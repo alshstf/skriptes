@@ -1,0 +1,21 @@
+{
+	# Локальный CA Caddy выдаст сертификат для *.localhost автоматически.
+	# Для прод-домена замените на реальный + email.
+	# email you@example.com
+	auto_https disable_redirects
+}
+
+{$SKRIPTES_HOST} {
+	encode zstd gzip
+
+	# API → backend
+	@api path /api/* /healthz /readyz
+	handle @api {
+		reverse_proxy backend:8080
+	}
+
+	# Всё остальное → frontend (nginx со SPA-фолбэком)
+	handle {
+		reverse_proxy frontend:80
+	}
+}

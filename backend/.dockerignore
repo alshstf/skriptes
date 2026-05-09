@@ -1,0 +1,7 @@
+Dockerfile
+.dockerignore
+.golangci.yml
+*.test
+*.out
+coverage.out
+testdata/large/
