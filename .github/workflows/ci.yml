@@ -35,9 +35,9 @@ jobs:
       - name: Test
         run: go test -race -coverprofile=coverage.out ./...
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: v1.62
+          version: v2.12
           working-directory: backend
           args: --timeout=5m
 
