@@ -1,7 +1,9 @@
 SHELL := /bin/bash
 COMPOSE := docker compose -f infra/docker-compose.yml --env-file infra/.env
+COMPOSE_RELEASE := docker compose -f infra/docker-compose.release.yml --env-file infra/.env
 
 .PHONY: help up down logs ps build pull test lint \
+        up-release down-release \
         backend-run backend-test backend-lint backend-tidy \
         frontend-dev frontend-test frontend-lint frontend-install frontend-e2e \
         migrate seed-admin clean
@@ -22,6 +24,13 @@ build: ## Пересобрать образы
 	$(COMPOSE) build
 pull: ## Подтянуть базовые образы
 	$(COMPOSE) pull
+
+# ── релизный стек (готовые образы из ghcr.io) ──────────────────
+up-release: ## Поднять стек из готовых образов (для конечных пользователей)
+	$(COMPOSE_RELEASE) pull
+	$(COMPOSE_RELEASE) up -d
+down-release: ## Остановить релизный стек
+	$(COMPOSE_RELEASE) down
 
 # ── backend ─────────────────────────────────────────────────────
 backend-run: ## Запустить backend локально
