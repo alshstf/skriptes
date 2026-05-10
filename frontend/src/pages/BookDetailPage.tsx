@@ -51,7 +51,18 @@ export function BookDetailPage() {
           <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
           {book.authors.length > 0 ? (
             <p className="text-base text-muted-foreground">
-              {book.authors.map((a) => a.full_name).join(', ')}
+              {book.authors.map((a, i) => (
+                <span key={a.id}>
+                  {i > 0 ? ', ' : ''}
+                  <Link
+                    to="/authors/$id"
+                    params={{ id: String(a.id) }}
+                    className="hover:underline"
+                  >
+                    {a.full_name}
+                  </Link>
+                </span>
+              ))}
             </p>
           ) : null}
         </CardHeader>
@@ -59,7 +70,13 @@ export function BookDetailPage() {
           {book.series ? (
             <div className="text-sm">
               <span className="text-muted-foreground">Серия:</span>{' '}
-              <span>{book.series.title}</span>
+              <Link
+                to="/series/$id"
+                params={{ id: String(book.series.id) }}
+                className="hover:underline"
+              >
+                {book.series.title}
+              </Link>
               {book.ser_no ? <span className="text-muted-foreground"> · #{book.ser_no}</span> : null}
             </div>
           ) : null}

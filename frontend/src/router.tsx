@@ -11,6 +11,8 @@ import { Layout } from '@/components/Layout';
 import { LoginPage } from '@/pages/LoginPage';
 import { BooksPage } from '@/pages/BooksPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
+import { AuthorPage } from '@/pages/AuthorPage';
+import { SeriesPage } from '@/pages/SeriesPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -87,9 +89,21 @@ const bookDetailRoute = createRoute({
   component: BookDetailPage,
 });
 
+const authorRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/authors/$id',
+  component: AuthorPage,
+});
+
+const seriesRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/series/$id',
+  component: SeriesPage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  protectedRoute.addChildren([indexRoute, booksRoute, bookDetailRoute]),
+  protectedRoute.addChildren([indexRoute, booksRoute, bookDetailRoute, authorRoute, seriesRoute]),
 ]);
 
 export function createAppRouter(queryClient: QueryClient) {
