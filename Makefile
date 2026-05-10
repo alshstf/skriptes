@@ -4,7 +4,7 @@ COMPOSE := docker compose -f infra/docker-compose.yml --env-file infra/.env
 .PHONY: help up down logs ps build pull test lint \
         backend-run backend-test backend-lint backend-tidy \
         frontend-dev frontend-test frontend-lint frontend-install \
-        migrate seed clean
+        migrate seed-admin clean
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?##"};{printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -47,11 +47,21 @@ frontend-lint: ## ESLint + tsc
 test: backend-test frontend-test ## Все тесты
 lint: backend-lint frontend-lint ## Все линтеры
 
-migrate: ## Применить миграции (через docker-контейнер golang-migrate)
-	$(COMPOSE) run --rm migrate up
+migrate: ## Применить миграции (бэкенд делает это сам при старте; ручной запуск — для миграций без HTTP)
+	$(COMPOSE) run --rm --no-deps backend skriptes-seed --help >/dev/null 2>&1 || true
+	@echo "ℹ︎  миграции применяются автоматически при старте backend; если нужно отдельно — запустите backend и сразу остановите"
 
-seed: ## Создать тестового admin/user (TODO в Фазе 1)
-	@echo "TODO: будет реализовано в Фазе 1"
+seed-admin: ## Создать admin-пользователя (требует EMAIL и PASSWORD; пример: make seed-admin EMAIL=me@x.com PASSWORD=secret123)
+	@if [ -z "$(EMAIL)" ] || [ -z "$(PASSWORD)" ]; then \
+		echo "Usage: make seed-admin EMAIL=you@example.com PASSWORD=secret123 [DISPLAY_NAME='Your Name']"; \
+		exit 2; \
+	fi
+	$(COMPOSE) run --rm \
+		-e SKRIPTES_SEED_PASSWORD="$(PASSWORD)" \
+		--entrypoint skriptes-seed backend \
+		--email "$(EMAIL)" \
+		$(if $(DISPLAY_NAME),--display-name "$(DISPLAY_NAME)") \
+		--no-prompt
 
 clean: ## Удалить volumes (ОСТОРОЖНО — все данные)
 	$(COMPOSE) down -v

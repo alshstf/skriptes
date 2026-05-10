@@ -15,7 +15,10 @@ ARG TARGETARCH
 ARG VERSION=dev
 RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
     go build -trimpath -ldflags="-s -w -X main.version=${VERSION}" \
-    -o /out/skriptes ./cmd/skriptes
+    -o /out/skriptes ./cmd/skriptes && \
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
+    go build -trimpath -ldflags="-s -w" \
+    -o /out/skriptes-seed ./cmd/skriptes-seed
 
 # ── fb2cng fetcher ──────────────────────────────────────────────
 # Скачиваем готовый релиз fb2cng (бинарь называется `fbc`).
@@ -39,8 +42,9 @@ RUN apk add --no-cache ca-certificates tzdata && \
     addgroup -S skriptes && adduser -S -G skriptes skriptes && \
     mkdir -p /data/books /data/inpx /cache && \
     chown -R skriptes:skriptes /cache
-COPY --from=builder /out/skriptes /usr/local/bin/skriptes
-COPY --from=fb2cng /opt/fb2cng/fbc /usr/local/bin/fbc
+COPY --from=builder /out/skriptes      /usr/local/bin/skriptes
+COPY --from=builder /out/skriptes-seed /usr/local/bin/skriptes-seed
+COPY --from=fb2cng  /opt/fb2cng/fbc    /usr/local/bin/fbc
 USER skriptes
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/skriptes"]
