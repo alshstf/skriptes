@@ -22,4 +22,13 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
+  {
+    // shadcn-сгенерированные компоненты часто экспортируют и сам компонент,
+    // и сопутствующие утилиты (cva variants и т.п.). Это канонический
+    // паттерн — react-refresh для них отключаем.
+    files: ['src/components/ui/**'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 );
