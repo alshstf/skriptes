@@ -20,6 +20,7 @@ type Deps struct {
 	DB      *pgxpool.Pool
 	Auth    AuthDeps
 	Books   BooksDeps
+	Catalog CatalogDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -52,6 +53,10 @@ func NewRouter(d Deps) http.Handler {
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books))
 					r.Get("/books/{id}", handleGetBook(d.Books))
+				}
+				if d.Catalog.Service != nil {
+					r.Get("/authors/{id}", handleGetAuthor(d.Catalog))
+					r.Get("/series/{id}", handleGetSeries(d.Catalog))
 				}
 			})
 		}
