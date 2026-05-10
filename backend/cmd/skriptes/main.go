@@ -8,12 +8,18 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"sort"
+	"strings"
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/importer"
 )
 
 func main() {
@@ -47,6 +53,15 @@ func run() error {
 	}
 	logger.Info("migrations applied")
 
+	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
+	logger.Info("meilisearch client configured", "url", cfg.MeiliURL)
+
+	// Стартовый scan: импортируем все *.inpx из каталога SKRIPTES_INPX_ROOT.
+	// Идемпотентно: повторные старты на тех же файлах — no-op за счёт хэш-проверки.
+	// Не блокируем HTTP — крутим в горутине; если /readyz нужно учитывать импорт,
+	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
+	go runStartupImport(ctx(), pool, meili, cfg.InpxRoot, logger)
+
 	router := api.NewRouter(api.Deps{Version: cfg.Version, DB: pool})
 
 	srv := &http.Server{
@@ -58,7 +73,7 @@ func run() error {
 		IdleTimeout:       90 * time.Second,
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	sigCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
 	go func() {
@@ -69,7 +84,7 @@ func run() error {
 		}
 	}()
 
-	<-ctx.Done()
+	<-sigCtx.Done()
 	logger.Info("shutting down")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -79,6 +94,61 @@ func run() error {
 	}
 	logger.Info("bye")
 	return nil
+}
+
+// ctx — фоновый контекст для startup-сканера.
+// Отдельная функция чтобы было видно, что у скана нет shutdown-контекста
+// (импорт всё равно отрабатывает до конца, даже если процесс ловит SIGTERM —
+// безопасно благодаря пер-записной транзакции).
+func ctx() context.Context { return context.Background() }
+
+func runStartupImport(ctx context.Context, pool *pgxpool.Pool, meili meilisearch.ServiceManager, inpxRoot string, logger *slog.Logger) {
+	files, err := findInpxFiles(inpxRoot)
+	if err != nil {
+		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
+		return
+	}
+	if len(files) == 0 {
+		logger.Info("startup import — no INPX files found", "root", inpxRoot)
+		return
+	}
+	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
+	logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
+	for _, f := range files {
+		stats, err := imp.Run(ctx, f)
+		if err != nil {
+			logger.Error("startup import failed for file", "file", f, "err", err)
+			continue
+		}
+		_ = stats // важная статистика уже залогирована изнутри Run
+	}
+	logger.Info("startup import finished")
+}
+
+// findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.
+func findInpxFiles(root string) ([]string, error) {
+	if root == "" {
+		return nil, nil
+	}
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	var out []string
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		name := e.Name()
+		if strings.HasSuffix(strings.ToLower(name), ".inpx") {
+			out = append(out, filepath.Join(root, name))
+		}
+	}
+	sort.Strings(out)
+	return out, nil
 }
 
 func newLogger(level, format string) *slog.Logger {
