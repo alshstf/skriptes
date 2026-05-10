@@ -3,7 +3,7 @@ COMPOSE := docker compose -f infra/docker-compose.yml --env-file infra/.env
 
 .PHONY: help up down logs ps build pull test lint \
         backend-run backend-test backend-lint backend-tidy \
-        frontend-dev frontend-test frontend-lint frontend-install \
+        frontend-dev frontend-test frontend-lint frontend-install frontend-e2e \
         migrate seed-admin clean
 
 help:
@@ -38,8 +38,10 @@ frontend-install: ## Установить зависимости
 	cd frontend && npm install
 frontend-dev: ## Vite dev server
 	cd frontend && npm run dev
-frontend-test: ## Vitest
+frontend-test: ## Vitest (jsdom unit-тесты)
 	cd frontend && npm run test
+frontend-e2e: ## Playwright e2e (реальный chromium на vite preview, ловит layout-регрессии)
+	cd frontend && npm run e2e
 frontend-lint: ## ESLint + tsc
 	cd frontend && npm run lint && npm run typecheck
 

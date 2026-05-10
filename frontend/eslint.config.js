@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'coverage'] },
+  { ignores: ['dist', 'node_modules', 'coverage', 'playwright-report', 'test-results'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -29,6 +29,16 @@ export default tseslint.config(
     files: ['src/components/ui/**'],
     rules: {
       'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Playwright fixtures (e2e/) используют функцию `use(value)` для
+    // передачи fixture'а в тест — это convention библиотеки, а не
+    // React-хук. ESLint react-hooks/rules-of-hooks ловит её по имени
+    // (`use*` = hook) и валит lint. Хуков в e2e нет в принципе — отключаем.
+    files: ['e2e/**'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
 );
