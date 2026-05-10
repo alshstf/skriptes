@@ -17,6 +17,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/api"
+	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
@@ -62,7 +63,17 @@ func run() error {
 	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
 	go runStartupImport(ctx(), pool, meili, cfg.InpxRoot, logger)
 
-	router := api.NewRouter(api.Deps{Version: cfg.Version, DB: pool})
+	authSvc := auth.New(pool, 0)
+	router := api.NewRouter(api.Deps{
+		Version: cfg.Version,
+		DB:      pool,
+		Auth: api.AuthDeps{
+			Service:        authSvc,
+			CookieSecure:   cfg.CookieSecure,
+			CookieDomain:   cfg.CookieDomain,
+			AllowedOrigins: cfg.AllowedOrigins,
+		},
+	})
 
 	srv := &http.Server{
 		Addr:              cfg.HTTPAddr,

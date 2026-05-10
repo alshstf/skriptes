@@ -21,6 +21,13 @@ type Config struct {
 	BooksRoot string `env:"SKRIPTES_BOOKS_ROOT" envDefault:"/data/books"`
 	InpxRoot  string `env:"SKRIPTES_INPX_ROOT"  envDefault:"/data/inpx"`
 	CacheRoot string `env:"SKRIPTES_CACHE_ROOT" envDefault:"/cache"`
+
+	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
+	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
+	// откуда разрешены мутирующие запросы (защита от CSRF).
+	CookieSecure   bool     `env:"SKRIPTES_COOKIE_SECURE"  envDefault:"true"`
+	CookieDomain   string   `env:"SKRIPTES_COOKIE_DOMAIN"`
+	AllowedOrigins []string `env:"SKRIPTES_ALLOWED_ORIGINS" envSeparator:"," envDefault:"https://skriptes.localhost"`
 }
 
 func Load() (*Config, error) {

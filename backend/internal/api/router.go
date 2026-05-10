@@ -11,9 +11,14 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// Deps собирает все зависимости HTTP-роутера.
+// Auth (Service, AllowedOrigins, ...) — опционален: если Auth.Service == nil,
+// auth-эндпоинты не монтируются и originCheck не применяется. Это полезно
+// для unit-тестов простых ручек (/healthz и т.п.) без поднятия БД.
 type Deps struct {
 	Version string
 	DB      *pgxpool.Pool
+	Auth    AuthDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -24,6 +29,10 @@ func NewRouter(d Deps) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 
+	if d.Auth.Service != nil && len(d.Auth.AllowedOrigins) > 0 {
+		r.Use(originCheck(d.Auth.AllowedOrigins))
+	}
+
 	// Liveness — процесс жив, можно ли его не убивать.
 	r.Get("/healthz", healthz)
 	// Readiness — процесс может обслуживать трафик (включая зависимости).
@@ -31,6 +40,16 @@ func NewRouter(d Deps) http.Handler {
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/version", version(d.Version))
+		if d.Auth.Service != nil {
+			// Публичные auth-эндпоинты.
+			r.Post("/auth/login", handleLogin(d.Auth))
+			r.Post("/auth/logout", handleLogout(d.Auth))
+			// Защищённые: требуют валидной session-cookie.
+			r.Group(func(r chi.Router) {
+				r.Use(requireAuth(d.Auth))
+				r.Get("/auth/me", handleMe(d.Auth))
+			})
+		}
 	})
 
 	return r
