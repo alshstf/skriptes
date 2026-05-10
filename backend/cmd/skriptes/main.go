@@ -21,6 +21,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/config"
+	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 )
@@ -68,6 +69,13 @@ func run() error {
 	authSvc := auth.New(pool, 0)
 	booksSvc := books.New(pool, meili)
 	catalogSvc := catalog.New(pool)
+
+	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
+	if err != nil {
+		return fmt.Errorf("converter init: %w", err)
+	}
+	logger.Info("converter ready", "fbc", cfg.FBCPath, "cache", cfg.CacheRoot)
+
 	router := api.NewRouter(api.Deps{
 		Version: cfg.Version,
 		DB:      pool,
@@ -77,8 +85,9 @@ func run() error {
 			CookieDomain:   cfg.CookieDomain,
 			AllowedOrigins: cfg.AllowedOrigins,
 		},
-		Books:   api.BooksDeps{Service: booksSvc},
-		Catalog: api.CatalogDeps{Service: catalogSvc},
+		Books:    api.BooksDeps{Service: booksSvc},
+		Catalog:  api.CatalogDeps{Service: catalogSvc},
+		Download: api.DownloadDeps{Books: booksSvc, Converter: conv},
 	})
 
 	srv := &http.Server{

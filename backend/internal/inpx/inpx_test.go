@@ -26,9 +26,9 @@ func TestOpenAndIterate(t *testing.T) {
 	// structure.info отсутствует → DefaultSchema
 	require.Equal(t, inpx.DefaultSchema, ix.Schema)
 
-	// 3 .inp файла; у двух в имени суффикс "_lost" — он должен быть
-	// отброшен при деривации Archive (физические архивы такой суффикс
-	// не несут).
+	// 3 .inp файла; имя архива формируется заменой .inp → .zip,
+	// суффиксы (включая "_lost") сохраняются — в реальных librusec
+	// коллекциях физический zip-файл несёт тот же суффикс что и .inp.
 	require.Len(t, ix.Files, 3)
 	names := map[string]inpx.InpFile{}
 	for _, f := range ix.Files {
@@ -38,9 +38,9 @@ func TestOpenAndIterate(t *testing.T) {
 	require.Contains(t, names, "fb2-625127-625160_lost.inp")
 	require.Contains(t, names, "fb2-025838-696919_lost.inp")
 	require.Equal(t, "fb2-749080-749080.zip", names["fb2-749080-749080.inp"].Archive)
-	require.Equal(t, "fb2-625127-625160.zip", names["fb2-625127-625160_lost.inp"].Archive,
-		"_lost суффикс должен быть отброшен при выводе имени архива")
-	require.Equal(t, "fb2-025838-696919.zip", names["fb2-025838-696919_lost.inp"].Archive)
+	require.Equal(t, "fb2-625127-625160_lost.zip", names["fb2-625127-625160_lost.inp"].Archive,
+		"суффикс _lost сохраняется в имени архива (zeркальное соответствие в librusec)")
+	require.Equal(t, "fb2-025838-696919_lost.zip", names["fb2-025838-696919_lost.inp"].Archive)
 
 	// Итерация: 19 записей всего; собираем мапу archive → []record для проверок.
 	type fr struct {
@@ -81,14 +81,14 @@ func TestOpenAndIterate(t *testing.T) {
 	sort.Strings(alekseev.Genres)
 	require.Equal(t, []string{"network_literature", "popadanec", "sf_action"}, alekseev.Genres)
 
-	// Записи из .inp с суффиксом _lost разбираются нормально — и в
-	// derived Archive они попадают под именем без суффикса.
-	var fromStrippedArchives int
+	// Записи из .inp с суффиксом _lost разбираются нормально и
+	// попадают в архив с тем же именем (тоже с _lost).
+	var fromLostArchives int
 	for _, x := range all {
-		if x.archive == "fb2-625127-625160.zip" || x.archive == "fb2-025838-696919.zip" {
-			fromStrippedArchives++
+		if x.archive == "fb2-625127-625160_lost.zip" || x.archive == "fb2-025838-696919_lost.zip" {
+			fromLostArchives++
 		}
 	}
-	require.Equal(t, 18, fromStrippedArchives,
-		"из 19 записей 18 пришли из .inp со стриппнутым _lost-суффиксом")
+	require.Equal(t, 18, fromLostArchives,
+		"из 19 записей 18 пришли из _lost-архивов")
 }
