@@ -22,6 +22,11 @@ type Config struct {
 	InpxRoot  string `env:"SKRIPTES_INPX_ROOT"  envDefault:"/data/inpx"`
 	CacheRoot string `env:"SKRIPTES_CACHE_ROOT" envDefault:"/cache"`
 
+	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
+	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
+	// искать в $PATH.
+	FBCPath string `env:"SKRIPTES_FBC_PATH" envDefault:"fbc"`
+
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
 	// откуда разрешены мутирующие запросы (защита от CSRF).

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { DownloadMenu } from '@/components/DownloadMenu';
 import { useBook } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
@@ -47,24 +48,27 @@ export function BookDetailPage() {
         </Link>
       </Button>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
-          {book.authors.length > 0 ? (
-            <p className="text-base text-muted-foreground">
-              {book.authors.map((a, i) => (
-                <span key={a.id}>
-                  {i > 0 ? ', ' : ''}
-                  <Link
-                    to="/authors/$id"
-                    params={{ id: String(a.id) }}
-                    className="hover:underline"
-                  >
-                    {a.full_name}
-                  </Link>
-                </span>
-              ))}
-            </p>
-          ) : null}
+        <CardHeader className="flex flex-row items-start justify-between gap-4">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
+            {book.authors.length > 0 ? (
+              <p className="text-base text-muted-foreground">
+                {book.authors.map((a, i) => (
+                  <span key={a.id}>
+                    {i > 0 ? ', ' : ''}
+                    <Link
+                      to="/authors/$id"
+                      params={{ id: String(a.id) }}
+                      className="hover:underline"
+                    >
+                      {a.full_name}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            ) : null}
+          </div>
+          {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
         </CardHeader>
         <CardContent className="space-y-4">
           {book.series ? (
