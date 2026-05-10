@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -15,10 +16,16 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		slog.Error("fatal", "err", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	cfg, err := config.Load()
 	if err != nil {
-		slog.Error("config load failed", "err", err)
-		os.Exit(1)
+		return fmt.Errorf("config load: %w", err)
 	}
 
 	logger := newLogger(cfg.LogLevel, cfg.LogFormat)
@@ -50,13 +57,12 @@ func main() {
 	logger.Info("shutting down")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
 	if err := srv.Shutdown(shutdownCtx); err != nil {
-		cancel()
-		logger.Error("graceful shutdown failed", "err", err)
-		os.Exit(1)
+		return fmt.Errorf("graceful shutdown: %w", err)
 	}
-	cancel()
 	logger.Info("bye")
+	return nil
 }
 
 func newLogger(level, format string) *slog.Logger {
