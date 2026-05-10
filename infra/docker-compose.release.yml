@@ -1,0 +1,122 @@
+# skriptes — релизный compose для конечных пользователей.
+#
+# Отличия от infra/docker-compose.yml (dev):
+#  - backend / frontend подтягиваются как готовые образы из ghcr.io,
+#    не собираются локально из исходников
+#  - SKRIPTES_VERSION = тег образа (по умолчанию из .env)
+#  - всё остальное идентично — postgres / meilisearch / caddy те же
+#
+# Quickstart:
+#   1) скачайте этот файл и infra/.env.example рядом с ним:
+#        curl -O https://raw.githubusercontent.com/alshstf/skriptes/main/infra/docker-compose.release.yml
+#        curl -O https://raw.githubusercontent.com/alshstf/skriptes/main/infra/.env.example
+#        mv .env.example .env
+#   2) поправьте в .env пути BOOKS_HOST_PATH / INPX_HOST_PATH и
+#      SKRIPTES_VERSION (см. https://github.com/alshstf/skriptes/releases)
+#   3) скачайте Caddyfile:
+#        curl -O https://raw.githubusercontent.com/alshstf/skriptes/main/infra/Caddyfile
+#   4) docker compose -f docker-compose.release.yml --env-file .env up -d
+
+name: ${COMPOSE_PROJECT_NAME:-skriptes}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.13
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-}
+      MEILI_ENV: ${MEILI_ENV:-development}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - meili_data:/meili_data
+    ports:
+      - "127.0.0.1:${MEILI_PORT:-7700}:7700"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:7700/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    image: ghcr.io/alshstf/skriptes-backend:${SKRIPTES_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      SKRIPTES_HTTP_ADDR: ${SKRIPTES_HTTP_ADDR:-:8080}
+      SKRIPTES_LOG_LEVEL: ${SKRIPTES_LOG_LEVEL:-info}
+      SKRIPTES_LOG_FORMAT: ${SKRIPTES_LOG_FORMAT:-json}
+      SKRIPTES_VERSION: ${SKRIPTES_VERSION:-latest}
+      SKRIPTES_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      SKRIPTES_MEILI_URL: http://meilisearch:7700
+      SKRIPTES_MEILI_API_KEY: ${MEILI_MASTER_KEY:-}
+      SKRIPTES_BOOKS_ROOT: /data/books
+      SKRIPTES_INPX_ROOT: /data/inpx
+      SKRIPTES_CACHE_ROOT: /cache
+      SKRIPTES_COOKIE_SECURE: ${SKRIPTES_COOKIE_SECURE:-true}
+      SKRIPTES_COOKIE_DOMAIN: ${SKRIPTES_COOKIE_DOMAIN:-}
+      SKRIPTES_ALLOWED_ORIGINS: ${SKRIPTES_ALLOWED_ORIGINS:-https://skriptes.localhost}
+    volumes:
+      - ${BOOKS_HOST_PATH}:/data/books:ro
+      - ${INPX_HOST_PATH}:/data/inpx:ro
+      - cache:/cache
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  frontend:
+    image: ghcr.io/alshstf/skriptes-frontend:${SKRIPTES_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      SKRIPTES_HOST: ${SKRIPTES_HOST:-skriptes.localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+
+volumes:
+  pg_data:
+  meili_data:
+  cache:
+  caddy_data:
+  caddy_config:
