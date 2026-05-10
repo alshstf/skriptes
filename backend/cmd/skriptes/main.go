@@ -13,6 +13,7 @@ import (
 
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/config"
+	"github.com/skriptes/skriptes/backend/internal/db"
 )
 
 func main() {
@@ -31,7 +32,22 @@ func run() error {
 	logger := newLogger(cfg.LogLevel, cfg.LogFormat)
 	slog.SetDefault(logger)
 
-	router := api.NewRouter(api.Deps{Version: cfg.Version})
+	dbCtx, dbCancel := context.WithTimeout(context.Background(), cfg.DatabaseTimeout)
+	defer dbCancel()
+
+	pool, err := db.NewPool(dbCtx, cfg.DatabaseURL)
+	if err != nil {
+		return fmt.Errorf("db connect: %w", err)
+	}
+	defer pool.Close()
+	logger.Info("database connected")
+
+	if err := db.Migrate(cfg.DatabaseURL); err != nil {
+		return fmt.Errorf("db migrate: %w", err)
+	}
+	logger.Info("migrations applied")
+
+	router := api.NewRouter(api.Deps{Version: cfg.Version, DB: pool})
 
 	srv := &http.Server{
 		Addr:              cfg.HTTPAddr,
