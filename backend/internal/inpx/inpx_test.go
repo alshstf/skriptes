@@ -26,7 +26,9 @@ func TestOpenAndIterate(t *testing.T) {
 	// structure.info отсутствует → DefaultSchema
 	require.Equal(t, inpx.DefaultSchema, ix.Schema)
 
-	// 3 .inp файла, два из них _lost.
+	// 3 .inp файла; у двух в имени суффикс "_lost" — он должен быть
+	// отброшен при деривации Archive (физические архивы такой суффикс
+	// не несут).
 	require.Len(t, ix.Files, 3)
 	names := map[string]inpx.InpFile{}
 	for _, f := range ix.Files {
@@ -35,12 +37,10 @@ func TestOpenAndIterate(t *testing.T) {
 	require.Contains(t, names, "fb2-749080-749080.inp")
 	require.Contains(t, names, "fb2-625127-625160_lost.inp")
 	require.Contains(t, names, "fb2-025838-696919_lost.inp")
-	require.False(t, names["fb2-749080-749080.inp"].Lost)
-	require.True(t, names["fb2-625127-625160_lost.inp"].Lost)
-	require.True(t, names["fb2-025838-696919_lost.inp"].Lost)
 	require.Equal(t, "fb2-749080-749080.zip", names["fb2-749080-749080.inp"].Archive)
 	require.Equal(t, "fb2-625127-625160.zip", names["fb2-625127-625160_lost.inp"].Archive,
-		"_lost суффикс должен быть удалён из имени связанного архива")
+		"_lost суффикс должен быть отброшен при выводе имени архива")
+	require.Equal(t, "fb2-025838-696919.zip", names["fb2-025838-696919_lost.inp"].Archive)
 
 	// Итерация: 19 записей всего; собираем мапу archive → []record для проверок.
 	type fr struct {
@@ -81,12 +81,14 @@ func TestOpenAndIterate(t *testing.T) {
 	sort.Strings(alekseev.Genres)
 	require.Equal(t, []string{"network_literature", "popadanec", "sf_action"}, alekseev.Genres)
 
-	// _lost-архивы отдают записи нормально (нам нужна метаинформация даже без файла).
-	var lostCount int
+	// Записи из .inp с суффиксом _lost разбираются нормально — и в
+	// derived Archive они попадают под именем без суффикса.
+	var fromStrippedArchives int
 	for _, x := range all {
 		if x.archive == "fb2-625127-625160.zip" || x.archive == "fb2-025838-696919.zip" {
-			lostCount++
+			fromStrippedArchives++
 		}
 	}
-	require.Equal(t, 18, lostCount, "из 19 записей 18 — из _lost архивов")
+	require.Equal(t, 18, fromStrippedArchives,
+		"из 19 записей 18 пришли из .inp со стриппнутым _lost-суффиксом")
 }

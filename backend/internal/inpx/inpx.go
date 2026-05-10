@@ -24,10 +24,17 @@ type CollectionInfo struct {
 }
 
 // InpFile описывает один .inp в INPX и связанный с ним архив книг.
+//
+// Имя архива выводится из имени .inp путём отбрасывания расширения и
+// (если присутствует) суффикса "_lost". Канонические генераторы
+// (rupor-github/InpxCreator, bookpauk/inpx-web) такой суффикс не
+// производят и не документируют — но в реально встречающихся коллекциях
+// (например, librusec_local_fb2) он попадается, и физический архив
+// называется без него. Выявление того, существует ли архив, — забота
+// импортёра: пробуем открыть zip и обрабатываем ENOENT отдельно.
 type InpFile struct {
-	Name    string // "fb2-749080-749080.inp"
-	Archive string // "fb2-749080-749080.zip"
-	Lost    bool   // имя содержит "_lost" — соответствующий .zip отсутствует
+	Name    string // имя .inp, "fb2-749080-749080.inp" или "fb2-...-..._lost.inp"
+	Archive string // имя соответствующего zip-архива, "fb2-749080-749080.zip"
 	Size    int64  // размер .inp в байтах
 }
 
@@ -102,7 +109,6 @@ func Open(p string) (*Inpx, error) {
 			continue
 		}
 		stem := strings.TrimSuffix(base, ".inp")
-		lost := strings.HasSuffix(stem, "_lost")
 		archiveStem := strings.TrimSuffix(stem, "_lost")
 		size := f.UncompressedSize64
 		if size > math.MaxInt64 {
@@ -111,7 +117,6 @@ func Open(p string) (*Inpx, error) {
 		i.Files = append(i.Files, InpFile{
 			Name:    base,
 			Archive: archiveStem + ".zip",
-			Lost:    lost,
 			Size:    int64(size),
 		})
 	}
