@@ -25,6 +25,15 @@ vi.mock('@tanstack/react-router', async () => {
       );
     },
     useParams: () => ({ id: '42' }),
+    // Минимальные заглушки для BackButton — он использует useRouter и
+    // useCanGoBack. В реальном приложении они работают через
+    // RouterProvider, но изолированный тест компонента поднимать его не
+    // должен.
+    useRouter: () => ({
+      history: { back: vi.fn() },
+      navigate: vi.fn(),
+    }),
+    useCanGoBack: () => false,
   };
 });
 

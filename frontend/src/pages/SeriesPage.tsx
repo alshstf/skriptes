@@ -1,8 +1,8 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { ArrowLeft, ListOrdered } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ListOrdered } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
+import { BackButton } from '@/components/BackButton';
 import { useSeries } from '@/lib/catalog';
 import { ApiError } from '@/lib/api';
 
@@ -71,16 +71,6 @@ export function SeriesPage() {
         </ul>
       )}
     </article>
-  );
-}
-
-function BackButton() {
-  return (
-    <Button asChild variant="ghost" size="sm">
-      <Link to="/books">
-        <ArrowLeft className="mr-2 size-4" aria-hidden />К списку книг
-      </Link>
-    </Button>
   );
 }
 
