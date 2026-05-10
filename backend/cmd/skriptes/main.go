@@ -50,11 +50,12 @@ func main() {
 	logger.Info("shutting down")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
 	if err := srv.Shutdown(shutdownCtx); err != nil {
+		cancel()
 		logger.Error("graceful shutdown failed", "err", err)
 		os.Exit(1)
 	}
+	cancel()
 	logger.Info("bye")
 }
 

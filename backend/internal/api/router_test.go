@@ -16,7 +16,7 @@ func TestHealthz(t *testing.T) {
 
 	resp, err := http.Get(srv.URL + "/healthz")
 	require.NoError(t, err)
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 
 	var body map[string]string
@@ -31,7 +31,7 @@ func TestVersion(t *testing.T) {
 
 	resp, err := http.Get(srv.URL + "/api/version")
 	require.NoError(t, err)
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 
 	var body map[string]string
