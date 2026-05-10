@@ -28,8 +28,8 @@ backend-run: ## Запустить backend локально
 	cd backend && go run ./cmd/skriptes
 backend-test: ## Прогнать тесты backend
 	cd backend && go test ./...
-backend-lint: ## Линтер Go
-	cd backend && golangci-lint run ./...
+backend-lint: ## Линтер Go (та же версия что в CI: --timeout=5m)
+	cd backend && golangci-lint run --timeout=5m ./...
 backend-tidy: ## go mod tidy
 	cd backend && go mod tidy
 
