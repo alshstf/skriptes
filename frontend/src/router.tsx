@@ -9,7 +9,8 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 import { Layout } from '@/components/Layout';
 import { LoginPage } from '@/pages/LoginPage';
-import { HomePage } from '@/pages/HomePage';
+import { BooksPage } from '@/pages/BooksPage';
+import { BookDetailPage } from '@/pages/BookDetailPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -62,13 +63,34 @@ const protectedRoute = createRoute({
   ),
 });
 
-const homeRoute = createRoute({
+// '/' редиректит на /books — главной страницы пока нет, список книг
+// и есть точка входа в каталог.
+const indexRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/',
-  component: HomePage,
+  beforeLoad: () => {
+    throw redirect({ to: '/books' });
+  },
+  // Component обязан быть, но не рендерится из-за redirect.
+  component: () => null,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, protectedRoute.addChildren([homeRoute])]);
+const booksRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/books',
+  component: BooksPage,
+});
+
+const bookDetailRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/books/$id',
+  component: BookDetailPage,
+});
+
+const routeTree = rootRoute.addChildren([
+  loginRoute,
+  protectedRoute.addChildren([indexRoute, booksRoute, bookDetailRoute]),
+]);
 
 export function createAppRouter(queryClient: QueryClient) {
   return createRouter({
@@ -78,7 +100,6 @@ export function createAppRouter(queryClient: QueryClient) {
   });
 }
 
-// Регистрируем тип роутера для type-safe Link/useNavigate.
 declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof createAppRouter>;
