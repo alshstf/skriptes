@@ -1,9 +1,9 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { ArrowLeft, BookText } from 'lucide-react';
+import { BookText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
+import { BackButton } from '@/components/BackButton';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { useBook } from '@/lib/books';
 import { ApiError } from '@/lib/api';
@@ -26,11 +26,7 @@ export function BookDetailPage() {
     const isNotFound = error instanceof ApiError && error.status === 404;
     return (
       <div className="space-y-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/books">
-            <ArrowLeft className="mr-2 size-4" aria-hidden />К списку книг
-          </Link>
-        </Button>
+        <BackButton />
         <p className="text-sm text-destructive" role="alert">
           {isNotFound ? 'Книга не найдена.' : `Не удалось загрузить карточку: ${error.message}`}
         </p>
@@ -42,11 +38,7 @@ export function BookDetailPage() {
 
   return (
     <article className="space-y-4">
-      <Button asChild variant="ghost" size="sm">
-        <Link to="/books">
-          <ArrowLeft className="mr-2 size-4" aria-hidden />К списку книг
-        </Link>
-      </Button>
+      <BackButton />
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div className="space-y-1">
