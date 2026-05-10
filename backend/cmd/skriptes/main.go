@@ -18,6 +18,7 @@ import (
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
@@ -64,6 +65,7 @@ func run() error {
 	go runStartupImport(ctx(), pool, meili, cfg.InpxRoot, logger)
 
 	authSvc := auth.New(pool, 0)
+	booksSvc := books.New(pool, meili)
 	router := api.NewRouter(api.Deps{
 		Version: cfg.Version,
 		DB:      pool,
@@ -73,6 +75,7 @@ func run() error {
 			CookieDomain:   cfg.CookieDomain,
 			AllowedOrigins: cfg.AllowedOrigins,
 		},
+		Books: api.BooksDeps{Service: booksSvc},
 	})
 
 	srv := &http.Server{
