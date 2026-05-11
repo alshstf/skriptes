@@ -1,82 +1,206 @@
-import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { useCallback, useState } from 'react';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
+import type { BooksSearch } from '@/router';
 import { Search } from 'lucide-react';
+
+// Code-based routing в TanStack Router не разносит validateSearch-тип
+// через routeTree-тайпинг, поэтому navigate-функция оказывается типа
+// "search не может быть ничем кроме never". Заворачиваем в свой
+// helper-тип, который принимает BooksSearch — реально search-параметры
+// проверяются validateSearch'ом ниже в run-time.
+type BooksNavigate = (opts: {
+  search?: BooksSearch | ((prev: BooksSearch) => BooksSearch);
+  replace?: boolean;
+}) => void;
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import {
+  FiltersSidebar,
+  ActiveFilterChips,
+  type FiltersValue,
+} from '@/components/FiltersSidebar';
 import { useBooks, type BookListItem } from '@/lib/books';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 
 const PAGE_SIZE = 20;
+const FACETS = ['genres', 'lang', 'year'];
 
 export function BooksPage() {
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(0);
-  const debouncedQuery = useDebouncedValue(query, 200);
+  // Все фильтры живут в URL-search → удобно делиться ссылками и refresh
+  // ничего не теряет. Тип BooksSearch гарантируется validateSearch в
+  // router.tsx; useSearch на code-based роутах в strict mode не
+  // выводит его — поэтому явная аннотация.
+  // strict:false — на code-based роутах TanStack не разносит
+  // validateSearch-тип, нам это и не нужно: search мы валидируем сами
+  // через as BooksSearch (рантайм-форму гарантирует router.tsx).
+  const search = useSearch({ strict: false }) as BooksSearch;
+  const navigate = useNavigate() as unknown as BooksNavigate;
 
-  // Сброс пагинации при смене поискового запроса.
-  const effectivePage = debouncedQuery === query ? page : 0;
-  const offset = effectivePage * PAGE_SIZE;
+  // Поисковый ввод — локальный стейт с debounce, чтобы не перерисовывать
+  // URL на каждое нажатие. URL обновляем после паузы.
+  const [queryInput, setQueryInput] = useState(search.q ?? '');
+  const debouncedQuery = useDebouncedValue(queryInput, 200);
+
+  // Синхронизируем URL.q ← debouncedQuery когда они разъезжаются.
+  if (debouncedQuery !== (search.q ?? '') && debouncedQuery === queryInput) {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        q: debouncedQuery || undefined,
+        page: undefined,
+      }),
+      replace: true,
+    });
+  }
+
+  const filters: FiltersValue = {
+    genres: search.genres ?? [],
+    lang: search.lang ?? '',
+    yearFrom: search.year_from ?? 0,
+    yearTo: search.year_to ?? 0,
+    sort: search.sort ?? '',
+  };
+
+  const setFilters = useCallback(
+    (next: FiltersValue) => {
+      void navigate({
+        search: (prev) => ({
+          ...prev,
+          genres: next.genres.length > 0 ? next.genres : undefined,
+          lang: next.lang || undefined,
+          year_from: next.yearFrom || undefined,
+          year_to: next.yearTo || undefined,
+          sort: next.sort || undefined,
+          page: undefined,
+        }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const page = search.page ?? 0;
+  const offset = page * PAGE_SIZE;
 
   const { data, isLoading, isFetching, error } = useBooks({
     query: debouncedQuery,
     limit: PAGE_SIZE,
     offset,
+    genres: filters.genres,
+    lang: filters.lang,
+    yearFrom: filters.yearFrom,
+    yearTo: filters.yearTo,
+    seriesId: search.series_id,
+    authorId: search.author_id,
+    sort: filters.sort,
+    facets: FACETS,
   });
 
+  const totalActive =
+    filters.genres.length +
+    (filters.lang ? 1 : 0) +
+    (filters.yearFrom || filters.yearTo ? 1 : 0) +
+    (filters.sort ? 1 : 0) +
+    (search.series_id ? 1 : 0) +
+    (search.author_id ? 1 : 0);
+
+  const resetAll = () => {
+    setQueryInput('');
+    void navigate({ search: {}, replace: true });
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden />
-          <Input
-            type="search"
-            placeholder="Поиск по названию или автору"
-            className="pl-9"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(0);
-            }}
-          />
-        </div>
-        {data ? (
-          <span className="text-sm text-muted-foreground tabular-nums">
-            {data.total} {pluralBooks(data.total)} · {data.processing_ms}мс
-          </span>
-        ) : null}
+    <div className="grid gap-6 md:grid-cols-[260px_minmax(0,1fr)]">
+      <div>
+        <FiltersSidebar
+          value={filters}
+          onChange={setFilters}
+          facets={data?.facets}
+          totalActive={totalActive}
+          onReset={resetAll}
+        />
       </div>
 
-      {error ? (
-        <p role="alert" className="text-sm text-destructive">
-          Не удалось загрузить список: {(error as Error).message}
-        </p>
-      ) : null}
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 max-w-md">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
+              aria-hidden
+            />
+            <Input
+              type="search"
+              placeholder="Поиск по названию или автору"
+              className="pl-9"
+              value={queryInput}
+              onChange={(e) => setQueryInput(e.target.value)}
+            />
+          </div>
+          {data ? (
+            <span className="text-sm text-muted-foreground tabular-nums">
+              {data.total} {pluralBooks(data.total)} · {data.processing_ms}мс
+            </span>
+          ) : null}
+        </div>
 
-      {isLoading ? (
-        <BookListSkeleton />
-      ) : data && data.items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Ничего не нашлось.</p>
-      ) : data ? (
-        <ul className={`space-y-3 ${isFetching ? 'opacity-70' : ''}`}>
-          {data.items.map((b) => (
-            <li key={b.id}>
-              <BookCard book={b} />
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
-      {data && data.total > PAGE_SIZE ? (
-        <Pagination
-          page={effectivePage}
-          total={data.total}
-          pageSize={PAGE_SIZE}
-          onChange={(p) => setPage(p)}
+        <ActiveFilterChips
+          value={{
+            ...filters,
+            seriesId: search.series_id,
+            authorId: search.author_id,
+          }}
+          onChange={(next) => {
+            const { seriesId, authorId, ...rest } = next;
+            setFilters(rest);
+            // Series/author не в FiltersValue — обновляем отдельно.
+            void navigate({
+              search: (prev) => ({
+                ...prev,
+                series_id: seriesId || undefined,
+                author_id: authorId || undefined,
+              }),
+              replace: true,
+            });
+          }}
         />
-      ) : null}
+
+        {error ? (
+          <p role="alert" className="text-sm text-destructive">
+            Не удалось загрузить список: {(error as Error).message}
+          </p>
+        ) : null}
+
+        {isLoading ? (
+          <BookListSkeleton />
+        ) : data && data.items.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Ничего не нашлось.</p>
+        ) : data ? (
+          <ul className={`space-y-3 ${isFetching ? 'opacity-70' : ''}`}>
+            {data.items.map((b) => (
+              <li key={b.id}>
+                <BookCard book={b} />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {data && data.total > PAGE_SIZE ? (
+          <Pagination
+            page={page}
+            total={data.total}
+            pageSize={PAGE_SIZE}
+            onChange={(p) =>
+              void navigate({
+                search: (prev) => ({ ...prev, page: p > 0 ? p : undefined }),
+                replace: true,
+              })
+            }
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -148,7 +272,12 @@ function Pagination({
         Страница {page + 1} из {totalPages}
       </span>
       <div className="flex gap-2">
-        <Button variant="outline" size="sm" disabled={isFirst} onClick={() => onChange(Math.max(0, page - 1))}>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={isFirst}
+          onClick={() => onChange(Math.max(0, page - 1))}
+        >
           Назад
         </Button>
         <Button variant="outline" size="sm" disabled={isLast} onClick={() => onChange(page + 1)}>
@@ -160,7 +289,6 @@ function Pagination({
 }
 
 function pluralBooks(n: number): string {
-  // Простая русская плюрализация: 1 книга / 2..4 книги / 5+ книг.
   const mod10 = n % 10;
   const mod100 = n % 100;
   if (mod100 >= 11 && mod100 <= 14) return 'книг';

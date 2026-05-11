@@ -2,8 +2,10 @@ package books
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -27,9 +29,13 @@ func New(pool *pgxpool.Pool, meili meilisearch.ServiceManager) *Service {
 	return &Service{pool: pool, meili: meili}
 }
 
-// List — поиск книг через Meilisearch.
+// List — поиск книг через Meilisearch с фильтрами, сортировкой и facets.
+//
+// Логика комбинирования фильтров: AND между разными атрибутами,
+// OR внутри multi-value (genres). Год — диапазон [from, to] инклюзивно.
+//
 // Если params.Query пустая — возвращает первые limit/offset (Meili
-// сортирует по дефолтным правилам).
+// сортирует по дефолтным правилам, либо по params.Sort).
 func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, error) {
 	if s.meili == nil {
 		return ListResponse{Items: []ListItem{}, Limit: params.Limit, Offset: params.Offset}, nil
@@ -41,6 +47,16 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	}
+	if f := buildFilter(params); f != "" {
+		req.Filter = f
+	}
+	if sort := buildSort(params.Sort); len(sort) > 0 {
+		req.Sort = sort
+	}
+	if len(params.Facets) > 0 {
+		req.Facets = params.Facets
+	}
+
 	res, err := s.meili.Index("books").SearchWithContext(ctx, params.Query, req)
 	if err != nil {
 		return ListResponse{}, fmt.Errorf("meili search: %w", err)
@@ -69,7 +85,80 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		Offset:      offset,
 		Query:       params.Query,
 		ProcessTime: res.ProcessingTimeMs,
+		Facets:      decodeFacets(res.FacetDistribution),
 	}, nil
+}
+
+// buildFilter — собирает meili filter-expression из ListParams.
+// Возвращает пустую строку если фильтров нет.
+//
+// Эскейпинг строк: используем strconv.Quote — он даст корректный JSON-
+// совместимый литерал ("Сергей \"Лютый\" Иванов" → "Сергей \"Лютый\" Иванов"),
+// и meili такие литералы понимает.
+func buildFilter(p ListParams) string {
+	var parts []string
+	if len(p.Genres) > 0 {
+		quoted := make([]string, 0, len(p.Genres))
+		for _, g := range p.Genres {
+			if g == "" {
+				continue
+			}
+			quoted = append(quoted, strconv.Quote(g))
+		}
+		if len(quoted) > 0 {
+			parts = append(parts, fmt.Sprintf("genres IN [%s]", strings.Join(quoted, ",")))
+		}
+	}
+	if p.Lang != "" {
+		parts = append(parts, fmt.Sprintf("lang = %s", strconv.Quote(p.Lang)))
+	}
+	if p.YearFrom > 0 {
+		parts = append(parts, fmt.Sprintf("year >= %d", p.YearFrom))
+	}
+	if p.YearTo > 0 {
+		parts = append(parts, fmt.Sprintf("year <= %d", p.YearTo))
+	}
+	if p.SeriesID > 0 {
+		parts = append(parts, fmt.Sprintf("series_id = %d", p.SeriesID))
+	}
+	if p.AuthorID > 0 {
+		parts = append(parts, fmt.Sprintf("author_ids = %d", p.AuthorID))
+	}
+	return strings.Join(parts, " AND ")
+}
+
+// buildSort — преобразует "user-friendly" значение sort в массив для Meili.
+// Если sort пустой — возвращаем nil, Meili применит свои ranking rules
+// (включая popularity:desc как customRanking).
+func buildSort(sort string) []string {
+	switch sort {
+	case "year_desc":
+		return []string{"year:desc"}
+	case "year_asc":
+		return []string{"year:asc"}
+	case "popularity":
+		return []string{"popularity:desc"}
+	default:
+		return nil
+	}
+}
+
+// decodeFacets — превращает FacetDistribution (json.RawMessage в SDK)
+// в map[string]map[string]int64. Если raw пустой или не парсится —
+// возвращаем nil: facets опциональны, лучше отдать список без них,
+// чем 500.
+func decodeFacets(raw json.RawMessage) map[string]map[string]int64 {
+	if len(raw) == 0 {
+		return nil
+	}
+	var out map[string]map[string]int64
+	if err := json.Unmarshal(raw, &out); err != nil {
+		return nil
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }
 
 // Suggest — компактный typeahead по индексу books.

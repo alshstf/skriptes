@@ -36,6 +36,11 @@ export const bookListFixture = {
   limit: 20,
   offset: 0,
   processing_ms: 1,
+  facets: {
+    genres: { sf_action: 1, popadanec: 1, network_literature: 1 },
+    lang: { ru: 1 },
+    year: { '2023': 1 },
+  },
 };
 
 export const bookDetailFixture = {

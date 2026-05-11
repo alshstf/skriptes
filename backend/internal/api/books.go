@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -21,9 +22,17 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		params := books.ListParams{
-			Query:  q.Get("q"),
-			Limit:  parseIntOr(q.Get("limit"), 20),
-			Offset: parseIntOr(q.Get("offset"), 0),
+			Query:    q.Get("q"),
+			Limit:    parseIntOr(q.Get("limit"), 20),
+			Offset:   parseIntOr(q.Get("offset"), 0),
+			Genres:   splitCSV(q.Get("genres")),
+			Lang:     q.Get("lang"),
+			YearFrom: parseIntOr(q.Get("year_from"), 0),
+			YearTo:   parseIntOr(q.Get("year_to"), 0),
+			SeriesID: parseInt64Or(q.Get("series_id"), 0),
+			AuthorID: parseInt64Or(q.Get("author_id"), 0),
+			Sort:     q.Get("sort"),
+			Facets:   splitCSV(q.Get("facets")),
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
@@ -68,4 +77,35 @@ func parseIntOr(s string, def int) int {
 		return def
 	}
 	return n
+}
+
+func parseInt64Or(s string, def int64) int64 {
+	if s == "" {
+		return def
+	}
+	n, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return def
+	}
+	return n
+}
+
+// splitCSV — разбивает значение query-параметра вида "a,b,c" в []string,
+// пропуская пустые элементы. Пустая или отсутствующая строка → nil.
+func splitCSV(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p != "" {
+			out = append(out, p)
+		}
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }

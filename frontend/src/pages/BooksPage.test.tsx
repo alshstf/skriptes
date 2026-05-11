@@ -5,9 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BooksPage } from './BooksPage';
 
 // TanStack Router компоненты нам не нужны для теста списка — мокаем Link
-// в обычный <a href="..."> чтобы у элемента был role="link".
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual<typeof import('@tanstack/react-router')>('@tanstack/react-router');
+// в обычный <a href="..."> чтобы у элемента был role="link", и
+// заменяем useSearch/useNavigate стабами (URL-стейтом мы тут не управляем,
+// а возвращать пустой объект достаточно).
+vi.mock('@tanstack/react-router', () => {
   type LinkProps = {
     to?: string;
     params?: Record<string, string>;
@@ -15,7 +16,6 @@ vi.mock('@tanstack/react-router', async () => {
     className?: string;
   };
   return {
-    ...actual,
     Link: ({ to, params, children, className }: LinkProps) => {
       let href = to ?? '#';
       if (params) {
@@ -29,6 +29,8 @@ vi.mock('@tanstack/react-router', async () => {
         </a>
       );
     },
+    useSearch: () => ({}),
+    useNavigate: () => () => undefined,
   };
 });
 
