@@ -52,6 +52,11 @@ type ListResponse struct {
 	Offset      int        `json:"offset"`
 	Query       string     `json:"query,omitempty"`
 	ProcessTime int64      `json:"processing_ms"` // время обработки в Meili
+	// Facets — распределения по запрошенным facetable атрибутам.
+	// Ключ внешней мапы — имя атрибута (genres, lang, year),
+	// внутренней — значение и сколько книг ему соответствует.
+	// Пустая мапа если facets не запросили — экономит трафик.
+	Facets map[string]map[string]int64 `json:"facets,omitempty"`
 }
 
 // Book — детальная карточка из PG (GET /api/books/:id).
@@ -76,8 +81,22 @@ type Book struct {
 }
 
 // ListParams — нормализованные параметры запроса /api/books.
+// Все фильтры опциональны; пустые значения означают "не фильтровать
+// по этому атрибуту". Sort:
+//   - "year_desc" / "year_asc"   — по году издания
+//   - "popularity"               — по числу просмотров (popularity:desc)
+//   - "title"                    — по нормализованному названию
+//   - "" (пустое)                — ранжирование по правилам Meili (с typo/relevance).
 type ListParams struct {
-	Query  string
-	Limit  int
-	Offset int
+	Query    string
+	Limit    int
+	Offset   int
+	Genres   []string // OR-семантика: книга подходит, если у неё есть ХОТЯ БЫ один из жанров
+	Lang     string
+	YearFrom int
+	YearTo   int
+	SeriesID int64
+	AuthorID int64
+	Sort     string
+	Facets   []string // запрашиваемые распределения; например ["genres","lang","year"]
 }

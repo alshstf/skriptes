@@ -12,6 +12,8 @@ export type BookListItem = {
   lib_id: string;
 };
 
+export type FacetDistribution = Record<string, Record<string, number>>;
+
 export type BookListResponse = {
   items: BookListItem[];
   total: number;
@@ -19,6 +21,21 @@ export type BookListResponse = {
   offset: number;
   query?: string;
   processing_ms: number;
+  facets?: FacetDistribution;
+};
+
+export type BookFilters = {
+  query: string;
+  limit?: number;
+  offset?: number;
+  genres?: string[];
+  lang?: string;
+  yearFrom?: number;
+  yearTo?: number;
+  seriesId?: number;
+  authorId?: number;
+  sort?: '' | 'year_desc' | 'year_asc' | 'popularity';
+  facets?: string[];
 };
 
 export type AuthorRef = {
@@ -60,20 +77,32 @@ export type Book = {
 };
 
 /**
- * useBooks — список/поиск книг.
+ * useBooks — список/поиск книг с фильтрами, сортировкой и facet-counts.
+ *
  * keepPreviousData чтобы при наборе текста UI не моргал в скелетон между
  * каждым нажатием — старый список остаётся видимым пока не подъедет новый.
+ *
+ * queryKey включает все параметры — react-query сам инвалидирует кэш
+ * при их смене.
  */
-export function useBooks(opts: { query: string; limit?: number; offset?: number }) {
+export function useBooks(opts: BookFilters) {
   const limit = opts.limit ?? 20;
   const offset = opts.offset ?? 0;
   return useQuery<BookListResponse>({
-    queryKey: ['books', { query: opts.query, limit, offset }],
+    queryKey: ['books', { ...opts, limit, offset }],
     queryFn: ({ signal }) => {
       const params = new URLSearchParams();
       if (opts.query) params.set('q', opts.query);
       params.set('limit', String(limit));
       params.set('offset', String(offset));
+      if (opts.genres && opts.genres.length > 0) params.set('genres', opts.genres.join(','));
+      if (opts.lang) params.set('lang', opts.lang);
+      if (opts.yearFrom) params.set('year_from', String(opts.yearFrom));
+      if (opts.yearTo) params.set('year_to', String(opts.yearTo));
+      if (opts.seriesId) params.set('series_id', String(opts.seriesId));
+      if (opts.authorId) params.set('author_id', String(opts.authorId));
+      if (opts.sort) params.set('sort', opts.sort);
+      if (opts.facets && opts.facets.length > 0) params.set('facets', opts.facets.join(','));
       return apiFetch<BookListResponse>(`/api/books?${params.toString()}`, { signal });
     },
     placeholderData: keepPreviousData,

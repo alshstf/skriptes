@@ -109,6 +109,44 @@ func TestService_ListAndGet(t *testing.T) {
 	empty, err := svc.Suggest(ctx, "  ", 5)
 	require.NoError(t, err)
 	require.Empty(t, empty)
+
+	// ── Фильтр по жанру: только sf_action → должна вернуться Кадетский корпус
+	//    (она единственная в фикстуре с этим жанром).
+	res, err = svc.List(ctx, books.ListParams{Genres: []string{"sf_action"}, Limit: 50})
+	require.NoError(t, err)
+	require.NotEmpty(t, res.Items)
+	for _, it := range res.Items {
+		require.Contains(t, it.Genres, "sf_action", "при фильтре genres=sf_action все книги должны иметь этот жанр")
+	}
+
+	// ── Фильтр по языку: должны вернуться только русские.
+	res, err = svc.List(ctx, books.ListParams{Lang: "ru", Limit: 50})
+	require.NoError(t, err)
+	for _, it := range res.Items {
+		require.Equal(t, "ru", it.Lang)
+	}
+
+	// ── Сортировка по году убывающая: первая книга должна быть новейшей.
+	res, err = svc.List(ctx, books.ListParams{Sort: "year_desc", Limit: 50})
+	require.NoError(t, err)
+	for i := 1; i < len(res.Items); i++ {
+		// Пропускаем книги без year — Meili их кладёт в конец при desc.
+		prev := res.Items[i-1].Year
+		cur := res.Items[i].Year
+		if prev != nil && cur != nil {
+			require.GreaterOrEqual(t, *prev, *cur, "year_desc нарушен")
+		}
+	}
+
+	// ── Facets: запросили genres и lang — должны получить распределения.
+	res, err = svc.List(ctx, books.ListParams{Facets: []string{"genres", "lang"}, Limit: 50})
+	require.NoError(t, err)
+	require.NotNil(t, res.Facets)
+	require.Contains(t, res.Facets, "genres")
+	require.Contains(t, res.Facets, "lang")
+	// Хотя бы один из жанров фикстуры должен присутствовать.
+	require.NotEmpty(t, res.Facets["genres"])
+	require.GreaterOrEqual(t, res.Facets["lang"]["ru"], int64(1))
 }
 
 // ── helpers ────────────────────────────────────────────────────

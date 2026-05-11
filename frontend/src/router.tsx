@@ -77,9 +77,58 @@ const indexRoute = createRoute({
   component: () => null,
 });
 
-const booksRoute = createRoute({
+// BooksSearch — URL-стейт списка книг.
+// Все поля опциональные; пустые/нулевые значения вырезаются из URL,
+// чтобы /books выглядел чистым без активных фильтров.
+export type BooksSearch = {
+  q?: string;
+  page?: number;
+  genres?: string[];
+  lang?: string;
+  year_from?: number;
+  year_to?: number;
+  series_id?: number;
+  author_id?: number;
+  sort?: 'year_desc' | 'year_asc' | 'popularity';
+};
+
+function asString(v: unknown): string | undefined {
+  return typeof v === 'string' && v !== '' ? v : undefined;
+}
+function asNumber(v: unknown): number | undefined {
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) && n > 0 ? n : undefined;
+}
+function asStringArray(v: unknown): string[] | undefined {
+  if (Array.isArray(v)) {
+    const out = v.filter((x): x is string => typeof x === 'string' && x !== '');
+    return out.length > 0 ? out : undefined;
+  }
+  if (typeof v === 'string' && v !== '') {
+    const out = v.split(',').filter(Boolean);
+    return out.length > 0 ? out : undefined;
+  }
+  return undefined;
+}
+
+export const booksRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/books',
+  validateSearch: (search: Record<string, unknown>): BooksSearch => {
+    const sort = asString(search.sort);
+    return {
+      q: asString(search.q),
+      page: asNumber(search.page),
+      genres: asStringArray(search.genres),
+      lang: asString(search.lang),
+      year_from: asNumber(search.year_from),
+      year_to: asNumber(search.year_to),
+      series_id: asNumber(search.series_id),
+      author_id: asNumber(search.author_id),
+      sort:
+        sort === 'year_desc' || sort === 'year_asc' || sort === 'popularity' ? sort : undefined,
+    };
+  },
   component: BooksPage,
 });
 
