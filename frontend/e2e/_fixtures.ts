@@ -67,6 +67,24 @@ export const bookDetailFixture = {
   deleted: false,
 };
 
+export const suggestFixture = {
+  query: 'кад',
+  books: [
+    {
+      id: 19,
+      title: 'Кадетский корпус. Книга 2',
+      authors: ['Алексеев Евгений Артёмович'],
+      series: 'Петля [Алексеев]',
+      genres: [],
+      year: 2023,
+      lang: 'ru',
+      lib_id: '749080',
+    },
+  ],
+  authors: [{ id: 17, full_name: 'Кадет Иван', book_count: 4 }],
+  series: [{ id: 7, title: 'Кадетство', author_name: 'Иванов И.', book_count: 12 }],
+};
+
 export async function mockApi(page: Page): Promise<void> {
   await page.route('**/api/auth/me', (route) =>
     route.fulfill({
@@ -77,6 +95,15 @@ export async function mockApi(page: Page): Promise<void> {
   );
   // Регэкспы вместо glob — '?' в URL это литерал, glob интерпретирует как
   // "один любой символ" в некоторых реализациях; для надёжности уходим в re.
+  // Маршруты Playwright матчатся в порядке регистрации, поэтому suggest
+  // должен быть зарегистрирован РАНЬШЕ общего /api/books.
+  await page.route(/\/api\/search\/suggest(\?|$)/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(suggestFixture),
+    }),
+  );
   await page.route(/\/api\/books(\?|$)/, (route) =>
     route.fulfill({
       status: 200,

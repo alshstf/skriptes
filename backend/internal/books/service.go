@@ -72,6 +72,32 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	}, nil
 }
 
+// Suggest — компактный typeahead по индексу books.
+// Возвращает срезанный набор ListItem (без total/pagination), в порядке,
+// который Meili даёт по умолчанию (с учётом ranking rules + popularity).
+// Если meili не сконфигурирован — пустой срез без ошибки (для unit-тестов).
+func (s *Service) Suggest(ctx context.Context, query string, limit int) ([]ListItem, error) {
+	if s.meili == nil || strings.TrimSpace(query) == "" {
+		return []ListItem{}, nil
+	}
+	limit = clampInt(limit, 1, 20, 5)
+	res, err := s.meili.Index("books").SearchWithContext(ctx, query, &meilisearch.SearchRequest{
+		Limit: int64(limit),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("meili search: %w", err)
+	}
+	out := make([]ListItem, 0, len(res.Hits))
+	for _, h := range res.Hits {
+		var item ListItem
+		if err := h.DecodeInto(&item); err != nil {
+			continue
+		}
+		out = append(out, item)
+	}
+	return out, nil
+}
+
 // Get возвращает детальную карточку книги по id.
 // Удалённые (deleted=true) тоже возвращаются — frontend сам решит как их
 // показать. Это симметрично с импортёром, который их сохраняет в PG.

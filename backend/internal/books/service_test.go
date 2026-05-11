@@ -97,6 +97,18 @@ func TestService_ListAndGet(t *testing.T) {
 	// ── Get: несуществующий id → ErrNotFound
 	_, err = svc.Get(ctx, 99999999)
 	require.ErrorIs(t, err, books.ErrNotFound)
+
+	// ── Suggest: typeahead с лимитом, по той же фикстуре.
+	sugg, err := svc.Suggest(ctx, "Кадетский", 5)
+	require.NoError(t, err)
+	require.NotEmpty(t, sugg)
+	require.Equal(t, "Кадетский корпус. Книга 2", sugg[0].Title)
+	require.LessOrEqual(t, len(sugg), 5)
+
+	// Пустой query → пустой срез без ошибки.
+	empty, err := svc.Suggest(ctx, "  ", 5)
+	require.NoError(t, err)
+	require.Empty(t, empty)
 }
 
 // ── helpers ────────────────────────────────────────────────────

@@ -34,6 +34,22 @@ type SeriesWithCount struct {
 	Count int    `json:"count"`
 }
 
+// AuthorSuggest — строка в typeahead-выдаче авторов.
+type AuthorSuggest struct {
+	ID        int64  `json:"id"`
+	FullName  string `json:"full_name"`
+	BookCount int    `json:"book_count"`
+}
+
+// SeriesSuggest — строка в typeahead-выдаче серий.
+// AuthorName заполнено только если у серии один автор (привязан в схеме).
+type SeriesSuggest struct {
+	ID         int64  `json:"id"`
+	Title      string `json:"title"`
+	AuthorName string `json:"author_name,omitempty"`
+	BookCount  int    `json:"book_count"`
+}
+
 // Series — детальная карточка серии (GET /api/series/:id).
 type Series struct {
 	ID         int64            `json:"id"`

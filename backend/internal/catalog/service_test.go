@@ -86,6 +86,33 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.ErrorIs(t, err, catalog.ErrNotFound)
 	_, err = svc.GetSeries(ctx, 99999999)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
+
+	// Suggest: префиксное совпадение по нормализованному имени.
+	// "алек" → должны попасть Алексеев и Алексеева Адель Ивановна.
+	authorSugg, err := svc.SuggestAuthors(ctx, "алек", 5)
+	require.NoError(t, err)
+	require.NotEmpty(t, authorSugg)
+	var foundAlekseev bool
+	for _, a := range authorSugg {
+		if a.FullName == "Алексеев Евгений Артёмович" {
+			require.Equal(t, 1, a.BookCount)
+			foundAlekseev = true
+		}
+	}
+	require.True(t, foundAlekseev, "ожидаем Алексеева в suggest по 'алек'")
+
+	// Пустой запрос → пустой срез без ошибки.
+	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5)
+	require.NoError(t, err)
+	require.Empty(t, authorEmpty)
+
+	// Suggest series: префикс "пет" по нормализованному заголовку.
+	seriesSugg, err := svc.SuggestSeries(ctx, "пет", 5)
+	require.NoError(t, err)
+	require.NotEmpty(t, seriesSugg)
+	require.Equal(t, "Петля [Алексеев]", seriesSugg[0].Title)
+	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
+	require.Equal(t, 1, seriesSugg[0].BookCount)
 }
 
 // ── helpers (повтор из internal/books) ─────────────────────────

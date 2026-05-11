@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { CommandPalette } from '@/components/CommandPalette';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import type { ReactNode } from 'react';
 
@@ -30,7 +31,10 @@ function Header({ user }: { user: User | null }) {
           <BookOpen className="size-5 text-primary" aria-hidden />
           <span>skriptes</span>
         </Link>
-        {user ? <UserMenu user={user} /> : null}
+        <div className="flex items-center gap-3">
+          {user ? <CommandPalette /> : null}
+          {user ? <UserMenu user={user} /> : null}
+        </div>
       </div>
     </header>
   );
