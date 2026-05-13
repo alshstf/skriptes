@@ -3,6 +3,7 @@ import { ListOrdered } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { useSeries } from '@/lib/catalog';
 import { ApiError } from '@/lib/api';
 
@@ -38,10 +39,13 @@ export function SeriesPage() {
     <article className="space-y-4">
       <BackButton />
       <header className="space-y-2">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-          <ListOrdered className="size-5 text-muted-foreground" aria-hidden />
-          {s.title}
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+            <ListOrdered className="size-5 text-muted-foreground" aria-hidden />
+            {s.title}
+          </h1>
+          <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
+        </div>
         {s.author_name && s.author_id ? (
           <p className="text-sm">
             <span className="text-muted-foreground">Автор:</span>{' '}

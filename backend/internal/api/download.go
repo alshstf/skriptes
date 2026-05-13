@@ -22,7 +22,7 @@ type DownloadDeps struct {
 	Converter *converter.Converter
 }
 
-func handleDownload(d DownloadDeps) http.HandlerFunc {
+func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -46,6 +46,13 @@ func handleDownload(d DownloadDeps) http.HandlerFunc {
 			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
+		}
+
+		// Записываем факт скачивания (fire-and-forget). Если пользователь
+		// не залогинен — middleware уже бы вернул 401, так что user в ctx
+		// гарантированно есть.
+		if u, ok := UserFromContext(r.Context()); ok {
+			recordReadAsync(hist.Service, u.ID, id)
 		}
 
 		src := converter.SourceBook{

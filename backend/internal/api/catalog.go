@@ -16,7 +16,20 @@ type CatalogDeps struct {
 	Service *catalog.Service
 }
 
-func handleGetAuthor(d CatalogDeps) http.HandlerFunc {
+// authorResponse / seriesResponse — обёртки над catalog-DTO с
+// user-specific is_favorite. Как и bookResponse, держим в api-слое
+// чтобы не тащить user-концепт в catalog.
+type authorResponse struct {
+	catalog.Author
+	IsFavorite bool `json:"is_favorite"`
+}
+
+type seriesResponse struct {
+	catalog.Series
+	IsFavorite bool `json:"is_favorite"`
+}
+
+func handleGetAuthor(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -34,11 +47,17 @@ func handleGetAuthor(d CatalogDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, a)
+		var isFav bool
+		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
+			if v, err := hist.Service.IsFavoriteAuthor(ctx, u.ID, id); err == nil {
+				isFav = v
+			}
+		}
+		writeJSON(w, http.StatusOK, authorResponse{Author: a, IsFavorite: isFav})
 	}
 }
 
-func handleGetSeries(d CatalogDeps) http.HandlerFunc {
+func handleGetSeries(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -56,6 +75,12 @@ func handleGetSeries(d CatalogDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, s)
+		var isFav bool
+		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
+			if v, err := hist.Service.IsFavoriteSeries(ctx, u.ID, id); err == nil {
+				isFav = v
+			}
+		}
+		writeJSON(w, http.StatusOK, seriesResponse{Series: s, IsFavorite: isFav})
 	}
 }

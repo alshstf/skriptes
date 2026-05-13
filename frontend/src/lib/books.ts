@@ -74,6 +74,7 @@ export type Book = {
   ext: string;
   size_bytes: number;
   deleted?: boolean;
+  is_favorite?: boolean;
 };
 
 /**

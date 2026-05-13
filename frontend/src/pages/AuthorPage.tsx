@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { useAuthor } from '@/lib/catalog';
 import { ApiError } from '@/lib/api';
 
@@ -32,7 +33,10 @@ export function AuthorPage() {
     <article className="space-y-6">
       <BackButton />
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
+          <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
+        </div>
         <p className="text-sm text-muted-foreground">
           {a.book_count} {pluralBooks(a.book_count)} в каталоге
         </p>

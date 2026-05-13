@@ -56,7 +56,8 @@ func TestMigrateAndPool(t *testing.T) {
 	// Проверка: все ключевые таблицы на месте.
 	expected := []string{
 		"archives", "authors", "book_authors", "book_genres", "books",
-		"collections", "favorites", "genres", "import_jobs", "metadata_cache",
+		"collections", "favorite_authors", "favorite_series", "favorites",
+		"genres", "import_jobs", "metadata_cache",
 		"reads", "series", "sessions", "users", "views",
 	}
 	rows, err := pool.Query(ctx, `
