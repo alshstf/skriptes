@@ -16,6 +16,7 @@ export type Author = {
   top_genres?: GenreCount[];
   series?: SeriesWithCount[];
   books: BookListItem[];
+  is_favorite?: boolean;
 };
 
 export type Series = {
@@ -25,6 +26,7 @@ export type Series = {
   author_name?: string;
   book_count: number;
   books: BookListItem[];
+  is_favorite?: boolean;
 };
 
 export function useAuthor(id: number | string | undefined) {

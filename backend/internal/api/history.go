@@ -97,7 +97,11 @@ func handleRemoveFavorite(d HistoryDeps) http.HandlerFunc {
 	}
 }
 
-// handleListFavorites — GET /api/me/favorites?limit=&offset=
+// handleListFavorites — GET /api/me/favorites.
+//
+// Возвращает все три типа избранного (книги, авторы, серии) за один
+// запрос. Для каждого типа — компактный срез без пагинации (домашняя
+// библиотека: списки скромные, 50 элементов на тип — потолок UX).
 func handleListFavorites(d HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, ok := UserFromContext(r.Context())
@@ -106,25 +110,119 @@ func handleListFavorites(d HistoryDeps) http.HandlerFunc {
 			return
 		}
 		limit := parseIntOr(r.URL.Query().Get("limit"), 50)
-		offset := parseIntOr(r.URL.Query().Get("offset"), 0)
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		items, err := d.Service.ListFavorites(ctx, u.ID, limit, offset)
+
+		books, err := d.Service.ListFavorites(ctx, u.ID, limit, 0)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		total, err := d.Service.FavoritesCount(ctx, u.ID)
+		authors, err := d.Service.ListFavoriteAuthors(ctx, u.ID, limit, 0)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, history.FavoritesListResponse{
-			Items:  items,
-			Total:  total,
-			Limit:  limit,
-			Offset: offset,
+		series, err := d.Service.ListFavoriteSeries(ctx, u.ID, limit, 0)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, history.AllFavoritesResponse{
+			Books:   books,
+			Authors: authors,
+			Series:  series,
 		})
+	}
+}
+
+// handleAddFavoriteAuthor / Remove — POST/DELETE /api/authors/{id}/favorite.
+func handleAddFavoriteAuthor(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		authorID, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || authorID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.AddFavoriteAuthor(ctx, u.ID, authorID); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]bool{"is_favorite": true})
+	}
+}
+
+func handleRemoveFavoriteAuthor(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		authorID, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || authorID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.RemoveFavoriteAuthor(ctx, u.ID, authorID); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "delete failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]bool{"is_favorite": false})
+	}
+}
+
+// handleAddFavoriteSeries / Remove — POST/DELETE /api/series/{id}/favorite.
+func handleAddFavoriteSeries(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		seriesID, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || seriesID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.AddFavoriteSeries(ctx, u.ID, seriesID); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]bool{"is_favorite": true})
+	}
+}
+
+func handleRemoveFavoriteSeries(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		seriesID, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || seriesID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.RemoveFavoriteSeries(ctx, u.ID, seriesID); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "delete failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]bool{"is_favorite": false})
 	}
 }
 

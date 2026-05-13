@@ -97,6 +97,52 @@ func TestService_HistoryFlow(t *testing.T) {
 	cnt, err = svc.FavoritesCount(ctx, userID)
 	require.NoError(t, err)
 	require.Equal(t, 0, cnt)
+
+	// ── favorites: авторы и серии ───────────────────────────────
+	// Берём какого-нибудь автора и серию из фикстуры.
+	var authorID, seriesID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT a.id FROM authors a
+		 JOIN book_authors ba ON ba.author_id = a.id
+		 JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		 LIMIT 1`,
+	).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT id FROM series LIMIT 1`,
+	).Scan(&seriesID))
+
+	// Авторы: add → IsFavorite=true → List → remove → IsFavorite=false.
+	require.NoError(t, svc.AddFavoriteAuthor(ctx, userID, authorID))
+	require.NoError(t, svc.AddFavoriteAuthor(ctx, userID, authorID)) // idempotent
+	favA, err := svc.IsFavoriteAuthor(ctx, userID, authorID)
+	require.NoError(t, err)
+	require.True(t, favA)
+	authors, err := svc.ListFavoriteAuthors(ctx, userID, 50, 0)
+	require.NoError(t, err)
+	require.Len(t, authors, 1)
+	require.Equal(t, authorID, authors[0].ID)
+	require.NotEmpty(t, authors[0].FullName)
+	require.GreaterOrEqual(t, authors[0].BookCount, 1)
+	require.NoError(t, svc.RemoveFavoriteAuthor(ctx, userID, authorID))
+	favA, err = svc.IsFavoriteAuthor(ctx, userID, authorID)
+	require.NoError(t, err)
+	require.False(t, favA)
+
+	// Серии: симметрично.
+	require.NoError(t, svc.AddFavoriteSeries(ctx, userID, seriesID))
+	require.NoError(t, svc.AddFavoriteSeries(ctx, userID, seriesID)) // idempotent
+	favS, err := svc.IsFavoriteSeries(ctx, userID, seriesID)
+	require.NoError(t, err)
+	require.True(t, favS)
+	seriesList, err := svc.ListFavoriteSeries(ctx, userID, 50, 0)
+	require.NoError(t, err)
+	require.Len(t, seriesList, 1)
+	require.Equal(t, seriesID, seriesList[0].ID)
+	require.GreaterOrEqual(t, seriesList[0].BookCount, 1)
+	require.NoError(t, svc.RemoveFavoriteSeries(ctx, userID, seriesID))
+	favS, err = svc.IsFavoriteSeries(ctx, userID, seriesID)
+	require.NoError(t, err)
+	require.False(t, favS)
 }
 
 // ── helpers (повтор из других пакетов) ─────────────────────────

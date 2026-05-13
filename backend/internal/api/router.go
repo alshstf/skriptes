@@ -63,12 +63,16 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/books/{id}/download", handleDownload(d.Download, d.History))
 				}
 				if d.Catalog.Service != nil {
-					r.Get("/authors/{id}", handleGetAuthor(d.Catalog))
-					r.Get("/series/{id}", handleGetSeries(d.Catalog))
+					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History))
+					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History))
 				}
 				if d.History.Service != nil {
 					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
 					r.Delete("/books/{id}/favorite", handleRemoveFavorite(d.History))
+					r.Post("/authors/{id}/favorite", handleAddFavoriteAuthor(d.History))
+					r.Delete("/authors/{id}/favorite", handleRemoveFavoriteAuthor(d.History))
+					r.Post("/series/{id}/favorite", handleAddFavoriteSeries(d.History))
+					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
 				}

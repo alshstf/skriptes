@@ -160,6 +160,177 @@ func (s *Service) ListFavorites(ctx context.Context, userID int64, limit, offset
 	return out, nil
 }
 
+// ── Favorites для авторов ───────────────────────────────────────
+
+// AddFavoriteAuthor / RemoveFavoriteAuthor / IsFavoriteAuthor — симметричные
+// AddFavorite/Remove/Is для книг, но работают на таблице favorite_authors.
+// Семантика: "пользователь следит за автором" (для будущей ленты новинок
+// и для bonus'а в персональном re-ranking).
+
+func (s *Service) AddFavoriteAuthor(ctx context.Context, userID, authorID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO favorite_authors (user_id, author_id) VALUES ($1, $2)
+		ON CONFLICT (user_id, author_id) DO NOTHING
+	`, userID, authorID)
+	if err != nil {
+		return fmt.Errorf("insert favorite author: %w", err)
+	}
+	return nil
+}
+
+func (s *Service) RemoveFavoriteAuthor(ctx context.Context, userID, authorID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		DELETE FROM favorite_authors WHERE user_id = $1 AND author_id = $2
+	`, userID, authorID)
+	if err != nil {
+		return fmt.Errorf("delete favorite author: %w", err)
+	}
+	return nil
+}
+
+func (s *Service) IsFavoriteAuthor(ctx context.Context, userID, authorID int64) (bool, error) {
+	var exists bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS(SELECT 1 FROM favorite_authors WHERE user_id = $1 AND author_id = $2)
+	`, userID, authorID).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("query favorite author: %w", err)
+	}
+	return exists, nil
+}
+
+// ListFavoriteAuthors — авторы, на которых подписан пользователь,
+// с числом их книг (живых) и временем подписки. Используется для UI
+// "Мои подписки" и как сигнал для re-ranking.
+func (s *Service) ListFavoriteAuthors(ctx context.Context, userID int64, limit, offset int) ([]FavoriteAuthorItem, error) {
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, fa.added_at,
+		       (SELECT count(*) FROM book_authors ba
+		        JOIN books b ON b.id = ba.book_id
+		        WHERE ba.author_id = a.id AND b.deleted = false) AS book_count
+		FROM favorite_authors fa
+		JOIN authors a ON a.id = fa.author_id
+		WHERE fa.user_id = $1
+		ORDER BY fa.added_at DESC
+		LIMIT $2 OFFSET $3
+	`, userID, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("query favorite authors: %w", err)
+	}
+	defer rows.Close()
+	out := make([]FavoriteAuthorItem, 0)
+	for rows.Next() {
+		var (
+			it                  FavoriteAuthorItem
+			last, first, middle string
+		)
+		if err := rows.Scan(&it.ID, &last, &first, &middle, &it.AddedAt, &it.BookCount); err != nil {
+			return nil, err
+		}
+		it.FullName = composeName(last, first, middle)
+		out = append(out, it)
+	}
+	return out, rows.Err()
+}
+
+// ── Favorites для серий ─────────────────────────────────────────
+
+func (s *Service) AddFavoriteSeries(ctx context.Context, userID, seriesID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO favorite_series (user_id, series_id) VALUES ($1, $2)
+		ON CONFLICT (user_id, series_id) DO NOTHING
+	`, userID, seriesID)
+	if err != nil {
+		return fmt.Errorf("insert favorite series: %w", err)
+	}
+	return nil
+}
+
+func (s *Service) RemoveFavoriteSeries(ctx context.Context, userID, seriesID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		DELETE FROM favorite_series WHERE user_id = $1 AND series_id = $2
+	`, userID, seriesID)
+	if err != nil {
+		return fmt.Errorf("delete favorite series: %w", err)
+	}
+	return nil
+}
+
+func (s *Service) IsFavoriteSeries(ctx context.Context, userID, seriesID int64) (bool, error) {
+	var exists bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS(SELECT 1 FROM favorite_series WHERE user_id = $1 AND series_id = $2)
+	`, userID, seriesID).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("query favorite series: %w", err)
+	}
+	return exists, nil
+}
+
+// ListFavoriteSeries — серии в подписках, с автором (если у серии один)
+// и числом книг в серии.
+func (s *Service) ListFavoriteSeries(ctx context.Context, userID int64, limit, offset int) ([]FavoriteSeriesItem, error) {
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT s.id, s.title, fs.added_at,
+		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), ''),
+		       (SELECT count(*) FROM books b WHERE b.series_id = s.id AND b.deleted = false) AS book_count
+		FROM favorite_series fs
+		JOIN series s ON s.id = fs.series_id
+		LEFT JOIN authors a ON a.id = s.author_id
+		WHERE fs.user_id = $1
+		ORDER BY fs.added_at DESC
+		LIMIT $2 OFFSET $3
+	`, userID, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("query favorite series: %w", err)
+	}
+	defer rows.Close()
+	out := make([]FavoriteSeriesItem, 0)
+	for rows.Next() {
+		var it FavoriteSeriesItem
+		if err := rows.Scan(&it.ID, &it.Title, &it.AddedAt, &it.AuthorName, &it.BookCount); err != nil {
+			return nil, err
+		}
+		out = append(out, it)
+	}
+	return out, rows.Err()
+}
+
+// composeName — то же что fullName() в catalog, но вынесено сюда чтобы
+// не тащить лишний пакет. Скучный код, но один источник правды.
+func composeName(last, first, middle string) string {
+	parts := make([]string, 0, 3)
+	if last != "" {
+		parts = append(parts, last)
+	}
+	if first != "" {
+		parts = append(parts, first)
+	}
+	if middle != "" {
+		parts = append(parts, middle)
+	}
+	out := ""
+	for i, p := range parts {
+		if i > 0 {
+			out += " "
+		}
+		out += p
+	}
+	return out
+}
+
 // RecentViews — последние просмотры пользователя (для "недавно открытые").
 // Возвращает по 1 записи на (book_id) — последний viewed_at.
 func (s *Service) RecentViews(ctx context.Context, userID int64, limit int) ([]ViewedItem, error) {

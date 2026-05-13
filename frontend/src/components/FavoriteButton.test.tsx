@@ -23,10 +23,10 @@ describe('FavoriteButton', () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  it('renders "В избранное" when not favorited and POSTs on click', async () => {
+  it('book: "В избранное" → POST /api/books/{id}/favorite', async () => {
     const user = userEvent.setup();
-    render(wrap(<FavoriteButton bookId={42} isFavorite={false} />));
-    const btn = screen.getByRole('button', { name: 'Добавить в избранное' });
+    render(wrap(<FavoriteButton target="book" id={42} isFavorite={false} />));
+    const btn = screen.getByRole('button', { name: 'Добавить книгу в избранное' });
     expect(btn).toHaveAttribute('aria-pressed', 'false');
     await user.click(btn);
     await waitFor(() => {
@@ -37,16 +37,42 @@ describe('FavoriteButton', () => {
     });
   });
 
-  it('renders "В избранном" when favorited and DELETEs on click', async () => {
+  it('book: "В избранном" → DELETE на клик', async () => {
     const user = userEvent.setup();
-    render(wrap(<FavoriteButton bookId={7} isFavorite={true} />));
-    const btn = screen.getByRole('button', { name: 'Убрать из избранного' });
+    render(wrap(<FavoriteButton target="book" id={7} isFavorite={true} />));
+    const btn = screen.getByRole('button', { name: 'Убрать книгу из избранного' });
     expect(btn).toHaveAttribute('aria-pressed', 'true');
     await user.click(btn);
     await waitFor(() => {
       const fetchMock = (globalThis as unknown as { fetch: ReturnType<typeof vi.fn> }).fetch;
       const last = fetchMock.mock.calls.at(-1)!;
       expect(last[0]).toBe('/api/books/7/favorite');
+      expect(last[1]).toMatchObject({ method: 'DELETE' });
+    });
+  });
+
+  it('author: POST /api/authors/{id}/favorite, лейбл "Подписаться"', async () => {
+    const user = userEvent.setup();
+    render(wrap(<FavoriteButton target="author" id={11} isFavorite={false} />));
+    const btn = screen.getByRole('button', { name: 'Подписаться на автора' });
+    await user.click(btn);
+    await waitFor(() => {
+      const fetchMock = (globalThis as unknown as { fetch: ReturnType<typeof vi.fn> }).fetch;
+      const last = fetchMock.mock.calls.at(-1)!;
+      expect(last[0]).toBe('/api/authors/11/favorite');
+      expect(last[1]).toMatchObject({ method: 'POST' });
+    });
+  });
+
+  it('series: DELETE /api/series/{id}/favorite, лейбл "Отписаться"', async () => {
+    const user = userEvent.setup();
+    render(wrap(<FavoriteButton target="series" id={22} isFavorite={true} />));
+    const btn = screen.getByRole('button', { name: 'Отписаться от серии' });
+    await user.click(btn);
+    await waitFor(() => {
+      const fetchMock = (globalThis as unknown as { fetch: ReturnType<typeof vi.fn> }).fetch;
+      const last = fetchMock.mock.calls.at(-1)!;
+      expect(last[0]).toBe('/api/series/22/favorite');
       expect(last[1]).toMatchObject({ method: 'DELETE' });
     });
   });

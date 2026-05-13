@@ -62,7 +62,7 @@ export function BookDetailPage() {
             ) : null}
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <FavoriteButton bookId={book.id} isFavorite={book.is_favorite ?? false} />
+            <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
             {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
           </div>
         </CardHeader>
