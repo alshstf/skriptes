@@ -23,6 +23,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 )
 
@@ -69,6 +70,7 @@ func run() error {
 	authSvc := auth.New(pool, 0)
 	booksSvc := books.New(pool, meili)
 	catalogSvc := catalog.New(pool)
+	historySvc := history.New(pool)
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
 	if err != nil {
@@ -88,6 +90,7 @@ func run() error {
 		Books:    api.BooksDeps{Service: booksSvc},
 		Catalog:  api.CatalogDeps{Service: catalogSvc},
 		Download: api.DownloadDeps{Books: booksSvc, Converter: conv},
+		History:  api.HistoryDeps{Service: historySvc},
 	})
 
 	srv := &http.Server{

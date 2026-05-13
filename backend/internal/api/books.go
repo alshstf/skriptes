@@ -45,7 +45,14 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 	}
 }
 
-func handleGetBook(d BooksDeps) http.HandlerFunc {
+// bookResponse — Book + user-specific поля. Книги в books-пакете не
+// знают про пользователя; user-зависимый is_favorite дорисовываем здесь.
+type bookResponse struct {
+	books.Book
+	IsFavorite bool `json:"is_favorite"`
+}
+
+func handleGetBook(d BooksDeps, hist HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -64,7 +71,18 @@ func handleGetBook(d BooksDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, b)
+
+		// is_favorite + fire-and-forget запись view. Ошибка чтения
+		// is_favorite не должна ломать карточку — отдаём false.
+		var isFav bool
+		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
+			if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
+				isFav = v
+			}
+			recordViewAsync(hist.Service, u.ID, id)
+		}
+
+		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav})
 	}
 }
 

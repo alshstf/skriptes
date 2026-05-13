@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BackButton } from '@/components/BackButton';
 import { DownloadMenu } from '@/components/DownloadMenu';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { useBook } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
@@ -60,7 +61,10 @@ export function BookDetailPage() {
               </p>
             ) : null}
           </div>
-          {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
+          <div className="flex items-center gap-2 shrink-0">
+            <FavoriteButton bookId={book.id} isFavorite={book.is_favorite ?? false} />
+            {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {book.series ? (

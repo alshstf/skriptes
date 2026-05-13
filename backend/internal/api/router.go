@@ -22,6 +22,7 @@ type Deps struct {
 	Books    BooksDeps
 	Catalog  CatalogDeps
 	Download DownloadDeps
+	History  HistoryDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -53,17 +54,23 @@ func NewRouter(d Deps) http.Handler {
 				r.Get("/auth/me", handleMe(d.Auth))
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books))
-					r.Get("/books/{id}", handleGetBook(d.Books))
+					r.Get("/books/{id}", handleGetBook(d.Books, d.History))
 				}
 				if d.Books.Service != nil || d.Catalog.Service != nil {
 					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog))
 				}
 				if d.Download.Books != nil && d.Download.Converter != nil {
-					r.Get("/books/{id}/download", handleDownload(d.Download))
+					r.Get("/books/{id}/download", handleDownload(d.Download, d.History))
 				}
 				if d.Catalog.Service != nil {
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog))
 					r.Get("/series/{id}", handleGetSeries(d.Catalog))
+				}
+				if d.History.Service != nil {
+					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
+					r.Delete("/books/{id}/favorite", handleRemoveFavorite(d.History))
+					r.Get("/me/favorites", handleListFavorites(d.History))
+					r.Get("/me/recent", handleRecentViews(d.History))
 				}
 			})
 		}
