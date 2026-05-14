@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"golang.org/x/net/html/charset"
 )
 
 // Fb2Provider извлекает обложку из самого fb2-файла внутри zip-архива.
@@ -141,6 +143,11 @@ type fb2Binary struct {
 // XML целиком.
 func scanFb2(r io.Reader) (coverID string, binaries map[string]fb2Binary, err error) {
 	dec := xml.NewDecoder(r)
+	// fb2 в нашем каталоге часто объявляет encoding="windows-1251"
+	// (Lib.rus.ec-наследие). Без CharsetReader stdlib-парсер падает с
+	// "declared but Decoder.CharsetReader is nil". charset.NewReaderLabel
+	// покрывает все распространённые legacy-кодировки.
+	dec.CharsetReader = charset.NewReaderLabel
 	binaries = map[string]fb2Binary{}
 	var inCoverpage bool
 
