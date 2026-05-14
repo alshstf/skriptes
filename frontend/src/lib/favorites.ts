@@ -56,6 +56,11 @@ export function useToggleFavorite() {
         void qc.invalidateQueries({ queryKey: ctx.key });
       }
       void qc.invalidateQueries({ queryKey: ['me', 'favorites'] });
+      // Меняем сигнал персонализации — перерисовываем кэш списков
+      // и палитры поиска: без этого re-rank продолжит отдавать старый
+      // порядок до истечения staleTime.
+      void qc.invalidateQueries({ queryKey: ['suggest'] });
+      void qc.invalidateQueries({ queryKey: ['books'] });
     },
   });
 }

@@ -152,32 +152,53 @@ type scoredItem struct {
 	personal float64
 }
 
-// Коэффициенты бонусов. Подобраны так, чтобы:
-//   - подписка на автора/серию давала ощутимый, но не подавляющий буст
-//     (Meili score в [0,1], так что 0.5 примерно равно "очень релевантному" хиту);
-//   - агрегированная активность капалась, чтобы один супер-частый автор
-//     не съел всю выдачу.
+// Коэффициенты бонусов. Подобраны под Meili-_rankingScore в [0,1]:
+// мы хотим, чтобы прямые персональные сигналы (избранная книга,
+// автор, серия) могли уверенно перевесить разницу в релевантности.
+//
+// Иерархия по силе:
+//
+//	favorite_book   (0.6)   — самый сильный: пользователь явно сказал «хочу»
+//	favorite_author (0.5)   — почти такой же, но даёт буст ВСЕМ книгам автора
+//	favorite_series (0.4)   — аналогично для серии
+//	per-book activity       — view = 0.1, read = 0.3, cap 0.5 (просмотрел → ещё раз нужна)
+//	author/series activity  — сильно ниже: лишь намёк, что "похоже на интересы"
+//	genre activity          — самый слабый: жанры пересекаются у многого
 const (
+	bonusFavoriteBook   = 0.6
 	bonusFavoriteAuthor = 0.5
 	bonusFavoriteSeries = 0.4
 
-	// activityScale переводит "сумма весов из views+reads" в бонус.
-	// Один read = 3.0 → activityScale*3 = 0.03 — небольшой буст,
-	// 10 reads → 0.3 (примерно как полу-избранное).
-	authorActivityScale = 0.01
-	seriesActivityScale = 0.01
-	genreActivityScale  = 0.005
+	// bookActivityScale — на каждую единицу веса в BookActivity. View=1
+	// → +0.1, read=3 → +0.3. Этот буст применяется К САМОЙ книге, поэтому
+	// он должен быть заметным: после открытия карточки книга должна
+	// уверенно подниматься на повторном поиске.
+	bookActivityScale = 0.1
+	bookActivityCap   = 0.5
 
-	// Капы на каждый тип сигнала — чтобы топ-1 автор не доминировал.
-	authorActivityCap = 0.4
-	seriesActivityCap = 0.4
-	genreActivityCap  = 0.2
+	// Activity по авторам/сериям/жанрам — заметно слабее: это "похожее",
+	// а не "то же самое".
+	authorActivityScale = 0.05
+	authorActivityCap   = 0.4
+	seriesActivityScale = 0.05
+	seriesActivityCap   = 0.4
+	genreActivityScale  = 0.02
+	genreActivityCap    = 0.2
 )
 
 func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
 	for i := range scored {
 		it := scored[i].item
 		bonus := 0.0
+
+		// Прямой book-level сигнал — самый сильный.
+		if _, ok := p.FavoriteBooks[it.ID]; ok {
+			bonus += bonusFavoriteBook
+		}
+		if w, ok := p.BookActivity[it.ID]; ok {
+			bonus += capFloat(w*bookActivityScale, bookActivityCap)
+		}
+
 		for _, aid := range it.AuthorIDs {
 			if _, ok := p.FavoriteAuthors[aid]; ok {
 				bonus += bonusFavoriteAuthor

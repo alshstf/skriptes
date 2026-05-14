@@ -25,6 +25,10 @@ type PersonaProfile struct {
 	FavoriteSeries  map[int64]struct{}
 	FavoriteBooks   map[int64]struct{}
 
+	// BookActivity[bookID] = сумма весов view/read событий ИМЕННО для этой
+	// книги. Сильный персональный сигнал: "пользователь уже открывал /
+	// скачивал эту книгу — наверняка хочет её снова увидеть в поиске".
+	BookActivity map[int64]float64
 	// AuthorActivity[authorID] = сумма весов событий с книгами этого автора.
 	AuthorActivity map[int64]float64
 	// SeriesActivity[seriesID] = аналогично для серий.
@@ -40,6 +44,7 @@ func (p PersonaProfile) IsEmpty() bool {
 	return len(p.FavoriteAuthors) == 0 &&
 		len(p.FavoriteSeries) == 0 &&
 		len(p.FavoriteBooks) == 0 &&
+		len(p.BookActivity) == 0 &&
 		len(p.AuthorActivity) == 0 &&
 		len(p.SeriesActivity) == 0 &&
 		len(p.GenreActivity) == 0
@@ -54,6 +59,7 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		FavoriteAuthors: map[int64]struct{}{},
 		FavoriteSeries:  map[int64]struct{}{},
 		FavoriteBooks:   map[int64]struct{}{},
+		BookActivity:    map[int64]float64{},
 		AuthorActivity:  map[int64]float64{},
 		SeriesActivity:  map[int64]float64{},
 		GenreActivity:   map[string]float64{},
@@ -87,7 +93,36 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		}
 	}
 
-	// 2. Активность по авторам.
+	// 2. Активность по конкретным книгам — сильнейший персональный сигнал
+	// "пользователь уже смотрел эту книгу, наверняка хочет её снова найти".
+	rowsBA, err := s.pool.Query(ctx, `
+		SELECT book_id, sum(w) FROM (
+			SELECT book_id, 1.0::float AS w FROM views WHERE user_id = $1
+			UNION ALL
+			SELECT book_id, 3.0::float AS w FROM reads WHERE user_id = $1
+		) e
+		GROUP BY book_id
+	`, userID)
+	if err != nil {
+		return PersonaProfile{}, fmt.Errorf("book activity: %w", err)
+	}
+	for rowsBA.Next() {
+		var (
+			id int64
+			w  float64
+		)
+		if err := rowsBA.Scan(&id, &w); err != nil {
+			rowsBA.Close()
+			return PersonaProfile{}, err
+		}
+		p.BookActivity[id] = w
+	}
+	rowsBA.Close()
+	if err := rowsBA.Err(); err != nil {
+		return PersonaProfile{}, err
+	}
+
+	// 3. Активность по авторам.
 	//
 	// UNION ALL с весами 1.0 (view) и 3.0 (read), плюс агрегация по
 	// автору. Если у книги два соавтора, эвент засчитывается обоим —
@@ -122,7 +157,7 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		return PersonaProfile{}, err
 	}
 
-	// 3. Активность по сериям (только книги, реально лежащие в серии).
+	// 4. Активность по сериям (только книги, реально лежащие в серии).
 	rows, err = s.pool.Query(ctx, `
 		WITH events AS (
 			SELECT book_id, 1.0::float AS w FROM views WHERE user_id = $1
@@ -154,7 +189,7 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		return PersonaProfile{}, err
 	}
 
-	// 4. Активность по жанрам (по fb2_code, не id — Meili хранит коды).
+	// 5. Активность по жанрам (по fb2_code, не id — Meili хранит коды).
 	rows, err = s.pool.Query(ctx, `
 		WITH events AS (
 			SELECT book_id, 1.0::float AS w FROM views WHERE user_id = $1

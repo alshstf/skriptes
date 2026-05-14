@@ -156,6 +156,65 @@ func TestService_SuggestRerank(t *testing.T) {
 		"Suggest должен поднять книгу любимого автора в палитре поиска")
 }
 
+// TestService_BookLevelRerank — два самых ожидаемых пользователем сигнала:
+//
+//  1. Просмотр конкретной книги поднимает ИМЕННО её на повторном поиске.
+//  2. Добавление книги в избранное поднимает её ещё выше (favorite > view).
+//
+// Без этих сигналов баг из ревью PR4: "посмотрел книгу — порядок не
+// изменился; добавил в избранное — снова без эффекта".
+func TestService_BookLevelRerank(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startPostgres(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, _ := filepath.Abs(fixtureINPX)
+	_, err := imp.Run(ctx, abs)
+	require.NoError(t, err)
+
+	historySvc := history.New(pool)
+	svc := books.New(pool, mgr, historySvc)
+
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('book-rerank@example.com', 'Book Rerank', 'x', 'user')
+		RETURNING id
+	`).Scan(&userID))
+
+	const query = "Алек"
+
+	baseline, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10})
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(baseline.Items), 2)
+
+	// Берём НЕ-первую книгу из baseline — её и будем "просматривать".
+	target := baseline.Items[1]
+	require.NotZero(t, target.ID)
+
+	// Записываем view.
+	require.NoError(t, historySvc.RecordView(ctx, userID, target.ID))
+
+	afterView, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10, UserID: userID})
+	require.NoError(t, err)
+	require.NotEmpty(t, afterView.Items)
+	require.Equal(t, target.ID, afterView.Items[0].ID,
+		"после view книга должна подняться на первое место (она получает book-level буст)")
+
+	// Добавляем favorite — буст ещё сильнее.
+	require.NoError(t, historySvc.AddFavorite(ctx, userID, target.ID))
+	afterFav, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10, UserID: userID})
+	require.NoError(t, err)
+	require.Equal(t, target.ID, afterFav.Items[0].ID,
+		"после favorite та же книга остаётся на первом месте (favorite_book доминирует)")
+}
+
 func containsID(s []int64, x int64) bool {
 	for _, v := range s {
 		if v == x {
