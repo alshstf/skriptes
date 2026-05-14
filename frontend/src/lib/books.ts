@@ -112,11 +112,26 @@ export function useBooks(opts: BookFilters) {
   });
 }
 
-/** useBook — детальная карточка по id. */
+/**
+ * useBook — детальная карточка по id.
+ *
+ * refetchInterval: пока у книги нет cover_path, backend в фоне
+ * обогащает её через internal/metadata. Поллим каждые 2 секунды
+ * и подменяем плейсхолдер на настоящую обложку без перезагрузки
+ * страницы. Сдаёмся через ~20 секунд (10 попыток), чтобы не
+ * крутить запросы бесконечно для книг без доступной обложки.
+ */
 export function useBook(id: number | string | undefined) {
   return useQuery<Book>({
     queryKey: ['book', String(id)],
     queryFn: ({ signal }) => apiFetch<Book>(`/api/books/${id}`, { signal }),
     enabled: id !== undefined && id !== '',
+    refetchInterval: (query) => {
+      const data = query.state.data as Book | undefined;
+      if (data?.cover_path) return false;
+      // dataUpdateCount = 1 после первой удачной загрузки → ~10 ретраев.
+      if (query.state.dataUpdateCount > 10) return false;
+      return 2_000;
+    },
   });
 }

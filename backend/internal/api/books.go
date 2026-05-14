@@ -58,7 +58,7 @@ type bookResponse struct {
 	IsFavorite bool `json:"is_favorite"`
 }
 
-func handleGetBook(d BooksDeps, hist HistoryDeps) http.HandlerFunc {
+func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -87,6 +87,11 @@ func handleGetBook(d BooksDeps, hist HistoryDeps) http.HandlerFunc {
 			}
 			recordViewAsync(hist.Service, u.ID, id)
 		}
+
+		// Lazy enrichment: если у книги нет обложки, в фоне сходим в
+		// провайдеры. На этом запросе пользователь её ещё не увидит —
+		// но следующий рендер карточки уже покажет.
+		triggerCoverEnrichmentAsync(meta, b)
 
 		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav})
 	}

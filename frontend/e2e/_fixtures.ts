@@ -45,6 +45,7 @@ export const bookListFixture = {
 
 export const bookDetailFixture = {
   id: 19,
+  cover_path: 'abc123.jpg',
   lib_id: '749080',
   title: 'Кадетский корпус. Книга 2',
   authors: [
@@ -121,6 +122,19 @@ export async function mockApi(page: Page): Promise<void> {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(bookDetailFixture),
+    }),
+  );
+  // Мокаем /api/covers/{name} крошечным PNG — иначе <img> упадёт в
+  // onerror и тест не отличит "не рендерили" от "запрос упал".
+  await page.route(/\/api\/covers\//, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'image/png',
+      // 1x1 transparent PNG
+      body: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+        'base64',
+      ),
     }),
   );
   await page.route(/\/api\/authors\/17$/, (route) =>
