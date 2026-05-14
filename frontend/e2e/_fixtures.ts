@@ -123,7 +123,58 @@ export async function mockApi(page: Page): Promise<void> {
       body: JSON.stringify(bookDetailFixture),
     }),
   );
+  await page.route(/\/api\/authors\/17$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(authorDetailFixture),
+    }),
+  );
+  await page.route(/\/api\/series\/7$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(seriesDetailFixture),
+    }),
+  );
 }
+
+// authorDetailFixture/seriesDetailFixture — для AuthorPage и SeriesPage,
+// с непустыми year_stats и read_count чтобы проверить блок "Статистика".
+export const authorDetailFixture = {
+  id: 17,
+  last_name: 'Алексеев',
+  first_name: 'Евгений',
+  middle_name: 'Артёмович',
+  full_name: 'Алексеев Евгений Артёмович',
+  book_count: 5,
+  books_total: 5,
+  top_genres: [{ code: 'sf_action', display: 'Боевая фантастика', count: 3 }],
+  series: [{ id: 7, title: 'Петля [Алексеев]', count: 2 }],
+  books: [],
+  is_favorite: false,
+  year_stats: [
+    { year: 2020, count: 2 },
+    { year: 2021, count: 1 },
+    { year: 2023, count: 2 },
+  ],
+  read_count: 2,
+};
+
+export const seriesDetailFixture = {
+  id: 7,
+  title: 'Петля [Алексеев]',
+  author_id: 17,
+  author_name: 'Алексеев Евгений Артёмович',
+  book_count: 3,
+  books: [],
+  is_favorite: false,
+  year_stats: [
+    { year: 2020, count: 1 },
+    { year: 2022, count: 2 },
+  ],
+  read_count: 1,
+};
 
 export const test = base.extend<{ mockedPage: Page }>({
   mockedPage: async ({ page }, use) => {

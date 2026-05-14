@@ -50,7 +50,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 		`SELECT id FROM authors WHERE normalized_name = 'алексеев евгений артёмович'`,
 	).Scan(&authorID))
 
-	a, err := svc.GetAuthor(ctx, authorID)
+	a, err := svc.GetAuthor(ctx, authorID, 0)
 	require.NoError(t, err)
 	require.Equal(t, "Алексеев", a.LastName)
 	require.Equal(t, "Алексеев Евгений Артёмович", a.FullName)
@@ -70,7 +70,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	seriesID = a.Series[0].ID
 
 	// Series detail
-	s, err := svc.GetSeries(ctx, seriesID)
+	s, err := svc.GetSeries(ctx, seriesID, 0)
 	require.NoError(t, err)
 	require.Equal(t, "Петля [Алексеев]", s.Title)
 	require.NotNil(t, s.AuthorID)
@@ -82,9 +82,9 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, []string{"Алексеев Евгений Артёмович"}, s.Books[0].Authors)
 
 	// Negative: несуществующий id
-	_, err = svc.GetAuthor(ctx, 99999999)
+	_, err = svc.GetAuthor(ctx, 99999999, 0)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
-	_, err = svc.GetSeries(ctx, 99999999)
+	_, err = svc.GetSeries(ctx, 99999999, 0)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
 
 	// Suggest: префиксное совпадение по нормализованному имени.
@@ -113,6 +113,41 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, "Петля [Алексеев]", seriesSugg[0].Title)
 	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
 	require.Equal(t, 1, seriesSugg[0].BookCount)
+
+	// ── YearStats: у Алексеева ровно 1 книга, у неё date_added есть →
+	// одна точка в гистограмме. Год — тот, что в фикстуре (см. test.inpx).
+	require.Len(t, a.YearStats, 1)
+	require.Equal(t, 1, a.YearStats[0].Count)
+	require.GreaterOrEqual(t, a.YearStats[0].Year, 2000)
+
+	// Series тоже — единственная книга, одна точка.
+	require.Len(t, s.YearStats, 1)
+	require.Equal(t, 1, s.YearStats[0].Count)
+
+	// ── ReadCount: без сигналов = 0; запишем read и повторно прочитаем.
+	require.Equal(t, 0, a.ReadCount)
+	require.Equal(t, 0, s.ReadCount)
+
+	// seed user + reads-record для единственной книги автора
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('catalog-stats@example.com', 'Stats User', 'x', 'user')
+		RETURNING id
+	`).Scan(&userID))
+	_, err = pool.Exec(ctx,
+		`INSERT INTO reads (user_id, book_id, updated_at) VALUES ($1, $2, now())`,
+		userID, a.Books[0].ID,
+	)
+	require.NoError(t, err)
+
+	a2, err := svc.GetAuthor(ctx, authorID, userID)
+	require.NoError(t, err)
+	require.Equal(t, 1, a2.ReadCount)
+
+	s2, err := svc.GetSeries(ctx, seriesID, userID)
+	require.NoError(t, err)
+	require.Equal(t, 1, s2.ReadCount)
 }
 
 // ── helpers (повтор из internal/books) ─────────────────────────

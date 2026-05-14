@@ -1,10 +1,13 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { ListOrdered } from 'lucide-react';
+import { BarChart3, ListOrdered } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { FavoriteButton } from '@/components/FavoriteButton';
-import { useSeries } from '@/lib/catalog';
+import { YearHistogram } from '@/components/YearHistogram';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { useSeries, type Series } from '@/lib/catalog';
 import { ApiError } from '@/lib/api';
 
 export function SeriesPage() {
@@ -63,6 +66,8 @@ export function SeriesPage() {
         </p>
       </header>
 
+      <SeriesStats series={s} />
+
       {s.books.length === 0 ? (
         <p className="text-sm text-muted-foreground">В серии пока ничего нет.</p>
       ) : (
@@ -75,6 +80,36 @@ export function SeriesPage() {
         </ul>
       )}
     </article>
+  );
+}
+
+// SeriesStats — симметрично AuthorStats. Прячется если нечего показать.
+function SeriesStats({ series }: { series: Series }) {
+  const years = series.year_stats ?? [];
+  const showHistogram = years.length >= 2;
+  const showProgress = (series.read_count ?? 0) > 0 && series.book_count > 0;
+  if (!showHistogram && !showProgress) return null;
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <BarChart3 className="size-4" aria-hidden /> Статистика
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-0">
+        {showProgress ? (
+          <ReadingProgress read={series.read_count ?? 0} total={series.book_count} />
+        ) : null}
+        {showHistogram ? (
+          <div className="space-y-1">
+            <div className="text-xs font-medium text-muted-foreground uppercase">
+              Добавлено по годам
+            </div>
+            <YearHistogram data={years} />
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 

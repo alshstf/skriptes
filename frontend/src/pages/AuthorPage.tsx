@@ -1,11 +1,13 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookOpen, ListOrdered } from 'lucide-react';
+import { BarChart3, BookOpen, ListOrdered } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { YearHistogram } from '@/components/YearHistogram';
+import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor } from '@/lib/catalog';
 import { ApiError } from '@/lib/api';
 
@@ -50,6 +52,8 @@ export function AuthorPage() {
           </div>
         ) : null}
       </header>
+
+      <AuthorStats author={a} />
 
       {a.series && a.series.length > 0 ? (
         <Card>
@@ -101,6 +105,39 @@ export function AuthorPage() {
         )}
       </section>
     </article>
+  );
+}
+
+// AuthorStats — блок "Статистика" над списком серий.
+// Прячется если ничего показать: нет year_stats и нет downloads.
+// Гистограмма скрывается отдельно если в распределении < 2 точек:
+// одинокий столбик ничего не сообщает.
+function AuthorStats({ author }: { author: import('@/lib/catalog').Author }) {
+  const years = author.year_stats ?? [];
+  const showHistogram = years.length >= 2;
+  const showProgress = (author.read_count ?? 0) > 0 && author.book_count > 0;
+  if (!showHistogram && !showProgress) return null;
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <BarChart3 className="size-4" aria-hidden /> Статистика
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-0">
+        {showProgress ? (
+          <ReadingProgress read={author.read_count ?? 0} total={author.book_count} />
+        ) : null}
+        {showHistogram ? (
+          <div className="space-y-1">
+            <div className="text-xs font-medium text-muted-foreground uppercase">
+              Добавлено по годам
+            </div>
+            <YearHistogram data={years} />
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 

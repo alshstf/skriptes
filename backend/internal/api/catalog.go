@@ -38,7 +38,14 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		a, err := d.Service.GetAuthor(ctx, id)
+
+		// userID нужен сервису для ReadCount; и параллельно для is_favorite.
+		var userID int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			userID = u.ID
+		}
+
+		a, err := d.Service.GetAuthor(ctx, id, userID)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "author not found"})
@@ -48,8 +55,8 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 			return
 		}
 		var isFav bool
-		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
-			if v, err := hist.Service.IsFavoriteAuthor(ctx, u.ID, id); err == nil {
+		if userID > 0 && hist.Service != nil {
+			if v, err := hist.Service.IsFavoriteAuthor(ctx, userID, id); err == nil {
 				isFav = v
 			}
 		}
@@ -66,7 +73,13 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		s, err := d.Service.GetSeries(ctx, id)
+
+		var userID int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			userID = u.ID
+		}
+
+		s, err := d.Service.GetSeries(ctx, id, userID)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "series not found"})
@@ -76,8 +89,8 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 			return
 		}
 		var isFav bool
-		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
-			if v, err := hist.Service.IsFavoriteSeries(ctx, u.ID, id); err == nil {
+		if userID > 0 && hist.Service != nil {
+			if v, err := hist.Service.IsFavoriteSeries(ctx, userID, id); err == nil {
 				isFav = v
 			}
 		}

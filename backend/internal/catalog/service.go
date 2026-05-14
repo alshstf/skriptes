@@ -31,10 +31,13 @@ func New(pool *pgxpool.Pool) *Service {
 //  3. топ-5 жанров (по числу книг этого автора в каждом)
 //  4. серии (по числу книг автора в каждой)
 //  5. до 50 последних книг (deleted скрыты, отсортированы по date_added desc)
+//  6. гистограмма по году добавления (year_stats)
+//  7. ReadCount — сколько книг этого автора уже скачивал пользователь;
+//     заполняется только если userID > 0.
 //
 // Каждый шаг — отдельный запрос; для 99% карточек это <10 ms total.
 // Если когда-то станет горячо — соберём в один CTE.
-func (s *Service) GetAuthor(ctx context.Context, id int64) (Author, error) {
+func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, error) {
 	var a Author
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, last_name, first_name, middle_name
@@ -76,12 +79,29 @@ func (s *Service) GetAuthor(ctx context.Context, id int64) (Author, error) {
 	}
 	a.Books = bookList
 
+	years, err := s.queryAuthorYearStats(ctx, id)
+	if err != nil {
+		return Author{}, err
+	}
+	a.YearStats = years
+
+	if userID > 0 {
+		read, err := s.queryAuthorReadCount(ctx, id, userID)
+		if err != nil {
+			return Author{}, err
+		}
+		a.ReadCount = read
+	}
+
 	return a, nil
 }
 
 // GetSeries возвращает серию + список её книг в порядке ser_no (затем title).
 // Удалённые книги скрыты — серия "висит" только пока в ней есть живые тома.
-func (s *Service) GetSeries(ctx context.Context, id int64) (Series, error) {
+//
+// Если userID > 0, дополнительно считается ReadCount (сколько книг серии
+// уже скачивал текущий пользователь). YearStats считаются всегда.
+func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, error) {
 	var (
 		out      Series
 		authorID pgtype.Int8
@@ -147,6 +167,21 @@ func (s *Service) GetSeries(ctx context.Context, id int64) (Series, error) {
 		return Series{}, err
 	}
 	out.BookCount = len(out.Books)
+
+	years, err := s.querySeriesYearStats(ctx, id)
+	if err != nil {
+		return Series{}, err
+	}
+	out.YearStats = years
+
+	if userID > 0 {
+		read, err := s.querySeriesReadCount(ctx, id, userID)
+		if err != nil {
+			return Series{}, err
+		}
+		out.ReadCount = read
+	}
+
 	return out, nil
 }
 
@@ -249,6 +284,92 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		out = append(out, b)
 	}
 	return out, rows.Err()
+}
+
+// queryAuthorYearStats — гистограмма по году добавления книг автора.
+// Использует date_added: это когда книга попала в нашу коллекцию,
+// а не год публикации (его мы пока из fb2 не парсим). Книги без
+// date_added отбрасываются — нет смысла рисовать столбик "Unknown".
+func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64) ([]YearCount, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT extract(year from b.date_added)::int AS year, count(*) AS cnt
+		FROM book_authors ba
+		JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		WHERE ba.author_id = $1 AND b.date_added IS NOT NULL
+		GROUP BY year
+		ORDER BY year
+	`, authorID)
+	if err != nil {
+		return nil, fmt.Errorf("query author year stats: %w", err)
+	}
+	defer rows.Close()
+	var out []YearCount
+	for rows.Next() {
+		var yc YearCount
+		if err := rows.Scan(&yc.Year, &yc.Count); err != nil {
+			return nil, err
+		}
+		out = append(out, yc)
+	}
+	return out, rows.Err()
+}
+
+// queryAuthorReadCount — DISTINCT-count книг автора, которые пользователь
+// хотя бы раз скачивал (reads.PK = (user_id, book_id), так что DISTINCT
+// тут de facto не нужен, но оставлен для семантической ясности).
+func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int64) (int, error) {
+	var n int
+	err := s.pool.QueryRow(ctx, `
+		SELECT count(*)
+		FROM book_authors ba
+		JOIN reads r ON r.book_id = ba.book_id
+		JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		WHERE ba.author_id = $1 AND r.user_id = $2
+	`, authorID, userID).Scan(&n)
+	if err != nil {
+		return 0, fmt.Errorf("query author read count: %w", err)
+	}
+	return n, nil
+}
+
+// querySeriesYearStats — то же самое для серии: распределение книг в
+// серии по году добавления.
+func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64) ([]YearCount, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT extract(year from b.date_added)::int AS year, count(*) AS cnt
+		FROM books b
+		WHERE b.series_id = $1 AND b.deleted = false AND b.date_added IS NOT NULL
+		GROUP BY year
+		ORDER BY year
+	`, seriesID)
+	if err != nil {
+		return nil, fmt.Errorf("query series year stats: %w", err)
+	}
+	defer rows.Close()
+	var out []YearCount
+	for rows.Next() {
+		var yc YearCount
+		if err := rows.Scan(&yc.Year, &yc.Count); err != nil {
+			return nil, err
+		}
+		out = append(out, yc)
+	}
+	return out, rows.Err()
+}
+
+// querySeriesReadCount — сколько книг серии уже скачивал пользователь.
+func (s *Service) querySeriesReadCount(ctx context.Context, seriesID, userID int64) (int, error) {
+	var n int
+	err := s.pool.QueryRow(ctx, `
+		SELECT count(*)
+		FROM books b
+		JOIN reads r ON r.book_id = b.id
+		WHERE b.series_id = $1 AND b.deleted = false AND r.user_id = $2
+	`, seriesID, userID).Scan(&n)
+	if err != nil {
+		return 0, fmt.Errorf("query series read count: %w", err)
+	}
+	return n, nil
 }
 
 func fullName(last, first, middle string) string {
