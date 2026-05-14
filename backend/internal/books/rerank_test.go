@@ -12,18 +12,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestService_PersonaReranking — реальный сценарий:
+// TestService_RerankOnlyOnQuery — два сценария в одном тесте:
 //
-//  1. Импортируем фикстуру (19 книг, разные авторы).
-//  2. Создаём пользователя; вызываем List без персонализации — запоминаем
-//     порядок (это базовая meili-выдача).
-//  3. Подписываем пользователя на конкретного автора (favorite_authors).
-//  4. Вызываем List(UserID=...) — ожидаем, что книги этого автора
-//     поднялись наверх.
-//
-// Это не unit-тест ранкера в изоляции, а проверка цепочки целиком: что
-// persona-сигнал докатывается до Meili-результата и переупорядочивает его.
-func TestService_PersonaReranking(t *testing.T) {
+//  1. Пустой query (главная страница /books): re-rank НЕ применяется.
+//     Желание пользователя — стабильный порядок на главной, одинаковый
+//     у всех пользователей. Проверяем что результат с UserID совпадает
+//     с результатом без UserID.
+//  2. Текстовый запрос (search): re-rank применяется, и книга подписанного
+//     автора поднимается на первое место выдачи.
+func TestService_RerankOnlyOnQuery(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")
 	}
@@ -42,7 +39,6 @@ func TestService_PersonaReranking(t *testing.T) {
 	historySvc := history.New(pool)
 	svc := books.New(pool, mgr, historySvc)
 
-	// seed user
 	var userID int64
 	require.NoError(t, pool.QueryRow(ctx, `
 		INSERT INTO users (email, display_name, password_hash, role)
@@ -50,65 +46,121 @@ func TestService_PersonaReranking(t *testing.T) {
 		RETURNING id
 	`).Scan(&userID))
 
-	// База без персонализации.
-	baseline, err := svc.List(ctx, books.ListParams{Limit: 20})
-	require.NoError(t, err)
-	require.NotEmpty(t, baseline.Items)
+	// "Алек" в фикстуре матчит сразу несколько книг (Алексеев Евгений
+	// и Алексеева Адель) — Meili ищет по searchableAttributes
+	// title + authors + series, поэтому фамилия автора найдётся.
+	const query = "Алек"
 
-	// Берём автора, который НЕ оказался на первой позиции baseline.
-	// Иначе тест не покажет эффект буста.
+	// Берём первого автора, чьи книги попали в search-выдачу,
+	// и который НЕ совпадает с автором, который сейчас на первом месте.
+	baseline, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10})
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(baseline.Items), 2,
+		"для теста нужны как минимум 2 книги — иначе re-rank ничего не поменяет")
+
+	topAuthorIDs := baseline.Items[0].AuthorIDs
+	require.NotEmpty(t, topAuthorIDs)
+
 	var targetAuthorID int64
-	var targetAuthorBooks int
-	for _, item := range baseline.Items {
-		if len(item.AuthorIDs) == 0 {
-			continue
-		}
-		// сколько книг этого автора в индексе?
-		var cnt int
-		require.NoError(t, pool.QueryRow(ctx,
-			`SELECT count(*) FROM book_authors WHERE author_id = $1`, item.AuthorIDs[0],
-		).Scan(&cnt))
-		if cnt >= 1 {
-			targetAuthorID = item.AuthorIDs[0]
-			targetAuthorBooks = cnt
-			break
-		}
-	}
-	require.NotZero(t, targetAuthorID, "должны найти автора с книгой в индексе")
-
-	// Подписываемся.
-	require.NoError(t, historySvc.AddFavoriteAuthor(ctx, userID, targetAuthorID))
-
-	// Запрос с userID — re-rank должен задействоваться (offset=0, нет Sort,
-	// нет AuthorID-фильтра).
-	personal, err := svc.List(ctx, books.ListParams{Limit: 20, UserID: userID})
-	require.NoError(t, err)
-	require.NotEmpty(t, personal.Items)
-
-	// Главное утверждение: на самом верху должен оказаться хотя бы один
-	// "наш" автор. У бейслайна — не обязательно (Meili по дефолту даёт
-	// другой порядок при пустом query).
-	topAuthorIDs := personal.Items[0].AuthorIDs
-	require.Contains(t, topAuthorIDs, targetAuthorID,
-		"после подписки книга любимого автора должна выйти на первое место (но %d книг автора)", targetAuthorBooks)
-
-	// И в первых N результатах книг этого автора должно быть НЕ МЕНЬШЕ
-	// чем без персонализации — даже если их было одинаково, порядок изменился.
-	got := countWithAuthor(personal.Items, targetAuthorID)
-	base := countWithAuthor(baseline.Items, targetAuthorID)
-	require.GreaterOrEqual(t, got, base,
-		"число книг любимого автора в топ-20 не должно уменьшиться (base=%d, personal=%d)", base, got)
-}
-
-func countWithAuthor(items []books.ListItem, authorID int64) int {
-	n := 0
-	for _, it := range items {
-		for _, a := range it.AuthorIDs {
-			if a == authorID {
-				n++
+	for _, item := range baseline.Items[1:] {
+		for _, aid := range item.AuthorIDs {
+			if !containsID(topAuthorIDs, aid) {
+				targetAuthorID = aid
 				break
 			}
 		}
+		if targetAuthorID != 0 {
+			break
+		}
 	}
-	return n
+	require.NotZero(t, targetAuthorID,
+		"нужен автор не из верхушки baseline — иначе тест не покажет эффект буста")
+
+	require.NoError(t, historySvc.AddFavoriteAuthor(ctx, userID, targetAuthorID))
+
+	// --- Сценарий 1: search с UserID → должен сработать re-rank.
+	personal, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10, UserID: userID})
+	require.NoError(t, err)
+	require.NotEmpty(t, personal.Items)
+	require.Contains(t, personal.Items[0].AuthorIDs, targetAuthorID,
+		"после подписки книга любимого автора должна быть на первой позиции при текстовом поиске")
+
+	// --- Сценарий 2: пустой query с UserID → re-rank НЕ применяется.
+	// Берём top-3 без UserID и с UserID — порядок должен совпадать.
+	plain, err := svc.List(ctx, books.ListParams{Limit: 10})
+	require.NoError(t, err)
+	withUser, err := svc.List(ctx, books.ListParams{Limit: 10, UserID: userID})
+	require.NoError(t, err)
+	require.Equal(t, len(plain.Items), len(withUser.Items))
+	for i := range plain.Items {
+		require.Equal(t, plain.Items[i].ID, withUser.Items[i].ID,
+			"на пустом query /books должен быть стабильный список — не должен меняться при наличии UserID (i=%d)", i)
+	}
+}
+
+// TestService_SuggestRerank — palette typeahead тоже должен учитывать
+// подписки: книги любимого автора всплывают наверх top-5.
+func TestService_SuggestRerank(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startPostgres(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, _ := filepath.Abs(fixtureINPX)
+	_, err := imp.Run(ctx, abs)
+	require.NoError(t, err)
+
+	historySvc := history.New(pool)
+	svc := books.New(pool, mgr, historySvc)
+
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('palette@example.com', 'Palette User', 'x', 'user')
+		RETURNING id
+	`).Scan(&userID))
+
+	const query = "Алек"
+
+	baseline, err := svc.Suggest(ctx, query, 5, 0)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(baseline), 2)
+
+	// Цель — автор не из верхушки.
+	topAuthorIDs := baseline[0].AuthorIDs
+	var targetAuthorID int64
+	for _, item := range baseline[1:] {
+		for _, aid := range item.AuthorIDs {
+			if !containsID(topAuthorIDs, aid) {
+				targetAuthorID = aid
+				break
+			}
+		}
+		if targetAuthorID != 0 {
+			break
+		}
+	}
+	require.NotZero(t, targetAuthorID)
+
+	require.NoError(t, historySvc.AddFavoriteAuthor(ctx, userID, targetAuthorID))
+
+	personal, err := svc.Suggest(ctx, query, 5, userID)
+	require.NoError(t, err)
+	require.NotEmpty(t, personal)
+	require.Contains(t, personal[0].AuthorIDs, targetAuthorID,
+		"Suggest должен поднять книгу любимого автора в палитре поиска")
+}
+
+func containsID(s []int64, x int64) bool {
+	for _, v := range s {
+		if v == x {
+			return true
+		}
+	}
+	return false
 }

@@ -57,10 +57,13 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 
 	// Решаем, применяем ли re-ranking. Условия:
 	//   - есть PersonaSource и UserID > 0;
+	//   - есть текстовый запрос — re-rank только в search-сценарии;
+	//     на "пустом" /books пользователь ожидает стабильный список,
+	//     а не индивидуальный для каждого пользователя;
 	//   - первая страница (offset == 0) — пагинированный re-rank путает;
 	//   - пользователь не задал явную сортировку (Sort пустой);
 	//   - нет фильтров по конкретному автору/серии (там и так одна группа).
-	rerank := s.persona != nil && params.UserID > 0 &&
+	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
 
 	// Расширяем окно meili-запроса при rerank: получаем ~3*limit (capped 50)
@@ -290,27 +293,68 @@ func decodeFacets(raw json.RawMessage) map[string]map[string]int64 {
 }
 
 // Suggest — компактный typeahead по индексу books.
-// Возвращает срезанный набор ListItem (без total/pagination), в порядке,
-// который Meili даёт по умолчанию (с учётом ranking rules + popularity).
+// Возвращает срезанный набор ListItem (без total/pagination).
+//
+// Если userID > 0 и есть PersonaSource — применяется тот же
+// персонализированный re-ranking, что и в List: книги любимых
+// авторов/серий поднимаются наверх. В палитре поиска (Cmd+K) это
+// особенно ценно, потому что показывается только top-5.
+//
 // Если meili не сконфигурирован — пустой срез без ошибки (для unit-тестов).
-func (s *Service) Suggest(ctx context.Context, query string, limit int) ([]ListItem, error) {
+func (s *Service) Suggest(ctx context.Context, query string, limit int, userID int64) ([]ListItem, error) {
 	if s.meili == nil || strings.TrimSpace(query) == "" {
 		return []ListItem{}, nil
 	}
 	limit = clampInt(limit, 1, 20, 5)
+	rerank := s.persona != nil && userID > 0
+
+	meiliLimit := int64(limit)
+	if rerank {
+		// То же расширение окна, что и в List, но более скромное —
+		// палитра редко отдаёт больше 5-10 строк.
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 20 {
+			meiliLimit = 20
+		}
+	}
+
 	res, err := s.meili.Index("books").SearchWithContext(ctx, query, &meilisearch.SearchRequest{
-		Limit: int64(limit),
+		Limit:            meiliLimit,
+		ShowRankingScore: rerank,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("meili search: %w", err)
 	}
-	out := make([]ListItem, 0, len(res.Hits))
+
+	scored := make([]scoredItem, 0, len(res.Hits))
 	for _, h := range res.Hits {
 		var item ListItem
 		if err := h.DecodeInto(&item); err != nil {
 			continue
 		}
-		out = append(out, item)
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: item, base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, userID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	out := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		out = append(out, sc.item)
 	}
 	return out, nil
 }

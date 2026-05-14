@@ -57,6 +57,14 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps) http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
 		defer cancel()
 
+		// userID — для персонализации книг в палитре поиска.
+		// Если запрос пришёл от незалогиненного клиента, userID останется
+		// нулевым и Suggest вернёт результаты в стандартном meili-порядке.
+		var userID int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			userID = u.ID
+		}
+
 		var (
 			bookItems   []books.ListItem
 			authorItems []catalog.AuthorSuggest
@@ -70,7 +78,7 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps) http.HandlerFunc {
 			if bd.Service == nil {
 				return
 			}
-			items, err := bd.Service.Suggest(ctx, q, limit)
+			items, err := bd.Service.Suggest(ctx, q, limit, userID)
 			if err == nil {
 				bookItems = items
 			}
