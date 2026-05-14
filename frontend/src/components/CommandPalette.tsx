@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { BookIcon, UserIcon, LayersIcon, SearchIcon } from 'lucide-react';
+import { BookIcon, UserIcon, LayersIcon, SearchIcon, Star } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -103,7 +103,7 @@ export function CommandPalette() {
                       onSelect={() => go(`/books/${b.id}`)}
                     >
                       <BookIcon aria-hidden />
-                      <div className="flex min-w-0 flex-col">
+                      <div className="flex min-w-0 flex-col flex-1">
                         <span className="truncate">{b.title}</span>
                         {b.authors?.length ? (
                           <span className="truncate text-xs text-muted-foreground">
@@ -113,6 +113,7 @@ export function CommandPalette() {
                           </span>
                         ) : null}
                       </div>
+                      <FavoriteMark show={!!b.is_favorite} />
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -129,12 +130,13 @@ export function CommandPalette() {
                         onSelect={() => go(`/authors/${a.id}`)}
                       >
                         <UserIcon aria-hidden />
-                        <div className="flex min-w-0 flex-col">
+                        <div className="flex min-w-0 flex-col flex-1">
                           <span className="truncate">{a.full_name}</span>
                           <span className="truncate text-xs text-muted-foreground">
                             {a.book_count} {pluralBooks(a.book_count)}
                           </span>
                         </div>
+                        <FavoriteMark show={!!a.is_favorite} />
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -154,13 +156,14 @@ export function CommandPalette() {
                         onSelect={() => go(`/series/${s.id}`)}
                       >
                         <LayersIcon aria-hidden />
-                        <div className="flex min-w-0 flex-col">
+                        <div className="flex min-w-0 flex-col flex-1">
                           <span className="truncate">{s.title}</span>
                           <span className="truncate text-xs text-muted-foreground">
                             {s.author_name ? `${s.author_name} · ` : ''}
                             {s.book_count} {pluralBooks(s.book_count)}
                           </span>
                         </div>
+                        <FavoriteMark show={!!s.is_favorite} />
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -171,6 +174,19 @@ export function CommandPalette() {
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+// FavoriteMark — маленькая звёздочка справа от элемента палитры,
+// рендерится только если is_favorite. Заполненная жёлтая — тот же
+// визуальный язык, что и в FavoriteButton'е на карточках.
+function FavoriteMark({ show }: { show: boolean }) {
+  if (!show) return null;
+  return (
+    <Star
+      className="ml-2 size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500"
+      aria-label="В избранном"
+    />
   );
 }
 

@@ -10,6 +10,7 @@ export type BookListItem = {
   year?: number;
   lang?: string;
   lib_id: string;
+  is_favorite?: boolean;
 };
 
 export type FacetDistribution = Record<string, Record<string, number>>;

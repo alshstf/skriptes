@@ -46,6 +46,10 @@ type ListItem struct {
 	Year      *int     `json:"year,omitempty"`
 	Lang      string   `json:"lang,omitempty"`
 	LibID     string   `json:"lib_id"`
+	// IsFavorite — user-specific флаг "книга в избранном текущего
+	// пользователя". Заполняется не в books-сервисе (он user-agnostic),
+	// а в api-handler'ах, которые знают про сессию.
+	IsFavorite bool `json:"is_favorite,omitempty"`
 }
 
 // ListResponse — обёртка для GET /api/books.

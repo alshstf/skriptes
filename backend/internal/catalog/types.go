@@ -35,10 +35,13 @@ type SeriesWithCount struct {
 }
 
 // AuthorSuggest — строка в typeahead-выдаче авторов.
+// IsFavorite — заполняется api-handler'ом, не сервисом catalog
+// (он не знает про user-сессию).
 type AuthorSuggest struct {
-	ID        int64  `json:"id"`
-	FullName  string `json:"full_name"`
-	BookCount int    `json:"book_count"`
+	ID         int64  `json:"id"`
+	FullName   string `json:"full_name"`
+	BookCount  int    `json:"book_count"`
+	IsFavorite bool   `json:"is_favorite,omitempty"`
 }
 
 // SeriesSuggest — строка в typeahead-выдаче серий.
@@ -48,6 +51,7 @@ type SeriesSuggest struct {
 	Title      string `json:"title"`
 	AuthorName string `json:"author_name,omitempty"`
 	BookCount  int    `json:"book_count"`
+	IsFavorite bool   `json:"is_favorite,omitempty"`
 }
 
 // Series — детальная карточка серии (GET /api/series/:id).

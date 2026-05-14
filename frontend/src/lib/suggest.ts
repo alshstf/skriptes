@@ -6,6 +6,7 @@ export type AuthorSuggest = {
   id: number;
   full_name: string;
   book_count: number;
+  is_favorite?: boolean;
 };
 
 export type SeriesSuggest = {
@@ -13,6 +14,7 @@ export type SeriesSuggest = {
   title: string;
   author_name?: string;
   book_count: number;
+  is_favorite?: boolean;
 };
 
 export type SuggestResponse = {
