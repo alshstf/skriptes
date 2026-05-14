@@ -31,17 +31,21 @@ type GenreRef struct {
 }
 
 // ListItem — строка в /api/books (приходит из Meilisearch).
-// Сознательно компактная — для списка авторы и жанры нужны как массивы строк,
-// клики уходят в детальную карточку.
+//
+// AuthorIDs / SeriesID — нужны для двух вещей:
+//   - персонализированный re-ranking (см. internal/history.PersonaProfile);
+//   - clickable-имена в списке книг на фронте (без отдельного запроса).
 type ListItem struct {
-	ID      int64    `json:"id"`
-	Title   string   `json:"title"`
-	Authors []string `json:"authors"`
-	Series  string   `json:"series,omitempty"`
-	Genres  []string `json:"genres,omitempty"`
-	Year    *int     `json:"year,omitempty"`
-	Lang    string   `json:"lang,omitempty"`
-	LibID   string   `json:"lib_id"`
+	ID        int64    `json:"id"`
+	Title     string   `json:"title"`
+	Authors   []string `json:"authors"`
+	AuthorIDs []int64  `json:"author_ids,omitempty"`
+	Series    string   `json:"series,omitempty"`
+	SeriesID  *int64   `json:"series_id,omitempty"`
+	Genres    []string `json:"genres,omitempty"`
+	Year      *int     `json:"year,omitempty"`
+	Lang      string   `json:"lang,omitempty"`
+	LibID     string   `json:"lib_id"`
 }
 
 // ListResponse — обёртка для GET /api/books.
@@ -99,4 +103,10 @@ type ListParams struct {
 	AuthorID int64
 	Sort     string
 	Facets   []string // запрашиваемые распределения; например ["genres","lang","year"]
+
+	// UserID — если >0 и не задан Sort/AuthorID/SeriesID, выдача пере-
+	// сортировывается персонализированным re-ranking'ом (см. List).
+	// Пагинация: re-rank применяется ТОЛЬКО к первой странице (offset==0),
+	// чтобы не путать пользователя при листании.
+	UserID int64
 }

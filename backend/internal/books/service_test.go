@@ -45,7 +45,7 @@ func TestService_ListAndGet(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 19, stats.BooksInserted)
 
-	svc := books.New(pool, mgr)
+	svc := books.New(pool, mgr, nil) // existing assertions не зависят от persona
 
 	// ── List без query: должно вернуться 18 (минус DEL=1)
 	res, err := svc.List(ctx, books.ListParams{Limit: 50})

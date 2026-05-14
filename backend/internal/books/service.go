@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -12,21 +13,32 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
 // ErrNotFound возвращается из Get когда книги с таким id нет (или она удалена).
 var ErrNotFound = errors.New("book not found")
 
+// PersonaSource — узкий контракт для персонализированного re-ranking'а.
+// Реализуется *history.Service. Объявлен интерфейсом чтобы unit-тестам
+// можно было подсовывать заглушки, а main-wiring пока остаётся тривиальным.
+type PersonaSource interface {
+	PersonaProfile(ctx context.Context, userID int64) (history.PersonaProfile, error)
+}
+
 // Service — read-side сервис каталога книг.
 type Service struct {
-	pool  *pgxpool.Pool
-	meili meilisearch.ServiceManager
+	pool    *pgxpool.Pool
+	meili   meilisearch.ServiceManager
+	persona PersonaSource
 }
 
 // New собирает Service. meili может быть nil — тогда List вернёт пустой
 // результат вместо ошибки (полезно для unit-тестов handlers без Meili).
-func New(pool *pgxpool.Pool, meili meilisearch.ServiceManager) *Service {
-	return &Service{pool: pool, meili: meili}
+// persona может быть nil — тогда персонализация не применяется
+// (List вернёт результаты в meili-порядке).
+func New(pool *pgxpool.Pool, meili meilisearch.ServiceManager, persona PersonaSource) *Service {
+	return &Service{pool: pool, meili: meili, persona: persona}
 }
 
 // List — поиск книг через Meilisearch с фильтрами, сортировкой и facets.
@@ -43,15 +55,34 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	limit := clampInt(params.Limit, 1, 100, 20)
 	offset := clampInt(params.Offset, 0, 10_000, 0)
 
+	// Решаем, применяем ли re-ranking. Условия:
+	//   - есть PersonaSource и UserID > 0;
+	//   - первая страница (offset == 0) — пагинированный re-rank путает;
+	//   - пользователь не задал явную сортировку (Sort пустой);
+	//   - нет фильтров по конкретному автору/серии (там и так одна группа).
+	rerank := s.persona != nil && params.UserID > 0 &&
+		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
+
+	// Расширяем окно meili-запроса при rerank: получаем ~3*limit (capped 50)
+	// чтобы было что переупорядочивать; вернём всё равно limit.
+	meiliLimit := int64(limit)
+	if rerank {
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 50 {
+			meiliLimit = 50
+		}
+	}
+
 	req := &meilisearch.SearchRequest{
-		Limit:  int64(limit),
-		Offset: int64(offset),
+		Limit:            meiliLimit,
+		Offset:           int64(offset),
+		ShowRankingScore: rerank,
 	}
 	if f := buildFilter(params); f != "" {
 		req.Filter = f
 	}
-	if sort := buildSort(params.Sort); len(sort) > 0 {
-		req.Sort = sort
+	if sortRules := buildSort(params.Sort); len(sortRules) > 0 {
+		req.Sort = sortRules
 	}
 	if len(params.Facets) > 0 {
 		req.Facets = params.Facets
@@ -62,16 +93,35 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		return ListResponse{}, fmt.Errorf("meili search: %w", err)
 	}
 
-	// JSON-теги ListItem совпадают со структурой docs из importer.bookDoc,
-	// поэтому декодируем прямо в неё. Битые hits пропускаем (без падения
-	// всего запроса) — лучше отдать частичный результат, чем 502.
-	items := make([]ListItem, 0, len(res.Hits))
+	scored := make([]scoredItem, 0, len(res.Hits))
 	for _, h := range res.Hits {
 		var item ListItem
 		if err := h.DecodeInto(&item); err != nil {
 			continue
 		}
-		items = append(items, item)
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: item, base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	items := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		items = append(items, sc.item)
 	}
 
 	total := res.EstimatedTotalHits
@@ -87,6 +137,84 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		ProcessTime: res.ProcessingTimeMs,
 		Facets:      decodeFacets(res.FacetDistribution),
 	}, nil
+}
+
+// ── Re-ranking ──────────────────────────────────────────────────
+
+// scoredItem — Item + базовый score из Meili (если включали ShowRankingScore)
+// + persona-бонус. final = base + personal.
+type scoredItem struct {
+	item     ListItem
+	base     float64
+	personal float64
+}
+
+// Коэффициенты бонусов. Подобраны так, чтобы:
+//   - подписка на автора/серию давала ощутимый, но не подавляющий буст
+//     (Meili score в [0,1], так что 0.5 примерно равно "очень релевантному" хиту);
+//   - агрегированная активность капалась, чтобы один супер-частый автор
+//     не съел всю выдачу.
+const (
+	bonusFavoriteAuthor = 0.5
+	bonusFavoriteSeries = 0.4
+
+	// activityScale переводит "сумма весов из views+reads" в бонус.
+	// Один read = 3.0 → activityScale*3 = 0.03 — небольшой буст,
+	// 10 reads → 0.3 (примерно как полу-избранное).
+	authorActivityScale = 0.01
+	seriesActivityScale = 0.01
+	genreActivityScale  = 0.005
+
+	// Капы на каждый тип сигнала — чтобы топ-1 автор не доминировал.
+	authorActivityCap = 0.4
+	seriesActivityCap = 0.4
+	genreActivityCap  = 0.2
+)
+
+func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
+	for i := range scored {
+		it := scored[i].item
+		bonus := 0.0
+		for _, aid := range it.AuthorIDs {
+			if _, ok := p.FavoriteAuthors[aid]; ok {
+				bonus += bonusFavoriteAuthor
+			}
+			if w, ok := p.AuthorActivity[aid]; ok {
+				bonus += capFloat(w*authorActivityScale, authorActivityCap)
+			}
+		}
+		if it.SeriesID != nil {
+			sid := *it.SeriesID
+			if _, ok := p.FavoriteSeries[sid]; ok {
+				bonus += bonusFavoriteSeries
+			}
+			if w, ok := p.SeriesActivity[sid]; ok {
+				bonus += capFloat(w*seriesActivityScale, seriesActivityCap)
+			}
+		}
+		for _, g := range it.Genres {
+			if w, ok := p.GenreActivity[g]; ok {
+				bonus += capFloat(w*genreActivityScale, genreActivityCap)
+			}
+		}
+		scored[i].personal = bonus
+	}
+}
+
+// sortByFinalScore — стабильная сортировка по убыванию (base+personal),
+// сохраняет порядок Meili при равных score. Стабильность важна: если
+// у двух хитов нет бонусов, они должны остаться в meili-порядке.
+func sortByFinalScore(scored []scoredItem) {
+	sort.SliceStable(scored, func(i, j int) bool {
+		return (scored[i].base + scored[i].personal) > (scored[j].base + scored[j].personal)
+	})
+}
+
+func capFloat(v, max float64) float64 {
+	if v > max {
+		return max
+	}
+	return v
 }
 
 // buildFilter — собирает meili filter-expression из ListParams.
