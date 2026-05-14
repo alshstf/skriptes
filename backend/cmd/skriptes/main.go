@@ -68,9 +68,9 @@ func run() error {
 	go runStartupImport(ctx(), pool, meili, cfg.InpxRoot, logger)
 
 	authSvc := auth.New(pool, 0)
-	booksSvc := books.New(pool, meili)
 	catalogSvc := catalog.New(pool)
 	historySvc := history.New(pool)
+	booksSvc := books.New(pool, meili, historySvc)
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
 	if err != nil {

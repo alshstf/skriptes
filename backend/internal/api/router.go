@@ -57,7 +57,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/books/{id}", handleGetBook(d.Books, d.History))
 				}
 				if d.Books.Service != nil || d.Catalog.Service != nil {
-					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog))
+					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog, d.History))
 				}
 				if d.Download.Books != nil && d.Download.Converter != nil {
 					r.Get("/books/{id}/download", handleDownload(d.Download, d.History))

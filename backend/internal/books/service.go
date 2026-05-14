@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -12,21 +13,32 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
 // ErrNotFound возвращается из Get когда книги с таким id нет (или она удалена).
 var ErrNotFound = errors.New("book not found")
 
+// PersonaSource — узкий контракт для персонализированного re-ranking'а.
+// Реализуется *history.Service. Объявлен интерфейсом чтобы unit-тестам
+// можно было подсовывать заглушки, а main-wiring пока остаётся тривиальным.
+type PersonaSource interface {
+	PersonaProfile(ctx context.Context, userID int64) (history.PersonaProfile, error)
+}
+
 // Service — read-side сервис каталога книг.
 type Service struct {
-	pool  *pgxpool.Pool
-	meili meilisearch.ServiceManager
+	pool    *pgxpool.Pool
+	meili   meilisearch.ServiceManager
+	persona PersonaSource
 }
 
 // New собирает Service. meili может быть nil — тогда List вернёт пустой
 // результат вместо ошибки (полезно для unit-тестов handlers без Meili).
-func New(pool *pgxpool.Pool, meili meilisearch.ServiceManager) *Service {
-	return &Service{pool: pool, meili: meili}
+// persona может быть nil — тогда персонализация не применяется
+// (List вернёт результаты в meili-порядке).
+func New(pool *pgxpool.Pool, meili meilisearch.ServiceManager, persona PersonaSource) *Service {
+	return &Service{pool: pool, meili: meili, persona: persona}
 }
 
 // List — поиск книг через Meilisearch с фильтрами, сортировкой и facets.
@@ -43,15 +55,37 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	limit := clampInt(params.Limit, 1, 100, 20)
 	offset := clampInt(params.Offset, 0, 10_000, 0)
 
+	// Решаем, применяем ли re-ranking. Условия:
+	//   - есть PersonaSource и UserID > 0;
+	//   - есть текстовый запрос — re-rank только в search-сценарии;
+	//     на "пустом" /books пользователь ожидает стабильный список,
+	//     а не индивидуальный для каждого пользователя;
+	//   - первая страница (offset == 0) — пагинированный re-rank путает;
+	//   - пользователь не задал явную сортировку (Sort пустой);
+	//   - нет фильтров по конкретному автору/серии (там и так одна группа).
+	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
+		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
+
+	// Расширяем окно meili-запроса при rerank: получаем ~3*limit (capped 50)
+	// чтобы было что переупорядочивать; вернём всё равно limit.
+	meiliLimit := int64(limit)
+	if rerank {
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 50 {
+			meiliLimit = 50
+		}
+	}
+
 	req := &meilisearch.SearchRequest{
-		Limit:  int64(limit),
-		Offset: int64(offset),
+		Limit:            meiliLimit,
+		Offset:           int64(offset),
+		ShowRankingScore: rerank,
 	}
 	if f := buildFilter(params); f != "" {
 		req.Filter = f
 	}
-	if sort := buildSort(params.Sort); len(sort) > 0 {
-		req.Sort = sort
+	if sortRules := buildSort(params.Sort); len(sortRules) > 0 {
+		req.Sort = sortRules
 	}
 	if len(params.Facets) > 0 {
 		req.Facets = params.Facets
@@ -62,16 +96,35 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		return ListResponse{}, fmt.Errorf("meili search: %w", err)
 	}
 
-	// JSON-теги ListItem совпадают со структурой docs из importer.bookDoc,
-	// поэтому декодируем прямо в неё. Битые hits пропускаем (без падения
-	// всего запроса) — лучше отдать частичный результат, чем 502.
-	items := make([]ListItem, 0, len(res.Hits))
+	scored := make([]scoredItem, 0, len(res.Hits))
 	for _, h := range res.Hits {
 		var item ListItem
 		if err := h.DecodeInto(&item); err != nil {
 			continue
 		}
-		items = append(items, item)
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: item, base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	items := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		items = append(items, sc.item)
 	}
 
 	total := res.EstimatedTotalHits
@@ -87,6 +140,105 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		ProcessTime: res.ProcessingTimeMs,
 		Facets:      decodeFacets(res.FacetDistribution),
 	}, nil
+}
+
+// ── Re-ranking ──────────────────────────────────────────────────
+
+// scoredItem — Item + базовый score из Meili (если включали ShowRankingScore)
+// + persona-бонус. final = base + personal.
+type scoredItem struct {
+	item     ListItem
+	base     float64
+	personal float64
+}
+
+// Коэффициенты бонусов. Подобраны под Meili-_rankingScore в [0,1]:
+// мы хотим, чтобы прямые персональные сигналы (избранная книга,
+// автор, серия) могли уверенно перевесить разницу в релевантности.
+//
+// Иерархия по силе:
+//
+//	favorite_book   (0.6)   — самый сильный: пользователь явно сказал «хочу»
+//	favorite_author (0.5)   — почти такой же, но даёт буст ВСЕМ книгам автора
+//	favorite_series (0.4)   — аналогично для серии
+//	per-book activity       — view = 0.1, read = 0.3, cap 0.5 (просмотрел → ещё раз нужна)
+//	author/series activity  — сильно ниже: лишь намёк, что "похоже на интересы"
+//	genre activity          — самый слабый: жанры пересекаются у многого
+const (
+	bonusFavoriteBook   = 0.6
+	bonusFavoriteAuthor = 0.5
+	bonusFavoriteSeries = 0.4
+
+	// bookActivityScale — на каждую единицу веса в BookActivity. View=1
+	// → +0.1, read=3 → +0.3. Этот буст применяется К САМОЙ книге, поэтому
+	// он должен быть заметным: после открытия карточки книга должна
+	// уверенно подниматься на повторном поиске.
+	bookActivityScale = 0.1
+	bookActivityCap   = 0.5
+
+	// Activity по авторам/сериям/жанрам — заметно слабее: это "похожее",
+	// а не "то же самое".
+	authorActivityScale = 0.05
+	authorActivityCap   = 0.4
+	seriesActivityScale = 0.05
+	seriesActivityCap   = 0.4
+	genreActivityScale  = 0.02
+	genreActivityCap    = 0.2
+)
+
+func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
+	for i := range scored {
+		it := scored[i].item
+		bonus := 0.0
+
+		// Прямой book-level сигнал — самый сильный.
+		if _, ok := p.FavoriteBooks[it.ID]; ok {
+			bonus += bonusFavoriteBook
+		}
+		if w, ok := p.BookActivity[it.ID]; ok {
+			bonus += capFloat(w*bookActivityScale, bookActivityCap)
+		}
+
+		for _, aid := range it.AuthorIDs {
+			if _, ok := p.FavoriteAuthors[aid]; ok {
+				bonus += bonusFavoriteAuthor
+			}
+			if w, ok := p.AuthorActivity[aid]; ok {
+				bonus += capFloat(w*authorActivityScale, authorActivityCap)
+			}
+		}
+		if it.SeriesID != nil {
+			sid := *it.SeriesID
+			if _, ok := p.FavoriteSeries[sid]; ok {
+				bonus += bonusFavoriteSeries
+			}
+			if w, ok := p.SeriesActivity[sid]; ok {
+				bonus += capFloat(w*seriesActivityScale, seriesActivityCap)
+			}
+		}
+		for _, g := range it.Genres {
+			if w, ok := p.GenreActivity[g]; ok {
+				bonus += capFloat(w*genreActivityScale, genreActivityCap)
+			}
+		}
+		scored[i].personal = bonus
+	}
+}
+
+// sortByFinalScore — стабильная сортировка по убыванию (base+personal),
+// сохраняет порядок Meili при равных score. Стабильность важна: если
+// у двух хитов нет бонусов, они должны остаться в meili-порядке.
+func sortByFinalScore(scored []scoredItem) {
+	sort.SliceStable(scored, func(i, j int) bool {
+		return (scored[i].base + scored[i].personal) > (scored[j].base + scored[j].personal)
+	})
+}
+
+func capFloat(v, max float64) float64 {
+	if v > max {
+		return max
+	}
+	return v
 }
 
 // buildFilter — собирает meili filter-expression из ListParams.
@@ -162,27 +314,68 @@ func decodeFacets(raw json.RawMessage) map[string]map[string]int64 {
 }
 
 // Suggest — компактный typeahead по индексу books.
-// Возвращает срезанный набор ListItem (без total/pagination), в порядке,
-// который Meili даёт по умолчанию (с учётом ranking rules + popularity).
+// Возвращает срезанный набор ListItem (без total/pagination).
+//
+// Если userID > 0 и есть PersonaSource — применяется тот же
+// персонализированный re-ranking, что и в List: книги любимых
+// авторов/серий поднимаются наверх. В палитре поиска (Cmd+K) это
+// особенно ценно, потому что показывается только top-5.
+//
 // Если meili не сконфигурирован — пустой срез без ошибки (для unit-тестов).
-func (s *Service) Suggest(ctx context.Context, query string, limit int) ([]ListItem, error) {
+func (s *Service) Suggest(ctx context.Context, query string, limit int, userID int64) ([]ListItem, error) {
 	if s.meili == nil || strings.TrimSpace(query) == "" {
 		return []ListItem{}, nil
 	}
 	limit = clampInt(limit, 1, 20, 5)
+	rerank := s.persona != nil && userID > 0
+
+	meiliLimit := int64(limit)
+	if rerank {
+		// То же расширение окна, что и в List, но более скромное —
+		// палитра редко отдаёт больше 5-10 строк.
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 20 {
+			meiliLimit = 20
+		}
+	}
+
 	res, err := s.meili.Index("books").SearchWithContext(ctx, query, &meilisearch.SearchRequest{
-		Limit: int64(limit),
+		Limit:            meiliLimit,
+		ShowRankingScore: rerank,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("meili search: %w", err)
 	}
-	out := make([]ListItem, 0, len(res.Hits))
+
+	scored := make([]scoredItem, 0, len(res.Hits))
 	for _, h := range res.Hits {
 		var item ListItem
 		if err := h.DecodeInto(&item); err != nil {
 			continue
 		}
-		out = append(out, item)
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: item, base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, userID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	out := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		out = append(out, sc.item)
 	}
 	return out, nil
 }

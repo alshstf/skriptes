@@ -6,6 +6,7 @@ export type AuthorSuggest = {
   id: number;
   full_name: string;
   book_count: number;
+  is_favorite?: boolean;
 };
 
 export type SeriesSuggest = {
@@ -13,6 +14,7 @@ export type SeriesSuggest = {
   title: string;
   author_name?: string;
   book_count: number;
+  is_favorite?: boolean;
 };
 
 export type SuggestResponse = {
@@ -34,6 +36,12 @@ const EMPTY: SuggestResponse = { query: '', books: [], authors: [], series: [] }
  *
  * keepPreviousData предотвращает мерцание между нажатиями: пока новый
  * ответ грузится, в палитре остаётся прошлый список.
+ *
+ * staleTime=0 — без этого свежий сигнал персонализации (новый view
+ * после открытия карточки книги, новый favorite) "застывает" в кэше
+ * до 5 секунд, и пользователь видит старый порядок выдачи. На нашей
+ * нагрузке (домашний сервер) лишний запрос при каждом открытии
+ * палитры — не проблема.
  */
 export function useSuggest(query: string, limit = 5) {
   const trimmed = query.trim();
@@ -46,7 +54,7 @@ export function useSuggest(query: string, limit = 5) {
     },
     enabled,
     placeholderData: keepPreviousData,
-    staleTime: 5_000,
+    staleTime: 0,
   });
 }
 

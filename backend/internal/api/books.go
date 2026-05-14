@@ -34,6 +34,12 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 			Sort:     q.Get("sort"),
 			Facets:   splitCSV(q.Get("facets")),
 		}
+		// Передаём UserID — books.List сам решает, применять ли re-ranking
+		// (см. условия там: offset==0, нет явного Sort и нет фильтра по
+		// одному автору/серии).
+		if u, ok := UserFromContext(r.Context()); ok {
+			params.UserID = u.ID
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		res, err := d.Service.List(ctx, params)
