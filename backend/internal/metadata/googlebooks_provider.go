@@ -1,0 +1,138 @@
+package metadata
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/url"
+	"strings"
+	"time"
+)
+
+// GoogleBooksProvider — обложки через https://www.googleapis.com/books/v1/volumes.
+//
+// Без API-ключа есть бесплатный квот ~1000 req/day, для домашнего
+// сервера это с запасом. Если упрёмся — добавим ключ через env.
+type GoogleBooksProvider struct {
+	httpClient *http.Client
+	apiURL     string // override для тестов
+}
+
+func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
+	if httpClient == nil {
+		httpClient = &http.Client{Timeout: 10 * time.Second}
+	}
+	return &GoogleBooksProvider{
+		httpClient: httpClient,
+		apiURL:     "https://www.googleapis.com/books/v1/volumes",
+	}
+}
+
+// WithEndpoint — для тестов.
+func (p *GoogleBooksProvider) WithEndpoint(apiURL string) *GoogleBooksProvider {
+	p.apiURL = apiURL
+	return p
+}
+
+func (p *GoogleBooksProvider) Name() string { return "googlebooks" }
+
+func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*CoverImage, error) {
+	if q.Title == "" {
+		return nil, ErrNotFound
+	}
+
+	var query strings.Builder
+	query.WriteString(`intitle:"`)
+	query.WriteString(q.Title)
+	query.WriteString(`"`)
+	if len(q.Authors) > 0 {
+		query.WriteString(` inauthor:"`)
+		query.WriteString(q.Authors[0])
+		query.WriteString(`"`)
+	}
+
+	v := url.Values{}
+	v.Set("q", query.String())
+	v.Set("maxResults", "1")
+	if q.Lang != "" {
+		v.Set("langRestrict", q.Lang)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("gb search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return nil, ErrNotFound
+	}
+
+	var sr gbSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return nil, fmt.Errorf("decode search: %w", err)
+	}
+	if len(sr.Items) == 0 {
+		return nil, ErrNotFound
+	}
+
+	thumb := pickGoogleBooksThumbnail(sr.Items[0].VolumeInfo.ImageLinks)
+	if thumb == "" {
+		return nil, ErrNotFound
+	}
+
+	// Google часто возвращает http-thumbnail; не переписываем в https
+	// принудительно: картинку мы кэшируем у себя и потом отдаём по
+	// HTTPS клиенту через /api/covers/. Mixed content на стороне
+	// браузера тут не релевантен.
+	coverReq, err := http.NewRequestWithContext(ctx, http.MethodGet, thumb, nil)
+	if err != nil {
+		return nil, fmt.Errorf("build cover request: %w", err)
+	}
+	coverResp, err := p.httpClient.Do(coverReq)
+	if err != nil {
+		return nil, fmt.Errorf("gb cover: %w", err)
+	}
+	if coverResp.StatusCode != http.StatusOK {
+		_ = coverResp.Body.Close()
+		return nil, ErrNotFound
+	}
+
+	mime := coverResp.Header.Get("Content-Type")
+	if mime == "" || !strings.HasPrefix(mime, "image/") {
+		mime = "image/jpeg"
+	}
+	return &CoverImage{
+		Reader:   coverResp.Body,
+		Mime:     mime,
+		SourceID: fmt.Sprintf("gb:%s", sr.Items[0].ID),
+	}, nil
+}
+
+type gbSearchResponse struct {
+	Items []struct {
+		ID         string `json:"id"`
+		VolumeInfo struct {
+			ImageLinks map[string]string `json:"imageLinks"`
+		} `json:"volumeInfo"`
+	} `json:"items"`
+}
+
+// pickGoogleBooksThumbnail — выбирает самую большую доступную картинку.
+// Google возвращает разные размеры (smallThumbnail/thumbnail/small/...);
+// чем больше — тем лучше выглядит на сетчатке.
+func pickGoogleBooksThumbnail(links map[string]string) string {
+	// Порядок убывания качества.
+	for _, key := range []string{"extraLarge", "large", "medium", "small", "thumbnail", "smallThumbnail"} {
+		if v, ok := links[key]; ok && v != "" {
+			return v
+		}
+	}
+	return ""
+}

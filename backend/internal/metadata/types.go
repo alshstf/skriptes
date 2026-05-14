@@ -1,0 +1,46 @@
+package metadata
+
+import (
+	"context"
+	"errors"
+	"io"
+)
+
+// ErrNotFound — провайдер не нашёл данных для книги; не считается
+// фатальной ошибкой, оркестратор просто пробует следующий.
+var ErrNotFound = errors.New("metadata not found")
+
+// BookQuery — что мы ищем. Передаётся в провайдеры; конкретный
+// набор полей зависит от того, что нужно искать.
+//
+// ArchivePath / FB2Name заполняются handler'ом для fb2-провайдера
+// (он один умеет лезть в наш zip). Внешним провайдерам не нужны.
+type BookQuery struct {
+	ID      int64
+	Title   string
+	Authors []string // полные имена в виде "Фамилия Имя Отчество"
+	Lang    string   // ISO-код (ru/en/...) — помогает выбрать локаль API
+
+	ArchivePath string // абсолютный путь к zip с книгой
+	FB2Name     string // имя файла внутри zip (например "12345.fb2")
+}
+
+// CoverImage — сырая обложка для записи в /cache/covers.
+// Reader живёт пока caller не вызовет Close; Mime — для проверки и
+// выбора расширения файла; SourceID — описание источника (для логов
+// и для записи в ext_ids книги: "ol:OL12345W" / "gb:abcdef" / "fb2").
+type CoverImage struct {
+	Reader   io.ReadCloser
+	Mime     string
+	SourceID string
+}
+
+// CoverProvider — поставщик одной обложки. Реализуется fb2/OL/GB.
+//
+// Возвращает ErrNotFound если для данного запроса ничего нет.
+// Все остальные ошибки — серьёзные (сеть, неожиданный формат);
+// Enricher логирует их и идёт дальше по цепочке.
+type CoverProvider interface {
+	Name() string
+	FetchCover(ctx context.Context, q BookQuery) (*CoverImage, error)
+}

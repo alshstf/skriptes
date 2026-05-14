@@ -25,6 +25,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/metadata"
 )
 
 func main() {
@@ -78,6 +79,25 @@ func run() error {
 	}
 	logger.Info("converter ready", "fbc", cfg.FBCPath, "cache", cfg.CacheRoot)
 
+	// Metadata enricher для обложек. Провайдеры в порядке убывания
+	// надёжности: fb2 (наши же архивы — почти всегда работает) →
+	// Open Library → Google Books.
+	httpClient := &http.Client{Timeout: 10 * time.Second}
+	enricher, err := metadata.New(
+		pool,
+		filepath.Join(cfg.CacheRoot, "covers"),
+		[]metadata.CoverProvider{
+			metadata.NewFb2Provider(),
+			metadata.NewOpenLibraryProvider(httpClient),
+			metadata.NewGoogleBooksProvider(httpClient),
+		},
+		logger,
+	)
+	if err != nil {
+		return fmt.Errorf("metadata init: %w", err)
+	}
+	logger.Info("metadata enricher ready", "cover_root", filepath.Join(cfg.CacheRoot, "covers"))
+
 	router := api.NewRouter(api.Deps{
 		Version: cfg.Version,
 		DB:      pool,
@@ -91,6 +111,7 @@ func run() error {
 		Catalog:  api.CatalogDeps{Service: catalogSvc},
 		Download: api.DownloadDeps{Books: booksSvc, Converter: conv},
 		History:  api.HistoryDeps{Service: historySvc},
+		Metadata: api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 	})
 
 	srv := &http.Server{

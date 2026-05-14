@@ -42,7 +42,15 @@ export function BookDetailPage() {
       <BackButton />
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
-          <div className="space-y-1">
+          {book.cover_path ? (
+            <img
+              src={`/api/covers/${book.cover_path}`}
+              alt={`Обложка: ${book.title}`}
+              className="w-24 sm:w-32 rounded-md border border-border shadow-sm shrink-0 self-start"
+              loading="lazy"
+            />
+          ) : null}
+          <div className="space-y-1 flex-1 min-w-0">
             <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
             {book.authors.length > 0 ? (
               <p className="text-base text-muted-foreground">

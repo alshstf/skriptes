@@ -23,6 +23,7 @@ type Deps struct {
 	Catalog  CatalogDeps
 	Download DownloadDeps
 	History  HistoryDeps
+	Metadata MetadataDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -54,7 +55,10 @@ func NewRouter(d Deps) http.Handler {
 				r.Get("/auth/me", handleMe(d.Auth))
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books))
-					r.Get("/books/{id}", handleGetBook(d.Books, d.History))
+					r.Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
+				}
+				if d.Metadata.Service != nil {
+					r.Get("/covers/{name}", handleCover(d.Metadata))
 				}
 				if d.Books.Service != nil || d.Catalog.Service != nil {
 					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog, d.History))
