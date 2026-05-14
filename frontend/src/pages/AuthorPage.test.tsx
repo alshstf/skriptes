@@ -48,8 +48,8 @@ const fixture = {
   first_name: 'Евгений',
   middle_name: 'Артёмович',
   full_name: 'Алексеев Евгений Артёмович',
-  book_count: 1,
-  books_total: 1,
+  book_count: 2,
+  books_total: 2,
   top_genres: [
     { code: 'sf_action', display: 'sf_action', count: 1 },
     { code: 'popadanec', display: 'popadanec', count: 1 },
@@ -61,7 +61,16 @@ const fixture = {
       title: 'Кадетский корпус. Книга 2',
       authors: ['Алексеев Евгений Артёмович'],
       series: 'Петля [Алексеев]',
+      series_id: 7,
+      ser_no: 2,
       lib_id: '749080',
+    },
+    // Книга вне серий — должна оказаться в секции "Вне серий".
+    {
+      id: 20,
+      title: 'Записки одиночки',
+      authors: ['Алексеев Евгений Артёмович'],
+      lib_id: '749081',
     },
   ],
 };
@@ -82,13 +91,20 @@ describe('AuthorPage', () => {
 
   it('renders author header, top genres, series link and books', async () => {
     render(wrap(<AuthorPage />));
-    expect(await screen.findByRole('heading', { level: 1, name: 'Алексеев Евгений Артёмович' })).toBeInTheDocument();
-    expect(screen.getByText(/1 книга в каталоге/)).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Алексеев Евгений Артёмович' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/2 книги в каталоге/)).toBeInTheDocument();
     expect(screen.getByText(/sf_action · 1/)).toBeInTheDocument();
-    // среди ссылок есть прямая на /series/7 (карточка "Серии").
-    const seriesLinks = screen.getAllByRole('link').filter((l) => l.getAttribute('href') === '/series/7');
+    // Среди ссылок есть прямая на /series/7 — заголовок-секции серии.
+    const seriesLinks = screen
+      .getAllByRole('link')
+      .filter((l) => l.getAttribute('href') === '/series/7');
     expect(seriesLinks.length).toBeGreaterThan(0);
-    // книга в списке
+    // Книги в обеих секциях.
     expect(screen.getByText('Кадетский корпус. Книга 2')).toBeInTheDocument();
+    expect(screen.getByText('Записки одиночки')).toBeInTheDocument();
+    // Псевдосекция для книг вне серий.
+    expect(screen.getByText('Вне серий')).toBeInTheDocument();
   });
 });

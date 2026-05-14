@@ -165,7 +165,32 @@ export const authorDetailFixture = {
   books_total: 5,
   top_genres: [{ code: 'sf_action', display: 'Боевая фантастика', count: 3 }],
   series: [{ id: 7, title: 'Петля [Алексеев]', count: 2 }],
-  books: [],
+  books: [
+    {
+      id: 100,
+      title: 'Кадетский корпус. Книга 1',
+      authors: ['Алексеев Евгений Артёмович'],
+      series: 'Петля [Алексеев]',
+      series_id: 7,
+      ser_no: 1,
+      lib_id: '749079',
+    },
+    {
+      id: 101,
+      title: 'Кадетский корпус. Книга 2',
+      authors: ['Алексеев Евгений Артёмович'],
+      series: 'Петля [Алексеев]',
+      series_id: 7,
+      ser_no: 2,
+      lib_id: '749080',
+    },
+    {
+      id: 102,
+      title: 'Отдельный роман',
+      authors: ['Алексеев Евгений Артёмович'],
+      lib_id: '749088',
+    },
+  ],
   is_favorite: false,
   year_stats: [
     { year: 2020, count: 2 },

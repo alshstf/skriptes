@@ -8,7 +8,8 @@ import { BackButton } from '@/components/BackButton';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
-import { useAuthor } from '@/lib/catalog';
+import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
+import { type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
 export function AuthorPage() {
@@ -55,56 +56,157 @@ export function AuthorPage() {
 
       <AuthorStats author={a} />
 
-      {a.series && a.series.length > 0 ? (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ListOrdered className="size-4" aria-hidden /> Серии
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <ul className="divide-y divide-border">
-              {a.series.map((s) => (
-                <li key={s.id}>
-                  <Link
-                    to="/series/$id"
-                    params={{ id: String(s.id) }}
-                    className="flex items-center justify-between py-2 hover:underline"
-                  >
-                    <span>{s.title}</span>
-                    <span className="text-sm text-muted-foreground tabular-nums">
-                      {s.count} {pluralBooks(s.count)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      ) : null}
+      <AuthorBooks author={a} />
+    </article>
+  );
+}
 
+/**
+ * AuthorBooks — основной блок книг автора с группировкой по сериям.
+ *
+ * Структура:
+ *  - если у автора есть серии — рисуем по карточке на каждую серию,
+ *    внутри карточки книги в порядке ser_no;
+ *  - книги вне серий идут отдельной карточкой "Вне серий" в самом
+ *    низу, но только если они вообще есть И если у автора есть хоть
+ *    одна серия (иначе обычным плоским списком — карточка
+ *    "Вне серий" у такого автора смотрелась бы абсурдно);
+ *  - если у автора нет серий — плоский список без всякой группировки.
+ *
+ * Порядок секций: серии в порядке, который пришёл с backend (он сейчас
+ * по убыванию числа книг), потом "Вне серий".
+ */
+function AuthorBooks({ author }: { author: Author }) {
+  if (author.books.length === 0) {
+    return (
+      <section>
+        <p className="text-sm text-muted-foreground">Книг нет.</p>
+      </section>
+    );
+  }
+
+  const hasSeries = (author.series ?? []).length > 0;
+
+  // Без серий — плоский список как раньше.
+  if (!hasSeries) {
+    return (
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 text-base font-medium">
           <BookOpen className="size-4" aria-hidden /> Книги
-          {a.books_total > a.books.length ? (
+          {author.books_total > author.books.length ? (
             <span className="text-sm font-normal text-muted-foreground">
-              (показаны последние {a.books.length} из {a.books_total})
+              (показаны последние {author.books.length} из {author.books_total})
             </span>
           ) : null}
         </h2>
-        {a.books.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Книг нет.</p>
+        <ul className="space-y-1">
+          {author.books.map((b) => (
+            <li key={b.id}>
+              <BookListItem book={b} showSeries={false} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
+
+  // С сериями — группируем по series_id.
+  const bySeries = new Map<number, BookListItemType[]>();
+  const standalone: BookListItemType[] = [];
+  for (const b of author.books) {
+    if (b.series_id != null) {
+      const arr = bySeries.get(b.series_id) ?? [];
+      arr.push(b);
+      bySeries.set(b.series_id, arr);
+    } else {
+      standalone.push(b);
+    }
+  }
+  // Внутри серии сортируем по ser_no, NULL'ы в конец.
+  for (const arr of bySeries.values()) {
+    arr.sort((x, y) => {
+      const xn = x.ser_no ?? Number.POSITIVE_INFINITY;
+      const yn = y.ser_no ?? Number.POSITIVE_INFINITY;
+      return xn - yn;
+    });
+  }
+
+  return (
+    <div className="space-y-4">
+      {(author.series ?? []).map((s) => (
+        <SeriesSection
+          key={s.id}
+          series={s}
+          books={bySeries.get(s.id) ?? []}
+        />
+      ))}
+      {standalone.length > 0 ? <StandaloneSection books={standalone} /> : null}
+    </div>
+  );
+}
+
+function SeriesSection({
+  series,
+  books,
+}: {
+  series: SeriesWithCount;
+  books: BookListItemType[];
+}) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <ListOrdered className="size-4" aria-hidden />
+          <Link
+            to="/series/$id"
+            params={{ id: String(series.id) }}
+            className="hover:underline"
+          >
+            {series.title}
+          </Link>
+          <span className="text-sm font-normal text-muted-foreground tabular-nums">
+            {series.count} {pluralBooks(series.count)}
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {books.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Книги не загрузились.</p>
         ) : (
           <ul className="space-y-1">
-            {a.books.map((b) => (
+            {books.map((b) => (
               <li key={b.id}>
-                <BookListItem book={b} showSeries={true} />
+                <BookListItem book={b} showSeries={false} />
               </li>
             ))}
           </ul>
         )}
-      </section>
-    </article>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StandaloneSection({ books }: { books: BookListItemType[] }) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <BookOpen className="size-4" aria-hidden /> Вне серий
+          <span className="text-sm font-normal text-muted-foreground tabular-nums">
+            {books.length} {pluralBooks(books.length)}
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <ul className="space-y-1">
+          {books.map((b) => (
+            <li key={b.id}>
+              <BookListItem book={b} showSeries={false} />
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }
 

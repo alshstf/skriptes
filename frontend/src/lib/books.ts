@@ -6,6 +6,8 @@ export type BookListItem = {
   title: string;
   authors: string[];
   series?: string;
+  series_id?: number;
+  ser_no?: number;
   genres?: string[];
   year?: number;
   lang?: string;
