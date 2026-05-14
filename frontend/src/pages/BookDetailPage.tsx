@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BackButton } from '@/components/BackButton';
+import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { useBook } from '@/lib/books';
@@ -42,14 +43,11 @@ export function BookDetailPage() {
       <BackButton />
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
-          {book.cover_path ? (
-            <img
-              src={`/api/covers/${book.cover_path}`}
-              alt={`Обложка: ${book.title}`}
-              className="w-24 sm:w-32 rounded-md border border-border shadow-sm shrink-0 self-start"
-              loading="lazy"
-            />
-          ) : null}
+          <BookCover
+            coverPath={book.cover_path}
+            title={book.title}
+            className="w-32 sm:w-44 md:w-56"
+          />
           <div className="space-y-1 flex-1 min-w-0">
             <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
             {book.authors.length > 0 ? (
