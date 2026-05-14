@@ -18,6 +18,23 @@ type Author struct {
 	Series     []SeriesWithCount `json:"series,omitempty"`
 	BooksTotal int               `json:"books_total"`
 	Books      []books.ListItem  `json:"books"`
+
+	// YearStats — распределение книг автора по году добавления в коллекцию.
+	// Используется для гистограммы на странице автора (recharts).
+	// Сортировка по году по возрастанию; книги без date_added не попадают.
+	YearStats []YearCount `json:"year_stats,omitempty"`
+
+	// ReadCount — сколько книг автора есть в reads текущего пользователя
+	// (read = "скачана хотя бы раз" до сборки in-browser reader'а).
+	// Заполняется только если в запрос пробрасывается user (см. GetAuthor),
+	// иначе 0 и фронт скрывает прогресс-блок.
+	ReadCount int `json:"read_count,omitempty"`
+}
+
+// YearCount — пара (год, число книг). nil-Year не отправляем.
+type YearCount struct {
+	Year  int `json:"year"`
+	Count int `json:"count"`
 }
 
 // GenreCount — пара (genre, books_in_this_genre_for_this_author).
@@ -62,4 +79,8 @@ type Series struct {
 	AuthorName string           `json:"author_name,omitempty"`
 	BookCount  int              `json:"book_count"`
 	Books      []books.ListItem `json:"books"` // отсортированы по ser_no, deleted скрыты
+
+	// Аналогично Author: гистограмма по годам и прогресс чтения.
+	YearStats []YearCount `json:"year_stats,omitempty"`
+	ReadCount int         `json:"read_count,omitempty"`
 }

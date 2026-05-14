@@ -4,6 +4,7 @@ import type { BookListItem } from './books';
 
 export type GenreCount = { code: string; display: string; count: number };
 export type SeriesWithCount = { id: number; title: string; count: number };
+export type YearCount = { year: number; count: number };
 
 export type Author = {
   id: number;
@@ -17,6 +18,10 @@ export type Author = {
   series?: SeriesWithCount[];
   books: BookListItem[];
   is_favorite?: boolean;
+  /** Распределение книг автора по году добавления в коллекцию. */
+  year_stats?: YearCount[];
+  /** Сколько книг автора пользователь хотя бы раз скачивал. */
+  read_count?: number;
 };
 
 export type Series = {
@@ -27,6 +32,8 @@ export type Series = {
   book_count: number;
   books: BookListItem[];
   is_favorite?: boolean;
+  year_stats?: YearCount[];
+  read_count?: number;
 };
 
 export function useAuthor(id: number | string | undefined) {
