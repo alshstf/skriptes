@@ -73,7 +73,10 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, erro
 	}
 	a.Series = series
 
-	bookList, err := s.queryAuthorBooks(ctx, id, 50)
+	// 500 — потолок для самых плодовитых авторов (Asimov ~500, Stephen
+	// King ~80). Группировка по сериям на фронте требует полного списка,
+	// поэтому усечение в 50 как раньше уже не работает.
+	bookList, err := s.queryAuthorBooks(ctx, id, 500)
 	if err != nil {
 		return Author{}, err
 	}
@@ -126,7 +129,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, b.title, b.lib_id,
-		       b.lang, b.date_added,
+		       b.lang, b.date_added, b.ser_no,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
 		           ARRAY[]::text[]
@@ -144,12 +147,13 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 	defer rows.Close()
 	for rows.Next() {
 		var (
-			b    books.ListItem
-			lang pgtype.Text
-			dt   pgtype.Date
-			auth []string
+			b     books.ListItem
+			lang  pgtype.Text
+			dt    pgtype.Date
+			serNo pgtype.Int4
+			auth  []string
 		)
-		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &auth); err != nil {
+		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth); err != nil {
 			return Series{}, err
 		}
 		if lang.Valid {
@@ -159,8 +163,17 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 			y := dt.Time.Year()
 			b.Year = &y
 		}
+		if serNo.Valid {
+			n := int(serNo.Int32)
+			b.SerNo = &n
+		}
 		b.Authors = auth
 		b.Series = out.Title
+		// SeriesID нужен фронту для clickable-имён в потенциальных
+		// смешанных списках; в карточке серии очевидно, что все книги
+		// принадлежат одной серии, но единообразный тип лучше.
+		sid := id
+		b.SeriesID = &sid
 		out.Books = append(out.Books, b)
 	}
 	if err := rows.Err(); err != nil {
@@ -239,7 +252,8 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64) ([]Seri
 
 func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int) ([]books.ListItem, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.title, b.lib_id, b.lang, b.date_added, ser.title,
+		SELECT b.id, b.title, b.lib_id, b.lang, b.date_added,
+		       ser.id, ser.title, b.ser_no,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a2.last_name, a2.first_name, a2.middle_name))) FILTER (WHERE a2.id IS NOT NULL),
 		           ARRAY[]::text[]
@@ -250,7 +264,7 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		LEFT JOIN book_authors ba2 ON ba2.book_id = b.id
 		LEFT JOIN authors a2 ON a2.id = ba2.author_id
 		WHERE ba.author_id = $1
-		GROUP BY b.id, ser.title
+		GROUP BY b.id, ser.id, ser.title
 		ORDER BY b.date_added DESC NULLS LAST, b.normalized_title
 		LIMIT $2
 	`, authorID, limit)
@@ -261,13 +275,15 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 	var out []books.ListItem
 	for rows.Next() {
 		var (
-			b      books.ListItem
-			lang   pgtype.Text
-			dt     pgtype.Date
-			series pgtype.Text
-			auth   []string
+			b           books.ListItem
+			lang        pgtype.Text
+			dt          pgtype.Date
+			seriesID    pgtype.Int8
+			seriesTitle pgtype.Text
+			serNo       pgtype.Int4
+			auth        []string
 		)
-		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &series, &auth); err != nil {
+		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth); err != nil {
 			return nil, err
 		}
 		if lang.Valid {
@@ -277,8 +293,16 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			y := dt.Time.Year()
 			b.Year = &y
 		}
-		if series.Valid {
-			b.Series = series.String
+		if seriesTitle.Valid {
+			b.Series = seriesTitle.String
+		}
+		if seriesID.Valid {
+			id := seriesID.Int64
+			b.SeriesID = &id
+		}
+		if serNo.Valid {
+			n := int(serNo.Int32)
+			b.SerNo = &n
 		}
 		b.Authors = auth
 		out = append(out, b)

@@ -42,10 +42,13 @@ type ListItem struct {
 	AuthorIDs []int64  `json:"author_ids,omitempty"`
 	Series    string   `json:"series,omitempty"`
 	SeriesID  *int64   `json:"series_id,omitempty"`
-	Genres    []string `json:"genres,omitempty"`
-	Year      *int     `json:"year,omitempty"`
-	Lang      string   `json:"lang,omitempty"`
-	LibID     string   `json:"lib_id"`
+	// SerNo — номер книги в серии (если есть). Используется фронтом для
+	// группировки и сортировки внутри серии на странице автора.
+	SerNo  *int     `json:"ser_no,omitempty"`
+	Genres []string `json:"genres,omitempty"`
+	Year   *int     `json:"year,omitempty"`
+	Lang   string   `json:"lang,omitempty"`
+	LibID  string   `json:"lib_id"`
 	// IsFavorite — user-specific флаг "книга в избранном текущего
 	// пользователя". Заполняется не в books-сервисе (он user-agnostic),
 	// а в api-handler'ах, которые знают про сессию.

@@ -5,15 +5,36 @@ import type { BookListItem as Item } from '@/lib/books';
 /**
  * BookListItem — компактная строка книги в любом списке
  * (BooksPage / AuthorPage / SeriesPage). Кликабельна целиком.
+ *
+ * showSerNo: если true и у книги есть `ser_no`, слева от заголовка
+ * рендерим колонку с номером тома (`1.`, `2.` …). Используется внутри
+ * карточки серии на странице автора и на странице самой серии.
  */
-export function BookListItem({ book, showSeries = true }: { book: Item; showSeries?: boolean }) {
+export function BookListItem({
+  book,
+  showSeries = true,
+  showSerNo = false,
+}: {
+  book: Item;
+  showSeries?: boolean;
+  showSerNo?: boolean;
+}) {
+  const serNo = showSerNo && typeof book.ser_no === 'number' ? book.ser_no : null;
   return (
     <Link
       to="/books/$id"
       params={{ id: String(book.id) }}
-      className="block rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
+      className="flex gap-3 rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
     >
-      <div className="space-y-1">
+      {serNo != null ? (
+        <span
+          aria-label={`Том ${serNo}`}
+          className="w-6 shrink-0 pt-0.5 text-right text-sm font-medium tabular-nums text-muted-foreground"
+        >
+          {serNo}.
+        </span>
+      ) : null}
+      <div className="space-y-1 min-w-0 flex-1">
         <h3 className="text-base font-medium leading-tight">{book.title}</h3>
         {book.authors && book.authors.length > 0 ? (
           <p className="text-sm text-muted-foreground">{book.authors.join(', ')}</p>
