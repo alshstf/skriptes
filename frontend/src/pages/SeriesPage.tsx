@@ -74,7 +74,7 @@ export function SeriesPage() {
         <ul className="space-y-1">
           {s.books.map((b) => (
             <li key={b.id}>
-              <BookListItem book={b} showSeries={false} />
+              <BookListItem book={b} showSeries={false} showSerNo={true} />
             </li>
           ))}
         </ul>

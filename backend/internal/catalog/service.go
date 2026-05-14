@@ -129,7 +129,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, b.title, b.lib_id,
-		       b.lang, b.date_added,
+		       b.lang, b.date_added, b.ser_no,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
 		           ARRAY[]::text[]
@@ -147,12 +147,13 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 	defer rows.Close()
 	for rows.Next() {
 		var (
-			b    books.ListItem
-			lang pgtype.Text
-			dt   pgtype.Date
-			auth []string
+			b     books.ListItem
+			lang  pgtype.Text
+			dt    pgtype.Date
+			serNo pgtype.Int4
+			auth  []string
 		)
-		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &auth); err != nil {
+		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth); err != nil {
 			return Series{}, err
 		}
 		if lang.Valid {
@@ -162,8 +163,17 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 			y := dt.Time.Year()
 			b.Year = &y
 		}
+		if serNo.Valid {
+			n := int(serNo.Int32)
+			b.SerNo = &n
+		}
 		b.Authors = auth
 		b.Series = out.Title
+		// SeriesID нужен фронту для clickable-имён в потенциальных
+		// смешанных списках; в карточке серии очевидно, что все книги
+		// принадлежат одной серии, но единообразный тип лучше.
+		sid := id
+		b.SeriesID = &sid
 		out.Books = append(out.Books, b)
 	}
 	if err := rows.Err(); err != nil {

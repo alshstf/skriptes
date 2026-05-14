@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BarChart3, BookOpen, ListOrdered } from 'lucide-react';
+import { BarChart3, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -155,8 +155,16 @@ function SeriesSection({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <ListOrdered className="size-4" aria-hidden />
+        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
+          {/* Badge "Серия" — явный визуальный маркер типа секции,
+              понятнее иконки. Outline + uppercase + tiny font = aside-tag
+              стиль, не конкурирует с названием. */}
+          <Badge
+            variant="outline"
+            className="px-1.5 py-0 text-[10px] font-medium uppercase tracking-wider"
+          >
+            Серия
+          </Badge>
           <Link
             to="/series/$id"
             params={{ id: String(series.id) }}
@@ -176,7 +184,7 @@ function SeriesSection({
           <ul className="space-y-1">
             {books.map((b) => (
               <li key={b.id}>
-                <BookListItem book={b} showSeries={false} />
+                <BookListItem book={b} showSeries={false} showSerNo={true} />
               </li>
             ))}
           </ul>
