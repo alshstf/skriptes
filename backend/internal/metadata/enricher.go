@@ -15,30 +15,36 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Enricher — оркестратор обогащения обложек.
+// Enricher — оркестратор обогащения карточек книг (обложки + аннотации).
 //
-// Содержит цепочку CoverProvider'ов (вызываются в порядке регистрации),
-// каталог /cache/covers для бинарей и pgxpool для записи cover_path.
+// Содержит две независимые цепочки провайдеров (cover/annotation) и
+// pgxpool для записи результатов. Каждая цепочка обходится в порядке
+// регистрации до первого успеха.
 //
-// Не потокобезопасен на уровне "две одновременные EnsureCover(bookID)
-// для одной книги" — это допустимо, потому что обе запишут одинаковый
-// результат. Если станет проблемой — добавим map[int64]chan struct{}
-// для дедупа.
+// Не потокобезопасен на уровне "две одновременные EnsureXxx(bookID)
+// для одной книги" — обе запишут одинаковый результат. Inflight-карты
+// дедуплицируют параллельные вызовы для одной книги в одном процессе.
 type Enricher struct {
-	providers []CoverProvider
-	pool      *pgxpool.Pool
-	coverRoot string // абсолютный путь к /cache/covers
-	logger    *slog.Logger
+	coverProviders      []CoverProvider
+	annotationProviders []AnnotationProvider
+	pool                *pgxpool.Pool
+	coverRoot           string // абсолютный путь к /cache/covers
+	logger              *slog.Logger
 
-	// inflight предотвращает параллельные fetch'и для одной и той же
-	// книги в рамках одного процесса. Не покрывает кластер — но у нас
-	// один backend на хост.
-	inflightMu sync.Mutex
-	inflight   map[int64]struct{}
+	inflightMu       sync.Mutex
+	inflightCover    map[int64]struct{}
+	inflightAnnotate map[int64]struct{}
 }
 
 // New создаёт Enricher и обеспечивает существование coverRoot.
-func New(pool *pgxpool.Pool, coverRoot string, providers []CoverProvider, logger *slog.Logger) (*Enricher, error) {
+// annotationProviders может быть nil — тогда EnsureAnnotation no-op.
+func New(
+	pool *pgxpool.Pool,
+	coverRoot string,
+	coverProviders []CoverProvider,
+	annotationProviders []AnnotationProvider,
+	logger *slog.Logger,
+) (*Enricher, error) {
 	if logger == nil {
 		logger = slog.Default()
 	}
@@ -46,11 +52,13 @@ func New(pool *pgxpool.Pool, coverRoot string, providers []CoverProvider, logger
 		return nil, fmt.Errorf("mkdir cover root: %w", err)
 	}
 	return &Enricher{
-		providers: providers,
-		pool:      pool,
-		coverRoot: coverRoot,
-		logger:    logger,
-		inflight:  map[int64]struct{}{},
+		coverProviders:      coverProviders,
+		annotationProviders: annotationProviders,
+		pool:                pool,
+		coverRoot:           coverRoot,
+		logger:              logger,
+		inflightCover:       map[int64]struct{}{},
+		inflightAnnotate:    map[int64]struct{}{},
 	}, nil
 }
 
@@ -61,10 +69,10 @@ func New(pool *pgxpool.Pool, coverRoot string, providers []CoverProvider, logger
 // Безопасно вызывать из горутины, отвязанной от HTTP-запроса
 // (использует свой контекст с deadline'ом).
 func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
-	if !e.tryLock(q.ID) {
-		return // уже обрабатывается параллельным вызовом
+	if !e.tryLock(e.inflightCover, q.ID) {
+		return
 	}
-	defer e.unlock(q.ID)
+	defer e.unlock(e.inflightCover, q.ID)
 
 	// Проверяем актуальное состояние БД на случай race условий
 	// (другой запрос мог обогатить пока мы стояли в queue).
@@ -77,7 +85,7 @@ func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
 		return
 	}
 
-	for _, p := range e.providers {
+	for _, p := range e.coverProviders {
 		img, err := p.FetchCover(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
@@ -109,6 +117,51 @@ func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
 		`UPDATE books SET metadata_fetched_at = now() WHERE id = $1`, q.ID,
 	); err != nil {
 		e.logger.Warn("metadata: mark fetched_at failed", "book_id", q.ID, "err", err)
+	}
+}
+
+// EnsureAnnotation — параллель EnsureCover для текстового описания.
+// Если у книги уже есть annotation — мгновенно выходит. Иначе обходит
+// annotationProviders, первый непустой результат пишется в books.annotation.
+func (e *Enricher) EnsureAnnotation(ctx context.Context, q BookQuery) {
+	if len(e.annotationProviders) == 0 {
+		return
+	}
+	if !e.tryLock(e.inflightAnnotate, q.ID) {
+		return
+	}
+	defer e.unlock(e.inflightAnnotate, q.ID)
+
+	var existing *string
+	if err := e.pool.QueryRow(ctx, `SELECT annotation FROM books WHERE id = $1`, q.ID).Scan(&existing); err != nil {
+		e.logger.Warn("metadata: query book annotation failed", "book_id", q.ID, "err", err)
+		return
+	}
+	if existing != nil && *existing != "" {
+		return
+	}
+
+	for _, p := range e.annotationProviders {
+		text, err := p.FetchAnnotation(ctx, q)
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			e.logger.Info("metadata: annotation provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			continue
+		}
+		if text == "" {
+			continue
+		}
+		if _, err := e.pool.Exec(ctx,
+			`UPDATE books SET annotation = $1, metadata_fetched_at = now() WHERE id = $2`,
+			text, q.ID,
+		); err != nil {
+			e.logger.Warn("metadata: record annotation failed", "book_id", q.ID, "err", err)
+			continue
+		}
+		e.logger.Info("metadata: annotation saved", "provider", p.Name(), "book_id", q.ID, "len", len(text))
+		return
 	}
 }
 
@@ -169,20 +222,20 @@ func (e *Enricher) CoverFile(filename string) string {
 // CoverRoot — корень кэша обложек (для тестов).
 func (e *Enricher) CoverRoot() string { return e.coverRoot }
 
-func (e *Enricher) tryLock(id int64) bool {
+func (e *Enricher) tryLock(set map[int64]struct{}, id int64) bool {
 	e.inflightMu.Lock()
 	defer e.inflightMu.Unlock()
-	if _, busy := e.inflight[id]; busy {
+	if _, busy := set[id]; busy {
 		return false
 	}
-	e.inflight[id] = struct{}{}
+	set[id] = struct{}{}
 	return true
 }
 
-func (e *Enricher) unlock(id int64) {
+func (e *Enricher) unlock(set map[int64]struct{}, id int64) {
 	e.inflightMu.Lock()
 	defer e.inflightMu.Unlock()
-	delete(e.inflight, id)
+	delete(set, id)
 }
 
 // extFromMime — выбирает расширение для cache-файла. Не пытаемся быть

@@ -113,18 +113,47 @@ export function BookDetailPage() {
             </p>
           ) : null}
 
-          {book.annotation ? (
-            <section className="space-y-2">
-              <h3 className="flex items-center gap-2 text-sm font-medium">
-                <BookText className="size-4" aria-hidden />
-                Аннотация
-              </h3>
-              <p className="whitespace-pre-line text-sm text-muted-foreground">{book.annotation}</p>
-            </section>
-          ) : null}
+          <AnnotationBlock annotation={book.annotation} />
+
         </CardContent>
       </Card>
     </article>
+  );
+}
+
+/**
+ * AnnotationBlock — секция "Аннотация" на странице книги.
+ *
+ * Если аннотация уже есть — рендерим plain-text с whitespace-pre-line
+ * (параграфы fb2 разделены \n\n, и pre-line их сохранит). Если ещё нет
+ * — рисуем скелетон-плейсхолдер той же примерно высоты, чтобы layout
+ * не прыгал когда polling в useBook подменит данные. Скелетон убирается
+ * автоматически: при следующей передаче props (когда придёт аннотация)
+ * условие `annotation` становится истинным.
+ *
+ * Полная "нет аннотации никогда" ситуация (книга без описания нигде в
+ * источниках) тоже корректно отрендерится скелетоном на ~20с, после
+ * чего polling в useBook остановится и UI просто застынет в этом виде.
+ * Это редкий edge case — для типичной книги скелетон виден 1–3 секунды.
+ */
+function AnnotationBlock({ annotation }: { annotation?: string }) {
+  return (
+    <section className="space-y-2">
+      <h3 className="flex items-center gap-2 text-sm font-medium">
+        <BookText className="size-4" aria-hidden />
+        Аннотация
+      </h3>
+      {annotation ? (
+        <p className="whitespace-pre-line text-sm text-muted-foreground">{annotation}</p>
+      ) : (
+        <div className="space-y-2" aria-busy="true" aria-label="Аннотация загружается">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-[95%]" />
+          <Skeleton className="h-3 w-[88%]" />
+          <Skeleton className="h-3 w-3/4" />
+        </div>
+      )}
+    </section>
   );
 }
 

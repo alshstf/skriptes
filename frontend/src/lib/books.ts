@@ -130,8 +130,13 @@ export function useBook(id: number | string | undefined) {
     enabled: id !== undefined && id !== '',
     refetchInterval: (query) => {
       const data = query.state.data as Book | undefined;
-      if (data?.cover_path) return false;
-      // dataUpdateCount = 1 после первой удачной загрузки → ~10 ретраев.
+      // Поллим пока хотя бы один артефакт enrichment'а не пришёл:
+      // обложка ИЛИ аннотация. Когда оба на месте — успокаиваемся.
+      // Если книга в принципе без обложки И без аннотации (бывает) —
+      // ограничение по числу ретраев освобождает поллинг через ~20с.
+      const haveCover = !!data?.cover_path;
+      const haveAnnotation = !!data?.annotation;
+      if (haveCover && haveAnnotation) return false;
       if (query.state.dataUpdateCount > 10) return false;
       return 2_000;
     },

@@ -91,7 +91,7 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 		// Lazy enrichment: если у книги нет обложки, в фоне сходим в
 		// провайдеры. На этом запросе пользователь её ещё не увидит —
 		// но следующий рендер карточки уже покажет.
-		triggerCoverEnrichmentAsync(meta, b)
+		triggerBookEnrichmentAsync(meta, b)
 
 		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav})
 	}

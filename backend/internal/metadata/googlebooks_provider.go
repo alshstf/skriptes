@@ -119,9 +119,63 @@ type gbSearchResponse struct {
 	Items []struct {
 		ID         string `json:"id"`
 		VolumeInfo struct {
-			ImageLinks map[string]string `json:"imageLinks"`
+			ImageLinks  map[string]string `json:"imageLinks"`
+			Description string            `json:"description"`
 		} `json:"volumeInfo"`
 	} `json:"items"`
+}
+
+// FetchAnnotation — один запрос на /volumes; description в первом
+// item'е. Google присылает plain-text c \n внутри, ничего экранировать
+// не нужно.
+func (p *GoogleBooksProvider) FetchAnnotation(ctx context.Context, q BookQuery) (string, error) {
+	if q.Title == "" {
+		return "", ErrNotFound
+	}
+
+	var query strings.Builder
+	query.WriteString(`intitle:"`)
+	query.WriteString(q.Title)
+	query.WriteString(`"`)
+	if len(q.Authors) > 0 {
+		query.WriteString(` inauthor:"`)
+		query.WriteString(q.Authors[0])
+		query.WriteString(`"`)
+	}
+
+	v := url.Values{}
+	v.Set("q", query.String())
+	v.Set("maxResults", "1")
+	if q.Lang != "" {
+		v.Set("langRestrict", q.Lang)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("gb search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+
+	var sr gbSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return "", fmt.Errorf("decode search: %w", err)
+	}
+	if len(sr.Items) == 0 {
+		return "", ErrNotFound
+	}
+	desc := strings.TrimSpace(sr.Items[0].VolumeInfo.Description)
+	if desc == "" {
+		return "", ErrNotFound
+	}
+	return desc, nil
 }
 
 // pickGoogleBooksThumbnail — выбирает самую большую доступную картинку.
