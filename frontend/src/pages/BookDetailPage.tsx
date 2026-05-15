@@ -43,100 +43,104 @@ export function BookDetailPage() {
       <BackButton />
       <Card>
         {/*
-          На мобильном — обложка центрирована сверху, всё остальное под ней.
-          На md+ — обложка слева отдельной колонкой, всё остальное (заголовок,
-          мета, аннотация) справа одной общей колонкой. Это устраняет пустое
-          место справа от обложки, на которое жаловался пользователь.
+          Двухуровневая структура:
+            1. flex-row: обложка слева + meta справа (на md+).
+               На мобильном — обложка сверху, meta под ней.
+            2. Аннотация на ПОЛНУЮ ширину карточки, под flex-row.
+          Так аннотация начинается с левого края (под обложкой), а не
+          плавает только в правой половине под высотой meta-блока.
         */}
-        <CardContent className="flex flex-col gap-6 md:flex-row md:items-start">
-          <BookCover
-            coverPath={book.cover_path}
-            title={book.title}
-            className="w-32 sm:w-44 md:w-56 mx-auto md:mx-0"
-          />
-
-          <div className="flex flex-col gap-4 flex-1 min-w-0">
-            {/* Заголовок + авторы + кнопки */}
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="space-y-1 flex-1 min-w-0">
-                <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
-                {book.authors.length > 0 ? (
-                  <p className="text-base text-muted-foreground">
-                    {book.authors.map((a, i) => (
-                      <span key={a.id}>
-                        {i > 0 ? ', ' : ''}
-                        <Link
-                          to="/authors/$id"
-                          params={{ id: String(a.id) }}
-                          className="hover:underline"
-                        >
-                          {a.full_name}
-                        </Link>
-                      </span>
-                    ))}
-                  </p>
-                ) : null}
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <FavoriteButton
-                  target="book"
-                  id={book.id}
-                  isFavorite={book.is_favorite ?? false}
-                />
-                {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
-              </div>
-            </div>
-
-            {/* Серия / жанры / meta */}
-            {book.series ? (
-              <div className="text-sm">
-                <span className="text-muted-foreground">Серия:</span>{' '}
-                <Link
-                  to="/series/$id"
-                  params={{ id: String(book.series.id) }}
-                  className="hover:underline"
-                >
-                  {book.series.title}
-                </Link>
-                {book.ser_no ? (
-                  <span className="text-muted-foreground"> · #{book.ser_no}</span>
-                ) : null}
-              </div>
-            ) : null}
-
-            {book.genres.length > 0 ? (
-              <div className="flex flex-wrap gap-1">
-                {book.genres.map((g) => (
-                  <Badge key={g.id} variant="secondary" className="font-normal">
-                    {g.display}
-                  </Badge>
-                ))}
-              </div>
-            ) : null}
-
-            <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm">
-              <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
-              <Field label="Архив" value={book.archive} mono />
-              <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
-              {book.lang ? <Field label="Язык" value={book.lang} /> : null}
-              {book.date_added ? <Field label="Добавлена" value={book.date_added} /> : null}
-              {book.rating !== undefined ? (
-                <Field label="Рейтинг" value={String(book.rating)} />
-              ) : null}
-              <Field label="LIBID" value={book.lib_id} mono />
-            </dl>
-
-            {book.deleted ? (
-              <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
-                В источнике помечена удалённой (DEL=1).
-              </p>
-            ) : null}
-
-            <AnnotationBlock
-              annotation={book.annotation}
-              enrichmentExhausted={enrichmentExhausted}
+        <CardContent className="space-y-6">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <BookCover
+              coverPath={book.cover_path}
+              title={book.title}
+              className="w-32 sm:w-44 md:w-56 mx-auto md:mx-0"
             />
+
+            <div className="flex flex-col gap-4 flex-1 min-w-0">
+              {/* Заголовок + авторы + кнопки */}
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="space-y-1 flex-1 min-w-0">
+                  <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
+                  {book.authors.length > 0 ? (
+                    <p className="text-base text-muted-foreground">
+                      {book.authors.map((a, i) => (
+                        <span key={a.id}>
+                          {i > 0 ? ', ' : ''}
+                          <Link
+                            to="/authors/$id"
+                            params={{ id: String(a.id) }}
+                            className="hover:underline"
+                          >
+                            {a.full_name}
+                          </Link>
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <FavoriteButton
+                    target="book"
+                    id={book.id}
+                    isFavorite={book.is_favorite ?? false}
+                  />
+                  {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
+                </div>
+              </div>
+
+              {/* Серия / жанры / meta */}
+              {book.series ? (
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Серия:</span>{' '}
+                  <Link
+                    to="/series/$id"
+                    params={{ id: String(book.series.id) }}
+                    className="hover:underline"
+                  >
+                    {book.series.title}
+                  </Link>
+                  {book.ser_no ? (
+                    <span className="text-muted-foreground"> · #{book.ser_no}</span>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {book.genres.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                  {book.genres.map((g) => (
+                    <Badge key={g.id} variant="secondary" className="font-normal">
+                      {g.display}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+
+              <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm">
+                <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
+                <Field label="Архив" value={book.archive} mono />
+                <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
+                {book.lang ? <Field label="Язык" value={book.lang} /> : null}
+                {book.date_added ? <Field label="Добавлена" value={book.date_added} /> : null}
+                {book.rating !== undefined ? (
+                  <Field label="Рейтинг" value={String(book.rating)} />
+                ) : null}
+                <Field label="LIBID" value={book.lib_id} mono />
+              </dl>
+
+              {book.deleted ? (
+                <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                  В источнике помечена удалённой (DEL=1).
+                </p>
+              ) : null}
+            </div>
           </div>
+
+          <AnnotationBlock
+            annotation={book.annotation}
+            enrichmentExhausted={enrichmentExhausted}
+          />
         </CardContent>
       </Card>
     </article>
