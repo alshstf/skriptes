@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -132,6 +133,102 @@ func TestWikipedia_PhotoNoThumbnail_NotFound(t *testing.T) {
 	)
 	defer srv.Close()
 	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	_, err := p.FetchAuthorPhoto(context.Background(), AuthorQuery{FullName: "X"})
+	require.ErrorIs(t, err, ErrNotFound)
+}
+
+// TestOpenLibrary_AuthorBioHappyPath — поиск по author search, потом
+// /authors/{OLID}.json возвращает bio. Поддерживаем bio как string
+// и как object{value}, как у работ.
+func TestOpenLibrary_AuthorBioHappyPath(t *testing.T) {
+	const olid = "OL12345A"
+	const bio = "Биография автора из Open Library."
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "/search/authors.json"):
+			_, _ = io.WriteString(w, `{"docs":[{"key":"/authors/`+olid+`","name":"Test"}]}`)
+		case strings.HasSuffix(r.URL.Path, "/authors/"+olid+".json"):
+			_, _ = io.WriteString(w, `{"bio":"`+bio+`","photos":[]}`)
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer srv.Close()
+
+	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
+	got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{FullName: "Test Author"})
+	require.NoError(t, err)
+	require.Equal(t, bio, got)
+}
+
+func TestOpenLibrary_AuthorBioObjectForm(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "/search/authors.json"):
+			_, _ = io.WriteString(w, `{"docs":[{"key":"OLxxxA","name":"X"}]}`)
+		default:
+			_, _ = io.WriteString(w, `{"bio":{"type":"/type/text","value":"From object."},"photos":[]}`)
+		}
+	}))
+	defer srv.Close()
+	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
+	got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{FullName: "X"})
+	require.NoError(t, err)
+	require.Equal(t, "From object.", got)
+}
+
+func TestOpenLibrary_AuthorBioNoResults(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = io.WriteString(w, `{"docs":[]}`)
+	}))
+	defer srv.Close()
+	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
+	_, err := p.FetchAuthorBio(context.Background(), AuthorQuery{FullName: "Unknown"})
+	require.ErrorIs(t, err, ErrNotFound)
+}
+
+func TestOpenLibrary_AuthorPhotoHappyPath(t *testing.T) {
+	const photoID = 42
+	const jpegBytes = "fake-author-jpeg"
+
+	covers := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, fmt.Sprintf("/a/id/%d-L.jpg", photoID), r.URL.Path)
+		w.Header().Set("Content-Type", "image/jpeg")
+		_, _ = io.WriteString(w, jpegBytes)
+	}))
+	defer covers.Close()
+
+	api := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "/search/authors.json"):
+			_, _ = io.WriteString(w, `{"docs":[{"key":"OLxxxA","name":"X"}]}`)
+		default:
+			_, _ = io.WriteString(w, fmt.Sprintf(`{"bio":"","photos":[-1, %d, 7]}`, photoID))
+		}
+	}))
+	defer api.Close()
+
+	p := NewOpenLibraryProvider(nil).WithEndpoints(api.URL+"/search.json", covers.URL)
+	img, err := p.FetchAuthorPhoto(context.Background(), AuthorQuery{FullName: "X"})
+	require.NoError(t, err)
+	defer func() { _ = img.Reader.Close() }()
+	body, err := io.ReadAll(img.Reader)
+	require.NoError(t, err)
+	require.Equal(t, jpegBytes, string(body))
+}
+
+func TestOpenLibrary_AuthorPhotoNoPositiveIDs(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "/search/authors.json"):
+			_, _ = io.WriteString(w, `{"docs":[{"key":"OLxxxA"}]}`)
+		default:
+			_, _ = io.WriteString(w, `{"bio":"x","photos":[-1, -1]}`)
+		}
+	}))
+	defer srv.Close()
+	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
 	_, err := p.FetchAuthorPhoto(context.Background(), AuthorQuery{FullName: "X"})
 	require.ErrorIs(t, err, ErrNotFound)
 }
