@@ -55,3 +55,29 @@ type AnnotationProvider interface {
 	Name() string
 	FetchAnnotation(ctx context.Context, q BookQuery) (string, error)
 }
+
+// AuthorQuery — то же что BookQuery, но для авторов. Wiki-провайдеры
+// ищут по полному имени; Lang — какую языковую Wikipedia пробовать
+// первой (ru / en).
+type AuthorQuery struct {
+	ID         int64
+	LastName   string
+	FirstName  string
+	MiddleName string
+	FullName   string // готовая склейка "Фамилия Имя Отчество"
+	Lang       string // ISO-код страны/языка автора, может быть пустой
+}
+
+// AuthorPhotoProvider — поставщик портрета автора. Reuse CoverImage —
+// формат тот же (Reader + Mime + SourceID), кэш в /cache/covers тоже общий.
+type AuthorPhotoProvider interface {
+	Name() string
+	FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error)
+}
+
+// AuthorBioProvider — поставщик био-текста автора. Контракт plain-text
+// с переводами строк, как у AnnotationProvider.
+type AuthorBioProvider interface {
+	Name() string
+	FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error)
+}

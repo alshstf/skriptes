@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
+	"github.com/skriptes/skriptes/backend/internal/metadata"
 )
 
 // CatalogDeps — зависимости /api/authors/:id и /api/series/:id.
@@ -29,7 +30,7 @@ type seriesResponse struct {
 	IsFavorite bool `json:"is_favorite"`
 }
 
-func handleGetAuthor(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
+func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -60,7 +61,50 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 				isFav = v
 			}
 		}
+
+		// Lazy enrichment: bio/фото подтягиваем из Wikipedia. На первом
+		// запросе клиент получит карточку без них; polling в useAuthor
+		// подменит без перезагрузки.
+		triggerAuthorEnrichmentAsync(meta, a)
+
 		writeJSON(w, http.StatusOK, authorResponse{Author: a, IsFavorite: isFav})
+	}
+}
+
+// triggerAuthorEnrichmentAsync — параллельно EnsureAuthorPhoto/Bio в
+// отдельных goroutines. Каждый сам выходит мгновенно, если поле уже на
+// месте. Контекст собственный с EnrichDeadline (HTTP может вернуться
+// клиенту раньше).
+func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
+	if d.Service == nil {
+		return
+	}
+	if a.PhotoPath != "" && a.Bio != "" {
+		return
+	}
+	q := metadata.AuthorQuery{
+		ID:         a.ID,
+		LastName:   a.LastName,
+		FirstName:  a.FirstName,
+		MiddleName: a.MiddleName,
+		FullName:   a.FullName,
+		// Lang заполнить из книг автора пришлось бы дополнительным
+		// запросом; пока оставим пустой — WikipediaProvider попробует
+		// ru-first, потом en, что покрывает наш каталог.
+	}
+	if a.PhotoPath == "" {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+			defer cancel()
+			d.Service.EnsureAuthorPhoto(ctx, q)
+		}()
+	}
+	if a.Bio == "" {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+			defer cancel()
+			d.Service.EnsureAuthorBio(ctx, q)
+		}()
 	}
 }
 

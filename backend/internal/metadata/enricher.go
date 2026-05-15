@@ -25,24 +25,32 @@ import (
 // для одной книги" — обе запишут одинаковый результат. Inflight-карты
 // дедуплицируют параллельные вызовы для одной книги в одном процессе.
 type Enricher struct {
-	coverProviders      []CoverProvider
-	annotationProviders []AnnotationProvider
-	pool                *pgxpool.Pool
-	coverRoot           string // абсолютный путь к /cache/covers
-	logger              *slog.Logger
+	coverProviders       []CoverProvider
+	annotationProviders  []AnnotationProvider
+	authorPhotoProviders []AuthorPhotoProvider
+	authorBioProviders   []AuthorBioProvider
+	pool                 *pgxpool.Pool
+	coverRoot            string // абсолютный путь к /cache/covers (используется и для фото авторов)
+	logger               *slog.Logger
 
-	inflightMu       sync.Mutex
-	inflightCover    map[int64]struct{}
-	inflightAnnotate map[int64]struct{}
+	inflightMu          sync.Mutex
+	inflightCover       map[int64]struct{}
+	inflightAnnotate    map[int64]struct{}
+	inflightAuthorPhoto map[int64]struct{}
+	inflightAuthorBio   map[int64]struct{}
 }
 
 // New создаёт Enricher и обеспечивает существование coverRoot.
-// annotationProviders может быть nil — тогда EnsureAnnotation no-op.
+// Любая цепочка провайдеров может быть nil — соответствующий Ensure-метод
+// станет no-op'ом. coverRoot используется как для обложек книг, так и
+// для фотографий авторов: имена content-addressable (sha256), коллизий нет.
 func New(
 	pool *pgxpool.Pool,
 	coverRoot string,
 	coverProviders []CoverProvider,
 	annotationProviders []AnnotationProvider,
+	authorPhotoProviders []AuthorPhotoProvider,
+	authorBioProviders []AuthorBioProvider,
 	logger *slog.Logger,
 ) (*Enricher, error) {
 	if logger == nil {
@@ -52,13 +60,17 @@ func New(
 		return nil, fmt.Errorf("mkdir cover root: %w", err)
 	}
 	return &Enricher{
-		coverProviders:      coverProviders,
-		annotationProviders: annotationProviders,
-		pool:                pool,
-		coverRoot:           coverRoot,
-		logger:              logger,
-		inflightCover:       map[int64]struct{}{},
-		inflightAnnotate:    map[int64]struct{}{},
+		coverProviders:       coverProviders,
+		annotationProviders:  annotationProviders,
+		authorPhotoProviders: authorPhotoProviders,
+		authorBioProviders:   authorBioProviders,
+		pool:                 pool,
+		coverRoot:            coverRoot,
+		logger:               logger,
+		inflightCover:        map[int64]struct{}{},
+		inflightAnnotate:     map[int64]struct{}{},
+		inflightAuthorPhoto:  map[int64]struct{}{},
+		inflightAuthorBio:    map[int64]struct{}{},
 	}, nil
 }
 
@@ -257,3 +269,107 @@ func extFromMime(mime string) string {
 // EnrichDeadline — дефолтное время на одну попытку обогащения.
 // Используется handler'ами при создании detached-контекста.
 const EnrichDeadline = 30 * time.Second
+
+// EnsureAuthorPhoto — гарантирует наличие authors.photo_path. Файл
+// сохраняется в тот же /cache/covers — у него content-addressable
+// имя, коллизий с обложками книг быть не может.
+func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
+	if len(e.authorPhotoProviders) == 0 {
+		return
+	}
+	if !e.tryLock(e.inflightAuthorPhoto, q.ID) {
+		return
+	}
+	defer e.unlock(e.inflightAuthorPhoto, q.ID)
+
+	var existing *string
+	if err := e.pool.QueryRow(ctx, `SELECT photo_path FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
+		e.logger.Warn("metadata: query author photo failed", "author_id", q.ID, "err", err)
+		return
+	}
+	if existing != nil && *existing != "" {
+		return
+	}
+
+	for _, p := range e.authorPhotoProviders {
+		img, err := p.FetchAuthorPhoto(ctx, q)
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			e.logger.Info("metadata: author photo provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
+			continue
+		}
+		if img == nil || img.Reader == nil {
+			continue
+		}
+		filename, err := e.saveCover(img)
+		_ = img.Reader.Close()
+		if err != nil {
+			e.logger.Warn("metadata: save author photo failed", "provider", p.Name(), "author_id", q.ID, "err", err)
+			continue
+		}
+		if _, err := e.pool.Exec(ctx,
+			`UPDATE authors SET photo_path = $1, metadata_fetched_at = now() WHERE id = $2`,
+			filename, q.ID,
+		); err != nil {
+			e.logger.Warn("metadata: record author photo failed", "author_id", q.ID, "err", err)
+			continue
+		}
+		e.logger.Info("metadata: author photo saved", "provider", p.Name(), "author_id", q.ID, "file", filename)
+		return
+	}
+
+	// Все провайдеры мимо — отмечаем попытку, чтобы фронт мог решить
+	// "polling сдался" и показать fallback. Совместимо с EnsureAuthorBio:
+	// они оба пишут metadata_fetched_at независимо, последний раз обновлённый
+	// время используется как "момент последней попытки enrichment'а".
+	if _, err := e.pool.Exec(ctx,
+		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1`, q.ID,
+	); err != nil {
+		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
+	}
+}
+
+// EnsureAuthorBio — параллельно EnsureAuthorPhoto, но пишет authors.bio.
+func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
+	if len(e.authorBioProviders) == 0 {
+		return
+	}
+	if !e.tryLock(e.inflightAuthorBio, q.ID) {
+		return
+	}
+	defer e.unlock(e.inflightAuthorBio, q.ID)
+
+	var existing *string
+	if err := e.pool.QueryRow(ctx, `SELECT bio FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
+		e.logger.Warn("metadata: query author bio failed", "author_id", q.ID, "err", err)
+		return
+	}
+	if existing != nil && *existing != "" {
+		return
+	}
+
+	for _, p := range e.authorBioProviders {
+		text, err := p.FetchAuthorBio(ctx, q)
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			e.logger.Info("metadata: author bio provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
+			continue
+		}
+		if text == "" {
+			continue
+		}
+		if _, err := e.pool.Exec(ctx,
+			`UPDATE authors SET bio = $1, metadata_fetched_at = now() WHERE id = $2`,
+			text, q.ID,
+		); err != nil {
+			e.logger.Warn("metadata: record author bio failed", "author_id", q.ID, "err", err)
+			continue
+		}
+		e.logger.Info("metadata: author bio saved", "provider", p.Name(), "author_id", q.ID, "len", len(text))
+		return
+	}
+}
