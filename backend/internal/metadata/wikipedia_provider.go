@@ -25,6 +25,11 @@ type WikipediaProvider struct {
 	apiRoot    string // override для тестов; продакшен — пустая (используем https://{lang}.wikipedia.org)
 }
 
+// wikiUserAgent — Wikimedia требует осмысленный User-Agent на REST API,
+// иначе блокирует или отдаёт пустые ответы без явной ошибки. Формат
+// рекомендован https://meta.wikimedia.org/wiki/User-Agent_policy.
+const wikiUserAgent = "skriptes/0.1 (https://github.com/alshstf/skriptes; metadata-enricher)"
+
 func NewWikipediaProvider(httpClient *http.Client) *WikipediaProvider {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
@@ -92,6 +97,7 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang, name string) (*wi
 		return nil, fmt.Errorf("build summary request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", wikiUserAgent)
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("wikipedia summary: %w", err)
@@ -126,6 +132,7 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang, name string)
 		return "", fmt.Errorf("build opensearch: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", wikiUserAgent)
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("wikipedia opensearch: %w", err)
@@ -158,6 +165,7 @@ func (p *WikipediaProvider) downloadImage(ctx context.Context, src string) (*Cov
 	if err != nil {
 		return nil, fmt.Errorf("build image request: %w", err)
 	}
+	req.Header.Set("User-Agent", wikiUserAgent)
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("wikipedia image: %w", err)
