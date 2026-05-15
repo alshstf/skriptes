@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 export type BookListItem = {
@@ -122,14 +122,24 @@ export function useBooks(opts: BookFilters) {
  * и подменяем плейсхолдер на настоящую обложку без перезагрузки
  * страницы. Сдаёмся через ~20 секунд (10 попыток), чтобы не
  * крутить запросы бесконечно для книг без доступной обложки.
+ *
+ * Возвращает обычный useQuery-результат плюс enrichmentExhausted:
+ * флаг "polling исчерпал ретраи, дальше ждать бесполезно". UI
+ * использует его чтобы превратить вечный скелетон в "Описание
+ * отсутствует" для книг которых нет ни в одном источнике.
  */
+const ENRICH_MAX_TRIES = 10;
+
 export function useBook(id: number | string | undefined) {
-  return useQuery<Book>({
-    queryKey: ['book', String(id)],
+  const qc = useQueryClient();
+  const queryKey = ['book', String(id)] as const;
+
+  const query = useQuery<Book>({
+    queryKey: [...queryKey],
     queryFn: ({ signal }) => apiFetch<Book>(`/api/books/${id}`, { signal }),
     enabled: id !== undefined && id !== '',
-    refetchInterval: (query) => {
-      const data = query.state.data as Book | undefined;
+    refetchInterval: (q) => {
+      const data = q.state.data as Book | undefined;
       // Поллим пока хотя бы один артефакт enrichment'а не пришёл:
       // обложка ИЛИ аннотация. Когда оба на месте — успокаиваемся.
       // Если книга в принципе без обложки И без аннотации (бывает) —
@@ -137,8 +147,20 @@ export function useBook(id: number | string | undefined) {
       const haveCover = !!data?.cover_path;
       const haveAnnotation = !!data?.annotation;
       if (haveCover && haveAnnotation) return false;
-      if (query.state.dataUpdateCount > 10) return false;
+      if (q.state.dataUpdateCount > ENRICH_MAX_TRIES) return false;
       return 2_000;
     },
   });
+
+  // dataUpdateCount не экспортируется в useQuery-result, читаем из
+  // QueryClient'а. После того как refetchInterval вернёт false по
+  // ретраям, polling остановится — но dataUpdateCount уже будет > MAX,
+  // что мы и используем как сигнал "обогащение завершилось без удачи".
+  const state = qc.getQueryState<Book>([...queryKey]);
+  const enrichmentExhausted =
+    !!state?.data &&
+    state.dataUpdateCount > ENRICH_MAX_TRIES &&
+    (!state.data.cover_path || !state.data.annotation);
+
+  return { ...query, enrichmentExhausted };
 }
