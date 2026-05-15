@@ -45,6 +45,33 @@ func NewFb2Provider() *Fb2Provider { return &Fb2Provider{} }
 
 func (p *Fb2Provider) Name() string { return "fb2" }
 
+// FetchAnnotation — текстовое описание книги из тега
+// <description><title-info><annotation> внутри fb2.
+//
+// Извлекаем только текстовое содержимое (включая текст внутри
+// inline-тегов вроде <emphasis>, <strong>), параграфы <p> склеиваются
+// через "\n\n" — фронт рендерит как whitespace-pre-wrap. Никакого HTML
+// в результате, безопасно для рендера.
+func (p *Fb2Provider) FetchAnnotation(_ context.Context, q BookQuery) (string, error) {
+	if q.ArchivePath == "" || q.FB2Name == "" {
+		return "", ErrNotFound
+	}
+	rc, err := openFB2(q.ArchivePath, q.FB2Name)
+	if err != nil {
+		return "", err
+	}
+	defer func() { _ = rc.Close() }()
+
+	text, err := extractFb2Annotation(rc)
+	if err != nil {
+		return "", fmt.Errorf("scan fb2 annotation: %w", err)
+	}
+	if text == "" {
+		return "", ErrNotFound
+	}
+	return text, nil
+}
+
 func (p *Fb2Provider) FetchCover(_ context.Context, q BookQuery) (*CoverImage, error) {
 	if q.ArchivePath == "" || q.FB2Name == "" {
 		return nil, ErrNotFound
@@ -246,4 +273,109 @@ func stripWhitespace(b []byte) []byte {
 		out = append(out, c)
 	}
 	return out
+}
+
+// extractFb2Annotation — стримом обходит XML и возвращает plain-text
+// аннотации. Структура fb2:
+//
+//	<description>
+//	  <title-info>
+//	    <annotation>
+//	      <p>Параграф 1...</p>
+//	      <p>Параграф <emphasis>с выделением</emphasis>.</p>
+//	    </annotation>
+//	    ...
+//
+// Алгоритм: ловим вход в <annotation>, далее каждый <p>-блок собираем
+// в одну строку (всё CharData внутри, без тегов), параграфы склеиваем
+// через "\n\n". Выход из <annotation> завершает сбор.
+//
+// Не-fb2 теги внутри annotation (например, у некоторых книг
+// сразу текст без <p>) обрабатываем как fallback: накапливаем весь
+// CharData до закрытия <annotation>.
+func extractFb2Annotation(r io.Reader) (string, error) {
+	dec := xml.NewDecoder(r)
+	dec.CharsetReader = charset.NewReaderLabel
+
+	var (
+		inAnnotation bool
+		paragraphs   []string
+		curPara      strings.Builder
+		inParagraph  bool
+		// fallback-буфер для текста-без-<p>
+		fallback strings.Builder
+	)
+
+	finalize := func() {
+		// если был открыт текущий параграф — закрыть его.
+		if inParagraph {
+			s := strings.TrimSpace(curPara.String())
+			if s != "" {
+				paragraphs = append(paragraphs, s)
+			}
+			curPara.Reset()
+			inParagraph = false
+		}
+	}
+
+	for {
+		tok, terr := dec.Token()
+		if terr == io.EOF {
+			break
+		}
+		if terr != nil {
+			return "", terr
+		}
+
+		switch t := tok.(type) {
+		case xml.StartElement:
+			if t.Name.Local == "annotation" {
+				inAnnotation = true
+				continue
+			}
+			if !inAnnotation {
+				continue
+			}
+			if t.Name.Local == "p" {
+				finalize()
+				inParagraph = true
+			}
+			// Любые другие inline-теги (<emphasis>, <strong>) — игнорим
+			// сам тег, но CharData внутри попадёт в curPara через
+			// следующий CharData-токен.
+		case xml.CharData:
+			if !inAnnotation {
+				continue
+			}
+			if inParagraph {
+				curPara.Write(t)
+			} else {
+				fallback.Write(t)
+			}
+		case xml.EndElement:
+			if !inAnnotation {
+				continue
+			}
+			if t.Name.Local == "annotation" {
+				finalize()
+				// если ни одного <p> не нашли, отдадим fallback-текст
+				if len(paragraphs) == 0 {
+					if s := strings.TrimSpace(fallback.String()); s != "" {
+						paragraphs = append(paragraphs, s)
+					}
+				}
+				// дальше XML может содержать что угодно — нам неинтересно.
+				return strings.Join(paragraphs, "\n\n"), nil
+			}
+			if t.Name.Local == "p" {
+				finalize()
+			}
+		}
+	}
+	// Никогда не встретили закрытия — отдаём что насобирали.
+	finalize()
+	if len(paragraphs) == 0 {
+		return strings.TrimSpace(fallback.String()), nil
+	}
+	return strings.Join(paragraphs, "\n\n"), nil
 }

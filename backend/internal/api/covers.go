@@ -20,21 +20,19 @@ type MetadataDeps struct {
 	BooksRoot string // корень read-only volume с zip-архивами; нужен для fb2-провайдера
 }
 
-// triggerCoverEnrichmentAsync — запускает fire-and-forget goroutine,
-// которая сходит в провайдеры и попытается сохранить обложку.
-//
-// Если у книги уже есть cover_path — Enricher сам мгновенно выйдет
-// после проверки БД, так что вызывать его на каждый GET безопасно.
+// triggerBookEnrichmentAsync — запускает fire-and-forget goroutine,
+// которая обогащает книгу обложкой и/или аннотацией если этих данных
+// ещё нет. Каждый Enrich* сам быстро выходит, если данные уже на месте.
 //
 // Контекст — собственный с таймаутом EnrichDeadline, а не унаследованный
 // от HTTP: HTTP-handler вернётся клиенту немедленно, нам нельзя дать
 // клиенту отменить фоновое обогащение.
-func triggerCoverEnrichmentAsync(d MetadataDeps, b books.Book) {
+func triggerBookEnrichmentAsync(d MetadataDeps, b books.Book) {
 	if d.Service == nil {
 		return
 	}
-	if b.CoverPath != "" {
-		return // уже есть
+	if b.CoverPath != "" && b.Annotation != "" {
+		return // ничего обогащать
 	}
 
 	authors := make([]string, 0, len(b.Authors))
@@ -49,11 +47,20 @@ func triggerCoverEnrichmentAsync(d MetadataDeps, b books.Book) {
 		ArchivePath: filepath.Join(d.BooksRoot, b.Archive),
 		FB2Name:     b.FileName + "." + b.Ext,
 	}
-	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
-		defer cancel()
-		d.Service.EnsureCover(ctx, q)
-	}()
+	if b.CoverPath == "" {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+			defer cancel()
+			d.Service.EnsureCover(ctx, q)
+		}()
+	}
+	if b.Annotation == "" {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+			defer cancel()
+			d.Service.EnsureAnnotation(ctx, q)
+		}()
+	}
 }
 
 // handleCover — GET /api/covers/{name}. Отдаёт файл из coverRoot.

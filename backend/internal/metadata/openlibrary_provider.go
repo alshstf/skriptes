@@ -116,3 +116,97 @@ type olSearchResponse struct {
 		Key    string `json:"key"` // "/works/OL12345W"
 	} `json:"docs"`
 }
+
+// FetchAnnotation — два запроса:
+//  1. /search.json → берём docs[0].key (например "/works/OL12345W");
+//  2. GET {workKey}.json → поле description.
+//
+// description в OL — иногда string ("текст"), иногда object
+// ({"type":"/type/text","value":"текст"}). Json.RawMessage + декодер
+// разруливает оба.
+func (p *OpenLibraryProvider) FetchAnnotation(ctx context.Context, q BookQuery) (string, error) {
+	if q.Title == "" {
+		return "", ErrNotFound
+	}
+
+	v := url.Values{}
+	v.Set("title", q.Title)
+	if len(q.Authors) > 0 {
+		v.Set("author", q.Authors[0])
+	}
+	v.Set("limit", "1")
+	v.Set("fields", "key,cover_i")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build search request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("ol search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+
+	var sr olSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return "", fmt.Errorf("decode search: %w", err)
+	}
+	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		return "", ErrNotFound
+	}
+
+	workKey := sr.Docs[0].Key // "/works/OLxxxW"
+	workReq, err := http.NewRequestWithContext(ctx, http.MethodGet,
+		strings.TrimRight(p.workBaseURL(), "/")+workKey+".json", nil)
+	if err != nil {
+		return "", fmt.Errorf("build work request: %w", err)
+	}
+	workReq.Header.Set("Accept", "application/json")
+	workResp, err := p.httpClient.Do(workReq)
+	if err != nil {
+		return "", fmt.Errorf("ol work: %w", err)
+	}
+	defer func() { _ = workResp.Body.Close() }()
+	if workResp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+
+	var work struct {
+		Description any `json:"description"` // string или {type, value}
+	}
+	if err := json.NewDecoder(workResp.Body).Decode(&work); err != nil {
+		return "", fmt.Errorf("decode work: %w", err)
+	}
+	desc := extractOLDescription(work.Description)
+	if desc == "" {
+		return "", ErrNotFound
+	}
+	return desc, nil
+}
+
+// workBaseURL — корень для /works/{OLID}.json. По умолчанию совпадает
+// с openlibrary.org; в тестах подменяется через WithEndpoints.
+func (p *OpenLibraryProvider) workBaseURL() string {
+	// searchURL = "https://openlibrary.org/search.json" → срезаем
+	// "/search.json" и получаем "https://openlibrary.org".
+	if idx := strings.LastIndex(p.searchURL, "/search.json"); idx >= 0 {
+		return p.searchURL[:idx]
+	}
+	return "https://openlibrary.org"
+}
+
+func extractOLDescription(v any) string {
+	switch x := v.(type) {
+	case string:
+		return strings.TrimSpace(x)
+	case map[string]any:
+		if s, ok := x["value"].(string); ok {
+			return strings.TrimSpace(s)
+		}
+	}
+	return ""
+}

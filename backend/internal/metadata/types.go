@@ -44,3 +44,14 @@ type CoverProvider interface {
 	Name() string
 	FetchCover(ctx context.Context, q BookQuery) (*CoverImage, error)
 }
+
+// AnnotationProvider — поставщик аннотации (описания) книги.
+// Возвращает plain-text с сохранёнными переводами строк (\n\n между
+// параграфами), без HTML-тегов — фронт рендерит как whitespace-pre-wrap
+// без риска XSS.
+//
+// Контракт ErrNotFound идентичен CoverProvider.
+type AnnotationProvider interface {
+	Name() string
+	FetchAnnotation(ctx context.Context, q BookQuery) (string, error)
+}
