@@ -7,73 +7,72 @@ import type { Adaptation } from '@/lib/adaptations';
 /**
  * AdaptationsSection — секция "По этой книге снято" на странице книги.
  *
- * Состояния:
- *  1. data === undefined (первый запрос грузится) → скелетон из 2-3 карточек.
- *  2. enrichment_status === "pending" И items пустой → "Ищем экранизации"
- *     со скелетоном (пока поллим), без скрытия секции — пользователю
- *     видна обратная связь что что-то происходит.
- *  3. status === "done" + items пустой → секция вообще не рендерится.
- *     "Экранизаций нет" слишком навязчиво: для большинства книг будет
- *     пустой список, незачем дёргать UI.
- *  4. items.length > 0 → горизонтальный скролл с карточками.
+ * Три состояния — параллельно AnnotationBlock (книга) и AuthorBio
+ * (страница автора): секция всегда рендерится с одинаковым заголовком,
+ * меняется только содержимое.
+ *
+ *  1. items.length > 0 → горизонтальный скролл с карточками. Счётчик
+ *     в скобках рядом с заголовком.
+ *  2. items пустой, enrichment_status === "pending" → скелетон из
+ *     трёх карточек (поллинг useAdaptations догонит до 30s ретраев).
+ *  3. items пустой, enrichment_status === "done" → "Экранизаций не
+ *     найдено." Это сигнал что Wikidata-обогащение отработало и
+ *     ничего по этой книге не нашло; иначе пользователь не отличит
+ *     "ещё ищем" от "уже посмотрели".
  */
 export function AdaptationsSection({ bookId }: { bookId: number }) {
   const { data, isLoading } = useAdaptations(bookId);
 
-  if (isLoading || (!data && !isLoading)) {
-    return <PendingSkeleton label="Ищем экранизации" />;
-  }
-  if (!data) {
-    return null;
-  }
-  if (data.enrichment_status === 'pending' && data.items.length === 0) {
-    return <PendingSkeleton label="Ищем экранизации" />;
-  }
-  if (data.items.length === 0) {
-    // done + ничего нет — секцию скрываем. Это самый частый кейс.
-    return null;
-  }
+  const items = data?.items ?? [];
+  const exhausted = data?.enrichment_status === 'done';
+  const showSkeleton = (isLoading || !data || !exhausted) && items.length === 0;
 
   return (
     <section className="space-y-3" aria-label="Экранизации">
       <h3 className="flex items-center gap-2 text-sm font-medium">
         <Film className="size-4" aria-hidden />
         По этой книге снято
-        <span className="text-muted-foreground font-normal">({data.items.length})</span>
+        {items.length > 0 ? (
+          <span className="text-muted-foreground font-normal">({items.length})</span>
+        ) : null}
       </h3>
-      {/*
-        Горизонтальный список карточек. На мобильном — свайп; на десктопе
-        обычный flex с overflow-x. Гэп подобран чтобы 4-5 постеров
-        помещались в типичную ширину карточки книги.
-      */}
-      <ul className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-        {data.items.map((a) => (
-          <li key={a.id} className="shrink-0 w-32 sm:w-36">
-            <AdaptationCard a={a} />
-          </li>
-        ))}
-      </ul>
+      {items.length > 0 ? (
+        /*
+          Горизонтальный список карточек. На мобильном — свайп; на
+          десктопе flex с overflow-x. Гэп подобран чтобы 4-5 постеров
+          помещались в типичную ширину карточки книги.
+        */
+        <ul className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+          {items.map((a) => (
+            <li key={a.id} className="shrink-0 w-32 sm:w-36">
+              <AdaptationCard a={a} />
+            </li>
+          ))}
+        </ul>
+      ) : showSkeleton ? (
+        <PendingSkeletonRow />
+      ) : (
+        <p className="text-sm italic text-muted-foreground">Экранизаций не найдено.</p>
+      )}
     </section>
   );
 }
 
-function PendingSkeleton({ label }: { label: string }) {
+function PendingSkeletonRow() {
   return (
-    <section className="space-y-3" aria-busy="true" aria-label={label}>
-      <h3 className="flex items-center gap-2 text-sm font-medium">
-        <Film className="size-4" aria-hidden />
-        {label}…
-      </h3>
-      <div className="flex gap-3 overflow-hidden pb-1 -mx-1 px-1">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="shrink-0 w-32 sm:w-36 space-y-2">
-            <Skeleton className="aspect-[2/3] w-full rounded-md" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-2/3" />
-          </div>
-        ))}
-      </div>
-    </section>
+    <div
+      className="flex gap-3 overflow-hidden pb-1 -mx-1 px-1"
+      aria-busy="true"
+      aria-label="Экранизации загружаются"
+    >
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="shrink-0 w-32 sm:w-36 space-y-2">
+          <Skeleton className="aspect-[2/3] w-full rounded-md" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-2/3" />
+        </div>
+      ))}
+    </div>
   );
 }
 

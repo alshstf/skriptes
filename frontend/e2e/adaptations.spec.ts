@@ -6,15 +6,15 @@ import { test, expect } from './_fixtures';
 // "мини-сериал", "аниме"); "film" по умолчанию badge не показывает чтобы
 // не шумел в типичном случае.
 
-test('adaptations: hidden when status=done and empty', async ({ mockedPage: page }) => {
-  // Дефолтный mock в _fixtures отдаёт пустой done — секция должна не
-  // отрендериться вообще. Проверяем что заголовка нет на странице.
+test('adaptations: shows "не найдено" fallback when status=done and empty', async ({
+  mockedPage: page,
+}) => {
+  // Дефолтный mock в _fixtures отдаёт пустой done — секция остаётся
+  // видна с заголовком и сообщением "Экранизаций не найдено"
+  // (параллельно AnnotationBlock и AuthorBio).
   await page.goto('/books/19');
-  // Подождём загрузку основной карточки.
-  await expect(page.getByText('Кадетский корпус. Книга 2')).toBeVisible({
-    timeout: 10_000,
-  });
-  await expect(page.getByText('По этой книге снято')).not.toBeVisible();
+  await expect(page.getByText(/По этой книге снято/)).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Экранизаций не найдено.')).toBeVisible();
 });
 
 test('adaptations: shows skeleton while enrichment pending', async ({ mockedPage: page }) => {
@@ -27,7 +27,9 @@ test('adaptations: shows skeleton while enrichment pending', async ({ mockedPage
   );
 
   await page.goto('/books/19');
-  await expect(page.getByText(/Ищем экранизации/)).toBeVisible({ timeout: 10_000 });
+  // Заголовок секции виден сразу; внутри — скелетон с aria-label.
+  await expect(page.getByText(/По этой книге снято/)).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[aria-label="Экранизации загружаются"]')).toBeVisible();
 });
 
 test('adaptations: renders cards with poster/year/director/kind', async ({
