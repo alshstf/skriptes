@@ -16,15 +16,16 @@ import (
 // auth-эндпоинты не монтируются и originCheck не применяется. Это полезно
 // для unit-тестов простых ручек (/healthz и т.п.) без поднятия БД.
 type Deps struct {
-	Version  string
-	DB       *pgxpool.Pool
-	Auth     AuthDeps
-	Books    BooksDeps
-	Catalog  CatalogDeps
-	Download DownloadDeps
-	History  HistoryDeps
-	Metadata MetadataDeps
-	Kindle   KindleDeps
+	Version     string
+	DB          *pgxpool.Pool
+	Auth        AuthDeps
+	Books       BooksDeps
+	Catalog     CatalogDeps
+	Download    DownloadDeps
+	History     HistoryDeps
+	Metadata    MetadataDeps
+	Kindle      KindleDeps
+	Adaptations AdaptationsDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -57,6 +58,9 @@ func NewRouter(d Deps) http.Handler {
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books))
 					r.Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
+				}
+				if d.Adaptations.Service != nil {
+					r.Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))
 				}
 				if d.Metadata.Service != nil {
 					r.Get("/covers/{name}", handleCover(d.Metadata))

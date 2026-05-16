@@ -3,6 +3,7 @@ import { BookText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AdaptationsSection } from '@/components/AdaptationsSection';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
@@ -143,6 +144,14 @@ export function BookDetailPage() {
             annotation={book.annotation}
             enrichmentExhausted={enrichmentExhausted}
           />
+
+          {/*
+            Экранизации — отдельная секция под аннотацией. Не рендерится
+            пока enrichment'у нечего показать (см. AdaptationsSection):
+            для большинства книг экранизаций просто нет, навязывать
+            "Экранизаций не найдено" — лишний шум.
+          */}
+          {!book.deleted ? <AdaptationsSection bookId={book.id} /> : null}
         </CardContent>
       </Card>
     </article>

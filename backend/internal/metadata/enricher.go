@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -29,15 +31,18 @@ type Enricher struct {
 	annotationProviders  []AnnotationProvider
 	authorPhotoProviders []AuthorPhotoProvider
 	authorBioProviders   []AuthorBioProvider
+	adaptationProviders  []AdaptationProvider
 	pool                 *pgxpool.Pool
-	coverRoot            string // абсолютный путь к /cache/covers (используется и для фото авторов)
+	coverRoot            string // абсолютный путь к /cache/covers (используется и для фото авторов, и для постеров экранизаций)
 	logger               *slog.Logger
+	posterHTTPClient     *http.Client // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
 
 	inflightMu          sync.Mutex
 	inflightCover       map[int64]struct{}
 	inflightAnnotate    map[int64]struct{}
 	inflightAuthorPhoto map[int64]struct{}
 	inflightAuthorBio   map[int64]struct{}
+	inflightAdaptations map[int64]struct{}
 }
 
 // New создаёт Enricher и обеспечивает существование coverRoot.
@@ -51,6 +56,7 @@ func New(
 	annotationProviders []AnnotationProvider,
 	authorPhotoProviders []AuthorPhotoProvider,
 	authorBioProviders []AuthorBioProvider,
+	adaptationProviders []AdaptationProvider,
 	logger *slog.Logger,
 ) (*Enricher, error) {
 	if logger == nil {
@@ -64,14 +70,26 @@ func New(
 		annotationProviders:  annotationProviders,
 		authorPhotoProviders: authorPhotoProviders,
 		authorBioProviders:   authorBioProviders,
+		adaptationProviders:  adaptationProviders,
 		pool:                 pool,
 		coverRoot:            coverRoot,
 		logger:               logger,
+		posterHTTPClient:     &http.Client{Timeout: 15 * time.Second},
 		inflightCover:        map[int64]struct{}{},
 		inflightAnnotate:     map[int64]struct{}{},
 		inflightAuthorPhoto:  map[int64]struct{}{},
 		inflightAuthorBio:    map[int64]struct{}{},
+		inflightAdaptations:  map[int64]struct{}{},
 	}, nil
+}
+
+// WithPosterHTTPClient — для тестов: подменить HTTP-клиент для скачивания
+// постеров экранизаций.
+func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
+	if c != nil {
+		e.posterHTTPClient = c
+	}
+	return e
 }
 
 // EnsureCover — гарантировать что у книги есть cover_path. Если уже
@@ -372,4 +390,160 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		e.logger.Info("metadata: author bio saved", "provider", p.Name(), "author_id", q.ID, "len", len(text))
 		return
 	}
+}
+
+// EnsureAdaptations — поиск экранизаций для книги через цепочку
+// AdaptationProvider'ов. Семантика отличается от Cover/Annotation:
+//
+//   - "успехом" провайдера считается ЛЮБОЙ непустой результат + отсутствие
+//     ошибки. Если первый провайдер вернул экранизации — следующие не
+//     опрашиваются (как для Cover).
+//   - Пустой результат без ErrNotFound — валидный: "книгу нашли, но
+//     экранизаций нет". В этом случае пишем adaptations_fetched_at,
+//     выходим, повторно не лезем (TTL обходится через скрипт-ретригер
+//     enrichment'а; в текущей версии — не реализован).
+//   - ErrNotFound от ВСЕХ провайдеров → книгу нигде не сопоставили;
+//     adaptations_fetched_at всё равно ставим, чтобы фронт показал
+//     "Экранизаций не найдено", а не вечный скелетон.
+//
+// Записи в book_adaptations пишутся ON CONFLICT DO NOTHING — это
+// делает повторный вызов идемпотентным.
+func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
+	if len(e.adaptationProviders) == 0 {
+		return
+	}
+	if !e.tryLock(e.inflightAdaptations, q.ID) {
+		return
+	}
+	defer e.unlock(e.inflightAdaptations, q.ID)
+
+	var fetchedAt *time.Time
+	if err := e.pool.QueryRow(ctx,
+		`SELECT adaptations_fetched_at FROM books WHERE id = $1`, q.ID,
+	).Scan(&fetchedAt); err != nil {
+		e.logger.Warn("metadata: query book adaptations_fetched_at failed", "book_id", q.ID, "err", err)
+		return
+	}
+	if fetchedAt != nil {
+		return // уже пробовали; ретрай — отдельный механизм (вне scope этой версии)
+	}
+
+	for _, p := range e.adaptationProviders {
+		items, err := p.FetchAdaptations(ctx, q)
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			e.logger.Info("metadata: adaptations provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			continue
+		}
+		// Успех: пишем records (даже если len==0 — это валидное
+		// "ничего не сняли"). Помечаем adaptations_fetched_at.
+		if err := e.saveAdaptations(ctx, q.ID, items); err != nil {
+			e.logger.Warn("metadata: save adaptations failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			continue
+		}
+		e.logger.Info("metadata: adaptations saved", "provider", p.Name(), "book_id", q.ID, "count", len(items))
+		return
+	}
+
+	// Все провайдеры мимо: помечаем попытку чтобы UI показал fallback.
+	if _, err := e.pool.Exec(ctx,
+		`UPDATE books SET adaptations_fetched_at = now() WHERE id = $1`, q.ID,
+	); err != nil {
+		e.logger.Warn("metadata: mark adaptations_fetched_at failed", "book_id", q.ID, "err", err)
+	}
+}
+
+// saveAdaptations — пишем найденные адаптации в БД одной транзакцией:
+// сначала скачиваем все постеры (если есть PosterURL) → пишем строки →
+// обновляем adaptations_fetched_at. ON CONFLICT DO NOTHING — повторный
+// вызов с теми же ext_id не дублирует.
+func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Adaptation) error {
+	// Скачиваем постеры до транзакции — IO не должен держать lock.
+	posters := make([]string, len(items)) // путь в /cache/covers или ""
+	for i, it := range items {
+		if it.PosterURL == "" {
+			continue
+		}
+		path, err := e.downloadPoster(ctx, it.PosterURL)
+		if err != nil {
+			// Постер опционален — лог и идём дальше.
+			e.logger.Info("metadata: download poster failed", "book_id", bookID, "url", it.PosterURL, "err", err)
+			continue
+		}
+		posters[i] = path
+	}
+
+	tx, err := e.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	for i, it := range items {
+		_, err := tx.Exec(ctx, `
+			INSERT INTO book_adaptations
+				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''))
+			ON CONFLICT (book_id, provider, ext_id) DO NOTHING
+		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL)
+		if err != nil {
+			return fmt.Errorf("insert adaptation %s: %w", it.ExtID, err)
+		}
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE books SET adaptations_fetched_at = now() WHERE id = $1`, bookID,
+	); err != nil {
+		return fmt.Errorf("mark adaptations_fetched_at: %w", err)
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit tx: %w", err)
+	}
+	return nil
+}
+
+// downloadPoster — скачивает картинку по URL, кэширует в /cache/covers
+// (content-addressable, sha256). Возвращает имя файла для poster_path.
+//
+// Использует existing saveCover (тот же конвейер: temp-файл с хешем,
+// переименование в финальный путь). Mime берём из Content-Type ответа.
+func (e *Enricher) downloadPoster(ctx context.Context, src string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, src, nil)
+	if err != nil {
+		return "", fmt.Errorf("build poster request: %w", err)
+	}
+	// Большинство CDN (commons.wikimedia.org, image.tmdb.org) принимают
+	// любой UA, но для повторяемости поведения добавим осмысленный.
+	req.Header.Set("User-Agent", wdUserAgent)
+
+	client := e.posterHTTPClient
+	if client == nil {
+		client = http.DefaultClient
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("poster fetch: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("poster status %d", resp.StatusCode)
+	}
+	mime := resp.Header.Get("Content-Type")
+	if mime == "" || !strings.HasPrefix(mime, "image/") {
+		mime = "image/jpeg"
+	}
+	img := &CoverImage{
+		Reader: resp.Body, // saveCover закроет
+		Mime:   mime,
+	}
+	defer func() { _ = img.Reader.Close() }()
+	return e.saveCover(img)
+}
+
+func nullIfEmpty(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
 }

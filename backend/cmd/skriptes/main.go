@@ -16,6 +16,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/books"
@@ -81,15 +82,19 @@ func run() error {
 	}
 	logger.Info("converter ready", "fbc", cfg.FBCPath, "cache", cfg.CacheRoot)
 
-	// Metadata enricher: цепочки провайдеров для обложек/аннотаций книг
-	// и для фото/био авторов. Порядок книжных — fb2 (локально, ~99% hit)
-	// → Open Library → Google Books. Авторские — Wikipedia (top hit
-	// rate для русских классиков) → Open Library (fallback).
+	// Metadata enricher: цепочки провайдеров для обложек/аннотаций книг,
+	// для фото/био авторов и для экранизаций. Порядок книжных — fb2
+	// (локально, ~99% hit) → Open Library → Google Books. Авторские —
+	// Wikipedia (top hit rate для русских классиков) → Open Library (fallback).
+	// Экранизации — Wikidata (SPARQL P144); TMDB enrichment отдельной
+	// фичей по запросу, требует API key.
 	httpClient := &http.Client{Timeout: 10 * time.Second}
+	sparqlClient := &http.Client{Timeout: 15 * time.Second} // SPARQL медленнее, отдельный timeout
 	fb2Provider := metadata.NewFb2Provider()
 	olProvider := metadata.NewOpenLibraryProvider(httpClient)
 	gbProvider := metadata.NewGoogleBooksProvider(httpClient)
 	wikiProvider := metadata.NewWikipediaProvider(httpClient)
+	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
@@ -97,6 +102,7 @@ func run() error {
 		[]metadata.AnnotationProvider{fb2Provider, olProvider, gbProvider},
 		[]metadata.AuthorPhotoProvider{wikiProvider, olProvider},
 		[]metadata.AuthorBioProvider{wikiProvider, olProvider},
+		[]metadata.AdaptationProvider{wdAdaptations},
 		logger,
 	)
 	if err != nil {
@@ -141,7 +147,8 @@ func run() error {
 			Books:     booksSvc,
 			Converter: conv,
 		},
-		Metadata: api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
+		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
+		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
 	})
 
 	srv := &http.Server{
