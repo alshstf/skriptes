@@ -20,6 +20,13 @@
 name: ${COMPOSE_PROJECT_NAME:-skriptes}
 
 services:
+  # postgres / meilisearch / backend НЕ пробрасываются на хост:
+  # вся коммуникация идёт через внутреннюю docker-сеть compose. Это
+  # важно для homelab'а, где на одном хосте крутится несколько стеков
+  # и порты типа 5432/7700/8080 заняты другими postgres/meili/backend.
+  # Если нужен прямой доступ из хоста для отладки — используйте
+  # `docker compose exec postgres psql ...` или dev-compose
+  # (infra/docker-compose.yml), где порты пробрасываются.
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
@@ -30,8 +37,6 @@ services:
       TZ: ${TZ:-UTC}
     volumes:
       - pg_data:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -47,8 +52,6 @@ services:
       MEILI_NO_ANALYTICS: "true"
     volumes:
       - meili_data:/meili_data
-    ports:
-      - "127.0.0.1:${MEILI_PORT:-7700}:7700"
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:7700/health"]
       interval: 10s
@@ -82,8 +85,6 @@ services:
       - ${BOOKS_HOST_PATH}:/data/books:ro
       - ${INPX_HOST_PATH}:/data/inpx:ro
       - cache:/cache
-    ports:
-      - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -102,6 +103,13 @@ services:
       backend:
         condition: service_healthy
 
+  # Caddy — единственный сервис который слушает на хосте. Дефолт 80/443
+  # подходит если других reverse-proxy на этой машине нет. Для homelab'а
+  # с занятыми 80/443 (Traefik / другой Caddy на хосте) — переопределите
+  # HTTP_PORT / HTTPS_PORT в .env (например 8080/8443).
+  #
+  # Если вы хотите ВООБЩЕ выключить caddy и пробросить frontend на свой
+  # внешний proxy — посмотрите docker-compose.no-caddy.override.yml в repo.
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
