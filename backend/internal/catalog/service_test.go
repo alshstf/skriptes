@@ -37,7 +37,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	abs, _ := filepath.Abs(fixtureINPX)
 	stats, err := imp.Run(ctx, abs)
 	require.NoError(t, err)
-	require.Equal(t, 19, stats.BooksInserted)
+	require.Equal(t, 20, stats.BooksInserted)
 
 	svc := catalog.New(pool)
 

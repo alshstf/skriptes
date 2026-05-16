@@ -207,15 +207,21 @@ LIMIT 20
 // директорах/типах SPARQL дал бы декартово произведение строк, мы
 // агрегируем в Go (директоров через запятую, kind — первый встретившийся,
 // year — первый встретившийся, и т.д.).
+//
+// Поля внешних идентификаторов (P345 IMDb, P2603 Кинопоиск) и
+// wikibase:sitelinks используются для построения ext_url и popularity
+// при агрегации.
 func (p *WikidataAdaptationsProvider) queryAdaptations(ctx context.Context, bookQID string) ([]Adaptation, error) {
 	query := fmt.Sprintf(`
-SELECT ?film ?filmLabel ?year ?directorLabel ?imdbId ?image ?kindLabel WHERE {
+SELECT ?film ?filmLabel ?year ?directorLabel ?imdbId ?kinopoiskId ?image ?kindLabel ?sitelinks WHERE {
   ?film wdt:P144 wd:%s .
   OPTIONAL { ?film wdt:P577 ?date . BIND(YEAR(?date) AS ?year) }
   OPTIONAL { ?film wdt:P57 ?director . }
   OPTIONAL { ?film wdt:P345 ?imdbId . }
+  OPTIONAL { ?film wdt:P2603 ?kinopoiskId . }
   OPTIONAL { ?film wdt:P18 ?image . }
   OPTIONAL { ?film wdt:P31 ?kind . }
+  OPTIONAL { ?film wikibase:sitelinks ?sitelinks . }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en".
     ?film rdfs:label ?filmLabel .
     ?director rdfs:label ?directorLabel .
@@ -282,13 +288,15 @@ func (p *WikidataAdaptationsProvider) runSPARQLAdaptations(ctx context.Context, 
 	out := make([]sparqlAdaptationRow, 0, len(resp.Results.Bindings))
 	for _, b := range resp.Results.Bindings {
 		row := sparqlAdaptationRow{
-			FilmURI:  b["film"].Value,
-			Title:    b["filmLabel"].Value,
-			Year:     b["year"].Value,
-			Director: b["directorLabel"].Value,
-			IMDBID:   b["imdbId"].Value,
-			Image:    b["image"].Value,
-			Kind:     b["kindLabel"].Value,
+			FilmURI:     b["film"].Value,
+			Title:       b["filmLabel"].Value,
+			Year:        b["year"].Value,
+			Director:    b["directorLabel"].Value,
+			IMDBID:      b["imdbId"].Value,
+			KinopoiskID: b["kinopoiskId"].Value,
+			Image:       b["image"].Value,
+			Kind:        b["kindLabel"].Value,
+			Sitelinks:   b["sitelinks"].Value,
 		}
 		if row.FilmURI == "" {
 			continue
@@ -328,16 +336,23 @@ func (p *WikidataAdaptationsProvider) doSPARQL(ctx context.Context, query string
 // в одну запись per film. Поля:
 //   - title / year / kind: первое непустое значение
 //   - director: уникальные через ", " (несколько режиссёров — норма)
-//   - imdb / image: первое непустое
+//   - imdb / kinopoisk / image / sitelinks: первое непустое
+//
+// ExtURL выбирается по приоритету Кинопоиск → IMDb → Wikidata.
+// Wikidata-страница — fallback для зрителя нерелевантна (это страница
+// для редакторов с QID и properties), Кинопоиск/IMDb — нормальные
+// карточки с описанием/трейлерами/постером.
 func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptationRow) []Adaptation {
 	type agg struct {
-		title     string
-		year      string
-		kind      string
-		imdbID    string
-		image     string
-		directors []string // в порядке появления, без дублей
-		dirSet    map[string]struct{}
+		title       string
+		year        string
+		kind        string
+		imdbID      string
+		kinopoiskID string
+		image       string
+		sitelinks   string
+		directors   []string // в порядке появления, без дублей
+		dirSet      map[string]struct{}
 	}
 	byFilm := map[string]*agg{}
 	order := []string{} // сохраняем порядок появления QID
@@ -360,8 +375,14 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		if a.imdbID == "" {
 			a.imdbID = r.IMDBID
 		}
+		if a.kinopoiskID == "" {
+			a.kinopoiskID = r.KinopoiskID
+		}
 		if a.image == "" {
 			a.image = r.Image
+		}
+		if a.sitelinks == "" {
+			a.sitelinks = r.Sitelinks
 		}
 		if r.Director != "" {
 			if _, seen := a.dirSet[r.Director]; !seen {
@@ -382,12 +403,17 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 			Director:  strings.Join(a.directors, ", "),
 			Kind:      mapWikidataKind(a.kind),
 			PosterURL: p.posterURL(a.image),
-			ExtURL:    "https://www.wikidata.org/wiki/" + qid,
+			ExtURL:    pickExtURL(a.kinopoiskID, a.imdbID, qid),
 		}
 		if a.year != "" {
 			if n, err := strconv.Atoi(a.year); err == nil && n > 1800 && n < 2200 {
 				y := n
 				ad.Year = &y
+			}
+		}
+		if a.sitelinks != "" {
+			if n, err := strconv.Atoi(a.sitelinks); err == nil && n >= 0 {
+				ad.Popularity = n
 			}
 		}
 		if ad.Title == "" {
@@ -397,6 +423,27 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		out = append(out, ad)
 	}
 	return out
+}
+
+// pickExtURL — приоритет внешних ссылок: Кинопоиск > IMDb > Wikidata.
+// Wikidata оставлен как fallback "лучше что-то чем ничего", но эта
+// страница не предназначена для конечного пользователя (показывает
+// QID, property/value пары без человеческого контекста).
+//
+// kinopoiskID — числовой (например "42664"); IMDb-id формата "tt0123456".
+// Финальные URL'ы вида:
+//
+//	https://www.kinopoisk.ru/film/42664/
+//	https://www.imdb.com/title/tt0123456/
+//	https://www.wikidata.org/wiki/Q12345
+func pickExtURL(kinopoiskID, imdbID, qid string) string {
+	if kinopoiskID != "" {
+		return "https://www.kinopoisk.ru/film/" + kinopoiskID + "/"
+	}
+	if imdbID != "" {
+		return "https://www.imdb.com/title/" + imdbID + "/"
+	}
+	return "https://www.wikidata.org/wiki/" + qid
 }
 
 // posterURL — конструирует thumbnail URL из Commons-имени файла.
@@ -425,13 +472,15 @@ func (p *WikidataAdaptationsProvider) posterURL(commonsFile string) string {
 
 // sparqlAdaptationRow — сырая строка SPARQL-результата до агрегации.
 type sparqlAdaptationRow struct {
-	FilmURI  string // http://www.wikidata.org/entity/Q12345
-	Title    string
-	Year     string
-	Director string
-	IMDBID   string
-	Image    string
-	Kind     string
+	FilmURI     string // http://www.wikidata.org/entity/Q12345
+	Title       string
+	Year        string
+	Director    string
+	IMDBID      string
+	KinopoiskID string
+	Image       string
+	Kind        string
+	Sitelinks   string // целое число как строка (xsd:integer из SPARQL)
 }
 
 // extractQID — выдёргивает Q-id из URI типа

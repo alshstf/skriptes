@@ -9,7 +9,9 @@ import (
 )
 
 // TestOpenAndIterate — golden-тест на реальном фикстуре.
-// Фикстура: infra/testdata/test.inpx (3 inp / 19 записей; 2 архива _lost).
+// Фикстура: infra/testdata/test.inpx (4 inp / 20 записей; 2 архива _lost,
+// fb2-749080 — Алексеев, fb2-100001 — Толстой "Анна Каренина" для теста
+// экранизаций через Wikidata).
 func TestOpenAndIterate(t *testing.T) {
 	ix, err := inpx.Open("testdata/test.inpx")
 	require.NoError(t, err)
@@ -29,20 +31,22 @@ func TestOpenAndIterate(t *testing.T) {
 	// 3 .inp файла; имя архива формируется заменой .inp → .zip,
 	// суффиксы (включая "_lost") сохраняются — в реальных librusec
 	// коллекциях физический zip-файл несёт тот же суффикс что и .inp.
-	require.Len(t, ix.Files, 3)
+	require.Len(t, ix.Files, 4)
 	names := map[string]inpx.InpFile{}
 	for _, f := range ix.Files {
 		names[f.Name] = f
 	}
 	require.Contains(t, names, "fb2-749080-749080.inp")
+	require.Contains(t, names, "fb2-100001-100001.inp")
 	require.Contains(t, names, "fb2-625127-625160_lost.inp")
 	require.Contains(t, names, "fb2-025838-696919_lost.inp")
 	require.Equal(t, "fb2-749080-749080.zip", names["fb2-749080-749080.inp"].Archive)
+	require.Equal(t, "fb2-100001-100001.zip", names["fb2-100001-100001.inp"].Archive)
 	require.Equal(t, "fb2-625127-625160_lost.zip", names["fb2-625127-625160_lost.inp"].Archive,
 		"суффикс _lost сохраняется в имени архива (zeркальное соответствие в librusec)")
 	require.Equal(t, "fb2-025838-696919_lost.zip", names["fb2-025838-696919_lost.inp"].Archive)
 
-	// Итерация: 19 записей всего; собираем мапу archive → []record для проверок.
+	// Итерация: 20 записей всего; собираем мапу archive → []record для проверок.
 	type fr struct {
 		archive string
 		rec     inpx.Record
@@ -52,7 +56,7 @@ func TestOpenAndIterate(t *testing.T) {
 		all = append(all, fr{archive: file.Archive, rec: rec})
 		return nil
 	}))
-	require.Len(t, all, 19)
+	require.Len(t, all, 20)
 
 	// Конкретная запись из непотерянного архива.
 	var alekseev *inpx.Record
@@ -90,5 +94,5 @@ func TestOpenAndIterate(t *testing.T) {
 		}
 	}
 	require.Equal(t, 18, fromLostArchives,
-		"из 19 записей 18 пришли из _lost-архивов")
+		"из 20 записей 18 пришли из _lost-архивов")
 }

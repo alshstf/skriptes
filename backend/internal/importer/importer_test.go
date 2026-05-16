@@ -22,7 +22,7 @@ import (
 const fixtureINPX = "../inpx/testdata/test.inpx"
 
 // TestRun_FullPipeline_OnFixture поднимает реальный postgres + meilisearch
-// через testcontainers, прогоняет импорт на тестовом INPX (19 записей)
+// через testcontainers, прогоняет импорт на тестовом INPX (20 записей)
 // и проверяет состояние и БД, и Meili.
 func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	if testing.Short() {
@@ -43,8 +43,8 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	require.NoError(t, err)
 
 	require.False(t, stats.Skipped)
-	require.Equal(t, 19, stats.Records)
-	require.Equal(t, 19, stats.BooksInserted, "первый запуск должен создать всё впервые")
+	require.Equal(t, 20, stats.Records)
+	require.Equal(t, 20, stats.BooksInserted, "первый запуск должен создать всё впервые")
 	require.Equal(t, 0, stats.BooksUpdated)
 	require.Equal(t, 0, stats.Errors)
 	require.Greater(t, stats.Authors, 0)
@@ -54,7 +54,7 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	// ── проверки PostgreSQL ──────────────────────────────────────
 	var bookCount int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books`).Scan(&bookCount))
-	require.Equal(t, 19, bookCount)
+	require.Equal(t, 20, bookCount)
 
 	var collectionCount int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM collections`).Scan(&collectionCount))
@@ -62,7 +62,7 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 
 	var archiveCount int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM archives`).Scan(&archiveCount))
-	require.Equal(t, 3, archiveCount, "3 .inp → 3 archives")
+	require.Equal(t, 4, archiveCount, "4 .inp → 4 archives")
 
 	// Конкретная книга (LIBID=749080, Алексеев)
 	var (
@@ -122,7 +122,7 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 
 	// Проверяем: число строк не изменилось.
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books`).Scan(&bookCount))
-	require.Equal(t, 19, bookCount)
+	require.Equal(t, 20, bookCount)
 
 	_ = dsn // dsn используется внутри startPostgres, оставлено для отладки
 }

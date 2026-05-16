@@ -61,38 +61,55 @@ func TestAdaptationsService_List(t *testing.T) {
 	require.Equal(t, "done", res.EnrichmentStatus)
 	require.Empty(t, res.Items)
 
-	// Вставляем три экранизации: одну с известным годом 1956, одну с
-	// годом 1965, и одну без года. Должны вернуться в порядке
-	// 1956 → 1965 → (без года в конце).
+	// Вставляем четыре экранизации с разной популярностью и годами.
+	// Ожидаемая сортировка: popularity DESC NULLS LAST, year DESC NULLS LAST, id.
+	//
+	//   Q1 popularity=82 year=1965  → 1-я (топ известности)
+	//   Q4 popularity=82 year=2016  → 2-я? Нет — popularity равны, дальше year DESC → 2-я (2016 > 1965)
+	//   Q2 popularity=47 year=1956  → 3-я (меньше известности)
+	//   Q3 popularity=NULL          → последняя (NULLS LAST)
+	//
+	// Финальный порядок: Q4, Q1, Q2, Q3.
 	_, err = pool.Exec(ctx, `
-		INSERT INTO book_adaptations (book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url)
+		INSERT INTO book_adaptations (book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity)
 		VALUES
-		  ($1, 'wikidata', 'Q1', 'Adaptation 1965', 1965, 'Director B', 'film', NULL, 'https://wd/Q1'),
-		  ($1, 'wikidata', 'Q2', 'Adaptation 1956', 1956, NULL, 'film', 'poster.jpg', NULL),
-		  ($1, 'wikidata', 'Q3', 'Adaptation Unknown Year', NULL, 'Director X', 'tv_series', NULL, NULL)
+		  ($1, 'wikidata', 'Q1', 'Adaptation 1965', 1965, 'Director B', 'film', NULL, 'https://wd/Q1', 82),
+		  ($1, 'wikidata', 'Q2', 'Adaptation 1956', 1956, NULL, 'film', 'poster.jpg', NULL, 47),
+		  ($1, 'wikidata', 'Q3', 'Adaptation Unknown', NULL, 'Director X', 'tv_series', NULL, NULL, NULL),
+		  ($1, 'wikidata', 'Q4', 'Adaptation 2016', 2016, 'Director Y', 'miniseries', NULL, 'https://imdb/tt1', 82)
 	`, bookID)
 	require.NoError(t, err)
 
 	res, err = svc.List(ctx, bookID)
 	require.NoError(t, err)
 	require.Equal(t, "done", res.EnrichmentStatus)
-	require.Len(t, res.Items, 3)
+	require.Len(t, res.Items, 4)
 
-	require.Equal(t, "Q2", res.Items[0].ExtID)
+	// Q4 первая: popularity=82 и year=2016 (год новее чем у Q1@1965).
+	require.Equal(t, "Q4", res.Items[0].ExtID)
 	require.NotNil(t, res.Items[0].Year)
-	require.Equal(t, 1956, *res.Items[0].Year)
-	require.NotNil(t, res.Items[0].PosterPath)
-	require.Equal(t, "poster.jpg", *res.Items[0].PosterPath)
-	require.Empty(t, res.Items[0].Director) // NULL → пустая строка
-	require.Empty(t, res.Items[0].ExtURL)
+	require.Equal(t, 2016, *res.Items[0].Year)
+	require.Equal(t, "miniseries", res.Items[0].Kind)
+	require.Equal(t, "https://imdb/tt1", res.Items[0].ExtURL)
 
+	// Q1 вторая: popularity=82, year=1965.
 	require.Equal(t, "Q1", res.Items[1].ExtID)
 	require.Equal(t, "Director B", res.Items[1].Director)
 	require.Equal(t, "https://wd/Q1", res.Items[1].ExtURL)
 
-	require.Equal(t, "Q3", res.Items[2].ExtID)
-	require.Nil(t, res.Items[2].Year)
-	require.Equal(t, "tv_series", res.Items[2].Kind)
+	// Q2 третья: popularity=47.
+	require.Equal(t, "Q2", res.Items[2].ExtID)
+	require.NotNil(t, res.Items[2].Year)
+	require.Equal(t, 1956, *res.Items[2].Year)
+	require.NotNil(t, res.Items[2].PosterPath)
+	require.Equal(t, "poster.jpg", *res.Items[2].PosterPath)
+	require.Empty(t, res.Items[2].Director) // NULL → пустая строка
+	require.Empty(t, res.Items[2].ExtURL)
+
+	// Q3 последняя: popularity=NULL.
+	require.Equal(t, "Q3", res.Items[3].ExtID)
+	require.Nil(t, res.Items[3].Year)
+	require.Equal(t, "tv_series", res.Items[3].Kind)
 }
 
 func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {

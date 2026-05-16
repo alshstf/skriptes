@@ -96,15 +96,25 @@ type AuthorBioProvider interface {
 //
 // PosterURL — внешний URL картинки (commons.wikimedia.org или image.tmdb.org).
 // Может быть пустой — фронт покажет плейсхолдер.
+//
+// ExtURL — канонический URL для "Открыть в источнике". Провайдер
+// выбирает по приоритету Кинопоиск → IMDb → Wikidata (Wikidata —
+// fallback, статьи не предназначены для конечных пользователей).
+//
+// Popularity — целое число, прокси известности фильма. Для Wikidata —
+// wikibase:sitelinks (сколько языковых Wikipedia ссылаются на статью).
+// 0 для неизвестных; Service.List использует как primary sort
+// (DESC NULLS LAST), tiebreaker — Year DESC.
 type Adaptation struct {
-	Provider  string // "wikidata" | "tmdb"
-	ExtID     string
-	Title     string
-	Year      *int // nil если неизвестен
-	Director  string
-	Kind      string // нормализованное значение, см. doc выше
-	PosterURL string
-	ExtURL    string // канонический URL для "Открыть в источнике"
+	Provider   string // "wikidata" | "tmdb"
+	ExtID      string
+	Title      string
+	Year       *int // nil если неизвестен
+	Director   string
+	Kind       string // нормализованное значение, см. doc выше
+	PosterURL  string
+	ExtURL     string
+	Popularity int
 }
 
 // AdaptationProvider — поставщик списка экранизаций для книги. В

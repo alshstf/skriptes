@@ -18,7 +18,8 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-// fixtureINPX — наш постоянный 19-записный фикстура.
+// fixtureINPX — наш постоянный 20-записный фикстура (включая Анну
+// Каренину Толстого — public-domain книга для теста экранизаций).
 // Лежит в backend/internal/inpx/testdata/test.inpx.
 const fixtureINPX = "../inpx/testdata/test.inpx"
 
@@ -43,11 +44,11 @@ func TestService_ListAndGet(t *testing.T) {
 	require.NoError(t, err)
 	stats, err := imp.Run(ctx, abs)
 	require.NoError(t, err)
-	require.Equal(t, 19, stats.BooksInserted)
+	require.Equal(t, 20, stats.BooksInserted)
 
 	svc := books.New(pool, mgr, nil) // existing assertions не зависят от persona
 
-	// ── List без query: должно вернуться 18 (минус DEL=1)
+	// ── List без query: должно вернуться 19 (минус 1 DEL=1)
 	res, err := svc.List(ctx, books.ListParams{Limit: 50})
 	require.NoError(t, err)
 	require.Len(t, res.Items, stats.BooksIndexed)
