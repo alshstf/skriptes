@@ -33,6 +33,18 @@ type Config struct {
 	CookieSecure   bool     `env:"SKRIPTES_COOKIE_SECURE"  envDefault:"true"`
 	CookieDomain   string   `env:"SKRIPTES_COOKIE_DOMAIN"`
 	AllowedOrigins []string `env:"SKRIPTES_ALLOWED_ORIGINS" envSeparator:"," envDefault:"https://skriptes.localhost"`
+
+	// SMTP для send-to-Kindle. Если SMTPHost пустой — функция
+	// отключена (handler вернёт 503), и фронт скроет кнопку.
+	// Для Gmail: smtp.gmail.com:587 + app-password (не основной).
+	// Для Yandex: smtp.yandex.ru:465 + SMTPUseTLS=true.
+	SMTPHost     string `env:"SKRIPTES_SMTP_HOST"`
+	SMTPPort     int    `env:"SKRIPTES_SMTP_PORT"      envDefault:"587"`
+	SMTPUser     string `env:"SKRIPTES_SMTP_USER"`
+	SMTPPassword string `env:"SKRIPTES_SMTP_PASSWORD"`
+	SMTPFrom     string `env:"SKRIPTES_SMTP_FROM"` // From-адрес; если пусто — берём SMTPUser
+	// SMTPUseTLS=true → implicit TLS (порт 465); false → STARTTLS (587).
+	SMTPUseTLS bool `env:"SKRIPTES_SMTP_USE_TLS" envDefault:"false"`
 }
 
 func Load() (*Config, error) {

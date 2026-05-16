@@ -23,8 +23,10 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/email"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/kindle"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 )
 
@@ -102,6 +104,24 @@ func run() error {
 	}
 	logger.Info("metadata enricher ready", "cover_root", filepath.Join(cfg.CacheRoot, "covers"))
 
+	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
+	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
+	// и handler сам отдаст 503 на send.
+	kindleSvc := kindle.New(pool)
+	emailSender := email.New(email.Config{
+		Host:     cfg.SMTPHost,
+		Port:     cfg.SMTPPort,
+		User:     cfg.SMTPUser,
+		Password: cfg.SMTPPassword,
+		From:     cfg.SMTPFrom,
+		UseTLS:   cfg.SMTPUseTLS,
+	}, logger)
+	if emailSender == nil {
+		logger.Info("smtp not configured — send-to-kindle disabled")
+	} else {
+		logger.Info("smtp ready", "host", cfg.SMTPHost, "port", cfg.SMTPPort)
+	}
+
 	router := api.NewRouter(api.Deps{
 		Version: cfg.Version,
 		DB:      pool,
@@ -115,6 +135,12 @@ func run() error {
 		Catalog:  api.CatalogDeps{Service: catalogSvc},
 		Download: api.DownloadDeps{Books: booksSvc, Converter: conv},
 		History:  api.HistoryDeps{Service: historySvc},
+		Kindle: api.KindleDeps{
+			Service:   kindleSvc,
+			Email:     emailSender,
+			Books:     booksSvc,
+			Converter: conv,
+		},
 		Metadata: api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 	})
 

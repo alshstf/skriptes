@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router';
-import { BookOpen, LogOut, User as UserIcon } from 'lucide-react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { BookOpen, LogOut, Settings, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -42,6 +42,7 @@ function Header({ user }: { user: User | null }) {
 
 function UserMenu({ user }: { user: User }) {
   const logout = useLogout();
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -58,6 +59,15 @@ function UserMenu({ user }: { user: User }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+            void navigate({ to: '/me' });
+          }}
+        >
+          <Settings className="mr-2 size-4" aria-hidden />
+          Профиль
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={(e) => {
             e.preventDefault();

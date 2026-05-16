@@ -7,6 +7,7 @@ import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBook } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
@@ -80,12 +81,13 @@ export function BookDetailPage() {
                     </p>
                   ) : null}
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <FavoriteButton
                     target="book"
                     id={book.id}
                     isFavorite={book.is_favorite ?? false}
                   />
+                  {!book.deleted ? <SendToKindleButton bookId={book.id} /> : null}
                   {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
                 </div>
               </div>

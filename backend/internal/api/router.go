@@ -24,6 +24,7 @@ type Deps struct {
 	Download DownloadDeps
 	History  HistoryDeps
 	Metadata MetadataDeps
+	Kindle   KindleDeps
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -79,6 +80,15 @@ func NewRouter(d Deps) http.Handler {
 					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
+				}
+				if d.Kindle.Service != nil {
+					r.Get("/me/kindle-targets", handleListKindleTargets(d.Kindle))
+					r.Post("/me/kindle-targets", handleAddKindleTarget(d.Kindle))
+					r.Patch("/me/kindle-targets/{id}", handleUpdateKindleTarget(d.Kindle))
+					r.Delete("/me/kindle-targets/{id}", handleDeleteKindleTarget(d.Kindle))
+					if d.Kindle.Books != nil && d.Kindle.Converter != nil {
+						r.Post("/books/{id}/send-to-kindle", handleSendToKindle(d.Kindle))
+					}
 				}
 			})
 		}
