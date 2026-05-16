@@ -1,20 +1,22 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BarChart3, BookOpen } from 'lucide-react';
+import { BarChart3, BookOpen, User as UserIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 export function AuthorPage() {
   const { id } = useParams({ strict: false }) as { id: string };
-  const { data: a, isLoading, error } = useAuthor(id);
+  const { data: a, isLoading, error, enrichmentExhausted } = useAuthor(id);
 
   if (isLoading) return <AuthorSkeleton />;
 
@@ -35,24 +37,43 @@ export function AuthorPage() {
   return (
     <article className="space-y-6">
       <BackButton />
-      <header className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
-          <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {a.book_count} {pluralBooks(a.book_count)} в каталоге
-        </p>
-        {a.top_genres && a.top_genres.length > 0 ? (
-          <div className="flex flex-wrap gap-1 pt-1">
-            {a.top_genres.map((g) => (
-              <Badge key={g.code} variant="secondary" className="font-normal">
-                {g.display} · {g.count}
-              </Badge>
-            ))}
+
+      {/* Шапка с двухуровневой структурой как у BookDetailPage:
+            1. flex-row с фото слева + meta (имя/счётчик/жанры/кнопка) справа.
+            2. Био ниже на полную ширину.
+          Био на полную ширину специально — bio из Wikipedia часто длинный,
+          в узкой правой колонке выглядит неудобно. */}
+      <Card>
+        <CardContent className="space-y-6">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <AuthorPhoto
+              photoPath={a.photo_path}
+              fullName={a.full_name}
+              className="w-32 sm:w-40 mx-auto md:mx-0"
+            />
+            <div className="flex flex-col gap-2 flex-1 min-w-0">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
+                <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {a.book_count} {pluralBooks(a.book_count)} в каталоге
+              </p>
+              {a.top_genres && a.top_genres.length > 0 ? (
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {a.top_genres.map((g) => (
+                    <Badge key={g.code} variant="secondary" className="font-normal">
+                      {g.display} · {g.count}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
-        ) : null}
-      </header>
+
+          <AuthorBio bio={a.bio} enrichmentExhausted={enrichmentExhausted} />
+        </CardContent>
+      </Card>
 
       <AuthorStats author={a} />
 
@@ -248,6 +269,82 @@ function AuthorStats({ author }: { author: import('@/lib/catalog').Author }) {
         ) : null}
       </CardContent>
     </Card>
+  );
+}
+
+/**
+ * AuthorPhoto — портрет автора с плейсхолдером.
+ *
+ * Симметрично BookCover: одинаковая высота/ширина у плейсхолдера и
+ * у настоящей картинки, чтобы подмена через polling не сдвигала layout.
+ * aspect-[3/4] — типичная пропорция портрета (вертикальный прямоугольник).
+ */
+function AuthorPhoto({
+  photoPath,
+  fullName,
+  className,
+}: {
+  photoPath?: string;
+  fullName: string;
+  className?: string;
+}) {
+  const base = cn(
+    'aspect-[3/4] rounded-md border border-border bg-muted shadow-sm overflow-hidden shrink-0 self-start',
+    className,
+  );
+  if (photoPath) {
+    return (
+      <img
+        src={`/api/covers/${photoPath}`}
+        alt={`Фото: ${fullName}`}
+        className={cn(base, 'object-cover')}
+        loading="lazy"
+      />
+    );
+  }
+  return (
+    <div
+      className={cn(base, 'flex flex-col items-center justify-center gap-2 p-3 text-muted-foreground')}
+      role="img"
+      aria-label={`Фото: ${fullName} (загружается)`}
+    >
+      <UserIcon className="size-10 opacity-40" aria-hidden />
+      <span className="text-xs line-clamp-3 text-center">{fullName}</span>
+    </div>
+  );
+}
+
+/**
+ * AuthorBio — био-блок с теми же тремя состояниями что и AnnotationBlock
+ * для книги: текст / скелетон / fallback "Информация отсутствует".
+ */
+function AuthorBio({
+  bio,
+  enrichmentExhausted,
+}: {
+  bio?: string;
+  enrichmentExhausted: boolean;
+}) {
+  return (
+    <section className="space-y-2">
+      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        Биография
+      </h3>
+      {bio ? (
+        // Wikipedia intro обычно 500-2000 символов — клампим до 5
+        // строк, дальше пользователь жмёт "Развернуть".
+        <ExpandableText text={bio} lines={5} />
+      ) : enrichmentExhausted ? (
+        <p className="text-sm italic text-muted-foreground">Информация отсутствует.</p>
+      ) : (
+        <div className="space-y-2" aria-busy="true" aria-label="Биография загружается">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-[97%]" />
+          <Skeleton className="h-3 w-[90%]" />
+          <Skeleton className="h-3 w-3/4" />
+        </div>
+      )}
+    </section>
   );
 }
 

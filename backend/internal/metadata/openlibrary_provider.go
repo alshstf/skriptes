@@ -210,3 +210,143 @@ func extractOLDescription(v any) string {
 	}
 	return ""
 }
+
+// ── Авторы: FetchAuthorBio / FetchAuthorPhoto ───────────────────
+//
+// Алгоритм:
+//   1. GET /search/authors.json?q={full_name}&limit=1 → берём первый
+//      docs[0].key (OLID типа "OL12345A").
+//   2. GET /authors/{OLID}.json → bio (string или {value: string}) +
+//      photos ([id1, id2, ...]).
+//   3. Для фото: GET covers.openlibrary.org/a/id/{photo_id}-L.jpg.
+//
+// Hit rate для русских авторов в OL средненький — каталог
+// англоцентричный. Но как fallback после Wikipedia работает: иногда
+// у автора есть страница в OL без Wikipedia.
+
+// authorSearch — общий шаг для bio и photo: ищем автора, возвращаем
+// его OLID + parsed details.
+func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
+	if q.FullName == "" {
+		return nil, ErrNotFound
+	}
+
+	base := p.workBaseURL()
+	v := url.Values{}
+	v.Set("q", q.FullName)
+	v.Set("limit", "1")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/search/authors.json?"+v.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build author search: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("ol author search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return nil, ErrNotFound
+	}
+
+	var sr olAuthorSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return nil, fmt.Errorf("decode author search: %w", err)
+	}
+	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		return nil, ErrNotFound
+	}
+
+	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
+	olid := strings.TrimPrefix(sr.Docs[0].Key, "/authors/")
+
+	detailReq, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/authors/"+olid+".json", nil)
+	if err != nil {
+		return nil, fmt.Errorf("build author detail: %w", err)
+	}
+	detailReq.Header.Set("Accept", "application/json")
+	detailResp, err := p.httpClient.Do(detailReq)
+	if err != nil {
+		return nil, fmt.Errorf("ol author detail: %w", err)
+	}
+	defer func() { _ = detailResp.Body.Close() }()
+	if detailResp.StatusCode != http.StatusOK {
+		return nil, ErrNotFound
+	}
+
+	var detail olAuthor
+	if err := json.NewDecoder(detailResp.Body).Decode(&detail); err != nil {
+		return nil, fmt.Errorf("decode author detail: %w", err)
+	}
+	detail.OLID = olid
+	return &detail, nil
+}
+
+// FetchAuthorBio — bio из /authors/{OLID}.json.
+func (p *OpenLibraryProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
+	a, err := p.authorSearch(ctx, q)
+	if err != nil {
+		return "", err
+	}
+	bio := extractOLDescription(a.Bio)
+	if bio == "" {
+		return "", ErrNotFound
+	}
+	return bio, nil
+}
+
+// FetchAuthorPhoto — первое фото из photos[] автора.
+func (p *OpenLibraryProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
+	a, err := p.authorSearch(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	// photos[i] = -1 у OL означает "удалено/нет", фильтруем.
+	var photoID int64
+	for _, id := range a.Photos {
+		if id > 0 {
+			photoID = id
+			break
+		}
+	}
+	if photoID == 0 {
+		return nil, ErrNotFound
+	}
+
+	imgReq, err := http.NewRequestWithContext(ctx, http.MethodGet,
+		fmt.Sprintf("%s/a/id/%d-L.jpg", p.coverURL, photoID), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build photo request: %w", err)
+	}
+	imgResp, err := p.httpClient.Do(imgReq)
+	if err != nil {
+		return nil, fmt.Errorf("ol photo: %w", err)
+	}
+	if imgResp.StatusCode != http.StatusOK {
+		_ = imgResp.Body.Close()
+		return nil, ErrNotFound
+	}
+	mime := imgResp.Header.Get("Content-Type")
+	if mime == "" || !strings.HasPrefix(mime, "image/") {
+		mime = "image/jpeg"
+	}
+	return &CoverImage{
+		Reader:   imgResp.Body,
+		Mime:     mime,
+		SourceID: fmt.Sprintf("ol:author-photo:%d", photoID),
+	}, nil
+}
+
+type olAuthorSearchResponse struct {
+	Docs []struct {
+		Key  string `json:"key"`  // "/authors/OL12345A" или "OL12345A"
+		Name string `json:"name"` // "Lev Tolstoy"
+	} `json:"docs"`
+}
+
+type olAuthor struct {
+	OLID   string  `json:"-"` // заполняем сами после search
+	Bio    any     `json:"bio"`
+	Photos []int64 `json:"photos"`
+}

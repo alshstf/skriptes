@@ -38,11 +38,16 @@ func New(pool *pgxpool.Pool) *Service {
 // Каждый шаг — отдельный запрос; для 99% карточек это <10 ms total.
 // Если когда-то станет горячо — соберём в один CTE.
 func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, error) {
-	var a Author
+	var (
+		a         Author
+		bio       pgtype.Text
+		photoPath pgtype.Text
+		fetchedAt pgtype.Timestamptz
+	)
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, last_name, first_name, middle_name
+		SELECT id, last_name, first_name, middle_name, bio, photo_path, metadata_fetched_at
 		FROM authors WHERE id = $1
-	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName)
+	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &bio, &photoPath, &fetchedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Author{}, ErrNotFound
@@ -50,6 +55,13 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, erro
 		return Author{}, fmt.Errorf("query author: %w", err)
 	}
 	a.FullName = fullName(a.LastName, a.FirstName, a.MiddleName)
+	if bio.Valid {
+		a.Bio = bio.String
+	}
+	if photoPath.Valid {
+		a.PhotoPath = photoPath.String
+	}
+	a.EnrichmentFetched = fetchedAt.Valid
 
 	if err := s.pool.QueryRow(ctx, `
 		SELECT count(*)

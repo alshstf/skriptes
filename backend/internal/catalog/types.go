@@ -13,6 +13,15 @@ type Author struct {
 	MiddleName string `json:"middle_name,omitempty"`
 	FullName   string `json:"full_name"`
 
+	// Био и фото из metadata-enrichment (Wikipedia/OL). Заполняются
+	// лениво при первом GET /api/authors/{id}, как и поля у Book.
+	Bio       string `json:"bio,omitempty"`
+	PhotoPath string `json:"photo_path,omitempty"`
+	// EnrichmentFetched — была ли хотя бы одна попытка обогащения.
+	// Фронт использует чтобы превратить вечный скелетон в fallback
+	// "Описание отсутствует" по тому же принципу, что у книг.
+	EnrichmentFetched bool `json:"enrichment_fetched,omitempty"`
+
 	BookCount  int               `json:"book_count"`
 	TopGenres  []GenreCount      `json:"top_genres,omitempty"`
 	Series     []SeriesWithCount `json:"series,omitempty"`

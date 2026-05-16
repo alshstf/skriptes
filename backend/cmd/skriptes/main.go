@@ -79,18 +79,22 @@ func run() error {
 	}
 	logger.Info("converter ready", "fbc", cfg.FBCPath, "cache", cfg.CacheRoot)
 
-	// Metadata enricher: цепочки провайдеров для обложек и аннотаций
-	// в одном объекте. Порядок — fb2 (локально, ~99% hit) →
-	// Open Library → Google Books.
+	// Metadata enricher: цепочки провайдеров для обложек/аннотаций книг
+	// и для фото/био авторов. Порядок книжных — fb2 (локально, ~99% hit)
+	// → Open Library → Google Books. Авторские — Wikipedia (top hit
+	// rate для русских классиков) → Open Library (fallback).
 	httpClient := &http.Client{Timeout: 10 * time.Second}
 	fb2Provider := metadata.NewFb2Provider()
 	olProvider := metadata.NewOpenLibraryProvider(httpClient)
 	gbProvider := metadata.NewGoogleBooksProvider(httpClient)
+	wikiProvider := metadata.NewWikipediaProvider(httpClient)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
 		[]metadata.CoverProvider{fb2Provider, olProvider, gbProvider},
 		[]metadata.AnnotationProvider{fb2Provider, olProvider, gbProvider},
+		[]metadata.AuthorPhotoProvider{wikiProvider, olProvider},
+		[]metadata.AuthorBioProvider{wikiProvider, olProvider},
 		logger,
 	)
 	if err != nil {
