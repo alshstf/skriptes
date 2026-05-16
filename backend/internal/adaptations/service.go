@@ -58,10 +58,16 @@ func New(pool *pgxpool.Pool) *Service {
 
 // List возвращает все экранизации для книги + статус enrichment'а.
 //
-// Сортировка: сначала фильмы с известным годом (по году по возрастанию),
-// потом без года в конце. Внутри одного года — стабильный порядок по id.
-// Логика: пользователю интересно сначала "первые экранизации", это
-// удобнее чем по алфавиту или по дате создания записи.
+// Сортировка: сначала по popularity DESC NULLS LAST (известность —
+// proxy через wikibase:sitelinks из Wikidata), потом по году DESC
+// NULLS LAST (более свежие — выше при одинаковой популярности),
+// tiebreaker — стабильный id.
+//
+// Логика: классические книги типа "Войны и мира" дают десятки
+// экранизаций от 1911 до 2010-х. Хронологический порядок (либо
+// прямой, либо обратный) ставит на верх обскурный немой фильм 1911
+// и опускает культовый фильм Бондарчука. Sitelinks-сортировка
+// поднимает известные адаптации первыми.
 func (s *Service) List(ctx context.Context, bookID int64) (ListResult, error) {
 	// Сначала проверим что книга вообще есть и узнаем статус enrichment'а.
 	var fetched *string
@@ -79,7 +85,7 @@ func (s *Service) List(ctx context.Context, bookID int64) (ListResult, error) {
 		SELECT id, provider, ext_id, title, year, director, kind, poster_path, ext_url
 		FROM book_adaptations
 		WHERE book_id = $1
-		ORDER BY (year IS NULL), year, id
+		ORDER BY popularity DESC NULLS LAST, year DESC NULLS LAST, id
 	`, bookID)
 	if err != nil {
 		return ListResult{}, fmt.Errorf("query adaptations: %w", err)

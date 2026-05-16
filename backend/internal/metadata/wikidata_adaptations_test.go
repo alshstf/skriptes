@@ -122,14 +122,17 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 					"year":          "1956",
 					"directorLabel": "King Vidor",
 					"imdbId":        "tt0049934",
+					"kinopoiskId":   "44567",
 					"image":         "http://commons.wikimedia.org/wiki/Special:FilePath/Poster.jpg",
 					"kindLabel":     "film",
+					"sitelinks":     "47",
 				},
 				{
 					"film":      "http://www.wikidata.org/entity/Q67890",
 					"filmLabel": "Война и мир",
 					"year":      "1965",
 					"kindLabel": "film",
+					"sitelinks": "82",
 				},
 			},
 		},
@@ -152,11 +155,26 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 	require.Equal(t, "King Vidor", got[0].Director)
 	require.Equal(t, "film", got[0].Kind)
 	require.Contains(t, got[0].PosterURL, "Poster.jpg")
-	require.Equal(t, "https://www.wikidata.org/wiki/Q12345", got[0].ExtURL)
+	// Кинопоиск приоритетнее IMDb (см. pickExtURL).
+	require.Equal(t, "https://www.kinopoisk.ru/film/44567/", got[0].ExtURL)
+	require.Equal(t, 47, got[0].Popularity)
 
 	require.Equal(t, "Q67890", got[1].ExtID)
 	require.NotNil(t, got[1].Year)
 	require.Equal(t, 1965, *got[1].Year)
+	// Нет ни Кинопоиска, ни IMDb → fallback на Wikidata.
+	require.Equal(t, "https://www.wikidata.org/wiki/Q67890", got[1].ExtURL)
+	require.Equal(t, 82, got[1].Popularity)
+}
+
+func TestPickExtURL(t *testing.T) {
+	// Кинопоиск > IMDb > Wikidata.
+	require.Equal(t, "https://www.kinopoisk.ru/film/42664/",
+		pickExtURL("42664", "tt0123456", "Q1"))
+	require.Equal(t, "https://www.imdb.com/title/tt0123456/",
+		pickExtURL("", "tt0123456", "Q1"))
+	require.Equal(t, "https://www.wikidata.org/wiki/Q1",
+		pickExtURL("", "", "Q1"))
 }
 
 func TestWikidataAdaptations_AuthorMismatchSkipsCandidate(t *testing.T) {

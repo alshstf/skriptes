@@ -482,12 +482,21 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 	defer func() { _ = tx.Rollback(ctx) }()
 
 	for i, it := range items {
+		// popularity=0 пишем как NULL — это означает "источник не дал
+		// сигнала" (например статья в Wikidata без sitelinks), а не
+		// "ровно ноль". В Service.List "NULLS LAST" положит такие
+		// записи в конец.
+		var popularity *int
+		if it.Popularity > 0 {
+			p := it.Popularity
+			popularity = &p
+		}
 		_, err := tx.Exec(ctx, `
 			INSERT INTO book_adaptations
-				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''))
+				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10)
 			ON CONFLICT (book_id, provider, ext_id) DO NOTHING
-		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL)
+		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity)
 		if err != nil {
 			return fmt.Errorf("insert adaptation %s: %w", it.ExtID, err)
 		}
