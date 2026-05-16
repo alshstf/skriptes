@@ -13,6 +13,7 @@ import { BooksPage } from '@/pages/BooksPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
+import { ProfilePage } from '@/pages/ProfilePage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -150,9 +151,22 @@ const seriesRoute = createRoute({
   component: SeriesPage,
 });
 
+const profileRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/me',
+  component: ProfilePage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  protectedRoute.addChildren([indexRoute, booksRoute, bookDetailRoute, authorRoute, seriesRoute]),
+  protectedRoute.addChildren([
+    indexRoute,
+    booksRoute,
+    bookDetailRoute,
+    authorRoute,
+    seriesRoute,
+    profileRoute,
+  ]),
 ]);
 
 export function createAppRouter(queryClient: QueryClient) {
