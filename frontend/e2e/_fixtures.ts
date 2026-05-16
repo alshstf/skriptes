@@ -124,6 +124,17 @@ export async function mockApi(page: Page): Promise<void> {
       body: JSON.stringify(bookDetailFixture),
     }),
   );
+  // Дефолт для /adaptations — "обогащение завершилось, ничего не нашли".
+  // AdaptationsSection в этом случае не рендерит ничего, существующие
+  // тесты карточки книги не затрагиваются. Spec'и про экранизации
+  // переопределяют этот route ПОСЛЕ mockApi.
+  await page.route(/\/api\/books\/\d+\/adaptations$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [], enrichment_status: 'done' }),
+    }),
+  );
   // Мокаем /api/covers/{name} крошечным PNG — иначе <img> упадёт в
   // onerror и тест не отличит "не рендерили" от "запрос упал".
   await page.route(/\/api\/covers\//, (route) =>

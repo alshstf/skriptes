@@ -81,3 +81,39 @@ type AuthorBioProvider interface {
 	Name() string
 	FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error)
 }
+
+// Adaptation — одна экранизация книги (фильм/сериал). Возвращается
+// AdaptationProvider'ом из внешнего источника (Wikidata, TMDB) ДО
+// сохранения в БД. Enricher.EnsureAdaptations downloads PosterURL
+// в /cache/covers и пишет результат в таблицу book_adaptations.
+//
+// ExtID — идентификатор в провайдере (QID для wikidata, tt-id для
+// imdb, числовой id для tmdb). Вместе с Provider даёт уникальный ключ.
+//
+// Kind — нормализованный тип: "film" | "tv_series" | "miniseries" |
+// "anime" | "other". Маппинг с разнородных P31-значений Wikidata в
+// этот узкий набор делает провайдер; фронт показывает badge.
+//
+// PosterURL — внешний URL картинки (commons.wikimedia.org или image.tmdb.org).
+// Может быть пустой — фронт покажет плейсхолдер.
+type Adaptation struct {
+	Provider  string // "wikidata" | "tmdb"
+	ExtID     string
+	Title     string
+	Year      *int // nil если неизвестен
+	Director  string
+	Kind      string // нормализованное значение, см. doc выше
+	PosterURL string
+	ExtURL    string // канонический URL для "Открыть в источнике"
+}
+
+// AdaptationProvider — поставщик списка экранизаций для книги. В
+// отличие от Cover/Annotation провайдеров возвращает СРЕЗ (одна книга
+// → много экранизаций) и пустой срез без ошибки — это валидный
+// результат "книга найдена, но экранизаций нет".
+//
+// ErrNotFound — книгу не удалось сопоставить с записью в источнике.
+type AdaptationProvider interface {
+	Name() string
+	FetchAdaptations(ctx context.Context, q BookQuery) ([]Adaptation, error)
+}
