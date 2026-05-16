@@ -50,17 +50,84 @@ func (p *WikipediaProvider) WithAPIRoot(root string) *WikipediaProvider {
 
 func (p *WikipediaProvider) Name() string { return "wikipedia" }
 
+// FetchAuthorBio — полный intro-раздел статьи через extracts API
+// (action=query&prop=extracts&exintro=1&explaintext=1). summary endpoint
+// возвращает только первые 1-2 предложения; для нормальной биографии
+// нужен весь preamble — обычно 500-2000 символов, "родился, учился,
+// написал, умер".
+//
+// Сначала пробуем родной язык автора (или ru по умолчанию), потом en.
 func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
 	for _, lang := range p.langs(q.Lang) {
-		s, err := p.summary(ctx, lang, q.FullName)
+		text, err := p.intro(ctx, lang, q.FullName)
 		if err != nil {
 			continue
 		}
-		if s.Extract != "" {
-			return strings.TrimSpace(s.Extract), nil
+		if text != "" {
+			return text, nil
 		}
 	}
 	return "", ErrNotFound
+}
+
+// intro — полный текст intro-раздела через MediaWiki action API.
+//
+//	GET /w/api.php?action=query&prop=extracts&exintro=1&explaintext=1
+//	    &exsectionformat=plain&titles={Title}&format=json
+//
+// Returns plain-text без HTML, заголовков и сносок. exintro=1 ограничивает
+// первой секцией статьи (до первого ==Heading==), что для биографических
+// статей даёт идеальный preamble.
+func (p *WikipediaProvider) intro(ctx context.Context, lang, name string) (string, error) {
+	title, err := p.resolveTitle(ctx, lang, name)
+	if err != nil {
+		return "", err
+	}
+	if title == "" {
+		return "", ErrNotFound
+	}
+
+	v := url.Values{}
+	v.Set("action", "query")
+	v.Set("prop", "extracts")
+	v.Set("exintro", "1")
+	v.Set("explaintext", "1")
+	v.Set("exsectionformat", "plain")
+	v.Set("redirects", "1")
+	v.Set("titles", title)
+	v.Set("format", "json")
+	v.Set("formatversion", "2") // v2 — pages как массив, удобнее парсить
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.baseURL(lang)+"/w/api.php?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build extracts: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", wikiUserAgent)
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("wikipedia extracts: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+
+	var body struct {
+		Query struct {
+			Pages []struct {
+				Missing bool   `json:"missing"`
+				Extract string `json:"extract"`
+			} `json:"pages"`
+		} `json:"query"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		return "", fmt.Errorf("decode extracts: %w", err)
+	}
+	if len(body.Query.Pages) == 0 || body.Query.Pages[0].Missing {
+		return "", ErrNotFound
+	}
+	return strings.TrimSpace(body.Query.Pages[0].Extract), nil
 }
 
 func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {

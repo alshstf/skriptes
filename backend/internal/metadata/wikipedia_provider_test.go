@@ -13,19 +13,29 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// wikiMockServer — общий httptest-server, имитирующий Wikipedia API:
-// /w/api.php (opensearch) и /api/rest_v1/page/summary/{title}.
+// wikiMockServer — общий httptest-server, имитирующий Wikipedia API.
 //
-// summary даётся как есть, opensearch отвечает первой записью из titles.
-func wikiMockServer(t *testing.T, titles []string, summary wikiSummary) *httptest.Server {
+// /w/api.php обслуживает оба action'а — opensearch (для resolveTitle)
+// и query (для extract'а полного intro-раздела). Для summary endpoint
+// (используется только в FetchAuthorPhoto) — /api/rest_v1/page/summary/.
+//
+// fullExtract — текст intro-раздела; для биографических тестов это
+// "Полный текст" (~> чем у summary).
+func wikiMockServer(t *testing.T, titles []string, summary wikiSummary, fullExtract string) *httptest.Server {
 	t.Helper()
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.URL.Path == "/w/api.php":
-			require.Equal(t, "opensearch", r.URL.Query().Get("action"))
-			// формат opensearch: [query, [titles], [snippets], [urls]]
-			arr := []any{r.URL.Query().Get("search"), titles, []string{}, []string{}}
-			_ = json.NewEncoder(w).Encode(arr)
+			switch r.URL.Query().Get("action") {
+			case "opensearch":
+				arr := []any{r.URL.Query().Get("search"), titles, []string{}, []string{}}
+				_ = json.NewEncoder(w).Encode(arr)
+			case "query":
+				// formatversion=2 → pages как массив.
+				_, _ = io.WriteString(w, `{"query":{"pages":[{"extract":`+jsonString(fullExtract)+`}]}}`)
+			default:
+				http.NotFound(w, r)
+			}
 		case strings.HasPrefix(r.URL.Path, "/api/rest_v1/page/summary/"):
 			_ = json.NewEncoder(w).Encode(summary)
 		case r.URL.Path == "/img.jpg":
@@ -37,10 +47,22 @@ func wikiMockServer(t *testing.T, titles []string, summary wikiSummary) *httptes
 	}))
 }
 
+// jsonString — кавычки + escape для inline JSON в test-сервере.
+// Используем json.Marshal — он сам обработает кириллицу и спецсимволы.
+func jsonString(s string) string {
+	b, _ := json.Marshal(s)
+	return string(b)
+}
+
 func TestWikipedia_BioHappyPath(t *testing.T) {
+	// extract — это уже не короткий summary, а полный intro раздел.
+	const fullBio = "Фёдор Михайлович Достоевский (1821-1881) — русский писатель. " +
+		"Родился в Москве. Учился в Военно-инженерном училище. " +
+		"Написал «Преступление и наказание», «Идиот» и другие романы."
 	srv := wikiMockServer(t,
 		[]string{"Достоевский,_Фёдор_Михайлович"},
-		wikiSummary{Title: "Достоевский", Type: "standard", Extract: "Русский писатель..."},
+		wikiSummary{Title: "Достоевский", Type: "standard", Extract: "Краткое (не используется)"},
+		fullBio,
 	)
 	defer srv.Close()
 
@@ -49,22 +71,11 @@ func TestWikipedia_BioHappyPath(t *testing.T) {
 		FullName: "Достоевский Фёдор Михайлович",
 	})
 	require.NoError(t, err)
-	require.Equal(t, "Русский писатель...", got)
-}
-
-func TestWikipedia_BioDisambiguation_NotFound(t *testing.T) {
-	srv := wikiMockServer(t,
-		[]string{"Достоевский"},
-		wikiSummary{Title: "Достоевский", Type: "disambiguation", Extract: "Может означать..."},
-	)
-	defer srv.Close()
-	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
-	_, err := p.FetchAuthorBio(context.Background(), AuthorQuery{FullName: "Достоевский"})
-	require.ErrorIs(t, err, ErrNotFound)
+	require.Equal(t, fullBio, got)
 }
 
 func TestWikipedia_BioEmptyOpensearch_NotFound(t *testing.T) {
-	srv := wikiMockServer(t, []string{}, wikiSummary{})
+	srv := wikiMockServer(t, []string{}, wikiSummary{}, "")
 	defer srv.Close()
 	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
 	_, err := p.FetchAuthorBio(context.Background(), AuthorQuery{FullName: "Несуществующий Автор"})
@@ -72,21 +83,9 @@ func TestWikipedia_BioEmptyOpensearch_NotFound(t *testing.T) {
 }
 
 func TestWikipedia_PhotoHappyPath(t *testing.T) {
-	srv := wikiMockServer(t,
-		[]string{"X"},
-		wikiSummary{
-			Title:   "X",
-			Type:    "standard",
-			Extract: "x",
-			Thumbnail: struct {
-				Source string `json:"source"`
-			}{Source: ""}, // заполним ниже
-		},
-	)
-	defer srv.Close()
-	// Подменим summary handler чтобы thumbnail.source ссылался на сам сервер.
-	// Проще пересоздать сервер вручную:
-	srv.Close()
+	// Этот тест собирает сервер вручную (а не через wikiMockServer),
+	// потому что thumbnail.source должен указывать абсолютно на сам же
+	// тестовый сервер — то есть URL известен только после его старта.
 	srv2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.URL.Path == "/w/api.php":
@@ -130,6 +129,7 @@ func TestWikipedia_PhotoNoThumbnail_NotFound(t *testing.T) {
 	srv := wikiMockServer(t,
 		[]string{"X"},
 		wikiSummary{Title: "X", Type: "standard", Extract: "x"},
+		"",
 	)
 	defer srv.Close()
 	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)

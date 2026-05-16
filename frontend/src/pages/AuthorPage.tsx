@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
@@ -330,7 +331,9 @@ function AuthorBio({
         Биография
       </h3>
       {bio ? (
-        <p className="whitespace-pre-line text-sm text-foreground">{bio}</p>
+        // Wikipedia intro обычно 500-2000 символов — клампим до 5
+        // строк, дальше пользователь жмёт "Развернуть".
+        <ExpandableText text={bio} lines={5} />
       ) : enrichmentExhausted ? (
         <p className="text-sm italic text-muted-foreground">Информация отсутствует.</p>
       ) : (
