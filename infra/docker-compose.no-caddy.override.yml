@@ -1,0 +1,50 @@
+# Override для homelab'а, где уже есть свой edge reverse proxy
+# (Traefik / nginx / Caddy на хосте) и нет смысла запускать ещё один
+# Caddy внутри skriptes-стека.
+#
+# Эффект:
+#  - сервис caddy переводится в profile "disabled" → не запускается
+#  - backend и frontend получают host-порты на 127.0.0.1, чтобы ваш
+#    edge proxy мог в них ходить
+#
+# Использование:
+#   docker compose \
+#     -f docker-compose.release.yml \
+#     -f docker-compose.no-caddy.override.yml \
+#     --env-file .env up -d
+#
+# Пример конфига edge-proxy (nginx) — /api/* и /healthz / /readyz уходят
+# в backend, всё остальное (SPA) — в frontend:
+#
+#   server {
+#     listen 443 ssl http2;
+#     server_name skriptes.example.com;
+#     # ssl_certificate / ssl_certificate_key ...
+#
+#     location ~ ^/(api/|healthz|readyz) {
+#       proxy_pass http://127.0.0.1:8080;
+#       proxy_set_header Host $host;
+#       proxy_set_header X-Forwarded-Proto https;
+#       proxy_set_header X-Real-IP $remote_addr;
+#     }
+#     location / {
+#       proxy_pass http://127.0.0.1:3000;
+#       proxy_set_header Host $host;
+#     }
+#   }
+#
+# Не забудьте обновить SKRIPTES_HOST / SKRIPTES_ALLOWED_ORIGINS в .env
+# под ваш реальный домен — без них CSRF middleware backend'а будет
+# отбрасывать мутирующие запросы.
+
+services:
+  caddy:
+    profiles: ["disabled"]
+
+  backend:
+    ports:
+      - "127.0.0.1:${BACKEND_HOST_PORT:-8080}:8080"
+
+  frontend:
+    ports:
+      - "127.0.0.1:${FRONTEND_HOST_PORT:-3000}:80"

@@ -146,6 +146,42 @@ docker compose -f docker-compose.release.yml --env-file .env up -d
 
 Миграции БД применяются автоматически при старте backend.
 
+### Развёртывание в homelab (порты заняты / есть свой reverse-proxy)
+
+Релизный compose **не пробрасывает** на хост порты `postgres` / `meilisearch` / `backend` — вся коммуникация между сервисами идёт через внутреннюю docker-сеть. Единственное что слушает на хосте — `caddy` на портах 80 / 443. Это важно, потому что в homelab'е на одном Docker-хосте часто крутится несколько стеков, и порты типа 5432/7700/8080 заняты другими postgres/meili/backend.
+
+Два типичных кейса для homelab'а:
+
+#### А. Порты 80 / 443 заняты другим reverse-proxy (но Caddy внутри стека нужен)
+
+Переопределите `HTTP_PORT` / `HTTPS_PORT` в `.env` на свободные:
+
+```env
+HTTP_PORT=8080
+HTTPS_PORT=8443
+```
+
+Caddy внутри контейнера остаётся на 80/443, наружу торчит на указанных портах. Дальше вы либо ходите по `https://skriptes.localhost:8443`, либо ваш внешний reverse-proxy делает `proxy_pass` на 127.0.0.1:8443.
+
+#### Б. У вас уже есть свой edge reverse-proxy и Caddy внутри стека не нужен
+
+Используйте готовый override-файл `docker-compose.no-caddy.override.yml` (выключает Caddy, пробрасывает `backend` и `frontend` на 127.0.0.1):
+
+```bash
+curl -fO $RAW/docker-compose.no-caddy.override.yml
+
+docker compose \
+  -f docker-compose.release.yml \
+  -f docker-compose.no-caddy.override.yml \
+  --env-file .env up -d
+```
+
+Затем в конфиге вашего edge-proxy (nginx / Traefik / Caddy на хосте) сделайте:
+- `/api/*`, `/healthz`, `/readyz` → `127.0.0.1:8080` (backend)
+- всё остальное → `127.0.0.1:3000` (frontend, отдаёт SPA)
+
+Готовый пример nginx-секции — в комментариях `docker-compose.no-caddy.override.yml`. Не забудьте обновить `SKRIPTES_HOST` и `SKRIPTES_ALLOWED_ORIGINS` в `.env` под ваш реальный домен — без них CSRF middleware backend'а отбросит мутирующие запросы (login, send-to-kindle и т.п.).
+
 ---
 
 ## Send-to-Kindle (настройка)
