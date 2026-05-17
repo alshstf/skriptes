@@ -95,23 +95,67 @@ func TestService_HistoryFlow(t *testing.T) {
 	).Scan(&readsCount))
 	require.Equal(t, 1, readsCount, "UnmarkRead не должен удалять строку")
 
-	// SavePosition / GetPosition: epub-cfi (TEXT).
+	// SavePosition / GetPosition: epub-cfi (TEXT) + fraction.
 	const cfi = "epubcfi(/6/4!/4/2,/1:0,/4/3:120)"
-	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi))
+	frac := 0.37
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi, &frac))
 	gotPos, err := svc.GetPosition(ctx, userID, bookID)
 	require.NoError(t, err)
 	require.Equal(t, cfi, gotPos)
 
-	// Пустая строка — сброс позиции.
-	require.NoError(t, svc.SavePosition(ctx, userID, bookID, ""))
+	// ReadStatus после SavePosition: книга НЕ прочитана (была UnmarkRead
+	// выше), но fraction сохранён.
+	rs, ca, fr, err := svc.ReadStatus(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.False(t, rs)
+	require.Nil(t, ca)
+	require.NotNil(t, fr)
+	require.InDelta(t, 0.37, *fr, 0.001)
+
+	// fraction зажимается в [0,1] — мусор отбрасывается.
+	out := 5.0
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi, &out))
+	_, _, fr, err = svc.ReadStatus(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.NotNil(t, fr)
+	require.InDelta(t, 1.0, *fr, 0.001, "fraction clamped to 1.0")
+
+	neg := -0.5
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi, &neg))
+	_, _, fr, err = svc.ReadStatus(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.NotNil(t, fr)
+	require.InDelta(t, 0.0, *fr, 0.001, "fraction clamped to 0.0")
+
+	// fraction=nil НЕ перетирает прежнее значение (COALESCE в SQL).
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi, nil))
+	_, _, fr, err = svc.ReadStatus(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.NotNil(t, fr)
+	require.InDelta(t, 0.0, *fr, 0.001, "nil fraction не должен перетирать прежнее значение (0.0)")
+
+	// Пустая строка pos — сбрасывает позицию (last_pos → NULL).
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, "", nil))
 	gotPos, err = svc.GetPosition(ctx, userID, bookID)
 	require.NoError(t, err)
 	require.Empty(t, gotPos)
 
-	// GetPosition для книги без записи в reads — пустая строка, не ошибка.
+	// GetPosition / ReadStatus для книги без записи в reads — пустые значения, не ошибка.
 	gotPos, err = svc.GetPosition(ctx, userID, 999999)
 	require.NoError(t, err)
 	require.Empty(t, gotPos)
+	rs, ca, fr, err = svc.ReadStatus(ctx, userID, 999999)
+	require.NoError(t, err)
+	require.False(t, rs)
+	require.Nil(t, ca)
+	require.Nil(t, fr)
+
+	// ReadStatus после MarkRead — completed_at не nil.
+	require.NoError(t, svc.MarkRead(ctx, userID, bookID))
+	rs, ca, _, err = svc.ReadStatus(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.True(t, rs)
+	require.NotNil(t, ca)
 
 	// MarkRead для новой пары (user, book) — создаёт строку даже без
 	// предварительного RecordRead. Это сценарий «пользователь читает на

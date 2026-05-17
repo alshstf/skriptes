@@ -15,6 +15,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -107,7 +108,8 @@ func (s *Service) UnmarkRead(ctx context.Context, userID, bookID int64) error {
 }
 
 // IsRead — true если есть запись в reads с completed_at IS NOT NULL.
-// Используется в /api/books/{id} чтобы отдать is_read для UI-чекмарка.
+// Совместимость с существующими callers; новый код должен использовать
+// ReadStatus который возвращает ещё и timestamp + fraction одним запросом.
 func (s *Service) IsRead(ctx context.Context, userID, bookID int64) (bool, error) {
 	var exists bool
 	err := s.pool.QueryRow(ctx, `
@@ -121,22 +123,59 @@ func (s *Service) IsRead(ctx context.Context, userID, bookID int64) (bool, error
 	return exists, nil
 }
 
-// SavePosition — сохраняет позицию чтения (epub-cfi из foliate-js).
-// Upsert: если строки в reads ещё нет, создаём её.
+// ReadStatus — расширенный аналог IsRead: возвращает is_read flag,
+// completed_at (когда отметили прочитанной — для отображения даты в
+// карточке книги) и fraction (для «Продолжить N%» на кнопке открытия
+// ридера). Все nil/0 если строки в reads нет.
 //
-// Пустая строка pos допустима — означает «сбросить позицию» (например
-// при начале чтения с самого начала).
-func (s *Service) SavePosition(ctx context.Context, userID, bookID int64, pos string) error {
+// Один запрос вместо трёх — для handleGetBook где мы обогащаем ответ
+// user-specific полями.
+func (s *Service) ReadStatus(ctx context.Context, userID, bookID int64) (isRead bool, completedAt *time.Time, fraction *float64, err error) {
+	var ca *time.Time
+	var fr *float64
+	err = s.pool.QueryRow(ctx, `
+		SELECT completed_at, fraction FROM reads
+		WHERE user_id = $1 AND book_id = $2
+	`, userID, bookID).Scan(&ca, &fr)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return false, nil, nil, nil
+		}
+		return false, nil, nil, fmt.Errorf("query read status: %w", err)
+	}
+	return ca != nil, ca, fr, nil
+}
+
+// SavePosition — сохраняет позицию чтения (epub-cfi) + fraction
+// прогресса (0.0–1.0). Upsert: если строки в reads ещё нет, создаём её.
+//
+// Пустая строка pos допустима — означает «сбросить позицию». fraction=nil
+// означает «не обновлять прогресс» (не перетирать предыдущее значение).
+// fraction=0 → 0% (явный сброс в начало).
+func (s *Service) SavePosition(ctx context.Context, userID, bookID int64, pos string, fraction *float64) error {
 	var p *string
 	if pos != "" {
 		p = &pos
 	}
+	// Зажимаем fraction в [0, 1] — защита от мусорного input'а.
+	if fraction != nil {
+		if *fraction < 0 {
+			f := 0.0
+			fraction = &f
+		} else if *fraction > 1 {
+			f := 1.0
+			fraction = &f
+		}
+	}
 	_, err := s.pool.Exec(ctx, `
-		INSERT INTO reads (user_id, book_id, last_pos, updated_at)
-		VALUES ($1, $2, $3, now())
+		INSERT INTO reads (user_id, book_id, last_pos, fraction, updated_at)
+		VALUES ($1, $2, $3, $4, now())
 		ON CONFLICT (user_id, book_id)
-		DO UPDATE SET last_pos = EXCLUDED.last_pos, updated_at = now()
-	`, userID, bookID, p)
+		DO UPDATE SET
+			last_pos = EXCLUDED.last_pos,
+			fraction = COALESCE(EXCLUDED.fraction, reads.fraction),
+			updated_at = now()
+	`, userID, bookID, p, fraction)
 	if err != nil {
 		return fmt.Errorf("save position: %w", err)
 	}

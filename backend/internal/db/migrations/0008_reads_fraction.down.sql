@@ -1,0 +1,1 @@
+ALTER TABLE reads DROP COLUMN IF EXISTS fraction;

@@ -85,10 +85,14 @@ func handleGetPosition(d HistoryDeps) http.HandlerFunc {
 	}
 }
 
-// handleSavePosition — PUT /api/books/{id}/position с body {"pos": "..."}.
-// Ридер дёргает на каждом перевороте «страницы» (foliate-js event
-// `relocate`); приходит дебаунсенно с фронта (раз в ~3 секунды),
-// чтобы не молотить БД.
+// handleSavePosition — PUT /api/books/{id}/position с body
+// {"pos": "...", "fraction": 0.37}. Ридер дёргает на каждом перевороте
+// «страницы» (foliate-js relocate event); приходит дебаунсенно с
+// фронта (раз в ~3 секунды), чтобы не молотить БД.
+//
+// fraction опциональный: если null/отсутствует — service не перетирает
+// прежнее значение (COALESCE в SQL). Это полезно для edge-cases где
+// foliate-js дал cfi без надёжного fraction.
 func handleSavePosition(d HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, ok := UserFromContext(r.Context())
@@ -104,7 +108,8 @@ func handleSavePosition(d HistoryDeps) http.HandlerFunc {
 		// Лимит на размер тела — epub-cfi обычно <500 байт. Защита от
 		// мусорного POST'а в десятки мегабайт.
 		var body struct {
-			Pos string `json:"pos"`
+			Pos      string   `json:"pos"`
+			Fraction *float64 `json:"fraction"`
 		}
 		dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096))
 		if err := dec.Decode(&body); err != nil {
@@ -118,10 +123,14 @@ func handleSavePosition(d HistoryDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 		defer cancel()
-		if err := d.Service.SavePosition(ctx, u.ID, bookID, body.Pos); err != nil {
+		if err := d.Service.SavePosition(ctx, u.ID, bookID, body.Pos, body.Fraction); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]string{"pos": body.Pos})
+		resp := map[string]any{"pos": body.Pos}
+		if body.Fraction != nil {
+			resp["fraction"] = *body.Fraction
+		}
+		writeJSON(w, http.StatusOK, resp)
 	}
 }

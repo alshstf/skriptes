@@ -1,70 +1,118 @@
 import { test, expect } from './_fixtures';
 import { bookDetailFixture } from './_fixtures';
 
-// ReadToggle на BookDetailPage — три сценария:
-//  1. is_read=false → видим «Прочитать»; клик → POST /read → меняется на «Прочитано»
-//  2. is_read=true (книга уже прочитана) → видим «Прочитано» с галочкой
-//  3. клик в «Прочитано»-состоянии → DELETE /read → состояние сменяется обратно
-//
-// Стабим /api/books/19 с is_read=false (по умолчанию), на /read endpoint
-// возвращаем 200; затем подсчитываем сколько раз и каким методом дёргали.
+// Статус «Прочитана» теперь живёт в meta-блоке карточки книги (не
+// в action-ряде). Тесты проверяют:
+//  1. is_read=false → видим «Нет ·» + кнопка «Отметить» → клик → POST /read
+//  2. is_read=true, есть read_at → видим дату + кнопка «снять» → клик → DELETE /read
+//  3. кнопка «Читать» в action-ряде ведёт на /books/:id/read
+//  4. с reading_fraction>0 кнопка показывает «Продолжить N%»
 
-test('read toggle: false → true on click', async ({ mockedPage: page }) => {
-  const calls: { method: string }[] = [];
-  await page.route(/\/api\/books\/19\/read$/, (route) => {
-    calls.push({ method: route.request().method() });
-    void route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ is_read: route.request().method() === 'POST' }),
-    });
-  });
-
-  await page.goto('/books/19');
-  const btn = page.getByRole('button', { name: /Отметить книгу как прочитанную/ });
-  await expect(btn).toBeVisible({ timeout: 10_000 });
-  await btn.click();
-  // Optimistic update: aria-label сразу меняется на «Снять отметку».
-  await expect(page.getByRole('button', { name: /Снять отметку «прочитано»/ })).toBeVisible();
-  await expect.poll(() => calls.length).toBe(1);
-  expect(calls[0].method).toBe('POST');
-});
-
-test('read toggle: true → false on click (unmark)', async ({ mockedPage: page }) => {
-  // Подменяем фикстуру: книга уже прочитана.
+test('read status: «Нет» → «Отметить» click marks as read', async ({ mockedPage: page }) => {
+  // Состояние is_read мутирует через /read и должно отражаться в
+  // последующих GET /api/books/19 (после useToggleRead.onSettled
+  // инвалидирует book-кэш — нужен консистентный ответ).
+  let isRead = false;
   await page.route(/\/api\/books\/19$/, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ ...bookDetailFixture, is_read: true }),
+      body: JSON.stringify({
+        ...bookDetailFixture,
+        is_read: isRead,
+        read_at: isRead ? '2026-05-17T20:00:00Z' : undefined,
+      }),
     }),
   );
   const calls: { method: string }[] = [];
   await page.route(/\/api\/books\/19\/read$/, (route) => {
     calls.push({ method: route.request().method() });
+    isRead = route.request().method() === 'POST';
     void route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ is_read: route.request().method() === 'POST' }),
+      body: JSON.stringify({ is_read: isRead }),
     });
   });
 
   await page.goto('/books/19');
-  const btn = page.getByRole('button', { name: /Снять отметку «прочитано»/ });
-  await expect(btn).toBeVisible({ timeout: 10_000 });
-  await btn.click();
-  // После unmark возвращаемся к исходному «Прочитать».
-  await expect(page.getByRole('button', { name: /Отметить книгу как прочитанную/ })).toBeVisible();
+  await expect(page.getByRole('term').filter({ hasText: /^Прочитана$/ })).toBeVisible({
+    timeout: 10_000,
+  });
+  const markBtn = page.getByRole('button', { name: /Отметить/ });
+  await expect(markBtn).toBeVisible();
+  await markBtn.click();
+
+  // После клика и refetch — должна остаться кнопка «снять» (а не
+  // вернуться обратно в «Отметить» от stale-кэша).
+  await expect(page.getByRole('button', { name: /Снять отметку «прочитано»/ })).toBeVisible();
+  await expect.poll(() => calls.length).toBe(1);
+  expect(calls[0].method).toBe('POST');
+});
+
+test('read status: показывает дату прочтения + кнопку «снять»', async ({ mockedPage: page }) => {
+  let isRead = true;
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...bookDetailFixture,
+        is_read: isRead,
+        read_at: isRead ? '2026-05-17T10:30:00Z' : undefined,
+      }),
+    }),
+  );
+  const calls: { method: string }[] = [];
+  await page.route(/\/api\/books\/19\/read$/, (route) => {
+    calls.push({ method: route.request().method() });
+    isRead = route.request().method() === 'POST';
+    void route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ is_read: isRead }),
+    });
+  });
+
+  await page.goto('/books/19');
+  // Должна быть видна дата в человеческом формате (русская локаль).
+  await expect(page.getByText(/17 мая 2026/)).toBeVisible({ timeout: 10_000 });
+
+  const unmarkBtn = page.getByRole('button', { name: /Снять отметку «прочитано»/ });
+  await expect(unmarkBtn).toBeVisible();
+  await unmarkBtn.click();
+
+  await expect(page.getByRole('button', { name: /Отметить/ })).toBeVisible();
   await expect.poll(() => calls.length).toBe(1);
   expect(calls[0].method).toBe('DELETE');
 });
 
+test('read button: «Читать» без прогресса', async ({ mockedPage: page }) => {
+  await page.goto('/books/19');
+  const link = page.getByRole('link', { name: /Открыть книгу в браузерном ридере/ });
+  await expect(link).toBeVisible({ timeout: 10_000 });
+  // Без reading_fraction видим базовый лейбл «Читать».
+  await expect(link).toContainText('Читать');
+});
+
+test('read button: «Продолжить N%» при reading_fraction', async ({ mockedPage: page }) => {
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...bookDetailFixture, reading_fraction: 0.37 }),
+    }),
+  );
+
+  await page.goto('/books/19');
+  const link = page.getByRole('link', { name: /Открыть книгу в браузерном ридере/ });
+  await expect(link).toBeVisible({ timeout: 10_000 });
+  await expect(link).toContainText('Продолжить 37%');
+});
+
 test('reader: «Читать» link navigates to /books/19/read', async ({ mockedPage: page }) => {
-  // foliate-reader.html нам сложно прогнать в e2e без backend (нужен
-  // настоящий epub). Поэтому проверяем только сам facт перехода —
-  // что кнопка «Читать» ведёт на правильный роут.
-  //
-  // Стабим /position и /epub чтобы ReaderPage не зависал в loading.
+  // foliate-reader.html в e2e не прогнать без настоящего epub — проверяем
+  // только что link ведёт на /read и страница ридера загружается.
   await page.route(/\/api\/books\/19\/position$/, (route) =>
     route.fulfill({
       status: 200,
@@ -78,6 +126,36 @@ test('reader: «Читать» link navigates to /books/19/read', async ({ mocke
   await expect(link).toBeVisible({ timeout: 10_000 });
   await link.click();
   await expect(page).toHaveURL(/\/books\/19\/read$/, { timeout: 10_000 });
-  // На ридер-странице вверху — кнопка «К карточке».
   await expect(page.getByRole('button', { name: /Вернуться к карточке книги/ })).toBeVisible();
+});
+
+test('reader: «К карточке» делает history.back, не push', async ({ mockedPage: page }) => {
+  // Регресс: раньше кнопка «К карточке» делала navigate({to:'/books/$id'})
+  // что push'ало новую entry в history, и тогда browser back из карточки
+  // возвращал в ридер вместо списка. Сейчас должен быть history.back().
+  //
+  // Сценарий: списки → карточка → ридер → «К карточке» → browser back
+  // должен вернуть НА СПИСОК (не в ридер).
+  await page.route(/\/api\/books\/19\/position$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ pos: '' }),
+    }),
+  );
+
+  await page.goto('/books');
+  // На списке кликаем по книге id=19 — переход на /books/19.
+  await page.getByRole('link', { name: /Кадетский корпус. Книга 2/ }).first().click();
+  await expect(page).toHaveURL(/\/books\/19$/);
+  // Кликаем «Читать» — переход на /books/19/read.
+  await page.getByRole('link', { name: /Открыть книгу в браузерном ридере/ }).click();
+  await expect(page).toHaveURL(/\/books\/19\/read$/);
+  // «К карточке» — должна сработать как history.back, не как push.
+  await page.getByRole('button', { name: /Вернуться к карточке книги/ }).click();
+  await expect(page).toHaveURL(/\/books\/19$/);
+  // Дальше browser back — должны попасть на /books (список), НЕ обратно
+  // в ридер. Это и есть проверка регресса.
+  await page.goBack();
+  await expect(page).toHaveURL(/\/books(\?.*)?$/);
 });
