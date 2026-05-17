@@ -169,13 +169,29 @@
 
     try {
       await view.open(file)
+      // ВАЖНО: view.open() только инициализирует renderer, но НЕ загружает
+      // первую секцию — без этого 'load' event никогда не fire'ит, и
+      // status-loader зависает навсегда. Канонический паттерн в
+      // reader.js foliate-js: после open() — либо goTo(cfi) для
+      // восстановления позиции, либо renderer.next() для свежего открытия.
       if (initialCfi) {
-        // goTo поддерживает epub-cfi напрямую.
         await view.goTo(initialCfi)
+      } else {
+        await view.renderer.next()
       }
     } catch (e) {
+      console.error('foliate-reader: open failed', e)
       status.textContent = `Не удалось открыть epub: ${e.message}`
       post({ type: 'error', reason: 'open', detail: String(e) })
     }
-  })()
+  })().catch((e) => {
+    // Защитный catch на случай если что-то выкинулось ВНЕ try/catch
+    // (например, при создании File или парсинге blob'а). Без него
+    // окно остаётся в «Загружаем…» и в консоли висит uncaught promise.
+    console.error('foliate-reader: top-level error', e)
+    if (status && status.isConnected) {
+      status.textContent = `Внутренняя ошибка ридера: ${e?.message ?? e}`
+    }
+    post({ type: 'error', reason: 'uncaught', detail: String(e) })
+  })
 </script>
