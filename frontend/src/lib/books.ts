@@ -79,6 +79,11 @@ export type Book = {
   deleted?: boolean;
   is_favorite?: boolean;
   is_read?: boolean;
+  /** Когда пользователь явно отметил прочитанной (или ридер auto-mark'нул). */
+  read_at?: string;
+  /** Прогресс чтения [0, 1] из in-browser ридера. Undefined если ридер
+   *  ни разу не открывали — UI тогда показывает «Читать» без процента. */
+  reading_fraction?: number;
 };
 
 /**
@@ -198,13 +203,15 @@ export function useToggleRead() {
       }
     },
     onSettled: (_data, _err, { bookId }) => {
-      // Чтобы вкладка автора с read_count тоже обновилась — инвалидируем
-      // соответствующие запросы. Это рефетч лишь когда страница автора
-      // открыта, на BookDetailPage всё уже обновлено через patch выше.
+      // Инвалидируем book-кэш чтобы из ответа пришли поля которые
+      // optimistic update не мог знать: read_at (бэкенд проставляет
+      // now() при MarkRead, мы клиентски это значение не имеем). Без
+      // этого «Прочитана 17 мая 2026» не появится пока юзер сам не
+      // рефрешнет страницу.
+      qc.invalidateQueries({ queryKey: ['book', String(bookId)] });
+      // Вкладка автора/серии — для read_count в статистике.
       qc.invalidateQueries({ queryKey: ['author'] });
       qc.invalidateQueries({ queryKey: ['series'] });
-      // Книга-кэш мы уже подкрутили в onMutate; рефетч не нужен.
-      void bookId;
     },
   });
 }
@@ -231,13 +238,17 @@ export function useReadingPosition(bookId: number | string | undefined) {
  * useSavePosition — мутация для сохранения позиции в БД. Caller
  * (ReaderPage) дёргает её debounce'нуто (раз в 3 секунды максимум)
  * на каждый foliate-js `relocate` event.
+ *
+ * fraction опциональный — foliate-js обычно его даёт, но в edge-cases
+ * (fixed-layout epub'ы) может прислать null. Backend в этом случае
+ * не перетирает прежнее значение (см. SavePosition в history service).
  */
 export function useSavePosition() {
   return useMutation({
-    mutationFn: ({ bookId, pos }: { bookId: number; pos: string }) =>
-      apiFetch<{ pos: string }>(`/api/books/${bookId}/position`, {
+    mutationFn: ({ bookId, pos, fraction }: { bookId: number; pos: string; fraction?: number }) =>
+      apiFetch<{ pos: string; fraction?: number }>(`/api/books/${bookId}/position`, {
         method: 'PUT',
-        body: { pos },
+        body: fraction !== undefined ? { pos, fraction } : { pos },
       }),
   });
 }

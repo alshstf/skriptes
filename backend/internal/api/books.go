@@ -52,12 +52,20 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 }
 
 // bookResponse — Book + user-specific поля. Книги в books-пакете не
-// знают про пользователя; user-зависимые is_favorite / is_read
-// дорисовываем здесь.
+// знают про пользователя; user-зависимые поля дорисовываем здесь:
+//   - is_favorite — лежит ли в favorites
+//   - is_read — есть ли запись в reads с completed_at IS NOT NULL
+//   - read_at — когда пометили прочитанной (для отображения даты в UI);
+//     nil если is_read=false
+//   - reading_fraction — прогресс чтения [0,1] из in-browser ридера;
+//     nil если ридер ни разу не открывали (UI тогда показывает «Читать»
+//     без процента вместо «Продолжить N%»)
 type bookResponse struct {
 	books.Book
-	IsFavorite bool `json:"is_favorite"`
-	IsRead     bool `json:"is_read"`
+	IsFavorite      bool       `json:"is_favorite"`
+	IsRead          bool       `json:"is_read"`
+	ReadAt          *time.Time `json:"read_at,omitempty"`
+	ReadingFraction *float64   `json:"reading_fraction,omitempty"`
 }
 
 func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
@@ -80,15 +88,20 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 			return
 		}
 
-		// is_favorite + is_read + fire-and-forget запись view. Ошибки
-		// чтения user-флагов не должны ломать карточку — отдаём false.
+		// is_favorite + read status + fire-and-forget запись view. Ошибки
+		// чтения user-флагов не должны ломать карточку — отдаём дефолты.
 		var isFav, isRead bool
+		var readAt *time.Time
+		var fraction *float64
 		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
 			if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
 				isFav = v
 			}
-			if v, err := hist.Service.IsRead(ctx, u.ID, id); err == nil {
-				isRead = v
+			// ReadStatus — один запрос вместо трёх (is_read + дата + fraction).
+			if r, ca, fr, err := hist.Service.ReadStatus(ctx, u.ID, id); err == nil {
+				isRead = r
+				readAt = ca
+				fraction = fr
 			}
 			recordViewAsync(hist.Service, u.ID, id)
 		}
@@ -98,7 +111,13 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 		// но следующий рендер карточки уже покажет.
 		triggerBookEnrichmentAsync(meta, b)
 
-		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav, IsRead: isRead})
+		writeJSON(w, http.StatusOK, bookResponse{
+			Book:            b,
+			IsFavorite:      isFav,
+			IsRead:          isRead,
+			ReadAt:          readAt,
+			ReadingFraction: fraction,
+		})
 	}
 }
 

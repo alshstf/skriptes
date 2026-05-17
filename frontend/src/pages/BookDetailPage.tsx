@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText, BookOpen } from 'lucide-react';
+import { BookText, BookOpen, Check, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -9,9 +9,8 @@ import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { FavoriteButton } from '@/components/FavoriteButton';
-import { ReadToggle } from '@/components/ReadToggle';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
-import { useBook } from '@/lib/books';
+import { useBook, useToggleRead } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
 export function BookDetailPage() {
@@ -85,7 +84,6 @@ export function BookDetailPage() {
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
-                  <ReadToggle bookId={book.id} isRead={book.is_read ?? false} />
                   <FavoriteButton
                     target="book"
                     id={book.id}
@@ -99,7 +97,7 @@ export function BookDetailPage() {
                         aria-label="Открыть книгу в браузерном ридере"
                       >
                         <BookOpen className="size-4" aria-hidden />
-                        <span className="hidden sm:inline">Читать</span>
+                        <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
                       </Link>
                     </Button>
                   ) : null}
@@ -144,6 +142,11 @@ export function BookDetailPage() {
                 {book.rating !== undefined ? (
                   <Field label="Рейтинг" value={String(book.rating)} />
                 ) : null}
+                <ReadStatusField
+                  bookId={book.id}
+                  isRead={book.is_read ?? false}
+                  readAt={book.read_at}
+                />
                 <Field label="LIBID" value={book.lib_id} mono />
               </dl>
 
@@ -222,4 +225,93 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
       <dd className={mono ? 'font-mono text-xs break-all' : ''}>{value}</dd>
     </>
   );
+}
+
+/**
+ * readButtonLabel — текст на кнопке открытия ридера. Без сохранённого
+ * прогресса — нейтральное «Читать»; с прогрессом > 0 показываем
+ * «Продолжить N%» чтобы пользователь видел что в браузерном ридере
+ * уже что-то прочитано и продолжит с того места.
+ *
+ * 100% мы не показываем как «Продолжить 100%» — это сигнал «уже
+ * дочитано», но если хочется перечитать — кнопка такая же «Читать».
+ */
+function readButtonLabel(fraction?: number): string {
+  if (fraction === undefined || fraction <= 0 || fraction >= 1) return 'Читать';
+  const pct = Math.max(1, Math.round(fraction * 100));
+  return `Продолжить ${pct}%`;
+}
+
+/**
+ * ReadStatusField — строка «Прочитана» в meta-grid карточки книги.
+ *
+ * Два состояния:
+ *  - is_read=true → «✓ <дата>» + малозаметная кнопка-крестик «Снять»
+ *  - is_read=false → «Нет ·» + кнопка-чекмарк «Отметить»
+ *
+ * Используем тот же useToggleRead с optimistic update — клик
+ * мгновенно перерисовывает состояние, при ошибке откатываемся.
+ *
+ * Возвращает фрагмент с <dt>/<dd> — расчитано на использование
+ * внутри родительского <dl class="grid grid-cols-[max-content_1fr]">.
+ */
+function ReadStatusField({
+  bookId,
+  isRead,
+  readAt,
+}: {
+  bookId: number;
+  isRead: boolean;
+  readAt?: string;
+}) {
+  const toggle = useToggleRead();
+  return (
+    <>
+      <dt className="text-muted-foreground">Прочитана</dt>
+      <dd className="flex items-center gap-2">
+        {isRead ? (
+          <>
+            <span className="inline-flex items-center gap-1 text-green-700 dark:text-green-400">
+              <Check className="size-3.5" aria-hidden />
+              {readAt ? formatReadDate(readAt) : 'Да'}
+            </span>
+            <button
+              type="button"
+              onClick={() => toggle.mutate({ bookId, isRead: false })}
+              disabled={toggle.isPending}
+              className="inline-flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+              aria-label="Снять отметку «прочитано»"
+            >
+              <X className="size-3" aria-hidden />
+              снять
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="text-muted-foreground">Нет</span>
+            <span className="text-muted-foreground">·</span>
+            <button
+              type="button"
+              onClick={() => toggle.mutate({ bookId, isRead: true })}
+              disabled={toggle.isPending}
+              className="inline-flex items-center gap-1 text-xs text-foreground underline-offset-2 hover:underline disabled:opacity-50"
+            >
+              <Check className="size-3" aria-hidden />
+              Отметить
+            </button>
+          </>
+        )}
+      </dd>
+    </>
+  );
+}
+
+/**
+ * formatReadDate — «17 мая 2026» (русская локаль, без времени).
+ * Принимает ISO-строку с TZ из бэка (RFC 3339), отдаёт человеческое.
+ */
+function formatReadDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 }
