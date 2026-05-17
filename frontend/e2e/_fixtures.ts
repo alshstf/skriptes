@@ -71,6 +71,8 @@ export const bookDetailFixture = {
   ext: 'fb2',
   size_bytes: 849047,
   deleted: false,
+  is_favorite: false,
+  is_read: false,
 };
 
 export const suggestFixture = {

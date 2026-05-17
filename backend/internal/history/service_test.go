@@ -72,6 +72,62 @@ func TestService_HistoryFlow(t *testing.T) {
 	).Scan(&readsCount))
 	require.Equal(t, 1, readsCount)
 
+	// IsRead: RecordRead не должен ставить completed_at → false.
+	isRead, err := svc.IsRead(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.False(t, isRead, "RecordRead не считается прочитыванием — только download/access")
+
+	// MarkRead — явная отметка прочитанным. Идемпотентна.
+	require.NoError(t, svc.MarkRead(ctx, userID, bookID))
+	require.NoError(t, svc.MarkRead(ctx, userID, bookID))
+	isRead, err = svc.IsRead(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.True(t, isRead)
+
+	// UnmarkRead — снимает флаг, но строку оставляет (для re-ranking-сигналов).
+	require.NoError(t, svc.UnmarkRead(ctx, userID, bookID))
+	isRead, err = svc.IsRead(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.False(t, isRead)
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM reads WHERE user_id = $1 AND book_id = $2`,
+		userID, bookID,
+	).Scan(&readsCount))
+	require.Equal(t, 1, readsCount, "UnmarkRead не должен удалять строку")
+
+	// SavePosition / GetPosition: epub-cfi (TEXT).
+	const cfi = "epubcfi(/6/4!/4/2,/1:0,/4/3:120)"
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, cfi))
+	gotPos, err := svc.GetPosition(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.Equal(t, cfi, gotPos)
+
+	// Пустая строка — сброс позиции.
+	require.NoError(t, svc.SavePosition(ctx, userID, bookID, ""))
+	gotPos, err = svc.GetPosition(ctx, userID, bookID)
+	require.NoError(t, err)
+	require.Empty(t, gotPos)
+
+	// GetPosition для книги без записи в reads — пустая строка, не ошибка.
+	gotPos, err = svc.GetPosition(ctx, userID, 999999)
+	require.NoError(t, err)
+	require.Empty(t, gotPos)
+
+	// MarkRead для новой пары (user, book) — создаёт строку даже без
+	// предварительного RecordRead. Это сценарий «пользователь читает на
+	// Kindle, потом отмечает прочитанным в UI, не скачивая через сайт».
+	var freshBookID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
+		SELECT collection_id, archive_id, 'L-MARK-FRESH', 'fmark', 'fb2', 'Mark Fresh', 'mark fresh'
+		FROM books WHERE id = $1
+		RETURNING id
+	`, bookID).Scan(&freshBookID))
+	require.NoError(t, svc.MarkRead(ctx, userID, freshBookID))
+	isRead, err = svc.IsRead(ctx, userID, freshBookID)
+	require.NoError(t, err)
+	require.True(t, isRead)
+
 	// favorites: add — повторный no-op — IsFavorite=true — List вернёт книгу
 	require.NoError(t, svc.AddFavorite(ctx, userID, bookID))
 	require.NoError(t, svc.AddFavorite(ctx, userID, bookID))

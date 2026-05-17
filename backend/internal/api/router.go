@@ -84,6 +84,19 @@ func NewRouter(d Deps) http.Handler {
 					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
+					// Явная отметка «прочитано» (кнопка на карточке книги +
+					// auto-mark из ридера при дочитывании). Основной сигнал
+					// для read_count в статистике автора/серии.
+					r.Post("/books/{id}/read", handleMarkRead(d.History))
+					r.Delete("/books/{id}/read", handleUnmarkRead(d.History))
+					// Позиция чтения для in-browser ридера (epub-cfi).
+					r.Get("/books/{id}/position", handleGetPosition(d.History))
+					r.Put("/books/{id}/position", handleSavePosition(d.History))
+				}
+				// In-browser ридер: тот же путь конвертации что и /download,
+				// но без Content-Disposition: attachment и без записи в reads.
+				if d.Download.Books != nil && d.Download.Converter != nil {
+					r.Get("/books/{id}/epub", handleEpub(d.Download))
 				}
 				if d.Kindle.Service != nil {
 					r.Get("/me/kindle-targets", handleListKindleTargets(d.Kindle))

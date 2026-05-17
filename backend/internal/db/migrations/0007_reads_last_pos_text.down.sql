@@ -1,0 +1,2 @@
+ALTER TABLE reads DROP COLUMN last_pos;
+ALTER TABLE reads ADD COLUMN last_pos INTEGER;
