@@ -10,7 +10,7 @@ import { bookDetailFixture } from './_fixtures';
 // возвращаем 200; затем подсчитываем сколько раз и каким методом дёргали.
 
 test('read toggle: false → true on click', async ({ mockedPage: page }) => {
-  let calls: { method: string }[] = [];
+  const calls: { method: string }[] = [];
   await page.route(/\/api\/books\/19\/read$/, (route) => {
     calls.push({ method: route.request().method() });
     void route.fulfill({
@@ -39,7 +39,7 @@ test('read toggle: true → false on click (unmark)', async ({ mockedPage: page 
       body: JSON.stringify({ ...bookDetailFixture, is_read: true }),
     }),
   );
-  let calls: { method: string }[] = [];
+  const calls: { method: string }[] = [];
   await page.route(/\/api\/books\/19\/read$/, (route) => {
     calls.push({ method: route.request().method() });
     void route.fulfill({
