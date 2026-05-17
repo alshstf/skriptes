@@ -128,7 +128,10 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, 0, a.ReadCount)
 	require.Equal(t, 0, s.ReadCount)
 
-	// seed user + reads-record для единственной книги автора
+	// seed user + явная отметка «прочитано» (completed_at IS NOT NULL).
+	// До v0.3 здесь был просто INSERT в reads с completed_at=NULL — этого
+	// раньше хватало (read_count считал любые reads-rows). Теперь сигнал
+	// строгий: только completed_at IS NOT NULL.
 	var userID int64
 	require.NoError(t, pool.QueryRow(ctx, `
 		INSERT INTO users (email, display_name, password_hash, role)
@@ -136,7 +139,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 		RETURNING id
 	`).Scan(&userID))
 	_, err = pool.Exec(ctx,
-		`INSERT INTO reads (user_id, book_id, updated_at) VALUES ($1, $2, now())`,
+		`INSERT INTO reads (user_id, book_id, completed_at, updated_at) VALUES ($1, $2, now(), now())`,
 		userID, a.Books[0].ID,
 	)
 	require.NoError(t, err)

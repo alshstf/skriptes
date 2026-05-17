@@ -105,6 +105,73 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 	}
 }
 
+// handleEpub — GET /api/books/{id}/epub. Inline-эндпоинт для in-browser
+// ридера (foliate-js): жёстко epub3-формат, без Content-Disposition
+// attachment (чтобы fetch не упирался в политики download-prompt'а
+// в SPA-окружении). НЕ дёргает RecordRead — учёт открытия книги в
+// ридере идёт через PUT /api/books/{id}/position при первом сохранении
+// позиции; download остаётся отдельной аналитикой.
+//
+// Конвертация идёт через тот же converter.Convert что и handleDownload —
+// первый запрос за epub3 для книги выполняет fbc, остальные мгновенно
+// берут из cacheRoot.
+func handleEpub(d DownloadDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
+		defer cancel()
+
+		book, err := d.Books.Get(ctx, id)
+		if err != nil {
+			if errors.Is(err, books.ErrNotFound) {
+				writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+
+		src := converter.SourceBook{
+			ID:       book.ID,
+			Archive:  book.Archive,
+			FileName: book.FileName,
+			Ext:      book.Ext,
+		}
+		res, err := d.Converter.Convert(ctx, src, converter.FormatEpub3)
+		if err != nil {
+			if errors.Is(err, converter.ErrSourceMissing) {
+				writeJSON(w, http.StatusNotFound, map[string]string{"error": "archive file not available"})
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("convert failed: %v", err)})
+			return
+		}
+
+		// Inline disposition + длинный кэш: имя файла content-derived
+		// (sha от book_id+format), при изменении контента изменится URL.
+		// В дев и в продакшене URL вида /api/books/19/epub не меняется
+		// между запросами одной книги, поэтому max-age=3600 безопасен.
+		w.Header().Set("Content-Type", res.ContentType)
+		w.Header().Set("Content-Disposition", `inline; filename="book.epub"`)
+		w.Header().Set("Cache-Control", "private, max-age=3600")
+
+		f, err := os.Open(res.Path) // #nosec G304 — путь из cacheRoot
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "open cache failed"})
+			return
+		}
+		defer func() { _ = f.Close() }()
+		if st, err := f.Stat(); err == nil {
+			w.Header().Set("Content-Length", strconv.FormatInt(st.Size(), 10))
+		}
+		_, _ = io.Copy(w, f)
+	}
+}
+
 // buildFilename собирает дружелюбное имя файла "Author - Title.ext".
 // Если автора или title нет — fallback к имени из converter.Result.
 func buildFilename(b books.Book, fallback string) string {

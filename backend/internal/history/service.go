@@ -48,11 +48,17 @@ func (s *Service) RecordView(ctx context.Context, userID, bookID int64) error {
 	return nil
 }
 
-// RecordRead — фиксирует факт скачивания/чтения книги.
+// RecordRead — фиксирует факт скачивания/открытия книги.
 //
-// reads имеет PRIMARY KEY (user_id, book_id) и хранит "последнее
-// взаимодействие" — обновляем updated_at при повторном скачивании,
-// last_pos оставляем как есть (потом will be updated by reader).
+// Слово "read" здесь в смысле "accessed" (download или fetch ридером),
+// НЕ "completed". Сигнал «прочитано» — это reads.completed_at IS NOT NULL,
+// устанавливается явно через MarkRead. RecordRead используется для
+// re-ranking (книга, к которой обращались, — слабый сигнал интереса)
+// и для тёплой памяти reads-row, на которую later может прийти
+// SavePosition или MarkRead.
+//
+// reads имеет PRIMARY KEY (user_id, book_id) — повторные вызовы
+// обновляют updated_at; last_pos и completed_at не трогаем.
 func (s *Service) RecordRead(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO reads (user_id, book_id, updated_at)
@@ -64,6 +70,97 @@ func (s *Service) RecordRead(ctx context.Context, userID, bookID int64) error {
 		return fmt.Errorf("upsert read: %w", err)
 	}
 	return nil
+}
+
+// MarkRead — пользователь явно отметил книгу как прочитанную.
+// Идемпотентна: повторный вызов перетирает completed_at тем же now() —
+// это нормально (точное время «первой отметки» нам не критично).
+//
+// Этот метод — основной сигнал «прочитано» для статистики автора/серии
+// и для UI-чекмарка на карточке книги. Дёргается из POST /api/books/{id}/read
+// и из ридера при дочитывании.
+func (s *Service) MarkRead(ctx context.Context, userID, bookID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO reads (user_id, book_id, completed_at, updated_at)
+		VALUES ($1, $2, now(), now())
+		ON CONFLICT (user_id, book_id)
+		DO UPDATE SET completed_at = now(), updated_at = now()
+	`, userID, bookID)
+	if err != nil {
+		return fmt.Errorf("mark read: %w", err)
+	}
+	return nil
+}
+
+// UnmarkRead — снять отметку «прочитано». Сама запись в reads остаётся
+// (важно для re-ranking сигналов: пользователь интересовался книгой,
+// даже если потом передумал её считать прочитанной).
+func (s *Service) UnmarkRead(ctx context.Context, userID, bookID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		UPDATE reads SET completed_at = NULL, updated_at = now()
+		WHERE user_id = $1 AND book_id = $2
+	`, userID, bookID)
+	if err != nil {
+		return fmt.Errorf("unmark read: %w", err)
+	}
+	return nil
+}
+
+// IsRead — true если есть запись в reads с completed_at IS NOT NULL.
+// Используется в /api/books/{id} чтобы отдать is_read для UI-чекмарка.
+func (s *Service) IsRead(ctx context.Context, userID, bookID int64) (bool, error) {
+	var exists bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS(SELECT 1 FROM reads
+		              WHERE user_id = $1 AND book_id = $2
+		                AND completed_at IS NOT NULL)
+	`, userID, bookID).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("query is_read: %w", err)
+	}
+	return exists, nil
+}
+
+// SavePosition — сохраняет позицию чтения (epub-cfi из foliate-js).
+// Upsert: если строки в reads ещё нет, создаём её.
+//
+// Пустая строка pos допустима — означает «сбросить позицию» (например
+// при начале чтения с самого начала).
+func (s *Service) SavePosition(ctx context.Context, userID, bookID int64, pos string) error {
+	var p *string
+	if pos != "" {
+		p = &pos
+	}
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO reads (user_id, book_id, last_pos, updated_at)
+		VALUES ($1, $2, $3, now())
+		ON CONFLICT (user_id, book_id)
+		DO UPDATE SET last_pos = EXCLUDED.last_pos, updated_at = now()
+	`, userID, bookID, p)
+	if err != nil {
+		return fmt.Errorf("save position: %w", err)
+	}
+	return nil
+}
+
+// GetPosition — последняя сохранённая позиция (epub-cfi). Если строки
+// в reads нет ИЛИ last_pos NULL — возвращает "" без ошибки. Caller
+// использует это чтобы решить, открывать книгу с начала или с позиции.
+func (s *Service) GetPosition(ctx context.Context, userID, bookID int64) (string, error) {
+	var pos *string
+	err := s.pool.QueryRow(ctx, `
+		SELECT last_pos FROM reads WHERE user_id = $1 AND book_id = $2
+	`, userID, bookID).Scan(&pos)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return "", nil
+		}
+		return "", fmt.Errorf("query position: %w", err)
+	}
+	if pos == nil {
+		return "", nil
+	}
+	return *pos, nil
 }
 
 // AddFavorite — добавить книгу в избранное.

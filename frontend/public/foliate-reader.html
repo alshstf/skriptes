@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>skriptes reader</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: Canvas;
+    color: CanvasText;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* Простой top-bar с навигацией и индикатором прогресса. ReaderPage в
+     React имеет свой header, но iframe общается с ним через postMessage,
+     а в самом iframe нам нужен компактный, безусловно работающий
+     fallback. */
+  #toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid color-mix(in srgb, CanvasText 10%, transparent);
+    font-size: 13px;
+  }
+  #toolbar button {
+    appearance: none;
+    background: color-mix(in srgb, CanvasText 8%, transparent);
+    color: CanvasText;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font: inherit;
+  }
+  #toolbar button:hover:not(:disabled) {
+    background: color-mix(in srgb, CanvasText 14%, transparent);
+  }
+  #toolbar button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  #progress {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, CanvasText 60%, transparent);
+  }
+  #view-host {
+    flex: 1 1 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  foliate-view {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  #status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, CanvasText 60%, transparent);
+    font-size: 14px;
+  }
+</style>
+
+<div id="toolbar">
+  <button id="prev" disabled aria-label="Назад">‹</button>
+  <button id="next" disabled aria-label="Вперёд">›</button>
+  <span id="progress" aria-live="polite"></span>
+</div>
+<div id="view-host">
+  <div id="status">Загружаем книгу…</div>
+</div>
+
+<script type="module">
+  // Скриптовый блок намеренно тяжёлый — он не часть react-bundle'а,
+  // живёт как статический ассет в public/. Логика:
+  //
+  //  1. Читаем ?src=URL&cfi=POS из URL iframe'а.
+  //  2. Скачиваем epub из src (как blob), парсим через foliate-js makeBook.
+  //  3. Открываем в <foliate-view>, при наличии cfi восстанавливаем позицию.
+  //  4. Слушаем relocate event → отправляем postMessage родителю
+  //     {type:'position', cfi, fraction}. Родитель debounce'нуто PUT'ит
+  //     в /api/books/{id}/position. При достижении конца (fraction >= 0.995)
+  //     отправляем {type:'completed'} — родитель вызывает MarkRead.
+  //  5. Кнопки prev/next из топбара дёргают view.next() / view.prev().
+  //     На мобиле работает swipe (foliate-paginator делает сам).
+
+  import './foliate/view.js'
+
+  const params = new URLSearchParams(location.search)
+  const src = params.get('src')
+  const initialCfi = params.get('cfi') || ''
+
+  const post = msg => parent.postMessage(msg, location.origin)
+
+  if (!src) {
+    document.getElementById('status').textContent = 'Не задан параметр ?src'
+    post({ type: 'error', reason: 'no-src' })
+    throw new Error('foliate-reader: no src')
+  }
+
+  const status = document.getElementById('status')
+  const host = document.getElementById('view-host')
+  const prevBtn = document.getElementById('prev')
+  const nextBtn = document.getElementById('next')
+  const progressEl = document.getElementById('progress')
+
+  let view = null
+  let lastCfi = ''
+  let completedReported = false
+
+  ;(async () => {
+    let blob
+    try {
+      const r = await fetch(src, { credentials: 'same-origin' })
+      if (!r.ok) throw new Error(`HTTP ${r.status}`)
+      blob = await r.blob()
+    } catch (e) {
+      status.textContent = `Не удалось загрузить книгу: ${e.message}`
+      post({ type: 'error', reason: 'fetch', detail: String(e) })
+      return
+    }
+
+    // makeBook принимает File или Blob с MIME-типом epub+zip.
+    const file = new File([blob], 'book.epub', { type: 'application/epub+zip' })
+
+    view = document.createElement('foliate-view')
+    host.appendChild(view)
+
+    view.addEventListener('load', () => {
+      status.remove()
+      prevBtn.disabled = false
+      nextBtn.disabled = false
+      post({ type: 'ready' })
+    })
+
+    view.addEventListener('relocate', (e) => {
+      const detail = e.detail || {}
+      const cfi = detail.cfi || ''
+      const fraction = typeof detail.fraction === 'number' ? detail.fraction : null
+      if (cfi && cfi !== lastCfi) {
+        lastCfi = cfi
+        post({ type: 'position', cfi, fraction })
+      }
+      if (fraction !== null) {
+        progressEl.textContent = `${Math.round(fraction * 100)}%`
+      }
+      // Дочитывание: foliate fraction может быть 1.0 на последней
+      // секции, но во многих epub'ах последний "spread" вообще не
+      // достигается из-за оглавления/выходных данных. 0.99 — компромисс.
+      if (!completedReported && fraction !== null && fraction >= 0.99) {
+        completedReported = true
+        post({ type: 'completed', cfi })
+      }
+    })
+
+    prevBtn.addEventListener('click', () => view.prev())
+    nextBtn.addEventListener('click', () => view.next())
+
+    try {
+      await view.open(file)
+      // ВАЖНО: view.open() только инициализирует renderer, но НЕ загружает
+      // первую секцию — без этого 'load' event никогда не fire'ит, и
+      // status-loader зависает навсегда. Канонический паттерн в
+      // reader.js foliate-js: после open() — либо goTo(cfi) для
+      // восстановления позиции, либо renderer.next() для свежего открытия.
+      if (initialCfi) {
+        await view.goTo(initialCfi)
+      } else {
+        await view.renderer.next()
+      }
+    } catch (e) {
+      console.error('foliate-reader: open failed', e)
+      status.textContent = `Не удалось открыть epub: ${e.message}`
+      post({ type: 'error', reason: 'open', detail: String(e) })
+    }
+  })().catch((e) => {
+    // Защитный catch на случай если что-то выкинулось ВНЕ try/catch
+    // (например, при создании File или парсинге blob'а). Без него
+    // окно остаётся в «Загружаем…» и в консоли висит uncaught promise.
+    console.error('foliate-reader: top-level error', e)
+    if (status && status.isConnected) {
+      status.textContent = `Внутренняя ошибка ридера: ${e?.message ?? e}`
+    }
+    post({ type: 'error', reason: 'uncaught', detail: String(e) })
+  })
+</script>

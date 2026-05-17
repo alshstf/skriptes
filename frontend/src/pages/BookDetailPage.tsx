@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText } from 'lucide-react';
+import { BookText, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
@@ -8,6 +9,7 @@ import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { ReadToggle } from '@/components/ReadToggle';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBook } from '@/lib/books';
 import { ApiError } from '@/lib/api';
@@ -83,11 +85,24 @@ export function BookDetailPage() {
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <ReadToggle bookId={book.id} isRead={book.is_read ?? false} />
                   <FavoriteButton
                     target="book"
                     id={book.id}
                     isFavorite={book.is_favorite ?? false}
                   />
+                  {!book.deleted ? (
+                    <Button asChild variant="secondary" size="sm" className="gap-1">
+                      <Link
+                        to="/books/$id/read"
+                        params={{ id: String(book.id) }}
+                        aria-label="Открыть книгу в браузерном ридере"
+                      >
+                        <BookOpen className="size-4" aria-hidden />
+                        <span className="hidden sm:inline">Читать</span>
+                      </Link>
+                    </Button>
+                  ) : null}
                   {!book.deleted ? <SendToKindleButton bookId={book.id} /> : null}
                   {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
                 </div>

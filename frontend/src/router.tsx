@@ -14,6 +14,7 @@ import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
+import { ReaderPage } from '@/pages/ReaderPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -35,35 +36,48 @@ const loginRoute = createRoute({
   component: LoginPage,
 });
 
-// Защищённое поддерево: всё что внутри protectedRoute требует валидной
-// сессии. beforeLoad дёргает /me ОДИН раз через QueryClient (если в кэше
-// уже есть — без сетевого запроса) и редиректит на /login, если нет.
+// requireAuth — общий beforeLoad для всех защищённых веток: дёргает /me
+// один раз через QueryClient (cache hit = без сетевого) и редиректит на
+// /login если не авторизован.
+async function requireAuth(context: RouterContext) {
+  const me = await context.queryClient.fetchQuery({
+    queryKey: ['auth', 'me'],
+    queryFn: async () => {
+      try {
+        const r = await apiFetch<MeResponse>('/api/auth/me');
+        return r.user;
+      } catch (err) {
+        if (err instanceof ApiError && err.isUnauthorized()) return null;
+        throw err;
+      }
+    },
+    staleTime: 60_000,
+  });
+  if (!me) {
+    throw redirect({ to: '/login' });
+  }
+}
+
+// Защищённое поддерево с обычным Layout (header + сайдбары).
 const protectedRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'protected',
-  beforeLoad: async ({ context }) => {
-    const me = await context.queryClient.fetchQuery({
-      queryKey: ['auth', 'me'],
-      queryFn: async () => {
-        try {
-          const r = await apiFetch<MeResponse>('/api/auth/me');
-          return r.user;
-        } catch (err) {
-          if (err instanceof ApiError && err.isUnauthorized()) return null;
-          throw err;
-        }
-      },
-      staleTime: 60_000,
-    });
-    if (!me) {
-      throw redirect({ to: '/login' });
-    }
-  },
+  beforeLoad: ({ context }) => requireAuth(context),
   component: () => (
     <Layout>
       <Outlet />
     </Layout>
   ),
+});
+
+// Защищённое full-screen поддерево БЕЗ Layout — используется для
+// ридера, где header / sidebar мешают погружению в чтение. Тот же
+// requireAuth, но Layout не оборачивает.
+const protectedFullscreenRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: 'protected-fullscreen',
+  beforeLoad: ({ context }) => requireAuth(context),
+  component: () => <Outlet />,
 });
 
 // '/' редиректит на /books — главной страницы пока нет, список книг
@@ -157,6 +171,14 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
+// Reader живёт в full-screen ветке (без Layout) — ему нужен весь
+// viewport для iframe-ридера. Auth по-прежнему обязателен.
+const readerRoute = createRoute({
+  getParentRoute: () => protectedFullscreenRoute,
+  path: '/books/$id/read',
+  component: ReaderPage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   protectedRoute.addChildren([
@@ -167,6 +189,7 @@ const routeTree = rootRoute.addChildren([
     seriesRoute,
     profileRoute,
   ]),
+  protectedFullscreenRoute.addChildren([readerRoute]),
 ]);
 
 export function createAppRouter(queryClient: QueryClient) {

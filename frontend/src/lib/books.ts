@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 export type BookListItem = {
@@ -78,6 +78,7 @@ export type Book = {
   size_bytes: number;
   deleted?: boolean;
   is_favorite?: boolean;
+  is_read?: boolean;
 };
 
 /**
@@ -163,4 +164,80 @@ export function useBook(id: number | string | undefined) {
     (!state.data.cover_path || !state.data.annotation);
 
   return { ...query, enrichmentExhausted };
+}
+
+/**
+ * useToggleRead — переключает is_read у книги через POST/DELETE
+ * /api/books/{id}/read. После успеха патчит кэш конкретной книги
+ * (cache hit на BookDetailPage сразу обновляется без рефетча).
+ *
+ * Использует optimistic update: меняем флаг до ответа сервера, при
+ * ошибке откатываем. Это нужно потому что кнопка моментально визуально
+ * переключается, а сервер отвечает за ~10ms — без optimistic был бы
+ * заметный лаг.
+ */
+export function useToggleRead() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ bookId, isRead }: { bookId: number; isRead: boolean }) =>
+      apiFetch<{ is_read: boolean }>(`/api/books/${bookId}/read`, {
+        method: isRead ? 'POST' : 'DELETE',
+      }),
+    onMutate: async ({ bookId, isRead }) => {
+      const key = ['book', String(bookId)];
+      await qc.cancelQueries({ queryKey: key });
+      const prev = qc.getQueryData<Book>(key);
+      if (prev) {
+        qc.setQueryData<Book>(key, { ...prev, is_read: isRead });
+      }
+      return { prev, key };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) {
+        qc.setQueryData(ctx.key, ctx.prev);
+      }
+    },
+    onSettled: (_data, _err, { bookId }) => {
+      // Чтобы вкладка автора с read_count тоже обновилась — инвалидируем
+      // соответствующие запросы. Это рефетч лишь когда страница автора
+      // открыта, на BookDetailPage всё уже обновлено через patch выше.
+      qc.invalidateQueries({ queryKey: ['author'] });
+      qc.invalidateQueries({ queryKey: ['series'] });
+      // Книга-кэш мы уже подкрутили в onMutate; рефетч не нужен.
+      void bookId;
+    },
+  });
+}
+
+/**
+ * useReadingPosition — получить сохранённую позицию чтения (epub-cfi).
+ * Возвращает пустую строку если позиции не было — ридер открывает с
+ * начала.
+ *
+ * staleTime небольшой: на reader-странице это запрос «один раз на старте»,
+ * после старта позицию обновляет уже сам ридер локально + PUT'ом.
+ */
+export function useReadingPosition(bookId: number | string | undefined) {
+  return useQuery<{ pos: string }>({
+    queryKey: ['book', String(bookId), 'position'],
+    queryFn: ({ signal }) =>
+      apiFetch<{ pos: string }>(`/api/books/${bookId}/position`, { signal }),
+    enabled: bookId !== undefined && bookId !== '',
+    staleTime: 1_000,
+  });
+}
+
+/**
+ * useSavePosition — мутация для сохранения позиции в БД. Caller
+ * (ReaderPage) дёргает её debounce'нуто (раз в 3 секунды максимум)
+ * на каждый foliate-js `relocate` event.
+ */
+export function useSavePosition() {
+  return useMutation({
+    mutationFn: ({ bookId, pos }: { bookId: number; pos: string }) =>
+      apiFetch<{ pos: string }>(`/api/books/${bookId}/position`, {
+        method: 'PUT',
+        body: { pos },
+      }),
+  });
 }

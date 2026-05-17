@@ -32,8 +32,9 @@ func New(pool *pgxpool.Pool) *Service {
 //  4. серии (по числу книг автора в каждой)
 //  5. до 50 последних книг (deleted скрыты, отсортированы по date_added desc)
 //  6. гистограмма по году добавления (year_stats)
-//  7. ReadCount — сколько книг этого автора уже скачивал пользователь;
-//     заполняется только если userID > 0.
+//  7. ReadCount — сколько книг этого автора пользователь явно отметил
+//     как прочитанные (reads.completed_at IS NOT NULL); заполняется
+//     только если userID > 0.
 //
 // Каждый шаг — отдельный запрос; для 99% карточек это <10 ms total.
 // Если когда-то станет горячо — соберём в один CTE.
@@ -350,15 +351,20 @@ func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64) ([]Y
 	return out, rows.Err()
 }
 
-// queryAuthorReadCount — DISTINCT-count книг автора, которые пользователь
-// хотя бы раз скачивал (reads.PK = (user_id, book_id), так что DISTINCT
-// тут de facto не нужен, но оставлен для семантической ясности).
+// queryAuthorReadCount — сколько книг автора пользователь явно
+// отметил как прочитанные (reads.completed_at IS NOT NULL).
+//
+// До добавления явной кнопки «Прочитано» считали все строки в reads
+// (download = read как heuristic). Теперь, когда у пользователя есть
+// явный сигнал — считаем только его. Старые скачанные но не отмеченные
+// книги в счётчик не попадают; пользователь может прокликать их
+// вручную либо они появятся при дочитывании в браузерном ридере.
 func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int64) (int, error) {
 	var n int
 	err := s.pool.QueryRow(ctx, `
 		SELECT count(*)
 		FROM book_authors ba
-		JOIN reads r ON r.book_id = ba.book_id
+		JOIN reads r ON r.book_id = ba.book_id AND r.completed_at IS NOT NULL
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		WHERE ba.author_id = $1 AND r.user_id = $2
 	`, authorID, userID).Scan(&n)
@@ -393,13 +399,15 @@ func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64) ([]Y
 	return out, rows.Err()
 }
 
-// querySeriesReadCount — сколько книг серии уже скачивал пользователь.
+// querySeriesReadCount — сколько книг серии пользователь явно отметил
+// как прочитанные. См. doc-comment queryAuthorReadCount для семантики
+// completed_at vs. старой «download = read» логики.
 func (s *Service) querySeriesReadCount(ctx context.Context, seriesID, userID int64) (int, error) {
 	var n int
 	err := s.pool.QueryRow(ctx, `
 		SELECT count(*)
 		FROM books b
-		JOIN reads r ON r.book_id = b.id
+		JOIN reads r ON r.book_id = b.id AND r.completed_at IS NOT NULL
 		WHERE b.series_id = $1 AND b.deleted = false AND r.user_id = $2
 	`, seriesID, userID).Scan(&n)
 	if err != nil {

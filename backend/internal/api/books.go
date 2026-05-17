@@ -52,10 +52,12 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 }
 
 // bookResponse — Book + user-specific поля. Книги в books-пакете не
-// знают про пользователя; user-зависимый is_favorite дорисовываем здесь.
+// знают про пользователя; user-зависимые is_favorite / is_read
+// дорисовываем здесь.
 type bookResponse struct {
 	books.Book
 	IsFavorite bool `json:"is_favorite"`
+	IsRead     bool `json:"is_read"`
 }
 
 func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
@@ -78,12 +80,15 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 			return
 		}
 
-		// is_favorite + fire-and-forget запись view. Ошибка чтения
-		// is_favorite не должна ломать карточку — отдаём false.
-		var isFav bool
+		// is_favorite + is_read + fire-and-forget запись view. Ошибки
+		// чтения user-флагов не должны ломать карточку — отдаём false.
+		var isFav, isRead bool
 		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
 			if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
 				isFav = v
+			}
+			if v, err := hist.Service.IsRead(ctx, u.ID, id); err == nil {
+				isRead = v
 			}
 			recordViewAsync(hist.Service, u.ID, id)
 		}
@@ -93,7 +98,7 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 		// но следующий рендер карточки уже покажет.
 		triggerBookEnrichmentAsync(meta, b)
 
-		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav})
+		writeJSON(w, http.StatusOK, bookResponse{Book: b, IsFavorite: isFav, IsRead: isRead})
 	}
 }
 

@@ -1,12 +1,12 @@
-import { Download } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 /**
- * ReadingProgress — "Скачано N из M книг" + горизонтальный прогресс-бар.
+ * ReadingProgress — "Прочитано N из M книг" + горизонтальный прогресс-бар.
  *
- * Используется на страницах автора и серии. "Скачано" — потому что
- * настоящий "прочитано" (через completed_at) появится только когда
- * в Фазе 3 будет in-browser reader. До тех пор скачивание — лучший
- * прокси для интереса.
+ * Источник «прочитано» — явная отметка пользователя (кнопка «Прочитано»
+ * на карточке книги, или auto-mark при дочитывании в браузерном ридере).
+ * До v0.3 здесь был fallback «Скачано N из M» (download = read как
+ * heuristic), сейчас сигнал точный.
  *
  * Если total = 0 — компонент ничего не рендерит (родитель тоже не
  * должен его вставлять, но дублирующая защита не повредит).
@@ -24,8 +24,8 @@ export function ReadingProgress({
     <div className="space-y-2">
       <div className="flex items-baseline justify-between text-sm">
         <span className="flex items-center gap-1.5 text-muted-foreground">
-          <Download className="size-3.5" aria-hidden />
-          Скачано {read} из {total} {pluralBooks(total)}
+          <CheckCircle2 className="size-3.5" aria-hidden />
+          Прочитано {read} из {total} {pluralBooks(total)}
         </span>
         <span className="tabular-nums text-xs text-muted-foreground">{pct}%</span>
       </div>

@@ -8,9 +8,9 @@ describe('ReadingProgress', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('renders "Скачано X из Y" + correct percentage', () => {
+  it('renders "Прочитано X из Y" + correct percentage', () => {
     render(<ReadingProgress read={3} total={12} />);
-    expect(screen.getByText(/Скачано 3 из 12/)).toBeInTheDocument();
+    expect(screen.getByText(/Прочитано 3 из 12/)).toBeInTheDocument();
     expect(screen.getByText('25%')).toBeInTheDocument();
     const bar = screen.getByRole('progressbar');
     expect(bar).toHaveAttribute('aria-valuenow', '3');
@@ -24,7 +24,7 @@ describe('ReadingProgress', () => {
 
   it('uses correct Russian plural for total', () => {
     render(<ReadingProgress read={1} total={1} />);
-    // 1 → "книги" в нашем варианте (Скачано 1 из 1 книги)
-    expect(screen.getByText(/Скачано 1 из 1 книги/)).toBeInTheDocument();
+    // 1 → "книги" в нашем варианте (Прочитано 1 из 1 книги)
+    expect(screen.getByText(/Прочитано 1 из 1 книги/)).toBeInTheDocument();
   });
 });
