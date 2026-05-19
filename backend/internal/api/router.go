@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/opds"
 )
 
 // Deps собирает все зависимости HTTP-роутера.
@@ -26,6 +27,15 @@ type Deps struct {
 	Metadata    MetadataDeps
 	Kindle      KindleDeps
 	Adaptations AdaptationsDeps
+	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
+	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
+	OPDS OPDSDeps
+}
+
+// OPDSDeps — handler уже сконфигурен в main.go (там удобнее всех
+// зависимостей собрать); сюда передаётся готовый объект для wiring'а.
+type OPDSDeps struct {
+	Handler *opds.Handler
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -44,6 +54,30 @@ func NewRouter(d Deps) http.Handler {
 	r.Get("/healthz", healthz)
 	// Readiness — процесс может обслуживать трафик (включая зависимости).
 	r.Get("/readyz", readyz(d.DB))
+
+	// OPDS-каталог для e-reader приложений (KOReader/Moon+Reader/...).
+	// Отдельная mount-точка от /api: своя авторизация (HTTP Basic
+	// вместо session cookie + CSRF), отдельный media-type — другие
+	// клиенты, другая лента эндпоинтов. Монтируется только если
+	// сконфигурен Handler И есть Auth.Service (нужен ValidateCredentials).
+	if d.OPDS.Handler != nil && d.Auth.Service != nil {
+		r.Route("/opds", func(r chi.Router) {
+			r.Use(requireBasicAuth(d.Auth))
+			h := d.OPDS.Handler
+			r.Get("/", h.Root)
+			r.Get("/opensearch.xml", h.OpenSearchDescription)
+			r.Get("/recent", h.Recent)
+			r.Get("/search", h.Search)
+			r.Get("/authors", h.AuthorsList)
+			r.Get("/authors/{id}", h.AuthorBooks)
+			r.Get("/series", h.SeriesList)
+			r.Get("/series/{id}", h.SeriesBooks)
+			r.Get("/genres", h.GenresList)
+			r.Get("/genres/{id}", h.GenreBooks)
+			r.Get("/books/{id}/download", h.Download)
+			r.Get("/covers/{name}", h.Cover)
+		})
+	}
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/version", version(d.Version))
