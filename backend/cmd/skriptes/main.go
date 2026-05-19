@@ -29,6 +29,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/opds"
 )
 
 func main() {
@@ -149,6 +150,19 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
+		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
+			// BaseURL пустой — handler возьмёт схему/host из заголовков
+			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
+			// сценариев типа Caddy). Если когда-то понадобится
+			// захардкодить — добавим cfg.OPDSBaseURL отдельным полем.
+			CoversRoot: filepath.Join(cfg.CacheRoot, "covers"),
+		}, opds.Deps{
+			Books:     booksSvc,
+			Catalog:   catalogSvc,
+			Converter: conv,
+			BooksRoot: cfg.BooksRoot,
+			Logger:    logger,
+		})},
 	})
 
 	srv := &http.Server{

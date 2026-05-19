@@ -79,6 +79,27 @@ type SessionMetadata struct {
 // При неуспехе всегда возвращает ErrInvalidPassword — никогда
 // ErrUserNotFound, чтобы не палить enumeration.
 func (s *Service) Login(ctx context.Context, email, password string, meta SessionMetadata) (User, string, error) {
+	u, err := s.ValidateCredentials(ctx, email, password)
+	if err != nil {
+		return User{}, "", err
+	}
+	token, err := s.createSession(ctx, u.ID, meta)
+	if err != nil {
+		return User{}, "", err
+	}
+	return u, token, nil
+}
+
+// ValidateCredentials — проверяет пару email+password и возвращает
+// User без создания сессии. Используется в HTTP Basic Auth для OPDS:
+// e-reader'ы не умеют cookie/CSRF и шлют credentials каждым запросом,
+// поэтому держать им долгоживущую сессию бессмысленно — проще валидировать
+// заново на каждый запрос.
+//
+// Сохраняет timing-mitigation Login'а: при отсутствии user'а всё равно
+// делает фиктивный bcrypt-verify, чтобы внешний атакующий не отличал
+// "user not found" от "wrong password".
+func (s *Service) ValidateCredentials(ctx context.Context, email, password string) (User, error) {
 	var (
 		u    User
 		hash string
@@ -94,18 +115,14 @@ func (s *Service) Login(ctx context.Context, email, password string, meta Sessio
 			_ = VerifyPassword(password, "$2a$12$"+
 				"abcdefghijklmnopqrstuv"+
 				"abcdefghijklmnopqrstuvwxyz0123456789")
-			return User{}, "", ErrInvalidPassword
+			return User{}, ErrInvalidPassword
 		}
-		return User{}, "", fmt.Errorf("lookup user: %w", err)
+		return User{}, fmt.Errorf("lookup user: %w", err)
 	}
 	if err := VerifyPassword(password, hash); err != nil {
-		return User{}, "", err
+		return User{}, err
 	}
-	token, err := s.createSession(ctx, u.ID, meta)
-	if err != nil {
-		return User{}, "", err
-	}
-	return u, token, nil
+	return u, nil
 }
 
 func (s *Service) createSession(ctx context.Context, userID int64, meta SessionMetadata) (string, error) {

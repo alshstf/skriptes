@@ -34,6 +34,42 @@ func requireAuth(d AuthDeps) func(http.Handler) http.Handler {
 // requireAdmin не реализован в этом PR. Будет добавлен в PR 6 когда
 // появятся admin-only эндпоинты (триггер импорта, управление пользователями).
 
+// requireBasicAuth — middleware для OPDS-роутов. E-reader приложения
+// (KOReader / Moon+Reader / FBReader) не поддерживают cookie+CSRF, но
+// умеют HTTP Basic — шлют Authorization header каждым запросом.
+//
+// На каждый запрос проверяем credentials через auth.Service.ValidateCredentials.
+// Сессия НЕ создаётся (нам не нужна — credentials всё равно приходят
+// каждый раз; создавать тысячи сессий было бы расходом БД ни на что).
+//
+// При неудаче — 401 с WWW-Authenticate (это триггер диалога логина
+// в e-reader'е); тело — короткий plain-text, OPDS-клиент его покажет.
+//
+// realm — строка в WWW-Authenticate; по соглашению "skriptes OPDS".
+func requireBasicAuth(d AuthDeps) func(http.Handler) http.Handler {
+	const realm = "skriptes OPDS"
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			email, password, ok := r.BasicAuth()
+			if !ok || email == "" || password == "" {
+				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`", charset="UTF-8"`)
+				http.Error(w, "authentication required", http.StatusUnauthorized)
+				return
+			}
+			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+			defer cancel()
+			if _, err := d.Service.ValidateCredentials(ctx, email, password); err != nil {
+				// ValidateCredentials имеет timing-mitigation, мы не различаем
+				// "нет такого" и "неверный пароль" в ответе.
+				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`", charset="UTF-8"`)
+				http.Error(w, "invalid credentials", http.StatusUnauthorized)
+				return
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
 // originCheck — простая CSRF-защита через сверку Origin / Referer на
 // мутирующих методах. Срабатывает только для POST/PUT/PATCH/DELETE и
 // только если в запросе есть Origin или Referer (т.е. это HTTPS-запрос
