@@ -561,11 +561,31 @@ func pagingLinks(baseURL, basePath string, page, total, limit int, mime string) 
 	return links
 }
 
-// makeFormats — список acquisition links для одной книги. Сейчас
-// один — epub3 (универсальный). Расширять можно, добавив kepub/kfx
-// в массив; KOReader и так подхватит первый подходящий по mime.
+// makeFormats — список acquisition links для одной книги.
+//
+// Порядок важен: первым идёт fb2 (нативный формат нашей коллекции,
+// zero-conversion — converter просто отдаёт байты из zip-архива без
+// re-encoding). KOReader / CoolReader / Cool Reader Android и
+// большинство «русских» e-reader приложений умеют fb2 нативно и
+// выберут его. EPUB3 вторым — для Kindle / Books / Apple Books и
+// прочих которые fb2 не понимают.
+//
+// MIME для fb2 — application/x-fictionbook+xml; этот же тип возвращает
+// download-handler в Content-Type (см. converter.mimeType), поэтому
+// клиент после скачивания не упирается в конфликт типов.
+//
+// kepub/kfx/azw8 НЕ анонсируем по умолчанию: они тяжелее (конверсия
+// в реальный отличный формат), целевая аудитория узкая (специфичные
+// e-reader'ы), а добавление их сюда раздуло бы entry без явной пользы
+// для большинства. Если кто-то нашёл нужным — пусть пользователь сам
+// дёрнет /opds/books/{id}/download?format=kepub (handler уже принимает).
 func (h *Handler) makeFormats(bookID int64) []FormatLink {
 	return []FormatLink{
+		{
+			HrefPath: fmt.Sprintf("/opds/books/%d/download?format=fb2", bookID),
+			MIME:     "application/x-fictionbook+xml",
+			Title:    "Скачать FB2",
+		},
 		{
 			HrefPath: fmt.Sprintf("/opds/books/%d/download?format=epub3", bookID),
 			MIME:     "application/epub+zip",

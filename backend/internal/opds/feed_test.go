@@ -135,6 +135,20 @@ func TestSanitizePaging(t *testing.T) {
 	require.NotEmpty(t, links) // self/start/up/first/last всегда должны быть
 }
 
+// makeFormats — фиксируем контракт: первым отдаём fb2 (наша целевая
+// аудитория — KOReader / CoolReader / fb2 нативно), вторым EPUB3
+// (универсальный fallback для Kindle/Apple Books). Если кто-то
+// меняет порядок или MIME — пусть осознанно ломает этот тест.
+func TestMakeFormats_FB2First(t *testing.T) {
+	h := NewHandler(Config{}, Deps{})
+	formats := h.makeFormats(42)
+	require.Len(t, formats, 2)
+	require.Equal(t, "/opds/books/42/download?format=fb2", formats[0].HrefPath)
+	require.Equal(t, "application/x-fictionbook+xml", formats[0].MIME)
+	require.Equal(t, "/opds/books/42/download?format=epub3", formats[1].HrefPath)
+	require.Equal(t, "application/epub+zip", formats[1].MIME)
+}
+
 // guessImageMIME — узкая утилита, но обложки в OPDS должны иметь
 // правильный type, иначе KOReader не отображает.
 func TestGuessImageMIME(t *testing.T) {
