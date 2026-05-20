@@ -7,6 +7,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // virtual:pwa-register создаётся плагином vite-plugin-pwa в
+      // build/dev режиме. В vitest плагин не подключён (он мешал бы
+      // тестам и не нужен в unit-сценариях), поэтому подменяем его на
+      // пустую заглушку. registerPWA() в src/lib/pwa.ts ловит import
+      // в try/catch и в случае пустого экспорта корректно no-op'ит.
+      'virtual:pwa-register': path.resolve(__dirname, './src/test/pwa-register-stub.ts'),
     },
   },
   test: {
