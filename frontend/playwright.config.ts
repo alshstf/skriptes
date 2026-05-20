@@ -18,6 +18,13 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',
+    // Блокируем service worker дефолтно. SW из vite-plugin-pwa
+    // (sw.js + runtime caching) интерферирует с page.route() моками:
+    // кэширует первый ответ /api/books/{id} и подменяет последующие,
+    // ломая polling-тесты (covers/annotation/author-bio и др.). PWA-
+    // специфичные проверки (e2e/pwa.spec.ts) переопределяют это
+    // локально через test.use({ serviceWorkers: 'allow' }).
+    serviceWorkers: 'block',
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!--
+    Маскируемая иконка skriptes для PWA-манифеста.
+    Заполняет весь viewBox (без отступов = maskable safe area) тёмным
+    фоном #0a0a0a (совпадает с theme-color из index.html); по центру —
+    стилизованная «s» в светлом цвете. Шрифт серифный (Georgia) — даёт
+    «книжное» ощущение, отличает от типичных tech-логотипов.
+
+    sizes="any" + purpose="any maskable" в манифесте позволяет одной SVG
+    обслужить и стандартный (плоский) install-icon, и круглый/закруглённый
+    (Android adaptive) — Chrome добавит свою маску поверх.
+  -->
+  <rect width="512" height="512" fill="#0a0a0a"/>
+  <text
+    x="256" y="256"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="360"
+    font-style="italic"
+    fill="#fafafa">s</text>
+</svg>
