@@ -97,7 +97,7 @@ curl -fO  $RAW/Caddyfile
 # 3) поправьте .env — минимум эти три значения:
 #    BOOKS_HOST_PATH=/srv/library/books    # путь к zip-архивам
 #    INPX_HOST_PATH=/srv/library/inpx      # путь к *.inpx
-#    SKRIPTES_VERSION=0.2.0-alpha.1        # тег релиза
+#    SKRIPTES_VERSION=0.3.0-beta.1         # тег релиза
 $EDITOR .env
 
 # 4) запустите стек
