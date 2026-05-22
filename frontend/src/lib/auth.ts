@@ -74,3 +74,37 @@ export function useLogout() {
     },
   });
 }
+
+/**
+ * useUpdateMe — обновляет свой display_name и/или email. Пустые поля
+ * = «не менять». На успехе подменяем user в кэше useMe, чтобы header
+ * с display_name'ом перерендерился сразу без отдельного GET.
+ */
+export function useUpdateMe() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (vars: { display_name?: string; email?: string }) => {
+      const r = await apiFetch<MeResponse>('/api/me', { method: 'PATCH', body: vars });
+      return r.user;
+    },
+    onSuccess: (user) => {
+      qc.setQueryData(meQueryKey, user);
+    },
+  });
+}
+
+/**
+ * useChangeMyPassword — меняет свой пароль с верификацией текущего.
+ * Backend сохраняет текущую сессию (cookie совпадает с keepSessionToken)
+ * и революует остальные. Кэш useMe трогать не нужно — user-объект
+ * не меняется. Ошибки:
+ *   - 403 → текущий пароль неверный (показать сообщение в форме)
+ *   - 400 → новый пароль короче 8 символов
+ */
+export function useChangeMyPassword() {
+  return useMutation({
+    mutationFn: async (vars: { current_password: string; new_password: string }) => {
+      await apiFetch<void>('/api/me/password', { method: 'PATCH', body: vars });
+    },
+  });
+}

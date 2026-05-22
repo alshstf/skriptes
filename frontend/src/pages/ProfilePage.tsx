@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Mail, Trash2, Pencil, Check, X } from 'lucide-react';
+import { Mail, Trash2, Pencil, Check, X, User as UserIcon, KeyRound } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,7 +14,7 @@ import {
   useDeleteKindleTarget,
   type KindleTarget,
 } from '@/lib/kindle';
-import { useMe } from '@/lib/auth';
+import { useMe, useUpdateMe, useChangeMyPassword, type User } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -39,6 +40,8 @@ export function ProfilePage() {
           </p>
         ) : null}
       </header>
+
+      {me.data ? <ProfileCard user={me.data} /> : null}
 
       <Card>
         <CardHeader className="pb-2">
@@ -235,4 +238,246 @@ function messageOf(err: unknown): string {
     return err.message;
   }
   return 'Не удалось сохранить.';
+}
+
+// ── Profile section: display name + password change ─────────────────
+
+/**
+ * ProfileCard — секция «Профиль». Над Kindle-адресатами на странице /me.
+ * Содержит:
+ *   - inline-edit display_name (та же UX-паттерн что у Kindle-target'ов:
+ *     pencil → editable input → save/cancel)
+ *   - кнопку «Сменить пароль» которая раскрывает форму current+new+confirm
+ *
+ * Email пока не редактируем — фронт-UX для email change без подтверждения
+ * почты рискованный (юзер может опечататься и заблочить себе вход);
+ * если потребуется — добавим отдельным шагом с email-verification flow.
+ */
+function ProfileCard({ user }: { user: User }) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <UserIcon className="size-4" aria-hidden />
+          Профиль
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-2">
+        <DisplayNameRow user={user} />
+        <PasswordChangeBlock />
+      </CardContent>
+    </Card>
+  );
+}
+
+function DisplayNameRow({ user }: { user: User }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(user.display_name);
+  const update = useUpdateMe();
+
+  if (editing) {
+    return (
+      <form
+        className="flex flex-wrap items-center gap-2"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const trimmed = name.trim();
+          if (!trimmed) return;
+          try {
+            await update.mutateAsync({ display_name: trimmed });
+            toast.success('Имя обновлено');
+            setEditing(false);
+          } catch {
+            /* выведем error ниже */
+          }
+        }}
+      >
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="h-9 flex-1 min-w-48"
+          autoFocus
+          aria-label="Отображаемое имя"
+        />
+        <Button type="submit" size="sm" disabled={update.isPending || !name.trim()}>
+          <Check className="size-4" aria-hidden />
+          Сохранить
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            setEditing(false);
+            setName(user.display_name);
+          }}
+        >
+          <X className="size-4" aria-hidden />
+        </Button>
+        {update.error ? (
+          <p className="basis-full text-xs text-destructive">{messageOf(update.error)}</p>
+        ) : null}
+      </form>
+    );
+  }
+
+  return (
+    <div className="flex items-start gap-2">
+      <div className="flex-1 min-w-0 space-y-1">
+        <p className="text-xs text-muted-foreground uppercase tracking-wider">
+          Отображаемое имя
+        </p>
+        <p className="text-sm font-medium">{user.display_name}</p>
+        <p className="text-xs text-muted-foreground">{user.email}</p>
+      </div>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => setEditing(true)}
+        aria-label="Изменить имя"
+      >
+        <Pencil className="size-4" aria-hidden />
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * PasswordChangeBlock — collapsible форма смены пароля. Закрытая
+ * по умолчанию (большинству юзеров она не нужна каждый раз),
+ * раскрывается клавишей «Сменить пароль».
+ *
+ * Поля: current_password + new_password + confirm. Confirm
+ * сравнивается на клиенте; разные → не submit'им.
+ */
+function PasswordChangeBlock() {
+  const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const change = useChangeMyPassword();
+
+  if (!open) {
+    return (
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => setOpen(true)}
+        className="gap-2"
+      >
+        <KeyRound className="size-4" aria-hidden />
+        Сменить пароль
+      </Button>
+    );
+  }
+
+  const mismatch = confirm !== '' && confirm !== next;
+  const tooShort = next.length > 0 && next.length < 8;
+  const canSubmit =
+    !change.isPending && current.length > 0 && next.length >= 8 && next === confirm;
+
+  return (
+    <form
+      className="space-y-2 rounded-md border border-border p-3"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (!canSubmit) return;
+        try {
+          await change.mutateAsync({ current_password: current, new_password: next });
+          toast.success('Пароль обновлён');
+          setOpen(false);
+          setCurrent('');
+          setNext('');
+          setConfirm('');
+        } catch {
+          /* error ниже */
+        }
+      }}
+    >
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        Смена пароля
+      </p>
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <Label htmlFor="pw-current" className="text-xs">
+            Текущий пароль
+          </Label>
+          <Input
+            id="pw-current"
+            type="password"
+            autoComplete="current-password"
+            value={current}
+            onChange={(e) => setCurrent(e.target.value)}
+            className="h-9"
+            required
+          />
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="pw-new" className="text-xs">
+            Новый пароль (мин. 8 символов)
+          </Label>
+          <Input
+            id="pw-new"
+            type="password"
+            autoComplete="new-password"
+            value={next}
+            onChange={(e) => setNext(e.target.value)}
+            className="h-9"
+            minLength={8}
+            required
+          />
+          {tooShort ? (
+            <p className="text-xs text-destructive">Минимум 8 символов.</p>
+          ) : null}
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="pw-confirm" className="text-xs">
+            Повторите новый пароль
+          </Label>
+          <Input
+            id="pw-confirm"
+            type="password"
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className="h-9"
+            required
+          />
+          {mismatch ? (
+            <p className="text-xs text-destructive">Пароли не совпадают.</p>
+          ) : null}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2 pt-1">
+        <Button type="submit" size="sm" disabled={!canSubmit}>
+          Обновить
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            setOpen(false);
+            setCurrent('');
+            setNext('');
+            setConfirm('');
+          }}
+        >
+          Отмена
+        </Button>
+      </div>
+      {change.error ? (
+        <p className="text-xs text-destructive">{passwordChangeMessage(change.error)}</p>
+      ) : null}
+    </form>
+  );
+}
+
+function passwordChangeMessage(err: unknown): string {
+  if (err instanceof ApiError) {
+    if (err.status === 403) return 'Текущий пароль введён неверно.';
+    if (err.status === 400) return 'Новый пароль слишком короткий (минимум 8 символов).';
+    return err.message;
+  }
+  return 'Не удалось сменить пароль.';
 }

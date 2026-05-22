@@ -31,8 +31,32 @@ func requireAuth(d AuthDeps) func(http.Handler) http.Handler {
 	}
 }
 
-// requireAdmin не реализован в этом PR. Будет добавлен в PR 6 когда
-// появятся admin-only эндпоинты (триггер импорта, управление пользователями).
+// requireAdmin — обёртка requireAuth с дополнительной проверкой role.
+// Используется для /api/admin/* (управление пользователями). Если юзер
+// не admin — 403 Forbidden (а не 401, чтобы фронт мог отличать «не
+// залогинен» от «нет прав»).
+//
+// Реализация: оборачиваем requireAuth (он положит user в context); внутри
+// проверяем role. UserFromContext всегда возвращает ok=true внутри
+// этого внутреннего handler'а, потому что requireAuth уже отработал.
+func requireAdmin(d AuthDeps) func(http.Handler) http.Handler {
+	inner := requireAuth(d)
+	return func(next http.Handler) http.Handler {
+		return inner(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			u, ok := UserFromContext(r.Context())
+			if !ok {
+				// Не должно случиться (requireAuth выше), но защищаемся.
+				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+				return
+			}
+			if string(u.Role) != "admin" {
+				writeJSON(w, http.StatusForbidden, map[string]string{"error": "admin only"})
+				return
+			}
+			next.ServeHTTP(w, r)
+		}))
+	}
+}
 
 // requireBasicAuth — middleware для OPDS-роутов. E-reader приложения
 // (KOReader / Moon+Reader / FBReader) не поддерживают cookie+CSRF, но

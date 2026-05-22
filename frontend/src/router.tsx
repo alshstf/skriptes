@@ -15,6 +15,7 @@ import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ReaderPage } from '@/pages/ReaderPage';
+import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -171,6 +172,24 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
+// requireAdmin — расширение requireAuth с проверкой role на клиенте.
+// Backend всё равно гейтит 403'м, но клиентский redirect даёт лучший
+// UX (юзер не видит вспышки страницы, на которую у него нет прав).
+async function requireAdmin(context: RouterContext) {
+  await requireAuth(context);
+  const me = context.queryClient.getQueryData<{ role?: string } | null>(['auth', 'me']);
+  if (!me || me.role !== 'admin') {
+    throw redirect({ to: '/books' });
+  }
+}
+
+const adminUsersRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/admin/users',
+  beforeLoad: ({ context }) => requireAdmin(context),
+  component: AdminUsersPage,
+});
+
 // Reader живёт в full-screen ветке (без Layout) — ему нужен весь
 // viewport для iframe-ридера. Auth по-прежнему обязателен.
 const readerRoute = createRoute({
@@ -188,6 +207,7 @@ const routeTree = rootRoute.addChildren([
     authorRoute,
     seriesRoute,
     profileRoute,
+    adminUsersRoute,
   ]),
   protectedFullscreenRoute.addChildren([readerRoute]),
 ]);

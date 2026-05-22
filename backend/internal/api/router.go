@@ -89,6 +89,11 @@ func NewRouter(d Deps) http.Handler {
 			r.Group(func(r chi.Router) {
 				r.Use(requireAuth(d.Auth))
 				r.Get("/auth/me", handleMe(d.Auth))
+				// Self-management. /api/me — обновление своего профиля
+				// (display_name, email), /api/me/password — смена своего
+				// пароля с верификацией текущего.
+				r.Patch("/me", handleUpdateMe(d.Auth))
+				r.Patch("/me/password", handleChangeMyPassword(d.Auth))
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books))
 					r.Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
@@ -141,6 +146,17 @@ func NewRouter(d Deps) http.Handler {
 						r.Post("/books/{id}/send-to-kindle", handleSendToKindle(d.Kindle))
 					}
 				}
+			})
+
+			// Admin-only group: те же session-cookie + role=admin check.
+			// Отдельный r.Group чтобы requireAdmin не дублировался на user-роутах.
+			r.Group(func(r chi.Router) {
+				r.Use(requireAdmin(d.Auth))
+				r.Get("/admin/users", handleListUsers(d.Auth))
+				r.Post("/admin/users", handleCreateUser(d.Auth))
+				r.Patch("/admin/users/{id}", handleUpdateUser(d.Auth))
+				r.Patch("/admin/users/{id}/password", handleResetPassword(d.Auth))
+				r.Delete("/admin/users/{id}", handleDeleteUser(d.Auth))
 			})
 		}
 	})
