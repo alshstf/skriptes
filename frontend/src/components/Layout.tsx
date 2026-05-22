@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { BookOpen, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { BookOpen, LogOut, Settings, Shield, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -68,6 +68,18 @@ function UserMenu({ user }: { user: User }) {
           <Settings className="mr-2 size-4" aria-hidden />
           Профиль
         </DropdownMenuItem>
+        {user.role === 'admin' ? (
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              void navigate({ to: '/admin/users' });
+            }}
+          >
+            <Shield className="mr-2 size-4" aria-hidden />
+            Пользователи
+          </DropdownMenuItem>
+        ) : null}
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={(e) => {
             e.preventDefault();
