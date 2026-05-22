@@ -38,13 +38,29 @@ RUN apk add --no-cache curl unzip ca-certificates && \
 
 # ── runtime ─────────────────────────────────────────────────────
 FROM alpine:${ALPINE_VERSION}
-RUN apk add --no-cache ca-certificates tzdata && \
+# gcompat — glibc-compat shim. Релизные бинари fb2cng (fbc) линкуются
+# с glibc + FORTIFY_SOURCE (`__vfprintf_chk`, `__fprintf_chk`), которых
+# на alpine с musl нет; без gcompat fbc падает с misleading ошибкой
+# "no such file or directory" при exec. См. полный разбор в PR #33.
+#
+# Альтернативы которые мы рассмотрели:
+#  - Перейти на debian-slim: +30MB к образу, перевыпуск всех слоёв.
+#  - Build fb2cng из исходников с CGO_ENABLED=0: +~5 мин к docker build
+#    (скачивание CTAN-словарей и vendoring), плюс хрупкая зависимость
+#    от upstream Taskfile.
+# gcompat — +~2MB, одна строка, легко вернуть назад если upstream
+# когда-нибудь выпустит static-релиз.
+RUN apk add --no-cache ca-certificates tzdata gcompat && \
     addgroup -S skriptes && adduser -S -G skriptes skriptes && \
     mkdir -p /data/books /data/inpx /cache && \
     chown -R skriptes:skriptes /cache
 COPY --from=builder /out/skriptes      /usr/local/bin/skriptes
 COPY --from=builder /out/skriptes-seed /usr/local/bin/skriptes-seed
 COPY --from=fb2cng  /opt/fb2cng/fbc    /usr/local/bin/fbc
+# Smoke-test: бинарь должен запускаться в финальном образе. Если
+# линковка снова рассинхронится (новая версия fb2cng / новый gcompat-gap
+# / переезд base), docker build упадёт сразу, не доезжая до релиза.
+RUN /usr/local/bin/fbc --help >/dev/null
 USER skriptes
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/skriptes"]
