@@ -25,9 +25,26 @@ import { toast } from 'sonner';
  * autoUpdate (см. vite.config.ts) сам активирует новый SW при следующей
  * навигации; toast «обновление доступно» — просто визуальный сигнал
  * пользователю, что вот сейчас он увидит свежую версию.
+ *
+ * Пропускаем регистрацию на *.localhost хостах. Caddy там выдаёт TLS-
+ * сертификат через локальный CA, которому system keychain браузера не
+ * доверяет по умолчанию. Браузер принимает cert на уровне навигации
+ * (пользователь жмёт «Принять»), но FETCH ИЗ SW идёт отдельным контекстом,
+ * без UI для подтверждения, и падает с network error. Workbox в этом
+ * случае на стратегии NetworkOnly (для /api/auth/*) возвращает
+ * «no-response: no-response», и страница ломается на первом же
+ * /api/auth/me. PWA-фича на dev-стенде всё равно не нужна — здесь
+ * проще зайти как обычное web-приложение без offline-shell.
+ *
+ * В production (реальный домен + Let's Encrypt) cert валиден,
+ * keychain ему доверяет, SW работает как ожидается.
  */
 export async function registerPWA(): Promise<void> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+    return;
+  }
+  if (isLocalhostHost(window.location.hostname)) {
+    // Тихо — это ожидаемое поведение на dev-стенде, не повод для warn'а.
     return;
   }
   try {
@@ -286,4 +303,24 @@ function markDismissed(): void {
   } catch {
     // ignore
   }
+}
+
+/**
+ * isLocalhostHost — true для хостов где TLS обслуживается локальным CA
+ * (нет system-trust → SW fetches падают). Покрывает:
+ *  - "localhost", "127.0.0.1", "::1" — bare loopback;
+ *  - "*.localhost" — Caddy auto-issued cert через локальный CA
+ *    (в нашем dev-стенде это `skriptes.localhost`);
+ *  - "*.local" / "*.test" — рекомендованные RFC-зарезервированные
+ *    суффиксы для разработки.
+ *
+ * НЕ покрывает: реальные домены (production), приватные IP подсетей —
+ * для подсетей home network может быть Let's Encrypt через DNS-01, мы
+ * НЕ хотим выключать SW там.
+ */
+export function isLocalhostHost(hostname: string): boolean {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+    return true;
+  }
+  return /\.(localhost|local|test)$/i.test(hostname);
 }
