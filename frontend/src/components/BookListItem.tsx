@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
+import { useGenreMap } from '@/lib/genres';
 import type { BookListItem as Item } from '@/lib/books';
 
 /**
@@ -20,6 +21,11 @@ export function BookListItem({
   showSerNo?: boolean;
 }) {
   const serNo = showSerNo && typeof book.ser_no === 'number' ? book.ser_no : null;
+  // book.genres приходит из Meili-индекса как массив fb2_code'ов
+  // (см. internal/search/index.go). Здесь переводим в человеческие
+  // display-имена через useGenreMap. Если справочник ещё в полёте
+  // или код не в словаре — показываем сам код как fallback.
+  const genreMap = useGenreMap();
   return (
     <Link
       to="/books/$id"
@@ -46,7 +52,7 @@ export function BookListItem({
           <div className="flex flex-wrap gap-1 pt-1">
             {book.genres.map((g) => (
               <Badge key={g} variant="secondary" className="text-xs font-normal">
-                {g}
+                {genreMap.get(g)?.display ?? g}
               </Badge>
             ))}
           </div>
