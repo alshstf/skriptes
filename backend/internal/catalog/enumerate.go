@@ -140,6 +140,12 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 //
 // Display — RU-имя если есть, EN если нет, code как последний fallback.
 // Это парирует случаи "новый FB2-жанр без локализации в нашем словаре".
+//
+// fb2_code LIKE 'cat:%' — наши pseudo-родители категорий (см.
+// internal/genres.Seed). Они в таблице genres только чтобы leaf-жанры
+// могли на них ссылаться через parent_id; как самостоятельные жанры
+// они НЕ существуют (book_genres на них не ссылается, фильтр по ним
+// не сработает). Исключаем чтобы не светить в filters sidebar.
 func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT g.id, g.fb2_code,
@@ -148,6 +154,7 @@ func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 		         JOIN books b ON b.id = bg.book_id
 		         WHERE bg.genre_id = g.id AND b.deleted = false)::int AS book_count
 		FROM genres g
+		WHERE g.fb2_code NOT LIKE 'cat:%'
 		ORDER BY display, g.id
 	`)
 	if err != nil {
