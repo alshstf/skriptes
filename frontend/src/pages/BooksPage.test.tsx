@@ -69,12 +69,22 @@ describe('BooksPage', () => {
   beforeEach(() => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () =>
-        new Response(JSON.stringify(fixture), {
+      vi.fn(async (url: string | Request) => {
+        const u = typeof url === 'string' ? url : url.url;
+        // GroupedGenresFilter (внутри FiltersSidebar) грузит /api/genres
+        // отдельно — отдаём пустой список чтобы он render'ил null и не
+        // мешал тестам про список книг.
+        if (u.includes('/api/genres')) {
+          return new Response(JSON.stringify({ items: [] }), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          });
+        }
+        return new Response(JSON.stringify(fixture), {
           status: 200,
           headers: { 'content-type': 'application/json' },
-        }),
-      ),
+        });
+      }),
     );
   });
   afterEach(() => vi.unstubAllGlobals());

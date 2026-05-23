@@ -25,11 +25,19 @@ type SeriesEntry struct {
 }
 
 // GenreEntry — узел дерева жанров.
+//
+// CategoryCode / CategoryName — заполняются если у жанра есть parent
+// (pseudo-родитель `cat:<slug>`, см. internal/genres.Seed). Для leaf'ов
+// у которых parent_id NULL (например legacy данные без иерархии) —
+// пустые строки. Фронт использует это для группировки фильтра в
+// FiltersSidebar: «Фантастика» (header) → ряд leaf'ов под ней.
 type GenreEntry struct {
-	ID        int64  `json:"id"`
-	Code      string `json:"code"`    // FB2-код, например "sf_action"
-	Display   string `json:"display"` // RU-имя если есть, иначе EN, иначе code
-	BookCount int    `json:"book_count"`
+	ID           int64  `json:"id"`
+	Code         string `json:"code"`    // FB2-код, например "sf_action"
+	Display      string `json:"display"` // RU-имя если есть, иначе EN, иначе code
+	BookCount    int    `json:"book_count"`
+	CategoryCode string `json:"category_code,omitempty"` // `cat:sf` и т.п.
+	CategoryName string `json:"category_name,omitempty"` // «Фантастика»
 }
 
 // ListAuthors — постраничный список авторов, отсортированный по
@@ -146,14 +154,22 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 // могли на них ссылаться через parent_id; как самостоятельные жанры
 // они НЕ существуют (book_genres на них не ссылается, фильтр по ним
 // не сработает). Исключаем чтобы не светить в filters sidebar.
+//
+// LEFT JOIN genres p ON p.id = g.parent_id — pulls category info
+// (fb2_code 'cat:sf', name_ru «Фантастика»). Фронт группирует фильтр
+// по CategoryName, leaf'ы без parent_id показываются в группе «Прочее»
+// (frontend-side).
 func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT g.id, g.fb2_code,
 		       COALESCE(NULLIF(g.name_ru, ''), NULLIF(g.name_en, ''), g.fb2_code) AS display,
 		       (SELECT COUNT(*) FROM book_genres bg
 		         JOIN books b ON b.id = bg.book_id
-		         WHERE bg.genre_id = g.id AND b.deleted = false)::int AS book_count
+		         WHERE bg.genre_id = g.id AND b.deleted = false)::int AS book_count,
+		       COALESCE(p.fb2_code, '') AS category_code,
+		       COALESCE(p.name_ru, '')  AS category_name
 		FROM genres g
+		LEFT JOIN genres p ON p.id = g.parent_id
 		WHERE g.fb2_code NOT LIKE 'cat:%'
 		ORDER BY display, g.id
 	`)
@@ -165,7 +181,10 @@ func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 	out := make([]GenreEntry, 0, 256)
 	for rows.Next() {
 		var g GenreEntry
-		if err := rows.Scan(&g.ID, &g.Code, &g.Display, &g.BookCount); err != nil {
+		if err := rows.Scan(
+			&g.ID, &g.Code, &g.Display, &g.BookCount,
+			&g.CategoryCode, &g.CategoryName,
+		); err != nil {
 			return nil, fmt.Errorf("scan genre: %w", err)
 		}
 		out = append(out, g)

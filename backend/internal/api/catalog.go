@@ -12,9 +12,34 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 )
 
-// CatalogDeps — зависимости /api/authors/:id и /api/series/:id.
+// CatalogDeps — зависимости /api/authors/:id, /api/series/:id, /api/genres.
 type CatalogDeps struct {
 	Service *catalog.Service
+}
+
+// handleListGenres — GET /api/genres. Возвращает плоский список всех
+// fb2-жанров с локализованным display-именем и info о parent-категории
+// (через LEFT JOIN на pseudo-родителей `cat:*`). Фронт использует это
+// чтобы построить tri-state grouped фильтр в FiltersSidebar.
+//
+// Pseudo-родители (`fb2_code LIKE 'cat:%'`) исключены из ответа на
+// уровне SQL — они нужны только как FK target, не как самостоятельные
+// жанры. Сами book_genres на них не ссылаются, фильтр по ним пустой.
+//
+// Сортировка по display — стабильная (по алфавиту RU-имён). Кэширование
+// фронтом на 5 минут: каталог жанров меняется только когда добавляется
+// новый INPX с неизвестным кодом, что редко.
+func handleListGenres(d CatalogDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		items, err := d.Service.ListGenres(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+	}
 }
 
 // authorResponse / seriesResponse — обёртки над catalog-DTO с

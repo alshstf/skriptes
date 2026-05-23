@@ -26,20 +26,46 @@ test('filters: genre checkbox writes to URL and re-issues /api/books with filter
   // Дожидаемся, что сайдбар фильтров отрисовался.
   await expect(page.getByRole('heading', { name: 'Фильтры' })).toBeVisible({ timeout: 10_000 });
 
-  // Жанр "sf_action" из facets (с counter=4) должен быть в чек-боксах.
-  const genreCheckbox = page.getByRole('checkbox', { name: /sf_action/ });
-  await expect(genreCheckbox).toBeVisible();
-  await genreCheckbox.check();
+  // Теперь жанры сгруппированы по категориям и свёрнуты по дефолту.
+  // Раскрываем «Фантастика», находим leaf «Боевая фантастика» (display
+  // для sf_action из фикстуры) и кликаем по нему.
+  const fantasyRow = page.locator('div').filter({ hasText: /^Фантастика/ }).first();
+  await fantasyRow.getByRole('button', { name: 'Развернуть' }).click();
 
-  // URL должен содержать sf_action (TanStack Router сериализует массивы
-  // как JSON, поэтому ожидаем %22sf_action%22 — "sf_action" url-encoded).
+  const leafCheckbox = page.getByRole('checkbox', { name: /Боевая фантастика/ });
+  await expect(leafCheckbox).toBeVisible();
+  await leafCheckbox.check();
+
+  // URL содержит sf_action.
   await expect(page).toHaveURL(/sf_action/);
 
   // Должен прилететь новый запрос с genres=sf_action.
   await expect.poll(() => calls.some((c) => c.includes('genres=sf_action'))).toBe(true);
 
-  // Чип активного фильтра появился над списком.
-  await expect(page.getByText(/Жанр: sf_action/)).toBeVisible();
+  // Active-чип использует display-имя из useGenres, а не сырой код.
+  await expect(page.getByText(/Жанр: Боевая фантастика/)).toBeVisible();
+});
+
+test('filters: tri-state — клик по checkbox категории выбирает все leaf жанры', async ({
+  mockedPage: page,
+}) => {
+  await page.goto('/books');
+  await expect(page.getByRole('heading', { name: 'Фильтры' })).toBeVisible({
+    timeout: 10_000,
+  });
+
+  // Tri-state checkbox у «Фантастика» — выбираем все её жанры одним кликом.
+  const fantasyRow = page.locator('div').filter({ hasText: /^Фантастика/ }).first();
+  const selectAll = fantasyRow.locator('input[type="checkbox"]').first();
+  await selectAll.check();
+
+  // URL содержит оба leaf-кода из категории «Фантастика»: sf_action + popadanec.
+  await expect(page).toHaveURL(/sf_action/);
+  await expect(page).toHaveURL(/popadanec/);
+
+  // Два чипа активных фильтров с display-именами.
+  await expect(page.getByText(/Жанр: Боевая фантастика/)).toBeVisible();
+  await expect(page.getByText(/Жанр: Попаданцы/)).toBeVisible();
 });
 
 test('filters: sort dropdown changes URL', async ({ mockedPage: page }) => {

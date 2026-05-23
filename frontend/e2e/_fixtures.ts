@@ -119,6 +119,43 @@ export async function mockApi(page: Page): Promise<void> {
       body: JSON.stringify(bookListFixture),
     }),
   );
+  // /api/genres — нужно для GroupedGenresFilter в FiltersSidebar. По
+  // умолчанию отдаём несколько demo-жанров с категориями и
+  // display-именами; spec'и могут override'ить если нужно своё.
+  await page.route(/\/api\/genres$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [
+          {
+            id: 1,
+            code: 'sf_action',
+            display: 'Боевая фантастика',
+            book_count: 4,
+            category_code: 'cat:sf',
+            category_name: 'Фантастика',
+          },
+          {
+            id: 2,
+            code: 'popadanec',
+            display: 'Попаданцы',
+            book_count: 2,
+            category_code: 'cat:sf',
+            category_name: 'Фантастика',
+          },
+          {
+            id: 3,
+            code: 'network_literature',
+            display: 'Сетевая литература',
+            book_count: 1,
+            category_code: 'cat:prose',
+            category_name: 'Проза',
+          },
+        ],
+      }),
+    }),
+  );
   await page.route(/\/api\/books\/19$/, (route) =>
     route.fulfill({
       status: 200,

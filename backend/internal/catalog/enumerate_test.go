@@ -148,6 +148,47 @@ func TestEnumerate(t *testing.T) {
 	require.Equal(t, 1, byCode["sf"].BookCount)
 	require.Equal(t, 1, byCode["drama"].BookCount)
 	require.Equal(t, 0, byCode["weird-no-name"].BookCount)
+	// CategoryCode/CategoryName — пустые в этом тесте: мы не задавали
+	// parent_id (только internal/genres.Seed его заполняет, и здесь
+	// его не вызывали). Подтверждаем что nil-parent корректно отдаёт ""
+	// без падений из-за NULL JOIN.
+	for _, g := range genres {
+		require.Empty(t, g.CategoryCode, "no parent_id set in this fixture")
+		require.Empty(t, g.CategoryName)
+	}
+}
+
+// TestListGenres_WithCategory — проверяет что LEFT JOIN на parent
+// корректно отдаёт CategoryCode/CategoryName когда leaf имеет parent_id.
+// Сценарий имитирует то что делает internal/genres.Seed.
+func TestListGenres_WithCategory(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startEnumeratePostgres(t, ctx)
+	svc := catalog.New(pool)
+
+	// Pseudo-родитель + leaf c parent_id
+	var parentID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO genres (fb2_code, name_ru) VALUES ('cat:sf', 'Фантастика') RETURNING id
+	`).Scan(&parentID))
+	_, err := pool.Exec(ctx, `
+		INSERT INTO genres (fb2_code, name_ru, parent_id) VALUES ('sf_action', 'Боевая фантастика', $1)
+	`, parentID)
+	require.NoError(t, err)
+
+	got, err := svc.ListGenres(ctx)
+	require.NoError(t, err)
+
+	// cat:sf скрыт фильтром «NOT LIKE 'cat:%'»; виден только leaf
+	require.Len(t, got, 1)
+	require.Equal(t, "sf_action", got[0].Code)
+	require.Equal(t, "Боевая фантастика", got[0].Display)
+	require.Equal(t, "cat:sf", got[0].CategoryCode)
+	require.Equal(t, "Фантастика", got[0].CategoryName)
 }
 
 // firstWord — мини-helper для проверки сортировки по фамилии без
