@@ -240,20 +240,23 @@ function messageOf(err: unknown): string {
   return 'Не удалось сохранить.';
 }
 
-// ── Profile section: display name + password change ─────────────────
+// ── Profile section: display name / email / password ────────────────
 
 /**
  * ProfileCard — секция «Профиль». Над Kindle-адресатами на странице /me.
  * Содержит:
- *   - inline-edit display_name (та же UX-паттерн что у Kindle-target'ов:
- *     pencil → editable input → save/cancel)
- *   - кнопку «Сменить пароль» которая раскрывает форму current+new+confirm
+ *   - inline-edit «Имя» — display_name через PATCH /api/me
+ *   - inline-edit «Email» — тоже PATCH /api/me; помечен предупреждением
+ *     что email = логин (если ошибётесь, восстановить может только admin)
+ *   - кнопку «Сменить пароль» (collapsible форма current+new+confirm)
  *
- * Email пока не редактируем — фронт-UX для email change без подтверждения
- * почты рискованный (юзер может опечататься и заблочить себе вход);
- * если потребуется — добавим отдельным шагом с email-verification flow.
+ * Layout: каждое поле — отдельная строка label-value-pencil; pencil
+ * стоит сразу после value, а не у правого края карточки, чтобы не
+ * выглядел сиротливо в широких viewport'ах.
  */
 function ProfileCard({ user }: { user: User }) {
+  const update = useUpdateMe();
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -262,81 +265,147 @@ function ProfileCard({ user }: { user: User }) {
           Профиль
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 pt-2">
-        <DisplayNameRow user={user} />
-        <PasswordChangeBlock />
+      <CardContent className="space-y-3 pt-2">
+        <EditableField
+          label="Имя"
+          value={user.display_name}
+          fieldKey="name"
+          onSave={async (v) => {
+            await update.mutateAsync({ display_name: v });
+            toast.success('Имя обновлено');
+          }}
+          validate={(v) => (v.trim() === '' ? 'Имя не должно быть пустым.' : null)}
+        />
+        <EditableField
+          label="Email"
+          value={user.email}
+          fieldKey="email"
+          inputType="email"
+          onSave={async (v) => {
+            await update.mutateAsync({ email: v });
+            toast.success('Email обновлён');
+          }}
+          validate={(v) => (!v.includes('@') ? 'Email должен содержать «@».' : null)}
+          helpText="Email используется для входа. Если ошибётесь и не сможете войти — попросите админа восстановить через /admin/users."
+        />
+        <div className="border-t border-border pt-3">
+          <PasswordChangeBlock />
+        </div>
       </CardContent>
     </Card>
   );
 }
 
-function DisplayNameRow({ user }: { user: User }) {
+/**
+ * EditableField — переиспользуемая «строка с inline-edit».
+ *
+ * View-режим: label (узкая колонка) + value (текст) + маленький pencil
+ * сразу справа от value. На широких viewport'ах pencil НЕ уезжает к
+ * правому краю карточки — value занимает только нужную ширину, pencil
+ * рядом.
+ *
+ * Edit-режим: тот же label + Input на flex-1 + Save/Cancel кнопки.
+ * Submit disabled пока value не изменилось ИЛИ validation вернула ошибку
+ * ИЛИ запрос ещё в полёте.
+ *
+ * fieldKey — суффикс для aria-label кнопки («Изменить name» / «email»),
+ * нужен для уникальности в a11y дереве и для тестов.
+ */
+function EditableField({
+  label,
+  value,
+  fieldKey,
+  inputType = 'text',
+  onSave,
+  validate,
+  helpText,
+}: {
+  label: string;
+  value: string;
+  fieldKey: string;
+  inputType?: 'text' | 'email';
+  onSave: (v: string) => Promise<void>;
+  validate?: (v: string) => string | null;
+  helpText?: string;
+}) {
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState(user.display_name);
-  const update = useUpdateMe();
+  const [draft, setDraft] = useState(value);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const inputId = `field-${fieldKey}`;
+
+  function cancel() {
+    setEditing(false);
+    setDraft(value);
+    setServerError(null);
+  }
 
   if (editing) {
+    const validationError = validate ? validate(draft) : null;
+    const isDirty = draft !== value;
+    const canSubmit = !submitting && isDirty && !validationError;
     return (
-      <form
-        className="flex flex-wrap items-center gap-2"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const trimmed = name.trim();
-          if (!trimmed) return;
-          try {
-            await update.mutateAsync({ display_name: trimmed });
-            toast.success('Имя обновлено');
-            setEditing(false);
-          } catch {
-            /* выведем error ниже */
-          }
-        }}
-      >
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="h-9 flex-1 min-w-48"
-          autoFocus
-          aria-label="Отображаемое имя"
-        />
-        <Button type="submit" size="sm" disabled={update.isPending || !name.trim()}>
-          <Check className="size-4" aria-hidden />
-          Сохранить
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="ghost"
-          onClick={() => {
-            setEditing(false);
-            setName(user.display_name);
+      <div className="space-y-1">
+        <form
+          className="flex flex-wrap items-center gap-2"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!canSubmit) return;
+            setSubmitting(true);
+            setServerError(null);
+            try {
+              await onSave(draft.trim());
+              setEditing(false);
+            } catch (err) {
+              setServerError(messageOf(err));
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
-          <X className="size-4" aria-hidden />
-        </Button>
-        {update.error ? (
-          <p className="basis-full text-xs text-destructive">{messageOf(update.error)}</p>
+          <Label htmlFor={inputId} className="w-16 shrink-0 text-xs text-muted-foreground">
+            {label}
+          </Label>
+          <Input
+            id={inputId}
+            type={inputType}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            className="h-9 flex-1 min-w-48"
+            autoFocus
+          />
+          <Button type="submit" size="sm" disabled={!canSubmit}>
+            <Check className="size-4" aria-hidden />
+            Сохранить
+          </Button>
+          <Button type="button" size="sm" variant="ghost" onClick={cancel}>
+            <X className="size-4" aria-hidden />
+          </Button>
+        </form>
+        {validationError ? (
+          <p className="ml-[4.5rem] text-xs text-destructive">{validationError}</p>
+        ) : serverError ? (
+          <p className="ml-[4.5rem] text-xs text-destructive">{serverError}</p>
+        ) : helpText ? (
+          <p className="ml-[4.5rem] text-xs text-muted-foreground">{helpText}</p>
         ) : null}
-      </form>
+      </div>
     );
   }
 
   return (
-    <div className="flex items-start gap-2">
-      <div className="flex-1 min-w-0 space-y-1">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider">
-          Отображаемое имя
-        </p>
-        <p className="text-sm font-medium">{user.display_name}</p>
-        <p className="text-xs text-muted-foreground">{user.email}</p>
-      </div>
+    <div className="flex items-center gap-2">
+      <span className="w-16 shrink-0 text-xs text-muted-foreground">{label}</span>
+      <span className="text-sm">{value}</span>
       <Button
-        size="sm"
+        type="button"
         variant="ghost"
+        size="sm"
+        className="h-7 w-7 p-0"
         onClick={() => setEditing(true)}
-        aria-label="Изменить имя"
+        aria-label={`Изменить ${fieldKey}`}
       >
-        <Pencil className="size-4" aria-hidden />
+        <Pencil className="size-3.5" aria-hidden />
       </Button>
     </div>
   );
