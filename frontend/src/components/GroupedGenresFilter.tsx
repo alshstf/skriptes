@@ -42,10 +42,15 @@ export function GroupedGenresFilter({
   // Группируем leaf'ы по category_name. Категория «Прочее» создаётся
   // только если есть leaf'ы без parent (legacy данные); в production
   // после Seed практически все жанры имеют parent_id, эта группа пуста.
-  const groups = useMemo(() => groupByCategory(genresQ.data ?? [], selected), [
-    genresQ.data,
-    selected,
-  ]);
+  //
+  // facets передаётся в сортировку: leaf'ы внутри категории и сами
+  // категории упорядочены по effective count (facets[code] ?? book_count)
+  // desc — популярные сверху. Это удобнее алфавита: первым видишь
+  // «Фантастика (7)», а не «Военное дело (1)».
+  const groups = useMemo(
+    () => groupByCategory(genresQ.data ?? [], selected, facets),
+    [genresQ.data, selected, facets],
+  );
 
   // Какие категории раскрыты. По дефолту — те, в которых хоть один
   // selected leaf. При изменении selection (через ActiveFilterChips
@@ -118,7 +123,6 @@ export function GroupedGenresFilter({
                 open={isOpen}
                 onToggleExpand={() => toggleExpanded(g.name)}
                 onToggleCheck={() => toggleCategory(g)}
-                facets={facets}
               />
               {isOpen ? (
                 <ul className="ml-7 space-y-0.5 border-l border-border/50 pl-2">
@@ -148,6 +152,10 @@ type GroupedCategory = {
   leafs: GenreItem[];
   selectedCount: number;
   state: 'none' | 'partial' | 'all';
+  // totalCount — sum of effective counts (facets[code] ?? book_count)
+  // по всем leaf'ам категории. Используется и для сортировки категорий,
+  // и для display'я суммарного counter'а рядом с названием.
+  totalCount: number;
 };
 
 function CategoryRow({
@@ -155,21 +163,17 @@ function CategoryRow({
   open,
   onToggleExpand,
   onToggleCheck,
-  facets,
 }: {
   group: GroupedCategory;
   open: boolean;
   onToggleExpand: () => void;
   onToggleCheck: () => void;
-  facets?: Record<string, number>;
 }) {
-  // Сумма counts по leaf'ам в категории. Если facets нет — общая
-  // сумма book_count, иначе только динамические (из текущего запроса).
-  const totalCount = group.leafs.reduce(
-    (acc, l) => acc + (facets?.[l.code] ?? 0),
-    0,
-  );
-  const hasFacets = facets !== undefined;
+  // totalCount precomputed в groupByCategory: facets[code] ?? book_count
+  // по всем leaf'ам. Один источник правды и сортировка категорий
+  // консистентна с тем что показано в counter'е.
+  const totalCount = group.totalCount;
+  const hasCount = totalCount > 0;
 
   return (
     <div className="flex items-center gap-1.5 rounded px-1 py-1 hover:bg-accent/30">
@@ -193,7 +197,7 @@ function CategoryRow({
       >
         {group.name}
       </button>
-      {hasFacets && totalCount > 0 ? (
+      {hasCount ? (
         <span className="text-xs tabular-nums text-muted-foreground">{totalCount}</span>
       ) : null}
     </div>
@@ -277,7 +281,11 @@ function TriStateCheckbox({
 
 const FALLBACK_CATEGORY = 'Прочее';
 
-function groupByCategory(items: GenreItem[], selected: string[]): GroupedCategory[] {
+function groupByCategory(
+  items: GenreItem[],
+  selected: string[],
+  facets?: Record<string, number>,
+): GroupedCategory[] {
   const map = new Map<string, GenreItem[]>();
   for (const it of items) {
     // Defensive: skip malformed entries (отсутствие code/display ломает
@@ -298,20 +306,37 @@ function groupByCategory(items: GenreItem[], selected: string[]): GroupedCategor
     bucket.push(it);
   }
   const selSet = new Set(selected);
+
+  // effectiveCount — динамический (от текущего поиска через facets) если
+  // есть, иначе статический total. Используется и для сортировки, и
+  // для подсчёта sum'ы у категории.
+  const effective = (g: GenreItem) =>
+    facets?.[g.code] ?? g.book_count ?? 0;
+
   const out: GroupedCategory[] = [];
   for (const [name, leafs] of map) {
-    // Сортировка leaf'ов внутри категории — по display.
-    leafs.sort((a, b) => a.display.localeCompare(b.display, 'ru'));
+    // Сортировка leaf'ов: по убыванию count, tiebreaker — display asc
+    // для стабильного порядка при равных счётчиках.
+    leafs.sort((a, b) => {
+      const diff = effective(b) - effective(a);
+      if (diff !== 0) return diff;
+      return a.display.localeCompare(b.display, 'ru');
+    });
     const selectedCount = leafs.filter((l) => selSet.has(l.code)).length;
     let state: GroupedCategory['state'] = 'none';
     if (selectedCount === leafs.length && leafs.length > 0) state = 'all';
     else if (selectedCount > 0) state = 'partial';
-    out.push({ name, leafs, selectedCount, state });
+    const totalCount = leafs.reduce((acc, l) => acc + effective(l), 0);
+    out.push({ name, leafs, selectedCount, state, totalCount });
   }
-  // Категории сортируем: «Прочее» в конце, остальные по алфавиту.
+  // Категории: «Прочее» всегда последняя (fallback-bucket для legacy
+  // данных, неважно сколько там книг). Остальные — по убыванию totalCount,
+  // tiebreaker — алфавит.
   out.sort((a, b) => {
     if (a.name === FALLBACK_CATEGORY) return 1;
     if (b.name === FALLBACK_CATEGORY) return -1;
+    const diff = b.totalCount - a.totalCount;
+    if (diff !== 0) return diff;
     return a.name.localeCompare(b.name, 'ru');
   });
   return out;

@@ -114,24 +114,17 @@ describe('FiltersSidebar', () => {
         />,
       ),
     );
-    await user.click(await screen.findByRole('button', { name: 'Развернуть' }) // первый chevron, для «Детективы и Триллеры»
-      .catch(() => screen.getAllByRole('button', { name: 'Развернуть' })[0]));
-    // Найдём «Фантастика» chevron и click'нем по нему. У всех expanded
-    // кнопок aria-label «Свернуть».
-    const allExpandButtons = screen.getAllByRole('button', { name: /Развернуть|Свернуть/ });
-    // Найдём кнопку для категории «Фантастика» — она должна быть в
-    // парном flex-row рядом с текстом «Фантастика».
-    const fantasyRow = screen.getByText('Фантастика').closest('div');
-    expect(fantasyRow).not.toBeNull();
-    const chevron = fantasyRow!.querySelector('button[aria-expanded]') as HTMLButtonElement;
+    await screen.findByText('Фантастика');
+    // Scope chevron к row «Фантастика» — иначе getByRole('button',
+    // {name:'Развернуть'}) находит сразу несколько (по одному на каждую
+    // категорию).
+    const fantasyRow = screen.getByText('Фантастика').closest('div')!;
+    const chevron = fantasyRow.querySelector('button[aria-expanded="false"]') as HTMLButtonElement;
     expect(chevron).not.toBeNull();
     await user.click(chevron);
     // Теперь leaf'ы Фантастики видны
     expect(screen.getByText('Боевая фантастика')).toBeInTheDocument();
     expect(screen.getByText('Альтернативная история')).toBeInTheDocument();
-    // Заметка: assertion выше про allExpandButtons — просто чтобы линтер
-    // не ругался на unused; реальная логика через fantasyRow.
-    expect(allExpandButtons.length).toBeGreaterThan(0);
   });
 
   it('tri-state: clicking category checkbox in none state selects all leafs', async () => {
@@ -209,6 +202,44 @@ describe('FiltersSidebar', () => {
       name: /Выбрана часть жанров категории/i,
     });
     expect(partial).toHaveAttribute('aria-checked', 'mixed');
+  });
+
+  it('sorts categories by total count desc; «Прочее» always last', async () => {
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          // facets перевешивают book_count из словаря:
+          //   sf_action 10 + sf_history 1 = Фантастика 11
+          //   det_classic 3  = Детективы 3
+          // → ожидаем порядок: Фантастика, Детективы, Прочее (фикстура misc_legacy без facets → 0)
+          facets={{ genres: { sf_action: 10, sf_history: 1, det_classic: 3 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await screen.findByText('Фантастика');
+    // Все три заголовка в article — берём в порядке появления в DOM.
+    const headers = ['Фантастика', 'Детективы и Триллеры', 'Прочее'];
+    const positions = headers.map((h) => {
+      const el = screen.getByText(h);
+      return { h, top: el.getBoundingClientRect().top };
+    });
+    // jsdom не делает реальный layout, у всех top === 0 → сравниваем
+    // через индекс в textContent родителя.
+    const list = screen.getByText('Фантастика').closest('ul')!;
+    const allTexts = Array.from(list.querySelectorAll('button.flex-1, button.text-left'))
+      .map((b) => b.textContent?.trim())
+      .filter((t): t is string => Boolean(t));
+    const idxFantasy = allTexts.findIndex((t) => t === 'Фантастика');
+    const idxDetective = allTexts.findIndex((t) => t === 'Детективы и Триллеры');
+    const idxOther = allTexts.findIndex((t) => t === 'Прочее');
+    expect(idxFantasy).toBeLessThan(idxDetective);
+    expect(idxDetective).toBeLessThan(idxOther);
+    // Просто чтобы убедиться что позиции используются (linter):
+    expect(positions).toHaveLength(3);
   });
 
   it('reset button appears only when there are active filters', async () => {
