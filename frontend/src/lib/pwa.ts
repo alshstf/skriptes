@@ -25,9 +25,31 @@ import { toast } from 'sonner';
  * autoUpdate (см. vite.config.ts) сам активирует новый SW при следующей
  * навигации; toast «обновление доступно» — просто визуальный сигнал
  * пользователю, что вот сейчас он увидит свежую версию.
+ *
+ * Пропускаем регистрацию на *.localhost хостах. Caddy там выдаёт TLS-
+ * сертификат через локальный CA, которому system keychain браузера не
+ * доверяет по умолчанию. Браузер принимает cert на уровне навигации
+ * (пользователь жмёт «Принять»), но FETCH ИЗ SW идёт отдельным контекстом,
+ * без UI для подтверждения, и падает с network error. Workbox в этом
+ * случае на стратегии NetworkOnly (для /api/auth/*) возвращает
+ * «no-response: no-response», и страница ломается на первом же
+ * /api/auth/me. PWA-фича на dev-стенде всё равно не нужна — здесь
+ * проще зайти как обычное web-приложение без offline-shell.
+ *
+ * В production (реальный домен + Let's Encrypt) cert валиден,
+ * keychain ему доверяет, SW работает как ожидается.
  */
 export async function registerPWA(): Promise<void> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+    return;
+  }
+  if (isLocalhostHost(window.location.hostname)) {
+    // Дополнительно: если на этом хосте остался активный SW от
+    // ПРЕДЫДУЩЕЙ версии приложения (когда мы регистрировали без
+    // skip'а), он продолжает intercept'ить fetch'и и ломать UI.
+    // Чистим самостоятельно — юзеру не надо лезть в DevTools.
+    // Effect виден после reload (SW уходит через cycle).
+    void unregisterAllSW();
     return;
   }
   try {
@@ -286,4 +308,42 @@ function markDismissed(): void {
   } catch {
     // ignore
   }
+}
+
+/**
+ * unregisterAllSW — снимает все service-worker регистрации текущего
+ * origin'а. Используется в dev-фоллбэке: код мог быть задеплоен с
+ * `registerPWA` (PWA вкл.) в прошлом, оставив активный SW; новый код
+ * с skip'ом сам по себе не уберёт уже-установленный SW.
+ *
+ * Лёгкий best-effort — глотаем ошибки, не падаем; на проде функция
+ * не вызывается (host не localhost).
+ */
+async function unregisterAllSW(): Promise<void> {
+  try {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((r) => r.unregister()));
+  } catch {
+    // ignore — SW API может быть недоступен в редких контекстах
+  }
+}
+
+/**
+ * isLocalhostHost — true для хостов где TLS обслуживается локальным CA
+ * (нет system-trust → SW fetches падают). Покрывает:
+ *  - "localhost", "127.0.0.1", "::1" — bare loopback;
+ *  - "*.localhost" — Caddy auto-issued cert через локальный CA
+ *    (в нашем dev-стенде это `skriptes.localhost`);
+ *  - "*.local" / "*.test" — рекомендованные RFC-зарезервированные
+ *    суффиксы для разработки.
+ *
+ * НЕ покрывает: реальные домены (production), приватные IP подсетей —
+ * для подсетей home network может быть Let's Encrypt через DNS-01, мы
+ * НЕ хотим выключать SW там.
+ */
+export function isLocalhostHost(hostname: string): boolean {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+    return true;
+  }
+  return /\.(localhost|local|test)$/i.test(hostname);
 }
