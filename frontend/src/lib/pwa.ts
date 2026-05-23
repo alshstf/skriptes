@@ -44,7 +44,12 @@ export async function registerPWA(): Promise<void> {
     return;
   }
   if (isLocalhostHost(window.location.hostname)) {
-    // Тихо — это ожидаемое поведение на dev-стенде, не повод для warn'а.
+    // Дополнительно: если на этом хосте остался активный SW от
+    // ПРЕДЫДУЩЕЙ версии приложения (когда мы регистрировали без
+    // skip'а), он продолжает intercept'ить fetch'и и ломать UI.
+    // Чистим самостоятельно — юзеру не надо лезть в DevTools.
+    // Effect виден после reload (SW уходит через cycle).
+    void unregisterAllSW();
     return;
   }
   try {
@@ -302,6 +307,24 @@ function markDismissed(): void {
     localStorage.setItem(DISMISS_KEY, String(Date.now()));
   } catch {
     // ignore
+  }
+}
+
+/**
+ * unregisterAllSW — снимает все service-worker регистрации текущего
+ * origin'а. Используется в dev-фоллбэке: код мог быть задеплоен с
+ * `registerPWA` (PWA вкл.) в прошлом, оставив активный SW; новый код
+ * с skip'ом сам по себе не уберёт уже-установленный SW.
+ *
+ * Лёгкий best-effort — глотаем ошибки, не падаем; на проде функция
+ * не вызывается (host не localhost).
+ */
+async function unregisterAllSW(): Promise<void> {
+  try {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((r) => r.unregister()));
+  } catch {
+    // ignore — SW API может быть недоступен в редких контекстах
   }
 }
 
