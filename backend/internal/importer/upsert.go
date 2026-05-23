@@ -134,16 +134,26 @@ func upsertSeries(ctx context.Context, q querier, title string, authorID int64) 
 	return id, nil
 }
 
-// upsertGenre возвращает id жанра по FB2-коду; если такого кода нет — создаёт
-// запись с name_ru = name_en = код (улучшение имён — отдельная задача).
+// upsertGenre возвращает id жанра по FB2-коду; если такого кода нет —
+// создаёт запись с NULL в name_ru/name_en. Локализованные имена
+// заполняются отдельно — internal/genres.Seed на startup'е backend'а
+// прописывает name_ru для всех known кодов из встроенного словаря.
+//
+// Для кодов которых нет в словаре (новые из реальных коллекций) —
+// name_ru остаётся NULL, и SELECT'ы делают COALESCE на fb2_code как
+// fallback (видно в catalog.ListGenres и books.Get).
+//
+// ON CONFLICT DO NOTHING — мы не хотим перетирать локализованные имена
+// которые поставил Seed: importer работает асинхронно (после startup'а),
+// и без NOTHING он сбросил бы name_ru обратно в NULL для каждого
+// импортируемого жанра.
 func upsertGenre(ctx context.Context, q querier, code string) (int64, error) {
 	if code == "" {
 		return 0, fmt.Errorf("empty genre code")
 	}
 	var id int64
 	err := q.QueryRow(ctx, `
-		INSERT INTO genres (fb2_code, name_ru, name_en)
-		VALUES ($1, $1, $1)
+		INSERT INTO genres (fb2_code) VALUES ($1)
 		ON CONFLICT (fb2_code) DO UPDATE SET fb2_code = EXCLUDED.fb2_code
 		RETURNING id
 	`, code).Scan(&id)

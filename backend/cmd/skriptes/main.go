@@ -25,6 +25,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/email"
+	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
@@ -62,6 +63,21 @@ func run() error {
 		return fmt.Errorf("db migrate: %w", err)
 	}
 	logger.Info("migrations applied")
+
+	// Seed справочника жанров — заполняет name_ru/parent_id для всех
+	// fb2-кодов из встроенного словаря (genres_fb2.glst от Books.NET /
+	// MyHomeLib). Идемпотентно: повторные старты переписывают
+	// имена/иерархию. До этого момента genres-таблица могла иметь
+	// name_ru = fb2_code (старая логика importer.upsertGenre); seed
+	// исправит на человеческое имя там где код известен.
+	seedCtx, seedCancel := context.WithTimeout(context.Background(), 15*time.Second)
+	if n, err := genres.Seed(seedCtx, pool); err != nil {
+		seedCancel()
+		return fmt.Errorf("seed genres: %w", err)
+	} else {
+		logger.Info("genres dictionary seeded", "entries", n)
+	}
+	seedCancel()
 
 	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
 	logger.Info("meilisearch client configured", "url", cfg.MeiliURL)
