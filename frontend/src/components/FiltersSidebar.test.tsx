@@ -1,7 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FiltersSidebar, type FiltersValue } from './FiltersSidebar';
+
+/**
+ * FiltersSidebar теперь содержит GroupedGenresFilter, который грузит
+ * /api/genres через useQuery. Обёртка делает QueryClient + мокает fetch
+ * через vi.stubGlobal, отдавая фикстуру из 4 жанров в 2 категориях
+ * (Фантастика, Детективы) + один leaf без category для проверки группы
+ * «Прочее».
+ */
 
 const emptyFilters: FiltersValue = {
   genres: [],
@@ -11,55 +20,221 @@ const emptyFilters: FiltersValue = {
   sort: '',
 };
 
+const genresFixture = {
+  items: [
+    {
+      id: 1,
+      code: 'sf_action',
+      display: 'Боевая фантастика',
+      book_count: 4,
+      category_code: 'cat:sf',
+      category_name: 'Фантастика',
+    },
+    {
+      id: 2,
+      code: 'sf_history',
+      display: 'Альтернативная история',
+      book_count: 3,
+      category_code: 'cat:sf',
+      category_name: 'Фантастика',
+    },
+    {
+      id: 3,
+      code: 'det_classic',
+      display: 'Классический детектив',
+      book_count: 5,
+      category_code: 'cat:detective',
+      category_name: 'Детективы и Триллеры',
+    },
+    {
+      id: 4,
+      code: 'misc_legacy',
+      display: 'misc_legacy',
+      book_count: 1,
+      // no category — должен попасть в «Прочее»
+    },
+  ],
+};
+
+function wrap(ui: React.ReactElement) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return <QueryClientProvider client={qc}>{ui}</QueryClientProvider>;
+}
+
+beforeEach(() => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string | Request) => {
+      const u = typeof url === 'string' ? url : url.url;
+      if (u.includes('/api/genres')) {
+        return new Response(JSON.stringify(genresFixture), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      return new Response('not mocked', { status: 404 });
+    }),
+  );
+});
+
 describe('FiltersSidebar', () => {
-  it('renders genre checkboxes with counts from facets', () => {
+  it('renders genre categories collapsed by default', async () => {
     render(
-      <FiltersSidebar
-        value={emptyFilters}
-        onChange={() => {}}
-        facets={{ genres: { sf_action: 4, fantasy: 2 }, lang: { ru: 6 } }}
-        totalActive={0}
-        onReset={() => {}}
-      />,
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          facets={{ genres: { sf_action: 4, sf_history: 3, det_classic: 5 }, lang: { ru: 12 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
     );
-    // Жанры в порядке убывания count: sf_action (4) первым.
-    const genreLabels = screen.getAllByText(/sf_action|fantasy/);
-    expect(genreLabels[0]).toHaveTextContent('sf_action');
-    expect(screen.getByText('4')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
+    // Категории должны появиться после загрузки списка.
+    expect(await screen.findByText('Фантастика')).toBeInTheDocument();
+    expect(screen.getByText('Детективы и Триллеры')).toBeInTheDocument();
+    expect(screen.getByText('Прочее')).toBeInTheDocument(); // fallback для leaf без category
+    // Сумма leaf-counts отображается рядом с категорией.
+    expect(screen.getByText('7')).toBeInTheDocument(); // 4 (sf_action) + 3 (sf_history)
+    expect(screen.getByText('5')).toBeInTheDocument(); // det_classic
+    // Leaf'ы не видны пока секция свёрнута.
+    expect(screen.queryByText('Боевая фантастика')).not.toBeInTheDocument();
   });
 
-  it('calls onChange with updated genres when checkbox flipped', async () => {
+  it('clicking category expands it; leafs become visible', async () => {
+    const user = userEvent.setup();
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          facets={{ genres: { sf_action: 4, sf_history: 3 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await user.click(await screen.findByRole('button', { name: 'Развернуть' }) // первый chevron, для «Детективы и Триллеры»
+      .catch(() => screen.getAllByRole('button', { name: 'Развернуть' })[0]));
+    // Найдём «Фантастика» chevron и click'нем по нему. У всех expanded
+    // кнопок aria-label «Свернуть».
+    const allExpandButtons = screen.getAllByRole('button', { name: /Развернуть|Свернуть/ });
+    // Найдём кнопку для категории «Фантастика» — она должна быть в
+    // парном flex-row рядом с текстом «Фантастика».
+    const fantasyRow = screen.getByText('Фантастика').closest('div');
+    expect(fantasyRow).not.toBeNull();
+    const chevron = fantasyRow!.querySelector('button[aria-expanded]') as HTMLButtonElement;
+    expect(chevron).not.toBeNull();
+    await user.click(chevron);
+    // Теперь leaf'ы Фантастики видны
+    expect(screen.getByText('Боевая фантастика')).toBeInTheDocument();
+    expect(screen.getByText('Альтернативная история')).toBeInTheDocument();
+    // Заметка: assertion выше про allExpandButtons — просто чтобы линтер
+    // не ругался на unused; реальная логика через fantasyRow.
+    expect(allExpandButtons.length).toBeGreaterThan(0);
+  });
+
+  it('tri-state: clicking category checkbox in none state selects all leafs', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
-      <FiltersSidebar
-        value={emptyFilters}
-        onChange={onChange}
-        facets={{ genres: { sf_action: 4 } }}
-        totalActive={0}
-        onReset={() => {}}
-      />,
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={onChange}
+          facets={{ genres: { sf_action: 4, sf_history: 3 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
     );
-    await user.click(screen.getByRole('checkbox', { name: /sf_action/ }));
-    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ genres: ['sf_action'] }));
+    await screen.findByText('Фантастика');
+    // Tri-state checkbox у «Фантастика» — нативный input (state='none')
+    // с aria-label 'Выбрать все в категории'. Их несколько (по одной
+    // на каждую категорию); scope'имся к row «Фантастика».
+    const fantasyRow = screen.getByText('Фантастика').closest('div')!;
+    const selectAll = fantasyRow.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(selectAll).not.toBeNull();
+    await user.click(selectAll);
+    expect(onChange).toHaveBeenCalledOnce();
+    const call = onChange.mock.calls[0][0] as FiltersValue;
+    // Должны выбраться все leaf'ы Фантастики (sf_action + sf_history)
+    expect(call.genres).toEqual(expect.arrayContaining(['sf_action', 'sf_history']));
+    expect(call.genres).toHaveLength(2);
+  });
+
+  it('tri-state: when all leafs selected, clicking checkbox deselects all', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      wrap(
+        <FiltersSidebar
+          value={{ ...emptyFilters, genres: ['sf_action', 'sf_history'] }}
+          onChange={onChange}
+          facets={{ genres: { sf_action: 4, sf_history: 3 } }}
+          totalActive={2}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await screen.findByText('Фантастика');
+    const deselectAll = await screen.findByRole('checkbox', {
+      name: /Снять выделение со всех/i,
+    });
+    await user.click(deselectAll);
+    expect(onChange).toHaveBeenCalledOnce();
+    const call = onChange.mock.calls[0][0] as FiltersValue;
+    expect(call.genres).toEqual([]);
+  });
+
+  it('partial state shows mixed checkbox + "Свернуть" aria-label (auto-expanded)', async () => {
+    render(
+      wrap(
+        <FiltersSidebar
+          value={{ ...emptyFilters, genres: ['sf_action'] }}
+          onChange={() => {}}
+          facets={{ genres: { sf_action: 4, sf_history: 3 } }}
+          totalActive={1}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await screen.findByText('Фантастика');
+    // Категория с selected leaf автоматически развёрнута.
+    const fantasyRow = screen.getByText('Фантастика').closest('div')!;
+    const chevron = fantasyRow.querySelector('button[aria-expanded="true"]');
+    expect(chevron).not.toBeNull();
+    // Mixed checkbox (partial state) имеет role=checkbox с aria-checked=mixed.
+    const partial = screen.getByRole('checkbox', {
+      name: /Выбрана часть жанров категории/i,
+    });
+    expect(partial).toHaveAttribute('aria-checked', 'mixed');
   });
 
   it('reset button appears only when there are active filters', async () => {
     const user = userEvent.setup();
     const onReset = vi.fn();
     const { rerender } = render(
-      <FiltersSidebar value={emptyFilters} onChange={() => {}} totalActive={0} onReset={onReset} />,
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          totalActive={0}
+          onReset={onReset}
+        />,
+      ),
     );
     expect(screen.queryByRole('button', { name: /Сбросить/ })).not.toBeInTheDocument();
 
     rerender(
-      <FiltersSidebar
-        value={{ ...emptyFilters, genres: ['sf_action'] }}
-        onChange={() => {}}
-        totalActive={1}
-        onReset={onReset}
-      />,
+      wrap(
+        <FiltersSidebar
+          value={{ ...emptyFilters, genres: ['sf_action'] }}
+          onChange={() => {}}
+          totalActive={1}
+          onReset={onReset}
+        />,
+      ),
     );
     const reset = screen.getByRole('button', { name: /Сбросить/ });
     await user.click(reset);
@@ -70,7 +245,14 @@ describe('FiltersSidebar', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
-      <FiltersSidebar value={emptyFilters} onChange={onChange} totalActive={0} onReset={() => {}} />,
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={onChange}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
     );
     await user.selectOptions(screen.getByLabelText('Сортировка'), 'year_desc');
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ sort: 'year_desc' }));

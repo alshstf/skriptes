@@ -113,6 +113,7 @@ func NewRouter(d Deps) http.Handler {
 				if d.Catalog.Service != nil {
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata))
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History))
+					r.Get("/genres", handleListGenres(d.Catalog))
 				}
 				if d.History.Service != nil {
 					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))

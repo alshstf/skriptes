@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
+import { useGenreMap } from '@/lib/genres';
 import { cn } from '@/lib/utils';
 import type { FacetDistribution } from '@/lib/books';
 
@@ -69,11 +71,9 @@ export function FiltersSidebar({
         onChange={(yearFrom, yearTo) => onChange({ ...value, yearFrom, yearTo })}
       />
 
-      <FacetCheckboxes
-        title="Жанры"
+      <GroupedGenresFilter
         selected={value.genres}
-        facetKey="genres"
-        facets={facets}
+        facets={facets?.genres}
         onChange={(genres) => onChange({ ...value, genres })}
       />
 
@@ -154,57 +154,6 @@ function YearBlock({
           className="h-9"
         />
       </div>
-    </div>
-  );
-}
-
-/** Чекбоксы по facet'у с counts. Если facets не пришли — рисуем только
- *  уже выбранные значения, чтобы их можно было отжать. */
-function FacetCheckboxes({
-  title,
-  selected,
-  facetKey,
-  facets,
-  onChange,
-}: {
-  title: string;
-  selected: string[];
-  facetKey: string;
-  facets?: FacetDistribution;
-  onChange: (next: string[]) => void;
-}) {
-  const items = mergeFacetItems(facets?.[facetKey], selected);
-  if (items.length === 0) return null;
-  return (
-    <div className="space-y-2">
-      <div className="text-xs font-medium text-muted-foreground uppercase">{title}</div>
-      <ul className="space-y-1 max-h-64 overflow-y-auto pr-1">
-        {items.map(({ value, count }) => {
-          const checked = selected.includes(value);
-          return (
-            <li key={value}>
-              <label className="flex items-center gap-2 cursor-pointer rounded px-1 py-0.5 hover:bg-accent/40">
-                <input
-                  type="checkbox"
-                  className="size-4 rounded border-input"
-                  checked={checked}
-                  onChange={(e) => {
-                    onChange(
-                      e.target.checked
-                        ? [...selected, value]
-                        : selected.filter((g) => g !== value),
-                    );
-                  }}
-                />
-                <span className="flex-1 truncate">{value}</span>
-                {count != null ? (
-                  <span className="text-xs tabular-nums text-muted-foreground">{count}</span>
-                ) : null}
-              </label>
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 }
@@ -306,10 +255,15 @@ export function ActiveFilterChips({
   value: FiltersValue & { seriesId?: number; authorId?: number; query?: string };
   onChange: (next: FiltersValue & { seriesId?: number; authorId?: number; query?: string }) => void;
 }) {
+  // Переводим fb2_code в человеческое display-имя если справочник
+  // жанров уже подгружен. Иначе показываем сырой код (fallback
+  // когда useGenres ещё в полёте; редкий случай).
+  const genreMap = useGenreMap();
   const chips: { label: string; onRemove: () => void }[] = [];
   for (const g of value.genres) {
+    const display = genreMap.get(g)?.display ?? g;
     chips.push({
-      label: `Жанр: ${g}`,
+      label: `Жанр: ${display}`,
       onRemove: () =>
         onChange({ ...value, genres: value.genres.filter((x) => x !== g) }),
     });
