@@ -127,6 +127,12 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		items = append(items, sc.item)
 	}
 
+	// Догидрачиваем cover_path из Postgres: в Meili-индексе обложек нет
+	// (проставляются лениво после индексации enrichment'ом), а для
+	// мобильного списка с thumbnail'ами нужен свежий путь. Один
+	// batched-SELECT по id текущей страницы — дёшево.
+	s.hydrateCovers(ctx, items)
+
 	total := res.EstimatedTotalHits
 	if total == 0 && res.TotalHits > 0 {
 		total = res.TotalHits
@@ -140,6 +146,47 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		ProcessTime: res.ProcessingTimeMs,
 		Facets:      decodeFacets(res.FacetDistribution),
 	}, nil
+}
+
+// hydrateCovers проставляет CoverPath на items одним batched-запросом
+// в Postgres. Meili-индекс обложек не хранит (они приезжают лениво
+// после индексации), поэтому свежий путь берём прямо из БД по id
+// текущей страницы. Ошибки не фатальны — список и без обложек валиден,
+// фронт покажет placeholder.
+func (s *Service) hydrateCovers(ctx context.Context, items []ListItem) {
+	if s.pool == nil || len(items) == 0 {
+		return
+	}
+	ids := make([]int64, 0, len(items))
+	for _, it := range items {
+		ids = append(ids, it.ID)
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, cover_path
+		FROM books
+		WHERE id = ANY($1) AND cover_path IS NOT NULL AND cover_path <> ''
+	`, ids)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	covers := make(map[int64]string, len(items))
+	for rows.Next() {
+		var id int64
+		var path string
+		if err := rows.Scan(&id, &path); err != nil {
+			return
+		}
+		covers[id] = path
+	}
+	if rows.Err() != nil {
+		return
+	}
+	for i := range items {
+		if p, ok := covers[items[i].ID]; ok {
+			items[i].CoverPath = p
+		}
+	}
 }
 
 // ── Re-ranking ──────────────────────────────────────────────────
