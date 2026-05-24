@@ -84,6 +84,19 @@ test.describe('mobile /books (375px)', () => {
     await expect(bar).toHaveCSS('position', 'sticky');
   });
 
+  test('контекстный поиск жанра внутри drawer фильтрует список', async ({ mockedPage: page }) => {
+    await page.goto('/books');
+    await page.getByRole('button', { name: 'Фильтры', exact: true }).click();
+    const sheet = page.locator('[data-slot="sheet-content"]');
+    await expect(sheet.getByText('Фантастика')).toBeVisible();
+    // Печатаем «проза» → совпадает категория «Проза» (фикстура _fixtures).
+    await sheet.getByLabel('Поиск жанра').fill('проза');
+    await expect(sheet.getByText('Проза')).toBeVisible();
+    await expect(sheet.getByText('Сетевая литература')).toBeVisible(); // leaf раскрыт
+    // Несовпавшая «Фантастика» отфильтрована.
+    await expect(sheet.getByText('Фантастика')).toBeHidden();
+  });
+
   test('бейдж на кнопке показывает число активных фильтров', async ({ mockedPage: page }) => {
     // Заходим сразу с активным фильтром в URL → бейдж = 1.
     await page.goto('/books?genres=sf_action');
