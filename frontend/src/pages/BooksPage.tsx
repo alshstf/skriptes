@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import type { BooksSearch } from '@/router';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { FilterX, Search, SlidersHorizontal } from 'lucide-react';
 
 // Code-based routing в TanStack Router не разносит validateSearch-тип
 // через routeTree-тайпинг, поэтому navigate-функция оказывается типа
@@ -140,25 +140,48 @@ export function BooksPage() {
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1 md:max-w-md">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
-              aria-hidden
-            />
-            <Input
-              type="search"
-              placeholder="Поиск по названию или автору"
-              className="pl-9"
-              value={queryInput}
-              onChange={(e) => setQueryInput(e.target.value)}
-            />
-          </div>
+        {/* Sticky-бар управления: поиск + сброс + фильтры. На мобильном
+            липнет под шапкой (top-14 = высота Header'а h-14), чтобы при
+            скролле вниз контролы оставались под рукой и не нужно было
+            мотать наверх. На десктопе sticky выключаем — там фильтры
+            живут в постоянном sidebar. -mx-4/px-4 даёт фон бара на всю
+            ширину под gutter'ом, чтобы карточки не «просвечивали» по краям
+            при скролле под баром. */}
+        <div className="sticky top-14 z-10 -mx-4 bg-background px-4 py-2 md:static md:top-auto md:z-auto md:mx-0 md:bg-transparent md:px-0 md:py-0">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1 md:max-w-md">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
+                aria-hidden
+              />
+              <Input
+                type="search"
+                placeholder="Поиск по названию или автору"
+                className="pl-9"
+                value={queryInput}
+                onChange={(e) => setQueryInput(e.target.value)}
+              />
+            </div>
 
-          {/* Мобильная кнопка фильтров — только < md. Бейдж со счётчиком
-              активных фильтров, чтобы было видно что что-то применено
-              даже со свёрнутой панелью. */}
-          <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+            {/* Быстрый сброс фильтров — только мобильный и только когда
+                есть что сбрасывать. На десктопе сброс живёт в шапке
+                sidebar'а. */}
+            {totalActive > 0 ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Сбросить фильтры"
+                onClick={resetAll}
+                className="shrink-0 text-muted-foreground md:hidden"
+              >
+                <FilterX className="size-4" aria-hidden />
+              </Button>
+            ) : null}
+
+            {/* Мобильная кнопка фильтров — только < md. Бейдж со счётчиком
+                активных фильтров, чтобы было видно что что-то применено
+                даже со свёрнутой панелью. */}
+            <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
@@ -202,6 +225,7 @@ export function BooksPage() {
               </SheetFooter>
             </SheetContent>
           </Sheet>
+          </div>
         </div>
 
         {data ? (
@@ -210,26 +234,32 @@ export function BooksPage() {
           </p>
         ) : null}
 
-        <ActiveFilterChips
-          value={{
-            ...filters,
-            seriesId: search.series_id,
-            authorId: search.author_id,
-          }}
-          onChange={(next) => {
-            const { seriesId, authorId, ...rest } = next;
-            setFilters(rest);
-            // Series/author не в FiltersValue — обновляем отдельно.
-            void navigate({
-              search: (prev) => ({
-                ...prev,
-                series_id: seriesId || undefined,
-                author_id: authorId || undefined,
-              }),
-              replace: true,
-            });
-          }}
-        />
+        {/* Чипсы выбранных фильтров — только на десктопе. На мобильном
+            при выборе целой категории жанров их набегает столько, что
+            блок съедает пол-экрана до первой книги; роль «что выбрано»
+            там берут бейдж-счётчик на кнопке фильтра + быстрый сброс. */}
+        <div className="hidden md:block">
+          <ActiveFilterChips
+            value={{
+              ...filters,
+              seriesId: search.series_id,
+              authorId: search.author_id,
+            }}
+            onChange={(next) => {
+              const { seriesId, authorId, ...rest } = next;
+              setFilters(rest);
+              // Series/author не в FiltersValue — обновляем отдельно.
+              void navigate({
+                search: (prev) => ({
+                  ...prev,
+                  series_id: seriesId || undefined,
+                  author_id: authorId || undefined,
+                }),
+                replace: true,
+              });
+            }}
+          />
+        </div>
 
         {error ? (
           <p role="alert" className="text-sm text-destructive">

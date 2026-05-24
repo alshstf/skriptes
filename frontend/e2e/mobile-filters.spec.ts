@@ -23,7 +23,7 @@ test.describe('mobile /books (375px)', () => {
     await expect(page.getByRole('heading', { name: 'Фильтры' })).toBeHidden();
 
     // Кнопка фильтров (icon, aria-label «Фильтры») видна.
-    const filterBtn = page.getByRole('button', { name: 'Фильтры' });
+    const filterBtn = page.getByRole('button', { name: 'Фильтры', exact: true });
     await expect(filterBtn).toBeVisible();
 
     // Первая книга списка видна без скролла мимо длинного фильтр-блока.
@@ -42,21 +42,44 @@ test.describe('mobile /books (375px)', () => {
     await expect(leaf).toBeVisible();
     await leaf.check();
 
-    // Фильтр применился сразу (URL + чип), даже не закрывая drawer.
+    // Фильтр применился сразу (URL), даже не закрывая drawer.
     await expect(page).toHaveURL(/sf_action/);
 
     // Закрываем по кнопке футера «Показать …».
     await sheet.getByRole('button', { name: /Показать/ }).click();
     await expect(sheet).toBeHidden();
 
-    // Активный чип виден на странице с человекочитаемым именем.
-    await expect(page.getByText(/Жанр: Боевая фантастика/)).toBeVisible();
+    // Чипсы выбранных фильтров на мобильном скрыты (hidden md:block) —
+    // их роль берёт бейдж-счётчик на кнопке. Сам чип в DOM есть (для
+    // десктопа), но не виден.
+    await expect(page.getByText(/Жанр: Боевая фантастика/)).toBeHidden();
+    // Бейдж счётчика на кнопке фильтра отражает выбор.
+    await expect(filterBtn.getByText('1')).toBeVisible();
+  });
+
+  test('кнопка быстрого сброса очищает фильтры', async ({ mockedPage: page }) => {
+    await page.goto('/books?genres=sf_action');
+    const reset = page.getByRole('button', { name: 'Сбросить фильтры' });
+    await expect(reset).toBeVisible();
+    await reset.click();
+    // URL очистился от genres, бейдж/счётчик пропал.
+    await expect(page).not.toHaveURL(/sf_action/);
+    await expect(page.getByRole('button', { name: 'Сбросить фильтры' })).toBeHidden();
+  });
+
+  test('бар поиска прилипает к верху при скролле', async ({ mockedPage: page }) => {
+    await page.goto('/books');
+    const input = page.getByPlaceholder('Поиск по названию или автору');
+    await expect(input).toBeVisible({ timeout: 10_000 });
+    // sticky-обёртка бара (родитель flex-строки) имеет position: sticky.
+    const bar = page.locator('.sticky').filter({ has: input });
+    await expect(bar).toHaveCSS('position', 'sticky');
   });
 
   test('бейдж на кнопке показывает число активных фильтров', async ({ mockedPage: page }) => {
     // Заходим сразу с активным фильтром в URL → бейдж = 1.
     await page.goto('/books?genres=sf_action');
-    const filterBtn = page.getByRole('button', { name: 'Фильтры' });
+    const filterBtn = page.getByRole('button', { name: 'Фильтры', exact: true });
     await expect(filterBtn).toBeVisible();
     await expect(filterBtn.getByText('1')).toBeVisible();
   });
@@ -70,6 +93,6 @@ test.describe('desktop /books', () => {
       timeout: 10_000,
     });
     // Кнопка-триггер drawer'а скрыта на десктопе (md:hidden).
-    await expect(page.getByRole('button', { name: 'Фильтры' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Фильтры', exact: true })).toBeHidden();
   });
 });
