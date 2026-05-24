@@ -27,6 +27,13 @@ type Config struct {
 	// искать в $PATH.
 	FBCPath string `env:"SKRIPTES_FBC_PATH" envDefault:"fbc"`
 
+	// CoverPrewarm — фоновый прогрев fb2-обложек и аннотаций (local-only)
+	// для всей коллекции, чтобы список книг был с обложками, а не с
+	// пустыми плейсхолдерами. CoverPrewarmWorkers — параллелизм чтения
+	// zip-архивов (выше = быстрее, но больше нагрузка на диск).
+	CoverPrewarm        bool `env:"SKRIPTES_COVER_PREWARM" envDefault:"true"`
+	CoverPrewarmWorkers int  `env:"SKRIPTES_COVER_PREWARM_WORKERS" envDefault:"4"`
+
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
 	// откуда разрешены мутирующие запросы (защита от CSRF).
