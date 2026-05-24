@@ -1,0 +1,155 @@
+# CLAUDE.md — гайд для Claude Code (и любого другого AI-ассистента)
+
+Это онбординг-указатель для нового чата / TUI-сессии. Цель — за минуту дать
+контекст, который иначе пришлось бы выковыривать grep'ом, плюс предупредить о
+граблях, на которых я уже спотыкался.
+
+Полную документацию **не дублирую** — она в `README.md` (что приложение делает
+и как развернуть релиз) и `CONTRIBUTING.md` (структура репо, все make-таргеты,
+архитектура pipeline'ов). Сюда — только то, чего там нет.
+
+## TL;DR в трёх строках
+
+skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + sqlc-style raw SQL +
+golang-migrate) на бэке, React + Vite + TanStack Router + shadcn/ui на фронте,
+Postgres + Meilisearch + Caddy в docker compose. Книги физически живут на
+read-only volume и конвертируются на лету через fb2cng.
+
+## Быстрые команды
+
+```bash
+# pre-commit самопроверка (запускай ВСЁ перед коммитом — это явное user-feedback)
+cd backend  && go test ./... && golangci-lint run --timeout=5m ./...
+cd frontend && npm run lint && npm run typecheck && npm test && npm run build
+cd frontend && npx playwright test        # ловит layout-регрессии, jsdom не умеет CSS
+
+# поднять локально + увидеть свои изменения
+cd infra && docker compose build backend frontend && \
+            docker compose up -d --force-recreate backend frontend
+# context: ../backend и ../frontend — то есть git pull в основном чекауте
+# (НЕ в worktree) перед билдом, иначе подтянутся старые исходники
+
+# проверить что новый bundle действительно поехал
+docker compose exec frontend ls /usr/share/nginx/html/assets/
+# хэш index-*.js должен поменяться после контентной правки
+```
+
+`make help` покажет полный список таргетов.
+
+## Грабли, на которых я уже спотыкался
+
+### 1. Frontend bundle не обновляется после `docker compose build`
+
+Vite хэширует имя бандла по контенту. Если `git pull` подтянул новые исходники
+**в worktree, а не в основной чекаут**, build возьмёт старое содержимое из
+`../frontend` (build context в `infra/docker-compose.yml`) и выдаст тот же хэш.
+Делай `git pull` в `/Users/<...>/projects/skriptes` (или в любом основном
+чекауте), не только в `.claude/worktrees/...`.
+
+Если что-то не сходится — `docker compose build --no-cache frontend` снимает
+кэш слоя COPY.
+
+### 2. Жанры на фронте — три разных места рендеринга, легко промазать
+
+`book.genres` от Meili приходит как массив `fb2_code`'ов (строк). Display-имена
+живут в Postgres + ежесборочный seed (см. `backend/internal/genres/`),
+exposed через `GET /api/genres`. На фронте — `useGenreMap()` в
+`frontend/src/lib/genres.ts`.
+
+**Места рендера chips с жанрами:**
+- `frontend/src/components/BookListItem.tsx` — AuthorPage / SeriesPage
+- `frontend/src/pages/BooksPage.tsx::BookCard` — основной список `/books` (свой компонент, НЕ BookListItem)
+- `frontend/src/pages/BookDetailPage.tsx` — карточка книги (тут backend hydrate'ит `g.display` сам, useGenreMap не нужен)
+
+Если правишь логику отображения жанров — пройди по всем трём. Я дважды
+запушил фикс не во все (PR #39 → #40 follow-up).
+
+### 3. `date_added` ≠ год написания книги
+
+INPX'овский `date_added` — когда книга добавилась в библиотеку librusec, а не
+когда автор её написал. Не использовать как proxy для creation date в
+enrichment-фичах (биография, таймлайн автора, экранизации). Подробнее — в
+`~/.claude/plans/cozy-zooming-popcorn.md`, секция «Фаза 5 — биограф-таймлайн».
+
+### 4. jsdom не делает CSS layout
+
+Vitest + RTL гоняют в jsdom — `getBoundingClientRect()` всегда возвращает
+нули, `top` / `width` бессмыслены. Любые layout-чувствительные проверки
+(порядок элементов по DOM ≠ ок, нужна реальная позиция; overflow; line-clamp;
+sticky) — только Playwright e2e в `frontend/e2e/`. Это записано и в моей
+auto-memory как `feedback_visual_layout_testing`.
+
+### 5. Миграции и Seed запускаются автоматически при старте backend
+
+Не нужно отдельно `migrate up`. Логи backend покажут `migrations applied` и
+`genres dictionary seeded entries=268` сразу после healthcheck. Если seed не
+сработал — справочник пустой и фронт покажет коды жанров вместо имён
+(fallback не молчит, видно сразу).
+
+### 6. Каждая миграция — новый номер, прошедшие не править in-place
+
+Текущая верхняя — `0009_genres_clear_legacy_names`. Backend хранит applied
+version в `schema_migrations` (golang-migrate), править уже-применённые .sql
+имеет смысл только до push'а.
+
+### 7. PR'ы идут через CI + watcher, merge только когда зелёное
+
+User'ский флоу: `gh pr create` → армировать Monitor (`gh pr view --json
+state,mergedAt` + `gh pr checks`) → дождаться `[pr] MERGED`. Это записано в
+auto-memory как `feedback_pr_lifecycle_watcher`. Не объявлять задачу
+выполненной только потому что CI зелёный — merge ≠ pass.
+
+### 8. Не выдумывать семантику данных
+
+Если в `.inp`-записи попадается неизвестный маркер (например, цифра в поле
+`DEL` помимо 0/1, новое поле в `structure.info`, неожиданное значение `EXT`) —
+не гадать, что оно значит. Записать defensive-обработку с явным fallback'ом и
+TODO «уточнить у пользователя / в спеке». Это `feedback_no_invented_semantics`
+в моей auto-memory.
+
+## Где что искать (карта по реальным путям)
+
+| Я ищу… | Файл |
+|---|---|
+| Парсер INPX | `backend/internal/inpx/parser.go` |
+| INPX → upsert в PG + Meili | `backend/internal/importer/` |
+| Список книг с фильтрами/фасетами/сортировкой | `backend/internal/books/` + `backend/internal/api/books.go` |
+| Поисковая логика + re-ranking | `backend/internal/search/` |
+| Enrichment (cover, annotation, bio, adaptations) | `backend/internal/metadata/` |
+| Конвертация формата | `backend/internal/converter/fb2cng.go` |
+| OPDS-каталог | `backend/internal/opds/` |
+| HTTP-роутер | `backend/internal/api/router.go` |
+| TanStack Router маршруты | `frontend/src/router.tsx` |
+| Layout / навбар | `frontend/src/components/Layout.tsx` |
+| Команда поиска (typeahead) | `frontend/src/components/CommandPalette.tsx` |
+| Сайдбар фильтров | `frontend/src/components/FiltersSidebar.tsx` + `GroupedGenresFilter.tsx` |
+| API-клиент (fetch + auth + error toast) | `frontend/src/lib/api.ts` |
+| TanStack Query hooks | `frontend/src/lib/books.ts`, `authors.ts`, `series.ts`, `genres.ts`, и т.д. |
+| Docker compose (dev / release) | `infra/docker-compose.yml` / `infra/docker-compose.release.yml` |
+| TLS + reverse-proxy | `infra/Caddyfile` |
+
+## Что лежит вне репо (но тоже релевантно)
+
+- **Roadmap / план фаз** — `~/.claude/plans/cozy-zooming-popcorn.md`. Что
+  сделано, что в работе, что отложено и почему. Перед началом новой фичи
+  заглянуть.
+- **Auto-memory пользователя** — `~/.claude/projects/<encoded>/memory/`.
+  Personal-feedback'и (pre-commit чек, PR-watcher, no-invented-semantics,
+  visual-testing-via-Playwright). Они подгружаются автоматически в каждую
+  сессию — в этом файле их повторил коротко, чтобы новый чат на чужой машине
+  тоже знал.
+- **INP/INPX формат** — `~/.claude/projects/<encoded>/memory/inp_format.md`.
+  Спецификация полей `.inp` файла (порядок полей берётся из `structure.info`,
+  AUTHOR/GENRE — несколько через `:`, имя файла внутри zip = `FILE.EXT`).
+
+## Что НЕ делать
+
+- Не коммитить `infra/.env`, `infra/data/`, `cache/`, `pg_data/`, `meili_data/`
+  (всё в `.gitignore`, но напоминание).
+- Не амендить чужие коммиты в PR — делать новый коммит (это и user'ское
+  предпочтение по pre-commit feedback).
+- Не пушить force на main / в чужие PR-ветки.
+- Не делать `make clean` без явной просьбы — удаляет volumes со всеми данными
+  пользователя.
+- Не предлагать «давай ещё фичу» после fix'а — фокус на одной задаче, ждать
+  следующего запроса.
