@@ -23,6 +23,7 @@ import {
   type FiltersValue,
 } from '@/components/FiltersSidebar';
 import { useBooks, type BookListItem } from '@/lib/books';
+import { useGenreMap } from '@/lib/genres';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 
 const PAGE_SIZE = 20;
@@ -206,6 +207,12 @@ export function BooksPage() {
 }
 
 function BookCard({ book }: { book: BookListItem }) {
+  // book.genres из Meili-индекса — массив fb2_code'ов. Маппим в
+  // человекочитаемые display-имена через справочник /api/genres
+  // (загружается один раз и кэшируется в TanStack Query). Если код
+  // не нашёлся в словаре — fallback на сам код, чтобы не показать
+  // пустую плашку.
+  const genreMap = useGenreMap();
   return (
     <Link
       to="/books/$id"
@@ -227,7 +234,7 @@ function BookCard({ book }: { book: BookListItem }) {
             <div className="flex flex-wrap gap-1 pt-1">
               {book.genres.map((g) => (
                 <Badge key={g} variant="secondary" className="text-xs font-normal">
-                  {g}
+                  {genreMap.get(g)?.display ?? g}
                 </Badge>
               ))}
             </div>
