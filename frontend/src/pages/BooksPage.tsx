@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import type { BooksSearch } from '@/router';
 import { FilterX, Search, SlidersHorizontal } from 'lucide-react';
@@ -31,7 +32,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { useBooks, type BookListItem } from '@/lib/books';
+import { useInfiniteBooks, type BookListItem } from '@/lib/books';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 
 const PAGE_SIZE = 20;
@@ -95,13 +96,17 @@ export function BooksPage() {
     [navigate],
   );
 
-  const page = search.page ?? 0;
-  const offset = page * PAGE_SIZE;
-
-  const { data, isLoading, isFetching, error } = useBooks({
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteBooks({
     query: debouncedQuery,
     limit: PAGE_SIZE,
-    offset,
     genres: filters.genres,
     lang: filters.lang,
     yearFrom: filters.yearFrom,
@@ -111,6 +116,47 @@ export function BooksPage() {
     sort: filters.sort,
     facets: FACETS,
   });
+
+  // Бесконечная прокрутка: items со всех загруженных страниц; total и
+  // facets — из первой (они про весь запрос). meta — первая страница.
+  const firstPage = data?.pages[0];
+  const items = data?.pages.flatMap((p) => p.items) ?? [];
+
+  // Виртуализация: на коллекции 500k бесконечный скролл без неё раздувает
+  // DOM. Оконный виртуализатор (useWindowVirtualizer) — чтобы сохранить
+  // window-scroll, sticky-бар и двухколоночную вёрстку (контейнерный
+  // скролл их бы сломал). Высоты карточек разные → measureElement меряет
+  // фактическую. scrollMargin — offsetTop списка (под баром/счётчиком/
+  // чипсами), точка отсчёта оконных координат; пересчитываем при сдвиге
+  // контента выше.
+  const listRef = useRef<HTMLDivElement>(null);
+  const [scrollMargin, setScrollMargin] = useState(0);
+  // Без deps намеренно: пересчитываем offsetTop на каждом рендере (контент
+  // выше — счётчик, чипсы — может менять высоту). setState с тем же
+  // значением React бейлит → цикла нет.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    const top = listRef.current?.offsetTop ?? 0;
+    setScrollMargin((prev) => (prev !== top ? top : prev));
+  });
+
+  const virtualizer = useWindowVirtualizer({
+    count: items.length,
+    estimateSize: () => 96,
+    overscan: 8,
+    scrollMargin,
+    getItemKey: (index) => items[index]?.id ?? index,
+  });
+  const virtualItems = virtualizer.getVirtualItems();
+
+  // Автоподгрузка: как только виртуализатор дорендерил до конца уже
+  // загруженного — тянем следующую страницу (overscan даёт префетч).
+  useEffect(() => {
+    const last = virtualItems[virtualItems.length - 1];
+    if (last && last.index >= items.length - 1 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [virtualItems, items.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const totalActive =
     filters.genres.length +
@@ -133,7 +179,7 @@ export function BooksPage() {
         <FiltersSidebar
           value={filters}
           onChange={setFilters}
-          facets={data?.facets}
+          facets={firstPage?.facets}
           totalActive={totalActive}
           onReset={resetAll}
         />
@@ -211,15 +257,15 @@ export function BooksPage() {
                 <FiltersSidebar
                   value={filters}
                   onChange={setFilters}
-                  facets={data?.facets}
+                  facets={firstPage?.facets}
                   totalActive={totalActive}
                   onReset={resetAll}
                 />
               </div>
               <SheetFooter className="border-t">
                 <Button onClick={() => setFiltersOpen(false)}>
-                  {data
-                    ? `Показать ${data.total} ${pluralBooks(data.total)}`
+                  {firstPage
+                    ? `Показать ${firstPage.total} ${pluralBooks(firstPage.total)}`
                     : 'Показать'}
                 </Button>
               </SheetFooter>
@@ -228,9 +274,9 @@ export function BooksPage() {
           </div>
         </div>
 
-        {data ? (
+        {firstPage ? (
           <p className="text-sm text-muted-foreground tabular-nums">
-            {data.total} {pluralBooks(data.total)} · {data.processing_ms}мс
+            {firstPage.total} {pluralBooks(firstPage.total)} · {firstPage.processing_ms}мс
           </p>
         ) : null}
 
@@ -269,30 +315,53 @@ export function BooksPage() {
 
         {isLoading ? (
           <BookListSkeleton />
-        ) : data && data.items.length === 0 ? (
+        ) : firstPage && items.length === 0 ? (
           <p className="text-sm text-muted-foreground">Ничего не нашлось.</p>
-        ) : data ? (
-          <ul className={`space-y-3 ${isFetching ? 'opacity-70' : ''}`}>
-            {data.items.map((b) => (
-              <li key={b.id}>
-                <BookCard book={b} highlightGenres={filters.genres} />
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        ) : firstPage ? (
+          <>
+            {/* Виртуализированный список: контейнер высотой во весь набор,
+                строки позиционируются абсолютно по измеренным высотам.
+                opacity только на рефетч после смены фильтра, не на
+                подгрузку следующей страницы (иначе мигает весь список). */}
+            <div
+              ref={listRef}
+              className={isFetching && !isFetchingNextPage ? 'opacity-70' : ''}
+              style={{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }}
+            >
+              {virtualItems.map((vi) => (
+                <div
+                  key={vi.key}
+                  data-index={vi.index}
+                  ref={virtualizer.measureElement}
+                  className="pb-3"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${vi.start - scrollMargin}px)`,
+                  }}
+                >
+                  <BookCard book={items[vi.index]} highlightGenres={filters.genres} />
+                </div>
+              ))}
+            </div>
 
-        {data && data.total > PAGE_SIZE ? (
-          <Pagination
-            page={page}
-            total={data.total}
-            pageSize={PAGE_SIZE}
-            onChange={(p) =>
-              void navigate({
-                search: (prev) => ({ ...prev, page: p > 0 ? p : undefined }),
-                replace: true,
-              })
-            }
-          />
+            {hasNextPage ? (
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => void fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  {isFetchingNextPage ? 'Загрузка…' : 'Показать ещё'}
+                </Button>
+              </div>
+            ) : items.length > 0 ? (
+              <p className="pt-2 text-center text-xs text-muted-foreground">Это все книги</p>
+            ) : null}
+          </>
         ) : null}
       </div>
     </div>
@@ -361,42 +430,6 @@ function BookListSkeleton() {
         </li>
       ))}
     </ul>
-  );
-}
-
-function Pagination({
-  page,
-  total,
-  pageSize,
-  onChange,
-}: {
-  page: number;
-  total: number;
-  pageSize: number;
-  onChange: (p: number) => void;
-}) {
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const isFirst = page === 0;
-  const isLast = page >= totalPages - 1;
-  return (
-    <div className="flex items-center justify-between text-sm">
-      <span className="text-muted-foreground">
-        Страница {page + 1} из {totalPages}
-      </span>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={isFirst}
-          onClick={() => onChange(Math.max(0, page - 1))}
-        >
-          Назад
-        </Button>
-        <Button variant="outline" size="sm" disabled={isLast} onClick={() => onChange(page + 1)}>
-          Вперёд
-        </Button>
-      </div>
-    </div>
   );
 }
 
