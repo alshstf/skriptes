@@ -138,6 +138,38 @@ describe('BooksPage', () => {
     expect(screen.queryByText('sf_action')).not.toBeInTheDocument();
   });
 
+  it('карточка показывает обложку-thumbnail когда есть cover_path', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string | Request) => {
+        const u = typeof url === 'string' ? url : url.url;
+        if (u.includes('/api/genres')) {
+          return new Response(JSON.stringify({ items: [] }), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          });
+        }
+        // Первой книге даём cover_path → должен отрендериться <img>.
+        const withCover = {
+          ...fixture,
+          items: [{ ...fixture.items[0], cover_path: 'abc123.jpg' }, fixture.items[1]],
+        };
+        return new Response(JSON.stringify(withCover), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }),
+    );
+    render(wrap(<BooksPage />));
+    const img = await screen.findByRole('img', { name: 'Обложка: Кадетский корпус. Книга 2' });
+    expect(img).toHaveAttribute('src', '/api/covers/abc123.jpg');
+    // Вторая книга без cover_path → монограм-плейсхолдер (role=img,
+    // aria-label без «загружается», внутри — первая буква названия).
+    const placeholder = screen.getByRole('img', { name: 'Обложка: Гост' });
+    expect(placeholder).toBeInTheDocument();
+    expect(placeholder).toHaveTextContent('Г');
+  });
+
   it('debounces search input before sending the request', async () => {
     const user = userEvent.setup();
     render(wrap(<BooksPage />));

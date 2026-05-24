@@ -19,6 +19,16 @@ describe('BookCover', () => {
     expect(screen.getByText('Без обложки')).toBeInTheDocument();
   });
 
+  it('renders monogram placeholder (первая буква) when placeholder="monogram"', () => {
+    render(<BookCover title="Гост" placeholder="monogram" />);
+    const ph = screen.getByRole('img', { name: 'Обложка: Гост' });
+    expect(ph.tagName).not.toBe('IMG'); // div с role
+    expect(ph).toHaveTextContent('Г'); // первая буква названия
+    // монограм НЕ показывает «загружается» — это финальное состояние, а
+    // не индикатор загрузки.
+    expect(screen.queryByText(/загружается/)).not.toBeInTheDocument();
+  });
+
   it('keeps same aspect class so swap does not shift layout', () => {
     const { rerender, container } = render(<BookCover title="X" />);
     const placeholderClass = container.firstElementChild?.className ?? '';

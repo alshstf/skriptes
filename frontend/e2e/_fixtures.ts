@@ -30,6 +30,7 @@ export const bookListFixture = {
       year: 2023,
       lang: 'ru',
       lib_id: '749080',
+      cover_path: 'abc123.jpg',
     },
   ],
   total: 1,

@@ -13,6 +13,9 @@ export type BookListItem = {
   lang?: string;
   lib_id: string;
   is_favorite?: boolean;
+  // cover_path догидрачивается backend'ом из Postgres (в Meili-индексе
+  // обложек нет). Пусто, если обложка ещё не обогащена → placeholder.
+  cover_path?: string;
 };
 
 export type FacetDistribution = Record<string, Record<string, number>>;
