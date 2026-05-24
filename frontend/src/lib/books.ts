@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 export type BookListItem = {
@@ -89,34 +95,50 @@ export type Book = {
   reading_fraction?: number;
 };
 
+function buildBooksParams(opts: BookFilters, limit: number, offset: number): string {
+  const params = new URLSearchParams();
+  if (opts.query) params.set('q', opts.query);
+  params.set('limit', String(limit));
+  params.set('offset', String(offset));
+  if (opts.genres && opts.genres.length > 0) params.set('genres', opts.genres.join(','));
+  if (opts.lang) params.set('lang', opts.lang);
+  if (opts.yearFrom) params.set('year_from', String(opts.yearFrom));
+  if (opts.yearTo) params.set('year_to', String(opts.yearTo));
+  if (opts.seriesId) params.set('series_id', String(opts.seriesId));
+  if (opts.authorId) params.set('author_id', String(opts.authorId));
+  if (opts.sort) params.set('sort', opts.sort);
+  if (opts.facets && opts.facets.length > 0) params.set('facets', opts.facets.join(','));
+  return params.toString();
+}
+
 /**
- * useBooks — список/поиск книг с фильтрами, сортировкой и facet-counts.
+ * useInfiniteBooks — список/поиск книг бесконечной прокруткой.
  *
- * keepPreviousData чтобы при наборе текста UI не моргал в скелетон между
- * каждым нажатием — старый список остаётся видимым пока не подъедет новый.
+ * Вместо страничной пагинации (offset в URL) подгружаем следующие
+ * страницы по мере скролла (BooksPage вешает IntersectionObserver на
+ * sentinel + кнопку «Показать ещё»). pageParam — offset; следующая
+ * страница есть пока offset+limit < total.
  *
- * queryKey включает все параметры — react-query сам инвалидирует кэш
- * при их смене.
+ * placeholderData: keepPreviousData — при смене фильтра/поиска старый
+ * список виден пока подъезжает новый (не моргаем в скелетон). queryKey
+ * включает все параметры → смена фильтра начинает infinite-набор заново
+ * с offset 0.
+ *
+ * facets/total берём из первой страницы (они про весь запрос, одинаковы
+ * на всех страницах).
  */
-export function useBooks(opts: BookFilters) {
+export function useInfiniteBooks(opts: Omit<BookFilters, 'offset'>) {
   const limit = opts.limit ?? 20;
-  const offset = opts.offset ?? 0;
-  return useQuery<BookListResponse>({
-    queryKey: ['books', { ...opts, limit, offset }],
-    queryFn: ({ signal }) => {
-      const params = new URLSearchParams();
-      if (opts.query) params.set('q', opts.query);
-      params.set('limit', String(limit));
-      params.set('offset', String(offset));
-      if (opts.genres && opts.genres.length > 0) params.set('genres', opts.genres.join(','));
-      if (opts.lang) params.set('lang', opts.lang);
-      if (opts.yearFrom) params.set('year_from', String(opts.yearFrom));
-      if (opts.yearTo) params.set('year_to', String(opts.yearTo));
-      if (opts.seriesId) params.set('series_id', String(opts.seriesId));
-      if (opts.authorId) params.set('author_id', String(opts.authorId));
-      if (opts.sort) params.set('sort', opts.sort);
-      if (opts.facets && opts.facets.length > 0) params.set('facets', opts.facets.join(','));
-      return apiFetch<BookListResponse>(`/api/books?${params.toString()}`, { signal });
+  return useInfiniteQuery({
+    queryKey: ['books-infinite', { ...opts, limit }],
+    initialPageParam: 0,
+    queryFn: ({ pageParam, signal }) =>
+      apiFetch<BookListResponse>(`/api/books?${buildBooksParams(opts, limit, pageParam)}`, {
+        signal,
+      }),
+    getNextPageParam: (lastPage) => {
+      const next = lastPage.offset + lastPage.limit;
+      return next < lastPage.total ? next : undefined;
     },
     placeholderData: keepPreviousData,
     staleTime: 10_000,
