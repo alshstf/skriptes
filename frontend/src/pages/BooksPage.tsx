@@ -14,7 +14,8 @@ type BooksNavigate = (opts: {
 }) => void;
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BookCover } from '@/components/BookCover';
+import { GenreChips } from '@/components/GenreChips';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +32,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useBooks, type BookListItem } from '@/lib/books';
-import { useGenreMap } from '@/lib/genres';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 
 const PAGE_SIZE = 20;
@@ -126,7 +126,7 @@ export function BooksPage() {
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-[260px_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-[260px_minmax(0,1fr)]">
       {/* Десктоп: фильтры — постоянный sidebar. На мобильном прячем
           (md:block), там фильтры живут в drawer по кнопке ниже. */}
       <div className="hidden md:block">
@@ -275,7 +275,7 @@ export function BooksPage() {
           <ul className={`space-y-3 ${isFetching ? 'opacity-70' : ''}`}>
             {data.items.map((b) => (
               <li key={b.id}>
-                <BookCard book={b} />
+                <BookCard book={b} highlightGenres={filters.genres} />
               </li>
             ))}
           </ul>
@@ -299,53 +299,65 @@ export function BooksPage() {
   );
 }
 
-function BookCard({ book }: { book: BookListItem }) {
-  // book.genres из Meili-индекса — массив fb2_code'ов. Маппим в
-  // человекочитаемые display-имена через справочник /api/genres
-  // (загружается один раз и кэшируется в TanStack Query). Если код
-  // не нашёлся в словаре — fallback на сам код, чтобы не показать
-  // пустую плашку.
-  const genreMap = useGenreMap();
+function BookCard({
+  book,
+  highlightGenres,
+}: {
+  book: BookListItem;
+  highlightGenres?: string[];
+}) {
+  // Вся карточка кликабельна и ведёт на деталку — паттерн «stretched
+  // link»: ссылка висит на заголовке, а её ::after растягивается на всю
+  // площадь карточки (родитель relative). Это позволяет держать внутри
+  // интерактивный «островок» (поповер «+N» в GenreChips) без вложения
+  // <button> в <a> — недопустимого и ломающего навигацию. «+N» поднят
+  // над ::after через relative z-10.
   return (
-    <Link
-      to="/books/$id"
-      params={{ id: String(book.id) }}
-      className="block rounded-md transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
-    >
-      <Card className="border-transparent bg-transparent shadow-none">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium leading-tight">{book.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-1">
-          {book.authors && book.authors.length > 0 ? (
-            <p className="text-sm text-muted-foreground">{book.authors.join(', ')}</p>
-          ) : null}
-          {book.series ? (
-            <p className="text-xs text-muted-foreground">Серия: {book.series}</p>
-          ) : null}
-          {book.genres && book.genres.length > 0 ? (
-            <div className="flex flex-wrap gap-1 pt-1">
-              {book.genres.map((g) => (
-                <Badge key={g} variant="secondary" className="text-xs font-normal">
-                  {genreMap.get(g)?.display ?? g}
-                </Badge>
-              ))}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
-    </Link>
+    <div className="relative flex gap-3 rounded-md p-2 transition hover:bg-accent/40 sm:p-3">
+      <BookCover
+        coverPath={book.cover_path}
+        title={book.title}
+        placeholder="monogram"
+        className="w-12 sm:w-14"
+      />
+      <div className="min-w-0 flex-1 space-y-0.5">
+        <h3 className="font-medium leading-snug line-clamp-2">
+          <Link
+            to="/books/$id"
+            params={{ id: String(book.id) }}
+            className="rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            {book.title}
+          </Link>
+        </h3>
+        {book.authors && book.authors.length > 0 ? (
+          <p className="text-sm text-muted-foreground line-clamp-1">{book.authors.join(', ')}</p>
+        ) : null}
+        {book.series ? (
+          <p className="text-xs text-muted-foreground line-clamp-1">Серия: {book.series}</p>
+        ) : null}
+        {book.genres && book.genres.length > 0 ? (
+          <GenreChips genres={book.genres} highlight={highlightGenres} />
+        ) : null}
+      </div>
+    </div>
   );
 }
 
 function BookListSkeleton() {
+  // Зеркалит горизонтальный layout BookCard: thumbnail-обложка слева +
+  // строки текста справа — чтобы при подмене skeleton'а на данные не
+  // было layout-сдвига.
   return (
     <ul className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
-        <li key={i} className="space-y-2 rounded-md border border-border p-4">
-          <Skeleton className="h-4 w-2/3" />
-          <Skeleton className="h-3 w-1/3" />
-          <Skeleton className="h-3 w-1/4" />
+        <li key={i} className="flex gap-3 p-2 sm:p-3">
+          <Skeleton className="aspect-[2/3] w-12 shrink-0 rounded-md sm:w-14" />
+          <div className="min-w-0 flex-1 space-y-2 pt-1">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-3 w-1/3" />
+            <Skeleton className="h-3 w-1/4" />
+          </div>
         </li>
       ))}
     </ul>

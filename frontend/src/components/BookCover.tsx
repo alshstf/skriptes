@@ -9,23 +9,29 @@ import { cn } from '@/lib/utils';
  *     ОДИН и тот же размер (fixed width + aspect-[2/3]) — при подмене
  *     карточка не "прыгает".
  *  2. Пустое место без обратной связи: пока обложки нет, рисуем
- *     приятный плейсхолдер с иконкой и названием книги в углу.
+ *     плейсхолдер.
  *
- * Когда `cover_path` приходит в ответе useBook (через polling), компонент
- * естественно перерисовывается через React — без перезагрузки страницы.
+ * Два вида плейсхолдера (`placeholder`):
+ *  - 'icon' (дефолт) — иконка + название книги. Для больших обложек
+ *    (карточка книги), где обложка вот-вот подтянется через polling.
+ *  - 'monogram' — компактный цветной тайл с первой буквой названия.
+ *    Для маленьких thumbnail'ов в списках: пустая иконка там «отъедает
+ *    место», а монограм выглядит как осознанный аватар. Цвет
+ *    детерминирован по названию.
  *
  * `aspect-[2/3]` — типичная пропорция книжной обложки. Width задаётся
- * через className родителем, чтобы можно было использовать разный
- * размер на разных страницах.
+ * через className родителем.
  */
 export function BookCover({
   coverPath,
   title,
   className,
+  placeholder = 'icon',
 }: {
   coverPath?: string;
   title: string;
   className?: string;
+  placeholder?: 'icon' | 'monogram';
 }) {
   const base = cn(
     'aspect-[2/3] rounded-md border border-border bg-muted shadow-sm overflow-hidden shrink-0 self-start',
@@ -41,6 +47,19 @@ export function BookCover({
       />
     );
   }
+  if (placeholder === 'monogram') {
+    const letter = title.trim().charAt(0).toUpperCase() || '?';
+    return (
+      <div
+        className={cn(base, 'flex items-center justify-center font-semibold text-white')}
+        style={{ backgroundColor: monogramColor(title) }}
+        role="img"
+        aria-label={`Обложка: ${title}`}
+      >
+        <span className="text-lg sm:text-xl">{letter}</span>
+      </div>
+    );
+  }
   return (
     <div
       className={cn(base, 'flex flex-col items-center justify-center gap-2 p-3 text-muted-foreground')}
@@ -51,4 +70,15 @@ export function BookCover({
       <span className="text-xs line-clamp-3 text-center">{title}</span>
     </div>
   );
+}
+
+// monogramColor — детерминированный приглушённый цвет фона по названию.
+// HSL с фиксированными S/L (читаемо с белой буквой и в тёмной теме),
+// варьируем только hue по простому хешу строки.
+function monogramColor(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash * 31 + title.charCodeAt(i)) % 360;
+  }
+  return `hsl(${hash} 42% 32%)`;
 }

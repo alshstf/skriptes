@@ -99,8 +99,34 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 // Безопасно вызывать из горутины, отвязанной от HTTP-запроса
 // (использует свой контекст с deadline'ом).
 func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
+	e.ensureCover(ctx, q, acceptAllCover, true)
+}
+
+// EnsureCoverLocal — как EnsureCover, но обходит ТОЛЬКО local-провайдеры
+// (fb2, без внешних API). Используется фоновым прогревом: fb2-обложка
+// есть у ~99% книг и достаётся локально из zip без rate-limit'ов.
+//
+// Отличие от EnsureCover: при промахе НЕ ставит metadata_fetched_at —
+// чтобы ленивый внешний путь (OL/GB при открытии карточки) всё ещё мог
+// сработать для редких книг без fb2-обложки. Отметку «прогрето» ставит
+// сам прогрев (Prewarmer), чтобы не молотить промахи каждый цикл.
+//
+// Возвращает true, если обложка сохранена.
+func (e *Enricher) EnsureCoverLocal(ctx context.Context, q BookQuery) bool {
+	return e.ensureCover(ctx, q, isLocalCover, false)
+}
+
+// ensureCover — общая реализация: обходит coverProviders, прошедшие
+// фильтр accept, на первом успехе сохраняет и возвращает true. Если
+// markOnMiss=true и никто не нашёл — ставит metadata_fetched_at.
+func (e *Enricher) ensureCover(
+	ctx context.Context,
+	q BookQuery,
+	accept func(CoverProvider) bool,
+	markOnMiss bool,
+) bool {
 	if !e.tryLock(e.inflightCover, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightCover, q.ID)
 
@@ -109,13 +135,16 @@ func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
 	var coverPath *string
 	if err := e.pool.QueryRow(ctx, `SELECT cover_path FROM books WHERE id = $1`, q.ID).Scan(&coverPath); err != nil {
 		e.logger.Warn("metadata: query book cover_path failed", "book_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if coverPath != nil && *coverPath != "" {
-		return
+		return false
 	}
 
 	for _, p := range e.coverProviders {
+		if !accept(p) {
+			continue
+		}
 		img, err := p.FetchCover(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
@@ -138,40 +167,65 @@ func (e *Enricher) EnsureCover(ctx context.Context, q BookQuery) {
 			continue
 		}
 		e.logger.Info("metadata: cover saved", "provider", p.Name(), "book_id", q.ID, "file", filename)
-		return
+		return true
 	}
 
-	// Никто не нашёл — помечаем попытку, чтобы не молотить каждый
-	// открыты карточки. Через TTL можно будет ретраиться.
-	if _, err := e.pool.Exec(ctx,
-		`UPDATE books SET metadata_fetched_at = now() WHERE id = $1`, q.ID,
-	); err != nil {
-		e.logger.Warn("metadata: mark fetched_at failed", "book_id", q.ID, "err", err)
+	if markOnMiss {
+		// Никто не нашёл — помечаем попытку, чтобы не молотить каждый
+		// открытие карточки. Через TTL можно будет ретраиться.
+		if _, err := e.pool.Exec(ctx,
+			`UPDATE books SET metadata_fetched_at = now() WHERE id = $1`, q.ID,
+		); err != nil {
+			e.logger.Warn("metadata: mark fetched_at failed", "book_id", q.ID, "err", err)
+		}
 	}
+	return false
 }
 
 // EnsureAnnotation — параллель EnsureCover для текстового описания.
 // Если у книги уже есть annotation — мгновенно выходит. Иначе обходит
 // annotationProviders, первый непустой результат пишется в books.annotation.
 func (e *Enricher) EnsureAnnotation(ctx context.Context, q BookQuery) {
+	e.ensureAnnotation(ctx, q, acceptAllAnnotation)
+}
+
+// EnsureAnnotationLocal — как EnsureAnnotation, но только local-провайдеры
+// (fb2 <annotation>, без внешних API). Для фонового прогрева. Возвращает
+// true, если аннотация сохранена.
+func (e *Enricher) EnsureAnnotationLocal(ctx context.Context, q BookQuery) bool {
+	return e.ensureAnnotation(ctx, q, isLocalAnnotation)
+}
+
+// ensureAnnotation — общая реализация: обходит annotationProviders,
+// прошедшие фильтр accept, первый непустой результат пишет в БД.
+// metadata_fetched_at на промахе НЕ ставит (в отличие от cover) —
+// аннотация менее критична, отметку «прогрето» ставит Prewarmer.
+func (e *Enricher) ensureAnnotation(
+	ctx context.Context,
+	q BookQuery,
+	accept func(AnnotationProvider) bool,
+) bool {
 	if len(e.annotationProviders) == 0 {
-		return
+		return false
 	}
 	if !e.tryLock(e.inflightAnnotate, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightAnnotate, q.ID)
 
 	var existing *string
 	if err := e.pool.QueryRow(ctx, `SELECT annotation FROM books WHERE id = $1`, q.ID).Scan(&existing); err != nil {
 		e.logger.Warn("metadata: query book annotation failed", "book_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if existing != nil && *existing != "" {
-		return
+		return false
 	}
 
 	for _, p := range e.annotationProviders {
+		if !accept(p) {
+			continue
+		}
 		text, err := p.FetchAnnotation(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
@@ -191,8 +245,30 @@ func (e *Enricher) EnsureAnnotation(ctx context.Context, q BookQuery) {
 			continue
 		}
 		e.logger.Info("metadata: annotation saved", "provider", p.Name(), "book_id", q.ID, "len", len(text))
-		return
+		return true
 	}
+	return false
+}
+
+// ── provider filters ────────────────────────────────────────────
+
+// localProvider — опциональный маркер провайдера, не ходящего в сеть
+// (читает из наших же файлов). Реализуется Fb2Provider'ом. Прогрев
+// использует только такие, чтобы не упереться в rate-limit внешних API.
+type localProvider interface{ Local() bool }
+
+func acceptAllCover(CoverProvider) bool { return true }
+
+func isLocalCover(p CoverProvider) bool {
+	lp, ok := p.(localProvider)
+	return ok && lp.Local()
+}
+
+func acceptAllAnnotation(AnnotationProvider) bool { return true }
+
+func isLocalAnnotation(p AnnotationProvider) bool {
+	lp, ok := p.(localProvider)
+	return ok && lp.Local()
 }
 
 // saveCover — пишет байты в /cache/covers/{sha256}.{ext} и возвращает

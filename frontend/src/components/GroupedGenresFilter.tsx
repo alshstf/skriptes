@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronRight, Minus } from 'lucide-react';
+import { ChevronRight, Minus, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { useGenres, type GenreItem } from '@/lib/genres';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +40,12 @@ export function GroupedGenresFilter({
 }) {
   const genresQ = useGenres();
 
+  // Контекстный поиск по жанру: жанров сотни, без фильтра найти нужный
+  // сложно. Фильтруем по имени жанра ИЛИ имени категории (тогда видно всю
+  // категорию). Совпавшие категории авто-раскрываются (см. isOpen ниже).
+  const [query, setQuery] = useState('');
+  const q = query.trim().toLowerCase();
+
   // Группируем leaf'ы по category_name. Категория «Прочее» создаётся
   // только если есть leaf'ы без parent (legacy данные); в production
   // после Seed практически все жанры имеют parent_id, эта группа пуста.
@@ -47,10 +54,21 @@ export function GroupedGenresFilter({
   // категории упорядочены по effective count (facets[code] ?? book_count)
   // desc — популярные сверху. Это удобнее алфавита: первым видишь
   // «Фантастика (7)», а не «Военное дело (1)».
-  const groups = useMemo(
-    () => groupByCategory(genresQ.data ?? [], selected, facets),
-    [genresQ.data, selected, facets],
-  );
+  //
+  // При активном поиске сначала фильтруем items — тогда счётчики и
+  // tri-state категории консистентны с тем, что показано (select-all
+  // тогда выбирает все ВИДИМЫЕ совпавшие).
+  const groups = useMemo(() => {
+    const all = genresQ.data ?? [];
+    const items = q
+      ? all.filter(
+          (it) =>
+            (it.display ?? '').toLowerCase().includes(q) ||
+            (it.category_name ?? '').toLowerCase().includes(q),
+        )
+      : all;
+    return groupByCategory(items, selected, facets);
+  }, [genresQ.data, selected, facets, q]);
 
   // Какие категории раскрыты. По дефолту — те, в которых хоть один
   // selected leaf. При изменении selection (через ActiveFilterChips
@@ -74,7 +92,8 @@ export function GroupedGenresFilter({
       </div>
     );
   }
-  if (groups.length === 0) {
+  // Нет жанров вообще (не результат поиска) — прячем секцию целиком.
+  if ((genresQ.data ?? []).length === 0) {
     return null;
   }
 
@@ -113,10 +132,29 @@ export function GroupedGenresFilter({
   return (
     <div className="space-y-2">
       <div className="text-xs font-medium text-muted-foreground uppercase">Жанры</div>
-      <ul className="space-y-0.5 max-h-96 overflow-y-auto pr-1">
-        {groups.map((g) => {
-          const isOpen = expanded.has(g.name);
-          return (
+      <div className="relative">
+        <Search
+          className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground"
+          aria-hidden
+        />
+        <Input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск жанра…"
+          aria-label="Поиск жанра"
+          className="h-8 pl-7 text-sm"
+        />
+      </div>
+      {groups.length === 0 ? (
+        <div className="px-1 py-2 text-xs italic text-muted-foreground">Ничего не найдено</div>
+      ) : (
+        <ul className="space-y-0.5 max-h-96 overflow-y-auto pr-1">
+          {groups.map((g) => {
+            // При активном поиске раскрываем все показанные категории,
+            // чтобы найденные жанры были сразу видны.
+            const isOpen = q !== '' || expanded.has(g.name);
+            return (
             <li key={g.name} className="space-y-0.5">
               <CategoryRow
                 group={g}
@@ -138,9 +176,10 @@ export function GroupedGenresFilter({
                 </ul>
               ) : null}
             </li>
-          );
-        })}
-      </ul>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

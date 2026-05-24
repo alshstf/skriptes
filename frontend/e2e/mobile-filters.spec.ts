@@ -67,6 +67,14 @@ test.describe('mobile /books (375px)', () => {
     await expect(page.getByRole('button', { name: 'Сбросить фильтры' })).toBeHidden();
   });
 
+  test('карточка книги показывает обложку-thumbnail', async ({ mockedPage: page }) => {
+    await page.goto('/books');
+    // bookListFixture отдаёт cover_path → BookCard рисует <img> слева.
+    const img = page.getByRole('img', { name: /Обложка: Кадетский корпус/ });
+    await expect(img).toBeVisible({ timeout: 10_000 });
+    await expect(img).toHaveAttribute('src', /\/api\/covers\/abc123\.jpg/);
+  });
+
   test('бар поиска прилипает к верху при скролле', async ({ mockedPage: page }) => {
     await page.goto('/books');
     const input = page.getByPlaceholder('Поиск по названию или автору');
@@ -74,6 +82,19 @@ test.describe('mobile /books (375px)', () => {
     // sticky-обёртка бара (родитель flex-строки) имеет position: sticky.
     const bar = page.locator('.sticky').filter({ has: input });
     await expect(bar).toHaveCSS('position', 'sticky');
+  });
+
+  test('контекстный поиск жанра внутри drawer фильтрует список', async ({ mockedPage: page }) => {
+    await page.goto('/books');
+    await page.getByRole('button', { name: 'Фильтры', exact: true }).click();
+    const sheet = page.locator('[data-slot="sheet-content"]');
+    await expect(sheet.getByText('Фантастика')).toBeVisible();
+    // Печатаем «проза» → совпадает категория «Проза» (фикстура _fixtures).
+    await sheet.getByLabel('Поиск жанра').fill('проза');
+    await expect(sheet.getByText('Проза')).toBeVisible();
+    await expect(sheet.getByText('Сетевая литература')).toBeVisible(); // leaf раскрыт
+    // Несовпавшая «Фантастика» отфильтрована.
+    await expect(sheet.getByText('Фантастика')).toBeHidden();
   });
 
   test('бейдж на кнопке показывает число активных фильтров', async ({ mockedPage: page }) => {

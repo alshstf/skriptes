@@ -120,6 +120,27 @@ func TestService_ListAndGet(t *testing.T) {
 		require.Contains(t, it.Genres, "sf_action", "при фильтре genres=sf_action все книги должны иметь этот жанр")
 	}
 
+	// ── cover_path догидрачивается из Postgres в список.
+	//    Meili обложек не хранит — проставляем cover_path напрямую в БД
+	//    (как это делает enrichment) и проверяем, что List вернул его на
+	//    нужной книге, а на остальных он пуст.
+	_, err = pool.Exec(ctx, `UPDATE books SET cover_path = $1 WHERE id = $2`, "deadbeef.jpg", bookID)
+	require.NoError(t, err)
+	res, err = svc.List(ctx, books.ListParams{Limit: 50})
+	require.NoError(t, err)
+	var covered, withPath int
+	for _, it := range res.Items {
+		if it.ID == bookID {
+			covered++
+			require.Equal(t, "deadbeef.jpg", it.CoverPath, "cover_path должен догидрачиваться на список")
+		}
+		if it.CoverPath != "" {
+			withPath++
+		}
+	}
+	require.Equal(t, 1, covered, "книга с известным id должна быть в списке ровно один раз")
+	require.Equal(t, 1, withPath, "cover_path должен стоять только у обогащённой книги")
+
 	// ── Фильтр по языку: должны вернуться только русские.
 	res, err = svc.List(ctx, books.ListParams{Lang: "ru", Limit: 50})
 	require.NoError(t, err)

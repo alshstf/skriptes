@@ -127,6 +127,16 @@ func run() error {
 	}
 	logger.Info("metadata enricher ready", "cover_root", filepath.Join(cfg.CacheRoot, "covers"))
 
+	// Фоновый прогрев fb2-обложек и аннотаций (local-only) — чтобы список
+	// книг был с обложками, а не с пустыми плейсхолдерами. Долгоживущая
+	// горутина: прогреть всё → поспать → пересканировать (ловит
+	// свежеимпортированные книги без рестарта). Отключается
+	// SKRIPTES_COVER_PREWARM=false.
+	if cfg.CoverPrewarm {
+		prewarmer := metadata.NewPrewarmer(enricher, pool, cfg.BooksRoot, cfg.CoverPrewarmWorkers, logger)
+		go prewarmer.Run(ctx())
+	}
+
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
 	// и handler сам отдаст 503 на send.

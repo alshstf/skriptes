@@ -45,6 +45,11 @@ func NewFb2Provider() *Fb2Provider { return &Fb2Provider{} }
 
 func (p *Fb2Provider) Name() string { return "fb2" }
 
+// Local помечает провайдер как не ходящий в сеть (читает обложку и
+// аннотацию из нашего же zip-архива). Фоновый прогрев использует только
+// такие провайдеры — без rate-limit'ов внешних API. См. localProvider.
+func (p *Fb2Provider) Local() bool { return true }
+
 // FetchAnnotation — текстовое описание книги из тега
 // <description><title-info><annotation> внутри fb2.
 //

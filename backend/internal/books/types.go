@@ -49,6 +49,12 @@ type ListItem struct {
 	Year   *int     `json:"year,omitempty"`
 	Lang   string   `json:"lang,omitempty"`
 	LibID  string   `json:"lib_id"`
+	// CoverPath — относительный путь до обложки (если уже обогащена).
+	// В Meili-индексе его нет (обложки проставляются лениво после
+	// индексации), поэтому List догидрачивает его из Postgres по id
+	// текущей страницы. Пусто, если обложка ещё не скачана — фронт
+	// тогда показывает placeholder.
+	CoverPath string `json:"cover_path,omitempty"`
 	// IsFavorite — user-specific флаг "книга в избранном текущего
 	// пользователя". Заполняется не в books-сервисе (он user-agnostic),
 	// а в api-handler'ах, которые знают про сессию.

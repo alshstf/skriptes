@@ -272,6 +272,48 @@ describe('FiltersSidebar', () => {
     expect(onReset).toHaveBeenCalled();
   });
 
+  it('контекстный поиск по жанру фильтрует список и раскрывает совпавшее', async () => {
+    const user = userEvent.setup();
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await screen.findByText('Фантастика');
+    const search = screen.getByLabelText('Поиск жанра');
+    await user.type(search, 'детектив');
+    // «Детективы и Триллеры» совпадает по имени категории → видна и
+    // раскрыта (leaf виден сразу).
+    expect(screen.getByText('Детективы и Триллеры')).toBeInTheDocument();
+    expect(screen.getByText('Классический детектив')).toBeInTheDocument();
+    // Несовпавшие категории/жанры отфильтрованы.
+    expect(screen.queryByText('Фантастика')).not.toBeInTheDocument();
+    expect(screen.queryByText('Боевая фантастика')).not.toBeInTheDocument();
+    expect(screen.queryByText('Прочее')).not.toBeInTheDocument();
+  });
+
+  it('поиск без совпадений показывает «Ничего не найдено»', async () => {
+    const user = userEvent.setup();
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    await screen.findByText('Фантастика');
+    await user.type(screen.getByLabelText('Поиск жанра'), 'zzzнеттакого');
+    expect(screen.getByText('Ничего не найдено')).toBeInTheDocument();
+  });
+
   it('selecting a sort option triggers onChange', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
