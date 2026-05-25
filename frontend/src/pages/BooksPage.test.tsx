@@ -138,36 +138,17 @@ describe('BooksPage', () => {
     expect(screen.queryByText('sf_action')).not.toBeInTheDocument();
   });
 
-  it('карточка показывает обложку-thumbnail когда есть cover_path', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (url: string | Request) => {
-        const u = typeof url === 'string' ? url : url.url;
-        if (u.includes('/api/genres')) {
-          return new Response(JSON.stringify({ items: [] }), {
-            status: 200,
-            headers: { 'content-type': 'application/json' },
-          });
-        }
-        // Первой книге даём cover_path → должен отрендериться <img>.
-        const withCover = {
-          ...fixture,
-          items: [{ ...fixture.items[0], cover_path: 'abc123.jpg' }, fixture.items[1]],
-        };
-        return new Response(JSON.stringify(withCover), {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        });
-      }),
-    );
+  it('карточки книг запрашивают обложку on-demand по id', async () => {
     render(wrap(<BooksPage />));
-    const img = await screen.findByRole('img', { name: 'Обложка: Кадетский корпус. Книга 2' });
-    expect(img).toHaveAttribute('src', '/api/covers/abc123.jpg');
-    // Вторая книга без cover_path → монограм-плейсхолдер (role=img,
-    // aria-label без «загружается», внутри — первая буква названия).
-    const placeholder = screen.getByRole('img', { name: 'Обложка: Гост' });
-    expect(placeholder).toBeInTheDocument();
-    expect(placeholder).toHaveTextContent('Г');
+    // Список ходит за обложкой по id книги (on-demand извлечение на
+    // бэке), без зависимости от cover_path. Монограм-fallback на 404
+    // живёт в onError <img> — в jsdom не срабатывает (картинки не
+    // грузятся), поэтому тут проверяем сам src; fallback покрыт в
+    // BookCover.test.
+    const img1 = await screen.findByRole('img', { name: 'Обложка: Кадетский корпус. Книга 2' });
+    expect(img1).toHaveAttribute('src', '/api/covers/book/1');
+    const img2 = screen.getByRole('img', { name: 'Обложка: Гост' });
+    expect(img2).toHaveAttribute('src', '/api/covers/book/2');
   });
 
   it('debounces search input before sending the request', async () => {

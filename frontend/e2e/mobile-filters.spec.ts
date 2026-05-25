@@ -67,12 +67,14 @@ test.describe('mobile /books (375px)', () => {
     await expect(page.getByRole('button', { name: 'Сбросить фильтры' })).toBeHidden();
   });
 
-  test('карточка книги показывает обложку-thumbnail', async ({ mockedPage: page }) => {
+  test('карточка книги показывает обложку-thumbnail (on-demand by-id)', async ({
+    mockedPage: page,
+  }) => {
     await page.goto('/books');
-    // bookListFixture отдаёт cover_path → BookCard рисует <img> слева.
+    // Список запрашивает обложку on-demand по id книги (19 в фикстуре).
     const img = page.getByRole('img', { name: /Обложка: Кадетский корпус/ });
     await expect(img).toBeVisible({ timeout: 10_000 });
-    await expect(img).toHaveAttribute('src', /\/api\/covers\/abc123\.jpg/);
+    await expect(img).toHaveAttribute('src', /\/api\/covers\/book\/19/);
   });
 
   test('бар поиска прилипает к верху при скролле', async ({ mockedPage: page }) => {

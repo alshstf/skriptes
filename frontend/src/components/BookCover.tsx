@@ -1,52 +1,62 @@
+import { useEffect, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
  * BookCover — обложка книги с плейсхолдером.
  *
- * Решает две UX-проблемы lazy-enrichment'а:
- *  1. Layout-сдвиг: и плейсхолдер, и реальная картинка занимают
- *     ОДИН и тот же размер (fixed width + aspect-[2/3]) — при подмене
- *     карточка не "прыгает".
- *  2. Пустое место без обратной связи: пока обложки нет, рисуем
- *     плейсхолдер.
+ * Источник картинки: либо `src` (готовый URL, напр. on-demand
+ * `/api/covers/book/{id}`), либо `coverPath` (content-addressable имя →
+ * `/api/covers/{coverPath}`). Если картинка не загрузилась (404 — у книги
+ * нет обложки, или файл вытеснен из кэша) → `onError` переключает на
+ * плейсхолдер. Так список с on-demand-обложками не показывает «битую
+ * картинку»: что есть — грузится, чего нет — плейсхолдер.
  *
  * Два вида плейсхолдера (`placeholder`):
- *  - 'icon' (дефолт) — иконка + название книги. Для больших обложек
- *    (карточка книги), где обложка вот-вот подтянется через polling.
- *  - 'monogram' — компактный цветной тайл с первой буквой названия.
- *    Для маленьких thumbnail'ов в списках: пустая иконка там «отъедает
- *    место», а монограм выглядит как осознанный аватар. Цвет
- *    детерминирован по названию.
+ *  - 'icon' (дефолт) — иконка + название (для крупной обложки на карточке);
+ *  - 'monogram' — компактный цветной тайл с первой буквой (для thumbnail
+ *    в списках).
  *
- * `aspect-[2/3]` — типичная пропорция книжной обложки. Width задаётся
- * через className родителем.
+ * `aspect-[2/3]` — типичная пропорция книжной обложки; ширина — через
+ * className родителя.
  */
 export function BookCover({
   coverPath,
+  src,
   title,
   className,
   placeholder = 'icon',
 }: {
   coverPath?: string;
+  src?: string;
   title: string;
   className?: string;
   placeholder?: 'icon' | 'monogram';
 }) {
+  const url = src ?? (coverPath ? `/api/covers/${coverPath}` : undefined);
+  const [failed, setFailed] = useState(false);
+  // Сброс флага ошибки при смене URL (напр. при пагинации/смене книги).
+  useEffect(() => {
+    setFailed(false);
+  }, [url]);
+
   const base = cn(
     'aspect-[2/3] rounded-md border border-border bg-muted shadow-sm overflow-hidden shrink-0 self-start',
     className,
   );
-  if (coverPath) {
+
+  if (url && !failed) {
     return (
       <img
-        src={`/api/covers/${coverPath}`}
+        src={url}
         alt={`Обложка: ${title}`}
         className={cn(base, 'object-cover')}
         loading="lazy"
+        onError={() => setFailed(true)}
       />
     );
   }
+
   if (placeholder === 'monogram') {
     const letter = title.trim().charAt(0).toUpperCase() || '?';
     return (
