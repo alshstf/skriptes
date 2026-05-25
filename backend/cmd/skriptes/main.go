@@ -125,13 +125,24 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("metadata init: %w", err)
 	}
-	logger.Info("metadata enricher ready", "cover_root", filepath.Join(cfg.CacheRoot, "covers"))
+	// Ограничение кэша обложек: бюджет (LRU-эвикция при превышении) + пол
+	// свободного места (ниже него новые обложки не пишутся). Защита от
+	// переполнения раздела с postgres.
+	enricher.WithCoverCache(
+		int64(cfg.CoverCacheMaxMB)<<20,
+		int64(cfg.CoverCacheMinFreeMB)<<20,
+	)
+	logger.Info("metadata enricher ready",
+		"cover_root", filepath.Join(cfg.CacheRoot, "covers"),
+		"cache_max_mb", cfg.CoverCacheMaxMB,
+		"cache_min_free_mb", cfg.CoverCacheMinFreeMB,
+	)
 
-	// Фоновый прогрев fb2-обложек и аннотаций (local-only) — чтобы список
-	// книг был с обложками, а не с пустыми плейсхолдерами. Долгоживущая
-	// горутина: прогреть всё → поспать → пересканировать (ловит
-	// свежеимпортированные книги без рестарта). Отключается
-	// SKRIPTES_COVER_PREWARM=false.
+	// Фоновый прогрев fb2-обложек (local-only) для всей коллекции —
+	// ВЫКЛЮЧЕН по умолчанию (на больших коллекциях забивает диск). При
+	// включении: долгоживущая горутина прогревает всё → спит →
+	// пересканирует (ловит новые импорты). Кэш-лимит/пол его тоже
+	// ограничивают.
 	if cfg.CoverPrewarm {
 		prewarmer := metadata.NewPrewarmer(enricher, pool, cfg.BooksRoot, cfg.CoverPrewarmWorkers, logger)
 		go prewarmer.Run(ctx())

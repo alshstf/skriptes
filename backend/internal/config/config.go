@@ -27,12 +27,25 @@ type Config struct {
 	// искать в $PATH.
 	FBCPath string `env:"SKRIPTES_FBC_PATH" envDefault:"fbc"`
 
-	// CoverPrewarm — фоновый прогрев fb2-обложек и аннотаций (local-only)
-	// для всей коллекции, чтобы список книг был с обложками, а не с
-	// пустыми плейсхолдерами. CoverPrewarmWorkers — параллелизм чтения
-	// zip-архивов (выше = быстрее, но больше нагрузка на диск).
-	CoverPrewarm        bool `env:"SKRIPTES_COVER_PREWARM" envDefault:"true"`
-	CoverPrewarmWorkers int  `env:"SKRIPTES_COVER_PREWARM_WORKERS" envDefault:"4"`
+	// Обложки. По умолчанию — ленивая on-demand модель: обложка
+	// извлекается из fb2 при запросе и кэшируется в ОГРАНИЧЕННОМ кэше.
+	//   CoverCacheMaxMB    — бюджет дискового кэша; при превышении —
+	//                        LRU-эвикция по mtime. 0 = без лимита (режим
+	//                        «полного стора», только для прогрева на жирном
+	//                        диске).
+	//   CoverCacheMinFreeMB — пол свободного места: ниже него новые обложки
+	//                        НЕ пишутся (страховка от переполнения раздела,
+	//                        на котором живёт postgres). 0 = выключено
+	//                        (не рекомендуется).
+	CoverCacheMaxMB     int `env:"SKRIPTES_COVER_CACHE_MAX_MB" envDefault:"8192"`
+	CoverCacheMinFreeMB int `env:"SKRIPTES_COVER_CACHE_MIN_FREE_MB" envDefault:"1024"`
+
+	// CoverPrewarm — фоновый прогрев fb2-обложек для всей коллекции.
+	// ВЫКЛЮЧЕН по умолчанию: на больших коллекциях он генерит десятки ГБ
+	// обложек и может забить диск (см. инцидент 0.4.0). Включать осознанно
+	// на инсталляциях с запасом места. CoverPrewarmWorkers — параллелизм.
+	CoverPrewarm        bool `env:"SKRIPTES_COVER_PREWARM" envDefault:"false"`
+	CoverPrewarmWorkers int  `env:"SKRIPTES_COVER_PREWARM_WORKERS" envDefault:"2"`
 
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,

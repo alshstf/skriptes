@@ -4,7 +4,9 @@ import (
 	"context"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/books"
@@ -90,8 +92,41 @@ func handleCover(d MetadataDeps) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Cache-Control", "public, max-age=2592000, immutable") // 30 дней
+		// LRU-отметка доступа (обновляет mtime) — чтобы недавно отданные
+		// обложки не вытеснялись из ограниченного кэша.
+		d.Service.TouchCover(name)
 		// gosec G304/G703 ложно-позитивны: name прошёл выше проверку на
 		// "/", "\\", ".." и filepath.Clean+prefix-check на побег из coverRoot.
 		http.ServeFile(w, r, full) //nolint:gosec // path traversal guarded above
+	}
+}
+
+// handleCoverByID — GET /api/covers/book/{id}. On-demand обложка книги:
+// отдаёт из кэша если есть, иначе извлекает из fb2 на лету (под
+// семафором). Так список книг показывает обложки без фонового прогрева и
+// без неограниченного роста кэша. 404 → фронт рисует плейсхолдер.
+func handleCoverByID(d MetadataDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Service == nil {
+			http.NotFound(w, r)
+			return
+		}
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			http.NotFound(w, r)
+			return
+		}
+		// Извлечение с сетевого диска может быть небыстрым — даём запас.
+		ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+		defer cancel()
+		full, ok := d.Service.ServeCoverByID(ctx, id, d.BooksRoot)
+		if !ok {
+			http.NotFound(w, r)
+			return
+		}
+		// Короче, чем content-addressable {name}: URL стабилен (по id), а
+		// содержимое может смениться при позднем re-enrich (OL/GB).
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		http.ServeFile(w, r, full) //nolint:gosec // путь построен сервисом из cache.Path, не из user input
 	}
 }
