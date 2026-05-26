@@ -90,3 +90,69 @@ export function useDeleteAdminUser() {
     onSuccess: () => qc.invalidateQueries({ queryKey: [...KEY] }),
   });
 }
+
+// ── Кэш обложек ───────────────────────────────────────────────────
+
+export type CoverCacheSettings = {
+  cache_max_mb: number;
+  cache_min_free_mb: number;
+  prewarm: boolean;
+  // статус прогрева (read-only): идёт ли прогон и какой
+  prewarm_running: boolean;
+  prewarm_mode: 'off' | 'continuous' | 'once';
+  // статистика (read-only)
+  cache_size_bytes: number;
+  free_bytes: number;
+};
+
+const COVER_KEY = ['admin', 'cover-cache'] as const;
+
+export function useCoverCacheSettings() {
+  return useQuery<CoverCacheSettings>({
+    queryKey: [...COVER_KEY],
+    queryFn: () => apiFetch<CoverCacheSettings>('/api/admin/cover-cache'),
+    staleTime: 10_000,
+    // Пока прогрев идёт — поллим, чтобы видеть рост кэша и момент
+    // завершения (тогда poll сам остановится).
+    refetchInterval: (query) => (query.state.data?.prewarm_running ? 2000 : false),
+  });
+}
+
+export function useUpdateCoverCacheSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { cache_max_mb: number; cache_min_free_mb: number; prewarm: boolean }) =>
+      apiFetch<CoverCacheSettings>('/api/admin/cover-cache', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...COVER_KEY], data),
+  });
+}
+
+export function useClearCoverCache() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ removed: number }>('/api/admin/cover-cache/clear', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
+  });
+}
+
+// usePrewarmCoverCache — разовый прогон прогрева (кнопка «Прогреть
+// сейчас»). Запускается в фоне на бэке, отвечает сразу.
+export function usePrewarmCoverCache() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/cover-cache/prewarm', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
+  });
+}
+
+// useStopPrewarmCoverCache — остановить идущий разовый прогон.
+export function useStopPrewarmCoverCache() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/cover-cache/prewarm/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
+  });
+}
