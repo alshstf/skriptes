@@ -384,7 +384,7 @@ function BookCard({
   return (
     <div className="relative flex gap-3 rounded-md p-2 transition hover:bg-accent/40 sm:p-3">
       <BookCover
-        coverPath={book.cover_path}
+        src={`/api/covers/book/${book.id}`}
         title={book.title}
         placeholder="monogram"
         className="w-12 sm:w-14"

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BookCover } from './BookCover';
 
 describe('BookCover', () => {
@@ -17,6 +17,23 @@ describe('BookCover', () => {
     expect(placeholder.tagName).not.toBe('IMG'); // div с role
     // Заголовок виден в placeholder'е.
     expect(screen.getByText('Без обложки')).toBeInTheDocument();
+  });
+
+  it('renders <img> from src (on-demand by-id)', () => {
+    render(<BookCover src="/api/covers/book/42" title="Test Book" />);
+    const img = screen.getByRole('img', { name: /Обложка: Test Book/ });
+    expect(img.tagName).toBe('IMG');
+    expect(img).toHaveAttribute('src', '/api/covers/book/42');
+  });
+
+  it('падает на монограм-плейсхолдер при ошибке загрузки (404 by-id)', () => {
+    render(<BookCover src="/api/covers/book/99" title="Гост" placeholder="monogram" />);
+    const img = screen.getByRole('img', { name: 'Обложка: Гост' });
+    expect(img.tagName).toBe('IMG');
+    fireEvent.error(img); // картинки нет (404) → onError
+    const ph = screen.getByRole('img', { name: 'Обложка: Гост' });
+    expect(ph.tagName).not.toBe('IMG'); // теперь div-плейсхолдер
+    expect(ph).toHaveTextContent('Г');
   });
 
   it('renders monogram placeholder (первая буква) when placeholder="monogram"', () => {

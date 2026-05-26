@@ -33,9 +33,11 @@ type Enricher struct {
 	authorBioProviders   []AuthorBioProvider
 	adaptationProviders  []AdaptationProvider
 	pool                 *pgxpool.Pool
-	coverRoot            string // абсолютный путь к /cache/covers (используется и для фото авторов, и для постеров экранизаций)
+	coverRoot            string      // абсолютный путь к /cache/covers (используется и для фото авторов, и для постеров экранизаций)
+	cache                *CoverCache // ограничение размера + пол свободного места над coverRoot
 	logger               *slog.Logger
-	posterHTTPClient     *http.Client // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
+	posterHTTPClient     *http.Client  // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
+	extractSem           chan struct{} // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
 
 	inflightMu          sync.Mutex
 	inflightCover       map[int64]struct{}
@@ -62,8 +64,11 @@ func New(
 	if logger == nil {
 		logger = slog.Default()
 	}
-	if err := os.MkdirAll(coverRoot, 0o750); err != nil {
-		return nil, fmt.Errorf("mkdir cover root: %w", err)
+	// По умолчанию кэш без лимита и без пола — поведение как раньше
+	// (для тестов). Прод включает лимиты через WithCoverCache.
+	cache, err := NewCoverCache(coverRoot, 0, 0, logger)
+	if err != nil {
+		return nil, err
 	}
 	return &Enricher{
 		coverProviders:       coverProviders,
@@ -73,7 +78,9 @@ func New(
 		adaptationProviders:  adaptationProviders,
 		pool:                 pool,
 		coverRoot:            coverRoot,
+		cache:                cache,
 		logger:               logger,
+		extractSem:           make(chan struct{}, defaultExtractConcurrency),
 		posterHTTPClient:     &http.Client{Timeout: 15 * time.Second},
 		inflightCover:        map[int64]struct{}{},
 		inflightAnnotate:     map[int64]struct{}{},
@@ -91,6 +98,36 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 	}
 	return e
 }
+
+// WithCoverCache настраивает лимит размера кэша обложек и пол свободного
+// места (в байтах). maxBytes<=0 — без лимита размера; minFree<=0 — без
+// проверки свободного места. Вызывается из main после New.
+func (e *Enricher) WithCoverCache(maxBytes, minFree int64) *Enricher {
+	if c, err := NewCoverCache(e.coverRoot, maxBytes, minFree, e.logger); err == nil {
+		e.cache = c
+	}
+	return e
+}
+
+// TouchCover — отметка доступа для LRU (вызывается HTTP-handler'ом при
+// отдаче файла обложки).
+func (e *Enricher) TouchCover(name string) {
+	if e.cache != nil {
+		e.cache.Touch(name)
+	}
+}
+
+// CoverCacheSize — текущий размер кэша обложек (для статистики админки).
+func (e *Enricher) CoverCacheSize() int64 {
+	if e.cache == nil {
+		return 0
+	}
+	return e.cache.Size()
+}
+
+// ErrCacheFull — на диске меньше пола свободного места; новые обложки не
+// пишутся (старые продолжают отдаваться). Не фатально.
+var ErrCacheFull = errors.New("cover cache: insufficient free disk")
 
 // EnsureCover — гарантировать что у книги есть cover_path. Если уже
 // есть — мгновенно выходит. Иначе обходит провайдеры по очереди до
@@ -277,6 +314,12 @@ func isLocalAnnotation(p AnnotationProvider) bool {
 // Hash файла гарантирует идемпотентность: повторное скачивание той же
 // картинки не дублирует место.
 func (e *Enricher) saveCover(img *CoverImage) (string, error) {
+	// Пол свободного места: если на диске мало — НЕ пишем (страховка от
+	// переполнения раздела, на котором живёт и postgres). Картинка при
+	// этом не закэшируется; не фатально.
+	if e.cache != nil && !e.cache.CanWrite(0) {
+		return "", ErrCacheFull
+	}
 	tmp, err := os.CreateTemp(e.coverRoot, "cover-*.tmp")
 	if err != nil {
 		return "", fmt.Errorf("create temp: %w", err)
@@ -288,7 +331,8 @@ func (e *Enricher) saveCover(img *CoverImage) (string, error) {
 
 	h := sha256.New()
 	mw := io.MultiWriter(tmp, h)
-	if _, err := io.Copy(mw, img.Reader); err != nil {
+	size, err := io.Copy(mw, img.Reader)
+	if err != nil {
 		return "", fmt.Errorf("copy cover: %w", err)
 	}
 	if err := tmp.Close(); err != nil {
@@ -300,10 +344,16 @@ func (e *Enricher) saveCover(img *CoverImage) (string, error) {
 	dst := filepath.Join(e.coverRoot, filename)
 	if err := os.Rename(tmp.Name(), dst); err != nil {
 		// если dst уже есть — это OK, идентичный файл; просто переиспользуем
+		// (в учёт размера не добавляем — он уже посчитан).
 		if _, statErr := os.Stat(dst); statErr == nil {
 			return filename, nil
 		}
 		return "", fmt.Errorf("rename to %s: %w", dst, err)
+	}
+	// Новый файл записан — учитываем в бюджете кэша; при превышении
+	// лимита запустится LRU-эвикция старейших по mtime.
+	if e.cache != nil {
+		e.cache.Added(size)
 	}
 	return filename, nil
 }
@@ -327,6 +377,76 @@ func (e *Enricher) CoverFile(filename string) string {
 
 // CoverRoot — корень кэша обложек (для тестов).
 func (e *Enricher) CoverRoot() string { return e.coverRoot }
+
+// defaultExtractConcurrency — сколько обложек извлекаем из zip
+// одновременно по запросу. ≈ числу видимых строк списка на высоком
+// телефоне (iPhone Pro Max), чтобы полный экран cold-обложек грузился
+// параллельно, а не по очереди, но и не устраивал random-read шторм по
+// сетевому диску.
+const defaultExtractConcurrency = 12
+
+// ServeCoverByID — on-demand отдача обложки книги по id. Возвращает
+// абсолютный путь к файлу (для http.ServeFile) и found.
+//
+// Логика: если cover_path стоит и файл на месте — отдаём (touch для LRU).
+// Если файла нет (вытеснен/удалён) или cover_path пуст — извлекаем из
+// fb2 на лету (local-only, под семафором), пишем в кэш, отдаём. Если в
+// fb2 обложки нет — found=false (handler отдаст 404, фронт покажет
+// плейсхолдер).
+func (e *Enricher) ServeCoverByID(ctx context.Context, bookID int64, booksRoot string) (string, bool) {
+	var coverPath, archive, fileName, ext string
+	err := e.pool.QueryRow(ctx, `
+		SELECT COALESCE(b.cover_path, ''), a.filename, b.file_name, b.ext
+		FROM books b
+		JOIN archives a ON a.id = b.archive_id
+		WHERE b.id = $1 AND b.deleted = false
+	`, bookID).Scan(&coverPath, &archive, &fileName, &ext)
+	if err != nil {
+		return "", false
+	}
+
+	if coverPath != "" {
+		p := e.cache.Path(coverPath)
+		if fileExists(p) {
+			e.cache.Touch(coverPath)
+			return p, true
+		}
+		// Файл вытеснен/удалён, а указатель остался — чистим, чтобы
+		// ensureCover извлёк заново (self-healing для удалённого кэша).
+		_, _ = e.pool.Exec(ctx, `UPDATE books SET cover_path = NULL WHERE id = $1`, bookID)
+	}
+
+	// Извлечение из fb2 — под семафором (ограничение конкурентных
+	// чтений zip с сетевого диска).
+	select {
+	case e.extractSem <- struct{}{}:
+		defer func() { <-e.extractSem }()
+	case <-ctx.Done():
+		return "", false
+	}
+
+	q := BookQuery{
+		ID:          bookID,
+		ArchivePath: filepath.Join(booksRoot, archive),
+		FB2Name:     fileName + "." + ext,
+	}
+	e.ensureCover(ctx, q, isLocalCover, false) // fb2-only, без отметки промаха
+
+	var newPath *string
+	if err := e.pool.QueryRow(ctx, `SELECT cover_path FROM books WHERE id = $1`, bookID).Scan(&newPath); err == nil &&
+		newPath != nil && *newPath != "" {
+		p := e.cache.Path(*newPath)
+		if fileExists(p) {
+			return p, true
+		}
+	}
+	return "", false
+}
+
+func fileExists(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && !info.IsDir()
+}
 
 func (e *Enricher) tryLock(set map[int64]struct{}, id int64) bool {
 	e.inflightMu.Lock()

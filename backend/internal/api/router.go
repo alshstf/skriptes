@@ -103,6 +103,8 @@ func NewRouter(d Deps) http.Handler {
 				}
 				if d.Metadata.Service != nil {
 					r.Get("/covers/{name}", handleCover(d.Metadata))
+					// On-demand обложка по id книги (извлечение из fb2 на лету).
+					r.Get("/covers/book/{id}", handleCoverByID(d.Metadata))
 				}
 				if d.Books.Service != nil || d.Catalog.Service != nil {
 					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog, d.History))
