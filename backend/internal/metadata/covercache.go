@@ -96,11 +96,11 @@ func (c *CoverCache) freeBytes() int64 {
 	if err := syscall.Statfs(c.root, &st); err != nil {
 		return -1
 	}
-	// Bavail — доступно непривилегированному пользователю; Bsize — размер
-	// блока. int64-конверсии нужны т.к. типы полей различаются по ОС
-	// (linux: int64, darwin: uint32). Оба неотрицательны — переполнение
-	// int64 на реальных дисках нереалистично.
-	return int64(st.Bavail) * int64(st.Bsize) //nolint:gosec // ФС-размеры неотрицательны, overflow int64 нереалистичен
+	// Bavail (uint64 на linux/darwin) — доступные блоки; Bsize — размер
+	// блока (linux: int64, darwin: uint32). Считаем в uint64 (конверсия
+	// Bsize необходима на обеих ОС → unconvert доволен), итог в int64.
+	// Размеры ФС неотрицательны, overflow int64 нереалистичен.
+	return int64(st.Bavail * uint64(st.Bsize)) //nolint:gosec // overflow int64 на реальных дисках нереалистичен
 }
 
 func (c *CoverCache) scanSize() int64 {
