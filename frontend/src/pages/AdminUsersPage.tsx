@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BackButton } from '@/components/BackButton';
+import { AdminTabs } from '@/components/AdminTabs';
 import {
   useAdminUsers,
   useCreateAdminUser,
@@ -47,7 +47,7 @@ export function AdminUsersPage() {
 
   return (
     <article className="space-y-6">
-      <BackButton />
+      <AdminTabs />
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Управление пользователями</h1>
         <p className="text-sm text-muted-foreground">

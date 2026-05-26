@@ -99,14 +99,40 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 	return e
 }
 
-// WithCoverCache настраивает лимит размера кэша обложек и пол свободного
-// места (в байтах). maxBytes<=0 — без лимита размера; minFree<=0 — без
-// проверки свободного места. Вызывается из main после New.
+// WithCoverCache задаёт начальные лимиты кэша обложек (в байтах).
+// maxBytes<=0 — без лимита размера; minFree<=0 — без проверки свободного
+// места. Вызывается из main после New.
 func (e *Enricher) WithCoverCache(maxBytes, minFree int64) *Enricher {
-	if c, err := NewCoverCache(e.coverRoot, maxBytes, minFree, e.logger); err == nil {
-		e.cache = c
+	if e.cache != nil {
+		e.cache.SetLimits(maxBytes, minFree)
 	}
 	return e
+}
+
+// SetCoverLimits — рантайм-смена лимитов кэша (из админки, без рестарта).
+func (e *Enricher) SetCoverLimits(maxBytes, minFree int64) {
+	if e.cache != nil {
+		e.cache.SetLimits(maxBytes, minFree)
+	}
+}
+
+// CoverCacheFree — свободно на разделе кэша (для статистики админки).
+func (e *Enricher) CoverCacheFree() int64 {
+	if e.cache == nil {
+		return -1
+	}
+	return e.cache.FreeBytes()
+}
+
+// ClearCoverCache удаляет все файлы кэша обложек (действие «Очистить» в
+// админке). Возвращает число удалённых файлов. cover_path в БД при этом
+// становятся «висячими» — by-id отдача само-восстановит при следующем
+// запросе (извлечёт из fb2 заново).
+func (e *Enricher) ClearCoverCache() (int, error) {
+	if e.cache == nil {
+		return 0, nil
+	}
+	return e.cache.Clear()
 }
 
 // TouchCover — отметка доступа для LRU (вызывается HTTP-handler'ом при

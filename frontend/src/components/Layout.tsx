@@ -76,7 +76,7 @@ function UserMenu({ user }: { user: User }) {
             }}
           >
             <Shield className="mr-2 size-4" aria-hidden />
-            Пользователи
+            Администрирование
           </DropdownMenuItem>
         ) : null}
         <DropdownMenuSeparator />
