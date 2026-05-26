@@ -1,0 +1,132 @@
+package api
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"time"
+
+	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/settings"
+)
+
+// SettingsDeps — зависимости admin-настроек. Store персистит конфиг в
+// app_settings; Metadata (enricher) применяет лимиты кэша в рантайме и
+// отдаёт статистику/очистку; Prewarm — контроллер фоновой джобы прогрева
+// (вкл/выкл по тумблеру + разовый прогон).
+type SettingsDeps struct {
+	Store    *settings.Store
+	Metadata *metadata.Enricher
+	Prewarm  *metadata.PrewarmController
+}
+
+// coverSettingsResponse — текущая конфигурация + статистика кэша +
+// состояние прогрева (running/mode — для кнопок «Прогреть/Остановить»).
+type coverSettingsResponse struct {
+	settings.CoverConfig
+	metadata.PrewarmStatus
+	CacheSizeBytes int64 `json:"cache_size_bytes"`
+	FreeBytes      int64 `json:"free_bytes"`
+}
+
+func coverStats(d SettingsDeps, cfg settings.CoverConfig) coverSettingsResponse {
+	resp := coverSettingsResponse{CoverConfig: cfg, FreeBytes: -1}
+	if d.Metadata != nil {
+		resp.CacheSizeBytes = d.Metadata.CoverCacheSize()
+		resp.FreeBytes = d.Metadata.CoverCacheFree()
+	}
+	if d.Prewarm != nil {
+		resp.PrewarmStatus = d.Prewarm.Status()
+	}
+	return resp
+}
+
+// handleGetCoverSettings — GET /api/admin/cover-cache. Конфиг + статистика.
+func handleGetCoverSettings(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		cfg, err := d.Store.Cover(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, coverStats(d, cfg))
+	}
+}
+
+// handleUpdateCoverSettings — PUT /api/admin/cover-cache. Сохраняет конфиг,
+// применяет лимиты кэша и запускает/останавливает фоновую джобу прогрева
+// в рантайме — всё без рестарта.
+func handleUpdateCoverSettings(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var cfg settings.CoverConfig
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&cfg); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
+			return
+		}
+		if cfg.CacheMaxMB < 0 || cfg.CacheMinFreeMB < 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "values must be non-negative"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		if err := d.Store.SetCover(ctx, cfg); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save settings failed"})
+			return
+		}
+		if d.Metadata != nil {
+			d.Metadata.SetCoverLimits(int64(cfg.CacheMaxMB)<<20, int64(cfg.CacheMinFreeMB)<<20)
+		}
+		// Живой запуск/остановка фоновой джобы прогрева по тумблеру.
+		if d.Prewarm != nil {
+			d.Prewarm.SetEnabled(cfg.Prewarm)
+		}
+		writeJSON(w, http.StatusOK, coverStats(d, cfg))
+	}
+}
+
+// handlePrewarmNow — POST /api/admin/cover-cache/prewarm. Разовый прогон
+// прогрева (кнопка «Прогреть сейчас»): извлечь обложки для книг, у
+// которых их ещё нет. Запускается в фоне, отвечает сразу.
+func handlePrewarmNow(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Prewarm == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		d.Prewarm.RunOnce()
+		writeJSON(w, http.StatusAccepted, map[string]string{"status": "started"})
+	}
+}
+
+// handlePrewarmStop — POST /api/admin/cover-cache/prewarm/stop. Отменяет
+// идущий разовый прогон (между батчами).
+func handlePrewarmStop(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Prewarm == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		d.Prewarm.StopOnce()
+		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
+	}
+}
+
+// handleClearCoverCache — POST /api/admin/cover-cache/clear. Удаляет все
+// файлы кэша обложек (мгновенно освобождает место). cover_path становятся
+// «висячими» — on-demand отдача само-восстановит при следующем запросе.
+func handleClearCoverCache(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Metadata == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		removed, err := d.Metadata.ClearCoverCache()
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "clear failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int{"removed": removed})
+	}
+}

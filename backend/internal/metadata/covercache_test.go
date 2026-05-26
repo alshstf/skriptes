@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -91,6 +92,39 @@ func TestCoverCache_CanWrite_MinFreeFloor(t *testing.T) {
 	cOpen, err := NewCoverCache(dir, 0, 0, discardLogger())
 	require.NoError(t, err)
 	require.True(t, cOpen.CanWrite(1<<40))
+}
+
+func TestCoverCache_SetLimits_EvictsOnTighten(t *testing.T) {
+	dir := t.TempDir()
+	c, err := NewCoverCache(dir, 0, 0, discardLogger()) // старт без лимита
+	require.NoError(t, err)
+	base := time.Now().Add(-time.Hour)
+	for i := 0; i < 5; i++ {
+		writeCacheFile(t, dir, fmt.Sprintf("f%d", i), base.Add(time.Duration(i)*time.Minute))
+		c.Added(cacheFileSize)
+	}
+	require.Equal(t, int64(500), c.Size())
+
+	// Рантайм-ужесточение бюджета → немедленная эвикция старейших.
+	c.SetLimits(250, 0)
+	require.LessOrEqual(t, c.Size(), int64(250))
+	require.False(t, exists(dir, "f0"), "старейший вытеснен")
+	require.True(t, exists(dir, "f4"), "новейший сохранён")
+}
+
+func TestCoverCache_Clear(t *testing.T) {
+	dir := t.TempDir()
+	c, err := NewCoverCache(dir, 0, 0, discardLogger())
+	require.NoError(t, err)
+	for i := 0; i < 3; i++ {
+		writeCacheFile(t, dir, fmt.Sprintf("f%d", i), time.Now())
+		c.Added(cacheFileSize)
+	}
+	n, err := c.Clear()
+	require.NoError(t, err)
+	require.Equal(t, 3, n)
+	require.Equal(t, int64(0), c.Size())
+	require.False(t, exists(dir, "f0"))
 }
 
 func TestCoverCache_NoLimit_NoEviction(t *testing.T) {

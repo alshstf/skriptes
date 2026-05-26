@@ -31,6 +31,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/kindle"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/opds"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 func main() {
@@ -125,27 +126,32 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("metadata init: %w", err)
 	}
-	// Ограничение кэша обложек: бюджет (LRU-эвикция при превышении) + пол
-	// свободного места (ниже него новые обложки не пишутся). Защита от
-	// переполнения раздела с postgres.
+	// Рантайм-настройки кэша обложек: дефолты в коде, оверрайды в БД
+	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
+	// (бюджет LRU + пол свободного места) на старте.
+	settingsStore := settings.New(pool)
+	coverCfg, err := settingsStore.Cover(ctx())
+	if err != nil {
+		logger.Warn("read cover settings — using defaults", "err", err)
+		coverCfg = settings.DefaultCoverConfig()
+	}
 	enricher.WithCoverCache(
-		int64(cfg.CoverCacheMaxMB)<<20,
-		int64(cfg.CoverCacheMinFreeMB)<<20,
+		int64(coverCfg.CacheMaxMB)<<20,
+		int64(coverCfg.CacheMinFreeMB)<<20,
 	)
 	logger.Info("metadata enricher ready",
 		"cover_root", filepath.Join(cfg.CacheRoot, "covers"),
-		"cache_max_mb", cfg.CoverCacheMaxMB,
-		"cache_min_free_mb", cfg.CoverCacheMinFreeMB,
+		"cache_max_mb", coverCfg.CacheMaxMB,
+		"cache_min_free_mb", coverCfg.CacheMinFreeMB,
+		"prewarm", coverCfg.Prewarm,
 	)
 
-	// Фоновый прогрев fb2-обложек (local-only) для всей коллекции —
-	// ВЫКЛЮЧЕН по умолчанию (на больших коллекциях забивает диск). При
-	// включении: долгоживущая горутина прогревает всё → спит →
-	// пересканирует (ловит новые импорты). Кэш-лимит/пол его тоже
-	// ограничивают.
-	if cfg.CoverPrewarm {
-		prewarmer := metadata.NewPrewarmer(enricher, pool, cfg.BooksRoot, cfg.CoverPrewarmWorkers, logger)
-		go prewarmer.Run(ctx())
+	// Контроллер фонового прогрева: запуск/остановка по тумблеру настроек
+	// в рантайме (без рестарта) + разовый прогон по кнопке. На старте
+	// запускаем непрерывный прогрев, только если он включён в настройках.
+	prewarmCtl := metadata.NewPrewarmController(enricher, pool, cfg.BooksRoot, cfg.CoverPrewarmWorkers, logger)
+	if coverCfg.Prewarm {
+		prewarmCtl.Start()
 	}
 
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
@@ -187,6 +193,7 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
+		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy

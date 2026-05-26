@@ -174,3 +174,123 @@ func (p *Prewarmer) processOne(ctx context.Context, b prewarmBook) {
 		p.logger.Warn("cover prewarm: mark fetched_at failed", "book_id", b.id, "err", err)
 	}
 }
+
+// PrewarmController — управляет фоновой джобой прогрева в рантайме:
+// запуск/остановка по тумблеру настроек (без рестарта) + разовый прогон
+// по кнопке «Прогреть сейчас». Создаётся один раз; Prewarmer'ы внутри
+// создаются на каждый запуск (дёшево).
+type PrewarmController struct {
+	enricher  *Enricher
+	pool      *pgxpool.Pool
+	booksRoot string
+	workers   int
+	logger    *slog.Logger
+
+	mu         sync.Mutex
+	contCancel context.CancelFunc // != nil ⇔ непрерывный прогрев запущен
+	onceCancel context.CancelFunc // != nil ⇔ разовый прогон идёт
+}
+
+// PrewarmStatus — текущее состояние прогрева для UI.
+//
+//	Mode: "off" — ничего не идёт; "continuous" — работает непрерывный
+//	прогрев (по тумблеру); "once" — идёт разовый прогон (кнопка).
+type PrewarmStatus struct {
+	Running bool   `json:"prewarm_running"`
+	Mode    string `json:"prewarm_mode"`
+}
+
+func NewPrewarmController(e *Enricher, pool *pgxpool.Pool, booksRoot string, workers int, logger *slog.Logger) *PrewarmController {
+	if logger == nil {
+		logger = slog.Default()
+	}
+	return &PrewarmController{enricher: e, pool: pool, booksRoot: booksRoot, workers: workers, logger: logger}
+}
+
+func (pc *PrewarmController) ready() bool {
+	return pc.enricher != nil && pc.pool != nil && pc.booksRoot != ""
+}
+
+// Status — текущее состояние (для отображения в админке).
+func (pc *PrewarmController) Status() PrewarmStatus {
+	pc.mu.Lock()
+	defer pc.mu.Unlock()
+	switch {
+	case pc.onceCancel != nil:
+		return PrewarmStatus{Running: true, Mode: "once"}
+	case pc.contCancel != nil:
+		return PrewarmStatus{Running: true, Mode: "continuous"}
+	default:
+		return PrewarmStatus{Running: false, Mode: "off"}
+	}
+}
+
+// Start запускает непрерывный прогрев (идемпотентно: повторный вызов —
+// no-op).
+func (pc *PrewarmController) Start() {
+	pc.mu.Lock()
+	defer pc.mu.Unlock()
+	if pc.contCancel != nil || !pc.ready() {
+		return
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	pc.contCancel = cancel
+	p := NewPrewarmer(pc.enricher, pc.pool, pc.booksRoot, pc.workers, pc.logger)
+	go p.Run(ctx)
+	pc.logger.Info("cover prewarm: continuous job started")
+}
+
+// Stop останавливает непрерывный прогрев.
+func (pc *PrewarmController) Stop() {
+	pc.mu.Lock()
+	defer pc.mu.Unlock()
+	if pc.contCancel == nil {
+		return
+	}
+	pc.contCancel()
+	pc.contCancel = nil
+	pc.logger.Info("cover prewarm: continuous job stopped")
+}
+
+// SetEnabled — переключатель из настроек: вкл → Start, выкл → Stop.
+func (pc *PrewarmController) SetEnabled(on bool) {
+	if on {
+		pc.Start()
+	} else {
+		pc.Stop()
+	}
+}
+
+// RunOnce делает ОДИН проход прогрева (кнопка «Прогреть сейчас»), не
+// запуская непрерывный цикл. Отменяем через StopOnce. No-op если уже
+// идёт разовый проход или активен непрерывный прогрев (он и так покроет).
+func (pc *PrewarmController) RunOnce() {
+	pc.mu.Lock()
+	if pc.onceCancel != nil || pc.contCancel != nil || !pc.ready() {
+		pc.mu.Unlock()
+		return
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	pc.onceCancel = cancel
+	pc.mu.Unlock()
+	go func() {
+		p := NewPrewarmer(pc.enricher, pc.pool, pc.booksRoot, pc.workers, pc.logger)
+		n := p.drain(ctx)
+		cancel()
+		pc.mu.Lock()
+		pc.onceCancel = nil
+		pc.mu.Unlock()
+		pc.logger.Info("cover prewarm: one-shot pass done", "processed", n)
+	}()
+}
+
+// StopOnce отменяет идущий разовый прогон (между батчами).
+func (pc *PrewarmController) StopOnce() {
+	pc.mu.Lock()
+	defer pc.mu.Unlock()
+	if pc.onceCancel == nil {
+		return
+	}
+	pc.onceCancel()
+	pc.logger.Info("cover prewarm: one-shot pass stop requested")
+}

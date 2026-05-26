@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sort"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"time"
 )
@@ -23,13 +24,14 @@ import (
 //   - после записи Added запускает эвикцию, если суммарный размер
 //     превысил maxBytes.
 //
-// maxBytes <= 0 → без лимита размера (режим «полного стора» для прогрева;
-// тогда единственный ограничитель — minFree). minFree <= 0 → проверка
+// Лимиты (maxBytes/minFree) атомарны и меняются в рантайме через
+// SetLimits — админка правит их без рестарта. maxBytes<=0 → без лимита
+// размера (режим «полного стора» под прогрев); minFree<=0 → проверка
 // свободного места отключена (не рекомендуется).
 type CoverCache struct {
 	root     string
-	maxBytes int64
-	minFree  int64
+	maxBytes atomic.Int64
+	minFree  atomic.Int64
 	logger   *slog.Logger
 
 	mu        sync.Mutex
@@ -44,9 +46,19 @@ func NewCoverCache(root string, maxBytes, minFree int64, logger *slog.Logger) (*
 	if err := os.MkdirAll(root, 0o750); err != nil {
 		return nil, fmt.Errorf("mkdir cover cache: %w", err)
 	}
-	c := &CoverCache{root: root, maxBytes: maxBytes, minFree: minFree, logger: logger}
+	c := &CoverCache{root: root, logger: logger}
+	c.maxBytes.Store(maxBytes)
+	c.minFree.Store(minFree)
 	c.sizeBytes = c.scanSize()
 	return c, nil
+}
+
+// SetLimits меняет лимиты в рантайме (из админки). При ужесточении
+// бюджета сразу подчищает лишнее.
+func (c *CoverCache) SetLimits(maxBytes, minFree int64) {
+	c.maxBytes.Store(maxBytes)
+	c.minFree.Store(minFree)
+	c.evictToLimit()
 }
 
 // Path — абсолютный путь к файлу в кэше по имени.
@@ -56,14 +68,15 @@ func (c *CoverCache) Path(name string) string { return filepath.Join(c.root, nam
 // свободного осталось не меньше minFree. На ошибке statfs не блокируем
 // (лучше записать, чем ложно отказать).
 func (c *CoverCache) CanWrite(size int64) bool {
-	if c.minFree <= 0 {
+	minFree := c.minFree.Load()
+	if minFree <= 0 {
 		return true
 	}
 	free := c.freeBytes()
 	if free < 0 {
 		return true
 	}
-	return free-size >= c.minFree
+	return free-size >= minFree
 }
 
 // Touch — отметка доступа для LRU (обновляет mtime). Best-effort.
@@ -77,7 +90,7 @@ func (c *CoverCache) Touch(name string) {
 func (c *CoverCache) Added(size int64) {
 	c.mu.Lock()
 	c.sizeBytes += size
-	over := c.maxBytes > 0 && c.sizeBytes > c.maxBytes
+	over := c.maxBytes.Load() > 0 && c.sizeBytes > c.maxBytes.Load()
 	c.mu.Unlock()
 	if over {
 		c.evictToLimit()
@@ -89,6 +102,32 @@ func (c *CoverCache) Size() int64 {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.sizeBytes
+}
+
+// FreeBytes — свободно на разделе кэша (для статистики админки); -1 если
+// не удалось определить.
+func (c *CoverCache) FreeBytes() int64 { return c.freeBytes() }
+
+// Clear удаляет все файлы кэша и обнуляет учёт размера. Возвращает число
+// удалённых файлов.
+func (c *CoverCache) Clear() (int, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	entries, err := os.ReadDir(c.root)
+	if err != nil {
+		return 0, fmt.Errorf("readdir for clear: %w", err)
+	}
+	removed := 0
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		if err := os.Remove(filepath.Join(c.root, e.Name())); err == nil {
+			removed++
+		}
+	}
+	c.sizeBytes = 0
+	return removed, nil
 }
 
 func (c *CoverCache) freeBytes() int64 {
@@ -121,12 +160,13 @@ func (c *CoverCache) scanSize() int64 {
 }
 
 // evictToLimit удаляет файлы по возрастанию mtime (LRU), пока суммарный
-// размер не уйдёт под maxBytes. Полный readdir+sort делается только в
-// момент превышения (редко), а не на каждую запись.
+// размер не уйдёт под maxBytes. Полный readdir+sort делается только при
+// превышении (редко), а не на каждую запись.
 func (c *CoverCache) evictToLimit() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.maxBytes <= 0 || c.sizeBytes <= c.maxBytes {
+	maxBytes := c.maxBytes.Load()
+	if maxBytes <= 0 || c.sizeBytes <= maxBytes {
 		return
 	}
 	entries, err := os.ReadDir(c.root)
@@ -155,7 +195,7 @@ func (c *CoverCache) evictToLimit() {
 	freed := int64(0)
 	removed := 0
 	for _, f := range files {
-		if c.sizeBytes <= c.maxBytes {
+		if c.sizeBytes <= maxBytes {
 			break
 		}
 		if err := os.Remove(filepath.Join(c.root, f.name)); err != nil {
@@ -166,5 +206,5 @@ func (c *CoverCache) evictToLimit() {
 		removed++
 	}
 	c.logger.Info("cover cache: evicted (LRU by mtime)",
-		"removed", removed, "freed_bytes", freed, "size_bytes", c.sizeBytes, "limit_bytes", c.maxBytes)
+		"removed", removed, "freed_bytes", freed, "size_bytes", c.sizeBytes, "limit_bytes", maxBytes)
 }

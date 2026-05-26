@@ -27,6 +27,7 @@ type Deps struct {
 	Metadata    MetadataDeps
 	Kindle      KindleDeps
 	Adaptations AdaptationsDeps
+	Settings    SettingsDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -160,6 +161,14 @@ func NewRouter(d Deps) http.Handler {
 				r.Patch("/admin/users/{id}", handleUpdateUser(d.Auth))
 				r.Patch("/admin/users/{id}/password", handleResetPassword(d.Auth))
 				r.Delete("/admin/users/{id}", handleDeleteUser(d.Auth))
+				// Раздел «Кэш обложек»: рантайм-настройки + статистика + очистка.
+				if d.Settings.Store != nil {
+					r.Get("/admin/cover-cache", handleGetCoverSettings(d.Settings))
+					r.Put("/admin/cover-cache", handleUpdateCoverSettings(d.Settings))
+					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
+					r.Post("/admin/cover-cache/prewarm", handlePrewarmNow(d.Settings))
+					r.Post("/admin/cover-cache/prewarm/stop", handlePrewarmStop(d.Settings))
+				}
 			})
 		}
 	})
