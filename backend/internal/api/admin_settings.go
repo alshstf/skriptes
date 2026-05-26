@@ -76,7 +76,8 @@ func handleUpdateCoverSettings(d SettingsDeps) http.HandlerFunc {
 			return
 		}
 		if d.Metadata != nil {
-			d.Metadata.SetCoverLimits(int64(cfg.CacheMaxMB)<<20, int64(cfg.CacheMinFreeMB)<<20)
+			// Прогрев ON → лимит 0 (full-store, без эвикции); иначе бюджет.
+			d.Metadata.SetCoverLimits(cfg.EffectiveCacheMaxBytes(), cfg.MinFreeBytes())
 		}
 		// Живой запуск/остановка фоновой джобы прогрева по тумблеру.
 		if d.Prewarm != nil {

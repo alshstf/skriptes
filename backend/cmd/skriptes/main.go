@@ -135,10 +135,9 @@ func run() error {
 		logger.Warn("read cover settings — using defaults", "err", err)
 		coverCfg = settings.DefaultCoverConfig()
 	}
-	enricher.WithCoverCache(
-		int64(coverCfg.CacheMaxMB)<<20,
-		int64(coverCfg.CacheMinFreeMB)<<20,
-	)
+	// При включённом прогреве лимит кэша = 0 (full-store, без эвикции):
+	// иначе прогрев всей коллекции + LRU-бюджет = бесконечная мясорубка.
+	enricher.WithCoverCache(coverCfg.EffectiveCacheMaxBytes(), coverCfg.MinFreeBytes())
 	logger.Info("metadata enricher ready",
 		"cover_root", filepath.Join(cfg.CacheRoot, "covers"),
 		"cache_max_mb", coverCfg.CacheMaxMB,
