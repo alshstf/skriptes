@@ -67,3 +67,15 @@ func startSettingsPG(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Cleanup(pool.Close)
 	return pool
 }
+
+// TestCoverConfig_EffectiveLimits — чистый юнит (без docker): прогрев ON
+// → лимит кэша 0 (full-store, без эвикции); OFF → заданный бюджет.
+func TestCoverConfig_EffectiveLimits(t *testing.T) {
+	off := settings.CoverConfig{CacheMaxMB: 8192, CacheMinFreeMB: 1024, Prewarm: false}
+	require.Equal(t, int64(8192)<<20, off.EffectiveCacheMaxBytes(), "без прогрева — заданный бюджет")
+	require.Equal(t, int64(1024)<<20, off.MinFreeBytes())
+
+	on := settings.CoverConfig{CacheMaxMB: 8192, CacheMinFreeMB: 1024, Prewarm: true}
+	require.Equal(t, int64(0), on.EffectiveCacheMaxBytes(), "с прогревом — без лимита (full-store)")
+	require.Equal(t, int64(1024)<<20, on.MinFreeBytes())
+}

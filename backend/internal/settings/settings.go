@@ -35,6 +35,23 @@ func DefaultCoverConfig() CoverConfig {
 	return CoverConfig{CacheMaxMB: 8192, CacheMinFreeMB: 1024, Prewarm: false}
 }
 
+// MinFreeBytes — порог свободного места в байтах.
+func (c CoverConfig) MinFreeBytes() int64 { return int64(c.CacheMinFreeMB) << 20 }
+
+// EffectiveCacheMaxBytes — фактический лимит кэша в байтах.
+//
+// При включённом прогреве возвращает 0 («без лимита», full-store): прогрев
+// заполняет обложки всей коллекции, и LRU-эвикция по бюджету привела бы к
+// бесконечной мясорубке (записал → вытеснил → записал) на коллекции
+// больше бюджета. В режиме прогрева рост ограничивает только порог
+// свободного места. Без прогрева — заданный бюджет (bounded LRU).
+func (c CoverConfig) EffectiveCacheMaxBytes() int64 {
+	if c.Prewarm {
+		return 0
+	}
+	return int64(c.CacheMaxMB) << 20
+}
+
 // Store — доступ к app_settings.
 type Store struct {
 	pool *pgxpool.Pool

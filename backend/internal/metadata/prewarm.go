@@ -85,6 +85,14 @@ func (p *Prewarmer) drain(ctx context.Context) int {
 		if ctx.Err() != nil {
 			return total
 		}
+		// Disk-aware: свободного места ниже порога — встаём (обложки всё
+		// равно не запишутся). Следующий проход (через rescan) попробует
+		// снова, если место освободится.
+		if !p.enricher.CoverCacheHasRoom() {
+			p.logger.Warn("cover prewarm: свободного места ниже порога — пауза до следующего прохода",
+				"processed", total)
+			return total
+		}
 		batch, err := p.fetchBatch(ctx, cursor, prewarmBatchSize)
 		if err != nil {
 			p.logger.Warn("cover prewarm: fetch batch failed", "err", err)
