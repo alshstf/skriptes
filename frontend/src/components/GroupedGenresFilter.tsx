@@ -33,10 +33,17 @@ export function GroupedGenresFilter({
   selected,
   facets,
   onChange,
+  hiddenCodes,
 }: {
   selected: string[];
   facets?: Record<string, number>;
   onChange: (next: string[]) => void;
+  /**
+   * hiddenCodes — жанры, скрытые из выдачи (admin ∪ персональные). Они не
+   * показываются в панели фильтров (бэкенд их и так исключает). Кроме тех,
+   * что уже выбраны в URL — их оставляем, чтобы фильтр можно было снять.
+   */
+  hiddenCodes?: string[];
 }) {
   const genresQ = useGenres();
 
@@ -59,7 +66,13 @@ export function GroupedGenresFilter({
   // tri-state категории консистентны с тем, что показано (select-all
   // тогда выбирает все ВИДИМЫЕ совпавшие).
   const groups = useMemo(() => {
-    const all = genresQ.data ?? [];
+    const hiddenSet = new Set(hiddenCodes ?? []);
+    const selSet = new Set(selected);
+    // Прячем скрытые жанры, но оставляем уже выбранные (чтобы фильтр
+    // можно было снять, даже если жанр позже скрыли).
+    const all = (genresQ.data ?? []).filter(
+      (it) => !hiddenSet.has(it.code) || selSet.has(it.code),
+    );
     const items = q
       ? all.filter(
           (it) =>
@@ -68,7 +81,7 @@ export function GroupedGenresFilter({
         )
       : all;
     return groupByCategory(items, selected, facets);
-  }, [genresQ.data, selected, facets, q]);
+  }, [genresQ.data, selected, facets, q, hiddenCodes]);
 
   // Какие категории раскрыты. По дефолту — те, в которых хоть один
   // selected leaf. При изменении selection (через ActiveFilterChips

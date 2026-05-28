@@ -191,6 +191,65 @@ func TestListGenres_WithCategory(t *testing.T) {
 	require.Equal(t, "Фантастика", got[0].CategoryName)
 }
 
+// TestListLanguages — языки коллекции с числом книг: deleted и NULL-lang
+// не считаются, сортировка по убыванию количества (tiebreak — код),
+// display-имя берётся из словаря (fallback — код в верхнем регистре).
+func TestListLanguages(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startEnumeratePostgres(t, ctx)
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t', 't.inpx') RETURNING id`,
+	).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1, 'a.zip') RETURNING id`,
+		collID).Scan(&archID))
+
+	// ru: 2 живые + 1 deleted (не считается); en: 1; xyz: 1 (неизвестный код
+	// → fallback display); 1 книга без lang (NULL → исключается).
+	ins := func(lib, lang string, deleted bool) {
+		_, err := pool.Exec(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, deleted)
+			VALUES ($1, $2, $3, 'f', 'fb2', $4, $5, $6, $7)
+		`, collID, archID, lib, lib, lib, lang, deleted)
+		require.NoError(t, err)
+	}
+	ins("r1", "ru", false)
+	ins("r2", "ru", false)
+	ins("r3", "ru", true)
+	ins("e1", "en", false)
+	ins("x1", "xyz", false)
+	_, err := pool.Exec(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, deleted)
+		VALUES ($1, $2, 'n1', 'f', 'fb2', 'n1', 'n1', false)
+	`, collID, archID)
+	require.NoError(t, err)
+
+	langs, err := catalog.New(pool).ListLanguages(ctx)
+	require.NoError(t, err)
+
+	byCode := map[string]catalog.LanguageEntry{}
+	for _, l := range langs {
+		byCode[l.Code] = l
+	}
+	require.Len(t, langs, 3, "ru, en, xyz; NULL-lang исключён")
+	require.Equal(t, 2, byCode["ru"].BookCount, "deleted ru не считается")
+	require.Equal(t, 1, byCode["en"].BookCount)
+	require.Equal(t, 1, byCode["xyz"].BookCount)
+	require.Equal(t, "Русский", byCode["ru"].Display)
+	require.Equal(t, "Английский", byCode["en"].Display)
+	require.Equal(t, "XYZ", byCode["xyz"].Display, "неизвестный код → код в верхнем регистре")
+	// Сортировка: ru(2) первым; en/xyz по 1 — tiebreak по коду (en < xyz).
+	require.Equal(t, "ru", langs[0].Code)
+	require.Equal(t, "en", langs[1].Code)
+	require.Equal(t, "xyz", langs[2].Code)
+}
+
 // firstWord — мини-helper для проверки сортировки по фамилии без
 // зависимости от форматирования fullName.
 func firstWord(s string) string {

@@ -153,6 +153,14 @@ func run() error {
 		prewarmCtl.Start()
 	}
 
+	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
+	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
+	// hard-block по id книги) и живо обновляется при сохранении из админки.
+	contentResolver := settings.NewContentResolver(settingsStore)
+	if err := contentResolver.Load(ctx()); err != nil {
+		logger.Warn("read content settings — using defaults", "err", err)
+	}
+
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
 	// и handler сам отдаст 503 на send.
@@ -193,6 +201,7 @@ func run() error {
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
 		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl},
+		Content:     api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy

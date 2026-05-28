@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BackButton } from '@/components/BackButton';
+import { ProfileTabs } from '@/components/ProfileTabs';
 import {
   useKindleTargets,
   useAddKindleTarget,
@@ -31,7 +31,7 @@ export function ProfilePage() {
 
   return (
     <article className="space-y-6">
-      <BackButton />
+      <ProfileTabs />
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Профиль</h1>
         {me.data ? (

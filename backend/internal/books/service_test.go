@@ -99,15 +99,24 @@ func TestService_ListAndGet(t *testing.T) {
 	_, err = svc.Get(ctx, 99999999)
 	require.ErrorIs(t, err, books.ErrNotFound)
 
+	// ── GenresAndLang: лёгкий lookup для hard-block gate. Те же жанры/язык,
+	//    что и в полной карточке; несуществующий id → ErrNotFound.
+	gCodes, gLang, err := svc.GenresAndLang(ctx, bookID)
+	require.NoError(t, err)
+	require.Equal(t, book.Lang, gLang)
+	require.ElementsMatch(t, codes, gCodes)
+	_, _, err = svc.GenresAndLang(ctx, 99999999)
+	require.ErrorIs(t, err, books.ErrNotFound)
+
 	// ── Suggest: typeahead с лимитом, по той же фикстуре.
-	sugg, err := svc.Suggest(ctx, "Кадетский", 5, 0)
+	sugg, err := svc.Suggest(ctx, "Кадетский", 5, 0, nil, nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, sugg)
 	require.Equal(t, "Кадетский корпус. Книга 2", sugg[0].Title)
 	require.LessOrEqual(t, len(sugg), 5)
 
 	// Пустой query → пустой срез без ошибки.
-	empty, err := svc.Suggest(ctx, "  ", 5, 0)
+	empty, err := svc.Suggest(ctx, "  ", 5, 0, nil, nil)
 	require.NoError(t, err)
 	require.Empty(t, empty)
 
@@ -118,6 +127,29 @@ func TestService_ListAndGet(t *testing.T) {
 	require.NotEmpty(t, res.Items)
 	for _, it := range res.Items {
 		require.Contains(t, it.Genres, "sf_action", "при фильтре genres=sf_action все книги должны иметь этот жанр")
+	}
+
+	// ── Скрытый контент (NOT IN): exclude по жанру убирает книги этого
+	//    жанра из выдачи; exclude по языку — книги этого языка. Проверяет
+	//    реальный meili `NOT IN`-синтаксис против настоящего Meili.
+	baseline, err := svc.List(ctx, books.ListParams{Limit: 50})
+	require.NoError(t, err)
+	excl, err := svc.List(ctx, books.ListParams{ExcludeGenres: []string{"sf_action"}, Limit: 50})
+	require.NoError(t, err)
+	require.Less(t, len(excl.Items), len(baseline.Items), "exclude жанра должен убрать хотя бы одну книгу")
+	for _, it := range excl.Items {
+		require.NotContains(t, it.Genres, "sf_action", "скрытый жанр не должен встречаться в выдаче")
+	}
+	exclLang, err := svc.List(ctx, books.ListParams{ExcludeLangs: []string{"ru"}, Limit: 50})
+	require.NoError(t, err)
+	for _, it := range exclLang.Items {
+		require.NotEqual(t, "ru", it.Lang, "книги на скрытом языке не должны попадать в выдачу")
+	}
+	// Suggest с exclude: палитра не подсказывает книги скрытого жанра.
+	sExcl, err := svc.Suggest(ctx, "Кадетский", 5, 0, []string{"sf_action"}, nil)
+	require.NoError(t, err)
+	for _, it := range sExcl {
+		require.NotContains(t, it.Genres, "sf_action", "Suggest не должен подсказывать книги скрытого жанра")
 	}
 
 	// ── cover_path догидрачивается из Postgres в список.

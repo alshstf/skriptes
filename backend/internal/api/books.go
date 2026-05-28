@@ -18,7 +18,7 @@ type BooksDeps struct {
 	Service *books.Service
 }
 
-func handleListBooks(d BooksDeps) http.HandlerFunc {
+func handleListBooks(d BooksDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		params := books.ListParams{
@@ -37,8 +37,14 @@ func handleListBooks(d BooksDeps) http.HandlerFunc {
 		// Передаём UserID — books.List сам решает, применять ли re-ranking
 		// (см. условия там: offset==0, нет явного Sort и нет фильтра по
 		// одному автору/серии).
+		var userID int64
 		if u, ok := UserFromContext(r.Context()); ok {
 			params.UserID = u.ID
+			userID = u.ID
+		}
+		// Скрытые из выдачи жанры/языки (admin ∪ персональные).
+		if content.Resolver != nil {
+			params.ExcludeGenres, params.ExcludeLangs = content.Resolver.Exclusions(r.Context(), userID)
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()

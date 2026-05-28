@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { useGenreMap } from '@/lib/genres';
+import { useEffectiveContent } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import type { FacetDistribution } from '@/lib/books';
 
@@ -49,6 +50,12 @@ export function FiltersSidebar({
   totalActive: number;
   onReset: () => void;
 }) {
+  // Скрытые из выдачи жанры/языки (admin ∪ персональные) — не показываем
+  // их в панели фильтров. Бэкенд уже исключает их из выдачи; это для
+  // чистого UI. Языки исключены из фасетов на бэке, поэтому FacetRadios
+  // и так их не покажет — отдельно фильтровать не нужно.
+  const effective = useEffectiveContent();
+  const hiddenGenres = effective.data?.hidden_genres;
   return (
     <aside className="space-y-6 text-sm" aria-label="Фильтры">
       <div className="flex items-center justify-between">
@@ -75,6 +82,7 @@ export function FiltersSidebar({
         selected={value.genres}
         facets={facets?.genres}
         onChange={(genres) => onChange({ ...value, genres })}
+        hiddenCodes={hiddenGenres}
       />
 
       <FacetRadios
