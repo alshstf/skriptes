@@ -35,3 +35,30 @@ test('command palette: opens via ⌘K, shows three sections, navigates on click'
   await expect(page).toHaveURL(/\/books\/19$/);
   await expect(input).not.toBeVisible();
 });
+
+test('command palette: mobile — диалог в пределах экрана и прижат к верху', async ({
+  mockedPage: page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/books');
+  await expect(page.getByLabel('Открыть поиск')).toBeVisible({ timeout: 10_000 });
+
+  // На мобильном hotkey не нажать — открываем кликом по триггеру.
+  await page.getByLabel('Открыть поиск').click();
+  const input = page.getByPlaceholder(/Поиск книг/);
+  await expect(input).toBeVisible();
+  await input.fill('кад');
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByText('Кадетский корпус. Книга 2')).toBeVisible();
+
+  // Диалог не должен вылезать за края экрана и должен быть прижат к верху
+  // (а не центрирован — иначе результаты уходят под клавиатуру на iOS).
+  const box = await dialog.boundingBox();
+  expect(box).not.toBeNull();
+  if (box) {
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    expect(box.y).toBeLessThanOrEqual(40);
+  }
+});

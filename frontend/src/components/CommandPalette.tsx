@@ -73,7 +73,10 @@ export function CommandPalette() {
     <>
       <PaletteTrigger onClick={() => setOpen(true)} />
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="overflow-hidden p-0 sm:max-w-2xl" showCloseButton={false}>
+        <DialogContent
+          className="top-4 translate-y-0 overflow-hidden p-0 sm:top-1/2 sm:max-w-2xl sm:-translate-y-1/2"
+          showCloseButton={false}
+        >
           <DialogTitle className="sr-only">Поиск</DialogTitle>
           <DialogDescription className="sr-only">
             Введите минимум 2 символа, чтобы найти книги, авторов или серии
@@ -84,8 +87,17 @@ export function CommandPalette() {
               value={query}
               onValueChange={setQuery}
               autoFocus
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              inputMode="search"
+              enterKeyHint="search"
             />
-            <CommandList aria-busy={isFetching || undefined}>
+            <CommandList
+              className="max-h-[60svh] sm:max-h-[400px]"
+              aria-busy={isFetching || undefined}
+            >
               {showHint ? (
                 <div className="py-6 text-center text-sm text-muted-foreground">
                   Введите минимум 2 символа
