@@ -14,8 +14,10 @@ import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
+import { ProfileContentPage } from '@/pages/ProfileContentPage';
 import { ReaderPage } from '@/pages/ReaderPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
+import { AdminContentPage } from '@/pages/AdminContentPage';
 import { AdminCoverCachePage } from '@/pages/AdminCoverCachePage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
@@ -173,6 +175,12 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
+const profileContentRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/me/content',
+  component: ProfileContentPage,
+});
+
 // requireAdmin — расширение requireAuth с проверкой role на клиенте.
 // Backend всё равно гейтит 403'м, но клиентский redirect даёт лучший
 // UX (юзер не видит вспышки страницы, на которую у него нет прав).
@@ -189,6 +197,13 @@ const adminUsersRoute = createRoute({
   path: '/admin/users',
   beforeLoad: ({ context }) => requireAdmin(context),
   component: AdminUsersPage,
+});
+
+const adminContentRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/admin/content',
+  beforeLoad: ({ context }) => requireAdmin(context),
+  component: AdminContentPage,
 });
 
 const adminCoverCacheRoute = createRoute({
@@ -215,7 +230,9 @@ const routeTree = rootRoute.addChildren([
     authorRoute,
     seriesRoute,
     profileRoute,
+    profileContentRoute,
     adminUsersRoute,
+    adminContentRoute,
     adminCoverCacheRoute,
   ]),
   protectedFullscreenRoute.addChildren([readerRoute]),

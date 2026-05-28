@@ -45,6 +45,64 @@ func TestSettings_CoverRoundTrip(t *testing.T) {
 	require.Equal(t, want2, got)
 }
 
+// TestSettings_ContentRoundTrip — глобальные и персональные настройки
+// видимости: дефолты на пустой БД, upsert+нормализация (дедуп/сортировка),
+// объединение admin ∪ user через ContentResolver.
+func TestSettings_ContentRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Глобальный: нет оверрайда → дефолт (ничего не скрыто).
+	got, err := store.Content(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultContentConfig(), got)
+
+	// Сохранили с дублями/пустыми — normalize чистит и сортирует.
+	require.NoError(t, store.SetContent(ctx, settings.ContentConfig{
+		HiddenGenres:    []string{"erotica", "", "erotica", "porno"},
+		HiddenLanguages: []string{"bg"},
+	}))
+	got, err = store.Content(ctx)
+	require.NoError(t, err)
+	require.Equal(t, []string{"erotica", "porno"}, got.HiddenGenres)
+	require.Equal(t, []string{"bg"}, got.HiddenLanguages)
+
+	// Персональные настройки требуют пользователя (FK user_settings.user_id).
+	var uid int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('u@example.test', 'U', 'x', 'user') RETURNING id`).Scan(&uid))
+
+	ug, err := store.UserContent(ctx, uid)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultContentConfig(), ug)
+
+	require.NoError(t, store.SetUserContent(ctx, uid, settings.ContentConfig{HiddenGenres: []string{"detective"}}))
+	ug, err = store.UserContent(ctx, uid)
+	require.NoError(t, err)
+	require.Equal(t, []string{"detective"}, ug.HiddenGenres)
+	require.Equal(t, []string{}, ug.HiddenLanguages)
+
+	// Resolver: Exclusions = admin ∪ user; AdminHides — только глобальные.
+	r := settings.NewContentResolver(store)
+	require.NoError(t, r.Load(ctx))
+	g, l := r.Exclusions(ctx, uid)
+	require.ElementsMatch(t, []string{"erotica", "porno", "detective"}, g)
+	require.ElementsMatch(t, []string{"bg"}, l)
+	require.True(t, r.AdminHides([]string{"erotica"}, "en"))
+	require.False(t, r.AdminHides([]string{"detective"}, "en"), "персональный жанр не должен блокироваться глобально")
+
+	// SetAdmin живо обновляет кэш.
+	require.NoError(t, r.SetAdmin(ctx, settings.ContentConfig{HiddenLanguages: []string{"uk"}}))
+	require.True(t, r.AdminHides(nil, "uk"))
+	require.False(t, r.AdminHides([]string{"erotica"}, "en"), "после перезаписи старые скрытые сняты")
+}
+
 func startSettingsPG(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Helper()
 	pgC, err := postgres.Run(ctx,

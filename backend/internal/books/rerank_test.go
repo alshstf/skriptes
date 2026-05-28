@@ -127,7 +127,7 @@ func TestService_SuggestRerank(t *testing.T) {
 
 	const query = "Алек"
 
-	baseline, err := svc.Suggest(ctx, query, 5, 0)
+	baseline, err := svc.Suggest(ctx, query, 5, 0, nil, nil)
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, len(baseline), 2)
 
@@ -149,7 +149,7 @@ func TestService_SuggestRerank(t *testing.T) {
 
 	require.NoError(t, historySvc.AddFavoriteAuthor(ctx, userID, targetAuthorID))
 
-	personal, err := svc.Suggest(ctx, query, 5, userID)
+	personal, err := svc.Suggest(ctx, query, 5, userID, nil, nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, personal)
 	require.Contains(t, personal[0].AuthorIDs, targetAuthorID,

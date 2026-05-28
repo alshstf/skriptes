@@ -42,6 +42,26 @@ func handleListGenres(d CatalogDeps) http.HandlerFunc {
 	}
 }
 
+// handleListLanguages — GET /api/languages. Полный список языков коллекции
+// (код + display-имя + число книг), отсортированный по популярности.
+//
+// Список НЕ фильтруется по скрытым языкам: его потребляют разделы «Контент»
+// в админке/профиле, где скрытые языки как раз надо показать (чтобы их
+// можно было включить обратно). Панель фильтров прячет скрытые на клиенте
+// через /api/content/effective.
+func handleListLanguages(d CatalogDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		items, err := d.Service.ListLanguages(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+	}
+}
+
 // authorResponse / seriesResponse — обёртки над catalog-DTO с
 // user-specific is_favorite. Как и bookResponse, держим в api-слое
 // чтобы не тащить user-концепт в catalog.

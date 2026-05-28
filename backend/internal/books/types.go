@@ -117,6 +117,14 @@ type ListParams struct {
 	Sort     string
 	Facets   []string // запрашиваемые распределения; например ["genres","lang","year"]
 
+	// ExcludeGenres / ExcludeLangs — скрытые из выдачи жанры/языки
+	// (объединение глобальных admin-настроек и персональных настроек
+	// пользователя, см. internal/settings.ContentResolver). Применяются как
+	// `genres NOT IN [...]` / `lang NOT IN [...]` — книга с любым скрытым
+	// жанром или скрытым языком не попадает в список/поиск/фасеты.
+	ExcludeGenres []string
+	ExcludeLangs  []string
+
 	// UserID — если >0 и не задан Sort/AuthorID/SeriesID, выдача пере-
 	// сортировывается персонализированным re-ranking'ом (см. List).
 	// Пагинация: re-rank применяется ТОЛЬКО к первой странице (offset==0),

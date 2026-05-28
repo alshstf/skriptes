@@ -296,17 +296,8 @@ func capFloat(v, max float64) float64 {
 // и meili такие литералы понимает.
 func buildFilter(p ListParams) string {
 	var parts []string
-	if len(p.Genres) > 0 {
-		quoted := make([]string, 0, len(p.Genres))
-		for _, g := range p.Genres {
-			if g == "" {
-				continue
-			}
-			quoted = append(quoted, strconv.Quote(g))
-		}
-		if len(quoted) > 0 {
-			parts = append(parts, fmt.Sprintf("genres IN [%s]", strings.Join(quoted, ",")))
-		}
+	if clause := inClause("genres", p.Genres); clause != "" {
+		parts = append(parts, clause)
 	}
 	if p.Lang != "" {
 		parts = append(parts, fmt.Sprintf("lang = %s", strconv.Quote(p.Lang)))
@@ -322,6 +313,55 @@ func buildFilter(p ListParams) string {
 	}
 	if p.AuthorID > 0 {
 		parts = append(parts, fmt.Sprintf("author_ids = %d", p.AuthorID))
+	}
+	// Скрытые жанры/языки (admin ∪ персональные) — исключающие фильтры.
+	if clause := notInClause("genres", p.ExcludeGenres); clause != "" {
+		parts = append(parts, clause)
+	}
+	if clause := notInClause("lang", p.ExcludeLangs); clause != "" {
+		parts = append(parts, clause)
+	}
+	return strings.Join(parts, " AND ")
+}
+
+// inClause / notInClause собирают meili-выражение `<attr> IN [...]` /
+// `<attr> NOT IN [...]` с корректным эскейпингом значений. Пустые
+// значения отбрасываются; если значимых нет — возвращается "".
+func inClause(attr string, values []string) string {
+	if q := quoteValues(values); q != "" {
+		return fmt.Sprintf("%s IN [%s]", attr, q)
+	}
+	return ""
+}
+
+func notInClause(attr string, values []string) string {
+	if q := quoteValues(values); q != "" {
+		return fmt.Sprintf("%s NOT IN [%s]", attr, q)
+	}
+	return ""
+}
+
+func quoteValues(values []string) string {
+	quoted := make([]string, 0, len(values))
+	for _, v := range values {
+		if v == "" {
+			continue
+		}
+		quoted = append(quoted, strconv.Quote(v))
+	}
+	return strings.Join(quoted, ",")
+}
+
+// exclusionFilter — meili-выражение для скрытых жанров/языков
+// (`genres NOT IN [...] AND lang NOT IN [...]`). Пусто, если скрывать
+// нечего. Используется в Suggest; в List те же клаузы добавляет buildFilter.
+func exclusionFilter(excludeGenres, excludeLangs []string) string {
+	var parts []string
+	if c := notInClause("genres", excludeGenres); c != "" {
+		parts = append(parts, c)
+	}
+	if c := notInClause("lang", excludeLangs); c != "" {
+		parts = append(parts, c)
 	}
 	return strings.Join(parts, " AND ")
 }
@@ -368,8 +408,12 @@ func decodeFacets(raw json.RawMessage) map[string]map[string]int64 {
 // авторов/серий поднимаются наверх. В палитре поиска (Cmd+K) это
 // особенно ценно, потому что показывается только top-5.
 //
+// excludeGenres / excludeLangs — скрытые из выдачи жанры/языки (admin ∪
+// персональные); применяются тем же `NOT IN`, что и в List, чтобы палитра
+// не подсказывала книги, которых нет в основном списке.
+//
 // Если meili не сконфигурирован — пустой срез без ошибки (для unit-тестов).
-func (s *Service) Suggest(ctx context.Context, query string, limit int, userID int64) ([]ListItem, error) {
+func (s *Service) Suggest(ctx context.Context, query string, limit int, userID int64, excludeGenres, excludeLangs []string) ([]ListItem, error) {
 	if s.meili == nil || strings.TrimSpace(query) == "" {
 		return []ListItem{}, nil
 	}
@@ -386,10 +430,14 @@ func (s *Service) Suggest(ctx context.Context, query string, limit int, userID i
 		}
 	}
 
-	res, err := s.meili.Index("books").SearchWithContext(ctx, query, &meilisearch.SearchRequest{
+	req := &meilisearch.SearchRequest{
 		Limit:            meiliLimit,
 		ShowRankingScore: rerank,
-	})
+	}
+	if f := exclusionFilter(excludeGenres, excludeLangs); f != "" {
+		req.Filter = f
+	}
+	res, err := s.meili.Index("books").SearchWithContext(ctx, query, req)
 	if err != nil {
 		return nil, fmt.Errorf("meili search: %w", err)
 	}
@@ -507,6 +555,33 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	b.Genres = genres
 
 	return b, nil
+}
+
+// GenresAndLang — лёгкий запрос: коды жанров (fb2_code) и язык книги по id.
+// Нужен для глобального hard-block скрытого контента на маршрутах, которые
+// не грузят полную карточку (обложка по id). Возвращает ErrNotFound, если
+// книги нет. Удалённые книги тоже учитываются (gate важнее, чем deleted-флаг).
+func (s *Service) GenresAndLang(ctx context.Context, id int64) ([]string, string, error) {
+	var (
+		lang  pgtype.Text
+		codes []string
+	)
+	err := s.pool.QueryRow(ctx, `
+		SELECT b.lang,
+		       COALESCE(array_agg(g.fb2_code) FILTER (WHERE g.fb2_code IS NOT NULL), '{}')
+		FROM books b
+		LEFT JOIN book_genres bg ON bg.book_id = b.id
+		LEFT JOIN genres g       ON g.id = bg.genre_id
+		WHERE b.id = $1
+		GROUP BY b.id, b.lang
+	`, id).Scan(&lang, &codes)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, "", ErrNotFound
+		}
+		return nil, "", fmt.Errorf("query book genres/lang: %w", err)
+	}
+	return codes, lang.String, nil
 }
 
 func (s *Service) queryAuthors(ctx context.Context, bookID int64) ([]AuthorRef, error) {

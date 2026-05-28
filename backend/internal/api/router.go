@@ -28,6 +28,7 @@ type Deps struct {
 	Kindle      KindleDeps
 	Adaptations AdaptationsDeps
 	Settings    SettingsDeps
+	Content     ContentDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -89,6 +90,10 @@ func NewRouter(d Deps) http.Handler {
 			// Защищённые: требуют валидной session-cookie.
 			r.Group(func(r chi.Router) {
 				r.Use(requireAuth(d.Auth))
+				// bookGate — глобальный hard-block скрытого контента на
+				// маршрутах «по id книги» (404 даже по прямой ссылке).
+				// Бесплатен, если админ ничего не скрыл (дефолт).
+				bookGate := requireBookVisible(d.Content, d.Books)
 				r.Get("/auth/me", handleMe(d.Auth))
 				// Self-management. /api/me — обновление своего профиля
 				// (display_name, email), /api/me/password — смена своего
@@ -96,27 +101,35 @@ func NewRouter(d Deps) http.Handler {
 				r.Patch("/me", handleUpdateMe(d.Auth))
 				r.Patch("/me/password", handleChangeMyPassword(d.Auth))
 				if d.Books.Service != nil {
-					r.Get("/books", handleListBooks(d.Books))
-					r.Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
+					r.Get("/books", handleListBooks(d.Books, d.Content))
+					r.With(bookGate).Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
 				}
 				if d.Adaptations.Service != nil {
-					r.Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))
+					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))
 				}
 				if d.Metadata.Service != nil {
 					r.Get("/covers/{name}", handleCover(d.Metadata))
 					// On-demand обложка по id книги (извлечение из fb2 на лету).
-					r.Get("/covers/book/{id}", handleCoverByID(d.Metadata))
+					r.With(bookGate).Get("/covers/book/{id}", handleCoverByID(d.Metadata))
 				}
 				if d.Books.Service != nil || d.Catalog.Service != nil {
-					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog, d.History))
+					r.Get("/search/suggest", handleSuggest(d.Books, d.Catalog, d.History, d.Content))
 				}
 				if d.Download.Books != nil && d.Download.Converter != nil {
-					r.Get("/books/{id}/download", handleDownload(d.Download, d.History))
+					r.With(bookGate).Get("/books/{id}/download", handleDownload(d.Download, d.History))
 				}
 				if d.Catalog.Service != nil {
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata))
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History))
 					r.Get("/genres", handleListGenres(d.Catalog))
+					r.Get("/languages", handleListLanguages(d.Catalog))
+				}
+				// Раздел «Контент» (персональные скрытые жанры/языки) +
+				// объединённый effective-набор для панели фильтров.
+				if d.Content.Resolver != nil {
+					r.Get("/me/content", handleGetMeContent(d.Content))
+					r.Put("/me/content", handleUpdateMeContent(d.Content))
+					r.Get("/content/effective", handleEffectiveContent(d.Content))
 				}
 				if d.History.Service != nil {
 					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
@@ -139,7 +152,7 @@ func NewRouter(d Deps) http.Handler {
 				// In-browser ридер: тот же путь конвертации что и /download,
 				// но без Content-Disposition: attachment и без записи в reads.
 				if d.Download.Books != nil && d.Download.Converter != nil {
-					r.Get("/books/{id}/epub", handleEpub(d.Download))
+					r.With(bookGate).Get("/books/{id}/epub", handleEpub(d.Download))
 				}
 				if d.Kindle.Service != nil {
 					r.Get("/me/kindle-targets", handleListKindleTargets(d.Kindle))
@@ -147,7 +160,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Patch("/me/kindle-targets/{id}", handleUpdateKindleTarget(d.Kindle))
 					r.Delete("/me/kindle-targets/{id}", handleDeleteKindleTarget(d.Kindle))
 					if d.Kindle.Books != nil && d.Kindle.Converter != nil {
-						r.Post("/books/{id}/send-to-kindle", handleSendToKindle(d.Kindle))
+						r.With(bookGate).Post("/books/{id}/send-to-kindle", handleSendToKindle(d.Kindle))
 					}
 				}
 			})
@@ -168,6 +181,12 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
 					r.Post("/admin/cover-cache/prewarm", handlePrewarmNow(d.Settings))
 					r.Post("/admin/cover-cache/prewarm/stop", handlePrewarmStop(d.Settings))
+				}
+				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
+				// пользователей сервера).
+				if d.Content.Resolver != nil {
+					r.Get("/admin/content", handleGetAdminContent(d.Content))
+					r.Put("/admin/content", handleUpdateAdminContent(d.Content))
 				}
 			})
 		}

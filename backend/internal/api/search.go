@@ -34,7 +34,7 @@ type SuggestResponse struct {
 //
 // Limit ограничен сверху 20 на каждую группу — палитра должна оставаться
 // компактной.
-func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps) http.HandlerFunc {
+func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		limit := parseIntOr(r.URL.Query().Get("limit"), 5)
@@ -65,6 +65,12 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps) http.Handler
 		if u, ok := UserFromContext(r.Context()); ok {
 			userID = u.ID
 		}
+		// Скрытые из выдачи жанры/языки (admin ∪ персональные) — палитра
+		// поиска не должна подсказывать книги, которых нет в основном списке.
+		var exGenres, exLangs []string
+		if content.Resolver != nil {
+			exGenres, exLangs = content.Resolver.Exclusions(r.Context(), userID)
+		}
 
 		var (
 			bookItems   []books.ListItem
@@ -79,7 +85,7 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps) http.Handler
 			if bd.Service == nil {
 				return
 			}
-			items, err := bd.Service.Suggest(ctx, q, limit, userID)
+			items, err := bd.Service.Suggest(ctx, q, limit, userID, exGenres, exLangs)
 			if err == nil {
 				bookItems = items
 			}
