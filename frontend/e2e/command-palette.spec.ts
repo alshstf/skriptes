@@ -47,6 +47,12 @@ test('command palette: mobile — диалог в пределах экрана 
   await page.getByLabel('Открыть поиск').click();
   const input = page.getByPlaceholder(/Поиск книг/);
   await expect(input).toBeVisible();
+
+  // iOS Safari авто-зумит страницу при фокусе в инпут с font-size < 16px
+  // (тогда левый край палитры уезжает за экран). На мобильном инпут ≥16px.
+  const fontSize = await input.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(fontSize).toBeGreaterThanOrEqual(16);
+
   await input.fill('кад');
 
   const dialog = page.getByRole('dialog');

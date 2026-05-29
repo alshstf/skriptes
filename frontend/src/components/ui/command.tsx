@@ -34,7 +34,11 @@ function CommandInput({
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          // text-base на мобильном (≥16px) — иначе iOS Safari авто-зумит
+          // страницу при фокусе в инпут и левый край палитры уезжает за
+          // экран. На md+ возвращаем компактный text-sm. Тот же приём, что
+          // в базовом ui/input.tsx.
+          "flex h-11 w-full rounded-md bg-transparent py-3 text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
           className,
         )}
         {...props}
