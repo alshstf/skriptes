@@ -46,6 +46,21 @@ describe('BookCover', () => {
     expect(screen.queryByText(/загружается/)).not.toBeInTheDocument();
   });
 
+  it('повторный маунт после 404 сразу рисует плейсхолдер (кэш исхода, без мелькания)', () => {
+    const url = '/api/covers/book/777';
+    const first = render(<BookCover src={url} title="Зет" placeholder="monogram" />);
+    fireEvent.error(screen.getByRole('img', { name: 'Обложка: Зет' }));
+    expect(screen.getByRole('img', { name: 'Обложка: Зет' }).tagName).not.toBe('IMG');
+    first.unmount();
+
+    // Тот же url появляется снова (как при возврате строки в окно
+    // виртуализации) — сразу плейсхолдер, без повторной попытки <img>.
+    render(<BookCover src={url} title="Зет" placeholder="monogram" />);
+    const ph = screen.getByRole('img', { name: 'Обложка: Зет' });
+    expect(ph.tagName).not.toBe('IMG');
+    expect(ph).toHaveTextContent('З');
+  });
+
   it('keeps same aspect class so swap does not shift layout', () => {
     const { rerender, container } = render(<BookCover title="X" />);
     const placeholderClass = container.firstElementChild?.className ?? '';
