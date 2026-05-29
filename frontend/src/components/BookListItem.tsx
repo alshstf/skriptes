@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
 import { useGenreMap } from '@/lib/genres';
+import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
 import type { BookListItem as Item } from '@/lib/books';
 
 /**
@@ -26,6 +27,7 @@ export function BookListItem({
   // display-имена через useGenreMap. Если справочник ещё в полёте
   // или код не в словаре — показываем сам код как fallback.
   const genreMap = useGenreMap();
+  const chipCls = genreChipClass(useGenreChipStyle());
   return (
     <Link
       to="/books/$id"
@@ -51,7 +53,7 @@ export function BookListItem({
         {book.genres && book.genres.length > 0 ? (
           <div className="flex flex-wrap gap-1 pt-1">
             {book.genres.map((g) => (
-              <Badge key={g} variant="secondary" className="text-xs font-normal">
+              <Badge key={g} variant="secondary" className={chipCls}>
                 {genreMap.get(g)?.display ?? g}
               </Badge>
             ))}

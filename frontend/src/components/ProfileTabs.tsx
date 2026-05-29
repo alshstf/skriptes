@@ -10,6 +10,7 @@ import { Link } from '@tanstack/react-router';
 const tabs = [
   { to: '/me', label: 'Профиль' },
   { to: '/me/content', label: 'Контент' },
+  { to: '/me/appearance', label: 'Внешний вид' },
 ] as const;
 
 const baseTab = 'rounded-md px-3 py-1.5 text-sm font-medium transition';
