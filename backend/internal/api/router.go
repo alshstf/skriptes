@@ -131,6 +131,11 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/me/content", handleUpdateMeContent(d.Content))
 					r.Get("/content/effective", handleEffectiveContent(d.Content))
 				}
+				// Раздел «Внешний вид» — персональные визуальные настройки.
+				if d.Settings.Store != nil {
+					r.Get("/me/appearance", handleGetMeAppearance(d.Settings))
+					r.Put("/me/appearance", handleUpdateMeAppearance(d.Settings))
+				}
 				if d.History.Service != nil {
 					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
 					r.Delete("/books/{id}/favorite", handleRemoveFavorite(d.History))

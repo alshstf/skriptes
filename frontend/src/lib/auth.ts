@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, ApiError } from './api';
+import { clearAppearanceCache } from './appearance';
 
 export type Role = 'admin' | 'user';
 
@@ -70,6 +71,9 @@ export function useLogout() {
     },
     onSettled: async () => {
       qc.setQueryData(meQueryKey, null);
+      // localStorage per-origin, не per-user → чистим кэш внешнего вида,
+      // чтобы следующий пользователь на этом браузере не увидел чужой стиль.
+      clearAppearanceCache();
       await qc.invalidateQueries();
     },
   });

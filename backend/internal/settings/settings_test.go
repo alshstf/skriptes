@@ -103,6 +103,41 @@ func TestSettings_ContentRoundTrip(t *testing.T) {
 	require.False(t, r.AdminHides([]string{"erotica"}, "en"), "после перезаписи старые скрытые сняты")
 }
 
+// TestSettings_AppearanceRoundTrip — дефолт (soft) на пустой БД, upsert,
+// нормализация мусорных значений в soft.
+func TestSettings_AppearanceRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	var uid int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('appearance@example.test', 'A', 'x', 'user') RETURNING id`).Scan(&uid))
+
+	// Нет оверрайда → дефолт (soft).
+	got, err := store.UserAppearance(ctx, uid)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultAppearanceConfig(), got)
+	require.Equal(t, "soft", got.GenreChipStyle)
+
+	// Сохранили classic — читается обратно.
+	require.NoError(t, store.SetUserAppearance(ctx, uid, settings.AppearanceConfig{GenreChipStyle: "classic"}))
+	got, err = store.UserAppearance(ctx, uid)
+	require.NoError(t, err)
+	require.Equal(t, "classic", got.GenreChipStyle)
+
+	// Мусорное значение нормализуется в soft.
+	require.NoError(t, store.SetUserAppearance(ctx, uid, settings.AppearanceConfig{GenreChipStyle: "garbage"}))
+	got, err = store.UserAppearance(ctx, uid)
+	require.NoError(t, err)
+	require.Equal(t, "soft", got.GenreChipStyle)
+}
+
 func startSettingsPG(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Helper()
 	pgC, err := postgres.Run(ctx,

@@ -11,10 +11,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { CommandPalette } from '@/components/CommandPalette';
 import { useMe, useLogout, type User } from '@/lib/auth';
+import { useAppearance } from '@/lib/appearance';
 import type { ReactNode } from 'react';
 
 export function Layout({ children }: { children: ReactNode }) {
   const me = useMe();
+  // Подтягиваем серверную настройку внешнего вида и зеркалим в localStorage,
+  // чтобы стиль чипов применился на любой странице (даже до захода в профиль).
+  useAppearance();
   return (
     <div className="min-h-dvh flex flex-col">
       <Header user={me.data ?? null} />

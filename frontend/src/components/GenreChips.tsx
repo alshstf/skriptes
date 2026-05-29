@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Badge, badgeVariants } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useGenreMap } from '@/lib/genres';
+import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
 import { cn } from '@/lib/utils';
 
 /**
@@ -32,6 +33,7 @@ const GAP_PX = 4; // соответствует gap-1 (0.25rem)
 export function GenreChips({ genres, highlight }: { genres: string[]; highlight?: string[] }) {
   const genreMap = useGenreMap();
   const label = (code: string) => genreMap.get(code)?.display ?? code;
+  const chipCls = genreChipClass(useGenreChipStyle());
 
   // Если активен фильтр по жанрам — совпавшие двигаем в начало (стабильно),
   // чтобы именно они попадали в видимые позиции, а не прятались за «+N».
@@ -129,11 +131,11 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
         className="relative flex items-center gap-1 overflow-hidden pt-1"
       >
         {ordered.map((g) => (
-          <Badge key={g} data-chip="" variant="secondary" className="text-xs font-normal">
+          <Badge key={g} data-chip="" variant="secondary" className={chipCls}>
             {label(g)}
           </Badge>
         ))}
-        <span data-plus="" className={cn(badgeVariants({ variant: 'secondary' }), 'font-normal')}>
+        <span data-plus="" className={cn(badgeVariants({ variant: 'secondary' }), chipCls)}>
           +{ordered.length}
         </span>
       </div>
@@ -150,7 +152,7 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
       className="relative flex items-center gap-1 overflow-hidden pt-1"
     >
       {shown.map((g) => (
-        <Badge key={g} variant="secondary" className="text-xs font-normal">
+        <Badge key={g} variant="secondary" className={chipCls}>
           {label(g)}
         </Badge>
       ))}
@@ -167,7 +169,8 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
               onClick={(e) => e.stopPropagation()}
               className={cn(
                 badgeVariants({ variant: 'secondary' }),
-                'relative z-10 cursor-pointer font-normal hover:bg-secondary/80',
+                chipCls,
+                'relative z-10 cursor-pointer hover:bg-muted hover:text-foreground',
               )}
               aria-label={`Ещё ${hidden.length} жанр(ов)`}
             >
@@ -177,7 +180,7 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
           <PopoverContent align="start" className="w-auto max-w-xs" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-wrap gap-1">
               {hidden.map((g) => (
-                <Badge key={g} variant="secondary" className="text-xs font-normal">
+                <Badge key={g} variant="secondary" className={chipCls}>
                   {label(g)}
                 </Badge>
               ))}
