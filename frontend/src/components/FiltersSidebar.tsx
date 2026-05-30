@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { useGenreMap } from '@/lib/genres';
-import { useEffectiveContent } from '@/lib/content';
+import { useEffectiveContent, useLanguageMap } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import type { FacetDistribution } from '@/lib/books';
 
@@ -56,6 +56,8 @@ export function FiltersSidebar({
   // и так их не покажет — отдельно фильтровать не нужно.
   const effective = useEffectiveContent();
   const hiddenGenres = effective.data?.hidden_genres;
+  // Резолвим код языка фасета (ru) в имя (Русский). Фолбэк — сам код.
+  const langMap = useLanguageMap();
   return (
     <aside className="space-y-6 text-sm" aria-label="Фильтры">
       <div className="flex items-center justify-between">
@@ -91,6 +93,7 @@ export function FiltersSidebar({
         facetKey="lang"
         facets={facets}
         onChange={(lang) => onChange({ ...value, lang })}
+        labelFor={(code) => langMap.get(code) ?? code}
       />
     </aside>
   );
@@ -173,12 +176,16 @@ function FacetRadios({
   facetKey,
   facets,
   onChange,
+  labelFor,
 }: {
   title: string;
   selected: string;
   facetKey: string;
   facets?: FacetDistribution;
   onChange: (next: string) => void;
+  // Маппинг значения фасета в отображаемую подпись (напр. код языка → имя).
+  // value остаётся ключом/значением для onChange; меняется только текст.
+  labelFor?: (value: string) => string;
 }) {
   const items = mergeFacetItems(facets?.[facetKey], selected ? [selected] : []);
   if (items.length === 0) return null;
@@ -208,7 +215,7 @@ function FacetRadios({
                 selected === value ? 'font-semibold' : '',
               )}
             >
-              <span className="flex-1 truncate">{value}</span>
+              <span className="flex-1 truncate">{labelFor ? labelFor(value) : value}</span>
               {count != null ? (
                 <span className="text-xs tabular-nums text-muted-foreground">{count}</span>
               ) : null}
@@ -267,6 +274,7 @@ export function ActiveFilterChips({
   // жанров уже подгружен. Иначе показываем сырой код (fallback
   // когда useGenres ещё в полёте; редкий случай).
   const genreMap = useGenreMap();
+  const langMap = useLanguageMap();
   const chips: { label: string; onRemove: () => void }[] = [];
   for (const g of value.genres) {
     const display = genreMap.get(g)?.display ?? g;
@@ -278,7 +286,7 @@ export function ActiveFilterChips({
   }
   if (value.lang) {
     chips.push({
-      label: `Язык: ${value.lang}`,
+      label: `Язык: ${langMap.get(value.lang) ?? value.lang}`,
       onRemove: () => onChange({ ...value, lang: '' }),
     });
   }
