@@ -149,36 +149,6 @@ export function ContentEditor({
 // LOCKED_HINT — текст тултипа для пунктов, скрытых администратором.
 const LOCKED_HINT = 'Скрыто администратором — изменить нельзя';
 
-/**
- * ContentSaveBar — закреплённая внизу панель сохранения. Рендерить только
- * при наличии несохранённых изменений (страница сама решает): тогда кнопка
- * «Сохранить» всегда на виду, даже если форма (список жанров) длиннее экрана.
- * `sticky bottom-0` прилипает к низу вьюпорта, пока контент выше скроллится.
- */
-export function ContentSaveBar({
-  saving,
-  onSave,
-  onReset,
-}: {
-  saving: boolean;
-  onSave: () => void;
-  onReset: () => void;
-}) {
-  return (
-    <div className="sticky bottom-0 z-20 flex items-center justify-between gap-3 rounded-lg border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <span className="text-sm text-muted-foreground">Есть несохранённые изменения</span>
-      <div className="flex shrink-0 gap-2">
-        <Button variant="ghost" size="sm" onClick={onReset} disabled={saving}>
-          Отменить
-        </Button>
-        <Button size="sm" onClick={onSave} disabled={saving}>
-          {saving ? 'Сохранение…' : 'Сохранить'}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 // ── Языки ───────────────────────────────────────────────────────────
 
 export function LanguageVisibilityList({
@@ -199,37 +169,84 @@ export function LanguageVisibilityList({
     return <p className="text-sm italic text-muted-foreground">Языки не найдены.</p>;
   }
 
+  // Массовые действия (учитывают locked — их не трогаем): языков на проде
+  // несколько десятков, по одному скрывать неудобно.
+  const toggleable = languages.map((l) => l.code).filter((c) => !lockedSet.has(c));
+  const allHidden = toggleable.length > 0 && toggleable.every((c) => hiddenSet.has(c));
+  const noneHidden = toggleable.every((c) => !hiddenSet.has(c));
+  const hideAll = () => onChange(Array.from(new Set([...hidden, ...toggleable])));
+  const showAll = () => onChange(hidden.filter((c) => !toggleable.includes(c)));
+
   return (
-    <ul className="space-y-0.5" aria-label="Языки">
-      {languages.map((l) => {
-        const isLocked = lockedSet.has(l.code);
-        const checked = isLocked || hiddenSet.has(l.code);
-        return (
-          <li key={l.code} title={isLocked ? LOCKED_HINT : undefined}>
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={checked}
-              aria-label={`Скрыть язык: ${l.display}`}
-              disabled={isLocked}
-              onClick={() => onChange(withCode(hidden, l.code, !checked))}
-              className={cn(
-                'flex w-full items-center gap-2 rounded px-1 py-1 text-left',
-                isLocked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-accent/40',
-              )}
-            >
-              <HideBox state={checked ? 'on' : 'off'} />
-              <span className="flex-1 truncate text-sm">{l.display}</span>
-              {isLocked ? (
-                <Lock className="size-3.5 text-muted-foreground" aria-label="скрыто администратором" />
-              ) : null}
-              <span className="text-xs tabular-nums text-muted-foreground">{l.book_count}</span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="space-y-1">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs text-muted-foreground">
+          {languages.length} {pluralLang(languages.length)}
+        </span>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs"
+            onClick={hideAll}
+            disabled={allHidden}
+          >
+            Скрыть все
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs"
+            onClick={showAll}
+            disabled={noneHidden}
+          >
+            Показать все
+          </Button>
+        </div>
+      </div>
+      <ul aria-label="Языки">
+        {languages.map((l) => {
+          const isLocked = lockedSet.has(l.code);
+          const checked = isLocked || hiddenSet.has(l.code);
+          return (
+            <li key={l.code} title={isLocked ? LOCKED_HINT : undefined}>
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={checked}
+                aria-label={`Скрыть язык: ${l.display}`}
+                disabled={isLocked}
+                onClick={() => onChange(withCode(hidden, l.code, !checked))}
+                className={cn(
+                  // Крупная тач-зона (min-h-9, px-2 py-2) — на телефоне легко
+                  // промахнуться мимо маленького чекбокса.
+                  'flex min-h-9 w-full items-center gap-2.5 rounded px-2 py-2 text-left',
+                  isLocked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-accent/40',
+                )}
+              >
+                <HideBox state={checked ? 'on' : 'off'} />
+                <span className="flex-1 truncate text-sm">{l.display}</span>
+                {isLocked ? (
+                  <Lock className="size-3.5 text-muted-foreground" aria-label="скрыто администратором" />
+                ) : null}
+                <span className="text-xs tabular-nums text-muted-foreground">{l.book_count}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
+}
+
+// pluralLang — «1 язык / 2 языка / 5 языков».
+function pluralLang(n: number): string {
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m100 >= 11 && m100 <= 14) return 'языков';
+  if (m10 === 1) return 'язык';
+  if (m10 >= 2 && m10 <= 4) return 'языка';
+  return 'языков';
 }
 
 // ── Жанры (сгруппированы по категориям, с поиском) ──────────────────

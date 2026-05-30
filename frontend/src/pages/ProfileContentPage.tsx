@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileTabs } from '@/components/ProfileTabs';
-import { ContentEditor, ContentSaveBar } from '@/components/ContentVisibility';
+import { ContentEditor } from '@/components/ContentVisibility';
+import { SaveBar } from '@/components/SaveBar';
 import { useMyContent, useUpdateMyContent, useLanguages, sameSet } from '@/lib/content';
 import { useGenres } from '@/lib/genres';
 import { ApiError } from '@/lib/api';
@@ -91,7 +92,7 @@ export function ProfileContentPage() {
           onChangeLanguages={setHiddenLangs}
           footer={
             dirty ? (
-              <ContentSaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
+              <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
             ) : null
           }
         />

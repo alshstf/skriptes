@@ -63,32 +63,19 @@ function UserMenu({ user }: { user: User }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={(e) => {
-            e.preventDefault();
-            void navigate({ to: '/me' });
-          }}
-        >
+        <DropdownMenuItem onSelect={() => void navigate({ to: '/me' })}>
           <Settings className="mr-2 size-4" aria-hidden />
           Профиль
         </DropdownMenuItem>
         {user.role === 'admin' ? (
-          <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault();
-              void navigate({ to: '/admin/users' });
-            }}
-          >
+          <DropdownMenuItem onSelect={() => void navigate({ to: '/admin/users' })}>
             <Shield className="mr-2 size-4" aria-hidden />
             Администрирование
           </DropdownMenuItem>
         ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onSelect={(e) => {
-            e.preventDefault();
-            logout.mutate();
-          }}
+          onSelect={() => logout.mutate()}
           disabled={logout.isPending}
         >
           <LogOut className="mr-2 size-4" aria-hidden />

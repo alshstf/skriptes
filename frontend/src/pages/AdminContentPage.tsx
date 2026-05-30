@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdminTabs } from '@/components/AdminTabs';
-import { ContentEditor, ContentSaveBar } from '@/components/ContentVisibility';
+import { ContentEditor } from '@/components/ContentVisibility';
+import { SaveBar } from '@/components/SaveBar';
 import { useAdminContent, useUpdateAdminContent, useLanguages, sameSet } from '@/lib/content';
 import { useGenres } from '@/lib/genres';
 import { ApiError } from '@/lib/api';
@@ -78,7 +79,7 @@ export function AdminContentPage() {
           onChangeLanguages={setHiddenLangs}
           footer={
             dirty ? (
-              <ContentSaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
+              <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
             ) : null
           }
         />

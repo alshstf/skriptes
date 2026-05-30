@@ -246,7 +246,13 @@ export function BooksPage() {
                 ) : null}
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[85%] gap-0 p-0">
+            <SheetContent
+              side="left"
+              className="w-[85%] gap-0 p-0"
+              // Не фокусируем первое поле (сортировку) при открытии — иначе на
+              // мобильном раскрывался её дропдаун и перекрывал треть дровера.
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
               {/* SheetTitle обязателен для a11y (Radix варнит без него),
                   но визуально дублировал бы собственный заголовок
                   FiltersSidebar — поэтому sr-only. */}

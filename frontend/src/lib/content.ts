@@ -58,6 +58,19 @@ export function useLanguages() {
 }
 
 /**
+ * useLanguageMap — производный Map код→display (как useGenreMap для жанров).
+ * Нужен там, где есть только код языка (фасеты `/books`, чипы активных
+ * фильтров): резолвим «ru» → «Русский». Пустой Map пока запрос не завершён
+ * — caller фолбэкает на сам код.
+ */
+export function useLanguageMap(): Map<string, string> {
+  const q = useLanguages();
+  const map = new Map<string, string>();
+  for (const l of q.data ?? []) map.set(l.code, l.display);
+  return map;
+}
+
+/**
  * useEffectiveContent — объединённый набор скрытого (admin ∪ персональное)
  * для текущего пользователя. Панель фильтров прячет эти жанры/языки.
  * Бэкенд уже исключает их из выдачи — это только для чистого UI.
