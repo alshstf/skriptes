@@ -103,7 +103,7 @@ function SeriesStats({ series }: { series: Series }) {
         {showHistogram ? (
           <div className="space-y-1">
             <div className="text-xs font-medium text-muted-foreground uppercase">
-              Добавлено по годам
+              Книги по годам написания
             </div>
             <YearHistogram data={years} />
           </div>

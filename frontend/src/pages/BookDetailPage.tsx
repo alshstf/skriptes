@@ -138,6 +138,12 @@ export function BookDetailPage() {
                 <Field label="Архив" value={book.archive} mono />
                 <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
                 {book.lang ? <Field label="Язык" value={book.lang} /> : null}
+                {book.written_year ? (
+                  <Field label="Год написания" value={String(book.written_year)} />
+                ) : null}
+                {book.edition_year ? (
+                  <Field label="Год издания" value={String(book.edition_year)} />
+                ) : null}
                 {book.date_added ? <Field label="Добавлена" value={book.date_added} /> : null}
                 {book.rating !== undefined ? (
                   <Field label="Рейтинг" value={String(book.rating)} />

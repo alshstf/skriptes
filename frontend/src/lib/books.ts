@@ -78,6 +78,12 @@ export type Book = {
   genres: GenreRef[];
   lang?: string;
   date_added?: string;
+  /** Год написания / первого издания произведения (fb2 title-info/date →
+   *  внешние источники). Питает гистограмму на страницах автора/серии. */
+  written_year?: number;
+  /** Год конкретного бумажного издания этого fb2 (publish-info/year).
+   *  Справочное поле, в статистику не идёт. */
+  edition_year?: number;
   rating?: number;
   annotation?: string;
   cover_path?: string;

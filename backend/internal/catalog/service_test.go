@@ -39,6 +39,13 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 20, stats.BooksInserted)
 
+	// Год написания (written_year) в INPX/фикстуре отсутствует — его
+	// наполняет fb2-обогащение (EnsureYearLocal), которого в этом тесте нет.
+	// Проставляем явно, чтобы проверить гистограмму по ГОДУ НАПИСАНИЯ
+	// (а не по date_added — см. граблю про дату добавления в коллекцию).
+	_, err = pool.Exec(ctx, `UPDATE books SET written_year = 2015`)
+	require.NoError(t, err)
+
 	svc := catalog.New(pool)
 
 	// Находим Алексеева по нормализованному имени — id плавающий между запусками.
@@ -114,15 +121,21 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
 	require.Equal(t, 1, seriesSugg[0].BookCount)
 
-	// ── YearStats: у Алексеева ровно 1 книга, у неё date_added есть →
-	// одна точка в гистограмме. Год — тот, что в фикстуре (см. test.inpx).
+	// ── YearStats: у Алексеева ровно 1 книга с проставленным written_year →
+	// одна точка в гистограмме по году написания.
 	require.Len(t, a.YearStats, 1)
 	require.Equal(t, 1, a.YearStats[0].Count)
-	require.GreaterOrEqual(t, a.YearStats[0].Year, 2000)
+	require.Equal(t, 2015, a.YearStats[0].Year)
+	// К году приложен список книг (для тултипа гистограммы).
+	require.Len(t, a.YearStats[0].Books, 1)
+	require.Equal(t, "Кадетский корпус. Книга 2", a.YearStats[0].Books[0].Title)
 
 	// Series тоже — единственная книга, одна точка.
 	require.Len(t, s.YearStats, 1)
 	require.Equal(t, 1, s.YearStats[0].Count)
+	require.Equal(t, 2015, s.YearStats[0].Year)
+	require.Len(t, s.YearStats[0].Books, 1)
+	require.Equal(t, "Кадетский корпус. Книга 2", s.YearStats[0].Books[0].Title)
 
 	// ── ReadCount: без сигналов = 0; запишем read и повторно прочитаем.
 	require.Equal(t, 0, a.ReadCount)

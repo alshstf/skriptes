@@ -323,30 +323,54 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 	return out, rows.Err()
 }
 
-// queryAuthorYearStats — гистограмма по году добавления книг автора.
-// Использует date_added: это когда книга попала в нашу коллекцию,
-// а не год публикации (его мы пока из fb2 не парсим). Книги без
-// date_added отбрасываются — нет смысла рисовать столбик "Unknown".
+// yearStatsBooksCap — потолок числа книг, прикладываемых к одному году
+// (для тултипа). Count при этом точный; список усекаем, чтобы не раздувать
+// payload у плодовитого автора. Реалистично книг в году единицы.
+const yearStatsBooksCap = 50
+
+// queryAuthorYearStats — гистограмма по году НАПИСАНИЯ книг автора
+// (written_year: fb2 <title-info><date> → внешние источники). Это год
+// произведения, а не дата добавления в коллекцию (см. граблю про
+// date_added). Книги без written_year отбрасываются — пока год не
+// извлечён/недоступен, столбик рисовать не из чего. К каждому году
+// прикладываем список книг (id+title) для тултипа на фронте.
 func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64) ([]YearCount, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT extract(year from b.date_added)::int AS year, count(*) AS cnt
+		SELECT b.written_year::int AS year, b.id, b.title
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		WHERE ba.author_id = $1 AND b.date_added IS NOT NULL
-		GROUP BY year
-		ORDER BY year
+		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL
+		ORDER BY b.written_year, b.title
 	`, authorID)
 	if err != nil {
 		return nil, fmt.Errorf("query author year stats: %w", err)
 	}
+	return groupYearStats(rows)
+}
+
+// groupYearStats сворачивает строки (year, id, title), отсортированные по
+// году, в []YearCount: считает книги и собирает их список (с потолком
+// yearStatsBooksCap). Закрывает rows.
+func groupYearStats(rows pgx.Rows) ([]YearCount, error) {
 	defer rows.Close()
 	var out []YearCount
 	for rows.Next() {
-		var yc YearCount
-		if err := rows.Scan(&yc.Year, &yc.Count); err != nil {
+		var (
+			year  int
+			id    int64
+			title string
+		)
+		if err := rows.Scan(&year, &id, &title); err != nil {
 			return nil, err
 		}
-		out = append(out, yc)
+		if len(out) == 0 || out[len(out)-1].Year != year {
+			out = append(out, YearCount{Year: year})
+		}
+		b := &out[len(out)-1]
+		b.Count++
+		if len(b.Books) < yearStatsBooksCap {
+			b.Books = append(b.Books, YearBook{ID: id, Title: title})
+		}
 	}
 	return out, rows.Err()
 }
@@ -375,28 +399,18 @@ func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int
 }
 
 // querySeriesYearStats — то же самое для серии: распределение книг в
-// серии по году добавления.
+// серии по году написания (written_year) + список книг каждого года.
 func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64) ([]YearCount, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT extract(year from b.date_added)::int AS year, count(*) AS cnt
+		SELECT b.written_year::int AS year, b.id, b.title
 		FROM books b
-		WHERE b.series_id = $1 AND b.deleted = false AND b.date_added IS NOT NULL
-		GROUP BY year
-		ORDER BY year
+		WHERE b.series_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL
+		ORDER BY b.written_year, b.title
 	`, seriesID)
 	if err != nil {
 		return nil, fmt.Errorf("query series year stats: %w", err)
 	}
-	defer rows.Close()
-	var out []YearCount
-	for rows.Next() {
-		var yc YearCount
-		if err := rows.Scan(&yc.Year, &yc.Count); err != nil {
-			return nil, err
-		}
-		out = append(out, yc)
-	}
-	return out, rows.Err()
+	return groupYearStats(rows)
 }
 
 // querySeriesReadCount — сколько книг серии пользователь явно отметил

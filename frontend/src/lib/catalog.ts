@@ -4,7 +4,10 @@ import type { BookListItem } from './books';
 
 export type GenreCount = { code: string; display: string; count: number };
 export type SeriesWithCount = { id: number; title: string; count: number };
-export type YearCount = { year: number; count: number };
+export type YearBook = { id: number; title: string };
+/** Точка гистограммы «по годам написания»: год, число книг и сами книги
+ *  (для тултипа — что именно написано в этот год). */
+export type YearCount = { year: number; count: number; books?: YearBook[] };
 
 export type Author = {
   id: number;

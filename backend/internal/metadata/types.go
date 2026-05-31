@@ -127,3 +127,13 @@ type AdaptationProvider interface {
 	Name() string
 	FetchAdaptations(ctx context.Context, q BookQuery) ([]Adaptation, error)
 }
+
+// LocalYearSource — локальный (без сети) поставщик года из fb2.
+// Возвращает год написания произведения (<title-info><date>) и год
+// бумажного издания (<publish-info><year>); 0 — если поле отсутствует
+// или непарсимо. Реализуется Fb2Provider; используется фоновым прогревом
+// (Enricher.EnsureYearLocal) для заполнения books.written_year /
+// edition_year. Внешние источники года — отдельная цепочка (отдельный PR).
+type LocalYearSource interface {
+	FetchYears(ctx context.Context, q BookQuery) (written int, edition int, err error)
+}

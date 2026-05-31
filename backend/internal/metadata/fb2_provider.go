@@ -8,6 +8,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/net/html/charset"
@@ -49,6 +51,29 @@ func (p *Fb2Provider) Name() string { return "fb2" }
 // аннотацию из нашего же zip-архива). Фоновый прогрев использует только
 // такие провайдеры — без rate-limit'ов внешних API. См. localProvider.
 func (p *Fb2Provider) Local() bool { return true }
+
+// FetchYears — локально, без сети: год написания произведения
+// (<title-info><date>) и год бумажного издания (<publish-info><year>).
+// Возвращает 0 для отсутствующего/непарсимого значения.
+//
+// written БЕЗ fallback на edition: это РАЗНЫЕ сущности. written питает
+// статистику по годам написания (и будущую корреляцию с биографией), а
+// edition — справочное поле «это издание». Смешивать их нельзя.
+//
+// document-info/date (когда СДЕЛАН fb2) и src-title-info (инфо об
+// оригинале перевода) сознательно игнорируем — это не год произведения.
+func (p *Fb2Provider) FetchYears(_ context.Context, q BookQuery) (written int, edition int, err error) {
+	if q.ArchivePath == "" || q.FB2Name == "" {
+		return 0, 0, ErrNotFound
+	}
+	rc, err := openFB2(q.ArchivePath, q.FB2Name)
+	if err != nil {
+		return 0, 0, err
+	}
+	defer func() { _ = rc.Close() }()
+	w, ed := scanFb2Years(rc)
+	return w, ed, nil
+}
 
 // FetchAnnotation — текстовое описание книги из тега
 // <description><title-info><annotation> внутри fb2.
@@ -250,6 +275,114 @@ func readCharData(dec *xml.Decoder) ([]byte, error) {
 			return out, nil
 		}
 	}
+}
+
+// fb2YearRe выдёргивает 4-значный год (1000–2029) из значения date/year.
+// Значения в fb2 бывают разные: ISO ("1869-01-01"), просто год ("1869"),
+// свободный текст ("XIX век", "1980-е") — берём первый разумный год либо 0.
+var fb2YearRe = regexp.MustCompile(`\b(1[0-9]{3}|20[0-2][0-9])\b`)
+
+func parseFb2Year(s string) int {
+	m := fb2YearRe.FindString(s)
+	if m == "" {
+		return 0
+	}
+	y, _ := strconv.Atoi(m)
+	return y
+}
+
+// attrValue — значение атрибута по local-name (без неймспейса).
+func attrValue(s xml.StartElement, name string) string {
+	for _, a := range s.Attr {
+		if a.Name.Local == name {
+			return a.Value
+		}
+	}
+	return ""
+}
+
+// elemText читает текстовое содержимое уже открытого элемента до его
+// закрывающего тега (StartElement элемента уже потреблён вызывающим).
+// Толерантен к вложенным тегам.
+func elemText(dec *xml.Decoder) string {
+	var b strings.Builder
+	depth := 1
+	for depth > 0 {
+		tok, err := dec.Token()
+		if err != nil {
+			break
+		}
+		switch t := tok.(type) {
+		case xml.CharData:
+			b.Write(t)
+		case xml.StartElement:
+			depth++
+		case xml.EndElement:
+			depth--
+		}
+	}
+	return strings.TrimSpace(b.String())
+}
+
+// scanFb2Years — один проход по XML, различает секции <description>:
+//
+//	title-info/date   → written (value-атрибут ISO либо текст)
+//	publish-info/year → edition
+//
+// Останавливаемся на <body>: вся метаинформация — выше, дальше тело книги.
+func scanFb2Years(r io.Reader) (written int, edition int) {
+	dec := xml.NewDecoder(r)
+	dec.CharsetReader = charset.NewReaderLabel
+	dec.Strict = false
+	var stack []string
+	for {
+		tok, terr := dec.Token()
+		if terr == io.EOF {
+			break
+		}
+		if terr != nil {
+			// Толерантно: битый хвост XML не должен ронять извлечение года —
+			// отдаём, что успели собрать выше по файлу.
+			return written, edition
+		}
+		switch t := tok.(type) {
+		case xml.StartElement:
+			name := t.Name.Local
+			parent := ""
+			if len(stack) > 0 {
+				parent = stack[len(stack)-1]
+			}
+			switch {
+			case name == "date" && parent == "title-info":
+				if written == 0 {
+					written = parseFb2Year(attrValue(t, "value"))
+					txt := elemText(dec)
+					if written == 0 {
+						written = parseFb2Year(txt)
+					}
+				} else {
+					_ = elemText(dec)
+				}
+				continue // элемент потреблён, в stack не кладём
+			case name == "year" && parent == "publish-info":
+				if edition == 0 {
+					edition = parseFb2Year(elemText(dec))
+				} else {
+					_ = elemText(dec)
+				}
+				continue
+			}
+			stack = append(stack, name)
+			if name == "body" {
+				return written, edition
+			}
+		case xml.EndElement:
+			if len(stack) > 0 {
+				stack = stack[:len(stack)-1]
+			}
+		}
+	}
+	return written, edition
 }
 
 func decodeBinary(b fb2Binary) (*CoverImage, error) {

@@ -78,23 +78,30 @@ type ListResponse struct {
 
 // Book — детальная карточка из PG (GET /api/books/:id).
 type Book struct {
-	ID         int64       `json:"id"`
-	LibID      string      `json:"lib_id"`
-	Title      string      `json:"title"`
-	Authors    []AuthorRef `json:"authors"`
-	Series     *SeriesRef  `json:"series,omitempty"`
-	SerNo      *int        `json:"ser_no,omitempty"`
-	Genres     []GenreRef  `json:"genres"`
-	Lang       string      `json:"lang,omitempty"`
-	DateAdded  *time.Time  `json:"date_added,omitempty"`
-	Rating     *int        `json:"rating,omitempty"`
-	Annotation string      `json:"annotation,omitempty"`
-	CoverPath  string      `json:"cover_path,omitempty"`
-	Archive    string      `json:"archive"`
-	FileName   string      `json:"file_name"`
-	Ext        string      `json:"ext"`
-	SizeBytes  int64       `json:"size_bytes"`
-	Deleted    bool        `json:"deleted,omitempty"`
+	ID        int64       `json:"id"`
+	LibID     string      `json:"lib_id"`
+	Title     string      `json:"title"`
+	Authors   []AuthorRef `json:"authors"`
+	Series    *SeriesRef  `json:"series,omitempty"`
+	SerNo     *int        `json:"ser_no,omitempty"`
+	Genres    []GenreRef  `json:"genres"`
+	Lang      string      `json:"lang,omitempty"`
+	DateAdded *time.Time  `json:"date_added,omitempty"`
+	// WrittenYear — год написания / первого издания произведения
+	// (fb2 <title-info><date> → внешние источники). EditionYear — год
+	// конкретного бумажного издания этого fb2 (<publish-info><year>).
+	// Это разные сущности: WrittenYear идёт в статистику, EditionYear —
+	// справочное поле. Оба nil, если год недоступен.
+	WrittenYear *int   `json:"written_year,omitempty"`
+	EditionYear *int   `json:"edition_year,omitempty"`
+	Rating      *int   `json:"rating,omitempty"`
+	Annotation  string `json:"annotation,omitempty"`
+	CoverPath   string `json:"cover_path,omitempty"`
+	Archive     string `json:"archive"`
+	FileName    string `json:"file_name"`
+	Ext         string `json:"ext"`
+	SizeBytes   int64  `json:"size_bytes"`
+	Deleted     bool   `json:"deleted,omitempty"`
 }
 
 // ListParams — нормализованные параметры запроса /api/books.
