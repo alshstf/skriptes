@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -15,24 +16,70 @@ import (
 
 const coverKey = "cover_cache"
 
-// CoverConfig — рантайм-настройки кэша обложек.
+// CoverConfig — рантайм-настройки фоновой ОБРАБОТКИ КОЛЛЕКЦИИ (парсинг fb2:
+// обложки + аннотации + года) и кэша обложек. Ключ app_settings остался
+// `cover_cache` ради совместимости; исторически тут жил только прогрев обложек,
+// теперь — вся локальная джоба.
 //
-//	CacheMaxMB     — бюджет дискового кэша (LRU-эвикция при превышении);
-//	                 0 = без лимита («полный стор» под прогрев).
-//	CacheMinFreeMB — пол свободного места: ниже него новые обложки не
-//	                 пишутся (защита раздела с postgres). Рекомендуется
-//	                 держать ≥ 100 МБ.
-//	Prewarm        — фоновый прогрев обложек всей коллекции (full-режим).
+//	Prewarm         — МАСТЕР-тумблер: вкл/выкл фоновую обработку коллекции.
+//	SyncCovers      — извлекать обложки из fb2 (под ним — лимиты кэша).
+//	SyncAnnotations — извлекать аннотации из fb2.
+//	SyncYears       — извлекать года написания/издания из fb2.
+//	Intensity       — нагрузка на IO: "low" | "medium" | "high"
+//	                  (число воркеров + пауза между книгами; для HDD vs NVMe).
+//	CacheMaxMB      — бюджет дискового кэша обложек (LRU-эвикция); 0 = без лимита.
+//	CacheMinFreeMB  — пол свободного места: ниже него обложки не пишутся.
 type CoverConfig struct {
-	CacheMaxMB     int  `json:"cache_max_mb"`
-	CacheMinFreeMB int  `json:"cache_min_free_mb"`
-	Prewarm        bool `json:"prewarm"`
+	CacheMaxMB      int    `json:"cache_max_mb"`
+	CacheMinFreeMB  int    `json:"cache_min_free_mb"`
+	Prewarm         bool   `json:"prewarm"`
+	SyncCovers      bool   `json:"sync_covers"`
+	SyncAnnotations bool   `json:"sync_annotations"`
+	SyncYears       bool   `json:"sync_years"`
+	Intensity       string `json:"intensity"`
 }
 
-// DefaultCoverConfig — безопасные дефолты (применяются если в БД нет
-// оверрайда). Прогрев выключен; кэш ограничен, есть пол свободного места.
+// DefaultCoverConfig — безопасные дефолты. Мастер выключен; при включении
+// синкаются все три типа (как раньше прогрев делал всё разом); интенсивность
+// средняя; кэш ограничен, есть пол свободного места.
 func DefaultCoverConfig() CoverConfig {
-	return CoverConfig{CacheMaxMB: 8192, CacheMinFreeMB: 1024, Prewarm: false}
+	return CoverConfig{
+		CacheMaxMB:      8192,
+		CacheMinFreeMB:  1024,
+		Prewarm:         false,
+		SyncCovers:      true,
+		SyncAnnotations: true,
+		SyncYears:       true,
+		Intensity:       IntensityMedium,
+	}
+}
+
+// Пресеты интенсивности обработки коллекции.
+const (
+	IntensityLow    = "low"
+	IntensityMedium = "medium"
+	IntensityHigh   = "high"
+)
+
+// IntensityWorkers — число параллельных воркеров прогрева для пресета.
+func (c CoverConfig) IntensityWorkers() int {
+	switch c.Intensity {
+	case IntensityLow:
+		return 1
+	case IntensityHigh:
+		return 6
+	default: // medium и любое неизвестное
+		return 2
+	}
+}
+
+// IntensityDelay — пауза между книгами (троттлинг IO). На low — заметная,
+// чтобы не душить медленный диск; на medium/high — без паузы.
+func (c CoverConfig) IntensityDelay() time.Duration {
+	if c.Intensity == IntensityLow {
+		return 250 * time.Millisecond
+	}
+	return 0
 }
 
 // MinFreeBytes — порог свободного места в байтах.

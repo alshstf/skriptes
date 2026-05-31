@@ -106,7 +106,9 @@ func TestPrewarmer_FillsCoverAndAnnotationFromFb2(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	prewarmer := NewPrewarmer(enricher, pool, booksRoot, 2, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	prewarmer := NewPrewarmer(enricher, pool, booksRoot,
+		PrewarmConfig{Covers: true, Annotations: true, Years: false, Workers: 2}, nil,
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
 	n := prewarmer.drain(ctx)
 	require.Equal(t, 1, n, "должна обработаться ровно одна книга")
 
@@ -125,6 +127,71 @@ func TestPrewarmer_FillsCoverAndAnnotationFromFb2(t *testing.T) {
 
 	// Повторный проход не должен ничего находить (книга уже помечена).
 	require.Equal(t, 0, prewarmer.drain(ctx), "уже прогретая книга не переобрабатывается")
+}
+
+// TestCandidateCond — кандидатное условие зависит от включённых под-типов.
+func TestCandidateCond(t *testing.T) {
+	require.Equal(t, "(b.metadata_fetched_at IS NULL OR b.year_local_scanned_at IS NULL)",
+		candidateCond(PrewarmConfig{Covers: true, Annotations: true, Years: true}))
+	require.Equal(t, "(b.metadata_fetched_at IS NULL)", candidateCond(PrewarmConfig{Covers: true}))
+	require.Equal(t, "(b.metadata_fetched_at IS NULL)", candidateCond(PrewarmConfig{Annotations: true}))
+	require.Equal(t, "(b.year_local_scanned_at IS NULL)", candidateCond(PrewarmConfig{Years: true}))
+	require.Equal(t, "false", candidateCond(PrewarmConfig{}))
+}
+
+type fakeResyncer struct{ calls int }
+
+func (f *fakeResyncer) ResyncYears(context.Context) (int, error) { f.calls++; return 0, nil }
+
+// TestPrewarmer_AutoResyncsYears — при включённом под-тумблере годов прогрев
+// извлекает written_year из fb2 и, раз год появился, сам зовёт ResyncYears.
+func TestPrewarmer_AutoResyncsYears(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	fb2 := []byte(`<?xml version="1.0" encoding="UTF-8"?>
+<FictionBook><description><title-info>
+  <date value="1990-01-01">1990</date>
+</title-info></description><body><p>text</p></body></FictionBook>`)
+	zipPath := makeFB2Archive(t, fb2)
+	booksRoot := filepath.Dir(zipPath)
+	archiveName := filepath.Base(zipPath)
+
+	var collID, archID, bookID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,$2) RETURNING id`, collID, archiveName).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
+		VALUES ($1,$2,'L1','book','fb2','T','t') RETURNING id`, collID, archID).Scan(&bookID))
+
+	fb2p := NewFb2Provider()
+	enricher, err := New(pool, t.TempDir(), nil, nil, nil, nil, nil, quiet)
+	require.NoError(t, err)
+	enricher.WithLocalYear(fb2p)
+
+	res := &fakeResyncer{}
+	pw := NewPrewarmer(enricher, pool, booksRoot,
+		PrewarmConfig{Years: true, Workers: 1}, res, quiet)
+	require.Equal(t, 1, pw.drain(ctx))
+
+	var wy *int16
+	require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM books WHERE id=$1`, bookID).Scan(&wy))
+	require.NotNil(t, wy, "written_year извлечён из fb2")
+	require.Equal(t, int16(1990), *wy)
+	require.Equal(t, 1, res.calls, "раз год появился — авто-ресинк вызван")
+
+	// Обложки выключены → cover_path не трогали.
+	var cover *string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT cover_path FROM books WHERE id=$1`, bookID).Scan(&cover))
+	require.Nil(t, cover, "под-тумблер обложек выключен — обложку не извлекаем")
 }
 
 func startPGForPrewarm(t *testing.T, ctx context.Context) *pgxpool.Pool {

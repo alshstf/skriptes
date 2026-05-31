@@ -10,13 +10,6 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
-// YearReindexer пересинхронизирует Meili-поле year из books.written_year
-// (реализуется *importer.Importer). Нужно, т.к. год наполняется обогащением
-// ПОСЛЕ импорта, а фильтр/сортировка/фасет «Год» на /books работают по Meili.
-type YearReindexer interface {
-	ResyncYears(ctx context.Context) (int, error)
-}
-
 // yearEnrichmentResponse — конфиг дозаполнения года + состояние воркера +
 // покрытие written_year по источникам (для админ-страницы).
 type yearEnrichmentResponse struct {
@@ -113,25 +106,5 @@ func handleYearBackfillStop(d SettingsDeps) http.HandlerFunc {
 		}
 		d.YearBackfill.StopOnce()
 		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
-	}
-}
-
-// handleResyncYears — POST /api/admin/year-enrichment/reindex. Пере-проставляет
-// Meili-поле year из written_year для всех книг (после обогащения). Синхронно
-// (batch partial-update), щедрый таймаут.
-func handleResyncYears(d SettingsDeps) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if d.Reindex == nil {
-			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "reindex unavailable"})
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Minute)
-		defer cancel()
-		n, err := d.Reindex.ResyncYears(ctx)
-		if err != nil {
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "resync failed"})
-			return
-		}
-		writeJSON(w, http.StatusOK, map[string]int{"synced": n})
 	}
 }

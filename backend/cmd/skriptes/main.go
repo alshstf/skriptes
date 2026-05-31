@@ -153,7 +153,16 @@ func run() error {
 	// Контроллер фонового прогрева: запуск/остановка по тумблеру настроек
 	// в рантайме (без рестарта) + разовый прогон по кнопке. На старте
 	// запускаем непрерывный прогрев, только если он включён в настройках.
-	prewarmCtl := metadata.NewPrewarmController(enricher, pool, cfg.BooksRoot, cfg.CoverPrewarmWorkers, logger)
+	prewarmCfg := metadata.PrewarmConfig{
+		Covers:      coverCfg.SyncCovers,
+		Annotations: coverCfg.SyncAnnotations,
+		Years:       coverCfg.SyncYears,
+		Workers:     coverCfg.IntensityWorkers(),
+		Delay:       coverCfg.IntensityDelay(),
+	}
+	// imp (importer) — YearResyncer: после прохода обработки коллекции, если
+	// появились года, прогрев сам синкнёт Meili-поле year (без ручной кнопки).
+	prewarmCtl := metadata.NewPrewarmController(enricher, pool, cfg.BooksRoot, prewarmCfg, imp, logger)
 	if coverCfg.Prewarm {
 		prewarmCtl.Start()
 	}
@@ -174,7 +183,7 @@ func run() error {
 		WikidataRPM:       yearCfg.WikidataRPM,
 		NotFoundRetryDays: yearCfg.NotFoundRetryDays,
 		ErrorRetryHours:   yearCfg.ErrorRetryHours,
-	}, logger)
+	}, imp, logger)
 	if yearCfg.Enabled {
 		yearBackfillCtl.Start()
 	}
@@ -226,7 +235,7 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
-		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl, Reindex: imp},
+		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl},
 		Content:     api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков

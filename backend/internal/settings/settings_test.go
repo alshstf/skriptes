@@ -45,6 +45,17 @@ func TestSettings_CoverRoundTrip(t *testing.T) {
 	require.Equal(t, want2, got)
 }
 
+func TestCoverConfig_Intensity(t *testing.T) {
+	require.Equal(t, 1, settings.CoverConfig{Intensity: settings.IntensityLow}.IntensityWorkers())
+	require.Equal(t, 2, settings.CoverConfig{Intensity: settings.IntensityMedium}.IntensityWorkers())
+	require.Equal(t, 6, settings.CoverConfig{Intensity: settings.IntensityHigh}.IntensityWorkers())
+	require.Equal(t, 2, settings.CoverConfig{Intensity: "bogus"}.IntensityWorkers(), "неизвестное → medium")
+
+	require.Equal(t, 250*time.Millisecond, settings.CoverConfig{Intensity: settings.IntensityLow}.IntensityDelay())
+	require.Equal(t, time.Duration(0), settings.CoverConfig{Intensity: settings.IntensityHigh}.IntensityDelay())
+	require.Equal(t, time.Duration(0), settings.CoverConfig{Intensity: settings.IntensityMedium}.IntensityDelay())
+}
+
 func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")

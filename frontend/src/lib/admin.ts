@@ -91,18 +91,36 @@ export function useDeleteAdminUser() {
   });
 }
 
-// ── Кэш обложек ───────────────────────────────────────────────────
+// ── Обработка коллекции (парсинг fb2: обложки/аннотации/года + кэш) ──
+
+export type Intensity = 'low' | 'medium' | 'high';
 
 export type CoverCacheSettings = {
   cache_max_mb: number;
   cache_min_free_mb: number;
+  // prewarm — МАСТЕР-тумблер всей обработки коллекции (имя поля историческое).
   prewarm: boolean;
-  // статус прогрева (read-only): идёт ли прогон и какой
+  sync_covers: boolean;
+  sync_annotations: boolean;
+  sync_years: boolean;
+  intensity: Intensity;
+  // статус (read-only): идёт ли проход и какой
   prewarm_running: boolean;
   prewarm_mode: 'off' | 'continuous' | 'once';
-  // статистика (read-only)
+  // статистика кэша (read-only)
   cache_size_bytes: number;
   free_bytes: number;
+};
+
+// CollectionInput — тело PUT (только конфиг, без read-only полей).
+export type CollectionInput = {
+  cache_max_mb: number;
+  cache_min_free_mb: number;
+  prewarm: boolean;
+  sync_covers: boolean;
+  sync_annotations: boolean;
+  sync_years: boolean;
+  intensity: Intensity;
 };
 
 const COVER_KEY = ['admin', 'cover-cache'] as const;
@@ -121,7 +139,7 @@ export function useCoverCacheSettings() {
 export function useUpdateCoverCacheSettings() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (vars: { cache_max_mb: number; cache_min_free_mb: number; prewarm: boolean }) =>
+    mutationFn: (vars: CollectionInput) =>
       apiFetch<CoverCacheSettings>('/api/admin/cover-cache', { method: 'PUT', body: vars }),
     onSuccess: (data) => qc.setQueryData([...COVER_KEY], data),
   });
@@ -228,13 +246,3 @@ export function useStopYearBackfill() {
   });
 }
 
-// useResyncYears — пере-проставить Meili-поле year из written_year (после
-// обогащения), чтобы фильтр/сортировка «Год» на /books отражали год написания.
-export function useResyncYears() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: () =>
-      apiFetch<{ synced: number }>('/api/admin/year-enrichment/reindex', { method: 'POST' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
-  });
-}

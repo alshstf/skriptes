@@ -153,7 +153,7 @@ func TestYearBackfiller_Integration(t *testing.T) {
 	// found: OpenLibrary вернул год → written_year проставлен, lookup found.
 	okProv := &fakeYearProvider{name: "openlibrary", year: 1869}
 	bf := NewYearBackfiller(pool, okProv, nil,
-		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
+		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
 	require.Equal(t, 2, bf.drain(ctx), "оба кандидата обработаны")
 
 	var wy *int
@@ -185,7 +185,7 @@ func TestYearBackfiller_Integration(t *testing.T) {
 	nfBook := mkBook("L-nf")
 	nfProv := &fakeYearProvider{name: "openlibrary", year: 0, err: ErrNotFound}
 	bf2 := NewYearBackfiller(pool, nfProv, nil,
-		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
+		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
 	bf2.drain(ctx)
 
 	var wyNF *int

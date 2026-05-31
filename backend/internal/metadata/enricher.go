@@ -284,7 +284,10 @@ func (e *Enricher) EnsureAnnotationLocal(ctx context.Context, q BookQuery) bool 
 //
 // year_local_scanned_at ставим всегда — чтобы прогрев не перечитывал книгу
 // и чтобы внешняя фаза знала: локально уже искали (даже если ничего не нашли).
-func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) {
+//
+// Возвращает true, если fb2 дал год НАПИСАНИЯ (written_year) — сигнал прогреву,
+// что Meili-поле year стоит пере-синкнуть после прохода (auto-resync).
+func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) bool {
 	var written, edition int
 	if e.localYear != nil {
 		w, ed, err := e.localYear.FetchYears(ctx, q)
@@ -304,7 +307,9 @@ func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) {
 		WHERE id = $1
 	`, q.ID, written, edition); err != nil {
 		e.logger.Warn("metadata: year local write failed", "book_id", q.ID, "err", err)
+		return false
 	}
+	return written > 0
 }
 
 // ensureAnnotation — общая реализация: обходит annotationProviders,
