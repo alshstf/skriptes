@@ -20,6 +20,7 @@ import { ReaderPage } from '@/pages/ReaderPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { AdminContentPage } from '@/pages/AdminContentPage';
 import { AdminCoverCachePage } from '@/pages/AdminCoverCachePage';
+import { AdminYearEnrichmentPage } from '@/pages/AdminYearEnrichmentPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -220,6 +221,13 @@ const adminCoverCacheRoute = createRoute({
   component: AdminCoverCachePage,
 });
 
+const adminYearEnrichmentRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/admin/year-enrichment',
+  beforeLoad: ({ context }) => requireAdmin(context),
+  component: AdminYearEnrichmentPage,
+});
+
 // Reader живёт в full-screen ветке (без Layout) — ему нужен весь
 // viewport для iframe-ридера. Auth по-прежнему обязателен.
 const readerRoute = createRoute({
@@ -242,6 +250,7 @@ const routeTree = rootRoute.addChildren([
     adminUsersRoute,
     adminContentRoute,
     adminCoverCacheRoute,
+    adminYearEnrichmentRoute,
   ]),
   protectedFullscreenRoute.addChildren([readerRoute]),
 ]);

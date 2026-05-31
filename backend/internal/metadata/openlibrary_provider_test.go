@@ -22,10 +22,7 @@ func TestOpenLibrary_HappyPath(t *testing.T) {
 		require.Equal(t, "Бесы", r.URL.Query().Get("title"))
 		require.Equal(t, "Достоевский", r.URL.Query().Get("author"))
 		_ = json.NewEncoder(w).Encode(olSearchResponse{
-			Docs: []struct {
-				CoverI int64  `json:"cover_i"`
-				Key    string `json:"key"`
-			}{{CoverI: coverID, Key: "/works/OL12345W"}},
+			Docs: []olSearchDoc{{CoverI: coverID, Key: "/works/OL12345W"}},
 		})
 	}))
 	defer search.Close()

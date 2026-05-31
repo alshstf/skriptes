@@ -94,3 +94,78 @@ func (s *Store) SetCover(ctx context.Context, cfg CoverConfig) error {
 	}
 	return nil
 }
+
+const yearEnrichmentKey = "year_enrichment"
+
+// YearEnrichmentConfig — настройки фонового дозаполнения written_year из
+// внешних источников (OpenLibrary, Wikidata). Воркер opt-in (Enabled=false
+// по умолчанию): он ходит в публичные API, поэтому включается осознанно из
+// админки.
+//
+//	OpenLibrary / Wikidata — какие источники опрашивать (можно отключить
+//	                         шумящий). Порядок приоритета фиксирован в коде:
+//	                         OpenLibrary (first_publish_year) → Wikidata (P577).
+//	*RPM                    — лимит запросов в минуту на источник (вежливость
+//	                         к публичным API; OL ~мягко, Wikidata строже).
+//	NotFoundRetryDays       — через сколько перепроверять источник, ранее
+//	                         вернувший not_found (данные со временем дополняются).
+//	ErrorRetryHours         — через сколько ретраить источник после ошибки
+//	                         (транзиентные 429/таймауты — быстрее, чем not_found).
+type YearEnrichmentConfig struct {
+	Enabled           bool `json:"enabled"`
+	OpenLibrary       bool `json:"openlibrary"`
+	Wikidata          bool `json:"wikidata"`
+	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	WikidataRPM       int  `json:"wikidata_rpm"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultYearEnrichmentConfig — воркер выключен (opt-in), оба источника
+// включены, вежливые rate-limit'ы и TTL перепроверки.
+func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
+	return YearEnrichmentConfig{
+		Enabled:           false,
+		OpenLibrary:       true,
+		Wikidata:          true,
+		OpenLibraryRPM:    60,
+		WikidataRPM:       20,
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// YearEnrichment читает настройки дозаполнения года; нет оверрайда в БД —
+// отдаёт дефолты (мердж поверх DefaultYearEnrichmentConfig).
+func (s *Store) YearEnrichment(ctx context.Context) (YearEnrichmentConfig, error) {
+	cfg := DefaultYearEnrichmentConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, yearEnrichmentKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read year enrichment settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultYearEnrichmentConfig(), fmt.Errorf("decode year enrichment settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetYearEnrichment сохраняет настройки дозаполнения года (upsert).
+func (s *Store) SetYearEnrichment(ctx context.Context, cfg YearEnrichmentConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode year enrichment settings: %w", err)
+	}
+	_, err = s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, yearEnrichmentKey, raw)
+	if err != nil {
+		return fmt.Errorf("save year enrichment settings: %w", err)
+	}
+	return nil
+}

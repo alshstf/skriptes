@@ -45,6 +45,32 @@ func TestSettings_CoverRoundTrip(t *testing.T) {
 	require.Equal(t, want2, got)
 }
 
+func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолты (воркер выключен — opt-in).
+	got, err := store.YearEnrichment(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultYearEnrichmentConfig(), got)
+	require.False(t, got.Enabled, "по умолчанию воркер выключен")
+
+	// Сохранили — читается обратно (upsert).
+	want := settings.YearEnrichmentConfig{
+		Enabled: true, OpenLibrary: true, Wikidata: false,
+		OpenLibraryRPM: 30, WikidataRPM: 10, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+	}
+	require.NoError(t, store.SetYearEnrichment(ctx, want))
+	got, err = store.YearEnrichment(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 // TestSettings_ContentRoundTrip — глобальные и персональные настройки
 // видимости: дефолты на пустой БД, upsert+нормализация (дедуп/сортировка),
 // объединение admin ∪ user через ContentResolver.

@@ -156,3 +156,74 @@ export function useStopPrewarmCoverCache() {
     onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
   });
 }
+
+// ── Год издания: дозаполнение written_year из внешних источников ──────
+
+export type YearEnrichmentSettings = {
+  enabled: boolean;
+  openlibrary: boolean;
+  wikidata: boolean;
+  openlibrary_rpm: number;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  year_backfill_running: boolean;
+  year_backfill_mode: 'off' | 'continuous' | 'once';
+  // покрытие written_year (read-only)
+  coverage: {
+    total: number;
+    with_year: number;
+    by_source: Record<string, number>;
+  };
+};
+
+// YearEnrichmentInput — тело PUT (только конфиг, без read-only полей).
+export type YearEnrichmentInput = {
+  enabled: boolean;
+  openlibrary: boolean;
+  wikidata: boolean;
+  openlibrary_rpm: number;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const YEAR_KEY = ['admin', 'year-enrichment'] as const;
+
+export function useYearEnrichmentSettings() {
+  return useQuery<YearEnrichmentSettings>({
+    queryKey: [...YEAR_KEY],
+    queryFn: () => apiFetch<YearEnrichmentSettings>('/api/admin/year-enrichment'),
+    staleTime: 10_000,
+    // Пока воркер идёт — поллим, чтобы видеть рост покрытия и завершение.
+    refetchInterval: (query) => (query.state.data?.year_backfill_running ? 3000 : false),
+  });
+}
+
+export function useUpdateYearEnrichmentSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: YearEnrichmentInput) =>
+      apiFetch<YearEnrichmentSettings>('/api/admin/year-enrichment', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...YEAR_KEY], data),
+  });
+}
+
+export function useRunYearBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/year-enrichment/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
+  });
+}
+
+export function useStopYearBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/year-enrichment/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
+  });
+}
