@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log/slog"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -20,13 +21,16 @@ import (
 // Кандидаты: written_year IS NULL AND year_local_scanned_at IS NOT NULL —
 // локальная fb2-фаза уже отработала, года нет → пробуем внешние.
 type YearBackfiller struct {
-	pool   *pgxpool.Pool
-	ol     YearProvider // nil → источник недоступен
-	wd     YearProvider // nil → источник недоступен
-	logger *slog.Logger
-	cfg    YearBackfillConfig
-	olGate *rateGate
-	wdGate *rateGate
+	pool     *pgxpool.Pool
+	ol       YearProvider // nil → источник недоступен
+	wd       YearProvider // nil → источник недоступен
+	logger   *slog.Logger
+	cfg      YearBackfillConfig
+	olGate   *rateGate
+	wdGate   *rateGate
+	resyncer YearResyncer // nil → без авто-ресинка Meili-года
+
+	yearChanged atomic.Int64 // сколько книг получили written_year за проход
 }
 
 // YearBackfillConfig — рантайм-параметры воркера (зеркало
@@ -49,12 +53,12 @@ const (
 )
 
 // NewYearBackfiller строит воркер с per-source rate-gate'ами по cfg.
-func NewYearBackfiller(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, logger *slog.Logger) *YearBackfiller {
+func NewYearBackfiller(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfiller {
 	if logger == nil {
 		logger = slog.Default()
 	}
 	b := &YearBackfiller{
-		pool: pool, ol: ol, wd: wd, cfg: cfg, logger: logger,
+		pool: pool, ol: ol, wd: wd, cfg: cfg, resyncer: resyncer, logger: logger,
 		olGate: &rateGate{}, wdGate: &rateGate{},
 	}
 	b.olGate.setRPM(cfg.OpenLibraryRPM)
@@ -93,24 +97,31 @@ type yearCandidate struct {
 }
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
+	b.yearChanged.Store(0)
 	total := 0
 	var cursor int64
-	for {
-		if ctx.Err() != nil {
-			return total
-		}
+	for ctx.Err() == nil {
 		batch, err := b.fetchBatch(ctx, cursor, yearBackfillBatchSize)
 		if err != nil {
 			b.logger.Warn("year backfill: fetch batch failed", "err", err)
-			return total
+			break
 		}
 		if len(batch) == 0 {
-			return total
+			break
 		}
 		b.processBatch(ctx, batch)
 		total += len(batch)
 		cursor = batch[len(batch)-1].id
 	}
+	// Авто-синк Meili-поля year, если за проход год у книг появился.
+	if b.resyncer != nil && b.yearChanged.Load() > 0 && ctx.Err() == nil {
+		if n, err := b.resyncer.ResyncYears(ctx); err != nil {
+			b.logger.Warn("year backfill: resync years failed", "err", err)
+		} else {
+			b.logger.Info("year backfill: years resynced to meili", "changed", b.yearChanged.Load(), "synced", n)
+		}
+	}
+	return total
 }
 
 func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]yearCandidate, error) {
@@ -275,6 +286,7 @@ func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source st
 		return err
 	}
 	b.upsertLookup(ctx, bookID, source, "found", year)
+	b.yearChanged.Add(1)
 	return nil
 }
 
@@ -355,10 +367,11 @@ type YearCoverage struct {
 }
 
 type YearBackfillController struct {
-	pool   *pgxpool.Pool
-	ol     YearProvider
-	wd     YearProvider
-	logger *slog.Logger
+	pool     *pgxpool.Pool
+	ol       YearProvider
+	wd       YearProvider
+	resyncer YearResyncer
+	logger   *slog.Logger
 
 	mu         sync.Mutex
 	cfg        YearBackfillConfig
@@ -366,11 +379,11 @@ type YearBackfillController struct {
 	onceCancel context.CancelFunc
 }
 
-func NewYearBackfillController(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, logger *slog.Logger) *YearBackfillController {
+func NewYearBackfillController(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfillController {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &YearBackfillController{pool: pool, ol: ol, wd: wd, cfg: cfg, logger: logger}
+	return &YearBackfillController{pool: pool, ol: ol, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
 }
 
 func (c *YearBackfillController) ready() bool {
@@ -398,7 +411,7 @@ func (c *YearBackfillController) Start() {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	c.contCancel = cancel
-	b := NewYearBackfiller(c.pool, c.ol, c.wd, c.cfg, c.logger)
+	b := NewYearBackfiller(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
 	go b.Run(ctx)
 	c.logger.Info("year backfill: continuous job started")
 }
@@ -448,7 +461,7 @@ func (c *YearBackfillController) RunOnce() {
 	cfg := c.cfg
 	c.mu.Unlock()
 	go func() {
-		b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.logger)
+		b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
 		n := b.drain(ctx)
 		cancel()
 		c.mu.Lock()

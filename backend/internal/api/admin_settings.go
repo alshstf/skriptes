@@ -19,7 +19,6 @@ type SettingsDeps struct {
 	Metadata     *metadata.Enricher
 	Prewarm      *metadata.PrewarmController
 	YearBackfill *metadata.YearBackfillController
-	Reindex      YearReindexer
 }
 
 // coverSettingsResponse — текущая конфигурация + статистика кэша +
@@ -71,6 +70,12 @@ func handleUpdateCoverSettings(d SettingsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "values must be non-negative"})
 			return
 		}
+		// Нормализуем интенсивность к известному пресету.
+		switch cfg.Intensity {
+		case settings.IntensityLow, settings.IntensityMedium, settings.IntensityHigh:
+		default:
+			cfg.Intensity = settings.IntensityMedium
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		if err := d.Store.SetCover(ctx, cfg); err != nil {
@@ -81,8 +86,15 @@ func handleUpdateCoverSettings(d SettingsDeps) http.HandlerFunc {
 			// Прогрев ON → лимит 0 (full-store, без эвикции); иначе бюджет.
 			d.Metadata.SetCoverLimits(cfg.EffectiveCacheMaxBytes(), cfg.MinFreeBytes())
 		}
-		// Живой запуск/остановка фоновой джобы прогрева по тумблеру.
+		// Живое применение под-настроек (тумблеры/интенсивность) + мастер вкл/выкл.
 		if d.Prewarm != nil {
+			d.Prewarm.SetConfig(metadata.PrewarmConfig{
+				Covers:      cfg.SyncCovers,
+				Annotations: cfg.SyncAnnotations,
+				Years:       cfg.SyncYears,
+				Workers:     cfg.IntensityWorkers(),
+				Delay:       cfg.IntensityDelay(),
+			})
 			d.Prewarm.SetEnabled(cfg.Prewarm)
 		}
 		writeJSON(w, http.StatusOK, coverStats(d, cfg))

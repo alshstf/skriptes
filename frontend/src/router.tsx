@@ -19,8 +19,7 @@ import { ProfileAppearancePage } from '@/pages/ProfileAppearancePage';
 import { ReaderPage } from '@/pages/ReaderPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { AdminContentPage } from '@/pages/AdminContentPage';
-import { AdminCoverCachePage } from '@/pages/AdminCoverCachePage';
-import { AdminYearEnrichmentPage } from '@/pages/AdminYearEnrichmentPage';
+import { AdminBackgroundPage } from '@/pages/AdminBackgroundPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
 
@@ -214,18 +213,11 @@ const adminContentRoute = createRoute({
   component: AdminContentPage,
 });
 
-const adminCoverCacheRoute = createRoute({
+const adminBackgroundRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  path: '/admin/cover-cache',
+  path: '/admin/background',
   beforeLoad: ({ context }) => requireAdmin(context),
-  component: AdminCoverCachePage,
-});
-
-const adminYearEnrichmentRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: '/admin/year-enrichment',
-  beforeLoad: ({ context }) => requireAdmin(context),
-  component: AdminYearEnrichmentPage,
+  component: AdminBackgroundPage,
 });
 
 // Reader живёт в full-screen ветке (без Layout) — ему нужен весь
@@ -249,8 +241,7 @@ const routeTree = rootRoute.addChildren([
     profileAppearanceRoute,
     adminUsersRoute,
     adminContentRoute,
-    adminCoverCacheRoute,
-    adminYearEnrichmentRoute,
+    adminBackgroundRoute,
   ]),
   protectedFullscreenRoute.addChildren([readerRoute]),
 ]);

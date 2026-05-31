@@ -8,8 +8,7 @@ import { Link } from '@tanstack/react-router';
 const tabs = [
   { to: '/admin/users', label: 'Пользователи' },
   { to: '/admin/content', label: 'Контент' },
-  { to: '/admin/cover-cache', label: 'Кэш обложек' },
-  { to: '/admin/year-enrichment', label: 'Год издания' },
+  { to: '/admin/background', label: 'Фоновые операции' },
 ] as const;
 
 const baseTab = 'rounded-md px-3 py-1.5 text-sm font-medium transition';
