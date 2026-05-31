@@ -20,7 +20,7 @@ type bookDoc struct {
 	Series          string   `json:"series,omitempty"`
 	SeriesID        *int64   `json:"series_id,omitempty"`
 	Genres          []string `json:"genres"`
-	Year            *int     `json:"year,omitempty"` // из date_added
+	Year            *int     `json:"year,omitempty"` // = written_year; синкается ResyncYears (НЕ date_added)
 	Lang            string   `json:"lang,omitempty"`
 	Popularity      int64    `json:"popularity"` // обновляется отдельным процессом
 	LibID           string   `json:"lib_id"`

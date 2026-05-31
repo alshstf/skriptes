@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Flame, Square } from 'lucide-react';
+import { Flame, RefreshCw, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import {
   useUpdateYearEnrichmentSettings,
   useRunYearBackfill,
   useStopYearBackfill,
+  useResyncYears,
   type YearEnrichmentSettings,
   type YearEnrichmentInput,
 } from '@/lib/admin';
@@ -55,6 +56,7 @@ export function AdminYearEnrichmentPage() {
   const update = useUpdateYearEnrichmentSettings();
   const runNow = useRunYearBackfill();
   const stop = useStopYearBackfill();
+  const resync = useResyncYears();
 
   const running = q.data?.year_backfill_running ?? false;
   const mode = q.data?.year_backfill_mode ?? 'off';
@@ -145,6 +147,14 @@ export function AdminYearEnrichmentPage() {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
     }
   };
+  const onResync = async () => {
+    try {
+      const r = await resync.mutateAsync();
+      toast.success(`Год синхронизирован в поиске: ${r.synced} книг`);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось синхронизировать');
+    }
+  };
 
   const cov = q.data?.coverage;
   const pct = cov && cov.total > 0 ? Math.round((cov.with_year / cov.total) * 100) : 0;
@@ -220,6 +230,17 @@ export function AdminYearEnrichmentPage() {
                   обрабатывает всю коллекцию.
                 </p>
               ) : null}
+
+              <div className="space-y-2 border-t border-border pt-3">
+                <Button variant="outline" onClick={onResync} disabled={resync.isPending}>
+                  <RefreshCw className="size-4" aria-hidden />
+                  {resync.isPending ? 'Синхронизация…' : 'Пересинхронизировать год в поиске'}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Фильтр и сортировка «Год» на странице книг работают по году написания. Год
+                  наполняется обогащением — нажмите, чтобы обновить его в поисковом индексе.
+                </p>
+              </div>
 
               <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
                 <span className="text-muted-foreground">Год известен</span>

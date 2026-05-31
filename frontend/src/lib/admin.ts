@@ -227,3 +227,14 @@ export function useStopYearBackfill() {
     onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
   });
 }
+
+// useResyncYears — пере-проставить Meili-поле year из written_year (после
+// обогащения), чтобы фильтр/сортировка «Год» на /books отражали год написания.
+export function useResyncYears() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ synced: number }>('/api/admin/year-enrichment/reindex', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
+  });
+}

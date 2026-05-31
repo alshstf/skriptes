@@ -14,7 +14,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/api"
@@ -87,7 +86,10 @@ func run() error {
 	// Идемпотентно: повторные старты на тех же файлах — no-op за счёт хэш-проверки.
 	// Не блокируем HTTP — крутим в горутине; если /readyz нужно учитывать импорт,
 	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
-	go runStartupImport(ctx(), pool, meili, cfg.InpxRoot, logger)
+	// Один импортёр на процесс: его использует и стартовый скан, и ручная
+	// пересинхронизация года в поиске из админки (ResyncYears).
+	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
+	go runStartupImport(ctx(), imp, cfg.InpxRoot, logger)
 
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
@@ -224,7 +226,7 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
-		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl},
+		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl, Reindex: imp},
 		Content:     api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
@@ -279,7 +281,7 @@ func run() error {
 // безопасно благодаря пер-записной транзакции).
 func ctx() context.Context { return context.Background() }
 
-func runStartupImport(ctx context.Context, pool *pgxpool.Pool, meili meilisearch.ServiceManager, inpxRoot string, logger *slog.Logger) {
+func runStartupImport(ctx context.Context, imp *importer.Importer, inpxRoot string, logger *slog.Logger) {
 	files, err := findInpxFiles(inpxRoot)
 	if err != nil {
 		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
@@ -289,7 +291,6 @@ func runStartupImport(ctx context.Context, pool *pgxpool.Pool, meili meilisearch
 		logger.Info("startup import — no INPX files found", "root", inpxRoot)
 		return
 	}
-	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
 	logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
 	for _, f := range files {
 		stats, err := imp.Run(ctx, f)

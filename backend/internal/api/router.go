@@ -192,6 +192,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/admin/year-enrichment", handleUpdateYearEnrichment(d.Settings))
 					r.Post("/admin/year-enrichment/run", handleYearBackfillNow(d.Settings))
 					r.Post("/admin/year-enrichment/stop", handleYearBackfillStop(d.Settings))
+					r.Post("/admin/year-enrichment/reindex", handleResyncYears(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).
