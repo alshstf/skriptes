@@ -121,6 +121,16 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		return stats, fmt.Errorf("mark collection imported: %w", err)
 	}
 
+	// Год в поиске (Meili year) = written_year (год написания), а он
+	// наполняется обогащением ПОСЛЕ импорта. Синкаем из PG: для свежего
+	// импорта это no-op (written_year NULL), для повторного — подтягивает уже
+	// извлечённые годы. Между импортами синк запускается из админки.
+	if n, rerr := im.ResyncYears(ctx); rerr != nil {
+		logger.Warn("import: resync years to meili failed", "err", rerr)
+	} else if n > 0 {
+		logger.Info("import: years resynced to meili", "count", n)
+	}
+
 	stats.Authors = len(caches.author)
 	stats.Series = len(caches.series)
 	stats.Genres = len(caches.genre)
@@ -138,6 +148,71 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		"duration", stats.Duration,
 	)
 	return stats, nil
+}
+
+// ResyncYears пере-проставляет Meili-поле year из books.written_year для
+// всех живых книг (partial update по primary key id). Источник правды по
+// году в поиске — written_year (год написания), но он наполняется
+// обогащением уже ПОСЛЕ импорта; этот метод синкает PG→Meili (в конце Run и
+// по кнопке в админке «Год издания»). year:null чистит возможный старый
+// (date_added) год у книг без written_year. Возвращает число обновлённых
+// документов.
+func (im *Importer) ResyncYears(ctx context.Context) (int, error) {
+	rows, err := im.deps.Pool.Query(ctx, `SELECT id, written_year FROM books WHERE deleted = false`)
+	if err != nil {
+		return 0, fmt.Errorf("query written_year: %w", err)
+	}
+	defer rows.Close()
+
+	const batchSize = 1000
+	pk := "id"
+	batch := make([]map[string]any, 0, batchSize)
+	total := 0
+	flush := func() error {
+		if len(batch) == 0 {
+			return nil
+		}
+		idx := im.deps.Meili.Index(booksIndex)
+		task, ferr := idx.UpdateDocumentsWithContext(ctx, batch, &meilisearch.DocumentOptions{PrimaryKey: &pk})
+		if ferr != nil {
+			return fmt.Errorf("meili update years: %w", ferr)
+		}
+		final, ferr := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+		if ferr != nil {
+			return fmt.Errorf("wait year task %d: %w", task.TaskUID, ferr)
+		}
+		if final.Status != meilisearch.TaskStatusSucceeded {
+			return fmt.Errorf("year task %d status %s: %v", final.UID, final.Status, final.Error)
+		}
+		total += len(batch)
+		batch = batch[:0]
+		return nil
+	}
+
+	for rows.Next() {
+		var id int64
+		var wy *int16 // written_year SMALLINT; NULL → nil
+		if serr := rows.Scan(&id, &wy); serr != nil {
+			return total, fmt.Errorf("scan year row: %w", serr)
+		}
+		var yv any // nil → year:null (partial update чистит поле)
+		if wy != nil {
+			yv = int(*wy)
+		}
+		batch = append(batch, map[string]any{"id": id, "year": yv})
+		if len(batch) >= batchSize {
+			if ferr := flush(); ferr != nil {
+				return total, ferr
+			}
+		}
+	}
+	if rerr := rows.Err(); rerr != nil {
+		return total, fmt.Errorf("iterate year rows: %w", rerr)
+	}
+	if ferr := flush(); ferr != nil {
+		return total, ferr
+	}
+	return total, nil
 }
 
 // processRecord обрабатывает одну запись внутри транзакции.
@@ -253,11 +328,10 @@ func (im *Importer) processRecord(
 		for _, a := range rec.Authors {
 			authorNames = append(authorNames, fullAuthorName(a))
 		}
-		var year *int
-		if rec.Date != nil {
-			y := rec.Date.Year()
-			year = &y
-		}
+		// Year НЕ берём из date_added (это дата добавления в коллекцию, не год
+		// книги — см. граблю про date_added). Поле year в поиске = written_year
+		// (год написания); оно наполняется обогащением ПОСЛЕ импорта и синкается
+		// в Meili через ResyncYears (в конце Run и по кнопке в админке).
 		doc := bookDoc{
 			ID:              res.ID,
 			Title:           rec.Title,
@@ -267,7 +341,6 @@ func (im *Importer) processRecord(
 			Series:          rec.Series,
 			SeriesID:        seriesPtr,
 			Genres:          rec.Genres,
-			Year:            year,
 			Lang:            rec.Lang,
 			LibID:           rec.LibID,
 			Archive:         file.Archive,

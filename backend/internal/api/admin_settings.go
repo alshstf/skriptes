@@ -19,6 +19,7 @@ type SettingsDeps struct {
 	Metadata     *metadata.Enricher
 	Prewarm      *metadata.PrewarmController
 	YearBackfill *metadata.YearBackfillController
+	Reindex      YearReindexer
 }
 
 // coverSettingsResponse — текущая конфигурация + статистика кэша +

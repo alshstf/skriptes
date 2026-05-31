@@ -96,10 +96,11 @@ INPX'овский `date_added` — когда книга добавилась в
   (`<publish-info><year>`). Справочное поле на карточке книги, в статистику НЕ
   идёт.
 
-⚠️ Meili-поле `year` (фильтр/сортировка/фасет «Год» на `/books`) ВСЁ ЕЩЁ =
-год `date_added` (`importer/importer.go`, `// из date_added`). Перевод его на
-`written_year` (+ reindex) — отдельный PR. Подробнее — в
-`~/.claude/plans/cozy-zooming-popcorn.md`.
+Meili-поле `year` (фильтр/сортировка/фасет «Год» на `/books`) тоже = `written_year`:
+импорт его НЕ берёт из `date_added`, а синкает `importer.ResyncYears` (в конце
+импорта и по кнопке «Пересинхронизировать год в поиске» в админке «Год издания» →
+`POST /api/admin/year-enrichment/reindex`). Год наполняется обогащением ПОСЛЕ
+импорта, поэтому в поиске он разрежён, пока не прошёл ресинк.
 
 ### 4. jsdom не делает CSS layout
 

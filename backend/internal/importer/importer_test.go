@@ -127,6 +127,57 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	_ = dsn // dsn используется внутри startPostgres, оставлено для отладки
 }
 
+// TestResyncYears_PushesWrittenYearToMeili — после импорта Meili-поле year
+// пустое (берётся из written_year, а он наполняется обогащением позже).
+// Проставляем written_year двум книгам, синкаем и проверяем, что фильтр по
+// year в Meili работает по году написания.
+func TestResyncYears_PushesWrittenYearToMeili(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool, _ := startPostgres(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+
+	abs, err := filepath.Abs(fixtureINPX)
+	require.NoError(t, err)
+	_, err = imp.Run(ctx, abs)
+	require.NoError(t, err)
+
+	// Сразу после импорта год не выставлен → фильтр по году пуст.
+	res0, err := mgr.Index("books").SearchWithContext(ctx, "", &meili.SearchRequest{Filter: "year >= 1000", Limit: 50})
+	require.NoError(t, err)
+	require.Len(t, res0.Hits, 0, "после импорта year пуст (written_year ещё NULL)")
+
+	// Проставляем written_year двум разным книгам.
+	var id1, id2 int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM books WHERE lib_id='749080'`).Scan(&id1))
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT id FROM books WHERE deleted=false AND lib_id<>'749080' ORDER BY id LIMIT 1`).Scan(&id2))
+	_, err = pool.Exec(ctx, `UPDATE books SET written_year=1990 WHERE id=$1`, id1)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE books SET written_year=2010 WHERE id=$1`, id2)
+	require.NoError(t, err)
+
+	var live int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books WHERE deleted=false`).Scan(&live))
+	n, err := imp.ResyncYears(ctx)
+	require.NoError(t, err)
+	require.Equal(t, live, n, "синкаются все живые книги")
+
+	// Теперь фильтр по году отражает written_year.
+	resAll, err := mgr.Index("books").SearchWithContext(ctx, "", &meili.SearchRequest{Filter: "year >= 1000", Limit: 50})
+	require.NoError(t, err)
+	require.Len(t, resAll.Hits, 2, "год известен ровно у двух книг")
+
+	res2000, err := mgr.Index("books").SearchWithContext(ctx, "", &meili.SearchRequest{Filter: "year >= 2000", Limit: 50})
+	require.NoError(t, err)
+	require.Len(t, res2000.Hits, 1, "год >= 2000 — только книга 2010")
+}
+
 // ── helpers ────────────────────────────────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) (*pgxpool.Pool, string) {
