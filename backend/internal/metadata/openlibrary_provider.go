@@ -110,11 +110,58 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}, nil
 }
 
+type olSearchDoc struct {
+	CoverI           int64  `json:"cover_i"`
+	Key              string `json:"key"` // "/works/OL12345W"
+	FirstPublishYear int    `json:"first_publish_year"`
+}
+
 type olSearchResponse struct {
-	Docs []struct {
-		CoverI int64  `json:"cover_i"`
-		Key    string `json:"key"` // "/works/OL12345W"
-	} `json:"docs"`
+	Docs []olSearchDoc `json:"docs"`
+}
+
+// FetchYear — год первого издания произведения из OpenLibrary search
+// (поле first_publish_year). Реализует YearProvider. Это «дата выхода»
+// произведения: OL отдаёт самый ранний год издания среди всех изданий
+// work'а — то, что нужно для written_year.
+func (p *OpenLibraryProvider) FetchYear(ctx context.Context, q BookQuery) (int, error) {
+	if q.Title == "" {
+		return 0, ErrNotFound
+	}
+	v := url.Values{}
+	v.Set("title", q.Title)
+	if len(q.Authors) > 0 {
+		v.Set("author", q.Authors[0])
+	}
+	v.Set("limit", "1")
+	v.Set("fields", "first_publish_year")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return 0, fmt.Errorf("build search request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return 0, fmt.Errorf("ol search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return 0, ErrNotFound
+	}
+
+	var sr olSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return 0, fmt.Errorf("decode search: %w", err)
+	}
+	if len(sr.Docs) == 0 {
+		return 0, ErrNotFound
+	}
+	y := sr.Docs[0].FirstPublishYear
+	if y < 1000 || y > 2100 {
+		return 0, ErrNotFound
+	}
+	return y, nil
 }
 
 // FetchAnnotation — два запроса:

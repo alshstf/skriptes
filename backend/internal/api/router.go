@@ -186,6 +186,12 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
 					r.Post("/admin/cover-cache/prewarm", handlePrewarmNow(d.Settings))
 					r.Post("/admin/cover-cache/prewarm/stop", handlePrewarmStop(d.Settings))
+					// Раздел «Год издания»: дозаполнение written_year из внешних
+					// источников (OpenLibrary/Wikidata) — настройки + воркер.
+					r.Get("/admin/year-enrichment", handleGetYearEnrichment(d.Settings))
+					r.Put("/admin/year-enrichment", handleUpdateYearEnrichment(d.Settings))
+					r.Post("/admin/year-enrichment/run", handleYearBackfillNow(d.Settings))
+					r.Post("/admin/year-enrichment/stop", handleYearBackfillStop(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).

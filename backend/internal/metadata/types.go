@@ -137,3 +137,14 @@ type AdaptationProvider interface {
 type LocalYearSource interface {
 	FetchYears(ctx context.Context, q BookQuery) (written int, edition int, err error)
 }
+
+// YearProvider — внешний источник года первого издания/написания для
+// дозаполнения written_year (когда из fb2 год не извлёкся). Возвращает год
+// (>0) либо ErrNotFound, если источник книгу/год не нашёл; прочие ошибки —
+// сетевые/HTTP, воркер их логирует и помечает source как error (ретрай по TTL).
+// Name() должен совпадать со строкой source в book_year_lookups /
+// written_year_source ("openlibrary" | "wikidata").
+type YearProvider interface {
+	Name() string
+	FetchYear(ctx context.Context, q BookQuery) (int, error)
+}

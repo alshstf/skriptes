@@ -56,7 +56,7 @@ func TestMigrateAndPool(t *testing.T) {
 	// Проверка: все ключевые таблицы на месте.
 	expected := []string{
 		"app_settings",
-		"archives", "authors", "book_adaptations", "book_authors", "book_genres", "books",
+		"archives", "authors", "book_adaptations", "book_authors", "book_genres", "book_year_lookups", "books",
 		"collections", "favorite_authors", "favorite_series", "favorites",
 		"genres", "import_jobs", "kindle_targets", "metadata_cache",
 		"reads", "series", "sessions", "user_settings", "users", "views",

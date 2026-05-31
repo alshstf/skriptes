@@ -74,10 +74,7 @@ func TestOpenLibrary_Annotation_HappyPath(t *testing.T) {
 		case strings.HasSuffix(r.URL.Path, "/search.json"):
 			require.Equal(t, "Бесы", r.URL.Query().Get("title"))
 			_ = json.NewEncoder(w).Encode(olSearchResponse{
-				Docs: []struct {
-					CoverI int64  `json:"cover_i"`
-					Key    string `json:"key"`
-				}{{Key: olid}},
+				Docs: []olSearchDoc{{Key: olid}},
 			})
 		case strings.HasSuffix(r.URL.Path, ".json") && strings.Contains(r.URL.Path, "/works/"):
 			_, _ = io.WriteString(w, `{"description":"`+description+`"}`)
@@ -100,10 +97,7 @@ func TestOpenLibrary_Annotation_DescriptionObject(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/search.json") {
 			_ = json.NewEncoder(w).Encode(olSearchResponse{
-				Docs: []struct {
-					CoverI int64  `json:"cover_i"`
-					Key    string `json:"key"`
-				}{{Key: "/works/OLxxxW"}},
+				Docs: []olSearchDoc{{Key: "/works/OLxxxW"}},
 			})
 			return
 		}

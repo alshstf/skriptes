@@ -156,6 +156,27 @@ func run() error {
 		prewarmCtl.Start()
 	}
 
+	// Дозаполнение года написания из внешних источников (OpenLibrary
+	// first_publish_year → Wikidata P577) для книг без written_year из fb2.
+	// Воркер opt-in (по умолчанию выключен — ходит в публичные API),
+	// включается тумблером в админке. Провайдеры те же, что для обложек.
+	yearCfg, err := settingsStore.YearEnrichment(ctx())
+	if err != nil {
+		logger.Warn("read year enrichment settings — using defaults", "err", err)
+		yearCfg = settings.DefaultYearEnrichmentConfig()
+	}
+	yearBackfillCtl := metadata.NewYearBackfillController(pool, olProvider, wdAdaptations, metadata.YearBackfillConfig{
+		OpenLibrary:       yearCfg.OpenLibrary,
+		Wikidata:          yearCfg.Wikidata,
+		OpenLibraryRPM:    yearCfg.OpenLibraryRPM,
+		WikidataRPM:       yearCfg.WikidataRPM,
+		NotFoundRetryDays: yearCfg.NotFoundRetryDays,
+		ErrorRetryHours:   yearCfg.ErrorRetryHours,
+	}, logger)
+	if yearCfg.Enabled {
+		yearBackfillCtl.Start()
+	}
+
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
@@ -203,7 +224,7 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
-		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl},
+		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl},
 		Content:     api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
