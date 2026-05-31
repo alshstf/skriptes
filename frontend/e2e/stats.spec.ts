@@ -10,7 +10,7 @@ test('author stats: progress + histogram appear on author page', async ({
   // Прогресс: 2 / 5 книг прочитано (read_count теперь = completed_at IS NOT NULL).
   await expect(page.getByText(/Прочитано 2 из 5/)).toBeVisible();
   // Гистограмма — проверяем что внутри блока есть svg (recharts его рендерит).
-  const statsCard = page.locator('div').filter({ hasText: 'Добавлено по годам' }).first();
+  const statsCard = page.locator('div').filter({ hasText: 'Книги по годам написания' }).first();
   await expect(statsCard.locator('svg').first()).toBeVisible();
 });
 

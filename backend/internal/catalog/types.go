@@ -28,9 +28,9 @@ type Author struct {
 	BooksTotal int               `json:"books_total"`
 	Books      []books.ListItem  `json:"books"`
 
-	// YearStats — распределение книг автора по году добавления в коллекцию.
+	// YearStats — распределение книг автора по году НАПИСАНИЯ (written_year).
 	// Используется для гистограммы на странице автора (recharts).
-	// Сортировка по году по возрастанию; книги без date_added не попадают.
+	// Сортировка по году по возрастанию; книги без written_year не попадают.
 	YearStats []YearCount `json:"year_stats,omitempty"`
 
 	// ReadCount — сколько книг автора есть в reads текущего пользователя
@@ -40,10 +40,18 @@ type Author struct {
 	ReadCount int `json:"read_count,omitempty"`
 }
 
-// YearCount — пара (год, число книг). nil-Year не отправляем.
+// YearCount — год + число книг этого года + список книг (для тултипа
+// гистограммы: при наведении на столбик показываем, ЧТО за книги).
 type YearCount struct {
-	Year  int `json:"year"`
-	Count int `json:"count"`
+	Year  int        `json:"year"`
+	Count int        `json:"count"`
+	Books []YearBook `json:"books,omitempty"`
+}
+
+// YearBook — компактная ссылка на книгу для тултипа гистограммы.
+type YearBook struct {
+	ID    int64  `json:"id"`
+	Title string `json:"title"`
 }
 
 // GenreCount — пара (genre, books_in_this_genre_for_this_author).
@@ -89,7 +97,7 @@ type Series struct {
 	BookCount  int              `json:"book_count"`
 	Books      []books.ListItem `json:"books"` // отсортированы по ser_no, deleted скрыты
 
-	// Аналогично Author: гистограмма по годам и прогресс чтения.
+	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`
 	ReadCount int         `json:"read_count,omitempty"`
 }

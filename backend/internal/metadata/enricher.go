@@ -32,6 +32,7 @@ type Enricher struct {
 	authorPhotoProviders []AuthorPhotoProvider
 	authorBioProviders   []AuthorBioProvider
 	adaptationProviders  []AdaptationProvider
+	localYear            LocalYearSource // локальный fb2-источник года (EnsureYearLocal); nil → только маркер
 	pool                 *pgxpool.Pool
 	coverRoot            string      // абсолютный путь к /cache/covers (используется и для фото авторов, и для постеров экранизаций)
 	cache                *CoverCache // ограничение размера + пол свободного места над coverRoot
@@ -96,6 +97,14 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 	if c != nil {
 		e.posterHTTPClient = c
 	}
+	return e
+}
+
+// WithLocalYear подключает локальный fb2-источник года (без сети) для
+// EnsureYearLocal. Вызывается из main после New. nil → EnsureYearLocal
+// только проставит маркер year_local_scanned_at, не извлекая год.
+func (e *Enricher) WithLocalYear(s LocalYearSource) *Enricher {
+	e.localYear = s
 	return e
 }
 
@@ -264,6 +273,38 @@ func (e *Enricher) EnsureAnnotation(ctx context.Context, q BookQuery) {
 // true, если аннотация сохранена.
 func (e *Enricher) EnsureAnnotationLocal(ctx context.Context, q BookQuery) bool {
 	return e.ensureAnnotation(ctx, q, isLocalAnnotation)
+}
+
+// EnsureYearLocal — локальная фаза извлечения года из fb2 (фоновый прогрев).
+// Достаёт written_year (<title-info><date>) и edition_year
+// (<publish-info><year>) и пишет в books, НЕ перетирая уже заполненные
+// значения (COALESCE): будущий внешний backfill сможет дозаполнить
+// written_year, а локальный проход его не затрёт. written_year_source
+// ставим 'fb2_title' только когда реально заполняем written_year из fb2.
+//
+// year_local_scanned_at ставим всегда — чтобы прогрев не перечитывал книгу
+// и чтобы внешняя фаза знала: локально уже искали (даже если ничего не нашли).
+func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) {
+	var written, edition int
+	if e.localYear != nil {
+		w, ed, err := e.localYear.FetchYears(ctx, q)
+		if err != nil && !errors.Is(err, ErrNotFound) {
+			e.logger.Info("metadata: fb2 year extract failed", "book_id", q.ID, "err", err)
+		}
+		written, edition = w, ed
+	}
+	if _, err := e.pool.Exec(ctx, `
+		UPDATE books SET
+			written_year = COALESCE(written_year, NULLIF($2, 0)::smallint),
+			written_year_source = CASE
+				WHEN written_year IS NULL AND $2 > 0 THEN 'fb2_title'
+				ELSE written_year_source END,
+			edition_year = COALESCE(edition_year, NULLIF($3, 0)::smallint),
+			year_local_scanned_at = now()
+		WHERE id = $1
+	`, q.ID, written, edition); err != nil {
+		e.logger.Warn("metadata: year local write failed", "book_id", q.ID, "err", err)
+	}
 }
 
 // ensureAnnotation — общая реализация: обходит annotationProviders,

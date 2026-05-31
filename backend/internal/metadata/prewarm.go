@@ -121,7 +121,9 @@ func (p *Prewarmer) fetchBatch(ctx context.Context, afterID int64, limit int) ([
 		SELECT b.id, b.title, COALESCE(b.lang, ''), a.filename, b.file_name, b.ext
 		FROM books b
 		JOIN archives a ON a.id = b.archive_id
-		WHERE b.deleted = false AND b.metadata_fetched_at IS NULL AND b.id > $1
+		WHERE b.deleted = false
+		  AND (b.metadata_fetched_at IS NULL OR b.year_local_scanned_at IS NULL)
+		  AND b.id > $1
 		ORDER BY b.id
 		LIMIT $2
 	`, afterID, limit)
@@ -172,6 +174,11 @@ func (p *Prewarmer) processOne(ctx context.Context, b prewarmBook) {
 	// Authors не нужны — fb2-провайдер читает из zip, не ищет по имени.
 	p.enricher.EnsureCoverLocal(taskCtx, q)
 	p.enricher.EnsureAnnotationLocal(taskCtx, q)
+	// Год из fb2 (written/edition): тот же локальный источник, сам ставит
+	// year_local_scanned_at. Книги, уже прогретые до этой фичи (cover есть,
+	// но year_local_scanned_at IS NULL), попадают сюда повторно один раз —
+	// Cover/Annotation для них no-op, открывается только год.
+	p.enricher.EnsureYearLocal(taskCtx, q)
 	// Помечаем «прогрето» независимо от результата: fb2-промахи не должны
 	// перечитываться каждый цикл. AND metadata_fetched_at IS NULL — на
 	// случай если Ensure* уже проставил его при успехе (no-op тогда).

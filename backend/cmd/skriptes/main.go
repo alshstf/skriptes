@@ -138,6 +138,9 @@ func run() error {
 	// При включённом прогреве лимит кэша = 0 (full-store, без эвикции):
 	// иначе прогрев всей коллекции + LRU-бюджет = бесконечная мясорубка.
 	enricher.WithCoverCache(coverCfg.EffectiveCacheMaxBytes(), coverCfg.MinFreeBytes())
+	// fb2 как локальный источник года (written_year/edition_year) для
+	// фонового прогрева — без сети, в том же проходе что обложки/аннотации.
+	enricher.WithLocalYear(fb2Provider)
 	logger.Info("metadata enricher ready",
 		"cover_root", filepath.Join(cfg.CacheRoot, "covers"),
 		"cache_max_mb", coverCfg.CacheMaxMB,

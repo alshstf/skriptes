@@ -239,7 +239,7 @@ function StandaloneSection({ books }: { books: BookListItemType[] }) {
   );
 }
 
-// AuthorStats — блок "Статистика" над списком серий.
+// AuthorStats — блок "Статистика" над списком книг.
 // Прячется если ничего показать: нет year_stats и нет downloads.
 // Гистограмма скрывается отдельно если в распределении < 2 точек:
 // одинокий столбик ничего не сообщает.
@@ -262,7 +262,7 @@ function AuthorStats({ author }: { author: import('@/lib/catalog').Author }) {
         {showHistogram ? (
           <div className="space-y-1">
             <div className="text-xs font-medium text-muted-foreground uppercase">
-              Добавлено по годам
+              Книги по годам написания
             </div>
             <YearHistogram data={years} />
           </div>

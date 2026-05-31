@@ -482,6 +482,8 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	var b Book
 	var (
 		dateAdded   pgtype.Date
+		writtenYear pgtype.Int2
+		editionYear pgtype.Int2
 		rating      pgtype.Int2
 		annotation  pgtype.Text
 		coverPath   pgtype.Text
@@ -495,6 +497,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		SELECT
 			b.id, b.lib_id, b.title,
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
+			b.written_year, b.edition_year,
 			b.ser_no, b.series_id, s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
 			a.filename
@@ -505,6 +508,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	`, id).Scan(
 		&b.ID, &b.LibID, &b.Title,
 		&lang, &dateAdded, &rating, &annotation, &coverPath,
+		&writtenYear, &editionYear,
 		&serNo, &seriesID, &seriesTitle,
 		&b.FileName, &b.Ext, &b.SizeBytes, &b.Deleted,
 		&archive,
@@ -532,6 +536,14 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	}
 	if coverPath.Valid {
 		b.CoverPath = coverPath.String
+	}
+	if writtenYear.Valid {
+		v := int(writtenYear.Int16)
+		b.WrittenYear = &v
+	}
+	if editionYear.Valid {
+		v := int(editionYear.Int16)
+		b.EditionYear = &v
 	}
 	if serNo.Valid {
 		v := int(serNo.Int32)
