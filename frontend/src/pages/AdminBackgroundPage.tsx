@@ -317,58 +317,14 @@ export function AdminBackgroundPage() {
 
               {/* Под-тумблеры — что синкать. Disabled при выключенном мастере. */}
               <div className="space-y-3 border-l border-border pl-3">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2.5">
-                    <Switch
-                      id="sync-covers"
-                      checked={cq.data?.sync_covers ?? false}
-                      disabled={!master || updateCol.isPending}
-                      onCheckedChange={(v) => void applyCol({ sync_covers: v }, 'Применено')}
-                    />
-                    <Label htmlFor="sync-covers" className="cursor-pointer text-sm">Обложки</Label>
-                  </div>
-                  {/* Лимиты кэша обложек — под тумблером обложек. */}
-                  {(cq.data?.sync_covers ?? false) ? (
-                    <div className="space-y-3 pl-7">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="cache-max">Бюджет кэша, МБ</Label>
-                        <Input
-                          id="cache-max"
-                          type="number"
-                          min={0}
-                          value={maxMB}
-                          disabled={master}
-                          onChange={(e) => setMaxMB(e.target.value)}
-                        />
-                        {master ? (
-                          <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-                            Бюджет не применяется при включённой обработке — рост кэша ограничивает
-                            только порог свободного места.
-                          </Callout>
-                        ) : (
-                          <p className="text-xs text-muted-foreground">
-                            При превышении вытесняются давно не запрашивавшиеся (LRU). 0 — без лимита.
-                          </p>
-                        )}
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="cache-min-free">Порог свободного места, МБ</Label>
-                        <Input
-                          id="cache-min-free"
-                          type="number"
-                          min={0}
-                          value={minFreeMB}
-                          onChange={(e) => setMinFreeMB(e.target.value)}
-                        />
-                        {lowFloorWarn ? (
-                          <Callout icon={<AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-                            Безопаснее держать ≥ {MIN_FREE_WARN_MB} МБ: слишком низкий порог повышает
-                            риск забить диск.
-                          </Callout>
-                        ) : null}
-                      </div>
-                    </div>
-                  ) : null}
+                <div className="flex items-center gap-2.5">
+                  <Switch
+                    id="sync-covers"
+                    checked={cq.data?.sync_covers ?? false}
+                    disabled={!master || updateCol.isPending}
+                    onCheckedChange={(v) => void applyCol({ sync_covers: v }, 'Применено')}
+                  />
+                  <Label htmlFor="sync-covers" className="cursor-pointer text-sm">Обложки</Label>
                 </div>
 
                 <div className="flex items-center gap-2.5">
@@ -426,7 +382,7 @@ export function AdminBackgroundPage() {
                 ) : (
                   <Button variant="outline" onClick={onRunCol} disabled={master || colRunning || runCol.isPending}>
                     <Flame className="size-4" aria-hidden />
-                    {runCol.isPending ? 'Запуск…' : 'Запустить сейчас'}
+                    {runCol.isPending ? 'Запуск…' : 'Прогнать разово'}
                   </Button>
                 )}
                 <Button variant="outline" onClick={onClear} disabled={clear.isPending}>
@@ -434,6 +390,10 @@ export function AdminBackgroundPage() {
                   {clear.isPending ? 'Очистка…' : 'Очистить кэш'}
                 </Button>
               </div>
+              <p className="text-xs text-muted-foreground">
+                «Прогнать разово» — однократный проход по непрогретым книгам. Постоянную фоновую
+                обработку включает мастер-тумблер выше.
+              </p>
               {colRunning ? (
                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="inline-block size-2 animate-pulse rounded-full bg-primary" aria-hidden />
@@ -441,11 +401,54 @@ export function AdminBackgroundPage() {
                 </p>
               ) : null}
 
-              <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
-                <span className="text-muted-foreground">Размер кэша</span>
-                <span className="tabular-nums">{formatBytes(cq.data?.cache_size_bytes ?? 0)}</span>
-                <span className="text-muted-foreground">Свободно на диске</span>
-                <span className="tabular-nums">{formatBytes(cq.data?.free_bytes ?? -1)}</span>
+              {/* Кэш обложек — отдельно от тумблеров обработки: бюджет и порог
+                  действуют не только на фоновую джобу, но и на lazy-кэш
+                  (извлечение обложки при первом открытии). */}
+              <div className="space-y-3 border-t border-border pt-3">
+                <p className="text-sm font-medium">Кэш обложек</p>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cache-max">Бюджет кэша, МБ</Label>
+                  <Input
+                    id="cache-max"
+                    type="number"
+                    min={0}
+                    value={maxMB}
+                    disabled={master}
+                    onChange={(e) => setMaxMB(e.target.value)}
+                  />
+                  {master ? (
+                    <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                      Бюджет не применяется при включённой обработке коллекции — рост кэша
+                      ограничивает только порог свободного места.
+                    </Callout>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      При превышении вытесняются давно не запрашивавшиеся (LRU). 0 — без лимита.
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cache-min-free">Порог свободного места, МБ</Label>
+                  <Input
+                    id="cache-min-free"
+                    type="number"
+                    min={0}
+                    value={minFreeMB}
+                    onChange={(e) => setMinFreeMB(e.target.value)}
+                  />
+                  {lowFloorWarn ? (
+                    <Callout icon={<AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                      Безопаснее держать ≥ {MIN_FREE_WARN_MB} МБ: слишком низкий порог повышает
+                      риск забить диск.
+                    </Callout>
+                  ) : null}
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <span className="text-muted-foreground">Размер кэша</span>
+                  <span className="tabular-nums">{formatBytes(cq.data?.cache_size_bytes ?? 0)}</span>
+                  <span className="text-muted-foreground">Свободно на диске</span>
+                  <span className="tabular-nums">{formatBytes(cq.data?.free_bytes ?? -1)}</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -528,10 +531,13 @@ export function AdminBackgroundPage() {
                 ) : (
                   <Button variant="outline" onClick={onRunYear} disabled={extEnabled || extRunning || runYear.isPending}>
                     <Flame className="size-4" aria-hidden />
-                    {runYear.isPending ? 'Запуск…' : 'Запустить сейчас'}
+                    {runYear.isPending ? 'Запуск…' : 'Прогнать разово'}
                   </Button>
                 )}
               </div>
+              <p className="text-xs text-muted-foreground">
+                «Прогнать разово» — однократный проход; постоянную работу включает тумблер выше.
+              </p>
               {extRunning ? (
                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="inline-block size-2 animate-pulse rounded-full bg-primary" aria-hidden />
