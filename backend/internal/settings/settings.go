@@ -305,3 +305,69 @@ func (s *Store) SetCoverEnrichment(ctx context.Context, cfg CoverEnrichmentConfi
 	}
 	return nil
 }
+
+const bioAdaptationKey = "bio_adaptation_enrichment"
+
+// BioAdaptationConfig — настройки фонового дозаполнения «людей и экранизаций» из
+// внешних источников: биографии + фото авторов (Wikipedia/OpenLibrary) и
+// экранизации книг (Wikidata). У этих данных НЕТ fb2-источника, поэтому режим
+// проще, чем у года/обложек: включил воркер → проходит по всей коллекции (нет
+// fallback-vs-whole тумблера). Оба воркера opt-in (по умолчанию выключены —
+// ходят в публичные API).
+//
+//	Bios            — фоновый проход по авторам без bio/photo.
+//	Adaptations     — фоновый проход по книгам без экранизаций.
+//	BiosRPM         — лимит запросов/мин воркера биографий (Wikipedia + OL).
+//	AdaptationsRPM  — лимит запросов/мин воркера экранизаций (Wikidata SPARQL —
+//	                  тяжелее, держим ниже).
+type BioAdaptationConfig struct {
+	Bios           bool `json:"bios"`
+	Adaptations    bool `json:"adaptations"`
+	BiosRPM        int  `json:"bios_rpm"`
+	AdaptationsRPM int  `json:"adaptations_rpm"`
+}
+
+// DefaultBioAdaptationConfig — оба воркера выключены (opt-in), вежливые лимиты.
+func DefaultBioAdaptationConfig() BioAdaptationConfig {
+	return BioAdaptationConfig{
+		Bios:           false,
+		Adaptations:    false,
+		BiosRPM:        30,
+		AdaptationsRPM: 20,
+	}
+}
+
+// BioAdaptation читает настройки; нет оверрайда в БД — дефолты (мердж поверх
+// DefaultBioAdaptationConfig).
+func (s *Store) BioAdaptation(ctx context.Context) (BioAdaptationConfig, error) {
+	cfg := DefaultBioAdaptationConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, bioAdaptationKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read bio/adaptation settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultBioAdaptationConfig(), fmt.Errorf("decode bio/adaptation settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetBioAdaptation сохраняет настройки (upsert).
+func (s *Store) SetBioAdaptation(ctx context.Context, cfg BioAdaptationConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode bio/adaptation settings: %w", err)
+	}
+	_, err = s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, bioAdaptationKey, raw)
+	if err != nil {
+		return fmt.Errorf("save bio/adaptation settings: %w", err)
+	}
+	return nil
+}

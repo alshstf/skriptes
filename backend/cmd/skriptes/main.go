@@ -210,6 +210,24 @@ func run() error {
 		coverBackfillCtl.Start()
 	}
 
+	// Фоновые воркеры «людей и экранизаций» из внешних источников (external-only,
+	// без fb2): био/фото авторов (Wikipedia/OL) и экранизации книг (Wikidata).
+	// Оба opt-in; используют существующие маркеры metadata_fetched_at /
+	// adaptations_fetched_at (как и lazy-путь), без новой таблицы.
+	baCfg, err := settingsStore.BioAdaptation(ctx())
+	if err != nil {
+		logger.Warn("read bio/adaptation settings — using defaults", "err", err)
+		baCfg = settings.DefaultBioAdaptationConfig()
+	}
+	authorBackfillCtl := metadata.NewAuthorBackfillController(pool, enricher, baCfg.BiosRPM, logger)
+	if baCfg.Bios {
+		authorBackfillCtl.Start()
+	}
+	adaptationBackfillCtl := metadata.NewAdaptationBackfillController(pool, enricher, baCfg.AdaptationsRPM, logger)
+	if baCfg.Adaptations {
+		adaptationBackfillCtl.Start()
+	}
+
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
@@ -257,8 +275,12 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
-		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl},
-		Content:     api.ContentDeps{Resolver: contentResolver},
+		Settings: api.SettingsDeps{
+			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
+			YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl,
+			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
+		},
+		Content: api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy

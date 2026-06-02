@@ -109,6 +109,32 @@ func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {
 	require.Equal(t, want, got)
 }
 
+func TestSettings_BioAdaptationRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолты (оба воркера выключены — opt-in).
+	got, err := store.BioAdaptation(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultBioAdaptationConfig(), got)
+	require.False(t, got.Bios)
+	require.False(t, got.Adaptations)
+
+	// Сохранили — читается обратно (upsert).
+	want := settings.BioAdaptationConfig{
+		Bios: true, Adaptations: false, BiosRPM: 15, AdaptationsRPM: 5,
+	}
+	require.NoError(t, store.SetBioAdaptation(ctx, want))
+	got, err = store.BioAdaptation(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 // TestSettings_ContentRoundTrip — глобальные и персональные настройки
 // видимости: дефолты на пустой БД, upsert+нормализация (дедуп/сортировка),
 // объединение admin ∪ user через ContentResolver.

@@ -198,6 +198,14 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/admin/cover-enrichment", handleUpdateCoverEnrichment(d.Settings))
 					r.Post("/admin/cover-enrichment/run", handleCoverBackfillNow(d.Settings))
 					r.Post("/admin/cover-enrichment/stop", handleCoverBackfillStop(d.Settings))
+					// Раздел «Биографии + Экранизации — внешние»: фоновые воркеры
+					// био/фото авторов (Wikipedia/OL) и экранизаций книг (Wikidata).
+					r.Get("/admin/bio-adaptation-enrichment", handleGetBioAdaptation(d.Settings))
+					r.Put("/admin/bio-adaptation-enrichment", handleUpdateBioAdaptation(d.Settings))
+					r.Post("/admin/bio-adaptation-enrichment/bios/run", handleBioBackfillNow(d.Settings))
+					r.Post("/admin/bio-adaptation-enrichment/bios/stop", handleBioBackfillStop(d.Settings))
+					r.Post("/admin/bio-adaptation-enrichment/adaptations/run", handleAdaptationBackfillNow(d.Settings))
+					r.Post("/admin/bio-adaptation-enrichment/adaptations/stop", handleAdaptationBackfillStop(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).

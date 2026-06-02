@@ -15,11 +15,13 @@ import (
 // отдаёт статистику/очистку; Prewarm — контроллер фоновой джобы прогрева
 // (вкл/выкл по тумблеру + разовый прогон).
 type SettingsDeps struct {
-	Store         *settings.Store
-	Metadata      *metadata.Enricher
-	Prewarm       *metadata.PrewarmController
-	YearBackfill  *metadata.YearBackfillController
-	CoverBackfill *metadata.CoverBackfillController
+	Store              *settings.Store
+	Metadata           *metadata.Enricher
+	Prewarm            *metadata.PrewarmController
+	YearBackfill       *metadata.YearBackfillController
+	CoverBackfill      *metadata.CoverBackfillController
+	AuthorBackfill     *metadata.AuthorBackfillController
+	AdaptationBackfill *metadata.AdaptationBackfillController
 }
 
 // coverSettingsResponse — текущая конфигурация + статистика кэша +

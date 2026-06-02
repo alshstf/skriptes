@@ -323,3 +323,65 @@ export function useStopCoverBackfill() {
   });
 }
 
+// ── Биографии авторов + Экранизации книг (внешние, фоном) ─────────────
+
+export type BioAdaptationSettings = {
+  bios: boolean;
+  adaptations: boolean;
+  bios_rpm: number;
+  adaptations_rpm: number;
+  // статусы воркеров (read-only)
+  bios_running: boolean;
+  bios_mode: 'off' | 'continuous' | 'once';
+  adaptations_running: boolean;
+  adaptations_mode: 'off' | 'continuous' | 'once';
+  // покрытие (read-only)
+  bio_coverage: { total: number; with_bio: number; with_photo: number };
+  adaptation_coverage: { total: number; with_adaptations: number };
+};
+
+// BioAdaptationInput — тело PUT (только конфиг, без read-only полей).
+export type BioAdaptationInput = {
+  bios: boolean;
+  adaptations: boolean;
+  bios_rpm: number;
+  adaptations_rpm: number;
+};
+
+const BIO_ADAPT_KEY = ['admin', 'bio-adaptation'] as const;
+
+export function useBioAdaptationSettings() {
+  return useQuery<BioAdaptationSettings>({
+    queryKey: [...BIO_ADAPT_KEY],
+    queryFn: () => apiFetch<BioAdaptationSettings>('/api/admin/bio-adaptation-enrichment'),
+    staleTime: 10_000,
+    refetchInterval: (query) =>
+      query.state.data?.bios_running || query.state.data?.adaptations_running ? 3000 : false,
+  });
+}
+
+export function useUpdateBioAdaptationSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: BioAdaptationInput) =>
+      apiFetch<BioAdaptationSettings>('/api/admin/bio-adaptation-enrichment', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...BIO_ADAPT_KEY], data),
+  });
+}
+
+function bioAdaptationAction(path: string) {
+  return function useAction() {
+    const qc = useQueryClient();
+    return useMutation({
+      mutationFn: () =>
+        apiFetch<{ status: string }>(`/api/admin/bio-adaptation-enrichment/${path}`, { method: 'POST' }),
+      onSuccess: () => qc.invalidateQueries({ queryKey: [...BIO_ADAPT_KEY] }),
+    });
+  };
+}
+
+export const useRunBioBackfill = bioAdaptationAction('bios/run');
+export const useStopBioBackfill = bioAdaptationAction('bios/stop');
+export const useRunAdaptationBackfill = bioAdaptationAction('adaptations/run');
+export const useStopAdaptationBackfill = bioAdaptationAction('adaptations/stop');
+
