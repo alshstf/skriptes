@@ -20,9 +20,13 @@ const collection = {
   sync_annotations: true,
   sync_years: true,
   intensity: 'medium',
+  poster_cache_max_mb: 0,
+  photo_cache_max_mb: 0,
   prewarm_running: false,
   prewarm_mode: 'off',
   cache_size_bytes: 1048576, // 1 МБ
+  poster_cache_size_bytes: 0,
+  photo_cache_size_bytes: 0,
   free_bytes: 5368709120, // 5 ГБ
 };
 
@@ -147,6 +151,8 @@ describe('AdminBackgroundPage', () => {
         sync_annotations: true,
         sync_years: true,
         intensity: 'medium',
+        poster_cache_max_mb: 0,
+        photo_cache_max_mb: 0,
       });
     });
   });

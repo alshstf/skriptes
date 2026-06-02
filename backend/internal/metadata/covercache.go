@@ -1,7 +1,9 @@
 package metadata
 
 import (
+	"crypto/sha256"
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -63,6 +65,49 @@ func (c *CoverCache) SetLimits(maxBytes, minFree int64) {
 
 // Path — абсолютный путь к файлу в кэше по имени.
 func (c *CoverCache) Path(name string) string { return filepath.Join(c.root, name) }
+
+// Root — корневой каталог кэша.
+func (c *CoverCache) Root() string { return c.root }
+
+// Save пишет картинку в кэш под content-addressable именем
+// {sha256}.{ext(mime)} и возвращает имя файла. Идемпотентно: одинаковые байты
+// → один файл (повторная запись переиспользует существующий, размер не
+// удваивается). При нехватке свободного места (ниже minFree) — ErrCacheFull,
+// файл не пишется (не фатально).
+func (c *CoverCache) Save(r io.Reader, mime string) (string, error) {
+	if !c.CanWrite(0) {
+		return "", ErrCacheFull
+	}
+	tmp, err := os.CreateTemp(c.root, "img-*.tmp")
+	if err != nil {
+		return "", fmt.Errorf("create temp: %w", err)
+	}
+	defer func() {
+		_ = tmp.Close()
+		_ = os.Remove(tmp.Name())
+	}()
+
+	h := sha256.New()
+	size, err := io.Copy(io.MultiWriter(tmp, h), r)
+	if err != nil {
+		return "", fmt.Errorf("copy image: %w", err)
+	}
+	if err := tmp.Close(); err != nil {
+		return "", fmt.Errorf("close temp: %w", err)
+	}
+
+	filename := fmt.Sprintf("%x%s", h.Sum(nil), extFromMime(mime))
+	dst := filepath.Join(c.root, filename)
+	if err := os.Rename(tmp.Name(), dst); err != nil {
+		// dst уже есть — идентичный файл; переиспользуем (в учёт не добавляем).
+		if _, statErr := os.Stat(dst); statErr == nil {
+			return filename, nil
+		}
+		return "", fmt.Errorf("rename to %s: %w", dst, err)
+	}
+	c.Added(size)
+	return filename, nil
+}
 
 // CanWrite — хватит ли места записать файл размера size так, чтобы
 // свободного осталось не меньше minFree. На ошибке statfs не блокируем

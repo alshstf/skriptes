@@ -14,6 +14,8 @@ import {
   useCoverCacheSettings,
   useUpdateCoverCacheSettings,
   useClearCoverCache,
+  useClearPosterCache,
+  useClearPhotoCache,
   usePrewarmCoverCache,
   useStopPrewarmCoverCache,
   useYearEnrichmentSettings,
@@ -91,6 +93,8 @@ function buildCollectionInput(d: CoverCacheSettings, patch: Partial<CollectionIn
     sync_annotations: d.sync_annotations,
     sync_years: d.sync_years,
     intensity: d.intensity,
+    poster_cache_max_mb: d.poster_cache_max_mb,
+    photo_cache_max_mb: d.photo_cache_max_mb,
     ...patch,
   };
 }
@@ -173,6 +177,8 @@ export function AdminBackgroundPage() {
   const cq = useCoverCacheSettings();
   const updateCol = useUpdateCoverCacheSettings();
   const clear = useClearCoverCache();
+  const clearPosters = useClearPosterCache();
+  const clearPhotos = useClearPhotoCache();
   const runCol = usePrewarmCoverCache();
   const stopCol = useStopPrewarmCoverCache();
 
@@ -182,22 +188,33 @@ export function AdminBackgroundPage() {
 
   const [maxMB, setMaxMB] = useState('');
   const [minFreeMB, setMinFreeMB] = useState('');
+  const [posterMB, setPosterMB] = useState('');
+  const [photoMB, setPhotoMB] = useState('');
   const colInit = useRef(false);
   useEffect(() => {
     if (cq.data && !colInit.current) {
       setMaxMB(String(cq.data.cache_max_mb));
       setMinFreeMB(String(cq.data.cache_min_free_mb));
+      setPosterMB(String(cq.data.poster_cache_max_mb));
+      setPhotoMB(String(cq.data.photo_cache_max_mb));
       colInit.current = true;
     }
   }, [cq.data]);
 
   const maxN = Number(maxMB);
   const minFreeN = Number(minFreeMB);
+  const posterN = Number(posterMB);
+  const photoN = Number(photoMB);
   const colInvalid =
-    maxMB === '' || minFreeMB === '' || Number.isNaN(maxN) || Number.isNaN(minFreeN) || maxN < 0 || minFreeN < 0;
+    [maxMB, minFreeMB, posterMB, photoMB].some((s) => s === '') ||
+    [maxN, minFreeN, posterN, photoN].some((n) => Number.isNaN(n) || n < 0);
   const lowFloorWarn = !Number.isNaN(minFreeN) && minFreeN < MIN_FREE_WARN_MB;
   const colDirty =
-    !!cq.data && (maxMB !== String(cq.data.cache_max_mb) || minFreeMB !== String(cq.data.cache_min_free_mb));
+    !!cq.data &&
+    (maxMB !== String(cq.data.cache_max_mb) ||
+      minFreeMB !== String(cq.data.cache_min_free_mb) ||
+      posterMB !== String(cq.data.poster_cache_max_mb) ||
+      photoMB !== String(cq.data.photo_cache_max_mb));
 
   // Live-применение тумблеров/интенсивности (с сохранёнными лимитами из cq.data).
   const applyCol = async (patch: Partial<CollectionInput>, msg: string) => {
@@ -357,6 +374,8 @@ export function AdminBackgroundPage() {
     if (cq.data) {
       setMaxMB(String(cq.data.cache_max_mb));
       setMinFreeMB(String(cq.data.cache_min_free_mb));
+      setPosterMB(String(cq.data.poster_cache_max_mb));
+      setPhotoMB(String(cq.data.photo_cache_max_mb));
     }
     if (yq.data) {
       setOlRpm(String(yq.data.openlibrary_rpm));
@@ -380,10 +399,17 @@ export function AdminBackgroundPage() {
     try {
       if (colDirty && !colInvalid && cq.data) {
         const saved = await updateCol.mutateAsync(
-          buildCollectionInput(cq.data, { cache_max_mb: maxN, cache_min_free_mb: minFreeN }),
+          buildCollectionInput(cq.data, {
+            cache_max_mb: maxN,
+            cache_min_free_mb: minFreeN,
+            poster_cache_max_mb: posterN,
+            photo_cache_max_mb: photoN,
+          }),
         );
         setMaxMB(String(saved.cache_max_mb));
         setMinFreeMB(String(saved.cache_min_free_mb));
+        setPosterMB(String(saved.poster_cache_max_mb));
+        setPhotoMB(String(saved.photo_cache_max_mb));
       }
       if (yearDirty && !yearInvalid && yq.data) {
         const saved = await updateYear.mutateAsync(
@@ -428,10 +454,28 @@ export function AdminBackgroundPage() {
 
   // ── Действия секции 1 ──
   const onClear = async () => {
-    if (!window.confirm('Очистить весь кэш обложек? Они переизвлекутся из fb2 по мере просмотра.')) return;
+    if (!window.confirm('Очистить весь кэш обложек книг? Они переизвлекутся из fb2 по мере просмотра.')) return;
     try {
       const r = await clear.mutateAsync();
       toast.success(`Кэш очищен: удалено файлов — ${r.removed}`);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось очистить');
+    }
+  };
+  const onClearPosters = async () => {
+    if (!window.confirm('Очистить постеры экранизаций? Вернутся при следующем дозаполнении экранизаций.')) return;
+    try {
+      const r = await clearPosters.mutateAsync();
+      toast.success(`Постеры очищены: удалено файлов — ${r.removed}`);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось очистить');
+    }
+  };
+  const onClearPhotos = async () => {
+    if (!window.confirm('Очистить фото авторов? Вернутся при следующем дозаполнении биографий.')) return;
+    try {
+      const r = await clearPhotos.mutateAsync();
+      toast.success(`Фото очищены: удалено файлов — ${r.removed}`);
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось очистить');
     }
@@ -661,7 +705,7 @@ export function AdminBackgroundPage() {
                   действуют не только на фоновую джобу, но и на lazy-кэш
                   (извлечение обложки при первом открытии). */}
               <div className="space-y-3 border-t border-border pt-3">
-                <p className="text-sm font-medium">Кэш обложек</p>
+                <p className="text-sm font-medium">Кэш обложек книг</p>
                 <div className="space-y-1.5">
                   <Label htmlFor="cache-max">Бюджет кэша, МБ</Label>
                   <Input
@@ -704,6 +748,55 @@ export function AdminBackgroundPage() {
                   <span className="tabular-nums">{formatBytes(cq.data?.cache_size_bytes ?? 0)}</span>
                   <span className="text-muted-foreground">Свободно на диске</span>
                   <span className="tabular-nums">{formatBytes(cq.data?.free_bytes ?? -1)}</span>
+                </div>
+              </div>
+
+              {/* Постеры экранизаций и фото авторов — отдельные бакеты:
+                  нерегенерируемые (внешний источник), поэтому со своими лимитами
+                  и очисткой, чтобы «Очистить кэш обложек»/LRU их не сносили. */}
+              <div className="space-y-3 border-t border-border pt-3">
+                <p className="text-sm font-medium">Постеры и фото авторов</p>
+                <p className="text-xs text-muted-foreground">
+                  Отдельно от обложек книг — они из внешних источников и не воссоздаются из fb2.
+                  0 = без лимита (рекомендуется: объём мал, а эвикция ломала бы их).
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="poster-max">Постеры, бюджет МБ</Label>
+                    <Input
+                      id="poster-max"
+                      type="number"
+                      min={0}
+                      value={posterMB}
+                      onChange={(e) => setPosterMB(e.target.value)}
+                    />
+                    <p className="text-xs tabular-nums text-muted-foreground">
+                      {formatBytes(cq.data?.poster_cache_size_bytes ?? 0)}
+                    </p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="photo-max">Фото авторов, бюджет МБ</Label>
+                    <Input
+                      id="photo-max"
+                      type="number"
+                      min={0}
+                      value={photoMB}
+                      onChange={(e) => setPhotoMB(e.target.value)}
+                    />
+                    <p className="text-xs tabular-nums text-muted-foreground">
+                      {formatBytes(cq.data?.photo_cache_size_bytes ?? 0)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" onClick={onClearPosters} disabled={clearPosters.isPending}>
+                    <Trash2 className="size-4" aria-hidden />
+                    {clearPosters.isPending ? 'Очистка…' : 'Очистить постеры'}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={onClearPhotos} disabled={clearPhotos.isPending}>
+                    <Trash2 className="size-4" aria-hidden />
+                    {clearPhotos.isPending ? 'Очистка…' : 'Очистить фото'}
+                  </Button>
                 </div>
               </div>
             </CardContent>

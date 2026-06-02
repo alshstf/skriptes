@@ -127,6 +127,13 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 	if a.PhotoPath != "" && a.Bio != "" {
 		return
 	}
+	// Попытка обогащения уже была (metadata_fetched_at) — не дёргаем внешние
+	// API повторно на каждый GET/поллинг карточки автора. Single-shot, как у
+	// экранизаций (adaptations_fetched_at). Если bio/photo так и не нашлись —
+	// фронт покажет fallback по тому же флагу enrichment_fetched.
+	if a.EnrichmentFetched {
+		return
+	}
 	q := metadata.AuthorQuery{
 		ID:         a.ID,
 		LastName:   a.LastName,

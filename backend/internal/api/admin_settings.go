@@ -29,14 +29,18 @@ type SettingsDeps struct {
 type coverSettingsResponse struct {
 	settings.CoverConfig
 	metadata.PrewarmStatus
-	CacheSizeBytes int64 `json:"cache_size_bytes"`
-	FreeBytes      int64 `json:"free_bytes"`
+	CacheSizeBytes       int64 `json:"cache_size_bytes"`
+	PosterCacheSizeBytes int64 `json:"poster_cache_size_bytes"`
+	PhotoCacheSizeBytes  int64 `json:"photo_cache_size_bytes"`
+	FreeBytes            int64 `json:"free_bytes"`
 }
 
 func coverStats(d SettingsDeps, cfg settings.CoverConfig) coverSettingsResponse {
 	resp := coverSettingsResponse{CoverConfig: cfg, FreeBytes: -1}
 	if d.Metadata != nil {
 		resp.CacheSizeBytes = d.Metadata.CoverCacheSize()
+		resp.PosterCacheSizeBytes = d.Metadata.PosterCacheSize()
+		resp.PhotoCacheSizeBytes = d.Metadata.PhotoCacheSize()
 		resp.FreeBytes = d.Metadata.CoverCacheFree()
 	}
 	if d.Prewarm != nil {
@@ -88,6 +92,9 @@ func handleUpdateCoverSettings(d SettingsDeps) http.HandlerFunc {
 		if d.Metadata != nil {
 			// Прогрев ON → лимит 0 (full-store, без эвикции); иначе бюджет.
 			d.Metadata.SetCoverLimits(cfg.EffectiveCacheMaxBytes(), cfg.MinFreeBytes())
+			// Постеры/фото — свои бюджеты (общий пол свободного места).
+			d.Metadata.SetPosterLimits(cfg.PosterCacheMaxBytes(), cfg.MinFreeBytes())
+			d.Metadata.SetPhotoLimits(cfg.PhotoCacheMaxBytes(), cfg.MinFreeBytes())
 		}
 		// Живое применение под-настроек (тумблеры/интенсивность) + мастер вкл/выкл.
 		if d.Prewarm != nil {
@@ -141,6 +148,46 @@ func handleClearCoverCache(d SettingsDeps) http.HandlerFunc {
 			return
 		}
 		removed, err := d.Metadata.ClearCoverCache()
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "clear failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int{"removed": removed})
+	}
+}
+
+// handleClearPosterCache — POST /api/admin/cover-cache/clear-posters. Удаляет
+// файлы постеров экранизаций + зануляет висячие poster_path. В отличие от
+// обложек книг постеры не воссоздаются из fb2 (внешний источник) — вернутся
+// при следующем дозаполнении экранизаций.
+func handleClearPosterCache(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Metadata == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+		defer cancel()
+		removed, err := d.Metadata.ClearPosterCache(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "clear failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int{"removed": removed})
+	}
+}
+
+// handleClearPhotoCache — POST /api/admin/cover-cache/clear-photos. Удаляет
+// файлы фото авторов + зануляет висячие photo_path.
+func handleClearPhotoCache(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Metadata == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+		defer cancel()
+		removed, err := d.Metadata.ClearPhotoCache(ctx)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "clear failed"})
 			return

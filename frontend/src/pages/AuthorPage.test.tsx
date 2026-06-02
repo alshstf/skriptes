@@ -107,4 +107,20 @@ describe('AuthorPage', () => {
     // Псевдосекция для книг вне серий.
     expect(screen.getByText('Вне серий')).toBeInTheDocument();
   });
+
+  it('при enrichment_fetched и пустой bio сразу показывает fallback, а не скелетон', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify({ ...fixture, enrichment_fetched: true }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    );
+    render(wrap(<AuthorPage />));
+    expect(await screen.findByText('Информация отсутствует.')).toBeInTheDocument();
+    // Скелетон биографии не висит — попытка обогащения уже была.
+    expect(screen.queryByLabelText('Биография загружается')).not.toBeInTheDocument();
+  });
 });

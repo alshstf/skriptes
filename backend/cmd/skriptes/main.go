@@ -140,6 +140,13 @@ func run() error {
 	// При включённом прогреве лимит кэша = 0 (full-store, без эвикции):
 	// иначе прогрев всей коллекции + LRU-бюджет = бесконечная мясорубка.
 	enricher.WithCoverCache(coverCfg.EffectiveCacheMaxBytes(), coverCfg.MinFreeBytes())
+	// Бакеты постеров/фото авторов — свои бюджеты, общий пол свободного места.
+	enricher.SetPosterLimits(coverCfg.PosterCacheMaxBytes(), coverCfg.MinFreeBytes())
+	enricher.SetPhotoLimits(coverCfg.PhotoCacheMaxBytes(), coverCfg.MinFreeBytes())
+	// Самолечение висячих указателей постеров/фото (после старых очисток кэша,
+	// когда они лежали вместе с обложками): зануляем битые ссылки + даём
+	// дозаполнению их перекачать. В фоне, не блокируем старт HTTP.
+	go enricher.HealDanglingAssets(ctx())
 	// fb2 как локальный источник года (written_year/edition_year) для
 	// фонового прогрева — без сети, в том же проходе что обложки/аннотации.
 	enricher.WithLocalYear(fb2Provider)
