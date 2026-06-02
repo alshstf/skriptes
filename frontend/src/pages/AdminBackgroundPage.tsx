@@ -24,6 +24,12 @@ import {
   useUpdateCoverEnrichmentSettings,
   useRunCoverBackfill,
   useStopCoverBackfill,
+  useBioAdaptationSettings,
+  useUpdateBioAdaptationSettings,
+  useRunBioBackfill,
+  useStopBioBackfill,
+  useRunAdaptationBackfill,
+  useStopAdaptationBackfill,
   type CoverCacheSettings,
   type CollectionInput,
   type Intensity,
@@ -31,6 +37,8 @@ import {
   type YearEnrichmentInput,
   type CoverEnrichmentSettings,
   type CoverEnrichmentInput,
+  type BioAdaptationSettings,
+  type BioAdaptationInput,
 } from '@/lib/admin';
 import { ApiError } from '@/lib/api';
 
@@ -111,6 +119,16 @@ function buildCoverInput(d: CoverEnrichmentSettings, patch: Partial<CoverEnrichm
     googlebooks_rpm: d.googlebooks_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
+function buildBaInput(d: BioAdaptationSettings, patch: Partial<BioAdaptationInput>): BioAdaptationInput {
+  return {
+    bios: d.bios,
+    adaptations: d.adaptations,
+    bios_rpm: d.bios_rpm,
+    adaptations_rpm: d.adaptations_rpm,
     ...patch,
   };
 }
@@ -284,10 +302,56 @@ export function AdminBackgroundPage() {
     }
   };
 
+  // ── Секция 2в: внешние источники — биографии + экранизации ──
+  const bq = useBioAdaptationSettings();
+  const updateBa = useUpdateBioAdaptationSettings();
+  const runBio = useRunBioBackfill();
+  const stopBio = useStopBioBackfill();
+  const runAdapt = useRunAdaptationBackfill();
+  const stopAdapt = useStopAdaptationBackfill();
+
+  const biosOn = bq.data?.bios ?? false;
+  const biosRunning = bq.data?.bios_running ?? false;
+  const biosMode = bq.data?.bios_mode ?? 'off';
+  const adaptOn = bq.data?.adaptations ?? false;
+  const adaptRunning = bq.data?.adaptations_running ?? false;
+  const adaptMode = bq.data?.adaptations_mode ?? 'off';
+
+  const [biosRpm, setBiosRpm] = useState('');
+  const [adaptRpm, setAdaptRpm] = useState('');
+  const baInit = useRef(false);
+  useEffect(() => {
+    if (bq.data && !baInit.current) {
+      setBiosRpm(String(bq.data.bios_rpm));
+      setAdaptRpm(String(bq.data.adaptations_rpm));
+      baInit.current = true;
+    }
+  }, [bq.data]);
+
+  const baNums = { bios: Number(biosRpm), adapt: Number(adaptRpm) };
+  const baInvalid =
+    [biosRpm, adaptRpm].some((s) => s === '') || Object.values(baNums).some((n) => Number.isNaN(n) || n < 0);
+  const baDirty =
+    !!bq.data && (biosRpm !== String(bq.data.bios_rpm) || adaptRpm !== String(bq.data.adaptations_rpm));
+
+  const applyBa = async (patch: Partial<BioAdaptationInput>, msg: string) => {
+    if (!bq.data) return;
+    try {
+      await updateBa.mutateAsync(buildBaInput(bq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
+
   // ── Общий SaveBar (числовые поля всех секций) ──
-  const dirty = colDirty || yearDirty || coverDirty;
-  const saveInvalid = (colDirty && colInvalid) || (yearDirty && yearInvalid) || (coverDirty && coverInvalid);
-  const saving = updateCol.isPending || updateYear.isPending || updateCover.isPending;
+  const dirty = colDirty || yearDirty || coverDirty || baDirty;
+  const saveInvalid =
+    (colDirty && colInvalid) ||
+    (yearDirty && yearInvalid) ||
+    (coverDirty && coverInvalid) ||
+    (baDirty && baInvalid);
+  const saving = updateCol.isPending || updateYear.isPending || updateCover.isPending || updateBa.isPending;
 
   const onReset = () => {
     if (cq.data) {
@@ -305,6 +369,10 @@ export function AdminBackgroundPage() {
       setGbRpmC(String(xq.data.googlebooks_rpm));
       setNfDaysC(String(xq.data.not_found_retry_days));
       setErrHoursC(String(xq.data.error_retry_hours));
+    }
+    if (bq.data) {
+      setBiosRpm(String(bq.data.bios_rpm));
+      setAdaptRpm(String(bq.data.adaptations_rpm));
     }
   };
 
@@ -344,6 +412,13 @@ export function AdminBackgroundPage() {
         setGbRpmC(String(saved.googlebooks_rpm));
         setNfDaysC(String(saved.not_found_retry_days));
         setErrHoursC(String(saved.error_retry_hours));
+      }
+      if (baDirty && !baInvalid && bq.data) {
+        const saved = await updateBa.mutateAsync(
+          buildBaInput(bq.data, { bios_rpm: baNums.bios, adaptations_rpm: baNums.adapt }),
+        );
+        setBiosRpm(String(saved.bios_rpm));
+        setAdaptRpm(String(saved.adaptations_rpm));
       }
       toast.success('Сохранено');
     } catch (e) {
@@ -414,12 +489,50 @@ export function AdminBackgroundPage() {
     }
   };
 
+  // ── Действия секции 2в (биографии + экранизации) ──
+  const onRunBio = async () => {
+    try {
+      await runBio.mutateAsync();
+      toast.success('Дозаполнение биографий запущено');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить');
+    }
+  };
+  const onStopBio = async () => {
+    try {
+      await stopBio.mutateAsync();
+      toast.success('Останавливаю…');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
+    }
+  };
+  const onRunAdapt = async () => {
+    try {
+      await runAdapt.mutateAsync();
+      toast.success('Поиск экранизаций запущен');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить');
+    }
+  };
+  const onStopAdapt = async () => {
+    try {
+      await stopAdapt.mutateAsync();
+      toast.success('Останавливаю…');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
+    }
+  };
+
   const yCov = yq.data?.coverage;
   const yPct = yCov && yCov.total > 0 ? Math.round((yCov.with_year / yCov.total) * 100) : 0;
   const xCov = xq.data?.coverage;
   const xPct = xCov && xCov.total > 0 ? Math.round((xCov.with_cover / xCov.total) * 100) : 0;
-  const loading = cq.isLoading || yq.isLoading || xq.isLoading;
-  const failed = cq.error || yq.error || xq.error;
+  const bCov = bq.data?.bio_coverage;
+  const bPct = bCov && bCov.total > 0 ? Math.round((bCov.with_bio / bCov.total) * 100) : 0;
+  const aCov = bq.data?.adaptation_coverage;
+  const aPct = aCov && aCov.total > 0 ? Math.round((aCov.with_adaptations / aCov.total) * 100) : 0;
+  const loading = cq.isLoading || yq.isLoading || xq.isLoading || bq.isLoading;
+  const failed = cq.error || yq.error || xq.error || bq.error;
 
   return (
     <article className="space-y-6 text-pretty">
@@ -824,6 +937,127 @@ export function AdminBackgroundPage() {
                     ))}
                 </div>
               ) : null}
+            </CardContent>
+          </Card>
+
+          {/* ────── Секция 2в: внешние — биографии + экранизации ────── */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Внешние источники — биографии и экранизации</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5 pt-2 sm:max-w-md">
+              <p className="text-xs text-muted-foreground">
+                У этих данных нет fb2-источника — только внешние API. Включённый воркер проходит по всей
+                коллекции (авторов / книг), у которых данных ещё нет. Ходит в публичные API, поэтому с
+                ограничением скорости. Без воркера — данные тянутся лениво при открытии карточки.
+              </p>
+
+              {/* Блок «Биографии» */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <Switch
+                    id="ba-bios"
+                    checked={biosOn}
+                    disabled={updateBa.isPending}
+                    onCheckedChange={(v) => void applyBa({ bios: v }, v ? 'Биографии включены' : 'Выключено')}
+                  />
+                  <Label htmlFor="ba-bios" className="cursor-pointer text-sm font-medium">
+                    Биографии и фото авторов (Wikipedia / OpenLibrary)
+                  </Label>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="bios-rpm">Скорость, авторов/мин</Label>
+                  <Input
+                    id="bios-rpm"
+                    type="number"
+                    min={0}
+                    value={biosRpm}
+                    onChange={(e) => setBiosRpm(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {biosMode === 'once' ? (
+                    <Button variant="outline" onClick={onStopBio} disabled={stopBio.isPending}>
+                      <Square className="size-4" aria-hidden />
+                      {stopBio.isPending ? 'Остановка…' : 'Остановить проход'}
+                    </Button>
+                  ) : (
+                    <Button variant="outline" onClick={onRunBio} disabled={biosOn || biosRunning || runBio.isPending}>
+                      <Flame className="size-4" aria-hidden />
+                      {runBio.isPending ? 'Запуск…' : 'Прогнать разово'}
+                    </Button>
+                  )}
+                </div>
+                {biosRunning ? (
+                  <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="inline-block size-2 animate-pulse rounded-full bg-primary" aria-hidden />
+                    {biosMode === 'continuous' ? 'Непрерывный воркер активен.' : 'Идёт разовый проход…'}
+                  </p>
+                ) : null}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                  <span className="text-muted-foreground">Биография есть</span>
+                  <span className="tabular-nums">{bCov ? `${bCov.with_bio} из ${bCov.total} (${bPct}%)` : '—'}</span>
+                  <span className="text-muted-foreground">Фото есть</span>
+                  <span className="tabular-nums">{bCov ? `${bCov.with_photo} из ${bCov.total}` : '—'}</span>
+                </div>
+              </div>
+
+              {/* Блок «Экранизации» */}
+              <div className="space-y-3 border-t border-border pt-4">
+                <div className="flex items-center gap-2.5">
+                  <Switch
+                    id="ba-adapt"
+                    checked={adaptOn}
+                    disabled={updateBa.isPending}
+                    onCheckedChange={(v) => void applyBa({ adaptations: v }, v ? 'Экранизации включены' : 'Выключено')}
+                  />
+                  <Label htmlFor="ba-adapt" className="cursor-pointer text-sm font-medium">
+                    Экранизации книг (Wikidata)
+                  </Label>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="adapt-rpm">Скорость, книг/мин</Label>
+                  <Input
+                    id="adapt-rpm"
+                    type="number"
+                    min={0}
+                    value={adaptRpm}
+                    onChange={(e) => setAdaptRpm(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Через SPARQL-запросы к Wikidata (тяжелее обычных API) — держите скорость ниже.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {adaptMode === 'once' ? (
+                    <Button variant="outline" onClick={onStopAdapt} disabled={stopAdapt.isPending}>
+                      <Square className="size-4" aria-hidden />
+                      {stopAdapt.isPending ? 'Остановка…' : 'Остановить проход'}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={onRunAdapt}
+                      disabled={adaptOn || adaptRunning || runAdapt.isPending}
+                    >
+                      <Flame className="size-4" aria-hidden />
+                      {runAdapt.isPending ? 'Запуск…' : 'Прогнать разово'}
+                    </Button>
+                  )}
+                </div>
+                {adaptRunning ? (
+                  <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="inline-block size-2 animate-pulse rounded-full bg-primary" aria-hidden />
+                    {adaptMode === 'continuous' ? 'Непрерывный воркер активен.' : 'Идёт разовый проход…'}
+                  </p>
+                ) : null}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                  <span className="text-muted-foreground">Экранизация есть</span>
+                  <span className="tabular-nums">
+                    {aCov ? `${aCov.with_adaptations} из ${aCov.total} (${aPct}%)` : '—'}
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
 

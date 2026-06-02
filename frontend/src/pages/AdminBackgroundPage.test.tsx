@@ -54,18 +54,40 @@ const coverEnrichment = {
   coverage: { total: 10, with_cover: 7, by_source: { openlibrary: 2 } },
 };
 
+const bioAdaptation = {
+  bios: false,
+  adaptations: false,
+  bios_rpm: 30,
+  adaptations_rpm: 20,
+  bios_running: false,
+  bios_mode: 'off',
+  adaptations_running: false,
+  adaptations_mode: 'off',
+  bio_coverage: { total: 8, with_bio: 5, with_photo: 3 },
+  adaptation_coverage: { total: 10, with_adaptations: 4 },
+};
+
 let collectionPut: unknown = null;
 let coverPut: unknown = null;
+let baPut: unknown = null;
 
 beforeEach(() => {
   collectionPut = null;
   coverPut = null;
+  baPut = null;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string | Request, init?: RequestInit) => {
       const u = typeof url === 'string' ? url : url.url;
       const json = (body: unknown) =>
         new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+      if (u.includes('/api/admin/bio-adaptation-enrichment')) {
+        if (init?.method === 'PUT') {
+          baPut = JSON.parse(String(init.body));
+          return json({ ...bioAdaptation, ...(baPut as object) });
+        }
+        return json(bioAdaptation);
+      }
       if (u.includes('/api/admin/cover-enrichment')) {
         if (init?.method === 'PUT') {
           coverPut = JSON.parse(String(init.body));
@@ -163,6 +185,30 @@ describe('AdminBackgroundPage', () => {
     await user.click(switches[1]);
     await vi.waitFor(() => {
       expect((coverPut as { whole_collection?: boolean })?.whole_collection).toBe(true);
+    });
+  });
+
+  it('карточка био/экранизаций: покрытие + переключатель + сохранение rpm', async () => {
+    const user = userEvent.setup();
+    render(wrap(<AdminBackgroundPage />));
+    // Покрытие из bio_coverage (5/8 = 63%) и adaptation_coverage (4/10 = 40%).
+    expect(await screen.findByText('5 из 8 (63%)')).toBeInTheDocument();
+    expect(screen.getByText('4 из 10 (40%)')).toBeInTheDocument();
+
+    // Тумблер «Экранизации» применяется сразу.
+    await user.click(screen.getByLabelText('Экранизации книг (Wikidata)'));
+    await vi.waitFor(() => {
+      expect((baPut as { adaptations?: boolean })?.adaptations).toBe(true);
+    });
+
+    // Изменение rpm биографий сохраняется через общий SaveBar.
+    const biosRpm = screen.getByLabelText('Скорость, авторов/мин') as HTMLInputElement;
+    expect(biosRpm.value).toBe('30');
+    await user.clear(biosRpm);
+    await user.type(biosRpm, '10');
+    await user.click(screen.getByRole('button', { name: 'Сохранить' }));
+    await vi.waitFor(() => {
+      expect(baPut).toEqual({ bios: false, adaptations: true, bios_rpm: 10, adaptations_rpm: 20 });
     });
   });
 });
