@@ -195,6 +195,54 @@ func (e *Enricher) EnsureCoverLocal(ctx context.Context, q BookQuery) bool {
 	return e.ensureCover(ctx, q, isLocalCover, false)
 }
 
+// FetchCoverFrom пытается получить обложку у ОДНОГО конкретного провайдера и
+// сохранить её. В отличие от ensureCover (который обходит всю цепочку и на
+// промахе ставит metadata_fetched_at) — работает с одним источником и НИЧЕГО
+// не помечает: учёт попыток ведёт вызывающий фоновый backfill в отдельной
+// таблице book_cover_lookups (per-source).
+//
+// Возвращает:
+//   - (true,  nil)         — обложка получена и записана (cover_path обновлён);
+//   - (false, ErrNotFound) — провайдер книгу/обложку не нашёл;
+//   - (false, <err>)       — сетевая/IO ошибка;
+//   - (false, nil)         — пропуск без действий: обложка уже появилась
+//     (race с lazy-путём) либо книга обрабатывается параллельно. Caller
+//     прекращает обход источников, ничего не помечая.
+func (e *Enricher) FetchCoverFrom(ctx context.Context, p CoverProvider, q BookQuery) (bool, error) {
+	if !e.tryLock(e.inflightCover, q.ID) {
+		return false, nil // другой обработчик уже занимается этой книгой
+	}
+	defer e.unlock(e.inflightCover, q.ID)
+
+	// Re-check на случай, что обложку успели проставить пока мы ждали слот
+	// rate-gate/lock (lazy-путь при открытии карточки).
+	var coverPath *string
+	if err := e.pool.QueryRow(ctx, `SELECT cover_path FROM books WHERE id = $1`, q.ID).Scan(&coverPath); err != nil {
+		return false, fmt.Errorf("query cover_path: %w", err)
+	}
+	if coverPath != nil && *coverPath != "" {
+		return false, nil
+	}
+
+	img, err := p.FetchCover(ctx, q)
+	if err != nil {
+		return false, err // в т.ч. ErrNotFound — caller разрулит
+	}
+	if img == nil || img.Reader == nil {
+		return false, ErrNotFound
+	}
+	filename, err := e.saveCover(img)
+	_ = img.Reader.Close()
+	if err != nil {
+		return false, err
+	}
+	if err := e.recordCover(ctx, q.ID, filename); err != nil {
+		return false, err
+	}
+	e.logger.Info("metadata: cover saved (external backfill)", "provider", p.Name(), "book_id", q.ID, "file", filename)
+	return true, nil
+}
+
 // ensureCover — общая реализация: обходит coverProviders, прошедшие
 // фильтр accept, на первом успехе сохраняет и возвращает true. Если
 // markOnMiss=true и никто не нашёл — ставит metadata_fetched_at.

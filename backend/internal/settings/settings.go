@@ -152,6 +152,12 @@ const yearEnrichmentKey = "year_enrichment"
 //	OpenLibrary / Wikidata — какие источники опрашивать (можно отключить
 //	                         шумящий). Порядок приоритета фиксирован в коде:
 //	                         OpenLibrary (first_publish_year) → Wikidata (P577).
+//	WholeCollection         — режим охвата. false (дефолт) = фолбэк: дозаполнять
+//	                         только книги, у которых локальная fb2-фаза уже
+//	                         прошла, но год не дала (year_local_scanned_at NOT
+//	                         NULL). true = вся коллекция: спрашивать внешние и для
+//	                         книг, которых fb2-проход не касался (очень долго,
+//	                         opt-in за дисклеймером).
 //	*RPM                    — лимит запросов в минуту на источник (вежливость
 //	                         к публичным API; OL ~мягко, Wikidata строже).
 //	NotFoundRetryDays       — через сколько перепроверять источник, ранее
@@ -162,6 +168,7 @@ type YearEnrichmentConfig struct {
 	Enabled           bool `json:"enabled"`
 	OpenLibrary       bool `json:"openlibrary"`
 	Wikidata          bool `json:"wikidata"`
+	WholeCollection   bool `json:"whole_collection"`
 	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
 	WikidataRPM       int  `json:"wikidata_rpm"`
 	NotFoundRetryDays int  `json:"not_found_retry_days"`
@@ -169,12 +176,13 @@ type YearEnrichmentConfig struct {
 }
 
 // DefaultYearEnrichmentConfig — воркер выключен (opt-in), оба источника
-// включены, вежливые rate-limit'ы и TTL перепроверки.
+// включены, режим фолбэка (не вся коллекция), вежливые rate-limit'ы и TTL.
 func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
 	return YearEnrichmentConfig{
 		Enabled:           false,
 		OpenLibrary:       true,
 		Wikidata:          true,
+		WholeCollection:   false,
 		OpenLibraryRPM:    60,
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
@@ -213,6 +221,87 @@ func (s *Store) SetYearEnrichment(ctx context.Context, cfg YearEnrichmentConfig)
 	`, yearEnrichmentKey, raw)
 	if err != nil {
 		return fmt.Errorf("save year enrichment settings: %w", err)
+	}
+	return nil
+}
+
+const coverEnrichmentKey = "cover_enrichment"
+
+// CoverEnrichmentConfig — настройки фонового дозаполнения cover_path из
+// внешних источников (OpenLibrary, Google Books). Зеркало
+// YearEnrichmentConfig, только источники другие (обложки берём из OL/GB, не
+// из Wikidata). Воркер opt-in (Enabled=false по умолчанию): ходит в публичные
+// API, включается осознанно из админки.
+//
+//	OpenLibrary / GoogleBooks — какие источники опрашивать. Порядок приоритета
+//	                            фиксирован в коде: OpenLibrary → Google Books.
+//	WholeCollection           — режим охвата. false (дефолт) = фолбэк:
+//	                            дозаполнять только книги, у которых локальная
+//	                            fb2-фаза уже прошла, но обложку не дала
+//	                            (metadata_fetched_at NOT NULL). true = вся
+//	                            коллекция: спрашивать внешние и для книг, которых
+//	                            fb2-проход не касался (тысячи запросов к OL/GB,
+//	                            очень долго; opt-in за дисклеймером).
+//	*RPM                      — лимит запросов в минуту на источник.
+//	NotFoundRetryDays         — TTL перепроверки источника после not_found.
+//	ErrorRetryHours           — TTL ретрая источника после ошибки.
+type CoverEnrichmentConfig struct {
+	Enabled           bool `json:"enabled"`
+	OpenLibrary       bool `json:"openlibrary"`
+	GoogleBooks       bool `json:"googlebooks"`
+	WholeCollection   bool `json:"whole_collection"`
+	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	GoogleBooksRPM    int  `json:"googlebooks_rpm"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultCoverEnrichmentConfig — воркер выключен (opt-in), оба источника
+// включены, режим фолбэка (не вся коллекция), вежливые rate-limit'ы и TTL.
+func DefaultCoverEnrichmentConfig() CoverEnrichmentConfig {
+	return CoverEnrichmentConfig{
+		Enabled:           false,
+		OpenLibrary:       true,
+		GoogleBooks:       true,
+		WholeCollection:   false,
+		OpenLibraryRPM:    60,
+		GoogleBooksRPM:    60,
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// CoverEnrichment читает настройки дозаполнения обложек; нет оверрайда в БД —
+// отдаёт дефолты (мердж поверх DefaultCoverEnrichmentConfig).
+func (s *Store) CoverEnrichment(ctx context.Context) (CoverEnrichmentConfig, error) {
+	cfg := DefaultCoverEnrichmentConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, coverEnrichmentKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read cover enrichment settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultCoverEnrichmentConfig(), fmt.Errorf("decode cover enrichment settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetCoverEnrichment сохраняет настройки дозаполнения обложек (upsert).
+func (s *Store) SetCoverEnrichment(ctx context.Context, cfg CoverEnrichmentConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode cover enrichment settings: %w", err)
+	}
+	_, err = s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, coverEnrichmentKey, raw)
+	if err != nil {
+		return fmt.Errorf("save cover enrichment settings: %w", err)
 	}
 	return nil
 }
