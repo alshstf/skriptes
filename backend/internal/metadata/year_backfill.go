@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"sync"
 	"sync/atomic"
@@ -39,6 +40,7 @@ type YearBackfiller struct {
 type YearBackfillConfig struct {
 	OpenLibrary       bool
 	Wikidata          bool
+	WholeCollection   bool
 	OpenLibraryRPM    int
 	WikidataRPM       int
 	NotFoundRetryDays int
@@ -124,8 +126,19 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 	return total
 }
 
+// candidateCond — SQL-условие выбора кандидатов по режиму охвата.
+//   - фолбэк (дефолт): локальная fb2-фаза прошла (year_local_scanned_at NOT
+//     NULL), но года нет — добираем внешними;
+//   - вся коллекция: все книги без written_year, даже не тронутые fb2-проходом.
+func (b *YearBackfiller) candidateCond() string {
+	if b.cfg.WholeCollection {
+		return "b.written_year IS NULL"
+	}
+	return "b.written_year IS NULL AND b.year_local_scanned_at IS NOT NULL"
+}
+
 func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]yearCandidate, error) {
-	rows, err := b.pool.Query(ctx, `
+	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(
 		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
@@ -136,13 +149,13 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
-		  AND b.written_year IS NULL
-		  AND b.year_local_scanned_at IS NOT NULL
+		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, afterID, limit)
+	`, b.candidateCond())
+	rows, err := b.pool.Query(ctx, q, afterID, limit)
 	if err != nil {
 		return nil, err
 	}

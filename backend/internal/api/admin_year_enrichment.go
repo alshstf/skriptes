@@ -22,6 +22,7 @@ func toYearBackfillConfig(c settings.YearEnrichmentConfig) metadata.YearBackfill
 	return metadata.YearBackfillConfig{
 		OpenLibrary:       c.OpenLibrary,
 		Wikidata:          c.Wikidata,
+		WholeCollection:   c.WholeCollection,
 		OpenLibraryRPM:    c.OpenLibraryRPM,
 		WikidataRPM:       c.WikidataRPM,
 		NotFoundRetryDays: c.NotFoundRetryDays,

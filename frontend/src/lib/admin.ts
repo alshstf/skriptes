@@ -181,6 +181,8 @@ export type YearEnrichmentSettings = {
   enabled: boolean;
   openlibrary: boolean;
   wikidata: boolean;
+  // режим охвата: false = фолбэк (где fb2 не дал), true = вся коллекция (долго)
+  whole_collection: boolean;
   openlibrary_rpm: number;
   wikidata_rpm: number;
   not_found_retry_days: number;
@@ -201,6 +203,7 @@ export type YearEnrichmentInput = {
   enabled: boolean;
   openlibrary: boolean;
   wikidata: boolean;
+  whole_collection: boolean;
   openlibrary_rpm: number;
   wikidata_rpm: number;
   not_found_retry_days: number;
@@ -243,6 +246,80 @@ export function useStopYearBackfill() {
     mutationFn: () =>
       apiFetch<{ status: string }>('/api/admin/year-enrichment/stop', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
+  });
+}
+
+// ── Обложки: дозаполнение cover_path из внешних источников (OL / GB) ──────
+
+export type CoverEnrichmentSettings = {
+  enabled: boolean;
+  openlibrary: boolean;
+  googlebooks: boolean;
+  // режим охвата: false = фолбэк (где fb2 не дал), true = вся коллекция (долго)
+  whole_collection: boolean;
+  openlibrary_rpm: number;
+  googlebooks_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  cover_backfill_running: boolean;
+  cover_backfill_mode: 'off' | 'continuous' | 'once';
+  // покрытие cover_path (read-only)
+  coverage: {
+    total: number;
+    with_cover: number;
+    by_source: Record<string, number>;
+  };
+};
+
+// CoverEnrichmentInput — тело PUT (только конфиг, без read-only полей).
+export type CoverEnrichmentInput = {
+  enabled: boolean;
+  openlibrary: boolean;
+  googlebooks: boolean;
+  whole_collection: boolean;
+  openlibrary_rpm: number;
+  googlebooks_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const COVER_ENRICH_KEY = ['admin', 'cover-enrichment'] as const;
+
+export function useCoverEnrichmentSettings() {
+  return useQuery<CoverEnrichmentSettings>({
+    queryKey: [...COVER_ENRICH_KEY],
+    queryFn: () => apiFetch<CoverEnrichmentSettings>('/api/admin/cover-enrichment'),
+    staleTime: 10_000,
+    // Пока воркер идёт — поллим, чтобы видеть рост покрытия и завершение.
+    refetchInterval: (query) => (query.state.data?.cover_backfill_running ? 3000 : false),
+  });
+}
+
+export function useUpdateCoverEnrichmentSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: CoverEnrichmentInput) =>
+      apiFetch<CoverEnrichmentSettings>('/api/admin/cover-enrichment', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...COVER_ENRICH_KEY], data),
+  });
+}
+
+export function useRunCoverBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/cover-enrichment/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_ENRICH_KEY] }),
+  });
+}
+
+export function useStopCoverBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/cover-enrichment/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_ENRICH_KEY] }),
   });
 }
 

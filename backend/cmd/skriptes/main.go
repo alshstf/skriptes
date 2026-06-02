@@ -179,6 +179,7 @@ func run() error {
 	yearBackfillCtl := metadata.NewYearBackfillController(pool, olProvider, wdAdaptations, metadata.YearBackfillConfig{
 		OpenLibrary:       yearCfg.OpenLibrary,
 		Wikidata:          yearCfg.Wikidata,
+		WholeCollection:   yearCfg.WholeCollection,
 		OpenLibraryRPM:    yearCfg.OpenLibraryRPM,
 		WikidataRPM:       yearCfg.WikidataRPM,
 		NotFoundRetryDays: yearCfg.NotFoundRetryDays,
@@ -186,6 +187,27 @@ func run() error {
 	}, imp, logger)
 	if yearCfg.Enabled {
 		yearBackfillCtl.Start()
+	}
+
+	// Дозаполнение обложек из внешних источников (OpenLibrary → Google Books)
+	// для книг без cover_path из fb2. Зеркало year-воркера: opt-in, per-source
+	// rate-limit + учёт (book_cover_lookups). Сохранение делает тот же enricher.
+	coverEnrichCfg, err := settingsStore.CoverEnrichment(ctx())
+	if err != nil {
+		logger.Warn("read cover enrichment settings — using defaults", "err", err)
+		coverEnrichCfg = settings.DefaultCoverEnrichmentConfig()
+	}
+	coverBackfillCtl := metadata.NewCoverBackfillController(pool, enricher, olProvider, gbProvider, metadata.CoverBackfillConfig{
+		OpenLibrary:       coverEnrichCfg.OpenLibrary,
+		GoogleBooks:       coverEnrichCfg.GoogleBooks,
+		WholeCollection:   coverEnrichCfg.WholeCollection,
+		OpenLibraryRPM:    coverEnrichCfg.OpenLibraryRPM,
+		GoogleBooksRPM:    coverEnrichCfg.GoogleBooksRPM,
+		NotFoundRetryDays: coverEnrichCfg.NotFoundRetryDays,
+		ErrorRetryHours:   coverEnrichCfg.ErrorRetryHours,
+	}, logger)
+	if coverEnrichCfg.Enabled {
+		coverBackfillCtl.Start()
 	}
 
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
@@ -235,7 +257,7 @@ func run() error {
 		},
 		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
-		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl},
+		Settings:    api.SettingsDeps{Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl, YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl},
 		Content:     api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков

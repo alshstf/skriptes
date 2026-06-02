@@ -192,6 +192,12 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/admin/year-enrichment", handleUpdateYearEnrichment(d.Settings))
 					r.Post("/admin/year-enrichment/run", handleYearBackfillNow(d.Settings))
 					r.Post("/admin/year-enrichment/stop", handleYearBackfillStop(d.Settings))
+					// Раздел «Обложки — внешние»: дозаполнение cover_path из
+					// OpenLibrary/Google Books — настройки + воркер.
+					r.Get("/admin/cover-enrichment", handleGetCoverEnrichment(d.Settings))
+					r.Put("/admin/cover-enrichment", handleUpdateCoverEnrichment(d.Settings))
+					r.Post("/admin/cover-enrichment/run", handleCoverBackfillNow(d.Settings))
+					r.Post("/admin/cover-enrichment/stop", handleCoverBackfillStop(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).

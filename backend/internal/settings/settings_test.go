@@ -82,6 +82,33 @@ func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 	require.Equal(t, want, got)
 }
 
+func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолты (воркер выключен — opt-in).
+	got, err := store.CoverEnrichment(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultCoverEnrichmentConfig(), got)
+	require.False(t, got.Enabled, "по умолчанию воркер выключен")
+	require.False(t, got.WholeCollection, "по умолчанию режим фолбэка")
+
+	// Сохранили — читается обратно (upsert).
+	want := settings.CoverEnrichmentConfig{
+		Enabled: true, OpenLibrary: true, GoogleBooks: false, WholeCollection: true,
+		OpenLibraryRPM: 30, GoogleBooksRPM: 15, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+	}
+	require.NoError(t, store.SetCoverEnrichment(ctx, want))
+	got, err = store.CoverEnrichment(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 // TestSettings_ContentRoundTrip — глобальные и персональные настройки
 // видимости: дефолты на пустой БД, upsert+нормализация (дедуп/сортировка),
 // объединение admin ∪ user через ContentResolver.

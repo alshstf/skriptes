@@ -20,11 +20,17 @@ import {
   useUpdateYearEnrichmentSettings,
   useRunYearBackfill,
   useStopYearBackfill,
+  useCoverEnrichmentSettings,
+  useUpdateCoverEnrichmentSettings,
+  useRunCoverBackfill,
+  useStopCoverBackfill,
   type CoverCacheSettings,
   type CollectionInput,
   type Intensity,
   type YearEnrichmentSettings,
   type YearEnrichmentInput,
+  type CoverEnrichmentSettings,
+  type CoverEnrichmentInput,
 } from '@/lib/admin';
 import { ApiError } from '@/lib/api';
 
@@ -33,8 +39,9 @@ import { ApiError } from '@/lib/api';
  * вместо разрозненных «Кэш обложек» и «Год издания»:
  *   - Секция 1 «Обработка коллекции» — парсинг fb2 (локально): мастер-тумблер +
  *     под-тумблеры обложки/аннотации/года, лимиты кэша, интенсивность IO.
- *   - Секция 2 «Внешние источники» — фоновый опрос OpenLibrary/Wikidata (пока
- *     только года; обложки/био/экранизации — следующей фазой).
+ *   - Секция 2 «Внешние источники» — фоновый опрос OpenLibrary/Wikidata/Google
+ *     Books: годы (OL → Wikidata) и обложки (OL → Google Books). У каждого типа
+ *     данных режим охвата: фолбэк (где fb2 не дал) или вся коллекция (долго).
  * Один SaveBar на странице — появляется при изменении числовых полей любой секции.
  */
 function formatBytes(n: number): string {
@@ -85,12 +92,62 @@ function buildYearInput(d: YearEnrichmentSettings, patch: Partial<YearEnrichment
     enabled: d.enabled,
     openlibrary: d.openlibrary,
     wikidata: d.wikidata,
+    whole_collection: d.whole_collection,
     openlibrary_rpm: d.openlibrary_rpm,
     wikidata_rpm: d.wikidata_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
     ...patch,
   };
+}
+
+function buildCoverInput(d: CoverEnrichmentSettings, patch: Partial<CoverEnrichmentInput>): CoverEnrichmentInput {
+  return {
+    enabled: d.enabled,
+    openlibrary: d.openlibrary,
+    googlebooks: d.googlebooks,
+    whole_collection: d.whole_collection,
+    openlibrary_rpm: d.openlibrary_rpm,
+    googlebooks_rpm: d.googlebooks_rpm,
+    not_found_retry_days: d.not_found_retry_days,
+    error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
+// WholeCollectionSwitch — переключатель режима охвата внешнего источника
+// (фолбэк ↔ вся коллекция) с дисклеймером при включении. Общий для годов и
+// обложек.
+function WholeCollectionSwitch({
+  id,
+  checked,
+  disabled,
+  onChange,
+  warning,
+}: {
+  id: string;
+  checked: boolean;
+  disabled: boolean;
+  onChange: (v: boolean) => void;
+  warning: string;
+}) {
+  return (
+    <div className="space-y-2 border-t border-border pt-3">
+      <div className="flex items-center gap-2.5">
+        <Switch id={id} checked={checked} disabled={disabled} onCheckedChange={onChange} />
+        <Label htmlFor={id} className="cursor-pointer text-sm">
+          Вся коллекция (иначе только где fb2 не дал)
+        </Label>
+      </div>
+      {checked ? (
+        <Callout icon={<AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>{warning}</Callout>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          Фолбэк: дозаполняются только книги, у которых локальный fb2-проход уже прошёл, но данных не дал.
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function AdminBackgroundPage() {
@@ -135,7 +192,7 @@ export function AdminBackgroundPage() {
     }
   };
 
-  // ── Секция 2: внешние источники (года) ──
+  // ── Секция 2а: внешние источники — годы ──
   const yq = useYearEnrichmentSettings();
   const updateYear = useUpdateYearEnrichmentSettings();
   const runYear = useRunYearBackfill();
@@ -181,10 +238,56 @@ export function AdminBackgroundPage() {
     }
   };
 
-  // ── Общий SaveBar (числовые поля обеих секций) ──
-  const dirty = colDirty || yearDirty;
-  const saveInvalid = (colDirty && colInvalid) || (yearDirty && yearInvalid);
-  const saving = updateCol.isPending || updateYear.isPending;
+  // ── Секция 2б: внешние источники — обложки ──
+  const xq = useCoverEnrichmentSettings();
+  const updateCover = useUpdateCoverEnrichmentSettings();
+  const runCover = useRunCoverBackfill();
+  const stopCover = useStopCoverBackfill();
+
+  const covEnabled = xq.data?.enabled ?? false;
+  const covRunning = xq.data?.cover_backfill_running ?? false;
+  const covMode = xq.data?.cover_backfill_mode ?? 'off';
+
+  const [olRpmC, setOlRpmC] = useState('');
+  const [gbRpmC, setGbRpmC] = useState('');
+  const [nfDaysC, setNfDaysC] = useState('');
+  const [errHoursC, setErrHoursC] = useState('');
+  const coverInit = useRef(false);
+  useEffect(() => {
+    if (xq.data && !coverInit.current) {
+      setOlRpmC(String(xq.data.openlibrary_rpm));
+      setGbRpmC(String(xq.data.googlebooks_rpm));
+      setNfDaysC(String(xq.data.not_found_retry_days));
+      setErrHoursC(String(xq.data.error_retry_hours));
+      coverInit.current = true;
+    }
+  }, [xq.data]);
+
+  const cNums = { ol: Number(olRpmC), gb: Number(gbRpmC), nf: Number(nfDaysC), eh: Number(errHoursC) };
+  const coverInvalid =
+    [olRpmC, gbRpmC, nfDaysC, errHoursC].some((s) => s === '') ||
+    Object.values(cNums).some((n) => Number.isNaN(n) || n < 0);
+  const coverDirty =
+    !!xq.data &&
+    (olRpmC !== String(xq.data.openlibrary_rpm) ||
+      gbRpmC !== String(xq.data.googlebooks_rpm) ||
+      nfDaysC !== String(xq.data.not_found_retry_days) ||
+      errHoursC !== String(xq.data.error_retry_hours));
+
+  const applyCover = async (patch: Partial<CoverEnrichmentInput>, msg: string) => {
+    if (!xq.data) return;
+    try {
+      await updateCover.mutateAsync(buildCoverInput(xq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
+
+  // ── Общий SaveBar (числовые поля всех секций) ──
+  const dirty = colDirty || yearDirty || coverDirty;
+  const saveInvalid = (colDirty && colInvalid) || (yearDirty && yearInvalid) || (coverDirty && coverInvalid);
+  const saving = updateCol.isPending || updateYear.isPending || updateCover.isPending;
 
   const onReset = () => {
     if (cq.data) {
@@ -196,6 +299,12 @@ export function AdminBackgroundPage() {
       setWdRpm(String(yq.data.wikidata_rpm));
       setNfDays(String(yq.data.not_found_retry_days));
       setErrHours(String(yq.data.error_retry_hours));
+    }
+    if (xq.data) {
+      setOlRpmC(String(xq.data.openlibrary_rpm));
+      setGbRpmC(String(xq.data.googlebooks_rpm));
+      setNfDaysC(String(xq.data.not_found_retry_days));
+      setErrHoursC(String(xq.data.error_retry_hours));
     }
   };
 
@@ -221,6 +330,20 @@ export function AdminBackgroundPage() {
         setWdRpm(String(saved.wikidata_rpm));
         setNfDays(String(saved.not_found_retry_days));
         setErrHours(String(saved.error_retry_hours));
+      }
+      if (coverDirty && !coverInvalid && xq.data) {
+        const saved = await updateCover.mutateAsync(
+          buildCoverInput(xq.data, {
+            openlibrary_rpm: cNums.ol,
+            googlebooks_rpm: cNums.gb,
+            not_found_retry_days: cNums.nf,
+            error_retry_hours: cNums.eh,
+          }),
+        );
+        setOlRpmC(String(saved.openlibrary_rpm));
+        setGbRpmC(String(saved.googlebooks_rpm));
+        setNfDaysC(String(saved.not_found_retry_days));
+        setErrHoursC(String(saved.error_retry_hours));
       }
       toast.success('Сохранено');
     } catch (e) {
@@ -255,7 +378,7 @@ export function AdminBackgroundPage() {
     }
   };
 
-  // ── Действия секции 2 ──
+  // ── Действия секции 2а (годы) ──
   const onRunYear = async () => {
     try {
       await runYear.mutateAsync();
@@ -273,10 +396,30 @@ export function AdminBackgroundPage() {
     }
   };
 
-  const cov = yq.data?.coverage;
-  const pct = cov && cov.total > 0 ? Math.round((cov.with_year / cov.total) * 100) : 0;
-  const loading = cq.isLoading || yq.isLoading;
-  const failed = cq.error || yq.error;
+  // ── Действия секции 2б (обложки) ──
+  const onRunCover = async () => {
+    try {
+      await runCover.mutateAsync();
+      toast.success('Дозаполнение запущено в фоне');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить');
+    }
+  };
+  const onStopCover = async () => {
+    try {
+      await stopCover.mutateAsync();
+      toast.success('Останавливаю…');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
+    }
+  };
+
+  const yCov = yq.data?.coverage;
+  const yPct = yCov && yCov.total > 0 ? Math.round((yCov.with_year / yCov.total) * 100) : 0;
+  const xCov = xq.data?.coverage;
+  const xPct = xCov && xCov.total > 0 ? Math.round((xCov.with_cover / xCov.total) * 100) : 0;
+  const loading = cq.isLoading || yq.isLoading || xq.isLoading;
+  const failed = cq.error || yq.error || xq.error;
 
   return (
     <article className="space-y-6 text-pretty">
@@ -453,10 +596,10 @@ export function AdminBackgroundPage() {
             </CardContent>
           </Card>
 
-          {/* ─────────── Секция 2: внешние источники ─────────── */}
+          {/* ─────────── Секция 2а: внешние источники — годы ─────────── */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Внешние источники</CardTitle>
+              <CardTitle className="text-base">Внешние источники — годы</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-2 sm:max-w-md">
               <div className="flex items-center gap-2.5">
@@ -469,13 +612,12 @@ export function AdminBackgroundPage() {
                   }
                 />
                 <Label htmlFor="ext-master" className="cursor-pointer text-sm font-medium">
-                  Фоновое дозаполнение из OpenLibrary / Wikidata
+                  Фоновое дозаполнение года из OpenLibrary / Wikidata
                 </Label>
               </div>
               <p className="text-xs text-muted-foreground">
-                Тянет год для книг без него из fb2. Если обложки/года из fb2 включены — внешние работают
-                как фолбэк (где локально не нашлось); если выключены — для всей коллекции (долго). Ходит в
-                публичные API, поэтому с ограничением скорости.
+                Тянет год для книг, у которых его нет. Ходит в публичные API, поэтому с ограничением скорости.
+                Режим охвата — переключатель ниже.
               </p>
 
               <div className="space-y-2 border-l border-border pl-3">
@@ -486,7 +628,7 @@ export function AdminBackgroundPage() {
                     disabled={updateYear.isPending}
                     onCheckedChange={(v) => void applyYear({ openlibrary: v }, 'Применено')}
                   />
-                  <Label htmlFor="src-ol" className="cursor-pointer text-sm">Годы — OpenLibrary (first_publish_year)</Label>
+                  <Label htmlFor="src-ol" className="cursor-pointer text-sm">OpenLibrary (first_publish_year)</Label>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Switch
@@ -495,13 +637,19 @@ export function AdminBackgroundPage() {
                     disabled={updateYear.isPending}
                     onCheckedChange={(v) => void applyYear({ wikidata: v }, 'Применено')}
                   />
-                  <Label htmlFor="src-wd" className="cursor-pointer text-sm">Годы — Wikidata (P577)</Label>
+                  <Label htmlFor="src-wd" className="cursor-pointer text-sm">Wikidata (P577)</Label>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Обложки / биографии / экранизации из внешних источников фоном — следующей фазой (сейчас
-                  только лениво при открытии).
-                </p>
               </div>
+
+              <WholeCollectionSwitch
+                id="year-whole"
+                checked={yq.data?.whole_collection ?? false}
+                disabled={updateYear.isPending}
+                onChange={(v) =>
+                  void applyYear({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: фолбэк')
+                }
+                warning="Вся коллекция: год запрашивается у внешних источников и для книг, которых fb2-проход не касался. Это десятки тысяч запросов и очень долго."
+              />
 
               <div className="grid grid-cols-2 gap-3 border-t border-border pt-3">
                 <div className="space-y-1.5">
@@ -547,11 +695,127 @@ export function AdminBackgroundPage() {
 
               <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
                 <span className="text-muted-foreground">Год известен</span>
-                <span className="tabular-nums">{cov ? `${cov.with_year} из ${cov.total} (${pct}%)` : '—'}</span>
+                <span className="tabular-nums">{yCov ? `${yCov.with_year} из ${yCov.total} (${yPct}%)` : '—'}</span>
               </div>
-              {cov && Object.keys(cov.by_source).length > 0 ? (
+              {yCov && Object.keys(yCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                  {Object.entries(cov.by_source)
+                  {Object.entries(yCov.by_source)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([src, n]) => (
+                      <span key={src} className="tabular-nums">
+                        {SOURCE_LABELS[src] ?? src}: {n}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+
+          {/* ─────────── Секция 2б: внешние источники — обложки ─────────── */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Внешние источники — обложки</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-2 sm:max-w-md">
+              <div className="flex items-center gap-2.5">
+                <Switch
+                  id="cov-master"
+                  checked={covEnabled}
+                  disabled={updateCover.isPending}
+                  onCheckedChange={(v) =>
+                    void applyCover({ enabled: v }, v ? 'Фоновое дозаполнение включено' : 'Выключено')
+                  }
+                />
+                <Label htmlFor="cov-master" className="cursor-pointer text-sm font-medium">
+                  Фоновое дозаполнение обложек из OpenLibrary / Google Books
+                </Label>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Тянет обложку для книг без неё из fb2. Ходит в публичные API, поэтому с ограничением скорости;
+                хит-рейт для русскоязычных книг невысокий. Режим охвата — переключатель ниже.
+              </p>
+
+              <div className="space-y-2 border-l border-border pl-3">
+                <div className="flex items-center gap-2.5">
+                  <Switch
+                    id="cov-src-ol"
+                    checked={xq.data?.openlibrary ?? false}
+                    disabled={updateCover.isPending}
+                    onCheckedChange={(v) => void applyCover({ openlibrary: v }, 'Применено')}
+                  />
+                  <Label htmlFor="cov-src-ol" className="cursor-pointer text-sm">OpenLibrary</Label>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Switch
+                    id="cov-src-gb"
+                    checked={xq.data?.googlebooks ?? false}
+                    disabled={updateCover.isPending}
+                    onCheckedChange={(v) => void applyCover({ googlebooks: v }, 'Применено')}
+                  />
+                  <Label htmlFor="cov-src-gb" className="cursor-pointer text-sm">Google Books</Label>
+                </div>
+              </div>
+
+              <WholeCollectionSwitch
+                id="cover-whole"
+                checked={xq.data?.whole_collection ?? false}
+                disabled={updateCover.isPending}
+                onChange={(v) =>
+                  void applyCover({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: фолбэк')
+                }
+                warning="Вся коллекция: обложка запрашивается у внешних источников и для книг, которых fb2-проход не касался. Это десятки тысяч запросов к OpenLibrary/Google Books и очень долго."
+              />
+
+              <div className="grid grid-cols-2 gap-3 border-t border-border pt-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="cov-ol-rpm">OpenLibrary, запросов/мин</Label>
+                  <Input id="cov-ol-rpm" type="number" min={0} value={olRpmC} onChange={(e) => setOlRpmC(e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cov-gb-rpm">Google Books, запросов/мин</Label>
+                  <Input id="cov-gb-rpm" type="number" min={0} value={gbRpmC} onChange={(e) => setGbRpmC(e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cov-nf-days">Ретрай «не найдено», дней</Label>
+                  <Input id="cov-nf-days" type="number" min={0} value={nfDaysC} onChange={(e) => setNfDaysC(e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cov-err-hours">Ретрай ошибки, часов</Label>
+                  <Input id="cov-err-hours" type="number" min={0} value={errHoursC} onChange={(e) => setErrHoursC(e.target.value)} />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {covMode === 'once' ? (
+                  <Button variant="outline" onClick={onStopCover} disabled={stopCover.isPending}>
+                    <Square className="size-4" aria-hidden />
+                    {stopCover.isPending ? 'Остановка…' : 'Остановить проход'}
+                  </Button>
+                ) : (
+                  <Button variant="outline" onClick={onRunCover} disabled={covEnabled || covRunning || runCover.isPending}>
+                    <Flame className="size-4" aria-hidden />
+                    {runCover.isPending ? 'Запуск…' : 'Прогнать разово'}
+                  </Button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                «Прогнать разово» — однократный проход; постоянную работу включает тумблер выше.
+              </p>
+              {covRunning ? (
+                <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span className="inline-block size-2 animate-pulse rounded-full bg-primary" aria-hidden />
+                  {covMode === 'continuous' ? 'Непрерывный воркер активен.' : 'Идёт разовый проход…'}
+                </p>
+              ) : null}
+
+              <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
+                <span className="text-muted-foreground">Обложка есть</span>
+                <span className="tabular-nums">{xCov ? `${xCov.with_cover} из ${xCov.total} (${xPct}%)` : '—'}</span>
+              </div>
+              {xCov && Object.keys(xCov.by_source).length > 0 ? (
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  <span className="w-full text-muted-foreground/80">Из внешних источников добавлено:</span>
+                  {Object.entries(xCov.by_source)
                     .sort((a, b) => b[1] - a[1])
                     .map(([src, n]) => (
                       <span key={src} className="tabular-nums">
