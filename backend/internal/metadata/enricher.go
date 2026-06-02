@@ -2,10 +2,8 @@ package metadata
 
 import (
 	"context"
-	"crypto/sha256"
 	"errors"
 	"fmt"
-	"io"
 	"log/slog"
 	"net/http"
 	"os"
@@ -34,11 +32,17 @@ type Enricher struct {
 	adaptationProviders  []AdaptationProvider
 	localYear            LocalYearSource // локальный fb2-источник года (EnsureYearLocal); nil → только маркер
 	pool                 *pgxpool.Pool
-	coverRoot            string      // абсолютный путь к /cache/covers (используется и для фото авторов, и для постеров экранизаций)
-	cache                *CoverCache // ограничение размера + пол свободного места над coverRoot
-	logger               *slog.Logger
-	posterHTTPClient     *http.Client  // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
-	extractSem           chan struct{} // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
+	coverRoot            string      // абсолютный путь к /cache/covers (ТОЛЬКО обложки книг — регенерируются из fb2)
+	cache                *CoverCache // LRU-бюджет + пол свободного места над coverRoot
+	// Отдельные бакеты для НЕрегенерируемых ассетов: фото авторов и постеры
+	// экранизаций. Внешний источник, локально не воссоздаются — поэтому в
+	// своих каталогах (соседних с coverRoot), со своими лимитами и очисткой,
+	// чтобы «Очистить кэш обложек» / LRU-эвикция обложек их НЕ сносили.
+	posterCache      *CoverCache // /cache/posters
+	photoCache       *CoverCache // /cache/author-photos
+	logger           *slog.Logger
+	posterHTTPClient *http.Client  // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
+	extractSem       chan struct{} // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
 
 	inflightMu          sync.Mutex
 	inflightCover       map[int64]struct{}
@@ -71,6 +75,17 @@ func New(
 	if err != nil {
 		return nil, err
 	}
+	// Постеры и фото авторов — в каталогах рядом с обложками книг, со своими
+	// (по умолчанию безлимитными — нерегенерируемые, эвиктить вредно) бюджетами.
+	parent := filepath.Dir(coverRoot)
+	posterCache, err := NewCoverCache(filepath.Join(parent, "posters"), 0, 0, logger)
+	if err != nil {
+		return nil, err
+	}
+	photoCache, err := NewCoverCache(filepath.Join(parent, "author-photos"), 0, 0, logger)
+	if err != nil {
+		return nil, err
+	}
 	return &Enricher{
 		coverProviders:       coverProviders,
 		annotationProviders:  annotationProviders,
@@ -80,6 +95,8 @@ func New(
 		pool:                 pool,
 		coverRoot:            coverRoot,
 		cache:                cache,
+		posterCache:          posterCache,
+		photoCache:           photoCache,
 		logger:               logger,
 		extractSem:           make(chan struct{}, defaultExtractConcurrency),
 		posterHTTPClient:     &http.Client{Timeout: 15 * time.Second},
@@ -435,54 +452,92 @@ func isLocalAnnotation(p AnnotationProvider) bool {
 	return ok && lp.Local()
 }
 
-// saveCover — пишет байты в /cache/covers/{sha256}.{ext} и возвращает
-// имя файла (без каталога) для записи в books.cover_path.
-//
-// Hash файла гарантирует идемпотентность: повторное скачивание той же
-// картинки не дублирует место.
+// saveCover — пишет обложку КНИГИ в кэш обложек и возвращает имя файла для
+// books.cover_path. Постеры и фото авторов идут в свои бакеты (см.
+// posterCache/photoCache) — их «Очистить кэш обложек» и LRU не трогают.
 func (e *Enricher) saveCover(img *CoverImage) (string, error) {
-	// Пол свободного места: если на диске мало — НЕ пишем (страховка от
-	// переполнения раздела, на котором живёт и postgres). Картинка при
-	// этом не закэшируется; не фатально.
-	if e.cache != nil && !e.cache.CanWrite(0) {
-		return "", ErrCacheFull
-	}
-	tmp, err := os.CreateTemp(e.coverRoot, "cover-*.tmp")
-	if err != nil {
-		return "", fmt.Errorf("create temp: %w", err)
-	}
-	defer func() {
-		_ = tmp.Close()
-		_ = os.Remove(tmp.Name())
-	}()
+	return e.cache.Save(img.Reader, img.Mime)
+}
 
-	h := sha256.New()
-	mw := io.MultiWriter(tmp, h)
-	size, err := io.Copy(mw, img.Reader)
-	if err != nil {
-		return "", fmt.Errorf("copy cover: %w", err)
-	}
-	if err := tmp.Close(); err != nil {
-		return "", fmt.Errorf("close temp: %w", err)
-	}
+// ── отдельные бакеты: постеры экранизаций и фото авторов ──
 
-	ext := extFromMime(img.Mime)
-	filename := fmt.Sprintf("%x%s", h.Sum(nil), ext)
-	dst := filepath.Join(e.coverRoot, filename)
-	if err := os.Rename(tmp.Name(), dst); err != nil {
-		// если dst уже есть — это OK, идентичный файл; просто переиспользуем
-		// (в учёт размера не добавляем — он уже посчитан).
-		if _, statErr := os.Stat(dst); statErr == nil {
-			return filename, nil
+// SetPosterLimits / SetPhotoLimits — рантайм-лимиты бакетов (из админки).
+func (e *Enricher) SetPosterLimits(maxBytes, minFree int64) {
+	if e.posterCache != nil {
+		e.posterCache.SetLimits(maxBytes, minFree)
+	}
+}
+func (e *Enricher) SetPhotoLimits(maxBytes, minFree int64) {
+	if e.photoCache != nil {
+		e.photoCache.SetLimits(maxBytes, minFree)
+	}
+}
+
+// PosterCacheSize / PhotoCacheSize — размер бакета (для статистики админки).
+func (e *Enricher) PosterCacheSize() int64 {
+	if e.posterCache == nil {
+		return 0
+	}
+	return e.posterCache.Size()
+}
+func (e *Enricher) PhotoCacheSize() int64 {
+	if e.photoCache == nil {
+		return 0
+	}
+	return e.photoCache.Size()
+}
+
+// ClearPosterCache — удалить файлы постеров + занулить висячие
+// book_adaptations.poster_path (постеры не воссоздаются из локали — без
+// зануления остались бы битые `?`). Возвращает число удалённых файлов.
+func (e *Enricher) ClearPosterCache(ctx context.Context) (int, error) {
+	if e.posterCache == nil {
+		return 0, nil
+	}
+	removed, err := e.posterCache.Clear()
+	if err != nil {
+		return removed, err
+	}
+	if _, derr := e.pool.Exec(ctx, `UPDATE book_adaptations SET poster_path = NULL WHERE poster_path IS NOT NULL`); derr != nil {
+		e.logger.Warn("metadata: clear poster_path failed", "err", derr)
+	}
+	return removed, nil
+}
+
+// ClearPhotoCache — удалить файлы фото авторов + занулить висячие
+// authors.photo_path (аналогично постерам).
+func (e *Enricher) ClearPhotoCache(ctx context.Context) (int, error) {
+	if e.photoCache == nil {
+		return 0, nil
+	}
+	removed, err := e.photoCache.Clear()
+	if err != nil {
+		return removed, err
+	}
+	if _, derr := e.pool.Exec(ctx, `UPDATE authors SET photo_path = NULL WHERE photo_path IS NOT NULL`); derr != nil {
+		e.logger.Warn("metadata: clear photo_path failed", "err", derr)
+	}
+	return removed, nil
+}
+
+// ResolveCachedFile ищет файл по имени во всех бакетах (обложки/постеры/фото),
+// с защитой от path traversal, и touch'ит соответствующий LRU. Используется
+// единым serve-эндпоинтом /api/covers/{name}, который отдаёт все три класса.
+func (e *Enricher) ResolveCachedFile(name string) (string, bool) {
+	for _, c := range []*CoverCache{e.cache, e.posterCache, e.photoCache} {
+		if c == nil {
+			continue
 		}
-		return "", fmt.Errorf("rename to %s: %w", dst, err)
+		full := c.Path(name)
+		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(c.Root())) {
+			continue // path traversal
+		}
+		if fileExists(full) {
+			c.Touch(name)
+			return full, true
+		}
 	}
-	// Новый файл записан — учитываем в бюджете кэша; при превышении
-	// лимита запустится LRU-эвикция старейших по mtime.
-	if e.cache != nil {
-		e.cache.Added(size)
-	}
-	return filename, nil
+	return "", false
 }
 
 func (e *Enricher) recordCover(ctx context.Context, bookID int64, filename string) error {
@@ -644,7 +699,7 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 		if img == nil || img.Reader == nil {
 			continue
 		}
-		filename, err := e.saveCover(img)
+		filename, err := e.photoCache.Save(img.Reader, img.Mime)
 		_ = img.Reader.Close()
 		if err != nil {
 			e.logger.Warn("metadata: save author photo failed", "provider", p.Name(), "author_id", q.ID, "err", err)
@@ -829,7 +884,8 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 			INSERT INTO book_adaptations
 				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10)
-			ON CONFLICT (book_id, provider, ext_id) DO NOTHING
+			ON CONFLICT (book_id, provider, ext_id) DO UPDATE SET
+				poster_path = COALESCE(book_adaptations.poster_path, EXCLUDED.poster_path)
 		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity)
 		if err != nil {
 			return fmt.Errorf("insert adaptation %s: %w", it.ExtID, err)
@@ -876,12 +932,9 @@ func (e *Enricher) downloadPoster(ctx context.Context, src string) (string, erro
 	if mime == "" || !strings.HasPrefix(mime, "image/") {
 		mime = "image/jpeg"
 	}
-	img := &CoverImage{
-		Reader: resp.Body, // saveCover закроет
-		Mime:   mime,
-	}
-	defer func() { _ = img.Reader.Close() }()
-	return e.saveCover(img)
+	defer func() { _ = resp.Body.Close() }()
+	// Постеры экранизаций — в свой бакет (не под «Очистить кэш обложек»/LRU).
+	return e.posterCache.Save(resp.Body, mime)
 }
 
 func nullIfEmpty(s string) *string {

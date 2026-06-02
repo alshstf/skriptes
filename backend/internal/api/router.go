@@ -184,6 +184,8 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/admin/cover-cache", handleGetCoverSettings(d.Settings))
 					r.Put("/admin/cover-cache", handleUpdateCoverSettings(d.Settings))
 					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
+					r.Post("/admin/cover-cache/clear-posters", handleClearPosterCache(d.Settings))
+					r.Post("/admin/cover-cache/clear-photos", handleClearPhotoCache(d.Settings))
 					r.Post("/admin/cover-cache/prewarm", handlePrewarmNow(d.Settings))
 					r.Post("/admin/cover-cache/prewarm/stop", handlePrewarmStop(d.Settings))
 					// Раздел «Год издания»: дозаполнение written_year из внешних

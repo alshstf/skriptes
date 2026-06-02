@@ -104,11 +104,16 @@ export type CoverCacheSettings = {
   sync_annotations: boolean;
   sync_years: boolean;
   intensity: Intensity;
+  // Бюджеты НЕрегенерируемых бакетов (отдельно от обложек книг).
+  poster_cache_max_mb: number;
+  photo_cache_max_mb: number;
   // статус (read-only): идёт ли проход и какой
   prewarm_running: boolean;
   prewarm_mode: 'off' | 'continuous' | 'once';
-  // статистика кэша (read-only)
+  // статистика кэшей (read-only)
   cache_size_bytes: number;
+  poster_cache_size_bytes: number;
+  photo_cache_size_bytes: number;
   free_bytes: number;
 };
 
@@ -121,6 +126,8 @@ export type CollectionInput = {
   sync_annotations: boolean;
   sync_years: boolean;
   intensity: Intensity;
+  poster_cache_max_mb: number;
+  photo_cache_max_mb: number;
 };
 
 const COVER_KEY = ['admin', 'cover-cache'] as const;
@@ -150,6 +157,24 @@ export function useClearCoverCache() {
   return useMutation({
     mutationFn: () =>
       apiFetch<{ removed: number }>('/api/admin/cover-cache/clear', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
+  });
+}
+
+export function useClearPosterCache() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ removed: number }>('/api/admin/cover-cache/clear-posters', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
+  });
+}
+
+export function useClearPhotoCache() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ removed: number }>('/api/admin/cover-cache/clear-photos', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_KEY] }),
   });
 }

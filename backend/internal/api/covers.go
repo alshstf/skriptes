@@ -84,19 +84,17 @@ func handleCover(d MetadataDeps) http.HandlerFunc {
 			http.NotFound(w, r)
 			return
 		}
-		full := d.Service.CoverFile(name)
-		// Защита от symlink/traversal: проверим, что итоговый путь
-		// действительно внутри CoverRoot.
-		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(d.Service.CoverRoot())) {
+		// Эндпоинт отдаёт три класса картинок (обложки книг / постеры
+		// экранизаций / фото авторов) — они в разных бакетах. ResolveCachedFile
+		// ищет файл по всем, touch'ит нужный LRU и сам защищает от traversal.
+		full, ok := d.Service.ResolveCachedFile(name)
+		if !ok {
 			http.NotFound(w, r)
 			return
 		}
 		w.Header().Set("Cache-Control", "public, max-age=2592000, immutable") // 30 дней
-		// LRU-отметка доступа (обновляет mtime) — чтобы недавно отданные
-		// обложки не вытеснялись из ограниченного кэша.
-		d.Service.TouchCover(name)
 		// gosec G304/G703 ложно-позитивны: name прошёл выше проверку на
-		// "/", "\\", ".." и filepath.Clean+prefix-check на побег из coverRoot.
+		// "/", "\\", ".." и ResolveCachedFile сделал filepath.Clean+prefix-check.
 		http.ServeFile(w, r, full) //nolint:gosec // path traversal guarded above
 	}
 }

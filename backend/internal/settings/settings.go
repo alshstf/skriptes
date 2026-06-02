@@ -37,6 +37,11 @@ type CoverConfig struct {
 	SyncAnnotations bool   `json:"sync_annotations"`
 	SyncYears       bool   `json:"sync_years"`
 	Intensity       string `json:"intensity"`
+	// Бюджеты НЕрегенерируемых бакетов (постеры экранизаций, фото авторов) —
+	// отдельно от обложек книг: их «Очистить кэш обложек»/LRU не трогают.
+	// 0 = без лимита (дефолт): эвиктить нерегенерируемое вредно, а объём мал.
+	PosterCacheMaxMB int `json:"poster_cache_max_mb"`
+	PhotoCacheMaxMB  int `json:"photo_cache_max_mb"`
 }
 
 // DefaultCoverConfig — безопасные дефолты. Мастер выключен; при включении
@@ -44,15 +49,21 @@ type CoverConfig struct {
 // средняя; кэш ограничен, есть пол свободного места.
 func DefaultCoverConfig() CoverConfig {
 	return CoverConfig{
-		CacheMaxMB:      8192,
-		CacheMinFreeMB:  1024,
-		Prewarm:         false,
-		SyncCovers:      true,
-		SyncAnnotations: true,
-		SyncYears:       true,
-		Intensity:       IntensityMedium,
+		CacheMaxMB:       8192,
+		CacheMinFreeMB:   1024,
+		Prewarm:          false,
+		SyncCovers:       true,
+		SyncAnnotations:  true,
+		SyncYears:        true,
+		Intensity:        IntensityMedium,
+		PosterCacheMaxMB: 0,
+		PhotoCacheMaxMB:  0,
 	}
 }
+
+// PosterCacheMaxBytes / PhotoCacheMaxBytes — лимиты бакетов в байтах (0 = без).
+func (c CoverConfig) PosterCacheMaxBytes() int64 { return int64(c.PosterCacheMaxMB) << 20 }
+func (c CoverConfig) PhotoCacheMaxBytes() int64  { return int64(c.PhotoCacheMaxMB) << 20 }
 
 // Пресеты интенсивности обработки коллекции.
 const (
