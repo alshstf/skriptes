@@ -59,7 +59,7 @@ func (p *WikipediaProvider) Name() string { return "wikipedia" }
 // Сначала пробуем родной язык автора (или ru по умолчанию), потом en.
 func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
 	for _, lang := range p.langs(q.Lang) {
-		text, err := p.intro(ctx, lang, q.FullName)
+		text, err := p.intro(ctx, lang, q)
 		if err != nil {
 			continue
 		}
@@ -78,8 +78,8 @@ func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (
 // Returns plain-text без HTML, заголовков и сносок. exintro=1 ограничивает
 // первой секцией статьи (до первого ==Heading==), что для биографических
 // статей даёт идеальный preamble.
-func (p *WikipediaProvider) intro(ctx context.Context, lang, name string) (string, error) {
-	title, err := p.resolveTitle(ctx, lang, name)
+func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return "", err
 	}
@@ -132,7 +132,7 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang, name string) (strin
 
 func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
 	for _, lang := range p.langs(q.Lang) {
-		s, err := p.summary(ctx, lang, q.FullName)
+		s, err := p.summary(ctx, lang, q)
 		if err != nil {
 			continue
 		}
@@ -149,8 +149,8 @@ func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery)
 }
 
 // summary — opensearch для точного титла + summary endpoint.
-func (p *WikipediaProvider) summary(ctx context.Context, lang, name string) (*wikiSummary, error) {
-	title, err := p.resolveTitle(ctx, lang, name)
+func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQuery) (*wikiSummary, error) {
+	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return nil, err
 	}
@@ -185,11 +185,14 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang, name string) (*wi
 	return &s, nil
 }
 
-// resolveTitle — через opensearch получает первый match.
-func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang, name string) (string, error) {
+// resolveTitle — через opensearch получает первый match И проверяет, что он
+// правдоподобно совпадает с искомым автором (совпадает имя, а не только
+// фамилия). Без проверки opensearch по «Гарднер Лиза» вернул бы «Иван Гарднер»
+// (однофамилец) — мы бы показали чужие био/фото. Лучше «не нашли».
+func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q AuthorQuery) (string, error) {
 	v := url.Values{}
 	v.Set("action", "opensearch")
-	v.Set("search", name)
+	v.Set("search", q.FullName)
 	v.Set("limit", "1")
 	v.Set("namespace", "0") // только статьи, не категории
 	v.Set("format", "json")
@@ -222,6 +225,11 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang, name string)
 		return "", fmt.Errorf("decode titles: %w", err)
 	}
 	if len(titles) == 0 {
+		return "", ErrNotFound
+	}
+	// Гейт по имени: первый хит opensearch матчит только фамилию — проверяем,
+	// что совпадает и имя. Не совпало → считаем «не нашли» (см. doc выше).
+	if !authorNameMatches(q, titles[0]) {
 		return "", ErrNotFound
 	}
 	return titles[0], nil
