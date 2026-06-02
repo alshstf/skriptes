@@ -304,6 +304,11 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
 		return nil, ErrNotFound
 	}
+	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
+	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
+	if !authorNameMatches(q, sr.Docs[0].Name) {
+		return nil, ErrNotFound
+	}
 
 	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
 	olid := strings.TrimPrefix(sr.Docs[0].Key, "/authors/")

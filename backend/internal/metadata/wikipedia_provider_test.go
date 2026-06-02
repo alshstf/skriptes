@@ -82,6 +82,40 @@ func TestWikipedia_BioEmptyOpensearch_NotFound(t *testing.T) {
 	require.ErrorIs(t, err, ErrNotFound)
 }
 
+// TestWikipedia_BioGate_RejectsSameSurname — opensearch вернул однофамильца
+// (Иван Гарднер) на запрос Лизы Гарднер: гейт по имени отвергает → ErrNotFound
+// (лучше пусто, чем чужая биография). Проверяем оба языка (ru, потом en).
+func TestWikipedia_BioGate_RejectsSameSurname(t *testing.T) {
+	srv := wikiMockServer(t,
+		[]string{"Гарднер, Иван Алексеевич"},
+		wikiSummary{Title: "Гарднер", Type: "standard"},
+		"Иван Алексеевич Гарднер — историк церковного пения.",
+	)
+	defer srv.Close()
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	_, err := p.FetchAuthorBio(context.Background(), AuthorQuery{
+		LastName: "Гарднер", FirstName: "Лиза", FullName: "Гарднер Лиза",
+	})
+	require.ErrorIs(t, err, ErrNotFound, "однофамилец не должен приниматься")
+}
+
+// TestWikipedia_BioGate_AcceptsRightPerson — корректный кандидат проходит гейт.
+func TestWikipedia_BioGate_AcceptsRightPerson(t *testing.T) {
+	const bio = "Фёдор Михайлович Достоевский — русский писатель."
+	srv := wikiMockServer(t,
+		[]string{"Достоевский, Фёдор Михайлович"},
+		wikiSummary{Title: "Достоевский", Type: "standard"},
+		bio,
+	)
+	defer srv.Close()
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{
+		LastName: "Достоевский", FirstName: "Фёдор", FullName: "Достоевский Фёдор Михайлович",
+	})
+	require.NoError(t, err)
+	require.Equal(t, bio, got)
+}
+
 func TestWikipedia_PhotoHappyPath(t *testing.T) {
 	// Этот тест собирает сервер вручную (а не через wikiMockServer),
 	// потому что thumbnail.source должен указывать абсолютно на сам же
