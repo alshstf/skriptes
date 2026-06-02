@@ -100,6 +100,39 @@ func TestAuthorBackfiller_Integration(t *testing.T) {
 	require.Equal(t, 0, cov.WithPhoto, "фото не нашлось (ErrNotFound)")
 }
 
+// TestEnsureAuthorBio_MarksOnMiss — bio не нашлась → metadata_fetched_at всё
+// равно проставлен (чтобы lazy-путь и triggerAuthorEnrichmentAsync не дёргали
+// автора повторно). Без photo-провайдера — проверяем именно вклад bio-ветки.
+func TestEnsureAuthorBio_MarksOnMiss(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	missProv := &fakeBioProvider{} // bio пуст → ErrNotFound
+	enricher, err := New(pool, t.TempDir(), nil, nil, nil,
+		[]AuthorBioProvider{missProv}, nil, quiet)
+	require.NoError(t, err)
+
+	var id int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Малоизвестный','малоизвестный') RETURNING id`).Scan(&id))
+
+	enricher.EnsureAuthorBio(ctx, AuthorQuery{ID: id, LastName: "Малоизвестный", FullName: "Малоизвестный"})
+
+	var bio *string
+	var fetched *time.Time
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT bio, metadata_fetched_at FROM authors WHERE id=$1`, id).Scan(&bio, &fetched))
+	require.Nil(t, bio, "bio не нашлась")
+	require.NotNil(t, fetched, "но попытка помечена — повторно дёргать не будем")
+	require.Greater(t, missProv.calls, 0)
+}
+
 // ── AdaptationBackfiller integration ────────────────────────────
 
 func TestAdaptationBackfiller_Integration(t *testing.T) {

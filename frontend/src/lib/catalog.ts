@@ -67,6 +67,10 @@ export function useAuthor(id: number | string | undefined) {
       const havePhoto = !!data?.photo_path;
       const haveBio = !!data?.bio;
       if (havePhoto && haveBio) return false;
+      // Бэкенд пометил, что попытка обогащения уже была (enrichment_fetched),
+      // даже если bio/photo не нашлись — прекращаем поллинг сразу, не висим
+      // скелетоном ~20с и не заставляем бэкенд долбить внешние API каждый poll.
+      if (data?.enrichment_fetched) return false;
       if (q.state.dataUpdateCount > AUTHOR_ENRICH_MAX_TRIES) return false;
       return 2_000;
     },
@@ -75,7 +79,7 @@ export function useAuthor(id: number | string | undefined) {
   const state = qc.getQueryState<Author>([...queryKey]);
   const enrichmentExhausted =
     !!state?.data &&
-    state.dataUpdateCount > AUTHOR_ENRICH_MAX_TRIES &&
+    (state.data.enrichment_fetched || state.dataUpdateCount > AUTHOR_ENRICH_MAX_TRIES) &&
     (!state.data.photo_path || !state.data.bio);
 
   return { ...query, enrichmentExhausted };

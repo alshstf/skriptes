@@ -713,6 +713,17 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		e.logger.Info("metadata: author bio saved", "provider", p.Name(), "author_id", q.ID, "len", len(text))
 		return
 	}
+
+	// Все провайдеры мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
+	// ленивый путь не дёргал bio заново на каждый заход на карточку. Маркер
+	// metadata_fetched_at у автора общий для bio+photo; respect его и
+	// triggerAuthorEnrichmentAsync, и фронтовый polling (single-shot, как у
+	// экранизаций).
+	if _, err := e.pool.Exec(ctx,
+		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1 AND metadata_fetched_at IS NULL`, q.ID,
+	); err != nil {
+		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
+	}
 }
 
 // EnsureAdaptations — поиск экранизаций для книги через цепочку
