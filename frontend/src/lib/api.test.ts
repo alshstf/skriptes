@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { apiFetch, ApiError } from './api';
+import { apiFetch, ApiError, NETWORK_ERROR_MESSAGE } from './api';
 
 describe('apiFetch', () => {
   beforeEach(() => vi.useFakeTimers({ shouldAdvanceTime: true }));
@@ -62,5 +62,38 @@ describe('apiFetch', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })));
     const res = await apiFetch<void>('/api/auth/logout', { method: 'POST' });
     expect(res).toBeUndefined();
+  });
+
+  it('маппит сетевой сбой fetch в ApiError(0) с понятным сообщением', async () => {
+    // fetch реджектит TypeError при DNS/offline/обрыве — не HTTP-ответ.
+    vi.stubGlobal('fetch', vi.fn(async () => {
+      throw new TypeError('Load failed');
+    }));
+    let caught: unknown;
+    try {
+      await apiFetch('/api/auth/me');
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(ApiError);
+    const err = caught as ApiError;
+    expect(err.status).toBe(0);
+    expect(err.isNetworkError()).toBe(true);
+    expect(err.message).toBe(NETWORK_ERROR_MESSAGE);
+  });
+
+  it('пробрасывает AbortError как есть (это не «сервер недоступен»)', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => {
+      throw new DOMException('aborted', 'AbortError');
+    }));
+    let caught: unknown;
+    try {
+      await apiFetch('/api/auth/me');
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(DOMException);
+    expect((caught as DOMException).name).toBe('AbortError');
+    expect(caught).not.toBeInstanceOf(ApiError);
   });
 });

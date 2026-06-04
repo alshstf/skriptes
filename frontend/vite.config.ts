@@ -121,14 +121,13 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          // /api/me/* и /api/auth/* — никогда не кэшируем. User-specific
-          // данные (favorites, kindle targets, session) могут поменяться
-          // между tab'ами, stale-кэш приведёт к рассинхрону.
-          {
-            urlPattern: ({ url }) =>
-              url.pathname.startsWith('/api/me/') || url.pathname.startsWith('/api/auth/'),
-            handler: 'NetworkOnly',
-          },
+          // /api/me/* и /api/auth/* НЕ перехватываем service worker'ом вовсе —
+          // они идут напрямую в сеть (никаких runtime-правил под них нет, а
+          // navigateFallback их не трогает: /api/* в denylist). Раньше тут было
+          // NetworkOnly-правило, но оно лишь оборачивало сетевой сбой в невнятный
+          // Workbox `no-response` в консоли. При недоступном бэкенде честнее
+          // отдать нативную сетевую ошибку — её ловит apiFetch и показывает
+          // «Сервер недоступен». User-specific данные и так не кэшируются.
         ],
       },
       // devOptions — SW в dev mode мешает горячему перезагру (Vite HMR);
