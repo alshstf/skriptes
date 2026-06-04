@@ -15,7 +15,18 @@ export class ApiError extends Error {
   isUnauthorized(): boolean {
     return this.status === 401;
   }
+
+  // Сетевой сбой (DNS/offline/обрыв соединения), а не HTTP-ответ сервера.
+  // status === 0 — наш сентинел: fetch() реджектнулся, ответа не было.
+  isNetworkError(): boolean {
+    return this.status === 0;
+  }
 }
+
+// NETWORK_ERROR_MESSAGE — единый текст для случая «сервер не ответил».
+// Показывается на форме логина и в тостах вместо невнятного нативного
+// «Load failed» / «Failed to fetch».
+export const NETWORK_ERROR_MESSAGE = 'Сервер недоступен — проверьте соединение';
 
 export type RequestOpts = {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -40,7 +51,18 @@ export async function apiFetch<T>(path: string, opts: RequestOpts = {}): Promise
     init.body = JSON.stringify(opts.body);
     (init.headers as Record<string, string>)['Content-Type'] = 'application/json';
   }
-  const res = await fetch(path, init);
+  let res: Response;
+  try {
+    res = await fetch(path, init);
+  } catch (e) {
+    // fetch() реджектит ТОЛЬКО на сетевом сбое (DNS не разрешился, хост
+    // недостижим, оффлайн, обрыв) — не на 4xx/5xx. AbortError (мы сами
+    // отменили запрос через signal) — это не «сервер недоступен», пробрасываем.
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw e;
+    }
+    throw new ApiError(0, undefined, NETWORK_ERROR_MESSAGE);
+  }
   if (res.status === 204) {
     return undefined as T;
   }
