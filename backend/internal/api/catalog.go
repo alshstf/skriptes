@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 // CatalogDeps — зависимости /api/authors/:id, /api/series/:id, /api/genres.
@@ -116,6 +117,21 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps) http.Ha
 	}
 }
 
+// authorEnrichWanted решает, нужно ли инициировать ленивое обогащение био/фото
+// автора. Чистая функция (вся логика гейта в одном месте):
+//   - тип «Био+фото» выключен в админке («Выкл») → нет;
+//   - попытка уже была (EnrichmentFetched / metadata_fetched_at) → нет
+//     (single-shot, как у экранизаций; иначе долбили бы Wikipedia/OL на каждый
+//     GET у авторов без биографии);
+//   - оба поля уже на месте → нет;
+//   - иначе да (не хватает фото или био).
+func authorEnrichWanted(g settings.EnrichmentGates, a catalog.Author) bool {
+	if g.AuthorDisabled || a.EnrichmentFetched {
+		return false
+	}
+	return a.PhotoPath == "" || a.Bio == ""
+}
+
 // triggerAuthorEnrichmentAsync — параллельно EnsureAuthorPhoto/Bio в
 // отдельных goroutines. Каждый сам выходит мгновенно, если поле уже на
 // месте. Контекст собственный с EnrichDeadline (HTTP может вернуться
@@ -124,14 +140,10 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 	if d.Service == nil {
 		return
 	}
-	if a.PhotoPath != "" && a.Bio != "" {
-		return
-	}
-	// Попытка обогащения уже была (metadata_fetched_at) — не дёргаем внешние
-	// API повторно на каждый GET/поллинг карточки автора. Single-shot, как у
-	// экранизаций (adaptations_fetched_at). Если bio/photo так и не нашлись —
-	// фронт покажет fallback по тому же флагу enrichment_fetched.
-	if a.EnrichmentFetched {
+	// Гейт «Выкл» + single-shot + «всё уже на месте» — вся логика в чистом
+	// authorEnrichWanted (Gates() nil-safe). Если она говорит «не нужно» —
+	// не дёргаем внешние API на каждый GET/поллинг карточки автора.
+	if !authorEnrichWanted(d.Gates.Gates(), a) {
 		return
 	}
 	q := metadata.AuthorQuery{

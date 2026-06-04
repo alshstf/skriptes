@@ -12,6 +12,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 // AdaptationsDeps — зависимости для /api/books/{id}/adaptations.
@@ -55,6 +56,14 @@ func handleListAdaptations(d AdaptationsDeps, books BooksDeps, meta MetadataDeps
 	}
 }
 
+// adaptationEnrichWanted — нужно ли инициировать ленивое обогащение
+// экранизаций: только гейт «Выкл» (в отличие от книг/авторов у триггера нет
+// проверки полей — статус pending уже проверен в хендлере). Чистая функция для
+// симметрии с bookEnrichTargets/authorEnrichWanted и юнит-теста гейта.
+func adaptationEnrichWanted(g settings.EnrichmentGates) bool {
+	return !g.AdaptationDisabled
+}
+
 // triggerAdaptationsEnrichmentAsync — отдельный триггер (не объединён с
 // triggerBookEnrichmentAsync для cover/annotation), потому что:
 //
@@ -65,6 +74,11 @@ func handleListAdaptations(d AdaptationsDeps, books BooksDeps, meta MetadataDeps
 //     генерить SPARQL-нагрузку на каждую открытую карточку.
 func triggerAdaptationsEnrichmentAsync(d MetadataDeps, svc *books.Service, bookID int64) {
 	if d.Service == nil || svc == nil {
+		return
+	}
+	// «Выкл» (gate) для экранизаций — не инициируем новый lazy-фетч.
+	// Gates() nil-safe: nil-resolver → ничего не выключено.
+	if !adaptationEnrichWanted(d.Gates.Gates()) {
 		return
 	}
 	go func() {

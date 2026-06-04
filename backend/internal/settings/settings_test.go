@@ -228,6 +228,58 @@ func TestSettings_AppearanceRoundTrip(t *testing.T) {
 	require.Equal(t, "soft", got.GenreChipStyle)
 }
 
+// TestSettings_EnrichmentGatesRoundTrip — дефолт (всё включено) на пустой БД,
+// upsert, и живое обновление кэша через EnrichmentGateResolver.
+func TestSettings_EnrichmentGatesRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолт (ничего не выключено).
+	got, err := store.EnrichmentGates(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultEnrichmentGates(), got)
+	require.False(t, got.CoverDisabled)
+	require.False(t, got.AuthorDisabled)
+
+	// Сохранили — читается обратно (upsert).
+	want := settings.EnrichmentGates{
+		CoverDisabled: true, AnnotationDisabled: false,
+		AuthorDisabled: true, AdaptationDisabled: true,
+	}
+	require.NoError(t, store.SetEnrichmentGates(ctx, want))
+	got, err = store.EnrichmentGates(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+
+	// Resolver: Load читает из БД, SetGates живо обновляет кэш.
+	r := settings.NewEnrichmentGateResolver(store)
+	require.NoError(t, r.Load(ctx))
+	require.Equal(t, want, r.Gates())
+
+	require.NoError(t, r.SetGates(ctx, settings.EnrichmentGates{AnnotationDisabled: true}))
+	require.True(t, r.Gates().AnnotationDisabled)
+	require.False(t, r.Gates().CoverDisabled, "после перезаписи старые флаги сняты")
+	// И персистентно.
+	got, err = store.EnrichmentGates(ctx)
+	require.NoError(t, err)
+	require.True(t, got.AnnotationDisabled)
+	require.False(t, got.CoverDisabled)
+}
+
+// TestEnrichmentGateResolver_NilSafe — Gates() на nil-резолвере возвращает
+// дефолт (ничего не выключено), без паники. Так триггеры-хелперы зовут его
+// как метод указателя при отсутствии deps (unit-тесты без БД).
+func TestEnrichmentGateResolver_NilSafe(t *testing.T) {
+	var r *settings.EnrichmentGateResolver
+	require.Equal(t, settings.DefaultEnrichmentGates(), r.Gates())
+	require.False(t, r.Gates().CoverDisabled)
+}
+
 func startSettingsPG(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Helper()
 	pgC, err := postgres.Run(ctx,
