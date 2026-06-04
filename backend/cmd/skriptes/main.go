@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/api"
@@ -90,6 +91,10 @@ func run() error {
 	// пересинхронизация года в поиске из админки (ResyncYears).
 	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
 	go runStartupImport(ctx(), imp, cfg.InpxRoot, logger)
+	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
+	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
+	// app_settings — выполняется один раз на апгрейде, дальше no-op.
+	go runOnceLangResync(ctx(), pool, imp, logger)
 
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
@@ -369,6 +374,34 @@ func runStartupImport(ctx context.Context, imp *importer.Importer, inpxRoot stri
 		_ = stats // важная статистика уже залогирована изнутри Run
 	}
 	logger.Info("startup import finished")
+}
+
+// runOnceLangResync разово синкает нормализованные коды языка в Meili. Миграция
+// 0015 приводит books.lang к нижнему регистру в PG, но Meili-индекс остаётся со
+// старыми значениями ('RU' и т.п.) — этот шаг их выравнивает. Гейтится флагом
+// app_settings.lang_normalized_v1: выполняется один раз (на апгрейде), дальше
+// no-op. Не блокирует старт — крутится в горутине.
+func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "lang_normalized_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("lang resync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := imp.ResyncLangs(ctx)
+	if err != nil {
+		logger.Warn("lang resync to meili failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("lang resync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time lang resync to meili done", "count", n)
 }
 
 // findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.
