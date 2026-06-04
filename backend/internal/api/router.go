@@ -215,6 +215,12 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/admin/content", handleGetAdminContent(d.Content))
 					r.Put("/admin/content", handleUpdateAdminContent(d.Content))
 				}
+				// «Выключатели» lazy-обогащения по типам (режим «Выкл» на
+				// странице «Фоновые операции»).
+				if d.Metadata.Gates != nil {
+					r.Get("/admin/enrichment-gates", handleGetEnrichmentGates(d.Metadata.Gates))
+					r.Put("/admin/enrichment-gates", handleUpdateEnrichmentGates(d.Metadata.Gates))
+				}
 			})
 		}
 	})

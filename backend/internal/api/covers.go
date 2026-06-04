@@ -11,15 +11,29 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 // MetadataDeps — обогащение карточек книг (обложки на этом этапе).
 // Service может быть nil — тогда триггер enrichment'а не подключается,
 // маршрут /api/covers/* всё равно работает (отдаст уже сохранённые
 // файлы из cacheRoot, если они есть).
+//
+// Gates — «выключатели» lazy-обогащения по типам (режим «Выкл» в админке).
+// Может быть nil (тесты без deps): тогда ничего не подавляется (как раньше).
 type MetadataDeps struct {
 	Service   *metadata.Enricher
 	BooksRoot string // корень read-only volume с zip-архивами; нужен для fb2-провайдера
+	Gates     *settings.EnrichmentGateResolver
+}
+
+// bookEnrichTargets решает, какие из (обложка, аннотация) нужно лениво
+// дозагрузить: данных ещё нет И тип НЕ выключен в админке («Выкл»). Чистая
+// функция — вся логика гейта в одном месте, легко юнит-тестится.
+func bookEnrichTargets(g settings.EnrichmentGates, b books.Book) (cover, annotation bool) {
+	cover = b.CoverPath == "" && !g.CoverDisabled
+	annotation = b.Annotation == "" && !g.AnnotationDisabled
+	return cover, annotation
 }
 
 // triggerBookEnrichmentAsync — запускает fire-and-forget goroutine,
@@ -33,8 +47,11 @@ func triggerBookEnrichmentAsync(d MetadataDeps, b books.Book) {
 	if d.Service == nil {
 		return
 	}
-	if b.CoverPath != "" && b.Annotation != "" {
-		return // ничего обогащать
+	// «Выкл» (gate) для обложек/аннотаций — не инициируем новый lazy-фетч.
+	// Gates() nil-safe (метод указателя): nil-resolver → ничего не выключено.
+	wantCover, wantAnnotation := bookEnrichTargets(d.Gates.Gates(), b)
+	if !wantCover && !wantAnnotation {
+		return // ничего обогащать (всё на месте или выключено)
 	}
 
 	authors := make([]string, 0, len(b.Authors))
@@ -49,14 +66,14 @@ func triggerBookEnrichmentAsync(d MetadataDeps, b books.Book) {
 		ArchivePath: filepath.Join(d.BooksRoot, b.Archive),
 		FB2Name:     b.FileName + "." + b.Ext,
 	}
-	if b.CoverPath == "" {
+	if wantCover {
 		go func() {
 			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
 			defer cancel()
 			d.Service.EnsureCover(ctx, q)
 		}()
 	}
-	if b.Annotation == "" {
+	if wantAnnotation {
 		go func() {
 			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
 			defer cancel()

@@ -410,3 +410,35 @@ export const useStopBioBackfill = bioAdaptationAction('bios/stop');
 export const useRunAdaptationBackfill = bioAdaptationAction('adaptations/run');
 export const useStopAdaptationBackfill = bioAdaptationAction('adaptations/stop');
 
+// ── «Выключатели» ленивого обогащения (режим «Выкл» по типам) ─────────────
+//
+// Отдельная ось от фоновых воркеров: эти флаги подавляют ИНИЦИАЦИЮ нового
+// lazy-фетча соответствующего типа при открытии карточки. Год сюда не входит
+// (у него нет lazy-пути). Дефолт всё false = lazy работает для всех типов.
+
+export type EnrichmentGates = {
+  cover_disabled: boolean;
+  annotation_disabled: boolean;
+  author_disabled: boolean;
+  adaptation_disabled: boolean;
+};
+
+const GATES_KEY = ['admin', 'enrichment-gates'] as const;
+
+export function useEnrichmentGates() {
+  return useQuery<EnrichmentGates>({
+    queryKey: [...GATES_KEY],
+    queryFn: () => apiFetch<EnrichmentGates>('/api/admin/enrichment-gates'),
+    staleTime: 10_000,
+  });
+}
+
+export function useUpdateEnrichmentGates() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: EnrichmentGates) =>
+      apiFetch<EnrichmentGates>('/api/admin/enrichment-gates', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...GATES_KEY], data),
+  });
+}
+

@@ -243,6 +243,14 @@ func run() error {
 		logger.Warn("read content settings — using defaults", "err", err)
 	}
 
+	// «Выключатели» lazy-обогащения по типам (режим «Выкл» на странице
+	// «Фоновые операции»). Тоже кэшируются в памяти — читаются на горячем пути
+	// GET карточек книги/автора/экранизаций, обновляются живо из админки.
+	gatesResolver := settings.NewEnrichmentGateResolver(settingsStore)
+	if err := gatesResolver.Load(ctx()); err != nil {
+		logger.Warn("read enrichment gates — using defaults", "err", err)
+	}
+
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
 	// и handler сам отдаст 503 на send.
@@ -280,7 +288,7 @@ func run() error {
 			Books:     booksSvc,
 			Converter: conv,
 		},
-		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot},
+		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot, Gates: gatesResolver},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
 		Settings: api.SettingsDeps{
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
