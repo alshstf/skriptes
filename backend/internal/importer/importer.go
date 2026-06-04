@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -30,6 +31,11 @@ import (
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 )
+
+// normalizeLang приводит код языка к канонике: нижний регистр + trim. В INPX/fb2
+// один язык встречается в разном регистре ('ru'/'RU'/' ru '), и без нормализации
+// он двоится в списке языков, фильтре и настройках видимости. Пустой → пустой.
+func normalizeLang(s string) string { return strings.ToLower(strings.TrimSpace(s)) }
 
 // Deps — зависимости импортёра.
 type Deps struct {
@@ -215,6 +221,71 @@ func (im *Importer) ResyncYears(ctx context.Context) (int, error) {
 	return total, nil
 }
 
+// ResyncLangs пере-проставляет Meili-поле lang из books.lang для всех живых
+// книг (partial update по primary key id). Нужен разово после нормализации кодов
+// языка (миграция 0015 чистит PG, а Meili-индекс — этот метод). Зеркало
+// ResyncYears. Пустой/NULL lang → lang:null (чистит поле). Возвращает число
+// обновлённых документов.
+func (im *Importer) ResyncLangs(ctx context.Context) (int, error) {
+	rows, err := im.deps.Pool.Query(ctx, `SELECT id, lang FROM books WHERE deleted = false`)
+	if err != nil {
+		return 0, fmt.Errorf("query lang: %w", err)
+	}
+	defer rows.Close()
+
+	const batchSize = 1000
+	pk := "id"
+	batch := make([]map[string]any, 0, batchSize)
+	total := 0
+	flush := func() error {
+		if len(batch) == 0 {
+			return nil
+		}
+		idx := im.deps.Meili.Index(booksIndex)
+		task, ferr := idx.UpdateDocumentsWithContext(ctx, batch, &meilisearch.DocumentOptions{PrimaryKey: &pk})
+		if ferr != nil {
+			return fmt.Errorf("meili update langs: %w", ferr)
+		}
+		final, ferr := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+		if ferr != nil {
+			return fmt.Errorf("wait lang task %d: %w", task.TaskUID, ferr)
+		}
+		if final.Status != meilisearch.TaskStatusSucceeded {
+			return fmt.Errorf("lang task %d status %s: %v", final.UID, final.Status, final.Error)
+		}
+		total += len(batch)
+		batch = batch[:0]
+		return nil
+	}
+
+	for rows.Next() {
+		var id int64
+		var lang *string // NULL → nil
+		if serr := rows.Scan(&id, &lang); serr != nil {
+			return total, fmt.Errorf("scan lang row: %w", serr)
+		}
+		var lv any // nil → lang:null (partial update чистит поле)
+		if lang != nil {
+			if n := normalizeLang(*lang); n != "" {
+				lv = n
+			}
+		}
+		batch = append(batch, map[string]any{"id": id, "lang": lv})
+		if len(batch) >= batchSize {
+			if ferr := flush(); ferr != nil {
+				return total, ferr
+			}
+		}
+	}
+	if rerr := rows.Err(); rerr != nil {
+		return total, fmt.Errorf("iterate lang rows: %w", rerr)
+	}
+	if ferr := flush(); ferr != nil {
+		return total, ferr
+	}
+	return total, nil
+}
+
 // processRecord обрабатывает одну запись внутри транзакции.
 // Откат транзакции при любой ошибке — состояние БД не пачкается полу-импортом одной книги.
 func (im *Importer) processRecord(
@@ -279,6 +350,10 @@ func (im *Importer) processRecord(
 		ratingPtr = &v
 	}
 
+	// Язык нормализуем к канонике (lower+trim): источники дают 'ru'/'RU'/' ru'
+	// вперемешку, иначе один язык двоится в списке/фильтре/видимости контента.
+	lang := normalizeLang(rec.Lang)
+
 	br := bookRow{
 		collectionID:    collectionID,
 		archiveID:       archiveID,
@@ -290,7 +365,7 @@ func (im *Importer) processRecord(
 		normalizedTitle: normalize(rec.Title),
 		seriesID:        seriesPtr,
 		serNo:           serNoPtr,
-		lang:            rec.Lang,
+		lang:            lang,
 		dateAdded:       rec.Date,
 		rating:          ratingPtr,
 		keywords:        rec.Keywords,
@@ -341,7 +416,7 @@ func (im *Importer) processRecord(
 			Series:          rec.Series,
 			SeriesID:        seriesPtr,
 			Genres:          rec.Genres,
-			Lang:            rec.Lang,
+			Lang:            lang,
 			LibID:           rec.LibID,
 			Archive:         file.Archive,
 		}

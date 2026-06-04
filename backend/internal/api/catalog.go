@@ -76,7 +76,7 @@ type seriesResponse struct {
 	IsFavorite bool `json:"is_favorite"`
 }
 
-func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
+func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -92,7 +92,14 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps) http.Ha
 			userID = u.ID
 		}
 
-		a, err := d.Service.GetAuthor(ctx, id, userID)
+		// Видимость контента: на карточке автора не показываем книги со скрытыми
+		// жанрами/языками (admin ∪ персональные), как и в /books.
+		var exGenres, exLangs []string
+		if content.Resolver != nil {
+			exGenres, exLangs = content.Resolver.Exclusions(ctx, userID)
+		}
+
+		a, err := d.Service.GetAuthor(ctx, id, userID, exGenres, exLangs)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "author not found"})
@@ -172,7 +179,7 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 	}
 }
 
-func handleGetSeries(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
+func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -187,7 +194,13 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps) http.HandlerFunc {
 			userID = u.ID
 		}
 
-		s, err := d.Service.GetSeries(ctx, id, userID)
+		// Видимость контента: книги серии со скрытыми жанрами/языками не показываем.
+		var exGenres, exLangs []string
+		if content.Resolver != nil {
+			exGenres, exLangs = content.Resolver.Exclusions(ctx, userID)
+		}
+
+		s, err := d.Service.GetSeries(ctx, id, userID, exGenres, exLangs)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "series not found"})

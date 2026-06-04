@@ -119,8 +119,8 @@ func NewRouter(d Deps) http.Handler {
 					r.With(bookGate).Get("/books/{id}/download", handleDownload(d.Download, d.History))
 				}
 				if d.Catalog.Service != nil {
-					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata))
-					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History))
+					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
+					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content))
 					r.Get("/genres", handleListGenres(d.Catalog))
 					r.Get("/languages", handleListLanguages(d.Catalog))
 				}

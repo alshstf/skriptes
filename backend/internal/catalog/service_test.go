@@ -57,7 +57,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 		`SELECT id FROM authors WHERE normalized_name = 'алексеев евгений артёмович'`,
 	).Scan(&authorID))
 
-	a, err := svc.GetAuthor(ctx, authorID, 0)
+	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
 	require.NoError(t, err)
 	require.Equal(t, "Алексеев", a.LastName)
 	require.Equal(t, "Алексеев Евгений Артёмович", a.FullName)
@@ -77,7 +77,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	seriesID = a.Series[0].ID
 
 	// Series detail
-	s, err := svc.GetSeries(ctx, seriesID, 0)
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil)
 	require.NoError(t, err)
 	require.Equal(t, "Петля [Алексеев]", s.Title)
 	require.NotNil(t, s.AuthorID)
@@ -88,10 +88,30 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, "Кадетский корпус. Книга 2", s.Books[0].Title)
 	require.Equal(t, []string{"Алексеев Евгений Артёмович"}, s.Books[0].Authors)
 
+	// ── Видимость контента: скрытый язык убирает книги с карточек ──
+	// Помечаем единственную книгу Алексеева языком-сентинелом и проверяем, что
+	// GetAuthor/GetSeries с этим языком в исключениях её прячут (как в /books).
+	_, err = pool.Exec(ctx, `UPDATE books SET lang = 'zz' WHERE id = $1`, a.Books[0].ID)
+	require.NoError(t, err)
+
+	aHidden, err := svc.GetAuthor(ctx, authorID, 0, nil, []string{"zz"})
+	require.NoError(t, err)
+	require.Equal(t, 0, aHidden.BookCount, "скрытый язык исключается из счётчика книг автора")
+	require.Empty(t, aHidden.Books, "скрытый язык исключается из списка книг автора")
+
+	sHidden, err := svc.GetSeries(ctx, seriesID, 0, nil, []string{"zz"})
+	require.NoError(t, err)
+	require.Empty(t, sHidden.Books, "скрытый язык исключается из книг серии")
+
+	// Контроль: без исключения книга снова видна.
+	aBack, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	require.NoError(t, err)
+	require.Len(t, aBack.Books, 1)
+
 	// Negative: несуществующий id
-	_, err = svc.GetAuthor(ctx, 99999999, 0)
+	_, err = svc.GetAuthor(ctx, 99999999, 0, nil, nil)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
-	_, err = svc.GetSeries(ctx, 99999999, 0)
+	_, err = svc.GetSeries(ctx, 99999999, 0, nil, nil)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
 
 	// Suggest: префиксное совпадение по нормализованному имени.
@@ -157,11 +177,11 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	a2, err := svc.GetAuthor(ctx, authorID, userID)
+	a2, err := svc.GetAuthor(ctx, authorID, userID, nil, nil)
 	require.NoError(t, err)
 	require.Equal(t, 1, a2.ReadCount)
 
-	s2, err := svc.GetSeries(ctx, seriesID, userID)
+	s2, err := svc.GetSeries(ctx, seriesID, userID, nil, nil)
 	require.NoError(t, err)
 	require.Equal(t, 1, s2.ReadCount)
 }

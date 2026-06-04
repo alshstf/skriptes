@@ -38,7 +38,32 @@ func New(pool *pgxpool.Pool) *Service {
 //
 // Каждый шаг — отдельный запрос; для 99% карточек это <10 ms total.
 // Если когда-то станет горячо — соберём в один CTE.
-func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, error) {
+// bookExclusionClause строит SQL-фрагмент для AND в WHERE по алиасу таблицы
+// книг `b`, исключающий книги со скрытым языком ИЛИ несущие хоть один скрытый
+// жанр (видимость контента: admin ∪ персональные). startArg — номер следующего
+// позиционного аргумента ($N). Пустые срезы → "" + нет доп. аргументов (no-op),
+// поэтому хелпер безопасно звать всегда. Возвращает фрагмент и аргументы, которые
+// нужно дописать в конец списка args запроса (в том же порядке).
+func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string) (clause string, args []any) {
+	n := startArg
+	var b strings.Builder
+	if len(excludeLangs) > 0 {
+		fmt.Fprintf(&b, " AND (b.lang IS NULL OR NOT (b.lang = ANY($%d::text[])))", n)
+		args = append(args, excludeLangs)
+		n++
+	}
+	if len(excludeGenres) > 0 {
+		fmt.Fprintf(&b, " AND NOT EXISTS (SELECT 1 FROM book_genres bgx JOIN genres gx ON gx.id = bgx.genre_id"+
+			" WHERE bgx.book_id = b.id AND gx.fb2_code = ANY($%d::text[]))", n)
+		args = append(args, excludeGenres)
+	}
+	return b.String(), args
+}
+
+// GetAuthor — карточка автора. excludeGenres/excludeLangs — скрытые жанры/языки
+// (видимость контента), применяются к счётчику книг и списку книг, чтобы на
+// карточке не всплывал контент, скрытый глобально/персонально (как в /books).
+func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string) (Author, error) {
 	var (
 		a         Author
 		bio       pgtype.Text
@@ -64,12 +89,14 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, erro
 	}
 	a.EnrichmentFetched = fetchedAt.Valid
 
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	countArgs := append([]any{id}, exArgs...)
 	if err := s.pool.QueryRow(ctx, `
 		SELECT count(*)
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id
-		WHERE ba.author_id = $1 AND b.deleted = false
-	`, id).Scan(&a.BookCount); err != nil {
+		WHERE ba.author_id = $1 AND b.deleted = false`+exClause,
+		countArgs...).Scan(&a.BookCount); err != nil {
 		return Author{}, fmt.Errorf("count books: %w", err)
 	}
 	a.BooksTotal = a.BookCount
@@ -89,7 +116,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, erro
 	// 500 — потолок для самых плодовитых авторов (Asimov ~500, Stephen
 	// King ~80). Группировка по сериям на фронте требует полного списка,
 	// поэтому усечение в 50 как раньше уже не работает.
-	bookList, err := s.queryAuthorBooks(ctx, id, 500)
+	bookList, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs)
 	if err != nil {
 		return Author{}, err
 	}
@@ -117,7 +144,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64) (Author, erro
 //
 // Если userID > 0, дополнительно считается ReadCount (сколько книг серии
 // уже скачивал текущий пользователь). YearStats считаются всегда.
-func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, error) {
+func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string) (Series, error) {
 	var (
 		out      Series
 		authorID pgtype.Int8
@@ -140,6 +167,8 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 		out.AuthorID = &v
 	}
 
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	bookArgs := append([]any{id}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, b.title, b.lib_id,
 		       b.lang, b.date_added, b.ser_no,
@@ -150,10 +179,10 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64) (Series, erro
 		FROM books b
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
-		WHERE b.series_id = $1 AND b.deleted = false
+		WHERE b.series_id = $1 AND b.deleted = false`+exClause+`
 		GROUP BY b.id
 		ORDER BY b.ser_no NULLS LAST, b.normalized_title
-	`, id)
+	`, bookArgs...)
 	if err != nil {
 		return Series{}, fmt.Errorf("query series books: %w", err)
 	}
@@ -263,7 +292,11 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64) ([]Seri
 	return out, rows.Err()
 }
 
-func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int) ([]books.ListItem, error) {
+func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]books.ListItem, error) {
+	// Исключения занимают $3.. (после $1 author, $2 limit); LIMIT остаётся $2
+	// независимо от позиции в строке — позиционные аргументы по номеру.
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
+	args := append([]any{authorID, limit}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, b.title, b.lib_id, b.lang, b.date_added,
 		       ser.id, ser.title, b.ser_no,
@@ -276,11 +309,11 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		LEFT JOIN series ser ON ser.id = b.series_id
 		LEFT JOIN book_authors ba2 ON ba2.book_id = b.id
 		LEFT JOIN authors a2 ON a2.id = ba2.author_id
-		WHERE ba.author_id = $1
+		WHERE ba.author_id = $1`+exClause+`
 		GROUP BY b.id, ser.id, ser.title
 		ORDER BY b.date_added DESC NULLS LAST, b.normalized_title
 		LIMIT $2
-	`, authorID, limit)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query author books: %w", err)
 	}
