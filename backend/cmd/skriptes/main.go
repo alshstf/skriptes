@@ -382,7 +382,9 @@ func runStartupImport(ctx context.Context, imp *importer.Importer, inpxRoot stri
 // app_settings.lang_normalized_v1: выполняется один раз (на апгрейде), дальше
 // no-op. Не блокирует старт — крутится в горутине.
 func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "lang_normalized_v1"
+	// v2: помимо регистра (0015) теперь срезаем региональные субтеги (0016),
+	// поэтому Meili нужно синкнуть заново — новый ключ перезапускает one-shot.
+	const flag = "lang_normalized_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("lang resync: check flag failed — skip", "err", err)
