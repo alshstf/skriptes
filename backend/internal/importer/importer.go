@@ -32,10 +32,18 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 )
 
-// normalizeLang приводит код языка к канонике: нижний регистр + trim. В INPX/fb2
-// один язык встречается в разном регистре ('ru'/'RU'/' ru '), и без нормализации
-// он двоится в списке языков, фильтре и настройках видимости. Пустой → пустой.
-func normalizeLang(s string) string { return strings.ToLower(strings.TrimSpace(s)) }
+// normalizeLang приводит код языка к канонике: нижний регистр + trim + срез
+// регионального/скриптового субтега (ru-RU, en_US, zh-Hans → ru/en/zh). В INPX/fb2
+// один язык встречается в разном регистре и с локалями ('ru'/'RU'/'ru-RU'), и без
+// нормализации он двоится в списке языков, фильтре и настройках видимости (для
+// каталога важен язык, а не локаль). Пустой → пустой.
+func normalizeLang(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	if i := strings.IndexAny(s, "-_"); i >= 0 {
+		s = s[:i]
+	}
+	return s
+}
 
 // Deps — зависимости импортёра.
 type Deps struct {
