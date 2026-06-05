@@ -101,13 +101,13 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.BooksTotal = a.BookCount
 
-	genres, err := s.queryAuthorTopGenres(ctx, id, 5)
+	genres, err := s.queryAuthorTopGenres(ctx, id, 5, excludeGenres, excludeLangs)
 	if err != nil {
 		return Author{}, err
 	}
 	a.TopGenres = genres
 
-	series, err := s.queryAuthorSeries(ctx, id)
+	series, err := s.queryAuthorSeries(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {
 		return Author{}, err
 	}
@@ -122,7 +122,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.Books = bookList
 
-	years, err := s.queryAuthorYearStats(ctx, id)
+	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {
 		return Author{}, err
 	}
@@ -223,7 +223,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	}
 	out.BookCount = len(out.Books)
 
-	years, err := s.querySeriesYearStats(ctx, id)
+	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {
 		return Series{}, err
 	}
@@ -240,18 +240,20 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	return out, nil
 }
 
-func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limit int) ([]GenreCount, error) {
+func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]GenreCount, error) {
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
+	args := append([]any{authorID, limit}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT g.fb2_code, COALESCE(NULLIF(g.name_ru,''), NULLIF(g.name_en,''), g.fb2_code), count(*) as cnt
 		FROM book_authors ba
 		JOIN books b      ON b.id = ba.book_id AND b.deleted = false
 		JOIN book_genres bg ON bg.book_id = b.id
 		JOIN genres g     ON g.id = bg.genre_id
-		WHERE ba.author_id = $1
+		WHERE ba.author_id = $1`+exClause+`
 		GROUP BY g.fb2_code, g.name_ru, g.name_en
 		ORDER BY cnt DESC, g.fb2_code
 		LIMIT $2
-	`, authorID, limit)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query top genres: %w", err)
 	}
@@ -267,16 +269,22 @@ func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limi
 	return out, rows.Err()
 }
 
-func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64) ([]SeriesWithCount, error) {
+func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]SeriesWithCount, error) {
+	// Исключения по контенту режут книги ДО группировки → серия, у которой не
+	// осталось видимых книг, просто не попадает в результат (INNER JOIN + WHERE).
+	// Так серии-дубли на скрытых языках («Cormoran Strike» при скрытом en) не
+	// висят пустыми на карточке автора. Счётчик cnt тоже = число видимых книг.
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	args := append([]any{authorID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT s.id, s.title, count(*) as cnt
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN series s ON s.id = b.series_id
-		WHERE ba.author_id = $1
+		WHERE ba.author_id = $1`+exClause+`
 		GROUP BY s.id, s.title
 		ORDER BY cnt DESC, s.normalized_title
-	`, authorID)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query series: %w", err)
 	}
@@ -367,14 +375,16 @@ const yearStatsBooksCap = 50
 // date_added). Книги без written_year отбрасываются — пока год не
 // извлечён/недоступен, столбик рисовать не из чего. К каждому году
 // прикладываем список книг (id+title) для тултипа на фронте.
-func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64) ([]YearCount, error) {
+func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]YearCount, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	args := append([]any{authorID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.written_year::int AS year, b.id, b.title
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL
+		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL`+exClause+`
 		ORDER BY b.written_year, b.title
-	`, authorID)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query author year stats: %w", err)
 	}
@@ -433,13 +443,15 @@ func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int
 
 // querySeriesYearStats — то же самое для серии: распределение книг в
 // серии по году написания (written_year) + список книг каждого года.
-func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64) ([]YearCount, error) {
+func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64, excludeGenres, excludeLangs []string) ([]YearCount, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	args := append([]any{seriesID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.written_year::int AS year, b.id, b.title
 		FROM books b
-		WHERE b.series_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL
+		WHERE b.series_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`
 		ORDER BY b.written_year, b.title
-	`, seriesID)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query series year stats: %w", err)
 	}

@@ -98,10 +98,16 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 0, aHidden.BookCount, "скрытый язык исключается из счётчика книг автора")
 	require.Empty(t, aHidden.Books, "скрытый язык исключается из списка книг автора")
+	// Серия без видимых книг не должна висеть на карточке (логически серия одна
+	// на язык, у неё нет языка — прячем, если после фильтра книг не осталось).
+	require.Empty(t, aHidden.Series, "серия без видимых книг скрыта на карточке автора")
+	require.Empty(t, aHidden.TopGenres, "жанры скрытых книг не учитываются")
+	require.Empty(t, aHidden.YearStats, "год скрытых книг не идёт в гистограмму")
 
 	sHidden, err := svc.GetSeries(ctx, seriesID, 0, nil, []string{"zz"})
 	require.NoError(t, err)
 	require.Empty(t, sHidden.Books, "скрытый язык исключается из книг серии")
+	require.Empty(t, sHidden.YearStats, "год скрытых книг серии не идёт в гистограмму")
 
 	// Контроль: без исключения книга снова видна.
 	aBack, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
