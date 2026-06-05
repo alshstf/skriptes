@@ -10,7 +10,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
-import { type BookListItem as BookListItemType } from '@/lib/books';
+import { bySeriesOrder, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -143,13 +143,10 @@ function AuthorBooks({ author }: { author: Author }) {
       standalone.push(b);
     }
   }
-  // Внутри серии сортируем по ser_no, NULL'ы в конец.
+  // Внутри серии — по series_order (backend-каскад: ser_no → год → эвристика →
+  // date_added). Бэкенд уже отдаёт сортированно, клиентская сортировка устойчива.
   for (const arr of bySeries.values()) {
-    arr.sort((x, y) => {
-      const xn = x.ser_no ?? Number.POSITIVE_INFINITY;
-      const yn = y.ser_no ?? Number.POSITIVE_INFINITY;
-      return xn - yn;
-    });
+    arr.sort(bySeriesOrder);
   }
 
   return (

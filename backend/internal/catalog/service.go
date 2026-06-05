@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -116,11 +117,12 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	// 500 — потолок для самых плодовитых авторов (Asimov ~500, Stephen
 	// King ~80). Группировка по сериям на фронте требует полного списка,
 	// поэтому усечение в 50 как раньше уже не работает.
-	bookList, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs)
+	bookList, refs, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs)
 	if err != nil {
 		return Author{}, err
 	}
 	a.Books = bookList
+	a.BookRefs = refs
 
 	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {
@@ -175,27 +177,38 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
 		           ARRAY[]::text[]
-		       )
+		       ),
+		       b.written_year, b.edition_year, b.normalized_title,
+		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL)
 		FROM books b
+		JOIN archives ar ON ar.id = b.archive_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		WHERE b.series_id = $1 AND b.deleted = false`+exClause+`
-		GROUP BY b.id
+		GROUP BY b.id, ar.filename
 		ORDER BY b.ser_no NULLS LAST, b.normalized_title
 	`, bookArgs...)
 	if err != nil {
 		return Series{}, fmt.Errorf("query series books: %w", err)
 	}
 	defer rows.Close()
+	var sortItems []seriesSortItem
 	for rows.Next() {
 		var (
-			b     books.ListItem
-			lang  pgtype.Text
-			dt    pgtype.Date
-			serNo pgtype.Int4
-			auth  []string
+			b         books.ListItem
+			lang      pgtype.Text
+			dt        pgtype.Date
+			serNo     pgtype.Int4
+			auth      []string
+			wy, ey    pgtype.Int2
+			normTitle string
+			archiveFn string
+			fileName  string
+			ext       string
+			localScan bool
 		)
-		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth); err != nil {
+		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth,
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan); err != nil {
 			return Series{}, err
 		}
 		if lang.Valid {
@@ -216,11 +229,39 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		// принадлежат одной серии, но единообразный тип лучше.
 		sid := id
 		b.SeriesID = &sid
+		si := seriesSortItem{bookID: b.ID, serNo: b.SerNo, title: b.Title, normTitle: normTitle}
+		if wy.Valid {
+			v := int(wy.Int16)
+			si.writtenYear = &v
+		}
+		if ey.Valid {
+			v := int(ey.Int16)
+			si.editionYear = &v
+		}
+		if dt.Valid {
+			si.dateAdded = dt.Time
+		}
+		sortItems = append(sortItems, si)
+		out.BookRefs = append(out.BookRefs, BookYearRef{
+			BookID: b.ID, Archive: archiveFn, FileName: fileName, Ext: ext,
+			HasWrittenYear: wy.Valid, LocalScanned: localScan,
+		})
 		out.Books = append(out.Books, b)
 	}
 	if err := rows.Err(); err != nil {
 		return Series{}, err
 	}
+	// Каскад порядка внутри серии: проставляем series_order и пересортировываем.
+	ranks := assignSeriesOrder(sortItems)
+	for i := range out.Books {
+		if r, ok := ranks[out.Books[i].ID]; ok {
+			rr := r
+			out.Books[i].SeriesOrder = &rr
+		}
+	}
+	sort.SliceStable(out.Books, func(i, j int) bool {
+		return seriesOrderOf(out.Books[i]) < seriesOrderOf(out.Books[j])
+	})
 	out.BookCount = len(out.Books)
 
 	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs)
@@ -300,7 +341,7 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	return out, rows.Err()
 }
 
-func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]books.ListItem, error) {
+func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]books.ListItem, []BookYearRef, error) {
 	// Исключения занимают $3.. (после $1 author, $2 limit); LIMIT остаётся $2
 	// независимо от позиции в строке — позиционные аргументы по номеру.
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
@@ -311,22 +352,28 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a2.last_name, a2.first_name, a2.middle_name))) FILTER (WHERE a2.id IS NOT NULL),
 		           ARRAY[]::text[]
-		       )
+		       ),
+		       b.written_year, b.edition_year, b.normalized_title,
+		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL)
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		JOIN archives ar ON ar.id = b.archive_id
 		LEFT JOIN series ser ON ser.id = b.series_id
 		LEFT JOIN book_authors ba2 ON ba2.book_id = b.id
 		LEFT JOIN authors a2 ON a2.id = ba2.author_id
 		WHERE ba.author_id = $1`+exClause+`
-		GROUP BY b.id, ser.id, ser.title
+		GROUP BY b.id, ser.id, ser.title, ar.filename
 		ORDER BY b.date_added DESC NULLS LAST, b.normalized_title
 		LIMIT $2
 	`, args...)
 	if err != nil {
-		return nil, fmt.Errorf("query author books: %w", err)
+		return nil, nil, fmt.Errorf("query author books: %w", err)
 	}
 	defer rows.Close()
 	var out []books.ListItem
+	var refs []BookYearRef
+	// sortItems сгруппированы по series_id для покнижного каскада series_order.
+	bySeries := map[int64][]seriesSortItem{}
 	for rows.Next() {
 		var (
 			b           books.ListItem
@@ -336,9 +383,16 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			seriesTitle pgtype.Text
 			serNo       pgtype.Int4
 			auth        []string
+			wy, ey      pgtype.Int2
+			normTitle   string
+			archiveFn   string
+			fileName    string
+			ext         string
+			localScan   bool
 		)
-		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth); err != nil {
-			return nil, err
+		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth,
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan); err != nil {
+			return nil, nil, err
 		}
 		if lang.Valid {
 			b.Lang = lang.String
@@ -359,9 +413,44 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			b.SerNo = &n
 		}
 		b.Authors = auth
+		if seriesID.Valid {
+			si := seriesSortItem{bookID: b.ID, serNo: b.SerNo, title: b.Title, normTitle: normTitle}
+			if wy.Valid {
+				v := int(wy.Int16)
+				si.writtenYear = &v
+			}
+			if ey.Valid {
+				v := int(ey.Int16)
+				si.editionYear = &v
+			}
+			if dt.Valid {
+				si.dateAdded = dt.Time
+			}
+			bySeries[seriesID.Int64] = append(bySeries[seriesID.Int64], si)
+		}
+		refs = append(refs, BookYearRef{
+			BookID: b.ID, Archive: archiveFn, FileName: fileName, Ext: ext,
+			HasWrittenYear: wy.Valid, LocalScanned: localScan,
+		})
 		out = append(out, b)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, nil, err
+	}
+	// Каскад series_order — на каждую серию отдельно; ранги по bookID.
+	ranks := map[int64]int{}
+	for _, items := range bySeries {
+		for bid, r := range assignSeriesOrder(items) {
+			ranks[bid] = r
+		}
+	}
+	for i := range out {
+		if r, ok := ranks[out[i].ID]; ok {
+			rr := r
+			out[i].SeriesOrder = &rr
+		}
+	}
+	return out, refs, nil
 }
 
 // yearStatsBooksCap — потолок числа книг, прикладываемых к одному году

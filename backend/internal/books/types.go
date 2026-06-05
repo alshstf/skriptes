@@ -44,11 +44,16 @@ type ListItem struct {
 	SeriesID  *int64   `json:"series_id,omitempty"`
 	// SerNo — номер книги в серии (если есть). Используется фронтом для
 	// группировки и сортировки внутри серии на странице автора.
-	SerNo  *int     `json:"ser_no,omitempty"`
-	Genres []string `json:"genres,omitempty"`
-	Year   *int     `json:"year,omitempty"`
-	Lang   string   `json:"lang,omitempty"`
-	LibID  string   `json:"lib_id"`
+	SerNo *int `json:"ser_no,omitempty"`
+	// SeriesOrder — 0-based позиция книги ВНУТРИ своей серии после backend-каскада
+	// сортировки (ser_no → written_year → edition_year → эвристика названия →
+	// date_added). Считается в catalog, чтобы фронт сортировал группу серии одним
+	// ключом. nil для книг вне серии (и в /books-листинге — там не вычисляется).
+	SeriesOrder *int     `json:"series_order,omitempty"`
+	Genres      []string `json:"genres,omitempty"`
+	Year        *int     `json:"year,omitempty"`
+	Lang        string   `json:"lang,omitempty"`
+	LibID       string   `json:"lib_id"`
 	// CoverPath — относительный путь до обложки (если уже обогащена).
 	// В Meili-индексе его нет (обложки проставляются лениво после
 	// индексации), поэтому List догидрачивает его из Postgres по id

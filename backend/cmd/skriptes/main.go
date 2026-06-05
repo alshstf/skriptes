@@ -293,7 +293,10 @@ func run() error {
 			Books:     booksSvc,
 			Converter: conv,
 		},
-		Metadata:    api.MetadataDeps{Service: enricher, BooksRoot: cfg.BooksRoot, Gates: gatesResolver},
+		Metadata: api.MetadataDeps{
+			Service: enricher, BooksRoot: cfg.BooksRoot, Gates: gatesResolver,
+			YearBackfill: yearBackfillCtl, Settings: settingsStore,
+		},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
 		Settings: api.SettingsDeps{
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,

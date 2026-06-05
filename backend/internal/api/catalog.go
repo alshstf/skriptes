@@ -119,6 +119,9 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content
 		// запросе клиент получит карточку без них; polling в useAuthor
 		// подменит без перезагрузки.
 		triggerAuthorEnrichmentAsync(meta, a)
+		// Ленивое дозаполнение года для книг в сериях без порядка (каскад
+		// series_order). pending → фронт поллит и переставляет порядок.
+		a.YearEnrichmentPending = triggerSeriesYearEnrichmentAsync(meta, a.BookRefs, a.Books)
 
 		writeJSON(w, http.StatusOK, authorResponse{Author: a, IsFavorite: isFav})
 	}
@@ -179,7 +182,7 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 	}
 }
 
-func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps) http.HandlerFunc {
+func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta MetadataDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil || id <= 0 {
@@ -215,6 +218,8 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps) http.
 				isFav = v
 			}
 		}
+		// Ленивое дозаполнение года для книг серии без порядка (каскад series_order).
+		s.YearEnrichmentPending = triggerSeriesYearEnrichmentAsync(meta, s.BookRefs, s.Books)
 		writeJSON(w, http.StatusOK, seriesResponse{Series: s, IsFavorite: isFav})
 	}
 }

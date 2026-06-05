@@ -38,6 +38,27 @@ type Author struct {
 	// Заполняется только если в запрос пробрасывается user (см. GetAuthor),
 	// иначе 0 и фронт скрывает прогресс-блок.
 	ReadCount int `json:"read_count,omitempty"`
+
+	// YearEnrichmentPending — этот запрос инициировал ленивое дозаполнение года
+	// хотя бы для одной книги (порядок в серии мог «упасть» на фолбэк). Фронт
+	// поллит карточку, пока true, и переставляет порядок по мере наполнения.
+	YearEnrichmentPending bool `json:"year_enrichment_pending,omitempty"`
+
+	// BookRefs — служебное (не сериализуется): данные книг карточки для ленивого
+	// триггера года (api-слой строит по ним BookQuery).
+	BookRefs []BookYearRef `json:"-"`
+}
+
+// BookYearRef — минимум для ленивого триггера года: идентичность fb2 + признаки
+// «год уже искали». Возвращается рядом со списком книг карточки, чтобы не делать
+// повторный запрос. Title/Lang/Authors берём из самих books.ListItem.
+type BookYearRef struct {
+	BookID         int64
+	Archive        string // archives.filename — для BookQuery.ArchivePath
+	FileName       string
+	Ext            string
+	HasWrittenYear bool
+	LocalScanned   bool // year_local_scanned_at IS NOT NULL
 }
 
 // YearCount — год + число книг этого года + список книг (для тултипа
@@ -100,4 +121,10 @@ type Series struct {
 	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`
 	ReadCount int         `json:"read_count,omitempty"`
+
+	// YearEnrichmentPending — см. одноимённое поле у Author.
+	YearEnrichmentPending bool `json:"year_enrichment_pending,omitempty"`
+
+	// BookRefs — служебное (не сериализуется): см. Author.BookRefs.
+	BookRefs []BookYearRef `json:"-"`
 }

@@ -8,6 +8,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useSeries, type Series } from '@/lib/catalog';
+import { bySeriesOrder } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
 export function SeriesPage() {
@@ -72,7 +73,7 @@ export function SeriesPage() {
         <p className="text-sm text-muted-foreground">В серии пока ничего нет.</p>
       ) : (
         <ul className="space-y-1">
-          {s.books.map((b) => (
+          {[...s.books].sort(bySeriesOrder).map((b) => (
             <li key={b.id}>
               <BookListItem book={b} showSeries={false} showSerNo={true} />
             </li>
