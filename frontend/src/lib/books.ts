@@ -14,6 +14,10 @@ export type BookListItem = {
   series?: string;
   series_id?: number;
   ser_no?: number;
+  // series_order — 0-based позиция книги внутри серии после backend-каскада
+  // сортировки (ser_no → written_year → edition_year → эвристика → date_added).
+  // Заполняется на карточках автора/серии; в /books-листинге отсутствует.
+  series_order?: number;
   genres?: string[];
   year?: number;
   lang?: string;
@@ -23,6 +27,17 @@ export type BookListItem = {
   // обложек нет). Пусто, если обложка ещё не обогащена → placeholder.
   cover_path?: string;
 };
+
+// bySeriesOrder — компаратор книг внутри одной серии: по series_order (бэкенд-
+// каскад), nil в конец; финальный тайбрейк — название (ru-локаль). Бэкенд уже
+// отдаёт книги сортированными, но клиентская сортировка делает группировку на
+// странице автора устойчивой к порядку массива.
+export function bySeriesOrder(a: BookListItem, b: BookListItem): number {
+  const ao = a.series_order ?? Number.POSITIVE_INFINITY;
+  const bo = b.series_order ?? Number.POSITIVE_INFINITY;
+  if (ao !== bo) return ao - bo;
+  return a.title.localeCompare(b.title, 'ru');
+}
 
 export type FacetDistribution = Record<string, Record<string, number>>;
 

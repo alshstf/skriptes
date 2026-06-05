@@ -25,6 +25,10 @@ type MetadataDeps struct {
 	Service   *metadata.Enricher
 	BooksRoot string // корень read-only volume с zip-архивами; нужен для fb2-провайдера
 	Gates     *settings.EnrichmentGateResolver
+	// YearBackfill / Settings — для ленивого дозаполнения года при просмотре
+	// карточки серии/автора (порядок книг в серии). nil → внешний lazy-год выкл.
+	YearBackfill *metadata.YearBackfillController
+	Settings     *settings.Store
 }
 
 // bookEnrichTargets решает, какие из (обложка, аннотация) нужно лениво

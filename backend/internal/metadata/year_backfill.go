@@ -248,6 +248,14 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 	}
 }
 
+// EnrichOne — разовое внешнее дозаполнение года для ОДНОЙ книги (ленивый путь
+// при открытии карточки серии/автора). Использует ту же машинерию, что фоновый
+// проход: per-source TTL (book_year_lookups), rate-gate, порядок источников из
+// cfg. Никаких новых правил/обхода лимитов.
+func (b *YearBackfiller) EnrichOne(ctx context.Context, id int64, title, lang string, authors []string) {
+	b.processOne(ctx, yearCandidate{id: id, title: title, lang: lang, authors: authors})
+}
+
 type lookupRow struct {
 	outcome   string
 	checkedAt time.Time
@@ -482,6 +490,43 @@ func (c *YearBackfillController) RunOnce() {
 		c.mu.Unlock()
 		c.logger.Info("year backfill: one-shot pass done", "processed", n)
 	}()
+}
+
+// LazyBook — книга-кандидат для ленивого внешнего дозаполнения года.
+type LazyBook struct {
+	ID      int64
+	Title   string
+	Lang    string
+	Authors []string
+}
+
+// EnrichBooksNow — ленивое внешнее дозаполнение года для книг карточки
+// серии/автора. Строит ОДИН воркер с текущим cfg (общий rate-gate серилизует
+// вызовы по RPM), идёт по списку через ту же processOne-машинерию, затем синкает
+// Meili-поле year, если год появился. No-op, если внешние источники не
+// сконфигурены. Блокирующий — звать из горутины с детач-ctx.
+func (c *YearBackfillController) EnrichBooksNow(ctx context.Context, books []LazyBook) {
+	if !c.ready() || len(books) == 0 {
+		return
+	}
+	c.mu.Lock()
+	cfg := c.cfg
+	c.mu.Unlock()
+	b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
+	b.yearChanged.Store(0)
+	for _, bk := range books {
+		if ctx.Err() != nil {
+			return
+		}
+		b.EnrichOne(ctx, bk.ID, bk.Title, bk.Lang, bk.Authors)
+	}
+	if b.resyncer != nil && b.yearChanged.Load() > 0 && ctx.Err() == nil {
+		if n, err := b.resyncer.ResyncYears(ctx); err != nil {
+			c.logger.Warn("year lazy: resync years failed", "err", err)
+		} else {
+			c.logger.Info("year lazy: years resynced to meili", "changed", b.yearChanged.Load(), "synced", n)
+		}
+	}
 }
 
 // StopOnce — отменить идущий разовый проход.

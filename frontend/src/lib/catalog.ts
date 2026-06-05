@@ -31,6 +31,9 @@ export type Author = {
   photo_path?: string;
   /** Была ли попытка enrichment'а (для UI fallback "Описание отсутствует"). */
   enrichment_fetched?: boolean;
+  /** Запрос инициировал ленивое дозаполнение года (порядок книг в серии мог
+   *  «упасть» на фолбэк) — фронт поллит и переставляет порядок по series_order. */
+  year_enrichment_pending?: boolean;
 };
 
 export type Series = {
@@ -43,6 +46,8 @@ export type Series = {
   is_favorite?: boolean;
   year_stats?: YearCount[];
   read_count?: number;
+  /** См. Author.year_enrichment_pending. */
+  year_enrichment_pending?: boolean;
 };
 
 /**
@@ -53,6 +58,7 @@ export type Series = {
  * показать fallback "Описание отсутствует" вместо вечного скелетона.
  */
 const AUTHOR_ENRICH_MAX_TRIES = 10;
+const SERIES_ENRICH_MAX_TRIES = 10;
 
 export function useAuthor(id: number | string | undefined) {
   const qc = useQueryClient();
@@ -66,11 +72,11 @@ export function useAuthor(id: number | string | undefined) {
       const data = q.state.data as Author | undefined;
       const havePhoto = !!data?.photo_path;
       const haveBio = !!data?.bio;
-      if (havePhoto && haveBio) return false;
-      // Бэкенд пометил, что попытка обогащения уже была (enrichment_fetched),
-      // даже если bio/photo не нашлись — прекращаем поллинг сразу, не висим
-      // скелетоном ~20с и не заставляем бэкенд долбить внешние API каждый poll.
-      if (data?.enrichment_fetched) return false;
+      // bio/фото «осели», когда оба пришли ИЛИ бэкенд пометил enrichment_fetched
+      // (даже если не нашлись) — иначе висели бы скелетоном и долбили внешние API.
+      const metaSettled = (havePhoto && haveBio) || !!data?.enrichment_fetched;
+      // Год серии ещё подтягивается → продолжаем поллить, чтобы переставить порядок.
+      if (metaSettled && !data?.year_enrichment_pending) return false;
       if (q.state.dataUpdateCount > AUTHOR_ENRICH_MAX_TRIES) return false;
       return 2_000;
     },
@@ -90,5 +96,13 @@ export function useSeries(id: number | string | undefined) {
     queryKey: ['series', String(id)],
     queryFn: ({ signal }) => apiFetch<Series>(`/api/series/${id}`, { signal }),
     enabled: id !== undefined && id !== '',
+    // Поллим, пока сервер дозаполняет год книгам серии без порядка — чтобы
+    // переставить их по series_order. Кап попыток, как у автора.
+    refetchInterval: (q) => {
+      const data = q.state.data as Series | undefined;
+      if (!data?.year_enrichment_pending) return false;
+      if (q.state.dataUpdateCount > SERIES_ENRICH_MAX_TRIES) return false;
+      return 2_000;
+    },
   });
 }

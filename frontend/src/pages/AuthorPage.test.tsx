@@ -108,6 +108,35 @@ describe('AuthorPage', () => {
     expect(screen.getByText('Вне серий')).toBeInTheDocument();
   });
 
+  it('сортирует книги серии по series_order, а не по порядку массива', async () => {
+    const reordered = {
+      ...fixture,
+      series: [{ id: 7, title: 'Без номеров', count: 2 }],
+      book_count: 2,
+      books_total: 2,
+      books: [
+        // В массиве «Второй» идёт первым, но series_order у него больше →
+        // в DOM он должен оказаться ПОСЛЕ «Первого».
+        { id: 51, title: 'Второй том', authors: ['A'], series: 'Без номеров', series_id: 7, series_order: 1, lib_id: '51' },
+        { id: 50, title: 'Первый том', authors: ['A'], series: 'Без номеров', series_id: 7, series_order: 0, lib_id: '50' },
+      ],
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify(reordered), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    );
+    render(wrap(<AuthorPage />));
+    const first = await screen.findByText('Первый том');
+    const second = screen.getByText('Второй том');
+    // Первый том должен предшествовать Второму в DOM (series_order 0 < 1).
+    expect(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('при enrichment_fetched и пустой bio сразу показывает fallback, а не скелетон', async () => {
     vi.stubGlobal(
       'fetch',

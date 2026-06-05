@@ -14,6 +14,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TestEnrichBooksNow_NoopWhenNotReady — ленивый внешний путь без провайдеров
+// (и/или без пула) ничего не делает и не паникует.
+func TestEnrichBooksNow_NoopWhenNotReady(t *testing.T) {
+	c := NewYearBackfillController(nil, nil, nil, YearBackfillConfig{}, nil, slog.Default())
+	require.False(t, c.ready())
+	c.EnrichBooksNow(context.Background(), []LazyBook{{ID: 1, Title: "X"}})
+	// no panic, no work → тест проходит, если не паникнули.
+}
+
 // ── rateGate (pure) ─────────────────────────────────────────────
 
 func TestRateGate_Interval(t *testing.T) {

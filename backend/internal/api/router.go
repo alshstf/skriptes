@@ -120,7 +120,7 @@ func NewRouter(d Deps) http.Handler {
 				}
 				if d.Catalog.Service != nil {
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
-					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content))
+					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))
 					r.Get("/languages", handleListLanguages(d.Catalog))
 				}
