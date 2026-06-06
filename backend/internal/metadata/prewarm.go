@@ -77,7 +77,10 @@ func candidateCond(cfg PrewarmConfig) string {
 		conds = append(conds, "b.metadata_fetched_at IS NULL")
 	}
 	if cfg.Years {
-		conds = append(conds, "b.year_local_scanned_at IS NULL")
+		// Под тумблером «Года» идёт и год, и атрибуты издания — оба из заголовка
+		// fb2. Маркеры РАЗНЫЕ (year_local_scanned_at / edition_meta_scanned_at),
+		// чтобы уже-просканированные на год книги добрали edition-поля.
+		conds = append(conds, "(b.year_local_scanned_at IS NULL OR b.edition_meta_scanned_at IS NULL)")
 	}
 	if len(conds) == 0 {
 		return "false"
@@ -156,17 +159,20 @@ func (p *Prewarmer) maybeResyncYears(ctx context.Context) {
 }
 
 type prewarmBook struct {
-	id       int64
-	title    string
-	lang     string
-	archive  string
-	fileName string
-	ext      string
+	id             int64
+	title          string
+	lang           string
+	archive        string
+	fileName       string
+	ext            string
+	yearScanned    bool // year_local_scanned_at IS NOT NULL
+	editionScanned bool // edition_meta_scanned_at IS NOT NULL
 }
 
 func (p *Prewarmer) fetchBatch(ctx context.Context, afterID int64, limit int) ([]prewarmBook, error) {
 	q := fmt.Sprintf(`
-		SELECT b.id, b.title, COALESCE(b.lang, ''), a.filename, b.file_name, b.ext
+		SELECT b.id, b.title, COALESCE(b.lang, ''), a.filename, b.file_name, b.ext,
+		       (b.year_local_scanned_at IS NOT NULL), (b.edition_meta_scanned_at IS NOT NULL)
 		FROM books b
 		JOIN archives a ON a.id = b.archive_id
 		WHERE b.deleted = false AND %s AND b.id > $1
@@ -181,7 +187,8 @@ func (p *Prewarmer) fetchBatch(ctx context.Context, afterID int64, limit int) ([
 	out := make([]prewarmBook, 0, limit)
 	for rows.Next() {
 		var b prewarmBook
-		if err := rows.Scan(&b.id, &b.title, &b.lang, &b.archive, &b.fileName, &b.ext); err != nil {
+		if err := rows.Scan(&b.id, &b.title, &b.lang, &b.archive, &b.fileName, &b.ext,
+			&b.yearScanned, &b.editionScanned); err != nil {
 			return nil, err
 		}
 		out = append(out, b)
@@ -233,8 +240,13 @@ func (p *Prewarmer) processOne(ctx context.Context, b prewarmBook) {
 		}
 	}
 	if p.cfg.Years {
-		if p.enricher.EnsureYearLocal(taskCtx, q) {
-			p.yearChanged.Add(1)
+		if !b.yearScanned {
+			if p.enricher.EnsureYearLocal(taskCtx, q) {
+				p.yearChanged.Add(1)
+			}
+		}
+		if !b.editionScanned {
+			p.enricher.EnsureEditionMeta(taskCtx, q)
 		}
 	}
 	// Троттлинг IO между книгами (низкая интенсивность на медленных дисках).

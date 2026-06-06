@@ -102,6 +102,22 @@ func (p *Fb2Provider) FetchAnnotation(_ context.Context, q BookQuery) (string, e
 	return text, nil
 }
 
+// FetchEditionMeta — локально, без сети: атрибуты ИЗДАНИЯ из заголовка fb2.
+// Читает <publish-info> (isbn/publisher/book-name/year), <src-title-info>
+// (book-title/lang/author — для переводов), <title-info> (translator/lang/
+// src-lang) и <document-info><id>. Пустые поля = их в fb2 нет (норма).
+func (p *Fb2Provider) FetchEditionMeta(_ context.Context, q BookQuery) (EditionMeta, error) {
+	if q.ArchivePath == "" || q.FB2Name == "" {
+		return EditionMeta{}, ErrNotFound
+	}
+	rc, err := openFB2(q.ArchivePath, q.FB2Name)
+	if err != nil {
+		return EditionMeta{}, err
+	}
+	defer func() { _ = rc.Close() }()
+	return scanFb2EditionMeta(rc), nil
+}
+
 func (p *Fb2Provider) FetchCover(_ context.Context, q BookQuery) (*CoverImage, error) {
 	if q.ArchivePath == "" || q.FB2Name == "" {
 		return nil, ErrNotFound
@@ -383,6 +399,158 @@ func scanFb2Years(r io.Reader) (written int, edition int) {
 		}
 	}
 	return written, edition
+}
+
+// scanFb2EditionMeta — один проход по <description> до <body>, собирает
+// атрибуты издания. Толерантен к битому XML (отдаёт что успел собрать).
+//
+// Секции <description> и интересующие нас поля:
+//
+//	title-info     → lang (TitleLang), src-lang (SrcLang), translator (первый)
+//	src-title-info → book-title (SrcTitle), lang (SrcLang, fallback), author (первый)
+//	publish-info   → isbn, publisher, book-name (EditionTitle), year (EditionYear)
+//	document-info  → id (FB2DocID)
+//
+// Для каждого поля берём ПЕРВОЕ значение (книги иногда дублируют секции).
+func scanFb2EditionMeta(r io.Reader) EditionMeta {
+	dec := xml.NewDecoder(r)
+	dec.CharsetReader = charset.NewReaderLabel
+	dec.Strict = false
+	var em EditionMeta
+	var stack []string
+	// section — ближайшая по стеку дочерняя секция <description>.
+	section := func() string {
+		for i := len(stack) - 1; i >= 0; i-- {
+			switch stack[i] {
+			case "title-info", "src-title-info", "publish-info", "document-info":
+				return stack[i]
+			}
+		}
+		return ""
+	}
+	for {
+		tok, terr := dec.Token()
+		if terr == io.EOF {
+			break
+		}
+		if terr != nil {
+			return em // толерантно: битый хвост не должен ронять извлечение
+		}
+		switch t := tok.(type) {
+		case xml.StartElement:
+			name := t.Name.Local
+			if name == "body" {
+				return em // метаинформация выше <body>
+			}
+			sec := section()
+			switch {
+			case name == "id" && sec == "document-info" && em.FB2DocID == "":
+				em.FB2DocID = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "isbn" && sec == "publish-info" && em.ISBN == "":
+				em.ISBN = normalizeISBN(elemText(dec))
+				continue
+			case name == "publisher" && sec == "publish-info" && em.Publisher == "":
+				em.Publisher = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "book-name" && sec == "publish-info" && em.EditionTitle == "":
+				em.EditionTitle = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "year" && sec == "publish-info" && em.EditionYear == 0:
+				em.EditionYear = parseFb2Year(elemText(dec))
+				continue
+			case name == "lang" && sec == "title-info" && em.TitleLang == "":
+				em.TitleLang = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "src-lang" && sec == "title-info" && em.SrcLang == "":
+				em.SrcLang = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "lang" && sec == "src-title-info" && em.SrcLang == "":
+				em.SrcLang = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "book-title" && sec == "src-title-info" && em.SrcTitle == "":
+				em.SrcTitle = strings.TrimSpace(elemText(dec))
+				continue
+			case name == "author" && sec == "src-title-info" && em.SrcAuthor == "":
+				em.SrcAuthor = parseFb2PersonName(dec)
+				continue
+			case name == "translator" && sec == "title-info" && em.Translator == "":
+				em.Translator = parseFb2PersonName(dec)
+				continue
+			}
+			stack = append(stack, name)
+		case xml.EndElement:
+			if len(stack) > 0 {
+				stack = stack[:len(stack)-1]
+			}
+		}
+	}
+	return em
+}
+
+// parseFb2PersonName читает уже открытый <author>/<translator> до его
+// закрытия и собирает display-форму "Фамилия Имя Отчество" (как авторы в
+// каталоге). StartElement элемента уже потреблён вызывающим.
+func parseFb2PersonName(dec *xml.Decoder) string {
+	var first, middle, last, nick string
+	depth := 1
+	for depth > 0 {
+		tok, err := dec.Token()
+		if err != nil {
+			break
+		}
+		switch t := tok.(type) {
+		case xml.StartElement:
+			switch t.Name.Local {
+			case "first-name":
+				first = elemText(dec) // elemText потребляет и закрывающий тег
+			case "middle-name":
+				middle = elemText(dec)
+			case "last-name":
+				last = elemText(dec)
+			case "nickname":
+				nick = elemText(dec)
+			default:
+				depth++ // неизвестный вложенный — балансируем по End
+			}
+		case xml.EndElement:
+			depth--
+		}
+	}
+	parts := make([]string, 0, 3)
+	for _, p := range []string{last, first, middle} {
+		if s := strings.TrimSpace(p); s != "" {
+			parts = append(parts, s)
+		}
+	}
+	if len(parts) == 0 {
+		return strings.TrimSpace(nick)
+	}
+	return strings.Join(parts, " ")
+}
+
+// normalizeISBN оставляет только [0-9X] (uppercase), принимает лишь валидную
+// длину 10/13 — иначе "" (мусорные/«вариант»-ISBN не должны стать ключом
+// слияния; precision > recall).
+func normalizeISBN(s string) string {
+	var b strings.Builder
+	for _, r := range strings.ToUpper(s) {
+		if (r >= '0' && r <= '9') || r == 'X' {
+			b.WriteRune(r)
+		}
+	}
+	out := b.String()
+	if len(out) != 10 && len(out) != 13 {
+		return ""
+	}
+	return out
+}
+
+// normalizePersonKey — ключ сравнения имени человека: lower + схлопнутые
+// пробелы. Совпадает по форме с importer.normalizedAuthorName ("фамилия имя
+// отчество"), чтобы src-автор перевода матчился с primary-автором работы.
+func normalizePersonKey(s string) string {
+	return strings.Join(strings.Fields(strings.ToLower(strings.TrimSpace(s))), " ")
 }
 
 func decodeBinary(b fb2Binary) (*CoverImage, error) {

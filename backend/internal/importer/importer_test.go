@@ -102,6 +102,33 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	`).Scan(&genreCount))
 	require.Equal(t, 3, genreCount)
 
+	// ── проверки works (Phase 1: singleton-работа на каждую книгу) ──
+	// Группировки изданий ещё нет → works == books, по 1 изданию на работу,
+	// инвариант work_id != NULL.
+	var worksCount, booksWithWork, maxEditionsPerWork int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM works`).Scan(&worksCount))
+	require.Equal(t, 20, worksCount, "каждая книга получает свою singleton-работу")
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM books WHERE work_id IS NOT NULL`).Scan(&booksWithWork))
+	require.Equal(t, 20, booksWithWork, "инвариант: у каждой книги есть work_id")
+	require.NoError(t, pool.QueryRow(ctx, `
+		SELECT COALESCE(max(c), 0) FROM (
+			SELECT count(*) c FROM books WHERE work_id IS NOT NULL GROUP BY work_id
+		) t
+	`).Scan(&maxEditionsPerWork))
+	require.Equal(t, 1, maxEditionsPerWork, "пока по одному изданию на работу")
+
+	// Work поднял Work-level поля книги (серия/ser_no/primary-автор).
+	var wSeriesOK, wHasPrimaryAuthor bool
+	require.NoError(t, pool.QueryRow(ctx, `
+		SELECT (w.series_id IS NOT DISTINCT FROM b.series_id) AND (w.ser_no IS NOT DISTINCT FROM b.ser_no),
+		       (w.primary_author_id IS NOT NULL)
+		FROM books b JOIN works w ON w.id = b.work_id
+		WHERE b.lib_id = '749080'
+	`).Scan(&wSeriesOK, &wHasPrimaryAuthor))
+	require.True(t, wSeriesOK, "work поднял series_id/ser_no книги")
+	require.True(t, wHasPrimaryAuthor, "work.primary_author_id заполнен из book_authors")
+
 	// ── проверки Meilisearch ─────────────────────────────────────
 	// Indexer ждёт завершения task'а Meili в самом flush — поэтому здесь
 	// проверка детерминированная, без Eventually.

@@ -138,6 +138,30 @@ type LocalYearSource interface {
 	FetchYears(ctx context.Context, q BookQuery) (written int, edition int, err error)
 }
 
+// EditionMeta — атрибуты уровня ИЗДАНИЯ, извлечённые из заголовка fb2
+// (см. Fb2Provider.FetchEditionMeta). Пустые поля = их в fb2 нет.
+// SrcAuthor — display-форма ("Фамилия Имя"); нормализованный ключ
+// (src_author_normalized) считается при записи через normalizePersonKey.
+type EditionMeta struct {
+	Translator   string // переводчик (первый), display-форма
+	ISBN         string // нормализован (uppercase, [0-9X], len 10/13) или ""
+	Publisher    string
+	EditionTitle string // <publish-info><book-name>
+	EditionYear  int    // <publish-info><year>, 0 — нет
+	SrcLang      string // язык оригинала (<title-info><src-lang> / <src-title-info><lang>)
+	SrcTitle     string // оригинальное название (<src-title-info><book-title>)
+	SrcAuthor    string // первый <src-title-info><author>, display-форма
+	TitleLang    string // <title-info><lang>
+	FB2DocID     string // <document-info><id>
+}
+
+// LocalEditionSource — локальный (без сети) поставщик атрибутов издания из
+// fb2. Реализуется Fb2Provider; используется фоновым прогревом
+// (Enricher.EnsureEditionMeta) для заполнения edition-полей books.
+type LocalEditionSource interface {
+	FetchEditionMeta(ctx context.Context, q BookQuery) (EditionMeta, error)
+}
+
 // YearProvider — внешний источник года первого издания/написания для
 // дозаполнения written_year (когда из fb2 год не извлёкся). Возвращает год
 // (>0) либо ErrNotFound, если источник книгу/год не нашёл; прочие ошибки —

@@ -390,6 +390,19 @@ func (im *Importer) processRecord(
 		return err
 	}
 
+	// Новая книга → своя singleton-работа (инвариант work_id != NULL). Существующая
+	// (re-import/update) уже привязана к работе — не трогаем (её work_id мог быть
+	// назначен джобой группировки в общую работу).
+	if res.Created {
+		var primaryAuthor int64
+		if len(authorIDs) > 0 {
+			primaryAuthor = authorIDs[0]
+		}
+		if err := ensureSingletonWork(ctx, q, res.ID, br, primaryAuthor); err != nil {
+			return err
+		}
+	}
+
 	if err := tx.Commit(ctx); err != nil {
 		return err
 	}
