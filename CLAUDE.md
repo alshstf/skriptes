@@ -281,9 +281,18 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   нового inpx `distinct` не включился бы (configureIndex живёт только в Run).
   One-shot гейт `app_settings.work_id_synced_v1`. Группировка после прохода с
   merge синкает `work_id` через `WorkIDResyncer` (`work_grouper`→`imp`).
-- ⚠️ ОСТАЛОСЬ на Phase 4: карточки автора/серии (`catalog`) и страница книги
-  всё ещё per-fb2 (там схлопывание + `editions[]` идут вместе с редизайном
-  страницы книги). reads/favorites агрегация в работу — тоже Phase 4.
+**Phase 4a (сделано) — бэкенд work-centric read-model:**
+- `books.Get` отдаёт work-level карточку: `WorkID`, `Editions []EditionRef` (все
+  издания работы, открытое — первым), Title/WrittenYear/Series/SerNo и
+  Authors/Genres (union) уровня работы; top-level поля (lang/cover/file/size/
+  annotation) = ОТКРЫТОГО издания (id в URL) для back-compat и скачивания.
+- `catalog.GetAuthor/GetSeries` схлопывают издания по `work_id` (представитель +
+  `ListItem.EditionCount`); `series_order` ранжирует работы; счётчики книг и
+  read-count — `count(DISTINCT COALESCE(work_id,-id))`. Фронт не менялся (DTO
+  аддитивен; на singleton-данных выдача та же).
+- ⚠️ ОСТАЛОСЬ на Phase 4b: **редизайн страницы книги** (плагин frontend design)
+  — секция «Издания» с переводчиком/годом/издателем + скачать/читать на каждое
+  издание; бейдж «N изданий» в списках; work-level favorite/read.
 
 ## Где что искать (карта по реальным путям)
 

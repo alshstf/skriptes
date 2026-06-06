@@ -64,6 +64,9 @@ type ListItem struct {
 	// пользователя". Заполняется не в books-сервисе (он user-agnostic),
 	// а в api-handler'ах, которые знают про сессию.
 	IsFavorite bool `json:"is_favorite,omitempty"`
+	// EditionCount — сколько изданий (fb2-файлов) у этой логической книги.
+	// >1 → фронт показывает бейдж «N изданий». Догидрачивается из PG.
+	EditionCount int `json:"edition_count,omitempty"`
 }
 
 // ListResponse — обёртка для GET /api/books.
@@ -107,6 +110,31 @@ type Book struct {
 	Ext         string `json:"ext"`
 	SizeBytes   int64  `json:"size_bytes"`
 	Deleted     bool   `json:"deleted,omitempty"`
+	// WorkID — логическая книга. Editions — ВСЕ издания этой работы (включая
+	// открытое). Title/WrittenYear/Series/SerNo/Authors/Genres — уровня работы
+	// (union по изданиям); остальные поля выше — открытого издания (id в URL),
+	// для обратной совместимости и кнопок скачать/читать конкретного издания.
+	WorkID   int64        `json:"work_id,omitempty"`
+	Editions []EditionRef `json:"editions,omitempty"`
+}
+
+// EditionRef — одно физическое издание (fb2-файл) логической книги. Для секции
+// «Издания» на карточке: атрибуты + ссылки на скачивание/чтение по id.
+type EditionRef struct {
+	ID           int64  `json:"id"`
+	Lang         string `json:"lang,omitempty"`
+	Translator   string `json:"translator,omitempty"`
+	EditionYear  *int   `json:"edition_year,omitempty"`
+	Publisher    string `json:"publisher,omitempty"`
+	ISBN         string `json:"isbn,omitempty"`
+	EditionTitle string `json:"edition_title,omitempty"`
+	PageCount    *int   `json:"page_count,omitempty"`
+	CoverPath    string `json:"cover_path,omitempty"`
+	SizeBytes    int64  `json:"size_bytes"`
+	Ext          string `json:"ext"`
+	Archive      string `json:"archive"`
+	FileName     string `json:"file_name"`
+	Deleted      bool   `json:"deleted,omitempty"`
 }
 
 // ListParams — нормализованные параметры запроса /api/books.

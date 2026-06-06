@@ -92,8 +92,11 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
 	countArgs := append([]any{id}, exArgs...)
+	// Считаем ЛОГИЧЕСКИЕ книги (работы), а не издания — иначе счётчик «N книг»
+	// разойдётся со схлопнутым списком. COALESCE(-id) — defensive на случай
+	// (невозможного по инварианту) NULL work_id.
 	if err := s.pool.QueryRow(ctx, `
-		SELECT count(*)
+		SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id
 		WHERE ba.author_id = $1 AND b.deleted = false`+exClause,
@@ -179,7 +182,8 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		           ARRAY[]::text[]
 		       ),
 		       b.written_year, b.edition_year, b.normalized_title,
-		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL)
+		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL),
+		       b.work_id
 		FROM books b
 		JOIN archives ar ON ar.id = b.archive_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
@@ -193,6 +197,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	}
 	defer rows.Close()
 	var sortItems []seriesSortItem
+	seenWork := map[int64]int{} // work_id → индекс в out.Books (схлопывание изданий)
 	for rows.Next() {
 		var (
 			b         books.ListItem
@@ -206,10 +211,17 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 			fileName  string
 			ext       string
 			localScan bool
+			workID    pgtype.Int8
 		)
 		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth,
-			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan); err != nil {
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID); err != nil {
 			return Series{}, err
+		}
+		if workID.Valid && workID.Int64 > 0 {
+			if idx, ok := seenWork[workID.Int64]; ok {
+				out.Books[idx].EditionCount++
+				continue
+			}
 		}
 		if lang.Valid {
 			b.Lang = lang.String
@@ -246,7 +258,11 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 			BookID: b.ID, Archive: archiveFn, FileName: fileName, Ext: ext,
 			HasWrittenYear: wy.Valid, LocalScanned: localScan,
 		})
+		b.EditionCount = 1
 		out.Books = append(out.Books, b)
+		if workID.Valid && workID.Int64 > 0 {
+			seenWork[workID.Int64] = len(out.Books) - 1
+		}
 	}
 	if err := rows.Err(); err != nil {
 		return Series{}, err
@@ -318,7 +334,7 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
 	args := append([]any{authorID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
-		SELECT s.id, s.title, count(*) as cnt
+		SELECT s.id, s.title, count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN series s ON s.id = b.series_id
@@ -354,7 +370,8 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		           ARRAY[]::text[]
 		       ),
 		       b.written_year, b.edition_year, b.normalized_title,
-		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL)
+		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL),
+		       b.work_id
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN archives ar ON ar.id = b.archive_id
@@ -374,6 +391,9 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 	var refs []BookYearRef
 	// sortItems сгруппированы по series_id для покнижного каскада series_order.
 	bySeries := map[int64][]seriesSortItem{}
+	// Схлопывание изданий в логическую книгу: представитель (первый по ORDER BY) на
+	// work_id, остальные издания той же работы только бампают EditionCount.
+	seenWork := map[int64]int{} // work_id → индекс в out
 	for rows.Next() {
 		var (
 			b           books.ListItem
@@ -389,10 +409,18 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			fileName    string
 			ext         string
 			localScan   bool
+			workID      pgtype.Int8
 		)
 		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth,
-			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan); err != nil {
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID); err != nil {
 			return nil, nil, err
+		}
+		// Дубликат-издание уже виденной работы → только счётчик, в список не добавляем.
+		if workID.Valid && workID.Int64 > 0 {
+			if idx, ok := seenWork[workID.Int64]; ok {
+				out[idx].EditionCount++
+				continue
+			}
 		}
 		if lang.Valid {
 			b.Lang = lang.String
@@ -428,11 +456,15 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			}
 			bySeries[seriesID.Int64] = append(bySeries[seriesID.Int64], si)
 		}
+		b.EditionCount = 1
 		refs = append(refs, BookYearRef{
 			BookID: b.ID, Archive: archiveFn, FileName: fileName, Ext: ext,
 			HasWrittenYear: wy.Valid, LocalScanned: localScan,
 		})
 		out = append(out, b)
+		if workID.Valid && workID.Int64 > 0 {
+			seenWork[workID.Int64] = len(out) - 1
+		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, nil, err
@@ -517,8 +549,9 @@ func groupYearStats(rows pgx.Rows) ([]YearCount, error) {
 // вручную либо они появятся при дочитывании в браузерном ридере.
 func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int64) (int, error) {
 	var n int
+	// DISTINCT по работе: прочитал любое издание книги → книга прочитана один раз.
 	err := s.pool.QueryRow(ctx, `
-		SELECT count(*)
+		SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		FROM book_authors ba
 		JOIN reads r ON r.book_id = ba.book_id AND r.completed_at IS NOT NULL
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
@@ -552,8 +585,9 @@ func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64, excl
 // completed_at vs. старой «download = read» логики.
 func (s *Service) querySeriesReadCount(ctx context.Context, seriesID, userID int64) (int, error) {
 	var n int
+	// DISTINCT по работе — прочитанное издание считает книгу один раз.
 	err := s.pool.QueryRow(ctx, `
-		SELECT count(*)
+		SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		FROM books b
 		JOIN reads r ON r.book_id = b.id AND r.completed_at IS NOT NULL
 		WHERE b.series_id = $1 AND b.deleted = false AND r.user_id = $2
