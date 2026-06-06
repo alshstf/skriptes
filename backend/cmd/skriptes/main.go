@@ -95,6 +95,10 @@ func run() error {
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
 	go runOnceLangResync(ctx(), pool, imp, logger)
+	// Разовый синк work_id в Meili: distinctAttribute=work_id появился в Phase 3,
+	// существующие доки его не имели. Гейтится флагом, дальше no-op (после
+	// группировки work_id синкается её воркером).
+	go runOnceWorkIDResync(ctx(), pool, imp, logger)
 
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
@@ -259,7 +263,7 @@ func run() error {
 		WikidataRPM:       wgCfg.WikidataRPM,
 		NotFoundRetryDays: wgCfg.NotFoundRetryDays,
 		ErrorRetryHours:   wgCfg.ErrorRetryHours,
-	}, logger)
+	}, imp, logger)
 	if wgCfg.Enabled {
 		workGroupCtl.Start()
 	}
@@ -432,6 +436,40 @@ func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Im
 		logger.Warn("lang resync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time lang resync to meili done", "count", n)
+}
+
+// runOnceWorkIDResync разово синкает books.work_id в Meili. distinctAttribute=
+// work_id включён в Phase 3 — существующие доки этого поля не имели, без него
+// distinct не схлопывал бы. Гейтится флагом app_settings.work_id_synced_v1:
+// один раз на апгрейде, дальше no-op (после импорта/группировки work_id
+// синкается их воркерами). В горутине, старт не блокирует.
+func runOnceWorkIDResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	// Настройки индекса (в т.ч. distinctAttribute=work_id) применяем на КАЖДОМ
+	// старте — идемпотентно. Иначе на стабильном деплое без нового импорта
+	// distinct не включился бы (configureIndex живёт только внутри Run).
+	if err := imp.ConfigureIndex(ctx); err != nil {
+		logger.Warn("meili configure index at startup failed", "err", err)
+	}
+	const flag = "work_id_synced_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work_id resync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := imp.ResyncWorkIDs(ctx)
+	if err != nil {
+		logger.Warn("work_id resync to meili failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work_id resync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time work_id resync to meili done", "count", n)
 }
 
 // findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.

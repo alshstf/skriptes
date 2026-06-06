@@ -76,7 +76,7 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	// Одноимённая книга ДРУГОГО автора — НЕ должна слиться с хоббитами.
 	foreign := seedGroupBook(t, ctx, pool, collID, archID, other, "L6", "The Hobbit", "the hobbit", "en", "", "", "")
 
-	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, quiet) // Tier-1 only
+	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet) // Tier-1 only
 	g.drain(ctx)
 
 	// orig + tr1 + tr2 + dupEn → одна работа.
@@ -144,7 +144,7 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 	fake := &fakeWorkResolver{name: "openlibrary", key: "OL777W"}
 	g := NewWorkGrouper(pool, fake, nil, WorkGroupConfig{
 		OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24,
-	}, quiet)
+	}, nil, quiet)
 	g.drain(ctx)
 
 	require.Equal(t, workIDOf(t, ctx, pool, b1), workIDOf(t, ctx, pool, b2), "слиты по внешнему work_key")

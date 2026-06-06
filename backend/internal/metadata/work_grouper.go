@@ -33,11 +33,20 @@ import (
 // edition_meta_scanned_at IS NOT NULL, чтобы были src-ключи). После обработки
 // книга помечается work_scanned_at, чтобы не гонять повторно (TTL для Tier-2 —
 // в book_work_lookups).
+// WorkIDResyncer пере-синкивает Meili-поле work_id из books.work_id
+// (реализуется *importer.Importer). Группировка дёргает после прохода, в
+// котором work_id у изданий менялся — чтобы distinctAttribute=work_id в поиске
+// схлопывал по актуальной работе.
+type WorkIDResyncer interface {
+	ResyncWorkIDs(ctx context.Context) (int, error)
+}
+
 type WorkGrouper struct {
 	pool      *pgxpool.Pool
 	resolvers []WorkKeyResolver    // включённые внешние источники (Tier-2), в порядке приоритета
 	gates     map[string]*rateGate // per-source rate-gate
 	cfg       WorkGroupConfig
+	resyncer  WorkIDResyncer // nil → без авто-ресинка Meili
 	logger    *slog.Logger
 
 	merged atomic.Int64 // сколько изданий переназначено за проход (для логов)
@@ -63,11 +72,11 @@ const (
 
 // NewWorkGrouper строит воркер. ol/wd — внешние резолверы (nil → источник
 // недоступен); фактическое включение — по cfg.OpenLibrary/Wikidata.
-func NewWorkGrouper(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, logger *slog.Logger) *WorkGrouper {
+func NewWorkGrouper(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, resyncer WorkIDResyncer, logger *slog.Logger) *WorkGrouper {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	g := &WorkGrouper{pool: pool, cfg: cfg, logger: logger, gates: map[string]*rateGate{}}
+	g := &WorkGrouper{pool: pool, cfg: cfg, resyncer: resyncer, logger: logger, gates: map[string]*rateGate{}}
 	if cfg.OpenLibrary && ol != nil {
 		g.resolvers = append(g.resolvers, ol)
 		gate := &rateGate{}
@@ -135,6 +144,14 @@ func (g *WorkGrouper) drain(ctx context.Context) int {
 	// Книги без авторов сгруппировать не по чему — помечаем их подтверждёнными
 	// singleton'ами, чтобы они не висели вечными кандидатами.
 	g.markAuthorlessScanned(ctx)
+	// Если за проход work_id у изданий менялся — синкаем Meili (distinct по work_id).
+	if g.resyncer != nil && g.merged.Load() > 0 && ctx.Err() == nil {
+		if n, err := g.resyncer.ResyncWorkIDs(ctx); err != nil {
+			g.logger.Warn("work grouping: resync work_id to meili failed", "err", err)
+		} else {
+			g.logger.Info("work grouping: work_id resynced to meili", "merged", g.merged.Load(), "synced", n)
+		}
+	}
 	return total
 }
 
@@ -801,10 +818,11 @@ type WorkGroupCoverage struct {
 }
 
 type WorkGroupController struct {
-	pool   *pgxpool.Pool
-	ol     WorkKeyResolver
-	wd     WorkKeyResolver
-	logger *slog.Logger
+	pool     *pgxpool.Pool
+	ol       WorkKeyResolver
+	wd       WorkKeyResolver
+	resyncer WorkIDResyncer
+	logger   *slog.Logger
 
 	mu         sync.Mutex
 	cfg        WorkGroupConfig
@@ -812,11 +830,11 @@ type WorkGroupController struct {
 	onceCancel context.CancelFunc
 }
 
-func NewWorkGroupController(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, logger *slog.Logger) *WorkGroupController {
+func NewWorkGroupController(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, resyncer WorkIDResyncer, logger *slog.Logger) *WorkGroupController {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &WorkGroupController{pool: pool, ol: ol, wd: wd, cfg: cfg, logger: logger}
+	return &WorkGroupController{pool: pool, ol: ol, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
 }
 
 func (c *WorkGroupController) ready() bool { return c.pool != nil }
@@ -842,7 +860,7 @@ func (c *WorkGroupController) Start() {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	c.contCancel = cancel
-	g := NewWorkGrouper(c.pool, c.ol, c.wd, c.cfg, c.logger)
+	g := NewWorkGrouper(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
 	go g.Run(ctx)
 	c.logger.Info("work grouping: continuous job started")
 }
@@ -891,7 +909,7 @@ func (c *WorkGroupController) RunOnce() {
 	cfg := c.cfg
 	c.mu.Unlock()
 	go func() {
-		g := NewWorkGrouper(c.pool, c.ol, c.wd, cfg, c.logger)
+		g := NewWorkGrouper(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
 		n := g.drain(ctx)
 		cancel()
 		c.mu.Lock()
