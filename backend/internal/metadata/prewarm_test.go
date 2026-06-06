@@ -131,11 +131,11 @@ func TestPrewarmer_FillsCoverAndAnnotationFromFb2(t *testing.T) {
 
 // TestCandidateCond — кандидатное условие зависит от включённых под-типов.
 func TestCandidateCond(t *testing.T) {
-	require.Equal(t, "(b.metadata_fetched_at IS NULL OR b.year_local_scanned_at IS NULL)",
+	require.Equal(t, "(b.metadata_fetched_at IS NULL OR (b.year_local_scanned_at IS NULL OR b.edition_meta_scanned_at IS NULL))",
 		candidateCond(PrewarmConfig{Covers: true, Annotations: true, Years: true}))
 	require.Equal(t, "(b.metadata_fetched_at IS NULL)", candidateCond(PrewarmConfig{Covers: true}))
 	require.Equal(t, "(b.metadata_fetched_at IS NULL)", candidateCond(PrewarmConfig{Annotations: true}))
-	require.Equal(t, "(b.year_local_scanned_at IS NULL)", candidateCond(PrewarmConfig{Years: true}))
+	require.Equal(t, "((b.year_local_scanned_at IS NULL OR b.edition_meta_scanned_at IS NULL))", candidateCond(PrewarmConfig{Years: true}))
 	require.Equal(t, "false", candidateCond(PrewarmConfig{}))
 }
 

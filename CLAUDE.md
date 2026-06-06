@@ -120,10 +120,10 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0016_strip_lang_region` (срез региональных субтегов языка,
-`ru-RU`→`ru` — см. граблю №14; до неё `0015_normalize_book_lang`). Backend хранит
-applied version в `schema_migrations` (golang-migrate), править уже-применённые
-.sql имеет смысл только до push'а.
+Текущая верхняя — `0018_edition_fields` (поля уровня издания на `books`;
+до неё `0017_works` — таблица `works` + `books.work_id`, см. граблю №15).
+Backend хранит applied version в `schema_migrations` (golang-migrate), править
+уже-применённые .sql имеет смысл только до push'а.
 
 ### 7. PR'ы идут через CI + watcher, merge только когда зелёное
 
@@ -232,6 +232,30 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
    (из `ContentResolver.Exclusions`, прокинуты хендлерами) и добавляют
    `bookExclusionClause` к спискам книг и счётчику. Добавляешь новый список книг
    (где угодно) — прогоняй через те же исключения, иначе скрытый контент всплывёт.
+
+### 15. Книга (Work) vs издание (fb2-файл) — переход к FRBR, идёт по фазам
+
+Большой рефактор: логическая **книга** (`works`) над физическими **изданиями**
+(строка `books` = один fb2-файл). План — `~/.claude/plans/joyful-gliding-lerdorf.md`.
+**Phase 1 (сделано) — только фундамент данных, read-path'ы НЕ тронуты:**
+- Миграция `0017_works`: таблица `works` (Work-level поля: каноническое
+  название, primary_author_id, written_year, series_id/ser_no, ext_ids,
+  edition_count) + `books.work_id` FK. Бэкфилл сделал каждую существующую книгу
+  **singleton-работой**. Инвариант: у каждой книги есть `work_id`, у каждого
+  Work ≥1 издание. Импортёр (`importer/upsert.go::ensureSingletonWork`) держит
+  инвариант для новых книг (своя работа на каждую; группировку НЕ делает).
+- Миграция `0018_edition_fields`: edition-поля на `books` — `translator`,
+  `isbn` (норм. len 10/13), `publisher`, `edition_title`, `src_lang`,
+  `src_title`, `src_author_normalized`, `fb2_doc_id`, `page_count`,
+  `edition_meta_scanned_at`. Извлекаются локально из fb2:
+  `metadata/fb2_provider.go::scanFb2EditionMeta` → `enricher.go::EnsureEditionMeta`
+  (single-shot по `edition_meta_scanned_at`, COALESCE) под тумблером «Года»
+  прогрева (`prewarm.go`, отдельный маркер от `year_local_scanned_at`).
+- ⚠️ work_id ПОКА не читается в read-path'ах (это Phase 3) — `works` есть, но
+  каталог/поиск/карточки всё ещё per-fb2. Группировка изданий (Tier 1
+  `<src-title-info>`/title+lang + Tier 2 OpenLibrary Work/Wikidata P629), админка
+  и ручной split/merge — Phase 2; works-индекс Meili и схлопывание в одну
+  карточку — Phase 3; редизайн страницы книги — Phase 4.
 
 ## Где что искать (карта по реальным путям)
 

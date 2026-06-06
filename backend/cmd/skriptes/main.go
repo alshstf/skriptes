@@ -155,6 +155,9 @@ func run() error {
 	// fb2 как локальный источник года (written_year/edition_year) для
 	// фонового прогрева — без сети, в том же проходе что обложки/аннотации.
 	enricher.WithLocalYear(fb2Provider)
+	// fb2 как локальный источник атрибутов издания (переводчик/isbn/издатель/
+	// src-title-info) — извлекается под тем же тумблером «Года» прогрева.
+	enricher.WithLocalEdition(fb2Provider)
 	logger.Info("metadata enricher ready",
 		"cover_root", filepath.Join(cfg.CacheRoot, "covers"),
 		"cache_max_mb", coverCfg.CacheMaxMB,

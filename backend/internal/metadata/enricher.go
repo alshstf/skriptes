@@ -30,7 +30,8 @@ type Enricher struct {
 	authorPhotoProviders []AuthorPhotoProvider
 	authorBioProviders   []AuthorBioProvider
 	adaptationProviders  []AdaptationProvider
-	localYear            LocalYearSource // локальный fb2-источник года (EnsureYearLocal); nil → только маркер
+	localYear            LocalYearSource    // локальный fb2-источник года (EnsureYearLocal); nil → только маркер
+	localEdition         LocalEditionSource // локальный fb2-источник атрибутов издания (EnsureEditionMeta); nil → только маркер
 	pool                 *pgxpool.Pool
 	coverRoot            string      // абсолютный путь к /cache/covers (ТОЛЬКО обложки книг — регенерируются из fb2)
 	cache                *CoverCache // LRU-бюджет + пол свободного места над coverRoot
@@ -122,6 +123,14 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 // только проставит маркер year_local_scanned_at, не извлекая год.
 func (e *Enricher) WithLocalYear(s LocalYearSource) *Enricher {
 	e.localYear = s
+	return e
+}
+
+// WithLocalEdition подключает локальный fb2-источник атрибутов издания (без
+// сети) для EnsureEditionMeta. Вызывается из main после New. nil →
+// EnsureEditionMeta только проставит маркер edition_meta_scanned_at.
+func (e *Enricher) WithLocalEdition(s LocalEditionSource) *Enricher {
+	e.localEdition = s
 	return e
 }
 
@@ -375,6 +384,41 @@ func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) bool {
 		return false
 	}
 	return written > 0
+}
+
+// EnsureEditionMeta — локальная фаза извлечения атрибутов ИЗДАНИЯ из fb2
+// (фоновый прогрев). Пишет translator/isbn/publisher/edition_title/src_*/
+// fb2_doc_id (и edition_year — на случай, если year-фаза не запускалась), НЕ
+// перетирая уже заполненные значения (COALESCE). src_author_normalized
+// считается из display-формы src-автора. edition_meta_scanned_at ставим всегда —
+// чтобы прогрев не перечитывал книгу (отдельный от year-маркера).
+func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) {
+	var em EditionMeta
+	if e.localEdition != nil {
+		m, err := e.localEdition.FetchEditionMeta(ctx, q)
+		if err != nil && !errors.Is(err, ErrNotFound) {
+			e.logger.Info("metadata: fb2 edition meta extract failed", "book_id", q.ID, "err", err)
+		}
+		em = m
+	}
+	srcAuthorNorm := normalizePersonKey(em.SrcAuthor)
+	if _, err := e.pool.Exec(ctx, `
+		UPDATE books SET
+			translator              = COALESCE(translator, NULLIF($2, '')),
+			isbn                    = COALESCE(isbn, NULLIF($3, '')),
+			publisher               = COALESCE(publisher, NULLIF($4, '')),
+			edition_title           = COALESCE(edition_title, NULLIF($5, '')),
+			src_lang                = COALESCE(src_lang, NULLIF($6, '')),
+			src_title               = COALESCE(src_title, NULLIF($7, '')),
+			src_author_normalized   = COALESCE(src_author_normalized, NULLIF($8, '')::citext),
+			fb2_doc_id              = COALESCE(fb2_doc_id, NULLIF($9, '')),
+			edition_year            = COALESCE(edition_year, NULLIF($10, 0)::smallint),
+			edition_meta_scanned_at = now()
+		WHERE id = $1
+	`, q.ID, em.Translator, em.ISBN, em.Publisher, em.EditionTitle,
+		em.SrcLang, em.SrcTitle, srcAuthorNorm, em.FB2DocID, em.EditionYear); err != nil {
+		e.logger.Warn("metadata: edition meta write failed", "book_id", q.ID, "err", err)
+	}
 }
 
 // ensureAnnotation — общая реализация: обходит annotationProviders,
