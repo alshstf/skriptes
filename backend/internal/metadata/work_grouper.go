@@ -936,11 +936,18 @@ func (c *WorkGroupController) Coverage(ctx context.Context) (WorkGroupCoverage, 
 	if c.pool == nil {
 		return out, nil
 	}
+	// Считаем по ЖИВЫМ изданиям (deleted=false): работы удалённых изданий нигде
+	// не показываются и группировкой не трогаются, поэтому в покрытие не входят
+	// (иначе works > editions из-за singleton-работ удалённых книг). COALESCE(-id)
+	// — defensive на случай (невозможного по инварианту) NULL work_id.
 	if err := c.pool.QueryRow(ctx, `
 		SELECT
 			(SELECT count(*) FROM books WHERE deleted = false),
-			(SELECT count(*) FROM works),
-			(SELECT count(*) FROM works WHERE edition_count > 1),
+			(SELECT count(DISTINCT COALESCE(work_id, -id)) FROM books WHERE deleted = false),
+			(SELECT count(*) FROM (
+				SELECT 1 FROM books WHERE deleted = false
+				GROUP BY COALESCE(work_id, -id) HAVING count(*) > 1
+			) t),
 			(SELECT count(*) FROM books WHERE deleted = false AND work_scanned_at IS NOT NULL)
 	`).Scan(&out.Books, &out.Works, &out.MultiEditionWorks, &out.Scanned); err != nil {
 		return out, err

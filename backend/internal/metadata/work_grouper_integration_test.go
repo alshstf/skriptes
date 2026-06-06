@@ -163,3 +163,36 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 	require.NotNil(t, olWork)
 	require.Equal(t, "OL777W", *olWork)
 }
+
+// TestWorkGroupCoverage_LiveEditionsOnly — покрытие считается по ЖИВЫМ изданиям:
+// singleton-работа удалённого издания (как после миграции 0017) НЕ должна
+// раздувать счётчик works выше числа изданий.
+func TestWorkGroupCoverage_LiveEditionsOnly(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	a := seedGroupAuthor(t, ctx, pool, "Кинг", "кинг стивен")
+	seedGroupBook(t, ctx, pool, collID, archID, a, "L1", "T1", "t1", "ru", "", "", "")
+	seedGroupBook(t, ctx, pool, collID, archID, a, "L2", "T2", "t2", "ru", "", "", "")
+	del := seedGroupBook(t, ctx, pool, collID, archID, a, "L3", "T3", "t3", "ru", "", "", "")
+	_, err := pool.Exec(ctx, `UPDATE books SET deleted=true WHERE id=$1`, del)
+	require.NoError(t, err)
+
+	ctl := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	cov, err := ctl.Coverage(ctx)
+	require.NoError(t, err)
+	require.Equal(t, 2, cov.Books, "живых изданий — 2 (удалённое не считается)")
+	require.Equal(t, 2, cov.Works, "работа удалённого издания не раздувает счётчик книг")
+	require.Equal(t, 0, cov.MultiEditionWorks)
+	require.Equal(t, 0, cov.Scanned)
+}
