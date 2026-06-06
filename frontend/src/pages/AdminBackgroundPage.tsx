@@ -33,6 +33,10 @@ import {
   useStopAdaptationBackfill,
   useEnrichmentGates,
   useUpdateEnrichmentGates,
+  useWorkGroupingSettings,
+  useUpdateWorkGroupingSettings,
+  useRunWorkGrouping,
+  useStopWorkGrouping,
   type CoverCacheSettings,
   type CollectionInput,
   type Intensity,
@@ -43,6 +47,8 @@ import {
   type BioAdaptationSettings,
   type BioAdaptationInput,
   type EnrichmentGates,
+  type WorkGroupingSettings,
+  type WorkGroupingInput,
 } from '@/lib/admin';
 import { ApiError } from '@/lib/api';
 
@@ -164,6 +170,25 @@ function buildBaInput(d: BioAdaptationSettings, patch: Partial<BioAdaptationInpu
   };
 }
 
+function buildWgInput(d: WorkGroupingSettings, patch: Partial<WorkGroupingInput>): WorkGroupingInput {
+  return {
+    enabled: d.enabled,
+    openlibrary: d.openlibrary,
+    wikidata: d.wikidata,
+    whole_collection: d.whole_collection,
+    openlibrary_rpm: d.openlibrary_rpm,
+    wikidata_rpm: d.wikidata_rpm,
+    not_found_retry_days: d.not_found_retry_days,
+    error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
+const MODE_HELP_WG: Record<'off' | 'bg', string> = {
+  off: 'Издания не группируются — каждый fb2-файл остаётся отдельной книгой.',
+  bg: 'Слияние изданий в логические книги по всей коллекции (локально + внешние Work ID).',
+};
+
 // ── Презентационные примитивы аккордеона ──
 
 function ModeBadge({ mode }: { mode: Mode }) {
@@ -185,12 +210,14 @@ function ModeSelector({
   twoState,
   disabled,
   idPrefix,
+  help,
 }: {
   value: Mode;
   onChange: (m: Mode) => void;
   twoState?: boolean;
   disabled?: boolean;
   idPrefix: string;
+  help?: Record<'off' | 'bg', string>; // переопределить двухпозиционный help-текст
 }) {
   const modes: Mode[] = twoState ? ['off', 'bg'] : ['off', 'lazy', 'bg'];
   return (
@@ -213,7 +240,7 @@ function ModeSelector({
         ))}
       </div>
       <p className="text-xs text-muted-foreground text-pretty">
-        {twoState ? MODE_HELP_YEAR[value === 'bg' ? 'bg' : 'off'] : MODE_HELP[value]}
+        {twoState ? (help ?? MODE_HELP_YEAR)[value === 'bg' ? 'bg' : 'off'] : MODE_HELP[value]}
       </p>
     </div>
   );
@@ -359,6 +386,7 @@ export function AdminBackgroundPage() {
   const xq = useCoverEnrichmentSettings();
   const bq = useBioAdaptationSettings();
   const gq = useEnrichmentGates();
+  const wq = useWorkGroupingSettings();
 
   // ── Мутации ──
   const updateCol = useUpdateCoverCacheSettings();
@@ -381,6 +409,9 @@ export function AdminBackgroundPage() {
   const stopBio = useStopBioBackfill();
   const runAdapt = useRunAdaptationBackfill();
   const stopAdapt = useStopAdaptationBackfill();
+  const updateWg = useUpdateWorkGroupingSettings();
+  const runWg = useRunWorkGrouping();
+  const stopWg = useStopWorkGrouping();
 
   // ── Числовые поля (общий SaveBar) ──
   const [minFreeMB, setMinFreeMB] = useState('');
@@ -508,6 +539,37 @@ export function AdminBackgroundPage() {
       toast.success(`Режим: ${MODE_LABEL[mode]}`);
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось применить режим');
+    }
+  };
+
+  // ── Группировка изданий (works) — самостоятельный воркер ──
+  const wgMode: Mode = (wq.data?.enabled ?? false) ? 'bg' : 'off';
+  const wgRunning = wq.data?.work_grouping_running ?? false;
+  const wgOnce = wq.data?.work_grouping_mode === 'once';
+  const wgCov = wq.data?.coverage;
+  const applyWg = async (patch: Partial<WorkGroupingInput>, msg: string) => {
+    if (!wq.data) return;
+    try {
+      await updateWg.mutateAsync(buildWgInput(wq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
+  const onRunWg = async () => {
+    try {
+      await runWg.mutateAsync();
+      toast.success('Проход группировки запущен');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить');
+    }
+  };
+  const onStopWg = async () => {
+    try {
+      await stopWg.mutateAsync();
+      toast.success('Останавливаю проход');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
     }
   };
 
@@ -1229,6 +1291,81 @@ export function AdminBackgroundPage() {
                   Сейчас: {formatBytes(cq.data?.poster_cache_size_bytes ?? 0)}
                 </p>
               </div>
+            </TypeRow>
+
+            {/* ГРУППИРОВКА ИЗДАНИЙ (works) */}
+            <TypeRow
+              title="Группировка изданий"
+              mode={wgMode}
+              coverage={wgCov ? `${wgCov.multi_edition_works} мульти` : '—'}
+            >
+              <ModeSelector
+                idPrefix="workgroup"
+                value={wgMode}
+                twoState
+                help={MODE_HELP_WG}
+                disabled={updateWg.isPending}
+                onChange={(m) => void applyWg({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
+              />
+              <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                Несколько fb2-файлов одной книги (разные издания/переводы) схлопываются в одну
+                карточку. Tier-1 — локально (название+язык, оригинал из «src-title-info», точный
+                дубль). Tier-2 — внешний Work ID (OpenLibrary / Wikidata). Никогда не сливает книги
+                разных авторов; при сомнении оставляет отдельной книгой.
+              </Callout>
+              {wgMode === 'bg' ? (
+                <>
+                  <div className="space-y-2">
+                    <FieldLabel>Внешние источники (Tier-2)</FieldLabel>
+                    <SourceSwitch
+                      id="wg-src-ol"
+                      label="OpenLibrary Work (ISBN → работа)"
+                      checked={wq.data?.openlibrary ?? false}
+                      disabled={updateWg.isPending}
+                      onChange={(v) => void applyWg({ openlibrary: v }, v ? 'OpenLibrary включён' : 'OpenLibrary выключен')}
+                    />
+                    <SourceSwitch
+                      id="wg-src-wd"
+                      label="Wikidata (P629)"
+                      checked={wq.data?.wikidata ?? false}
+                      disabled={updateWg.isPending}
+                      onChange={(v) => void applyWg({ wikidata: v }, v ? 'Wikidata включён' : 'Wikidata выключен')}
+                    />
+                    <p className="text-xs text-muted-foreground text-pretty">
+                      Оба выключены — работает только локальный Tier-1 (без сети). Межъязыковое
+                      слияние переводов в основном опирается на Tier-2.
+                    </p>
+                  </div>
+                  <div className="space-y-3 border-t border-border pt-3">
+                    <ScopeControl
+                      whole={wq.data?.whole_collection ?? false}
+                      disabled={updateWg.isPending}
+                      onChange={(v) => void applyWg({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: после edition-скана')}
+                      warning="Вся коллекция: группировать даже книги, у которых локальный edition-проход fb2 ещё не прошёл (src-ключей нет). Внешних запросов много, очень долго."
+                    />
+                    <div className="flex flex-wrap gap-2">
+                      {wgOnce ? (
+                        <Button variant="outline" size="sm" onClick={onStopWg} disabled={stopWg.isPending}>
+                          <Square className="size-4" aria-hidden />
+                          {stopWg.isPending ? 'Остановка…' : 'Остановить проход'}
+                        </Button>
+                      ) : (
+                        <Button variant="outline" size="sm" onClick={onRunWg} disabled={wgRunning || runWg.isPending}>
+                          <Flame className="size-4" aria-hidden />
+                          {runWg.isPending ? 'Запуск…' : 'Прогнать разово'}
+                        </Button>
+                      )}
+                    </div>
+                    {wgRunning ? <RunningDot continuous={!wgOnce} /> : null}
+                  </div>
+                </>
+              ) : null}
+              {wgCov ? (
+                <p className="text-xs tabular-nums text-muted-foreground text-pretty">
+                  {wgCov.works} книг из {wgCov.books} изданий · с несколькими изданиями:{' '}
+                  {wgCov.multi_edition_works} · обработано {wgCov.scanned}/{wgCov.books}
+                </p>
+              ) : null}
             </TypeRow>
           </section>
 

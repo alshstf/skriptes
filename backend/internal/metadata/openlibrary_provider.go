@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -111,9 +112,112 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 }
 
 type olSearchDoc struct {
-	CoverI           int64  `json:"cover_i"`
-	Key              string `json:"key"` // "/works/OL12345W"
-	FirstPublishYear int    `json:"first_publish_year"`
+	CoverI           int64    `json:"cover_i"`
+	Key              string   `json:"key"` // "/works/OL12345W"
+	FirstPublishYear int      `json:"first_publish_year"`
+	AuthorName       []string `json:"author_name"`
+}
+
+// ResolveWorkKey — внешний идентификатор работы OpenLibrary для группировки
+// изданий (Tier-2). Стратегия:
+//  1. ISBN (самый точный, язык-агностичный): GET /isbn/{isbn}.json →
+//     works[0].key. Гейт по автору не нужен — ISBN однозначен.
+//  2. иначе поиск по названию (для переводов — оригинальному src_title) +
+//     автору: /search.json?fields=key,author_name → docs[0].key ТОЛЬКО если
+//     authorNameMatches (precision > recall, как в authorSearch).
+//
+// Возвращает чистый OL Work ID ("OL12345W") либо ErrNotFound.
+func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (string, error) {
+	if isbn := normalizeISBN(q.ISBN); isbn != "" {
+		if key, err := p.resolveWorkByISBN(ctx, isbn); err == nil {
+			return key, nil
+		} else if !errors.Is(err, ErrNotFound) {
+			return "", err
+		}
+	}
+	title := q.SrcTitle
+	if title == "" {
+		title = q.Title
+	}
+	if title == "" {
+		return "", ErrNotFound
+	}
+	v := url.Values{}
+	v.Set("title", title)
+	if len(q.Authors) > 0 {
+		v.Set("author", q.Authors[0])
+	}
+	v.Set("limit", "1")
+	v.Set("fields", "key,author_name")
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build work search: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("ol work search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+	var sr olSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return "", fmt.Errorf("decode work search: %w", err)
+	}
+	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		return "", ErrNotFound
+	}
+	// Гейт по автору: OL-поиск может вернуть однофамильца/другую работу.
+	gate := AuthorQuery{LastName: q.LastName, FirstName: q.FirstName}
+	if !anyAuthorMatches(gate, sr.Docs[0].AuthorName) {
+		return "", ErrNotFound
+	}
+	return strings.TrimPrefix(sr.Docs[0].Key, "/works/"), nil
+}
+
+// resolveWorkByISBN: GET /isbn/{isbn}.json → works[0].key.
+func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string) (string, error) {
+	u := strings.TrimRight(p.workBaseURL(), "/") + "/isbn/" + url.PathEscape(isbn) + ".json"
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return "", fmt.Errorf("build isbn request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("ol isbn: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", ErrNotFound
+	}
+	var ed struct {
+		Works []struct {
+			Key string `json:"key"`
+		} `json:"works"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&ed); err != nil {
+		return "", fmt.Errorf("decode isbn edition: %w", err)
+	}
+	if len(ed.Works) == 0 || ed.Works[0].Key == "" {
+		return "", ErrNotFound
+	}
+	return strings.TrimPrefix(ed.Works[0].Key, "/works/"), nil
+}
+
+// anyAuthorMatches — проходит ли хоть один из кандидатов-имён гейт по автору.
+func anyAuthorMatches(q AuthorQuery, candidates []string) bool {
+	if q.LastName == "" {
+		return true // нечем гейтить
+	}
+	for _, c := range candidates {
+		if authorNameMatches(q, c) {
+			return true
+		}
+	}
+	return false
 }
 
 type olSearchResponse struct {

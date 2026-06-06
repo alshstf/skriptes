@@ -208,6 +208,15 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/bio-adaptation-enrichment/bios/stop", handleBioBackfillStop(d.Settings))
 					r.Post("/admin/bio-adaptation-enrichment/adaptations/run", handleAdaptationBackfillNow(d.Settings))
 					r.Post("/admin/bio-adaptation-enrichment/adaptations/stop", handleAdaptationBackfillStop(d.Settings))
+					// Раздел «Группировка изданий»: слияние fb2-файлов в логические
+					// книги (works) — Tier-1 локально + Tier-2 внешние Work ID +
+					// ручной split/merge.
+					r.Get("/admin/work-grouping", handleGetWorkGrouping(d.Settings))
+					r.Put("/admin/work-grouping", handleUpdateWorkGrouping(d.Settings))
+					r.Post("/admin/work-grouping/run", handleWorkGroupingNow(d.Settings))
+					r.Post("/admin/work-grouping/stop", handleWorkGroupingStop(d.Settings))
+					r.Post("/admin/works/split", handleWorkSplit(d.Settings))
+					r.Post("/admin/works/merge", handleWorkMerge(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).

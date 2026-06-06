@@ -119,6 +119,21 @@ func (p *WikidataAdaptationsProvider) resolveBookQID(ctx context.Context, q Book
 	return "", ErrNotFound
 }
 
+// ResolveWorkKey — Wikidata QID работы как ключ группировки изданий (Tier-2).
+// Переиспользует resolveBookQID (wbsearchentities по названию + валидация по
+// автору P50). Для переводов ищем по оригинальному названию (SrcTitle), если
+// оно есть — выше шанс найти исходную работу. Реализует WorkKeyResolver.
+func (p *WikidataAdaptationsProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (string, error) {
+	title := q.SrcTitle
+	if title == "" {
+		title = q.Title
+	}
+	if title == "" || len(q.Authors) == 0 {
+		return "", ErrNotFound // без автора Wikidata-валидация всё равно отвергнет
+	}
+	return p.resolveBookQID(ctx, BookQuery{ID: q.BookID, Title: title, Authors: q.Authors, Lang: q.Lang})
+}
+
 // searchEntities — wbsearchentities → массив QID'ов кандидатов.
 func (p *WikidataAdaptationsProvider) searchEntities(ctx context.Context, title, lang string) ([]string, error) {
 	v := url.Values{}

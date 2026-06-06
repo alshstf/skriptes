@@ -243,6 +243,27 @@ func run() error {
 		adaptationBackfillCtl.Start()
 	}
 
+	// Группировка изданий (fb2-файлов) в логические книги (works): Tier-1
+	// локально (название+язык, <src-title-info>, fb2_doc_id) + Tier-2 внешние
+	// Work ID (OpenLibrary Work / Wikidata QID). Opt-in; ручной split/merge.
+	wgCfg, err := settingsStore.WorkGrouping(ctx())
+	if err != nil {
+		logger.Warn("read work grouping settings — using defaults", "err", err)
+		wgCfg = settings.DefaultWorkGroupingConfig()
+	}
+	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
+		OpenLibrary:       wgCfg.OpenLibrary,
+		Wikidata:          wgCfg.Wikidata,
+		WholeCollection:   wgCfg.WholeCollection,
+		OpenLibraryRPM:    wgCfg.OpenLibraryRPM,
+		WikidataRPM:       wgCfg.WikidataRPM,
+		NotFoundRetryDays: wgCfg.NotFoundRetryDays,
+		ErrorRetryHours:   wgCfg.ErrorRetryHours,
+	}, logger)
+	if wgCfg.Enabled {
+		workGroupCtl.Start()
+	}
+
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
@@ -305,6 +326,7 @@ func run() error {
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
 			YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl,
 			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
+			WorkGroup: workGroupCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
