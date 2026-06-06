@@ -161,7 +161,14 @@ func (s *Service) hydrateCovers(ctx context.Context, items []ListItem) {
 		ids = append(ids, it.ID)
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, COALESCE(b.cover_path, ''), COALESCE(w.edition_count, 1)
+		SELECT b.id,
+		       COALESCE(b.cover_path, (
+		           SELECT bb.cover_path FROM books bb
+		           WHERE bb.work_id = b.work_id AND bb.deleted = false
+		             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
+		           ORDER BY bb.id LIMIT 1
+		       ), ''),
+		       COALESCE(w.edition_count, 1)
 		FROM books b
 		LEFT JOIN works w ON w.id = b.work_id
 		WHERE b.id = ANY($1)
@@ -588,6 +595,18 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		return Book{}, err
 	}
 	b.Editions = editions
+
+	// Обложка карточки: если у открытого издания её нет — берём обложку любого
+	// другого издания работы (для героя/мини-обложки), чтобы не показывать
+	// плейсхолдер, когда у книги обложка есть хоть в одном fb2.
+	if b.CoverPath == "" {
+		for _, e := range b.Editions {
+			if e.CoverPath != "" {
+				b.CoverPath = e.CoverPath
+				break
+			}
+		}
+	}
 
 	return b, nil
 }
