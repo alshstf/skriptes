@@ -64,8 +64,22 @@ export default defineConfig({
         // отдают index.html из кэша → offline-shell. Исключаем /api/* и
         // /opds/* — на эти пути ходить через сеть, кэш не должен их
         // перехватывать.
+        //
+        // /foliate-reader.html ОБЯЗАТЕЛЬНО в denylist: ридер открывает его в
+        // iframe как /foliate-reader.html?src=...&cfi=... — это navigation-
+        // запрос с query-параметрами. Precache-роут ключуется по голому
+        // /foliate-reader.html и из-за query НЕ матчит → без denylist
+        // navigateFallback отдаёт в iframe index.html (всё приложение!), и
+        // ридер виснет на «Подготовка…». Denylist → запрос идёт в сеть (nginx
+        // отдаёт настоящий foliate-reader.html).
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api\//, /^\/opds\//, /^\/healthz/, /^\/readyz/],
+        navigateFallbackDenylist: [
+          /^\/api\//,
+          /^\/opds\//,
+          /^\/healthz/,
+          /^\/readyz/,
+          /^\/foliate-reader\.html/,
+        ],
         runtimeCaching: [
           // Обложки книг и фото авторов: content-addressable URLs
           // (/api/covers/{sha256.ext}), бесконечно immutable. CacheFirst
