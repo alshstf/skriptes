@@ -43,7 +43,14 @@ export function BookListItem({
         </span>
       ) : null}
       <div className="space-y-1 min-w-0 flex-1">
-        <h3 className="text-base font-medium leading-tight">{book.title}</h3>
+        <h3 className="text-base font-medium leading-tight">
+          {book.title}
+          {book.edition_count && book.edition_count > 1 ? (
+            <span className="ml-2 align-middle text-xs font-normal text-muted-foreground tabular-nums">
+              · {book.edition_count} изд.
+            </span>
+          ) : null}
+        </h3>
         {book.authors && book.authors.length > 0 ? (
           <p className="text-sm text-muted-foreground">{book.authors.join(', ')}</p>
         ) : null}

@@ -148,11 +148,10 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	}, nil
 }
 
-// hydrateCovers проставляет CoverPath на items одним batched-запросом
-// в Postgres. Meili-индекс обложек не хранит (они приезжают лениво
-// после индексации), поэтому свежий путь берём прямо из БД по id
-// текущей страницы. Ошибки не фатальны — список и без обложек валиден,
-// фронт покажет placeholder.
+// hydrateCovers проставляет CoverPath и EditionCount на items одним
+// batched-запросом в Postgres. Meili-индекс обложек не хранит (они приезжают
+// лениво), а edition_count живёт в works — берём прямо из БД по id текущей
+// страницы (id = представительное издание работы). Ошибки не фатальны.
 func (s *Service) hydrateCovers(ctx context.Context, items []ListItem) {
 	if s.pool == nil || len(items) == 0 {
 		return
@@ -162,29 +161,37 @@ func (s *Service) hydrateCovers(ctx context.Context, items []ListItem) {
 		ids = append(ids, it.ID)
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, cover_path
-		FROM books
-		WHERE id = ANY($1) AND cover_path IS NOT NULL AND cover_path <> ''
+		SELECT b.id, COALESCE(b.cover_path, ''), COALESCE(w.edition_count, 1)
+		FROM books b
+		LEFT JOIN works w ON w.id = b.work_id
+		WHERE b.id = ANY($1)
 	`, ids)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
-	covers := make(map[int64]string, len(items))
+	type hyd struct {
+		cover    string
+		editions int
+	}
+	byID := make(map[int64]hyd, len(items))
 	for rows.Next() {
 		var id int64
-		var path string
-		if err := rows.Scan(&id, &path); err != nil {
+		var h hyd
+		if err := rows.Scan(&id, &h.cover, &h.editions); err != nil {
 			return
 		}
-		covers[id] = path
+		byID[id] = h
 	}
 	if rows.Err() != nil {
 		return
 	}
 	for i := range items {
-		if p, ok := covers[items[i].ID]; ok {
-			items[i].CoverPath = p
+		if h, ok := byID[items[i].ID]; ok {
+			if h.cover != "" {
+				items[i].CoverPath = h.cover
+			}
+			items[i].EditionCount = h.editions
 		}
 	}
 }

@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText, BookOpen, Check, X } from 'lucide-react';
+import { BookText, BookOpen, Check, X, Library } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -8,9 +8,10 @@ import { AdaptationsSection } from '@/components/AdaptationsSection';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
+import { EditionRow } from '@/components/EditionRow';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
-import { useBook, useToggleRead } from '@/lib/books';
+import { useBook, useToggleRead, type Book } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
 export function BookDetailPage() {
@@ -40,6 +41,12 @@ export function BookDetailPage() {
   }
 
   if (!book) return null;
+
+  const editions = book.editions ?? [];
+  // Несколько изданий → действия (Читать/Скачать/Kindle) переезжают в секцию
+  // «Издания» (на каждое издание своё). Одно издание → классический вид: всё в
+  // шапке, секцию не показываем (избегаем избыточной таблицы из одной строки).
+  const multi = editions.length > 1;
 
   return (
     <article className="space-y-4">
@@ -89,20 +96,24 @@ export function BookDetailPage() {
                     id={book.id}
                     isFavorite={book.is_favorite ?? false}
                   />
-                  {!book.deleted ? (
-                    <Button asChild variant="secondary" size="sm" className="gap-1">
-                      <Link
-                        to="/books/$id/read"
-                        params={{ id: String(book.id) }}
-                        aria-label="Открыть книгу в браузерном ридере"
-                      >
-                        <BookOpen className="size-4" aria-hidden />
-                        <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
-                      </Link>
-                    </Button>
+                  {/* Действия для одного издания — в шапке; при нескольких изданиях
+                      они в секции «Издания» (на каждое издание свои). */}
+                  {!multi && !book.deleted ? (
+                    <>
+                      <Button asChild variant="secondary" size="sm" className="gap-1">
+                        <Link
+                          to="/books/$id/read"
+                          params={{ id: String(book.id) }}
+                          aria-label="Открыть книгу в браузерном ридере"
+                        >
+                          <BookOpen className="size-4" aria-hidden />
+                          <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
+                        </Link>
+                      </Button>
+                      <SendToKindleButton bookId={book.id} />
+                      <DownloadMenu bookId={book.id} />
+                    </>
                   ) : null}
-                  {!book.deleted ? <SendToKindleButton bookId={book.id} /> : null}
-                  {!book.deleted ? <DownloadMenu bookId={book.id} /> : null}
                 </div>
               </div>
 
@@ -134,14 +145,20 @@ export function BookDetailPage() {
               ) : null}
 
               <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm">
-                <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
-                <Field label="Архив" value={book.archive} mono />
-                <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
-                {book.lang ? <Field label="Язык" value={book.lang} /> : null}
+                {/* Поля уровня файла показываем в шапке только для одного издания;
+                    при нескольких они в строках секции «Издания». */}
+                {!multi ? (
+                  <>
+                    <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
+                    <Field label="Архив" value={book.archive} mono />
+                    <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
+                    {book.lang ? <Field label="Язык" value={book.lang} /> : null}
+                  </>
+                ) : null}
                 {book.written_year ? (
                   <Field label="Год написания" value={String(book.written_year)} />
                 ) : null}
-                {book.edition_year ? (
+                {!multi && book.edition_year ? (
                   <Field label="Год издания" value={String(book.edition_year)} />
                 ) : null}
                 {book.date_added ? <Field label="Добавлена" value={book.date_added} /> : null}
@@ -153,7 +170,7 @@ export function BookDetailPage() {
                   isRead={book.is_read ?? false}
                   readAt={book.read_at}
                 />
-                <Field label="LIBID" value={book.lib_id} mono />
+                {!multi ? <Field label="LIBID" value={book.lib_id} mono /> : null}
               </dl>
 
               {book.deleted ? (
@@ -163,6 +180,8 @@ export function BookDetailPage() {
               ) : null}
             </div>
           </div>
+
+          {multi ? <EditionsSection book={book} /> : null}
 
           <AnnotationBlock
             annotation={book.annotation}
@@ -179,6 +198,33 @@ export function BookDetailPage() {
         </CardContent>
       </Card>
     </article>
+  );
+}
+
+/**
+ * EditionsSection — секция «Издания»: одна логическая книга = несколько
+ * fb2-файлов (разные переводы / годы издания / языки). Каждое издание —
+ * строка с атрибутами и собственными действиями (Читать/Скачать/Kindle).
+ * Открытое (id из URL) — первым и выделено. Рендерится только при ≥2 изданиях
+ * (для одного действия остаются в шапке).
+ */
+function EditionsSection({ book }: { book: Book }) {
+  const editions = book.editions ?? [];
+  return (
+    <section className="space-y-2">
+      <h3 className="flex items-center gap-2 text-sm font-medium">
+        <Library className="size-4" aria-hidden />
+        Издания
+        <span className="text-xs font-normal text-muted-foreground tabular-nums">
+          {editions.length}
+        </span>
+      </h3>
+      <ul className="space-y-2">
+        {editions.map((e) => (
+          <EditionRow key={e.id} edition={e} isCurrent={e.id === book.id} />
+        ))}
+      </ul>
+    </section>
   );
 }
 

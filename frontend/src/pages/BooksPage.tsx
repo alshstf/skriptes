@@ -405,6 +405,9 @@ function BookCard({
             {book.title}
           </Link>
         </h3>
+        {book.edition_count && book.edition_count > 1 ? (
+          <p className="text-xs text-muted-foreground tabular-nums">{book.edition_count} изданий</p>
+        ) : null}
         {book.authors && book.authors.length > 0 ? (
           <p className="text-sm text-muted-foreground line-clamp-1">{book.authors.join(', ')}</p>
         ) : null}
