@@ -146,6 +146,41 @@ func (s *Service) ReadStatus(ctx context.Context, userID, bookID int64) (isRead 
 	return ca != nil, ca, fr, nil
 }
 
+// IsWorkFavorite — книга (логическая работа) в избранном, если избрано ЛЮБОЕ
+// её издание. Для singleton-работы совпадает с IsFavorite по изданию.
+func (s *Service) IsWorkFavorite(ctx context.Context, userID, workID int64) (bool, error) {
+	var ok bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS(
+			SELECT 1 FROM favorites f
+			JOIN books b ON b.id = f.book_id
+			WHERE f.user_id = $1 AND b.work_id = $2
+		)
+	`, userID, workID).Scan(&ok)
+	if err != nil {
+		return false, fmt.Errorf("query work favorite: %w", err)
+	}
+	return ok, nil
+}
+
+// WorkReadStatus — «прочитана» на уровне работы: прочитано ЛЮБОЕ издание.
+// completedAt — самая поздняя дата прочтения среди изданий (NULL → не прочитана).
+// Прогресс чтения (fraction) остаётся per-edition — он привязан к конкретному
+// файлу (CFI), агрегировать его нельзя.
+func (s *Service) WorkReadStatus(ctx context.Context, userID, workID int64) (isRead bool, completedAt *time.Time, err error) {
+	var ca *time.Time
+	err = s.pool.QueryRow(ctx, `
+		SELECT max(r.completed_at)
+		FROM reads r
+		JOIN books b ON b.id = r.book_id
+		WHERE r.user_id = $1 AND b.work_id = $2 AND r.completed_at IS NOT NULL
+	`, userID, workID).Scan(&ca)
+	if err != nil {
+		return false, nil, fmt.Errorf("query work read status: %w", err)
+	}
+	return ca != nil, ca, nil
+}
+
 // SavePosition — сохраняет позицию чтения (epub-cfi) + fraction
 // прогресса (0.0–1.0). Upsert: если строки в reads ещё нет, создаём её.
 //

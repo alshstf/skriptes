@@ -234,7 +234,10 @@ func TestService_GetReturnsEditions(t *testing.T) {
 		return id
 	}
 	ru := mk("L-ru", "ru", "Вебер Виктор")
-	mk("L-en", "en", "")
+	en := mk("L-en", "en", "")
+	// У открытого издания (ru) обложки нет, у другого (en) — есть.
+	_, err := pool.Exec(ctx, `UPDATE books SET cover_path='cover-en.jpg' WHERE id=$1`, en)
+	require.NoError(t, err)
 
 	svc := books.New(pool, nil, nil)
 	b, err := svc.Get(ctx, ru)
@@ -247,6 +250,7 @@ func TestService_GetReturnsEditions(t *testing.T) {
 	require.Equal(t, ru, b.Editions[0].ID, "открытое издание — первым")
 	require.Equal(t, "Вебер Виктор", b.Editions[0].Translator)
 	require.Equal(t, "ru", b.Lang, "top-level lang = открытое издание")
+	require.Equal(t, "cover-en.jpg", b.CoverPath, "обложка берётся из другого издания, если у открытого её нет")
 }
 
 // ── helpers ────────────────────────────────────────────────────

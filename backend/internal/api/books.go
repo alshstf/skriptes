@@ -100,14 +100,26 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 		var readAt *time.Time
 		var fraction *float64
 		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
-			if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
-				isFav = v
-			}
-			// ReadStatus — один запрос вместо трёх (is_read + дата + fraction).
+			// fraction («продолжить N%») — прогресс ОТКРЫТОГО издания: привязан к
+			// конкретному файлу (CFI), агрегировать по работе нельзя. Дефолты
+			// is_read/read_at тоже отсюда (на случай, если work_id неизвестен).
 			if r, ca, fr, err := hist.Service.ReadStatus(ctx, u.ID, id); err == nil {
 				isRead = r
 				readAt = ca
 				fraction = fr
+			}
+			// is_favorite / is_read — на уровне КНИГИ (любое издание избрано/
+			// прочитано ⇒ книга избрана/прочитана). Для singleton-работы == по изданию.
+			if b.WorkID > 0 {
+				if v, err := hist.Service.IsWorkFavorite(ctx, u.ID, b.WorkID); err == nil {
+					isFav = v
+				}
+				if r, ca, err := hist.Service.WorkReadStatus(ctx, u.ID, b.WorkID); err == nil {
+					isRead = r
+					readAt = ca
+				}
+			} else if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
+				isFav = v
 			}
 			recordViewAsync(hist.Service, u.ID, id)
 		}

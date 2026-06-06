@@ -245,6 +245,58 @@ func TestService_HistoryFlow(t *testing.T) {
 	require.False(t, favS)
 }
 
+// TestService_WorkLevelFavoriteRead — избранное/прочитано на уровне КНИГИ:
+// избрали/прочитали одно издание → вся работа считается избранной/прочитанной.
+func TestService_WorkLevelFavoriteRead(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var userID, collID, archID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('w@e.com','W','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Оно','оно') RETURNING id`).Scan(&workID))
+	mk := func(lib string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+			VALUES ($1,$2,$3,$3,'fb2','Оно','оно',$4) RETURNING id`, collID, archID, lib, workID).Scan(&id))
+		return id
+	}
+	_ = mk("L1")
+	e2 := mk("L2")
+
+	svc := history.New(pool)
+	fav, err := svc.IsWorkFavorite(ctx, userID, workID)
+	require.NoError(t, err)
+	require.False(t, fav)
+	rd, _, err := svc.WorkReadStatus(ctx, userID, workID)
+	require.NoError(t, err)
+	require.False(t, rd)
+
+	// Избрали и прочитали ВТОРОЕ издание.
+	_, err = pool.Exec(ctx, `INSERT INTO favorites (user_id, book_id) VALUES ($1,$2)`, userID, e2)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO reads (user_id, book_id, completed_at) VALUES ($1,$2,now())`, userID, e2)
+	require.NoError(t, err)
+
+	fav, err = svc.IsWorkFavorite(ctx, userID, workID)
+	require.NoError(t, err)
+	require.True(t, fav, "избранное любого издания ⇒ книга избрана")
+	rd, ca, err := svc.WorkReadStatus(ctx, userID, workID)
+	require.NoError(t, err)
+	require.True(t, rd, "прочитано любое издание ⇒ книга прочитана")
+	require.NotNil(t, ca)
+}
+
 // ── helpers (повтор из других пакетов) ─────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
