@@ -410,6 +410,80 @@ export const useStopBioBackfill = bioAdaptationAction('bios/stop');
 export const useRunAdaptationBackfill = bioAdaptationAction('adaptations/run');
 export const useStopAdaptationBackfill = bioAdaptationAction('adaptations/stop');
 
+// ── Группировка изданий в логические книги (works) ───────────────────────
+
+export type WorkGroupingSettings = {
+  enabled: boolean;
+  openlibrary: boolean;
+  wikidata: boolean;
+  // режим охвата: false = только книги с локальным edition-сканом, true = все
+  whole_collection: boolean;
+  openlibrary_rpm: number;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  work_grouping_running: boolean;
+  work_grouping_mode: 'off' | 'continuous' | 'once';
+  // покрытие (read-only)
+  coverage: {
+    books: number;
+    works: number;
+    multi_edition_works: number;
+    scanned: number;
+  };
+};
+
+// WorkGroupingInput — тело PUT (только конфиг, без read-only полей).
+export type WorkGroupingInput = {
+  enabled: boolean;
+  openlibrary: boolean;
+  wikidata: boolean;
+  whole_collection: boolean;
+  openlibrary_rpm: number;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const WORK_GROUP_KEY = ['admin', 'work-grouping'] as const;
+
+export function useWorkGroupingSettings() {
+  return useQuery<WorkGroupingSettings>({
+    queryKey: [...WORK_GROUP_KEY],
+    queryFn: () => apiFetch<WorkGroupingSettings>('/api/admin/work-grouping'),
+    staleTime: 10_000,
+    refetchInterval: (query) => (query.state.data?.work_grouping_running ? 3000 : false),
+  });
+}
+
+export function useUpdateWorkGroupingSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: WorkGroupingInput) =>
+      apiFetch<WorkGroupingSettings>('/api/admin/work-grouping', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...WORK_GROUP_KEY], data),
+  });
+}
+
+export function useRunWorkGrouping() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/work-grouping/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
+  });
+}
+
+export function useStopWorkGrouping() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/work-grouping/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
+  });
+}
+
 // ── «Выключатели» ленивого обогащения (режим «Выкл» по типам) ─────────────
 //
 // Отдельная ось от фоновых воркеров: эти флаги подавляют ИНИЦИАЦИЮ нового

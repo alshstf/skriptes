@@ -162,6 +162,30 @@ type LocalEditionSource interface {
 	FetchEditionMeta(ctx context.Context, q BookQuery) (EditionMeta, error)
 }
 
+// WorkQuery — запрос на резолв ВНЕШНЕГО идентификатора работы (Tier-2
+// группировки). Для переводов выгоднее искать по оригинальному названию/языку
+// (SrcTitle/SrcLang), а ISBN — самый точный ключ (резолвится без гейта).
+// LastName/FirstName нужны для гейта authorNameMatches при поиске по названию.
+type WorkQuery struct {
+	BookID    int64
+	Title     string
+	SrcTitle  string
+	ISBN      string
+	Lang      string
+	Authors   []string // display-имена авторов книги
+	LastName  string   // primary-автор, для precision-гейта
+	FirstName string
+}
+
+// WorkKeyResolver — внешний источник идентификатора работы (OpenLibrary Work /
+// Wikidata QID). Книги, у которых ОДИНАКОВЫЙ (Name(), work_key), сливаются в
+// одну логическую книгу. Возвращает ключ работы (без префикса источника) либо
+// ErrNotFound. Name() = строка source в book_work_lookups ("openlibrary"|"wikidata").
+type WorkKeyResolver interface {
+	Name() string
+	ResolveWorkKey(ctx context.Context, q WorkQuery) (string, error)
+}
+
 // YearProvider — внешний источник года первого издания/написания для
 // дозаполнения written_year (когда из fb2 год не извлёкся). Возвращает год
 // (>0) либо ErrNotFound, если источник книгу/год не нашёл; прочие ошибки —

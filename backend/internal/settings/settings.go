@@ -317,6 +317,86 @@ func (s *Store) SetCoverEnrichment(ctx context.Context, cfg CoverEnrichmentConfi
 	return nil
 }
 
+const workGroupingKey = "work_grouping"
+
+// WorkGroupingConfig — настройки фоновой ГРУППИРОВКИ изданий в логические книги
+// (works). Зеркало YearEnrichmentConfig.
+//
+// Tier-1 (внутриязыковой дедуп + межъязыковой через <src-title-info>) —
+// локальный, без сети, идёт всегда когда воркер включён. Tier-2 (резолв
+// внешнего Work ID: OpenLibrary Work / Wikidata) ходит в публичные API,
+// поэтому source-флаги гейтят ТОЛЬКО его; мастер-тумблер Enabled включает
+// джобу целиком (opt-in, по умолчанию выключен).
+//
+//	OpenLibrary / Wikidata — внешние источники Work ID (Tier-2). Оба off →
+//	                         работает только Tier-1 (без сети).
+//	WholeCollection         — режим охвата. false (дефолт) = только книги,
+//	                         у которых уже прошёл локальный edition-скан
+//	                         (edition_meta_scanned_at NOT NULL — есть src-ключи).
+//	                         true = все непросканированные (work_scanned_at NULL).
+//	*RPM / *RetryDays/Hours — вежливость к внешним API + TTL перепроверки
+//	                         (book_work_lookups), как у года/обложек.
+type WorkGroupingConfig struct {
+	Enabled           bool `json:"enabled"`
+	OpenLibrary       bool `json:"openlibrary"`
+	Wikidata          bool `json:"wikidata"`
+	WholeCollection   bool `json:"whole_collection"`
+	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	WikidataRPM       int  `json:"wikidata_rpm"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultWorkGroupingConfig — воркер выключен (opt-in), оба внешних источника
+// включены (но работают лишь при Enabled), режим фолбэка, вежливые лимиты/TTL.
+func DefaultWorkGroupingConfig() WorkGroupingConfig {
+	return WorkGroupingConfig{
+		Enabled:           false,
+		OpenLibrary:       true,
+		Wikidata:          true,
+		WholeCollection:   false,
+		OpenLibraryRPM:    60,
+		WikidataRPM:       20,
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// WorkGrouping читает настройки группировки; нет оверрайда в БД — дефолты
+// (мердж поверх DefaultWorkGroupingConfig).
+func (s *Store) WorkGrouping(ctx context.Context) (WorkGroupingConfig, error) {
+	cfg := DefaultWorkGroupingConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, workGroupingKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read work grouping settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultWorkGroupingConfig(), fmt.Errorf("decode work grouping settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetWorkGrouping сохраняет настройки группировки (upsert).
+func (s *Store) SetWorkGrouping(ctx context.Context, cfg WorkGroupingConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode work grouping settings: %w", err)
+	}
+	_, err = s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, workGroupingKey, raw)
+	if err != nil {
+		return fmt.Errorf("save work grouping settings: %w", err)
+	}
+	return nil
+}
+
 const bioAdaptationKey = "bio_adaptation_enrichment"
 
 // BioAdaptationConfig — настройки фонового дозаполнения «людей и экранизаций» из

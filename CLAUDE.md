@@ -120,10 +120,11 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0018_edition_fields` (поля уровня издания на `books`;
-до неё `0017_works` — таблица `works` + `books.work_id`, см. граблю №15).
-Backend хранит applied version в `schema_migrations` (golang-migrate), править
-уже-применённые .sql имеет смысл только до push'а.
+Текущая верхняя — `0019_book_work_lookups` (TTL-таблица внешних Work ID +
+`books.work_scanned_at` для группировки изданий; до неё `0018_edition_fields`
+и `0017_works`, см. граблю №15). Backend хранит applied version в
+`schema_migrations` (golang-migrate), править уже-применённые .sql имеет смысл
+только до push'а.
 
 ### 7. PR'ы идут через CI + watcher, merge только когда зелёное
 
@@ -251,11 +252,27 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `metadata/fb2_provider.go::scanFb2EditionMeta` → `enricher.go::EnsureEditionMeta`
   (single-shot по `edition_meta_scanned_at`, COALESCE) под тумблером «Года»
   прогрева (`prewarm.go`, отдельный маркер от `year_local_scanned_at`).
-- ⚠️ work_id ПОКА не читается в read-path'ах (это Phase 3) — `works` есть, но
-  каталог/поиск/карточки всё ещё per-fb2. Группировка изданий (Tier 1
-  `<src-title-info>`/title+lang + Tier 2 OpenLibrary Work/Wikidata P629), админка
-  и ручной split/merge — Phase 2; works-индекс Meili и схлопывание в одну
-  карточку — Phase 3; редизайн страницы книги — Phase 4.
+**Phase 2 (сделано) — джоба группировки + админка + ручной split/merge:**
+- `metadata/work_grouper.go`: `WorkGrouper`/`WorkGroupController` (клон
+  `year_backfill.go`). Работает **по автору** (blast radius = 1 автор, НИКОГДА
+  не сливает разных primary-авторов). Tier-1 (без сети, union-find): дубли
+  `(normalized_title, lang)` + `fb2_doc_id` + перевод↔оригинал/переводы между
+  собой через `src_*`. Tier-2 (opt-in, rate-gated, `book_work_lookups` TTL):
+  внешний Work ID — `WorkKeyResolver` на OL (`/isbn/.json`→work, иначе
+  title+author за гейтом `authorNameMatches`) и Wikidata (`resolveBookQID`→QID).
+  Кандидаты: `work_scanned_at IS NULL` (фолбэк — ещё `edition_meta_scanned_at NOT
+  NULL`). apply транзакционно: каноника = work с большинством членов (тай → min
+  id), GC опустевших works, пересчёт `edition_count`/`written_year`/`series`,
+  `ext_ids` += work_key. Ручные `SplitEditions`/`MergeWorks` (стабильны, т.к.
+  scanned-книги не переобрабатываются).
+- Настройки `settings.WorkGroupingConfig` (ключ `work_grouping`, зеркало
+  year/cover). API `api/admin_work_grouping.go` (`/admin/work-grouping`
+  GET/PUT/run/stop + `/admin/works/split`,`/merge`). Фронт — секция
+  «Группировка изданий» в `AdminBackgroundPage` (Выкл/Фоном, источники Tier-2,
+  scope, coverage), хуки в `lib/admin.ts`. main: `workGroupCtl` в `SettingsDeps`.
+- ⚠️ work_id ПОКА не читается в read-path'ах (это Phase 3) — группировка
+  проставляет `work_id`, но каталог/поиск/карточки всё ещё per-fb2. works-индекс
+  Meili и схлопывание в одну карточку — Phase 3; редизайн страницы книги — Phase 4.
 
 ## Где что искать (карта по реальным путям)
 

@@ -22,6 +22,7 @@ type SettingsDeps struct {
 	CoverBackfill      *metadata.CoverBackfillController
 	AuthorBackfill     *metadata.AuthorBackfillController
 	AdaptationBackfill *metadata.AdaptationBackfillController
+	WorkGroup          *metadata.WorkGroupController
 }
 
 // coverSettingsResponse — текущая конфигурация + статистика кэша +
