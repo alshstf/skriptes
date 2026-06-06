@@ -93,6 +93,10 @@ export type EditionRef = {
   ext: string;
   archive: string;
   file_name: string;
+  /** Прогресс чтения [0,1] этого издания (user-specific). */
+  reading_fraction?: number;
+  /** Издание прочитано (completed) текущим пользователем. */
+  is_read?: boolean;
 };
 
 export type GenreRef = {

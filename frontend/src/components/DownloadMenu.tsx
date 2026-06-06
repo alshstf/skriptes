@@ -8,15 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-const formats: Array<{ id: string; label: string; sub: string }> = [
-  { id: 'epub3', label: 'EPUB 3', sub: 'универсальный, для большинства ридеров и Send-to-Kindle' },
-  { id: 'kepub', label: 'KEPUB', sub: 'для Kobo' },
-  { id: 'azw8', label: 'AZW8', sub: 'для современных Kindle' },
-  { id: 'kfx', label: 'KFX', sub: 'тоже Kindle (новая модель)' },
-  { id: 'epub2', label: 'EPUB 2', sub: 'старые читалки' },
-  { id: 'fb2', label: 'FB2', sub: 'оригинал, без конвертации' },
-];
+import { downloadFormats } from '@/lib/formats';
 
 export function DownloadMenu({ bookId }: { bookId: number }) {
   return (
@@ -30,7 +22,7 @@ export function DownloadMenu({ bookId }: { bookId: number }) {
       <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel>Формат</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {formats.map((f) => (
+        {downloadFormats.map((f) => (
           <DropdownMenuItem key={f.id} asChild>
             {/*
               Вертикальная раскладка вместо ряда: ширины меню (320px) хватает

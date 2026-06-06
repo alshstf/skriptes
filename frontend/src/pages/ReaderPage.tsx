@@ -209,20 +209,14 @@ export function ReaderPage() {
           variant="ghost"
           size="sm"
           onClick={() => {
-            // Browser back уважает реальную историю навигации:
-            //   List → Detail → Reader → back → Detail → back → List
-            // Использовать navigate({to:'/books/$id'}) нельзя — оно
-            // pushает НОВУЮ entry, и тогда стек становится
-            //   [List, Detail, Reader, Detail]
-            // → browser back из Detail возвращает в Reader (bug, который
-            // юзер заметил). Fallback на прямой navigate — если ридер
-            // открыт по deeplink'у и в истории ничего нет, чтобы
-            // кнопка не выкидывала из приложения.
-            if (window.history.length > 1) {
-              window.history.back();
-            } else {
-              void navigate({ to: '/books/$id', params: { id: String(bookId) } });
-            }
+            // Навигация на карточку REPLACE'ом текущей reader-записи.
+            // window.history.back() здесь ненадёжен: foliate в iframe плодит
+            // СВОИ записи в общей session history (перелистывание/секции), и
+            // back мог увести в ридер ДРУГОГО издания, а не на карточку (баг,
+            // который заметил юзер). replace не добавляет записей и всегда ведёт
+            // на карточку (work-страницу), а browser-back с карточки — на то,
+            // что было ДО ридера (список/карточка), но не обратно в ридер.
+            void navigate({ to: '/books/$id', params: { id: String(bookId) }, replace: true });
           }}
           aria-label="Вернуться к карточке книги"
         >

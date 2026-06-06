@@ -163,6 +163,38 @@ func (s *Service) IsWorkFavorite(ctx context.Context, userID, workID int64) (boo
 	return ok, nil
 }
 
+// EditionRead — состояние чтения одного издания пользователем.
+type EditionRead struct {
+	Fraction  *float64
+	Completed bool
+}
+
+// WorkEditionReads — состояние чтения по КАЖДОМУ изданию работы для
+// пользователя: map book_id → {fraction, completed}. Нужен для отображения
+// прогресса на каждой строке секции «Издания» (позиция/прогресс per-edition).
+func (s *Service) WorkEditionReads(ctx context.Context, userID, workID int64) (map[int64]EditionRead, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT r.book_id, r.fraction, (r.completed_at IS NOT NULL)
+		FROM reads r
+		JOIN books b ON b.id = r.book_id
+		WHERE r.user_id = $1 AND b.work_id = $2
+	`, userID, workID)
+	if err != nil {
+		return nil, fmt.Errorf("query work edition reads: %w", err)
+	}
+	defer rows.Close()
+	out := map[int64]EditionRead{}
+	for rows.Next() {
+		var id int64
+		var er EditionRead
+		if err := rows.Scan(&id, &er.Fraction, &er.Completed); err != nil {
+			return nil, err
+		}
+		out[id] = er
+	}
+	return out, rows.Err()
+}
+
 // WorkReadStatus — «прочитана» на уровне работы: прочитано ЛЮБОЕ издание.
 // completedAt — самая поздняя дата прочтения среди изданий (NULL → не прочитана).
 // Прогресс чтения (fraction) остаётся per-edition — он привязан к конкретному

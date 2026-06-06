@@ -135,6 +135,10 @@ type EditionRef struct {
 	Archive      string `json:"archive"`
 	FileName     string `json:"file_name"`
 	Deleted      bool   `json:"deleted,omitempty"`
+	// User-specific (заполняет API-слой, не books-сервис): прогресс чтения и
+	// флаг «прочитано» ИМЕННО этого издания (позиция/CFI привязаны к файлу).
+	ReadingFraction *float64 `json:"reading_fraction,omitempty"`
+	IsRead          bool     `json:"is_read,omitempty"`
 }
 
 // ListParams — нормализованные параметры запроса /api/books.

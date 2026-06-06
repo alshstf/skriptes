@@ -608,6 +608,19 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		}
 	}
 
+	// Аннотация карточки — work-level: если у открытого издания её нет, берём
+	// аннотацию любого другого издания работы (детерминированно, по id).
+	if b.Annotation == "" && workID > 0 {
+		var ann pgtype.Text
+		if err := s.pool.QueryRow(ctx, `
+			SELECT annotation FROM books
+			WHERE work_id = $1 AND deleted = false AND annotation IS NOT NULL AND annotation <> ''
+			ORDER BY id LIMIT 1
+		`, workID).Scan(&ann); err == nil && ann.Valid {
+			b.Annotation = ann.String
+		}
+	}
+
 	return b, nil
 }
 

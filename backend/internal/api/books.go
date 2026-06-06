@@ -121,6 +121,17 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 			} else if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
 				isFav = v
 			}
+			// Прогресс/«прочитано» на КАЖДОЕ издание (для секции «Издания»).
+			if b.WorkID > 0 && len(b.Editions) > 0 {
+				if reads, err := hist.Service.WorkEditionReads(ctx, u.ID, b.WorkID); err == nil {
+					for i := range b.Editions {
+						if er, ok := reads[b.Editions[i].ID]; ok {
+							b.Editions[i].ReadingFraction = er.Fraction
+							b.Editions[i].IsRead = er.Completed
+						}
+					}
+				}
+			}
 			recordViewAsync(hist.Service, u.ID, id)
 		}
 
