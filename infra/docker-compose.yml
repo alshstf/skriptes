@@ -79,6 +79,10 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+      # Окно «прогрева»: миграции применяются ДО старта HTTP; на большой коллекции
+      # это минуты — без start_period `up` падал бы «backend is unhealthy» (см.
+      # docker-compose.release.yml). Запас на медленные диски.
+      start_period: 300s
 
   frontend:
     build:

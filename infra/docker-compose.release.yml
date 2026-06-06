@@ -95,6 +95,12 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+      # start_period — окно «прогрева»: пока оно идёт, провалы healthcheck НЕ
+      # помечают контейнер unhealthy и НЕ роняют зависимые сервисы (caddy/frontend).
+      # На старте backend применяет миграции ДО запуска HTTP; на большой коллекции
+      # (сотни тысяч книг) бэкфилл/индексы могут идти минуты — без этого окна
+      # `up` падал бы с «backend is unhealthy». 5 минут — запас для медленных дисков.
+      start_period: 300s
 
   frontend:
     image: ghcr.io/alshstf/skriptes-frontend:${SKRIPTES_VERSION:-latest}
