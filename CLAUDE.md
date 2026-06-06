@@ -290,9 +290,18 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `ListItem.EditionCount`); `series_order` ранжирует работы; счётчики книг и
   read-count — `count(DISTINCT COALESCE(work_id,-id))`. Фронт не менялся (DTO
   аддитивен; на singleton-данных выдача та же).
-- ⚠️ ОСТАЛОСЬ на Phase 4b: **редизайн страницы книги** (плагин frontend design)
-  — секция «Издания» с переводчиком/годом/издателем + скачать/читать на каждое
-  издание; бейдж «N изданий» в списках; work-level favorite/read.
+**Phase 4b (сделано) — редизайн страницы книги (editions UI):**
+- `BookDetailPage` (`frontend/src/pages/BookDetailPage.tsx`): при ≥2 изданиях —
+  секция «Издания» (`components/EditionRow.tsx`): на каждое издание строка
+  (язык через `useLanguageMap`, переводчик/издатель/год издания/ISBN/размер/
+  формат) + действия Читать/Скачать/Kindle ПО id издания; открытое (id из URL)
+  выделено + первым. Одно издание → классический вид (действия в шапке), секцию
+  не показываем. Title/год/серия/авторы/жанры — уровня работы.
+- Бейдж «N изданий»: `BookListItem` (автор/серия) и `BooksPage::BookCard`
+  (/books); `books.Service.hydrateCovers` догидрачивает `edition_count` из
+  `works`. e2e — `frontend/e2e/editions.spec.ts` (layout, jsdom не умеет).
+- ⚠️ work-level favorite/read пока per-edition (на открытом издании); полноценная
+  агрегация в работу — отдельный follow-up (Phase 5).
 
 ## Где что искать (карта по реальным путям)
 

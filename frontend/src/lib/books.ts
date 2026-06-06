@@ -26,6 +26,9 @@ export type BookListItem = {
   // cover_path догидрачивается backend'ом из Postgres (в Meili-индексе
   // обложек нет). Пусто, если обложка ещё не обогащена → placeholder.
   cover_path?: string;
+  // edition_count — число изданий (fb2-файлов) логической книги. >1 → бейдж
+  // «N изданий». Заполняется на карточках автора/серии.
+  edition_count?: number;
 };
 
 // bySeriesOrder — компаратор книг внутри одной серии: по series_order (бэкенд-
@@ -75,6 +78,23 @@ export type AuthorRef = {
 
 export type SeriesRef = { id: number; title: string };
 
+/** EditionRef — одно физическое издание (fb2-файл) логической книги. */
+export type EditionRef = {
+  id: number;
+  lang?: string;
+  translator?: string;
+  edition_year?: number;
+  publisher?: string;
+  isbn?: string;
+  edition_title?: string;
+  page_count?: number;
+  cover_path?: string;
+  size_bytes: number;
+  ext: string;
+  archive: string;
+  file_name: string;
+};
+
 export type GenreRef = {
   id: number;
   code: string;
@@ -109,6 +129,12 @@ export type Book = {
   deleted?: boolean;
   is_favorite?: boolean;
   is_read?: boolean;
+  /** Логическая книга (works.id). */
+  work_id?: number;
+  /** Все издания этой работы (открытое — первым). Title/written_year/series/
+   *  authors/genres выше — уровня работы; lang/cover/archive/file/size — открытого
+   *  издания (id выше). На singleton-работе массив из одного элемента. */
+  editions?: EditionRef[];
   /** Когда пользователь явно отметил прочитанной (или ридер auto-mark'нул). */
   read_at?: string;
   /** Прогресс чтения [0, 1] из in-browser ридера. Undefined если ридер
