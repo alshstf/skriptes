@@ -152,10 +152,19 @@ export const booksRoute = createRoute({
   component: BooksPage,
 });
 
+// /books/$id — карточка по id ИЗДАНИЯ (обратная совместимость: прямые ссылки,
+// возврат из ридера). Ссылки из списков ведут на /works/$id (ниже).
 const bookDetailRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/books/$id',
   component: BookDetailPage,
+});
+
+// /works/$id — карточка логической книги по works.id (основной маршрут карточки).
+const workDetailRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/works/$id',
+  component: () => <BookDetailPage mode="work" />,
 });
 
 const authorRoute = createRoute({
@@ -234,6 +243,7 @@ const routeTree = rootRoute.addChildren([
     indexRoute,
     booksRoute,
     bookDetailRoute,
+    workDetailRoute,
     authorRoute,
     seriesRoute,
     profileRoute,

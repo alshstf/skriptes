@@ -275,9 +275,9 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   scope, coverage), хуки в `lib/admin.ts`. main: `workGroupCtl` в `SettingsDeps`.
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
-  (`importer/index.go`) → `/books`, поиск, Cmd+K, OPDS отдают ОДНО издание на
-  логическую книгу (представитель — самое релевантное издание). Без отдельного
-  works-индекса (минорный минус — фасетные счётчики считают издания, не работы).
+  (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу
+  (представитель — самое релевантное издание). Веб-список/Cmd+K с Phase 6
+  переехали на отдельный индекс `works` (точные фасеты), books-индекс — для OPDS.
 - `Importer.ResyncWorkIDs` (зеркало `ResyncLangs`) синкает `work_id` в Meili.
   `Importer.ConfigureIndex` (экспортирован) применяет настройки индекса на КАЖДОМ
   старте (`runOnceWorkIDResync` в `main.go`) — иначе на стабильном деплое без
@@ -315,8 +315,42 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   back уводил в чужой ридер). `/foliate-reader.html` в PWA
   `navigateFallbackDenylist` (`vite.config.ts`) — иначе SW отдаёт в iframe
   index.html (всё SPA), ридер виснет на «Подготовка…».
-- ⚠️ Остаётся опциональным: отдельный works-индекс Meili (точные фасетные
-  счётчики; сейчас distinct считает издания).
+**Phase 6 (сделано) — отдельный works-индекс Meili + маршрут `/works/{id}`:**
+- **Два индекса.** `books` (1 док/издание, `distinctAttribute=work_id`) остаётся
+  ДЛЯ OPDS (скачивание по id издания). Новый `works` (1 док/работа, БЕЗ distinct)
+  — для веба: фасетные счётчики считают РАБОТЫ, а не издания. `importer/index.go`:
+  `workDoc` + `configureWorksIndex` (searchable title/authors/series; filterable
+  genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). Популярности
+  у works нет (в PG её нет — поле books-индекса; в works = 0).
+- **Ресинк works-индекса** (`importer/importer.go`): `ResyncWorksIndex` (полный
+  upsert всех живых работ, батчи по id, UNION авторов/жанров/языков подзапросами,
+  year = COALESCE(work.written_year, min года изданий)), `UpsertWorksToIndex(ids)` /
+  `DeleteWorksFromIndex(ids)` (таргетно). Точки синка: импорт (полный, в конце Run),
+  старт (`runOnceWorksIndexSync`, гейт `works_index_synced_v1`, + `ConfigureWorksIndex`
+  на КАЖДОМ старте), группировка (`work_grouper` копит touched/deleted → таргетный
+  синк через type-assert `WorksIndexSyncer`; GC работ = `DELETE ... RETURNING`),
+  год (`year_backfill` drain post-pass — таргетный upsert изменённых работ; ленивый
+  `EnrichBooksNow` works НЕ трогает — наполнится на следующем полном ресинке),
+  ручные split/merge (`syncSearchAfterManual` — детачнуто: ResyncWorkIDs + works-синк).
+- **Веб-путь** (`books/service.go`): `ListWorks`/`SuggestWorks` (индекс `works`,
+  id = works.id, обложка+`cover_edition_id`+`edition_count` гидрируются по work_id),
+  `GetWork(workID, excl)` = выбрать ВИДИМОЕ представительное издание → `Get(repID)`.
+  `handleListBooks`→`ListWorks`, `handleSuggest`→`SuggestWorks` (+ work-level
+  is_favorite через `history.FavoriteWorkSet`). OPDS остаётся на `List`/`Suggest`.
+- **Скрытие контента на works**: genres — `NOT IN` (жанры уровня работы); язык —
+  `lang IN [видимые]` (видимые = вселенная−скрытые, кэш `allLangs` 5 мин), т.е.
+  работа видна, если есть издание на видимом языке (мультиязычную работу не прячем
+  целиком из-за одного скрытого языка). Вселенная неизвестна → fallback `NOT IN`.
+- **Маршрут `/works/{id}`** (основной для карточки): `api/works.go`-нет, ручка
+  `handleGetWork` в `api/books.go` (общий хелпер `writeBookCard` с `handleGetBook`);
+  router `/works/{id}` без bookGate (видимость решает `GetWork`→404). `/books/{id}`
+  остаётся (back-compat: прямые ссылки, возврат из ридера). Фронт: `router.tsx`
+  `/works/$id`→`<BookDetailPage mode="work">` (`useBookCard(id,mode)`/`useWork`);
+  discovery-ссылки (`BookListItem`, `BooksPage`, `CommandPalette`) → `/works/{work_id ?? id}`
+  (catalog кладёт `ListItem.WorkID`, т.к. там ID = издание; в works-выдаче ID и так
+  = works.id). Ридер/скачивание/«Читать» — по-прежнему `/books/{editionId}`.
+- ⚠️ id работ и изданий ПЕРЕСЕКАЮТСЯ (отдельные sequence) → `/books/{N}` ≠
+  `/works/{N}`; поэтому работа-URL — отдельный маршрут, не «трактовать books id как work».
 
 ## Где что искать (карта по реальным путям)
 

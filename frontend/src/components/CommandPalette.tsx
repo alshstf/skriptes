@@ -112,7 +112,7 @@ export function CommandPalette() {
                     <CommandItem
                       key={`b-${b.id}`}
                       value={`book-${b.id}`}
-                      onSelect={() => go(`/books/${b.id}`)}
+                      onSelect={() => go(`/works/${b.work_id ?? b.id}`)}
                     >
                       <BookIcon aria-hidden />
                       <div className="flex min-w-0 flex-col flex-1">

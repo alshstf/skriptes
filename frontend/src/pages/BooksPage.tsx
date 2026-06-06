@@ -390,7 +390,7 @@ function BookCard({
   return (
     <div className="relative flex gap-3 rounded-md p-2 transition hover:bg-accent/40 sm:p-3">
       <BookCover
-        src={`/api/covers/book/${book.id}`}
+        src={`/api/covers/book/${book.cover_edition_id ?? book.id}`}
         title={book.title}
         placeholder="monogram"
         className="w-12 sm:w-14"
@@ -398,8 +398,8 @@ function BookCard({
       <div className="min-w-0 flex-1 space-y-0.5">
         <h3 className="font-medium leading-snug line-clamp-2">
           <Link
-            to="/books/$id"
-            params={{ id: String(book.id) }}
+            to="/works/$id"
+            params={{ id: String(book.work_id ?? book.id) }}
             className="rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-ring"
           >
             {book.title}

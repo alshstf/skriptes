@@ -163,6 +163,33 @@ func (s *Service) IsWorkFavorite(ctx context.Context, userID, workID int64) (boo
 	return ok, nil
 }
 
+// FavoriteWorkSet — подмножество переданных work_id, у которых избрано ЛЮБОЕ
+// издание (для пометки is_favorite в выдаче по работам, например в Cmd+K).
+func (s *Service) FavoriteWorkSet(ctx context.Context, userID int64, workIDs []int64) (map[int64]struct{}, error) {
+	out := map[int64]struct{}{}
+	if len(workIDs) == 0 {
+		return out, nil
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT b.work_id
+		FROM favorites f
+		JOIN books b ON b.id = f.book_id
+		WHERE f.user_id = $1 AND b.work_id = ANY($2)
+	`, userID, workIDs)
+	if err != nil {
+		return out, fmt.Errorf("query favorite works: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return out, err
+		}
+		out[id] = struct{}{}
+	}
+	return out, rows.Err()
+}
+
 // EditionRead — состояние чтения одного издания пользователем.
 type EditionRead struct {
 	Fraction  *float64

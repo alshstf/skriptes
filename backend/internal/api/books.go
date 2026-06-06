@@ -48,7 +48,9 @@ func handleListBooks(d BooksDeps, content ContentDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		res, err := d.Service.List(ctx, params)
+		// Веб-список ищет по индексу works (фасеты считают РАБОТЫ, id = works.id,
+		// ссылки фронта ведут на /works/{id}). OPDS остаётся на List (издания).
+		res, err := d.Service.ListWorks(ctx, params)
 		if err != nil {
 			writeJSON(w, http.StatusBadGateway, map[string]string{"error": "search failed"})
 			return
@@ -93,61 +95,99 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
+		writeBookCard(w, r, ctx, b, hist, meta)
+	}
+}
 
-		// is_favorite + read status + fire-and-forget запись view. Ошибки
-		// чтения user-флагов не должны ломать карточку — отдаём дефолты.
-		var isFav, isRead bool
-		var readAt *time.Time
-		var fraction *float64
-		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
-			// fraction («продолжить N%») — прогресс ОТКРЫТОГО издания: привязан к
-			// конкретному файлу (CFI), агрегировать по работе нельзя. Дефолты
-			// is_read/read_at тоже отсюда (на случай, если work_id неизвестен).
-			if r, ca, fr, err := hist.Service.ReadStatus(ctx, u.ID, id); err == nil {
-				isRead = r
-				readAt = ca
-				fraction = fr
+// handleGetWork — GET /api/works/{id}: карточка логической книги по works.id.
+// Работа видна, если у неё есть издание, не скрытое жанром/языком (иначе 404).
+// Возвращает тот же DTO, что /api/books/{id} (top-level = представительное
+// издание); фронт переиспользует BookDetailPage.
+func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content ContentDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr := chi.URLParam(r, "id")
+		workID, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil || workID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		var exGenres, exLangs []string
+		if content.Resolver != nil {
+			var userID int64
+			if u, ok := UserFromContext(r.Context()); ok {
+				userID = u.ID
 			}
-			// is_favorite / is_read — на уровне КНИГИ (любое издание избрано/
-			// прочитано ⇒ книга избрана/прочитана). Для singleton-работы == по изданию.
-			if b.WorkID > 0 {
-				if v, err := hist.Service.IsWorkFavorite(ctx, u.ID, b.WorkID); err == nil {
-					isFav = v
-				}
-				if r, ca, err := hist.Service.WorkReadStatus(ctx, u.ID, b.WorkID); err == nil {
-					isRead = r
-					readAt = ca
-				}
-			} else if v, err := hist.Service.IsFavorite(ctx, u.ID, id); err == nil {
+			exGenres, exLangs = content.Resolver.Exclusions(r.Context(), userID)
+		}
+		b, err := d.Service.GetWork(ctx, workID, exGenres, exLangs)
+		if err != nil {
+			if errors.Is(err, books.ErrNotFound) {
+				writeJSON(w, http.StatusNotFound, map[string]string{"error": "work not found"})
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeBookCard(w, r, ctx, b, hist, meta)
+	}
+}
+
+// writeBookCard дорисовывает user-зависимые поля к карточке (общее для
+// /api/books/{id} и /api/works/{id}) и отдаёт JSON. b.ID — открытое/
+// представительное издание (для fraction/view/скачивания), b.WorkID — работа
+// (для work-level is_favorite/is_read и прогресса по изданиям).
+func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, b books.Book, hist HistoryDeps, meta MetadataDeps) {
+	var isFav, isRead bool
+	var readAt *time.Time
+	var fraction *float64
+	if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
+		// fraction («продолжить N%») — прогресс ОТКРЫТОГО издания: привязан к
+		// конкретному файлу (CFI), агрегировать по работе нельзя. Дефолты
+		// is_read/read_at тоже отсюда (на случай, если work_id неизвестен).
+		if rd, ca, fr, err := hist.Service.ReadStatus(ctx, u.ID, b.ID); err == nil {
+			isRead = rd
+			readAt = ca
+			fraction = fr
+		}
+		// is_favorite / is_read — на уровне КНИГИ (любое издание избрано/
+		// прочитано ⇒ книга избрана/прочитана). Для singleton-работы == по изданию.
+		if b.WorkID > 0 {
+			if v, err := hist.Service.IsWorkFavorite(ctx, u.ID, b.WorkID); err == nil {
 				isFav = v
 			}
-			// Прогресс/«прочитано» на КАЖДОЕ издание (для секции «Издания»).
-			if b.WorkID > 0 && len(b.Editions) > 0 {
-				if reads, err := hist.Service.WorkEditionReads(ctx, u.ID, b.WorkID); err == nil {
-					for i := range b.Editions {
-						if er, ok := reads[b.Editions[i].ID]; ok {
-							b.Editions[i].ReadingFraction = er.Fraction
-							b.Editions[i].IsRead = er.Completed
-						}
+			if rd, ca, err := hist.Service.WorkReadStatus(ctx, u.ID, b.WorkID); err == nil {
+				isRead = rd
+				readAt = ca
+			}
+		} else if v, err := hist.Service.IsFavorite(ctx, u.ID, b.ID); err == nil {
+			isFav = v
+		}
+		// Прогресс/«прочитано» на КАЖДОЕ издание (для секции «Издания»).
+		if b.WorkID > 0 && len(b.Editions) > 0 {
+			if reads, err := hist.Service.WorkEditionReads(ctx, u.ID, b.WorkID); err == nil {
+				for i := range b.Editions {
+					if er, ok := reads[b.Editions[i].ID]; ok {
+						b.Editions[i].ReadingFraction = er.Fraction
+						b.Editions[i].IsRead = er.Completed
 					}
 				}
 			}
-			recordViewAsync(hist.Service, u.ID, id)
 		}
-
-		// Lazy enrichment: если у книги нет обложки, в фоне сходим в
-		// провайдеры. На этом запросе пользователь её ещё не увидит —
-		// но следующий рендер карточки уже покажет.
-		triggerBookEnrichmentAsync(meta, b)
-
-		writeJSON(w, http.StatusOK, bookResponse{
-			Book:            b,
-			IsFavorite:      isFav,
-			IsRead:          isRead,
-			ReadAt:          readAt,
-			ReadingFraction: fraction,
-		})
+		recordViewAsync(hist.Service, u.ID, b.ID)
 	}
+
+	// Lazy enrichment: если у книги нет обложки, в фоне сходим в провайдеры.
+	triggerBookEnrichmentAsync(meta, b)
+
+	writeJSON(w, http.StatusOK, bookResponse{
+		Book:            b,
+		IsFavorite:      isFav,
+		IsRead:          isRead,
+		ReadAt:          readAt,
+		ReadingFraction: fraction,
+	})
 }
 
 func parseIntOr(s string, def int) int {

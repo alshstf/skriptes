@@ -32,6 +32,9 @@ type YearBackfiller struct {
 	resyncer YearResyncer // nil → без авто-ресинка Meili-года
 
 	yearChanged atomic.Int64 // сколько книг получили written_year за проход
+
+	changedMu    sync.Mutex // processBatch гоняет writeFound из нескольких горутин
+	changedBooks []int64    // id книг, у которых год появился (для works-индекса)
 }
 
 // YearBackfillConfig — рантайм-параметры воркера (зеркало
@@ -100,6 +103,9 @@ type yearCandidate struct {
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
 	b.yearChanged.Store(0)
+	b.changedMu.Lock()
+	b.changedBooks = nil
+	b.changedMu.Unlock()
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -122,8 +128,46 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 		} else {
 			b.logger.Info("year backfill: years resynced to meili", "changed", b.yearChanged.Load(), "synced", n)
 		}
+		// Год работы в индексе works = COALESCE(work.written_year, min года изданий) —
+		// таргетно пере-собираем работы изменённых книг, чтобы /books-список (по
+		// works) не отставал по году/фасету. Только фоновый проход; лёгкий лениво-
+		// путь EnrichBooksNow works-индекс не трогает (наполнится на следующем
+		// полном ресинке импорта/группировки).
+		if syncer, ok := b.resyncer.(WorksIndexSyncer); ok {
+			if workIDs := b.changedWorkIDs(ctx); len(workIDs) > 0 {
+				if err := syncer.UpsertWorksToIndex(ctx, workIDs); err != nil {
+					b.logger.Warn("year backfill: upsert works to index failed", "err", err)
+				}
+			}
+		}
 	}
 	return total
+}
+
+// changedWorkIDs — distinct work_id книг, у которых за проход появился год.
+func (b *YearBackfiller) changedWorkIDs(ctx context.Context) []int64 {
+	b.changedMu.Lock()
+	ids := append([]int64(nil), b.changedBooks...)
+	b.changedMu.Unlock()
+	if len(ids) == 0 {
+		return nil
+	}
+	rows, err := b.pool.Query(ctx,
+		`SELECT DISTINCT work_id FROM books WHERE id = ANY($1) AND work_id IS NOT NULL`, ids)
+	if err != nil {
+		b.logger.Warn("year backfill: map changed books to works failed", "err", err)
+		return nil
+	}
+	defer rows.Close()
+	var out []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil
+		}
+		out = append(out, id)
+	}
+	return out
 }
 
 // candidateCond — SQL-условие выбора кандидатов по режиму охвата.
@@ -308,6 +352,9 @@ func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source st
 	}
 	b.upsertLookup(ctx, bookID, source, "found", year)
 	b.yearChanged.Add(1)
+	b.changedMu.Lock()
+	b.changedBooks = append(b.changedBooks, bookID)
+	b.changedMu.Unlock()
 	return nil
 }
 

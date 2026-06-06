@@ -203,6 +203,99 @@ func TestService_ListAndGet(t *testing.T) {
 	require.GreaterOrEqual(t, res.Facets["lang"]["ru"], int64(1))
 }
 
+// TestService_WorksIndex — веб-путь (ListWorks/SuggestWorks/GetWork) против
+// индекса works, построенного импортёром. Фикстура без группировки → каждая
+// работа singleton, поэтому число работ = числу проиндексированных изданий.
+func TestService_WorksIndex(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startPostgres(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, err := filepath.Abs(fixtureINPX)
+	require.NoError(t, err)
+	stats, err := imp.Run(ctx, abs)
+	require.NoError(t, err)
+
+	svc := books.New(pool, mgr, nil)
+
+	// ── ListWorks без query: по работе на каждое живое издание (singleton).
+	wres, err := svc.ListWorks(ctx, books.ListParams{Limit: 50})
+	require.NoError(t, err)
+	require.Len(t, wres.Items, stats.BooksIndexed)
+	require.Equal(t, int64(stats.BooksIndexed), wres.Total)
+	for _, it := range wres.Items {
+		require.NotZero(t, it.ID)
+		require.NotEmpty(t, it.Title)
+	}
+
+	// ── Поиск по работам → ID работы; GetWork по нему отдаёт карточку.
+	wsearch, err := svc.ListWorks(ctx, books.ListParams{Query: "Кадетский", Limit: 5})
+	require.NoError(t, err)
+	require.NotEmpty(t, wsearch.Items)
+	require.Equal(t, "Кадетский корпус. Книга 2", wsearch.Items[0].Title)
+	workID := wsearch.Items[0].ID
+
+	wb, err := svc.GetWork(ctx, workID, nil, nil)
+	require.NoError(t, err)
+	require.Equal(t, "Кадетский корпус. Книга 2", wb.Title)
+	require.Equal(t, workID, wb.WorkID, "GetWork(workID).WorkID == workID")
+	require.NotEmpty(t, wb.Editions)
+
+	// Несуществующая работа → ErrNotFound.
+	_, err = svc.GetWork(ctx, 99999999, nil, nil)
+	require.ErrorIs(t, err, books.ErrNotFound)
+
+	// ── SuggestWorks → тот же work id, что ListWorks.
+	wsugg, err := svc.SuggestWorks(ctx, "Кадетский", 5, 0, nil, nil)
+	require.NoError(t, err)
+	require.NotEmpty(t, wsugg)
+	require.Equal(t, "Кадетский корпус. Книга 2", wsugg[0].Title)
+	require.Equal(t, workID, wsugg[0].ID)
+
+	// ── Исключение жанра убирает работу из works-выдачи.
+	wbaseline, err := svc.ListWorks(ctx, books.ListParams{Limit: 50})
+	require.NoError(t, err)
+	wexcl, err := svc.ListWorks(ctx, books.ListParams{ExcludeGenres: []string{"sf_action"}, Limit: 50})
+	require.NoError(t, err)
+	require.Less(t, len(wexcl.Items), len(wbaseline.Items), "exclude жанра должен убрать хотя бы одну работу")
+	for _, it := range wexcl.Items {
+		require.NotContains(t, it.Genres, "sf_action")
+	}
+
+	// ── Исключение языка ru (works-семантика lang IN visible): русские работы
+	//    уходят, нерусские остаются.
+	wexLang, err := svc.ListWorks(ctx, books.ListParams{ExcludeLangs: []string{"ru"}, Limit: 50})
+	require.NoError(t, err)
+	for _, it := range wexLang.Items {
+		require.NotEqual(t, "ru", it.Lang)
+	}
+
+	// ── Обложка/CoverEditionID/EditionCount догидрачиваются на works-выдачу.
+	_, err = pool.Exec(ctx, `
+		UPDATE books SET cover_path='wcover.jpg'
+		WHERE id = (SELECT id FROM books WHERE work_id=$1 AND deleted=false ORDER BY id LIMIT 1)`, workID)
+	require.NoError(t, err)
+	wres2, err := svc.ListWorks(ctx, books.ListParams{Query: "Кадетский", Limit: 5})
+	require.NoError(t, err)
+	require.NotEmpty(t, wres2.Items)
+	require.Equal(t, "wcover.jpg", wres2.Items[0].CoverPath)
+	require.NotZero(t, wres2.Items[0].CoverEditionID)
+	require.GreaterOrEqual(t, wres2.Items[0].EditionCount, 1)
+
+	// ── Фасеты по works присутствуют (считают РАБОТЫ).
+	wfac, err := svc.ListWorks(ctx, books.ListParams{Facets: []string{"genres", "lang"}, Limit: 50})
+	require.NoError(t, err)
+	require.NotNil(t, wfac.Facets)
+	require.Contains(t, wfac.Facets, "genres")
+	require.Contains(t, wfac.Facets, "lang")
+}
+
 // TestService_GetReturnsEditions — Get отдаёт work-level карточку с массивом
 // editions[] (все издания работы), top-level поля = открытого издания.
 func TestService_GetReturnsEditions(t *testing.T) {

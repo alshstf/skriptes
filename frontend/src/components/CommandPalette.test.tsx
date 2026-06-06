@@ -89,7 +89,9 @@ describe('CommandPalette', () => {
     await user.click(item);
 
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith({ to: '/books/7' });
+      // Палитра ведёт на карточку работы (/works/{work_id ?? id}); у фикстуры
+      // work_id нет → /works/7.
+      expect(navigateMock).toHaveBeenCalledWith({ to: '/works/7' });
     });
     await waitFor(() => {
       expect(screen.queryByPlaceholderText(/Поиск книг/)).not.toBeInTheDocument();

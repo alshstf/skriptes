@@ -74,7 +74,7 @@ test.describe('genre chips overflow (375px)', () => {
     await page.keyboard.press('Escape');
     await expect(popover).toBeHidden();
     await page.getByRole('link', { name: 'Книга с кучей жанров' }).click();
-    await expect(page).toHaveURL(/\/books\/19/);
+    await expect(page).toHaveURL(/\/works\/19/);
   });
 
   test('активный фильтр по жанру — совпавший жанр виден, а не спрятан за +N', async ({

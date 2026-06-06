@@ -236,6 +236,9 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		}
 		b.Authors = auth
 		b.Series = out.Title
+		if workID.Valid && workID.Int64 > 0 {
+			b.WorkID = workID.Int64 // ссылка карточки → /works/{work_id}
+		}
 		// SeriesID нужен фронту для clickable-имён в потенциальных
 		// смешанных списках; в карточке серии очевидно, что все книги
 		// принадлежат одной серии, но единообразный тип лучше.
@@ -441,6 +444,9 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			b.SerNo = &n
 		}
 		b.Authors = auth
+		if workID.Valid && workID.Int64 > 0 {
+			b.WorkID = workID.Int64 // ссылка карточки → /works/{work_id}
+		}
 		if seriesID.Valid {
 			si := seriesSortItem{bookID: b.ID, serNo: b.SerNo, title: b.Title, normTitle: normTitle}
 			if wy.Valid {
