@@ -203,6 +203,52 @@ func TestService_ListAndGet(t *testing.T) {
 	require.GreaterOrEqual(t, res.Facets["lang"]["ru"], int64(1))
 }
 
+// TestService_GetReturnsEditions — Get отдаёт work-level карточку с массивом
+// editions[] (все издания работы), top-level поля = открытого издания.
+func TestService_GetReturnsEditions(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var collID, archID, authorID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Кинг','кинг стивен') RETURNING id`).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title, primary_author_id, written_year) VALUES ('Оно','оно',$1,1986) RETURNING id`,
+		authorID).Scan(&workID))
+	mk := func(lib, lang, translator string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, translator, work_id)
+			VALUES ($1,$2,$3,$3,'fb2','Оно','оно',$4,NULLIF($5,''),$6) RETURNING id`,
+			collID, archID, lib, lang, translator, workID).Scan(&id))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, authorID)
+		require.NoError(t, err)
+		return id
+	}
+	ru := mk("L-ru", "ru", "Вебер Виктор")
+	mk("L-en", "en", "")
+
+	svc := books.New(pool, nil, nil)
+	b, err := svc.Get(ctx, ru)
+	require.NoError(t, err)
+	require.Equal(t, "Оно", b.Title)
+	require.Equal(t, workID, b.WorkID)
+	require.NotNil(t, b.WrittenYear)
+	require.Equal(t, 1986, *b.WrittenYear, "год написания — уровня работы")
+	require.Len(t, b.Editions, 2, "обе издания работы в editions[]")
+	require.Equal(t, ru, b.Editions[0].ID, "открытое издание — первым")
+	require.Equal(t, "Вебер Виктор", b.Editions[0].Translator)
+	require.Equal(t, "ru", b.Lang, "top-level lang = открытое издание")
+}
+
 // ── helpers ────────────────────────────────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {

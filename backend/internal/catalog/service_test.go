@@ -20,6 +20,59 @@ import (
 
 const fixtureINPX = "../inpx/testdata/test.inpx"
 
+// TestService_CollapsesEditionsByWork — два издания одной работы схлопываются в
+// ОДНУ карточку на странице автора/серии (BookCount=1, EditionCount=2). Сидим
+// напрямую (Meili не нужен — catalog работает по PG).
+func TestService_CollapsesEditionsByWork(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var collID, archID, authorID, seriesID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Кинг','кинг стивен') RETURNING id`).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ('Тёмная башня','тёмная башня',$1) RETURNING id`, authorID).Scan(&seriesID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title, primary_author_id, series_id, ser_no) VALUES ('Оно','оно',$1,$2,1) RETURNING id`,
+		authorID, seriesID).Scan(&workID))
+
+	mkEdition := func(lib, lang string) {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, series_id, ser_no, work_id)
+			VALUES ($1,$2,$3,'f','fb2','Оно','оно',$4,$5,1,$6) RETURNING id`,
+			collID, archID, lib, lang, seriesID, workID).Scan(&id))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, authorID)
+		require.NoError(t, err)
+	}
+	mkEdition("L-ru", "ru")
+	mkEdition("L-en", "en")
+
+	svc := catalog.New(pool)
+
+	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	require.NoError(t, err)
+	require.Equal(t, 1, a.BookCount, "две издания одной работы = одна логическая книга")
+	require.Len(t, a.Books, 1, "карточка автора схлопнута до одной работы")
+	require.Equal(t, 2, a.Books[0].EditionCount, "edition_count учитывает оба издания")
+	require.Len(t, a.Series, 1)
+	require.Equal(t, 1, a.Series[0].Count, "счётчик серии — по работам, не изданиям")
+
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil)
+	require.NoError(t, err)
+	require.Equal(t, 1, s.BookCount, "серия: одна логическая книга")
+	require.Len(t, s.Books, 1)
+	require.Equal(t, 2, s.Books[0].EditionCount)
+}
+
 // TestService_AuthorAndSeries_OnFixture — реальный PG + Meili (для импорта),
 // после импорта ходим в Author/Series и проверяем агрегаты на конкретной книге
 // LIBID=749080 (Алексеев / "Кадетский корпус. Книга 2" / серия "Петля [Алексеев]" #2 / 3 жанра).

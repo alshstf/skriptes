@@ -493,20 +493,24 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		archive     string
 		lang        pgtype.Text
 	)
+	// Work-центрично: Title/WrittenYear/Series/SerNo — уровня работы (works);
+	// lang/edition_year/cover/file/size/annotation — ОТКРЫТОГО издания (id в URL),
+	// для кнопок скачать/читать и обратной совместимости.
 	err := s.pool.QueryRow(ctx, `
 		SELECT
-			b.id, b.lib_id, b.title,
+			b.id, b.lib_id, COALESCE(w.title, b.title), b.work_id,
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
-			b.written_year, b.edition_year,
-			b.ser_no, b.series_id, s.title,
+			COALESCE(w.written_year, b.written_year), b.edition_year,
+			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
 			a.filename
 		FROM books b
-		LEFT JOIN series s   ON s.id = b.series_id
+		LEFT JOIN works w    ON w.id = b.work_id
+		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id)
 		JOIN archives a      ON a.id = b.archive_id
 		WHERE b.id = $1
 	`, id).Scan(
-		&b.ID, &b.LibID, &b.Title,
+		&b.ID, &b.LibID, &b.Title, &b.WorkID,
 		&lang, &dateAdded, &rating, &annotation, &coverPath,
 		&writtenYear, &editionYear,
 		&serNo, &seriesID, &seriesTitle,
@@ -554,17 +558,29 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	}
 	b.Archive = archive
 
-	authors, err := s.queryAuthors(ctx, b.ID)
+	// Авторы/жанры — уровня РАБОTЫ (union по всем изданиям). Для singleton-работы
+	// совпадает с изданием. WorkID гарантирован инвариантом (миграция 0017).
+	workID := b.WorkID
+	if workID == 0 {
+		workID = -1 // не сматчит ничего → пустые union (defensive)
+	}
+	authors, err := s.queryWorkAuthors(ctx, workID, b.ID)
 	if err != nil {
 		return Book{}, err
 	}
 	b.Authors = authors
 
-	genres, err := s.queryGenres(ctx, b.ID)
+	genres, err := s.queryWorkGenres(ctx, workID, b.ID)
 	if err != nil {
 		return Book{}, err
 	}
 	b.Genres = genres
+
+	editions, err := s.queryEditions(ctx, workID, b.ID)
+	if err != nil {
+		return Book{}, err
+	}
+	b.Editions = editions
 
 	return b, nil
 }
@@ -596,14 +612,18 @@ func (s *Service) GenresAndLang(ctx context.Context, id int64) ([]string, string
 	return codes, lang.String, nil
 }
 
-func (s *Service) queryAuthors(ctx context.Context, bookID int64) ([]AuthorRef, error) {
+// queryWorkAuthors — авторы уровня РАБОТЫ: union по всем изданиям работы
+// (workID), либо по одному изданию (bookID), если работа не определена.
+func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([]AuthorRef, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT a.id, a.last_name, a.first_name, a.middle_name
-		FROM book_authors ba
-		JOIN authors a ON a.id = ba.author_id
-		WHERE ba.book_id = $1
-		ORDER BY ba.position
-	`, bookID)
+		FROM authors a
+		JOIN book_authors ba ON ba.author_id = a.id
+		JOIN books b         ON b.id = ba.book_id
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		GROUP BY a.id, a.last_name, a.first_name, a.middle_name
+		ORDER BY min(ba.position), a.last_name
+	`, workID, bookID)
 	if err != nil {
 		return nil, fmt.Errorf("query authors: %w", err)
 	}
@@ -620,14 +640,17 @@ func (s *Service) queryAuthors(ctx context.Context, bookID int64) ([]AuthorRef, 
 	return out, rows.Err()
 }
 
-func (s *Service) queryGenres(ctx context.Context, bookID int64) ([]GenreRef, error) {
+// queryWorkGenres — жанры уровня РАБОТЫ: union по всем изданиям работы.
+func (s *Service) queryWorkGenres(ctx context.Context, workID, bookID int64) ([]GenreRef, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT g.id, g.fb2_code, COALESCE(g.name_ru,''), COALESCE(g.name_en,'')
-		FROM book_genres bg
-		JOIN genres g ON g.id = bg.genre_id
-		WHERE bg.book_id = $1
+		FROM genres g
+		JOIN book_genres bg ON bg.genre_id = g.id
+		JOIN books b        ON b.id = bg.book_id
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		GROUP BY g.id, g.fb2_code, g.name_ru, g.name_en
 		ORDER BY g.fb2_code
-	`, bookID)
+	`, workID, bookID)
 	if err != nil {
 		return nil, fmt.Errorf("query genres: %w", err)
 	}
@@ -640,6 +663,47 @@ func (s *Service) queryGenres(ctx context.Context, bookID int64) ([]GenreRef, er
 		}
 		g.Display = pickGenreDisplay(g)
 		out = append(out, g)
+	}
+	return out, rows.Err()
+}
+
+// queryEditions — все физические издания работы (открытое — первым). Удалённые
+// исключаем (их нельзя скачать). Для singleton-работы вернёт одно издание.
+func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]EditionRef, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT b.id, COALESCE(b.lang,''), COALESCE(b.translator,''), b.edition_year,
+		       COALESCE(b.publisher,''), COALESCE(b.isbn,''), COALESCE(b.edition_title,''),
+		       b.page_count, COALESCE(b.cover_path,''), b.size_bytes, b.ext, ar.filename, b.file_name
+		FROM books b
+		JOIN archives ar ON ar.id = b.archive_id
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		ORDER BY (b.id = $2) DESC, b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
+	`, workID, bookID)
+	if err != nil {
+		return nil, fmt.Errorf("query editions: %w", err)
+	}
+	defer rows.Close()
+	var out []EditionRef
+	for rows.Next() {
+		var (
+			e           EditionRef
+			editionYear pgtype.Int2
+			pageCount   pgtype.Int4
+		)
+		if err := rows.Scan(&e.ID, &e.Lang, &e.Translator, &editionYear,
+			&e.Publisher, &e.ISBN, &e.EditionTitle, &pageCount,
+			&e.CoverPath, &e.SizeBytes, &e.Ext, &e.Archive, &e.FileName); err != nil {
+			return nil, err
+		}
+		if editionYear.Valid {
+			v := int(editionYear.Int16)
+			e.EditionYear = &v
+		}
+		if pageCount.Valid {
+			v := int(pageCount.Int32)
+			e.PageCount = &v
+		}
+		out = append(out, e)
 	}
 	return out, rows.Err()
 }
