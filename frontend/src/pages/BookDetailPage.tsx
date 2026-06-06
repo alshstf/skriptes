@@ -161,7 +161,9 @@ export function BookDetailPage() {
                 {!multi && book.edition_year ? (
                   <Field label="Год издания" value={String(book.edition_year)} />
                 ) : null}
-                {book.date_added ? <Field label="Добавлена" value={book.date_added} /> : null}
+                {book.date_added ? (
+                  <Field label="Добавлена" value={formatReadDate(book.date_added)} />
+                ) : null}
                 {book.rating !== undefined ? (
                   <Field label="Рейтинг" value={String(book.rating)} />
                 ) : null}
@@ -221,7 +223,7 @@ function EditionsSection({ book }: { book: Book }) {
       </h3>
       <ul className="space-y-2">
         {editions.map((e) => (
-          <EditionRow key={e.id} edition={e} isCurrent={e.id === book.id} />
+          <EditionRow key={e.id} edition={e} workTitle={book.title} />
         ))}
       </ul>
     </section>

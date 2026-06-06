@@ -129,13 +129,13 @@ test('reader: «Читать» link navigates to /books/19/read', async ({ mocke
   await expect(page.getByRole('button', { name: /Вернуться к карточке книги/ })).toBeVisible();
 });
 
-test('reader: «К карточке» делает history.back, не push', async ({ mockedPage: page }) => {
-  // Регресс: раньше кнопка «К карточке» делала navigate({to:'/books/$id'})
-  // что push'ало новую entry в history, и тогда browser back из карточки
-  // возвращал в ридер вместо списка. Сейчас должен быть history.back().
-  //
-  // Сценарий: списки → карточка → ридер → «К карточке» → browser back
-  // должен вернуть НА СПИСОК (не в ридер).
+test('reader: «К карточке» ведёт на карточку и browser-back не возвращает в ридер', async ({
+  mockedPage: page,
+}) => {
+  // «К карточке» делает navigate(replace) на карточку. window.history.back()
+  // здесь ненадёжен: foliate в iframe плодит свои history-записи, и back мог
+  // увести в ридер другого издания (баг, который заметил юзер). Проверяем:
+  // (1) «К карточке» → карточка; (2) browser-back НЕ возвращает в ридер.
   await page.route(/\/api\/books\/19\/position$/, (route) =>
     route.fulfill({
       status: 200,
@@ -145,17 +145,13 @@ test('reader: «К карточке» делает history.back, не push', asy
   );
 
   await page.goto('/books');
-  // На списке кликаем по книге id=19 — переход на /books/19.
   await page.getByRole('link', { name: /Кадетский корпус. Книга 2/ }).first().click();
   await expect(page).toHaveURL(/\/books\/19$/);
-  // Кликаем «Читать» — переход на /books/19/read.
   await page.getByRole('link', { name: /Открыть книгу в браузерном ридере/ }).click();
   await expect(page).toHaveURL(/\/books\/19\/read$/);
-  // «К карточке» — должна сработать как history.back, не как push.
   await page.getByRole('button', { name: /Вернуться к карточке книги/ }).click();
   await expect(page).toHaveURL(/\/books\/19$/);
-  // Дальше browser back — должны попасть на /books (список), НЕ обратно
-  // в ридер. Это и есть проверка регресса.
+  // Browser-back НЕ должен вернуть в ридер (replace убрал reader-запись).
   await page.goBack();
-  await expect(page).toHaveURL(/\/books(\?.*)?$/);
+  await expect(page).not.toHaveURL(/\/books\/19\/read$/);
 });

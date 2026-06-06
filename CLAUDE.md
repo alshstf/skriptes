@@ -295,16 +295,28 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   аддитивен; на singleton-данных выдача та же).
 **Phase 4b (сделано) — редизайн страницы книги (editions UI):**
 - `BookDetailPage` (`frontend/src/pages/BookDetailPage.tsx`): при ≥2 изданиях —
-  секция «Издания» (`components/EditionRow.tsx`): на каждое издание строка
-  (язык через `useLanguageMap`, переводчик/издатель/год издания/ISBN/размер/
-  формат) + действия Читать/Скачать/Kindle ПО id издания; открытое (id из URL)
-  выделено + первым. Одно издание → классический вид (действия в шапке), секцию
-  не показываем. Title/год/серия/авторы/жанры — уровня работы.
-- Бейдж «N изданий»: `BookListItem` (автор/серия) и `BooksPage::BookCard`
-  (/books); `books.Service.hydrateCovers` догидрачивает `edition_count` из
-  `works`. e2e — `frontend/e2e/editions.spec.ts` (layout, jsdom не умеет).
-- ⚠️ work-level favorite/read пока per-edition (на открытом издании); полноценная
-  агрегация в работу — отдельный follow-up (Phase 5).
+  секция «Издания» (`components/EditionRow.tsx`): ПЛОСКИЙ список равноправных
+  изданий (никакого «открытого»/выделения — убрано как непонятное), на каждое:
+  мини-обложка, язык (`useLanguageMap`), переводчик/издатель/год издания/ISBN/
+  размер (формат НЕ показываем — вся коллекция fb2), прогресс чтения per-edition,
+  и компактные действия `components/EditionActions.tsx` — «Читать» + одно меню
+  «⋯» (скачать форматы + На Kindle), чтобы строки не рябили при многих изданиях.
+  Форматы вынесены в `lib/formats.ts` (общие с `DownloadMenu`). Title/год/серия/
+  авторы/жанры — уровня работы.
+- Обложка/аннотация карточки — work-level: открытого издания, иначе любого
+  издания работы (`books.Get`, COALESCE по `id`). work-level favorite/read
+  (`history.IsWorkFavorite`/`WorkReadStatus`) + per-edition прогресс
+  (`WorkEditionReads` → `EditionRef.reading_fraction`/`is_read`, мёрджит
+  `api/books.go::handleGetBook`).
+- Бейдж «N изданий»: `BookListItem` + `BooksPage::BookCard`;
+  `hydrateCovers` догидрачивает `edition_count` (+ обложку из любого издания).
+- ⚠️ Ридер: «К карточке» = `navigate(replace)` на карточку, НЕ
+  `window.history.back()` (foliate в iframe плодит свои history-записи →
+  back уводил в чужой ридер). `/foliate-reader.html` в PWA
+  `navigateFallbackDenylist` (`vite.config.ts`) — иначе SW отдаёт в iframe
+  index.html (всё SPA), ридер виснет на «Подготовка…».
+- ⚠️ Остаётся опциональным: отдельный works-индекс Meili (точные фасетные
+  счётчики; сейчас distinct считает издания).
 
 ## Где что искать (карта по реальным путям)
 

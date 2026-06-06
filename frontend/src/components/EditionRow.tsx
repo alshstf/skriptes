@@ -1,77 +1,73 @@
-import { Link } from '@tanstack/react-router';
-import { BookOpen, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { DownloadMenu } from '@/components/DownloadMenu';
-import { SendToKindleButton } from '@/components/SendToKindleButton';
+import { BookCover } from '@/components/BookCover';
+import { EditionActions } from '@/components/EditionActions';
 import { useLanguageMap } from '@/lib/content';
 import { type EditionRef } from '@/lib/books';
 import { cn } from '@/lib/utils';
 
 /**
- * EditionRow — одно издание (fb2-файл) в секции «Издания» на странице книги.
+ * EditionRow — одно издание (fb2-файл) в секции «Издания».
  *
- * Монохром: открытое издание выделяется не цветом, а контрастной рамкой +
- * приглушённым фоном + меткой «Открыто». Атрибуты издания (переводчик/издатель/
- * год/ISBN/размер/формат) — компактным inline-списком; действия (Читать/
- * Скачать/Kindle) — справа, по id ИМЕННО этого издания.
+ * Издания равноправны (никакого «активного»/«открытого»): плоская строка с
+ * мини-обложкой, атрибутами и компактными действиями. Прогресс чтения — на
+ * строке (per-edition: позиция/CFI привязаны к файлу). Формат не показываем —
+ * вся коллекция fb2, формат выбирается в меню скачивания.
  */
-export function EditionRow({ edition, isCurrent }: { edition: EditionRef; isCurrent: boolean }) {
+export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTitle: string }) {
   const langMap = useLanguageMap();
   const langLabel = edition.lang ? (langMap.get(edition.lang) ?? edition.lang) : null;
+  const pct =
+    edition.reading_fraction && edition.reading_fraction > 0
+      ? Math.min(100, Math.max(1, Math.round(edition.reading_fraction * 100)))
+      : 0;
 
   return (
-    <li
-      className={cn(
-        'rounded-lg border p-3 sm:p-4 transition-colors',
-        isCurrent ? 'border-foreground/30 bg-muted/50' : 'border-border',
-      )}
-    >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0 space-y-1.5">
-          <div className="flex flex-wrap items-center gap-2">
+    <li className="rounded-lg border border-border p-3 sm:p-4">
+      <div className="flex gap-3">
+        <BookCover
+          coverPath={edition.cover_path}
+          title={workTitle}
+          className="w-12 shrink-0"
+        />
+        <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 space-y-1.5">
             {langLabel ? (
               <Badge variant="outline" className="font-normal uppercase">
                 {langLabel}
               </Badge>
             ) : null}
-            {isCurrent ? (
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <Check className="size-3" aria-hidden /> Открыто
-              </span>
+
+            {edition.edition_title && edition.edition_title !== workTitle ? (
+              <p className="text-sm font-medium text-pretty">{edition.edition_title}</p>
+            ) : null}
+
+            <dl className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground tabular-nums">
+              <Meta label="Переводчик" value={edition.translator} />
+              <Meta
+                label="Год издания"
+                value={edition.edition_year ? String(edition.edition_year) : undefined}
+              />
+              <Meta label="Издатель" value={edition.publisher} />
+              <Meta label="ISBN" value={edition.isbn} mono />
+              <Meta label="Размер" value={`${(edition.size_bytes / 1024).toFixed(1)} KiB`} />
+            </dl>
+
+            {edition.is_read ? (
+              <p className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400">
+                <Check className="size-3.5" aria-hidden /> Прочитано
+              </p>
+            ) : pct > 0 ? (
+              <div className="flex items-center gap-2" aria-label={`Прочитано ${pct}%`}>
+                <div className="h-1 w-28 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full bg-foreground/60" style={{ width: `${pct}%` }} />
+                </div>
+                <span className="text-xs text-muted-foreground tabular-nums">{pct}%</span>
+              </div>
             ) : null}
           </div>
 
-          {edition.edition_title ? (
-            <p className="text-sm font-medium text-pretty">{edition.edition_title}</p>
-          ) : null}
-
-          <dl className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground tabular-nums">
-            <Meta label="Переводчик" value={edition.translator} />
-            <Meta
-              label="Год издания"
-              value={edition.edition_year ? String(edition.edition_year) : undefined}
-            />
-            <Meta label="Издатель" value={edition.publisher} />
-            <Meta label="ISBN" value={edition.isbn} mono />
-            <Meta label="Размер" value={`${(edition.size_bytes / 1024).toFixed(1)} KiB`} />
-            <Meta label="Формат" value={edition.ext.toUpperCase()} />
-          </dl>
-        </div>
-
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
-          <Button asChild variant="secondary" size="sm" className="gap-1">
-            <Link
-              to="/books/$id/read"
-              params={{ id: String(edition.id) }}
-              aria-label="Открыть издание в браузерном ридере"
-            >
-              <BookOpen className="size-4" aria-hidden />
-              <span className="hidden sm:inline">Читать</span>
-            </Link>
-          </Button>
-          <SendToKindleButton bookId={edition.id} />
-          <DownloadMenu bookId={edition.id} />
+          <EditionActions editionId={edition.id} readingFraction={edition.reading_fraction} />
         </div>
       </div>
     </li>
