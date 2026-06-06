@@ -294,6 +294,63 @@ func (im *Importer) ResyncLangs(ctx context.Context) (int, error) {
 	return total, nil
 }
 
+// ResyncWorkIDs пере-проставляет Meili-поле work_id из books.work_id для всех
+// живых книг. Нужен: разово при включении distinctAttribute (существующие
+// доки его не имели) и после прохода группировки (merge меняет work_id у
+// изданий). Зеркало ResyncLangs. Возвращает число обновлённых документов.
+func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
+	rows, err := im.deps.Pool.Query(ctx, `SELECT id, COALESCE(work_id, 0) FROM books WHERE deleted = false`)
+	if err != nil {
+		return 0, fmt.Errorf("query work_id: %w", err)
+	}
+	defer rows.Close()
+
+	const batchSize = 1000
+	pk := "id"
+	batch := make([]map[string]any, 0, batchSize)
+	total := 0
+	flush := func() error {
+		if len(batch) == 0 {
+			return nil
+		}
+		idx := im.deps.Meili.Index(booksIndex)
+		task, ferr := idx.UpdateDocumentsWithContext(ctx, batch, &meilisearch.DocumentOptions{PrimaryKey: &pk})
+		if ferr != nil {
+			return fmt.Errorf("meili update work_id: %w", ferr)
+		}
+		final, ferr := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+		if ferr != nil {
+			return fmt.Errorf("wait work_id task %d: %w", task.TaskUID, ferr)
+		}
+		if final.Status != meilisearch.TaskStatusSucceeded {
+			return fmt.Errorf("work_id task %d status %s: %v", final.UID, final.Status, final.Error)
+		}
+		total += len(batch)
+		batch = batch[:0]
+		return nil
+	}
+
+	for rows.Next() {
+		var id, workID int64
+		if serr := rows.Scan(&id, &workID); serr != nil {
+			return total, fmt.Errorf("scan work_id row: %w", serr)
+		}
+		batch = append(batch, map[string]any{"id": id, "work_id": workID})
+		if len(batch) >= batchSize {
+			if ferr := flush(); ferr != nil {
+				return total, ferr
+			}
+		}
+	}
+	if rerr := rows.Err(); rerr != nil {
+		return total, fmt.Errorf("iterate work_id rows: %w", rerr)
+	}
+	if ferr := flush(); ferr != nil {
+		return total, ferr
+	}
+	return total, nil
+}
+
 // processRecord обрабатывает одну запись внутри транзакции.
 // Откат транзакции при любой ошибке — состояние БД не пачкается полу-импортом одной книги.
 func (im *Importer) processRecord(
@@ -391,15 +448,21 @@ func (im *Importer) processRecord(
 	}
 
 	// Новая книга → своя singleton-работа (инвариант work_id != NULL). Существующая
-	// (re-import/update) уже привязана к работе — не трогаем (её work_id мог быть
-	// назначен джобой группировки в общую работу).
+	// (re-import/update) уже привязана к работе — её work_id мог быть назначен
+	// джобой группировки в общую работу, поэтому только читаем.
+	var workID int64
 	if res.Created {
 		var primaryAuthor int64
 		if len(authorIDs) > 0 {
 			primaryAuthor = authorIDs[0]
 		}
-		if err := ensureSingletonWork(ctx, q, res.ID, br, primaryAuthor); err != nil {
+		workID, err = ensureSingletonWork(ctx, q, res.ID, br, primaryAuthor)
+		if err != nil {
 			return err
+		}
+	} else {
+		if err := q.QueryRow(ctx, `SELECT COALESCE(work_id, 0) FROM books WHERE id = $1`, res.ID).Scan(&workID); err != nil {
+			return fmt.Errorf("read work_id: %w", err)
 		}
 	}
 
@@ -440,6 +503,7 @@ func (im *Importer) processRecord(
 			Lang:            lang,
 			LibID:           rec.LibID,
 			Archive:         file.Archive,
+			WorkID:          workID,
 		}
 		if err := idx.add(doc); err != nil {
 			return err

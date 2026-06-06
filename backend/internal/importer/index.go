@@ -25,6 +25,18 @@ type bookDoc struct {
 	Popularity      int64    `json:"popularity"` // обновляется отдельным процессом
 	LibID           string   `json:"lib_id"`
 	Archive         string   `json:"archive"`
+	// WorkID — логическая книга (works.id). distinctAttribute индекса = work_id:
+	// поиск/список отдают ОДНО издание на работу (схлопывание дублей/переводов).
+	// Синкается ResyncWorkIDs (импорт + после прохода группировки).
+	WorkID int64 `json:"work_id"`
+}
+
+// ConfigureIndex применяет настройки индекса books идемпотентно — для вызова на
+// СТАРТЕ backend (а не только при импорте): на стабильном деплое без нового
+// inpx импорт пропускается по хэшу, и новые настройки (например
+// distinctAttribute=work_id из Phase 3) иначе не применились бы.
+func (im *Importer) ConfigureIndex(ctx context.Context) error {
+	return configureIndex(ctx, im.deps.Meili)
 }
 
 // configureIndex применяет настройки к индексу books идемпотентно.
@@ -50,12 +62,18 @@ func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
 		return fmt.Errorf("update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "year", "series_id", "author_ids"}
+	filterable := []any{"genres", "lang", "year", "series_id", "author_ids", "work_id"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("update filterable: %w", err)
 	}
 	if _, err := idx.UpdateSortableAttributesWithContext(ctx, &[]string{"year", "popularity"}); err != nil {
 		return fmt.Errorf("update sortable: %w", err)
+	}
+	// distinctAttribute = work_id: поиск/список схлопываются в ОДНО издание на
+	// логическую книгу (works). Представитель — самое релевантное издание;
+	// edition_count/языки догидрируются из PG на страницу выдачи.
+	if _, err := idx.UpdateDistinctAttributeWithContext(ctx, "work_id"); err != nil {
+		return fmt.Errorf("update distinct: %w", err)
 	}
 	if _, err := idx.UpdateRankingRulesWithContext(ctx,
 		&[]string{"words", "typo", "proximity", "attribute", "sort", "exactness", "popularity:desc"}); err != nil {

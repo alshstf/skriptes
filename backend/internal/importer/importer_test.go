@@ -205,6 +205,54 @@ func TestResyncYears_PushesWrittenYearToMeili(t *testing.T) {
 	require.Len(t, res2000.Hits, 1, "год >= 2000 — только книга 2010")
 }
 
+// TestImport_MeiliDistinctByWork — distinctAttribute=work_id: поиск отдаёт одно
+// издание на логическую книгу. Сливаем два издания в одну работу + ResyncWorkIDs
+// → результатов на одно меньше.
+func TestImport_MeiliDistinctByWork(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool, _ := startPostgres(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, err := filepath.Abs(fixtureINPX)
+	require.NoError(t, err)
+	_, err = imp.Run(ctx, abs)
+	require.NoError(t, err)
+
+	// Базовая выдача: по одному изданию на работу (изначально все singleton).
+	res0, err := mgr.Index("books").SearchWithContext(ctx, "", &meili.SearchRequest{Limit: 1000})
+	require.NoError(t, err)
+	baseline := len(res0.Hits)
+	require.Greater(t, baseline, 1)
+
+	// Берём два живых издания с РАЗНЫМИ работами, сливаем второе в работу первого.
+	rows, err := pool.Query(ctx, `SELECT id, work_id FROM books WHERE deleted=false ORDER BY id LIMIT 2`)
+	require.NoError(t, err)
+	var ids, works []int64
+	for rows.Next() {
+		var id, w int64
+		require.NoError(t, rows.Scan(&id, &w))
+		ids = append(ids, id)
+		works = append(works, w)
+	}
+	rows.Close()
+	require.Len(t, ids, 2)
+	require.NotEqual(t, works[0], works[1], "изначально разные работы")
+
+	_, err = pool.Exec(ctx, `UPDATE books SET work_id=$1 WHERE id=$2`, works[0], ids[1])
+	require.NoError(t, err)
+	_, err = imp.ResyncWorkIDs(ctx)
+	require.NoError(t, err)
+
+	res1, err := mgr.Index("books").SearchWithContext(ctx, "", &meili.SearchRequest{Limit: 1000})
+	require.NoError(t, err)
+	require.Equal(t, baseline-1, len(res1.Hits), "distinct по work_id схлопнул два издания одной работы")
+}
+
 // ── helpers ────────────────────────────────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) (*pgxpool.Pool, string) {

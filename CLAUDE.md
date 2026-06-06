@@ -270,9 +270,20 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   GET/PUT/run/stop + `/admin/works/split`,`/merge`). Фронт — секция
   «Группировка изданий» в `AdminBackgroundPage` (Выкл/Фоном, источники Tier-2,
   scope, coverage), хуки в `lib/admin.ts`. main: `workGroupCtl` в `SettingsDeps`.
-- ⚠️ work_id ПОКА не читается в read-path'ах (это Phase 3) — группировка
-  проставляет `work_id`, но каталог/поиск/карточки всё ещё per-fb2. works-индекс
-  Meili и схлопывание в одну карточку — Phase 3; редизайн страницы книги — Phase 4.
+**Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
+- `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
+  (`importer/index.go`) → `/books`, поиск, Cmd+K, OPDS отдают ОДНО издание на
+  логическую книгу (представитель — самое релевантное издание). Без отдельного
+  works-индекса (минорный минус — фасетные счётчики считают издания, не работы).
+- `Importer.ResyncWorkIDs` (зеркало `ResyncLangs`) синкает `work_id` в Meili.
+  `Importer.ConfigureIndex` (экспортирован) применяет настройки индекса на КАЖДОМ
+  старте (`runOnceWorkIDResync` в `main.go`) — иначе на стабильном деплое без
+  нового inpx `distinct` не включился бы (configureIndex живёт только в Run).
+  One-shot гейт `app_settings.work_id_synced_v1`. Группировка после прохода с
+  merge синкает `work_id` через `WorkIDResyncer` (`work_grouper`→`imp`).
+- ⚠️ ОСТАЛОСЬ на Phase 4: карточки автора/серии (`catalog`) и страница книги
+  всё ещё per-fb2 (там схлопывание + `editions[]` идут вместе с редизайном
+  страницы книги). reads/favorites агрегация в работу — тоже Phase 4.
 
 ## Где что искать (карта по реальным путям)
 

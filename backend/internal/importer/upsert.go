@@ -213,7 +213,7 @@ func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, e
 // инвариант «у каждой книги есть work_id» (миграция 0017 сделала это для
 // существующих, импорт — для новых). Группировка нескольких изданий в одну
 // работу — отдельная opt-in фоновая джоба, не здесь.
-func ensureSingletonWork(ctx context.Context, q querier, bookID int64, in bookRow, primaryAuthorID int64) error {
+func ensureSingletonWork(ctx context.Context, q querier, bookID int64, in bookRow, primaryAuthorID int64) (int64, error) {
 	var aid any
 	if primaryAuthorID > 0 {
 		aid = primaryAuthorID
@@ -224,12 +224,12 @@ func ensureSingletonWork(ctx context.Context, q querier, bookID int64, in bookRo
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id
 	`, in.title, in.normalizedTitle, aid, in.seriesID, in.serNo).Scan(&workID); err != nil {
-		return fmt.Errorf("insert work for book %d: %w", bookID, err)
+		return 0, fmt.Errorf("insert work for book %d: %w", bookID, err)
 	}
 	if _, err := q.Exec(ctx, `UPDATE books SET work_id = $2 WHERE id = $1`, bookID, workID); err != nil {
-		return fmt.Errorf("set book %d work_id: %w", bookID, err)
+		return 0, fmt.Errorf("set book %d work_id: %w", bookID, err)
 	}
-	return nil
+	return workID, nil
 }
 
 // replaceBookAuthors переписывает m:n book↔author для одной книги.
