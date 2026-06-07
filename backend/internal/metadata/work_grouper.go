@@ -720,9 +720,19 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 	if len(ids) == 0 {
 		return nil
 	}
+	// Все агрегаты пересчитываются АВТОРИТЕТНО из ТЕКУЩИХ живых изданий работы
+	// (а не set-if-null). Это важно для split/merge: после выноса издания год и
+	// серия должны переderiv'иться по оставшимся, ИНАЧЕ остаётся протухшее
+	// значение (баг: работа сохраняла серию вынесенной книги). LEFT JOIN LATERAL
+	// → если поддерживающих изданий нет, поле очищается (NULL).
 	if _, err := ex.Exec(ctx, `
-		UPDATE works w SET edition_count = c.n, updated_at = now()
-		FROM (SELECT work_id, count(*) n FROM books WHERE work_id = ANY($1) GROUP BY work_id) c
+		UPDATE works w SET edition_count = COALESCE(c.n, 0), updated_at = now()
+		FROM (
+			SELECT w2.id AS work_id, (
+				SELECT count(*) FROM books b WHERE b.work_id = w2.id AND b.deleted = false
+			) AS n
+			FROM works w2 WHERE w2.id = ANY($1)
+		) c
 		WHERE w.id = c.work_id
 	`, ids); err != nil {
 		return fmt.Errorf("recount editions: %w", err)
@@ -730,22 +740,36 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 	if _, err := ex.Exec(ctx, `
 		UPDATE works w SET written_year = c.y, written_year_source = c.src
 		FROM (
-			SELECT DISTINCT ON (work_id) work_id, written_year::int AS y, written_year_source AS src
-			FROM books WHERE work_id = ANY($1) AND written_year IS NOT NULL
-			ORDER BY work_id, written_year ASC
+			SELECT w2.id AS work_id, sub.y, sub.src
+			FROM works w2
+			LEFT JOIN LATERAL (
+				SELECT b.written_year::int AS y, b.written_year_source AS src
+				FROM books b
+				WHERE b.work_id = w2.id AND b.deleted = false AND b.written_year IS NOT NULL
+				ORDER BY b.written_year ASC
+				LIMIT 1
+			) sub ON true
+			WHERE w2.id = ANY($1)
 		) c
-		WHERE w.id = c.work_id AND (w.written_year IS NULL OR c.y < w.written_year)
+		WHERE w.id = c.work_id
 	`, ids); err != nil {
 		return fmt.Errorf("recompute written_year: %w", err)
 	}
 	if _, err := ex.Exec(ctx, `
 		UPDATE works w SET series_id = c.series_id, ser_no = c.ser_no
 		FROM (
-			SELECT DISTINCT ON (work_id) work_id, series_id, ser_no
-			FROM books WHERE work_id = ANY($1) AND series_id IS NOT NULL
-			ORDER BY work_id, ser_no NULLS LAST
+			SELECT w2.id AS work_id, sub.series_id, sub.ser_no
+			FROM works w2
+			LEFT JOIN LATERAL (
+				SELECT b.series_id, b.ser_no
+				FROM books b
+				WHERE b.work_id = w2.id AND b.deleted = false AND b.series_id IS NOT NULL
+				ORDER BY b.ser_no NULLS LAST, b.id
+				LIMIT 1
+			) sub ON true
+			WHERE w2.id = ANY($1)
 		) c
-		WHERE w.id = c.work_id AND w.series_id IS NULL
+		WHERE w.id = c.work_id
 	`, ids); err != nil {
 		return fmt.Errorf("recompute series: %w", err)
 	}

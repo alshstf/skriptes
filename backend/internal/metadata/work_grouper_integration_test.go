@@ -226,6 +226,79 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 	require.Equal(t, "OL777W", *olWork)
 }
 
+// TestWorkAggregates_SplitReDerivesSeries — баг-фикс: recomputeWorkAggregates
+// авторитетно переderiv'ит серию/год из ТЕКУЩИХ изданий. После merge чужой
+// книги с серией и обратного split серия исходной работы должна ОЧИСТИТЬСЯ
+// (раньше set-if-null оставлял чужую серию — «торговец» с серией STALKER).
+func TestWorkAggregates_SplitReDerivesSeries(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Мандино", "мандино ог")
+	var seriesID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ('S.T.A.L.K.E.R.','s.t.a.l.k.e.r.',$1) RETURNING id`,
+		author).Scan(&seriesID))
+
+	mk := func(lib, title, norm string, ser *int64, serNo int) (int64, int64) {
+		var workID, bookID int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title, primary_author_id, series_id, ser_no)
+			 VALUES ($1,$2,$3,$4,NULLIF($5,0)) RETURNING id`,
+			title, norm, author, ser, serNo).Scan(&workID))
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
+			                   lang, series_id, ser_no, work_id)
+			VALUES ($1,$2,$3,$3,'fb2',$4,$5,'ru',$6,NULLIF($7,0),$8) RETURNING id`,
+			collID, archID, lib, title, norm, ser, serNo, workID).Scan(&bookID))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bookID, author)
+		require.NoError(t, err)
+		return bookID, workID
+	}
+	_, aWork := mk("A", "Величайший в мире торговец", "величайший в мире торговец", nil, 0)
+	bBook, bWork := mk("B", "Сталкер-фанфик", "сталкер-фанфик", &seriesID, 1)
+
+	c := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+
+	seriesOf := func(workID int64) *int64 {
+		var s *int64
+		require.NoError(t, pool.QueryRow(ctx, `SELECT series_id FROM works WHERE id=$1`, workID).Scan(&s))
+		return s
+	}
+
+	// Merge B → A: у A серии не было, наследует STALKER от B.
+	_, err := c.MergeWorks(ctx, []int64{aWork, bWork}, aWork)
+	require.NoError(t, err)
+	require.Equal(t, aWork, workIDOf(t, ctx, pool, bBook), "B переехал в A")
+	sa := seriesOf(aWork)
+	require.NotNil(t, sa, "после merge A наследует серию вошедшей книги")
+	require.Equal(t, seriesID, *sa)
+
+	// Split B обратно → A остаётся только с «торговцем» (без серии) → серия очищается.
+	newWork, err := c.SplitEditions(ctx, []int64{bBook})
+	require.NoError(t, err)
+	require.Nil(t, seriesOf(aWork), "после split чужая серия очищена у исходной работы (баг-фикс)")
+	sn := seriesOf(newWork)
+	require.NotNil(t, sn, "вынесенная книга унесла свою серию в новую работу")
+	require.Equal(t, seriesID, *sn)
+	var ca, cn int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT edition_count FROM works WHERE id=$1`, aWork).Scan(&ca))
+	require.NoError(t, pool.QueryRow(ctx, `SELECT edition_count FROM works WHERE id=$1`, newWork).Scan(&cn))
+	require.Equal(t, 1, ca)
+	require.Equal(t, 1, cn)
+}
+
 // countingResolver — внешний резолвер со счётчиком вызовов (для проверки, что
 // sweepTier1 НЕ ходит в сеть). Всегда возвращает фиксированный key.
 type countingResolver struct {

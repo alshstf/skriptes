@@ -117,6 +117,10 @@ export type SeriesRef = { id: number; title: string };
 /** EditionRef — одно физическое издание (fb2-файл) логической книги. */
 export type EditionRef = {
   id: number;
+  /** Собственные название/серия издания (могут отличаться от work-level —
+   *  тогда видно «чужое» издание после ошибочного слияния; нужно для split). */
+  title?: string;
+  series?: SeriesRef;
   lang?: string;
   translator?: string;
   edition_year?: number;

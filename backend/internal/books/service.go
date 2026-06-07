@@ -1135,11 +1135,13 @@ func (s *Service) queryWorkGenres(ctx context.Context, workID, bookID int64) ([]
 // исключаем (их нельзя скачать). Для singleton-работы вернёт одно издание.
 func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]EditionRef, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, COALESCE(b.lang,''), COALESCE(b.translator,''), b.edition_year,
+		SELECT b.id, b.title, b.series_id, COALESCE(es.title,''),
+		       COALESCE(b.lang,''), COALESCE(b.translator,''), b.edition_year,
 		       COALESCE(b.publisher,''), COALESCE(b.isbn,''), COALESCE(b.edition_title,''),
 		       b.page_count, COALESCE(b.cover_path,''), b.size_bytes, b.ext, ar.filename, b.file_name
 		FROM books b
-		JOIN archives ar ON ar.id = b.archive_id
+		JOIN archives ar      ON ar.id = b.archive_id
+		LEFT JOIN series es    ON es.id = b.series_id
 		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
 		ORDER BY (b.id = $2) DESC, b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
 	`, workID, bookID)
@@ -1153,8 +1155,11 @@ func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]Ed
 			e           EditionRef
 			editionYear pgtype.Int2
 			pageCount   pgtype.Int4
+			seriesID    pgtype.Int8
+			seriesTitle string
 		)
-		if err := rows.Scan(&e.ID, &e.Lang, &e.Translator, &editionYear,
+		if err := rows.Scan(&e.ID, &e.Title, &seriesID, &seriesTitle,
+			&e.Lang, &e.Translator, &editionYear,
 			&e.Publisher, &e.ISBN, &e.EditionTitle, &pageCount,
 			&e.CoverPath, &e.SizeBytes, &e.Ext, &e.Archive, &e.FileName); err != nil {
 			return nil, err
@@ -1166,6 +1171,9 @@ func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]Ed
 		if pageCount.Valid {
 			v := int(pageCount.Int32)
 			e.PageCount = &v
+		}
+		if seriesID.Valid && seriesTitle != "" {
+			e.Series = &SeriesRef{ID: seriesID.Int64, Title: seriesTitle}
 		}
 		out = append(out, e)
 	}
