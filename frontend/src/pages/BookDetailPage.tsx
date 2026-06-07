@@ -10,6 +10,7 @@ import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
+import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
@@ -189,6 +190,12 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 </p>
               ) : null}
             </div>
+          </div>
+
+          {/* Админ: присоединить другую книгу (дубль вне общей серии/автора).
+              Сам скрыт у не-админа. */}
+          <div className="flex justify-end empty:hidden">
+            <MergeIntoWorkDialog workId={book.work_id ?? 0} workTitle={book.title} />
           </div>
 
           {multi ? <EditionsSection book={book} /> : null}
