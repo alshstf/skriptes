@@ -23,6 +23,10 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Нормальная сборка укладывается в ~6-8 мин; кап (вместо дефолтных 6ч)
+    # роняет зависшую сборку быстро. Раньше флэйк frontend-сборки (qemu-arm64)
+    # на 0.9.0 сжёг 6ч до отмены — теперь упадёт за 30 мин.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:

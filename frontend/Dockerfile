@@ -3,7 +3,13 @@ ARG NODE_VERSION=22
 ARG NGINX_VERSION=1.27-alpine
 
 # ── builder ─────────────────────────────────────────────────────
-FROM node:${NODE_VERSION}-alpine AS builder
+# --platform=$BUILDPLATFORM: сборка фронта (npm ci + vite build) выдаёт
+# АРХ-НЕЗАВИСИМЫЙ статический `dist` (JS/CSS/HTML), поэтому гоняем её на
+# НАТИВНОЙ платформе раннера (amd64) ОДИН раз для всех target-арок. Без этого
+# при multi-arch (linux/arm64) весь npm/vite крутился под qemu-эмуляцией —
+# минуты превращались в часы (релиз 0.9.0 упёрся в 6-часовой кап Actions).
+# Runtime-стадия (nginx) остаётся per-target-arch и лишь копирует готовый dist.
+FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
