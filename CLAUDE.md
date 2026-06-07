@@ -285,9 +285,13 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `work_id` → плашка «Объединить?» (каталог несёт `ListItem.WorkID`/`ser_no`,
   отдельный эндпоинт НЕ нужен). `components/MergeWorksDialog.tsx` — ручной выбор
   ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — выбор
-  изданий в секции «Издания» карточки книги → split (нельзя вынести все). Все
-  компоненты сами скрываются у не-админа (`useMe().role`). merge/split детачнуто
-  синкают поиск через `syncSearchAfterManual` (ResyncWorkIDs + works-индекс).
+  изданий в секции «Издания» карточки книги → split (нельзя вынести все).
+  `components/MergeIntoWorkDialog.tsx` — на карточке книги «Объединить с другой
+  книгой…»: поиск целевой работы через `useSuggest` (works), merge с `target` =
+  ТЕКУЩАЯ работа (она выживает, URL карточки не ломается) — для дублей вне общей
+  серии/автора. Все компоненты сами скрываются у не-админа (`useMe().role`).
+  merge/split детачнуто синкают поиск через `syncSearchAfterManual` (ResyncWorkIDs
+  + works-индекс).
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
   (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу
