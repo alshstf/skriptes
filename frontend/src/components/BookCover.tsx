@@ -12,10 +12,12 @@ import { cn } from '@/lib/utils';
  * плейсхолдер. Так список с on-demand-обложками не показывает «битую
  * картинку»: что есть — грузится, чего нет — плейсхолдер.
  *
- * Два вида плейсхолдера (`placeholder`):
+ * Три вида плейсхолдера (`placeholder`):
  *  - 'icon' (дефолт) — иконка + название (для крупной обложки на карточке);
  *  - 'monogram' — компактный цветной тайл с первой буквой (для thumbnail
- *    в списках).
+ *    в списках);
+ *  - 'mini' — только иконка книги по центру, БЕЗ названия (для мелких обложек,
+ *    где текст нечитаем — напр. строки изданий).
  *
  * `aspect-[2/3]` — типичная пропорция книжной обложки; ширина — через
  * className родителя.
@@ -40,7 +42,7 @@ export function BookCover({
   src?: string;
   title: string;
   className?: string;
-  placeholder?: 'icon' | 'monogram';
+  placeholder?: 'icon' | 'monogram' | 'mini';
 }) {
   const url = src ?? (coverPath ? `/api/covers/${coverPath}` : undefined);
   // Инициализируем из кэша исхода: если по этому url уже был 404 — сразу
@@ -71,6 +73,19 @@ export function BookCover({
           setFailed(true);
         }}
       />
+    );
+  }
+
+  if (placeholder === 'mini') {
+    // Только иконка по центру — название на мелкой обложке нечитаемо.
+    return (
+      <div
+        className={cn(base, 'flex items-center justify-center text-muted-foreground')}
+        role="img"
+        aria-label={`Обложка: ${title}`}
+      >
+        <BookOpen className="size-5 opacity-50" aria-hidden />
+      </div>
     );
   }
 

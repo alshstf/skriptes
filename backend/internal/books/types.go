@@ -130,20 +130,26 @@ type Book struct {
 // EditionRef — одно физическое издание (fb2-файл) логической книги. Для секции
 // «Издания» на карточке: атрибуты + ссылки на скачивание/чтение по id.
 type EditionRef struct {
-	ID           int64  `json:"id"`
-	Lang         string `json:"lang,omitempty"`
-	Translator   string `json:"translator,omitempty"`
-	EditionYear  *int   `json:"edition_year,omitempty"`
-	Publisher    string `json:"publisher,omitempty"`
-	ISBN         string `json:"isbn,omitempty"`
-	EditionTitle string `json:"edition_title,omitempty"`
-	PageCount    *int   `json:"page_count,omitempty"`
-	CoverPath    string `json:"cover_path,omitempty"`
-	SizeBytes    int64  `json:"size_bytes"`
-	Ext          string `json:"ext"`
-	Archive      string `json:"archive"`
-	FileName     string `json:"file_name"`
-	Deleted      bool   `json:"deleted,omitempty"`
+	ID int64 `json:"id"`
+	// Title/Series — СОБСТВЕННЫЕ название и серия этого издания (из books.title /
+	// books.series_id). Обычно совпадают с work-level, но при ошибочном слиянии
+	// «чужое» издание видно по отличному названию/серии — нужно для осознанного
+	// split (какое издание вынести). Work-level title/series — в самом Book.
+	Title        string     `json:"title,omitempty"`
+	Series       *SeriesRef `json:"series,omitempty"`
+	Lang         string     `json:"lang,omitempty"`
+	Translator   string     `json:"translator,omitempty"`
+	EditionYear  *int       `json:"edition_year,omitempty"`
+	Publisher    string     `json:"publisher,omitempty"`
+	ISBN         string     `json:"isbn,omitempty"`
+	EditionTitle string     `json:"edition_title,omitempty"`
+	PageCount    *int       `json:"page_count,omitempty"`
+	CoverPath    string     `json:"cover_path,omitempty"`
+	SizeBytes    int64      `json:"size_bytes"`
+	Ext          string     `json:"ext"`
+	Archive      string     `json:"archive"`
+	FileName     string     `json:"file_name"`
+	Deleted      bool       `json:"deleted,omitempty"`
 	// User-specific (заполняет API-слой, не books-сервис): прогресс чтения и
 	// флаг «прочитано» ИМЕННО этого издания (позиция/CFI привязаны к файлу).
 	ReadingFraction *float64 `json:"reading_fraction,omitempty"`

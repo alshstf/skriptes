@@ -17,6 +17,14 @@ import { cn } from '@/lib/utils';
 export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTitle: string }) {
   const langMap = useLanguageMap();
   const langLabel = edition.lang ? (langMap.get(edition.lang) ?? edition.lang) : null;
+  // Собственное название/серия издания, если отличаются от work-level — сигнал
+  // «чужого» издания после ошибочного слияния (помогает решиться на split).
+  const ownTitle =
+    edition.edition_title && edition.edition_title !== workTitle
+      ? edition.edition_title
+      : edition.title && edition.title !== workTitle
+        ? edition.title
+        : null;
   const pct =
     edition.reading_fraction && edition.reading_fraction > 0
       ? Math.min(100, Math.max(1, Math.round(edition.reading_fraction * 100)))
@@ -28,18 +36,26 @@ export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTi
         <BookCover
           coverPath={edition.cover_path}
           title={workTitle}
+          placeholder="mini"
           className="w-12 shrink-0"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 space-y-1.5">
-            {langLabel ? (
-              <Badge variant="outline" className="font-normal uppercase">
-                {langLabel}
-              </Badge>
-            ) : null}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {langLabel ? (
+                <Badge variant="outline" className="font-normal uppercase">
+                  {langLabel}
+                </Badge>
+              ) : null}
+              {ownTitle && edition.series?.title ? (
+                <Badge variant="outline" className="font-normal">
+                  Серия: {edition.series.title}
+                </Badge>
+              ) : null}
+            </div>
 
-            {edition.edition_title && edition.edition_title !== workTitle ? (
-              <p className="text-sm font-medium text-pretty">{edition.edition_title}</p>
+            {ownTitle ? (
+              <p className="text-sm font-medium text-pretty">{ownTitle}</p>
             ) : null}
 
             <dl className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground tabular-nums">

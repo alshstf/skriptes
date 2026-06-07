@@ -293,7 +293,14 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `work_id` → плашка «Объединить?» (каталог несёт `ListItem.WorkID`/`ser_no`,
   отдельный эндпоинт НЕ нужен). `components/MergeWorksDialog.tsx` — ручной выбор
   ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — выбор
-  изданий в секции «Издания» карточки книги → split (нельзя вынести все).
+  изданий в секции «Издания» карточки книги → split (нельзя вынести все);
+  показывает СОБСТВЕННЫЕ название/серию каждого издания (`EditionRef.title`/
+  `series` из `books.title`/`series_id`) — видно «чужое» издание после ошибочного
+  merge. ⚠️ `recomputeWorkAggregates` пересчитывает edition_count/written_year/
+  series **авторитетно** из текущих живых изданий (а не set-if-null) — иначе
+  после split у работы оставались серия/год вынесенной книги. Мини-обложки
+  изданий — `BookCover placeholder="mini"` (иконка без названия; текст на 48px
+  нечитаем).
   `components/MergeIntoWorkDialog.tsx` — на карточке книги «Объединить с другой
   книгой…»: поиск целевой работы через `useSuggest` (works), merge с `target` =
   ТЕКУЩАЯ работа (она выживает, URL карточки не ломается) — для дублей вне общей

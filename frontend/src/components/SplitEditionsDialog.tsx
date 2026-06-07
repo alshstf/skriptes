@@ -58,10 +58,17 @@ export function SplitEditionsDialog({
     );
   };
 
-  const label = (e: EditionRef) => {
-    const lang = e.lang ? (langMap.get(e.lang) ?? e.lang) : '';
-    const detail = e.translator || e.edition_title || `Издание ${e.id}`;
-    return [lang.toUpperCase(), detail].filter(Boolean).join(' · ');
+  // Заголовок строки = СОБСТВЕННОЕ название издания (так «чужое» издание сразу
+  // видно); мета — язык/серия/переводчик/год/размер для осознанного выбора.
+  const editionTitle = (e: EditionRef) => e.title || e.edition_title || workTitle;
+  const editionMeta = (e: EditionRef) => {
+    const parts: string[] = [];
+    if (e.lang) parts.push((langMap.get(e.lang) ?? e.lang).toUpperCase());
+    if (e.series?.title) parts.push(`Серия: ${e.series.title}`);
+    if (e.translator) parts.push(e.translator);
+    if (e.edition_year) parts.push(String(e.edition_year));
+    parts.push(`${(e.size_bytes / 1024).toFixed(0)} KiB`);
+    return parts.join(' · ');
   };
 
   return (
@@ -82,8 +89,8 @@ export function SplitEditionsDialog({
         <div className="space-y-1">
           <DialogTitle>Разделить издания</DialogTitle>
           <DialogDescription>
-            Отметьте издания «{workTitle}», которые на самом деле другая книга, — они
-            будут вынесены в отдельную книгу.
+            Отметьте издания, которые на самом деле ДРУГАЯ книга. Отмеченные будут
+            вынесены в новую отдельную книгу, остальные останутся в «{workTitle}».
           </DialogDescription>
         </div>
         <ul className="max-h-[50vh] space-y-1 overflow-y-auto py-1">
@@ -109,7 +116,10 @@ export function SplitEditionsDialog({
                   >
                     {on ? <Check className="size-3" /> : null}
                   </span>
-                  <span className="min-w-0 flex-1 truncate">{label(e)}</span>
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate">{editionTitle(e)}</span>
+                    <span className="truncate text-xs text-muted-foreground">{editionMeta(e)}</span>
+                  </span>
                 </button>
               </li>
             );
