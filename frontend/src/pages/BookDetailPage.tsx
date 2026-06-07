@@ -9,6 +9,7 @@ import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
+import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
@@ -221,13 +222,17 @@ function EditionsSection({ book }: { book: Book }) {
   const editions = book.editions ?? [];
   return (
     <section className="space-y-2">
-      <h3 className="flex items-center gap-2 text-sm font-medium">
-        <Library className="size-4" aria-hidden />
-        Издания
-        <span className="text-xs font-normal text-muted-foreground tabular-nums">
-          {editions.length}
-        </span>
-      </h3>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-sm font-medium">
+          <Library className="size-4" aria-hidden />
+          Издания
+          <span className="text-xs font-normal text-muted-foreground tabular-nums">
+            {editions.length}
+          </span>
+        </h3>
+        {/* Админ: вынести ошибочно слитые издания в отдельную книгу (сам скрыт у не-админа). */}
+        <SplitEditionsDialog editions={editions} workTitle={book.title} />
+      </div>
       <ul className="space-y-2">
         {editions.map((e) => (
           <EditionRow key={e.id} edition={e} workTitle={book.title} />

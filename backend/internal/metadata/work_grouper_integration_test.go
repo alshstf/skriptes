@@ -108,6 +108,68 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	require.Equal(t, wOrig, workIDOf(t, ctx, pool, tr1))
 }
 
+// TestWorkGrouper_Tier15_Series_Integration — Tier-1.5: два разно-названных перевода
+// одного тома серии (один ser_no) сливаются в работу БЕЗ src-title-info и без сети.
+func TestWorkGrouper_Tier15_Series_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Гэлбрейт", "гэлбрейт роберт")
+	var seriesID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ('Корморан Страйк','корморан страйк',$1) RETURNING id`,
+		author).Scan(&seriesID))
+
+	// Издание с series_id/ser_no + своя singleton-работа (как после импорта).
+	mk := func(lib, title, norm, srcTitle string, serNo int) int64 {
+		var workID, bookID int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title, primary_author_id, series_id, ser_no)
+			 VALUES ($1,$2,$3,$4,$5) RETURNING id`,
+			title, norm, author, seriesID, serNo).Scan(&workID))
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
+			                   lang, series_id, ser_no, src_title, src_lang, work_id, edition_meta_scanned_at)
+			VALUES ($1,$2,$3,'f','fb2',$4,$5,'ru',$6,$7, NULLIF($8,''), 'en', $9, now())
+			RETURNING id`,
+			collID, archID, lib, title, norm, seriesID, serNo, srcTitle, workID).Scan(&bookID))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bookID, author)
+		require.NoError(t, err)
+		return bookID
+	}
+
+	// #7 — два перевода с разными названиями; у одного есть src-оригинал, у другого
+	// пуст → Tier-1 их НЕ свяжет, сольёт только Tier-1.5 по (серия, ser_no).
+	razv := mk("R1", "Развороченная могила", "развороченная могила", "The Running Grave", 7)
+	neiz := mk("R2", "Неизбежная могила", "неизбежная могила", "", 7)
+	// #6 — другой том, должен остаться отдельной работой.
+	other := mk("R3", "Чернильно-чёрное сердце", "чернильно-чёрное сердце", "", 6)
+
+	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet) // Tier-1(+1.5) only
+	g.drain(ctx)
+
+	require.Equal(t, workIDOf(t, ctx, pool, razv), workIDOf(t, ctx, pool, neiz),
+		"#7: оба перевода слиты по (серия, ser_no)")
+	require.NotEqual(t, workIDOf(t, ctx, pool, razv), workIDOf(t, ctx, pool, other),
+		"#6 — отдельная работа")
+
+	var editions int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT edition_count FROM works WHERE id=$1`, workIDOf(t, ctx, pool, razv)).Scan(&editions))
+	require.Equal(t, 2, editions, "edition_count работы #7 = 2")
+}
+
 // fakeWorkResolver — внешний резолвер для Tier-2-теста.
 type fakeWorkResolver struct {
 	name string

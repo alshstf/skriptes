@@ -5,6 +5,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { MergeSuggestions } from '@/components/MergeSuggestions';
+import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useSeries, type Series } from '@/lib/catalog';
@@ -72,13 +74,20 @@ export function SeriesPage() {
       {s.books.length === 0 ? (
         <p className="text-sm text-muted-foreground">В серии пока ничего нет.</p>
       ) : (
-        <ul className="space-y-1">
-          {[...s.books].sort(bySeriesOrder).map((b) => (
-            <li key={b.id}>
-              <BookListItem book={b} showSeries={false} showSerNo={true} />
-            </li>
-          ))}
-        </ul>
+        <div className="space-y-2">
+          {/* Админ-подсказки + ручное объединение (оба сами скрываются у не-админа). */}
+          <MergeSuggestions books={s.books} />
+          <div className="flex justify-end empty:hidden">
+            <MergeWorksDialog books={s.books} />
+          </div>
+          <ul className="space-y-1">
+            {[...s.books].sort(bySeriesOrder).map((b) => (
+              <li key={b.id}>
+                <BookListItem book={b} showSeries={false} showSerNo={true} />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </article>
   );

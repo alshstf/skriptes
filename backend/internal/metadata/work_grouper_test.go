@@ -85,6 +85,51 @@ func TestClusterTier1(t *testing.T) {
 		}
 		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
 	})
+
+	// ── Tier-1.5: один том серии ⇒ одна работа ──
+	t.Run("Tier-1.5: разные названия с одним ser_no сливаются (кейс Страйка)", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "развороченная могила", lang: "ru",
+				seriesID: 5, serNo: 7, srcTitleNorm: "the running grave", srcLang: "en"},
+			{id: 2, workID: 2, normTitle: "неизбежная могила", lang: "ru",
+				seriesID: 5, serNo: 7}, // src пуст — Tier-1 по src не свёл бы
+		}
+		require.Equal(t, [][]int64{{1, 2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("Tier-1.5: разные ser_no НЕ сливаются", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "том 1", lang: "ru", seriesID: 5, serNo: 1},
+			{id: 2, workID: 2, normTitle: "том 2", lang: "ru", seriesID: 5, serNo: 2},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("Tier-1.5: ser_no=0 (вне серии) не группирует", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "сборник а", lang: "ru", seriesID: 5, serNo: 0},
+			{id: 2, workID: 2, normTitle: "сборник б", lang: "ru", seriesID: 5, serNo: 0},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("Tier-1.5: конфликт оригиналов (разные src) НЕ сливает один ser_no", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "книга а", lang: "ru", seriesID: 5, serNo: 3,
+				srcTitleNorm: "original a", srcLang: "en"},
+			{id: 2, workID: 2, normTitle: "книга б", lang: "ru", seriesID: 5, serNo: 3,
+				srcTitleNorm: "original b", srcLang: "en"},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("Tier-1.5: один ser_no в РАЗНЫХ сериях не путается", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "а", lang: "ru", seriesID: 5, serNo: 1},
+			{id: 2, workID: 2, normTitle: "б", lang: "ru", seriesID: 9, serNo: 1},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
 }
 
 func TestPickCanonicalWork(t *testing.T) {

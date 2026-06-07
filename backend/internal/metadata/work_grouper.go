@@ -242,6 +242,8 @@ type groupBook struct {
 	srcLang       string
 	docID         string
 	isbn          string
+	seriesID      int64 // для Tier-1.5: (серия, ser_no) ⇒ одна работа
+	serNo         int
 	lastName      string
 	firstName     string
 	scanned       bool // work_scanned_at NOT NULL (контекст, не кандидат)
@@ -270,6 +272,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		SELECT b.id, b.work_id, b.title, b.normalized_title::text, COALESCE(b.lang,''),
 		       COALESCE(b.src_title,''), COALESCE(b.src_author_normalized::text,''), COALESCE(b.src_lang,''),
 		       COALESCE(b.fb2_doc_id,''), COALESCE(b.isbn,''),
+		       COALESCE(b.series_id, 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
 		       a.last_name, COALESCE(a.first_name,'')
 		FROM books b
@@ -290,6 +293,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		var srcTitle string
 		if err := rows.Scan(&b.id, &b.workID, &b.title, &b.normTitle, &b.lang,
 			&srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
+			&b.seriesID, &b.serNo,
 			&b.scanned, &b.lastName, &b.firstName); err != nil {
 			return nil, err
 		}
@@ -305,7 +309,8 @@ func clusterTier1(books []groupBook) *unionFind {
 	uf := newUnionFind(len(books))
 	byTitleLang := map[string][]int{} // (normTitle, lang) — оригинал/дубль одного языка
 	byDoc := map[string][]int{}
-	byTrans := map[string][]int{} // (srcAuthorNorm, srcTitleNorm, srcLang) — переводы между собой
+	byTrans := map[string][]int{}    // (srcAuthorNorm, srcTitleNorm, srcLang) — переводы между собой
+	bySeriesNo := map[string][]int{} // (series_id, ser_no) — Tier-1.5: один том серии ⇒ одна работа
 	key := func(parts ...string) string {
 		s := parts[0]
 		for _, p := range parts[1:] {
@@ -321,6 +326,10 @@ func clusterTier1(books []groupBook) *unionFind {
 		if b.srcTitleNorm != "" && b.srcLang != "" {
 			tk := key(b.srcAuthorNorm, b.srcTitleNorm, b.srcLang)
 			byTrans[tk] = append(byTrans[tk], i)
+		}
+		if b.serNo > 0 && b.seriesID > 0 {
+			snk := fmt.Sprintf("%d\x00%d", b.seriesID, b.serNo)
+			bySeriesNo[snk] = append(bySeriesNo[snk], i)
 		}
 	}
 	unionBucket := func(m map[string][]int) {
@@ -340,6 +349,28 @@ func clusterTier1(books []groupBook) *unionFind {
 		}
 		for _, j := range byTitleLang[key(b.srcTitleNorm, b.srcLang)] {
 			uf.union(i, j)
+		}
+	}
+	// Tier-1.5: один том серии (series_id, ser_no) у одного автора ⇒ одна работа —
+	// ловит разно-названные переводы без <src-title-info> и без сети. Гейт точности:
+	// если в бакете ≥2 РАЗНЫХ непустых srcTitleNorm (конфликт оригиналов) — НЕ
+	// союзим (это разные книги с одинаковым ser_no), оставляем другим тирам/ручному
+	// merge. Пустой src конфликтом не считается.
+	for _, idxs := range bySeriesNo {
+		if len(idxs) < 2 {
+			continue
+		}
+		srcs := map[string]struct{}{}
+		for _, i := range idxs {
+			if s := books[i].srcTitleNorm; s != "" {
+				srcs[s] = struct{}{}
+			}
+		}
+		if len(srcs) > 1 {
+			continue // конфликт оригиналов — разные книги под одним ser_no
+		}
+		for j := 1; j < len(idxs); j++ {
+			uf.union(idxs[0], idxs[j])
 		}
 	}
 	return uf
