@@ -61,6 +61,7 @@ type WorkGrouper struct {
 	merged       atomic.Int64       // сколько изданий переназначено за проход (для логов)
 	touchedWorks map[int64]struct{} // канонические работы, изменённые за проход (для works-индекса)
 	deletedWorks map[int64]struct{} // работы, удалённые (GC) за проход
+	tier2Cursor  int64              // курсор по author_id для батчей внешнего краулера (Tier-2)
 }
 
 // WorkGroupConfig — рантайм-параметры (зеркало settings.WorkGroupingConfig;
@@ -106,20 +107,33 @@ func NewWorkGrouper(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupCon
 	return g
 }
 
-// Run — долгоживущий цикл (вызывать в горутине): обработать всех кандидатов,
-// поспать, пересканить.
+// Run — долгоживущий цикл (в горутине). ЧЕРЕДУЕТ быстрый структурный sweep
+// (Tier-1/1.5, без сети) и медленный внешний краулер (Tier-2, rate-gated), с
+// приоритетом Tier-1: на каждой итерации сначала догруппировываем всё, что
+// можно локально (и новые книги из импорта), затем делаем ОДИН батч Tier-2.
+// Так Tier-1/1.5 НЕ заблокирован за rate-лимитом внешних источников (раньше
+// Tier-2 был вшит в каждого автора и тормозил весь проход до ~RPM).
 func (g *WorkGrouper) Run(ctx context.Context) {
 	if g.pool == nil {
 		return
 	}
 	g.logger.Info("work grouping: started", "tier2_sources", len(g.resolvers))
 	for {
-		n := g.drain(ctx)
+		g.sweepTier1(ctx)
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			g.logger.Info("work grouping: pass complete", "authors", n, "editions_merged", g.merged.Load())
+		n2 := 0
+		if len(g.resolvers) > 0 {
+			n2 = g.crawlTier2Batch(ctx)
+		}
+		if ctx.Err() != nil {
+			return
+		}
+		// Есть ещё due-кандидаты Tier-2 → сразу следующий батч (он сам rate-gated;
+		// Tier-1 перепроверяется в начале каждой итерации). Иначе — спим.
+		if n2 > 0 {
+			continue
 		}
 		select {
 		case <-ctx.Done():
@@ -129,18 +143,17 @@ func (g *WorkGrouper) Run(ctx context.Context) {
 	}
 }
 
-// drain прогоняет всех авторов-кандидатов батчами по возрастанию author_id.
-// Возвращает число обработанных авторов.
-func (g *WorkGrouper) drain(ctx context.Context) int {
-	g.merged.Store(0)
-	g.touchedWorks = map[int64]struct{}{}
-	g.deletedWorks = map[int64]struct{}{}
+// sweepTier1 — БЫСТРЫЙ структурный проход без сети: все кандидаты
+// (work_scanned_at IS NULL [+ edition_meta в fallback]), Tier-1/1.5 кластеризация
+// + apply + пометка scanned. Идёт до исчерпания. Возвращает число авторов.
+func (g *WorkGrouper) sweepTier1(ctx context.Context) int {
+	g.resetPassState()
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
 		authors, err := g.fetchCandidateAuthors(ctx, cursor, workGroupAuthorBatch)
 		if err != nil {
-			g.logger.Warn("work grouping: fetch authors failed", "err", err)
+			g.logger.Warn("work grouping: fetch tier-1 authors failed", "err", err)
 			break
 		}
 		if len(authors) == 0 {
@@ -150,17 +163,80 @@ func (g *WorkGrouper) drain(ctx context.Context) int {
 			if ctx.Err() != nil {
 				break
 			}
-			if err := g.processAuthor(ctx, aid); err != nil {
-				g.logger.Warn("work grouping: process author failed", "author_id", aid, "err", err)
+			if err := g.groupAuthorTier1(ctx, aid); err != nil {
+				g.logger.Warn("work grouping: tier-1 author failed", "author_id", aid, "err", err)
 			}
 			total++
 		}
 		cursor = authors[len(authors)-1]
 	}
-	// Книги без авторов сгруппировать не по чему — помечаем их подтверждёнными
-	// singleton'ами, чтобы они не висели вечными кандидатами.
+	// Книги без авторов сгруппировать не по чему — помечаем подтверждёнными.
 	g.markAuthorlessScanned(ctx)
-	// Если за проход work_id у изданий менялся — синкаем Meili (distinct по work_id).
+	g.syncSearchAfterPass(ctx)
+	if total > 0 {
+		g.logger.Info("work grouping: tier-1 sweep done", "authors", total, "merged", g.merged.Load())
+	}
+	return total
+}
+
+// crawlTier2Batch — ОДИН батч внешнего краулера (если есть резолверы): авторы с
+// singleton-работами, «due» по book_work_lookups; внешний резолв (rate-gated) +
+// союз по Work ID. Курсор по author_id; исчерпался → сброс (по TTL кандидаты
+// вернутся). Возвращает число авторов в батче (0 = больше нечего).
+func (g *WorkGrouper) crawlTier2Batch(ctx context.Context) int {
+	g.resetPassState()
+	authors, err := g.fetchTier2Authors(ctx, g.tier2Cursor, workGroupAuthorBatch)
+	if err != nil {
+		g.logger.Warn("work grouping: fetch tier-2 authors failed", "err", err)
+		return 0
+	}
+	if len(authors) == 0 {
+		g.tier2Cursor = 0 // круг пройден — на следующем заходе due вернутся по TTL
+		return 0
+	}
+	for _, aid := range authors {
+		if ctx.Err() != nil {
+			break
+		}
+		if err := g.groupAuthorTier2(ctx, aid); err != nil {
+			g.logger.Warn("work grouping: tier-2 author failed", "author_id", aid, "err", err)
+		}
+	}
+	g.tier2Cursor = authors[len(authors)-1]
+	g.syncSearchAfterPass(ctx)
+	if g.merged.Load() > 0 {
+		g.logger.Info("work grouping: tier-2 batch merged", "authors", len(authors), "merged", g.merged.Load())
+	}
+	return len(authors)
+}
+
+// drainAll — полный проход: Tier-1 sweep + Tier-2 до исчерпания. Для кнопки
+// «Запустить сейчас» и интеграционных тестов. Возвращает число обработанных
+// авторов (Tier-1 + Tier-2).
+func (g *WorkGrouper) drainAll(ctx context.Context) int {
+	total := g.sweepTier1(ctx)
+	if len(g.resolvers) > 0 {
+		for ctx.Err() == nil {
+			n := g.crawlTier2Batch(ctx)
+			if n == 0 {
+				break
+			}
+			total += n
+		}
+	}
+	return total
+}
+
+// resetPassState обнуляет счётчики прохода (для логов + таргетного синка).
+func (g *WorkGrouper) resetPassState() {
+	g.merged.Store(0)
+	g.touchedWorks = map[int64]struct{}{}
+	g.deletedWorks = map[int64]struct{}{}
+}
+
+// syncSearchAfterPass синкает поиск, если за проход что-то менялось: books-индекс
+// work_id (distinct/OPDS) + таргетный works-индекс (upsert изменённых, delete GC).
+func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
 	if g.resyncer != nil && g.merged.Load() > 0 && ctx.Err() == nil {
 		if n, err := g.resyncer.ResyncWorkIDs(ctx); err != nil {
 			g.logger.Warn("work grouping: resync work_id to meili failed", "err", err)
@@ -168,7 +244,6 @@ func (g *WorkGrouper) drain(ctx context.Context) int {
 			g.logger.Info("work grouping: work_id resynced to meili", "merged", g.merged.Load(), "synced", n)
 		}
 	}
-	// Таргетный синк индекса works: удалить осиротевшие (GC), upsert изменённых.
 	if syncer, ok := g.resyncer.(WorksIndexSyncer); ok && ctx.Err() == nil {
 		if len(g.deletedWorks) > 0 {
 			if err := syncer.DeleteWorksFromIndex(ctx, keysOf(g.deletedWorks)); err != nil {
@@ -181,7 +256,6 @@ func (g *WorkGrouper) drain(ctx context.Context) int {
 			}
 		}
 	}
-	return total
 }
 
 func (g *WorkGrouper) candidateCond() string {
@@ -203,6 +277,46 @@ func (g *WorkGrouper) fetchCandidateAuthors(ctx context.Context, after int64, li
 		LIMIT $2
 	`, g.candidateCond())
 	rows, err := g.pool.Query(ctx, q, after, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		out = append(out, id)
+	}
+	return out, rows.Err()
+}
+
+// fetchTier2Authors — кандидаты для внешнего краулера: авторы, у кого есть
+// SINGLETON-работа (edition_count = 1), «due» по book_work_lookups — нет
+// found-строки И не проверялось в пределах NotFoundRetryDays. Это грубый фильтр
+// (избегает churn на полностью проверенных книгах); точный per-source isDue —
+// внутри applyTier2. Курсор по author_id.
+func (g *WorkGrouper) fetchTier2Authors(ctx context.Context, after int64, limit int) ([]int64, error) {
+	ttlDays := g.cfg.NotFoundRetryDays
+	if ttlDays <= 0 {
+		ttlDays = 1
+	}
+	rows, err := g.pool.Query(ctx, `
+		SELECT DISTINCT pa.author_id
+		FROM books b
+		JOIN LATERAL (
+			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
+		) pa ON true
+		JOIN works w ON w.id = b.work_id
+		WHERE b.deleted = false
+		  AND w.edition_count = 1
+		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.outcome = 'found')
+		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.checked_at > now() - make_interval(days => $3))
+		  AND pa.author_id > $1
+		ORDER BY pa.author_id
+		LIMIT $2
+	`, after, limit, ttlDays)
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +363,9 @@ type groupBook struct {
 	scanned       bool // work_scanned_at NOT NULL (контекст, не кандидат)
 }
 
-func (g *WorkGrouper) processAuthor(ctx context.Context, authorID int64) error {
+// groupAuthorTier1 — структурная группировка одного автора БЕЗ сети
+// (Tier-1/1.5) + apply (пустой extByRoot). Быстрая фаза.
+func (g *WorkGrouper) groupAuthorTier1(ctx context.Context, authorID int64) error {
 	books, err := g.loadAuthorBooks(ctx, authorID)
 	if err != nil {
 		return err
@@ -257,13 +373,22 @@ func (g *WorkGrouper) processAuthor(ctx context.Context, authorID int64) error {
 	if len(books) == 0 {
 		return nil
 	}
-
 	uf := clusterTier1(books)
+	return g.apply(ctx, authorID, books, uf, nil)
+}
 
-	// Tier-2: резолв внешних Work ID для кандидатов-одиночек + союз по work_key.
-	// Возвращает per-cluster ext_ids (work_key источников) для записи в works.
+// groupAuthorTier2 — Tier-1 (восстановить uf) + внешний резолв Work ID
+// (rate-gated, для due-одиночек) + союз по work_key + apply. Медленная фаза.
+func (g *WorkGrouper) groupAuthorTier2(ctx context.Context, authorID int64) error {
+	books, err := g.loadAuthorBooks(ctx, authorID)
+	if err != nil {
+		return err
+	}
+	if len(books) == 0 {
+		return nil
+	}
+	uf := clusterTier1(books)
 	resolvedExt := g.applyTier2(ctx, books, uf)
-
 	return g.apply(ctx, authorID, books, uf, resolvedExt)
 }
 
@@ -413,9 +538,9 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		if ctx.Err() != nil {
 			break
 		}
-		if b.scanned { // не кандидат — внешне не дёргаем
-			continue
-		}
+		// applyTier2 вызывается только из Tier-2-фазы (после Tier-1 sweep все
+		// книги уже scanned), поэтому гейта по b.scanned тут нет — кандидатность
+		// определяют одиночка-после-Tier-1 + per-source isDue (TTL ниже).
 		// Резолвим только одиночек после Tier-1 (экономия внешних вызовов).
 		if uf.size(i) > 1 {
 			continue
@@ -1041,7 +1166,7 @@ func (c *WorkGroupController) RunOnce() {
 	c.mu.Unlock()
 	go func() {
 		g := NewWorkGrouper(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
-		n := g.drain(ctx)
+		n := g.drainAll(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil
