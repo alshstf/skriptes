@@ -49,6 +49,35 @@ export function bySeriesOrder(a: BookListItem, b: BookListItem): number {
   return a.title.localeCompare(b.title, 'ru');
 }
 
+export type MergeSuggestion = {
+  serNo: number;
+  books: BookListItem[];
+  workIds: number[];
+};
+
+/**
+ * computeMergeSuggestions — кандидаты на объединение для админ-подсказок: каталог
+ * уже схлопывает издания по работе (строка = работа), поэтому если у одного
+ * `ser_no` (>0) оказалось ≥2 РАЗНЫХ работ (`work_id ?? id`) — это вероятный
+ * нерасклеенный том серии в нескольких изданиях. Возвращает группы по ser_no.
+ */
+export function computeMergeSuggestions(books: BookListItem[]): MergeSuggestion[] {
+  const bySer = new Map<number, BookListItem[]>();
+  for (const b of books) {
+    if (typeof b.ser_no === 'number' && b.ser_no > 0) {
+      const arr = bySer.get(b.ser_no) ?? [];
+      arr.push(b);
+      bySer.set(b.ser_no, arr);
+    }
+  }
+  const out: MergeSuggestion[] = [];
+  for (const [serNo, arr] of bySer) {
+    const workIds = [...new Set(arr.map((b) => b.work_id ?? b.id))];
+    if (workIds.length >= 2) out.push({ serNo, books: arr, workIds });
+  }
+  return out.sort((a, b) => a.serNo - b.serNo);
+}
+
 export type FacetDistribution = Record<string, Record<string, number>>;
 
 export type BookListResponse = {

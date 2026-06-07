@@ -9,6 +9,8 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch } from './api';
 import type { Role } from './auth';
 
@@ -481,6 +483,50 @@ export function useStopWorkGrouping() {
     mutationFn: () =>
       apiFetch<{ status: string }>('/api/admin/work-grouping/stop', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
+  });
+}
+
+// ── Ручные merge/split с карточек (admin) ─────────────────────────────────
+//
+// merge оперирует РАБОТАМИ (объединяет несколько works в одну), split —
+// ИЗДАНИЯМИ (выносит book_id'ы в новую работу). Обе ручки гейтятся requireAdmin
+// на бэке. После успеха инвалидируем все каталожные кэши, чтобы карточки
+// серии/автора/книги/списка пере-схлопнулись.
+
+// invalidateCatalog — сбросить кэши, на которые влияет merge/split.
+function invalidateCatalog(qc: QueryClient) {
+  for (const key of [['series'], ['author'], ['book'], ['work'], ['books-infinite']]) {
+    void qc.invalidateQueries({ queryKey: key });
+  }
+}
+
+/** useMergeWorks — объединить работы в одну (work_ids ≥ 2; target опционален). */
+export function useMergeWorks() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { work_ids: number[]; target?: number }) =>
+      apiFetch<{ work_id: number }>('/api/admin/works/merge', { method: 'POST', body: vars }),
+    onSuccess: () => {
+      invalidateCatalog(qc);
+      toast.success('Издания объединены в одну книгу');
+    },
+    onError: (e) =>
+      toast.error(`Не удалось объединить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
+/** useSplitEditions — вынести издания (book_ids) в новую отдельную работу. */
+export function useSplitEditions() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { book_ids: number[] }) =>
+      apiFetch<{ work_id: number }>('/api/admin/works/split', { method: 'POST', body: vars }),
+    onSuccess: () => {
+      invalidateCatalog(qc);
+      toast.success('Издания вынесены в отдельную книгу');
+    },
+    onError: (e) =>
+      toast.error(`Не удалось разделить: ${e instanceof Error ? e.message : 'ошибка'}`),
   });
 }
 

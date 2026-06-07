@@ -260,7 +260,11 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `year_backfill.go`). Работает **по автору** (blast radius = 1 автор, НИКОГДА
   не сливает разных primary-авторов). Tier-1 (без сети, union-find): дубли
   `(normalized_title, lang)` + `fb2_doc_id` + перевод↔оригинал/переводы между
-  собой через `src_*`. Tier-2 (opt-in, rate-gated, `book_work_lookups` TTL):
+  собой через `src_*` + **Tier-1.5** `(series_id, ser_no)` (один том серии ⇒ одна
+  работа — ловит разно-названные переводы без src-title-info; гейт точности: бакет
+  пропускается при ≥2 разных непустых `src_title`). ⚠️ применяется только к
+  кандидатам/переобрабатываемым авторам — существующие дубли чинятся подсказками/
+  ручным merge (см. ниже). Tier-2 (opt-in, rate-gated, `book_work_lookups` TTL):
   внешний Work ID — `WorkKeyResolver` на OL (`/isbn/.json`→work, иначе
   title+author за гейтом `authorNameMatches`) и Wikidata (`resolveBookQID`→QID).
   Кандидаты: `work_scanned_at IS NULL` (фолбэк — ещё `edition_meta_scanned_at NOT
@@ -273,6 +277,17 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   GET/PUT/run/stop + `/admin/works/split`,`/merge`). Фронт — секция
   «Группировка изданий» в `AdminBackgroundPage` (Выкл/Фоном, источники Tier-2,
   scope, coverage), хуки в `lib/admin.ts`. main: `workGroupCtl` в `SettingsDeps`.
+- **Ручные merge/split + подсказки НА КАРТОЧКАХ (админ), не из админки**
+  (после 0.8.0): хуки `useMergeWorks`/`useSplitEditions` (`lib/admin.ts`,
+  инвалидируют каталожные кэши + тост). `components/MergeSuggestions.tsx` —
+  read-only подсказки на карточке серии/автора: `computeMergeSuggestions`
+  (`lib/books.ts`) группирует загруженные книги по `ser_no` (>0) → если ≥2 разных
+  `work_id` → плашка «Объединить?» (каталог несёт `ListItem.WorkID`/`ser_no`,
+  отдельный эндпоинт НЕ нужен). `components/MergeWorksDialog.tsx` — ручной выбор
+  ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — выбор
+  изданий в секции «Издания» карточки книги → split (нельзя вынести все). Все
+  компоненты сами скрываются у не-админа (`useMe().role`). merge/split детачнуто
+  синкают поиск через `syncSearchAfterManual` (ResyncWorkIDs + works-индекс).
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
   (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу

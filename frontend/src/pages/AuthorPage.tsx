@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { MergeSuggestions } from '@/components/MergeSuggestions';
+import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
@@ -199,13 +201,19 @@ function SeriesSection({
         {books.length === 0 ? (
           <p className="text-sm text-muted-foreground">Книги не загрузились.</p>
         ) : (
-          <ul className="space-y-1">
-            {books.map((b) => (
-              <li key={b.id}>
-                <BookListItem book={b} showSeries={false} showSerNo={true} />
-              </li>
-            ))}
-          </ul>
+          <div className="space-y-2">
+            <MergeSuggestions books={books} />
+            <div className="flex justify-end empty:hidden">
+              <MergeWorksDialog books={books} />
+            </div>
+            <ul className="space-y-1">
+              {books.map((b) => (
+                <li key={b.id}>
+                  <BookListItem book={b} showSeries={false} showSerNo={true} />
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </CardContent>
     </Card>
@@ -224,13 +232,18 @@ function StandaloneSection({ books }: { books: BookListItemType[] }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <ul className="space-y-1">
-          {books.map((b) => (
-            <li key={b.id}>
-              <BookListItem book={b} showSeries={false} />
-            </li>
-          ))}
-        </ul>
+        <div className="space-y-2">
+          <div className="flex justify-end empty:hidden">
+            <MergeWorksDialog books={books} />
+          </div>
+          <ul className="space-y-1">
+            {books.map((b) => (
+              <li key={b.id}>
+                <BookListItem book={b} showSeries={false} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </CardContent>
     </Card>
   );
