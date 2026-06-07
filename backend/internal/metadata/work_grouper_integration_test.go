@@ -299,6 +299,57 @@ func TestWorkAggregates_SplitReDerivesSeries(t *testing.T) {
 	require.Equal(t, 1, cn)
 }
 
+// TestSplitEditions_AnchorProtected — якорное издание (title-derived: его
+// название == названию работы) нельзя вынести через split; не-якорь — можно.
+func TestSplitEditions_AnchorProtected(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Автор", "автор тест")
+	// Работа «Оригинал» с двумя изданиями (как после ошибочного merge): A —
+	// название совпадает с работой (якорь), B — чужое название (не-якорь).
+	var workW int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title, primary_author_id, edition_count) VALUES ('Оригинал','оригинал',$1,2) RETURNING id`,
+		author).Scan(&workW))
+	mkBook := func(lib, title, norm string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, work_id)
+			VALUES ($1,$2,$3,$3,'fb2',$4,$5,'ru',$6) RETURNING id`,
+			collID, archID, lib, title, norm, workW).Scan(&id))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, author)
+		require.NoError(t, err)
+		return id
+	}
+	aBook := mkBook("A", "Оригинал", "оригинал") // совпадает с работой → якорь
+	bBook := mkBook("B", "Чужак", "чужак")       // не-якорь
+
+	c := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+
+	// Якорь вынести нельзя.
+	_, err := c.SplitEditions(ctx, []int64{aBook})
+	require.ErrorIs(t, err, ErrSplitAnchor)
+	require.Equal(t, workW, workIDOf(t, ctx, pool, aBook), "якорь не сдвинулся")
+
+	// Не-якорь — выносится в новую работу.
+	newWork, err := c.SplitEditions(ctx, []int64{bBook})
+	require.NoError(t, err)
+	require.Equal(t, newWork, workIDOf(t, ctx, pool, bBook), "не-якорь вынесен")
+	require.Equal(t, workW, workIDOf(t, ctx, pool, aBook), "якорь остался в исходной работе")
+}
+
 // countingResolver — внешний резолвер со счётчиком вызовов (для проверки, что
 // sweepTier1 НЕ ходит в сеть). Всегда возвращает фиксированный key.
 type countingResolver struct {

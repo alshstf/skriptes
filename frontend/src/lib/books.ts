@@ -121,6 +121,9 @@ export type EditionRef = {
    *  тогда видно «чужое» издание после ошибочного слияния; нужно для split). */
   title?: string;
   series?: SeriesRef;
+  /** Якорное издание работы (его название = названию работы). Нельзя вынести
+   *  через split — фронт лочит, бэкенд запрещает. Ровно одно издание — якорь. */
+  is_anchor?: boolean;
   lang?: string;
   translator?: string;
   edition_year?: number;

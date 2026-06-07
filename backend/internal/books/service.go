@@ -1177,7 +1177,36 @@ func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]Ed
 		}
 		out = append(out, e)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	// Якорное издание (title-derived): normalized_title == названию работы (тай →
+	// min id; fallback → min id). Помечаем для UI (лочим в split) и как ориентир
+	// — split-guard на бэке считает якорь той же логикой.
+	if anchorID := s.anchorEditionID(ctx, workID, bookID); anchorID != 0 {
+		for i := range out {
+			out[i].IsAnchor = out[i].ID == anchorID
+		}
+	}
+	return out, nil
+}
+
+// anchorEditionID — id «якорного» издания работы (title-derived). 0 если не
+// нашлось (например, у работы нет живых изданий). Та же логика в split-guard
+// (work_grouper.go::SplitEditions) — держать синхронно.
+func (s *Service) anchorEditionID(ctx context.Context, workID, bookID int64) int64 {
+	var id int64
+	err := s.pool.QueryRow(ctx, `
+		SELECT b.id FROM books b
+		JOIN works w ON w.id = b.work_id
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		ORDER BY (b.normalized_title = w.normalized_title) DESC, b.id
+		LIMIT 1
+	`, workID, bookID).Scan(&id)
+	if err != nil {
+		return 0
+	}
+	return id
 }
 
 // fullName собирает "Lastname Firstname Middlename" пропуская пустые куски.
