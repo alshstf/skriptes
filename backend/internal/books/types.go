@@ -150,6 +150,11 @@ type EditionRef struct {
 	Archive      string     `json:"archive"`
 	FileName     string     `json:"file_name"`
 	Deleted      bool       `json:"deleted,omitempty"`
+	// IsAnchor — «якорное» издание работы (title-derived: его normalized_title
+	// совпадает с названием работы; тай → min id; fallback → min id). Якорь
+	// определяет идентичность работы и НЕ выносится через split (фронт его лочит,
+	// бэкенд запрещает). Ровно одно издание работы — якорь.
+	IsAnchor bool `json:"is_anchor,omitempty"`
 	// User-specific (заполняет API-слой, не books-сервис): прогресс чтения и
 	// флаг «прочитано» ИМЕННО этого издания (позиция/CFI привязаны к файлу).
 	ReadingFraction *float64 `json:"reading_fraction,omitempty"`

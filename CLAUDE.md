@@ -292,11 +292,16 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   (`lib/books.ts`) группирует загруженные книги по `ser_no` (>0) → если ≥2 разных
   `work_id` → плашка «Объединить?» (каталог несёт `ListItem.WorkID`/`ser_no`,
   отдельный эндпоинт НЕ нужен). `components/MergeWorksDialog.tsx` — ручной выбор
-  ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — выбор
-  изданий в секции «Издания» карточки книги → split (нельзя вынести все);
-  показывает СОБСТВЕННЫЕ название/серию каждого издания (`EditionRef.title`/
-  `series` из `books.title`/`series_id`) — видно «чужое» издание после ошибочного
-  merge. ⚠️ `recomputeWorkAggregates` пересчитывает edition_count/written_year/
+  ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — split
+  изданий из секции «Издания» карточки книги. **ЯКОРНОЕ издание выносить нельзя**
+  (title-derived: его `normalized_title` == названию работы; тай/fallback → min id;
+  ровно одно издание — якорь, `EditionRef.is_anchor` из `books.queryEditions`).
+  Якорь залочен; выбор только среди НЕ-якорных: один не-якорь (часто при 2
+  изданиях) → подтверждение без выбора, несколько → чек-лист. Бэкенд-защита:
+  `WorkGroupController.SplitEditions` отклоняет вынос якоря (`metadata.ErrSplitAnchor`
+  → 400; SQL якоря синхронен с `anchorEditionID`). Показывает СОБСТВЕННЫЕ
+  название/серию издания (`EditionRef.title`/`series` из `books.title`/`series_id`)
+  — видно «чужое» издание после ошибочного merge. ⚠️ `recomputeWorkAggregates` пересчитывает edition_count/written_year/
   series **авторитетно** из текущих живых изданий (а не set-if-null) — иначе
   после split у работы оставались серия/год вынесенной книги. Мини-обложки
   изданий — `BookCover placeholder="mini"` (иконка без названия; текст на 48px

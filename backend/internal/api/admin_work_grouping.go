@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
 
@@ -124,6 +125,10 @@ func handleWorkSplit(d SettingsDeps) http.HandlerFunc {
 		defer cancel()
 		newID, err := d.WorkGroup.SplitEditions(ctx, body.BookIDs)
 		if err != nil {
+			if errors.Is(err, metadata.ErrSplitAnchor) {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "нельзя вынести якорное издание"})
+				return
+			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "split failed"})
 			return
 		}

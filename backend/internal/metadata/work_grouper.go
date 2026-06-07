@@ -50,6 +50,11 @@ type WorksIndexSyncer interface {
 	DeleteWorksFromIndex(ctx context.Context, ids []int64) error
 }
 
+// ErrSplitAnchor — попытка вынести через split ЯКОРНОЕ издание работы (то, чьё
+// название совпадает с названием работы). Запрещено: якорь держит идентичность
+// работы. API мапит это в 400.
+var ErrSplitAnchor = errors.New("cannot split the anchor edition of a work")
+
 type WorkGrouper struct {
 	pool      *pgxpool.Pool
 	resolvers []WorkKeyResolver    // включённые внешние источники (Tier-2), в порядке приоритета
@@ -783,6 +788,27 @@ func (c *WorkGroupController) SplitEditions(ctx context.Context, bookIDs []int64
 	if len(bookIDs) == 0 {
 		return 0, fmt.Errorf("no book ids")
 	}
+	// Якорное издание выносить нельзя (title-derived: normalized_title ==
+	// названию работы; тай → min id). Защищает «оригинал» работы от случайного
+	// выноса при undo merge. Логика якоря синхронна с books.anchorEditionID.
+	var anchorHit int64
+	guardErr := c.pool.QueryRow(ctx, `
+		SELECT b.id FROM books b
+		JOIN works w ON w.id = b.work_id
+		WHERE b.id = ANY($1) AND b.deleted = false AND b.id = (
+			SELECT bb.id FROM books bb
+			WHERE bb.work_id = b.work_id AND bb.deleted = false
+			ORDER BY (bb.normalized_title = w.normalized_title) DESC, bb.id
+			LIMIT 1
+		)
+		LIMIT 1
+	`, bookIDs).Scan(&anchorHit)
+	if guardErr == nil {
+		return 0, ErrSplitAnchor
+	} else if !errors.Is(guardErr, pgx.ErrNoRows) {
+		return 0, fmt.Errorf("anchor guard: %w", guardErr)
+	}
+
 	tx, err := c.pool.Begin(ctx)
 	if err != nil {
 		return 0, err
