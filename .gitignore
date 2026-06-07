@@ -32,3 +32,6 @@ infra/cache/
 # misc
 *.log
 tmp/
+
+# playwright artefacts при запуске из корня (а не из frontend/)
+/test-results/
