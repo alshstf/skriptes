@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -15,6 +17,16 @@ import (
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
 )
+
+// worksIndexName — индекс логических книг (works) в Meili. Зеркало
+// importer.worksIndex (тот пакет не экспортирует константу). Веб-список и Cmd+K
+// ищут здесь, чтобы фасеты считали РАБОТЫ; OPDS остаётся на индексе "books".
+const worksIndexName = "works"
+
+// langCacheTTL — как долго кэшировать вселенную языков коллекции (нужна для
+// корректного скрытия мультиязычных работ: показать работу, если у неё есть
+// издание на видимом языке).
+const langCacheTTL = 5 * time.Minute
 
 // ErrNotFound возвращается из Get когда книги с таким id нет (или она удалена).
 var ErrNotFound = errors.New("book not found")
@@ -31,6 +43,11 @@ type Service struct {
 	pool    *pgxpool.Pool
 	meili   meilisearch.ServiceManager
 	persona PersonaSource
+
+	// Кэш вселенной языков коллекции (для works-фильтра скрытия языков).
+	langMu      sync.Mutex
+	langCache   []string
+	langCacheAt time.Time
 }
 
 // New собирает Service. meili может быть nil — тогда List вернёт пустой
@@ -201,6 +218,414 @@ func (s *Service) hydrateCovers(ctx context.Context, items []ListItem) {
 			items[i].EditionCount = h.editions
 		}
 	}
+}
+
+// ── works-индекс: список/typeahead/карточка по работе ───────────
+
+// workHit — декодирование документа индекса works. Отличие от ListItem —
+// lang приходит МАССИВОМ (json-ключ "lang"); маппим в представительный язык
+// для чипа в списке.
+type workHit struct {
+	ID           int64    `json:"id"`
+	Title        string   `json:"title"`
+	Authors      []string `json:"authors"`
+	AuthorIDs    []int64  `json:"author_ids"`
+	Series       string   `json:"series"`
+	SeriesID     *int64   `json:"series_id"`
+	Genres       []string `json:"genres"`
+	Year         *int     `json:"year"`
+	Langs        []string `json:"lang"`
+	EditionCount int      `json:"edition_count"`
+}
+
+func (wh workHit) toListItem() ListItem {
+	li := ListItem{
+		ID: wh.ID, Title: wh.Title, Authors: wh.Authors, AuthorIDs: wh.AuthorIDs,
+		Series: wh.Series, SeriesID: wh.SeriesID, Genres: wh.Genres, Year: wh.Year,
+		EditionCount: wh.EditionCount,
+	}
+	if len(wh.Langs) > 0 {
+		langs := append([]string(nil), wh.Langs...)
+		sort.Strings(langs) // детерминированный представительный язык для чипа
+		li.Lang = langs[0]
+	}
+	return li
+}
+
+// ListWorks — веб-список/поиск по индексу works (фасеты считают РАБОТЫ).
+// Зеркало List, но: индекс works, work-mode фильтр (genres NOT IN + lang IN
+// visible), id = works.id, обложка/edition_count гидрируются по work_id.
+func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListResponse, error) {
+	if s.meili == nil {
+		return ListResponse{Items: []ListItem{}, Limit: params.Limit, Offset: params.Offset}, nil
+	}
+	limit := clampInt(params.Limit, 1, 100, 20)
+	offset := clampInt(params.Offset, 0, 10_000, 0)
+
+	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
+		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
+	meiliLimit := int64(limit)
+	if rerank {
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 50 {
+			meiliLimit = 50
+		}
+	}
+
+	var visibleLangs []string
+	if len(params.ExcludeLangs) > 0 {
+		visibleLangs = s.allLangs(ctx)
+	}
+
+	req := &meilisearch.SearchRequest{
+		Limit:            meiliLimit,
+		Offset:           int64(offset),
+		ShowRankingScore: rerank,
+	}
+	if f := buildWorksFilter(params, visibleLangs); f != "" {
+		req.Filter = f
+	}
+	if sortRules := buildSort(params.Sort); len(sortRules) > 0 {
+		req.Sort = sortRules
+	}
+	if len(params.Facets) > 0 {
+		req.Facets = params.Facets
+	}
+
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, params.Query, req)
+	if err != nil {
+		return ListResponse{}, fmt.Errorf("meili works search: %w", err)
+	}
+
+	// Fallback на books-индекс, пока works-индекс ещё НЕ построен (одноразовое
+	// окно при апгрейде до Phase 6: ResyncWorksIndex наполняет works в фоне).
+	// У непустой библиотеки browse без запроса/фильтров не может дать 0 работ →
+	// значит индекс пуст. List отдаёт издания, но с work_id (через DecodeInto) —
+	// ссылки на /works корректны; самолечится, как только works наполнится.
+	if len(res.Hits) == 0 && isUnfilteredBrowse(params) {
+		return s.List(ctx, params)
+	}
+
+	scored := make([]scoredItem, 0, len(res.Hits))
+	for _, h := range res.Hits {
+		var wh workHit
+		if err := h.DecodeInto(&wh); err != nil {
+			continue
+		}
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: wh.toListItem(), base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	items := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		items = append(items, sc.item)
+	}
+	s.hydrateWorkCovers(ctx, items)
+
+	total := res.EstimatedTotalHits
+	if total == 0 && res.TotalHits > 0 {
+		total = res.TotalHits
+	}
+	return ListResponse{
+		Items:       items,
+		Total:       total,
+		Limit:       limit,
+		Offset:      offset,
+		Query:       params.Query,
+		ProcessTime: res.ProcessingTimeMs,
+		Facets:      decodeFacets(res.FacetDistribution),
+	}, nil
+}
+
+// SuggestWorks — typeahead по индексу works (Cmd+K). Зеркало Suggest.
+func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, userID int64, excludeGenres, excludeLangs []string) ([]ListItem, error) {
+	if s.meili == nil || strings.TrimSpace(query) == "" {
+		return []ListItem{}, nil
+	}
+	limit = clampInt(limit, 1, 20, 5)
+	rerank := s.persona != nil && userID > 0
+	meiliLimit := int64(limit)
+	if rerank {
+		meiliLimit = int64(limit * 3)
+		if meiliLimit > 20 {
+			meiliLimit = 20
+		}
+	}
+
+	var visibleLangs []string
+	if len(excludeLangs) > 0 {
+		visibleLangs = s.allLangs(ctx)
+	}
+	req := &meilisearch.SearchRequest{Limit: meiliLimit, ShowRankingScore: rerank}
+	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs); f != "" {
+		req.Filter = f
+	}
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, query, req)
+	if err != nil {
+		return nil, fmt.Errorf("meili works search: %w", err)
+	}
+
+	scored := make([]scoredItem, 0, len(res.Hits))
+	for _, h := range res.Hits {
+		var wh workHit
+		if err := h.DecodeInto(&wh); err != nil {
+			continue
+		}
+		score := 0.0
+		if rerank {
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+		}
+		scored = append(scored, scoredItem{item: wh.toListItem(), base: score})
+	}
+
+	if rerank {
+		profile, err := s.persona.PersonaProfile(ctx, userID)
+		if err == nil && !profile.IsEmpty() {
+			applyPersonaBoost(scored, profile)
+			sortByFinalScore(scored)
+			if len(scored) > limit {
+				scored = scored[:limit]
+			}
+		}
+	}
+
+	out := make([]ListItem, 0, len(scored))
+	for _, sc := range scored {
+		out = append(out, sc.item)
+	}
+	s.hydrateWorkCovers(ctx, out)
+	return out, nil
+}
+
+// hydrateWorkCovers проставляет CoverPath (обложка любого издания работы) и
+// EditionCount по work_id (= ListItem.ID для works-выдачи).
+func (s *Service) hydrateWorkCovers(ctx context.Context, items []ListItem) {
+	if s.pool == nil || len(items) == 0 {
+		return
+	}
+	ids := make([]int64, 0, len(items))
+	for _, it := range items {
+		ids = append(ids, it.ID)
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT w.id, COALESCE(rep.id, 0), COALESCE(rep.cover_path, ''), COALESCE(w.edition_count, 1)
+		FROM works w
+		LEFT JOIN LATERAL (
+		    SELECT bb.id, bb.cover_path
+		    FROM books bb
+		    WHERE bb.work_id = w.id AND bb.deleted = false
+		    ORDER BY (bb.cover_path IS NOT NULL AND bb.cover_path <> '') DESC, bb.id
+		    LIMIT 1
+		) rep ON true
+		WHERE w.id = ANY($1)
+	`, ids)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	type hyd struct {
+		coverEditionID int64
+		cover          string
+		editions       int
+	}
+	byID := make(map[int64]hyd, len(items))
+	for rows.Next() {
+		var id int64
+		var h hyd
+		if err := rows.Scan(&id, &h.coverEditionID, &h.cover, &h.editions); err != nil {
+			return
+		}
+		byID[id] = h
+	}
+	if rows.Err() != nil {
+		return
+	}
+	for i := range items {
+		if h, ok := byID[items[i].ID]; ok {
+			if h.cover != "" {
+				items[i].CoverPath = h.cover
+			}
+			if h.coverEditionID > 0 {
+				items[i].CoverEditionID = h.coverEditionID
+			}
+			items[i].EditionCount = h.editions
+		}
+	}
+}
+
+// allLangs — вселенная нормализованных языков коллекции (кэш с TTL). На ошибке
+// возвращает прошлый кэш (возможно nil) — фильтр скрытия тогда делает fallback.
+func (s *Service) allLangs(ctx context.Context) []string {
+	s.langMu.Lock()
+	defer s.langMu.Unlock()
+	if s.langCache != nil && time.Since(s.langCacheAt) < langCacheTTL {
+		return s.langCache
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT lower(btrim(lang)) FROM books
+		WHERE deleted = false AND lang IS NOT NULL AND btrim(lang) <> ''
+	`)
+	if err != nil {
+		return s.langCache
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var l string
+		if rows.Scan(&l) == nil && l != "" {
+			out = append(out, l)
+		}
+	}
+	if rows.Err() == nil {
+		s.langCache = out
+		s.langCacheAt = time.Now()
+	}
+	return s.langCache
+}
+
+// GetWork возвращает карточку логической книги по works.id. Представительное
+// издание выбирается среди ВИДИМЫХ (не скрытых жанром/языком); если видимых нет
+// — ErrNotFound (работа целиком скрыта). Дальше переиспользуется Get(repID):
+// он уже work-центричен (title/авторы/жанры — уровня работы).
+func (s *Service) GetWork(ctx context.Context, workID int64, excludeGenres, excludeLangs []string) (Book, error) {
+	repID, err := s.visibleWorkEditionID(ctx, workID, excludeGenres, excludeLangs)
+	if err != nil {
+		return Book{}, err
+	}
+	return s.Get(ctx, repID)
+}
+
+// visibleWorkEditionID — id представительного ВИДИМОГО издания работы (обложка в
+// приоритете, затем язык/год издания/id). Применяет те же исключения, что и
+// список: издание видимо, если его язык не скрыт И ни один жанр не скрыт.
+func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, excludeGenres, excludeLangs []string) (int64, error) {
+	var id int64
+	// COALESCE(..,'{}') — nil-слайс pgx кодирует как NULL, а `<> ALL(NULL)` даёт
+	// NULL (не TRUE) и отсёк бы все издания. Пустой массив → корректно: <> ALL(чисто)
+	// = TRUE, = ANY(пусто) = FALSE.
+	err := s.pool.QueryRow(ctx, `
+		SELECT b.id FROM books b
+		WHERE b.work_id = $1 AND b.deleted = false
+		  AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
+		  AND NOT EXISTS (
+		      SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
+		      WHERE bg.book_id = b.id AND g.fb2_code = ANY(COALESCE($2::text[], '{}'))
+		  )
+		ORDER BY (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
+		         b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
+		LIMIT 1
+	`, workID, excludeGenres, excludeLangs).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return 0, ErrNotFound
+	}
+	if err != nil {
+		return 0, fmt.Errorf("pick visible edition: %w", err)
+	}
+	return id, nil
+}
+
+// isUnfilteredBrowse — «голый» browse первой страницы (без запроса/фильтров).
+// Только для него ListWorks делает fallback на books-индекс при пустом works.
+func isUnfilteredBrowse(p ListParams) bool {
+	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" &&
+		p.YearFrom == 0 && p.YearTo == 0 && p.SeriesID == 0 && p.AuthorID == 0 &&
+		p.Offset <= 0
+}
+
+// buildWorksFilter — meili-фильтр для индекса works. genres-исключение — NOT IN
+// (жанры уровня работы); lang-исключение — через worksLangExclusion (показать
+// работу, если у неё есть издание на видимом языке).
+func buildWorksFilter(p ListParams, visibleLangs []string) string {
+	var parts []string
+	if clause := inClause("genres", p.Genres); clause != "" {
+		parts = append(parts, clause)
+	}
+	if p.Lang != "" {
+		parts = append(parts, fmt.Sprintf("lang = %s", strconv.Quote(p.Lang)))
+	}
+	if p.YearFrom > 0 {
+		parts = append(parts, fmt.Sprintf("year >= %d", p.YearFrom))
+	}
+	if p.YearTo > 0 {
+		parts = append(parts, fmt.Sprintf("year <= %d", p.YearTo))
+	}
+	if p.SeriesID > 0 {
+		parts = append(parts, fmt.Sprintf("series_id = %d", p.SeriesID))
+	}
+	if p.AuthorID > 0 {
+		parts = append(parts, fmt.Sprintf("author_ids = %d", p.AuthorID))
+	}
+	if clause := notInClause("genres", p.ExcludeGenres); clause != "" {
+		parts = append(parts, clause)
+	}
+	if clause := worksLangExclusion(p.ExcludeLangs, visibleLangs); clause != "" {
+		parts = append(parts, clause)
+	}
+	return strings.Join(parts, " AND ")
+}
+
+// worksExclusionFilter — только исключения (для SuggestWorks).
+func worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs []string) string {
+	var parts []string
+	if c := notInClause("genres", excludeGenres); c != "" {
+		parts = append(parts, c)
+	}
+	if c := worksLangExclusion(excludeLangs, visibleLangs); c != "" {
+		parts = append(parts, c)
+	}
+	return strings.Join(parts, " AND ")
+}
+
+// worksLangExclusion — скрытие по языку на индексе works (lang — массив языков
+// изданий). Семантика: показать работу, если у неё есть издание на видимом
+// языке. visible = вселенная − скрытые. Работы вовсе без языка не прячем
+// (паритет с books-индексом, где NOT IN их пропускал). Если вселенная неизвестна
+// (ошибка кэша) — консервативный fallback на NOT IN.
+func worksLangExclusion(excludeLangs, visibleLangs []string) string {
+	if len(excludeLangs) == 0 {
+		return ""
+	}
+	if len(visibleLangs) == 0 {
+		return notInClause("lang", excludeLangs)
+	}
+	vis := subtractLangs(visibleLangs, excludeLangs)
+	if len(vis) == 0 {
+		// Все языки скрыты — оставляем только работы без языка.
+		return "(lang IS EMPTY OR lang IS NULL)"
+	}
+	return fmt.Sprintf("(%s OR lang IS EMPTY OR lang IS NULL)", inClause("lang", vis))
+}
+
+func subtractLangs(universe, remove []string) []string {
+	rm := make(map[string]struct{}, len(remove))
+	for _, r := range remove {
+		rm[strings.ToLower(strings.TrimSpace(r))] = struct{}{}
+	}
+	var out []string
+	for _, x := range universe {
+		if _, ok := rm[strings.ToLower(strings.TrimSpace(x))]; !ok {
+			out = append(out, x)
+		}
+	}
+	return out
 }
 
 // ── Re-ranking ──────────────────────────────────────────────────

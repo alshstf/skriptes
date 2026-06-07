@@ -103,6 +103,10 @@ func NewRouter(d Deps) http.Handler {
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books, d.Content))
 					r.With(bookGate).Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
+					// Карточка логической книги по works.id. Видимость скрытого
+					// контента обрабатывает GetWork (404, если все издания скрыты) —
+					// отдельный bookGate не нужен (он по book_id).
+					r.Get("/works/{id}", handleGetWork(d.Books, d.History, d.Metadata, d.Content))
 				}
 				if d.Adaptations.Service != nil {
 					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))

@@ -41,6 +41,15 @@ type WorkIDResyncer interface {
 	ResyncWorkIDs(ctx context.Context) (int, error)
 }
 
+// WorksIndexSyncer — таргетный синк индекса works в Meili (реализуется
+// *importer.Importer). Группировка/split/merge вызывают его после изменения
+// состава работ: upsert изменённых, delete осиротевших (GC). Опционален —
+// получаем type-assert'ом из WorkIDResyncer, чтобы не менять конструкторы.
+type WorksIndexSyncer interface {
+	UpsertWorksToIndex(ctx context.Context, ids []int64) error
+	DeleteWorksFromIndex(ctx context.Context, ids []int64) error
+}
+
 type WorkGrouper struct {
 	pool      *pgxpool.Pool
 	resolvers []WorkKeyResolver    // включённые внешние источники (Tier-2), в порядке приоритета
@@ -49,7 +58,9 @@ type WorkGrouper struct {
 	resyncer  WorkIDResyncer // nil → без авто-ресинка Meili
 	logger    *slog.Logger
 
-	merged atomic.Int64 // сколько изданий переназначено за проход (для логов)
+	merged       atomic.Int64       // сколько изданий переназначено за проход (для логов)
+	touchedWorks map[int64]struct{} // канонические работы, изменённые за проход (для works-индекса)
+	deletedWorks map[int64]struct{} // работы, удалённые (GC) за проход
 }
 
 // WorkGroupConfig — рантайм-параметры (зеркало settings.WorkGroupingConfig;
@@ -76,7 +87,10 @@ func NewWorkGrouper(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupCon
 	if logger == nil {
 		logger = slog.Default()
 	}
-	g := &WorkGrouper{pool: pool, cfg: cfg, resyncer: resyncer, logger: logger, gates: map[string]*rateGate{}}
+	g := &WorkGrouper{
+		pool: pool, cfg: cfg, resyncer: resyncer, logger: logger, gates: map[string]*rateGate{},
+		touchedWorks: map[int64]struct{}{}, deletedWorks: map[int64]struct{}{},
+	}
 	if cfg.OpenLibrary && ol != nil {
 		g.resolvers = append(g.resolvers, ol)
 		gate := &rateGate{}
@@ -119,6 +133,8 @@ func (g *WorkGrouper) Run(ctx context.Context) {
 // Возвращает число обработанных авторов.
 func (g *WorkGrouper) drain(ctx context.Context) int {
 	g.merged.Store(0)
+	g.touchedWorks = map[int64]struct{}{}
+	g.deletedWorks = map[int64]struct{}{}
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -150,6 +166,19 @@ func (g *WorkGrouper) drain(ctx context.Context) int {
 			g.logger.Warn("work grouping: resync work_id to meili failed", "err", err)
 		} else {
 			g.logger.Info("work grouping: work_id resynced to meili", "merged", g.merged.Load(), "synced", n)
+		}
+	}
+	// Таргетный синк индекса works: удалить осиротевшие (GC), upsert изменённых.
+	if syncer, ok := g.resyncer.(WorksIndexSyncer); ok && ctx.Err() == nil {
+		if len(g.deletedWorks) > 0 {
+			if err := syncer.DeleteWorksFromIndex(ctx, keysOf(g.deletedWorks)); err != nil {
+				g.logger.Warn("work grouping: delete works from index failed", "err", err)
+			}
+		}
+		if len(g.touchedWorks) > 0 {
+			if err := syncer.UpsertWorksToIndex(ctx, keysOf(g.touchedWorks)); err != nil {
+				g.logger.Warn("work grouping: upsert works to index failed", "err", err)
+			}
 		}
 	}
 	return total
@@ -465,12 +494,14 @@ func (g *WorkGrouper) apply(ctx context.Context, authorID int64, books []groupBo
 		}
 	}
 
-	// GC опустевших работ автора.
-	if _, err := tx.Exec(ctx, `
+	// GC опустевших работ автора (RETURNING — для синка works-индекса).
+	gcDeleted, err := scanInt64s(ctx, tx, `
 		DELETE FROM works w
 		WHERE w.primary_author_id = $1
 		  AND NOT EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id)
-	`, authorID); err != nil {
+		RETURNING w.id
+	`, authorID)
+	if err != nil {
 		return fmt.Errorf("gc works: %w", err)
 	}
 
@@ -483,7 +514,23 @@ func (g *WorkGrouper) apply(ctx context.Context, authorID int64, books []groupBo
 			return fmt.Errorf("mark scanned: %w", err)
 		}
 	}
-	return tx.Commit(ctx)
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	// Учёт для works-индекса — только после успешного коммита. deleted = GC'нутые,
+	// touched = изменённые канонические (affected минус удалённые).
+	deletedSet := make(map[int64]struct{}, len(gcDeleted))
+	for _, id := range gcDeleted {
+		deletedSet[id] = struct{}{}
+		g.deletedWorks[id] = struct{}{}
+	}
+	for id := range affected {
+		if _, gone := deletedSet[id]; !gone {
+			g.touchedWorks[id] = struct{}{}
+		}
+	}
+	return nil
 }
 
 // pickCanonicalWork — каноническая работа кластера: work_id, встречающийся у
@@ -580,9 +627,11 @@ func (c *WorkGroupController) SplitEditions(ctx context.Context, bookIDs []int64
 	if _, err := tx.Exec(ctx, `UPDATE books SET work_id = $1, work_scanned_at = now() WHERE id = ANY($2)`, newID, bookIDs); err != nil {
 		return 0, fmt.Errorf("reassign split editions: %w", err)
 	}
-	if _, err := tx.Exec(ctx, `
+	gcDeleted, err := scanInt64s(ctx, tx, `
 		DELETE FROM works w WHERE w.id = ANY($1) AND NOT EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id)
-	`, oldIDs); err != nil {
+		RETURNING w.id
+	`, oldIDs)
+	if err != nil {
 		return 0, fmt.Errorf("gc split works: %w", err)
 	}
 	if err := recomputeWorkAggregates(ctx, tx, append(oldIDs, newID)); err != nil {
@@ -591,6 +640,8 @@ func (c *WorkGroupController) SplitEditions(ctx context.Context, bookIDs []int64
 	if err := tx.Commit(ctx); err != nil {
 		return 0, err
 	}
+	// Синк поиска: новая работа + выжившие старые upsert, GC'нутые — удалить.
+	c.syncSearchAfterManual(append(survivors(oldIDs, gcDeleted), newID), gcDeleted)
 	return newID, nil
 }
 
@@ -628,9 +679,11 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	if _, err := tx.Exec(ctx, `UPDATE books SET work_id = $1 WHERE work_id = ANY($2)`, target, others); err != nil {
 		return 0, fmt.Errorf("reassign merge editions: %w", err)
 	}
-	if _, err := tx.Exec(ctx, `
+	gcDeleted, err := scanInt64s(ctx, tx, `
 		DELETE FROM works w WHERE w.id = ANY($1) AND NOT EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id)
-	`, others); err != nil {
+		RETURNING w.id
+	`, others)
+	if err != nil {
 		return 0, fmt.Errorf("gc merged works: %w", err)
 	}
 	if err := recomputeWorkAggregates(ctx, tx, []int64{target}); err != nil {
@@ -639,7 +692,54 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	if err := tx.Commit(ctx); err != nil {
 		return 0, err
 	}
+	// Синк поиска: target upsert, поглощённые работы — удалить из works-индекса.
+	c.syncSearchAfterManual([]int64{target}, gcDeleted)
 	return target, nil
+}
+
+// survivors — элементы all, которых нет в removed (для синка works-индекса
+// после split: старые работы, пережившие GC).
+func survivors(all, removed []int64) []int64 {
+	rm := make(map[int64]struct{}, len(removed))
+	for _, id := range removed {
+		rm[id] = struct{}{}
+	}
+	var out []int64
+	for _, id := range all {
+		if _, gone := rm[id]; !gone {
+			out = append(out, id)
+		}
+	}
+	return out
+}
+
+// syncSearchAfterManual — детачнутый синк поиска после РУЧНЫХ split/merge:
+// books-индекс (work_id для distinct/OPDS) + таргетный works-индекс. В фоне,
+// чтобы не держать админ-запрос на полном ResyncWorkIDs.
+func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
+	if c.resyncer == nil {
+		return
+	}
+	go func() {
+		ctx := context.Background()
+		if _, err := c.resyncer.ResyncWorkIDs(ctx); err != nil {
+			c.logger.Warn("manual work edit: resync work_id failed", "err", err)
+		}
+		syncer, ok := c.resyncer.(WorksIndexSyncer)
+		if !ok {
+			return
+		}
+		if len(deleted) > 0 {
+			if err := syncer.DeleteWorksFromIndex(ctx, deleted); err != nil {
+				c.logger.Warn("manual work edit: delete works from index failed", "err", err)
+			}
+		}
+		if len(touched) > 0 {
+			if err := syncer.UpsertWorksToIndex(ctx, touched); err != nil {
+				c.logger.Warn("manual work edit: upsert works to index failed", "err", err)
+			}
+		}
+	}()
 }
 
 func scanInt64s(ctx context.Context, ex interface {

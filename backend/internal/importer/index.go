@@ -9,6 +9,13 @@ import (
 
 const booksIndex = "books"
 
+// worksIndex — индекс ЛОГИЧЕСКИХ книг (works). В отличие от booksIndex (один
+// документ на издание + distinctAttribute=work_id), здесь один документ на
+// работу, поэтому фасетные счётчики считают РАБОТЫ, а не издания. Веб-список
+// (/api/books) и Cmd+K ищут здесь; OPDS остаётся на booksIndex (скачивание
+// идёт по id издания, схлопывание делает distinct).
+const worksIndex = "works"
+
 // bookDoc — документ для индекса "books" в Meilisearch.
 // id используется как primary key (совпадает с books.id в Postgres).
 type bookDoc struct {
@@ -37,6 +44,60 @@ type bookDoc struct {
 // distinctAttribute=work_id из Phase 3) иначе не применились бы.
 func (im *Importer) ConfigureIndex(ctx context.Context) error {
 	return configureIndex(ctx, im.deps.Meili)
+}
+
+// ConfigureWorksIndex применяет настройки индекса works идемпотентно. Зеркало
+// ConfigureIndex — вызывать на каждом старте, чтобы индекс существовал и имел
+// нужные filterable/sortable атрибуты даже на стабильном деплое без импорта.
+func (im *Importer) ConfigureWorksIndex(ctx context.Context) error {
+	return configureWorksIndex(ctx, im.deps.Meili)
+}
+
+// workDoc — документ индекса "works". id = works.id (primary key). Поля авторов/
+// жанров/языков — UNION по живым изданиям работы. lang — массив (json-ключ
+// "lang"), фильтруется/фасетится как и в booksIndex, но считает работы.
+type workDoc struct {
+	ID              int64    `json:"id"`
+	Title           string   `json:"title"`
+	NormalizedTitle string   `json:"normalized_title"`
+	Authors         []string `json:"authors"`
+	AuthorIDs       []int64  `json:"author_ids"`
+	Series          string   `json:"series,omitempty"`
+	SeriesID        *int64   `json:"series_id,omitempty"`
+	Genres          []string `json:"genres"`
+	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
+	Langs           []string `json:"lang"`           // массив языков всех изданий работы
+	Popularity      int64    `json:"popularity"`     // сумма популярности изданий
+	EditionCount    int      `json:"edition_count"`
+}
+
+// configureWorksIndex создаёт и настраивает индекс works идемпотентно.
+// Без distinctAttribute: каждый документ уже = одна работа.
+func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) error {
+	idx := m.Index(worksIndex)
+	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
+		Uid:        worksIndex,
+		PrimaryKey: "id",
+	}); err != nil {
+		if !isMeiliAlreadyExists(err) {
+			return fmt.Errorf("create works index: %w", err)
+		}
+	}
+	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
+		return fmt.Errorf("works update searchable: %w", err)
+	}
+	filterable := []any{"genres", "lang", "year", "series_id", "author_ids"}
+	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
+		return fmt.Errorf("works update filterable: %w", err)
+	}
+	if _, err := idx.UpdateSortableAttributesWithContext(ctx, &[]string{"year", "popularity", "edition_count"}); err != nil {
+		return fmt.Errorf("works update sortable: %w", err)
+	}
+	if _, err := idx.UpdateRankingRulesWithContext(ctx,
+		&[]string{"words", "typo", "proximity", "attribute", "sort", "exactness", "popularity:desc"}); err != nil {
+		return fmt.Errorf("works update ranking: %w", err)
+	}
+	return nil
 }
 
 // configureIndex применяет настройки к индексу books идемпотентно.

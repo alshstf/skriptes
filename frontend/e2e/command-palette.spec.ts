@@ -30,9 +30,9 @@ test('command palette: opens via ⌘K, shows three sections, navigates on click'
   await expect(dialog.getByText('Кадет Иван')).toBeVisible();
   await expect(dialog.getByText('Кадетство')).toBeVisible();
 
-  // Клик по книге → переход на /books/19 + закрытие палитры.
+  // Клик по книге → переход на карточку работы /works/19 + закрытие палитры.
   await dialog.getByText('Кадетский корпус. Книга 2').click();
-  await expect(page).toHaveURL(/\/books\/19$/);
+  await expect(page).toHaveURL(/\/works\/19$/);
   await expect(input).not.toBeVisible();
 });
 

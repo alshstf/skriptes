@@ -99,6 +99,10 @@ func run() error {
 	// существующие доки его не имели. Гейтится флагом, дальше no-op (после
 	// группировки work_id синкается её воркером).
 	go runOnceWorkIDResync(ctx(), pool, imp, logger)
+	// Конфиг индекса works (на каждом старте) + разовый полный ресинк (на
+	// апгрейде). Дальше индекс поддерживают импорт (полный) и таргетные синки
+	// группировки/года. Гейтится флагом, в горутине — старт не блокирует.
+	go runOnceWorksIndexSync(ctx(), pool, imp, logger)
 
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
@@ -470,6 +474,37 @@ func runOnceWorkIDResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.
 		logger.Warn("work_id resync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time work_id resync to meili done", "count", n)
+}
+
+// runOnceWorksIndexSync применяет настройки индекса works на каждом старте
+// (идемпотентно) и разово делает полный ResyncWorksIndex на апгрейде (гейт
+// app_settings.works_index_synced_v1). Веб-список/Cmd+K ищут по works-индексу —
+// без этого на стабильном деплое без импорта индекс был бы пустым. Дальше
+// индекс поддерживают импорт (полный ресинк) и таргетные синки группировки/года.
+func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	if err := imp.ConfigureWorksIndex(ctx); err != nil {
+		logger.Warn("meili configure works index at startup failed", "err", err)
+	}
+	const flag = "works_index_synced_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("works index sync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := imp.ResyncWorksIndex(ctx)
+	if err != nil {
+		logger.Warn("works index resync failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("works index sync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time works index resync done", "count", n)
 }
 
 // findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.

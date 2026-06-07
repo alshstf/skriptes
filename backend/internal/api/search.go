@@ -85,7 +85,9 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 			if bd.Service == nil {
 				return
 			}
-			items, err := bd.Service.Suggest(ctx, q, limit, userID, exGenres, exLangs)
+			// SuggestWorks: палитра отдаёт работы (id = works.id), ссылки ведут
+			// на /works/{id} — как и веб-список. OPDS-поиск остаётся на Suggest.
+			items, err := bd.Service.SuggestWorks(ctx, q, limit, userID, exGenres, exLangs)
 			if err == nil {
 				bookItems = items
 			}
@@ -118,10 +120,18 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 		// PersonaProfile-запрос (4 SELECT'а), но нам нужны только три
 		// маленьких set'а; делаем их прямо тут, чтобы не тянуть лишнее.
 		if userID > 0 && hist.Service != nil {
-			favBooks, favAuthors, favSeries := loadFavoriteSets(ctx, hist.Service, userID)
+			_, favAuthors, favSeries := loadFavoriteSets(ctx, hist.Service, userID)
+			// bookItems — это РАБОТЫ (id = works.id), поэтому is_favorite берём
+			// work-level: работа избрана, если избрано любое её издание.
+			workIDs := make([]int64, 0, len(bookItems))
 			for i := range bookItems {
-				if _, ok := favBooks[bookItems[i].ID]; ok {
-					bookItems[i].IsFavorite = true
+				workIDs = append(workIDs, bookItems[i].ID)
+			}
+			if favWorks, err := hist.Service.FavoriteWorkSet(ctx, userID, workIDs); err == nil {
+				for i := range bookItems {
+					if _, ok := favWorks[bookItems[i].ID]; ok {
+						bookItems[i].IsFavorite = true
+					}
 				}
 			}
 			for i := range authorItems {

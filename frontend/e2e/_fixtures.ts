@@ -164,6 +164,15 @@ export async function mockApi(page: Page): Promise<void> {
       body: JSON.stringify(bookDetailFixture),
     }),
   );
+  // Карточка работы (/api/works/{id}) отдаёт тот же DTO, что /api/books/{id}.
+  // Ссылки из списков/палитры ведут на /works/{id} → BookDetailPage(mode=work).
+  await page.route(/\/api\/works\/\d+$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(bookDetailFixture),
+    }),
+  );
   // Дефолт для /adaptations — "обогащение завершилось, ничего не нашли".
   // AdaptationsSection в этом случае не рендерит ничего, существующие
   // тесты карточки книги не затрагиваются. Spec'и про экранизации

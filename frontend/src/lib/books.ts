@@ -29,6 +29,13 @@ export type BookListItem = {
   // edition_count — число изданий (fb2-файлов) логической книги. >1 → бейдж
   // «N изданий». Заполняется на карточках автора/серии.
   edition_count?: number;
+  // work_id — логическая книга (works.id). Ссылка карточки ведёт на
+  // /works/{work_id ?? id}. В /books-выдаче id уже = works.id (work_id опущен);
+  // в каталоге автора/серии id = издание, а work_id несёт id работы.
+  work_id?: number;
+  // cover_edition_id — id издания для on-demand обложки (/api/covers/book/{id}),
+  // т.к. в /books-выдаче id = works.id. Заполняется в /books-листинге.
+  cover_edition_id?: number;
 };
 
 // bySeriesOrder — компаратор книг внутри одной серии: по series_order (бэкенд-
@@ -212,13 +219,21 @@ export function useInfiniteBooks(opts: Omit<BookFilters, 'offset'>) {
  */
 const ENRICH_MAX_TRIES = 10;
 
-export function useBook(id: number | string | undefined) {
+/**
+ * useBookCard — общее ядро карточки для двух источников:
+ *  - mode='book' → GET /api/books/{id} (id = издание), queryKey ['book', id];
+ *  - mode='work' → GET /api/works/{id} (id = работа), queryKey ['work', id].
+ * Оба возвращают один DTO (Book): для работы top-level = представительное
+ * издание. enrichment-поллинг (обложка/аннотация) идентичен.
+ */
+export function useBookCard(id: number | string | undefined, mode: 'book' | 'work') {
   const qc = useQueryClient();
-  const queryKey = ['book', String(id)] as const;
+  const queryKey = [mode === 'work' ? 'work' : 'book', String(id)] as const;
+  const url = mode === 'work' ? `/api/works/${id}` : `/api/books/${id}`;
 
   const query = useQuery<Book>({
     queryKey: [...queryKey],
-    queryFn: ({ signal }) => apiFetch<Book>(`/api/books/${id}`, { signal }),
+    queryFn: ({ signal }) => apiFetch<Book>(url, { signal }),
     enabled: id !== undefined && id !== '',
     refetchInterval: (q) => {
       const data = q.state.data as Book | undefined;
@@ -245,6 +260,17 @@ export function useBook(id: number | string | undefined) {
     (!state.data.cover_path || !state.data.annotation);
 
   return { ...query, enrichmentExhausted };
+}
+
+/** useBook — карточка по id ИЗДАНИЯ (GET /api/books/{id}). */
+export function useBook(id: number | string | undefined) {
+  return useBookCard(id, 'book');
+}
+
+/** useWork — карточка по id РАБОТЫ (GET /api/works/{id}). Те же поля, что
+ *  useBook; top-level — представительное издание работы. */
+export function useWork(id: number | string | undefined) {
+  return useBookCard(id, 'work');
 }
 
 /**

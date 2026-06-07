@@ -67,6 +67,15 @@ type ListItem struct {
 	// EditionCount — сколько изданий (fb2-файлов) у этой логической книги.
 	// >1 → фронт показывает бейдж «N изданий». Догидрачивается из PG.
 	EditionCount int `json:"edition_count,omitempty"`
+	// CoverEditionID — id издания, из которого брать обложку (для works-выдачи:
+	// ListItem.ID = works.id, а on-demand-обложка /api/covers/book/{id} требует
+	// id ИЗДАНИЯ). Догидрачивается из PG (издание с обложкой в приоритете).
+	CoverEditionID int64 `json:"cover_edition_id,omitempty"`
+	// WorkID — логическая книга (works.id). Ссылки на карточку ведут на
+	// /works/{work_id}. В works-выдаче (ListWorks) ID и так = works.id, поле не
+	// заполняется; в catalog-выдаче (автор/серия) ID = представительное ИЗДАНИЕ,
+	// поэтому WorkID несёт id работы для ссылки. Фронт: /works/{work_id ?? id}.
+	WorkID int64 `json:"work_id,omitempty"`
 }
 
 // ListResponse — обёртка для GET /api/books.

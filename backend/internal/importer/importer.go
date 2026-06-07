@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -106,6 +107,9 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	if err := configureIndex(ctx, im.deps.Meili); err != nil {
 		return stats, fmt.Errorf("configure meili: %w", err)
 	}
+	if err := configureWorksIndex(ctx, im.deps.Meili); err != nil {
+		return stats, fmt.Errorf("configure works meili: %w", err)
+	}
 
 	caches := newCaches()
 	idx := newIndexer(im.deps.Meili, 1000)
@@ -143,6 +147,15 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		logger.Warn("import: resync years to meili failed", "err", rerr)
 	} else if n > 0 {
 		logger.Info("import: years resynced to meili", "count", n)
+	}
+
+	// Индекс works (фасеты по работам) перестраиваем после импорта: новые
+	// singleton-работы + актуальный год/агрегаты. Upsert-only — осиротевшие
+	// доки чистят таргетные удаления в точках GC (группировка/split/merge).
+	if n, rerr := im.ResyncWorksIndex(ctx); rerr != nil {
+		logger.Warn("import: resync works index failed", "err", rerr)
+	} else if n > 0 {
+		logger.Info("import: works index resynced", "count", n)
 	}
 
 	stats.Authors = len(caches.author)
@@ -349,6 +362,214 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 		return total, ferr
 	}
 	return total, nil
+}
+
+// ── works-индекс: полный ресинк + таргетные upsert/delete ───────
+
+// workDocSelect — общий список колонок для построения workDoc из PG. Агрегаты
+// (авторы/жанры/языки/популярность) считаются по ЖИВЫМ изданиям работы
+// подзапросами (а не GROUP BY с JOIN'ами) — без декартова взрыва строк.
+// year = COALESCE(works.written_year, минимальный written_year изданий): даже
+// если work-агрегат года ещё не пересчитан группировкой, индекс берёт год из
+// изданий (паритет с карточкой books.Get).
+const workDocSelect = `
+	SELECT
+		w.id, w.title, w.normalized_title::text,
+		w.series_id, COALESCE(s.title, ''),
+		COALESCE(w.edition_count, 1),
+		COALESCE(w.written_year, (
+			SELECT min(b.written_year) FROM books b WHERE b.work_id = w.id AND b.deleted = false
+		)),
+		COALESCE((
+			SELECT array_agg(DISTINCT lower(btrim(b.lang)))
+			FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+			  AND b.lang IS NOT NULL AND btrim(b.lang) <> ''
+		), '{}'),
+		COALESCE((
+			SELECT array_agg(DISTINCT g.fb2_code)
+			FROM books b
+			JOIN book_genres bg ON bg.book_id = b.id
+			JOIN genres g       ON g.id = bg.genre_id
+			WHERE b.work_id = w.id AND b.deleted = false AND g.fb2_code IS NOT NULL
+		), '{}'),
+		COALESCE((
+			SELECT array_agg(x.full_name ORDER BY x.minpos, x.last_name)
+			FROM (
+				SELECT a.id, a.last_name,
+				       TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) AS full_name,
+				       min(ba.position) AS minpos
+				FROM book_authors ba
+				JOIN authors a ON a.id = ba.author_id
+				JOIN books b   ON b.id = ba.book_id
+				WHERE b.work_id = w.id AND b.deleted = false
+				GROUP BY a.id, a.last_name, a.first_name, a.middle_name
+			) x
+		), '{}'),
+		COALESCE((
+			SELECT array_agg(x.id ORDER BY x.minpos, x.last_name)
+			FROM (
+				SELECT a.id, a.last_name, min(ba.position) AS minpos
+				FROM book_authors ba
+				JOIN authors a ON a.id = ba.author_id
+				JOIN books b   ON b.id = ba.book_id
+				WHERE b.work_id = w.id AND b.deleted = false
+				GROUP BY a.id, a.last_name
+			) x
+		), '{}')
+	FROM works w
+	LEFT JOIN series s ON s.id = w.series_id`
+
+// scanWorkDocs выполняет workDocSelect + переданный хвост (WHERE/ORDER/LIMIT) и
+// собирает документы. Возвращаются только работы с ≥1 живым изданием
+// (EXISTS-фильтр в хвосте у вызывающих).
+func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) ([]workDoc, error) {
+	rows, err := im.deps.Pool.Query(ctx, workDocSelect+tail, args...)
+	if err != nil {
+		return nil, fmt.Errorf("query work docs: %w", err)
+	}
+	defer rows.Close()
+	var out []workDoc
+	for rows.Next() {
+		var (
+			d        workDoc
+			seriesID *int64
+			series   string
+			year     *int16
+		)
+		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
+			&seriesID, &series, &d.EditionCount, &year,
+			&d.Langs, &d.Genres, &d.Authors, &d.AuthorIDs); err != nil {
+			return nil, fmt.Errorf("scan work doc: %w", err)
+		}
+		// Popularity у работы = 0: в PG её нет (поле books-индекса обновляется
+		// отдельным процессом и в works пока не агрегируется).
+		if seriesID != nil && series != "" {
+			d.Series = series
+			d.SeriesID = seriesID
+		}
+		if year != nil {
+			v := int(*year)
+			d.Year = &v
+		}
+		// nil-слайсы → пустые, чтобы Meili получал [] а не null.
+		if d.Langs == nil {
+			d.Langs = []string{}
+		}
+		if d.Genres == nil {
+			d.Genres = []string{}
+		}
+		if d.Authors == nil {
+			d.Authors = []string{}
+		}
+		if d.AuthorIDs == nil {
+			d.AuthorIDs = []int64{}
+		}
+		out = append(out, d)
+	}
+	return out, rows.Err()
+}
+
+// addWorkDocs upsert-ит документы в индекс works и дожидается задачи.
+func (im *Importer) addWorkDocs(ctx context.Context, docs []workDoc) error {
+	if len(docs) == 0 {
+		return nil
+	}
+	idx := im.deps.Meili.Index(worksIndex)
+	pk := "id"
+	task, err := idx.AddDocumentsWithContext(ctx, docs, &meilisearch.DocumentOptions{PrimaryKey: &pk})
+	if err != nil {
+		return fmt.Errorf("meili add work docs: %w", err)
+	}
+	final, err := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+	if err != nil {
+		return fmt.Errorf("wait works task %d: %w", task.TaskUID, err)
+	}
+	if final.Status != meilisearch.TaskStatusSucceeded {
+		return fmt.Errorf("works task %d status %s: %v", final.UID, final.Status, final.Error)
+	}
+	return nil
+}
+
+// ResyncWorksIndex полностью перестраивает индекс works из PG: upsert всех работ
+// с ≥1 живым изданием, батчами по возрастанию id. Upsert-only (не удаляет
+// осиротевшие доки — это делают таргетные DeleteWorksFromIndex в точках GC).
+// Зовётся на старте (one-shot) и в конце импорта. Возвращает число доков.
+func (im *Importer) ResyncWorksIndex(ctx context.Context) (int, error) {
+	const batchSize = 500
+	var cursor int64
+	total := 0
+	for {
+		docs, err := im.scanWorkDocs(ctx,
+			` WHERE w.id > $1 AND EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id AND b.deleted = false)
+			  ORDER BY w.id LIMIT $2`, cursor, batchSize)
+		if err != nil {
+			return total, err
+		}
+		if len(docs) == 0 {
+			break
+		}
+		if err := im.addWorkDocs(ctx, docs); err != nil {
+			return total, err
+		}
+		total += len(docs)
+		cursor = docs[len(docs)-1].ID
+	}
+	return total, nil
+}
+
+// UpsertWorksToIndex таргетно пере-собирает и upsert-ит документы заданных работ
+// (после прохода группировки / дозаполнения года). Работы из ids, у которых не
+// осталось живых изданий, удаляются из индекса. Дешевле полного ResyncWorksIndex.
+func (im *Importer) UpsertWorksToIndex(ctx context.Context, ids []int64) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	docs, err := im.scanWorkDocs(ctx,
+		` WHERE w.id = ANY($1) AND EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id AND b.deleted = false)`, ids)
+	if err != nil {
+		return err
+	}
+	if err := im.addWorkDocs(ctx, docs); err != nil {
+		return err
+	}
+	// Работы из ids без живых изданий (не вернулись) — убрать из индекса.
+	got := make(map[int64]struct{}, len(docs))
+	for _, d := range docs {
+		got[d.ID] = struct{}{}
+	}
+	var missing []int64
+	for _, id := range ids {
+		if _, ok := got[id]; !ok {
+			missing = append(missing, id)
+		}
+	}
+	return im.DeleteWorksFromIndex(ctx, missing)
+}
+
+// DeleteWorksFromIndex удаляет документы работ из индекса works (после GC работ
+// при группировке / split / merge). Дожидается задачи.
+func (im *Importer) DeleteWorksFromIndex(ctx context.Context, ids []int64) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	strIDs := make([]string, len(ids))
+	for i, id := range ids {
+		strIDs[i] = strconv.FormatInt(id, 10)
+	}
+	idx := im.deps.Meili.Index(worksIndex)
+	task, err := idx.DeleteDocumentsWithContext(ctx, strIDs, nil)
+	if err != nil {
+		return fmt.Errorf("meili delete work docs: %w", err)
+	}
+	final, err := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+	if err != nil {
+		return fmt.Errorf("wait works delete task %d: %w", task.TaskUID, err)
+	}
+	if final.Status != meilisearch.TaskStatusSucceeded {
+		return fmt.Errorf("works delete task %d status %s: %v", final.UID, final.Status, final.Error)
+	}
+	return nil
 }
 
 // processRecord обрабатывает одну запись внутри транзакции.

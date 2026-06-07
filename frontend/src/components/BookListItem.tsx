@@ -30,8 +30,8 @@ export function BookListItem({
   const chipCls = genreChipClass(useGenreChipStyle());
   return (
     <Link
-      to="/books/$id"
-      params={{ id: String(book.id) }}
+      to="/works/$id"
+      params={{ id: String(book.work_id ?? book.id) }}
       className="flex gap-3 rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
     >
       {serNo != null ? (

@@ -145,10 +145,13 @@ test('reader: «К карточке» ведёт на карточку и browse
   );
 
   await page.goto('/books');
+  // Список ведёт на карточку работы /works/19.
   await page.getByRole('link', { name: /Кадетский корпус. Книга 2/ }).first().click();
-  await expect(page).toHaveURL(/\/books\/19$/);
+  await expect(page).toHaveURL(/\/works\/19$/);
   await page.getByRole('link', { name: /Открыть книгу в браузерном ридере/ }).click();
   await expect(page).toHaveURL(/\/books\/19\/read$/);
+  // «К карточке» из ридера ведёт на /books/{editionId} (back-compat → та же
+  // карточка работы), ему не нужен work_id.
   await page.getByRole('button', { name: /Вернуться к карточке книги/ }).click();
   await expect(page).toHaveURL(/\/books\/19$/);
   // Browser-back НЕ должен вернуть в ридер (replace убрал reader-запись).

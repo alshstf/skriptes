@@ -11,12 +11,19 @@ import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
-import { useBook, useToggleRead, type Book } from '@/lib/books';
+import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
-export function BookDetailPage() {
+/**
+ * BookDetailPage — карточка логической книги. Один компонент для двух маршрутов:
+ *  - /works/$id (mode='work', основной — ссылки из списков ведут сюда);
+ *  - /books/$id (mode='book', обратная совместимость: открывает по id издания,
+ *    например возврат из ридера). Оба отдают тот же DTO; top-level — открытое/
+ *    представительное издание. book.id (а не id из URL) — цель действий.
+ */
+export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   const { id } = useParams({ strict: false }) as { id: string };
-  const { data: book, isLoading, error, enrichmentExhausted } = useBook(id);
+  const { data: book, isLoading, error, enrichmentExhausted } = useBookCard(id, mode);
 
   if (isLoading) {
     return (
@@ -205,9 +212,9 @@ export function BookDetailPage() {
 
 /**
  * EditionsSection — секция «Издания»: одна логическая книга = несколько
- * fb2-файлов (разные переводы / годы издания / языки). Каждое издание —
- * строка с атрибутами и собственными действиями (Читать/Скачать/Kindle).
- * Открытое (id из URL) — первым и выделено. Рендерится только при ≥2 изданиях
+ * fb2-файлов (разные переводы / годы издания / языки). Плоский список
+ * равноправных изданий — на каждое строка с атрибутами и собственными
+ * действиями (Читать/Скачать/Kindle). Рендерится только при ≥2 изданиях
  * (для одного действия остаются в шапке).
  */
 function EditionsSection({ book }: { book: Book }) {
