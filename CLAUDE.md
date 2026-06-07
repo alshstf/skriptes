@@ -258,7 +258,14 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
 **Phase 2 (сделано) — джоба группировки + админка + ручной split/merge:**
 - `metadata/work_grouper.go`: `WorkGrouper`/`WorkGroupController` (клон
   `year_backfill.go`). Работает **по автору** (blast radius = 1 автор, НИКОГДА
-  не сливает разных primary-авторов). Tier-1 (без сети, union-find): дубли
+  не сливает разных primary-авторов). ⚙️ **Tier-1 и Tier-2 РАЗВЯЗАНЫ** (после
+  0.9.0): `Run` чередует быстрый `sweepTier1` (Tier-1/1.5, без сети, по всей
+  коллекции до исчерпания) и `crawlTier2Batch` (внешний, ОДИН батч/итерация,
+  rate-gated) с приоритетом Tier-1. Раньше Tier-2 был вшит в каждого автора и
+  тормозил весь проход до ~RPM (на 462k — дни); теперь Tier-1/1.5 догруппирует за
+  минуты, Tier-2 ползёт в фоне отдельно. `RunOnce`/тесты — `drainAll`. Кандидаты
+  Tier-2: `fetchTier2Authors` (singleton-работа + due по `book_work_lookups`).
+  Tier-1 (без сети, union-find): дубли
   `(normalized_title, lang)` + `fb2_doc_id` + перевод↔оригинал/переводы между
   собой через `src_*` + **Tier-1.5** `(series_id, ser_no)` (один том серии ⇒ одна
   работа — ловит разно-названные переводы без src-title-info; гейт точности: бакет

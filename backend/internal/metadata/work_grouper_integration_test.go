@@ -77,7 +77,7 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	foreign := seedGroupBook(t, ctx, pool, collID, archID, other, "L6", "The Hobbit", "the hobbit", "en", "", "", "")
 
 	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet) // Tier-1 only
-	g.drain(ctx)
+	g.drainAll(ctx)
 
 	// orig + tr1 + tr2 + dupEn → одна работа.
 	wOrig := workIDOf(t, ctx, pool, orig)
@@ -104,7 +104,7 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	require.Equal(t, 0, unscanned, "все кандидаты помечены scanned")
 
 	// Идемпотентность: повторный проход кандидатов не находит, ничего не ломает.
-	g.drain(ctx)
+	g.drainAll(ctx)
 	require.Equal(t, wOrig, workIDOf(t, ctx, pool, tr1))
 }
 
@@ -157,7 +157,7 @@ func TestWorkGrouper_Tier15_Series_Integration(t *testing.T) {
 	other := mk("R3", "Чернильно-чёрное сердце", "чернильно-чёрное сердце", "", 6)
 
 	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet) // Tier-1(+1.5) only
-	g.drain(ctx)
+	g.drainAll(ctx)
 
 	require.Equal(t, workIDOf(t, ctx, pool, razv), workIDOf(t, ctx, pool, neiz),
 		"#7: оба перевода слиты по (серия, ser_no)")
@@ -207,7 +207,7 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 	g := NewWorkGrouper(pool, fake, nil, WorkGroupConfig{
 		OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24,
 	}, nil, quiet)
-	g.drain(ctx)
+	g.drainAll(ctx)
 
 	require.Equal(t, workIDOf(t, ctx, pool, b1), workIDOf(t, ctx, pool, b2), "слиты по внешнему work_key")
 
@@ -224,6 +224,69 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 		`SELECT ext_ids->>'ol_work' FROM works WHERE id=$1`, w).Scan(&olWork))
 	require.NotNil(t, olWork)
 	require.Equal(t, "OL777W", *olWork)
+}
+
+// countingResolver — внешний резолвер со счётчиком вызовов (для проверки, что
+// sweepTier1 НЕ ходит в сеть). Всегда возвращает фиксированный key.
+type countingResolver struct {
+	name  string
+	key   string
+	calls int
+}
+
+func (c *countingResolver) Name() string { return c.name }
+func (c *countingResolver) ResolveWorkKey(context.Context, WorkQuery) (string, error) {
+	c.calls++
+	return c.key, nil
+}
+
+// TestWorkGrouper_Tier1NoNetwork_Integration — декаплинг Tier-1/Tier-2:
+//  1. sweepTier1 НЕ дёргает внешний резолвер (calls == 0) и помечает книги scanned;
+//  2. Tier-2 краулер ОТДЕЛЬНОЙ фазой сводит оставшиеся singletons по внешнему ключу
+//     (даже после того как sweepTier1 пометил их scanned — гейт по isDue, не scanned).
+func TestWorkGrouper_Tier1NoNetwork_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Кинг", "кинг стивен")
+	// Разные названия, без src, без общей серии → Tier-1/1.5 их НЕ свяжет: оба
+	// остаются singleton-работами (кандидаты Tier-2).
+	b1 := seedGroupBook(t, ctx, pool, collID, archID, author, "K1", "Оно", "оно", "ru", "", "", "")
+	b2 := seedGroupBook(t, ctx, pool, collID, archID, author, "K2", "It", "it", "en", "", "", "")
+
+	res := &countingResolver{name: "openlibrary", key: "OL999W"}
+	g := NewWorkGrouper(pool, res, nil, WorkGroupConfig{
+		OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24,
+	}, nil, quiet)
+
+	// Фаза 1: только Tier-1 — без сети.
+	g.sweepTier1(ctx)
+	require.Equal(t, 0, res.calls, "sweepTier1 не должен ходить во внешние источники")
+	require.NotEqual(t, workIDOf(t, ctx, pool, b1), workIDOf(t, ctx, pool, b2),
+		"Tier-1 без общего ключа/серии не сливает разные книги")
+	var unscanned int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM books WHERE work_scanned_at IS NULL AND deleted=false`).Scan(&unscanned))
+	require.Equal(t, 0, unscanned, "sweepTier1 пометил всех scanned")
+
+	// Фаза 2: Tier-2 краулер — теперь ходит в сеть и сводит singletons по ключу,
+	// несмотря на то что книги уже scanned (гейт по isDue, не по scanned).
+	for g.crawlTier2Batch(ctx) > 0 { // прокрутить батчи Tier-2 до исчерпания
+	}
+	require.Greater(t, res.calls, 0, "Tier-2 краулер должен сходить во внешний источник")
+	require.Equal(t, workIDOf(t, ctx, pool, b1), workIDOf(t, ctx, pool, b2),
+		"Tier-2 свёл singletons по внешнему work_key отдельной фазой")
 }
 
 // TestWorkGroupCoverage_LiveEditionsOnly — покрытие считается по ЖИВЫМ изданиям:
