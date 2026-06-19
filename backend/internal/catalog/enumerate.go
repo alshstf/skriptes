@@ -38,6 +38,7 @@ type GenreEntry struct {
 	BookCount    int    `json:"book_count"`
 	CategoryCode string `json:"category_code,omitempty"` // `cat:sf` и т.п.
 	CategoryName string `json:"category_name,omitempty"` // «Фантастика»
+	IsFavorite   bool   `json:"is_favorite"`             // жанр в избранном текущего пользователя
 }
 
 // ListAuthors — постраничный список авторов, отсортированный по
@@ -159,7 +160,11 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 // (fb2_code 'cat:sf', name_ru «Фантастика»). Фронт группирует фильтр
 // по CategoryName, leaf'ы без parent_id показываются в группе «Прочее»
 // (frontend-side).
-func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
+//
+// userID > 0 → IsFavorite проставляется по таблице user_favorite_genres
+// (LEFT JOIN): жанры в личном избранном пользователь закрепляет сверху на
+// странице «Жанры». userID == 0 (аноним / OPDS) → IsFavorite всегда false.
+func (s *Service) ListGenres(ctx context.Context, userID int64) ([]GenreEntry, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT g.id, g.fb2_code,
 		       COALESCE(NULLIF(g.name_ru, ''), NULLIF(g.name_en, ''), g.fb2_code) AS display,
@@ -167,12 +172,14 @@ func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 		         JOIN books b ON b.id = bg.book_id
 		         WHERE bg.genre_id = g.id AND b.deleted = false)::int AS book_count,
 		       COALESCE(p.fb2_code, '') AS category_code,
-		       COALESCE(p.name_ru, '')  AS category_name
+		       COALESCE(p.name_ru, '')  AS category_name,
+		       (ufg.genre_id IS NOT NULL) AS is_favorite
 		FROM genres g
 		LEFT JOIN genres p ON p.id = g.parent_id
+		LEFT JOIN user_favorite_genres ufg ON ufg.genre_id = g.id AND ufg.user_id = $1
 		WHERE g.fb2_code NOT LIKE 'cat:%'
 		ORDER BY display, g.id
-	`)
+	`, userID)
 	if err != nil {
 		return nil, fmt.Errorf("list genres: %w", err)
 	}
@@ -183,7 +190,7 @@ func (s *Service) ListGenres(ctx context.Context) ([]GenreEntry, error) {
 		var g GenreEntry
 		if err := rows.Scan(
 			&g.ID, &g.Code, &g.Display, &g.BookCount,
-			&g.CategoryCode, &g.CategoryName,
+			&g.CategoryCode, &g.CategoryName, &g.IsFavorite,
 		); err != nil {
 			return nil, fmt.Errorf("scan genre: %w", err)
 		}

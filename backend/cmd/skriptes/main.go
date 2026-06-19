@@ -21,6 +21,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
+	"github.com/skriptes/skriptes/backend/internal/collections"
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
@@ -107,6 +108,7 @@ func run() error {
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
 	historySvc := history.New(pool)
+	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
@@ -315,10 +317,11 @@ func run() error {
 			CookieDomain:   cfg.CookieDomain,
 			AllowedOrigins: cfg.AllowedOrigins,
 		},
-		Books:    api.BooksDeps{Service: booksSvc},
-		Catalog:  api.CatalogDeps{Service: catalogSvc},
-		Download: api.DownloadDeps{Books: booksSvc, Converter: conv},
-		History:  api.HistoryDeps{Service: historySvc},
+		Books:       api.BooksDeps{Service: booksSvc},
+		Catalog:     api.CatalogDeps{Service: catalogSvc},
+		Collections: api.CollectionsDeps{Service: collectionsSvc},
+		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv},
+		History:     api.HistoryDeps{Service: historySvc},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

@@ -15,6 +15,7 @@ import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorsPage } from '@/pages/AuthorsPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
+import { GenresPage } from '@/pages/GenresPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ProfileContentPage } from '@/pages/ProfileContentPage';
 import { ProfileAppearancePage } from '@/pages/ProfileAppearancePage';
@@ -185,6 +186,13 @@ const seriesRoute = createRoute({
   component: SeriesPage,
 });
 
+// /genres — раздел «Жанры»: обзор жанров с избранным + личные полки.
+const genresRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/genres',
+  component: GenresPage,
+});
+
 const profileRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/me',
@@ -253,6 +261,7 @@ const routeTree = rootRoute.addChildren([
     authorsListRoute,
     authorRoute,
     seriesRoute,
+    genresRoute,
     profileRoute,
     profileContentRoute,
     profileAppearanceRoute,

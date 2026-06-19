@@ -9,6 +9,7 @@ import {
   Sparkles,
   Star,
   UserIcon,
+  X,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Callout } from '@/components/ui/callout';
@@ -16,7 +17,7 @@ import { BookCover } from '@/components/BookCover';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
-import { useContinueReading, useSubscriptionFeed } from '@/lib/home';
+import { useContinueReading, useSubscriptionFeed, useDismissFeedItem } from '@/lib/home';
 import type { ContinueItem, FeedItem } from '@/lib/home';
 import { cn } from '@/lib/utils';
 
@@ -335,18 +336,43 @@ function SubscriptionFeedRow() {
 }
 
 function FeedCard({ item }: { item: FeedItem }) {
+  const dismiss = useDismissFeedItem();
+  const workId = item.work_id ?? item.id;
   return (
-    <CoverCard
-      to={`/works/${item.work_id ?? item.id}`}
-      title={item.title}
-      authors={item.authors}
-      coverPath={item.cover_path}
-      coverEditionId={item.id}
-    >
-      {item.series ? (
-        <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.series}</p>
-      ) : null}
-    </CoverCard>
+    <div className="group/feed relative shrink-0">
+      {/* Скрыть из новинок: маленький × в углу обложки. На мобиле виден всегда,
+          на десктопе — по наведению. preventDefault/stopPropagation, чтобы клик
+          не открывал карточку (родитель — Link). */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dismiss.mutate(workId);
+        }}
+        aria-label="Скрыть из новинок"
+        title="Скрыть из новинок"
+        className={cn(
+          'absolute right-1 top-1 z-10 flex size-6 items-center justify-center rounded-full',
+          'border border-border bg-background/90 text-muted-foreground shadow-sm backdrop-blur',
+          'transition hover:bg-accent hover:text-foreground focus-visible:opacity-100',
+          'max-sm:opacity-100 sm:opacity-0 sm:group-hover/feed:opacity-100',
+        )}
+      >
+        <X className="size-3.5" aria-hidden />
+      </button>
+      <CoverCard
+        to={`/works/${workId}`}
+        title={item.title}
+        authors={item.authors}
+        coverPath={item.cover_path}
+        coverEditionId={item.id}
+      >
+        {item.series ? (
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.series}</p>
+        ) : null}
+      </CoverCard>
+    </div>
   );
 }
 

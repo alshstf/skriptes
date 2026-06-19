@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send, ChevronDown } from 'lucide-react';
+import { Tablet, ChevronDown } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -48,9 +48,9 @@ export function SendToKindleButton({ bookId }: { bookId: number }) {
   if (targetsQ.isSuccess && targets.length === 0) {
     return (
       <Button variant="outline" size="sm" asChild>
-        <Link to="/me" className="gap-2">
-          <Send className="size-4" aria-hidden />
-          <span>Настроить Kindle</span>
+        <Link to="/me" className="gap-2" aria-label="Настроить Kindle" title="Настроить Kindle">
+          <Tablet className="size-4" aria-hidden />
+          <span className="hidden sm:inline">Настроить Kindle</span>
         </Link>
       </Button>
     );
@@ -66,9 +66,11 @@ export function SendToKindleButton({ bookId }: { bookId: number }) {
         onClick={() => doSend(t)}
         disabled={disabled}
         className="gap-2"
+        aria-label="Отправить на Kindle"
+        title="Отправить на Kindle"
       >
-        <Send className="size-4" aria-hidden />
-        {sendingTo === t.id ? 'Отправляется…' : 'На Kindle'}
+        <Tablet className="size-4" aria-hidden />
+        <span className="hidden sm:inline">{sendingTo === t.id ? 'Отправляется…' : 'На Kindle'}</span>
       </Button>
     );
   }
@@ -77,9 +79,16 @@ export function SendToKindleButton({ bookId }: { bookId: number }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" disabled={disabled} className="gap-2">
-          <Send className="size-4" aria-hidden />
-          {send.isPending ? 'Отправляется…' : 'На Kindle'}
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          className="gap-2"
+          aria-label="Отправить на Kindle"
+          title="Отправить на Kindle"
+        >
+          <Tablet className="size-4" aria-hidden />
+          <span className="hidden sm:inline">{send.isPending ? 'Отправляется…' : 'На Kindle'}</span>
           <ChevronDown className="size-3.5 opacity-60" aria-hidden />
         </Button>
       </DropdownMenuTrigger>

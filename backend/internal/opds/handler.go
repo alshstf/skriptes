@@ -272,7 +272,7 @@ func (h *Handler) SeriesBooks(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) GenresList(w http.ResponseWriter, r *http.Request) {
 	base := h.baseURL(r)
-	items, err := h.deps.Catalog.ListGenres(r.Context())
+	items, err := h.deps.Catalog.ListGenres(r.Context(), 0)
 	if err != nil {
 		h.error(w, "list genres failed", err, http.StatusInternalServerError)
 		return
@@ -669,7 +669,7 @@ func (h *Handler) lookupGenre(ctx context.Context, id int64) (code, display stri
 	// Делаем минимальный helper в catalog.Service: но это утяжелит API.
 	// Проще — взять данные через ListGenres + linear search; жанров ~250,
 	// O(N) на лишний запрос терпимо.
-	items, err := h.deps.Catalog.ListGenres(ctx)
+	items, err := h.deps.Catalog.ListGenres(ctx, 0)
 	if err != nil {
 		return "", "", err
 	}

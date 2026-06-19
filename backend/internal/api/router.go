@@ -22,6 +22,7 @@ type Deps struct {
 	Auth        AuthDeps
 	Books       BooksDeps
 	Catalog     CatalogDeps
+	Collections CollectionsDeps
 	Download    DownloadDeps
 	History     HistoryDeps
 	Metadata    MetadataDeps
@@ -151,11 +152,16 @@ func NewRouter(d Deps) http.Handler {
 					r.Delete("/authors/{id}/favorite", handleRemoveFavoriteAuthor(d.History))
 					r.Post("/series/{id}/favorite", handleAddFavoriteSeries(d.History))
 					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
+					// Избранные жанры — раздел «Жанры» (закрепление сверху).
+					r.Post("/genres/{id}/favorite", handleAddFavoriteGenre(d.History))
+					r.Delete("/genres/{id}/favorite", handleRemoveFavoriteGenre(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
-					// Главная: «Продолжить чтение» + «Новинки по подписанным авторам».
+					// Главная: «Продолжить чтение» + «Новинки по подпискам».
 					r.Get("/me/continue-reading", handleContinueReading(d.History))
 					r.Get("/me/feed/subscriptions", handleSubscriptionFeed(d.History))
+					// Скрыть работу из ленты новинок («не интересно»).
+					r.Post("/me/feed/dismiss", handleDismissFeedItem(d.History))
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
 					// для read_count в статистике автора/серии.
@@ -164,6 +170,17 @@ func NewRouter(d Deps) http.Handler {
 					// Позиция чтения для in-browser ридера (epub-cfi).
 					r.Get("/books/{id}/position", handleGetPosition(d.History))
 					r.Put("/books/{id}/position", handleSavePosition(d.History))
+				}
+				// Личные полки (коллекции) — раздел «Жанры». CRUD полки +
+				// членство книг. Все ручки гейтят владение по userID.
+				if d.Collections.Service != nil {
+					r.Get("/me/collections", handleListCollections(d.Collections))
+					r.Post("/me/collections", handleCreateCollection(d.Collections))
+					r.Patch("/me/collections/{id}", handleRenameCollection(d.Collections))
+					r.Delete("/me/collections/{id}", handleDeleteCollection(d.Collections))
+					r.Get("/me/collections/{id}", handleListCollectionBooks(d.Collections))
+					r.Post("/me/collections/{id}/books/{bookId}", handleAddBookToCollection(d.Collections))
+					r.Delete("/me/collections/{id}/books/{bookId}", handleRemoveBookFromCollection(d.Collections))
 				}
 				// In-browser ридер: тот же путь конвертации что и /download,
 				// но без Content-Disposition: attachment и без записи в reads.
