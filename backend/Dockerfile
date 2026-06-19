@@ -33,7 +33,11 @@ RUN apk add --no-cache curl unzip ca-certificates && \
     esac && \
     URL="https://github.com/rupor-github/fb2cng/releases/download/v${FB2CNG_VERSION}/fbc-linux-${ARCH}.zip" && \
     mkdir -p /opt/fb2cng && cd /opt/fb2cng && \
-    curl -fsSL -o fbc.zip "$URL" && \
+    # --retry/--retry-all-errors: загрузка релиза с GitHub-CDN иногда обрывается
+    # на середине (TLS "unexpected eof") при сборке за VPN с низким MTU — повтор
+    # лечит этот transient, чтобы один сетевой сбой не валил весь билд (в т.ч. CI).
+    curl -fsSL --retry 5 --retry-all-errors --retry-delay 3 \
+         --connect-timeout 30 --max-time 300 -o fbc.zip "$URL" && \
     unzip fbc.zip && rm fbc.zip && chmod +x fbc
 
 # ── runtime ─────────────────────────────────────────────────────
