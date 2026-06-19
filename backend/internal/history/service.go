@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -591,6 +592,148 @@ func (s *Service) RecentViews(ctx context.Context, userID int64, limit int) ([]V
 		var it ViewedItem
 		if err := rows.Scan(&it.ID, &it.Title, &it.LastViewedAt, &it.Authors); err != nil {
 			return nil, err
+		}
+		out = append(out, it)
+	}
+	return out, rows.Err()
+}
+
+// ContinueReading — книги «в процессе»: записи в reads с прогрессом
+// (fraction > 0), но ещё не отмеченные прочитанными (completed_at IS NULL).
+// Сортировка по updated_at DESC — самые свежие сверху («продолжить с того,
+// на чём остановился»). По образцу RecentViews: JOIN авторов + серии, скрываем
+// deleted-книги.
+//
+// ID = reads.book_id (издание): прогресс/позиция привязаны к конкретному
+// fb2-файлу. work_id отдаём для ссылки карточки (/works/{work_id}). cover_path
+// COALESCE'ится с обложкой любого живого издания работы — как в books.hydrateCovers,
+// чтобы у издания без своей обложки она бралась из соседнего.
+func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) ([]ContinueItem, error) {
+	if limit <= 0 || limit > 100 {
+		limit = 20
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT b.id, b.work_id, b.title, b.lib_id, ser.title,
+		       COALESCE(r.fraction, 0), r.updated_at,
+		       COALESCE(b.cover_path, (
+		           SELECT bb.cover_path FROM books bb
+		           WHERE bb.work_id = b.work_id AND bb.deleted = false
+		             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
+		           ORDER BY bb.id LIMIT 1
+		       ), ''),
+		       COALESCE(
+		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
+		           ARRAY[]::text[]
+		       )
+		FROM reads r
+		JOIN books b ON b.id = r.book_id AND b.deleted = false
+		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN book_authors ba ON ba.book_id = b.id
+		LEFT JOIN authors a ON a.id = ba.author_id
+		WHERE r.user_id = $1
+		  AND r.completed_at IS NULL
+		  AND COALESCE(r.fraction, 0) > 0
+		GROUP BY b.id, b.work_id, b.title, b.lib_id, ser.title, r.fraction, r.updated_at, b.cover_path
+		ORDER BY r.updated_at DESC
+		LIMIT $2
+	`, userID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("query continue reading: %w", err)
+	}
+	defer rows.Close()
+	out := make([]ContinueItem, 0)
+	for rows.Next() {
+		var (
+			it     ContinueItem
+			workID *int64
+			series *string
+		)
+		if err := rows.Scan(&it.ID, &workID, &it.Title, &it.LibID, &series,
+			&it.Fraction, &it.UpdatedAt, &it.CoverPath, &it.Authors); err != nil {
+			return nil, err
+		}
+		if workID != nil {
+			it.WorkID = *workID
+		}
+		if series != nil {
+			it.Series = *series
+		}
+		out = append(out, it)
+	}
+	return out, rows.Err()
+}
+
+// SubscriptionFeed — свежие книги авторов, на которых подписан пользователь
+// (favorite_authors). «Свежесть» = books.date_added (когда книга появилась в
+// библиотеке, см. граблю про date_added ≠ год написания — для «новинок»
+// добавление в библиотеку и есть корректный сигнал).
+//
+// Схлопывание по работе: одна логическая книга в ленте один раз. Берём
+// представительное издание (DISTINCT ON по COALESCE(work_id, -id), внутри
+// группы — самое свежее date_added, тай-брейк по min id). Скрываем deleted.
+func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int) ([]FeedItem, error) {
+	if limit <= 0 || limit > 100 {
+		limit = 20
+	}
+	// Шаг 1 — представитель на работу: среди живых книг подписанных авторов
+	// выбираем по одному изданию на work (самое свежее date_added).
+	// Шаг 2 — обогащаем представителя авторами/серией/обложкой.
+	rows, err := s.pool.Query(ctx, `
+		WITH rep AS (
+			SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
+			       b.id, b.work_id, b.date_added
+			FROM favorite_authors fa
+			JOIN book_authors ba ON ba.author_id = fa.author_id
+			JOIN books b ON b.id = ba.book_id AND b.deleted = false
+			WHERE fa.user_id = $1
+			ORDER BY COALESCE(b.work_id, -b.id),
+			         b.date_added DESC NULLS LAST, b.id
+		)
+		SELECT b.id, b.work_id, b.title, b.lib_id, b.date_added, ser.title,
+		       COALESCE(b.cover_path, (
+		           SELECT bb.cover_path FROM books bb
+		           WHERE bb.work_id = b.work_id AND bb.deleted = false
+		             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
+		           ORDER BY bb.id LIMIT 1
+		       ), ''),
+		       COALESCE(
+		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
+		           ARRAY[]::text[]
+		       )
+		FROM rep
+		JOIN books b ON b.id = rep.id
+		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN book_authors ba ON ba.book_id = b.id
+		LEFT JOIN authors a ON a.id = ba.author_id
+		GROUP BY b.id, b.work_id, b.title, b.lib_id, b.date_added, ser.title, b.cover_path
+		ORDER BY b.date_added DESC NULLS LAST, b.id DESC
+		LIMIT $2
+	`, userID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("query subscription feed: %w", err)
+	}
+	defer rows.Close()
+	out := make([]FeedItem, 0)
+	for rows.Next() {
+		var (
+			it     FeedItem
+			workID *int64
+			added  pgtype.Date
+			series *string
+		)
+		if err := rows.Scan(&it.ID, &workID, &it.Title, &it.LibID, &added, &series,
+			&it.CoverPath, &it.Authors); err != nil {
+			return nil, err
+		}
+		if workID != nil {
+			it.WorkID = *workID
+		}
+		if added.Valid {
+			t := added.Time
+			it.AddedAt = &t
+		}
+		if series != nil {
+			it.Series = *series
 		}
 		out = append(out, it)
 	}

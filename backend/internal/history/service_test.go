@@ -297,6 +297,152 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.NotNil(t, ca)
 }
 
+// TestService_ContinueReading — блок «Продолжить чтение» на Главной:
+//   - возвращает только книги с прогрессом (fraction > 0) и НЕ дочитанные
+//     (completed_at IS NULL);
+//   - дочитанные и нетронутые (fraction = 0 / нет записи) — не попадают;
+//   - сортировка по updated_at DESC.
+func TestService_ContinueReading(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var userID, collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('cr@e.com','CR','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	// mkBook — книга + singleton-работа (инвариант work_id), возвращает (bookID, workID).
+	mkBook := func(lib, title string) (int64, int64) {
+		var wid int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ($1, lower($1)) RETURNING id`, title).Scan(&wid))
+		var bid int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+			VALUES ($1,$2,$3,$3,'fb2',$4, lower($4), $5) RETURNING id`,
+			collID, archID, lib, title, wid).Scan(&bid))
+		return bid, wid
+	}
+
+	inProgress, ipWork := mkBook("L-IP", "В процессе")
+	finished, _ := mkBook("L-FIN", "Дочитана")
+	untouched, _ := mkBook("L-UNT", "Не тронута")
+
+	svc := history.New(pool)
+
+	// Пусто пока нет ни одной записи reads.
+	items, err := svc.ContinueReading(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Empty(t, items)
+
+	// in-progress: fraction>0, completed_at NULL.
+	frac := 0.42
+	require.NoError(t, svc.SavePosition(ctx, userID, inProgress, "cfi-1", &frac))
+	// finished: есть прогресс, но дочитана → не в выдаче.
+	f2 := 0.9
+	require.NoError(t, svc.SavePosition(ctx, userID, finished, "cfi-2", &f2))
+	require.NoError(t, svc.MarkRead(ctx, userID, finished))
+	// untouched: только RecordRead (fraction остаётся NULL/0) → не в выдаче.
+	require.NoError(t, svc.RecordRead(ctx, userID, untouched))
+
+	items, err = svc.ContinueReading(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Len(t, items, 1, "только in-progress книга")
+	require.Equal(t, inProgress, items[0].ID)
+	require.Equal(t, ipWork, items[0].WorkID)
+	require.InDelta(t, 0.42, items[0].Fraction, 0.001)
+	require.Equal(t, "В процессе", items[0].Title)
+}
+
+// TestService_SubscriptionFeed — блок «Новинки по подписанным авторам»:
+//   - книги авторов из favorite_authors, отсортированные по date_added DESC;
+//   - книги не-подписанных авторов не попадают;
+//   - схлопывание по work_id (одна работа один раз);
+//   - пустая выдача, если подписок нет.
+func TestService_SubscriptionFeed(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var userID, collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('sf@e.com','SF','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	var subAuthor, otherAuthor int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, first_name, normalized_name) VALUES ('Подписан','Автор','подписан автор') RETURNING id`).Scan(&subAuthor))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, first_name, normalized_name) VALUES ('Другой','Автор','другой автор') RETURNING id`).Scan(&otherAuthor))
+
+	svc := history.New(pool)
+
+	// Без подписок — пусто.
+	items, err := svc.SubscriptionFeed(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Empty(t, items)
+
+	// mkBook — книга + singleton-работа + привязка автора + date_added.
+	mkBook := func(lib, title string, authorID int64, dateAdded string) (int64, int64) {
+		var wid int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ($1, lower($1)) RETURNING id`, title).Scan(&wid))
+		var bid int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, date_added)
+			VALUES ($1,$2,$3,$3,'fb2',$4, lower($4), $5, $6) RETURNING id`,
+			collID, archID, lib, title, wid, dateAdded).Scan(&bid))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, bid, authorID)
+		require.NoError(t, err)
+		return bid, wid
+	}
+
+	bNewer, wNewer := mkBook("L-NEW", "Новая", subAuthor, "2024-01-10")
+	_, _ = mkBook("L-OLD", "Старая", subAuthor, "2020-01-01")
+	mkBook("L-OTH", "Чужая", otherAuthor, "2025-01-01") // не подписан — не должна попасть
+
+	// Подписываемся на subAuthor.
+	require.NoError(t, svc.AddFavoriteAuthor(ctx, userID, subAuthor))
+
+	items, err = svc.SubscriptionFeed(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Len(t, items, 2, "две книги подписанного автора, чужая исключена")
+	require.Equal(t, bNewer, items[0].ID, "свежая по date_added — первой")
+	require.Equal(t, wNewer, items[0].WorkID)
+	require.Equal(t, "Новая", items[0].Title)
+	require.Contains(t, items[0].Authors[0], "Подписан")
+	require.NotNil(t, items[0].AddedAt)
+
+	// Схлопывание по работе: добавим ВТОРОЕ издание новейшей работы — лента
+	// не должна задвоить книгу.
+	_, err = pool.Exec(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, date_added)
+		VALUES ($1,$2,'L-NEW2','L-NEW2','fb2','Новая','новая',$3,'2024-02-01')`,
+		collID, archID, wNewer)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `
+		INSERT INTO book_authors (book_id, author_id)
+		SELECT id, $1 FROM books WHERE lib_id='L-NEW2'`, subAuthor)
+	require.NoError(t, err)
+
+	items, err = svc.SubscriptionFeed(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Len(t, items, 2, "второе издание той же работы не должно задваивать ленту")
+}
+
 // ── helpers (повтор из других пакетов) ─────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {

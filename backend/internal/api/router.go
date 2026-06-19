@@ -149,6 +149,9 @@ func NewRouter(d Deps) http.Handler {
 					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
+					// Главная: «Продолжить чтение» + «Новинки по подписанным авторам».
+					r.Get("/me/continue-reading", handleContinueReading(d.History))
+					r.Get("/me/feed/subscriptions", handleSubscriptionFeed(d.History))
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
 					// для read_count в статистике автора/серии.
