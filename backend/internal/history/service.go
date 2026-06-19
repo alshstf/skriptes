@@ -663,15 +663,18 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 	return out, rows.Err()
 }
 
-// SubscriptionFeed — свежие книги по подпискам пользователя: авторы
-// (favorite_authors) И серии (favorite_series). «Свежесть» = books.date_added
-// (когда книга появилась в библиотеке, см. граблю про date_added ≠ год
-// написания — для «новинок» добавление в библиотеку и есть корректный сигнал).
+// SubscriptionFeed — НОВИНКИ по подпискам пользователя: авторы
+// (favorite_authors) И серии (favorite_series). «Новинка» = книга, добавленная
+// в библиотеку ПОСЛЕ того, как пользователь подписался: b.date_added >
+// favorite.added_at (см. граблю про date_added ≠ год написания — добавление
+// в библиотеку и есть корректный сигнал «появилось новое»). То, что было в
+// библиотеке на момент подписки, новинкой не считается. NULL date_added не
+// проходит сравнение → исключается (нельзя подтвердить, что появилось после).
 //
-// Кандидаты — UNION книг подписанных авторов и книг подписанных серий.
-// Схлопывание по работе: одна логическая книга в ленте один раз. Берём
-// представительное издание (DISTINCT ON по COALESCE(work_id, -id), внутри
-// группы — самое свежее date_added, тай-брейк по min id). Скрываем deleted.
+// Кандидаты — UNION книг подписанных авторов и книг подписанных серий
+// (каждая со своим порогом added_at). Схлопывание по работе: одна логическая
+// книга в ленте один раз. Берём представительное издание (DISTINCT ON по
+// COALESCE(work_id, -id), внутри группы — самое свежее date_added). Скрываем deleted.
 func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int) ([]FeedItem, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
@@ -687,11 +690,13 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			JOIN book_authors ba ON ba.author_id = fa.author_id
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
 			WHERE fa.user_id = $1
+			  AND b.date_added > fa.added_at::date
 			UNION
 			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_series fs
 			JOIN books b ON b.series_id = fs.series_id AND b.deleted = false
 			WHERE fs.user_id = $1
+			  AND b.date_added > fs.added_at::date
 		),
 		rep AS (
 			SELECT DISTINCT ON (COALESCE(work_id, -id))

@@ -396,7 +396,8 @@ func TestService_SubscriptionFeed(t *testing.T) {
 	require.Empty(t, items)
 
 	// mkBook — книга + singleton-работа + привязка автора + date_added.
-	mkBook := func(lib, title string, authorID int64, dateAdded string) (int64, int64) {
+	// Возвращает work_id (id издания тесту не нужен).
+	mkBook := func(lib, title string, authorID int64, dateAdded string) int64 {
 		var wid int64
 		require.NoError(t, pool.QueryRow(ctx,
 			`INSERT INTO works (title, normalized_title) VALUES ($1, lower($1)) RETURNING id`, title).Scan(&wid))
@@ -407,31 +408,36 @@ func TestService_SubscriptionFeed(t *testing.T) {
 			collID, archID, lib, title, wid, dateAdded).Scan(&bid))
 		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, bid, authorID)
 		require.NoError(t, err)
-		return bid, wid
+		return wid
 	}
 
-	bNewer, wNewer := mkBook("L-NEW", "Новая", subAuthor, "2024-01-10")
-	_, _ = mkBook("L-OLD", "Старая", subAuthor, "2020-01-01")
-	mkBook("L-OTH", "Чужая", otherAuthor, "2025-01-01") // не подписан — не должна попасть
+	wNew := mkBook("L-NEW", "Новая", subAuthor, "2024-01-10") // ПОСЛЕ подписки
+	mkBook("L-OLD", "Старая", subAuthor, "2020-01-01")        // ДО подписки — не новинка
+	mkBook("L-OTH", "Чужая", otherAuthor, "2025-01-01")       // не подписан — не должна попасть
 
-	// Подписываемся на subAuthor.
-	require.NoError(t, svc.AddFavoriteAuthor(ctx, userID, subAuthor))
+	// Подписка на автора датирована прошлым (2023-06-01): новинки = книги,
+	// добавленные ПОСЛЕ этой даты. svc.AddFavoriteAuthor ставит added_at=now(),
+	// поэтому вставляем подписку напрямую с нужной датой.
+	_, err = pool.Exec(ctx,
+		`INSERT INTO favorite_authors (user_id, author_id, added_at) VALUES ($1,$2,'2023-06-01')`,
+		userID, subAuthor)
+	require.NoError(t, err)
 
 	items, err = svc.SubscriptionFeed(ctx, userID, 20)
 	require.NoError(t, err)
-	require.Len(t, items, 2, "две книги подписанного автора, чужая исключена")
-	require.Equal(t, bNewer, items[0].ID, "свежая по date_added — первой")
-	require.Equal(t, wNewer, items[0].WorkID)
+	require.Len(t, items, 1,
+		"только «Новая» (2024, после подписки); «Старая» (2020, до) и «Чужая» (чужой автор) исключены")
+	require.Equal(t, wNew, items[0].WorkID)
 	require.Equal(t, "Новая", items[0].Title)
 	require.Contains(t, items[0].Authors[0], "Подписан")
 	require.NotNil(t, items[0].AddedAt)
 
-	// Схлопывание по работе: добавим ВТОРОЕ издание новейшей работы — лента
-	// не должна задвоить книгу.
+	// Схлопывание по работе: второе издание новейшей работы (тоже после
+	// подписки) не должно задваивать ленту.
 	_, err = pool.Exec(ctx, `
 		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, date_added)
 		VALUES ($1,$2,'L-NEW2','L-NEW2','fb2','Новая','новая',$3,'2024-02-01')`,
-		collID, archID, wNewer)
+		collID, archID, wNew)
 	require.NoError(t, err)
 	_, err = pool.Exec(ctx, `
 		INSERT INTO book_authors (book_id, author_id)
@@ -440,33 +446,42 @@ func TestService_SubscriptionFeed(t *testing.T) {
 
 	items, err = svc.SubscriptionFeed(ctx, userID, 20)
 	require.NoError(t, err)
-	require.Len(t, items, 2, "второе издание той же работы не должно задваивать ленту")
+	require.Len(t, items, 1, "второе издание той же работы не задваивает ленту")
 
-	// Подписка на СЕРИЮ (не автора): новинки серии тоже попадают в ленту.
-	// Книга серии написана otherAuthor (на него НЕ подписаны) — значит
-	// попасть в ленту она может ИСКЛЮЧИТЕЛЬНО через favorite_series.
-	var serID, wSer, bSer int64
+	// Подписка на СЕРИЮ (датирована 2025-01-01). Книги серии написаны
+	// otherAuthor (на него НЕ подписаны) — попасть могут только через серию.
+	var serID int64
 	require.NoError(t, pool.QueryRow(ctx,
 		`INSERT INTO series (title, normalized_title) VALUES ('Моя Серия','моя серия') RETURNING id`).Scan(&serID))
-	require.NoError(t, pool.QueryRow(ctx,
-		`INSERT INTO works (title, normalized_title) VALUES ('Томик','томик') RETURNING id`).Scan(&wSer))
-	require.NoError(t, pool.QueryRow(ctx, `
-		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, series_id, date_added)
-		VALUES ($1,$2,'L-SER','L-SER','fb2','Томик','томик',$3,$4,'2025-06-01') RETURNING id`,
-		collID, archID, wSer, serID).Scan(&bSer))
-	_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, bSer, otherAuthor)
-	require.NoError(t, err)
+	mkSeriesBook := func(lib, title, dateAdded string) int64 {
+		var wid, bid int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ($1, lower($1)) RETURNING id`, title).Scan(&wid))
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, series_id, date_added)
+			VALUES ($1,$2,$3,$3,'fb2',$4, lower($4), $5, $6, $7) RETURNING id`,
+			collID, archID, lib, title, wid, serID, dateAdded).Scan(&bid))
+		_, e := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, bid, otherAuthor)
+		require.NoError(t, e)
+		return bid
+	}
+	bSerNew := mkSeriesBook("L-SER-NEW", "Томик-новый", "2025-06-01") // после подписки
+	mkSeriesBook("L-SER-OLD", "Томик-старый", "2024-01-01")           // ДО подписки — не новинка
 
-	require.NoError(t, svc.AddFavoriteSeries(ctx, userID, serID))
+	_, err = pool.Exec(ctx,
+		`INSERT INTO favorite_series (user_id, series_id, added_at) VALUES ($1,$2,'2025-01-01')`,
+		userID, serID)
+	require.NoError(t, err)
 
 	items, err = svc.SubscriptionFeed(ctx, userID, 20)
 	require.NoError(t, err)
-	require.Len(t, items, 3, "2 работы подписанного автора (схлопнуто) + 1 книга подписанной серии")
+	require.Len(t, items, 2,
+		"«Новая» (автор) + «Томик-новый» (серия); старый том серии (до подписки) исключён")
 	ids := make(map[int64]bool, len(items))
 	for _, it := range items {
 		ids[it.ID] = true
 	}
-	require.True(t, ids[bSer], "книга подписанной серии попадает в ленту по favorite_series")
+	require.True(t, ids[bSerNew], "новинка подписанной серии попадает в ленту")
 }
 
 // ── helpers (повтор из других пакетов) ─────────────────────────
