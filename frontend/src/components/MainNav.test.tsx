@@ -4,8 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { MainNavBar, MainNavTrigger } from './MainNav';
 
 /**
- * MainNav: проверяем наличие всех четырёх ссылок в десктоп-ряду и то,
- * что бургер открывает Sheet с тем же списком и клик по ссылке его
+ * MainNav: проверяем наличие ссылок на разделы в десктоп-ряду (роль
+ * «Главной» выполняет логотип, отдельного пункта нет — его быть не должно)
+ * и то, что бургер открывает Sheet с тем же списком и клик по ссылке его
  * закрывает. Layout (порядок, видимость по брейкпоинту, hidden md:flex)
  * jsdom не считает (грабля №4) — это покрывает Playwright; здесь только
  * DOM-уровень.
@@ -42,18 +43,19 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const sections = ['Главная', 'Авторы', 'Книги', 'Жанры'];
+const sections = ['Авторы', 'Книги', 'Жанры'];
 
 describe('MainNav', () => {
-  it('десктоп-ряд содержит ссылки на все четыре раздела', () => {
+  it('десктоп-ряд содержит ссылки на разделы (без отдельной «Главной»)', () => {
     render(<MainNavBar />);
     const nav = screen.getByRole('navigation', { name: 'Основная навигация' });
     for (const label of sections) {
       const link = within(nav).getByRole('link', { name: label });
       expect(link).toBeInTheDocument();
     }
+    // Отдельного пункта «Главная» нет — его роль у логотипа в хэдере.
+    expect(within(nav).queryByRole('link', { name: 'Главная' })).not.toBeInTheDocument();
     // Корректные href у разделов.
-    expect(within(nav).getByRole('link', { name: 'Главная' })).toHaveAttribute('href', '/');
     expect(within(nav).getByRole('link', { name: 'Авторы' })).toHaveAttribute('href', '/authors');
     expect(within(nav).getByRole('link', { name: 'Книги' })).toHaveAttribute('href', '/books');
     expect(within(nav).getByRole('link', { name: 'Жанры' })).toHaveAttribute('href', '/genres');
@@ -67,7 +69,7 @@ describe('MainNav', () => {
 
     await user.click(screen.getByRole('button', { name: 'Открыть меню' }));
 
-    // После открытия все четыре ссылки доступны.
+    // После открытия все ссылки разделов доступны.
     for (const label of sections) {
       expect(await screen.findByRole('link', { name: label })).toBeInTheDocument();
     }

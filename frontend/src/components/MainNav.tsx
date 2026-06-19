@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { BookOpen, Home, Menu, Tags, Users } from 'lucide-react';
+import { BookOpen, Menu, Tags, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,27 +13,25 @@ import {
 import { cn } from '@/lib/utils';
 
 /**
- * Primary-навигация по четырём разделам приложения: Главная / Авторы /
- * Книги / Жанры. Два экспорта под две точки хедера (разный порядок на
- * десктопе и мобиле):
+ * Primary-навигация по разделам приложения: Авторы / Книги / Жанры. Роль
+ * «Главной» (`/`) выполняет клик по логотипу skriptes в хэдере — отдельного
+ * пункта нет. Два экспорта под две точки хедера (разный порядок на десктопе
+ * и мобиле):
  *   - MainNavBar — горизонтальный ряд ссылок после логотипа (`hidden md:flex`);
  *   - MainNavTrigger — бургер слева от логотипа (`md:hidden`), открывает Sheet
  *     с тем же списком вертикально.
  *
- * Active-состояние ссылки даёт TanStack Router через activeProps. У
- * «Главной» (`/`) — activeOptions exact: иначе её префикс совпадал бы с
- * любым путём и она всегда была бы подсвечена.
+ * Active-состояние ссылки даёт TanStack Router через activeProps.
  */
 
 type NavItem = {
   to: string;
   label: string;
-  icon: typeof Home;
+  icon: typeof Users;
   exact?: boolean;
 };
 
 const navItems: NavItem[] = [
-  { to: '/', label: 'Главная', icon: Home, exact: true },
   { to: '/authors', label: 'Авторы', icon: Users },
   { to: '/books', label: 'Книги', icon: BookOpen },
   { to: '/genres', label: 'Жанры', icon: Tags },
