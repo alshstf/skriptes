@@ -13,22 +13,29 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { MainNavBar, MainNavTrigger } from '@/components/MainNav';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import { useAppearance } from '@/lib/appearance';
-import type { ReactNode } from 'react';
+import { HeroSearchContext } from '@/lib/heroSearch';
+import { cn } from '@/lib/utils';
+import { useState, type ReactNode } from 'react';
 
 export function Layout({ children }: { children: ReactNode }) {
   const me = useMe();
   // Подтягиваем серверную настройку внешнего вида и зеркалим в localStorage,
   // чтобы стиль чипов применился на любой странице (даже до захода в профиль).
   useAppearance();
+  // Видим ли hero-поиск Главной — управляет видимостью кнопки поиска в хэдере
+  // (см. heroSearch.ts). Дефолт false: на остальных страницах кнопка видна.
+  const [heroSearchVisible, setHeroSearchVisible] = useState(false);
   return (
-    <div className="min-h-dvh flex flex-col">
-      <Header user={me.data ?? null} />
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">{children}</main>
-    </div>
+    <HeroSearchContext.Provider value={{ heroSearchVisible, setHeroSearchVisible }}>
+      <div className="min-h-dvh flex flex-col">
+        <Header user={me.data ?? null} heroSearchVisible={heroSearchVisible} />
+        <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">{children}</main>
+      </div>
+    </HeroSearchContext.Provider>
   );
 }
 
-function Header({ user }: { user: User | null }) {
+function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisible: boolean }) {
   return (
     <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-10">
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2">
@@ -43,7 +50,22 @@ function Header({ user }: { user: User | null }) {
           {user ? <MainNavBar /> : null}
         </div>
         <div className="flex items-center gap-3">
-          {user ? <CommandPalette /> : null}
+          {/* Поиск в хэдере прячется, пока на Главной виден hero-инпут, и
+              быстро «въезжает» при скролле вниз. Остаётся смонтированным
+              (Cmd+K работает всегда), скрываем визуально. */}
+          {user ? (
+            <div
+              className={cn(
+                'transition-all duration-200',
+                heroSearchVisible
+                  ? 'pointer-events-none -translate-y-1 opacity-0'
+                  : 'translate-y-0 opacity-100',
+              )}
+              aria-hidden={heroSearchVisible}
+            >
+              <CommandPalette />
+            </div>
+          ) : null}
           {user ? <UserMenu user={user} /> : null}
         </div>
       </div>

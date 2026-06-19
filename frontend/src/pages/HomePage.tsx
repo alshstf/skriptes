@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { BookIcon, LayersIcon, Search, Sparkles, Star, Stars, UserIcon } from 'lucide-react';
+import { BookIcon, LayersIcon, Search, Sparkles, Star, UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Callout } from '@/components/ui/callout';
 import { BookCover } from '@/components/BookCover';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
+import { useHeroSearch } from '@/lib/heroSearch';
 import { useContinueReading, useSubscriptionFeed } from '@/lib/home';
 import type { ContinueItem, FeedItem } from '@/lib/home';
 import { cn } from '@/lib/utils';
@@ -18,7 +19,7 @@ import { cn } from '@/lib/utils';
  * «Показать все результаты» уводят на /books?q=… (там полноценный список).
  *
  * Ниже — динамические блоки: «Продолжить чтение» (книги в процессе) и
- * «Новинки по подписанным авторам». Плюс две заглушки «Скоро» (оценки и
+ * «Новинки по подпискам». Плюс две заглушки «Скоро» (оценки и
  * рекомендации) — без бэкенда.
  *
  * Стиль монохромный (грабля №9): акценты — иконкой и насыщенностью, не цветом.
@@ -42,8 +43,28 @@ function HeroSearch() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { setHeroSearchVisible } = useHeroSearch();
+  const heroRef = useRef<HTMLDivElement>(null);
 
   const { data, isFetching } = useSuggest(debounced, 5);
+
+  // Пока hero-инпут на экране — прячем кнопку поиска в хэдере (она дублирует
+  // hero). Когда инпут уезжает под sticky-хедер (rootMargin ≈ высота хэдера),
+  // observer гасит флаг и кнопка «въезжает». На размонтировании — сброс, чтобы
+  // на других страницах кнопка снова была видна.
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setHeroSearchVisible(entry.isIntersecting),
+      { rootMargin: '-72px 0px 0px 0px' },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      setHeroSearchVisible(false);
+    };
+  }, [setHeroSearchVisible]);
 
   const trimmed = debounced.trim();
   const showDropdown = open && trimmed.length >= 2;
@@ -64,12 +85,9 @@ function HeroSearch() {
   }
 
   return (
-    <section className="space-y-4 pt-4 text-center sm:pt-8">
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Библиотека</h1>
-      <p className="text-sm text-muted-foreground">
-        Найдите книгу, автора или серию — поиск терпим к опечаткам.
-      </p>
-      <div className="relative mx-auto w-full max-w-2xl text-left">
+    <section className="flex min-h-[42vh] flex-col justify-center space-y-5 pb-2 pt-4 text-center sm:block sm:min-h-0 sm:space-y-4 sm:pb-0 sm:pt-8">
+      <h1 className="text-3xl font-semibold tracking-tight">Библиотека Skriptes</h1>
+      <div ref={heroRef} className="relative mx-auto w-full max-w-2xl text-left">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -100,7 +118,7 @@ function HeroSearch() {
             spellCheck={false}
             inputMode="search"
             enterKeyHint="search"
-            className="h-12 pl-11 pr-4 text-base shadow-sm sm:text-base"
+            className="h-14 pl-11 pr-4 text-base shadow-sm sm:h-12"
           />
         </form>
 
@@ -268,28 +286,28 @@ function ContinueCard({ item }: { item: ContinueItem }) {
   );
 }
 
-// ── «Новинки по подписанным авторам» ─────────────────────────────
+// ── «Новинки по подпискам» ─────────────────────────────
 
 function SubscriptionFeedRow() {
   const { data, isLoading } = useSubscriptionFeed(12);
 
-  if (isLoading) return <ShelfSkeleton title="Новинки по подписанным авторам" />;
+  if (isLoading) return <ShelfSkeleton title="Новинки по подпискам" />;
 
   // Нет подписок ИЛИ у подписанных авторов пока нет книг → аккуратный пустой стейт.
   if (!data || data.length === 0) {
     return (
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold tracking-tight">Новинки по подписанным авторам</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Новинки по подпискам</h2>
         <Callout icon={<Star className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-          Добавляйте авторов в избранное, чтобы видеть их новинки. Звезда есть на карточке любого
-          автора.
+          Добавляйте авторов и серии в избранное, чтобы видеть их новинки. Звезда есть на карточке
+          любого автора и любой серии.
         </Callout>
       </section>
     );
   }
 
   return (
-    <Shelf title="Новинки по подписанным авторам">
+    <Shelf title="Новинки по подпискам">
       {data.map((it) => (
         <FeedCard key={`feed-${it.id}`} item={it} />
       ))}
@@ -319,7 +337,7 @@ function ComingSoonRow() {
   return (
     <section className="grid gap-3 sm:grid-cols-2">
       <ComingSoonCard
-        icon={<Stars className="size-4 shrink-0" aria-hidden />}
+        icon={<Star className="size-4 shrink-0" aria-hidden />}
         title="Оцените прочитанное"
         text="Скоро здесь можно будет ставить оценки книгам, которые вы уже прочитали."
       />
