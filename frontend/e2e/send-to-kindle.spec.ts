@@ -48,7 +48,7 @@ test('send-to-kindle: single target → direct send button', async ({ mockedPage
   });
 
   await page.goto('/books/19');
-  const btn = page.getByRole('button', { name: /На Kindle/ });
+  const btn = page.getByRole('button', { name: /Отправить на Kindle/ });
   await expect(btn).toBeVisible({ timeout: 10_000 });
   await btn.click();
   await expect.poll(() => sendCalls).toBe(1);
@@ -78,7 +78,7 @@ test('send-to-kindle: multiple targets → dropdown with both', async ({ mockedP
   );
 
   await page.goto('/books/19');
-  await page.getByRole('button', { name: /На Kindle/ }).click();
+  await page.getByRole('button', { name: /Отправить на Kindle/ }).click();
   await expect(page.getByText('Куда отправить?')).toBeVisible();
   await expect(page.getByText('Мой Kindle')).toBeVisible();
   await expect(page.getByText('Жены Kindle')).toBeVisible();
