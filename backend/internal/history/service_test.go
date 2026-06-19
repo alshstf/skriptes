@@ -441,6 +441,32 @@ func TestService_SubscriptionFeed(t *testing.T) {
 	items, err = svc.SubscriptionFeed(ctx, userID, 20)
 	require.NoError(t, err)
 	require.Len(t, items, 2, "второе издание той же работы не должно задваивать ленту")
+
+	// Подписка на СЕРИЮ (не автора): новинки серии тоже попадают в ленту.
+	// Книга серии написана otherAuthor (на него НЕ подписаны) — значит
+	// попасть в ленту она может ИСКЛЮЧИТЕЛЬНО через favorite_series.
+	var serID, wSer, bSer int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title) VALUES ('Моя Серия','моя серия') RETURNING id`).Scan(&serID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Томик','томик') RETURNING id`).Scan(&wSer))
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id, series_id, date_added)
+		VALUES ($1,$2,'L-SER','L-SER','fb2','Томик','томик',$3,$4,'2025-06-01') RETURNING id`,
+		collID, archID, wSer, serID).Scan(&bSer))
+	_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, bSer, otherAuthor)
+	require.NoError(t, err)
+
+	require.NoError(t, svc.AddFavoriteSeries(ctx, userID, serID))
+
+	items, err = svc.SubscriptionFeed(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Len(t, items, 3, "2 работы подписанного автора (схлопнуто) + 1 книга подписанной серии")
+	ids := make(map[int64]bool, len(items))
+	for _, it := range items {
+		ids[it.ID] = true
+	}
+	require.True(t, ids[bSer], "книга подписанной серии попадает в ленту по favorite_series")
 }
 
 // ── helpers (повтор из других пакетов) ─────────────────────────

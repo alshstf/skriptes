@@ -663,11 +663,12 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 	return out, rows.Err()
 }
 
-// SubscriptionFeed — свежие книги авторов, на которых подписан пользователь
-// (favorite_authors). «Свежесть» = books.date_added (когда книга появилась в
-// библиотеке, см. граблю про date_added ≠ год написания — для «новинок»
-// добавление в библиотеку и есть корректный сигнал).
+// SubscriptionFeed — свежие книги по подпискам пользователя: авторы
+// (favorite_authors) И серии (favorite_series). «Свежесть» = books.date_added
+// (когда книга появилась в библиотеке, см. граблю про date_added ≠ год
+// написания — для «новинок» добавление в библиотеку и есть корректный сигнал).
 //
+// Кандидаты — UNION книг подписанных авторов и книг подписанных серий.
 // Схлопывание по работе: одна логическая книга в ленте один раз. Берём
 // представительное издание (DISTINCT ON по COALESCE(work_id, -id), внутри
 // группы — самое свежее date_added, тай-брейк по min id). Скрываем deleted.
@@ -675,19 +676,29 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
-	// Шаг 1 — представитель на работу: среди живых книг подписанных авторов
-	// выбираем по одному изданию на work (самое свежее date_added).
-	// Шаг 2 — обогащаем представителя авторами/серией/обложкой.
+	// Шаг 1 — кандидаты: живые книги подписанных авторов И подписанных серий
+	// (UNION дедуплицирует пересечение). Шаг 2 — представитель на работу: по
+	// одному изданию на work (самое свежее date_added). Шаг 3 — обогащаем
+	// представителя авторами/серией/обложкой.
 	rows, err := s.pool.Query(ctx, `
-		WITH rep AS (
-			SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
-			       b.id, b.work_id, b.date_added
+		WITH cand AS (
+			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_authors fa
 			JOIN book_authors ba ON ba.author_id = fa.author_id
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
 			WHERE fa.user_id = $1
-			ORDER BY COALESCE(b.work_id, -b.id),
-			         b.date_added DESC NULLS LAST, b.id
+			UNION
+			SELECT b.id, b.work_id, b.date_added
+			FROM favorite_series fs
+			JOIN books b ON b.series_id = fs.series_id AND b.deleted = false
+			WHERE fs.user_id = $1
+		),
+		rep AS (
+			SELECT DISTINCT ON (COALESCE(work_id, -id))
+			       id, work_id, date_added
+			FROM cand
+			ORDER BY COALESCE(work_id, -id),
+			         date_added DESC NULLS LAST, id
 		)
 		SELECT b.id, b.work_id, b.title, b.lib_id, b.date_added, ser.title,
 		       COALESCE(b.cover_path, (
