@@ -120,11 +120,12 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0019_book_work_lookups` (TTL-таблица внешних Work ID +
-`books.work_scanned_at` для группировки изданий; до неё `0018_edition_fields`
-и `0017_works`, см. граблю №15). Backend хранит applied version в
-`schema_migrations` (golang-migrate), править уже-применённые .sql имеет смысл
-только до push'а.
+Текущая верхняя — `0023_favorites_collection` (★-избранное книг стало служебной
+полкой, см. граблю №16); до неё `0022_feed_dismissals`, `0021_collections`
+(личные полки), `0020_genre_favorites`, `0019_book_work_lookups` (TTL-таблица
+внешних Work ID + `books.work_scanned_at`, см. граблю №15). Backend хранит applied
+version в `schema_migrations` (golang-migrate), править уже-применённые .sql имеет
+смысл только до push'а.
 
 ### 7. PR'ы идут через CI + watcher, merge только когда зелёное
 
@@ -396,6 +397,32 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   = works.id). Ридер/скачивание/«Читать» — по-прежнему `/books/{editionId}`.
 - ⚠️ id работ и изданий ПЕРЕСЕКАЮТСЯ (отдельные sequence) → `/books/{N}` ≠
   `/works/{N}`; поэтому работа-URL — отдельный маршрут, не «трактовать books id как work».
+
+### 16. ★-избранное книг — это служебная полка, таблицы `favorites` БОЛЬШЕ НЕТ
+
+После унификации (PR #109, миграция `0023`) книжное «избранное» = членство в
+служебной коллекции `user_collections.kind='favorites'` (одна на юзера через
+partial unique `user_collections_one_fav`). ★ на книге — её one-click шорткат.
+Таблица `favorites` **дропнута** — не ищи её, не пиши в неё. Книжный API не
+менялся (`POST/DELETE /api/books/{id}/favorite`, поле `is_favorite`); репойнт
+только внутри бэка — все читают/пишут favorites-коллекцию:
+- `history/service.go` — `AddFavorite` (CTE: ensure favorites-полки + membership),
+  `RemoveFavorite`/`IsFavorite`/`IsWorkFavorite`/`FavoriteWorkSet`/`ListFavorites`/
+  `FavoritesCount`; `history/persona.go` — источник `FavoriteBooks` для re-ranking;
+  `catalog/authors_list.go` — счётчик `fav_books` на `/authors`.
+- Служебную полку нельзя переименовать/удалить/создать-дубль:
+  `collections.ErrSystemCollection`/`ErrReservedName` → 400 (`api/collections.go`).
+  `ListCollections` отдаёт `kind` и закрепляет favorites ПЕРВОЙ.
+- Фронт: `Collection.kind`/`BookShelf.kind` (`lib/collections.ts`); ★↔полки
+  держат синхронными кросс-инвалидацией (`invalidateFavoriteSide` + `['me','collections']`
+  в `useToggleFavorite`). На карточке книги `ShelfSection` исключает favorites из
+  чипов «На полках» (её передаёт ★). `/shelves` — favorites закреплена, без удаления.
+
+⚠️ **Авторы/серии — это ПОДПИСКА, не «избранное»** (питает «Новинки по подпискам»;
+свои таблицы `favorite_authors`/`favorite_series` — НЕ трогались). Иконка у них —
+колокольчик (`Bell`, монохром), а не звезда: `FavoriteButton` (`target!=='book'`),
+suggest `FavoriteMark`, hero-дропдаун (`HomePage`), строка автора (`AuthorsPage`).
+Книжная ★ — жёлтая звезда (исключение из монохрома, граблю №9).
 
 ## Где что искать (карта по реальным путям)
 
