@@ -14,9 +14,12 @@ export function DownloadMenu({ bookId }: { bookId: number }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="default" size="sm" className="gap-2">
+        {/* На мобиле — только иконка (текст hidden sm:inline), чтобы ряд
+            действий в шапке карточки не переносился. aria-label/title — для
+            доступности и тултипа, раз текст скрыт. */}
+        <Button variant="default" size="sm" className="gap-2" aria-label="Скачать" title="Скачать">
           <Download className="size-4" aria-hidden />
-          Скачать
+          <span className="hidden sm:inline">Скачать</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">

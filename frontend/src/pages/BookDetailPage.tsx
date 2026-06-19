@@ -79,11 +79,10 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             />
 
             <div className="flex flex-col gap-4 flex-1 min-w-0">
-              {/* Заголовок + авторы + кнопки. На мобиле — колонкой (кнопки под
-                  заголовком, во всю ширину и переносятся); на ≥sm — в ряд с
-                  выравниванием по краям. Без этого ряд действий (Kindle +
-                  Скачать + иконки) вылезал за вьюпорт на узких экранах. */}
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-2">
+              {/* Заголовок + авторы + кнопки в один ряд. Действия на мобиле —
+                  только иконки (у Kindle/Скачать текст hidden sm:inline), поэтому
+                  ряд компактный и помещается без переноса на новую строку. */}
+              <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="space-y-1 flex-1 min-w-0">
                   <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
                   {book.authors.length > 0 ? (
