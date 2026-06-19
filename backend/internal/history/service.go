@@ -470,6 +470,56 @@ func (s *Service) ListFavoriteAuthors(ctx context.Context, userID int64, limit, 
 	return out, rows.Err()
 }
 
+// ── Favorites для жанров ────────────────────────────────────────
+
+// AddFavoriteGenre / RemoveFavoriteGenre / ListFavoriteGenreIDs — избранные
+// жанры пользователя (раздел «Жанры»). Симметрично авторам/сериям, но на
+// таблице user_favorite_genres. Семантика проще: «закрепить жанр сверху»,
+// никакого re-ranking-сигнала (жанр — широкая категория, плохой сигнал интереса).
+
+func (s *Service) AddFavoriteGenre(ctx context.Context, userID, genreID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO user_favorite_genres (user_id, genre_id) VALUES ($1, $2)
+		ON CONFLICT (user_id, genre_id) DO NOTHING
+	`, userID, genreID)
+	if err != nil {
+		return fmt.Errorf("insert favorite genre: %w", err)
+	}
+	return nil
+}
+
+func (s *Service) RemoveFavoriteGenre(ctx context.Context, userID, genreID int64) error {
+	_, err := s.pool.Exec(ctx, `
+		DELETE FROM user_favorite_genres WHERE user_id = $1 AND genre_id = $2
+	`, userID, genreID)
+	if err != nil {
+		return fmt.Errorf("delete favorite genre: %w", err)
+	}
+	return nil
+}
+
+// ListFavoriteGenreIDs — множество id избранных жанров пользователя. Возвращаем
+// именно id-сет (а не полный список с display): caller (catalog.ListGenres)
+// и так перечисляет все жанры и просто помечает is_favorite по этому множеству.
+func (s *Service) ListFavoriteGenreIDs(ctx context.Context, userID int64) (map[int64]struct{}, error) {
+	out := map[int64]struct{}{}
+	rows, err := s.pool.Query(ctx, `
+		SELECT genre_id FROM user_favorite_genres WHERE user_id = $1
+	`, userID)
+	if err != nil {
+		return out, fmt.Errorf("query favorite genres: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return out, err
+		}
+		out[id] = struct{}{}
+	}
+	return out, rows.Err()
+}
+
 // ── Favorites для серий ─────────────────────────────────────────
 
 func (s *Service) AddFavoriteSeries(ctx context.Context, userID, seriesID int64) error {

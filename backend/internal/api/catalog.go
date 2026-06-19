@@ -34,7 +34,12 @@ func handleListGenres(d CatalogDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		items, err := d.Service.ListGenres(ctx)
+		// userID для пометки is_favorite (избранные жанры). 0 → без избранного.
+		var userID int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			userID = u.ID
+		}
+		items, err := d.Service.ListGenres(ctx, userID)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return

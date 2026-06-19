@@ -484,6 +484,46 @@ func TestService_SubscriptionFeed(t *testing.T) {
 	require.True(t, ids[bSerNew], "новинка подписанной серии попадает в ленту")
 }
 
+// TestService_FavoriteGenres — избранные жанры: add (идемпотентно) →
+// ListFavoriteGenreIDs содержит id → remove → больше нет.
+func TestService_FavoriteGenres(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var userID, gID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('g@e.com','G','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO genres (fb2_code, name_ru) VALUES ('sf', 'Фантастика') RETURNING id`).Scan(&gID))
+
+	svc := history.New(pool)
+
+	// Изначально пусто.
+	ids, err := svc.ListFavoriteGenreIDs(ctx, userID)
+	require.NoError(t, err)
+	require.Empty(t, ids)
+
+	// Add (идемпотентно).
+	require.NoError(t, svc.AddFavoriteGenre(ctx, userID, gID))
+	require.NoError(t, svc.AddFavoriteGenre(ctx, userID, gID))
+	ids, err = svc.ListFavoriteGenreIDs(ctx, userID)
+	require.NoError(t, err)
+	require.Len(t, ids, 1)
+	_, ok := ids[gID]
+	require.True(t, ok)
+
+	// Remove (идемпотентно).
+	require.NoError(t, svc.RemoveFavoriteGenre(ctx, userID, gID))
+	require.NoError(t, svc.RemoveFavoriteGenre(ctx, userID, gID))
+	ids, err = svc.ListFavoriteGenreIDs(ctx, userID)
+	require.NoError(t, err)
+	require.Empty(t, ids)
+}
+
 // ── helpers (повтор из других пакетов) ─────────────────────────
 
 func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {

@@ -133,7 +133,7 @@ func TestEnumerate(t *testing.T) {
 	// AuthorName пустой — в тестовых данных series.author_id не выставляли.
 
 	// ── ListGenres ──
-	genres, err := svc.ListGenres(ctx)
+	genres, err := svc.ListGenres(ctx, 0)
 	require.NoError(t, err)
 	require.Len(t, genres, 3)
 	// Display fallback: RU → EN → code
@@ -180,7 +180,7 @@ func TestListGenres_WithCategory(t *testing.T) {
 	`, parentID)
 	require.NoError(t, err)
 
-	got, err := svc.ListGenres(ctx)
+	got, err := svc.ListGenres(ctx, 0)
 	require.NoError(t, err)
 
 	// cat:sf скрыт фильтром «NOT LIKE 'cat:%'»; виден только leaf
@@ -189,6 +189,46 @@ func TestListGenres_WithCategory(t *testing.T) {
 	require.Equal(t, "Боевая фантастика", got[0].Display)
 	require.Equal(t, "cat:sf", got[0].CategoryCode)
 	require.Equal(t, "Фантастика", got[0].CategoryName)
+}
+
+// TestListGenres_IsFavorite — userID > 0 проставляет IsFavorite по таблице
+// user_favorite_genres; userID == 0 (аноним/OPDS) → всегда false.
+func TestListGenres_IsFavorite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startEnumeratePostgres(t, ctx)
+	svc := catalog.New(pool)
+
+	var userID, gFavID, gOtherID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('f@e.com','F','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO genres (fb2_code, name_ru) VALUES ('sf', 'Фантастика') RETURNING id`).Scan(&gFavID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO genres (fb2_code, name_ru) VALUES ('detective', 'Детектив') RETURNING id`).Scan(&gOtherID))
+	_, err := pool.Exec(ctx,
+		`INSERT INTO user_favorite_genres (user_id, genre_id) VALUES ($1, $2)`, userID, gFavID)
+	require.NoError(t, err)
+
+	// userID > 0: один жанр избран, другой нет.
+	got, err := svc.ListGenres(ctx, userID)
+	require.NoError(t, err)
+	byID := map[int64]catalog.GenreEntry{}
+	for _, g := range got {
+		byID[g.ID] = g
+	}
+	require.True(t, byID[gFavID].IsFavorite)
+	require.False(t, byID[gOtherID].IsFavorite)
+
+	// userID == 0: избранного нет ни у кого.
+	anon, err := svc.ListGenres(ctx, 0)
+	require.NoError(t, err)
+	for _, g := range anon {
+		require.False(t, g.IsFavorite, "аноним: is_favorite всегда false")
+	}
 }
 
 // TestListLanguages — языки коллекции с числом книг: deleted и NULL-lang
