@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { CommandPalette } from '@/components/CommandPalette';
+import { MainNavBar, MainNavTrigger } from '@/components/MainNav';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import { useAppearance } from '@/lib/appearance';
 import type { ReactNode } from 'react';
@@ -30,11 +31,17 @@ export function Layout({ children }: { children: ReactNode }) {
 function Header({ user }: { user: User | null }) {
   return (
     <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-10">
-      <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <BookOpen className="size-5 text-primary" aria-hidden />
-          <span>skriptes</span>
-        </Link>
+      <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-4 min-w-0">
+          {/* Бургер — только мобила (md:hidden внутри компонента), слева от логотипа */}
+          {user ? <MainNavTrigger /> : null}
+          <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
+            <BookOpen className="size-5 text-primary" aria-hidden />
+            <span>skriptes</span>
+          </Link>
+          {/* Десктоп-ряд разделов — после логотипа (hidden md:flex внутри компонента) */}
+          {user ? <MainNavBar /> : null}
+        </div>
         <div className="flex items-center gap-3">
           {user ? <CommandPalette /> : null}
           {user ? <UserMenu user={user} /> : null}
