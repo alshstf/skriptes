@@ -432,11 +432,14 @@ function AuthorsFiltersSidebar({
         </select>
       </div>
 
-      {/* Жанры — переиспользуем grouped-фильтр (без facets: их у авторов нет) */}
+      {/* Жанры — переиспользуем grouped-фильтр. showCounts=false: числа там
+          книжные (book_count), а список — об авторах; author-scoped счётчиков
+          пока нет, поэтому не показываем (не вводим в заблуждение). */}
       <GroupedGenresFilter
         selected={value.genres}
         onChange={(genres) => onChange({ ...value, genres })}
         hiddenCodes={hiddenGenres}
+        showCounts={false}
       />
 
       {/* Языки */}
@@ -490,8 +493,10 @@ function LanguagesFilter({
                 checked={selected.includes(l.code)}
                 onChange={(e) => toggle(l.code, e.target.checked)}
               />
+              {/* Без числа: book_count — счётчик КНИГ, а список об авторах
+                  (и фильтр матчит lang ИЛИ src_lang) — число вводило в
+                  заблуждение (4 английских книги ↔ 6 авторов). */}
               <span className="flex-1 truncate text-sm">{l.display}</span>
-              <span className="text-xs tabular-nums text-muted-foreground">{l.book_count}</span>
             </label>
           </li>
         ))}

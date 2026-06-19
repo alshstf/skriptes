@@ -34,6 +34,7 @@ export function GroupedGenresFilter({
   facets,
   onChange,
   hiddenCodes,
+  showCounts = true,
 }: {
   selected: string[];
   facets?: Record<string, number>;
@@ -44,6 +45,13 @@ export function GroupedGenresFilter({
    * что уже выбраны в URL — их оставляем, чтобы фильтр можно было снять.
    */
   hiddenCodes?: string[];
+  /**
+   * showCounts — показывать ли числа рядом с жанрами/категориями. На /books
+   * это книжные facets (дефолт true). На /authors список — об АВТОРАХ, а не
+   * книгах, и author-scoped счётчиков пока нет → передаём false, чтобы не
+   * светить книжные числа (вводят в заблуждение).
+   */
+  showCounts?: boolean;
 }) {
   const genresQ = useGenres();
 
@@ -174,6 +182,7 @@ export function GroupedGenresFilter({
                 open={isOpen}
                 onToggleExpand={() => toggleExpanded(g.name)}
                 onToggleCheck={() => toggleCategory(g)}
+                showCounts={showCounts}
               />
               {isOpen ? (
                 <ul className="ml-7 space-y-0.5 border-l border-border/50 pl-2">
@@ -184,6 +193,7 @@ export function GroupedGenresFilter({
                       checked={selected.includes(leaf.code)}
                       onChange={(c) => toggleLeaf(leaf.code, c)}
                       facets={facets}
+                      showCounts={showCounts}
                     />
                   ))}
                 </ul>
@@ -215,17 +225,19 @@ function CategoryRow({
   open,
   onToggleExpand,
   onToggleCheck,
+  showCounts = true,
 }: {
   group: GroupedCategory;
   open: boolean;
   onToggleExpand: () => void;
   onToggleCheck: () => void;
+  showCounts?: boolean;
 }) {
   // totalCount precomputed в groupByCategory: facets[code] ?? book_count
   // по всем leaf'ам. Один источник правды и сортировка категорий
   // консистентна с тем что показано в counter'е.
   const totalCount = group.totalCount;
-  const hasCount = totalCount > 0;
+  const hasCount = showCounts && totalCount > 0;
 
   return (
     <div className="flex items-center gap-1.5 rounded px-1 py-1 hover:bg-accent/30">
@@ -261,11 +273,13 @@ function LeafRow({
   checked,
   onChange,
   facets,
+  showCounts = true,
 }: {
   leaf: GenreItem;
   checked: boolean;
   onChange: (next: boolean) => void;
   facets?: Record<string, number>;
+  showCounts?: boolean;
 }) {
   const count = facets?.[leaf.code];
   return (
@@ -278,7 +292,7 @@ function LeafRow({
           onChange={(e) => onChange(e.target.checked)}
         />
         <span className="flex-1 truncate text-sm">{leaf.display}</span>
-        {count != null && count > 0 ? (
+        {showCounts && count != null && count > 0 ? (
           <span className="text-xs tabular-nums text-muted-foreground">{count}</span>
         ) : null}
       </label>
