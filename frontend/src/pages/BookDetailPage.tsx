@@ -15,6 +15,7 @@ import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
+import { useBookCollections } from '@/lib/collections';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -190,6 +191,8 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 {!multi ? <Field label="LIBID" value={book.lib_id} mono /> : null}
               </dl>
 
+              <ShelfMembership bookId={book.id} />
+
               {book.deleted ? (
                 <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
                   В источнике помечена удалённой (DEL=1).
@@ -303,6 +306,31 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
       <dt className="text-muted-foreground">{label}</dt>
       <dd className={mono ? 'font-mono text-xs break-all' : ''}>{value}</dd>
     </>
+  );
+}
+
+/**
+ * ShelfMembership — тихая строка «На полках: …» под мета-блоком. Показывается
+ * только когда книга лежит хотя бы на одной полке (иначе ничего — affordance
+ * добавления это кнопка «На полку»). Малоакцентно: мелкий muted-текст +
+ * приглушённые чипы, до 3 имён + «+N». Управление — в диалоге кнопки «На полку».
+ */
+function ShelfMembership({ bookId }: { bookId: number }) {
+  const shelves = useBookCollections(bookId).data ?? [];
+  if (shelves.length === 0) return null;
+  const shown = shelves.slice(0, 3);
+  const extra = shelves.length - shown.length;
+  return (
+    <p className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+      <Library className="size-3.5 shrink-0" aria-hidden />
+      <span>На полках:</span>
+      {shown.map((s) => (
+        <span key={s.id} className="rounded border border-border bg-muted px-1.5 py-0.5">
+          {s.name}
+        </span>
+      ))}
+      {extra > 0 ? <span className="tabular-nums">+{extra}</span> : null}
+    </p>
   );
 }
 

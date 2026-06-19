@@ -163,6 +163,31 @@ func handleListCollectionBooks(d CollectionsDeps) http.HandlerFunc {
 	}
 }
 
+// handleCollectionsForBook — GET /api/books/{id}/collections — полки текущего
+// юзера, содержащие эту книгу (для индикации членства на карточке).
+func handleCollectionsForBook(d CollectionsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		items, err := d.Service.CollectionsForBook(ctx, u.ID, id)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+	}
+}
+
 // handleAddBookToCollection — POST /api/me/collections/{id}/books/{bookId}.
 func handleAddBookToCollection(d CollectionsDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

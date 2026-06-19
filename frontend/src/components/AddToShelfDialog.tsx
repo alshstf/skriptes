@@ -13,6 +13,7 @@ import { Callout } from '@/components/ui/callout';
 import {
   useCollections,
   useCollectionBooks,
+  useBookCollections,
   useCreateCollection,
   useAddBookToCollection,
   useRemoveBookFromCollection,
@@ -32,13 +33,22 @@ import { cn } from '@/lib/utils';
  */
 export function AddToShelfDialog({ bookId }: { bookId: number }) {
   const [open, setOpen] = useState(false);
+  // Бинарный стейт на кнопке: «На полку» (нигде) → «На полках» (на ≥1 полке).
+  // Имена полок — отдельной тихой строкой на карточке (см. BookDetailPage).
+  // Тот же queryKey, что у строки членства — react-query дедупит запрос.
+  const onShelves = (useBookCollections(bookId).data?.length ?? 0) > 0;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1">
-          <Library className="size-4" aria-hidden />
-          <span className="hidden sm:inline">На полку</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1"
+          aria-label={onShelves ? 'Полки книги' : 'Добавить на полку'}
+        >
+          <Library className={cn('size-4', onShelves && 'text-foreground')} aria-hidden />
+          <span className="hidden sm:inline">{onShelves ? 'На полках' : 'На полку'}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
