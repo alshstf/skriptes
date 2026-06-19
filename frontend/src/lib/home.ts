@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 /**
@@ -77,5 +77,40 @@ export function useSubscriptionFeed(limit = 12) {
       return r.items;
     },
     staleTime: 60_000,
+  });
+}
+
+/**
+ * useDismissFeedItem — скрыть работу из ленты «Новинки по подпискам»
+ * («не интересно»). Оптимистично убираем работу из всех закэшированных
+ * страниц ленты, чтобы карточка исчезла мгновенно; на ошибке — откат.
+ * Скрытие персистентно (backend feed_dismissals), книга не вернётся.
+ */
+export function useDismissFeedItem() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (workId: number) => {
+      await apiFetch<void>('/api/me/feed/dismiss', { method: 'POST', body: { work_id: workId } });
+      return workId;
+    },
+    onMutate: async (workId) => {
+      await qc.cancelQueries({ queryKey: ['me', 'feed', 'subscriptions'] });
+      const prev = qc.getQueriesData<FeedItem[]>({ queryKey: ['me', 'feed', 'subscriptions'] });
+      for (const [key, data] of prev) {
+        if (data) {
+          qc.setQueryData(
+            key,
+            data.filter((it) => (it.work_id ?? it.id) !== workId),
+          );
+        }
+      }
+      return { prev };
+    },
+    onError: (_e, _workId, ctx) => {
+      ctx?.prev?.forEach(([key, data]) => qc.setQueryData(key, data));
+    },
+    onSettled: () => {
+      void qc.invalidateQueries({ queryKey: ['me', 'feed', 'subscriptions'] });
+    },
   });
 }

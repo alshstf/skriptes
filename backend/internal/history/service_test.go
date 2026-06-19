@@ -482,6 +482,15 @@ func TestService_SubscriptionFeed(t *testing.T) {
 		ids[it.ID] = true
 	}
 	require.True(t, ids[bSerNew], "новинка подписанной серии попадает в ленту")
+
+	// Скрытие работы из ленты («не интересно») — она исчезает из выдачи и
+	// (персистентно) не возвращается.
+	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew))
+	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew)) // идемпотентно
+	items, err = svc.SubscriptionFeed(ctx, userID, 20)
+	require.NoError(t, err)
+	require.Len(t, items, 1, "скрытая работа автора ушла из ленты, осталась только серия")
+	require.Equal(t, bSerNew, items[0].ID, "осталась новинка серии")
 }
 
 // TestService_FavoriteGenres — избранные жанры: add (идемпотентно) →

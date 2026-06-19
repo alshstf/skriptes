@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -332,5 +333,31 @@ func handleSubscriptionFeed(d HistoryDeps) http.HandlerFunc {
 			return
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+	}
+}
+
+// handleDismissFeedItem — POST /api/me/feed/dismiss {work_id}: скрыть работу из
+// ленты «Новинки по подпискам» для текущего пользователя («не интересно»).
+func handleDismissFeedItem(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		var body struct {
+			WorkID int64 `json:"work_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.WorkID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid work_id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.DismissFeedItem(ctx, u.ID, body.WorkID); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "dismiss failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]bool{"dismissed": true})
 	}
 }

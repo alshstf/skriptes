@@ -741,12 +741,16 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
 			WHERE fa.user_id = $1
 			  AND b.date_added > fa.added_at::date
+			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
+			                  WHERE fd.user_id = $1 AND fd.work_id = b.work_id)
 			UNION
 			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_series fs
 			JOIN books b ON b.series_id = fs.series_id AND b.deleted = false
 			WHERE fs.user_id = $1
 			  AND b.date_added > fs.added_at::date
+			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
+			                  WHERE fd.user_id = $1 AND fd.work_id = b.work_id)
 		),
 		rep AS (
 			SELECT DISTINCT ON (COALESCE(work_id, -id))
@@ -804,6 +808,20 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 		out = append(out, it)
 	}
 	return out, rows.Err()
+}
+
+// DismissFeedItem — скрыть работу из ленты «Новинки по подпискам» для юзера
+// («не интересно»). Идемпотентно (повторный вызов — no-op). Скрываем по
+// work_id: лента схлопнута по работе, иначе книга вернулась бы через другое
+// издание. Запись фильтруется в SubscriptionFeed (NOT EXISTS feed_dismissals).
+func (s *Service) DismissFeedItem(ctx context.Context, userID, workID int64) error {
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO feed_dismissals (user_id, work_id) VALUES ($1, $2)
+		ON CONFLICT (user_id, work_id) DO NOTHING
+	`, userID, workID); err != nil {
+		return fmt.Errorf("dismiss feed item: %w", err)
+	}
+	return nil
 }
 
 // FavoritesCount — количество избранного у пользователя. Нужно для
