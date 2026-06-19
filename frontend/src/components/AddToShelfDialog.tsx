@@ -21,7 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 
 /**
- * AddToShelfDialog — действие «Добавить в полку» на карточке книги.
+ * AddToShelfDialog — действие «Добавить на полку» на карточке книги.
  *
  * Диалог: список полок пользователя (toggle членства книги в каждой) + поле
  * «создать новую полку». Всегда доступен залогиненному юзеру; если полок нет —
@@ -38,12 +38,12 @@ export function AddToShelfDialog({ bookId }: { bookId: number }) {
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-1">
           <Library className="size-4" aria-hidden />
-          <span className="hidden sm:inline">В полку</span>
+          <span className="hidden sm:inline">На полку</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <div className="space-y-1">
-          <DialogTitle>Добавить в полку</DialogTitle>
+          <DialogTitle>Добавить на полку</DialogTitle>
           <DialogDescription>Личные списки книг, которые вы собираете вручную.</DialogDescription>
         </div>
         {open ? <ShelvesBody bookId={bookId} /> : null}
