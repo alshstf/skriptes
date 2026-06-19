@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { BookIcon, UserIcon, LayersIcon, SearchIcon, Star } from 'lucide-react';
+import { Bell, BookIcon, UserIcon, LayersIcon, SearchIcon, Star } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -148,7 +148,7 @@ export function CommandPalette() {
                             {a.book_count} {pluralBooks(a.book_count)}
                           </span>
                         </div>
-                        <FavoriteMark show={!!a.is_favorite} />
+                        <FavoriteMark show={!!a.is_favorite} kind="sub" />
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -175,7 +175,7 @@ export function CommandPalette() {
                             {s.book_count} {pluralBooks(s.book_count)}
                           </span>
                         </div>
-                        <FavoriteMark show={!!s.is_favorite} />
+                        <FavoriteMark show={!!s.is_favorite} kind="sub" />
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -189,11 +189,14 @@ export function CommandPalette() {
   );
 }
 
-// FavoriteMark — маленькая звёздочка справа от элемента палитры,
-// рендерится только если is_favorite. Заполненная жёлтая — тот же
-// визуальный язык, что и в FavoriteButton'е на карточках.
-function FavoriteMark({ show }: { show: boolean }) {
+// FavoriteMark — маленькая метка справа от элемента палитры (рендерится только
+// при is_favorite). Книга — ★ «в избранном» (жёлтая). Автор/серия — колокольчик
+// «подписан» (монохромный): подписка, а не избранное.
+function FavoriteMark({ show, kind = 'book' }: { show: boolean; kind?: 'book' | 'sub' }) {
   if (!show) return null;
+  if (kind === 'sub') {
+    return <Bell className="ml-2 size-3.5 shrink-0 fill-foreground" aria-label="Подписан" />;
+  }
   return (
     <Star
       className="ml-2 size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500"

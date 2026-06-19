@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
+  Bell,
   BookIcon,
   ChevronLeft,
   ChevronRight,
@@ -189,6 +190,7 @@ function HeroSearch() {
                       title={a.full_name}
                       subtitle={`${a.book_count} ${pluralBooks(a.book_count)}`}
                       favorite={!!a.is_favorite}
+                      favoriteKind="sub"
                       onClick={() => go(`/authors/${a.id}`)}
                     />
                   ))}
@@ -204,6 +206,7 @@ function HeroSearch() {
                       title={s.title}
                       subtitle={`${s.author_name ? `${s.author_name} · ` : ''}${s.book_count} ${pluralBooks(s.book_count)}`}
                       favorite={!!s.is_favorite}
+                      favoriteKind="sub"
                       onClick={() => go(`/series/${s.id}`)}
                     />
                   ))}
@@ -242,12 +245,15 @@ function SuggestRow({
   title,
   subtitle,
   favorite,
+  favoriteKind = 'book',
   onClick,
 }: {
   icon: React.ReactNode;
   title: string;
   subtitle?: string;
   favorite?: boolean;
+  // Книга — ★ «в избранном»; автор/серия — колокольчик «подписан».
+  favoriteKind?: 'book' | 'sub';
   onClick: () => void;
 }) {
   return (
@@ -262,7 +268,11 @@ function SuggestRow({
         {subtitle ? <span className="truncate text-xs text-muted-foreground">{subtitle}</span> : null}
       </span>
       {favorite ? (
-        <Star className="ml-2 size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500" aria-label="В избранном" />
+        favoriteKind === 'sub' ? (
+          <Bell className="ml-2 size-3.5 shrink-0 fill-foreground" aria-label="Подписан" />
+        ) : (
+          <Star className="ml-2 size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500" aria-label="В избранном" />
+        )
       ) : null}
     </button>
   );

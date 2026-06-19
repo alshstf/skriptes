@@ -250,9 +250,11 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		       EXISTS (SELECT 1 FROM favorite_authors fa
 		               WHERE fa.author_id = a.id AND fa.user_id = $%[1]d) AS is_favorite,
 		       (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
-		          FROM favorites f JOIN book_authors ba ON ba.book_id = f.book_id
-		          JOIN books b ON b.id = f.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND f.user_id = $%[1]d%[3]s)::int AS fav_books,
+		          FROM user_collection_books fcb
+		          JOIN user_collections fc ON fc.id = fcb.collection_id AND fc.user_id = $%[1]d AND fc.kind = 'favorites'
+		          JOIN book_authors ba ON ba.book_id = fcb.book_id
+		          JOIN books b ON b.id = fcb.book_id
+		          WHERE ba.author_id = a.id AND b.deleted = false%[3]s)::int AS fav_books,
 		       (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[4]s) AS yr_from,
 		       (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id

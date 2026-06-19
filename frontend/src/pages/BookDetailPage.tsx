@@ -318,7 +318,9 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
  * показываем.
  */
 function ShelfSection({ bookId, deleted }: { bookId: number; deleted: boolean }) {
-  const shelves = useBookCollections(bookId).data ?? [];
+  // Служебную «Избранное» исключаем — её передаёт ★ в шапке (без дубля);
+  // здесь только пользовательские полки.
+  const shelves = (useBookCollections(bookId).data ?? []).filter((s) => s.kind !== 'favorites');
   const onShelves = shelves.length > 0;
   // Удалённая книга без полок — показывать нечего.
   if (!onShelves && deleted) return null;

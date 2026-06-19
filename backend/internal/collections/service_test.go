@@ -144,6 +144,45 @@ func TestCollectionsFlow(t *testing.T) {
 	require.True(t, errors.Is(svc.RenameCollection(ctx, u1, 999999, "x"), collections.ErrNotFound))
 }
 
+// TestCollections_FavoritesGuards — служебная полка «Избранное» (kind='favorites'):
+// дубль руками нельзя, переименовать/удалить нельзя, закреплена первой в списке.
+func TestCollections_FavoritesGuards(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	pool := startCollectionsPostgres(t, ctx)
+
+	var u int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('fav@e.com','F','x','user') RETURNING id`).Scan(&u))
+	svc := collections.New(pool)
+
+	// Дубль «Избранное» руками создать нельзя (регистр/пробелы тоже).
+	_, err := svc.CreateCollection(ctx, u, "Избранное")
+	require.ErrorIs(t, err, collections.ErrReservedName)
+	_, err = svc.CreateCollection(ctx, u, "  избранное  ")
+	require.ErrorIs(t, err, collections.ErrReservedName)
+
+	// Служебная полка (как её создаёт AddFavorite).
+	var favID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO user_collections (user_id, name, kind) VALUES ($1, 'Избранное', 'favorites') RETURNING id`, u).Scan(&favID))
+	require.ErrorIs(t, svc.RenameCollection(ctx, u, favID, "Другое"), collections.ErrSystemCollection)
+	require.ErrorIs(t, svc.RenameCollection(ctx, u, favID, "Избранное"), collections.ErrReservedName)
+	require.ErrorIs(t, svc.DeleteCollection(ctx, u, favID), collections.ErrSystemCollection)
+
+	// Обычную полку создаём, она НЕ favorites; в списке favorites — первой.
+	_, err = svc.CreateCollection(ctx, u, "Прочитать")
+	require.NoError(t, err)
+	list, err := svc.ListCollections(ctx, u)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(list), 2)
+	require.Equal(t, "favorites", list[0].Kind, "служебная «Избранное» закреплена сверху")
+	require.Equal(t, "Избранное", list[0].Name)
+}
+
 func startCollectionsPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Helper()
 	pgC, err := tcpostgres.Run(ctx,

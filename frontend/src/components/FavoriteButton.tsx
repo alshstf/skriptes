@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Bell, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToggleFavorite, type FavoriteTarget } from '@/lib/favorites';
 import { cn } from '@/lib/utils';
@@ -30,6 +30,9 @@ export function FavoriteButton({
   const toggle = useToggleFavorite();
   const next = !isFavorite;
   const text = labelText(target, isFavorite);
+  // Книга — ★ «избранное» (жёлтая, исключение из монохрома). Автор/серия —
+  // «подписка»: колокольчик (заполненный foreground'ом, когда подписан).
+  const Icon = target === 'book' ? Star : Bell;
   return (
     <Button
       variant="ghost"
@@ -40,10 +43,14 @@ export function FavoriteButton({
       aria-label={ariaLabel(target, isFavorite)}
       className="gap-1"
     >
-      <Star
+      <Icon
         className={cn(
           'size-4',
-          isFavorite ? 'fill-yellow-500 stroke-yellow-500' : 'text-muted-foreground',
+          isFavorite
+            ? target === 'book'
+              ? 'fill-yellow-500 stroke-yellow-500'
+              : 'fill-foreground'
+            : 'text-muted-foreground',
         )}
         aria-hidden
       />

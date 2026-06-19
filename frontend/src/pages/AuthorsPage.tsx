@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Film, Search, SlidersHorizontal, Star, User as UserIcon } from 'lucide-react';
+import { Bell, Film, Search, SlidersHorizontal, Star, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -240,9 +240,8 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
         <div className="flex items-center gap-1.5">
           <h3 className="text-base font-medium leading-tight">{author.full_name}</h3>
           {author.is_favorite ? (
-            // Звезда избранного — существующий цветовой паттерн (исключение из
-            // монохрома, как в FavoriteButton).
-            <Star className="size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500" aria-label="В избранном" />
+            // Подписка на автора — колокольчик (монохром), не «избранное».
+            <Bell className="size-3.5 shrink-0 fill-foreground" aria-label="Подписан" />
           ) : null}
           {author.has_adaptations ? (
             <Film className="size-3.5 shrink-0 text-muted-foreground" aria-label="Есть экранизации" />

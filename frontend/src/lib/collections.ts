@@ -6,13 +6,15 @@
  * полки) + показывают тост, как в lib/admin.ts.
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch } from './api';
 
 export type Collection = {
   id: number;
   name: string;
+  // kind: 'user' — обычная полка; 'favorites' — служебная «Избранное» (★ книги).
+  kind: 'user' | 'favorites';
   book_count: number;
   created_at: string;
   updated_at: string;
@@ -44,8 +46,8 @@ function bookShelvesKey(bookId: number) {
   return [...KEY, 'by-book', bookId] as const;
 }
 
-/** BookShelf — лёгкая полка (id+name), содержащая книгу. Для индикации на карточке. */
-export type BookShelf = { id: number; name: string };
+/** BookShelf — лёгкая полка (id+name+kind), содержащая книгу. Для индикации на карточке. */
+export type BookShelf = { id: number; name: string; kind: 'user' | 'favorites' };
 
 type ListCollectionsResponse = { items: Collection[] };
 type ListBooksResponse = { items: CollectionBook[] };
@@ -65,6 +67,18 @@ export function useBookCollections(bookId: number | undefined) {
     enabled: bookId != null,
     staleTime: 30_000,
   });
+}
+
+/**
+ * invalidateFavoriteSide — после изменения членства в полке обновляем кэши
+ * книжного ★ (избранное = служебная полка «Избранное»): карточка (book/work) +
+ * список избранного. Безопасно звать на любую полку — лишний refetch дёшев,
+ * а согласованность ★↔полки важнее.
+ */
+function invalidateFavoriteSide(qc: QueryClient, bookId: number) {
+  void qc.invalidateQueries({ queryKey: ['book', String(bookId)] });
+  void qc.invalidateQueries({ queryKey: ['work'] });
+  void qc.invalidateQueries({ queryKey: ['me', 'favorites'] });
 }
 
 /** useCollections — список полок текущего пользователя. */
@@ -146,8 +160,10 @@ export function useAddBookToCollection() {
       }),
     onSuccess: (_data, vars) => {
       void qc.invalidateQueries({ queryKey: [...KEY] });
-      void qc.invalidateQueries({ queryKey: booksKey(vars.collectionId) });
       void qc.invalidateQueries({ queryKey: bookShelvesKey(vars.bookId) });
+      // Полка могла быть служебной «Избранное» (= ★ книги) → обновляем и
+      // favorite-стейт карточки/списков, чтобы ★ и полки были согласованы.
+      invalidateFavoriteSide(qc, vars.bookId);
       toast.success('Добавлено на полку');
     },
     onError: () => toast.error('Не удалось добавить на полку'),
@@ -163,8 +179,8 @@ export function useRemoveBookFromCollection() {
       }),
     onSuccess: (_data, vars) => {
       void qc.invalidateQueries({ queryKey: [...KEY] });
-      void qc.invalidateQueries({ queryKey: booksKey(vars.collectionId) });
       void qc.invalidateQueries({ queryKey: bookShelvesKey(vars.bookId) });
+      invalidateFavoriteSide(qc, vars.bookId);
       toast.success('Убрано с полки');
     },
     onError: () => toast.error('Не удалось убрать с полки'),
