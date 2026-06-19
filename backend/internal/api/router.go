@@ -123,6 +123,10 @@ func NewRouter(d Deps) http.Handler {
 					r.With(bookGate).Get("/books/{id}/download", handleDownload(d.Download, d.History))
 				}
 				if d.Catalog.Service != nil {
+					// /authors — список авторов с фильтрами (раздел «Авторы»);
+					// /authors/{id} — карточка одного автора. Разные chi-маршруты,
+					// сосуществуют (статический путь vs. path-параметр).
+					r.Get("/authors", handleListAuthors(d.Catalog, d.Content))
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))
