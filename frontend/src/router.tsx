@@ -12,6 +12,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { HomePage } from '@/pages/HomePage';
 import { BooksPage } from '@/pages/BooksPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
+import { AuthorsPage } from '@/pages/AuthorsPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
@@ -164,6 +165,14 @@ const workDetailRoute = createRoute({
   component: () => <BookDetailPage mode="work" />,
 });
 
+// /authors — список авторов с фильтрами (раздел «Авторы»). Отдельный маршрут
+// от /authors/$id (карточка одного автора) — статический путь vs. path-параметр.
+const authorsListRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/authors',
+  component: AuthorsPage,
+});
+
 const authorRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/authors/$id',
@@ -241,6 +250,7 @@ const routeTree = rootRoute.addChildren([
     booksRoute,
     bookDetailRoute,
     workDetailRoute,
+    authorsListRoute,
     authorRoute,
     seriesRoute,
     profileRoute,
