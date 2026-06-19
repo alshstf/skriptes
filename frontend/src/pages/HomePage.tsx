@@ -87,7 +87,17 @@ function HeroSearch() {
   return (
     <section className="flex min-h-[42vh] flex-col justify-center space-y-5 pb-2 pt-4 text-center sm:block sm:min-h-0 sm:space-y-4 sm:pb-0 sm:pt-8">
       <h1 className="text-3xl font-semibold tracking-tight">Библиотека Skriptes</h1>
-      <div ref={heroRef} className="relative mx-auto w-full max-w-2xl text-left">
+      {/* Скрим: пока открыт дропдаун — затемняем страницу, чтобы результаты
+          читались как отдельный слой, а не сливались с карточками под ними.
+          Инпут и дропдаун выше скрима (wrapper z-40), скрим — z-30. */}
+      {showDropdown ? (
+        <div
+          className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm"
+          aria-hidden
+          onMouseDown={() => setOpen(false)}
+        />
+      ) : null}
+      <div ref={heroRef} className="relative z-40 mx-auto w-full max-w-2xl text-left">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -124,7 +134,7 @@ function HeroSearch() {
 
         {showDropdown ? (
           <div
-            className="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-border bg-popover shadow-lg"
+            className="absolute z-50 mt-2 w-full overflow-hidden rounded-md border border-border bg-popover shadow-xl"
             // Держим фокус: mousedown по дропдауну не должен закрывать его раньше клика.
             onMouseDown={(e) => {
               e.preventDefault();
