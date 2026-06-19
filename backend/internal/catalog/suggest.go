@@ -9,13 +9,14 @@ import (
 // SuggestAuthors — typeahead по авторам.
 //
 // Стратегия:
-//   - префиксное совпадение по normalized_name (CITEXT) — учитывает регистр-нечувствительно
-//     "достоев" → "Достоевский Фёдор Михайлович".
-//   - GIN trigram index (authors_normalized_trgm) ускоряет ILIKE на длинных
-//     запросах; на коротких префиксах (1-2 символа) планировщик может
+//   - ПОДСТРОЧНОЕ совпадение по normalized_name (CITEXT), регистр-нечувствительно:
+//     "достоев" → "Достоевский …", но и "роберт" → "Гэлбрейт Роберт" (имя — не
+//     первое слово). Префиксные совпадения ранжируются выше (см. ORDER BY).
+//   - GIN trigram index (authors_normalized_trgm) ускоряет ILIKE '%…%' на
+//     запросах ≥3 символов; на коротких (1-2 символа) планировщик может
 //     выбрать seq scan, но при ~50-100K авторов это всё ещё <50 мс.
-//   - сортировка: сначала по числу книг (популярные авторы наверху),
-//     потом по нормализованному имени для стабильности.
+//   - сортировка: сначала префиксные совпадения, затем по числу книг
+//     (популярные наверху), потом по нормализованному имени для стабильности.
 func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) ([]AuthorSuggest, error) {
 	q := strings.TrimSpace(query)
 	if q == "" {
@@ -31,8 +32,9 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 		        JOIN books b ON b.id = ba.book_id
 		        WHERE ba.author_id = a.id AND b.deleted = false) AS cnt
 		FROM authors a
-		WHERE a.normalized_name::text ILIKE $1 || '%'
-		ORDER BY cnt DESC, a.normalized_name::text
+		WHERE a.normalized_name::text ILIKE '%' || $1 || '%'
+		ORDER BY (a.normalized_name::text ILIKE $1 || '%') DESC,
+		         cnt DESC, a.normalized_name::text
 		LIMIT $2
 	`, q, limit)
 	if err != nil {
@@ -59,9 +61,10 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 }
 
 // SuggestSeries — typeahead по сериям.
-// Принцип тот же, что и для авторов: префиксное ILIKE на normalized_title +
-// trigram GIN index. AuthorName заполняется LEFT JOIN если серия привязана
-// к одному автору (это поле опционально в схеме).
+// Принцип тот же, что и для авторов: ПОДСТРОЧНОЕ ILIKE на normalized_title +
+// trigram GIN index (так "страйк" находит «Корморан Страйк» — не первое слово);
+// префиксные совпадения ранжируются выше. AuthorName заполняется LEFT JOIN
+// если серия привязана к одному автору (это поле опционально в схеме).
 func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([]SeriesSuggest, error) {
 	q := strings.TrimSpace(query)
 	if q == "" {
@@ -78,8 +81,9 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([
 		        WHERE b.series_id = s.id AND b.deleted = false) AS cnt
 		FROM series s
 		LEFT JOIN authors a ON a.id = s.author_id
-		WHERE s.normalized_title::text ILIKE $1 || '%'
-		ORDER BY cnt DESC, s.normalized_title::text
+		WHERE s.normalized_title::text ILIKE '%' || $1 || '%'
+		ORDER BY (s.normalized_title::text ILIKE $1 || '%') DESC,
+		         cnt DESC, s.normalized_title::text
 		LIMIT $2
 	`, q, limit)
 	if err != nil {

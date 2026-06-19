@@ -9,6 +9,7 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 import { Layout } from '@/components/Layout';
 import { LoginPage } from '@/pages/LoginPage';
+import { HomePage } from '@/pages/HomePage';
 import { BooksPage } from '@/pages/BooksPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorPage } from '@/pages/AuthorPage';
@@ -85,16 +86,12 @@ const protectedFullscreenRoute = createRoute({
   component: () => <Outlet />,
 });
 
-// '/' редиректит на /books — главной страницы пока нет, список книг
-// и есть точка входа в каталог.
+// '/' — Главная: доминанта hero-поиск + динамические блоки (продолжить
+// чтение, новинки по подпискам). Раньше редиректила на /books.
 const indexRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/',
-  beforeLoad: () => {
-    throw redirect({ to: '/books' });
-  },
-  // Component обязан быть, но не рендерится из-за redirect.
-  component: () => null,
+  component: HomePage,
 });
 
 // BooksSearch — URL-стейт списка книг.
