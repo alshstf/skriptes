@@ -51,9 +51,16 @@ export function useToggleFavorite() {
         qc.setQueryData(ctx.key, ctx.prev);
       }
     },
-    onSettled: (_data, _err, _vars, ctx) => {
+    onSettled: (_data, _err, vars, ctx) => {
       if (ctx?.key) {
         void qc.invalidateQueries({ queryKey: ctx.key });
+      }
+      // Карточка работы (/works/{id}) кэшируется под ['work', …], а тоггл книги
+      // пишет ключ ['book', editionId] — без этой инвалидации звезда на
+      // work-карточке не обновлялась бы (выглядело как «кнопка не нажимается»).
+      // is_favorite у работы — work-level (любое её издание в избранном).
+      if (vars.target === 'book') {
+        void qc.invalidateQueries({ queryKey: ['work'] });
       }
       void qc.invalidateQueries({ queryKey: ['me', 'favorites'] });
       // Меняем сигнал персонализации — перерисовываем кэш списков
