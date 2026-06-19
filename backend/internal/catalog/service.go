@@ -126,6 +126,11 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.Books = bookList
 	a.BookRefs = refs
+	// Books — json-тег без omitempty: nil-срез сериализуется как null и роняет
+	// фронт (author.books.length). У автора без видимых книг нормализуем в [].
+	if a.Books == nil {
+		a.Books = []books.ListItem{}
+	}
 
 	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {

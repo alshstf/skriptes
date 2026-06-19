@@ -132,6 +132,13 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// предикаты ОБЩИЕ для COUNT и главного запроса (одни плейсхолдеры).
 	var where []string
 
+	// База (всегда): только авторы с ≥1 ВИДИМОЙ книгой. Без неё в списке
+	// всплывали «пустые» авторы (0 книг в каталоге) — это и шум, и клик по
+	// такому автору ронял карточку (author.books == null). Исключения
+	// видимости учитываются renderExclusion().
+	where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
+		" WHERE ba.author_id = a.id"+renderExclusion()+")")
+
 	if q := strings.TrimSpace(p.Query); q != "" {
 		// Префиксный ILIKE по normalized_name (как в SuggestAuthors): GIN
 		// trigram index ускоряет на длинных запросах.
