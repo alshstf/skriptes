@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { BookOpen, LogOut, Settings, Shield, User as UserIcon } from 'lucide-react';
+import { BookOpen, Library, LogOut, Settings, Shield, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -92,6 +92,10 @@ function UserMenu({ user }: { user: User }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => void navigate({ to: '/shelves' })}>
+          <Library className="mr-2 size-4" aria-hidden />
+          Мои полки
+        </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => void navigate({ to: '/me' })}>
           <Settings className="mr-2 size-4" aria-hidden />
           Профиль

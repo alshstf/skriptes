@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, FolderPlus, Library, Plus } from 'lucide-react';
+import { Check, FolderPlus, Library, Pencil, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -30,16 +30,33 @@ import { cn } from '@/lib/utils';
  * bookId — id ИЗДАНИЯ (book.id), членство в полке привязано к конкретному
  * fb2-файлу (как favorites/reads — по book_id, а не work_id).
  */
-export function AddToShelfDialog({ bookId }: { bookId: number }) {
+/**
+ * compact — триггер живёт в блоке «полки книги» под мета (см. BookDetailPage):
+ *  - false (книга ни на одной полке): основная кнопка «На полку»;
+ *  - true (рядом со списком полок): компактное «Изменить».
+ */
+export function AddToShelfDialog({ bookId, compact = false }: { bookId: number; compact?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1">
-          <Library className="size-4" aria-hidden />
-          <span className="hidden sm:inline">На полку</span>
-        </Button>
+        {compact ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-auto gap-1 px-1.5 py-0.5 text-xs"
+            aria-label="Изменить полки книги"
+          >
+            <Pencil className="size-3" aria-hidden />
+            Изменить
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" className="gap-1" aria-label="Добавить на полку">
+            <Library className="size-4" aria-hidden />
+            На полку
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <div className="space-y-1">

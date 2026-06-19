@@ -181,6 +181,8 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/me/collections/{id}", handleListCollectionBooks(d.Collections))
 					r.Post("/me/collections/{id}/books/{bookId}", handleAddBookToCollection(d.Collections))
 					r.Delete("/me/collections/{id}/books/{bookId}", handleRemoveBookFromCollection(d.Collections))
+					// Членство книги в полках — для индикации на карточке.
+					r.Get("/books/{id}/collections", handleCollectionsForBook(d.Collections))
 				}
 				// In-browser ридер: тот же путь конвертации что и /download,
 				// но без Content-Disposition: attachment и без записи в reads.

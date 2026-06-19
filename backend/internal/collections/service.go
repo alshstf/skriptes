@@ -157,6 +157,40 @@ func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collecti
 	return out, rows.Err()
 }
 
+// CollectionShelf — лёгкая строка «полка, содержащая книгу» (id+name) для
+// индикации членства на карточке книги (без book_count и дат).
+type CollectionShelf struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+// CollectionsForBook — полки текущего юзера, содержащие данную книгу (издание).
+// Для индикации членства на карточке («На полках: …»). Членство per-edition
+// (по book_id) — согласовано с AddToShelfDialog, который добавляет по book.id
+// представительного издания. Сортировка по имени.
+func (s *Service) CollectionsForBook(ctx context.Context, userID, bookID int64) ([]CollectionShelf, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT c.id, c.name
+		FROM user_collections c
+		JOIN user_collection_books cb ON cb.collection_id = c.id
+		WHERE c.user_id = $1 AND cb.book_id = $2
+		ORDER BY c.name, c.id
+	`, userID, bookID)
+	if err != nil {
+		return nil, fmt.Errorf("collections for book: %w", err)
+	}
+	defer rows.Close()
+	out := make([]CollectionShelf, 0)
+	for rows.Next() {
+		var sh CollectionShelf
+		if err := rows.Scan(&sh.ID, &sh.Name); err != nil {
+			return nil, err
+		}
+		out = append(out, sh)
+	}
+	return out, rows.Err()
+}
+
 // ownsCollection — true если полка id принадлежит userID. Используется как
 // гейт перед операциями с книгами полки.
 func (s *Service) ownsCollection(ctx context.Context, userID, id int64) (bool, error) {

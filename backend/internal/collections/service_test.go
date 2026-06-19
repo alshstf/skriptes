@@ -94,6 +94,22 @@ func TestCollectionsFlow(t *testing.T) {
 	require.Contains(t, ids, b2)
 	require.NotContains(t, ids, bDel)
 
+	// CollectionsForBook — членство per-book для индикации на карточке.
+	shB1, err := svc.CollectionsForBook(ctx, u1, b1)
+	require.NoError(t, err)
+	require.Len(t, shB1, 1)
+	require.Equal(t, c.ID, shB1[0].ID)
+	require.Equal(t, list[0].Name, shB1[0].Name) // текущее имя (полку выше переименовали)
+	// Книга не на полках → пусто.
+	bNone := mkBook("L4", "No Shelf", false)
+	none, err := svc.CollectionsForBook(ctx, u1, bNone)
+	require.NoError(t, err)
+	require.Empty(t, none)
+	// Чужой пользователь не видит членство в чужих полках.
+	shU2, err := svc.CollectionsForBook(ctx, u2, b1)
+	require.NoError(t, err)
+	require.Empty(t, shU2)
+
 	// Убрать книгу (идемпотентно).
 	require.NoError(t, svc.RemoveBookFromCollection(ctx, u1, c.ID, b1))
 	require.NoError(t, svc.RemoveBookFromCollection(ctx, u1, c.ID, b1)) // no-op

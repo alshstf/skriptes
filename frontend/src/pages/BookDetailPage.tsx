@@ -15,6 +15,7 @@ import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
+import { useBookCollections } from '@/lib/collections';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -108,9 +109,8 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                     id={book.id}
                     isFavorite={book.is_favorite ?? false}
                   />
-                  {/* Добавить на личную полку — доступно всем; удалённую книгу
-                      на полку класть не предлагаем. */}
-                  {!book.deleted ? <AddToShelfDialog bookId={book.id} /> : null}
+                  {/* «На полку» переехала вниз, в блок полок под мета (ShelfSection):
+                      и сам контрол, и список полок — в одном месте. */}
                   {/* Действия для одного издания — в шапке; при нескольких изданиях
                       они в секции «Издания» (на каждое издание свои). */}
                   {!multi && !book.deleted ? (
@@ -189,6 +189,8 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 />
                 {!multi ? <Field label="LIBID" value={book.lib_id} mono /> : null}
               </dl>
+
+              <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
 
               {book.deleted ? (
                 <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
@@ -303,6 +305,42 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
       <dt className="text-muted-foreground">{label}</dt>
       <dd className={mono ? 'font-mono text-xs break-all' : ''}>{value}</dd>
     </>
+  );
+}
+
+/**
+ * ShelfSection — блок «полки книги» под мета-блоком. И контрол, и список полок
+ * в одном месте (раньше кнопка «На полку» висела в ряду действий сверху —
+ * перенесли вниз). Малоакцентно: мелкий muted-текст + приглушённые чипы.
+ *  - книга ни на одной полке → одна кнопка «На полку» (открывает диалог);
+ *  - книга на ≥1 полке → «На полках: чип · чип +N» + компактное «Изменить».
+ * Удалённую книгу на полки не кладём (контрол скрыт), но уже имеющееся членство
+ * показываем.
+ */
+function ShelfSection({ bookId, deleted }: { bookId: number; deleted: boolean }) {
+  const shelves = useBookCollections(bookId).data ?? [];
+  const onShelves = shelves.length > 0;
+  // Удалённая книга без полок — показывать нечего.
+  if (!onShelves && deleted) return null;
+  const shown = shelves.slice(0, 3);
+  const extra = shelves.length - shown.length;
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+      {onShelves ? (
+        <>
+          <Library className="size-3.5 shrink-0" aria-hidden />
+          <span>На полках:</span>
+          {shown.map((s) => (
+            <span key={s.id} className="rounded border border-border bg-muted px-1.5 py-0.5">
+              {s.name}
+            </span>
+          ))}
+          {extra > 0 ? <span className="tabular-nums">+{extra}</span> : null}
+        </>
+      ) : null}
+      {!deleted ? <AddToShelfDialog bookId={bookId} compact={onShelves} /> : null}
+    </div>
   );
 }
 

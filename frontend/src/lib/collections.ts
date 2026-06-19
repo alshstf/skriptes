@@ -39,8 +39,33 @@ function booksKey(id: number) {
   return [...KEY, id, 'books'] as const;
 }
 
+/** queryKey: полки, содержащие конкретную книгу (членство для карточки). */
+function bookShelvesKey(bookId: number) {
+  return [...KEY, 'by-book', bookId] as const;
+}
+
+/** BookShelf — лёгкая полка (id+name), содержащая книгу. Для индикации на карточке. */
+export type BookShelf = { id: number; name: string };
+
 type ListCollectionsResponse = { items: Collection[] };
 type ListBooksResponse = { items: CollectionBook[] };
+type BookShelvesResponse = { items: BookShelf[] };
+
+/**
+ * useBookCollections — полки, в которых лежит книга (издание book.id). Питает
+ * индикацию членства на карточке («На полках: …») и стейт кнопки «На полку».
+ */
+export function useBookCollections(bookId: number | undefined) {
+  return useQuery<BookShelf[]>({
+    queryKey: bookId != null ? bookShelvesKey(bookId) : [...KEY, 'by-book', 'none'],
+    queryFn: async () => {
+      const r = await apiFetch<BookShelvesResponse>(`/api/books/${bookId}/collections`);
+      return r.items;
+    },
+    enabled: bookId != null,
+    staleTime: 30_000,
+  });
+}
 
 /** useCollections — список полок текущего пользователя. */
 export function useCollections() {
@@ -122,9 +147,10 @@ export function useAddBookToCollection() {
     onSuccess: (_data, vars) => {
       void qc.invalidateQueries({ queryKey: [...KEY] });
       void qc.invalidateQueries({ queryKey: booksKey(vars.collectionId) });
-      toast.success('Добавлено в полку');
+      void qc.invalidateQueries({ queryKey: bookShelvesKey(vars.bookId) });
+      toast.success('Добавлено на полку');
     },
-    onError: () => toast.error('Не удалось добавить в полку'),
+    onError: () => toast.error('Не удалось добавить на полку'),
   });
 }
 
@@ -138,8 +164,9 @@ export function useRemoveBookFromCollection() {
     onSuccess: (_data, vars) => {
       void qc.invalidateQueries({ queryKey: [...KEY] });
       void qc.invalidateQueries({ queryKey: booksKey(vars.collectionId) });
-      toast.success('Убрано из полки');
+      void qc.invalidateQueries({ queryKey: bookShelvesKey(vars.bookId) });
+      toast.success('Убрано с полки');
     },
-    onError: () => toast.error('Не удалось убрать из полки'),
+    onError: () => toast.error('Не удалось убрать с полки'),
   });
 }

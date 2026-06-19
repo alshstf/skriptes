@@ -16,6 +16,7 @@ import { AuthorsPage } from '@/pages/AuthorsPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { GenresPage } from '@/pages/GenresPage';
+import { ShelvesPage } from '@/pages/ShelvesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ProfileContentPage } from '@/pages/ProfileContentPage';
 import { ProfileAppearancePage } from '@/pages/ProfileAppearancePage';
@@ -186,11 +187,19 @@ const seriesRoute = createRoute({
   component: SeriesPage,
 });
 
-// /genres — раздел «Жанры»: обзор жанров с избранным + личные полки.
+// /genres — раздел «Жанры»: обзор жанров с избранным (личные полки — на /shelves).
 const genresRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/genres',
   component: GenresPage,
+});
+
+// /shelves — личные полки (коллекции). Личная библиотека, не каталог-браузинг,
+// поэтому не в топ-навигации, а доступом из меню пользователя.
+const shelvesRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/shelves',
+  component: ShelvesPage,
 });
 
 const profileRoute = createRoute({
@@ -262,6 +271,7 @@ const routeTree = rootRoute.addChildren([
     authorRoute,
     seriesRoute,
     genresRoute,
+    shelvesRoute,
     profileRoute,
     profileContentRoute,
     profileAppearanceRoute,
