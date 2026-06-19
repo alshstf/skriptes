@@ -9,9 +9,12 @@ test('author stats: progress + histogram appear on author page', async ({
   });
   // Прогресс: 2 / 5 книг прочитано (read_count теперь = completed_at IS NOT NULL).
   await expect(page.getByText(/Прочитано 2 из 5/)).toBeVisible();
-  // Гистограмма — проверяем что внутри блока есть svg (recharts его рендерит).
+  // Гистограмма — проверяем что внутри блока есть svg графика. Таргетим
+  // именно recharts-surface, а не первый попавшийся svg: в хедере теперь
+  // живут lucide-иконки (в т.ч. бургер md:hidden), и `svg().first()`
+  // цеплялся бы за скрытую иконку меню вместо графика.
   const statsCard = page.locator('div').filter({ hasText: 'Книги по годам написания' }).first();
-  await expect(statsCard.locator('svg').first()).toBeVisible();
+  await expect(statsCard.locator('svg.recharts-surface').first()).toBeVisible();
 });
 
 test('series stats: same block appears on series page', async ({ mockedPage: page }) => {
