@@ -155,6 +155,9 @@ func NewRouter(d Deps) http.Handler {
 					// Избранные жанры — раздел «Жанры» (закрепление сверху).
 					r.Post("/genres/{id}/favorite", handleAddFavoriteGenre(d.History))
 					r.Delete("/genres/{id}/favorite", handleRemoveFavoriteGenre(d.History))
+					// Пользовательские оценки книг (work-level, шкала 1–5).
+					r.Put("/works/{id}/rating", handleSetRating(d.History))
+					r.Delete("/works/{id}/rating", handleRemoveRating(d.History))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
 					// Главная: «Продолжить чтение» + «Новинки по подпискам».
