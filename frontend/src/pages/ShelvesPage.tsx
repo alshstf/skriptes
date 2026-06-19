@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, FolderPlus, Library, Pencil, Trash2 } from 'lucide-react';
+import { ChevronRight, FolderPlus, Library, Pencil, Star, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
@@ -69,6 +69,8 @@ export function ShelvesPage() {
 function ShelfRow({ collection }: { collection: Collection }) {
   const [open, setOpen] = useState(false);
   const del = useDeleteCollection();
+  // Служебная «Избранное» (★ книги): закреплена сверху, переименовать/удалить нельзя.
+  const isFav = collection.kind === 'favorites';
 
   return (
     <li className="rounded-md border border-border">
@@ -84,27 +86,35 @@ function ShelfRow({ collection }: { collection: Collection }) {
             className={cn('size-4 shrink-0 transition-transform', open ? 'rotate-90' : '')}
             aria-hidden
           />
+          {isFav ? (
+            <Star className="size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500" aria-hidden />
+          ) : null}
           <span className="min-w-0 flex-1 truncate text-sm font-medium">{collection.name}</span>
           <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
             {collection.book_count} кн.
           </span>
         </button>
-        <RenameShelfDialog collection={collection} />
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => {
-            if (
-              window.confirm(`Удалить полку «${collection.name}»? Книги останутся в библиотеке.`)
-            ) {
-              del.mutate(collection.id);
-            }
-          }}
-          disabled={del.isPending}
-          aria-label={`Удалить полку «${collection.name}»`}
-        >
-          <Trash2 className="size-4" aria-hidden />
-        </Button>
+        {/* Служебную полку не переименовать/не удалить (★ управляет ей с карточек). */}
+        {!isFav ? (
+          <>
+            <RenameShelfDialog collection={collection} />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => {
+                if (
+                  window.confirm(`Удалить полку «${collection.name}»? Книги останутся в библиотеке.`)
+                ) {
+                  del.mutate(collection.id);
+                }
+              }}
+              disabled={del.isPending}
+              aria-label={`Удалить полку «${collection.name}»`}
+            >
+              <Trash2 className="size-4" aria-hidden />
+            </Button>
+          </>
+        ) : null}
       </div>
       {open ? <ShelfBooks collectionId={collection.id} /> : null}
     </li>

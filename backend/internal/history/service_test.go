@@ -282,9 +282,9 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, rd)
 
-	// Избрали и прочитали ВТОРОЕ издание.
-	_, err = pool.Exec(ctx, `INSERT INTO favorites (user_id, book_id) VALUES ($1,$2)`, userID, e2)
-	require.NoError(t, err)
+	// Избрали и прочитали ВТОРОЕ издание. Избранное — через сервис (служебная
+	// полка kind='favorites', миграция 0023; таблицы favorites больше нет).
+	require.NoError(t, svc.AddFavorite(ctx, userID, e2))
 	_, err = pool.Exec(ctx, `INSERT INTO reads (user_id, book_id, completed_at) VALUES ($1,$2,now())`, userID, e2)
 	require.NoError(t, err)
 

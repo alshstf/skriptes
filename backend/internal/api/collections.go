@@ -63,6 +63,9 @@ func handleCreateCollection(d CollectionsDeps) http.HandlerFunc {
 		case errors.Is(err, collections.ErrEmptyName):
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "name required"})
 			return
+		case errors.Is(err, collections.ErrReservedName):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» — служебная полка, имя занято"})
+			return
 		case err != nil:
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
 			return
@@ -96,6 +99,12 @@ func handleRenameCollection(d CollectionsDeps) http.HandlerFunc {
 		case errors.Is(err, collections.ErrEmptyName):
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "name required"})
 			return
+		case errors.Is(err, collections.ErrReservedName):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» — служебная полка, имя занято"})
+			return
+		case errors.Is(err, collections.ErrSystemCollection):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "служебную полку нельзя переименовать"})
+			return
 		case errors.Is(err, collections.ErrNotFound):
 			writeJSON(w, http.StatusNotFound, map[string]string{"error": "collection not found"})
 			return
@@ -124,6 +133,9 @@ func handleDeleteCollection(d CollectionsDeps) http.HandlerFunc {
 		defer cancel()
 		err = d.Service.DeleteCollection(ctx, u.ID, id)
 		switch {
+		case errors.Is(err, collections.ErrSystemCollection):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "служебную полку нельзя удалить"})
+			return
 		case errors.Is(err, collections.ErrNotFound):
 			writeJSON(w, http.StatusNotFound, map[string]string{"error": "collection not found"})
 			return

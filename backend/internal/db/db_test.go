@@ -57,7 +57,7 @@ func TestMigrateAndPool(t *testing.T) {
 	expected := []string{
 		"app_settings",
 		"archives", "authors", "book_adaptations", "book_authors", "book_cover_lookups", "book_genres", "book_work_lookups", "book_year_lookups", "books",
-		"collections", "favorite_authors", "favorite_series", "favorites",
+		"collections", "favorite_authors", "favorite_series",
 		"feed_dismissals", "genres", "import_jobs", "kindle_targets", "metadata_cache",
 		"reads", "series", "sessions",
 		"user_collection_books", "user_collections", "user_favorite_genres",

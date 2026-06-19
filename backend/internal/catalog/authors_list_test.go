@@ -113,9 +113,17 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse})
 
 	// Избранное юзера: подписка на Кинга + одна книга Кинга в избранном.
+	// Книжное избранное — членство в служебной полке kind='favorites' (миграция 0023).
 	_, err := pool.Exec(ctx, `INSERT INTO favorite_authors (user_id, author_id) VALUES ($1,$2)`, f.userID, f.kingID)
 	require.NoError(t, err)
-	_, err = pool.Exec(ctx, `INSERT INTO favorites (user_id, book_id) VALUES ($1,$2)`, f.userID, kingBookRu)
+	_, err = pool.Exec(ctx, `
+		WITH fav AS (
+			INSERT INTO user_collections (user_id, name, kind) VALUES ($1, 'Избранное', 'favorites')
+			ON CONFLICT (user_id) WHERE kind = 'favorites' DO UPDATE SET name = user_collections.name
+			RETURNING id
+		)
+		INSERT INTO user_collection_books (collection_id, book_id) SELECT id, $2 FROM fav
+	`, f.userID, kingBookRu)
 	require.NoError(t, err)
 
 	return f

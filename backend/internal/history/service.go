@@ -149,13 +149,15 @@ func (s *Service) ReadStatus(ctx context.Context, userID, bookID int64) (isRead 
 
 // IsWorkFavorite — книга (логическая работа) в избранном, если избрано ЛЮБОЕ
 // её издание. Для singleton-работы совпадает с IsFavorite по изданию.
+// Избранное книг — членство в служебной полке kind='favorites' (миграция 0023).
 func (s *Service) IsWorkFavorite(ctx context.Context, userID, workID int64) (bool, error) {
 	var ok bool
 	err := s.pool.QueryRow(ctx, `
 		SELECT EXISTS(
-			SELECT 1 FROM favorites f
-			JOIN books b ON b.id = f.book_id
-			WHERE f.user_id = $1 AND b.work_id = $2
+			SELECT 1 FROM user_collection_books cb
+			JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
+			JOIN books b ON b.id = cb.book_id
+			WHERE b.work_id = $2
 		)
 	`, userID, workID).Scan(&ok)
 	if err != nil {
@@ -173,9 +175,10 @@ func (s *Service) FavoriteWorkSet(ctx context.Context, userID int64, workIDs []i
 	}
 	rows, err := s.pool.Query(ctx, `
 		SELECT DISTINCT b.work_id
-		FROM favorites f
-		JOIN books b ON b.id = f.book_id
-		WHERE f.user_id = $1 AND b.work_id = ANY($2)
+		FROM user_collection_books cb
+		JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
+		JOIN books b ON b.id = cb.book_id
+		WHERE b.work_id = ANY($2)
 	`, userID, workIDs)
 	if err != nil {
 		return out, fmt.Errorf("query favorite works: %w", err)
@@ -297,12 +300,22 @@ func (s *Service) GetPosition(ctx context.Context, userID, bookID int64) (string
 	return *pos, nil
 }
 
-// AddFavorite — добавить книгу в избранное.
+// AddFavorite — добавить книгу в избранное (= членство в служебной полке
+// kind='favorites', миграция 0023; ★ на книге — её шорткат). CTE гарантирует
+// полку «Избранное» (one-per-user через partial unique) и кладёт в неё книгу.
 // Идемпотентна: повторный вызов не падает и не меняет added_at.
 func (s *Service) AddFavorite(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
-		INSERT INTO favorites (user_id, book_id) VALUES ($1, $2)
-		ON CONFLICT (user_id, book_id) DO NOTHING
+		WITH fav AS (
+			INSERT INTO user_collections (user_id, name, kind)
+			VALUES ($1, 'Избранное', 'favorites')
+			ON CONFLICT (user_id) WHERE kind = 'favorites'
+			DO UPDATE SET name = user_collections.name
+			RETURNING id
+		)
+		INSERT INTO user_collection_books (collection_id, book_id)
+		SELECT id, $2 FROM fav
+		ON CONFLICT (collection_id, book_id) DO NOTHING
 	`, userID, bookID)
 	if err != nil {
 		return fmt.Errorf("insert favorite: %w", err)
@@ -310,10 +323,13 @@ func (s *Service) AddFavorite(ctx context.Context, userID, bookID int64) error {
 	return nil
 }
 
-// RemoveFavorite — убрать из избранного. Идемпотентна.
+// RemoveFavorite — убрать из избранного (членство в favorites-полке). Идемпотентна.
 func (s *Service) RemoveFavorite(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
-		DELETE FROM favorites WHERE user_id = $1 AND book_id = $2
+		DELETE FROM user_collection_books cb
+		USING user_collections c
+		WHERE cb.collection_id = c.id AND c.user_id = $1 AND c.kind = 'favorites'
+		  AND cb.book_id = $2
 	`, userID, bookID)
 	if err != nil {
 		return fmt.Errorf("delete favorite: %w", err)
@@ -321,11 +337,15 @@ func (s *Service) RemoveFavorite(ctx context.Context, userID, bookID int64) erro
 	return nil
 }
 
-// IsFavorite — true если пользователь добавил книгу в избранное.
+// IsFavorite — true если книга в favorites-полке пользователя.
 func (s *Service) IsFavorite(ctx context.Context, userID, bookID int64) (bool, error) {
 	var exists bool
 	err := s.pool.QueryRow(ctx, `
-		SELECT EXISTS(SELECT 1 FROM favorites WHERE user_id = $1 AND book_id = $2)
+		SELECT EXISTS(
+			SELECT 1 FROM user_collection_books cb
+			JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
+			WHERE cb.book_id = $2
+		)
 	`, userID, bookID).Scan(&exists)
 	if err != nil {
 		return false, fmt.Errorf("query favorite: %w", err)
@@ -347,20 +367,20 @@ func (s *Service) ListFavorites(ctx context.Context, userID int64, limit, offset
 		offset = 0
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.title, b.lang, b.lib_id, f.added_at,
+		SELECT b.id, b.title, b.lang, b.lib_id, cb.added_at,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
 		           ARRAY[]::text[]
 		       ),
 		       ser.title
-		FROM favorites f
-		JOIN books b ON b.id = f.book_id AND b.deleted = false
+		FROM user_collection_books cb
+		JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
+		JOIN books b ON b.id = cb.book_id AND b.deleted = false
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		LEFT JOIN series ser ON ser.id = b.series_id
-		WHERE f.user_id = $1
-		GROUP BY b.id, b.title, b.lang, b.lib_id, f.added_at, ser.title
-		ORDER BY f.added_at DESC
+		GROUP BY b.id, b.title, b.lang, b.lib_id, cb.added_at, ser.title
+		ORDER BY cb.added_at DESC
 		LIMIT $2 OFFSET $3
 	`, userID, limit, offset)
 	if err != nil {
@@ -830,9 +850,9 @@ func (s *Service) DismissFeedItem(ctx context.Context, userID, workID int64) err
 func (s *Service) FavoritesCount(ctx context.Context, userID int64) (int, error) {
 	var n int
 	err := s.pool.QueryRow(ctx, `
-		SELECT count(*) FROM favorites f
-		JOIN books b ON b.id = f.book_id AND b.deleted = false
-		WHERE f.user_id = $1
+		SELECT count(*) FROM user_collection_books cb
+		JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
+		JOIN books b ON b.id = cb.book_id AND b.deleted = false
 	`, userID).Scan(&n)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

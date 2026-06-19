@@ -98,8 +98,8 @@ describe('AuthorsPage', () => {
     expect(screen.getByText('Ужасы')).toBeInTheDocument();
     // Библиотечный рейтинг отрендерен (a11y-label).
     expect(screen.getByLabelText('Рейтинг библиотеки 5')).toBeInTheDocument();
-    // Звезда избранного — только у Кинга.
-    expect(screen.getByLabelText('В избранном')).toBeInTheDocument();
+    // Иконка подписки (колокольчик) — только у Кинга.
+    expect(screen.getByLabelText('Подписан')).toBeInTheDocument();
     // Иконка экранизаций — только у Кинга.
     expect(screen.getByLabelText('Есть экранизации')).toBeInTheDocument();
 

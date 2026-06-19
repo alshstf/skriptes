@@ -27,9 +27,23 @@ var ErrNotFound = errors.New("collection not found")
 // ErrEmptyName — имя полки после trim пустое.
 var ErrEmptyName = errors.New("collection name is empty")
 
+// ErrSystemCollection — служебную полку («Избранное») нельзя переименовать/удалить.
+var ErrSystemCollection = errors.New("system collection cannot be modified")
+
+// ErrReservedName — имя зарезервировано за служебной полкой (нельзя создать дубль).
+var ErrReservedName = errors.New("collection name is reserved")
+
 // maxNameLen — потолок длины имени полки (защита от мусорного ввода;
 // домашняя библиотека, длинные имена ни к чему).
 const maxNameLen = 200
+
+// kind полки + имя служебной «Избранное» (миграция 0023). favorites-полка —
+// служебная: ★ книги = членство в ней; одна на юзера (partial unique).
+const (
+	kindUser      = "user"
+	kindFavorites = "favorites"
+	favoritesName = "Избранное"
+)
 
 // Service — операции с полками. Потокобезопасен (pgxpool сам управляет
 // конкурентным доступом).
@@ -43,8 +57,10 @@ func New(pool *pgxpool.Pool) *Service {
 
 // Collection — строка в списке полок пользователя.
 type Collection struct {
-	ID        int64     `json:"id"`
-	Name      string    `json:"name"`
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+	// Kind — "user" (обычная полка) | "favorites" (служебная «Избранное»: ★ книги).
+	Kind      string    `json:"kind"`
 	BookCount int       `json:"book_count"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -80,10 +96,13 @@ func (s *Service) CreateCollection(ctx context.Context, userID int64, name strin
 	if err != nil {
 		return Collection{}, err
 	}
-	var c Collection
-	c.Name = n
+	// «Избранное» зарезервировано за служебной полкой — дубль руками нельзя.
+	if strings.EqualFold(n, favoritesName) {
+		return Collection{}, ErrReservedName
+	}
+	c := Collection{Name: n, Kind: kindUser}
 	err = s.pool.QueryRow(ctx, `
-		INSERT INTO user_collections (user_id, name) VALUES ($1, $2)
+		INSERT INTO user_collections (user_id, name, kind) VALUES ($1, $2, 'user')
 		RETURNING id, created_at, updated_at
 	`, userID, n).Scan(&c.ID, &c.CreatedAt, &c.UpdatedAt)
 	if err != nil {
@@ -99,15 +118,26 @@ func (s *Service) RenameCollection(ctx context.Context, userID, id int64, name s
 	if err != nil {
 		return err
 	}
-	tag, err := s.pool.Exec(ctx, `
+	if strings.EqualFold(n, favoritesName) {
+		return ErrReservedName
+	}
+	// Служебную «Избранное» переименовывать нельзя.
+	var kind string
+	err = s.pool.QueryRow(ctx, `SELECT kind FROM user_collections WHERE id = $1 AND user_id = $2`, id, userID).Scan(&kind)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ErrNotFound
+	}
+	if err != nil {
+		return fmt.Errorf("lookup collection: %w", err)
+	}
+	if kind != kindUser {
+		return ErrSystemCollection
+	}
+	if _, err := s.pool.Exec(ctx, `
 		UPDATE user_collections SET name = $1, updated_at = now()
 		WHERE id = $2 AND user_id = $3
-	`, n, id, userID)
-	if err != nil {
+	`, n, id, userID); err != nil {
 		return fmt.Errorf("rename collection: %w", err)
-	}
-	if tag.RowsAffected() == 0 {
-		return ErrNotFound
 	}
 	return nil
 }
@@ -116,14 +146,20 @@ func (s *Service) RenameCollection(ctx context.Context, userID, id int64, name s
 // Идемпотентность здесь НЕ нужна: повторный DELETE по уже удалённой/чужой
 // полке отдаёт ErrNotFound (фронт показывает «полка не найдена»).
 func (s *Service) DeleteCollection(ctx context.Context, userID, id int64) error {
-	tag, err := s.pool.Exec(ctx, `
-		DELETE FROM user_collections WHERE id = $1 AND user_id = $2
-	`, id, userID)
-	if err != nil {
-		return fmt.Errorf("delete collection: %w", err)
-	}
-	if tag.RowsAffected() == 0 {
+	// Служебную «Избранное» удалять нельзя.
+	var kind string
+	err := s.pool.QueryRow(ctx, `SELECT kind FROM user_collections WHERE id = $1 AND user_id = $2`, id, userID).Scan(&kind)
+	if errors.Is(err, pgx.ErrNoRows) {
 		return ErrNotFound
+	}
+	if err != nil {
+		return fmt.Errorf("lookup collection: %w", err)
+	}
+	if kind != kindUser {
+		return ErrSystemCollection
+	}
+	if _, err := s.pool.Exec(ctx, `DELETE FROM user_collections WHERE id = $1 AND user_id = $2`, id, userID); err != nil {
+		return fmt.Errorf("delete collection: %w", err)
 	}
 	return nil
 }
@@ -134,13 +170,13 @@ func (s *Service) DeleteCollection(ctx context.Context, userID, id int64) error 
 // сверху (updated_at desc).
 func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collection, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT c.id, c.name, c.created_at, c.updated_at,
+		SELECT c.id, c.name, c.kind, c.created_at, c.updated_at,
 		       (SELECT count(*) FROM user_collection_books cb
 		        JOIN books b ON b.id = cb.book_id AND b.deleted = false
 		        WHERE cb.collection_id = c.id)::int AS book_count
 		FROM user_collections c
 		WHERE c.user_id = $1
-		ORDER BY c.updated_at DESC, c.id DESC
+		ORDER BY (c.kind = 'favorites') DESC, c.updated_at DESC, c.id DESC
 	`, userID)
 	if err != nil {
 		return nil, fmt.Errorf("list collections: %w", err)
@@ -149,7 +185,7 @@ func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collecti
 	out := make([]Collection, 0)
 	for rows.Next() {
 		var c Collection
-		if err := rows.Scan(&c.ID, &c.Name, &c.CreatedAt, &c.UpdatedAt, &c.BookCount); err != nil {
+		if err := rows.Scan(&c.ID, &c.Name, &c.Kind, &c.CreatedAt, &c.UpdatedAt, &c.BookCount); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -157,11 +193,13 @@ func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collecti
 	return out, rows.Err()
 }
 
-// CollectionShelf — лёгкая строка «полка, содержащая книгу» (id+name) для
-// индикации членства на карточке книги (без book_count и дат).
+// CollectionShelf — лёгкая строка «полка, содержащая книгу» (id+name+kind) для
+// индикации членства на карточке книги (без book_count и дат). Kind нужен фронту,
+// чтобы исключить служебную «Избранное» из чипов (её передаёт ★).
 type CollectionShelf struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
+	Kind string `json:"kind"`
 }
 
 // CollectionsForBook — полки текущего юзера, содержащие данную книгу (издание).
@@ -170,7 +208,7 @@ type CollectionShelf struct {
 // представительного издания. Сортировка по имени.
 func (s *Service) CollectionsForBook(ctx context.Context, userID, bookID int64) ([]CollectionShelf, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT c.id, c.name
+		SELECT c.id, c.name, c.kind
 		FROM user_collections c
 		JOIN user_collection_books cb ON cb.collection_id = c.id
 		WHERE c.user_id = $1 AND cb.book_id = $2
@@ -183,7 +221,7 @@ func (s *Service) CollectionsForBook(ctx context.Context, userID, bookID int64) 
 	out := make([]CollectionShelf, 0)
 	for rows.Next() {
 		var sh CollectionShelf
-		if err := rows.Scan(&sh.ID, &sh.Name); err != nil {
+		if err := rows.Scan(&sh.ID, &sh.Name, &sh.Kind); err != nil {
 			return nil, err
 		}
 		out = append(out, sh)

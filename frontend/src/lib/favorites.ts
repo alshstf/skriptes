@@ -61,6 +61,9 @@ export function useToggleFavorite() {
       // is_favorite у работы — work-level (любое её издание в избранном).
       if (vars.target === 'book') {
         void qc.invalidateQueries({ queryKey: ['work'] });
+        // ★ книги = членство в служебной полке «Избранное» → обновляем и полки
+        // (/shelves, членство на карточке, диалог), чтобы ★↔полки были согласованы.
+        void qc.invalidateQueries({ queryKey: ['me', 'collections'] });
       }
       void qc.invalidateQueries({ queryKey: ['me', 'favorites'] });
       // Меняем сигнал персонализации — перерисовываем кэш списков

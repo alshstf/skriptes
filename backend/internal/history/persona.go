@@ -73,7 +73,8 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 	}{
 		{`SELECT author_id FROM favorite_authors WHERE user_id = $1`, p.FavoriteAuthors},
 		{`SELECT series_id FROM favorite_series  WHERE user_id = $1`, p.FavoriteSeries},
-		{`SELECT book_id   FROM favorites        WHERE user_id = $1`, p.FavoriteBooks},
+		// Книжное избранное теперь = членство в служебной полке kind='favorites' (миграция 0023).
+		{`SELECT cb.book_id FROM user_collection_books cb JOIN user_collections c ON c.id = cb.collection_id WHERE c.user_id = $1 AND c.kind = 'favorites'`, p.FavoriteBooks},
 	} {
 		rs, err := s.pool.Query(ctx, q.sql, userID)
 		if err != nil {
