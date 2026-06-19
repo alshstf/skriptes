@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { BookIcon, LayersIcon, Search, Sparkles, Star, UserIcon } from 'lucide-react';
+import {
+  BookIcon,
+  ChevronLeft,
+  ChevronRight,
+  LayersIcon,
+  Search,
+  Sparkles,
+  Star,
+  UserIcon,
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Callout } from '@/components/ui/callout';
 import { BookCover } from '@/components/BookCover';
@@ -385,14 +394,82 @@ function ComingSoonCard({
 
 // ── Общие примитивы полки ────────────────────────────────────────
 
-// Shelf — горизонтальный ряд карточек с заголовком. Прокрутка по X, чтобы
-// длинная полка не ломала layout.
+// Shelf — горизонтальная КАРУСЕЛЬ карточек с заголовком. Чтобы было очевидно,
+// что контент скроллится (и на десктопе, и на мобиле): градиент-затухание у
+// краёв + круглые кнопки-стрелки. И то и другое появляется только когда есть
+// куда прокручивать (canLeft/canRight по факту overflow).
 function Shelf({ title, children }: { title: string; children: React.ReactNode }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  const update = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 1);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    // ResizeObserver — пересчитать при смене ширины контейнера/догрузке карточек.
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', update);
+      ro.disconnect();
+    };
+  }, [update]);
+
+  function scrollByDir(dir: 1 | -1) {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
+  }
+
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <div className="flex gap-4 overflow-x-auto pb-2">{children}</div>
+      <div className="relative">
+        {canLeft ? <ShelfArrow side="left" onClick={() => scrollByDir(-1)} /> : null}
+        {canRight ? <ShelfArrow side="right" onClick={() => scrollByDir(1)} /> : null}
+        <div ref={scrollRef} className="flex gap-4 overflow-x-auto scroll-smooth pb-2">
+          {children}
+        </div>
+      </div>
     </section>
+  );
+}
+
+// ShelfArrow — затухание у края полки + круглая кнопка-стрелка. Затухание
+// (pointer-events-none) — пассивная подсказка «контент продолжается»; кнопка —
+// активный контрол прокрутки (тапается и на мобиле, и на десктопе).
+function ShelfArrow({ side, onClick }: { side: 'left' | 'right'; onClick: () => void }) {
+  const Icon = side === 'left' ? ChevronLeft : ChevronRight;
+  return (
+    <>
+      <div
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute inset-y-0 z-10 w-10 from-background to-transparent',
+          side === 'left' ? 'left-0 bg-gradient-to-r' : 'right-0 bg-gradient-to-l',
+        )}
+      />
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={side === 'left' ? 'Прокрутить назад' : 'Прокрутить вперёд'}
+        className={cn(
+          'absolute top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/90 text-muted-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent hover:text-foreground',
+          side === 'left' ? 'left-1' : 'right-1',
+        )}
+      >
+        <Icon className="size-4" aria-hidden />
+      </button>
+    </>
   );
 }
 
