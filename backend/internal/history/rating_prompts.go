@@ -43,11 +43,11 @@ func (s *Service) RecordAcquisition(ctx context.Context, userID, bookID int64) e
 // RateableWorks — пул блока «Оцените прочитанное»: работы, которые пользователь
 // вероятно прочитал и ещё не оценил. Пригодность (на работу, агрегируя издания):
 //   - read_signal = любое издание отмечено «Прочитана» ИЛИ web-fraction ≥ 0.95
-//     → пригодна СРАЗУ (и перебивает скрытие 'never');
+//     → пригодна СРАЗУ (без ожидания задержки);
 //   - acquired_eligible = min(acquired_at) ≤ now() − delay.
 //
-// Исключаем: уже оценённые; скрытые 'never' (пока нет read_signal); 'snooze'
-// (пока snoozed_until в будущем). read_signal сортируется выше отложенных.
+// Исключаем: уже оценённые; скрытые 'never' (бесповоротно — «не буду оценивать»);
+// 'snooze' (пока snoozed_until в будущем). read_signal сортируется выше отложенных.
 func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, limit int) ([]RateableItem, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
@@ -85,7 +85,7 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 			          SELECT 1 FROM book_rating_prompts p
 			          WHERE p.user_id = (SELECT uid FROM p0) AND p.work_id = wr.work_id
 			            AND (
-			                (p.state = 'never' AND NOT (wr.completed OR wr.max_fraction >= 0.95))
+			                p.state = 'never'
 			                OR (p.state = 'snooze' AND p.snoozed_until > now())
 			            )
 			      )
@@ -143,8 +143,9 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 	return out, rows.Err()
 }
 
-// DismissRatingPrompt — «не буду оценивать»: скрыть запрос навсегда, ПОКА не
-// появится явный сигнал чтения (тогда eligibility вернёт книгу снова).
+// DismissRatingPrompt — «не буду оценивать»: бесповоротно убрать книгу из блока
+// «Оцените прочитанное» (даже если она прочитана). Оценить всё равно можно с
+// карточки книги; на сам факт оценки/прочтения это скрытие не влияет.
 func (s *Service) DismissRatingPrompt(ctx context.Context, userID, workID int64) error {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO book_rating_prompts (user_id, work_id, state, snoozed_until, updated_at)

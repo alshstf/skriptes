@@ -439,29 +439,30 @@ func TestService_RatingPrompts(t *testing.T) {
 	require.NoError(t, svc.SnoozeRatingPrompt(ctx, userID, w1, 30))
 	require.False(t, inPool()[w1], "snooze скрывает")
 
-	// never для прочитанной W2 → НЕ скрывает (read_signal перебивает).
+	// БАГ-ФИКС: «Не буду оценивать» для ПРОЧИТАННОЙ W2 → скрывает бесповоротно
+	// (раньше read_signal перебивал never, и карточка не исчезала).
 	require.NoError(t, svc.DismissRatingPrompt(ctx, userID, w2))
-	require.True(t, inPool()[w2], "read_signal перебивает never")
+	require.False(t, inPool()[w2], "never скрывает даже прочитанное")
 
-	// W3 — давняя + never → скрыта (нет read_signal); отметили прочитанной → вернулась.
+	// W3 — давняя + never → скрыта; последующее прочтение НЕ возвращает (never бесповоротен).
 	w3 := mkWork("W3")
 	b3 := mkBook("L3", w3)
 	require.NoError(t, svc.RecordAcquisition(ctx, userID, b3))
 	agePast(b3)
 	require.True(t, inPool()[w3])
 	require.NoError(t, svc.DismissRatingPrompt(ctx, userID, w3))
-	require.False(t, inPool()[w3], "never скрывает без read_signal")
+	require.False(t, inPool()[w3], "never скрывает")
 	require.NoError(t, svc.MarkRead(ctx, userID, b3))
-	require.True(t, inPool()[w3], "прочтение возвращает скрытую never")
+	require.False(t, inPool()[w3], "never бесповоротен — прочтение не возвращает")
 
-	// Оценил W3 → ушёл из пула + авто-«Прочитана» (уже стояла, но проверим контракт).
+	// Оценил W3 → авто-«Прочитана» (контракт), из пула и так ушёл (never+оценено).
 	require.NoError(t, svc.SetRating(ctx, userID, w3, 4))
 	require.False(t, inPool()[w3], "оценённое не в пуле")
 	rd, _, err := svc.WorkReadStatus(ctx, userID, w3)
 	require.NoError(t, err)
 	require.True(t, rd, "оценка авто-проставляет «Прочитана»")
 
-	// Оценка работы БЕЗ предшествующего чтения (W2 не была б оценена) — авто-mark.
+	// Оценка работы БЕЗ предшествующего чтения (W1 только приобретена+snooze) — авто-mark.
 	require.NoError(t, svc.SetRating(ctx, userID, w1, 5))
 	rd, _, err = svc.WorkReadStatus(ctx, userID, w1)
 	require.NoError(t, err)
