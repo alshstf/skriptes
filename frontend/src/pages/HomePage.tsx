@@ -18,8 +18,16 @@ import { BookCover } from '@/components/BookCover';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
-import { useContinueReading, useSubscriptionFeed, useDismissFeedItem } from '@/lib/home';
-import type { ContinueItem, FeedItem } from '@/lib/home';
+import {
+  useContinueReading,
+  useSubscriptionFeed,
+  useDismissFeedItem,
+  useRateablePrompts,
+} from '@/lib/home';
+import type { ContinueItem, FeedItem, RateableItem } from '@/lib/home';
+import { useRatePrompt } from '@/lib/ratings';
+import { RatingControl } from '@/components/RatingControl';
+import { RatingPromptMenu } from '@/components/RatingPromptMenu';
 import { cn } from '@/lib/utils';
 
 /**
@@ -41,6 +49,7 @@ export function HomePage() {
       <HeroSearch />
       <ContinueReadingRow />
       <SubscriptionFeedRow />
+      <RateablePromptsRow />
       <ComingSoonRow />
     </div>
   );
@@ -386,22 +395,74 @@ function FeedCard({ item }: { item: FeedItem }) {
   );
 }
 
-// ── Заглушки «Скоро» ─────────────────────────────────────────────
+// ── «Оцените прочитанное» ────────────────────────────────────────
+
+// RateablePromptsRow — книги, которые юзер вероятно прочитал и ещё не оценил.
+// Бэкенд отдаёт пусто, если запросы оценки выключены в профиле → блок скрыт.
+function RateablePromptsRow() {
+  const { data, isLoading } = useRateablePrompts(12);
+
+  if (isLoading) return <ShelfSkeleton title="Оцените прочитанное" />;
+  if (!data || data.length === 0) return null;
+
+  return (
+    <Shelf title="Оцените прочитанное">
+      {data.map((it) => (
+        <RateableCard key={`rate-${it.id}`} item={it} />
+      ))}
+    </Shelf>
+  );
+}
+
+function RateableCard({ item }: { item: RateableItem }) {
+  const workId = item.work_id ?? item.id;
+  const rate = useRatePrompt();
+  return (
+    <div className="group/rate relative flex w-32 shrink-0 flex-col gap-1.5 sm:w-36">
+      {/* Kebab поверх обложки: «ещё не прочитал» / «не буду оценивать». */}
+      <div className="absolute right-1 top-1 z-10">
+        <RatingPromptMenu workId={workId} />
+      </div>
+      <Link
+        to="/works/$id"
+        params={{ id: String(workId) }}
+        className="group flex flex-col gap-1.5 rounded-md p-1 transition-colors hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
+      >
+        <BookCover
+          coverPath={item.cover_path}
+          src={item.cover_path ? undefined : `/api/covers/book/${item.id}`}
+          title={item.title}
+          placeholder="monogram"
+          className="w-full"
+        />
+        <p className="line-clamp-2 text-sm font-medium leading-snug">{item.title}</p>
+        {item.authors.length > 0 ? (
+          <p className="line-clamp-1 text-xs text-muted-foreground">{item.authors.join(', ')}</p>
+        ) : null}
+      </Link>
+      {/* Инлайн-оценка: выбрал → книга уходит из ленты (+ авто-«Прочитана»). */}
+      <div className="px-1">
+        <RatingControl
+          value={0}
+          disabled={rate.isPending}
+          onChange={(n) => {
+            if (n) rate.mutate({ workId, rating: n });
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ── Заглушка «Скоро» ─────────────────────────────────────────────
 
 function ComingSoonRow() {
   return (
-    <section className="grid gap-3 sm:grid-cols-2">
-      <ComingSoonCard
-        icon={<Star className="size-4 shrink-0" aria-hidden />}
-        title="Оцените прочитанное"
-        text="Скоро здесь можно будет ставить оценки книгам, которые вы уже прочитали."
-      />
-      <ComingSoonCard
-        icon={<Sparkles className="size-4 shrink-0" aria-hidden />}
-        title="Рекомендации"
-        text="Скоро здесь появятся персональные подборки на основе ваших оценок и истории."
-      />
-    </section>
+    <ComingSoonCard
+      icon={<Sparkles className="size-4 shrink-0" aria-hidden />}
+      title="Рекомендации"
+      text="Скоро здесь появятся персональные подборки на основе ваших оценок и истории."
+    />
   );
 }
 

@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Mail, Trash2, Pencil, Check, X, User as UserIcon, KeyRound } from 'lucide-react';
+import { Mail, Trash2, Pencil, Check, X, User as UserIcon, KeyRound, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileTabs } from '@/components/ProfileTabs';
+import { useRatingPromptSettings, useUpdateRatingPromptSettings } from '@/lib/ratings';
 import {
   useKindleTargets,
   useAddKindleTarget,
@@ -66,7 +68,76 @@ export function ProfilePage() {
           <AddTargetForm existingCount={targetsQ.data?.length ?? 0} />
         </CardContent>
       </Card>
+
+      <RatingPromptsCard />
     </article>
+  );
+}
+
+const RATING_DELAYS = [
+  { days: 7, label: '1 неделю' },
+  { days: 14, label: '2 недели' },
+  { days: 30, label: '1 месяц' },
+  { days: 90, label: '3 месяца' },
+] as const;
+
+/**
+ * RatingPromptsCard — настройка блока «Оцените прочитанное» на Главной.
+ * Переключатель «показывать» (мгновенно) + выбор задержки: через сколько после
+ * отправки на Kindle / скачивания книга считается вероятно прочитанной.
+ */
+function RatingPromptsCard() {
+  const q = useRatingPromptSettings();
+  const update = useUpdateRatingPromptSettings();
+  const cfg = q.data ?? { enabled: true, delay_days: 30 };
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Star className="size-4" aria-hidden />
+          Запросы на оценку
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          На Главной в блоке «Оцените прочитанное» предлагаем оценить книги, которые вы вероятно
+          прочитали — отправленные на Kindle или скачанные какое-то время назад.
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-2">
+        <label className="flex items-center justify-between gap-3">
+          <span className="text-sm">Показывать «Оцените прочитанное»</span>
+          <Switch
+            checked={cfg.enabled}
+            onCheckedChange={(v) => update.mutate({ ...cfg, enabled: v })}
+            disabled={update.isPending || q.isLoading}
+            aria-label="Показывать запросы на оценку"
+          />
+        </label>
+        {cfg.enabled ? (
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Спрашивать оценку через</p>
+            <div className="flex flex-wrap gap-2">
+              {RATING_DELAYS.map((d) => (
+                <Button
+                  key={d.days}
+                  type="button"
+                  size="sm"
+                  variant={cfg.delay_days === d.days ? 'default' : 'outline'}
+                  disabled={update.isPending}
+                  onClick={() => update.mutate({ ...cfg, delay_days: d.days })}
+                >
+                  {d.label}
+                </Button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground text-pretty">
+              Книга появится в запросах через выбранный срок (или сразу, если отметить «Прочитана»
+              либо дочитать в браузерной читалке).
+            </p>
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 

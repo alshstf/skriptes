@@ -3,10 +3,11 @@
  * Отдельно от библиотечного рейтинга (books.rating / LIBRATE).
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch } from './api';
 import type { Book } from './books';
+import { RATEABLE_FEED_KEY } from './home';
 
 /**
  * useRateBook — поставить/снять оценку работе (1–5; null = снять).
@@ -44,5 +45,81 @@ export function useRateBook(
     onSettled: () => {
       void qc.invalidateQueries({ queryKey: cardKey });
     },
+  });
+}
+
+// ── Отложенные запросы оценки («Оцените прочитанное») ──────────────
+
+export type RatingPromptSettings = { enabled: boolean; delay_days: number };
+
+/**
+ * useRatePrompt — оценка книги из блока «Оцените прочитанное» на Главной.
+ * Успех → книга уходит из ленты (инвалидация) + обновляем карточку. Бэкенд
+ * заодно авто-проставляет «Прочитана».
+ */
+export function useRatePrompt() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ workId, rating }: { workId: number; rating: number }) =>
+      apiFetch(`/api/works/${workId}/rating`, { method: 'PUT', body: { rating } }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: RATEABLE_FEED_KEY });
+      void qc.invalidateQueries({ queryKey: ['work'] });
+      void qc.invalidateQueries({ queryKey: ['book'] });
+      void qc.invalidateQueries({ queryKey: ['me', 'favorites'] });
+      toast.success('Оценка сохранена');
+    },
+    onError: () => toast.error('Не удалось сохранить оценку'),
+  });
+}
+
+/** useDismissRatingPrompt — «Не буду оценивать»: скрыть до явного прочтения. */
+export function useDismissRatingPrompt() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (workId: number) =>
+      apiFetch(`/api/works/${workId}/rating-prompt/dismiss`, { method: 'POST' }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: RATEABLE_FEED_KEY });
+      toast.success('Убрали из запросов на оценку');
+    },
+    onError: () => toast.error('Не удалось скрыть'),
+  });
+}
+
+/** useSnoozeRatingPrompt — «Ещё не прочитал»: спросить позже. */
+export function useSnoozeRatingPrompt() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (workId: number) =>
+      apiFetch(`/api/works/${workId}/rating-prompt/snooze`, { method: 'POST' }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: RATEABLE_FEED_KEY });
+      toast.success('Спросим позже');
+    },
+    onError: () => toast.error('Не удалось отложить'),
+  });
+}
+
+/** useRatingPromptSettings — настройки запросов оценки (профиль). */
+export function useRatingPromptSettings() {
+  return useQuery<RatingPromptSettings>({
+    queryKey: ['me', 'rating-prompts'],
+    queryFn: ({ signal }) => apiFetch<RatingPromptSettings>('/api/me/rating-prompts', { signal }),
+    staleTime: 60_000,
+  });
+}
+
+export function useUpdateRatingPromptSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (cfg: RatingPromptSettings) =>
+      apiFetch<RatingPromptSettings>('/api/me/rating-prompts', { method: 'PUT', body: cfg }),
+    onSuccess: (saved) => {
+      qc.setQueryData(['me', 'rating-prompts'], saved);
+      // Вкл/выкл и задержка меняют состав ленты «Оцените прочитанное».
+      void qc.invalidateQueries({ queryKey: RATEABLE_FEED_KEY });
+    },
+    onError: () => toast.error('Не удалось сохранить настройку'),
   });
 }

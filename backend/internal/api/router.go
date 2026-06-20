@@ -144,6 +144,9 @@ func NewRouter(d Deps) http.Handler {
 				if d.Settings.Store != nil {
 					r.Get("/me/appearance", handleGetMeAppearance(d.Settings))
 					r.Put("/me/appearance", handleUpdateMeAppearance(d.Settings))
+					// Профиль: настройки отложенных запросов оценки.
+					r.Get("/me/rating-prompts", handleGetMeRatingPrompts(d.Settings))
+					r.Put("/me/rating-prompts", handleUpdateMeRatingPrompts(d.Settings))
 				}
 				if d.History.Service != nil {
 					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
@@ -158,6 +161,10 @@ func NewRouter(d Deps) http.Handler {
 					// Пользовательские оценки книг (work-level, шкала 1–5).
 					r.Put("/works/{id}/rating", handleSetRating(d.History))
 					r.Delete("/works/{id}/rating", handleRemoveRating(d.History))
+					// Отложенные запросы оценки («Оцените прочитанное»).
+					r.Get("/me/rating-prompts/feed", handleRateablePrompts(d.History, d.Settings))
+					r.Post("/works/{id}/rating-prompt/dismiss", handleDismissRatingPrompt(d.History))
+					r.Post("/works/{id}/rating-prompt/snooze", handleSnoozeRatingPrompt(d.History, d.Settings))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
 					// Главная: «Продолжить чтение» + «Новинки по подпискам».

@@ -363,6 +363,111 @@ func TestService_Ratings(t *testing.T) {
 	require.InDelta(t, 2.0, avg, 0.001)
 }
 
+// TestService_RatingPrompts — отложенные запросы оценки: приобретение
+// (earliest-wins), eligibility (задержка / read_signal / snooze / never с
+// override read_signal'ом), авто-«Прочитана» при оценке.
+func TestService_RatingPrompts(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var userID, collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('rp@e.com','RP','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	mkWork := func(title string) int64 {
+		var w int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ($1,$2) RETURNING id`, title, title).Scan(&w))
+		return w
+	}
+	mkBook := func(lib string, work int64) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+			VALUES ($1,$2,$3,$3,'fb2',$4,$5,$6) RETURNING id`, collID, archID, lib, lib, lib, work).Scan(&id))
+		return id
+	}
+	agePast := func(bookID int64) {
+		_, err := pool.Exec(ctx,
+			`UPDATE reads SET acquired_at = now() - interval '40 days' WHERE user_id=$1 AND book_id=$2`, userID, bookID)
+		require.NoError(t, err)
+	}
+	svc := history.New(pool)
+	inPool := func() map[int64]bool {
+		items, err := svc.RateableWorks(ctx, userID, 30, 50)
+		require.NoError(t, err)
+		m := map[int64]bool{}
+		for _, it := range items {
+			m[it.WorkID] = true
+		}
+		return m
+	}
+
+	// W1 — приобретена 40 дней назад → пригодна по задержке.
+	w1, b1 := mkWork("W1"), int64(0)
+	b1 = mkBook("L1", w1)
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, b1))
+	agePast(b1)
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, b1)) // повтор не перетирает acquired_at
+	var acq time.Time
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT acquired_at FROM reads WHERE user_id=$1 AND book_id=$2`, userID, b1).Scan(&acq))
+	require.Greater(t, time.Since(acq), 30*24*time.Hour, "acquired_at earliest-wins")
+
+	// W2 — приобретена только что → по задержке ещё НЕ пригодна.
+	w2 := mkWork("W2")
+	b2 := mkBook("L2", w2)
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, b2))
+
+	p := inPool()
+	require.True(t, p[w1], "приобретена давно → в пуле")
+	require.False(t, p[w2], "приобретена только что → не в пуле")
+
+	// W2 → явная «Прочитана» (read_signal) → пригодна сразу.
+	require.NoError(t, svc.MarkRead(ctx, userID, b2))
+	require.True(t, inPool()[w2], "read_signal даёт пригодность сразу")
+
+	// snooze W1 → ушла из пула.
+	require.NoError(t, svc.SnoozeRatingPrompt(ctx, userID, w1, 30))
+	require.False(t, inPool()[w1], "snooze скрывает")
+
+	// never для прочитанной W2 → НЕ скрывает (read_signal перебивает).
+	require.NoError(t, svc.DismissRatingPrompt(ctx, userID, w2))
+	require.True(t, inPool()[w2], "read_signal перебивает never")
+
+	// W3 — давняя + never → скрыта (нет read_signal); отметили прочитанной → вернулась.
+	w3 := mkWork("W3")
+	b3 := mkBook("L3", w3)
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, b3))
+	agePast(b3)
+	require.True(t, inPool()[w3])
+	require.NoError(t, svc.DismissRatingPrompt(ctx, userID, w3))
+	require.False(t, inPool()[w3], "never скрывает без read_signal")
+	require.NoError(t, svc.MarkRead(ctx, userID, b3))
+	require.True(t, inPool()[w3], "прочтение возвращает скрытую never")
+
+	// Оценил W3 → ушёл из пула + авто-«Прочитана» (уже стояла, но проверим контракт).
+	require.NoError(t, svc.SetRating(ctx, userID, w3, 4))
+	require.False(t, inPool()[w3], "оценённое не в пуле")
+	rd, _, err := svc.WorkReadStatus(ctx, userID, w3)
+	require.NoError(t, err)
+	require.True(t, rd, "оценка авто-проставляет «Прочитана»")
+
+	// Оценка работы БЕЗ предшествующего чтения (W2 не была б оценена) — авто-mark.
+	require.NoError(t, svc.SetRating(ctx, userID, w1, 5))
+	rd, _, err = svc.WorkReadStatus(ctx, userID, w1)
+	require.NoError(t, err)
+	require.True(t, rd, "оценка W1 авто-проставила «Прочитана»")
+}
+
 // TestService_ContinueReading — блок «Продолжить чтение» на Главной:
 //   - возвращает только книги с прогрессом (fraction > 0) и НЕ дочитанные
 //     (completed_at IS NULL);
