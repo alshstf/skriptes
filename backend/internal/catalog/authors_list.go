@@ -45,6 +45,11 @@ type AuthorListItem struct {
 	// НЕ пользовательский. Берём максимум по книгам автора. nil, если рейтинга
 	// нет ни у одной книги.
 	LibraryRating *int `json:"library_rating,omitempty"`
+	// ReaderRating — средняя ПОЛЬЗОВАТЕЛЬСКАЯ оценка (book_ratings) по работам
+	// автора, по инстансу (все юзеры). Без порога голосов (см. решение). nil,
+	// если ни одной оценки. ReaderRatingCount — число таких оценок (для бейджа).
+	ReaderRating      *float64 `json:"reader_rating,omitempty"`
+	ReaderRatingCount int      `json:"reader_rating_count"`
 }
 
 // YearsRange — диапазон лет активности автора (по written_year).
@@ -59,16 +64,17 @@ type AuthorListParams struct {
 	// 0 = аноним (поля остаются пустыми).
 	UserID int64
 
-	Query          string   // ILIKE по authors.normalized_name (префикс)
-	Genres         []string // авторы, писавшие хотя бы в одном из этих жанров (fb2_code)
-	Langs          []string // авторы с хотя бы одной книгой на этих языках (lang/src_lang)
-	YearFrom       int      // пересечение [year_from, year_to] с диапазоном лет активности
-	YearTo         int
-	HasAdaptations bool // только авторы, у книг которых есть экранизации
-	MinRating      int  // минимальный библиотечный рейтинг (max по книгам автора ≥ этого)
-	FavoritesOnly  bool // только авторы из favorite_authors текущего юзера
+	Query           string   // ILIKE по authors.normalized_name (префикс)
+	Genres          []string // авторы, писавшие хотя бы в одном из этих жанров (fb2_code)
+	Langs           []string // авторы с хотя бы одной книгой на этих языках (lang/src_lang)
+	YearFrom        int      // пересечение [year_from, year_to] с диапазоном лет активности
+	YearTo          int
+	HasAdaptations  bool    // только авторы, у книг которых есть экранизации
+	MinRating       int     // минимальный библиотечный рейтинг (max по книгам автора ≥ этого)
+	MinReaderRating float64 // минимальная средняя оценка читателей по работам автора (≥ этого)
+	FavoritesOnly   bool    // только авторы из favorite_authors текущего юзера
 
-	Sort   string // "name" (дефолт) | "book_count" | "rating"
+	Sort   string // "name" (дефолт) | "book_count" | "rating" | "reader_rating"
 	Limit  int    // ≤ 500, дефолт 50
 	Offset int
 
@@ -202,6 +208,14 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 				" WHERE ba.author_id = a.id AND b.rating >= $%d"+renderExclusion()+")", n))
 	}
 
+	if p.MinReaderRating > 0 {
+		n := addArg(p.MinReaderRating)
+		where = append(where, fmt.Sprintf(
+			"(SELECT avg(br.rating) FROM book_ratings br WHERE br.work_id IN ("+
+				"SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
+				" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL"+renderExclusion()+")) >= $%d", n))
+	}
+
 	whereSQL := ""
 	if len(where) > 0 {
 		whereSQL = " WHERE " + strings.Join(where, " AND ")
@@ -226,6 +240,8 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		orderSQL = "ORDER BY book_count DESC, a.last_name, a.id"
 	case "rating":
 		orderSQL = "ORDER BY library_rating DESC NULLS LAST, book_count DESC, a.id"
+	case "reader_rating":
+		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
 	}
 
 	// Главный запрос: на каждого автора — агрегаты подзапросами. userID для
@@ -239,6 +255,8 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	exYrTo := renderExclusion()
 	exAdapt := renderExclusion()
 	exRating := renderExclusion()
+	exReaderAvg := renderExclusion()
+	exReaderCnt := renderExclusion()
 	limitN := addArg(p.Limit)
 	offsetN := addArg(p.Offset)
 
@@ -262,11 +280,21 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[6]s) AS has_adapt,
 		       (SELECT max(b.rating)::int FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.rating IS NOT NULL%[7]s) AS library_rating
+		          WHERE ba.author_id = a.id AND b.deleted = false AND b.rating IS NOT NULL%[7]s) AS library_rating,
+		       (SELECT avg(br.rating)::float8 FROM book_ratings br
+		          WHERE br.work_id IN (
+		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[12]s
+		          )) AS reader_rating,
+		       (SELECT count(*)::int FROM book_ratings br
+		          WHERE br.work_id IN (
+		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[13]s
+		          )) AS reader_rating_count
 		FROM authors a%[8]s
 		%[9]s
 		LIMIT $%[10]d OFFSET $%[11]d
-	`, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, whereSQL, orderSQL, limitN, offsetN)
+	`, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, whereSQL, orderSQL, limitN, offsetN, exReaderAvg, exReaderCnt)
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
@@ -283,10 +311,12 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
 			rating              pgtype.Int4
+			readerAvg           pgtype.Float8
 		)
 		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
-			&yrFrom, &yrTo, &it.HasAdaptations, &rating); err != nil {
+			&yrFrom, &yrTo, &it.HasAdaptations, &rating,
+			&readerAvg, &it.ReaderRatingCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
 		it.FullName = fullName(last, first, middle)
@@ -299,6 +329,10 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		if rating.Valid {
 			v := int(rating.Int32)
 			it.LibraryRating = &v
+		}
+		if readerAvg.Valid {
+			v := readerAvg.Float64
+			it.ReaderRating = &v
 		}
 		out = append(out, it)
 		ids = append(ids, it.ID)
