@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { Circle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * RatingControl — контрол пользовательской оценки (5 кружков, шкала 1–5).
- *
- * Намеренно НЕ звезда: звезда занята избранным (жёлтая ★) и встречается часто —
- * оценка должна читаться как отдельная сущность. Монохром (правило №9): выбранные
- * кружки — `fill-foreground`, пустые — кольцо `muted`.
+ * RatingControl — пользовательская оценка как сегментированная числовая шкала
+ * 1–5 (цифры в ячейках). Намеренно НЕ звезда (звезда занята избранным) и не
+ * «налив» из 5 одинаковых глифов — явная числовая шкала: подсвечена ВЫБРАННАЯ
+ * цифра. Монохром (правило №9): выбранная — инверсия (`bg-foreground`), прочие —
+ * рамка + muted-цифра.
  *
  * Интерактив: hover-превью, клик ставит оценку, клик по текущей — снимает
- * (onChange(null)). readOnly (или без onChange) — только показ (средняя/чужая).
+ * (onChange(null)). readOnly (или без onChange) — только показ.
  */
 export function RatingControl({
   value,
@@ -29,26 +28,30 @@ export function RatingControl({
 }) {
   const [hover, setHover] = useState(0);
   const shown = hover || value;
-  const px = size === 'sm' ? 'size-3.5' : 'size-5';
-  const dot = (active: boolean) => (
-    <Circle
-      className={cn(px, active ? 'fill-foreground stroke-foreground' : 'text-muted-foreground')}
-      aria-hidden
-    />
-  );
+  const box = size === 'sm' ? 'size-5 text-xs' : 'size-7 text-sm';
+  const cell = 'inline-flex items-center justify-center rounded font-medium tabular-nums';
 
   if (readOnly || !onChange) {
     return (
       <span className="inline-flex items-center gap-1" aria-label={`Оценка ${value} из 5`}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <span key={n}>{dot(n <= value)}</span>
+          <span
+            key={n}
+            className={cn(
+              cell,
+              box,
+              n === value ? 'bg-foreground text-background' : 'border border-border text-muted-foreground',
+            )}
+          >
+            {n}
+          </span>
         ))}
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-0.5" role="group" aria-label="Ваша оценка">
+    <span className="inline-flex items-center gap-1" role="group" aria-label="Ваша оценка">
       {[1, 2, 3, 4, 5].map((n) => (
         <button
           key={n}
@@ -60,10 +63,17 @@ export function RatingControl({
           onBlur={() => setHover(0)}
           onClick={() => onChange(n === value ? null : n)}
           aria-label={n === value ? `Снять оценку (сейчас ${n})` : `Оценить на ${n}`}
-          aria-pressed={n <= value}
-          className="rounded p-0.5 transition hover:scale-110 disabled:opacity-50"
+          aria-pressed={n === value}
+          className={cn(
+            cell,
+            box,
+            'transition disabled:opacity-50',
+            n === shown
+              ? 'bg-foreground text-background'
+              : 'border border-border text-muted-foreground hover:border-foreground',
+          )}
         >
-          {dot(n <= shown)}
+          {n}
         </button>
       ))}
     </span>

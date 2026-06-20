@@ -3,13 +3,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { RatingControl } from './RatingControl';
 
 describe('RatingControl', () => {
-  it('renders 5 clickable dot buttons in interactive mode', () => {
+  it('renders 5 clickable number cells in interactive mode', () => {
     render(<RatingControl value={0} onChange={() => {}} />);
     expect(screen.getAllByRole('button')).toHaveLength(5);
     expect(screen.getByLabelText('Оценить на 3')).toBeInTheDocument();
   });
 
-  it('clicking a dot sets that rating', () => {
+  it('clicking a cell sets that rating', () => {
     const onChange = vi.fn();
     render(<RatingControl value={0} onChange={onChange} />);
     fireEvent.click(screen.getByLabelText('Оценить на 4'));
