@@ -74,6 +74,13 @@ type bookResponse struct {
 	IsRead          bool       `json:"is_read"`
 	ReadAt          *time.Time `json:"read_at,omitempty"`
 	ReadingFraction *float64   `json:"reading_fraction,omitempty"`
+	// Пользовательские оценки (work-level), ОТДЕЛЬНО от Book.Rating (LIBRATE):
+	//   - user_rating — оценка текущего юзера (nil если не оценивал/гость);
+	//   - rating_avg / rating_count — средняя по инстансу и число голосов
+	//     (rating_avg nil, count 0 — оценок ещё нет).
+	UserRating  *int     `json:"user_rating,omitempty"`
+	RatingAvg   *float64 `json:"rating_avg,omitempty"`
+	RatingCount int      `json:"rating_count"`
 }
 
 func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
@@ -178,6 +185,23 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		recordViewAsync(hist.Service, u.ID, b.ID)
 	}
 
+	// Оценки читателей (work-level): средняя по инстансу — всегда (даже гостю),
+	// оценка текущего юзера — если залогинен. Отдельно от Book.Rating (LIBRATE).
+	var userRating *int
+	var ratingAvg *float64
+	var ratingCount int
+	if hist.Service != nil && b.WorkID > 0 {
+		if avg, cnt, err := hist.Service.WorkRatingAggregate(ctx, b.WorkID); err == nil && cnt > 0 {
+			ratingAvg = &avg
+			ratingCount = cnt
+		}
+		if u, ok := UserFromContext(r.Context()); ok {
+			if rt, has, err := hist.Service.UserRating(ctx, u.ID, b.WorkID); err == nil && has {
+				userRating = &rt
+			}
+		}
+	}
+
 	// Lazy enrichment: если у книги нет обложки, в фоне сходим в провайдеры.
 	triggerBookEnrichmentAsync(meta, b)
 
@@ -187,6 +211,9 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		IsRead:          isRead,
 		ReadAt:          readAt,
 		ReadingFraction: fraction,
+		UserRating:      userRating,
+		RatingAvg:       ratingAvg,
+		RatingCount:     ratingCount,
 	})
 }
 

@@ -297,6 +297,72 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.NotNil(t, ca)
 }
 
+// TestService_Ratings — пользовательские оценки (work-level): set/update/remove,
+// валидация 1–5, агрегат (средняя + число голосов по инстансу).
+func TestService_Ratings(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+
+	var u1, u2, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('r1@e.com','R1','x','user') RETURNING id`).Scan(&u1))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('r2@e.com','R2','x','user') RETURNING id`).Scan(&u2))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Война и мир','война и мир') RETURNING id`).Scan(&workID))
+
+	svc := history.New(pool)
+
+	// Нет оценок → агрегат пустой, у юзера оценки нет.
+	avg, cnt, err := svc.WorkRatingAggregate(ctx, workID)
+	require.NoError(t, err)
+	require.Zero(t, cnt)
+	require.Zero(t, avg)
+	_, has, err := svc.UserRating(ctx, u1, workID)
+	require.NoError(t, err)
+	require.False(t, has)
+
+	// Валидация диапазона.
+	require.ErrorIs(t, svc.SetRating(ctx, u1, workID, 0), history.ErrInvalidRating)
+	require.ErrorIs(t, svc.SetRating(ctx, u1, workID, 6), history.ErrInvalidRating)
+
+	// u1=4, u2=2 → avg 3.0, count 2.
+	require.NoError(t, svc.SetRating(ctx, u1, workID, 4))
+	require.NoError(t, svc.SetRating(ctx, u2, workID, 2))
+	r, has, err := svc.UserRating(ctx, u1, workID)
+	require.NoError(t, err)
+	require.True(t, has)
+	require.Equal(t, 4, r)
+	avg, cnt, err = svc.WorkRatingAggregate(ctx, workID)
+	require.NoError(t, err)
+	require.Equal(t, 2, cnt)
+	require.InDelta(t, 3.0, avg, 0.001)
+
+	// Изменить оценку (upsert): u1 4→5 → avg 3.5.
+	require.NoError(t, svc.SetRating(ctx, u1, workID, 5))
+	r, _, err = svc.UserRating(ctx, u1, workID)
+	require.NoError(t, err)
+	require.Equal(t, 5, r)
+	avg, _, err = svc.WorkRatingAggregate(ctx, workID)
+	require.NoError(t, err)
+	require.InDelta(t, 3.5, avg, 0.001)
+
+	// Снять оценку u1 → остаётся u2=2 (count 1, avg 2.0); повторный DELETE — no-op.
+	require.NoError(t, svc.RemoveRating(ctx, u1, workID))
+	require.NoError(t, svc.RemoveRating(ctx, u1, workID))
+	_, has, err = svc.UserRating(ctx, u1, workID)
+	require.NoError(t, err)
+	require.False(t, has)
+	avg, cnt, err = svc.WorkRatingAggregate(ctx, workID)
+	require.NoError(t, err)
+	require.Equal(t, 1, cnt)
+	require.InDelta(t, 2.0, avg, 0.001)
+}
+
 // TestService_ContinueReading — блок «Продолжить чтение» на Главной:
 //   - возвращает только книги с прогрессом (fraction > 0) и НЕ дочитанные
 //     (completed_at IS NULL);

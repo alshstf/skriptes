@@ -166,7 +166,14 @@ export type Book = {
   /** Год конкретного бумажного издания этого fb2 (publish-info/year).
    *  Справочное поле, в статистику не идёт. */
   edition_year?: number;
+  /** Библиотечный рейтинг (LIBRATE из INPX, 0–5). ОТДЕЛЬНО от оценок читателей. */
   rating?: number;
+  /** Оценка текущего пользователя (1–5). Undefined — не оценивал/гость. */
+  user_rating?: number;
+  /** Средняя оценка читателей по инстансу. Undefined — оценок ещё нет. */
+  rating_avg?: number;
+  /** Число пользовательских оценок (0 — ещё нет). */
+  rating_count?: number;
   annotation?: string;
   cover_path?: string;
   archive: string;

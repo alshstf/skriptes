@@ -13,6 +13,8 @@ import { EditionRow } from '@/components/EditionRow';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { RatingControl } from '@/components/RatingControl';
+import { useRateBook } from '@/lib/ratings';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
@@ -180,7 +182,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                   <Field label="Добавлена" value={formatReadDate(book.date_added)} />
                 ) : null}
                 {book.rating !== undefined ? (
-                  <Field label="Рейтинг" value={String(book.rating)} />
+                  <Field label="Рейтинг библиотеки" value={String(book.rating)} />
                 ) : null}
                 <ReadStatusField
                   bookId={book.id}
@@ -189,6 +191,10 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 />
                 {!multi ? <Field label="LIBID" value={book.lib_id} mono /> : null}
               </dl>
+
+              {!book.deleted ? (
+                <RatingsBlock book={book} cardKey={[mode === 'work' ? 'work' : 'book', String(id)]} />
+              ) : null}
 
               <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
 
@@ -306,6 +312,44 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
       <dd className={mono ? 'font-mono text-xs break-all' : ''}>{value}</dd>
     </>
   );
+}
+
+/**
+ * RatingsBlock — «Оценки читателей»: моя оценка (интерактивные звёзды, work-level)
+ * + средняя по инстансу. Отдельно от «Рейтинг библиотеки» (LIBRATE). cardKey —
+ * ключ кэша открытой карточки для оптимистичного обновления.
+ */
+function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }) {
+  const rate = useRateBook(book.work_id ?? book.id, cardKey);
+  const value = book.user_rating ?? 0;
+  const avg = book.rating_avg;
+  const count = book.rating_count ?? 0;
+  return (
+    <div className="space-y-1.5">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="text-sm text-muted-foreground">Ваша оценка:</span>
+        <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {count > 0 && avg !== undefined ? (
+          <>
+            Средняя: <span className="tabular-nums text-foreground">{avg.toFixed(1)}</span> ·{' '}
+            {count} {pluralVotes(count)}
+          </>
+        ) : (
+          'Оценок читателей пока нет'
+        )}
+      </p>
+    </div>
+  );
+}
+
+function pluralVotes(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'оценка';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'оценки';
+  return 'оценок';
 }
 
 /**
