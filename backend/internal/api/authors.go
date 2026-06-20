@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/catalog"
@@ -24,17 +25,18 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		params := catalog.AuthorListParams{
-			Query:          q.Get("q"),
-			Genres:         splitCSV(q.Get("genres")),
-			Langs:          splitCSV(q.Get("langs")),
-			YearFrom:       parseIntOr(q.Get("year_from"), 0),
-			YearTo:         parseIntOr(q.Get("year_to"), 0),
-			HasAdaptations: parseBool(q.Get("has_adaptations")),
-			MinRating:      parseIntOr(q.Get("min_rating"), 0),
-			FavoritesOnly:  parseBool(q.Get("favorites_only")),
-			Sort:           q.Get("sort"),
-			Limit:          parseIntOr(q.Get("limit"), 50),
-			Offset:         parseIntOr(q.Get("offset"), 0),
+			Query:           q.Get("q"),
+			Genres:          splitCSV(q.Get("genres")),
+			Langs:           splitCSV(q.Get("langs")),
+			YearFrom:        parseIntOr(q.Get("year_from"), 0),
+			YearTo:          parseIntOr(q.Get("year_to"), 0),
+			HasAdaptations:  parseBool(q.Get("has_adaptations")),
+			MinRating:       parseIntOr(q.Get("min_rating"), 0),
+			MinReaderRating: parseFloatOr(q.Get("min_reader_rating"), 0),
+			FavoritesOnly:   parseBool(q.Get("favorites_only")),
+			Sort:            q.Get("sort"),
+			Limit:           parseIntOr(q.Get("limit"), 50),
+			Offset:          parseIntOr(q.Get("offset"), 0),
 		}
 		if u, ok := UserFromContext(r.Context()); ok {
 			params.UserID = u.ID
@@ -62,4 +64,16 @@ func parseBool(s string) bool {
 	default:
 		return false
 	}
+}
+
+// parseFloatOr — query-параметр-число с дефолтом (для min_reader_rating).
+func parseFloatOr(s string, def float64) float64 {
+	if s == "" {
+		return def
+	}
+	v, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return def
+	}
+	return v
 }

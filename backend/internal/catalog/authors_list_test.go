@@ -126,6 +126,15 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 	`, f.userID, kingBookRu)
 	require.NoError(t, err)
 
+	// Оценки читателей (book_ratings, по инстансу): работу Кинга оценили ДВА
+	// пользователя — 5 и 2 → средняя 3.5, count 2. У Азимова/Толстого оценок нет.
+	var u2 int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u2@e','U2','x','user') RETURNING id`).Scan(&u2))
+	_, err = pool.Exec(ctx,
+		`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,5),($3,$2,2)`, f.userID, kingWork, u2)
+	require.NoError(t, err)
+
 	return f
 }
 
@@ -173,6 +182,9 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.True(t, king.HasAdaptations)
 	require.NotNil(t, king.LibraryRating)
 	require.Equal(t, 5, *king.LibraryRating)
+	require.NotNil(t, king.ReaderRating, "у Кинга есть оценки читателей")
+	require.InDelta(t, 3.5, *king.ReaderRating, 0.001, "avg(5,2) по инстансу")
+	require.Equal(t, 2, king.ReaderRatingCount)
 	require.NotNil(t, king.YearsActive)
 	require.Equal(t, 1977, king.YearsActive.From)
 	require.Equal(t, 1986, king.YearsActive.To)
@@ -185,6 +197,8 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.Equal(t, 0, tolstoy.FavoritedBooksCount)
 	require.False(t, tolstoy.HasAdaptations)
 	require.Nil(t, tolstoy.LibraryRating, "нет рейтинга → nil")
+	require.Nil(t, tolstoy.ReaderRating, "нет оценок читателей → nil")
+	require.Equal(t, 0, tolstoy.ReaderRatingCount)
 	require.Nil(t, tolstoy.YearsActive, "нет written_year → nil")
 }
 
@@ -247,6 +261,16 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
 
+	// min_reader_rating — у Кинга средняя 3.5: проходит ≥3, не проходит ≥4.
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinReaderRating: 3})
+	require.NoError(t, err)
+	require.Equal(t, 1, res.Total)
+	require.True(t, ids(res)[f.kingID])
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinReaderRating: 4})
+	require.NoError(t, err)
+	require.Equal(t, 0, res.Total, "3.5 < 4 → Кинг отфильтрован")
+
 	// favorites_only — подписка только на Кинга.
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{UserID: f.userID, FavoritesOnly: true})
 	require.NoError(t, err)
@@ -271,6 +295,12 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, res.Items, 3)
 	require.Equal(t, f.kingID, res.Items[0].ID, "автор с большим числом книг — первым")
+
+	// sort=reader_rating — Кинг (единственный с оценками) впереди.
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "reader_rating"})
+	require.NoError(t, err)
+	require.Len(t, res.Items, 3)
+	require.Equal(t, f.kingID, res.Items[0].ID, "автор с оценками читателей — первым")
 
 	// Исключение жанра sf_horror: у Кинга остаётся только sf-работа (k2),
 	// book_count падает до 1 и hsorror-экранизация/рейтинг с horror-издания уходят.

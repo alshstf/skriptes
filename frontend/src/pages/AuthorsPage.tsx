@@ -38,6 +38,7 @@ type AuthorsFilters = {
   yearTo: number;
   hasAdaptations: boolean;
   minRating: number;
+  minReaderRating: number;
   favoritesOnly: boolean;
   sort: NonNullable<AuthorsListParams['sort']>;
 };
@@ -49,6 +50,7 @@ const EMPTY_FILTERS: AuthorsFilters = {
   yearTo: 0,
   hasAdaptations: false,
   minRating: 0,
+  minReaderRating: 0,
   favoritesOnly: false,
   sort: 'name',
 };
@@ -75,6 +77,7 @@ export function AuthorsPage() {
     yearTo: filters.yearTo,
     hasAdaptations: filters.hasAdaptations,
     minRating: filters.minRating,
+    minReaderRating: filters.minReaderRating,
     favoritesOnly: filters.favoritesOnly,
     sort: filters.sort,
     limit,
@@ -92,6 +95,7 @@ export function AuthorsPage() {
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.hasAdaptations ? 1 : 0) +
     (filters.minRating ? 1 : 0) +
+    (filters.minReaderRating ? 1 : 0) +
     (filters.favoritesOnly ? 1 : 0) +
     (filters.sort !== 'name' ? 1 : 0);
 
@@ -260,6 +264,18 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
               · <Star className="size-3 stroke-muted-foreground" aria-hidden /> {author.library_rating}
             </span>
           ) : null}
+          {author.reader_rating != null ? (
+            // Оценка читателей (book_ratings, по инстансу) — подписана словом,
+            // чтобы не путать с библиотечной звездой.
+            <span
+              aria-label={`Оценка читателей ${author.reader_rating.toFixed(1)} (${author.reader_rating_count ?? 0})`}
+            >
+              · читатели {author.reader_rating.toFixed(1)}
+              {author.reader_rating_count ? (
+                <span className="text-muted-foreground/70"> ({author.reader_rating_count})</span>
+              ) : null}
+            </span>
+          ) : null}
         </p>
 
         {author.favorited_books_count > 0 ? (
@@ -318,7 +334,8 @@ function AuthorAvatar({ photoPath, fullName }: { photoPath?: string; fullName: s
 const SORT_OPTIONS: { value: AuthorsFilters['sort']; label: string }[] = [
   { value: 'name', label: 'По имени' },
   { value: 'book_count', label: 'По числу книг' },
-  { value: 'rating', label: 'По рейтингу' },
+  { value: 'rating', label: 'По рейтингу библиотеки' },
+  { value: 'reader_rating', label: 'По оценке читателей' },
 ];
 
 function AuthorsFiltersSidebar({
@@ -428,6 +445,22 @@ function AuthorsFiltersSidebar({
           <option value={3}>3+</option>
           <option value={4}>4+</option>
           <option value={5}>5</option>
+        </select>
+      </div>
+
+      {/* Минимальная средняя оценка читателей (book_ratings, по инстансу). */}
+      <div className="space-y-2">
+        <div className="text-xs font-medium text-muted-foreground uppercase">Оценка читателей от</div>
+        <select
+          value={value.minReaderRating}
+          onChange={(e) => onChange({ ...value, minReaderRating: Number(e.target.value) || 0 })}
+          aria-label="Минимальная оценка читателей"
+          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <option value={0}>Любая</option>
+          <option value={3}>3+</option>
+          <option value={4}>4+</option>
+          <option value={4.5}>4.5+</option>
         </select>
       </div>
 

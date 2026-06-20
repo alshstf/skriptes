@@ -35,6 +35,10 @@ export type AuthorListItem = {
   years_active?: YearsRange;
   has_adaptations: boolean;
   library_rating?: number;
+  /** Средняя оценка читателей (book_ratings) по работам автора, по инстансу. */
+  reader_rating?: number;
+  /** Число пользовательских оценок (для бейджа «N оценок»). */
+  reader_rating_count?: number;
 };
 
 export type AuthorListResponse = {
@@ -51,8 +55,9 @@ export type AuthorsListParams = {
   yearTo?: number;
   hasAdaptations?: boolean;
   minRating?: number;
+  minReaderRating?: number;
   favoritesOnly?: boolean;
-  sort?: '' | 'name' | 'book_count' | 'rating';
+  sort?: '' | 'name' | 'book_count' | 'rating' | 'reader_rating';
   limit?: number;
   offset?: number;
 };
@@ -66,6 +71,7 @@ function buildQuery(p: AuthorsListParams): string {
   if (p.yearTo) sp.set('year_to', String(p.yearTo));
   if (p.hasAdaptations) sp.set('has_adaptations', '1');
   if (p.minRating) sp.set('min_rating', String(p.minRating));
+  if (p.minReaderRating) sp.set('min_reader_rating', String(p.minReaderRating));
   if (p.favoritesOnly) sp.set('favorites_only', '1');
   if (p.sort && p.sort !== 'name') sp.set('sort', p.sort);
   sp.set('limit', String(p.limit ?? 50));

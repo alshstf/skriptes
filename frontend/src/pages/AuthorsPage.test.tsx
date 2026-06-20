@@ -45,6 +45,8 @@ const authorsFixture = {
       years_active: { from: 1974, to: 2009 },
       has_adaptations: true,
       library_rating: 5,
+      reader_rating: 3.5,
+      reader_rating_count: 2,
     },
     {
       id: 7,
@@ -98,6 +100,8 @@ describe('AuthorsPage', () => {
     expect(screen.getByText('Ужасы')).toBeInTheDocument();
     // Библиотечный рейтинг отрендерен (a11y-label).
     expect(screen.getByLabelText('Рейтинг библиотеки 5')).toBeInTheDocument();
+    // Оценка читателей (book_ratings) — отдельно от библиотечного рейтинга.
+    expect(screen.getByLabelText('Оценка читателей 3.5 (2)')).toBeInTheDocument();
     // Иконка подписки (колокольчик) — только у Кинга.
     expect(screen.getByLabelText('Подписан')).toBeInTheDocument();
     // Иконка экранизаций — только у Кинга.
