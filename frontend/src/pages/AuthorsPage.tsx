@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Bell, Film, Search, SlidersHorizontal, Star, User as UserIcon } from 'lucide-react';
+import { Bell, BookHeart, Film, Landmark, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -258,19 +258,20 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
           </span>
           {years ? <span>· {years}</span> : null}
           {author.library_rating != null ? (
-            // Библиотечный рейтинг (LIBRATE), не пользовательский — монохромный
-            // контур-звезда (заливка-жёлтый зарезервирована за избранным).
+            // Рейтинг библиотеки-источника (LIBRATE из INPX, донор) — иконка
+            // Landmark (НЕ звезда: звезда строго за избранным; НЕ Library: занята
+            // кнопкой «На полку»).
             <span className="inline-flex items-center gap-0.5" aria-label={`Рейтинг библиотеки ${author.library_rating}`}>
-              · <Star className="size-3 stroke-muted-foreground" aria-hidden /> {author.library_rating}
+              · <Landmark className="size-3 text-muted-foreground" aria-hidden /> {author.library_rating}
             </span>
           ) : null}
           {author.reader_rating != null ? (
-            // Оценка читателей (book_ratings, по инстансу) — подписана словом,
-            // чтобы не путать с библиотечной звездой.
+            // Оценка читателей этого инстанса (book_ratings) — иконка BookHeart.
             <span
+              className="inline-flex items-center gap-0.5"
               aria-label={`Оценка читателей ${author.reader_rating.toFixed(1)} (${author.reader_rating_count ?? 0})`}
             >
-              · читатели {author.reader_rating.toFixed(1)}
+              · <BookHeart className="size-3 text-muted-foreground" aria-hidden /> {author.reader_rating.toFixed(1)}
               {author.reader_rating_count ? (
                 <span className="text-muted-foreground/70"> ({author.reader_rating_count})</span>
               ) : null}
@@ -432,7 +433,7 @@ function AuthorsFiltersSidebar({
 
       {/* Минимальный рейтинг (библиотечный LIBRATE, 1..5) */}
       <div className="space-y-2">
-        <div className="text-xs font-medium text-muted-foreground uppercase">Рейтинг от</div>
+        <div className="text-xs font-medium text-muted-foreground uppercase">Рейтинг библиотеки от</div>
         <select
           value={value.minRating}
           onChange={(e) => onChange({ ...value, minRating: Number(e.target.value) || 0 })}
