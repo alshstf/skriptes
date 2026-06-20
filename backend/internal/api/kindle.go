@@ -14,6 +14,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/email"
+	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
 )
 
@@ -25,6 +26,7 @@ type KindleDeps struct {
 	Email     *email.Sender
 	Books     *books.Service       // для получения метаданных книги
 	Converter *converter.Converter // fb2 → epub
+	History   *history.Service     // фиксация приобретения (для запросов оценки)
 }
 
 // ── CRUD endpoints для /api/me/kindle-targets ───────────────────
@@ -233,6 +235,10 @@ func handleSendToKindle(d KindleDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadGateway, map[string]string{"error": "send failed: " + err.Error()})
 			return
 		}
+
+		// Отправка на Kindle = приобретение: через задержку книга попадёт в
+		// запрос оценки (основной канал чтения у пользователя — Kindle).
+		recordAcquisitionAsync(d.History, u.ID, bookID)
 
 		writeJSON(w, http.StatusOK, map[string]string{
 			"status": "sent",

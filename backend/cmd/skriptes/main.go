@@ -327,6 +327,7 @@ func run() error {
 			Email:     emailSender,
 			Books:     booksSvc,
 			Converter: conv,
+			History:   historySvc,
 		},
 		Metadata: api.MetadataDeps{
 			Service: enricher, BooksRoot: cfg.BooksRoot, Gates: gatesResolver,

@@ -52,7 +52,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		// не залогинен — middleware уже бы вернул 401, так что user в ctx
 		// гарантированно есть.
 		if u, ok := UserFromContext(r.Context()); ok {
-			recordReadAsync(hist.Service, u.ID, id)
+			recordAcquisitionAsync(hist.Service, u.ID, id)
 		}
 
 		src := converter.SourceBook{

@@ -14,6 +14,7 @@ import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
+import { RatingPromptMenu } from '@/components/RatingPromptMenu';
 import { useRateBook } from '@/lib/ratings';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
@@ -329,6 +330,9 @@ function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-sm text-muted-foreground">Ваша оценка:</span>
         <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
+        {/* Пока не оценено — «ещё не прочитал» / «не буду оценивать» (управляет
+            запросами оценки на Главной). */}
+        {value === 0 ? <RatingPromptMenu workId={book.work_id ?? book.id} /> : null}
       </div>
       <p className="text-xs text-muted-foreground">
         {count > 0 && avg !== undefined ? (

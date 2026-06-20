@@ -38,16 +38,19 @@ func recordViewAsync(svc *history.Service, userID, bookID int64) {
 	}()
 }
 
-// recordReadAsync — аналог для скачивания книги.
-func recordReadAsync(svc *history.Service, userID, bookID int64) {
+// recordAcquisitionAsync — fire-and-forget фиксация приобретения книги
+// (скачивание / Send-to-Kindle): ставит reads.acquired_at (один раз) — по нему
+// через задержку книга попадёт в запрос оценки. Заодно бампает updated_at
+// (слабый сигнал интереса для re-ranking, как раньше RecordRead на скачивании).
+func recordAcquisitionAsync(svc *history.Service, userID, bookID int64) {
 	if svc == nil {
 		return
 	}
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
-		if err := svc.RecordRead(ctx, userID, bookID); err != nil {
-			slog.Warn("record read failed", "user_id", userID, "book_id", bookID, "err", err)
+		if err := svc.RecordAcquisition(ctx, userID, bookID); err != nil {
+			slog.Warn("record acquisition failed", "user_id", userID, "book_id", bookID, "err", err)
 		}
 	}()
 }

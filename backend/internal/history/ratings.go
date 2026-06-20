@@ -19,18 +19,45 @@ var ErrInvalidRating = errors.New("rating must be between 1 and 5")
 
 // SetRating — поставить/изменить оценку пользователя работе. Повторный вызов
 // обновляет оценку и rated_at. Снятие оценки — RemoveRating.
+//
+// Оценил ⇒ прочитал: заодно авто-проставляем явную «Прочитана» (completed_at) на
+// представительном издании работы (предпочитаем издание, у которого уже есть
+// reads-строка), чтобы книга считалась прочитанной во всём приложении. Обе записи
+// — в одной транзакции. COALESCE сохраняет уже стоявший completed_at.
 func (s *Service) SetRating(ctx context.Context, userID, workID int64, rating int) error {
 	if rating < 1 || rating > 5 {
 		return ErrInvalidRating
 	}
-	_, err := s.pool.Exec(ctx, `
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("set rating: begin: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	if _, err := tx.Exec(ctx, `
 		INSERT INTO book_ratings (user_id, work_id, rating)
 		VALUES ($1, $2, $3)
 		ON CONFLICT (user_id, work_id)
 		DO UPDATE SET rating = EXCLUDED.rating, rated_at = now()
-	`, userID, workID, rating)
-	if err != nil {
+	`, userID, workID, rating); err != nil {
 		return fmt.Errorf("set rating: %w", err)
+	}
+
+	if _, err := tx.Exec(ctx, `
+		INSERT INTO reads (user_id, book_id, completed_at, updated_at)
+		SELECT $1, b.id, now(), now()
+		FROM books b
+		WHERE b.work_id = $2 AND b.deleted = false
+		ORDER BY (EXISTS (SELECT 1 FROM reads r WHERE r.user_id = $1 AND r.book_id = b.id)) DESC, b.id
+		LIMIT 1
+		ON CONFLICT (user_id, book_id)
+		DO UPDATE SET completed_at = COALESCE(reads.completed_at, now()), updated_at = now()
+	`, userID, workID); err != nil {
+		return fmt.Errorf("set rating: auto-mark read: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("set rating: commit: %w", err)
 	}
 	return nil
 }

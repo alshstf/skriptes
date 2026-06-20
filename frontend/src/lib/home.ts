@@ -41,6 +41,20 @@ export type FeedItem = {
   added_at?: string;
 };
 
+// RateableItem — зеркало history.RateableItem (книга в блоке «Оцените прочитанное»).
+export type RateableItem = {
+  id: number;
+  work_id?: number;
+  title: string;
+  authors: string[];
+  series?: string;
+  lib_id: string;
+  cover_path?: string;
+};
+
+/** queryKey ленты запросов оценки (мутации в lib/ratings.ts инвалидируют по префиксу). */
+export const RATEABLE_FEED_KEY = ['me', 'rating-prompts', 'feed'] as const;
+
 type ItemsResponse<T> = { items: T[] };
 
 /**
@@ -77,6 +91,26 @@ export function useSubscriptionFeed(limit = 12) {
       return r.items;
     },
     staleTime: 60_000,
+  });
+}
+
+/**
+ * useRateablePrompts — книги, которые юзер вероятно прочитал и ещё не оценил
+ * (блок «Оцените прочитанное»). Backend сам возвращает пусто, если запросы
+ * оценки выключены в профиле → блок прячется. Меняется при оценке/скрытии —
+ * скромный staleTime + инвалидация из мутаций (lib/ratings.ts).
+ */
+export function useRateablePrompts(limit = 12) {
+  return useQuery<RateableItem[]>({
+    queryKey: [...RATEABLE_FEED_KEY, limit],
+    queryFn: async ({ signal }) => {
+      const r = await apiFetch<ItemsResponse<RateableItem>>(
+        `/api/me/rating-prompts/feed?limit=${limit}`,
+        { signal },
+      );
+      return r.items;
+    },
+    staleTime: 30_000,
   });
 }
 
