@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import { Star } from 'lucide-react';
+import { Circle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * RatingStars — 5-звёздный контрол пользовательской оценки.
+ * RatingControl — контрол пользовательской оценки (5 кружков, шкала 1–5).
  *
- * Монохром (правило №9): выбранные звёзды `fill-foreground`, пустые —
- * `text-muted-foreground`. Жёлтая ★ зарезервирована за избранным — здесь не она.
+ * Намеренно НЕ звезда: звезда занята избранным (жёлтая ★) и встречается часто —
+ * оценка должна читаться как отдельная сущность. Монохром (правило №9): выбранные
+ * кружки — `fill-foreground`, пустые — кольцо `muted`.
  *
- * Интерактивный режим: hover-превью, клик ставит оценку, клик по текущей —
- * снимает (onChange(null)). readOnly — только показ (средняя/чужая оценка).
+ * Интерактив: hover-превью, клик ставит оценку, клик по текущей — снимает
+ * (onChange(null)). readOnly (или без onChange) — только показ (средняя/чужая).
  */
-export function RatingStars({
+export function RatingControl({
   value,
   onChange,
   readOnly = false,
   disabled = false,
-  size = 'md',
+  size = 'sm',
 }: {
   /** Текущая оценка 0–5 (0 = нет оценки). */
   value: number;
@@ -28,9 +29,9 @@ export function RatingStars({
 }) {
   const [hover, setHover] = useState(0);
   const shown = hover || value;
-  const px = size === 'sm' ? 'size-4' : 'size-6';
-  const star = (active: boolean) => (
-    <Star
+  const px = size === 'sm' ? 'size-3.5' : 'size-5';
+  const dot = (active: boolean) => (
+    <Circle
       className={cn(px, active ? 'fill-foreground stroke-foreground' : 'text-muted-foreground')}
       aria-hidden
     />
@@ -38,9 +39,9 @@ export function RatingStars({
 
   if (readOnly || !onChange) {
     return (
-      <span className="inline-flex items-center gap-0.5" aria-label={`Оценка ${value} из 5`}>
+      <span className="inline-flex items-center gap-1" aria-label={`Оценка ${value} из 5`}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <span key={n}>{star(n <= value)}</span>
+          <span key={n}>{dot(n <= value)}</span>
         ))}
       </span>
     );
@@ -62,7 +63,7 @@ export function RatingStars({
           aria-pressed={n <= value}
           className="rounded p-0.5 transition hover:scale-110 disabled:opacity-50"
         >
-          {star(n <= shown)}
+          {dot(n <= shown)}
         </button>
       ))}
     </span>

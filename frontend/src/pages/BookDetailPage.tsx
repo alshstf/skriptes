@@ -13,7 +13,7 @@ import { EditionRow } from '@/components/EditionRow';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
-import { RatingStars } from '@/components/RatingStars';
+import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
@@ -328,7 +328,7 @@ function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number
     <div className="space-y-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-sm text-muted-foreground">Ваша оценка:</span>
-        <RatingStars value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
+        <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
       </div>
       <p className="text-xs text-muted-foreground">
         {count > 0 && avg !== undefined ? (
