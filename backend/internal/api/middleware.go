@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"slices"
 	"time"
+
+	"github.com/skriptes/skriptes/backend/internal/auth"
 )
 
 // requireAuth — middleware: на каждый защищённый запрос вытаскивает
@@ -82,14 +84,17 @@ func requireBasicAuth(d AuthDeps) func(http.Handler) http.Handler {
 			}
 			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 			defer cancel()
-			if _, err := d.Service.ValidateCredentials(ctx, email, password); err != nil {
+			user, err := d.Service.ValidateCredentials(ctx, email, password)
+			if err != nil {
 				// ValidateCredentials имеет timing-mitigation, мы не различаем
 				// "нет такого" и "неверный пароль" в ответе.
 				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`", charset="UTF-8"`)
 				http.Error(w, "invalid credentials", http.StatusUnauthorized)
 				return
 			}
-			next.ServeHTTP(w, r)
+			// Кладём пользователя в контекст (нейтральный auth-хелпер) — OPDS-хендлеры
+			// (пакет opds, без цикла на api) читают его, напр. для учёта приобретения.
+			next.ServeHTTP(w, r.WithContext(auth.ContextWithUser(r.Context(), user)))
 		})
 	}
 }

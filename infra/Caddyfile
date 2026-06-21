@@ -14,6 +14,14 @@
 		reverse_proxy backend:8080
 	}
 
+	# OPDS-каталог для e-reader клиентов (KOReader/Moon+Reader/…) → backend.
+	# Своя HTTP Basic авторизация внутри backend; без этого матчера /opds/*
+	# падал в SPA-фолбэк (frontend отдавал index.html вместо каталога).
+	@opds path /opds/*
+	handle @opds {
+		reverse_proxy backend:8080
+	}
+
 	# Всё остальное → frontend (nginx со SPA-фолбэком)
 	handle {
 		reverse_proxy frontend:80
