@@ -166,8 +166,17 @@ export type Book = {
   /** Год конкретного бумажного издания этого fb2 (publish-info/year).
    *  Справочное поле, в статистику не идёт. */
   edition_year?: number;
-  /** Библиотечный рейтинг (LIBRATE из INPX, 0–5). ОТДЕЛЬНО от оценок читателей. */
+  /** Библиотечный рейтинг (LIBRATE из INPX, 0–5). ОТДЕЛЬНО от оценок читателей.
+   *  На UI объединяется с external_rating в единый «Внешний рейтинг» (приоритет
+   *  LIBRATE → web), см. externalRatingDisplay в BookDetailPage. */
   rating?: number;
+  /** Внешний рейтинг из сети (Google Books/OpenLibrary, 1–5). Undefined — не
+   *  обогащено. Показывается, когда нет LIBRATE (rating). */
+  external_rating?: number;
+  /** Источник external_rating: 'google_books' | 'openlibrary'. */
+  external_rating_source?: string;
+  /** Число голосов у внешнего источника. */
+  external_rating_count?: number;
   /** Оценка текущего пользователя (1–5). Undefined — не оценивал/гость. */
   user_rating?: number;
   /** Средняя оценка читателей по инстансу. Undefined — оценок ещё нет. */

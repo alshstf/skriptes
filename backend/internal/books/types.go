@@ -109,16 +109,24 @@ type Book struct {
 	// конкретного бумажного издания этого fb2 (<publish-info><year>).
 	// Это разные сущности: WrittenYear идёт в статистику, EditionYear —
 	// справочное поле. Оба nil, если год недоступен.
-	WrittenYear *int   `json:"written_year,omitempty"`
-	EditionYear *int   `json:"edition_year,omitempty"`
-	Rating      *int   `json:"rating,omitempty"`
-	Annotation  string `json:"annotation,omitempty"`
-	CoverPath   string `json:"cover_path,omitempty"`
-	Archive     string `json:"archive"`
-	FileName    string `json:"file_name"`
-	Ext         string `json:"ext"`
-	SizeBytes   int64  `json:"size_bytes"`
-	Deleted     bool   `json:"deleted,omitempty"`
+	WrittenYear *int `json:"written_year,omitempty"`
+	EditionYear *int `json:"edition_year,omitempty"`
+	Rating      *int `json:"rating,omitempty"`
+	// Внешний рейтинг из сети (Google Books/OpenLibrary), ОТДЕЛЬНО от Rating
+	// (LIBRATE из INPX). На UI оба объединяются в единый «Внешний рейтинг» с
+	// приоритетом LIBRATE → web; Source — источник web-рейтинга
+	// ('google_books'|'openlibrary'), Count — число голосов у источника.
+	// Заполняется фоновым воркером обогащения (nil, пока не обогащено).
+	ExternalRating       *float64 `json:"external_rating,omitempty"`
+	ExternalRatingSource *string  `json:"external_rating_source,omitempty"`
+	ExternalRatingCount  *int     `json:"external_rating_count,omitempty"`
+	Annotation           string   `json:"annotation,omitempty"`
+	CoverPath            string   `json:"cover_path,omitempty"`
+	Archive              string   `json:"archive"`
+	FileName             string   `json:"file_name"`
+	Ext                  string   `json:"ext"`
+	SizeBytes            int64    `json:"size_bytes"`
+	Deleted              bool     `json:"deleted,omitempty"`
 	// WorkID — логическая книга. Editions — ВСЕ издания этой работы (включая
 	// открытое). Title/WrittenYear/Series/SerNo/Authors/Genres — уровня работы
 	// (union по изданиям); остальные поля выше — открытого издания (id в URL),

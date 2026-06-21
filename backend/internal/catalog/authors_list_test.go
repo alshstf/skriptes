@@ -18,7 +18,7 @@ type authorsListFixture struct {
 	userID   int64
 	kingID   int64 // Кинг — 2 книги (ru/en издания одной работы + ещё одна), рейтинг 5, экранизация, в избранном (автор+книга)
 	asimovID int64 // Азимов — 1 книга sf, год 1951
-	tolstoy  int64 // Толстой — 1 книга prose, без рейтинга/экранизации/года
+	tolstoy  int64 // Толстой — 1 книга prose, без LIBRATE, но web-рейтинг 4.2
 }
 
 func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) authorsListFixture {
@@ -60,13 +60,21 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		lang      string
 		srcLang   string
 		year      *int
-		rating    *int
+		rating    *int     // LIBRATE (books.rating)
+		extRating *float64 // web-рейтинг (books.external_rating)
 		workID    int64
 		authorID  int64
 		genreID   int64
 		adaptYear *int
 	}
 	intp := func(v int) *int { return &v }
+	fp := func(v float64) *float64 { return &v }
+	nullFloat := func(p *float64) any {
+		if p == nil {
+			return nil
+		}
+		return *p
+	}
 	mkBook := func(o bookOpt) int64 {
 		var workID int64
 		if o.workID == 0 {
@@ -79,10 +87,10 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		var id int64
 		require.NoError(t, pool.QueryRow(ctx, `
 			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
-			                   lang, src_lang, written_year, rating, work_id)
-			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8) RETURNING id`,
+			                   lang, src_lang, written_year, rating, work_id, external_rating)
+			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8,$10) RETURNING id`,
 			collID, archID, o.lib, nullStr(o.lang), nullStr(o.srcLang),
-			nullInt(o.year), nullInt(o.rating), workID, o.lib).Scan(&id))
+			nullInt(o.year), nullInt(o.rating), workID, o.lib, nullFloat(o.extRating)).Scan(&id))
 		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, o.authorID)
 		require.NoError(t, err)
 		_, err = pool.Exec(ctx, `INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2)`, id, o.genreID)
@@ -110,7 +118,9 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 	mkBook(bookOpt{lib: "az", lang: "en", year: intp(1951), authorID: f.asimovID, genreID: gSf})
 
 	// Толстой: одна prose-книга, без года/рейтинга/экранизации.
-	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse})
+	// Толстой — без LIBRATE, но с web-рейтингом 4.2 (проверка фолбэка
+	// COALESCE(LIBRATE, web) в агрегате/фильтре «внешний рейтинг»).
+	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse, extRating: fp(4.2)})
 
 	// Избранное юзера: подписка на Кинга + одна книга Кинга в избранном.
 	// Книжное избранное — членство в служебной полке kind='favorites' (миграция 0023).
@@ -153,7 +163,7 @@ func nullInt(p *int) any {
 
 // TestListAuthorsFiltered_Aggregates — базовые агрегаты на строке автора:
 // book_count схлопывает издания по работе; languages = lang ∪ src_lang;
-// years_active = min/max written_year; library_rating = max(rating);
+// years_active = min/max written_year; external_rating = max(COALESCE(rating, web));
 // has_adaptations; is_favorite + favorited_books_count для текущего юзера.
 func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	if testing.Short() {
@@ -180,8 +190,8 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.True(t, king.IsFavorite)
 	require.Equal(t, 1, king.FavoritedBooksCount, "одна книга Кинга в избранном")
 	require.True(t, king.HasAdaptations)
-	require.NotNil(t, king.LibraryRating)
-	require.Equal(t, 5, *king.LibraryRating)
+	require.NotNil(t, king.ExternalRating)
+	require.InDelta(t, 5.0, *king.ExternalRating, 0.001)
 	require.NotNil(t, king.ReaderRating, "у Кинга есть оценки читателей")
 	require.InDelta(t, 3.5, *king.ReaderRating, 0.001, "avg(5,2) по инстансу")
 	require.Equal(t, 2, king.ReaderRatingCount)
@@ -196,7 +206,8 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.False(t, tolstoy.IsFavorite)
 	require.Equal(t, 0, tolstoy.FavoritedBooksCount)
 	require.False(t, tolstoy.HasAdaptations)
-	require.Nil(t, tolstoy.LibraryRating, "нет рейтинга → nil")
+	require.NotNil(t, tolstoy.ExternalRating, "web-рейтинг подхватывается через COALESCE")
+	require.InDelta(t, 4.2, *tolstoy.ExternalRating, 0.001, "fallback на web, когда нет LIBRATE")
 	require.Nil(t, tolstoy.ReaderRating, "нет оценок читателей → nil")
 	require.Equal(t, 0, tolstoy.ReaderRatingCount)
 	require.Nil(t, tolstoy.YearsActive, "нет written_year → nil")
@@ -255,11 +266,18 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
 
-	// min_rating — рейтинг 5 только у Кинга.
-	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 3})
+	// min_rating — единый внешний рейтинг = COALESCE(LIBRATE, web): Кинг=5 (LIBRATE),
+	// Толстой=4.2 (web). Порог 5 → только Кинг; порог 3 → оба (web Толстого считается).
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 5})
 	require.NoError(t, err)
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 3})
+	require.NoError(t, err)
+	require.Equal(t, 2, res.Total, "web-рейтинг Толстого (4.2) проходит порог 3")
+	require.True(t, ids(res)[f.kingID])
+	require.True(t, ids(res)[f.tolstoy])
 
 	// min_reader_rating — у Кинга средняя 3.5: проходит ≥3, не проходит ≥4.
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinReaderRating: 3})
@@ -302,6 +320,14 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	require.Len(t, res.Items, 3)
 	require.Equal(t, f.kingID, res.Items[0].ID, "автор с оценками читателей — первым")
 
+	// sort=rating — единый внешний рейтинг: Кинг (5, LIBRATE) > Толстой (4.2, web) >
+	// Азимов (нет внешнего, NULLS LAST).
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "rating"})
+	require.NoError(t, err)
+	require.Len(t, res.Items, 3)
+	require.Equal(t, f.kingID, res.Items[0].ID, "LIBRATE 5 — первым")
+	require.Equal(t, f.tolstoy, res.Items[1].ID, "web 4.2 — вторым")
+
 	// Исключение жанра sf_horror: у Кинга остаётся только sf-работа (k2),
 	// book_count падает до 1 и hsorror-экранизация/рейтинг с horror-издания уходят.
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{
@@ -317,7 +343,7 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	}
 	require.Equal(t, 1, king.BookCount, "horror-работа исключена из счётчика")
 	require.False(t, king.HasAdaptations, "экранизация была на horror-издании")
-	require.Nil(t, king.LibraryRating, "рейтинг 5 был на horror-издании")
+	require.Nil(t, king.ExternalRating, "рейтинг 5 был на horror-издании")
 	for _, g := range king.TopGenres {
 		require.NotEqual(t, "sf_horror", g.Code, "скрытый жанр не светится в топе")
 	}

@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText, BookOpen, BookHeart, Check, X, Library } from 'lucide-react';
+import { BookText, BookOpen, BookHeart, Check, X, Library, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -181,9 +181,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 {book.date_added ? (
                   <Field label="Добавлена" value={formatReadDate(book.date_added)} />
                 ) : null}
-                {book.rating !== undefined ? (
-                  <Field label="Рейтинг библиотеки" value={String(book.rating)} />
-                ) : null}
+                <ExternalRatingField book={book} />
                 <ReadStatusField
                   bookId={book.id}
                   isRead={book.is_read ?? false}
@@ -314,9 +312,58 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
   );
 }
 
+// fmtRating — LIBRATE целочисленный, web-рейтинг дробный: целые без хвоста, иначе 1 знак.
+function fmtRating(v: number): string {
+  return Number.isInteger(v) ? String(v) : v.toFixed(1);
+}
+
+// externalSourceLabel — человекочитаемый источник внешнего рейтинга.
+function externalSourceLabel(source?: string): string {
+  switch (source) {
+    case 'google_books':
+      return 'Google Books';
+    case 'openlibrary':
+      return 'OpenLibrary';
+    default:
+      return 'внешний источник';
+  }
+}
+
+// externalRatingDisplay — единый «Внешний рейтинг» с атрибуцией источника.
+// Приоритет: LIBRATE (донорская библиотека) → web (Google Books/OpenLibrary).
+function externalRatingDisplay(book: Book): { value: string; source: string } | null {
+  if (book.rating != null) return { value: String(book.rating), source: 'библиотека' };
+  if (book.external_rating != null) {
+    return { value: fmtRating(book.external_rating), source: externalSourceLabel(book.external_rating_source) };
+  }
+  return null;
+}
+
+/**
+ * ExternalRatingField — поле «Внешний рейтинг» в карточке (Globe + значение +
+ * источник). Объединяет LIBRATE и web-рейтинг; не показывается, если внешнего
+ * рейтинга нет. Оценки читателей (RatingsBlock, BookHeart) — отдельно.
+ */
+function ExternalRatingField({ book }: { book: Book }) {
+  const ext = externalRatingDisplay(book);
+  if (!ext) return null;
+  return (
+    <>
+      <dt className="text-muted-foreground">Внешний рейтинг</dt>
+      <dd className="flex items-center gap-1.5">
+        <Globe className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+        <span>
+          {ext.value}
+          <span className="text-muted-foreground"> · {ext.source}</span>
+        </span>
+      </dd>
+    </>
+  );
+}
+
 /**
  * RatingsBlock — «Оценки читателей»: моя оценка (интерактивные звёзды, work-level)
- * + средняя по инстансу. Отдельно от «Рейтинг библиотеки» (LIBRATE). cardKey —
+ * + средняя по инстансу. Отдельно от «Внешнего рейтинга» (LIBRATE ∪ web). cardKey —
  * ключ кэша открытой карточки для оптимистичного обновления.
  */
 function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }) {

@@ -924,6 +924,9 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		writtenYear pgtype.Int2
 		editionYear pgtype.Int2
 		rating      pgtype.Int2
+		extRating   pgtype.Float4
+		extSource   pgtype.Text
+		extCount    pgtype.Int4
 		annotation  pgtype.Text
 		coverPath   pgtype.Text
 		serNo       pgtype.Int4
@@ -939,6 +942,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		SELECT
 			b.id, b.lib_id, COALESCE(w.title, b.title), b.work_id,
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
+			b.external_rating, b.external_rating_source, b.external_rating_count,
 			COALESCE(w.written_year, b.written_year), b.edition_year,
 			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
@@ -951,6 +955,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	`, id).Scan(
 		&b.ID, &b.LibID, &b.Title, &b.WorkID,
 		&lang, &dateAdded, &rating, &annotation, &coverPath,
+		&extRating, &extSource, &extCount,
 		&writtenYear, &editionYear,
 		&serNo, &seriesID, &seriesTitle,
 		&b.FileName, &b.Ext, &b.SizeBytes, &b.Deleted,
@@ -973,6 +978,18 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	if rating.Valid {
 		v := int(rating.Int16)
 		b.Rating = &v
+	}
+	if extRating.Valid {
+		v := float64(extRating.Float32)
+		b.ExternalRating = &v
+	}
+	if extSource.Valid && extSource.String != "" {
+		s := extSource.String
+		b.ExternalRatingSource = &s
+	}
+	if extCount.Valid {
+		v := int(extCount.Int32)
+		b.ExternalRatingCount = &v
 	}
 	if annotation.Valid {
 		b.Annotation = annotation.String

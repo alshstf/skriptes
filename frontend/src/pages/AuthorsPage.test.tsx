@@ -44,7 +44,7 @@ const authorsFixture = {
       languages: ['ru', 'en'],
       years_active: { from: 1974, to: 2009 },
       has_adaptations: true,
-      library_rating: 5,
+      external_rating: 5,
       reader_rating: 3.5,
       reader_rating_count: 2,
     },
@@ -98,9 +98,9 @@ describe('AuthorsPage', () => {
     expect(screen.getByText(/2 книги в избранном/)).toBeInTheDocument();
     // Топ-жанр (display из ответа; useGenreMap пуст → fallback на g.display).
     expect(screen.getByText('Ужасы')).toBeInTheDocument();
-    // Библиотечный рейтинг отрендерен (a11y-label).
-    expect(screen.getByLabelText('Рейтинг библиотеки 5')).toBeInTheDocument();
-    // Оценка читателей (book_ratings) — отдельно от библиотечного рейтинга.
+    // Единый внешний рейтинг отрендерен (a11y-label).
+    expect(screen.getByLabelText('Внешний рейтинг 5')).toBeInTheDocument();
+    // Оценка читателей (book_ratings) — отдельно от внешнего рейтинга.
     expect(screen.getByLabelText('Оценка читателей 3.5 (2)')).toBeInTheDocument();
     // Иконка подписки (колокольчик) — только у Кинга.
     expect(screen.getByLabelText('Подписан')).toBeInTheDocument();
