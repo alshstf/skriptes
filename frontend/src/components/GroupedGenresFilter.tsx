@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronRight, Minus, Search } from 'lucide-react';
+import { ChevronRight, Minus, Search, Tags } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useGenres, type GenreItem } from '@/lib/genres';
 import { cn } from '@/lib/utils';
@@ -108,7 +108,10 @@ export function GroupedGenresFilter({
   if (genresQ.isLoading) {
     return (
       <div className="space-y-2">
-        <div className="text-xs font-medium text-muted-foreground uppercase">Жанры</div>
+        <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+        <Tags className="size-3.5 shrink-0" aria-hidden />
+        Жанры
+      </div>
         <div className="text-xs italic text-muted-foreground">загружается…</div>
       </div>
     );
@@ -152,7 +155,10 @@ export function GroupedGenresFilter({
 
   return (
     <div className="space-y-2">
-      <div className="text-xs font-medium text-muted-foreground uppercase">Жанры</div>
+      <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+        <Tags className="size-3.5 shrink-0" aria-hidden />
+        Жанры
+      </div>
       <div className="relative">
         <Search
           className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground"

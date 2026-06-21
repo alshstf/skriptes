@@ -381,10 +381,14 @@ function AuthorsFiltersSidebar({
         </select>
       </div>
 
-      {/* Быстрые тумблеры */}
+      {/* Быстрые тумблеры. Иконки — те же, что в строке автора (самообучающий
+          UI): подписка = колокольчик, экранизации = плёнка. */}
       <div className="space-y-3">
         <label className="flex items-center justify-between gap-2">
-          <span>Только избранные</span>
+          <span className="flex items-center gap-1.5">
+            <Bell className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+            Только избранные
+          </span>
           <Switch
             checked={value.favoritesOnly}
             onCheckedChange={(v) => onChange({ ...value, favoritesOnly: v })}
@@ -392,7 +396,10 @@ function AuthorsFiltersSidebar({
           />
         </label>
         <label className="flex items-center justify-between gap-2">
-          <span>С экранизациями</span>
+          <span className="flex items-center gap-1.5">
+            <Film className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+            С экранизациями
+          </span>
           <Switch
             checked={value.hasAdaptations}
             onCheckedChange={(v) => onChange({ ...value, hasAdaptations: v })}
@@ -433,7 +440,10 @@ function AuthorsFiltersSidebar({
 
       {/* Минимальный рейтинг (библиотечный LIBRATE, 1..5) */}
       <div className="space-y-2">
-        <div className="text-xs font-medium text-muted-foreground uppercase">Рейтинг библиотеки от</div>
+        <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+          <Landmark className="size-3.5 shrink-0" aria-hidden />
+          Рейтинг библиотеки от
+        </div>
         <select
           value={value.minRating}
           onChange={(e) => onChange({ ...value, minRating: Number(e.target.value) || 0 })}
@@ -451,7 +461,10 @@ function AuthorsFiltersSidebar({
 
       {/* Минимальная средняя оценка читателей (book_ratings, по инстансу). */}
       <div className="space-y-2">
-        <div className="text-xs font-medium text-muted-foreground uppercase">Оценка читателей от</div>
+        <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+          <BookHeart className="size-3.5 shrink-0" aria-hidden />
+          Оценка читателей от
+        </div>
         <select
           value={value.minReaderRating}
           onChange={(e) => onChange({ ...value, minReaderRating: Number(e.target.value) || 0 })}
