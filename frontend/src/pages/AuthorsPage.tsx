@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Bell, BookHeart, Film, Landmark, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
+import { Bell, BookHeart, Film, Globe, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -257,12 +257,14 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
             {author.book_count} {pluralBooks(author.book_count)} в каталоге
           </span>
           {years ? <span>· {years}</span> : null}
-          {author.library_rating != null ? (
-            // Рейтинг библиотеки-источника (LIBRATE из INPX, донор) — иконка
-            // Landmark (НЕ звезда: звезда строго за избранным; НЕ Library: занята
-            // кнопкой «На полку»).
-            <span className="inline-flex items-center gap-0.5" aria-label={`Рейтинг библиотеки ${author.library_rating}`}>
-              · <Landmark className="size-3 text-muted-foreground" aria-hidden /> {author.library_rating}
+          {author.external_rating != null ? (
+            // Единый ВНЕШНИЙ рейтинг (LIBRATE ∪ web) — иконка Globe (НЕ звезда:
+            // звезда строго за избранным; НЕ Library: занята кнопкой «На полку»).
+            <span
+              className="inline-flex items-center gap-0.5"
+              aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)}`}
+            >
+              · <Globe className="size-3 text-muted-foreground" aria-hidden /> {fmtRating(author.external_rating)}
             </span>
           ) : null}
           {author.reader_rating != null ? (
@@ -335,7 +337,7 @@ function AuthorAvatar({ photoPath, fullName }: { photoPath?: string; fullName: s
 const SORT_OPTIONS: { value: AuthorsFilters['sort']; label: string }[] = [
   { value: 'name', label: 'По имени' },
   { value: 'book_count', label: 'По числу книг' },
-  { value: 'rating', label: 'По рейтингу библиотеки' },
+  { value: 'rating', label: 'По внешнему рейтингу' },
   { value: 'reader_rating', label: 'По оценке читателей' },
 ];
 
@@ -438,11 +440,11 @@ function AuthorsFiltersSidebar({
         </div>
       </div>
 
-      {/* Минимальный рейтинг (библиотечный LIBRATE, 1..5) */}
+      {/* Минимальный внешний рейтинг (единый LIBRATE ∪ web, 1..5) */}
       <div className="space-y-2">
         <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
-          <Landmark className="size-3.5 shrink-0" aria-hidden />
-          Рейтинг библиотеки от
+          <Globe className="size-3.5 shrink-0" aria-hidden />
+          Внешний рейтинг от
         </div>
         <select
           value={value.minRating}
@@ -584,6 +586,11 @@ function pluralBooks(n: number): string {
   if (mod10 === 1) return 'книга';
   if (mod10 >= 2 && mod10 <= 4) return 'книги';
   return 'книг';
+}
+
+// fmtRating — внешний рейтинг автора дробный (web); целые без хвоста, иначе 1 знак.
+function fmtRating(v: number): string {
+  return Number.isInteger(v) ? String(v) : v.toFixed(1);
 }
 
 function pluralAuthors(n: number): string {

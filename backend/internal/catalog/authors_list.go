@@ -41,10 +41,11 @@ type AuthorListItem struct {
 	YearsActive *YearsRange `json:"years_active,omitempty"`
 	// HasAdaptations — есть ли экранизация хоть у одной книги автора.
 	HasAdaptations bool `json:"has_adaptations"`
-	// LibraryRating — БИБЛИОТЕЧНЫЙ рейтинг (LIBRATE из INPX, books.rating), а
-	// НЕ пользовательский. Берём максимум по книгам автора. nil, если рейтинга
-	// нет ни у одной книги.
-	LibraryRating *int `json:"library_rating,omitempty"`
+	// ExternalRating — единый ВНЕШНИЙ рейтинг (НЕ пользовательский): максимум по
+	// книгам автора от COALESCE(LIBRATE из INPX, web-рейтинг Google Books/OL),
+	// с приоритетом LIBRATE на уровне книги. nil, если внешнего рейтинга нет ни
+	// у одной книги. Источник на уровне автора не показываем (это агрегат-max).
+	ExternalRating *float64 `json:"external_rating,omitempty"`
 	// ReaderRating — средняя ПОЛЬЗОВАТЕЛЬСКАЯ оценка (book_ratings) по работам
 	// автора, по инстансу (все юзеры). Без порога голосов (см. решение). nil,
 	// если ни одной оценки. ReaderRatingCount — число таких оценок (для бейджа).
@@ -205,7 +206,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		n := addArg(p.MinRating)
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" WHERE ba.author_id = a.id AND b.rating >= $%d"+renderExclusion()+")", n))
+				" WHERE ba.author_id = a.id AND COALESCE(b.rating, b.external_rating) >= $%d"+renderExclusion()+")", n))
 	}
 
 	if p.MinReaderRating > 0 {
@@ -239,7 +240,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	case "book_count":
 		orderSQL = "ORDER BY book_count DESC, a.last_name, a.id"
 	case "rating":
-		orderSQL = "ORDER BY library_rating DESC NULLS LAST, book_count DESC, a.id"
+		orderSQL = "ORDER BY external_rating DESC NULLS LAST, book_count DESC, a.id"
 	case "reader_rating":
 		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
 	}
@@ -279,8 +280,8 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[5]s) AS yr_to,
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[6]s) AS has_adapt,
-		       (SELECT max(b.rating)::int FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.rating IS NOT NULL%[7]s) AS library_rating,
+		       (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[7]s) AS external_rating,
 		       (SELECT avg(br.rating)::float8 FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
@@ -310,12 +311,12 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			last, first, middle string
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
-			rating              pgtype.Int4
+			extRating           pgtype.Float8
 			readerAvg           pgtype.Float8
 		)
 		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
-			&yrFrom, &yrTo, &it.HasAdaptations, &rating,
+			&yrFrom, &yrTo, &it.HasAdaptations, &extRating,
 			&readerAvg, &it.ReaderRatingCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
@@ -326,9 +327,9 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		if yrFrom.Valid && yrTo.Valid {
 			it.YearsActive = &YearsRange{From: int(yrFrom.Int16), To: int(yrTo.Int16)}
 		}
-		if rating.Valid {
-			v := int(rating.Int32)
-			it.LibraryRating = &v
+		if extRating.Valid {
+			v := extRating.Float64
+			it.ExternalRating = &v
 		}
 		if readerAvg.Valid {
 			v := readerAvg.Float64
