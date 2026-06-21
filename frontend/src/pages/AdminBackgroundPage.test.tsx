@@ -16,6 +16,7 @@ type State = {
   collection: Record<string, unknown>;
   year: Record<string, unknown>;
   cover: Record<string, unknown>;
+  rating: Record<string, unknown>;
   ba: Record<string, unknown>;
   gates: Record<string, unknown>;
 };
@@ -65,6 +66,19 @@ function baseState(): State {
       cover_backfill_mode: 'off',
       coverage: { total: 10, with_cover: 7, by_source: { openlibrary: 2 } },
     },
+    rating: {
+      enabled: false,
+      googlebooks: true,
+      openlibrary: true,
+      whole_collection: false,
+      googlebooks_rpm: 60,
+      openlibrary_rpm: 60,
+      not_found_retry_days: 90,
+      error_retry_hours: 24,
+      external_rating_running: false,
+      external_rating_mode: 'off',
+      coverage: { total: 10, with_rating: 6, with_web: 1, by_source: { googlebooks: 1 } },
+    },
     ba: {
       bios: false,
       adaptations: false,
@@ -90,6 +104,7 @@ type Puts = {
   collection?: Record<string, unknown>;
   year?: Record<string, unknown>;
   cover?: Record<string, unknown>;
+  rating?: Record<string, unknown>;
   ba?: Record<string, unknown>;
   gates?: Record<string, unknown>;
 };
@@ -129,6 +144,13 @@ function setup(mutate?: (s: State) => void) {
           state.cover = { ...state.cover, ...body };
         }
         return json(state.cover);
+      }
+      if (u.includes('/api/admin/external-rating')) {
+        if (put && body) {
+          puts.rating = body;
+          state.rating = { ...state.rating, ...body };
+        }
+        return json(state.rating);
       }
       if (u.includes('/api/admin/year-enrichment')) {
         if (put && body) {
@@ -271,5 +293,30 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     await vi.waitFor(() => {
       expect((puts.cover as { whole_collection?: boolean })?.whole_collection).toBe(true);
     });
+  });
+
+  it('внешний рейтинг: по умолчанию Выкл, покрытие в заголовке, «Фоном» включает воркер', async () => {
+    const user = userEvent.setup();
+    setup();
+    expect(await screen.findByTestId('rating-mode-off')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('рейтинг у 60%')).toBeInTheDocument();
+    await user.click(screen.getByTestId('rating-mode-bg'));
+    await vi.waitFor(() => {
+      expect((puts.rating as { enabled?: boolean })?.enabled).toBe(true);
+    });
+  });
+
+  it('внешний рейтинг в Фоном: выключение единственного источника гасит воркер (enabled пересчитывается)', async () => {
+    const user = userEvent.setup();
+    setup((s) => {
+      s.rating.enabled = true;
+      s.rating.openlibrary = false; // оставим только Google Books
+    });
+    const gb = (await screen.findByLabelText('Google Books (averageRating)')) as HTMLElement;
+    await user.click(gb); // выключаем единственный внешний → enabled=false
+    await vi.waitFor(() => {
+      expect((puts.rating as { googlebooks?: boolean })?.googlebooks).toBe(false);
+    });
+    expect((puts.rating as { enabled?: boolean })?.enabled).toBe(false);
   });
 });

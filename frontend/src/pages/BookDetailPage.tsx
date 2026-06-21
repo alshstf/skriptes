@@ -320,6 +320,7 @@ function fmtRating(v: number): string {
 // externalSourceLabel — человекочитаемый источник внешнего рейтинга.
 function externalSourceLabel(source?: string): string {
   switch (source) {
+    case 'googlebooks':
     case 'google_books':
       return 'Google Books';
     case 'openlibrary':
