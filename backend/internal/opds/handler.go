@@ -14,9 +14,11 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/converter"
+	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
 // Config — настройки OPDS-handler'ов.
@@ -41,6 +43,7 @@ type Deps struct {
 	Books     *books.Service
 	Catalog   *catalog.Service
 	Converter *converter.Converter // для acquisition: convert+serve файла
+	History   *history.Service     // учёт приобретения при скачивании (для запросов оценки); может быть nil
 	BooksRoot string               // корень read-only volume (передаётся в converter.SourceBook)
 	Logger    *slog.Logger
 }
@@ -446,6 +449,22 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 //  2. Можно было дёргать без CSRF (e-reader не передаёт CSRF-token).
 //
 // Реализация — короткая обёртка над converter.Convert + http.ServeFile.
+// recordAcquisitionAsync — fire-and-forget фиксация приобретения (OPDS-скачивание).
+// Детачнутый контекст (запись должна пережить ответ); svc==nil → no-op. Отдельная
+// функция (не inline-горутина) — чтобы не тянуть request-ctx в горутину (gosec G118).
+func recordAcquisitionAsync(svc *history.Service, logger *slog.Logger, userID, bookID int64) {
+	if svc == nil {
+		return
+	}
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		if err := svc.RecordAcquisition(ctx, userID, bookID); err != nil {
+			logger.Warn("opds record acquisition failed", "user_id", userID, "book_id", bookID, "err", err)
+		}
+	}()
+}
+
 func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 	id, err := parseID(r)
 	if err != nil {
@@ -472,6 +491,13 @@ func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 	if book.Deleted {
 		h.error(w, "book deleted", nil, http.StatusGone)
 		return
+	}
+
+	// Учёт приобретения (для блока «Оцените прочитанное»): OPDS-скачивание —
+	// такой же канал, как web-скачивание / Send-to-Kindle. Fire-and-forget;
+	// пользователь — из Basic-auth контекста (requireBasicAuth кладёт его).
+	if u, ok := auth.UserFromContext(r.Context()); ok {
+		recordAcquisitionAsync(h.deps.History, h.deps.Logger, u.ID, book.ID)
 	}
 
 	res, err := h.deps.Converter.Convert(ctx, converter.SourceBook{

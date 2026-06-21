@@ -351,6 +351,7 @@ func run() error {
 			Books:     booksSvc,
 			Catalog:   catalogSvc,
 			Converter: conv,
+			History:   historySvc,
 			BooksRoot: cfg.BooksRoot,
 			Logger:    logger,
 		})},
