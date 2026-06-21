@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText, BookOpen, Check, X, Library } from 'lucide-react';
+import { BookText, BookOpen, BookHeart, Check, X, Library } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -330,14 +330,16 @@ function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number
         <span className="text-sm text-muted-foreground">Ваша оценка:</span>
         <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <BookHeart className="size-3.5 shrink-0" aria-hidden />
         {count > 0 && avg !== undefined ? (
-          <>
-            Средняя: <span className="tabular-nums text-foreground">{avg.toFixed(1)}</span> ·{' '}
-            {count} {pluralVotes(count)}
-          </>
+          <span>
+            Средняя оценка читателей:{' '}
+            <span className="tabular-nums text-foreground">{avg.toFixed(1)}</span> · {count}{' '}
+            {pluralVotes(count)}
+          </span>
         ) : (
-          'Оценок читателей пока нет'
+          <span>Оценок читателей пока нет</span>
         )}
       </p>
     </div>
