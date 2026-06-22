@@ -119,10 +119,73 @@ type gbSearchResponse struct {
 	Items []struct {
 		ID         string `json:"id"`
 		VolumeInfo struct {
-			ImageLinks  map[string]string `json:"imageLinks"`
-			Description string            `json:"description"`
+			ImageLinks    map[string]string `json:"imageLinks"`
+			Description   string            `json:"description"`
+			AverageRating float64           `json:"averageRating"` // шкала 1–5
+			RatingsCount  int               `json:"ratingsCount"`
 		} `json:"volumeInfo"`
 	} `json:"items"`
+}
+
+// FetchRating — внешний рейтинг через /volumes: volumeInfo.averageRating (1–5)
+// + ratingsCount. Запрос ISBN-first (точнее), иначе по названию+автору. Первый
+// item не всегда несёт рейтинг — берём первый с averageRating>0.
+func (p *GoogleBooksProvider) FetchRating(ctx context.Context, q WorkQuery) (RatingResult, error) {
+	query := gbRatingQuery(q)
+	if query == "" {
+		return RatingResult{}, ErrNotFound
+	}
+	v := url.Values{}
+	v.Set("q", query)
+	v.Set("maxResults", "5")
+	if q.Lang != "" {
+		v.Set("langRestrict", q.Lang)
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return RatingResult{}, fmt.Errorf("build request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return RatingResult{}, fmt.Errorf("gb rating search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return RatingResult{}, ErrNotFound
+	}
+	var sr gbSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return RatingResult{}, fmt.Errorf("decode rating search: %w", err)
+	}
+	for _, it := range sr.Items {
+		if it.VolumeInfo.AverageRating > 0 {
+			return RatingResult{Average: it.VolumeInfo.AverageRating, Count: it.VolumeInfo.RatingsCount}, nil
+		}
+	}
+	return RatingResult{}, ErrNotFound
+}
+
+// gbRatingQuery — строка q для поиска рейтинга: ISBN (точнее) → иначе
+// intitle/inauthor.
+func gbRatingQuery(q WorkQuery) string {
+	if isbn := normalizeISBN(q.ISBN); isbn != "" {
+		return "isbn:" + isbn
+	}
+	title := q.Title
+	if title == "" {
+		return ""
+	}
+	var sb strings.Builder
+	sb.WriteString(`intitle:"`)
+	sb.WriteString(title)
+	sb.WriteString(`"`)
+	if len(q.Authors) > 0 {
+		sb.WriteString(` inauthor:"`)
+		sb.WriteString(q.Authors[0])
+		sb.WriteString(`"`)
+	}
+	return sb.String()
 }
 
 // FetchAnnotation — один запрос на /volumes; description в первом

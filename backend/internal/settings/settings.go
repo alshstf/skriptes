@@ -317,6 +317,75 @@ func (s *Store) SetCoverEnrichment(ctx context.Context, cfg CoverEnrichmentConfi
 	return nil
 }
 
+const externalRatingEnrichmentKey = "external_rating_enrichment"
+
+// ExternalRatingConfig — настройки фонового дозаполнения books.external_rating
+// из внешних источников (Google Books, OpenLibrary). Зеркало
+// CoverEnrichmentConfig. Воркер opt-in (Enabled=false): ходит в публичные API,
+// включается осознанно из админки. Источники выбираются независимо (можно
+// оставить только Google Books). WholeCollection: false = только пробелы (книги
+// без любого рейтинга), true = вся коллекция (даже книги с LIBRATE).
+type ExternalRatingConfig struct {
+	Enabled           bool `json:"enabled"`
+	GoogleBooks       bool `json:"googlebooks"`
+	OpenLibrary       bool `json:"openlibrary"`
+	WholeCollection   bool `json:"whole_collection"`
+	GoogleBooksRPM    int  `json:"googlebooks_rpm"`
+	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultExternalRatingConfig — воркер выключен (opt-in), оба источника включены,
+// режим «только пробелы», вежливые rate-limit'ы и TTL.
+func DefaultExternalRatingConfig() ExternalRatingConfig {
+	return ExternalRatingConfig{
+		Enabled:           false,
+		GoogleBooks:       true,
+		OpenLibrary:       true,
+		WholeCollection:   false,
+		GoogleBooksRPM:    60,
+		OpenLibraryRPM:    60,
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// ExternalRating читает настройки дозаполнения рейтинга; нет оверрайда в БД —
+// отдаёт дефолты (мердж поверх DefaultExternalRatingConfig).
+func (s *Store) ExternalRating(ctx context.Context) (ExternalRatingConfig, error) {
+	cfg := DefaultExternalRatingConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, externalRatingEnrichmentKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read external rating settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultExternalRatingConfig(), fmt.Errorf("decode external rating settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetExternalRating сохраняет настройки дозаполнения рейтинга (upsert).
+func (s *Store) SetExternalRating(ctx context.Context, cfg ExternalRatingConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode external rating settings: %w", err)
+	}
+	_, err = s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, externalRatingEnrichmentKey, raw)
+	if err != nil {
+		return fmt.Errorf("save external rating settings: %w", err)
+	}
+	return nil
+}
+
 const workGroupingKey = "work_grouping"
 
 // WorkGroupingConfig — настройки фоновой ГРУППИРОВКИ изданий в логические книги

@@ -25,6 +25,10 @@ import {
   useUpdateCoverEnrichmentSettings,
   useRunCoverBackfill,
   useStopCoverBackfill,
+  useExternalRatingSettings,
+  useUpdateExternalRatingSettings,
+  useRunExternalRating,
+  useStopExternalRating,
   useBioAdaptationSettings,
   useUpdateBioAdaptationSettings,
   useRunBioBackfill,
@@ -44,6 +48,8 @@ import {
   type YearEnrichmentInput,
   type CoverEnrichmentSettings,
   type CoverEnrichmentInput,
+  type ExternalRatingSettings,
+  type ExternalRatingInput,
   type BioAdaptationSettings,
   type BioAdaptationInput,
   type EnrichmentGates,
@@ -184,9 +190,28 @@ function buildWgInput(d: WorkGroupingSettings, patch: Partial<WorkGroupingInput>
   };
 }
 
+function buildExtRatingInput(d: ExternalRatingSettings, patch: Partial<ExternalRatingInput>): ExternalRatingInput {
+  return {
+    enabled: d.enabled,
+    googlebooks: d.googlebooks,
+    openlibrary: d.openlibrary,
+    whole_collection: d.whole_collection,
+    googlebooks_rpm: d.googlebooks_rpm,
+    openlibrary_rpm: d.openlibrary_rpm,
+    not_found_retry_days: d.not_found_retry_days,
+    error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
 const MODE_HELP_WG: Record<'off' | 'bg', string> = {
   off: 'Издания не группируются — каждый fb2-файл остаётся отдельной книгой.',
   bg: 'Слияние изданий в логические книги по всей коллекции (локально + внешние Work ID).',
+};
+
+const MODE_HELP_RATING: Record<'off' | 'bg', string> = {
+  off: 'Внешний рейтинг из сети не запрашивается (остаётся только LIBRATE, если есть).',
+  bg: 'Дозаполнять внешний рейтинг (Google Books / OpenLibrary) по книгам без рейтинга.',
 };
 
 // ── Презентационные примитивы аккордеона ──
@@ -384,6 +409,7 @@ export function AdminBackgroundPage() {
   const cq = useCoverCacheSettings();
   const yq = useYearEnrichmentSettings();
   const xq = useCoverEnrichmentSettings();
+  const rq = useExternalRatingSettings();
   const bq = useBioAdaptationSettings();
   const gq = useEnrichmentGates();
   const wq = useWorkGroupingSettings();
@@ -405,6 +431,9 @@ export function AdminBackgroundPage() {
   const stopYear = useStopYearBackfill();
   const runCover = useRunCoverBackfill();
   const stopCover = useStopCoverBackfill();
+  const updateRating = useUpdateExternalRatingSettings();
+  const runRating = useRunExternalRating();
+  const stopRating = useStopExternalRating();
   const runBio = useRunBioBackfill();
   const stopBio = useStopBioBackfill();
   const runAdapt = useRunAdaptationBackfill();
@@ -450,6 +479,17 @@ export function AdminBackgroundPage() {
       coverInit.current = true;
     }
   }, [xq.data]);
+
+  const [gbRpmR, setGbRpmR] = useState('');
+  const [olRpmR, setOlRpmR] = useState('');
+  const ratingInit = useRef(false);
+  useEffect(() => {
+    if (rq.data && !ratingInit.current) {
+      setGbRpmR(String(rq.data.googlebooks_rpm));
+      setOlRpmR(String(rq.data.openlibrary_rpm));
+      ratingInit.current = true;
+    }
+  }, [rq.data]);
 
   const [biosRpm, setBiosRpm] = useState('');
   const [adaptRpm, setAdaptRpm] = useState('');
@@ -573,6 +613,27 @@ export function AdminBackgroundPage() {
     }
   };
 
+  // ── Внешний рейтинг (Google Books / OpenLibrary) — самостоятельный воркер ──
+  const ratingMode: Mode = (rq.data?.enabled ?? false) ? 'bg' : 'off';
+  const ratingRunning = rq.data?.external_rating_running ?? false;
+  const ratingOnce = rq.data?.external_rating_mode === 'once';
+  const rCov = rq.data?.coverage;
+  const applyRating = async (patch: Partial<ExternalRatingInput>, msg: string) => {
+    if (!rq.data) return;
+    try {
+      await updateRating.mutateAsync(buildExtRatingInput(rq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
+  const toggleRatingProvider = (which: 'googlebooks' | 'openlibrary', v: boolean) => {
+    if (!rq.data) return;
+    const gb = which === 'googlebooks' ? v : rq.data.googlebooks;
+    const ol = which === 'openlibrary' ? v : rq.data.openlibrary;
+    void applyRating({ [which]: v, enabled: gb || ol }, 'Применено');
+  };
+
   // ── Живое применение прочих тумблеров/настроек ──
   const applyCol = async (patch: Partial<CollectionInput>, msg: string) => {
     if (!cq.data) return;
@@ -653,6 +714,8 @@ export function AdminBackgroundPage() {
   const onStopYear = action(() => stopYear.mutateAsync(), 'Останавливаю…');
   const onRunCover = action(() => runCover.mutateAsync(), 'Дозаполнение запущено');
   const onStopCover = action(() => stopCover.mutateAsync(), 'Останавливаю…');
+  const onRunRating = action(() => runRating.mutateAsync(), 'Дозаполнение рейтинга запущено');
+  const onStopRating = action(() => stopRating.mutateAsync(), 'Останавливаю…');
   const onRunBio = action(() => runBio.mutateAsync(), 'Дозаполнение биографий запущено');
   const onStopBio = action(() => stopBio.mutateAsync(), 'Останавливаю…');
   const onRunAdapt = action(() => runAdapt.mutateAsync(), 'Поиск экранизаций запущен');
@@ -700,15 +763,22 @@ export function AdminBackgroundPage() {
   const yearInvalid = [olRpmY, wdRpmY].some(badNum);
   const coverDirty = !!xq.data && (olRpmC !== String(xq.data.openlibrary_rpm) || gbRpmC !== String(xq.data.googlebooks_rpm));
   const coverInvalid = [olRpmC, gbRpmC].some(badNum);
+  const ratingDirty = !!rq.data && (gbRpmR !== String(rq.data.googlebooks_rpm) || olRpmR !== String(rq.data.openlibrary_rpm));
+  const ratingInvalid = [gbRpmR, olRpmR].some(badNum);
   const baDirty = !!bq.data && (biosRpm !== String(bq.data.bios_rpm) || adaptRpm !== String(bq.data.adaptations_rpm));
   const baInvalid = [biosRpm, adaptRpm].some(badNum);
 
   const lowFloorWarn = !badNum(minFreeMB) && num(minFreeMB) < MIN_FREE_WARN_MB;
 
-  const dirty = colDirty || yearDirty || coverDirty || baDirty;
+  const dirty = colDirty || yearDirty || coverDirty || ratingDirty || baDirty;
   const saveInvalid =
-    (colDirty && colInvalid) || (yearDirty && yearInvalid) || (coverDirty && coverInvalid) || (baDirty && baInvalid);
-  const saving = updateCol.isPending || updateYear.isPending || updateCover.isPending || updateBa.isPending;
+    (colDirty && colInvalid) ||
+    (yearDirty && yearInvalid) ||
+    (coverDirty && coverInvalid) ||
+    (ratingDirty && ratingInvalid) ||
+    (baDirty && baInvalid);
+  const saving =
+    updateCol.isPending || updateYear.isPending || updateCover.isPending || updateRating.isPending || updateBa.isPending;
 
   const onReset = () => {
     if (cq.data) {
@@ -724,6 +794,10 @@ export function AdminBackgroundPage() {
     if (xq.data) {
       setOlRpmC(String(xq.data.openlibrary_rpm));
       setGbRpmC(String(xq.data.googlebooks_rpm));
+    }
+    if (rq.data) {
+      setGbRpmR(String(rq.data.googlebooks_rpm));
+      setOlRpmR(String(rq.data.openlibrary_rpm));
     }
     if (bq.data) {
       setBiosRpm(String(bq.data.bios_rpm));
@@ -761,6 +835,13 @@ export function AdminBackgroundPage() {
         setOlRpmC(String(saved.openlibrary_rpm));
         setGbRpmC(String(saved.googlebooks_rpm));
       }
+      if (ratingDirty && !ratingInvalid && rq.data) {
+        const saved = await updateRating.mutateAsync(
+          buildExtRatingInput(rq.data, { googlebooks_rpm: num(gbRpmR), openlibrary_rpm: num(olRpmR) }),
+        );
+        setGbRpmR(String(saved.googlebooks_rpm));
+        setOlRpmR(String(saved.openlibrary_rpm));
+      }
       if (baDirty && !baInvalid && bq.data) {
         const saved = await updateBa.mutateAsync(
           buildBaInput(bq.data, { bios_rpm: num(biosRpm), adaptations_rpm: num(adaptRpm) }),
@@ -779,11 +860,14 @@ export function AdminBackgroundPage() {
   const yPct = yCov && yCov.total > 0 ? Math.round((yCov.with_year / yCov.total) * 100) : 0;
   const xCov = xq.data?.coverage;
   const xPct = xCov && xCov.total > 0 ? Math.round((xCov.with_cover / xCov.total) * 100) : 0;
+  const rPct = rCov && rCov.total > 0 ? Math.round((rCov.with_rating / rCov.total) * 100) : 0;
   const bCov = bq.data?.bio_coverage;
   const bPct = bCov && bCov.total > 0 ? Math.round((bCov.with_bio / bCov.total) * 100) : 0;
   const aCov = bq.data?.adaptation_coverage;
   const aPct = aCov && aCov.total > 0 ? Math.round((aCov.with_adaptations / aCov.total) * 100) : 0;
 
+  // rq (внешний рейтинг) и wq (группировка) — вторичные самостоятельные секции:
+  // их загрузка/ошибка не блокирует страницу (рендерятся по rq.data?./wq.data?.).
   const loading = cq.isLoading || yq.isLoading || xq.isLoading || bq.isLoading || gq.isLoading;
   const failed = cq.error || yq.error || xq.error || bq.error || gq.error;
 
@@ -1291,6 +1375,102 @@ export function AdminBackgroundPage() {
                   Сейчас: {formatBytes(cq.data?.poster_cache_size_bytes ?? 0)}
                 </p>
               </div>
+            </TypeRow>
+
+            {/* ВНЕШНИЙ РЕЙТИНГ */}
+            <TypeRow
+              title="Внешний рейтинг"
+              mode={ratingMode}
+              coverage={rCov ? `рейтинг у ${rPct}%` : '—'}
+            >
+              <ModeSelector
+                idPrefix="rating"
+                value={ratingMode}
+                twoState
+                help={MODE_HELP_RATING}
+                disabled={updateRating.isPending}
+                onChange={(m) => void applyRating({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
+              />
+              <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                Рейтинг из сети (Google Books / OpenLibrary) для книг без рейтинга. На карточке
+                показывается как «Внешний рейтинг», когда нет библиотечного (LIBRATE из INPX).
+                Оценки читателей этого инстанса — отдельная сущность, сюда не входят.
+              </Callout>
+              {ratingMode === 'bg' ? (
+                <>
+                  <div className="space-y-2">
+                    <FieldLabel>Источники (только внешние)</FieldLabel>
+                    <SourceSwitch
+                      id="rating-src-gb"
+                      label="Google Books (averageRating)"
+                      checked={rq.data?.googlebooks ?? false}
+                      disabled={updateRating.isPending}
+                      onChange={(v) => toggleRatingProvider('googlebooks', v)}
+                    />
+                    <SourceSwitch
+                      id="rating-src-ol"
+                      label="OpenLibrary (ratings)"
+                      checked={rq.data?.openlibrary ?? false}
+                      disabled={updateRating.isPending}
+                      onChange={(v) => toggleRatingProvider('openlibrary', v)}
+                    />
+                    <p className="text-xs text-muted-foreground text-pretty">
+                      Хотя бы один источник; если выключить все — рейтинг наполняться не будет. Из
+                      включённых берётся оценка с бОльшим числом голосов.
+                    </p>
+                  </div>
+                  {rq.data?.googlebooks || rq.data?.openlibrary ? (
+                    <div className="space-y-3 border-t border-border pt-3">
+                      <ScopeControl
+                        whole={rq.data?.whole_collection ?? false}
+                        disabled={updateRating.isPending}
+                        onChange={(v) => void applyRating({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: только пробелы')}
+                        warning="Вся коллекция: рейтинг запрашивается и для книг с библиотечным рейтингом (LIBRATE). На показ LIBRATE приоритетнее, web-данные просто накопятся. Десятки тысяч запросов, очень долго."
+                      />
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <label htmlFor="rating-gb-rpm" className="text-sm">
+                            Google Books, зап./мин
+                          </label>
+                          <Input id="rating-gb-rpm" type="number" min={0} value={gbRpmR} onChange={(e) => setGbRpmR(e.target.value)} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label htmlFor="rating-ol-rpm" className="text-sm">
+                            OpenLibrary, зап./мин
+                          </label>
+                          <Input id="rating-ol-rpm" type="number" min={0} value={olRpmR} onChange={(e) => setOlRpmR(e.target.value)} />
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {ratingOnce ? (
+                          <Button variant="outline" size="sm" onClick={onStopRating} disabled={stopRating.isPending}>
+                            <Square className="size-4" aria-hidden />
+                            {stopRating.isPending ? 'Остановка…' : 'Остановить проход'}
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" onClick={onRunRating} disabled={ratingRunning || runRating.isPending}>
+                            <Flame className="size-4" aria-hidden />
+                            {runRating.isPending ? 'Запуск…' : 'Прогнать разово'}
+                          </Button>
+                        )}
+                      </div>
+                      {ratingRunning ? <RunningDot continuous={!ratingOnce} /> : null}
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
+              {rCov && Object.keys(rCov.by_source).length > 0 ? (
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  <span className="w-full text-muted-foreground/80">Из внешних добавлено:</span>
+                  {Object.entries(rCov.by_source)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([src, n]) => (
+                      <span key={src} className="tabular-nums">
+                        {SOURCE_LABELS[src] ?? src}: {n}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
             </TypeRow>
 
             {/* ГРУППИРОВКА ИЗДАНИЙ (works) */}

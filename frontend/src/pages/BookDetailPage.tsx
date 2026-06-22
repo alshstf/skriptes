@@ -313,7 +313,6 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
   );
 }
 
-// fmtRating — LIBRATE целочисленный, web-рейтинг дробный: целые без хвоста, иначе 1 знак.
 // externalRatingDisplay — единый «Внешний рейтинг» с атрибуцией источника.
 // Приоритет: LIBRATE (донорская библиотека) → web (Google Books/OpenLibrary).
 function externalRatingDisplay(book: Book): { value: string; source: string } | null {

@@ -240,6 +240,12 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/admin/cover-enrichment", handleUpdateCoverEnrichment(d.Settings))
 					r.Post("/admin/cover-enrichment/run", handleCoverBackfillNow(d.Settings))
 					r.Post("/admin/cover-enrichment/stop", handleCoverBackfillStop(d.Settings))
+					// Внешний рейтинг (Google Books/OpenLibrary) — фоновый воркер
+					// дозаполнения books.external_rating.
+					r.Get("/admin/external-rating", handleGetExternalRating(d.Settings))
+					r.Put("/admin/external-rating", handleUpdateExternalRating(d.Settings))
+					r.Post("/admin/external-rating/run", handleExternalRatingNow(d.Settings))
+					r.Post("/admin/external-rating/stop", handleExternalRatingStop(d.Settings))
 					// Раздел «Биографии + Экранизации — внешние»: фоновые воркеры
 					// био/фото авторов (Wikipedia/OL) и экранизаций книг (Wikidata).
 					r.Get("/admin/bio-adaptation-enrichment", handleGetBioAdaptation(d.Settings))

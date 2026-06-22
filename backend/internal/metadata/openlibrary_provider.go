@@ -224,6 +224,44 @@ type olSearchResponse struct {
 	Docs []olSearchDoc `json:"docs"`
 }
 
+// FetchRating — внешний рейтинг работы: резолвим OL Work ID (ResolveWorkKey:
+// ISBN-first, иначе title+author за гейтом authorNameMatches) → GET
+// /works/{key}/ratings.json → summary.average (1–5) / summary.count. Реализует
+// RatingProvider. ErrNotFound, если работа не нашлась или рейтинга/голосов нет.
+func (p *OpenLibraryProvider) FetchRating(ctx context.Context, q WorkQuery) (RatingResult, error) {
+	key, err := p.ResolveWorkKey(ctx, q)
+	if err != nil {
+		return RatingResult{}, err // ErrNotFound пробрасывается как есть
+	}
+	u := strings.TrimRight(p.workBaseURL(), "/") + "/works/" + url.PathEscape(key) + "/ratings.json"
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return RatingResult{}, fmt.Errorf("build ratings request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return RatingResult{}, fmt.Errorf("ol ratings: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return RatingResult{}, ErrNotFound
+	}
+	var rr struct {
+		Summary struct {
+			Average *float64 `json:"average"`
+			Count   int      `json:"count"`
+		} `json:"summary"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&rr); err != nil {
+		return RatingResult{}, fmt.Errorf("decode ratings: %w", err)
+	}
+	if rr.Summary.Average == nil || *rr.Summary.Average <= 0 || rr.Summary.Count <= 0 {
+		return RatingResult{}, ErrNotFound
+	}
+	return RatingResult{Average: *rr.Summary.Average, Count: rr.Summary.Count}, nil
+}
+
 // FetchYear — год первого издания произведения из OpenLibrary search
 // (поле first_publish_year). Реализует YearProvider. Это «дата выхода»
 // произведения: OL отдаёт самый ранний год издания среди всех изданий
