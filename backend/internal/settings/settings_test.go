@@ -109,6 +109,33 @@ func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {
 	require.Equal(t, want, got)
 }
 
+func TestSettings_ExternalRatingRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, фолбэк).
+	got, err := store.ExternalRating(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultExternalRatingConfig(), got)
+	require.False(t, got.Enabled, "по умолчанию воркер выключен")
+	require.False(t, got.WholeCollection, "по умолчанию только пробелы")
+
+	// Сохранили выбор «только Google Books» + вся коллекция — читается обратно.
+	want := settings.ExternalRatingConfig{
+		Enabled: true, GoogleBooks: true, OpenLibrary: false, WholeCollection: true,
+		GoogleBooksRPM: 30, OpenLibraryRPM: 0, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+	}
+	require.NoError(t, store.SetExternalRating(ctx, want))
+	got, err = store.ExternalRating(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 func TestSettings_BioAdaptationRoundTrip(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")

@@ -196,3 +196,22 @@ type YearProvider interface {
 	Name() string
 	FetchYear(ctx context.Context, q BookQuery) (int, error)
 }
+
+// RatingResult — внешний рейтинг произведения: средняя (шкала 1–5) + число
+// голосов у источника. Count помогает выбрать более надёжный источник, когда
+// их несколько (больше голосов — выше доверие).
+type RatingResult struct {
+	Average float64
+	Count   int
+}
+
+// RatingProvider — внешний источник рейтинга книги (Google Books / OpenLibrary)
+// для дозаполнения books.external_rating. Возвращает RatingResult (Average > 0)
+// либо ErrNotFound, если рейтинга там нет; прочие ошибки — сетевые/HTTP, воркер
+// их логирует и помечает source как error (ретрай по TTL). Name() совпадает со
+// строкой source в book_external_rating_lookups / external_rating_source
+// ("googlebooks" | "openlibrary").
+type RatingProvider interface {
+	Name() string
+	FetchRating(ctx context.Context, q WorkQuery) (RatingResult, error)
+}

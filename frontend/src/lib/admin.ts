@@ -350,6 +350,80 @@ export function useStopCoverBackfill() {
   });
 }
 
+// ── Внешний рейтинг (Google Books / OpenLibrary, фоном) ───────────────
+
+export type ExternalRatingSettings = {
+  enabled: boolean;
+  googlebooks: boolean;
+  openlibrary: boolean;
+  // режим охвата: false = только пробелы (без любого рейтинга), true = вся коллекция
+  whole_collection: boolean;
+  googlebooks_rpm: number;
+  openlibrary_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  external_rating_running: boolean;
+  external_rating_mode: 'off' | 'continuous' | 'once';
+  // покрытие (read-only)
+  coverage: {
+    total: number;
+    with_rating: number; // LIBRATE или web
+    with_web: number; // только web (external_rating)
+    by_source: Record<string, number>;
+  };
+};
+
+// ExternalRatingInput — тело PUT (только конфиг, без read-only полей).
+export type ExternalRatingInput = {
+  enabled: boolean;
+  googlebooks: boolean;
+  openlibrary: boolean;
+  whole_collection: boolean;
+  googlebooks_rpm: number;
+  openlibrary_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const EXTERNAL_RATING_KEY = ['admin', 'external-rating'] as const;
+
+export function useExternalRatingSettings() {
+  return useQuery<ExternalRatingSettings>({
+    queryKey: [...EXTERNAL_RATING_KEY],
+    queryFn: () => apiFetch<ExternalRatingSettings>('/api/admin/external-rating'),
+    staleTime: 10_000,
+    refetchInterval: (query) => (query.state.data?.external_rating_running ? 3000 : false),
+  });
+}
+
+export function useUpdateExternalRatingSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: ExternalRatingInput) =>
+      apiFetch<ExternalRatingSettings>('/api/admin/external-rating', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...EXTERNAL_RATING_KEY], data),
+  });
+}
+
+export function useRunExternalRating() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/external-rating/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...EXTERNAL_RATING_KEY] }),
+  });
+}
+
+export function useStopExternalRating() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/external-rating/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...EXTERNAL_RATING_KEY] }),
+  });
+}
+
 // ── Биографии авторов + Экранизации книг (внешние, фоном) ─────────────
 
 export type BioAdaptationSettings = {

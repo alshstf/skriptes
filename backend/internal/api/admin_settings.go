@@ -20,6 +20,7 @@ type SettingsDeps struct {
 	Prewarm            *metadata.PrewarmController
 	YearBackfill       *metadata.YearBackfillController
 	CoverBackfill      *metadata.CoverBackfillController
+	ExternalRating     *metadata.ExternalRatingBackfillController
 	AuthorBackfill     *metadata.AuthorBackfillController
 	AdaptationBackfill *metadata.AdaptationBackfillController
 	WorkGroup          *metadata.WorkGroupController

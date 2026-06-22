@@ -68,6 +68,25 @@ test('admin: панель фоновых операций — аккордеон
       }),
     }),
   );
+  await page.route(/\/api\/admin\/external-rating$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        enabled: false,
+        googlebooks: true,
+        openlibrary: true,
+        whole_collection: false,
+        googlebooks_rpm: 60,
+        openlibrary_rpm: 60,
+        not_found_retry_days: 90,
+        error_retry_hours: 24,
+        external_rating_running: false,
+        external_rating_mode: 'off',
+        coverage: { total: 10, with_rating: 6, with_web: 1, by_source: { googlebooks: 1 } },
+      }),
+    }),
+  );
   await page.route(/\/api\/admin\/bio-adaptation-enrichment$/, (route) =>
     route.fulfill({
       status: 200,

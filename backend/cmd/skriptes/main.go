@@ -235,6 +235,28 @@ func run() error {
 		coverBackfillCtl.Start()
 	}
 
+	// Фоновое дозаполнение внешнего рейтинга (books.external_rating) из Google
+	// Books / OpenLibrary для книг без рейтинга. Зеркало cover-воркера: opt-in,
+	// per-source rate-limit + учёт (book_external_rating_lookups); пишет рейтинг
+	// прямо в books (кэша нет).
+	extRatingCfg, err := settingsStore.ExternalRating(ctx())
+	if err != nil {
+		logger.Warn("read external rating settings — using defaults", "err", err)
+		extRatingCfg = settings.DefaultExternalRatingConfig()
+	}
+	externalRatingCtl := metadata.NewExternalRatingBackfillController(pool, gbProvider, olProvider, metadata.ExternalRatingBackfillConfig{
+		GoogleBooks:       extRatingCfg.GoogleBooks,
+		OpenLibrary:       extRatingCfg.OpenLibrary,
+		WholeCollection:   extRatingCfg.WholeCollection,
+		GoogleBooksRPM:    extRatingCfg.GoogleBooksRPM,
+		OpenLibraryRPM:    extRatingCfg.OpenLibraryRPM,
+		NotFoundRetryDays: extRatingCfg.NotFoundRetryDays,
+		ErrorRetryHours:   extRatingCfg.ErrorRetryHours,
+	}, logger)
+	if extRatingCfg.Enabled {
+		externalRatingCtl.Start()
+	}
+
 	// Фоновые воркеры «людей и экранизаций» из внешних источников (external-only,
 	// без fb2): био/фото авторов (Wikipedia/OL) и экранизации книг (Wikidata).
 	// Оба opt-in; используют существующие маркеры metadata_fetched_at /
@@ -337,6 +359,7 @@ func run() error {
 		Settings: api.SettingsDeps{
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
 			YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl,
+			ExternalRating: externalRatingCtl,
 			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
 			WorkGroup: workGroupCtl,
 		},
