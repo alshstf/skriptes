@@ -78,6 +78,17 @@ exposed через `GET /api/genres`. На фронте — `useGenreMap()` в
 `BookListItem`. Правишь имена/стиль жанров — пройди по всем местам. Языки в
 фильтре резолвятся через `useLanguageMap()` (`lib/content.ts`).
 
+**Обогащённая плашка книги** (плотная строка сигналов, как у авторов): общий
+компонент `frontend/src/components/BookMeta.tsx` — год · 🌐 внешний рейтинг (Tooltip:
+источник) · 📖 оценка читателей · 🎬 экранизация · язык · ✓/N% чтение · ★ избранное.
+Используется в `BookListItem` (автор/серия) и `BooksPage::BookCard` (/books). Данные
+на `books.ListItem` гидрирует бэкенд: НЕ-user сигналы (рейтинги/источник/экранизация) —
+`books.HydrateListMeta(ctx, pool, items)` по work_id (зовут `ListWorks` и
+`catalog.GetAuthor/GetSeries`); user-сигналы (★/чтение) — `api.hydrateUserListMeta`
+(`history.FavoriteWorkSet` + `WorkReadStatusSet`) в хендлерах. Suggest/Cmd+K плашку
+НЕ обогащаем (минимальная). Полки (`ShelvesPage`/`collections.CollectionBook`) — TODO
+(PR2).
+
 ### 3. `date_added` ≠ год написания книги
 
 INPX'овский `date_added` — когда книга добавилась в библиотеку librusec, а не

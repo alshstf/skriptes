@@ -337,6 +337,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		items = append(items, sc.item)
 	}
 	s.hydrateWorkCovers(ctx, items)
+	HydrateListMeta(ctx, s.pool, items)
 
 	total := res.EstimatedTotalHits
 	if total == 0 && res.TotalHits > 0 {
@@ -468,6 +469,92 @@ func (s *Service) hydrateWorkCovers(ctx context.Context, items []ListItem) {
 			}
 			items[i].EditionCount = h.editions
 		}
+	}
+}
+
+// listItemWorkID — id логической книги для item: WorkID (если задан, как в
+// catalog-выдаче автора/серии) либо ID (в works-выдаче ID = works.id).
+func listItemWorkID(it ListItem) int64 {
+	if it.WorkID > 0 {
+		return it.WorkID
+	}
+	return it.ID
+}
+
+// HydrateListMeta батч-проставляет на плашку НЕ-user сигналы по work_id: внешний
+// рейтинг (max COALESCE(rating, external_rating) по изданиям) + источник
+// топ-издания (как у авторов), оценку читателей (avg book_ratings по работе) +
+// число, наличие экранизаций. Пул передаётся явно — функция переиспользуется
+// catalog'ом (автор/серия) поверх его же ListItem'ов. Ошибки молча игнорируются
+// (плашка деградирует до базовой, как с обложками). User-поля (favorite/read) —
+// в api-слое.
+func HydrateListMeta(ctx context.Context, pool *pgxpool.Pool, items []ListItem) {
+	if pool == nil || len(items) == 0 {
+		return
+	}
+	idSet := make(map[int64]struct{}, len(items))
+	for _, it := range items {
+		idSet[listItemWorkID(it)] = struct{}{}
+	}
+	ids := make([]int64, 0, len(idSet))
+	for id := range idSet {
+		ids = append(ids, id)
+	}
+	rows, err := pool.Query(ctx, `
+		SELECT w.id,
+		  (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM books b
+		     WHERE b.work_id = w.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)),
+		  (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END FROM books b
+		     WHERE b.work_id = w.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)
+		     ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id LIMIT 1),
+		  (SELECT avg(br.rating)::float8 FROM book_ratings br WHERE br.work_id = w.id),
+		  (SELECT count(*)::int FROM book_ratings br WHERE br.work_id = w.id),
+		  EXISTS (SELECT 1 FROM books b JOIN book_adaptations ad ON ad.book_id = b.id
+		          WHERE b.work_id = w.id AND b.deleted = false)
+		FROM works w WHERE w.id = ANY($1)
+	`, ids)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	type meta struct {
+		extRating pgtype.Float8
+		extSource pgtype.Text
+		readerAvg pgtype.Float8
+		readerCnt int
+		hasAdapt  bool
+	}
+	byID := make(map[int64]meta, len(ids))
+	for rows.Next() {
+		var id int64
+		var m meta
+		if err := rows.Scan(&id, &m.extRating, &m.extSource, &m.readerAvg, &m.readerCnt, &m.hasAdapt); err != nil {
+			return
+		}
+		byID[id] = m
+	}
+	if rows.Err() != nil {
+		return
+	}
+	for i := range items {
+		m, ok := byID[listItemWorkID(items[i])]
+		if !ok {
+			continue
+		}
+		if m.extRating.Valid {
+			v := m.extRating.Float64
+			items[i].ExternalRating = &v
+		}
+		if m.extSource.Valid && m.extSource.String != "" {
+			src := m.extSource.String
+			items[i].ExternalRatingSource = &src
+		}
+		if m.readerAvg.Valid {
+			v := m.readerAvg.Float64
+			items[i].ReaderRating = &v
+		}
+		items[i].ReaderRatingCount = m.readerCnt
+		items[i].HasAdaptations = m.hasAdapt
 	}
 }
 

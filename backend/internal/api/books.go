@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/books"
+	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
 // BooksDeps — зависимости для эндпоинтов /api/books*.
@@ -18,7 +19,45 @@ type BooksDeps struct {
 	Service *books.Service
 }
 
-func handleListBooks(d BooksDeps, content ContentDeps) http.HandlerFunc {
+// listItemWorkID — id логической книги для item: WorkID (catalog-выдача автора/
+// серии) либо ID (works-выдача, ID = works.id). Совпадает с фронтовым work_id ?? id.
+func listItemWorkID(it books.ListItem) int64 {
+	if it.WorkID > 0 {
+		return it.WorkID
+	}
+	return it.ID
+}
+
+// hydrateUserListMeta доразмечает USER-поля обогащённой плашки на списке работ:
+// is_favorite (FavoriteWorkSet) + is_read/reading_fraction (WorkReadStatusSet),
+// по work_id. Не-user сигналы (рейтинги/экранизации) уже проставлены сервисом
+// (books.HydrateListMeta). Гость/без history — no-op.
+func hydrateUserListMeta(ctx context.Context, items []books.ListItem, userID int64, hist *history.Service) {
+	if userID == 0 || hist == nil || len(items) == 0 {
+		return
+	}
+	ids := make([]int64, 0, len(items))
+	for i := range items {
+		ids = append(ids, listItemWorkID(items[i]))
+	}
+	if fav, err := hist.FavoriteWorkSet(ctx, userID, ids); err == nil {
+		for i := range items {
+			if _, ok := fav[listItemWorkID(items[i])]; ok {
+				items[i].IsFavorite = true
+			}
+		}
+	}
+	if reads, err := hist.WorkReadStatusSet(ctx, userID, ids); err == nil {
+		for i := range items {
+			if rs, ok := reads[listItemWorkID(items[i])]; ok {
+				items[i].IsRead = rs.IsRead
+				items[i].ReadingFraction = rs.Fraction
+			}
+		}
+	}
+}
+
+func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		params := books.ListParams{
@@ -55,6 +94,7 @@ func handleListBooks(d BooksDeps, content ContentDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadGateway, map[string]string{"error": "search failed"})
 			return
 		}
+		hydrateUserListMeta(ctx, res.Items, userID, hist.Service)
 		writeJSON(w, http.StatusOK, res)
 	}
 }

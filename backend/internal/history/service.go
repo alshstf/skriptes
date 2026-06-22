@@ -244,6 +244,49 @@ func (s *Service) WorkReadStatus(ctx context.Context, userID, workID int64) (isR
 	return ca != nil, ca, nil
 }
 
+// WorkRead — компактный статус чтения работы для списковой плашки.
+type WorkRead struct {
+	IsRead   bool     // прочитано любое издание (completed_at)
+	Fraction *float64 // макс. прогресс web-ридера по изданиям (для «N%»), nil если нет
+}
+
+// WorkReadStatusSet — батч-статус чтения по работам для одного пользователя:
+// map work_id → {IsRead, Fraction}. Зеркало WorkReadStatus/WorkEditionReads, но
+// батчем для списков (плашка книги в /books, у автора/серии, на полках).
+// IsRead = прочитано любое издание; Fraction = max(fraction) по изданиям
+// (для singleton-работ — обычная позиция; агрегат для мультиизданий —
+// эвристика «дальше всего прочитано», для компактного сигнала достаточно).
+func (s *Service) WorkReadStatusSet(ctx context.Context, userID int64, workIDs []int64) (map[int64]WorkRead, error) {
+	out := map[int64]WorkRead{}
+	if userID == 0 || len(workIDs) == 0 {
+		return out, nil
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT b.work_id,
+		       bool_or(r.completed_at IS NOT NULL) AS is_read,
+		       max(r.fraction) AS fraction
+		FROM reads r
+		JOIN books b ON b.id = r.book_id
+		WHERE r.user_id = $1 AND b.work_id = ANY($2)
+		GROUP BY b.work_id
+	`, userID, workIDs)
+	if err != nil {
+		return out, fmt.Errorf("query work read status set: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var (
+			workID int64
+			wr     WorkRead
+		)
+		if err := rows.Scan(&workID, &wr.IsRead, &wr.Fraction); err != nil {
+			return out, err
+		}
+		out[workID] = wr
+	}
+	return out, rows.Err()
+}
+
 // SavePosition — сохраняет позицию чтения (epub-cfi) + fraction
 // прогресса (0.0–1.0). Upsert: если строки в reads ещё нет, создаём её.
 //

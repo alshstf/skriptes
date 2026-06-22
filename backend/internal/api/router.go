@@ -102,7 +102,7 @@ func NewRouter(d Deps) http.Handler {
 				r.Patch("/me", handleUpdateMe(d.Auth))
 				r.Patch("/me/password", handleChangeMyPassword(d.Auth))
 				if d.Books.Service != nil {
-					r.Get("/books", handleListBooks(d.Books, d.Content))
+					r.Get("/books", handleListBooks(d.Books, d.History, d.Content))
 					r.With(bookGate).Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
 					// Карточка логической книги по works.id. Видимость скрытого
 					// контента обрабатывает GetWork (404, если все издания скрыты) —

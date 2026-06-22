@@ -76,6 +76,19 @@ type ListItem struct {
 	// заполняется; в catalog-выдаче (автор/серия) ID = представительное ИЗДАНИЕ,
 	// поэтому WorkID несёт id работы для ссылки. Фронт: /works/{work_id ?? id}.
 	WorkID int64 `json:"work_id,omitempty"`
+
+	// Сигналы для обогащённой плашки (как строка автора). Не-user поля
+	// (ExternalRating/Source, ReaderRating/Count, HasAdaptations) гидрируются
+	// HydrateListMeta по work_id; user-поля (IsRead/ReadingFraction; IsFavorite
+	// выше) — в api-слое (есть history+userID). Внешний рейтинг = max(COALESCE(
+	// rating, external_rating)) по изданиям работы + источник топ-издания.
+	ExternalRating       *float64 `json:"external_rating,omitempty"`
+	ExternalRatingSource *string  `json:"external_rating_source,omitempty"`
+	ReaderRating         *float64 `json:"reader_rating,omitempty"`
+	ReaderRatingCount    int      `json:"reader_rating_count,omitempty"`
+	HasAdaptations       bool     `json:"has_adaptations,omitempty"`
+	IsRead               bool     `json:"is_read,omitempty"`
+	ReadingFraction      *float64 `json:"reading_fraction,omitempty"`
 }
 
 // ListResponse — обёртка для GET /api/books.

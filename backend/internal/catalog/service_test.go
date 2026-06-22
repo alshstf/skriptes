@@ -118,6 +118,13 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, 1, a.BooksTotal)
 	require.Len(t, a.Books, 1)
 	require.Equal(t, "Кадетский корпус. Книга 2", a.Books[0].Title)
+	// Обогащённая плашка: books.HydrateListMeta проставил внешний рейтинг из
+	// LIBRATE (=4 в фикстуре) + источник 'library'; экранизаций нет.
+	require.NotNil(t, a.Books[0].ExternalRating, "плашка несёт внешний рейтинг (LIBRATE)")
+	require.InDelta(t, 4.0, *a.Books[0].ExternalRating, 0.001)
+	require.NotNil(t, a.Books[0].ExternalRatingSource)
+	require.Equal(t, "library", *a.Books[0].ExternalRatingSource)
+	require.False(t, a.Books[0].HasAdaptations)
 	// Топ-жанры: ровно 3 (sf_action, popadanec, network_literature), каждый с count=1
 	require.Len(t, a.TopGenres, 3)
 	for _, g := range a.TopGenres {

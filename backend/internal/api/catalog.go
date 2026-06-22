@@ -120,6 +120,10 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content
 			}
 		}
 
+		// User-сигналы обогащённой плашки на книгах автора (★ избранное + статус
+		// чтения); не-user (рейтинги/экранизации) уже проставил сервис.
+		hydrateUserListMeta(ctx, a.Books, userID, hist.Service)
+
 		// Lazy enrichment: bio/фото подтягиваем из Wikipedia. На первом
 		// запросе клиент получит карточку без них; polling в useAuthor
 		// подменит без перезагрузки.
@@ -223,6 +227,8 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta 
 				isFav = v
 			}
 		}
+		// User-сигналы обогащённой плашки на книгах серии (★ + статус чтения).
+		hydrateUserListMeta(ctx, s.Books, userID, hist.Service)
 		// Ленивое дозаполнение года для книг серии без порядка (каскад series_order).
 		s.YearEnrichmentPending = triggerSeriesYearEnrichmentAsync(meta, s.BookRefs, s.Books)
 		writeJSON(w, http.StatusOK, seriesResponse{Series: s, IsFavorite: isFav})
