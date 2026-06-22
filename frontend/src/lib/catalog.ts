@@ -21,6 +21,17 @@ export type Author = {
   series?: SeriesWithCount[];
   books: BookListItem[];
   is_favorite?: boolean;
+  /** Агрегаты-зеркало строки списка авторов (чтобы карточка несла ту же сводку). */
+  external_rating?: number;
+  /** Источник топ-издания внешнего рейтинга: 'library' | 'googlebooks' | 'openlibrary'. */
+  external_rating_source?: string;
+  reader_rating?: number;
+  reader_rating_count?: number;
+  has_adaptations?: boolean;
+  /** Языки изданий (lang∪src_lang), нормализованные, по убыванию числа книг. */
+  languages?: string[];
+  /** Диапазон лет активности (по written_year). */
+  years_active?: { from: number; to: number };
   /** Распределение книг автора по году добавления в коллекцию. */
   year_stats?: YearCount[];
   /** Сколько книг автора пользователь хотя бы раз скачивал. */

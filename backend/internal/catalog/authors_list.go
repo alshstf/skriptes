@@ -44,8 +44,12 @@ type AuthorListItem struct {
 	// ExternalRating — единый ВНЕШНИЙ рейтинг (НЕ пользовательский): максимум по
 	// книгам автора от COALESCE(LIBRATE из INPX, web-рейтинг Google Books/OL),
 	// с приоритетом LIBRATE на уровне книги. nil, если внешнего рейтинга нет ни
-	// у одной книги. Источник на уровне автора не показываем (это агрегат-max).
+	// у одной книги.
 	ExternalRating *float64 `json:"external_rating,omitempty"`
+	// ExternalRatingSource — источник того издания, что дало максимум
+	// ExternalRating: 'library' (LIBRATE) | 'googlebooks' | 'openlibrary'. Для
+	// тултипа в списке (откуда оценка). nil, если рейтинга нет.
+	ExternalRatingSource *string `json:"external_rating_source,omitempty"`
 	// ReaderRating — средняя ПОЛЬЗОВАТЕЛЬСКАЯ оценка (book_ratings) по работам
 	// автора, по инстансу (все юзеры). Без порога голосов (см. решение). nil,
 	// если ни одной оценки. ReaderRatingCount — число таких оценок (для бейджа).
@@ -256,6 +260,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	exYrTo := renderExclusion()
 	exAdapt := renderExclusion()
 	exRating := renderExclusion()
+	exRatingSrc := renderExclusion()
 	exReaderAvg := renderExclusion()
 	exReaderCnt := renderExclusion()
 	limitN := addArg(p.Limit)
@@ -282,6 +287,11 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[6]s) AS has_adapt,
 		       (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[7]s) AS external_rating,
+		       (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
+		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[14]s
+		          ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id
+		          LIMIT 1) AS external_rating_source,
 		       (SELECT avg(br.rating)::float8 FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
@@ -295,7 +305,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		FROM authors a%[8]s
 		%[9]s
 		LIMIT $%[10]d OFFSET $%[11]d
-	`, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, whereSQL, orderSQL, limitN, offsetN, exReaderAvg, exReaderCnt)
+	`, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, whereSQL, orderSQL, limitN, offsetN, exReaderAvg, exReaderCnt, exRatingSrc)
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
@@ -312,11 +322,12 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
 			extRating           pgtype.Float8
+			extSource           pgtype.Text
 			readerAvg           pgtype.Float8
 		)
 		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
-			&yrFrom, &yrTo, &it.HasAdaptations, &extRating,
+			&yrFrom, &yrTo, &it.HasAdaptations, &extRating, &extSource,
 			&readerAvg, &it.ReaderRatingCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
@@ -330,6 +341,10 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		if extRating.Valid {
 			v := extRating.Float64
 			it.ExternalRating = &v
+		}
+		if extSource.Valid && extSource.String != "" {
+			s := extSource.String
+			it.ExternalRatingSource = &s
 		}
 		if readerAvg.Valid {
 			v := readerAvg.Float64

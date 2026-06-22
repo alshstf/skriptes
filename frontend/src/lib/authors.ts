@@ -35,8 +35,11 @@ export type AuthorListItem = {
   years_active?: YearsRange;
   has_adaptations: boolean;
   /** Единый ВНЕШНИЙ рейтинг автора: max по книгам от COALESCE(LIBRATE, web).
-   *  Float (web даёт дробные). Источник на уровне автора не показываем. */
+   *  Float (web даёт дробные). */
   external_rating?: number;
+  /** Источник топ-издания внешнего рейтинга: 'library' | 'googlebooks' |
+   *  'openlibrary'. Для тултипа в списке. */
+  external_rating_source?: string;
   /** Средняя оценка читателей (book_ratings) по работам автора, по инстансу. */
   reader_rating?: number;
   /** Число пользовательских оценок (для бейджа «N оценок»). */

@@ -3,7 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthorsPage } from './AuthorsPage';
 
-// Link → <a> (role=link); прочие router-хуки в AuthorsPage не используются.
+// Link → <a> (role=link). useSearch/useNavigate — фильтры теперь живут в URL;
+// в юните стабим пустой search (дефолтные фильтры) и no-op navigate.
 vi.mock('@tanstack/react-router', () => {
   type LinkProps = {
     to?: string;
@@ -23,6 +24,8 @@ vi.mock('@tanstack/react-router', () => {
         </a>
       );
     },
+    useSearch: () => ({}),
+    useNavigate: () => () => {},
   };
 });
 
@@ -45,6 +48,7 @@ const authorsFixture = {
       years_active: { from: 1974, to: 2009 },
       has_adaptations: true,
       external_rating: 5,
+      external_rating_source: 'library',
       reader_rating: 3.5,
       reader_rating_count: 2,
     },
@@ -98,8 +102,9 @@ describe('AuthorsPage', () => {
     expect(screen.getByText(/2 книги в избранном/)).toBeInTheDocument();
     // Топ-жанр (display из ответа; useGenreMap пуст → fallback на g.display).
     expect(screen.getByText('Ужасы')).toBeInTheDocument();
-    // Единый внешний рейтинг отрендерен (a11y-label).
-    expect(screen.getByLabelText('Внешний рейтинг 5')).toBeInTheDocument();
+    // Единый внешний рейтинг отрендерен с источником в a11y-label (текст
+    // тултипа — тот же; сам Radix-тултип монтирует контент только по ховеру).
+    expect(screen.getByLabelText('Внешний рейтинг 5 · библиотека')).toBeInTheDocument();
     // Оценка читателей (book_ratings) — отдельно от внешнего рейтинга.
     expect(screen.getByLabelText('Оценка читателей 3.5 (2)')).toBeInTheDocument();
     // Иконка подписки (колокольчик) — только у Кинга.

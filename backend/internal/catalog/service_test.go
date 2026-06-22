@@ -129,6 +129,14 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, 1, a.Series[0].Count)
 	seriesID = a.Series[0].ID
 
+	// Агрегаты-зеркало строки списка на карточке: годы активности (written_year
+	// проставлен 2015 для всех) + языки изданий (ru). Подтверждает, что карточка
+	// несёт ту же сводку, что компактный список авторов.
+	require.NotNil(t, a.YearsActive, "годы активности на карточке")
+	require.Equal(t, 2015, a.YearsActive.From)
+	require.Equal(t, 2015, a.YearsActive.To)
+	require.Contains(t, a.Languages, "ru", "языки изданий на карточке")
+
 	// Series detail
 	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil)
 	require.NoError(t, err)
