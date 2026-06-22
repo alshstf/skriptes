@@ -102,9 +102,9 @@ describe('AuthorsPage', () => {
     expect(screen.getByText(/2 книги в избранном/)).toBeInTheDocument();
     // Топ-жанр (display из ответа; useGenreMap пуст → fallback на g.display).
     expect(screen.getByText('Ужасы')).toBeInTheDocument();
-    // Единый внешний рейтинг отрендерен с источником в a11y-label/тултипе.
+    // Единый внешний рейтинг отрендерен с источником в a11y-label (текст
+    // тултипа — тот же; сам Radix-тултип монтирует контент только по ховеру).
     expect(screen.getByLabelText('Внешний рейтинг 5 · библиотека')).toBeInTheDocument();
-    expect(screen.getByTitle('Внешний рейтинг 5 · библиотека')).toBeInTheDocument();
     // Оценка читателей (book_ratings) — отдельно от внешнего рейтинга.
     expect(screen.getByLabelText('Оценка читателей 3.5 (2)')).toBeInTheDocument();
     // Иконка подписки (колокольчик) — только у Кинга.

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import type { AuthorsSearch } from '@/router';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Link } from '@tanstack/react-router';
 import { Bell, BookHeart, Film, Globe, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -300,15 +301,22 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
           {author.external_rating != null ? (
             // Единый ВНЕШНИЙ рейтинг (LIBRATE ∪ web) — иконка Globe (НЕ звезда:
             // звезда строго за избранным; НЕ Library: занята кнопкой «На полку»).
-            // Источник топ-издания — в тултипе (title), чтобы не плодить текст
-            // в строке, но было видно «откуда» без захода на карточку книги.
-            <span
-              className="inline-flex items-center gap-0.5"
-              aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
-              title={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
-            >
-              · <Globe className="size-3 text-muted-foreground" aria-hidden /> {fmtRating(author.external_rating)}
-            </span>
+            // Источник топ-издания — в снаппи-тултипе (Radix, не нативный title с
+            // его огромной задержкой), чтобы видеть «откуда» без захода на карточку.
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className="inline-flex items-center gap-0.5"
+                  aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
+                >
+                  · <Globe className="size-3 text-muted-foreground" aria-hidden /> {fmtRating(author.external_rating)}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Внешний рейтинг {fmtRating(author.external_rating)} ·{' '}
+                {externalRatingSourceLabel(author.external_rating_source)}
+              </TooltipContent>
+            </Tooltip>
           ) : null}
           {author.reader_rating != null ? (
             // Оценка читателей этого инстанса (book_ratings) — иконка BookHeart.

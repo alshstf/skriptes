@@ -14,6 +14,7 @@ import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { useLanguageMap } from '@/lib/content';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { bySeriesOrder, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -82,13 +83,20 @@ export function AuthorPage() {
                 </span>
                 {years ? <span>· {years}</span> : null}
                 {a.external_rating != null ? (
-                  <span
-                    className="inline-flex items-center gap-0.5"
-                    aria-label={`Внешний рейтинг ${fmtRating(a.external_rating)} · ${externalRatingSourceLabel(a.external_rating_source)}`}
-                    title={`Внешний рейтинг ${fmtRating(a.external_rating)} · ${externalRatingSourceLabel(a.external_rating_source)}`}
-                  >
-                    · <Globe className="size-3.5 text-muted-foreground" aria-hidden /> {fmtRating(a.external_rating)}
-                  </span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span
+                        className="inline-flex items-center gap-0.5"
+                        aria-label={`Внешний рейтинг ${fmtRating(a.external_rating)} · ${externalRatingSourceLabel(a.external_rating_source)}`}
+                      >
+                        · <Globe className="size-3.5 text-muted-foreground" aria-hidden /> {fmtRating(a.external_rating)}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Внешний рейтинг {fmtRating(a.external_rating)} ·{' '}
+                      {externalRatingSourceLabel(a.external_rating_source)}
+                    </TooltipContent>
+                  </Tooltip>
                 ) : null}
                 {a.reader_rating != null ? (
                   <span
