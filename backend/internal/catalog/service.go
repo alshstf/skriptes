@@ -138,6 +138,17 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.YearStats = years
 
+	// Агрегаты-зеркало строки списка (рейтинги/экранизации/годы + языки), чтобы
+	// карточка показывала то же, что компактный список авторов.
+	if err := s.queryAuthorMeta(ctx, &a, id, excludeGenres, excludeLangs); err != nil {
+		return Author{}, err
+	}
+	langs, err := s.queryAuthorLanguages(ctx, id, excludeGenres, excludeLangs)
+	if err != nil {
+		return Author{}, err
+	}
+	a.Languages = langs
+
 	if userID > 0 {
 		read, err := s.queryAuthorReadCount(ctx, id, userID)
 		if err != nil {
@@ -521,6 +532,104 @@ func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excl
 		return nil, fmt.Errorf("query author year stats: %w", err)
 	}
 	return groupYearStats(rows)
+}
+
+// queryAuthorMeta — агрегаты-зеркало строки списка для карточки автора:
+// внешний рейтинг + источник топ-издания, оценка читателей + число, наличие
+// экранизаций, годы активности (по written_year). Языки — отдельно
+// (queryAuthorLanguages). Все подзапросы — по видимым книгам (exClause).
+func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excludeGenres, excludeLangs []string) error {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	args := append([]any{id}, exArgs...)
+	var (
+		extRating pgtype.Float8
+		extSource pgtype.Text
+		readerAvg pgtype.Float8
+		readerCnt int
+		hasAdapt  bool
+		yrFrom    pgtype.Int2
+		yrTo      pgtype.Int2
+	)
+	err := s.pool.QueryRow(ctx, `
+		SELECT
+		  (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+`),
+		  (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
+		     FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+`
+		     ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id LIMIT 1),
+		  (SELECT avg(br.rating)::float8 FROM book_ratings br WHERE br.work_id IN (
+		     SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+`)),
+		  (SELECT count(*)::int FROM book_ratings br WHERE br.work_id IN (
+		     SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+`)),
+		  EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		     JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = $1`+exClause+`),
+		  (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`),
+		  (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`)
+	`, args...).Scan(&extRating, &extSource, &readerAvg, &readerCnt, &hasAdapt, &yrFrom, &yrTo)
+	if err != nil {
+		return fmt.Errorf("query author meta: %w", err)
+	}
+	if extRating.Valid {
+		v := extRating.Float64
+		a.ExternalRating = &v
+	}
+	if extSource.Valid && extSource.String != "" {
+		sv := extSource.String
+		a.ExternalRatingSource = &sv
+	}
+	if readerAvg.Valid {
+		v := readerAvg.Float64
+		a.ReaderRating = &v
+	}
+	a.ReaderRatingCount = readerCnt
+	a.HasAdaptations = hasAdapt
+	if yrFrom.Valid && yrTo.Valid {
+		a.YearsActive = &YearsRange{From: int(yrFrom.Int16), To: int(yrTo.Int16)}
+	}
+	return nil
+}
+
+// queryAuthorLanguages — языки изданий автора (lang∪src_lang, нормализованные
+// lower+btrim, граблю №14), по убыванию числа книг. Single-author зеркало
+// fillAuthorLanguages из списка.
+func (s *Service) queryAuthorLanguages(ctx context.Context, id int64, excludeGenres, excludeLangs []string) ([]string, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	args := append([]any{id}, exArgs...)
+	rows, err := s.pool.Query(ctx, `
+		SELECT code, count(*) AS cnt FROM (
+			SELECT NULLIF(lower(btrim(b.lang)), '') AS code
+			FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
+			WHERE ba.author_id = $1`+exClause+`
+			UNION ALL
+			SELECT NULLIF(lower(btrim(b.src_lang)), '') AS code
+			FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
+			WHERE ba.author_id = $1`+exClause+`
+		) t
+		WHERE code IS NOT NULL
+		GROUP BY code
+		ORDER BY cnt DESC, code
+	`, args...)
+	if err != nil {
+		return nil, fmt.Errorf("query author languages: %w", err)
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var (
+			code string
+			cnt  int
+		)
+		if err := rows.Scan(&code, &cnt); err != nil {
+			return nil, err
+		}
+		out = append(out, code)
+	}
+	return out, rows.Err()
 }
 
 // groupYearStats сворачивает строки (year, id, title), отсортированные по

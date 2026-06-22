@@ -28,6 +28,18 @@ type Author struct {
 	BooksTotal int               `json:"books_total"`
 	Books      []books.ListItem  `json:"books"`
 
+	// Агрегаты автора (зеркало строки в списке /authors) — чтобы карточка
+	// показывала то же, что компактный список: единый ВНЕШНИЙ рейтинг +
+	// источник топ-издания, оценка читателей + число, наличие экранизаций,
+	// языки изданий (lang∪src_lang), годы активности (по written_year).
+	ExternalRating       *float64    `json:"external_rating,omitempty"`
+	ExternalRatingSource *string     `json:"external_rating_source,omitempty"`
+	ReaderRating         *float64    `json:"reader_rating,omitempty"`
+	ReaderRatingCount    int         `json:"reader_rating_count,omitempty"`
+	HasAdaptations       bool        `json:"has_adaptations,omitempty"`
+	Languages            []string    `json:"languages,omitempty"`
+	YearsActive          *YearsRange `json:"years_active,omitempty"`
+
 	// YearStats — распределение книг автора по году НАПИСАНИЯ (written_year).
 	// Используется для гистограммы на странице автора (recharts).
 	// Сортировка по году по возрастанию; книги без written_year не попадают.

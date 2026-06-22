@@ -1,4 +1,7 @@
 import { useMemo, useState } from 'react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import type { AuthorsSearch } from '@/router';
+import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { Link } from '@tanstack/react-router';
 import { Bell, BookHeart, Film, Globe, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -29,8 +32,16 @@ const PAGE_SIZE = 50;
 // перестаёт отдавать больше; клампим, чтобы «Показать ещё» не висел вечно.
 const MAX_LIMIT = 500;
 
-// AuthorsFilters — состояние панели фильтров (локальное, без URL: раздел
-// самодостаточен, пагинация — кнопкой «Показать ещё»).
+// Code-based routing не разносит validateSearch-тип через navigate — как в
+// BooksPage заворачиваем в helper-тип (рантайм-форму гарантирует validateSearch).
+type AuthorsNavigate = (opts: {
+  search?: AuthorsSearch | ((prev: AuthorsSearch) => AuthorsSearch);
+  replace?: boolean;
+}) => void;
+
+// AuthorsFilters — рабочая форма панели фильтров (в UI-удобном виде). Источник
+// истины — URL-search (AuthorsSearch): фильтры/поиск/сортировка переживают уход
+// на карточку автора и возврат назад (раньше были в локальном стейте).
 type AuthorsFilters = {
   genres: string[];
   langs: string[];
@@ -43,29 +54,57 @@ type AuthorsFilters = {
   sort: NonNullable<AuthorsListParams['sort']>;
 };
 
-const EMPTY_FILTERS: AuthorsFilters = {
-  genres: [],
-  langs: [],
-  yearFrom: 0,
-  yearTo: 0,
-  hasAdaptations: false,
-  minRating: 0,
-  minReaderRating: 0,
-  favoritesOnly: false,
-  sort: 'name',
-};
-
 export function AuthorsPage() {
-  const [queryInput, setQueryInput] = useState('');
+  // Все фильтры живут в URL-search (как /books) → переживают возврат назад с
+  // карточки автора и refresh, и ими можно делиться.
+  const search = useSearch({ strict: false }) as AuthorsSearch;
+  const navigate = useNavigate() as unknown as AuthorsNavigate;
+
+  // Поисковый ввод — локальный стейт с debounce; URL.q обновляем после паузы.
+  const [queryInput, setQueryInput] = useState(search.q ?? '');
   const debouncedQuery = useDebouncedValue(queryInput, 200);
-  const [filters, setFilters] = useState<AuthorsFilters>(EMPTY_FILTERS);
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // Любое изменение фильтра/поиска сбрасывает пагинацию: меняем filters →
-  // сбрасываем limit к первой странице через производный ключ ниже.
+  // Синхронизируем URL.q ← debouncedQuery когда они разъезжаются.
+  if (debouncedQuery !== (search.q ?? '') && debouncedQuery === queryInput) {
+    void navigate({
+      search: (prev) => ({ ...prev, q: debouncedQuery || undefined }),
+      replace: true,
+    });
+  }
+
+  // Производим рабочую форму фильтров из URL-search.
+  const filters: AuthorsFilters = {
+    genres: search.genres ?? [],
+    langs: search.langs ?? [],
+    yearFrom: search.year_from ?? 0,
+    yearTo: search.year_to ?? 0,
+    hasAdaptations: search.has_adaptations ?? false,
+    minRating: search.min_rating ?? 0,
+    minReaderRating: search.min_reader_rating ?? 0,
+    favoritesOnly: search.favorites_only ?? false,
+    sort: search.sort ?? 'name',
+  };
+
+  // Применение фильтров пишет URL (нулевые/дефолтные значения вырезаем) и
+  // сбрасывает пагинацию «Показать ещё» к первой странице.
   const applyFilters = (next: AuthorsFilters) => {
-    setFilters(next);
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        genres: next.genres.length > 0 ? next.genres : undefined,
+        langs: next.langs.length > 0 ? next.langs : undefined,
+        year_from: next.yearFrom || undefined,
+        year_to: next.yearTo || undefined,
+        has_adaptations: next.hasAdaptations || undefined,
+        min_rating: next.minRating || undefined,
+        min_reader_rating: next.minReaderRating || undefined,
+        favorites_only: next.favoritesOnly || undefined,
+        sort: next.sort && next.sort !== 'name' ? next.sort : undefined,
+      }),
+      replace: true,
+    });
     setLimit(PAGE_SIZE);
   };
 
@@ -101,7 +140,8 @@ export function AuthorsPage() {
 
   const resetAll = () => {
     setQueryInput('');
-    applyFilters(EMPTY_FILTERS);
+    void navigate({ search: {}, replace: true });
+    setLimit(PAGE_SIZE);
   };
 
   return (
@@ -260,9 +300,12 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
           {author.external_rating != null ? (
             // Единый ВНЕШНИЙ рейтинг (LIBRATE ∪ web) — иконка Globe (НЕ звезда:
             // звезда строго за избранным; НЕ Library: занята кнопкой «На полку»).
+            // Источник топ-издания — в тултипе (title), чтобы не плодить текст
+            // в строке, но было видно «откуда» без захода на карточку книги.
             <span
               className="inline-flex items-center gap-0.5"
-              aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)}`}
+              aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
+              title={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
             >
               · <Globe className="size-3 text-muted-foreground" aria-hidden /> {fmtRating(author.external_rating)}
             </span>
@@ -586,11 +629,6 @@ function pluralBooks(n: number): string {
   if (mod10 === 1) return 'книга';
   if (mod10 >= 2 && mod10 <= 4) return 'книги';
   return 'книг';
-}
-
-// fmtRating — внешний рейтинг автора дробный (web); целые без хвоста, иначе 1 знак.
-function fmtRating(v: number): string {
-  return Number.isInteger(v) ? String(v) : v.toFixed(1);
 }
 
 function pluralAuthors(n: number): string {

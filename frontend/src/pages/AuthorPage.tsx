@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BarChart3, BookOpen, User as UserIcon } from 'lucide-react';
+import { BarChart3, BookHeart, BookOpen, Film, Globe, User as UserIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,6 +12,8 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
+import { useLanguageMap } from '@/lib/content';
+import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { bySeriesOrder, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -19,6 +21,7 @@ import { cn } from '@/lib/utils';
 export function AuthorPage() {
   const { id } = useParams({ strict: false }) as { id: string };
   const { data: a, isLoading, error, enrichmentExhausted } = useAuthor(id);
+  const langMap = useLanguageMap();
 
   if (isLoading) return <AuthorSkeleton />;
 
@@ -35,6 +38,14 @@ export function AuthorPage() {
   }
 
   if (!a) return null;
+
+  // Сводка-зеркало строки списка авторов: годы активности, языки изданий.
+  const years = a.years_active
+    ? a.years_active.from === a.years_active.to
+      ? String(a.years_active.from)
+      : `${a.years_active.from}–${a.years_active.to}`
+    : null;
+  const langNames = (a.languages ?? []).map((c) => langMap.get(c) ?? c);
 
   return (
     <article className="space-y-6">
@@ -55,11 +66,41 @@ export function AuthorPage() {
             />
             <div className="flex flex-col gap-2 flex-1 min-w-0">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <h1 className="text-2xl font-semibold tracking-tight">{a.full_name}</h1>
+                  {a.has_adaptations ? (
+                    <Film className="size-4 shrink-0 text-muted-foreground" aria-label="Есть экранизации" />
+                  ) : null}
+                </div>
                 <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
               </div>
-              <p className="text-sm text-muted-foreground">
-                {a.book_count} {pluralBooks(a.book_count)} в каталоге
+              {/* Сводка-зеркало строки списка: книги · годы · внешний рейтинг
+                  (Globe, источник в тултипе) · оценка читателей (BookHeart). */}
+              <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground tabular-nums">
+                <span>
+                  {a.book_count} {pluralBooks(a.book_count)} в каталоге
+                </span>
+                {years ? <span>· {years}</span> : null}
+                {a.external_rating != null ? (
+                  <span
+                    className="inline-flex items-center gap-0.5"
+                    aria-label={`Внешний рейтинг ${fmtRating(a.external_rating)} · ${externalRatingSourceLabel(a.external_rating_source)}`}
+                    title={`Внешний рейтинг ${fmtRating(a.external_rating)} · ${externalRatingSourceLabel(a.external_rating_source)}`}
+                  >
+                    · <Globe className="size-3.5 text-muted-foreground" aria-hidden /> {fmtRating(a.external_rating)}
+                  </span>
+                ) : null}
+                {a.reader_rating != null ? (
+                  <span
+                    className="inline-flex items-center gap-0.5"
+                    aria-label={`Оценка читателей ${a.reader_rating.toFixed(1)} (${a.reader_rating_count ?? 0})`}
+                  >
+                    · <BookHeart className="size-3.5 text-muted-foreground" aria-hidden /> {a.reader_rating.toFixed(1)}
+                    {a.reader_rating_count ? (
+                      <span className="text-muted-foreground/70"> ({a.reader_rating_count})</span>
+                    ) : null}
+                  </span>
+                ) : null}
               </p>
               {a.top_genres && a.top_genres.length > 0 ? (
                 <div className="flex flex-wrap gap-1 pt-1">
@@ -69,6 +110,9 @@ export function AuthorPage() {
                     </Badge>
                   ))}
                 </div>
+              ) : null}
+              {langNames.length > 0 ? (
+                <p className="text-xs text-muted-foreground">{langNames.join(', ')}</p>
               ) : null}
             </div>
           </div>

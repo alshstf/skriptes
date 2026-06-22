@@ -62,6 +62,7 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		year      *int
 		rating    *int     // LIBRATE (books.rating)
 		extRating *float64 // web-рейтинг (books.external_rating)
+		extSource string   // источник web-рейтинга (books.external_rating_source)
 		workID    int64
 		authorID  int64
 		genreID   int64
@@ -87,10 +88,10 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		var id int64
 		require.NoError(t, pool.QueryRow(ctx, `
 			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
-			                   lang, src_lang, written_year, rating, work_id, external_rating)
-			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8,$10) RETURNING id`,
+			                   lang, src_lang, written_year, rating, work_id, external_rating, external_rating_source)
+			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8,$10,$11) RETURNING id`,
 			collID, archID, o.lib, nullStr(o.lang), nullStr(o.srcLang),
-			nullInt(o.year), nullInt(o.rating), workID, o.lib, nullFloat(o.extRating)).Scan(&id))
+			nullInt(o.year), nullInt(o.rating), workID, o.lib, nullFloat(o.extRating), nullStr(o.extSource)).Scan(&id))
 		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, o.authorID)
 		require.NoError(t, err)
 		_, err = pool.Exec(ctx, `INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2)`, id, o.genreID)
@@ -118,9 +119,9 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 	mkBook(bookOpt{lib: "az", lang: "en", year: intp(1951), authorID: f.asimovID, genreID: gSf})
 
 	// Толстой: одна prose-книга, без года/рейтинга/экранизации.
-	// Толстой — без LIBRATE, но с web-рейтингом 4.2 (проверка фолбэка
-	// COALESCE(LIBRATE, web) в агрегате/фильтре «внешний рейтинг»).
-	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse, extRating: fp(4.2)})
+	// Толстой — без LIBRATE, но с web-рейтингом 4.2 от Google Books (проверка
+	// фолбэка COALESCE(LIBRATE, web) в агрегате/фильтре + атрибуции источника).
+	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse, extRating: fp(4.2), extSource: "googlebooks"})
 
 	// Избранное юзера: подписка на Кинга + одна книга Кинга в избранном.
 	// Книжное избранное — членство в служебной полке kind='favorites' (миграция 0023).
@@ -192,6 +193,8 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.True(t, king.HasAdaptations)
 	require.NotNil(t, king.ExternalRating)
 	require.InDelta(t, 5.0, *king.ExternalRating, 0.001)
+	require.NotNil(t, king.ExternalRatingSource)
+	require.Equal(t, "library", *king.ExternalRatingSource, "у Кинга максимум — LIBRATE")
 	require.NotNil(t, king.ReaderRating, "у Кинга есть оценки читателей")
 	require.InDelta(t, 3.5, *king.ReaderRating, 0.001, "avg(5,2) по инстансу")
 	require.Equal(t, 2, king.ReaderRatingCount)
@@ -208,6 +211,8 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.False(t, tolstoy.HasAdaptations)
 	require.NotNil(t, tolstoy.ExternalRating, "web-рейтинг подхватывается через COALESCE")
 	require.InDelta(t, 4.2, *tolstoy.ExternalRating, 0.001, "fallback на web, когда нет LIBRATE")
+	require.NotNil(t, tolstoy.ExternalRatingSource)
+	require.Equal(t, "googlebooks", *tolstoy.ExternalRatingSource, "источник web-рейтинга в тултип")
 	require.Nil(t, tolstoy.ReaderRating, "нет оценок читателей → nil")
 	require.Equal(t, 0, tolstoy.ReaderRatingCount)
 	require.Nil(t, tolstoy.YearsActive, "нет written_year → nil")

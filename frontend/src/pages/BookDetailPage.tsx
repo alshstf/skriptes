@@ -15,6 +15,7 @@ import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
+import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
@@ -313,28 +314,17 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
 }
 
 // fmtRating — LIBRATE целочисленный, web-рейтинг дробный: целые без хвоста, иначе 1 знак.
-function fmtRating(v: number): string {
-  return Number.isInteger(v) ? String(v) : v.toFixed(1);
-}
-
-// externalSourceLabel — человекочитаемый источник внешнего рейтинга.
-function externalSourceLabel(source?: string): string {
-  switch (source) {
-    case 'google_books':
-      return 'Google Books';
-    case 'openlibrary':
-      return 'OpenLibrary';
-    default:
-      return 'внешний источник';
-  }
-}
-
 // externalRatingDisplay — единый «Внешний рейтинг» с атрибуцией источника.
 // Приоритет: LIBRATE (донорская библиотека) → web (Google Books/OpenLibrary).
 function externalRatingDisplay(book: Book): { value: string; source: string } | null {
-  if (book.rating != null) return { value: String(book.rating), source: 'библиотека' };
+  if (book.rating != null) {
+    return { value: fmtRating(book.rating), source: externalRatingSourceLabel('library') };
+  }
   if (book.external_rating != null) {
-    return { value: fmtRating(book.external_rating), source: externalSourceLabel(book.external_rating_source) };
+    return {
+      value: fmtRating(book.external_rating),
+      source: externalRatingSourceLabel(book.external_rating_source),
+    };
   }
   return null;
 }

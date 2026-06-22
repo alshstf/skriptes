@@ -112,6 +112,24 @@ export type BooksSearch = {
   sort?: 'year_desc' | 'year_asc' | 'popularity';
 };
 
+// AuthorsSearch — URL-стейт списка авторов (раздел «Авторы»). Как BooksSearch:
+// все поля опциональные, пустые/нулевые/дефолтные вырезаются из URL. Нужно,
+// чтобы фильтры/поиск/сортировка переживали уход на карточку автора и возврат
+// назад (раньше были в локальном стейте и сбрасывались). sort='name' — дефолт,
+// в URL не пишем.
+export type AuthorsSearch = {
+  q?: string;
+  genres?: string[];
+  langs?: string[];
+  year_from?: number;
+  year_to?: number;
+  has_adaptations?: boolean;
+  min_rating?: number;
+  min_reader_rating?: number;
+  favorites_only?: boolean;
+  sort?: 'book_count' | 'rating' | 'reader_rating';
+};
+
 function asString(v: unknown): string | undefined {
   return typeof v === 'string' && v !== '' ? v : undefined;
 }
@@ -129,6 +147,10 @@ function asStringArray(v: unknown): string[] | undefined {
     return out.length > 0 ? out : undefined;
   }
   return undefined;
+}
+// asBool — только true сохраняем в URL; false/отсутствие → undefined (вырезаем).
+function asBool(v: unknown): boolean | undefined {
+  return v === true || v === 'true' ? true : undefined;
 }
 
 export const booksRoute = createRoute({
@@ -172,6 +194,22 @@ const workDetailRoute = createRoute({
 const authorsListRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/authors',
+  validateSearch: (search: Record<string, unknown>): AuthorsSearch => {
+    const sort = asString(search.sort);
+    return {
+      q: asString(search.q),
+      genres: asStringArray(search.genres),
+      langs: asStringArray(search.langs),
+      year_from: asNumber(search.year_from),
+      year_to: asNumber(search.year_to),
+      has_adaptations: asBool(search.has_adaptations),
+      min_rating: asNumber(search.min_rating),
+      min_reader_rating: asNumber(search.min_reader_rating),
+      favorites_only: asBool(search.favorites_only),
+      sort:
+        sort === 'book_count' || sort === 'rating' || sort === 'reader_rating' ? sort : undefined,
+    };
+  },
   component: AuthorsPage,
 });
 
