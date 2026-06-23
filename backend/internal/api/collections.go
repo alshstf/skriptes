@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/collections"
+	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
 // CollectionsDeps — зависимости эндпоинтов личных полок.
@@ -147,8 +148,43 @@ func handleDeleteCollection(d CollectionsDeps) http.HandlerFunc {
 	}
 }
 
+// hydrateUserCollectionMeta доразмечает USER-поля плашки на книгах полки
+// (★ избранное + статус чтения) по work_id. НЕ-user сигналы (рейтинги/экранизация)
+// уже проставил сервис (books.WorkMeta). Зеркало hydrateUserListMeta для
+// collections.CollectionBook (свой DTO, work_id — указатель).
+func hydrateUserCollectionMeta(ctx context.Context, items []collections.CollectionBook, userID int64, hist *history.Service) {
+	if userID == 0 || hist == nil || len(items) == 0 {
+		return
+	}
+	ids := make([]int64, 0, len(items))
+	for i := range items {
+		if items[i].WorkID != nil {
+			ids = append(ids, *items[i].WorkID)
+		}
+	}
+	if fav, err := hist.FavoriteWorkSet(ctx, userID, ids); err == nil {
+		for i := range items {
+			if items[i].WorkID != nil {
+				if _, ok := fav[*items[i].WorkID]; ok {
+					items[i].IsFavorite = true
+				}
+			}
+		}
+	}
+	if reads, err := hist.WorkReadStatusSet(ctx, userID, ids); err == nil {
+		for i := range items {
+			if items[i].WorkID != nil {
+				if rs, ok := reads[*items[i].WorkID]; ok {
+					items[i].IsRead = rs.IsRead
+					items[i].ReadingFraction = rs.Fraction
+				}
+			}
+		}
+	}
+}
+
 // handleListCollectionBooks — GET /api/me/collections/{id} — книги полки.
-func handleListCollectionBooks(d CollectionsDeps) http.HandlerFunc {
+func handleListCollectionBooks(d CollectionsDeps, hist HistoryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, ok := UserFromContext(r.Context())
 		if !ok {
@@ -171,6 +207,7 @@ func handleListCollectionBooks(d CollectionsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
+		hydrateUserCollectionMeta(ctx, books, u.ID, hist.Service)
 		writeJSON(w, http.StatusOK, map[string]any{"items": books})
 	}
 }

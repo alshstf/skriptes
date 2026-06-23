@@ -50,6 +50,15 @@ func TestCollectionsFlow(t *testing.T) {
 	b2 := mkBook("L2", "Book Two", false)
 	bDel := mkBook("L3", "Deleted Book", true)
 
+	// b1 — работа с LIBRATE=5 (для проверки обогащённой плашки полки: books.WorkMeta).
+	{
+		var workID int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ('Book One','book one') RETURNING id`).Scan(&workID))
+		_, e := pool.Exec(ctx, `UPDATE books SET work_id = $1, rating = 5 WHERE id = $2`, workID, b1)
+		require.NoError(t, e)
+	}
+
 	svc := collections.New(pool)
 
 	// Пустое имя → ошибка.
@@ -93,6 +102,15 @@ func TestCollectionsFlow(t *testing.T) {
 	require.Contains(t, ids, b1)
 	require.Contains(t, ids, b2)
 	require.NotContains(t, ids, bDel)
+	// Обогащённая плашка полки: b1 несёт внешний рейтинг из LIBRATE (=5) + источник.
+	for _, bk := range books {
+		if bk.ID == b1 {
+			require.NotNil(t, bk.ExternalRating, "плашка полки несёт внешний рейтинг")
+			require.InDelta(t, 5.0, *bk.ExternalRating, 0.001)
+			require.NotNil(t, bk.ExternalRatingSource)
+			require.Equal(t, "library", *bk.ExternalRatingSource)
+		}
+	}
 
 	// CollectionsForBook — членство per-book для индикации на карточке.
 	shB1, err := svc.CollectionsForBook(ctx, u1, b1)

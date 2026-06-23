@@ -2,7 +2,22 @@ import { BookHeart, Check, Film, Globe, Star } from 'lucide-react';
 import { useLanguageMap } from '@/lib/content';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import type { BookListItem } from '@/lib/books';
+
+// BookMetaFields — структурный набор полей плашки. И BookListItem (/books, автор,
+// серия), и CollectionBook (полки) — суперсеты этого набора, поэтому BookMeta
+// принимает любой из них без приведения типов.
+export type BookMetaFields = {
+  year?: number;
+  external_rating?: number;
+  external_rating_source?: string;
+  reader_rating?: number;
+  reader_rating_count?: number;
+  has_adaptations?: boolean;
+  lang?: string;
+  is_read?: boolean;
+  reading_fraction?: number;
+  is_favorite?: boolean;
+};
 
 /**
  * BookMeta — компактная строка сигналов книжной плашки (как строка автора в
@@ -15,7 +30,7 @@ import type { BookListItem } from '@/lib/books';
  * title). Иконки монохромные, кроме ★ — жёлтая звезда книжного избранного
  * (исключение из монохрома, как и везде).
  */
-export function BookMeta({ book }: { book: BookListItem }) {
+export function BookMeta({ book }: { book: BookMetaFields }) {
   const langMap = useLanguageMap();
 
   const hasReading = book.is_read || (book.reading_fraction != null && book.reading_fraction > 0);

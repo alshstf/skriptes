@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight, FolderPlus, Library, Pencil, Star, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BookMeta } from '@/components/BookMeta';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import {
@@ -152,6 +153,7 @@ function ShelfBooks({ collectionId }: { collectionId: number }) {
                 {b.series ? ` · ${b.series}` : ''}
               </span>
             ) : null}
+            <BookMeta book={b} />
           </Link>
           <Button
             variant="ghost"

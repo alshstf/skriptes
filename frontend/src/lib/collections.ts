@@ -30,8 +30,18 @@ export type CollectionBook = {
   authors: string[];
   series?: string;
   lang?: string;
+  year?: number;
   work_id?: number;
   added_at: string;
+  // Сигналы обогащённой плашки (как /books): рейтинги/экранизация/чтение/★.
+  external_rating?: number;
+  external_rating_source?: string;
+  reader_rating?: number;
+  reader_rating_count?: number;
+  has_adaptations?: boolean;
+  is_favorite?: boolean;
+  is_read?: boolean;
+  reading_fraction?: number;
 };
 
 const KEY = ['me', 'collections'] as const;

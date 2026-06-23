@@ -481,24 +481,26 @@ func listItemWorkID(it ListItem) int64 {
 	return it.ID
 }
 
-// HydrateListMeta батч-проставляет на плашку НЕ-user сигналы по work_id: внешний
-// рейтинг (max COALESCE(rating, external_rating) по изданиям) + источник
-// топ-издания (как у авторов), оценку читателей (avg book_ratings по работе) +
-// число, наличие экранизаций. Пул передаётся явно — функция переиспользуется
-// catalog'ом (автор/серия) поверх его же ListItem'ов. Ошибки молча игнорируются
-// (плашка деградирует до базовой, как с обложками). User-поля (favorite/read) —
-// в api-слое.
-func HydrateListMeta(ctx context.Context, pool *pgxpool.Pool, items []ListItem) {
-	if pool == nil || len(items) == 0 {
-		return
-	}
-	idSet := make(map[int64]struct{}, len(items))
-	for _, it := range items {
-		idSet[listItemWorkID(it)] = struct{}{}
-	}
-	ids := make([]int64, 0, len(idSet))
-	for id := range idSet {
-		ids = append(ids, id)
+// ListMeta — НЕ-user сигналы работы для плашки (рейтинги/экранизация). Указатели
+// nil = «нет данных» (плашка скрывает пустое).
+type ListMeta struct {
+	ExternalRating       *float64
+	ExternalRatingSource *string
+	ReaderRating         *float64
+	ReaderRatingCount    int
+	HasAdaptations       bool
+}
+
+// WorkMeta — батч-агрегат НЕ-user сигналов по work_id: внешний рейтинг
+// (max COALESCE(rating, external_rating) по изданиям) + источник топ-издания
+// (как у авторов), оценка читателей (avg book_ratings по работе) + число,
+// наличие экранизаций. Переиспользуется HydrateListMeta (books.ListItem) и
+// collections (полки, свой DTO). Ошибки молча игнорируются (плашка деградирует
+// до базовой, как с обложками).
+func WorkMeta(ctx context.Context, pool *pgxpool.Pool, workIDs []int64) map[int64]ListMeta {
+	out := map[int64]ListMeta{}
+	if pool == nil || len(workIDs) == 0 {
+		return out
 	}
 	rows, err := pool.Query(ctx, `
 		SELECT w.id,
@@ -512,49 +514,68 @@ func HydrateListMeta(ctx context.Context, pool *pgxpool.Pool, items []ListItem) 
 		  EXISTS (SELECT 1 FROM books b JOIN book_adaptations ad ON ad.book_id = b.id
 		          WHERE b.work_id = w.id AND b.deleted = false)
 		FROM works w WHERE w.id = ANY($1)
-	`, ids)
+	`, workIDs)
 	if err != nil {
-		return
+		return out
 	}
 	defer rows.Close()
-	type meta struct {
-		extRating pgtype.Float8
-		extSource pgtype.Text
-		readerAvg pgtype.Float8
-		readerCnt int
-		hasAdapt  bool
-	}
-	byID := make(map[int64]meta, len(ids))
 	for rows.Next() {
-		var id int64
-		var m meta
-		if err := rows.Scan(&id, &m.extRating, &m.extSource, &m.readerAvg, &m.readerCnt, &m.hasAdapt); err != nil {
-			return
+		var (
+			id        int64
+			extRating pgtype.Float8
+			extSource pgtype.Text
+			readerAvg pgtype.Float8
+			m         ListMeta
+		)
+		if err := rows.Scan(&id, &extRating, &extSource, &readerAvg, &m.ReaderRatingCount, &m.HasAdaptations); err != nil {
+			return out
 		}
-		byID[id] = m
+		if extRating.Valid {
+			v := extRating.Float64
+			m.ExternalRating = &v
+		}
+		if extSource.Valid && extSource.String != "" {
+			src := extSource.String
+			m.ExternalRatingSource = &src
+		}
+		if readerAvg.Valid {
+			v := readerAvg.Float64
+			m.ReaderRating = &v
+		}
+		out[id] = m
 	}
 	if rows.Err() != nil {
+		return map[int64]ListMeta{}
+	}
+	return out
+}
+
+// HydrateListMeta батч-проставляет НЕ-user сигналы (WorkMeta) на []ListItem по
+// work_id. Переиспускается ListWorks и catalog'ом (автор/серия). User-поля
+// (favorite/read) — в api-слое.
+func HydrateListMeta(ctx context.Context, pool *pgxpool.Pool, items []ListItem) {
+	if len(items) == 0 {
 		return
 	}
+	idSet := make(map[int64]struct{}, len(items))
+	for _, it := range items {
+		idSet[listItemWorkID(it)] = struct{}{}
+	}
+	ids := make([]int64, 0, len(idSet))
+	for id := range idSet {
+		ids = append(ids, id)
+	}
+	byID := WorkMeta(ctx, pool, ids)
 	for i := range items {
 		m, ok := byID[listItemWorkID(items[i])]
 		if !ok {
 			continue
 		}
-		if m.extRating.Valid {
-			v := m.extRating.Float64
-			items[i].ExternalRating = &v
-		}
-		if m.extSource.Valid && m.extSource.String != "" {
-			src := m.extSource.String
-			items[i].ExternalRatingSource = &src
-		}
-		if m.readerAvg.Valid {
-			v := m.readerAvg.Float64
-			items[i].ReaderRating = &v
-		}
-		items[i].ReaderRatingCount = m.readerCnt
-		items[i].HasAdaptations = m.hasAdapt
+		items[i].ExternalRating = m.ExternalRating
+		items[i].ExternalRatingSource = m.ExternalRatingSource
+		items[i].ReaderRating = m.ReaderRating
+		items[i].ReaderRatingCount = m.ReaderRatingCount
+		items[i].HasAdaptations = m.HasAdaptations
 	}
 }
 

@@ -79,15 +79,17 @@ exposed через `GET /api/genres`. На фронте — `useGenreMap()` в
 фильтре резолвятся через `useLanguageMap()` (`lib/content.ts`).
 
 **Обогащённая плашка книги** (плотная строка сигналов, как у авторов): общий
-компонент `frontend/src/components/BookMeta.tsx` — год · 🌐 внешний рейтинг (Tooltip:
+компонент `frontend/src/components/BookMeta.tsx` (приём — структурный `BookMetaFields`,
+поэтому годится и `BookListItem`, и `CollectionBook`) — год · 🌐 внешний рейтинг (Tooltip:
 источник) · 📖 оценка читателей · 🎬 экранизация · язык · ✓/N% чтение · ★ избранное.
-Используется в `BookListItem` (автор/серия) и `BooksPage::BookCard` (/books). Данные
-на `books.ListItem` гидрирует бэкенд: НЕ-user сигналы (рейтинги/источник/экранизация) —
-`books.HydrateListMeta(ctx, pool, items)` по work_id (зовут `ListWorks` и
-`catalog.GetAuthor/GetSeries`); user-сигналы (★/чтение) — `api.hydrateUserListMeta`
-(`history.FavoriteWorkSet` + `WorkReadStatusSet`) в хендлерах. Suggest/Cmd+K плашку
-НЕ обогащаем (минимальная). Полки (`ShelvesPage`/`collections.CollectionBook`) — TODO
-(PR2).
+Используется в `BookListItem` (автор/серия), `BooksPage::BookCard` (/books) и `ShelvesPage`
+(полки). НЕ-user сигналы (рейтинги/источник/экранизация) гидрирует `books.WorkMeta(ctx,
+pool, workIDs) → map[workID]ListMeta` по work_id — зовут `books.HydrateListMeta` (для
+`[]books.ListItem`: ListWorks + `catalog.GetAuthor/GetSeries`) и `collections.ListCollectionBooks`
+(полки, свой DTO). User-сигналы (★/чтение) — в api-слое: `hydrateUserListMeta`
+(`[]books.ListItem`) и `hydrateUserCollectionMeta` (`[]CollectionBook`), оба через
+`history.FavoriteWorkSet` + `WorkReadStatusSet`. Suggest/Cmd+K плашку НЕ обогащаем
+(минимальная, latency-sensitive).
 
 ### 3. `date_added` ≠ год написания книги
 

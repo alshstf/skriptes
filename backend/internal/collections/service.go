@@ -18,6 +18,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/books"
 )
 
 // ErrNotFound — полка не существует ИЛИ принадлежит другому пользователю
@@ -73,8 +74,20 @@ type CollectionBook struct {
 	Authors []string  `json:"authors"`
 	Series  string    `json:"series,omitempty"`
 	Lang    string    `json:"lang,omitempty"`
+	Year    *int      `json:"year,omitempty"`
 	WorkID  *int64    `json:"work_id,omitempty"`
 	AddedAt time.Time `json:"added_at"`
+
+	// Сигналы обогащённой плашки (как /books, автор, серия): НЕ-user гидрирует
+	// books.WorkMeta по work_id; user-поля (★/чтение) — api-слой.
+	ExternalRating       *float64 `json:"external_rating,omitempty"`
+	ExternalRatingSource *string  `json:"external_rating_source,omitempty"`
+	ReaderRating         *float64 `json:"reader_rating,omitempty"`
+	ReaderRatingCount    int      `json:"reader_rating_count,omitempty"`
+	HasAdaptations       bool     `json:"has_adaptations,omitempty"`
+	IsFavorite           bool     `json:"is_favorite,omitempty"`
+	IsRead               bool     `json:"is_read,omitempty"`
+	ReadingFraction      *float64 `json:"reading_fraction,omitempty"`
 }
 
 // normalizeName — trim + потолок длины. Возвращает ErrEmptyName, если после
@@ -311,7 +324,7 @@ func (s *Service) ListCollectionBooks(ctx context.Context, userID, collID int64)
 		return nil, ErrNotFound
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.title, b.lang, b.work_id, cb.added_at,
+		SELECT b.id, b.title, b.lang, COALESCE(w.written_year, b.written_year), b.work_id, cb.added_at,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
 		           ARRAY[]::text[]
@@ -319,11 +332,12 @@ func (s *Service) ListCollectionBooks(ctx context.Context, userID, collID int64)
 		       ser.title
 		FROM user_collection_books cb
 		JOIN books b ON b.id = cb.book_id AND b.deleted = false
+		LEFT JOIN works w ON w.id = b.work_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		LEFT JOIN series ser ON ser.id = b.series_id
 		WHERE cb.collection_id = $1
-		GROUP BY b.id, b.title, b.lang, b.work_id, cb.added_at, ser.title
+		GROUP BY b.id, b.title, b.lang, COALESCE(w.written_year, b.written_year), b.work_id, cb.added_at, ser.title
 		ORDER BY cb.added_at DESC, b.id DESC
 	`, collID)
 	if err != nil {
@@ -335,18 +349,44 @@ func (s *Service) ListCollectionBooks(ctx context.Context, userID, collID int64)
 		var (
 			it     CollectionBook
 			lang   *string
+			year   *int
 			series *string
 		)
-		if err := rows.Scan(&it.ID, &it.Title, &lang, &it.WorkID, &it.AddedAt, &it.Authors, &series); err != nil {
+		if err := rows.Scan(&it.ID, &it.Title, &lang, &year, &it.WorkID, &it.AddedAt, &it.Authors, &series); err != nil {
 			return nil, err
 		}
 		if lang != nil {
 			it.Lang = *lang
 		}
+		it.Year = year
 		if series != nil {
 			it.Series = *series
 		}
 		out = append(out, it)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	// Обогащённая плашка: НЕ-user сигналы (рейтинги/экранизация) по work_id —
+	// тем же агрегатом, что /books и каталог. User-поля (★/чтение) — api-слой.
+	workIDs := make([]int64, 0, len(out))
+	for i := range out {
+		if out[i].WorkID != nil {
+			workIDs = append(workIDs, *out[i].WorkID)
+		}
+	}
+	meta := books.WorkMeta(ctx, s.pool, workIDs)
+	for i := range out {
+		if out[i].WorkID == nil {
+			continue
+		}
+		if m, ok := meta[*out[i].WorkID]; ok {
+			out[i].ExternalRating = m.ExternalRating
+			out[i].ExternalRatingSource = m.ExternalRatingSource
+			out[i].ReaderRating = m.ReaderRating
+			out[i].ReaderRatingCount = m.ReaderRatingCount
+			out[i].HasAdaptations = m.HasAdaptations
+		}
+	}
+	return out, nil
 }
