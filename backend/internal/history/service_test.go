@@ -295,6 +295,20 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.NoError(t, err)
 	require.True(t, rd, "прочитано любое издание ⇒ книга прочитана")
 	require.NotNil(t, ca)
+
+	// Батч WorkReadStatusSet (для плашки в списках): is_read по работе.
+	set, err := svc.WorkReadStatusSet(ctx, userID, []int64{workID})
+	require.NoError(t, err)
+	require.True(t, set[workID].IsRead, "батч: прочитано ⇒ IsRead")
+
+	// Прогресс (fraction): незавершённое чтение первого издания → max по работе.
+	e1 := mk("L3")
+	half := 0.5
+	require.NoError(t, svc.SavePosition(ctx, userID, e1, "cfi", &half))
+	set, err = svc.WorkReadStatusSet(ctx, userID, []int64{workID})
+	require.NoError(t, err)
+	require.NotNil(t, set[workID].Fraction)
+	require.InDelta(t, 0.5, *set[workID].Fraction, 0.001, "макс. прогресс по изданиям работы")
 }
 
 // TestService_Ratings — пользовательские оценки (work-level): set/update/remove,

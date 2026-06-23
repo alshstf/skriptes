@@ -36,6 +36,17 @@ export type BookListItem = {
   // cover_edition_id — id издания для on-demand обложки (/api/covers/book/{id}),
   // т.к. в /books-выдаче id = works.id. Заполняется в /books-листинге.
   cover_edition_id?: number;
+  // Сигналы обогащённой плашки (как строка автора), гидрируются бэкендом:
+  // внешний рейтинг (LIBRATE∪web) + источник, оценка читателей + число,
+  // экранизация, статус чтения. is_favorite — выше.
+  external_rating?: number;
+  external_rating_source?: string;
+  reader_rating?: number;
+  reader_rating_count?: number;
+  has_adaptations?: boolean;
+  is_read?: boolean;
+  /** Макс. прогресс web-ридера по изданиям работы [0..1]. */
+  reading_fraction?: number;
 };
 
 // bySeriesOrder — компаратор книг внутри одной серии: по series_order (бэкенд-

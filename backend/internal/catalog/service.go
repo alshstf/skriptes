@@ -131,6 +131,9 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	if a.Books == nil {
 		a.Books = []books.ListItem{}
 	}
+	// Обогащённая плашка: внешний рейтинг/источник, оценка читателей, экранизации
+	// по work_id (как в /books). User-поля (favorite/read) — в api-слое.
+	books.HydrateListMeta(ctx, s.pool, a.Books)
 
 	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {
@@ -298,6 +301,8 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		return seriesOrderOf(out.Books[i]) < seriesOrderOf(out.Books[j])
 	})
 	out.BookCount = len(out.Books)
+	// Обогащённая плашка (как в /books): рейтинги/экранизации по work_id.
+	books.HydrateListMeta(ctx, s.pool, out.Books)
 
 	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs)
 	if err != nil {

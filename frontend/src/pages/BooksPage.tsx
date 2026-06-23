@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { BookCover } from '@/components/BookCover';
 import { GenreChips } from '@/components/GenreChips';
+import { BookMeta } from '@/components/BookMeta';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import {
@@ -417,6 +418,7 @@ function BookCard({
         {book.genres && book.genres.length > 0 ? (
           <GenreChips genres={book.genres} highlight={highlightGenres} />
         ) : null}
+        <BookMeta book={book} />
       </div>
     </div>
   );

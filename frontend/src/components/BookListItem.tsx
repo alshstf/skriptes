@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
+import { BookMeta } from '@/components/BookMeta';
 import { useGenreMap } from '@/lib/genres';
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
 import type { BookListItem as Item } from '@/lib/books';
@@ -66,6 +67,7 @@ export function BookListItem({
             ))}
           </div>
         ) : null}
+        <BookMeta book={book} />
       </div>
     </Link>
   );
