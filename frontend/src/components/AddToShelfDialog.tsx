@@ -52,7 +52,7 @@ export function AddToShelfDialog({ bookId, compact = false }: { bookId: number; 
             Изменить
           </Button>
         ) : (
-          <Button variant="ghost" size="sm" className="gap-1" aria-label="Добавить на полку">
+          <Button variant="outline" size="sm" className="gap-1.5" aria-label="Добавить на полку">
             <Library className="size-4" aria-hidden />
             На полку
           </Button>

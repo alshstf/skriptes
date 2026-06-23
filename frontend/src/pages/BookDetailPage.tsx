@@ -1,24 +1,28 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BookText, BookOpen, BookHeart, Check, X, Library, Globe } from 'lucide-react';
+import { BookText, BookOpen, BookHeart, Check, ChevronRight, X, Library, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
+import { ExpandableText } from '@/components/ExpandableText';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
+import { formatBytes } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
+import { useLanguageMap } from '@/lib/content';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -63,7 +67,9 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   const multi = editions.length > 1;
 
   return (
-    <article className="space-y-4">
+    // Кап ширины: на широком десктопе карточка — центрированная читаемая
+    // колонка, без огромной пустоты справа от обложки (была до редизайна).
+    <article className="mx-auto max-w-4xl space-y-4">
       <BackButton />
       <Card>
         {/*
@@ -74,20 +80,20 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
           Так аннотация начинается с левого края (под обложкой), а не
           плавает только в правой половине под высотой meta-блока.
         */}
-        <CardContent className="space-y-6">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+        <CardContent className="space-y-5">
+          <div className="flex gap-4 md:gap-6 md:items-start">
             <BookCover
               coverPath={book.cover_path}
               title={book.title}
-              className="w-32 sm:w-44 md:w-56 mx-auto md:mx-0"
+              className="w-24 shrink-0 sm:w-32 md:w-44"
             />
 
-            <div className="flex flex-col gap-4 flex-1 min-w-0">
-              {/* Заголовок + авторы + кнопки в один ряд. Действия на мобиле —
-                  только иконки (у Kindle/Скачать текст hidden sm:inline), поэтому
-                  ряд компактный и помещается без переноса на новую строку. */}
+            {/* Идентичность работы рядом с обложкой: заголовок, авторы, строка
+                сигналов, серия, жанры. На мобиле обложка слева (не по центру),
+                справа от неё — заголовок и сигналы, без пустых полей по бокам. */}
+            <div className="min-w-0 flex-1 space-y-2.5">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="space-y-1 flex-1 min-w-0">
+                <div className="min-w-0 space-y-1">
                   <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
                   {book.authors.length > 0 ? (
                     <p className="text-base text-muted-foreground">
@@ -106,38 +112,17 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                     </p>
                   ) : null}
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <FavoriteButton
-                    target="book"
-                    id={book.id}
-                    isFavorite={book.is_favorite ?? false}
-                  />
-                  {/* «На полку» переехала вниз, в блок полок под мета (ShelfSection):
-                      и сам контрол, и список полок — в одном месте. */}
-                  {/* Действия для одного издания — в шапке; при нескольких изданиях
-                      они в секции «Издания» (на каждое издание свои). */}
-                  {!multi && !book.deleted ? (
-                    <>
-                      <Button asChild variant="secondary" size="sm" className="gap-1">
-                        <Link
-                          to="/books/$id/read"
-                          params={{ id: String(book.id) }}
-                          aria-label="Открыть книгу в браузерном ридере"
-                        >
-                          <BookOpen className="size-4" aria-hidden />
-                          <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
-                        </Link>
-                      </Button>
-                      <SendToKindleButton bookId={book.id} />
-                      <DownloadMenu bookId={book.id} />
-                    </>
-                  ) : null}
+                {/* Действия — кластер справа от заголовка на десктопе; на мобиле
+                    отдельным рядом ниже (рядом с обложкой колонка узкая). */}
+                <div className="hidden flex-wrap items-center gap-2 md:flex">
+                  <ActionButtons book={book} multi={multi} />
                 </div>
               </div>
 
-              {/* Серия / жанры / meta */}
+              <CardSignalRow book={book} />
+
               {book.series ? (
-                <div className="text-sm">
+                <p className="text-sm">
                   <span className="text-muted-foreground">Серия:</span>{' '}
                   <Link
                     to="/series/$id"
@@ -149,7 +134,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                   {book.ser_no ? (
                     <span className="text-muted-foreground"> · #{book.ser_no}</span>
                   ) : null}
-                </div>
+                </p>
               ) : null}
 
               {book.genres.length > 0 ? (
@@ -161,55 +146,32 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                   ))}
                 </div>
               ) : null}
-
-              <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-sm">
-                {/* Поля уровня файла показываем в шапке только для одного издания;
-                    при нескольких они в строках секции «Издания». */}
-                {!multi ? (
-                  <>
-                    <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
-                    <Field label="Архив" value={book.archive} mono />
-                    <Field label="Размер" value={`${(book.size_bytes / 1024).toFixed(1)} KiB`} />
-                    {book.lang ? <Field label="Язык" value={book.lang} /> : null}
-                  </>
-                ) : null}
-                {book.written_year ? (
-                  <Field label="Год написания" value={String(book.written_year)} />
-                ) : null}
-                {!multi && book.edition_year ? (
-                  <Field label="Год издания" value={String(book.edition_year)} />
-                ) : null}
-                {book.date_added ? (
-                  <Field label="Добавлена" value={formatReadDate(book.date_added)} />
-                ) : null}
-                <ExternalRatingField book={book} />
-                <ReadStatusField
-                  bookId={book.id}
-                  isRead={book.is_read ?? false}
-                  readAt={book.read_at}
-                />
-                {!multi ? <Field label="LIBID" value={book.lib_id} mono /> : null}
-              </dl>
-
-              {!book.deleted ? (
-                <RatingsBlock book={book} cardKey={[mode === 'work' ? 'work' : 'book', String(id)]} />
-              ) : null}
-
-              <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
-
-              {book.deleted ? (
-                <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
-                  В источнике помечена удалённой (DEL=1).
-                </p>
-              ) : null}
             </div>
           </div>
 
-          {/* Админ: присоединить другую книгу (дубль вне общей серии/автора).
-              Сам скрыт у не-админа. */}
-          <div className="flex justify-end empty:hidden">
-            <MergeIntoWorkDialog workId={book.work_id ?? 0} workTitle={book.title} />
-          </div>
+          {/* Действия (мобайл) — отдельный ряд под обложкой. */}
+          {!book.deleted ? (
+            <div className="flex flex-wrap items-center gap-2 md:hidden">
+              <ActionButtons book={book} multi={multi} />
+            </div>
+          ) : null}
+
+          {/* «Моё»: ваша оценка + переключатель «прочитано» (снятие сохранено). */}
+          {!book.deleted ? (
+            <MyBlock book={book} cardKey={[mode === 'work' ? 'work' : 'book', String(id)]} />
+          ) : null}
+
+          <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
+
+          {/* Технические поля издания — под раскрывашкой, не в основном потоке.
+              При нескольких изданиях поля живут в строках секции «Издания». */}
+          {!multi ? <FileDetails book={book} /> : null}
+
+          {book.deleted ? (
+            <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              В источнике помечена удалённой (DEL=1).
+            </p>
+          ) : null}
 
           {multi ? <EditionsSection book={book} /> : null}
 
@@ -225,6 +187,12 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             "Экранизаций не найдено" — лишний шум.
           */}
           {!book.deleted ? <AdaptationsSection bookId={book.id} /> : null}
+
+          {/* Админ: присоединить другую книгу (дубль вне общей серии/автора).
+              Тихий ряд внизу; сам скрыт у не-админа (тогда обёртка пуста). */}
+          <div className="border-t border-border pt-3 empty:hidden">
+            <MergeIntoWorkDialog workId={book.work_id ?? 0} workTitle={book.title} />
+          </div>
         </CardContent>
       </Card>
     </article>
@@ -289,7 +257,7 @@ function AnnotationBlock({
         Аннотация
       </h3>
       {annotation ? (
-        <p className="whitespace-pre-line text-sm text-muted-foreground">{annotation}</p>
+        <ExpandableText text={annotation} lines={6} className="text-muted-foreground" />
       ) : enrichmentExhausted ? (
         <p className="text-sm italic text-muted-foreground">Описание отсутствует.</p>
       ) : (
@@ -329,65 +297,128 @@ function externalRatingDisplay(book: Book): { value: string; source: string } | 
 }
 
 /**
- * ExternalRatingField — поле «Внешний рейтинг» в карточке (Globe + значение +
- * источник). Объединяет LIBRATE и web-рейтинг; не показывается, если внешнего
- * рейтинга нет. Оценки читателей (RatingsBlock, BookHeart) — отдельно.
+ * ActionButtons — кластер действий карточки: ★ избранное + (для одного издания)
+ * Читать / На Kindle / Скачать. При нескольких изданиях действия — в строках
+ * секции «Издания», поэтому здесь только ★. Рендерится дважды (кластер справа от
+ * заголовка на десктопе, отдельный ряд на мобиле) — один из двух всегда скрыт.
  */
-function ExternalRatingField({ book }: { book: Book }) {
-  const ext = externalRatingDisplay(book);
-  if (!ext) return null;
+function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
   return (
     <>
-      <dt className="text-muted-foreground">Внешний рейтинг</dt>
-      <dd className="flex items-center gap-1.5">
-        <Globe className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
-        <span>
-          {ext.value}
-          <span className="text-muted-foreground"> · {ext.source}</span>
-        </span>
-      </dd>
+      <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
+      {!multi && !book.deleted ? (
+        <>
+          <Button asChild variant="secondary" size="sm" className="gap-1">
+            <Link
+              to="/books/$id/read"
+              params={{ id: String(book.id) }}
+              aria-label="Открыть книгу в браузерном ридере"
+            >
+              <BookOpen className="size-4" aria-hidden />
+              <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
+            </Link>
+          </Button>
+          <SendToKindleButton bookId={book.id} />
+          <DownloadMenu bookId={book.id} />
+        </>
+      ) : null}
     </>
   );
 }
 
 /**
- * RatingsBlock — «Оценки читателей»: моя оценка (интерактивные звёзды, work-level)
- * + средняя по инстансу. Отдельно от «Внешнего рейтинга» (LIBRATE ∪ web). cardKey —
- * ключ кэша открытой карточки для оптимистичного обновления.
+ * CardSignalRow — компактная строка сигналов под заголовком: год · 🌐 внешний
+ * рейтинг (Tooltip с источником) · 📖 средняя оценка читателей (count) · язык
+ * (именем). Пустые сигналы скрываются; экранизации сюда НЕ выносим — для них
+ * на карточке есть отдельная секция AdaptationsSection (на плашке-списка 🎬
+ * нужен, на карточке дублировал бы). Зеркалит идею BookMeta для плашки списка.
  */
-function RatingsBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }) {
-  const rate = useRateBook(book.work_id ?? book.id, cardKey);
-  const value = book.user_rating ?? 0;
+function CardSignalRow({ book }: { book: Book }) {
+  const langMap = useLanguageMap();
+  const ext = externalRatingDisplay(book);
   const avg = book.rating_avg;
   const count = book.rating_count ?? 0;
+  const hasReader = avg !== undefined && count > 0;
+  const langName = book.lang ? (langMap.get(book.lang) ?? book.lang) : null;
+
+  if (!book.written_year && !ext && !hasReader && !langName) return null;
+
   return (
-    <div className="space-y-1.5">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <span className="text-sm text-muted-foreground">Ваша оценка:</span>
-        <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
-      </div>
-      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <BookHeart className="size-3.5 shrink-0" aria-hidden />
-        {count > 0 && avg !== undefined ? (
-          <span>
-            Средняя оценка читателей:{' '}
-            <span className="tabular-nums text-foreground">{avg.toFixed(1)}</span> · {count}{' '}
-            {pluralVotes(count)}
-          </span>
-        ) : (
-          <span>Оценок читателей пока нет</span>
-        )}
-      </p>
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+      {book.written_year ? <span className="tabular-nums">{book.written_year}</span> : null}
+      {ext ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-flex items-center gap-1">
+              <Globe className="size-3.5 shrink-0" aria-hidden />
+              <span className="tabular-nums text-foreground">{ext.value}</span>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>Внешний рейтинг · {ext.source}</TooltipContent>
+        </Tooltip>
+      ) : null}
+      {hasReader ? (
+        <span className="inline-flex items-center gap-1" title="Оценка читателей">
+          <BookHeart className="size-3.5 shrink-0" aria-hidden />
+          <span className="tabular-nums text-foreground">{avg!.toFixed(1)}</span>
+          <span>({count})</span>
+        </span>
+      ) : null}
+      {langName ? <span>{langName}</span> : null}
     </div>
   );
 }
 
-function pluralVotes(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return 'оценка';
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'оценки';
-  return 'оценок';
+/**
+ * MyBlock — блок личного взаимодействия «Моё»: ваша оценка (work-level звёзды) +
+ * переключатель «прочитано». Снятие отметки СОХРАНЕНО (та же useToggleRead, что
+ * была в ReadStatusField — просто переехала из мета-сетки сюда, в осмысленный
+ * блок). cardKey — ключ кэша открытой карточки для оптимистичного обновления.
+ */
+function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }) {
+  const rate = useRateBook(book.work_id ?? book.id, cardKey);
+  const toggle = useToggleRead();
+  const value = book.user_rating ?? 0;
+  const isRead = book.is_read ?? false;
+  return (
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-md border border-border bg-muted/30 px-3 py-2.5">
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">Ваша оценка:</span>
+        <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
+      </div>
+      {isRead ? (
+        <div className="flex items-center gap-2 text-sm">
+          <span className="inline-flex items-center gap-1 text-green-700 dark:text-green-400">
+            <Check className="size-4" aria-hidden />
+            Прочитано
+          </span>
+          {book.read_at ? (
+            <span className="text-muted-foreground">· {formatReadDate(book.read_at)}</span>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => toggle.mutate({ bookId: book.id, isRead: false })}
+            disabled={toggle.isPending}
+            className="inline-flex items-center gap-0.5 rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+            aria-label="Снять отметку «прочитано»"
+          >
+            <X className="size-3" aria-hidden />
+            снять
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => toggle.mutate({ bookId: book.id, isRead: true })}
+          disabled={toggle.isPending}
+          className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-sm transition-colors hover:bg-accent disabled:opacity-50"
+        >
+          <Check className="size-4" aria-hidden />
+          Отметить прочитанной
+        </button>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -444,66 +475,35 @@ function readButtonLabel(fraction?: number): string {
 }
 
 /**
- * ReadStatusField — строка «Прочитана» в meta-grid карточки книги.
- *
- * Два состояния:
- *  - is_read=true → «✓ <дата>» + малозаметная кнопка-крестик «Снять»
- *  - is_read=false → «Нет ·» + кнопка-чекмарк «Отметить»
- *
- * Используем тот же useToggleRead с optimistic update — клик
- * мгновенно перерисовывает состояние, при ошибке откатываемся.
- *
- * Возвращает фрагмент с <dt>/<dd> — расчитано на использование
- * внутри родительского <dl class="grid grid-cols-[max-content_1fr]">.
+ * FileDetails — технические поля издания под раскрывашкой «Детали файла»
+ * (нативный <details>): Файл / Архив / Размер / Год издания / Добавлена / LIBID.
+ * Свёрнуто по умолчанию — это справочные данные, не должны конкурировать с
+ * читательской информацией в основном потоке. Только для одного издания; при
+ * нескольких поля живут в строках секции «Издания».
  */
-function ReadStatusField({
-  bookId,
-  isRead,
-  readAt,
-}: {
-  bookId: number;
-  isRead: boolean;
-  readAt?: string;
-}) {
-  const toggle = useToggleRead();
+function FileDetails({ book }: { book: Book }) {
   return (
-    <>
-      <dt className="text-muted-foreground">Прочитана</dt>
-      <dd className="flex items-center gap-2">
-        {isRead ? (
-          <>
-            <span className="inline-flex items-center gap-1 text-green-700 dark:text-green-400">
-              <Check className="size-3.5" aria-hidden />
-              {readAt ? formatReadDate(readAt) : 'Да'}
-            </span>
-            <button
-              type="button"
-              onClick={() => toggle.mutate({ bookId, isRead: false })}
-              disabled={toggle.isPending}
-              className="inline-flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
-              aria-label="Снять отметку «прочитано»"
-            >
-              <X className="size-3" aria-hidden />
-              снять
-            </button>
-          </>
-        ) : (
-          <>
-            <span className="text-muted-foreground">Нет</span>
-            <span className="text-muted-foreground">·</span>
-            <button
-              type="button"
-              onClick={() => toggle.mutate({ bookId, isRead: true })}
-              disabled={toggle.isPending}
-              className="inline-flex items-center gap-1 text-xs text-foreground underline-offset-2 hover:underline disabled:opacity-50"
-            >
-              <Check className="size-3" aria-hidden />
-              Отметить
-            </button>
-          </>
-        )}
-      </dd>
-    </>
+    <details className="group text-sm">
+      <summary className="flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+        <ChevronRight
+          className="size-4 shrink-0 transition-transform group-open:rotate-90"
+          aria-hidden
+        />
+        Детали файла
+      </summary>
+      <dl className="mt-2 grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 pl-[1.375rem] text-xs">
+        <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
+        <Field label="Архив" value={book.archive} mono />
+        <Field label="Размер" value={formatBytes(book.size_bytes)} />
+        {book.edition_year ? (
+          <Field label="Год издания" value={String(book.edition_year)} />
+        ) : null}
+        {book.date_added ? (
+          <Field label="Добавлена" value={formatReadDate(book.date_added)} />
+        ) : null}
+        <Field label="LIBID" value={book.lib_id} mono />
+      </dl>
+    </details>
   );
 }
 
