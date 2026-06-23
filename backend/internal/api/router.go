@@ -188,7 +188,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/me/collections", handleCreateCollection(d.Collections))
 					r.Patch("/me/collections/{id}", handleRenameCollection(d.Collections))
 					r.Delete("/me/collections/{id}", handleDeleteCollection(d.Collections))
-					r.Get("/me/collections/{id}", handleListCollectionBooks(d.Collections))
+					r.Get("/me/collections/{id}", handleListCollectionBooks(d.Collections, d.History))
 					r.Post("/me/collections/{id}/books/{bookId}", handleAddBookToCollection(d.Collections))
 					r.Delete("/me/collections/{id}/books/{bookId}", handleRemoveBookFromCollection(d.Collections))
 					// Членство книги в полках — для индикации на карточке.
