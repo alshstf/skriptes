@@ -146,6 +146,14 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                   ))}
                 </div>
               ) : null}
+
+              {/* Полка + «Детали файла» — в шапке (над панелью оценок): заполняют
+                  место рядом с обложкой и относятся к метаданным/организации книги,
+                  а не к контенту. Панель оценок ниже — намеренный разделитель
+                  «шапка / контент» (аннотация и т.д. идут после неё). */}
+              <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
+
+              {!multi ? <FileDetails book={book} /> : null}
             </div>
           </div>
 
@@ -156,16 +164,11 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             </div>
           ) : null}
 
-          {/* «Моё»: ваша оценка + переключатель «прочитано» (снятие сохранено). */}
+          {/* «Моё»: ваша оценка + переключатель «прочитано» (снятие сохранено).
+              Полноширинная панель — намеренный разделитель «шапка / контент». */}
           {!book.deleted ? (
             <MyBlock book={book} cardKey={[mode === 'work' ? 'work' : 'book', String(id)]} />
           ) : null}
-
-          <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
-
-          {/* Технические поля издания — под раскрывашкой, не в основном потоке.
-              При нескольких изданиях поля живут в строках секции «Издания». */}
-          {!multi ? <FileDetails book={book} /> : null}
 
           {book.deleted ? (
             <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
