@@ -10,16 +10,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { downloadFormats } from '@/lib/formats';
 
-export function DownloadMenu({ bookId }: { bookId: number }) {
+export function DownloadMenu({ bookId, showLabel = false }: { bookId: number; showLabel?: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {/* На мобиле — только иконка (текст hidden sm:inline), чтобы ряд
-            действий в шапке карточки не переносился. aria-label/title — для
-            доступности и тултипа, раз текст скрыт. */}
+        {/* По умолчанию на мобиле — только иконка (текст hidden sm:inline), чтобы
+            ряд действий в шапке карточки не переносился. showLabel=true заставляет
+            показывать текст всегда (мобильный action-блок карточки книги).
+            aria-label/title — для доступности и тултипа, когда текст скрыт. */}
         <Button variant="default" size="sm" className="gap-2" aria-label="Скачать" title="Скачать">
           <Download className="size-4" aria-hidden />
-          <span className="hidden sm:inline">Скачать</span>
+          <span className={showLabel ? '' : 'hidden sm:inline'}>Скачать</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">

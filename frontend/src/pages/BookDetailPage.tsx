@@ -147,20 +147,24 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 </div>
               ) : null}
 
-              {/* Полка + «Детали файла» — в шапке (над панелью оценок): заполняют
-                  место рядом с обложкой и относятся к метаданным/организации книги,
-                  а не к контенту. Панель оценок ниже — намеренный разделитель
-                  «шапка / контент» (аннотация и т.д. идут после неё). */}
-              <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
-
-              {!multi ? <FileDetails book={book} /> : null}
+              {/* Полка + «Детали файла» — в шапке у обложки (над панелью оценок):
+                  заполняют место рядом с обложкой, это метаданные/организация книги.
+                  На ДЕСКТОПЕ — здесь (hidden md:block). На мобайле эти блоки уходят
+                  вниз (после действий и оценки), чтобы важные действия не оказались
+                  под второстепенными — см. ниже md:hidden-блок. */}
+              <div className="hidden space-y-2.5 md:block">
+                <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
+                {!multi ? <FileDetails book={book} /> : null}
+              </div>
             </div>
           </div>
 
-          {/* Действия (мобайл) — отдельный ряд под обложкой. */}
+          {/* Действия (мобайл) — отдельный блок под шапкой, по приоритету:
+              «Читать» крупной кнопкой с текстом, затем второстепенные (Скачать/
+              Kindle/★). На десктопе действия — кластер справа от заголовка. */}
           {!book.deleted ? (
-            <div className="flex flex-wrap items-center gap-2 md:hidden">
-              <ActionButtons book={book} multi={multi} />
+            <div className="space-y-2 md:hidden">
+              <MobileActions book={book} multi={multi} />
             </div>
           ) : null}
 
@@ -169,6 +173,13 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
           {!book.deleted ? (
             <MyBlock book={book} cardKey={[mode === 'work' ? 'work' : 'book', String(id)]} />
           ) : null}
+
+          {/* Полка + «Детали файла» (мобайл) — ниже оценки, как второстепенное.
+              На десктопе они в шапке у обложки (hidden md:block выше). */}
+          <div className="space-y-3 md:hidden">
+            <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
+            {!multi ? <FileDetails book={book} /> : null}
+          </div>
 
           {book.deleted ? (
             <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
@@ -300,10 +311,10 @@ function externalRatingDisplay(book: Book): { value: string; source: string } | 
 }
 
 /**
- * ActionButtons — кластер действий карточки: ★ избранное + (для одного издания)
- * Читать / На Kindle / Скачать. При нескольких изданиях действия — в строках
- * секции «Издания», поэтому здесь только ★. Рендерится дважды (кластер справа от
- * заголовка на десктопе, отдельный ряд на мобиле) — один из двух всегда скрыт.
+ * ActionButtons — ДЕСКТОПНЫЙ кластер действий (справа от заголовка): ★ избранное +
+ * (для одного издания) Читать / На Kindle / Скачать. При нескольких изданиях
+ * действия — в строках секции «Издания», поэтому здесь только ★. На мобайле своя
+ * раскладка по приоритету — см. MobileActions.
  */
 function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
   return (
@@ -325,6 +336,39 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
           <DownloadMenu bookId={book.id} />
         </>
       ) : null}
+    </>
+  );
+}
+
+/**
+ * MobileActions — действия на мобайле, по приоритету: «Читать» — крупная primary-
+ * кнопка во всю ширину С ТЕКСТОМ (главное действие), ниже ряд второстепенных
+ * (Скачать / На Kindle с текстом + ★ иконкой). Так важное действие не оказывается
+ * иконкой ниже второстепенных полки/деталей (см. правку раскладки мобайла). При
+ * нескольких изданиях Читать/скачивание — на каждое издание в секции «Издания»,
+ * поэтому здесь только ★.
+ */
+function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
+  if (multi) {
+    return <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />;
+  }
+  return (
+    <>
+      <Button asChild className="w-full gap-1.5">
+        <Link
+          to="/books/$id/read"
+          params={{ id: String(book.id) }}
+          aria-label="Открыть книгу в браузерном ридере"
+        >
+          <BookOpen className="size-4" aria-hidden />
+          {readButtonLabel(book.reading_fraction)}
+        </Link>
+      </Button>
+      <div className="flex items-center gap-2">
+        <DownloadMenu bookId={book.id} showLabel />
+        <SendToKindleButton bookId={book.id} showLabel />
+        <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
+      </div>
     </>
   );
 }
