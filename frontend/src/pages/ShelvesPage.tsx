@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, FolderPlus, Library, Pencil, Star, Trash2 } from 'lucide-react';
+import { ChevronRight, FolderPlus, GripVertical, Library, Pencil, Star, Trash2 } from 'lucide-react';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { BookMeta } from '@/components/BookMeta';
 import { Callout } from '@/components/ui/callout';
@@ -19,9 +32,16 @@ import {
   useRenameCollection,
   useDeleteCollection,
   useRemoveBookFromCollection,
+  useMoveBookBetweenShelves,
   type Collection,
+  type CollectionBook,
 } from '@/lib/collections';
 import { cn } from '@/lib/utils';
+
+// dragData/dropData — типизированные payload'ы DnD. Draggable книги несёт исходную
+// полку (sourceId) + название (для DragOverlay), droppable полка — id+имя (для тоста).
+type DragData = { bookId: number; sourceId: number; title: string };
+type DropData = { collId: number; name: string };
 
 /**
  * ShelvesPage — /shelves: личные полки (коллекции) пользователя. Создать/
@@ -34,6 +54,29 @@ import { cn } from '@/lib/utils';
 export function ShelvesPage() {
   const collectionsQ = useCollections();
   const collections = collectionsQ.data ?? [];
+  const move = useMoveBookBetweenShelves();
+  // Активная перетаскиваемая книга — для DragOverlay (плавающий чип под курсором/пальцем).
+  const [drag, setDrag] = useState<DragData | null>(null);
+
+  // Сенсоры: мышь (drag после сдвига 8px — клик/тап по книге и «убрать» не стартуют
+  // drag), тач (long-press 220мс — чтобы свайп-скролл списка не превращался в drag),
+  // клавиатура (space взять/бросить, стрелки — для доступности).
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 220, tolerance: 6 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  function onDragStart(e: DragStartEvent) {
+    setDrag((e.active.data.current as DragData | undefined) ?? null);
+  }
+  function onDragEnd(e: DragEndEvent) {
+    setDrag(null);
+    const a = e.active.data.current as DragData | undefined;
+    const o = e.over?.data.current as DropData | undefined;
+    if (!a || !o || o.collId === a.sourceId) return; // бросок мимо/в ту же полку — no-op
+    move.mutate({ bookId: a.bookId, fromId: a.sourceId, toId: o.collId, toName: o.name });
+  }
 
   return (
     <div className="space-y-4">
@@ -53,11 +96,25 @@ export function ShelvesPage() {
           книги через «Добавить на полку».
         </Callout>
       ) : (
-        <ul className="space-y-2">
-          {collections.map((c) => (
-            <ShelfRow key={c.id} collection={c} />
-          ))}
-        </ul>
+        <DndContext
+          sensors={sensors}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          onDragCancel={() => setDrag(null)}
+        >
+          <ul className="space-y-2">
+            {collections.map((c) => (
+              <ShelfRow key={c.id} collection={c} />
+            ))}
+          </ul>
+          <DragOverlay>
+            {drag ? (
+              <div className="max-w-xs truncate rounded-md border border-border bg-popover px-3 py-1.5 text-sm font-medium shadow-md">
+                {drag.title}
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       )}
     </div>
   );
@@ -65,7 +122,8 @@ export function ShelvesPage() {
 
 /**
  * ShelfRow — одна полка: заголовок (раскрытие книг) + действия
- * (переименовать/удалить). Книги полки грузятся лениво при раскрытии.
+ * (переименовать/удалить). Книги полки грузятся лениво при раскрытии. Сама полка —
+ * drop-зона: подсвечивается, когда над ней тащат книгу с ДРУГОЙ полки.
  */
 function ShelfRow({ collection }: { collection: Collection }) {
   const [open, setOpen] = useState(false);
@@ -73,8 +131,21 @@ function ShelfRow({ collection }: { collection: Collection }) {
   // Служебная «Избранное» (★ книги): закреплена сверху, переименовать/удалить нельзя.
   const isFav = collection.kind === 'favorites';
 
+  const { setNodeRef, isOver, active } = useDroppable({
+    id: `shelf-${collection.id}`,
+    data: { collId: collection.id, name: collection.name } satisfies DropData,
+  });
+  const activeData = active?.data.current as DragData | undefined;
+  const isTarget = isOver && activeData != null && activeData.sourceId !== collection.id;
+
   return (
-    <li className="rounded-md border border-border">
+    <li
+      ref={setNodeRef}
+      className={cn(
+        'rounded-md border transition',
+        isTarget ? 'border-primary bg-accent/40 ring-2 ring-primary/40' : 'border-border',
+      )}
+    >
       <div className="flex items-center gap-1.5 p-2">
         <button
           type="button"
@@ -133,40 +204,85 @@ function ShelfBooks({ collectionId }: { collectionId: number }) {
   if (books.length === 0) {
     return (
       <p className="px-4 pb-3 text-sm italic text-muted-foreground">
-        Полка пуста — добавьте книги с их карточек.
+        Полка пуста — добавьте книги с их карточек или перетащите с другой полки.
       </p>
     );
   }
   return (
     <ul className="border-t border-border/60 px-2 py-1">
       {books.map((b) => (
-        <li key={b.id} className="flex items-center gap-2 rounded px-2 py-1.5 hover:bg-accent/30">
-          <Link
-            to="/works/$id"
-            params={{ id: String(b.work_id ?? b.id) }}
-            className="min-w-0 flex-1"
-          >
-            <span className="block truncate text-sm font-medium">{b.title}</span>
-            {b.authors.length > 0 ? (
-              <span className="block truncate text-xs text-muted-foreground">
-                {b.authors.join(', ')}
-                {b.series ? ` · ${b.series}` : ''}
-              </span>
-            ) : null}
-            <BookMeta book={b} />
-          </Link>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => remove.mutate({ collectionId, bookId: b.id })}
-            disabled={remove.isPending}
-            aria-label={`Убрать «${b.title}» из полки`}
-          >
-            <Trash2 className="size-4" aria-hidden />
-          </Button>
-        </li>
+        <ShelfBookRow
+          key={b.id}
+          book={b}
+          collectionId={collectionId}
+          onRemove={() => remove.mutate({ collectionId, bookId: b.id })}
+          removing={remove.isPending}
+        />
       ))}
     </ul>
+  );
+}
+
+/**
+ * ShelfBookRow — строка книги на полке + draggable (перенос на другую полку).
+ * Listeners на всей строке (тащить можно за любую её часть; long-press на тач).
+ * Клик по книге (без сдвига) ведёт на карточку; «убрать» — stopPropagation на
+ * pointerdown, чтобы взаимодействие с кнопкой не стартовало drag.
+ */
+function ShelfBookRow({
+  book,
+  collectionId,
+  onRemove,
+  removing,
+}: {
+  book: CollectionBook;
+  collectionId: number;
+  onRemove: () => void;
+  removing: boolean;
+}) {
+  const { setNodeRef, listeners, attributes, isDragging } = useDraggable({
+    id: `book-${collectionId}-${book.id}`,
+    data: { bookId: book.id, sourceId: collectionId, title: book.title } satisfies DragData,
+  });
+  return (
+    <li
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className={cn(
+        'flex items-center gap-1.5 rounded px-2 py-1.5 hover:bg-accent/30',
+        isDragging ? 'opacity-40' : 'cursor-grab',
+      )}
+    >
+      <GripVertical className="size-4 shrink-0 text-muted-foreground/50" aria-hidden />
+      <Link
+        to="/works/$id"
+        params={{ id: String(book.work_id ?? book.id) }}
+        className="min-w-0 flex-1"
+        onClick={(e) => {
+          if (isDragging) e.preventDefault(); // не навигируем после drag
+        }}
+      >
+        <span className="block truncate text-sm font-medium">{book.title}</span>
+        {book.authors.length > 0 ? (
+          <span className="block truncate text-xs text-muted-foreground">
+            {book.authors.join(', ')}
+            {book.series ? ` · ${book.series}` : ''}
+          </span>
+        ) : null}
+        <BookMeta book={book} />
+      </Link>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={onRemove}
+        disabled={removing}
+        aria-label={`Убрать «${book.title}» из полки`}
+      >
+        <Trash2 className="size-4" aria-hidden />
+      </Button>
+    </li>
   );
 }
 

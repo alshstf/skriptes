@@ -196,3 +196,26 @@ export function useRemoveBookFromCollection() {
     onError: () => toast.error('Не удалось убрать с полки'),
   });
 }
+
+/**
+ * useMoveBookBetweenShelves — перенести книгу с одной полки на другую (DnD на
+ * /shelves). Это add(целевая) + remove(исходная). add-first: если remove
+ * упадёт, книга хотя бы окажется в целевой (без потери). Инвалидации те же, что
+ * у add/remove (+ favorite-side, если involved «Избранное»), единый тост.
+ */
+export function useMoveBookBetweenShelves() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (vars: { bookId: number; fromId: number; toId: number; toName?: string }) => {
+      await apiFetch<void>(`/api/me/collections/${vars.toId}/books/${vars.bookId}`, { method: 'POST' });
+      await apiFetch<void>(`/api/me/collections/${vars.fromId}/books/${vars.bookId}`, { method: 'DELETE' });
+    },
+    onSuccess: (_data, vars) => {
+      void qc.invalidateQueries({ queryKey: [...KEY] });
+      void qc.invalidateQueries({ queryKey: bookShelvesKey(vars.bookId) });
+      invalidateFavoriteSide(qc, vars.bookId);
+      toast.success(vars.toName ? `Перенесено в «${vars.toName}»` : 'Перенесено');
+    },
+    onError: () => toast.error('Не удалось перенести'),
+  });
+}
