@@ -1,11 +1,11 @@
 import { test, expect } from './_fixtures';
 import { bookDetailFixture } from './_fixtures';
 
-// Статус «Прочитана» теперь живёт в meta-блоке карточки книги (не
-// в action-ряде). Тесты проверяют:
-//  1. is_read=false → видим «Нет ·» + кнопка «Отметить» → клик → POST /read
+// Статус «Прочитано» живёт в блоке «Моё» карточки книги (рядом с «Ваша
+// оценка»), не в meta-сетке. Тесты проверяют:
+//  1. is_read=false → кнопка «Отметить прочитанной» → клик → POST /read
 //  2. is_read=true, есть read_at → видим дату + кнопка «снять» → клик → DELETE /read
-//  3. кнопка «Читать» в action-ряде ведёт на /books/:id/read
+//  3. кнопка «Читать» в action-кластере ведёт на /books/:id/read
 //  4. с reading_fraction>0 кнопка показывает «Продолжить N%»
 
 test('read status: «Нет» → «Отметить» click marks as read', async ({ mockedPage: page }) => {
@@ -36,10 +36,9 @@ test('read status: «Нет» → «Отметить» click marks as read', asy
   });
 
   await page.goto('/books/19');
-  await expect(page.getByRole('term').filter({ hasText: /^Прочитана$/ })).toBeVisible({
-    timeout: 10_000,
-  });
-  const markBtn = page.getByRole('button', { name: /Отметить/ });
+  // Блок «Моё» загрузился (карточка отрисована).
+  await expect(page.getByText('Ваша оценка:')).toBeVisible({ timeout: 10_000 });
+  const markBtn = page.getByRole('button', { name: /Отметить прочитанной/ });
   await expect(markBtn).toBeVisible();
   await markBtn.click();
 

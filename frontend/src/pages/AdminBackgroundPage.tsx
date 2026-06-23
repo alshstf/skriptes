@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AdminTabs } from '@/components/AdminTabs';
 import { SaveBar } from '@/components/SaveBar';
 import { cn } from '@/lib/utils';
+import { formatBytes } from '@/lib/format';
 import {
   useCoverCacheSettings,
   useUpdateCoverCacheSettings,
@@ -92,19 +93,6 @@ const MODE_HELP_YEAR: Record<'off' | 'bg', string> = {
 };
 
 const MODE_LABEL: Record<Mode, string> = { off: 'Выкл', lazy: 'Лениво', bg: 'Фоном' };
-
-function formatBytes(n: number): string {
-  if (n < 0) return '—';
-  if (n < 1024) return `${n} Б`;
-  const units = ['КБ', 'МБ', 'ГБ', 'ТБ'];
-  let v = n / 1024;
-  let i = 0;
-  while (v >= 1024 && i < units.length - 1) {
-    v /= 1024;
-    i++;
-  }
-  return `${v.toFixed(1)} ${units[i]}`;
-}
 
 const MIN_FREE_WARN_MB = 100;
 

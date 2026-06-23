@@ -24,13 +24,22 @@ import { ApiError } from '@/lib/api';
  *
  * 503 от backend (SMTP не сконфигурирован) — toast с пояснением.
  */
-export function SendToKindleButton({ bookId }: { bookId: number }) {
+export function SendToKindleButton({
+  bookId,
+  showLabel = false,
+}: {
+  bookId: number;
+  showLabel?: boolean;
+}) {
   const targetsQ = useKindleTargets();
   const send = useSendToKindle();
   const [sendingTo, setSendingTo] = useState<number | null>(null);
 
   const targets = targetsQ.data ?? [];
   const disabled = send.isPending || targetsQ.isLoading;
+  // showLabel=true → текст всегда (мобильный action-блок карточки); иначе текст
+  // прячется <sm (компактный ряд действий в шапке/списках).
+  const labelCls = showLabel ? '' : 'hidden sm:inline';
 
   async function doSend(target: KindleTarget) {
     setSendingTo(target.id);
@@ -50,7 +59,7 @@ export function SendToKindleButton({ bookId }: { bookId: number }) {
       <Button variant="outline" size="sm" asChild>
         <Link to="/me" className="gap-2" aria-label="Настроить Kindle" title="Настроить Kindle">
           <Tablet className="size-4" aria-hidden />
-          <span className="hidden sm:inline">Настроить Kindle</span>
+          <span className={labelCls}>Настроить Kindle</span>
         </Link>
       </Button>
     );
@@ -70,7 +79,7 @@ export function SendToKindleButton({ bookId }: { bookId: number }) {
         title="Отправить на Kindle"
       >
         <Tablet className="size-4" aria-hidden />
-        <span className="hidden sm:inline">{sendingTo === t.id ? 'Отправляется…' : 'На Kindle'}</span>
+        <span className={labelCls}>{sendingTo === t.id ? 'Отправляется…' : 'На Kindle'}</span>
       </Button>
     );
   }
