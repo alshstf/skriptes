@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -44,10 +45,16 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 		if content.Resolver != nil {
 			params.ExcludeGenres, params.ExcludeLangs = content.Resolver.Exclusions(r.Context(), params.UserID)
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		// 15с (не 5): список авторов считает агрегаты подзапросами, а на больших
+		// библиотеках под нагрузкой фоновых воркеров запас нужен. Основной фикс —
+		// двухфазный запрос в ListAuthorsFiltered (LIMIT до богатых подзапросов).
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 		defer cancel()
 		res, err := d.Service.ListAuthorsFiltered(ctx, params)
 		if err != nil {
+			// Логируем причину — раньше глоталась, и 500 «query failed» нельзя было
+			// диагностировать по логам (таймаут sort=rating на большой библиотеке).
+			slog.Error("list authors failed", "sort", params.Sort, "err", err)
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}

@@ -237,8 +237,47 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		return AuthorListResult{}, fmt.Errorf("count authors: %w", err)
 	}
 
-	// ORDER BY — по выбранной сортировке. book_count/rating считаются в
-	// SELECT-агрегатах ниже; сортируем по тем же выражениям (алиасы).
+	// ── Главный запрос: ДВЕ ФАЗЫ (иначе таймаут на большой библиотеке) ─────
+	// Фаза 1 (CTE page): отобрать страницу авторов по фильтрам + сортировке +
+	// LIMIT/OFFSET. Для агрегатных сортировок ключ — ОДИН лёгкий коррелированный
+	// подзапрос на автора (max/avg/count). Фаза 2: богатые подзапросы
+	// (book_count, годы, рейтинги, оценки читателей с work_id IN (...)) считаются
+	// ТОЛЬКО для ≤Limit строк страницы.
+	//
+	// Раньше это был один уровень: при ORDER BY по алиасу-подзапросу PG вычислял
+	// подзапросы для ВСЕХ отфильтрованных авторов до LIMIT — на 462k книгах /
+	// десятках тысяч авторов запрос упирался в таймаут хендлера (5с) и падал в 500
+	// «query failed». sort=name работал (сортировка по индексируемым колонкам →
+	// LIMIT применяется сразу), а sort=rating/book_count/reader_rating — нет.
+
+	// Сортировка фазы 1: базовые колонки (name) либо ОДИН коррелированный агрегат
+	// (свои exclusion-плейсхолдеры — видимость учитывается и в ключе сортировки).
+	var phase1Order string
+	switch p.Sort {
+	case "book_count":
+		ex := renderExclusion()
+		phase1Order = fmt.Sprintf("ORDER BY (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))"+
+			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
+			" WHERE ba.author_id = a.id AND b.deleted = false%s) DESC,"+
+			" a.last_name, a.first_name, a.middle_name, a.id", ex)
+	case "rating":
+		ex := renderExclusion()
+		phase1Order = fmt.Sprintf("ORDER BY (SELECT max(COALESCE(b.rating, b.external_rating))::float8"+
+			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
+			" WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%s)"+
+			" DESC NULLS LAST, a.last_name, a.id", ex)
+	case "reader_rating":
+		ex := renderExclusion()
+		phase1Order = fmt.Sprintf("ORDER BY (SELECT avg(br.rating)::float8 FROM book_ratings br"+
+			" WHERE br.work_id IN (SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
+			" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%s))"+
+			" DESC NULLS LAST, a.last_name, a.id", ex)
+	default:
+		phase1Order = "ORDER BY a.last_name, a.first_name, a.middle_name, a.id"
+	}
+
+	// Финальная сортировка фазы 2 — по тем же критериям, но по готовым алиасам
+	// страницы (≤Limit строк, дёшево; secondary-ключи доступны как алиасы).
 	orderSQL := "ORDER BY a.last_name, a.first_name, a.middle_name, a.id"
 	switch p.Sort {
 	case "book_count":
@@ -249,10 +288,10 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
 	}
 
-	// Главный запрос: на каждого автора — агрегаты подзапросами. userID для
-	// is_favorite/favorited_books_count — отдельный аргумент (0 у анонима →
-	// подзапрос даст false/0). Исключения в каждом агрегате рендерим свежими
-	// плейсхолдерами (renderExclusion).
+	// Аргументы фазы 1 (limit/offset) и фазы 2 (userID + exclusion на каждый
+	// богатый подзапрос). userID для is_favorite/fav_books (0 у анонима → false/0).
+	limitN := addArg(p.Limit)
+	offsetN := addArg(p.Offset)
 	userN := addArg(p.UserID)
 	exBookCount := renderExclusion()
 	exFavBooks := renderExclusion()
@@ -263,49 +302,54 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	exRatingSrc := renderExclusion()
 	exReaderAvg := renderExclusion()
 	exReaderCnt := renderExclusion()
-	limitN := addArg(p.Limit)
-	offsetN := addArg(p.Offset)
 
+	// CTE page (фаза 1, FROM authors a) + богатый SELECT (фаза 2, FROM page a —
+	// тот же алиас `a`, поэтому подзапросы по a.id не меняются).
 	query := fmt.Sprintf(`
+		WITH page AS (
+		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path
+		    FROM authors a%[1]s
+		    %[2]s
+		    LIMIT $%[3]d OFFSET $%[4]d
+		)
 		SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
 		       (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false%[2]s)::int AS book_count,
+		          WHERE ba.author_id = a.id AND b.deleted = false%[6]s)::int AS book_count,
 		       EXISTS (SELECT 1 FROM favorite_authors fa
-		               WHERE fa.author_id = a.id AND fa.user_id = $%[1]d) AS is_favorite,
+		               WHERE fa.author_id = a.id AND fa.user_id = $%[5]d) AS is_favorite,
 		       (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		          FROM user_collection_books fcb
-		          JOIN user_collections fc ON fc.id = fcb.collection_id AND fc.user_id = $%[1]d AND fc.kind = 'favorites'
+		          JOIN user_collections fc ON fc.id = fcb.collection_id AND fc.user_id = $%[5]d AND fc.kind = 'favorites'
 		          JOIN book_authors ba ON ba.book_id = fcb.book_id
 		          JOIN books b ON b.id = fcb.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false%[3]s)::int AS fav_books,
+		          WHERE ba.author_id = a.id AND b.deleted = false%[7]s)::int AS fav_books,
 		       (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[4]s) AS yr_from,
+		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[8]s) AS yr_from,
 		       (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[5]s) AS yr_to,
+		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[9]s) AS yr_to,
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[6]s) AS has_adapt,
+		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[10]s) AS has_adapt,
 		       (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[7]s) AS external_rating,
+		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[11]s) AS external_rating,
 		       (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
 		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[14]s
+		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[12]s
 		          ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id
 		          LIMIT 1) AS external_rating_source,
 		       (SELECT avg(br.rating)::float8 FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[12]s
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[13]s
 		          )) AS reader_rating,
 		       (SELECT count(*)::int FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[13]s
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[14]s
 		          )) AS reader_rating_count
-		FROM authors a%[8]s
-		%[9]s
-		LIMIT $%[10]d OFFSET $%[11]d
-	`, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, whereSQL, orderSQL, limitN, offsetN, exReaderAvg, exReaderCnt, exRatingSrc)
+		FROM page a
+		%[15]s
+	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, exRatingSrc, exReaderAvg, exReaderCnt, orderSQL)
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
