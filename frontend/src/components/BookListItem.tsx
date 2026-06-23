@@ -36,9 +36,13 @@ export function BookListItem({
       className="flex gap-3 rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
     >
       {serNo != null ? (
+        // min-w (не фикс. w-6): у некоторых серий ser_no = ГОД (1996, 1998 —
+        // «Антология фантастики»); 4 цифры в 24px упирались в название. min-width
+        // держит выравнивание для 1–2 значных номеров и растёт для широких, не
+        // съедая gap-3 до заголовка. mr-0.5 — небольшой зазор сверх gap.
         <span
           aria-label={`Том ${serNo}`}
-          className="w-6 shrink-0 pt-0.5 text-right text-sm font-medium tabular-nums text-muted-foreground"
+          className="min-w-[1.75rem] shrink-0 pt-0.5 text-right text-sm font-medium tabular-nums text-muted-foreground"
         >
           {serNo}.
         </span>

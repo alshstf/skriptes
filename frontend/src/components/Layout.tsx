@@ -37,7 +37,14 @@ export function Layout({ children }: { children: ReactNode }) {
 
 function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisible: boolean }) {
   return (
-    <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-10">
+    // bg-background СПЛОШНОЙ (не /95 + blur): на iOS Safari backdrop-blur ненадёжен,
+    // и при скролле контент просвечивал сквозь полупрозрачный хэдер. paddingTop =
+    // safe-area-inset-top: в PWA standalone на iOS (status-bar-style=black-translucent)
+    // контент иначе лезет под системный бар с часами; на десктопе/в Safari инсет = 0.
+    <header
+      className="sticky top-0 z-10 border-b border-border bg-background"
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+    >
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2">
         <div className="flex items-center gap-4 min-w-0">
           {/* Бургер — только мобила (md:hidden внутри компонента), слева от логотипа */}
