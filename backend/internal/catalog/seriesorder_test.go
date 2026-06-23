@@ -126,9 +126,11 @@ func TestAssignSeriesOrder(t *testing.T) {
 		}
 	})
 
-	t.Run("частичный ser_no падает на следующий полный уровень", func(t *testing.T) {
-		// У одной книги есть ser_no, у других нет, но у ВСЕХ есть written_year →
-		// уровень ser_no пропускается (не у всех), берём written_year.
+	t.Run("частичный ser_no: книги без номера вставляются по году", func(t *testing.T) {
+		// У одной книги ser_no=1 (год 2010), у других номера нет, но есть год
+		// (2005, 2008) — оба РАНЬШЕ единственного датированного якоря (2010), поэтому
+		// встают перед ним, по году. Раньше all-or-nothing отбрасывал ser_no и брал
+		// written_year; теперь — ser_no-каркас + вставка, итог тот же [11,12,10].
 		items := []seriesSortItem{
 			{bookID: 10, serNo: iptr(1), writtenYear: iptr(2010), normTitle: "в"},
 			{bookID: 11, writtenYear: iptr(2005), normTitle: "а"},
@@ -147,6 +149,72 @@ func TestAssignSeriesOrder(t *testing.T) {
 		}
 		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{11, 10}) {
 			t.Fatalf("partial heuristic: got %v", got)
+		}
+	})
+
+	// ── ser_no-каркас + вставка по году (Option A+) ──────────────────────────
+
+	t.Run("каркас: orphan заполняет пропуск по году", func(t *testing.T) {
+		// Кейс пользователя: #1@1999, #3@2001, без-номера@2000 → orphan садится в
+		// пропуск №2 (ключ 1.5), а не уходит в конец. Порядок [1, orphan, 3].
+		items := []seriesSortItem{
+			{bookID: 1, serNo: iptr(1), writtenYear: iptr(1999), normTitle: "a"},
+			{bookID: 3, serNo: iptr(3), writtenYear: iptr(2001), normTitle: "c"},
+			{bookID: 2, writtenYear: iptr(2000), normTitle: "b"},
+		}
+		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{1, 2, 3}) {
+			t.Fatalf("gap-fill: got %v", got)
+		}
+	})
+
+	t.Run("каркас: поздний омнибус без номера — за нумерованными", func(t *testing.T) {
+		// Как «МИФические истории»: 1..3 (часть с годами), омнибус без номера с
+		// годом ПОЗЖЕ всех нумерованных → сразу за последним номером, не в перемешку.
+		items := []seriesSortItem{
+			{bookID: 1, serNo: iptr(1), writtenYear: iptr(1978), normTitle: "a"},
+			{bookID: 2, serNo: iptr(2), normTitle: "b"}, // номер без года
+			{bookID: 3, serNo: iptr(3), writtenYear: iptr(1982), normTitle: "c"},
+			{bookID: 99, writtenYear: iptr(2015), normTitle: "omnibus"},
+		}
+		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{1, 2, 3, 99}) {
+			t.Fatalf("late omnibus: got %v", got)
+		}
+	})
+
+	t.Run("каркас: orphan без года — в самый хвост после датированных", func(t *testing.T) {
+		items := []seriesSortItem{
+			{bookID: 1, serNo: iptr(1), writtenYear: iptr(2000), normTitle: "a"},
+			{bookID: 50, writtenYear: iptr(2005), normTitle: "dated-orphan"},
+			{bookID: 60, normTitle: "no-year", dateAdded: day(1)},
+		}
+		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{1, 50, 60}) {
+			t.Fatalf("no-year orphan: got %v", got)
+		}
+	})
+
+	t.Run("каркас: orphan раньше всех датированных номеров — перед ними", func(t *testing.T) {
+		items := []seriesSortItem{
+			{bookID: 3, serNo: iptr(3), writtenYear: iptr(2001), normTitle: "c"},
+			{bookID: 5, serNo: iptr(5), writtenYear: iptr(2005), normTitle: "e"},
+			{bookID: 1, writtenYear: iptr(1999), normTitle: "early"},
+		}
+		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{1, 3, 5}) {
+			t.Fatalf("early orphan: got %v", got)
+		}
+	})
+
+	t.Run("каркас: два orphan в одном пропуске — по году", func(t *testing.T) {
+		// #1@2000, #4@2010, два без-номера (2003, 2006) → оба в пропуск, по году.
+		items := []seriesSortItem{
+			{bookID: 1, serNo: iptr(1), writtenYear: iptr(2000), normTitle: "a"},
+			{bookID: 4, serNo: iptr(4), writtenYear: iptr(2010), normTitle: "d"},
+			{bookID: 30, writtenYear: iptr(2006), normTitle: "y"},
+			{bookID: 20, writtenYear: iptr(2003), normTitle: "x"},
+		}
+		// 1(2000) → key1; 20(2003)→ после #1 → 1.5; 30(2006)→ после #1 → 1.5; 4→key4.
+		// 20 и 30 равны по ключу → по году: 20(2003) < 30(2006).
+		if got := order(assignSeriesOrder(items)); !eqIDs(got, []int64{1, 20, 30, 4}) {
+			t.Fatalf("two orphans in gap: got %v", got)
 		}
 	})
 }

@@ -30,16 +30,135 @@ type seriesSortItem struct {
 	dateAdded   time.Time
 }
 
-// assignSeriesOrder сортирует книги ОДНОЙ серии по каскаду и возвращает
-// map[bookID]rank (0-based). Каскад — по-серийно, all-or-nothing на уровень:
-//  1. ser_no — если задан у ВСЕХ книг серии;
-//  2. written_year — если задан у всех;
-//  3. edition_year — если задан у всех;
-//  4. эвристика названия — если уверенно парсится у всех;
-//  5. date_added — последний резерв (есть всегда из inp).
+// assignSeriesOrder сортирует книги ОДНОЙ серии и возвращает map[bookID]rank
+// (0-based). Две стратегии:
 //
-// Финальный стабильный тайбрейк на любом уровне — normalized_title.
+//   - Есть хотя бы один ser_no → ser_no-КАРКАС (assignBySerNoBackbone):
+//     нумерованные книги встают на свой номер, БЕЗ-номерные ВСТАВЛЯЮТСЯ по году
+//     (written_year ∥ edition_year) в подходящий пропуск, а не уходят в конец.
+//     Это чинит частый случай, когда у серии ser_no проставлен у большинства, но
+//     не у всех (раньше all-or-nothing отбрасывал ser_no целиком и сортировка
+//     валилась на date_added — порядок добавления в библиотеку).
+//
+//   - Ни у кого нет ser_no → каскад (assignByCascade): written_year → edition_year
+//     → эвристика номера из названия → date_added (all-or-nothing на уровень).
+//
+// Работает на ПРЕДСТАВИТЕЛЯХ работ (издания уже схлопнуты по work_id вызывающим).
+// Финальный стабильный тайбрейк везде — normalized_title.
 func assignSeriesOrder(items []seriesSortItem) map[int64]int {
+	if len(items) == 0 {
+		return map[int64]int{}
+	}
+	for _, it := range items {
+		if it.serNo != nil {
+			return assignBySerNoBackbone(items)
+		}
+	}
+	return assignByCascade(items)
+}
+
+// secOf — вторичный непрерывный сигнал порядка: год написания, иначе год издания.
+func secOf(it seriesSortItem) (int, bool) {
+	if it.writtenYear != nil {
+		return *it.writtenYear, true
+	}
+	if it.editionYear != nil {
+		return *it.editionYear, true
+	}
+	return 0, false
+}
+
+// assignBySerNoBackbone — ser_no как каркас + вставка без-номерных книг по году.
+//
+// Ключ сортировки (float):
+//   - книга с ser_no → key = ser_no;
+//   - без ser_no, но с годом и есть датированные нумерованные «якоря» → key =
+//     (max ser_no среди якорей, чей год ≤ год книги) + 0.5; то есть книга садится
+//     СРАЗУ ПОСЛЕ последнего номера, который её не позже → попадает в пропуск.
+//     Год раньше всех датированных якорей → перед самым ранним из них (−0.5);
+//   - без года (или вставлять не по чему) → в хвост (maxSer+1).
+//
+// Тайбрейк на равном ключе: датированные раньше бездатных, затем год, date_added,
+// normalized_title (два «orphan» в одном пропуске упорядочатся по году/названию).
+func assignBySerNoBackbone(items []seriesSortItem) map[int64]int {
+	type anchor struct{ serNo, sec int }
+	var dated []anchor
+	maxSer := 0
+	minDatedSer, haveMinDated := 0, false
+	for _, it := range items {
+		if it.serNo == nil {
+			continue
+		}
+		if *it.serNo > maxSer {
+			maxSer = *it.serNo
+		}
+		if sec, ok := secOf(it); ok {
+			dated = append(dated, anchor{serNo: *it.serNo, sec: sec})
+			if !haveMinDated || *it.serNo < minDatedSer {
+				minDatedSer, haveMinDated = *it.serNo, true
+			}
+		}
+	}
+
+	type keyed struct {
+		bookID    int64
+		key       float64
+		sec       int
+		hasSec    bool
+		dateAdded time.Time
+		normTitle string
+	}
+	keys := make([]keyed, 0, len(items))
+	for _, it := range items {
+		sec, hasSec := secOf(it)
+		k := keyed{bookID: it.bookID, sec: sec, hasSec: hasSec, dateAdded: it.dateAdded, normTitle: it.normTitle}
+		switch {
+		case it.serNo != nil:
+			k.key = float64(*it.serNo)
+		case hasSec && len(dated) > 0:
+			best := -1
+			for _, a := range dated {
+				if a.sec <= sec && a.serNo > best {
+					best = a.serNo
+				}
+			}
+			if best >= 0 {
+				k.key = float64(best) + 0.5 // в пропуск сразу за последним «не позже» номером
+			} else {
+				k.key = float64(minDatedSer) - 0.5 // раньше самого раннего датированного
+			}
+		default:
+			k.key = float64(maxSer) + 1 // нечем вставлять → хвост
+		}
+		keys = append(keys, k)
+	}
+
+	sort.SliceStable(keys, func(i, j int) bool {
+		if keys[i].key != keys[j].key {
+			return keys[i].key < keys[j].key
+		}
+		if keys[i].hasSec != keys[j].hasSec {
+			return keys[i].hasSec // датированные раньше бездатных
+		}
+		if keys[i].hasSec && keys[i].sec != keys[j].sec {
+			return keys[i].sec < keys[j].sec
+		}
+		if !keys[i].dateAdded.Equal(keys[j].dateAdded) {
+			return keys[i].dateAdded.Before(keys[j].dateAdded)
+		}
+		return keys[i].normTitle < keys[j].normTitle
+	})
+	out := make(map[int64]int, len(keys))
+	for rank, k := range keys {
+		out[k.bookID] = rank
+	}
+	return out
+}
+
+// assignByCascade — серия БЕЗ ser_no: порядок по каскаду pickSeriesLevel
+// (written_year → edition_year → эвристика названия → date_added). Стабильный
+// тайбрейк — normalized_title.
+func assignByCascade(items []seriesSortItem) map[int64]int {
 	keyFn := pickSeriesLevel(items)
 	sorted := make([]seriesSortItem, len(items))
 	copy(sorted, items)
