@@ -133,7 +133,9 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0026_external_rating` (`books.external_rating`/`_source`/`_count` —
+Текущая верхняя — `0028_metadata_overrides` (`metadata_overrides` — локальные ручные
+правки метаданных каталога, только админ; см. граблю №19); до неё `0027_external_rating_lookups`
+(`book_external_rating_lookups`); `0026_external_rating` (`books.external_rating`/`_source`/`_count` —
 внешний рейтинг из сети, см. граблю №17); до неё `0025_rating_prompts` (`reads.acquired_at` +
 `book_rating_prompts` для отложенных запросов оценки); `0024_book_ratings`
 (пользовательские оценки книг), `0023_favorites_collection` (★-избранное → служебная
@@ -603,6 +605,29 @@ safe-area-инсет**, иначе контент лезет под бар. Ра
 покрыты централизованно: новый оверлей на этих примитивах safe-area получает автоматически.
 ⚠️ Playwright/Chromium даёт `env(safe-area-*)=0` (как десктоп) — реальные инсеты только на
 iOS-устройстве; визуально проверять симуляцией (инъекция `top/padding:47px`) или на айфоне.
+
+### 19. Локальные оверрайды метаданных — МАТЕРИАЛИЗАЦИЯ в колонку, не query-time
+
+Ручная корректура каталога (только админ, глобально): `metadata_overrides` (миграция
+**0028**) + `metadata.OverrideController` (`metadata/overrides.go`). Правка **материализуется
+в реальную колонку** (`books.*`/`works.*`) — иначе НЕ попадёт в Meili (индексы строятся из
+колонок, query-time-join туда не дотянется); бонусом обогащение (`COALESCE` set-if-null) не
+перетирает непустое значение. Леджер хранит `original_value` (захват ДО первой правки;
+повторная правка его НЕ перезахватывает) → откат + индикатор «изменено». API под
+`requireAdmin`: `POST/DELETE /admin/overrides` + `GET /admin/overrides?work_id=` (индикаторы) +
+`POST /admin/overrides/revert-all`. Фронт: `useSetOverride`/`useRevertOverride`/`useOverrides`
+(`lib/admin.ts`) + `InlineEditableField` (admin-only карандаш/бейдж/откат) в `EditionRow` и
+`FileDetails` карточки. **План — `~/.claude/plans/cryptic-roaming-turing.md`.**
+- **PR1 (сделано):** фундамент + edition-СКАЛЯРЫ (`edition_year`/`isbn`/`publisher`/
+  `translator`/`edition_title`) — не индексируются и не перетираются импортом, поэтому
+  материализуются прямо в `books.*` без ресинка/ре-апплая/гейтов. Шипает кейс Чарушина
+  (`edition_year=1000`).
+- **PR2+ (план):** work-поля (`title`/`written_year`/`ser_no`) — **dual-write** в `works.*`
+  И в якорное издание `books.*` (списки автора/серии читают `b.*`), + гейт recompute (`NOT
+  EXISTS metadata_overrides` в `recomputeWorkAggregates`/`recomputeWorkTitles`, иначе
+  группировка перетрёт) + ре-апплай после импорта (`lang`/title перетираются) + `UpsertBook
+  DocsToIndex` (новый таргетный примитив для books-индекса) + ресинк works-индекса. PR3 —
+  жанры/авторы (M:N). PR4 — перенос между сериями.
 
 ## Где что искать (карта по реальным путям)
 

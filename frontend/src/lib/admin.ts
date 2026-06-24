@@ -12,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch } from './api';
+import { useMe } from './auth';
 import type { Role } from './auth';
 
 export type AdminUser = {
@@ -632,6 +633,74 @@ export function useSplitEditions() {
     },
     onError: (e) =>
       toast.error(`Не удалось разделить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
+// ── Локальные оверрайды метаданных (admin, глобально) ─────────────────────
+//
+// Ручная корректура полей книги/работы. Значение материализуется в реальную
+// колонку на бэке → попадает в поиск/фильтры; после успеха инвалидируем
+// каталог + список оверрайдов (для индикаторов «изменено»).
+
+// OverridesMap — какие поля работы и её изданий оверрайднуты (для индикаторов).
+export type OverridesMap = { work: string[]; book: Record<string, string[]> };
+
+/** useOverrides — список правок работы и её изданий (только админ). */
+export function useOverrides(workId: number | undefined) {
+  const me = useMe();
+  return useQuery({
+    queryKey: ['overrides', workId],
+    enabled: me.data?.role === 'admin' && !!workId,
+    queryFn: () => apiFetch<OverridesMap>(`/api/admin/overrides?work_id=${workId}`),
+  });
+}
+
+function invalidateOverrides(qc: QueryClient) {
+  invalidateCatalog(qc);
+  void qc.invalidateQueries({ queryKey: ['overrides'] });
+}
+
+type OverrideTarget = { target_kind: 'book' | 'work'; target_id: number; field: string };
+
+/** useSetOverride — выставить правку поля (value = {v: …} или составной объект). */
+export function useSetOverride() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: OverrideTarget & { value: unknown }) =>
+      apiFetch<{ ok: boolean }>('/api/admin/overrides', { method: 'POST', body: vars }),
+    onSuccess: () => {
+      invalidateOverrides(qc);
+      toast.success('Поле обновлено');
+    },
+    onError: (e) => toast.error(`Не удалось сохранить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
+/** useRevertOverride — отменить правку поля (вернуть оригинал). */
+export function useRevertOverride() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: OverrideTarget) =>
+      apiFetch<{ ok: boolean }>('/api/admin/overrides', { method: 'DELETE', body: vars }),
+    onSuccess: () => {
+      invalidateOverrides(qc);
+      toast.success('Правка отменена');
+    },
+    onError: (e) => toast.error(`Не удалось отменить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
+/** useRevertAllOverrides — отменить все правки книги. */
+export function useRevertAllOverrides() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { book_id: number }) =>
+      apiFetch<{ ok: boolean }>('/api/admin/overrides/revert-all', { method: 'POST', body: vars }),
+    onSuccess: () => {
+      invalidateOverrides(qc);
+      toast.success('Все правки книги отменены');
+    },
+    onError: (e) => toast.error(`Не удалось: ${e instanceof Error ? e.message : 'ошибка'}`),
   });
 }
 

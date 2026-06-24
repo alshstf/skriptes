@@ -12,6 +12,8 @@ import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { ExpandableText } from '@/components/ExpandableText';
+import { InlineEditableField } from '@/components/InlineEditableField';
+import { useOverrides } from '@/lib/admin';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -227,6 +229,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
  */
 function EditionsSection({ book }: { book: Book }) {
   const editions = book.editions ?? [];
+  const ov = useOverrides(book.work_id ?? undefined);
   return (
     <section className="space-y-2">
       <div className="flex items-center justify-between gap-2">
@@ -242,7 +245,12 @@ function EditionsSection({ book }: { book: Book }) {
       </div>
       <ul className="space-y-2">
         {editions.map((e) => (
-          <EditionRow key={e.id} edition={e} workTitle={book.title} />
+          <EditionRow
+            key={e.id}
+            edition={e}
+            workTitle={book.title}
+            overridden={ov.data?.book[String(e.id)] ?? []}
+          />
         ))}
       </ul>
     </section>
@@ -534,6 +542,10 @@ function readButtonLabel(fraction?: number): string {
  * нескольких поля живут в строках секции «Издания».
  */
 function FileDetails({ book }: { book: Book }) {
+  // Правки изданий этой работы (для админ-индикаторов; React Query дедупит вызов
+  // с EditionsSection по ключу ['overrides', workId]).
+  const ov = useOverrides(book.work_id ?? undefined);
+  const overridden = ov.data?.book[String(book.id)] ?? [];
   return (
     <details className="group text-sm">
       <summary className="flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
@@ -547,9 +559,17 @@ function FileDetails({ book }: { book: Book }) {
         <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
         <Field label="Архив" value={book.archive} mono />
         <Field label="Размер" value={formatBytes(book.size_bytes)} />
-        {book.edition_year ? (
-          <Field label="Год издания" value={String(book.edition_year)} />
-        ) : null}
+        {/* Год издания редактируем у админа (кейс Чарушина: edition_year=1000). */}
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="edition_year"
+          value={book.edition_year}
+          kind="int"
+          label="Год издания"
+          overridden={overridden.includes('edition_year')}
+          layout="grid"
+        />
         {book.date_added ? (
           <Field label="Добавлена" value={formatReadDate(book.date_added)} />
         ) : null}
