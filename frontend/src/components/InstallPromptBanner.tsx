@@ -53,7 +53,7 @@ export function InstallPromptBanner() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 pb-[env(safe-area-inset-bottom,0)] pointer-events-none"
+      className="fixed inset-x-0 bottom-0 z-40 pb-safe pointer-events-none"
       role="region"
       aria-label="Установить приложение"
     >

@@ -152,7 +152,10 @@ export function AuthorsPage() {
       </div>
 
       <div className="space-y-4">
-        <div className="sticky top-14 z-10 -mx-4 bg-background px-4 py-2 md:static md:top-auto md:z-auto md:mx-0 md:bg-transparent md:px-0 md:py-0">
+        {/* sticky-саб-бар липнет ПОД хэдером. top = высота хэдера (h-14=3.5rem) +
+            safe-area-inset-top: на iOS PWA хэдер выше на инсет, иначе саб-бар
+            уезжает ПОД хэдер и пропадает (грабля safe-area, см. index.css). */}
+        <div className="sticky top-[calc(env(safe-area-inset-top)+3.5rem)] z-10 -mx-4 bg-background px-4 py-2 md:static md:top-auto md:z-auto md:mx-0 md:bg-transparent md:px-0 md:py-0">
           <div className="flex items-center gap-2">
             <div className="relative flex-1 md:max-w-md">
               <Search

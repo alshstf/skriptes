@@ -38,12 +38,15 @@ export function Layout({ children }: { children: ReactNode }) {
 function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisible: boolean }) {
   return (
     // bg-background СПЛОШНОЙ (не /95 + blur): на iOS Safari backdrop-blur ненадёжен,
-    // и при скролле контент просвечивал сквозь полупрозрачный хэдер. paddingTop =
-    // safe-area-inset-top: в PWA standalone на iOS (status-bar-style=black-translucent)
-    // контент иначе лезет под системный бар с часами; на десктопе/в Safari инсет = 0.
+    // и при скролле контент просвечивал сквозь полупрозрачный хэдер.
+    // shadow + граница: хэдер, контент и боди — один цвет (--background), без тени
+    // граница (--border = 10% white) почти невидима → при скролле хэдер визуально
+    // «сливался» с контентом. Мягкая тень даёт глубину (box-shadow на iOS Safari
+    // надёжен в отличие от blur), хэдер читается как отдельный слой над контентом.
+    // pt-safe: в PWA standalone на iOS (status-bar-style=black-translucent) контент
+    // иначе лезет под системный бар с часами; на десктопе/в Safari инсет = 0.
     <header
-      className="sticky top-0 z-10 border-b border-border bg-background"
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      className="sticky top-0 z-20 border-b border-border bg-background pt-safe shadow-[0_10px_22px_-10px_rgba(0,0,0,0.9)]"
     >
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2">
         <div className="flex items-center gap-4 min-w-0">

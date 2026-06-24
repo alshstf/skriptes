@@ -51,13 +51,17 @@ function SheetOverlay({
 
 type SheetSide = "top" | "bottom" | "left" | "right"
 
+// Safe-area по сторонам (грабля iOS, см. index.css): дровер — fixed-оверлей от
+// края экрана, его контент иначе лезет под часы/home-indicator (тот же баг, что
+// у хэдера). Боковые (inset-y-0, во всю высоту) клирят и верх, и низ; верхний —
+// верх; нижний — низ. На десктопе/в Safari инсеты = 0.
 const sideClasses: Record<SheetSide, string> = {
-  left: "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
+  left: "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r pt-safe pb-safe data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
   right:
-    "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
-  top: "inset-x-0 top-0 h-auto border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+    "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l pt-safe pb-safe data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+  top: "inset-x-0 top-0 h-auto border-b pt-safe data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
   bottom:
-    "inset-x-0 bottom-0 h-auto border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+    "inset-x-0 bottom-0 h-auto border-t pb-safe data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
 }
 
 function SheetContent({
@@ -84,7 +88,7 @@ function SheetContent({
       >
         {children}
         {showCloseButton ? (
-          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
+          <SheetPrimitive.Close className="absolute top-[calc(env(safe-area-inset-top)+0.75rem)] right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
             <XIcon className="size-4" />
             <span className="sr-only">Закрыть</span>
           </SheetPrimitive.Close>
