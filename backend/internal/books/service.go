@@ -637,7 +637,8 @@ func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, exclud
 		      SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
 		      WHERE bg.book_id = b.id AND g.fb2_code = ANY(COALESCE($2::text[], '{}'))
 		  )
-		ORDER BY (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
+		ORDER BY COALESCE(b.normalized_title = (SELECT normalized_title FROM works WHERE id = $1), false) DESC,
+		         (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
 		         b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
 		LIMIT 1
 	`, workID, excludeGenres, excludeLangs).Scan(&id)

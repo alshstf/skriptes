@@ -67,6 +67,24 @@ type WorkGrouper struct {
 	touchedWorks map[int64]struct{} // канонические работы, изменённые за проход (для works-индекса)
 	deletedWorks map[int64]struct{} // работы, удалённые (GC) за проход
 	tier2Cursor  int64              // курсор по author_id для батчей внешнего краулера (Tier-2)
+
+	domLang    string // доминирующий язык библиотеки (для локализации works.title), кэш
+	domLangSet bool   // domLang вычислен (мемоизация; группировщик однопоточный)
+}
+
+// ensureDomLang лениво вычисляет и кэширует доминирующий язык библиотеки —
+// чтобы apply не гонял full-table-агрегат на каждого автора. Группировщик
+// работает в один поток (Run чередует Tier-1/Tier-2 последовательно), гонок нет.
+func (g *WorkGrouper) ensureDomLang(ctx context.Context) string {
+	if !g.domLangSet {
+		if l, err := dominantLang(ctx, g.pool); err != nil {
+			g.logger.Warn("work grouper: dominant lang lookup failed — skip title localization", "err", err)
+		} else {
+			g.domLang = l
+		}
+		g.domLangSet = true
+	}
+	return g.domLang
 }
 
 // WorkGroupConfig — рантайм-параметры (зеркало settings.WorkGroupingConfig;
@@ -669,6 +687,15 @@ func (g *WorkGrouper) apply(ctx context.Context, authorID int64, books []groupBo
 	if err := recomputeWorkAggregates(ctx, tx, keysOf(affected)); err != nil {
 		return err
 	}
+	// Локализуем каноническое название работы на язык библиотеки: при слиянии
+	// «перевод + оригинал» каноникой могло стать иноязычное издание (см.
+	// recomputeWorkTitles). Только для затронутых работ; они и так в touchedWorks
+	// → попадут в таргетный ресинк works-индекса после прохода.
+	if dom := g.ensureDomLang(ctx); dom != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, dom, keysOf(affected)); err != nil {
+			return fmt.Errorf("localize work titles: %w", err)
+		}
+	}
 
 	if len(candidateIDs) > 0 {
 		if _, err := tx.Exec(ctx, `UPDATE books SET work_scanned_at = now() WHERE id = ANY($1)`, candidateIDs); err != nil {
@@ -843,6 +870,11 @@ func (c *WorkGroupController) SplitEditions(ctx context.Context, bookIDs []int64
 	if err := recomputeWorkAggregates(ctx, tx, append(oldIDs, newID)); err != nil {
 		return 0, err
 	}
+	if dom, derr := dominantLang(ctx, tx); derr == nil && dom != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, dom, append(oldIDs, newID)); err != nil {
+			return 0, fmt.Errorf("localize work titles: %w", err)
+		}
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return 0, err
 	}
@@ -894,6 +926,11 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	}
 	if err := recomputeWorkAggregates(ctx, tx, []int64{target}); err != nil {
 		return 0, err
+	}
+	if dom, derr := dominantLang(ctx, tx); derr == nil && dom != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, dom, []int64{target}); err != nil {
+			return 0, fmt.Errorf("localize work titles: %w", err)
+		}
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return 0, err
