@@ -125,9 +125,14 @@ func run() error {
 	// фичей по запросу, требует API key.
 	httpClient := &http.Client{Timeout: 10 * time.Second}
 	sparqlClient := &http.Client{Timeout: 15 * time.Second} // SPARQL медленнее, отдельный timeout
+	// OL/GB — отдельные клиенты с осмысленным User-Agent: анонимный Go-UA
+	// троттлится (особенно OpenLibrary → наблюдались context deadline). OL даём
+	// 20с — его search.json медленный. Wiki ставит свой UA сам, остаётся на httpClient.
+	olHTTPClient := metadata.NewEnricherHTTPClient(20 * time.Second)
+	gbHTTPClient := metadata.NewEnricherHTTPClient(10 * time.Second)
 	fb2Provider := metadata.NewFb2Provider()
-	olProvider := metadata.NewOpenLibraryProvider(httpClient)
-	gbProvider := metadata.NewGoogleBooksProvider(httpClient)
+	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient)
+	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient)
 	wikiProvider := metadata.NewWikipediaProvider(httpClient)
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
 	enricher, err := metadata.New(

@@ -59,6 +59,11 @@ const (
 	coverBackfillWorkers        = 2
 	coverBackfillRescanInterval = 30 * time.Minute
 	coverBackfillTaskTimeout    = 60 * time.Second
+	// olCoverRPMCap — потолок RPM для OpenLibrary по ДОКУМЕНТИРОВАННОМУ лимиту
+	// covers API: «100 requests/IP per 5 minutes» (= 20/мин, сверх → 403 Forbidden,
+	// «do not crawl our cover API»). Держим запас (18) и КЛАМПИМ конфиг — иначе
+	// дефолт 60 RPM ловил бы 403/блок.
+	olCoverRPMCap = 18
 )
 
 // NewCoverBackfiller строит воркер с per-source rate-gate'ами по cfg.
@@ -70,7 +75,14 @@ func NewCoverBackfiller(pool *pgxpool.Pool, enricher *Enricher, ol, gb CoverProv
 		pool: pool, enricher: enricher, ol: ol, gb: gb, cfg: cfg, logger: logger,
 		olGate: &rateGate{}, gbGate: &rateGate{},
 	}
-	b.olGate.setRPM(cfg.OpenLibraryRPM)
+	// OL covers — клампим к olCoverRPMCap (док-лимит 20/мин); 0/«без лимита» тоже
+	// прижимаем, чтобы не словить 403. GB — как в конфиге (его лимит — дневная
+	// квота проекта, не RPM).
+	olRPM := cfg.OpenLibraryRPM
+	if olRPM <= 0 || olRPM > olCoverRPMCap {
+		olRPM = olCoverRPMCap
+	}
+	b.olGate.setRPM(olRPM)
 	b.gbGate.setRPM(cfg.GoogleBooksRPM)
 	return b
 }
