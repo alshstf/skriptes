@@ -462,6 +462,18 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   = works.id). Ридер/скачивание/«Читать» — по-прежнему `/books/{editionId}`.
 - ⚠️ id работ и изданий ПЕРЕСЕКАЮТСЯ (отдельные sequence) → `/books/{N}` ≠
   `/works/{N}`; поэтому работа-URL — отдельный маршрут, не «трактовать books id как work».
+- **`works.title` локализован на язык библиотеки** (`metadata/work_title.go`): при
+  слиянии «оригинал+перевод» каноникой могло стать иноязычное издание → заголовок
+  карточки (`COALESCE(w.title,b.title)`) и works-индекс были английскими при русских
+  изданиях (рассинхрон со списком `b.title` представителя + провал поиска по рус.
+  названию). `recomputeWorkTitles` переписывает `works.title`/`normalized_title` на
+  издание в `dominantLang` (самый частый язык коллекции) — ТОЛЬКО если такое издание
+  есть (иноязычную-без-перевода работу не трогаем). Точки: группировка `apply` +
+  ручные merge/split (затронутые работы → в touchedWorks → таргетный ресинк индекса);
+  разовый backfill `runOnceWorkTitleLocalize` (гейт `app_settings.work_title_localized_v1`,
+  ПОСЛЕ `runOnceWorksIndexSync`) + `UpsertWorksToIndex(changed)`. Представитель карточки
+  `books.visibleWorkEditionID` предпочитает издание-якорь (`normalized_title ==
+  works.normalized_title`) → обложка/lang/скачивание совпадают с локализованным title.
 
 ### 16. ★-избранное книг — это служебная полка, таблицы `favorites` БОЛЬШЕ НЕТ
 

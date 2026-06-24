@@ -103,7 +103,13 @@ func run() error {
 	// Конфиг индекса works (на каждом старте) + разовый полный ресинк (на
 	// апгрейде). Дальше индекс поддерживают импорт (полный) и таргетные синки
 	// группировки/года. Гейтится флагом, в горутине — старт не блокирует.
-	go runOnceWorksIndexSync(ctx(), pool, imp, logger)
+	// Локализацию works.title запускаем В ТОЙ ЖЕ горутине ПОСЛЕ синка индекса:
+	// ей нужен сконфигурированный works-индекс для таргетного ресинка
+	// изменённых работ (порядок между отдельными горутинами не гарантирован).
+	go func() {
+		runOnceWorksIndexSync(ctx(), pool, imp, logger)
+		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
+	}()
 
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
@@ -538,6 +544,50 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		logger.Warn("works index sync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time works index resync done", "count", n)
+}
+
+// runOnceWorkTitleLocalize — разовый backfill: локализует works.title на
+// доминирующий язык библиотеки для работ, у которых есть издание в этом языке
+// (см. metadata.LocalizeWorkTitles). Чинит «перевод+оригинал слиты, каноникой
+// стало иноязычное издание» — карточка и works-поиск показывали английский
+// заголовок при русских изданиях. Изменённые работы таргетно ресинкаются в
+// works-индекс (поиск по локализованному названию начинает находить).
+// Гейт app_settings.work_title_localized_v1: один раз на апгрейде, дальше no-op
+// (новые такие работы локализует группировка в apply). Зовётся ПОСЛЕ
+// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен.
+func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_title_localized_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work title localize: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, dom, err := metadata.LocalizeWorkTitles(ctx, pool)
+	if err != nil {
+		logger.Warn("work title localize failed — will retry next start", "err", err)
+		return
+	}
+	// Ресинк индекса для изменённых работ ДО установки флага: если он упадёт, не
+	// фиксируем гейт — на следующем старте title уже локализованы (changed=∅),
+	// поэтому индекс досинкнётся полным ResyncWorksIndex как фолбэк.
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("work title localize: works index resync failed — retry next start", "err", err)
+			if _, rerr := imp.ResyncWorksIndex(ctx); rerr != nil {
+				logger.Warn("work title localize: full works index resync fallback failed", "err", rerr)
+				return
+			}
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work title localize: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time work title localization done", "lang", dom, "changed", len(changed))
 }
 
 // findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.
