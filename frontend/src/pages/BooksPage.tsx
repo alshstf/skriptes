@@ -194,7 +194,7 @@ export function BooksPage() {
             живут в постоянном sidebar. -mx-4/px-4 даёт фон бара на всю
             ширину под gutter'ом, чтобы карточки не «просвечивали» по краям
             при скролле под баром. */}
-        <div className="sticky top-14 z-10 -mx-4 bg-background px-4 py-2 md:static md:top-auto md:z-auto md:mx-0 md:bg-transparent md:px-0 md:py-0">
+        <div className="sticky top-[calc(env(safe-area-inset-top)+3.5rem)] z-10 -mx-4 bg-background px-4 py-2 md:static md:top-auto md:z-auto md:mx-0 md:bg-transparent md:px-0 md:py-0">
           <div className="flex items-center gap-2">
             <div className="relative flex-1 md:max-w-md">
               <Search

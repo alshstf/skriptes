@@ -81,3 +81,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Safe-area утилиты — iOS standalone PWA (status-bar-style=black-translucent +
+   viewport-fit=cover) кладёт контент ПОД системные бары (часы/home-indicator).
+   Любой sticky/fixed элемент у края экрана (хэдер, дроверы Sheet, нижние баннеры)
+   ОБЯЗАН добавлять соответствующий инсет, иначе контент лезет под бар. Именованные
+   утилиты, чтобы паттерн был единым и переиспользуемым, а не env(...) ad-hoc по
+   месту (из-за чего фикс терялся на новых оверлеях). На десктопе/в Safari инсет=0. */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
