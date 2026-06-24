@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { AlertTriangle, ChevronRight, Flame, Info, Square, Trash2 } from 'lucide-react';
+import { AlertTriangle, ChevronRight, Flame, Info, RotateCcw, Square, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,9 @@ import {
   useUpdateExternalRatingSettings,
   useRunExternalRating,
   useStopExternalRating,
+  useResetYearLookups,
+  useResetCoverLookups,
+  useResetRatingLookups,
   useBioAdaptationSettings,
   useUpdateBioAdaptationSettings,
   useRunBioBackfill,
@@ -422,6 +425,9 @@ export function AdminBackgroundPage() {
   const updateRating = useUpdateExternalRatingSettings();
   const runRating = useRunExternalRating();
   const stopRating = useStopExternalRating();
+  const resetYear = useResetYearLookups();
+  const resetCover = useResetCoverLookups();
+  const resetRating = useResetRatingLookups();
   const runBio = useRunBioBackfill();
   const stopBio = useStopBioBackfill();
   const runAdapt = useRunAdaptationBackfill();
@@ -686,6 +692,22 @@ export function AdminBackgroundPage() {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось выполнить');
     }
   };
+  // resetAction — подтверждение + сброс неудачных попыток (not_found/error) +
+  // тост со счётчиком. Книги снова станут кандидатами на следующем проходе.
+  const resetAction = (fn: () => Promise<{ reset: number }>) => async () => {
+    if (
+      !window.confirm(
+        'Сбросить неудачные попытки (not_found/error)? Книги перепроверятся внешними источниками на следующем проходе.',
+      )
+    )
+      return;
+    try {
+      const r = await fn();
+      toast.success(`Сброшено попыток: ${r.reset} — перепроверятся на следующем проходе`);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось сбросить');
+    }
+  };
   const confirmThen = (msg: string, fn: () => Promise<{ removed: number }>, label: string) => async () => {
     if (!window.confirm(msg)) return;
     try {
@@ -704,6 +726,9 @@ export function AdminBackgroundPage() {
   const onStopCover = action(() => stopCover.mutateAsync(), 'Останавливаю…');
   const onRunRating = action(() => runRating.mutateAsync(), 'Дозаполнение рейтинга запущено');
   const onStopRating = action(() => stopRating.mutateAsync(), 'Останавливаю…');
+  const onResetYear = resetAction(() => resetYear.mutateAsync());
+  const onResetCover = resetAction(() => resetCover.mutateAsync());
+  const onResetRating = resetAction(() => resetRating.mutateAsync());
   const onRunBio = action(() => runBio.mutateAsync(), 'Дозаполнение биографий запущено');
   const onStopBio = action(() => stopBio.mutateAsync(), 'Останавливаю…');
   const onRunAdapt = action(() => runAdapt.mutateAsync(), 'Поиск экранизаций запущен');
@@ -1045,6 +1070,10 @@ export function AdminBackgroundPage() {
                         {runCover.isPending ? 'Запуск…' : 'Прогнать внешние разово'}
                       </Button>
                     )}
+                    <Button variant="outline" size="sm" onClick={onResetCover} disabled={resetCover.isPending}>
+                      <RotateCcw className="size-4" aria-hidden />
+                      {resetCover.isPending ? 'Сброс…' : 'Сбросить неудачные'}
+                    </Button>
                   </div>
                   {coverRunning ? <RunningDot continuous={coverOnceMode === 'continuous'} /> : null}
                 </div>
@@ -1196,6 +1225,10 @@ export function AdminBackgroundPage() {
                             {runYear.isPending ? 'Запуск…' : 'Прогнать внешние разово'}
                           </Button>
                         )}
+                        <Button variant="outline" size="sm" onClick={onResetYear} disabled={resetYear.isPending}>
+                          <RotateCcw className="size-4" aria-hidden />
+                          {resetYear.isPending ? 'Сброс…' : 'Сбросить неудачные'}
+                        </Button>
                       </div>
                       {yearRunning ? <RunningDot continuous={yearOnceMode === 'continuous'} /> : null}
                     </div>
@@ -1441,6 +1474,10 @@ export function AdminBackgroundPage() {
                             {runRating.isPending ? 'Запуск…' : 'Прогнать разово'}
                           </Button>
                         )}
+                        <Button variant="outline" size="sm" onClick={onResetRating} disabled={resetRating.isPending}>
+                          <RotateCcw className="size-4" aria-hidden />
+                          {resetRating.isPending ? 'Сброс…' : 'Сбросить неудачные'}
+                        </Button>
                       </div>
                       {ratingRunning ? <RunningDot continuous={!ratingOnce} /> : null}
                     </div>

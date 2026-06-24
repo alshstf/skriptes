@@ -373,6 +373,20 @@ func (c *ExternalRatingBackfillController) ready() bool {
 	return c.pool != nil && (c.gb != nil || c.ol != nil)
 }
 
+// ResetFailedLookups удаляет неудачные попытки (not_found/error) из
+// book_external_rating_lookups — книги перепроверятся на следующем проходе
+// (напр. после улучшения поиска: кириллица → src_title). 'found' не трогаем.
+func (c *ExternalRatingBackfillController) ResetFailedLookups(ctx context.Context) (int64, error) {
+	if c.pool == nil {
+		return 0, nil
+	}
+	tag, err := c.pool.Exec(ctx, `DELETE FROM book_external_rating_lookups WHERE outcome IN ('not_found', 'error')`)
+	if err != nil {
+		return 0, err
+	}
+	return tag.RowsAffected(), nil
+}
+
 func (c *ExternalRatingBackfillController) Status() ExternalRatingBackfillStatus {
 	c.mu.Lock()
 	defer c.mu.Unlock()
