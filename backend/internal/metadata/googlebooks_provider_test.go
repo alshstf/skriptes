@@ -75,6 +75,26 @@ func TestGoogleBooks_NoImageLinks(t *testing.T) {
 	require.ErrorIs(t, err, ErrNotFound)
 }
 
+// TestGoogleBooks_APIKey — ключ из WithAPIKey добавляется параметром key= ко
+// всем запросам; без ключа параметра нет.
+func TestGoogleBooks_APIKey(t *testing.T) {
+	var gotKey string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotKey = r.URL.Query().Get("key")
+		_, _ = io.WriteString(w, `{"items":[]}`) // 0 items → ErrNotFound, key уже зафиксирован
+	}))
+	defer srv.Close()
+
+	p := NewGoogleBooksProvider(srv.Client()).WithEndpoint(srv.URL).WithAPIKey("test-key-123")
+	_, _ = p.FetchCover(context.Background(), BookQuery{Title: "X", Authors: []string{"A"}})
+	require.Equal(t, "test-key-123", gotKey)
+
+	gotKey = "sentinel"
+	p2 := NewGoogleBooksProvider(srv.Client()).WithEndpoint(srv.URL)
+	_, _ = p2.FetchCover(context.Background(), BookQuery{Title: "X"})
+	require.Empty(t, gotKey)
+}
+
 // ─── helpers ────────────────────────────────────────────────────────
 //
 // Нам нужно знать URL httptest-сервера, чтобы вернуть из mock-search

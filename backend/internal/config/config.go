@@ -33,6 +33,12 @@ type Config struct {
 	// только тюнинг параллелизма прогрева (операционный параметр).
 	CoverPrewarmWorkers int `env:"SKRIPTES_COVER_PREWARM_WORKERS" envDefault:"2"`
 
+	// GoogleBooksAPIKey — ключ Google Books API. ОБЯЗАТЕЛЕН для обогащения из
+	// Google Books (обложки/рейтинг/work-key): без него GB отдаёт 429 по общей
+	// анонимной квоте. Получить: Google Cloud Console → APIs → Books API → API key.
+	// Пусто = GB-обогащение работать практически не будет (быстро упрётся в 429).
+	GoogleBooksAPIKey string `env:"SKRIPTES_GOOGLE_BOOKS_API_KEY"`
+
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
 	// откуда разрешены мутирующие запросы (защита от CSRF).

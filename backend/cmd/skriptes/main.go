@@ -132,7 +132,7 @@ func run() error {
 	gbHTTPClient := metadata.NewEnricherHTTPClient(10 * time.Second)
 	fb2Provider := metadata.NewFb2Provider()
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient)
-	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient)
+	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient).WithAPIKey(cfg.GoogleBooksAPIKey)
 	wikiProvider := metadata.NewWikipediaProvider(httpClient)
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
 	enricher, err := metadata.New(
