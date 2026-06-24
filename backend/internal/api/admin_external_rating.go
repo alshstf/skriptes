@@ -109,3 +109,22 @@ func handleExternalRatingStop(d SettingsDeps) http.HandlerFunc {
 		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
 	}
 }
+
+// handleResetRatingLookups — POST /api/admin/external-rating/reset-failed. Сброс
+// неудачных попыток (not_found/error) → книги перепроверятся на следующем проходе.
+func handleResetRatingLookups(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.ExternalRating == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "external rating enrichment disabled"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		n, err := d.ExternalRating.ResetFailedLookups(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "reset failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int64{"reset": n})
+	}
+}

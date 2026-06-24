@@ -463,6 +463,20 @@ func (c *YearBackfillController) ready() bool {
 	return c.pool != nil && (c.ol != nil || c.wd != nil)
 }
 
+// ResetFailedLookups удаляет неудачные попытки (not_found/error) из
+// book_year_lookups — книги перепроверятся на следующем проходе (напр. после
+// улучшения поиска: кириллица → src_title). 'found' не трогаем. Возвращает число.
+func (c *YearBackfillController) ResetFailedLookups(ctx context.Context) (int64, error) {
+	if c.pool == nil {
+		return 0, nil
+	}
+	tag, err := c.pool.Exec(ctx, `DELETE FROM book_year_lookups WHERE outcome IN ('not_found', 'error')`)
+	if err != nil {
+		return 0, err
+	}
+	return tag.RowsAffected(), nil
+}
+
 func (c *YearBackfillController) Status() YearBackfillStatus {
 	c.mu.Lock()
 	defer c.mu.Unlock()

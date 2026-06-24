@@ -109,3 +109,22 @@ func handleYearBackfillStop(d SettingsDeps) http.HandlerFunc {
 		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
 	}
 }
+
+// handleResetYearLookups — POST /api/admin/year-enrichment/reset-failed. Сброс
+// неудачных попыток (not_found/error) → книги перепроверятся на следующем проходе.
+func handleResetYearLookups(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.YearBackfill == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "year enrichment disabled"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		n, err := d.YearBackfill.ResetFailedLookups(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "reset failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int64{"reset": n})
+	}
+}

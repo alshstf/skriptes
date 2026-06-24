@@ -276,6 +276,17 @@ export function useStopYearBackfill() {
   });
 }
 
+// useResetYearLookups — сброс неудачных попыток (not_found/error) по году:
+// книги перепроверятся на следующем проходе (напр. после улучшения поиска).
+export function useResetYearLookups() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/year-enrichment/reset-failed', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...YEAR_KEY] }),
+  });
+}
+
 // ── Обложки: дозаполнение cover_path из внешних источников (OL / GB) ──────
 
 export type CoverEnrichmentSettings = {
@@ -350,6 +361,16 @@ export function useStopCoverBackfill() {
   });
 }
 
+// useResetCoverLookups — сброс неудачных попыток (not_found/error) по обложкам.
+export function useResetCoverLookups() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/cover-enrichment/reset-failed', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...COVER_ENRICH_KEY] }),
+  });
+}
+
 // ── Внешний рейтинг (Google Books / OpenLibrary, фоном) ───────────────
 
 export type ExternalRatingSettings = {
@@ -420,6 +441,16 @@ export function useStopExternalRating() {
   return useMutation({
     mutationFn: () =>
       apiFetch<{ status: string }>('/api/admin/external-rating/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...EXTERNAL_RATING_KEY] }),
+  });
+}
+
+// useResetRatingLookups — сброс неудачных попыток (not_found/error) по внешнему рейтингу.
+export function useResetRatingLookups() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/external-rating/reset-failed', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [...EXTERNAL_RATING_KEY] }),
   });
 }

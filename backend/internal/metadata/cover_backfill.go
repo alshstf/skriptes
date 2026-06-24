@@ -348,6 +348,21 @@ func (c *CoverBackfillController) ready() bool {
 	return c.pool != nil && c.enricher != nil && (c.ol != nil || c.gb != nil)
 }
 
+// ResetFailedLookups удаляет неудачные попытки (not_found/error) из
+// book_cover_lookups — книги снова станут кандидатами и перепроверятся на
+// следующем проходе (полезно после улучшения поискового запроса, напр.
+// кириллица → src_title). Исход 'found' не трогаем. Возвращает число удалённых.
+func (c *CoverBackfillController) ResetFailedLookups(ctx context.Context) (int64, error) {
+	if c.pool == nil {
+		return 0, nil
+	}
+	tag, err := c.pool.Exec(ctx, `DELETE FROM book_cover_lookups WHERE outcome IN ('not_found', 'error')`)
+	if err != nil {
+		return 0, err
+	}
+	return tag.RowsAffected(), nil
+}
+
 func (c *CoverBackfillController) Status() CoverBackfillStatus {
 	c.mu.Lock()
 	defer c.mu.Unlock()
