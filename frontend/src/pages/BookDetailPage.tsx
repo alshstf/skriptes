@@ -65,6 +65,11 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   // «Издания» (на каждое издание своё). Одно издание → классический вид: всё в
   // шапке, секцию не показываем (избегаем избыточной таблицы из одной строки).
   const multi = editions.length > 1;
+  // Обложку грузим по РЕГЕНЕРИРУЮЩЕМУ эндпоинту /api/covers/book/{editionId}
+  // (а не by-name /api/covers/{cover_path}, который НЕ восстанавливает файл после
+  // очистки/LRU-эвикции кэша → 404). Берём издание, у которого есть обложка (у
+  // мульти открытое может быть без неё); иначе — открытое.
+  const coverEditionId = editions.find((e) => e.cover_path)?.id ?? book.id;
 
   return (
     // Кап ширины: на широком десктопе карточка — центрированная читаемая
@@ -83,7 +88,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
         <CardContent className="space-y-5">
           <div className="flex gap-4 md:gap-6 md:items-start">
             <BookCover
-              coverPath={book.cover_path}
+              src={`/api/covers/book/${coverEditionId}`}
               title={book.title}
               className="w-24 shrink-0 sm:w-32 md:w-44"
             />

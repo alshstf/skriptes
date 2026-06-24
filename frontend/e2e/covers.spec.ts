@@ -1,72 +1,29 @@
 import { test, expect } from './_fixtures';
-import { bookDetailFixture } from './_fixtures';
 
-test('book detail: cover image renders when cover_path is set', async ({
+// Обложка книги грузится по РЕГЕНЕРИРУЮЩЕМУ эндпоинту /api/covers/book/{editionId}
+// (а не by-name /api/covers/{cover_path}). Это переживает очистку/LRU-эвикцию кэша:
+// by-name отдаёт только кэш-файл и 404-ит после эвикции, а by-id переизвлекает из
+// fb2 на лету. Поэтому polling-swap по cover_path для карточки больше не нужен —
+// обложка запрашивается сразу.
+
+test('book detail: cover renders via on-demand by-id endpoint', async ({
   mockedPage: page,
 }) => {
   await page.goto('/books/19');
   const cover = page.getByRole('img', { name: /Обложка: Кадетский корпус/ });
   await expect(cover).toBeVisible({ timeout: 10_000 });
-  // Когда cover_path присутствует в фикстуре — рендерится тег img.
-  await expect(cover).toHaveAttribute('src', '/api/covers/abc123.jpg');
+  // У фикстуры нет editions → coverEditionId = book.id (19). Запрос by-id, не by-name.
+  await expect(cover).toHaveAttribute('src', '/api/covers/book/19');
 });
 
-test('book detail: placeholder shows immediately, real cover swaps in after polling', async ({
-  page,
-}) => {
-  await page.route('**/api/auth/me', (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        user: {
-          id: 1,
-          email: 'tester@example.com',
-          display_name: 'Tester',
-          role: 'admin',
-          created_at: '2026-05-10T00:00:00Z',
-        },
-      }),
-    }),
+test('book detail: placeholder when cover endpoint 404s', async ({ mockedPage: page }) => {
+  // by-id вернул 404 (обложка не извлекается) → BookCover onError → плейсхолдер,
+  // а не битая картинка. Маршрут регистрируем после mockApi → он приоритетнее.
+  await page.route(/\/api\/covers\/book\//, (route) =>
+    route.fulfill({ status: 404, contentType: 'text/plain', body: 'no cover' }),
   );
-  await page.route(/\/api\/covers\//, (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'image/png',
-      body: Buffer.from(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-        'base64',
-      ),
-    }),
-  );
-
-  // Динамический mock /api/books/19: первый запрос без cover_path
-  // (плейсхолдер), последующие — с (img появляется).
-  let hits = 0;
-  await page.route(/\/api\/books\/19$/, (route) => {
-    hits++;
-    const body =
-      hits === 1
-        ? { ...bookDetailFixture, cover_path: undefined }
-        : { ...bookDetailFixture, cover_path: 'late-cover.png' };
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(body),
-    });
-  });
-
   await page.goto('/books/19');
-
-  // Сначала видим плейсхолдер (role=img, aria-label содержит "загружается").
-  const placeholder = page.getByRole('img', { name: /загружается/ });
-  await expect(placeholder).toBeVisible({ timeout: 5_000 });
-
-  // После refetchInterval (2s) реальный img появится без перезагрузки.
-  const real = page.getByRole('img', { name: /Обложка: Кадетский корпус/ });
-  await expect(real).toBeVisible({ timeout: 10_000 });
-  await expect(real).toHaveAttribute('src', '/api/covers/late-cover.png');
-
-  // И плейсхолдер исчезает.
-  await expect(placeholder).not.toBeVisible();
+  // Плейсхолдер 'icon' имеет aria-label «Обложка: … (загружается)».
+  const placeholder = page.getByRole('img', { name: /Обложка: Кадетский корпус.*загружается/ });
+  await expect(placeholder).toBeVisible({ timeout: 10_000 });
 });

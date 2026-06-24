@@ -430,7 +430,7 @@ function RateableCard({ item }: { item: RateableItem }) {
       >
         <BookCover
           coverPath={item.cover_path}
-          src={item.cover_path ? undefined : `/api/covers/book/${item.id}`}
+          src={`/api/covers/book/${item.id}`}
           title={item.title}
           placeholder="monogram"
           className="w-full"
@@ -598,7 +598,7 @@ function CoverCard({
     >
       <BookCover
         coverPath={coverPath}
-        src={coverPath ? undefined : `/api/covers/book/${coverEditionId}`}
+        src={`/api/covers/book/${coverEditionId}`}
         title={title}
         placeholder="monogram"
         className="w-full"
