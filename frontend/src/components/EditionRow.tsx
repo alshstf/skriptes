@@ -34,7 +34,7 @@ export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTi
     <li className="rounded-lg border border-border p-3 sm:p-4">
       <div className="flex gap-3">
         <BookCover
-          coverPath={edition.cover_path}
+          src={`/api/covers/book/${edition.id}`}
           title={workTitle}
           placeholder="mini"
           className="w-12 shrink-0"
