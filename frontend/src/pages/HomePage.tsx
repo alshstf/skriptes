@@ -117,7 +117,17 @@ function HeroSearch() {
           onMouseDown={() => setOpen(false)}
         />
       ) : null}
-      <div ref={heroRef} className="relative z-40 mx-auto w-full max-w-2xl text-left">
+      {/* z-40 ТОЛЬКО когда открыт дропдаун: тогда нужно быть выше скрима (z-30) и
+          ниже списка (z-50). Без условия `relative z-40` создаёт stacking-контекст
+          ВЫШЕ хэдера (z-20) → при скролле hero-инпут просвечивал поверх хэдера, в
+          отличие от остального контента, который уезжает под него (грабля №18). */}
+      <div
+        ref={heroRef}
+        className={cn(
+          'relative mx-auto w-full max-w-2xl text-left',
+          showDropdown && 'z-40',
+        )}
+      >
         <form
           onSubmit={(e) => {
             e.preventDefault();
