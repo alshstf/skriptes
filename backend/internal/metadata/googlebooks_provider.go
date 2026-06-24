@@ -10,13 +10,17 @@ import (
 	"time"
 )
 
-// GoogleBooksProvider — обложки через https://www.googleapis.com/books/v1/volumes.
+// GoogleBooksProvider — обложки/рейтинг/work-key через
+// https://www.googleapis.com/books/v1/volumes.
 //
-// Без API-ключа есть бесплатный квот ~1000 req/day, для домашнего
-// сервера это с запасом. Если упрёмся — добавим ключ через env.
+// API-ключ ОБЯЗАТЕЛЕН для public-data запросов: без него GB отдаёт 429 «quota
+// exceeded» по общей анонимной квоте (быстро исчерпывается). Ключ — из env
+// SKRIPTES_GOOGLE_BOOKS_API_KEY (Google Cloud Console → Books API → API key),
+// прокидывается через WithAPIKey; квота считается на проект (free ~1000/день).
 type GoogleBooksProvider struct {
 	httpClient *http.Client
 	apiURL     string // override для тестов
+	apiKey     string // SKRIPTES_GOOGLE_BOOKS_API_KEY; пусто = анонимно (429-prone)
 }
 
 func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
@@ -33,6 +37,20 @@ func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
 func (p *GoogleBooksProvider) WithEndpoint(apiURL string) *GoogleBooksProvider {
 	p.apiURL = apiURL
 	return p
+}
+
+// WithAPIKey задаёт ключ Google Books API (параметр key= ко всем запросам).
+// Пусто — без ключа (анонимная квота, упирается в 429).
+func (p *GoogleBooksProvider) WithAPIKey(key string) *GoogleBooksProvider {
+	p.apiKey = key
+	return p
+}
+
+// addKey доклеивает key= к запросу, если ключ задан.
+func (p *GoogleBooksProvider) addKey(v url.Values) {
+	if p.apiKey != "" {
+		v.Set("key", p.apiKey)
+	}
 }
 
 func (p *GoogleBooksProvider) Name() string { return "googlebooks" }
@@ -58,6 +76,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	if q.Lang != "" {
 		v.Set("langRestrict", q.Lang)
 	}
+	p.addKey(v)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
@@ -212,6 +231,7 @@ func (p *GoogleBooksProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	if q.Lang != "" {
 		v.Set("langRestrict", q.Lang)
 	}
+	p.addKey(v)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
