@@ -22,8 +22,10 @@ export function SaveBar({
   // всё равно показан — чтобы можно было «Отменить» или поправить.
   canSave?: boolean;
 }) {
+  // pb с safe-area-инсетом: sticky bottom-0 прилипает к низу вьюпорта, иначе на
+  // iOS PWA кнопки уходят под home-indicator (грабля №18).
   return (
-    <div className="sticky bottom-0 z-20 flex items-center justify-between gap-3 rounded-lg border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div className="sticky bottom-0 z-20 flex items-center justify-between gap-3 rounded-lg border border-border bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <span className="text-sm text-muted-foreground">Есть несохранённые изменения</span>
       <div className="flex shrink-0 gap-2">
         <Button variant="ghost" size="sm" onClick={onReset} disabled={saving}>

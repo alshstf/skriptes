@@ -28,3 +28,17 @@ test('mobile nav drawer: несёт safe-area паддинг (pt-safe) — не 
   await expect(sheet).toHaveClass(/pt-safe/);
   await expect(sheet).toHaveClass(/pb-safe/);
 });
+
+test('command palette: top с safe-area-инсетом (не под статус-баром на мобиле)', async ({
+  mockedPage: page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/books');
+  await page.getByRole('button', { name: 'Открыть поиск' }).click();
+  const dialog = page.locator('[data-slot=dialog-content]');
+  await expect(dialog).toBeVisible();
+  // На мобиле палитра прижата к верху → top должен учитывать safe-area-инсет
+  // (а не голый top-4, который уезжал под статус-бар).
+  const cls = (await dialog.getAttribute('class')) ?? '';
+  expect(cls).toContain('env(safe-area-inset-top)');
+});
