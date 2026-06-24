@@ -271,11 +271,14 @@ type CoverEnrichmentConfig struct {
 // включены, режим фолбэка (не вся коллекция), вежливые rate-limit'ы и TTL.
 func DefaultCoverEnrichmentConfig() CoverEnrichmentConfig {
 	return CoverEnrichmentConfig{
-		Enabled:           false,
-		OpenLibrary:       true,
-		GoogleBooks:       true,
-		WholeCollection:   false,
-		OpenLibraryRPM:    60,
+		Enabled:     false,
+		OpenLibrary: true,
+		GoogleBooks: true,
+		// WholeCollection: false — по умолчанию только пробелы.
+		WholeCollection: false,
+		// OL covers API: документированный лимит 100/IP/5мин (= 20/мин, сверх → 403).
+		// 18 с запасом; воркер дополнительно клампит (olCoverRPMCap).
+		OpenLibraryRPM:    18,
 		GoogleBooksRPM:    60,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
