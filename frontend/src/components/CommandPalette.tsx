@@ -74,7 +74,9 @@ export function CommandPalette() {
       <PaletteTrigger onClick={() => setOpen(true)} />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
-          className="top-4 translate-y-0 overflow-hidden p-0 sm:top-1/2 sm:max-w-2xl sm:-translate-y-1/2"
+          // На мобиле палитра прижата к верху — top с safe-area-инсетом, иначе
+          // на iOS PWA уезжает под статус-бар (грабля №18). Десктоп — по центру.
+          className="top-[calc(env(safe-area-inset-top)+1rem)] translate-y-0 overflow-hidden p-0 sm:top-1/2 sm:max-w-2xl sm:-translate-y-1/2"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Поиск</DialogTitle>

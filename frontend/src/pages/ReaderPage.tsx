@@ -204,7 +204,10 @@ export function ReaderPage() {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-background">
-      <header className="flex items-center gap-2 border-b border-border px-3 py-2 shrink-0">
+      {/* pt-safe: тулбар ридера — наверху fixed inset-0, иначе на iOS PWA «К
+          карточке»/заголовок лезут под статус-бар (грабля №18). Контент iframe
+          ниже остаётся immersive. */}
+      <header className="flex items-center gap-2 border-b border-border px-3 py-2 pt-[calc(0.5rem+env(safe-area-inset-top))] shrink-0">
         <Button
           variant="ghost"
           size="sm"

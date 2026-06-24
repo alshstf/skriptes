@@ -583,10 +583,21 @@ safe-area-инсет**, иначе контент лезет под бар. Ра
   `top-[calc(env(safe-area-inset-top)+3.5rem)]` (инсет + высота хэдера h-14). На `top-14`
   уезжали бы ПОД хэдер (который на iOS выше на инсет) и пропадали.
 - **Нижний баннер установки** (`InstallPromptBanner`): `pb-safe`.
-- **Dialog/CommandPalette** — центрированы (`top-50% translate-y-[-50%]`, `max-h`), до
-  бара не достают → safe-area НЕ нужна.
+- **CommandPalette** (`components/CommandPalette.tsx`): на мобиле прижат к верху →
+  `top-[calc(env(safe-area-inset-top)+1rem)]` (десктоп — по центру). БЫЛ `top-4` → лез под бар.
+- **Dialog** (`ui/dialog.tsx`): центрирован, но высокий мог переполнить под бары →
+  `max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] overflow-y-auto`.
+- **SaveBar** (`sticky bottom-0`): `pb-[calc(0.75rem+env(safe-area-inset-bottom))]` (home-indicator).
+- **Ридер** (`ReaderPage`, `fixed inset-0`): тулбар `pt-[calc(0.5rem+env(safe-area-inset-top))]`
+  (контент iframe ниже — immersive).
+- **Toaster** (sonner `top-right`, `main.tsx`): CSS-override в index.css
+  `[data-sonner-toaster][data-y-position=top]{top:calc(env(safe-area-inset-top)+1rem)}`.
+- **Radix-поперы** (`ui/dropdown-menu`/`popover`/`tooltip`): `collisionPadding={safeCollisionPadding()}`
+  (`lib/safeArea.ts` — меряет инсеты проб-элементом, т.к. env() из JS недоступен; 0 на десктопе).
+⚠️ Все оверлеи на shadcn-примитивах (Sheet/Dialog/Popover/Dropdown/Tooltip/CommandPalette+Toaster) —
+покрыты централизованно: новый оверлей на этих примитивах safe-area получает автоматически.
 ⚠️ Playwright/Chromium даёт `env(safe-area-*)=0` (как десктоп) — реальные инсеты только на
-iOS-устройстве; визуально проверять симуляцией (инъекция `padding-top:47px`) или на айфоне.
+iOS-устройстве; визуально проверять симуляцией (инъекция `top/padding:47px`) или на айфоне.
 
 ## Где что искать (карта по реальным путям)
 
