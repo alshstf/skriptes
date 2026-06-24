@@ -95,13 +95,16 @@ func (b *ExternalRatingBackfiller) Run(ctx context.Context) {
 }
 
 type extRatingCandidate struct {
-	id        int64
-	title     string
-	lang      string
-	isbn      string
-	authors   []string
-	lastName  string
-	firstName string
+	id            int64
+	title         string
+	lang          string
+	isbn          string
+	authors       []string
+	lastName      string
+	firstName     string
+	srcTitle      string
+	srcAuthorNorm string
+	srcLang       string
 }
 
 // candidateCond — SQL-условие выбора кандидатов по режиму охвата.
@@ -135,6 +138,7 @@ func (b *ExternalRatingBackfiller) drain(ctx context.Context) int {
 func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]extRatingCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''), COALESCE(b.isbn, ''),
+		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
 		       COALESCE(
 		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
 		           FILTER (WHERE a.id IS NOT NULL),
@@ -162,7 +166,9 @@ func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64
 	out := make([]extRatingCandidate, 0, limit)
 	for rows.Next() {
 		var c extRatingCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.isbn, &c.authors, &c.lastName, &c.firstName); err != nil {
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.isbn,
+			&c.srcTitle, &c.srcAuthorNorm, &c.srcLang,
+			&c.authors, &c.lastName, &c.firstName); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -213,12 +219,19 @@ func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingC
 		return
 	}
 	now := time.Now()
+	// Для переводных книг (есть src_title) Title/Authors/Lang берём из ОРИГИНАЛА
+	// (OL/GB ищут по нему). ISBN (язык-агностичный, точный) и last/first name
+	// (гейт authorNameMatches сам транслитерирует) — как есть.
+	title, authors, lang := externalTitleAuthorLang(externalQueryFields{
+		id: bk.id, title: bk.title, lang: bk.lang, authors: bk.authors,
+		srcTitle: bk.srcTitle, srcAuthorNorm: bk.srcAuthorNorm, srcLang: bk.srcLang,
+	})
 	q := WorkQuery{
 		BookID:    bk.id,
-		Title:     bk.title,
+		Title:     title,
 		ISBN:      bk.isbn,
-		Lang:      bk.lang,
-		Authors:   bk.authors,
+		Lang:      lang,
+		Authors:   authors,
 		LastName:  bk.lastName,
 		FirstName: bk.firstName,
 	}

@@ -95,10 +95,13 @@ func (b *YearBackfiller) Run(ctx context.Context) {
 }
 
 type yearCandidate struct {
-	id      int64
-	title   string
-	lang    string
-	authors []string
+	id            int64
+	title         string
+	lang          string
+	authors       []string
+	srcTitle      string
+	srcAuthorNorm string
+	srcLang       string
 }
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
@@ -184,6 +187,7 @@ func (b *YearBackfiller) candidateCond() string {
 func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
+		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
 		       COALESCE(
 		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
 		           FILTER (WHERE a.id IS NOT NULL),
@@ -207,7 +211,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 	out := make([]yearCandidate, 0, limit)
 	for rows.Next() {
 		var c yearCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.authors); err != nil {
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -258,7 +262,8 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 		return
 	}
 	now := time.Now()
-	q := BookQuery{ID: bk.id, Title: bk.title, Authors: bk.authors, Lang: bk.lang}
+	// yearCandidate по полям идентичен externalQueryFields → прямая конверсия.
+	q := buildExternalQuery(externalQueryFields(bk))
 
 	for _, src := range b.sources() {
 		name := src.provider.Name()
