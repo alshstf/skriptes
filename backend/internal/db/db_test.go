@@ -59,6 +59,7 @@ func TestMigrateAndPool(t *testing.T) {
 		"archives", "authors", "book_adaptations", "book_authors", "book_cover_lookups", "book_external_rating_lookups", "book_genres", "book_rating_prompts", "book_ratings", "book_work_lookups", "book_year_lookups", "books",
 		"collections", "favorite_authors", "favorite_series",
 		"feed_dismissals", "genres", "import_jobs", "kindle_targets", "metadata_cache",
+		"metadata_overrides",
 		"reads", "series", "sessions",
 		"user_collection_books", "user_collections", "user_favorite_genres",
 		"user_settings", "users", "views", "works",

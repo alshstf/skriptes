@@ -307,6 +307,9 @@ func run() error {
 		workGroupCtl.Start()
 	}
 
+	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
+	overrideCtl := metadata.NewOverrideController(pool, logger)
+
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
@@ -373,6 +376,7 @@ func run() error {
 			ExternalRating: externalRatingCtl,
 			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
 			WorkGroup: workGroupCtl,
+			Overrides: overrideCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{

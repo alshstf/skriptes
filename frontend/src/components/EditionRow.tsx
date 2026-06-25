@@ -2,6 +2,7 @@ import { Check } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { BookCover } from '@/components/BookCover';
 import { EditionActions } from '@/components/EditionActions';
+import { InlineEditableField } from '@/components/InlineEditableField';
 import { useLanguageMap } from '@/lib/content';
 import { type EditionRef } from '@/lib/books';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,16 @@ import { cn } from '@/lib/utils';
  * строке (per-edition: позиция/CFI привязаны к файлу). Формат не показываем —
  * вся коллекция fb2, формат выбирается в меню скачивания.
  */
-export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTitle: string }) {
+export function EditionRow({
+  edition,
+  workTitle,
+  overridden = [],
+}: {
+  edition: EditionRef;
+  workTitle: string;
+  // Поля этого издания, уже оверрайднутые (для бейджа «изменено»); только админ.
+  overridden?: string[];
+}) {
   const langMap = useLanguageMap();
   const langLabel = edition.lang ? (langMap.get(edition.lang) ?? edition.lang) : null;
   // Собственное название/серия издания, если отличаются от work-level — сигнал
@@ -59,13 +69,43 @@ export function EditionRow({ edition, workTitle }: { edition: EditionRef; workTi
             ) : null}
 
             <dl className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground tabular-nums">
-              <Meta label="Переводчик" value={edition.translator} />
-              <Meta
-                label="Год издания"
-                value={edition.edition_year ? String(edition.edition_year) : undefined}
+              <InlineEditableField
+                targetKind="book"
+                targetID={edition.id}
+                field="translator"
+                value={edition.translator}
+                kind="text"
+                label="Переводчик"
+                overridden={overridden.includes('translator')}
               />
-              <Meta label="Издатель" value={edition.publisher} />
-              <Meta label="ISBN" value={edition.isbn} mono />
+              <InlineEditableField
+                targetKind="book"
+                targetID={edition.id}
+                field="edition_year"
+                value={edition.edition_year}
+                kind="int"
+                label="Год издания"
+                overridden={overridden.includes('edition_year')}
+              />
+              <InlineEditableField
+                targetKind="book"
+                targetID={edition.id}
+                field="publisher"
+                value={edition.publisher}
+                kind="text"
+                label="Издатель"
+                overridden={overridden.includes('publisher')}
+              />
+              <InlineEditableField
+                targetKind="book"
+                targetID={edition.id}
+                field="isbn"
+                value={edition.isbn}
+                kind="text"
+                label="ISBN"
+                overridden={overridden.includes('isbn')}
+                mono
+              />
               <Meta label="Размер" value={`${(edition.size_bytes / 1024).toFixed(1)} KiB`} />
             </dl>
 
