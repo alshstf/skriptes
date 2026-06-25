@@ -114,6 +114,17 @@ func TestOverrides_WorkFields_Integration(t *testing.T) {
 	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "written_year"))
 	require.Equal(t, 1990, ovWorkInt(t, ctx, pool, workID, "written_year"))
 	require.Equal(t, "fb2_title", ovWorkText(t, ctx, pool, workID, "written_year_source"))
+
+	// ser_no: материализация в works.ser_no + гейт series-recompute (книга без
+	// серии → recompute занулил бы, но оверрайд выживает).
+	_, err = pool.Exec(ctx, `UPDATE works SET ser_no=5 WHERE id=$1`, workID)
+	require.NoError(t, err)
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "ser_no", json.RawMessage(`{"v":1}`), 0))
+	require.Equal(t, 1, ovWorkInt(t, ctx, pool, workID, "ser_no"))
+	require.NoError(t, recomputeWorkAggregates(ctx, pool, []int64{workID}))
+	require.Equal(t, 1, ovWorkInt(t, ctx, pool, workID, "ser_no")) // гейт series UPDATE
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "ser_no"))
+	require.Equal(t, 5, ovWorkInt(t, ctx, pool, workID, "ser_no"))
 }
 
 func ovWorkText(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int64, col string) string {
