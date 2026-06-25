@@ -13,8 +13,7 @@ import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
-import { useOverrides, useRevertAllOverrides } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
+import { useOverrides } from '@/lib/admin';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -38,6 +37,9 @@ import { ApiError } from '@/lib/api';
 export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   const { id } = useParams({ strict: false }) as { id: string };
   const { data: book, isLoading, error, enrichmentExhausted } = useBookCard(id, mode);
+  // Список оверрайдов работы (для админ-индикаторов; null/disabled у не-админа).
+  const overrides = useOverrides(book?.work_id ?? undefined);
+  const workOverridden = overrides.data?.work ?? [];
 
   if (isLoading) {
     return (
@@ -102,7 +104,18 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             <div className="min-w-0 flex-1 space-y-2.5">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0 space-y-1">
-                  <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
+                  <InlineEditableField
+                    targetKind="work"
+                    targetID={book.work_id ?? 0}
+                    field="title"
+                    value={book.title}
+                    kind="text"
+                    label="Название"
+                    overridden={workOverridden.includes('title')}
+                    layout="heading"
+                  >
+                    <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
+                  </InlineEditableField>
                   {book.authors.length > 0 ? (
                     <p className="text-base text-muted-foreground">
                       {book.authors.map((a, i) => (
@@ -128,8 +141,6 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
               </div>
 
               <CardSignalRow book={book} />
-
-              <WorkOverrideRow book={book} />
 
               {book.series ? (
                 <p className="text-sm">
@@ -390,53 +401,6 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
 }
 
 /**
- * WorkOverrideRow — admin-only ряд правки work-полей (название / год написания):
- * локальные оверрайды каталога (грабля №19). Материализуются в works.*, видны в
- * поиске и списках автора/серии. Не-админ ряд не видит. + «Сбросить все правки».
- */
-function WorkOverrideRow({ book }: { book: Book }) {
-  const me = useMe();
-  const ov = useOverrides(book.work_id ?? undefined);
-  const revertAll = useRevertAllOverrides();
-  if (me.data?.role !== 'admin' || !book.work_id) return null;
-  const wf = ov.data?.work ?? [];
-  const hasAny = wf.length > 0 || Object.values(ov.data?.book ?? {}).some((a) => a.length > 0);
-  return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-md border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
-      <span className="font-medium text-foreground/70">Правка (админ):</span>
-      <InlineEditableField
-        targetKind="work"
-        targetID={book.work_id}
-        field="title"
-        value={book.title}
-        kind="text"
-        label="Название"
-        overridden={wf.includes('title')}
-      />
-      <InlineEditableField
-        targetKind="work"
-        targetID={book.work_id}
-        field="written_year"
-        value={book.written_year}
-        kind="int"
-        label="Год написания"
-        overridden={wf.includes('written_year')}
-      />
-      {hasAny ? (
-        <button
-          type="button"
-          onClick={() => revertAll.mutate({ book_id: book.id })}
-          disabled={revertAll.isPending}
-          className="ml-auto underline hover:text-foreground disabled:opacity-50"
-        >
-          Сбросить все мои правки
-        </button>
-      ) : null}
-    </div>
-  );
-}
-
-/**
  * CardSignalRow — компактная строка сигналов под заголовком: год · 🌐 внешний
  * рейтинг (Tooltip с источником) · 📖 средняя оценка читателей (count) · язык
  * (именем). Пустые сигналы скрываются; экранизации сюда НЕ выносим — для них
@@ -445,6 +409,7 @@ function WorkOverrideRow({ book }: { book: Book }) {
  */
 function CardSignalRow({ book }: { book: Book }) {
   const langMap = useLanguageMap();
+  const ov = useOverrides(book.work_id ?? undefined);
   const ext = externalRatingDisplay(book);
   const avg = book.rating_avg;
   const count = book.rating_count ?? 0;
@@ -455,7 +420,20 @@ function CardSignalRow({ book }: { book: Book }) {
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-      {book.written_year ? <span className="tabular-nums">{book.written_year}</span> : null}
+      {book.written_year ? (
+        <InlineEditableField
+          targetKind="work"
+          targetID={book.work_id ?? 0}
+          field="written_year"
+          value={book.written_year}
+          kind="int"
+          label="Год написания"
+          overridden={(ov.data?.work ?? []).includes('written_year')}
+          layout="heading"
+        >
+          <span className="tabular-nums">{book.written_year}</span>
+        </InlineEditableField>
+      ) : null}
       {ext ? (
         <Tooltip>
           <TooltipTrigger asChild>

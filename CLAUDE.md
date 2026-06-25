@@ -616,8 +616,12 @@ iOS-устройстве; визуально проверять симуляци
 повторная правка его НЕ перезахватывает) → откат + индикатор «изменено». API под
 `requireAdmin`: `POST/DELETE /admin/overrides` + `GET /admin/overrides?work_id=` (индикаторы) +
 `POST /admin/overrides/revert-all`. Фронт: `useSetOverride`/`useRevertOverride`/`useOverrides`
-(`lib/admin.ts`) + `InlineEditableField` (admin-only карандаш/бейдж/откат) в `EditionRow` и
-`FileDetails` карточки. **План — `~/.claude/plans/cryptic-roaming-turing.md`.**
+(`lib/admin.ts`) + `InlineEditableField` — **визуально незаметно по умолчанию** (правят редко,
+карточку читают): десктоп — карандаш на ховере у значения, мобила — лонг-тап → action-меню
+(«Редактировать»/«Отменить правку»), правка **in-place** (без отдельной панели). Применён к
+заголовку (`layout='heading'`, оборачивает `CardTitle`), году в `CardSignalRow`, полям издания
+в `EditionRow`/`FileDetails`. Не-админ видит обычный текст. **План —
+`~/.claude/plans/cryptic-roaming-turing.md`.**
 - **PR1 (сделано):** фундамент + edition-СКАЛЯРЫ (`edition_year`/`isbn`/`publisher`/
   `translator`/`edition_title`) — не индексируются и не перетираются импортом, поэтому
   материализуются прямо в `books.*` без ресинка/ре-апплая/гейтов. Шипает кейс Чарушина
@@ -631,8 +635,8 @@ iOS-устройстве; визуально проверять симуляци
   join/GROUP BY-возни; иначе списки читали `b.title` и оверрайд бы не видели). Гейты
   recompute (`NOT EXISTS metadata_overrides` в written_year-UPDATE `recomputeWorkAggregates`
   + `recomputeWorkTitles`) → группировка/merge/split не перетирают. Импорт `works.*` НЕ
-  трогает → ре-апплай не нужен (гейт recompute достаточен). UI: блок «Правка (админ)» на
-  карточке (`WorkOverrideRow`). `ser_no` (правит порядок в серии — читает `b.ser_no`) — позже.
+  трогает → ре-апплай не нужен (гейт recompute достаточен). `ser_no` (правит порядок в
+  серии — читает `b.ser_no`) — позже.
 - **PR3+ (план):** `ser_no` + `lang` (индексируется, перетирается импортом → нужны
   `UpsertBookDocsToIndex` + ре-апплай); жанры/авторы (M:N); перенос между сериями.
 
