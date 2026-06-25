@@ -475,19 +475,21 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
         <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
       </div>
       {isRead ? (
-        <div className="flex items-center gap-2 text-sm">
-          <span className="inline-flex items-center gap-1 text-green-700 dark:text-green-400">
+        // flex-wrap + whitespace-nowrap на юнитах: длинная дата «23 июня 2026 г.»
+        // иначе ломалась посреди (на узкой мобильной колонке «г.» уезжала на строку).
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap text-green-700 dark:text-green-400">
             <Check className="size-4" aria-hidden />
             Прочитано
           </span>
           {book.read_at ? (
-            <span className="text-muted-foreground">· {formatReadDate(book.read_at)}</span>
+            <span className="whitespace-nowrap text-muted-foreground">· {formatReadDate(book.read_at)}</span>
           ) : null}
           <button
             type="button"
             onClick={() => toggle.mutate({ bookId: book.id, isRead: false })}
             disabled={toggle.isPending}
-            className="inline-flex items-center gap-0.5 rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+            className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
             aria-label="Снять отметку «прочитано»"
           >
             <X className="size-3" aria-hidden />
