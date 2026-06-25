@@ -158,9 +158,12 @@ function AdminEditable({
           }}
           onBlur={() => setEditing(false)}
           type={kind === 'int' ? 'number' : 'text'}
+          // Размер шрифта НЕ переопределяем: базовый Input = text-base (16px) на
+          // мобиле + md:text-sm на десктопе. <16px заставил бы iOS Safari зумить
+          // поле на фокусе (и зум «залипал»).
           className={cn(
-            'h-7 px-1.5 py-0 text-sm',
-            layout !== 'heading' && 'w-36 text-xs',
+            'h-8 px-1.5 py-0',
+            layout !== 'heading' && 'w-36',
             layout === 'heading' && kind === 'int' && 'w-24',
             layout === 'heading' && kind === 'text' && 'w-full max-w-md',
           )}
