@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { Pencil } from 'lucide-react';
+import { Pencil, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -195,31 +195,43 @@ function AdminEditable({
       </span>
     );
 
+  const doRevert = () => revert.mutate({ target_kind: targetKind, target_id: targetID, field });
+
   const editor = (
     <span className="group/edit relative inline-flex items-center gap-1" {...longPress}>
       {valueNode}
+      {/* Десктоп: карандаш на ховере → СРАЗУ in-place правка (+ ↺ откат, если
+          оверрайднуто). Иконки opacity-0/group-hover; на тач не видны. */}
+      <button
+        type="button"
+        onClick={startEdit}
+        aria-label={`Изменить: ${label}`}
+        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
+      >
+        <Pencil className="size-3.5" aria-hidden />
+      </button>
+      {overridden ? (
+        <button
+          type="button"
+          onClick={doRevert}
+          disabled={revert.isPending}
+          aria-label="Отменить правку"
+          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-60 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100 disabled:opacity-30"
+        >
+          <RotateCcw className="size-3" aria-hidden />
+        </button>
+      ) : null}
+      {/* Мобила: лонг-тап → action-меню. Триггер — невидимый якорь поверх значения
+          (pointer-events-none, не перехватывает обычный тап), открывается через
+          menuOpen из useLongPress. */}
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
-          {/* opacity-0 (не display:none) — чтобы у меню был якорь и на тач. */}
-          <button
-            type="button"
-            aria-label={`Изменить: ${label}`}
-            className={cn(
-              'shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100',
-              overridden && 'opacity-60', // оверрайднутое — лёгкий намёк всегда
-            )}
-          >
-            <Pencil className="size-3.5" aria-hidden />
-          </button>
+          <span className="pointer-events-none absolute inset-0" aria-hidden />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="min-w-40">
           <DropdownMenuItem onSelect={startEdit}>Редактировать «{label}»</DropdownMenuItem>
           {overridden ? (
-            <DropdownMenuItem
-              onSelect={() => revert.mutate({ target_kind: targetKind, target_id: targetID, field })}
-            >
-              Отменить правку
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={doRevert}>Отменить правку</DropdownMenuItem>
           ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
