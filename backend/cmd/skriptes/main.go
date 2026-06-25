@@ -308,7 +308,8 @@ func run() error {
 	}
 
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
-	overrideCtl := metadata.NewOverrideController(pool, logger)
+	// imp ресинкает works-индекс после правки work-поля (title/written_year).
+	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
 
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь

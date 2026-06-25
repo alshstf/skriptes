@@ -28,7 +28,7 @@ func TestOverrides_EditionScalar_Integration(t *testing.T) {
 	_, err := pool.Exec(ctx, `UPDATE books SET edition_year=1000, isbn=NULL WHERE id=$1`, bookID)
 	require.NoError(t, err)
 
-	ctl := NewOverrideController(pool, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
 
 	// 1) Правка 1000 → 2018; original захвачен = 1000.
 	require.NoError(t, ctl.SetOverride(ctx, "book", bookID, "edition_year", json.RawMessage(`{"v":2018}`), 0))
@@ -62,6 +62,78 @@ func TestOverrides_EditionScalar_Integration(t *testing.T) {
 	// 6) Неизвестное поле → ErrUnknownOverrideField; несуществующая книга → ErrOverrideTargetNotFound.
 	require.ErrorIs(t, ctl.SetOverride(ctx, "book", bookID, "nope", json.RawMessage(`{"v":1}`), 0), ErrUnknownOverrideField)
 	require.ErrorIs(t, ctl.SetOverride(ctx, "book", 999999, "isbn", json.RawMessage(`{"v":"x"}`), 0), ErrOverrideTargetNotFound)
+}
+
+// TestOverrides_WorkFields_Integration — work-поля (PR2): материализация в works.*,
+// гейт recompute (правка ВЫЖИВАЕТ при группировке/локализации), откат.
+func TestOverrides_WorkFields_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Тест", "тест ворк")
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "W1", "Старое", "старое", "ru", "", "", "")
+	workID := workIDOf(t, ctx, pool, bookID)
+	_, err := pool.Exec(ctx,
+		`UPDATE works SET written_year=1990, written_year_source='fb2_title' WHERE id=$1`, workID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE books SET written_year=1990 WHERE id=$1`, bookID)
+	require.NoError(t, err)
+
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// title: материализация в works.title + normalized_title.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "title", json.RawMessage(`{"v":"Новое название"}`), 0))
+	require.Equal(t, "Новое название", ovWorkText(t, ctx, pool, workID, "title"))
+	require.Equal(t, "новое название", ovWorkText(t, ctx, pool, workID, "normalized_title"))
+
+	// recompute-survival: recomputeWorkTitles(ru) НЕ перетирает title-оверрайд.
+	changed, err := recomputeWorkTitles(ctx, pool, "ru", []int64{workID})
+	require.NoError(t, err)
+	require.NotContains(t, changed, workID)
+	require.Equal(t, "Новое название", ovWorkText(t, ctx, pool, workID, "title"))
+
+	// written_year: материализация + source='override'.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "written_year", json.RawMessage(`{"v":1949}`), 0))
+	require.Equal(t, 1949, ovWorkInt(t, ctx, pool, workID, "written_year"))
+	require.Equal(t, "override", ovWorkText(t, ctx, pool, workID, "written_year_source"))
+
+	// recompute-survival: recomputeWorkAggregates НЕ перетирает (книга=1990, но гейт).
+	require.NoError(t, recomputeWorkAggregates(ctx, pool, []int64{workID}))
+	require.Equal(t, 1949, ovWorkInt(t, ctx, pool, workID, "written_year"))
+
+	// откат title → оригинал.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "title"))
+	require.Equal(t, "Старое", ovWorkText(t, ctx, pool, workID, "title"))
+	require.False(t, ovLedgerExists(t, ctx, pool, "work", workID, "title"))
+
+	// откат written_year → 1990/fb2_title.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "written_year"))
+	require.Equal(t, 1990, ovWorkInt(t, ctx, pool, workID, "written_year"))
+	require.Equal(t, "fb2_title", ovWorkText(t, ctx, pool, workID, "written_year_source"))
+}
+
+func ovWorkText(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int64, col string) string {
+	t.Helper()
+	var s *string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT `+col+`::text FROM works WHERE id=$1`, workID).Scan(&s))
+	if s == nil {
+		return ""
+	}
+	return *s
+}
+
+func ovWorkInt(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int64, col string) int {
+	t.Helper()
+	var n *int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT `+col+` FROM works WHERE id=$1`, workID).Scan(&n))
+	if n == nil {
+		return 0
+	}
+	return *n
 }
 
 func ovEditionYear(t *testing.T, ctx context.Context, pool *pgxpool.Pool, id int64) int {

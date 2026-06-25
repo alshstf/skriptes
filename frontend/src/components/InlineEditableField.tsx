@@ -1,20 +1,28 @@
-import { useState } from 'react';
-import { Check, Pencil, RotateCcw, X } from 'lucide-react';
+import { useRef, useState, type ReactNode } from 'react';
+import { Pencil, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useMe } from '@/lib/auth';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { cn } from '@/lib/utils';
 
 /**
- * InlineEditableField — мета-поле «метка: значение» с inline-правкой для админа
- * (локальные оверрайды каталога). Не-админ видит обычную мету (скрыта если пусто),
- * админ — карандаш → input → сохранить; если поле уже оверрайднуто, бейдж
- * «изменено» + откат (↺). Значение материализуется на бэке в реальную колонку.
+ * InlineEditableField — поле с правкой для админа (локальные оверрайды каталога,
+ * грабля №19). По умолчанию ВИЗУАЛЬНО НЕЗАМЕТНО (как обычный текст) — правят редко,
+ * карточку в основном читают. Affordance:
+ *   - десктоп: при ховере у значения появляется карандаш → меню (in-place, без
+ *     отдельной панели);
+ *   - мобила: лонг-тап по значению → то же action-меню.
+ * Меню: «Редактировать» (→ in-place input) + «Отменить правку» (если оверрайднуто).
+ * Не-админ видит обычную мету (скрыта если пусто).
  *
- * layout 'inline' — строка «метка: значение» (секция «Издания», EditionRow);
- *        'grid'   — пара <dt>/<dd> в grid-`<dl>` (раскрывашка «Детали файла»).
- *
- * PR1 — скалярные edition-поля (kind 'text'|'int'). Серия/жанры/авторы — позже.
+ * layout: 'inline' — «метка: значение» (EditionRow); 'grid' — <dt>/<dd> (FileDetails);
+ *         'heading' — крупный текст (заголовок карточки), правка тоже на месте.
  */
 type Props = {
   targetKind: 'book' | 'work';
@@ -25,61 +33,107 @@ type Props = {
   label: string;
   overridden?: boolean;
   mono?: boolean;
-  layout?: 'inline' | 'grid';
+  layout?: 'inline' | 'grid' | 'heading';
+  /** Для layout='heading' — отрисовка значения родителем (CardTitle и т.п.). */
+  children?: ReactNode;
 };
 
-export function InlineEditableField({
+export function InlineEditableField(props: Props) {
+  const { value, label, mono = false, layout = 'inline', children } = props;
+  const me = useMe();
+  const isAdmin = me.data?.role === 'admin';
+  const display = value === null || value === undefined || value === '' ? null : String(value);
+
+  if (!isAdmin) {
+    return <PlainValue layout={layout} label={label} display={display} mono={mono}>{children}</PlainValue>;
+  }
+  return <AdminEditable {...props} display={display} />;
+}
+
+// PlainValue — отрисовка значения без правки (не-админ + не редактируем).
+function PlainValue({
+  layout,
+  label,
+  display,
+  mono,
+  children,
+}: {
+  layout: 'inline' | 'grid' | 'heading';
+  label: string;
+  display: string | null;
+  mono: boolean;
+  children?: ReactNode;
+}) {
+  if (layout === 'heading') return <>{children}</>;
+  if (!display) return null;
+  if (layout === 'grid') {
+    return (
+      <>
+        <dt className="text-muted-foreground">{label}</dt>
+        <dd className={cn(mono && 'font-mono text-xs break-all')}>{display}</dd>
+      </>
+    );
+  }
+  return (
+    <span>
+      <span className="opacity-70">{label}:</span>{' '}
+      <span className={cn('text-foreground/80', mono && 'font-mono break-all')}>{display}</span>
+    </span>
+  );
+}
+
+// useLongPress — лонг-тап (тач) для вызова меню правки. preventDefault на
+// contextmenu подавляет нативное long-press-меню браузера.
+function useLongPress(onLongPress: () => void, ms = 450) {
+  const timer = useRef<number | null>(null);
+  const clear = () => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  };
+  return {
+    onTouchStart: () => {
+      clear();
+      timer.current = window.setTimeout(onLongPress, ms);
+    },
+    onTouchEnd: clear,
+    onTouchMove: clear,
+    onTouchCancel: clear,
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+  };
+}
+
+function AdminEditable({
   targetKind,
   targetID,
   field,
-  value,
   kind,
   label,
   overridden = false,
   mono = false,
   layout = 'inline',
-}: Props) {
-  const me = useMe();
-  const isAdmin = me.data?.role === 'admin';
+  display,
+  children,
+}: Props & { display: string | null }) {
   const setOverride = useSetOverride();
   const revert = useRevertOverride();
   const [editing, setEditing] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [draft, setDraft] = useState('');
-
-  const display = value === null || value === undefined || value === '' ? null : String(value);
-  const isGrid = layout === 'grid';
-
-  // Не-админ: обычная мета, скрыта если значения нет.
-  if (!isAdmin) {
-    if (!display) return null;
-    if (isGrid) {
-      return (
-        <>
-          <dt className="text-muted-foreground">{label}</dt>
-          <dd className={cn(mono && 'font-mono text-xs break-all')}>{display}</dd>
-        </>
-      );
-    }
-    return (
-      <span>
-        <span className="opacity-70">{label}:</span>{' '}
-        <span className={cn('text-foreground/80', mono && 'font-mono break-all')}>{display}</span>
-      </span>
-    );
-  }
+  const longPress = useLongPress(() => setMenuOpen(true));
 
   function startEdit() {
     setDraft(display ?? '');
     setEditing(true);
   }
-
   function save() {
     const raw = draft.trim();
     let v: string | number | null = null;
     if (raw !== '') {
       if (kind === 'int') {
         const n = Number(raw);
-        if (!Number.isFinite(n)) return; // невалидное число — игнор
+        if (!Number.isFinite(n)) return;
         v = n;
       } else {
         v = raw;
@@ -91,84 +145,114 @@ export function InlineEditableField({
     );
   }
 
-  // controls — значение/инпут + кнопки (БЕЗ метки; метку кладёт обёртка по layout).
-  // Карандаш ВСЕГДА виден у админа (не на ховере): на тач-экране ховера нет, иначе
-  // непонятно, что поле редактируемо.
-  const controls = editing ? (
-    <span className="inline-flex items-center gap-1">
-      <Input
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') save();
-          if (e.key === 'Escape') setEditing(false);
-        }}
-        type={kind === 'int' ? 'number' : 'text'}
-        className="h-6 w-32 px-1 py-0 text-xs"
-        aria-label={label}
-        autoFocus
-      />
-      <button
-        type="button"
-        onClick={save}
-        disabled={setOverride.isPending}
-        aria-label="Сохранить"
-        className="text-foreground/70 hover:text-foreground disabled:opacity-50"
-      >
-        <Check className="size-3.5" aria-hidden />
-      </button>
-      <button
-        type="button"
-        onClick={() => setEditing(false)}
-        aria-label="Отмена"
-        className="text-muted-foreground hover:text-foreground"
-      >
-        <X className="size-3.5" aria-hidden />
-      </button>
-    </span>
-  ) : (
-    <span className="inline-flex items-center gap-1">
+  // ── Режим редактирования: in-place input ──
+  if (editing) {
+    const input = (
+      <span className="inline-flex items-center gap-1">
+        <Input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') save();
+            if (e.key === 'Escape') setEditing(false);
+          }}
+          onBlur={() => setEditing(false)}
+          type={kind === 'int' ? 'number' : 'text'}
+          // Размер шрифта НЕ переопределяем: базовый Input = text-base (16px) на
+          // мобиле + md:text-sm на десктопе. <16px заставил бы iOS Safari зумить
+          // поле на фокусе (и зум «залипал»).
+          className={cn(
+            'h-8 px-1.5 py-0',
+            layout !== 'heading' && 'w-36',
+            layout === 'heading' && kind === 'int' && 'w-24',
+            layout === 'heading' && kind === 'text' && 'w-full max-w-md',
+          )}
+          aria-label={label}
+          autoFocus
+        />
+      </span>
+    );
+    if (layout === 'grid') {
+      return (
+        <>
+          <dt className="text-muted-foreground">{label}</dt>
+          <dd>{input}</dd>
+        </>
+      );
+    }
+    if (layout === 'heading') return input;
+    return (
+      <span className="inline-flex items-center gap-1">
+        <span className="opacity-70">{label}:</span> {input}
+      </span>
+    );
+  }
+
+  // ── Просмотр: значение + (ховер) карандаш-триггер меню + лонг-тап ──
+  const valueNode =
+    layout === 'heading' ? (
+      children
+    ) : (
+      <span className={cn(mono && 'font-mono break-all', display ? 'text-foreground/80' : 'italic text-muted-foreground')}>
+        {display ?? '—'}
+      </span>
+    );
+
+  const doRevert = () => revert.mutate({ target_kind: targetKind, target_id: targetID, field });
+
+  const editor = (
+    <span className="group/edit relative inline-flex items-center gap-1" {...longPress}>
+      {valueNode}
+      {/* Десктоп: карандаш на ховере → СРАЗУ in-place правка (+ ↺ откат, если
+          оверрайднуто). Иконки opacity-0/group-hover; на тач не видны. */}
       <button
         type="button"
         onClick={startEdit}
         aria-label={`Изменить: ${label}`}
-        className={cn(
-          'inline-flex items-center gap-1 text-left underline decoration-dotted decoration-muted-foreground/60 underline-offset-2 hover:decoration-foreground',
-          mono && 'font-mono break-all',
-          display ? 'text-foreground/80' : 'italic text-muted-foreground',
-        )}
+        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
       >
-        {display ?? 'добавить'}
-        <Pencil className="size-3 shrink-0 text-muted-foreground" aria-hidden />
+        <Pencil className="size-3.5" aria-hidden />
       </button>
       {overridden ? (
-        <span className="inline-flex items-center gap-0.5">
-          <span className="rounded bg-muted px-1 text-[10px] text-muted-foreground">изменено</span>
-          <button
-            type="button"
-            onClick={() => revert.mutate({ target_kind: targetKind, target_id: targetID, field })}
-            disabled={revert.isPending}
-            aria-label="Отменить правку"
-            className="text-muted-foreground hover:text-foreground disabled:opacity-50"
-          >
-            <RotateCcw className="size-3" aria-hidden />
-          </button>
-        </span>
+        <button
+          type="button"
+          onClick={doRevert}
+          disabled={revert.isPending}
+          aria-label="Отменить правку"
+          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-60 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100 disabled:opacity-30"
+        >
+          <RotateCcw className="size-3" aria-hidden />
+        </button>
       ) : null}
+      {/* Мобила: лонг-тап → action-меню. Триггер — невидимый якорь поверх значения
+          (pointer-events-none, не перехватывает обычный тап), открывается через
+          menuOpen из useLongPress. */}
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <span className="pointer-events-none absolute inset-0" aria-hidden />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="min-w-40">
+          <DropdownMenuItem onSelect={startEdit}>Редактировать «{label}»</DropdownMenuItem>
+          {overridden ? (
+            <DropdownMenuItem onSelect={doRevert}>Отменить правку</DropdownMenuItem>
+          ) : null}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </span>
   );
 
-  if (isGrid) {
+  if (layout === 'heading') return editor;
+  if (layout === 'grid') {
     return (
       <>
         <dt className="text-muted-foreground">{label}</dt>
-        <dd>{controls}</dd>
+        <dd>{editor}</dd>
       </>
     );
   }
   return (
     <span className="inline-flex items-center gap-1">
-      <span className="opacity-70">{label}:</span> {controls}
+      <span className="opacity-70">{label}:</span> {editor}
     </span>
   );
 }

@@ -784,6 +784,9 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 			WHERE w2.id = ANY($1)
 		) c
 		WHERE w.id = c.work_id
+		  -- Не перетираем ручной оверрайд года (грабля №19, metadata/overrides.go).
+		  AND NOT EXISTS (SELECT 1 FROM metadata_overrides o
+		                  WHERE o.target_kind='work' AND o.target_id=w.id AND o.field='written_year')
 	`, ids); err != nil {
 		return fmt.Errorf("recompute written_year: %w", err)
 	}
