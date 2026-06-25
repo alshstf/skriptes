@@ -13,7 +13,8 @@ import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
-import { useOverrides } from '@/lib/admin';
+import { useOverrides, useRevertAllOverrides } from '@/lib/admin';
+import { useMe } from '@/lib/auth';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -127,6 +128,8 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
               </div>
 
               <CardSignalRow book={book} />
+
+              <WorkOverrideRow book={book} />
 
               {book.series ? (
                 <p className="text-sm">
@@ -383,6 +386,53 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
         <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
       </div>
     </>
+  );
+}
+
+/**
+ * WorkOverrideRow — admin-only ряд правки work-полей (название / год написания):
+ * локальные оверрайды каталога (грабля №19). Материализуются в works.*, видны в
+ * поиске и списках автора/серии. Не-админ ряд не видит. + «Сбросить все правки».
+ */
+function WorkOverrideRow({ book }: { book: Book }) {
+  const me = useMe();
+  const ov = useOverrides(book.work_id ?? undefined);
+  const revertAll = useRevertAllOverrides();
+  if (me.data?.role !== 'admin' || !book.work_id) return null;
+  const wf = ov.data?.work ?? [];
+  const hasAny = wf.length > 0 || Object.values(ov.data?.book ?? {}).some((a) => a.length > 0);
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-md border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
+      <span className="font-medium text-foreground/70">Правка (админ):</span>
+      <InlineEditableField
+        targetKind="work"
+        targetID={book.work_id}
+        field="title"
+        value={book.title}
+        kind="text"
+        label="Название"
+        overridden={wf.includes('title')}
+      />
+      <InlineEditableField
+        targetKind="work"
+        targetID={book.work_id}
+        field="written_year"
+        value={book.written_year}
+        kind="int"
+        label="Год написания"
+        overridden={wf.includes('written_year')}
+      />
+      {hasAny ? (
+        <button
+          type="button"
+          onClick={() => revertAll.mutate({ book_id: book.id })}
+          disabled={revertAll.isPending}
+          className="ml-auto underline hover:text-foreground disabled:opacity-50"
+        >
+          Сбросить все мои правки
+        </button>
+      ) : null}
+    </div>
   );
 }
 

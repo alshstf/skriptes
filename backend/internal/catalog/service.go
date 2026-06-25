@@ -194,7 +194,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
 	bookArgs := append([]any{id}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.title, b.lib_id,
+		SELECT b.id, COALESCE((SELECT ww.title FROM works ww WHERE ww.id = b.work_id), b.title), b.lib_id,
 		       b.lang, b.date_added, b.ser_no,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
@@ -387,7 +387,7 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
 	args := append([]any{authorID, limit}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.title, b.lib_id, b.lang, b.date_added,
+		SELECT b.id, COALESCE((SELECT ww.title FROM works ww WHERE ww.id = b.work_id), b.title), b.lib_id, b.lang, b.date_added,
 		       ser.id, ser.title, b.ser_no,
 		       COALESCE(
 		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a2.last_name, a2.first_name, a2.middle_name))) FILTER (WHERE a2.id IS NOT NULL),

@@ -74,6 +74,9 @@ func recomputeWorkTitles(ctx context.Context, ex interface {
 		WHERE w.id = pick.wid
 		  AND (w.title IS DISTINCT FROM pick.title
 		       OR w.normalized_title IS DISTINCT FROM pick.ntitle)
+		  -- Не перетираем ручной оверрайд названия (грабля №19, metadata/overrides.go).
+		  AND NOT EXISTS (SELECT 1 FROM metadata_overrides o
+		                  WHERE o.target_kind='work' AND o.target_id=w.id AND o.field='title')
 		RETURNING w.id
 	`
 	return scanInt64s(ctx, ex, q, domLang, ids)

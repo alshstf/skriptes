@@ -622,12 +622,19 @@ iOS-устройстве; визуально проверять симуляци
   `translator`/`edition_title`) — не индексируются и не перетираются импортом, поэтому
   материализуются прямо в `books.*` без ресинка/ре-апплая/гейтов. Шипает кейс Чарушина
   (`edition_year=1000`).
-- **PR2+ (план):** work-поля (`title`/`written_year`/`ser_no`) — **dual-write** в `works.*`
-  И в якорное издание `books.*` (списки автора/серии читают `b.*`), + гейт recompute (`NOT
-  EXISTS metadata_overrides` в `recomputeWorkAggregates`/`recomputeWorkTitles`, иначе
-  группировка перетрёт) + ре-апплай после импорта (`lang`/title перетираются) + `UpsertBook
-  DocsToIndex` (новый таргетный примитив для books-индекса) + ресинк works-индекса. PR3 —
-  жанры/авторы (M:N). PR4 — перенос между сериями.
+- **PR2 (сделано):** work-СКАЛЯРЫ `title`/`written_year` — материализуются в `works.*`
+  (title → `title`+`normalized_title` через `lower(btrim(regexp_replace(...,'\s+',' ')))` =
+  зеркало `importer.normalize`; written_year → +`written_year_source='override'`). Видимость:
+  карточка (`COALESCE(w.*,b.*)`) + works-индекс (`UpsertWorksToIndex` детачнуто после
+  set/revert) + **списки автора/серии переведены на `COALESCE((SELECT ww.title FROM works ww
+  WHERE ww.id=b.work_id), b.title)`** (`catalog/service.go` — коррелированный подзапрос, без
+  join/GROUP BY-возни; иначе списки читали `b.title` и оверрайд бы не видели). Гейты
+  recompute (`NOT EXISTS metadata_overrides` в written_year-UPDATE `recomputeWorkAggregates`
+  + `recomputeWorkTitles`) → группировка/merge/split не перетирают. Импорт `works.*` НЕ
+  трогает → ре-апплай не нужен (гейт recompute достаточен). UI: блок «Правка (админ)» на
+  карточке (`WorkOverrideRow`). `ser_no` (правит порядок в серии — читает `b.ser_no`) — позже.
+- **PR3+ (план):** `ser_no` + `lang` (индексируется, перетирается импортом → нужны
+  `UpsertBookDocsToIndex` + ре-апплай); жанры/авторы (M:N); перенос между сериями.
 
 ## Где что искать (карта по реальным путям)
 
