@@ -92,6 +92,8 @@ export function InlineEditableField({
   }
 
   // controls — значение/инпут + кнопки (БЕЗ метки; метку кладёт обёртка по layout).
+  // Карандаш ВСЕГДА виден у админа (не на ховере): на тач-экране ховера нет, иначе
+  // непонятно, что поле редактируемо.
   const controls = editing ? (
     <span className="inline-flex items-center gap-1">
       <Input
@@ -125,17 +127,19 @@ export function InlineEditableField({
       </button>
     </span>
   ) : (
-    <span className="group/edit inline-flex items-center gap-1">
+    <span className="inline-flex items-center gap-1">
       <button
         type="button"
         onClick={startEdit}
+        aria-label={`Изменить: ${label}`}
         className={cn(
-          'text-left hover:underline',
+          'inline-flex items-center gap-1 text-left underline decoration-dotted decoration-muted-foreground/60 underline-offset-2 hover:decoration-foreground',
           mono && 'font-mono break-all',
           display ? 'text-foreground/80' : 'italic text-muted-foreground',
         )}
       >
         {display ?? 'добавить'}
+        <Pencil className="size-3 shrink-0 text-muted-foreground" aria-hidden />
       </button>
       {overridden ? (
         <span className="inline-flex items-center gap-0.5">
@@ -150,12 +154,7 @@ export function InlineEditableField({
             <RotateCcw className="size-3" aria-hidden />
           </button>
         </span>
-      ) : (
-        <Pencil
-          className="size-3 text-muted-foreground opacity-0 transition-opacity group-hover/edit:opacity-100"
-          aria-hidden
-        />
-      )}
+      ) : null}
     </span>
   );
 
