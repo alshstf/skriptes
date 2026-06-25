@@ -153,7 +153,18 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                     {book.series.title}
                   </Link>
                   {book.ser_no ? (
-                    <span className="text-muted-foreground"> · #{book.ser_no}</span>
+                    <InlineEditableField
+                      targetKind="work"
+                      targetID={book.work_id ?? 0}
+                      field="ser_no"
+                      value={book.ser_no}
+                      kind="int"
+                      label="№ в серии"
+                      overridden={workOverridden.includes('ser_no')}
+                      layout="heading"
+                    >
+                      <span className="text-muted-foreground"> · #{book.ser_no}</span>
+                    </InlineEditableField>
                   ) : null}
                 </p>
               ) : null}

@@ -635,10 +635,15 @@ iOS-устройстве; визуально проверять симуляци
   join/GROUP BY-возни; иначе списки читали `b.title` и оверрайд бы не видели). Гейты
   recompute (`NOT EXISTS metadata_overrides` в written_year-UPDATE `recomputeWorkAggregates`
   + `recomputeWorkTitles`) → группировка/merge/split не перетирают. Импорт `works.*` НЕ
-  трогает → ре-апплай не нужен (гейт recompute достаточен). `ser_no` (правит порядок в
-  серии — читает `b.ser_no`) — позже.
-- **PR3+ (план):** `ser_no` + `lang` (индексируется, перетирается импортом → нужны
-  `UpsertBookDocsToIndex` + ре-апплай); жанры/авторы (M:N); перенос между сериями.
+  трогает → ре-апплай не нужен (гейт recompute достаточен).
+- **PR3 (сделано):** `ser_no` (правит порядок книги в серии) — то же, что title: `works.ser_no`
+  + каталог COALESCE (`b.ser_no` → `COALESCE((SELECT ww.ser_no …), b.ser_no)` в обоих списках,
+  т.к. сортировка серии `seriesorder.go` читает `ListItem.SerNo`) + гейт series-UPDATE
+  `recomputeWorkAggregates` (`o.field IN ('ser_no','series')`). Не индексируется, ре-апплай не
+  нужен. UI: `#N` в строке серии редактируем.
+- **PR4+ (план):** `lang` (edition, индексируется + перетирается импортом → `books.lang` +
+  ресинк works-индекса lang[] + ре-апплай после импорта `ReapplyAfterImport`); жанры/авторы
+  (M:N); перенос между сериями.
 
 ## Где что искать (карта по реальным путям)
 

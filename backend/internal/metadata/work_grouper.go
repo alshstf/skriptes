@@ -805,6 +805,9 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 			WHERE w2.id = ANY($1)
 		) c
 		WHERE w.id = c.work_id
+		  -- Не перетираем ручной оверрайд серии/номера (грабля №19).
+		  AND NOT EXISTS (SELECT 1 FROM metadata_overrides o
+		                  WHERE o.target_kind='work' AND o.target_id=w.id AND o.field IN ('ser_no','series'))
 	`, ids); err != nil {
 		return fmt.Errorf("recompute series: %w", err)
 	}

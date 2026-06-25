@@ -66,8 +66,8 @@ var bookScalarFields = map[string]overrideField{
 }
 
 // workFields — allow-list work-полей (kind='work'). Материализация особая (title —
-// две колонки; written_year — + источник), поэтому обрабатываются switch'ем.
-var workFields = map[string]bool{"title": true, "written_year": true}
+// две колонки; written_year — + источник; ser_no — скаляр), поэтому switch'ем.
+var workFields = map[string]bool{"title": true, "written_year": true, "ser_no": true}
 
 // Override — факт правки поля (для индикаторов на карточке).
 type Override struct {
@@ -240,6 +240,8 @@ func captureWorkOriginal(ctx context.Context, tx pgx.Tx, workID int64, field str
 		sql = `SELECT jsonb_build_object('title', title, 'normalized_title', normalized_title::text) FROM works WHERE id=$1`
 	case "written_year":
 		sql = `SELECT jsonb_build_object('written_year', written_year, 'written_year_source', written_year_source) FROM works WHERE id=$1`
+	case "ser_no":
+		sql = `SELECT jsonb_build_object('ser_no', ser_no) FROM works WHERE id=$1`
 	default:
 		return nil, fmt.Errorf("%w: %s", ErrUnknownOverrideField, field)
 	}
@@ -287,6 +289,18 @@ func materializeWork(ctx context.Context, tx pgx.Tx, workID int64, field string,
 		if tag.RowsAffected() == 0 {
 			return ErrOverrideTargetNotFound
 		}
+	case "ser_no":
+		serNo, err := decodeScalar(value, "int")
+		if err != nil {
+			return err
+		}
+		tag, err := tx.Exec(ctx, `UPDATE works SET ser_no=$1, updated_at=now() WHERE id=$2`, serNo, workID)
+		if err != nil {
+			return err
+		}
+		if tag.RowsAffected() == 0 {
+			return ErrOverrideTargetNotFound
+		}
 	default:
 		return fmt.Errorf("%w: %s", ErrUnknownOverrideField, field)
 	}
@@ -319,6 +333,15 @@ func restoreWork(ctx context.Context, tx pgx.Tx, workID int64, field string, ori
 		_, err := tx.Exec(ctx,
 			`UPDATE works SET written_year=$1, written_year_source=$2, updated_at=now() WHERE id=$3`,
 			o.Year, o.Source, workID)
+		return err
+	case "ser_no":
+		var o struct {
+			SerNo *int `json:"ser_no"`
+		}
+		if err := json.Unmarshal(original, &o); err != nil {
+			return err
+		}
+		_, err := tx.Exec(ctx, `UPDATE works SET ser_no=$1, updated_at=now() WHERE id=$2`, o.SerNo, workID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", ErrUnknownOverrideField, field)
