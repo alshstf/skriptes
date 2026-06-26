@@ -1,5 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { BookText, BookOpen, BookHeart, Check, ChevronRight, X, Library, Globe } from 'lucide-react';
+import { AuthorsEditor } from '@/components/AuthorsEditor';
 import { GenresEditor } from '@/components/GenresEditor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
@@ -116,22 +117,11 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                   >
                     <CardTitle className="text-2xl tracking-tight">{book.title}</CardTitle>
                   </InlineEditableField>
-                  {book.authors.length > 0 ? (
-                    <p className="text-base text-muted-foreground">
-                      {book.authors.map((a, i) => (
-                        <span key={a.id}>
-                          {i > 0 ? ', ' : ''}
-                          <Link
-                            to="/authors/$id"
-                            params={{ id: String(a.id) }}
-                            className="hover:underline"
-                          >
-                            {a.full_name}
-                          </Link>
-                        </span>
-                      ))}
-                    </p>
-                  ) : null}
+                  <AuthorsEditor
+                    workId={book.work_id ?? 0}
+                    authors={book.authors}
+                    overridden={workOverridden.includes('authors')}
+                  />
                 </div>
                 {/* Действия — кластер справа от заголовка на десктопе; на мобиле
                     отдельным рядом ниже (рядом с обложкой колонка узкая). */}

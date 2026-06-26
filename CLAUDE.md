@@ -668,8 +668,21 @@ iOS-устройстве; визуально проверять симуляци
   — чипы + (ховер/лонг-тап) поповер с поиском и мультиселектом (`Command` cmdk) по `useGenres()`;
   `useLongPress` вынесен в `lib/useLongPress.ts`. ⚠️ OPDS books-индекс на правке НЕ ресинкается
   (как lang/title).
-- **PR6+ (план):** авторы (M:N — резолв/создание + `primary_author_id` + инвалидация кэшей
-  авторов); перенос между сериями.
+- **PR6 (сделано):** `authors` (M:N, work-level, упорядоченный). Как genres: авторы карточки/
+  индекса = union `book_authors` всех живых изданий (`queryWorkAuthors`/`workDocSelect`), оверрайд
+  упорядоченного `author_ids` материализуется в `book_authors` ВСЕХ изданий (`position`=индекс) +
+  `works.primary_author_id` = первый. ⚠️ `primary_author_id` НИГДЕ не пересчитывается (`UPDATE` его
+  есть ТОЛЬКО в materialize/restore + при `INSERT` работы) → **гейт recompute не нужен**.
+  `original_value` — per-edition снапшот `(id,position)` БЕЗ primary (импорт его не перетирает →
+  при откате выводим из восстановленных авторов, `setPrimaryFromEditions`). Импорт
+  (`replaceBookAuthors`) перетирает `book_authors` → `ReapplyAfterImport` ре-применяет (проход
+  `field='authors'`). Диспетчер → `setWorkAuthors`/`revertWorkAuthors`. UI:
+  `components/AuthorsEditor.tsx` — ссылки + (ховер/лонг-тап) поповер: упорядоченный список
+  выбранных (✕) + поиск по СУЩЕСТВУЮЩИМ авторам (`useSuggest().authors`, новый эндпоинт не нужен).
+  `invalidateCatalog` дополнен `['authors']` (список /authors). Создание НОВЫХ авторов (по имени) —
+  follow-up. ⚠️ OPDS books-индекс на правке НЕ ресинкается (как остальные).
+- **PR7+ (план):** перенос между сериями (work-level series-оверрайд); создание новых авторов
+  по имени; переименование общей серии.
 
 ## Где что искать (карта по реальным путям)
 

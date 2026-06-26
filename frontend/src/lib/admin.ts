@@ -599,9 +599,11 @@ export function useStopWorkGrouping() {
 // на бэке. После успеха инвалидируем все каталожные кэши, чтобы карточки
 // серии/автора/книги/списка пере-схлопнулись.
 
-// invalidateCatalog — сбросить кэши, на которые влияет merge/split.
+// invalidateCatalog — сбросить кэши, на которые влияет merge/split/оверрайд.
 function invalidateCatalog(qc: QueryClient) {
-  for (const key of [['series'], ['author'], ['book'], ['work'], ['books-infinite']]) {
+  // ['author'] — карточка автора; ['authors'] — список /authors (агрегаты автора
+  // меняются при правке авторов/жанров книги).
+  for (const key of [['series'], ['author'], ['authors'], ['book'], ['work'], ['books-infinite']]) {
     void qc.invalidateQueries({ queryKey: key });
   }
 }
