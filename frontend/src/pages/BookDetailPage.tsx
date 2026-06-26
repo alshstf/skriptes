@@ -463,7 +463,20 @@ function CardSignalRow({ book }: { book: Book }) {
           <span>({count})</span>
         </span>
       ) : null}
-      {langName ? <span>{langName}</span> : null}
+      {langName ? (
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="lang"
+          value={book.lang}
+          kind="lang"
+          label="Язык"
+          overridden={(ov.data?.book[String(book.id)] ?? []).includes('lang')}
+          layout="heading"
+        >
+          <span>{langName}</span>
+        </InlineEditableField>
+      ) : null}
     </div>
   );
 }
