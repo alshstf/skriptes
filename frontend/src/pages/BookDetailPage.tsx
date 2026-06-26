@@ -142,6 +142,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 <p className="text-sm">
                   <SeriesEditor
                     workId={book.work_id ?? 0}
+                    authorId={book.authors[0]?.id}
                     series={book.series ?? null}
                     serNo={book.ser_no ?? null}
                     overridden={workOverridden.includes('series')}

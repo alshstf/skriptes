@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Pencil, RotateCcw, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useMe } from '@/lib/auth';
+import { useAuthorSeries } from '@/lib/catalog';
 import { useSuggest } from '@/lib/suggest';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLongPress } from '@/lib/useLongPress';
@@ -19,11 +20,14 @@ type SeriesRef = { id: number; title: string };
  */
 export function SeriesEditor({
   workId,
+  authorId,
   series,
   serNo,
   overridden = false,
 }: {
   workId: number;
+  /** Основной автор книги — по умолчанию листим его серии (без поиска). */
+  authorId?: number;
   series: SeriesRef | null;
   serNo: number | null;
   overridden?: boolean;
@@ -42,17 +46,28 @@ export function SeriesEditor({
     </>
   );
   if (me.data?.role !== 'admin') return series ? <span>{label}</span> : null;
-  return <AdminSeries workId={workId} series={series} serNo={serNo} overridden={overridden} label={label} />;
+  return (
+    <AdminSeries
+      workId={workId}
+      authorId={authorId}
+      series={series}
+      serNo={serNo}
+      overridden={overridden}
+      label={label}
+    />
+  );
 }
 
 function AdminSeries({
   workId,
+  authorId,
   series,
   serNo,
   overridden,
   label,
 }: {
   workId: number;
+  authorId?: number;
   series: SeriesRef | null;
   serNo: number | null;
   overridden: boolean;
@@ -66,8 +81,12 @@ function AdminSeries({
     setSearch('');
     setOpen(true);
   });
+  const q = search.trim();
   const suggest = useSuggest(open ? search : '', 8);
   const candidates = (suggest.data?.series ?? []).filter((s) => s.id !== series?.id);
+  // По умолчанию (пустой поиск) — серии этого автора, без необходимости вводить.
+  const authorSeriesQ = useAuthorSeries(authorId, open && q === '');
+  const authorSeries = (authorSeriesQ.data ?? []).filter((s) => s.id !== series?.id);
 
   // Перенос: series_id меняется, номер #N сохраняем (его правит ser_no-редактор).
   function move(seriesID: number | null) {
@@ -115,7 +134,7 @@ function AdminSeries({
         </PopoverTrigger>
         <PopoverContent align="start" className="w-72 p-0">
           <Command shouldFilter={false}>
-            <CommandInput value={search} onValueChange={setSearch} placeholder="Найти серию…" />
+            <CommandInput value={search} onValueChange={setSearch} placeholder="Серии автора · или поиск…" />
             <CommandList>
               {series ? (
                 <CommandItem value="__remove" onSelect={() => move(null)}>
@@ -123,9 +142,24 @@ function AdminSeries({
                   <span className="text-muted-foreground">Убрать из серии</span>
                 </CommandItem>
               ) : null}
-              {search.trim().length < 2 ? (
-                <div className="py-4 text-center text-xs text-muted-foreground">Введите ≥2 символов</div>
+              {q === '' ? (
+                // По умолчанию — серии этого автора (частый кейс, без ввода).
+                authorSeries.length > 0 ? (
+                  <CommandGroup heading="Серии автора">
+                    {authorSeries.map((s) => (
+                      <CommandItem key={s.id} value={String(s.id)} onSelect={() => move(s.id)}>
+                        <span className="flex-1 truncate">{s.title}</span>
+                        <span className="ml-2 shrink-0 text-xs text-muted-foreground">{s.count} кн.</span>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                ) : (
+                  <div className="py-4 text-center text-xs text-muted-foreground">
+                    {authorSeriesQ.isFetching ? 'Загрузка…' : 'У автора нет серий — введите название для поиска'}
+                  </div>
+                )
               ) : candidates.length > 0 ? (
+                // Поиск по всем сериям (в т.ч. чужого автора).
                 candidates.map((s) => (
                   <CommandItem key={s.id} value={String(s.id)} onSelect={() => move(s.id)}>
                     <span className="flex-1 truncate">{s.title}</span>

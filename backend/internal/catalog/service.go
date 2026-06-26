@@ -374,6 +374,13 @@ func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limi
 	return out, rows.Err()
 }
 
+// ListAuthorSeries — серии автора (для пикера переноса серии: листим серии того же
+// автора без поиска, т.к. перенос внутри автора — частый кейс). Админ-контекст, без
+// исключений видимости.
+func (s *Service) ListAuthorSeries(ctx context.Context, authorID int64) ([]SeriesWithCount, error) {
+	return s.queryAuthorSeries(ctx, authorID, nil, nil)
+}
+
 func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]SeriesWithCount, error) {
 	// Исключения по контенту режут книги ДО группировки → серия, у которой не
 	// осталось видимых книг, просто не попадает в результат (INNER JOIN + WHERE).
