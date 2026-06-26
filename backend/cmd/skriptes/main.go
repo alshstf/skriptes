@@ -91,7 +91,10 @@ func run() error {
 	// Один импортёр на процесс: его использует и стартовый скан, и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
 	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
-	go runStartupImport(ctx(), imp, cfg.InpxRoot, logger)
+	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
+	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
+	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
+	go runStartupImport(ctx(), imp, overrideCtl, cfg.InpxRoot, logger)
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
@@ -307,10 +310,6 @@ func run() error {
 		workGroupCtl.Start()
 	}
 
-	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
-	// imp ресинкает works-индекс после правки work-поля (title/written_year).
-	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
-
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
@@ -434,7 +433,7 @@ func run() error {
 // безопасно благодаря пер-записной транзакции).
 func ctx() context.Context { return context.Background() }
 
-func runStartupImport(ctx context.Context, imp *importer.Importer, inpxRoot string, logger *slog.Logger) {
+func runStartupImport(ctx context.Context, imp *importer.Importer, overrideCtl *metadata.OverrideController, inpxRoot string, logger *slog.Logger) {
 	files, err := findInpxFiles(inpxRoot)
 	if err != nil {
 		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
@@ -454,6 +453,13 @@ func runStartupImport(ctx context.Context, imp *importer.Importer, inpxRoot stri
 		_ = stats // важная статистика уже залогирована изнутри Run
 	}
 	logger.Info("startup import finished")
+	// Ре-применить ручные оверрайды полей, которые импорт ПЕРЕЗАПИСЫВАЕТ (lang) —
+	// иначе ре-импорт коллекции сбросил бы правки (грабля №19).
+	if n, err := overrideCtl.ReapplyAfterImport(ctx); err != nil {
+		logger.Warn("reapply metadata overrides after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("reapplied metadata overrides after import", "count", n)
+	}
 }
 
 // runOnceLangResync разово синкает нормализованные коды языка в Meili. Миграция

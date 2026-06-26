@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -49,20 +50,23 @@ var (
 	ErrOverrideTargetNotFound = errors.New("override target not found")
 )
 
-// overrideField — спецификация скалярного поля: колонка + тип JSON-значения.
+// overrideField — спецификация скалярного поля: колонка + тип JSON-значения +
+// indexed (поле в Meili → после правки ресинкаем works-индекс работы; lang).
 type overrideField struct {
-	column string
-	typ    string // "int" | "text"
+	column  string
+	typ     string // "int" | "text"
+	indexed bool
 }
 
 // bookScalarFields — allow-list edition-полей (kind='book'). Колонки ТОЛЬКО отсюда
 // (не из ввода) → безопасно интерполировать в SQL-идентификатор.
 var bookScalarFields = map[string]overrideField{
-	"edition_year":  {"edition_year", "int"},
-	"isbn":          {"isbn", "text"},
-	"publisher":     {"publisher", "text"},
-	"translator":    {"translator", "text"},
-	"edition_title": {"edition_title", "text"},
+	"edition_year":  {"edition_year", "int", false},
+	"isbn":          {"isbn", "text", false},
+	"publisher":     {"publisher", "text", false},
+	"translator":    {"translator", "text", false},
+	"edition_title": {"edition_title", "text", false},
+	"lang":          {"lang", "text", true}, // в works-индексе (lang[]) → ресинк
 }
 
 // workFields — allow-list work-полей (kind='work'). Материализация особая (title —
@@ -111,6 +115,7 @@ func (c *OverrideController) setBookScalar(ctx context.Context, bookID int64, fi
 	if err != nil {
 		return err
 	}
+	newVal = normalizeBookValue(spec.column, newVal)
 	tx, err := c.pool.Begin(ctx)
 	if err != nil {
 		return err
@@ -132,6 +137,9 @@ func (c *OverrideController) setBookScalar(ctx context.Context, bookID int64, fi
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return err
+	}
+	if spec.indexed {
+		c.resyncBookWork(ctx, bookID)
 	}
 	c.logger.Info("metadata override set", "kind", "book", "target", bookID, "field", field)
 	return nil
@@ -168,6 +176,9 @@ func (c *OverrideController) revertBookScalar(ctx context.Context, bookID int64,
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return err
+	}
+	if spec.indexed {
+		c.resyncBookWork(ctx, bookID)
 	}
 	c.logger.Info("metadata override reverted", "kind", "book", "target", bookID, "field", field)
 	return nil
@@ -469,6 +480,95 @@ func deleteLedger(ctx context.Context, tx pgx.Tx, kind string, targetID int64, f
 	_, err := tx.Exec(ctx,
 		`DELETE FROM metadata_overrides WHERE target_kind=$1 AND target_id=$2 AND field=$3`, kind, targetID, field)
 	return err
+}
+
+// normalizeBookValue — нормализация перед записью в колонку. lang → lower+trim
+// (зеркало importer.normalizeLang; региональный субтег фронт не присылает).
+func normalizeBookValue(column string, v any) any {
+	if column == "lang" {
+		if s, ok := v.(string); ok {
+			return strings.ToLower(strings.TrimSpace(s))
+		}
+	}
+	return v
+}
+
+// resyncBookWork — детачнутый ресинк works-индекса работы книги (после правки
+// индексируемого edition-поля: lang → меняется lang[] работы).
+func (c *OverrideController) resyncBookWork(ctx context.Context, bookID int64) {
+	var workID *int64
+	if err := c.pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID); err != nil {
+		c.logger.Warn("override: lookup work_id for resync failed", "book", bookID, "err", err)
+		return
+	}
+	if workID != nil {
+		c.syncWorkIndex(*workID)
+	}
+}
+
+// ReapplyAfterImport ре-применяет book-уровневые оверрайды полей, которые импорт
+// ПЕРЕЗАПИСЫВАЕТ (lang). Зовётся из main ПОСЛЕ imp.Run: обновляет original_value на
+// свежеимпортированное значение (чтобы откат вернул именно его), затем заново
+// материализует оверрайд. В конце — таргетный ресинк works-индекса затронутых работ.
+func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error) {
+	type item struct {
+		bookID int64
+		value  json.RawMessage
+	}
+	rows, err := c.pool.Query(ctx,
+		`SELECT target_id, override_value FROM metadata_overrides WHERE target_kind='book' AND field='lang'`)
+	if err != nil {
+		return 0, err
+	}
+	var items []item
+	for rows.Next() {
+		var it item
+		if err := rows.Scan(&it.bookID, &it.value); err != nil {
+			rows.Close()
+			return 0, err
+		}
+		items = append(items, it)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return 0, err
+	}
+
+	works := map[int64]struct{}{}
+	for _, it := range items {
+		newVal, derr := decodeScalar(it.value, "text")
+		if derr != nil {
+			continue
+		}
+		newVal = normalizeBookValue("lang", newVal)
+		// original ← свежеимпортированный lang (до ре-материализации оверрайда).
+		if _, err := c.pool.Exec(ctx, `
+			UPDATE metadata_overrides
+			SET original_value = jsonb_build_object('v', (SELECT lang FROM books WHERE id=$1))
+			WHERE target_kind='book' AND target_id=$1 AND field='lang'
+		`, it.bookID); err != nil {
+			c.logger.Warn("reapply lang: refresh original failed", "book", it.bookID, "err", err)
+			continue
+		}
+		if _, err := c.pool.Exec(ctx, `UPDATE books SET lang=$1, updated_at=now() WHERE id=$2`, newVal, it.bookID); err != nil {
+			c.logger.Warn("reapply lang: materialize failed", "book", it.bookID, "err", err)
+			continue
+		}
+		var workID *int64
+		if c.pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, it.bookID).Scan(&workID) == nil && workID != nil {
+			works[*workID] = struct{}{}
+		}
+	}
+	if len(works) > 0 && c.resyncer != nil {
+		ids := make([]int64, 0, len(works))
+		for w := range works {
+			ids = append(ids, w)
+		}
+		if err := c.resyncer.UpsertWorksToIndex(ctx, ids); err != nil {
+			c.logger.Warn("reapply lang: works index resync failed", "err", err)
+		}
+	}
+	return len(items), nil
 }
 
 // captureScalar возвращает текущее значение колонки books как JSONB {"v": …}.

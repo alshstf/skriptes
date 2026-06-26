@@ -641,9 +641,18 @@ iOS-устройстве; визуально проверять симуляци
   т.к. сортировка серии `seriesorder.go` читает `ListItem.SerNo`) + гейт series-UPDATE
   `recomputeWorkAggregates` (`o.field IN ('ser_no','series')`). Не индексируется, ре-апплай не
   нужен. UI: `#N` в строке серии редактируем.
-- **PR4+ (план):** `lang` (edition, индексируется + перетирается импортом → `books.lang` +
-  ресинк works-индекса lang[] + ре-апплай после импорта `ReapplyAfterImport`); жанры/авторы
-  (M:N); перенос между сериями.
+- **PR4 (сделано):** `lang` (edition-СКАЛЯР, но индексируется + перетирается импортом).
+  Материализуется в `books.lang` (нормализация lower+trim, зеркало `importer.normalizeLang`,
+  грабля №14), помечен `indexed` в `bookScalarFields` → после set/revert детачнутый
+  `resyncBookWork` → `UpsertWorksToIndex(work)` обновляет `lang[]` works-индекса (веб-фасет
+  `/books`). Импорт перетирает `books.lang` → `OverrideController.ReapplyAfterImport(ctx)`
+  (зовётся из `runStartupImport` ПОСЛЕ `imp.Run`): обновляет `original_value` на свежеимпорт.
+  значение → ре-материализует оверрайд → таргетный ресинк works-индекса. UI: lang-бейдж в
+  `EditionRow` редактируем СЕЛЕКТОМ (`InlineEditableField` `kind='lang'` → `<select>` из
+  `useLanguages()`). ⚠️ OPDS books-индекс (`lang`) на правке НЕ ресинкается — как и title
+  (PR2): вторично, освежается полным импортом. `overrideCtl` создаётся РАНЬШЕ (сразу после
+  `imp`) — нужен `runStartupImport` для ре-апплая.
+- **PR5+ (план):** жанры/авторы (M:N); перенос между сериями.
 
 ## Где что искать (карта по реальным путям)
 

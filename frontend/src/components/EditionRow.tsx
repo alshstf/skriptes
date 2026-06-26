@@ -52,10 +52,21 @@ export function EditionRow({
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 space-y-1.5">
             <div className="flex flex-wrap items-center gap-1.5">
-              {langLabel ? (
-                <Badge variant="outline" className="font-normal uppercase">
-                  {langLabel}
-                </Badge>
+              {edition.lang ? (
+                <InlineEditableField
+                  targetKind="book"
+                  targetID={edition.id}
+                  field="lang"
+                  value={edition.lang}
+                  kind="lang"
+                  label="Язык"
+                  overridden={overridden.includes('lang')}
+                  layout="heading"
+                >
+                  <Badge variant="outline" className="font-normal uppercase">
+                    {langLabel}
+                  </Badge>
+                </InlineEditableField>
               ) : null}
               {ownTitle && edition.series?.title ? (
                 <Badge variant="outline" className="font-normal">
