@@ -2,6 +2,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { BookText, BookOpen, BookHeart, Check, ChevronRight, X, Library, Globe } from 'lucide-react';
 import { AuthorsEditor } from '@/components/AuthorsEditor';
 import { GenresEditor } from '@/components/GenresEditor';
+import { SeriesEditor } from '@/components/SeriesEditor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -134,14 +135,12 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
 
               {book.series ? (
                 <p className="text-sm">
-                  <span className="text-muted-foreground">Серия:</span>{' '}
-                  <Link
-                    to="/series/$id"
-                    params={{ id: String(book.series.id) }}
-                    className="hover:underline"
-                  >
-                    {book.series.title}
-                  </Link>
+                  <SeriesEditor
+                    workId={book.work_id ?? 0}
+                    series={book.series}
+                    serNo={book.ser_no ?? null}
+                    overridden={workOverridden.includes('series')}
+                  />
                   {book.ser_no ? (
                     <InlineEditableField
                       targetKind="work"

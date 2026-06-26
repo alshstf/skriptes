@@ -681,8 +681,20 @@ iOS-устройстве; визуально проверять симуляци
   выбранных (✕) + поиск по СУЩЕСТВУЮЩИМ авторам (`useSuggest().authors`, новый эндпоинт не нужен).
   `invalidateCatalog` дополнен `['authors']` (список /authors). Создание НОВЫХ авторов (по имени) —
   follow-up. ⚠️ OPDS books-индекс на правке НЕ ресинкается (как остальные).
-- **PR7+ (план):** перенос между сериями (work-level series-оверрайд); создание новых авторов
-  по имени; переименование общей серии.
+- **PR7 (сделано):** `series` (перенос между сериями, work-level). Серия читается тремя путями:
+  card — `COALESCE(w.series_id, b.series_id)`; works-индекс — `w.series_id`; страница `/series/X` —
+  `b.series_id` (издания). Поэтому материализуется в `works.series_id/ser_no` И в ВСЕ издания
+  `books.series_id/ser_no`. value `{"series_id":X|null,"ser_no":N|null}` (null=убрать). `original` —
+  per-edition снапшот; `works.*` выводим из изданий при откате (`setWorkSeriesFromEditions`, как
+  authors.primary — импорт `works.*` не перетирает). Гейт series-UPDATE recompute уже покрывал
+  `'series'` (PR3). Импорт перетирает `books.series_id/ser_no` → `ReapplyAfterImport` (проход
+  `field='series'`). Диспетчер → `setWorkSeries`/`revertWorkSeries`. UI: `components/SeriesEditor.tsx`
+  — «Серия: ссылка» + (ховер/лонг-тап) поповер: поиск по СУЩЕСТВУЮЩИМ сериям (`useSuggest().series`)
+  + «убрать из серии»; номер #N сохраняется (правит ser_no-редактор PR3 — без конфликта полей).
+  Создание новой серии — follow-up. ⚠️ OPDS books-индекс на правке НЕ ресинкается.
+- **Follow-up (план):** создание новых авторов/серий по имени «на лету»; переименование общей серии
+  (`series.title` — ломает upsert-ключ при ре-импорте, отдельный кейс). **Базовая фича оверрайдов
+  (все поля + M:N + перенос серий) — закрыта PR1–7.**
 
 ## Где что искать (карта по реальным путям)
 
