@@ -193,6 +193,30 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
 	bookArgs := append([]any{id}, exArgs...)
+
+	// Все авторы книг серии (по числу работ убыв.) — серия может содержать книги
+	// нескольких авторов (со-авторство / ручной перенос), шапка показывает всех.
+	if arows, aerr := s.pool.Query(ctx, `
+		SELECT a.id,
+		       TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) AS name,
+		       count(DISTINCT COALESCE(b.work_id, -b.id)) AS cnt
+		FROM books b
+		JOIN book_authors ba ON ba.book_id = b.id
+		JOIN authors a       ON a.id = ba.author_id
+		WHERE b.series_id = $1 AND b.deleted = false`+exClause+`
+		GROUP BY a.id, a.last_name, a.first_name, a.middle_name
+		ORDER BY cnt DESC, name
+	`, bookArgs...); aerr == nil {
+		for arows.Next() {
+			var ar SeriesAuthorRef
+			var cnt int
+			if arows.Scan(&ar.ID, &ar.Name, &cnt) == nil && ar.Name != "" {
+				out.Authors = append(out.Authors, ar)
+			}
+		}
+		arows.Close()
+	}
+
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, COALESCE((SELECT ww.title FROM works ww WHERE ww.id = b.work_id), b.title), b.lib_id,
 		       b.lang, b.date_added, COALESCE((SELECT ww.ser_no FROM works ww WHERE ww.id = b.work_id), b.ser_no),
@@ -348,6 +372,13 @@ func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limi
 		out = append(out, g)
 	}
 	return out, rows.Err()
+}
+
+// ListAuthorSeries — серии автора (для пикера переноса серии: листим серии того же
+// автора без поиска, т.к. перенос внутри автора — частый кейс). Админ-контекст, без
+// исключений видимости.
+func (s *Service) ListAuthorSeries(ctx context.Context, authorID int64) ([]SeriesWithCount, error) {
+	return s.queryAuthorSeries(ctx, authorID, nil, nil)
 }
 
 func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]SeriesWithCount, error) {

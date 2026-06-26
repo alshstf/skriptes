@@ -322,6 +322,132 @@ func ovPrimaryAuthor(t *testing.T, ctx context.Context, pool *pgxpool.Pool, work
 	return id
 }
 
+// TestOverrides_WorkSeries_Integration — перенос между сериями (PR7): материализация
+// в works.series_id/ser_no + ВСЕ издания books.series_id/ser_no, ре-апплай после
+// импорта (перетирает издания), откат (works выводится из восстановленных изданий).
+func TestOverrides_WorkSeries_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Серия", "серия тест")
+	seriesA := seedSeries(t, ctx, pool, "Серия А", author)
+	seriesB := seedSeries(t, ctx, pool, "Серия Б", author)
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "S1", "Книга", "книга", "ru", "", "", "")
+	var workID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID))
+	_, err := pool.Exec(ctx, `UPDATE books SET series_id=$1, ser_no=1 WHERE id=$2`, seriesA, bookID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE works SET series_id=$1, ser_no=1 WHERE id=$2`, seriesA, workID)
+	require.NoError(t, err)
+
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// перенос в серию Б, номер 2 → издание + работа.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "series",
+		json.RawMessage(fmt.Sprintf(`{"series_id":%d,"ser_no":2}`, seriesB)), 0))
+	bsid, bsn := ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, seriesB, bsid)
+	require.Equal(t, 2, bsn)
+	wsid, wsn := ovWorkSeries(t, ctx, pool, workID)
+	require.Equal(t, seriesB, wsid)
+	require.Equal(t, 2, wsn)
+
+	// симулируем ре-импорт: издание обратно в серию А, номер 1.
+	_, err = pool.Exec(ctx, `UPDATE books SET series_id=$1, ser_no=1 WHERE id=$2`, seriesA, bookID)
+	require.NoError(t, err)
+	// ReapplyAfterImport → снова Б/2.
+	n, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, n, 1)
+	bsid, bsn = ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, seriesB, bsid)
+	require.Equal(t, 2, bsn)
+
+	// откат → А/1 (works.series_id/ser_no выводится из восстановленных изданий).
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "series"))
+	bsid, bsn = ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, seriesA, bsid)
+	require.Equal(t, 1, bsn)
+	wsid, wsn = ovWorkSeries(t, ctx, pool, workID)
+	require.Equal(t, seriesA, wsid)
+	require.Equal(t, 1, wsn)
+	require.False(t, ovLedgerExists(t, ctx, pool, "work", workID, "series"))
+}
+
+// TestOverrides_ReapplyNoClobber_PreservesOriginal — регрессия: ReapplyAfterImport на
+// no-op импорте (уже-импортированный inpx → поля НЕ перетёрты) НЕ должен обновлять
+// original оверрайдом (иначе откат вернёт оверрайд, а не оригинал). Воспроизводит баг
+// «отменил перенос в серию, а оригинал не вернулся».
+func TestOverrides_ReapplyNoClobber_PreservesOriginal(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Регресс", "регресс тест")
+	seriesB := seedSeries(t, ctx, pool, "Серия Б", author)
+	// книга БЕЗ серии (оригинал — NULL).
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "R1", "Книга", "книга", "ru", "", "", "")
+	var workID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID))
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// перенос в серию Б.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "series",
+		json.RawMessage(fmt.Sprintf(`{"series_id":%d,"ser_no":7}`, seriesB)), 0))
+	bsid, _ := ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, seriesB, bsid)
+
+	// no-op «ре-импорт»: издания НЕ трогаем (как при старте на уже-импортированном
+	// inpx). Ре-апплай должен только ре-материализовать, original НЕ затирать.
+	_, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+
+	// откат → книга БЕЗ серии (истинный оригинал), а не серия Б.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "series"))
+	bsid, bsn := ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, int64(0), bsid) // NULL → 0
+	require.Equal(t, 0, bsn)
+	wsid, _ := ovWorkSeries(t, ctx, pool, workID)
+	require.Equal(t, int64(0), wsid)
+}
+
+// seedSeries создаёт серию (normalized_title = lower(title)).
+func seedSeries(t *testing.T, ctx context.Context, pool *pgxpool.Pool, title string, authorID int64) int64 {
+	t.Helper()
+	var id int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ($1, lower($1), $2) RETURNING id`,
+		title, authorID).Scan(&id))
+	return id
+}
+
+// ovBookSeries — (series_id, ser_no) издания (0, если NULL).
+func ovBookSeries(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int64) (int64, int) {
+	t.Helper()
+	var sid int64
+	var sn int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT COALESCE(series_id,0), COALESCE(ser_no,0) FROM books WHERE id=$1`, bookID).Scan(&sid, &sn))
+	return sid, sn
+}
+
+// ovWorkSeries — (series_id, ser_no) работы (0, если NULL).
+func ovWorkSeries(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int64) (int64, int) {
+	t.Helper()
+	var sid int64
+	var sn int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT COALESCE(series_id,0), COALESCE(ser_no,0) FROM works WHERE id=$1`, workID).Scan(&sid, &sn))
+	return sid, sn
+}
+
 func ovEditionYear(t *testing.T, ctx context.Context, pool *pgxpool.Pool, id int64) int {
 	t.Helper()
 	var y *int

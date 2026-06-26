@@ -121,13 +121,26 @@ function AdminEditable({
     if (raw !== '') {
       if (kind === 'int') {
         const n = Number(raw);
-        if (!Number.isFinite(n)) return;
+        if (!Number.isFinite(n)) {
+          setEditing(false); // невалидное число — отбрасываем и закрываем
+          return;
+        }
         v = n;
       } else {
         v = raw;
       }
     }
     commit(v);
+  }
+
+  // Клик мимо (blur) = сохранить, если значение менялось (иначе просто закрыть —
+  // не плодим пустой оверрайд). Современный UX: не заставлять жать Enter.
+  function saveOnBlur() {
+    if (draft.trim() === (display ?? '').trim()) {
+      setEditing(false);
+      return;
+    }
+    save();
   }
 
   // ── Режим редактирования: in-place input/select ──
@@ -166,7 +179,7 @@ function AdminEditable({
             if (e.key === 'Enter') save();
             if (e.key === 'Escape') setEditing(false);
           }}
-          onBlur={() => setEditing(false)}
+          onBlur={saveOnBlur}
           type={kind === 'int' ? 'number' : 'text'}
           // Размер шрифта НЕ переопределяем: базовый Input = text-base (16px) на
           // мобиле + md:text-sm на десктопе. <16px заставил бы iOS Safari зумить
@@ -211,18 +224,10 @@ function AdminEditable({
   const doRevert = () => revert.mutate({ target_kind: targetKind, target_id: targetID, field });
 
   const editor = (
-    <span className="group/edit relative inline-flex items-center gap-1" {...longPress}>
+    <span className="group/edit relative inline-flex items-center gap-0.5" {...longPress}>
       {valueNode}
-      {/* Десктоп: карандаш на ховере → СРАЗУ in-place правка (+ ↺ откат, если
-          оверрайднуто). Иконки opacity-0/group-hover; на тач не видны. */}
-      <button
-        type="button"
-        onClick={startEdit}
-        aria-label={`Изменить: ${label}`}
-        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
-      >
-        <Pencil className="size-3.5" aria-hidden />
-      </button>
+      {/* Откат (↺) идёт СРАЗУ после значения — жмётся к нему, не к соседнему полю.
+          Карандаш (opacity-0/hover) после него: его «пустое место» уходит вправо. */}
       {overridden ? (
         <button
           type="button"
@@ -234,6 +239,14 @@ function AdminEditable({
           <RotateCcw className="size-3" aria-hidden />
         </button>
       ) : null}
+      <button
+        type="button"
+        onClick={startEdit}
+        aria-label={`Изменить: ${label}`}
+        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
+      >
+        <Pencil className="size-3.5" aria-hidden />
+      </button>
       {/* Мобила: лонг-тап → action-меню. Триггер — невидимый якорь поверх значения
           (pointer-events-none, не перехватывает обычный тап), открывается через
           menuOpen из useLongPress. */}

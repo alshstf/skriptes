@@ -122,13 +122,22 @@ type SeriesSuggest struct {
 }
 
 // Series — детальная карточка серии (GET /api/series/:id).
+// SeriesAuthorRef — автор книг серии. Серия может содержать книги НЕСКОЛЬКИХ авторов
+// (со-авторство или ручной перенос книги в чужую серию) — шапка показывает всех, а не
+// только `series.author_id`.
+type SeriesAuthorRef struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 type Series struct {
-	ID         int64            `json:"id"`
-	Title      string           `json:"title"`
-	AuthorID   *int64           `json:"author_id,omitempty"`
-	AuthorName string           `json:"author_name,omitempty"`
-	BookCount  int              `json:"book_count"`
-	Books      []books.ListItem `json:"books"` // отсортированы по ser_no, deleted скрыты
+	ID         int64             `json:"id"`
+	Title      string            `json:"title"`
+	AuthorID   *int64            `json:"author_id,omitempty"`
+	AuthorName string            `json:"author_name,omitempty"`
+	Authors    []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)
+	BookCount  int               `json:"book_count"`
+	Books      []books.ListItem  `json:"books"` // отсортированы по ser_no, deleted скрыты
 
 	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`

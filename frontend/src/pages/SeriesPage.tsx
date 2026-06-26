@@ -52,14 +52,22 @@ export function SeriesPage() {
           </h1>
           <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
         </div>
-        {s.author_name && s.author_id ? (
+        {s.authors && s.authors.length > 0 ? (
+          <p className="text-sm">
+            <span className="text-muted-foreground">{s.authors.length > 1 ? 'Авторы:' : 'Автор:'}</span>{' '}
+            {s.authors.map((a, i) => (
+              <span key={a.id}>
+                {i > 0 ? ', ' : ''}
+                <Link to="/authors/$id" params={{ id: String(a.id) }} className="hover:underline">
+                  {a.name}
+                </Link>
+              </span>
+            ))}
+          </p>
+        ) : s.author_name && s.author_id ? (
           <p className="text-sm">
             <span className="text-muted-foreground">Автор:</span>{' '}
-            <Link
-              to="/authors/$id"
-              params={{ id: String(s.author_id) }}
-              className="hover:underline"
-            >
+            <Link to="/authors/$id" params={{ id: String(s.author_id) }} className="hover:underline">
               {s.author_name}
             </Link>
           </p>

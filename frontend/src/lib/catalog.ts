@@ -47,11 +47,29 @@ export type Author = {
   year_enrichment_pending?: boolean;
 };
 
+export type SeriesAuthorRef = { id: number; name: string };
+
+/**
+ * useAuthorSeries — серии автора (для пикера переноса серии: листим серии того же
+ * автора без поиска). Грузим лениво (enabled — только при открытом поповере).
+ */
+export function useAuthorSeries(authorId: number | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: ['author-series', authorId],
+    enabled: enabled && !!authorId,
+    queryFn: () =>
+      apiFetch<{ items: SeriesWithCount[] }>(`/api/authors/${authorId}/series`).then((r) => r.items),
+    staleTime: 60_000,
+  });
+}
+
 export type Series = {
   id: number;
   title: string;
   author_id?: number;
   author_name?: string;
+  /** Все авторы книг серии (серия может содержать книги нескольких авторов). */
+  authors?: SeriesAuthorRef[];
   book_count: number;
   books: BookListItem[];
   is_favorite?: boolean;
