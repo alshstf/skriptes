@@ -16,6 +16,7 @@ import { EditionRow } from '@/components/EditionRow';
 import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
 import { useOverrides } from '@/lib/admin';
+import { useMe } from '@/lib/auth';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -42,6 +43,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   // Список оверрайдов работы (для админ-индикаторов; null/disabled у не-админа).
   const overrides = useOverrides(book?.work_id ?? undefined);
   const workOverridden = overrides.data?.work ?? [];
+  const isAdmin = useMe().data?.role === 'admin';
 
   if (isLoading) {
     return (
@@ -133,26 +135,29 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
 
               <CardSignalRow book={book} />
 
-              {book.series ? (
+              {/* Строку показываем и без серии — у админа SeriesEditor даёт контрол
+                  «добавить в серию». #N (PR3) виден при наличии серии: значение есть
+                  ИЛИ админ (тогда «· #—» редактируем — задать номер после добавления). */}
+              {book.series || isAdmin ? (
                 <p className="text-sm">
                   <SeriesEditor
                     workId={book.work_id ?? 0}
-                    series={book.series}
+                    series={book.series ?? null}
                     serNo={book.ser_no ?? null}
                     overridden={workOverridden.includes('series')}
                   />
-                  {book.ser_no ? (
+                  {book.series && (book.ser_no || isAdmin) ? (
                     <InlineEditableField
                       targetKind="work"
                       targetID={book.work_id ?? 0}
                       field="ser_no"
-                      value={book.ser_no}
+                      value={book.ser_no ?? null}
                       kind="int"
                       label="№ в серии"
                       overridden={workOverridden.includes('ser_no')}
                       layout="heading"
                     >
-                      <span className="text-muted-foreground"> · #{book.ser_no}</span>
+                      <span className="text-muted-foreground"> · #{book.ser_no ?? '—'}</span>
                     </InlineEditableField>
                   ) : null}
                 </p>
