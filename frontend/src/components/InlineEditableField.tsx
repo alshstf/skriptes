@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useMe } from '@/lib/auth';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
-import { useLanguages } from '@/lib/content';
+import { useLanguageOptions } from '@/lib/content';
 import { cn } from '@/lib/utils';
 
 /**
@@ -119,7 +119,7 @@ function AdminEditable({
 }: Props & { display: string | null }) {
   const setOverride = useSetOverride();
   const revert = useRevertOverride();
-  const langs = useLanguages();
+  const langOptions = useLanguageOptions();
   const [editing, setEditing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [draft, setDraft] = useState('');
@@ -153,14 +153,12 @@ function AdminEditable({
 
   // ── Режим редактирования: in-place input/select ──
   if (editing) {
-    // lang — выбор из языков коллекции (текущий код — display — добавляем, если его нет).
-    const langOpts: { code: string; display: string }[] = (langs.data ?? []).map((i) => ({
-      code: i.code,
-      display: i.display,
-    }));
-    if (display && !langOpts.some((o) => o.code === display)) {
-      langOpts.unshift({ code: display, display });
-    }
+    // lang — выбор из полного ISO 639-1 (useLanguageOptions). Текущий код (display)
+    // почти всегда в наборе; добавляем спереди дефенсивно, если вдруг нет.
+    const langOpts =
+      display && !langOptions.some((o) => o.code === display)
+        ? [{ code: display, display }, ...langOptions]
+        : langOptions;
     const editControl =
       kind === 'lang' ? (
         <select
