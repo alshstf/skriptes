@@ -83,8 +83,20 @@ function AdminSeries({
   }
 
   return (
-    <span className="group/ser relative inline-flex items-center gap-1" {...longPress}>
+    <span className="group/ser relative inline-flex items-center gap-0.5" {...longPress}>
       {label}
+      {/* Откат (↺) сразу после названия серии — жмётся к нему, не к номеру #N. */}
+      {overridden ? (
+        <button
+          type="button"
+          onClick={() => revert.mutate({ target_kind: 'work', target_id: workId, field: 'series' })}
+          disabled={revert.isPending}
+          aria-label="Отменить перенос серии"
+          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-60 transition-opacity hover:text-foreground focus:opacity-100 group-hover/ser:opacity-100 disabled:opacity-30"
+        >
+          <RotateCcw className="size-3" aria-hidden />
+        </button>
+      ) : null}
       <Popover
         open={open}
         onOpenChange={(o) => {
@@ -131,17 +143,6 @@ function AdminSeries({
           </Command>
         </PopoverContent>
       </Popover>
-      {overridden ? (
-        <button
-          type="button"
-          onClick={() => revert.mutate({ target_kind: 'work', target_id: workId, field: 'series' })}
-          disabled={revert.isPending}
-          aria-label="Отменить перенос серии"
-          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-60 transition-opacity hover:text-foreground focus:opacity-100 group-hover/ser:opacity-100 disabled:opacity-30"
-        >
-          <RotateCcw className="size-3" aria-hidden />
-        </button>
-      ) : null}
     </span>
   );
 }

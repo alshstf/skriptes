@@ -211,18 +211,10 @@ function AdminEditable({
   const doRevert = () => revert.mutate({ target_kind: targetKind, target_id: targetID, field });
 
   const editor = (
-    <span className="group/edit relative inline-flex items-center gap-1" {...longPress}>
+    <span className="group/edit relative inline-flex items-center gap-0.5" {...longPress}>
       {valueNode}
-      {/* Десктоп: карандаш на ховере → СРАЗУ in-place правка (+ ↺ откат, если
-          оверрайднуто). Иконки opacity-0/group-hover; на тач не видны. */}
-      <button
-        type="button"
-        onClick={startEdit}
-        aria-label={`Изменить: ${label}`}
-        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
-      >
-        <Pencil className="size-3.5" aria-hidden />
-      </button>
+      {/* Откат (↺) идёт СРАЗУ после значения — жмётся к нему, не к соседнему полю.
+          Карандаш (opacity-0/hover) после него: его «пустое место» уходит вправо. */}
       {overridden ? (
         <button
           type="button"
@@ -234,6 +226,14 @@ function AdminEditable({
           <RotateCcw className="size-3" aria-hidden />
         </button>
       ) : null}
+      <button
+        type="button"
+        onClick={startEdit}
+        aria-label={`Изменить: ${label}`}
+        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus:opacity-100 group-hover/edit:opacity-100"
+      >
+        <Pencil className="size-3.5" aria-hidden />
+      </button>
       {/* Мобила: лонг-тап → action-меню. Триггер — невидимый якорь поверх значения
           (pointer-events-none, не перехватывает обычный тап), открывается через
           menuOpen из useLongPress. */}
