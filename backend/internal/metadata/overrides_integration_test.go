@@ -378,6 +378,46 @@ func TestOverrides_WorkSeries_Integration(t *testing.T) {
 	require.False(t, ovLedgerExists(t, ctx, pool, "work", workID, "series"))
 }
 
+// TestOverrides_ReapplyNoClobber_PreservesOriginal — регрессия: ReapplyAfterImport на
+// no-op импорте (уже-импортированный inpx → поля НЕ перетёрты) НЕ должен обновлять
+// original оверрайдом (иначе откат вернёт оверрайд, а не оригинал). Воспроизводит баг
+// «отменил перенос в серию, а оригинал не вернулся».
+func TestOverrides_ReapplyNoClobber_PreservesOriginal(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Регресс", "регресс тест")
+	seriesB := seedSeries(t, ctx, pool, "Серия Б", author)
+	// книга БЕЗ серии (оригинал — NULL).
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "R1", "Книга", "книга", "ru", "", "", "")
+	var workID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID))
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// перенос в серию Б.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "series",
+		json.RawMessage(fmt.Sprintf(`{"series_id":%d,"ser_no":7}`, seriesB)), 0))
+	bsid, _ := ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, seriesB, bsid)
+
+	// no-op «ре-импорт»: издания НЕ трогаем (как при старте на уже-импортированном
+	// inpx). Ре-апплай должен только ре-материализовать, original НЕ затирать.
+	_, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+
+	// откат → книга БЕЗ серии (истинный оригинал), а не серия Б.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "series"))
+	bsid, bsn := ovBookSeries(t, ctx, pool, bookID)
+	require.Equal(t, int64(0), bsid) // NULL → 0
+	require.Equal(t, 0, bsn)
+	wsid, _ := ovWorkSeries(t, ctx, pool, workID)
+	require.Equal(t, int64(0), wsid)
+}
+
 // seedSeries создаёт серию (normalized_title = lower(title)).
 func seedSeries(t *testing.T, ctx context.Context, pool *pgxpool.Pool, title string, authorID int64) int64 {
 	t.Helper()

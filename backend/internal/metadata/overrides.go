@@ -1064,10 +1064,15 @@ func (c *OverrideController) resyncBookWork(ctx context.Context, bookID int64) {
 	}
 }
 
-// ReapplyAfterImport ре-применяет book-уровневые оверрайды полей, которые импорт
-// ПЕРЕЗАПИСЫВАЕТ (lang). Зовётся из main ПОСЛЕ imp.Run: обновляет original_value на
-// свежеимпортированное значение (чтобы откат вернул именно его), затем заново
-// материализует оверрайд. В конце — таргетный ресинк works-индекса затронутых работ.
+// ReapplyAfterImport заново МАТЕРИАЛИЗУЕТ оверрайды полей, которые импорт перетирает
+// (book: lang; work: genres/authors/series), чтобы правка пережила ре-импорт. Зовётся
+// из main ПОСЛЕ imp.Run; идемпотентно (на no-op импорте ре-материализация ничего не
+// меняет). В конце — таргетный ресинк works-индекса затронутых работ.
+//
+// ВАЖНО: original_value НЕ трогаем. Импорт уже-импортированного inpx — no-op (поля не
+// перетирает), поэтому «текущее значение» там = сам оверрайд; обновление original на
+// него затёрло бы истинный оригинал и сломало откат (был такой баг). Откат всегда
+// возвращает к значению, захваченному при ПЕРВОЙ правке.
 func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error) {
 	type item struct {
 		bookID int64
@@ -1099,15 +1104,6 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 			continue
 		}
 		newVal = normalizeBookValue("lang", newVal)
-		// original ← свежеимпортированный lang (до ре-материализации оверрайда).
-		if _, err := c.pool.Exec(ctx, `
-			UPDATE metadata_overrides
-			SET original_value = jsonb_build_object('v', (SELECT lang FROM books WHERE id=$1))
-			WHERE target_kind='book' AND target_id=$1 AND field='lang'
-		`, it.bookID); err != nil {
-			c.logger.Warn("reapply lang: refresh original failed", "book", it.bookID, "err", err)
-			continue
-		}
 		if _, err := c.pool.Exec(ctx, `UPDATE books SET lang=$1, updated_at=now() WHERE id=$2`, newVal, it.bookID); err != nil {
 			c.logger.Warn("reapply lang: materialize failed", "book", it.bookID, "err", err)
 			continue
@@ -1150,21 +1146,6 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 		if json.Unmarshal(it.value, &v) != nil {
 			continue
 		}
-		// original ← свежий per-edition снапшот (после импорта), затем ре-материализуем.
-		snap, serr := captureWorkGenres(ctx, c.pool, it.workID)
-		if errors.Is(serr, pgx.ErrNoRows) {
-			continue // работа без живых изданий
-		}
-		if serr != nil {
-			c.logger.Warn("reapply genres: snapshot failed", "work", it.workID, "err", serr)
-			continue
-		}
-		if _, err := c.pool.Exec(ctx,
-			`UPDATE metadata_overrides SET original_value=$2 WHERE target_kind='work' AND target_id=$1 AND field='genres'`,
-			it.workID, snap); err != nil {
-			c.logger.Warn("reapply genres: refresh original failed", "work", it.workID, "err", err)
-			continue
-		}
 		if err := materializeWorkGenres(ctx, c.pool, it.workID, v.Codes); err != nil {
 			c.logger.Warn("reapply genres: materialize failed", "work", it.workID, "err", err)
 			continue
@@ -1201,20 +1182,6 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 			AuthorIDs []int64 `json:"author_ids"`
 		}
 		if json.Unmarshal(it.value, &v) != nil {
-			continue
-		}
-		snap, serr := captureWorkAuthors(ctx, c.pool, it.workID)
-		if errors.Is(serr, pgx.ErrNoRows) {
-			continue
-		}
-		if serr != nil {
-			c.logger.Warn("reapply authors: snapshot failed", "work", it.workID, "err", serr)
-			continue
-		}
-		if _, err := c.pool.Exec(ctx,
-			`UPDATE metadata_overrides SET original_value=$2 WHERE target_kind='work' AND target_id=$1 AND field='authors'`,
-			it.workID, snap); err != nil {
-			c.logger.Warn("reapply authors: refresh original failed", "work", it.workID, "err", err)
 			continue
 		}
 		if err := materializeWorkAuthors(ctx, c.pool, it.workID, v.AuthorIDs); err != nil {
@@ -1254,20 +1221,6 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 			SerNo    *int   `json:"ser_no"`
 		}
 		if json.Unmarshal(it.value, &v) != nil {
-			continue
-		}
-		snap, serr := captureWorkSeries(ctx, c.pool, it.workID)
-		if errors.Is(serr, pgx.ErrNoRows) {
-			continue
-		}
-		if serr != nil {
-			c.logger.Warn("reapply series: snapshot failed", "work", it.workID, "err", serr)
-			continue
-		}
-		if _, err := c.pool.Exec(ctx,
-			`UPDATE metadata_overrides SET original_value=$2 WHERE target_kind='work' AND target_id=$1 AND field='series'`,
-			it.workID, snap); err != nil {
-			c.logger.Warn("reapply series: refresh original failed", "work", it.workID, "err", err)
 			continue
 		}
 		if err := materializeWorkSeries(ctx, c.pool, it.workID, v.SeriesID, v.SerNo); err != nil {
