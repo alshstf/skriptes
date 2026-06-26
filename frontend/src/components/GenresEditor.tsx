@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Check, Pencil, RotateCcw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
 import { useMe } from '@/lib/auth';
-import { useGenres } from '@/lib/genres';
+import { useGenres, type GenreItem } from '@/lib/genres';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLongPress } from '@/lib/useLongPress';
 import { type GenreRef } from '@/lib/books';
@@ -60,14 +59,48 @@ function AdminGenres({
   overridden: boolean;
 }) {
   const allGenres = useGenres();
+  const data = allGenres.data;
   const setOverride = useSetOverride();
   const revert = useRevertOverride();
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const [draft, setDraft] = useState<Set<string>>(new Set());
   const longPress = useLongPress(() => startEdit());
+  const q = search.trim().toLowerCase();
+
+  // Гибрид: пустой поиск → группировка по категориям (browse); активный поиск →
+  // плоский список с двухстрочными результатами (жанр + категория-подпись), т.к.
+  // поперёк категорий группировка теряет смысл, а подпись возвращает контекст.
+  const grouped = useMemo(() => {
+    const m = new Map<string, GenreItem[]>();
+    for (const g of data ?? []) {
+      const cat = g.category_name || 'Прочее';
+      const arr = m.get(cat);
+      if (arr) arr.push(g);
+      else m.set(cat, [g]);
+    }
+    return [...m.entries()]
+      .map(([cat, items]) => ({
+        cat,
+        items: [...items].sort((a, b) => a.display.localeCompare(b.display, 'ru')),
+      }))
+      .sort((a, b) => a.cat.localeCompare(b.cat, 'ru'));
+  }, [data]);
+  const filtered = useMemo(() => {
+    if (q === '') return [];
+    return (data ?? [])
+      .filter(
+        (g) =>
+          g.display.toLowerCase().includes(q) ||
+          g.code.toLowerCase().includes(q) ||
+          (g.category_name ?? '').toLowerCase().includes(q),
+      )
+      .sort((a, b) => a.display.localeCompare(b.display, 'ru'));
+  }, [data, q]);
 
   function startEdit() {
     setDraft(new Set(genres.map((g) => g.code)));
+    setSearch('');
     setOpen(true);
   }
   function toggle(code: string) {
@@ -107,31 +140,45 @@ function AdminGenres({
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-72 p-0">
-          <Command
-            // фильтруем по display + коду; cmdk матчит по value (substring).
-            filter={(value, search) => (value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0)}
-          >
-            <CommandInput placeholder="Поиск жанра…" />
+          <Command shouldFilter={false}>
+            <CommandInput placeholder="Поиск жанра…" value={search} onValueChange={setSearch} />
             <CommandList>
-              <CommandEmpty>Ничего не найдено</CommandEmpty>
-              <CommandGroup>
-                {(allGenres.data ?? []).map((g) => (
-                  <CommandItem
-                    key={g.code}
-                    value={`${g.display} ${g.code}`}
-                    onSelect={() => toggle(g.code)}
-                  >
-                    <Check
-                      className={cn('mr-2 size-4 shrink-0', draft.has(g.code) ? 'opacity-100' : 'opacity-0')}
-                      aria-hidden
-                    />
-                    <span className="flex-1 truncate">{g.display}</span>
-                    {g.category_name ? (
-                      <span className="ml-2 shrink-0 text-xs text-muted-foreground">{g.category_name}</span>
-                    ) : null}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {q === '' ? (
+                // browse: группы-категории, в строке только имя жанра.
+                grouped.map((grp) => (
+                  <CommandGroup key={grp.cat} heading={grp.cat}>
+                    {grp.items.map((g) => (
+                      <CommandItem key={g.code} value={g.code} onSelect={() => toggle(g.code)}>
+                        <Check
+                          className={cn('mr-2 size-4 shrink-0', draft.has(g.code) ? 'opacity-100' : 'opacity-0')}
+                          aria-hidden
+                        />
+                        <span className="flex-1 truncate">{g.display}</span>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                ))
+              ) : filtered.length > 0 ? (
+                // search: плоский список, две строки (жанр + категория-подпись).
+                <CommandGroup>
+                  {filtered.map((g) => (
+                    <CommandItem key={g.code} value={g.code} onSelect={() => toggle(g.code)}>
+                      <Check
+                        className={cn('mr-2 size-4 shrink-0', draft.has(g.code) ? 'opacity-100' : 'opacity-0')}
+                        aria-hidden
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate">{g.display}</div>
+                        {g.category_name ? (
+                          <div className="truncate text-xs text-muted-foreground">{g.category_name}</div>
+                        ) : null}
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ) : (
+                <div className="py-6 text-center text-sm text-muted-foreground">Ничего не найдено</div>
+              )}
             </CommandList>
           </Command>
           <div className="flex items-center justify-between gap-2 border-t p-2">
