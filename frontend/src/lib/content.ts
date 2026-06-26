@@ -13,6 +13,7 @@
  * «Контент»; НЕ фильтруется по скрытым — их как раз надо показать).
  */
 
+import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
@@ -68,6 +69,43 @@ export function useLanguageMap(): Map<string, string> {
   const map = new Map<string, string>();
   for (const l of q.data ?? []) map.set(l.code, l.display);
   return map;
+}
+
+// ISO 639-1 — все 2-буквенные коды языков. Имена резолвим через Intl.DisplayNames
+// на язык интерфейса (ru), без хардкода. Импорт нормализует lang именно до 2 букв
+// (грабля №14), поэтому этот набор полный и достаточный.
+const ISO_639_1 =
+  'aa ab ae af ak am an ar as av ay az ba be bg bh bi bm bn bo br bs ca ce ch co cr cs cu cv cy da de dv dz ee el en eo es et eu fa ff fi fj fo fr fy ga gd gl gn gu gv ha he hi ho hr ht hu hy hz ia id ie ig ii ik io is it iu ja jv ka kg ki kj kk kl km kn ko kr ks ku kv kw ky la lb lg li ln lo lt lu lv mg mh mi mk ml mn mr ms mt my na nb nd ne ng nl nn no nr nv ny oc oj om or os pa pi pl ps pt qu rm rn ro ru rw sa sc sd se sg si sk sl sm sn so sq sr ss st su sv sw ta te tg th ti tk tl tn to tr ts tt tw ty ug uk ur uz ve vi vo wa wo xh yi yo za zh zu'.split(
+    ' ',
+  );
+
+/**
+ * useLanguageOptions — ПОЛНЫЙ список языков для правки языка издания (оверрайд):
+ * весь ISO 639-1, а не только присутствующие в коллекции (мислейбл правят на язык,
+ * которого в инстансе ещё нет). Имена: backend-display коллекции (приоритет) →
+ * Intl.DisplayNames('ru') → сам код. Отсортирован по имени.
+ */
+export function useLanguageOptions(): { code: string; display: string }[] {
+  const q = useLanguages();
+  const data = q.data;
+  return useMemo(() => {
+    const backend = new Map<string, string>();
+    for (const l of data ?? []) backend.set(l.code, l.display);
+    let dn: Intl.DisplayNames | null = null;
+    try {
+      dn = new Intl.DisplayNames(['ru'], { type: 'language' });
+    } catch {
+      dn = null;
+    }
+    const seen = new Set<string>();
+    const out: { code: string; display: string }[] = [];
+    for (const code of [...backend.keys(), ...ISO_639_1]) {
+      if (seen.has(code)) continue;
+      seen.add(code);
+      out.push({ code, display: backend.get(code) ?? dn?.of(code) ?? code });
+    }
+    return out.sort((a, b) => a.display.localeCompare(b.display, 'ru'));
+  }, [data]);
 }
 
 /**

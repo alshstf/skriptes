@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useMe } from '@/lib/auth';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
+import { useLanguageOptions } from '@/lib/content';
 import { cn } from '@/lib/utils';
 
 /**
@@ -29,7 +30,7 @@ type Props = {
   targetID: number;
   field: string;
   value: string | number | null | undefined;
-  kind: 'text' | 'int';
+  kind: 'text' | 'int' | 'lang';
   label: string;
   overridden?: boolean;
   mono?: boolean;
@@ -118,6 +119,7 @@ function AdminEditable({
 }: Props & { display: string | null }) {
   const setOverride = useSetOverride();
   const revert = useRevertOverride();
+  const langOptions = useLanguageOptions();
   const [editing, setEditing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [draft, setDraft] = useState('');
@@ -127,6 +129,13 @@ function AdminEditable({
     setDraft(display ?? '');
     setEditing(true);
   }
+  function commit(v: string | number | null) {
+    setOverride.mutate(
+      { target_kind: targetKind, target_id: targetID, field, value: { v } },
+      { onSuccess: () => setEditing(false) },
+    );
+  }
+
   function save() {
     const raw = draft.trim();
     let v: string | number | null = null;
@@ -139,16 +148,38 @@ function AdminEditable({
         v = raw;
       }
     }
-    setOverride.mutate(
-      { target_kind: targetKind, target_id: targetID, field, value: { v } },
-      { onSuccess: () => setEditing(false) },
-    );
+    commit(v);
   }
 
-  // ── Режим редактирования: in-place input ──
+  // ── Режим редактирования: in-place input/select ──
   if (editing) {
-    const input = (
-      <span className="inline-flex items-center gap-1">
+    // lang — выбор из полного ISO 639-1 (useLanguageOptions). Текущий код (display)
+    // почти всегда в наборе; добавляем спереди дефенсивно, если вдруг нет.
+    const langOpts =
+      display && !langOptions.some((o) => o.code === display)
+        ? [{ code: display, display }, ...langOptions]
+        : langOptions;
+    const editControl =
+      kind === 'lang' ? (
+        <select
+          value={display ?? ''}
+          onChange={(e) => commit(e.target.value || null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setEditing(false);
+          }}
+          onBlur={() => setEditing(false)}
+          // text-base (16px) на мобиле — иначе iOS Safari зумит поле на фокусе.
+          className="h-8 rounded-md border border-input bg-transparent px-2 text-base focus:outline-none focus:ring-1 focus:ring-ring md:text-sm"
+          aria-label={label}
+          autoFocus
+        >
+          {langOpts.map((o) => (
+            <option key={o.code} value={o.code}>
+              {o.display}
+            </option>
+          ))}
+        </select>
+      ) : (
         <Input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -170,8 +201,8 @@ function AdminEditable({
           aria-label={label}
           autoFocus
         />
-      </span>
-    );
+      );
+    const input = <span className="inline-flex items-center gap-1">{editControl}</span>;
     if (layout === 'grid') {
       return (
         <>

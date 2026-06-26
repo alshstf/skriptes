@@ -147,6 +147,40 @@ func ovWorkInt(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int
 	return *n
 }
 
+// TestOverrides_LangReapply_Integration — lang (PR4): нормализация, ре-апплай после
+// импорта (lang перетирается импортом), откат к свежеимпортированному значению.
+func TestOverrides_LangReapply_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Ланг", "ланг тест")
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "L1", "Книга", "книга", "ru", "", "", "")
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// set lang ru→EN; нормализуется в lower.
+	require.NoError(t, ctl.SetOverride(ctx, "book", bookID, "lang", json.RawMessage(`{"v":"EN"}`), 0))
+	require.Equal(t, "en", ovText(t, ctx, pool, bookID, "lang"))
+
+	// симулируем ре-импорт: импорт перетирает lang обратно на ru.
+	_, err := pool.Exec(ctx, `UPDATE books SET lang='ru' WHERE id=$1`, bookID)
+	require.NoError(t, err)
+	// ReapplyAfterImport → lang снова en, original ← свежий ru.
+	n, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+	require.Equal(t, 1, n)
+	require.Equal(t, "en", ovText(t, ctx, pool, bookID, "lang"))
+	require.JSONEq(t, `{"v": "ru"}`, ovLedgerOriginal(t, ctx, pool, "book", bookID, "lang"))
+
+	// откат → свежеимпортированный ru.
+	require.NoError(t, ctl.RevertOverride(ctx, "book", bookID, "lang"))
+	require.Equal(t, "ru", ovText(t, ctx, pool, bookID, "lang"))
+	require.False(t, ovLedgerExists(t, ctx, pool, "book", bookID, "lang"))
+}
+
 func ovEditionYear(t *testing.T, ctx context.Context, pool *pgxpool.Pool, id int64) int {
 	t.Helper()
 	var y *int
