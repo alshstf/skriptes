@@ -121,13 +121,26 @@ function AdminEditable({
     if (raw !== '') {
       if (kind === 'int') {
         const n = Number(raw);
-        if (!Number.isFinite(n)) return;
+        if (!Number.isFinite(n)) {
+          setEditing(false); // невалидное число — отбрасываем и закрываем
+          return;
+        }
         v = n;
       } else {
         v = raw;
       }
     }
     commit(v);
+  }
+
+  // Клик мимо (blur) = сохранить, если значение менялось (иначе просто закрыть —
+  // не плодим пустой оверрайд). Современный UX: не заставлять жать Enter.
+  function saveOnBlur() {
+    if (draft.trim() === (display ?? '').trim()) {
+      setEditing(false);
+      return;
+    }
+    save();
   }
 
   // ── Режим редактирования: in-place input/select ──
@@ -166,7 +179,7 @@ function AdminEditable({
             if (e.key === 'Enter') save();
             if (e.key === 'Escape') setEditing(false);
           }}
-          onBlur={() => setEditing(false)}
+          onBlur={saveOnBlur}
           type={kind === 'int' ? 'number' : 'text'}
           // Размер шрифта НЕ переопределяем: базовый Input = text-base (16px) на
           // мобиле + md:text-sm на десктопе. <16px заставил бы iOS Safari зумить
