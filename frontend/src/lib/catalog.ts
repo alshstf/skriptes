@@ -47,11 +47,15 @@ export type Author = {
   year_enrichment_pending?: boolean;
 };
 
+export type SeriesAuthorRef = { id: number; name: string };
+
 export type Series = {
   id: number;
   title: string;
   author_id?: number;
   author_name?: string;
+  /** Все авторы книг серии (серия может содержать книги нескольких авторов). */
+  authors?: SeriesAuthorRef[];
   book_count: number;
   books: BookListItem[];
   is_favorite?: boolean;
