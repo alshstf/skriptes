@@ -99,6 +99,9 @@ func (c *OverrideController) SetOverride(ctx context.Context, kind string, targe
 		if field == "genres" {
 			return c.setWorkGenres(ctx, targetID, value, setBy)
 		}
+		if field == "authors" {
+			return c.setWorkAuthors(ctx, targetID, value, setBy)
+		}
 		return c.setWorkField(ctx, targetID, field, value, setBy)
 	default:
 		return fmt.Errorf("%w: kind %q not supported", ErrUnknownOverrideField, kind)
@@ -113,6 +116,9 @@ func (c *OverrideController) RevertOverride(ctx context.Context, kind string, ta
 	case "work":
 		if field == "genres" {
 			return c.revertWorkGenres(ctx, targetID)
+		}
+		if field == "authors" {
+			return c.revertWorkAuthors(ctx, targetID)
 		}
 		return c.revertWorkField(ctx, targetID, field)
 	default:
@@ -457,6 +463,194 @@ func restoreWorkGenres(ctx context.Context, ex pgxExec, original json.RawMessage
 		}
 	}
 	return nil
+}
+
+// ── kind='work', field='authors': M:N (PR6) ──────────────────────────────
+//
+// Авторы карточки/works-индекса = union book_authors всех живых изданий работы
+// (queryWorkAuthors, workDocSelect). Оверрайд упорядоченного набора author_id
+// материализуется в book_authors ВСЕХ изданий (position = индекс) + обновляет
+// works.primary_author_id = первый автор (нигде не пересчитывается — UPDATE
+// primary_author_id есть ТОЛЬКО здесь и при INSERT работы; гейт recompute не нужен).
+// original — per-edition снапшот (author_id, position); primary_author_id НЕ храним
+// (импорт его не перетирает → выводим из восстановленных авторов при откате).
+// Импорт (replaceBookAuthors) перетирает book_authors → нужен ре-апплай. Авторы
+// выбираются из СУЩЕСТВУЮЩИХ (suggest); создание новых — отдельный follow-up.
+
+func (c *OverrideController) setWorkAuthors(ctx context.Context, workID int64, value json.RawMessage, setBy int64) error {
+	var v struct {
+		AuthorIDs []int64 `json:"author_ids"`
+	}
+	if err := json.Unmarshal(value, &v); err != nil {
+		return fmt.Errorf("invalid authors value: %w", err)
+	}
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	if err := upsertLedger(ctx, tx, "work", workID, "authors", value, setBy, func() (json.RawMessage, error) {
+		return captureWorkAuthors(ctx, tx, workID)
+	}); err != nil {
+		return err
+	}
+	if err := materializeWorkAuthors(ctx, tx, workID, v.AuthorIDs); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncWorkIndex(workID)
+	c.logger.Info("metadata override set", "kind", "work", "target", workID, "field", "authors")
+	return nil
+}
+
+func (c *OverrideController) revertWorkAuthors(ctx context.Context, workID int64) error {
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	orig, err := loadOriginal(ctx, tx, "work", workID, "authors")
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if err := restoreWorkAuthors(ctx, tx, workID, orig); err != nil {
+		return err
+	}
+	if err := deleteLedger(ctx, tx, "work", workID, "authors"); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncWorkIndex(workID)
+	c.logger.Info("metadata override reverted", "kind", "work", "target", workID, "field", "authors")
+	return nil
+}
+
+// captureWorkAuthors — снапшот book_authors (id+position) по каждому живому изданию
+// работы + works.primary_author_id. pgx.ErrNoRows, если живых изданий нет.
+func captureWorkAuthors(ctx context.Context, ex pgxExec, workID int64) (json.RawMessage, error) {
+	rows, err := ex.Query(ctx, `
+		SELECT b.id, COALESCE(jsonb_agg(jsonb_build_object('id', ba.author_id, 'pos', ba.position)
+		                                ORDER BY ba.position) FILTER (WHERE ba.author_id IS NOT NULL), '[]'::jsonb)
+		FROM books b
+		LEFT JOIN book_authors ba ON ba.book_id=b.id
+		WHERE b.work_id=$1 AND b.deleted=false
+		GROUP BY b.id`, workID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	editions := map[string]json.RawMessage{}
+	for rows.Next() {
+		var id int64
+		var arr json.RawMessage
+		if err := rows.Scan(&id, &arr); err != nil {
+			return nil, err
+		}
+		editions[strconv.FormatInt(id, 10)] = arr
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if len(editions) == 0 {
+		return nil, pgx.ErrNoRows
+	}
+	// primary_author_id НЕ храним: импорт его не перетирает (остался бы = оверрайд),
+	// поэтому при откате выводим из восстановленных авторов (см. restoreWorkAuthors).
+	return json.Marshal(map[string]any{"editions": editions})
+}
+
+// setEditionAuthors переписывает book_authors одного издания на authorIDs (position = индекс).
+func setEditionAuthors(ctx context.Context, ex pgxExec, bookID int64, authorIDs []int64) error {
+	if _, err := ex.Exec(ctx, `DELETE FROM book_authors WHERE book_id=$1`, bookID); err != nil {
+		return err
+	}
+	for i, aid := range authorIDs {
+		if _, err := ex.Exec(ctx,
+			`INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`,
+			bookID, aid, i); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// materializeWorkAuthors ставит упорядоченный набор авторов на ВСЕ живые издания
+// работы + works.primary_author_id = первый (NULL, если пусто).
+func materializeWorkAuthors(ctx context.Context, ex pgxExec, workID int64, authorIDs []int64) error {
+	editions, err := liveEditionIDs(ctx, ex, workID)
+	if err != nil {
+		return err
+	}
+	if len(editions) == 0 {
+		return ErrOverrideTargetNotFound
+	}
+	for _, bid := range editions {
+		if err := setEditionAuthors(ctx, ex, bid, authorIDs); err != nil {
+			return err
+		}
+	}
+	var primary any
+	if len(authorIDs) > 0 {
+		primary = authorIDs[0]
+	}
+	_, err = ex.Exec(ctx, `UPDATE works SET primary_author_id=$1, updated_at=now() WHERE id=$2`, primary, workID)
+	return err
+}
+
+// restoreWorkAuthors восстанавливает per-edition снапшот book_authors и выводит
+// works.primary_author_id из восстановленных авторов (первый по position).
+func restoreWorkAuthors(ctx context.Context, ex pgxExec, workID int64, original json.RawMessage) error {
+	var o struct {
+		Editions map[string][]struct {
+			ID  int64 `json:"id"`
+			Pos int   `json:"pos"`
+		} `json:"editions"`
+	}
+	if err := json.Unmarshal(original, &o); err != nil {
+		return err
+	}
+	for bidStr, authors := range o.Editions {
+		bid, err := strconv.ParseInt(bidStr, 10, 64)
+		if err != nil {
+			continue
+		}
+		if _, err := ex.Exec(ctx, `DELETE FROM book_authors WHERE book_id=$1`, bid); err != nil {
+			return err
+		}
+		for _, a := range authors {
+			if _, err := ex.Exec(ctx,
+				`INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`,
+				bid, a.ID, a.Pos); err != nil {
+				return err
+			}
+		}
+	}
+	return setPrimaryFromEditions(ctx, ex, workID)
+}
+
+// setPrimaryFromEditions выводит works.primary_author_id из book_authors живых
+// изданий работы (первый по position; NULL, если авторов нет).
+func setPrimaryFromEditions(ctx context.Context, ex pgxExec, workID int64) error {
+	var primary *int64
+	err := ex.QueryRow(ctx, `
+		SELECT ba.author_id FROM book_authors ba
+		JOIN books b ON b.id=ba.book_id
+		WHERE b.work_id=$1 AND b.deleted=false
+		ORDER BY ba.position, ba.author_id LIMIT 1`, workID).Scan(&primary)
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+	_, err = ex.Exec(ctx, `UPDATE works SET primary_author_id=$1, updated_at=now() WHERE id=$2`, primary, workID)
+	return err
 }
 
 // captureWorkOriginal — снимок текущих значений work-поля (для отката).
@@ -825,6 +1019,58 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 		}
 		if err := materializeWorkGenres(ctx, c.pool, it.workID, v.Codes); err != nil {
 			c.logger.Warn("reapply genres: materialize failed", "work", it.workID, "err", err)
+			continue
+		}
+		works[it.workID] = struct{}{}
+		total++
+	}
+
+	// work-уровневые authors: импорт (replaceBookAuthors) перетирает book_authors.
+	arows, err := c.pool.Query(ctx,
+		`SELECT target_id, override_value FROM metadata_overrides WHERE target_kind='work' AND field='authors'`)
+	if err != nil {
+		return total, err
+	}
+	type aItem struct {
+		workID int64
+		value  json.RawMessage
+	}
+	var aItems []aItem
+	for arows.Next() {
+		var it aItem
+		if err := arows.Scan(&it.workID, &it.value); err != nil {
+			arows.Close()
+			return total, err
+		}
+		aItems = append(aItems, it)
+	}
+	arows.Close()
+	if err := arows.Err(); err != nil {
+		return total, err
+	}
+	for _, it := range aItems {
+		var v struct {
+			AuthorIDs []int64 `json:"author_ids"`
+		}
+		if json.Unmarshal(it.value, &v) != nil {
+			continue
+		}
+		snap, serr := captureWorkAuthors(ctx, c.pool, it.workID)
+		if errors.Is(serr, pgx.ErrNoRows) {
+			continue
+		}
+		if serr != nil {
+			c.logger.Warn("reapply authors: snapshot failed", "work", it.workID, "err", serr)
+			continue
+		}
+		if _, err := c.pool.Exec(ctx,
+			`UPDATE metadata_overrides SET original_value=$2 WHERE target_kind='work' AND target_id=$1 AND field='authors'`,
+			it.workID, snap); err != nil {
+			c.logger.Warn("reapply authors: refresh original failed", "work", it.workID, "err", err)
+			continue
+		}
+		if err := materializeWorkAuthors(ctx, c.pool, it.workID, v.AuthorIDs); err != nil {
+			c.logger.Warn("reapply authors: materialize failed", "work", it.workID, "err", err)
 			continue
 		}
 		works[it.workID] = struct{}{}

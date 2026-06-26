@@ -248,6 +248,80 @@ func ovGenres(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int6
 	return codes
 }
 
+// TestOverrides_WorkAuthors_Integration — authors M:N (PR6): материализация
+// упорядоченного набора авторов на все живые издания + works.primary_author_id,
+// ре-апплай после импорта (replaceBookAuthors перетирает), откат.
+func TestOverrides_WorkAuthors_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	authorA := seedGroupAuthor(t, ctx, pool, "Алфа", "алфа автор")
+	authorB := seedGroupAuthor(t, ctx, pool, "Бета", "бета автор")
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, authorA, "A1", "Книга", "книга", "ru", "", "", "")
+	var workID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID))
+	_, err := pool.Exec(ctx, `UPDATE works SET primary_author_id=$1 WHERE id=$2`, authorA, workID)
+	require.NoError(t, err)
+	require.Equal(t, []int64{authorA}, ovAuthors(t, ctx, pool, bookID))
+
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// override авторов → [B]; материализуется на издание + primary=B.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "authors",
+		json.RawMessage(fmt.Sprintf(`{"author_ids":[%d]}`, authorB)), 0))
+	require.Equal(t, []int64{authorB}, ovAuthors(t, ctx, pool, bookID))
+	require.Equal(t, authorB, ovPrimaryAuthor(t, ctx, pool, workID))
+
+	// симулируем ре-импорт: replaceBookAuthors → [A].
+	seedBookAuthors(t, ctx, pool, bookID, authorA)
+	require.Equal(t, []int64{authorA}, ovAuthors(t, ctx, pool, bookID))
+	// ReapplyAfterImport → снова [B], primary=B.
+	n, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, n, 1)
+	require.Equal(t, []int64{authorB}, ovAuthors(t, ctx, pool, bookID))
+	require.Equal(t, authorB, ovPrimaryAuthor(t, ctx, pool, workID))
+
+	// откат → [A], primary=A.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "authors"))
+	require.Equal(t, []int64{authorA}, ovAuthors(t, ctx, pool, bookID))
+	require.Equal(t, authorA, ovPrimaryAuthor(t, ctx, pool, workID))
+	require.False(t, ovLedgerExists(t, ctx, pool, "work", workID, "authors"))
+}
+
+// seedBookAuthors переписывает book_authors издания на ids (position = индекс).
+func seedBookAuthors(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int64, ids ...int64) {
+	t.Helper()
+	_, err := pool.Exec(ctx, `DELETE FROM book_authors WHERE book_id=$1`, bookID)
+	require.NoError(t, err)
+	for i, id := range ids {
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,$3)`, bookID, id, i)
+		require.NoError(t, err)
+	}
+}
+
+// ovAuthors — author_id издания (по position).
+func ovAuthors(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int64) []int64 {
+	t.Helper()
+	var ids []int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT COALESCE(array_agg(author_id ORDER BY position), '{}') FROM book_authors WHERE book_id=$1`,
+		bookID).Scan(&ids))
+	return ids
+}
+
+// ovPrimaryAuthor — works.primary_author_id (0, если NULL).
+func ovPrimaryAuthor(t *testing.T, ctx context.Context, pool *pgxpool.Pool, workID int64) int64 {
+	t.Helper()
+	var id int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(primary_author_id,0) FROM works WHERE id=$1`, workID).Scan(&id))
+	return id
+}
+
 func ovEditionYear(t *testing.T, ctx context.Context, pool *pgxpool.Pool, id int64) int {
 	t.Helper()
 	var y *int
