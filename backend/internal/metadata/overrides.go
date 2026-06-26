@@ -6,11 +6,21 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+// pgxExec — общий интерфейс *pgxpool.Pool и pgx.Tx: M:N-хелперы зовутся и в
+// tx-правке (set/revert), и из пула при ре-апплае после импорта.
+type pgxExec interface {
+	Query(context.Context, string, ...any) (pgx.Rows, error)
+	QueryRow(context.Context, string, ...any) pgx.Row
+	Exec(context.Context, string, ...any) (pgconn.CommandTag, error)
+}
 
 // OverrideController — локальные ручные правки метаданных каталога (только админ,
 // глобально). Значение МАТЕРИАЛИЗУЕТСЯ в реальную колонку (books.*/works.*), чтобы
@@ -86,6 +96,9 @@ func (c *OverrideController) SetOverride(ctx context.Context, kind string, targe
 	case "book":
 		return c.setBookScalar(ctx, targetID, field, value, setBy)
 	case "work":
+		if field == "genres" {
+			return c.setWorkGenres(ctx, targetID, value, setBy)
+		}
 		return c.setWorkField(ctx, targetID, field, value, setBy)
 	default:
 		return fmt.Errorf("%w: kind %q not supported", ErrUnknownOverrideField, kind)
@@ -98,6 +111,9 @@ func (c *OverrideController) RevertOverride(ctx context.Context, kind string, ta
 	case "book":
 		return c.revertBookScalar(ctx, targetID, field)
 	case "work":
+		if field == "genres" {
+			return c.revertWorkGenres(ctx, targetID)
+		}
 		return c.revertWorkField(ctx, targetID, field)
 	default:
 		return fmt.Errorf("%w: kind %q not supported", ErrUnknownOverrideField, kind)
@@ -240,6 +256,206 @@ func (c *OverrideController) revertWorkField(ctx context.Context, workID int64, 
 	}
 	c.syncWorkIndex(workID)
 	c.logger.Info("metadata override reverted", "kind", "work", "target", workID, "field", field)
+	return nil
+}
+
+// ── kind='work', field='genres': M:N (PR5) ────────────────────────────────
+//
+// Жанры карточки/индекса работы = union book_genres всех её живых изданий
+// (queryWorkGenres, workDocSelect). Поэтому оверрайд жанров материализуется в
+// book_genres ВСЕХ изданий работы (одинаковый набор → union = набор). original —
+// per-edition снапшот кодов (точный откат). Импорт перетирает book_genres
+// (replaceBookGenres) → нужен ре-апплай (см. ReapplyAfterImport). Не зеркалится в
+// books-индекс (OPDS) — как title/lang, освежается полным импортом.
+
+func (c *OverrideController) setWorkGenres(ctx context.Context, workID int64, value json.RawMessage, setBy int64) error {
+	var v struct {
+		Codes []string `json:"codes"`
+	}
+	if err := json.Unmarshal(value, &v); err != nil {
+		return fmt.Errorf("invalid genres value: %w", err)
+	}
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	if err := upsertLedger(ctx, tx, "work", workID, "genres", value, setBy, func() (json.RawMessage, error) {
+		return captureWorkGenres(ctx, tx, workID)
+	}); err != nil {
+		return err
+	}
+	if err := materializeWorkGenres(ctx, tx, workID, v.Codes); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncWorkIndex(workID)
+	c.logger.Info("metadata override set", "kind", "work", "target", workID, "field", "genres")
+	return nil
+}
+
+func (c *OverrideController) revertWorkGenres(ctx context.Context, workID int64) error {
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	orig, err := loadOriginal(ctx, tx, "work", workID, "genres")
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if err := restoreWorkGenres(ctx, tx, orig); err != nil {
+		return err
+	}
+	if err := deleteLedger(ctx, tx, "work", workID, "genres"); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncWorkIndex(workID)
+	c.logger.Info("metadata override reverted", "kind", "work", "target", workID, "field", "genres")
+	return nil
+}
+
+// ensureGenreIDs резолвит fb2-коды в genre_id, создавая отсутствующие (зеркало
+// importer.upsertGenre). Коды → lower+trim; пустые/дубли отброшены.
+func ensureGenreIDs(ctx context.Context, ex pgxExec, codes []string) ([]int64, error) {
+	ids := make([]int64, 0, len(codes))
+	seen := map[string]bool{}
+	for _, c := range codes {
+		c = strings.ToLower(strings.TrimSpace(c))
+		if c == "" || seen[c] {
+			continue
+		}
+		seen[c] = true
+		var id int64
+		if err := ex.QueryRow(ctx,
+			`INSERT INTO genres (fb2_code) VALUES ($1)
+			 ON CONFLICT (fb2_code) DO UPDATE SET fb2_code=EXCLUDED.fb2_code RETURNING id`,
+			c).Scan(&id); err != nil {
+			return nil, fmt.Errorf("ensure genre %q: %w", c, err)
+		}
+		ids = append(ids, id)
+	}
+	return ids, nil
+}
+
+// liveEditionIDs — id живых изданий работы.
+func liveEditionIDs(ctx context.Context, ex pgxExec, workID int64) ([]int64, error) {
+	rows, err := ex.Query(ctx, `SELECT id FROM books WHERE work_id=$1 AND deleted=false ORDER BY id`, workID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var ids []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	return ids, rows.Err()
+}
+
+// captureWorkGenres — снапшот book_genres (коды) по каждому живому изданию работы.
+// {"editions": {"<bookID>": ["sf", …]}}. pgx.ErrNoRows, если живых изданий нет.
+func captureWorkGenres(ctx context.Context, ex pgxExec, workID int64) (json.RawMessage, error) {
+	rows, err := ex.Query(ctx, `
+		SELECT b.id, COALESCE(array_agg(g.fb2_code ORDER BY g.fb2_code)
+		                      FILTER (WHERE g.fb2_code IS NOT NULL), '{}')
+		FROM books b
+		LEFT JOIN book_genres bg ON bg.book_id=b.id
+		LEFT JOIN genres g ON g.id=bg.genre_id
+		WHERE b.work_id=$1 AND b.deleted=false
+		GROUP BY b.id`, workID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	editions := map[string][]string{}
+	for rows.Next() {
+		var id int64
+		var codes []string
+		if err := rows.Scan(&id, &codes); err != nil {
+			return nil, err
+		}
+		editions[strconv.FormatInt(id, 10)] = codes
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if len(editions) == 0 {
+		return nil, pgx.ErrNoRows
+	}
+	return json.Marshal(map[string]any{"editions": editions})
+}
+
+// setEditionGenres переписывает book_genres одного издания на genreIDs (DELETE+INSERT).
+func setEditionGenres(ctx context.Context, ex pgxExec, bookID int64, genreIDs []int64) error {
+	if _, err := ex.Exec(ctx, `DELETE FROM book_genres WHERE book_id=$1`, bookID); err != nil {
+		return err
+	}
+	for _, gid := range genreIDs {
+		if _, err := ex.Exec(ctx,
+			`INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
+			bookID, gid); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// materializeWorkGenres ставит набор жанров (коды) на ВСЕ живые издания работы.
+func materializeWorkGenres(ctx context.Context, ex pgxExec, workID int64, codes []string) error {
+	ids, err := ensureGenreIDs(ctx, ex, codes)
+	if err != nil {
+		return err
+	}
+	editions, err := liveEditionIDs(ctx, ex, workID)
+	if err != nil {
+		return err
+	}
+	if len(editions) == 0 {
+		return ErrOverrideTargetNotFound
+	}
+	for _, bid := range editions {
+		if err := setEditionGenres(ctx, ex, bid, ids); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// restoreWorkGenres восстанавливает per-edition снапшот из original_value.
+func restoreWorkGenres(ctx context.Context, ex pgxExec, original json.RawMessage) error {
+	var o struct {
+		Editions map[string][]string `json:"editions"`
+	}
+	if err := json.Unmarshal(original, &o); err != nil {
+		return err
+	}
+	for bidStr, codes := range o.Editions {
+		bid, err := strconv.ParseInt(bidStr, 10, 64)
+		if err != nil {
+			continue
+		}
+		ids, err := ensureGenreIDs(ctx, ex, codes)
+		if err != nil {
+			return err
+		}
+		if err := setEditionGenres(ctx, ex, bid, ids); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -559,16 +775,72 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 			works[*workID] = struct{}{}
 		}
 	}
+	total := len(items)
+
+	// work-уровневые genres: импорт (replaceBookGenres) перетирает book_genres
+	// изданий → ре-применяем оверрайд набора жанров на все живые издания работы.
+	grows, err := c.pool.Query(ctx,
+		`SELECT target_id, override_value FROM metadata_overrides WHERE target_kind='work' AND field='genres'`)
+	if err != nil {
+		return total, err
+	}
+	type gItem struct {
+		workID int64
+		value  json.RawMessage
+	}
+	var gItems []gItem
+	for grows.Next() {
+		var it gItem
+		if err := grows.Scan(&it.workID, &it.value); err != nil {
+			grows.Close()
+			return total, err
+		}
+		gItems = append(gItems, it)
+	}
+	grows.Close()
+	if err := grows.Err(); err != nil {
+		return total, err
+	}
+	for _, it := range gItems {
+		var v struct {
+			Codes []string `json:"codes"`
+		}
+		if json.Unmarshal(it.value, &v) != nil {
+			continue
+		}
+		// original ← свежий per-edition снапшот (после импорта), затем ре-материализуем.
+		snap, serr := captureWorkGenres(ctx, c.pool, it.workID)
+		if errors.Is(serr, pgx.ErrNoRows) {
+			continue // работа без живых изданий
+		}
+		if serr != nil {
+			c.logger.Warn("reapply genres: snapshot failed", "work", it.workID, "err", serr)
+			continue
+		}
+		if _, err := c.pool.Exec(ctx,
+			`UPDATE metadata_overrides SET original_value=$2 WHERE target_kind='work' AND target_id=$1 AND field='genres'`,
+			it.workID, snap); err != nil {
+			c.logger.Warn("reapply genres: refresh original failed", "work", it.workID, "err", err)
+			continue
+		}
+		if err := materializeWorkGenres(ctx, c.pool, it.workID, v.Codes); err != nil {
+			c.logger.Warn("reapply genres: materialize failed", "work", it.workID, "err", err)
+			continue
+		}
+		works[it.workID] = struct{}{}
+		total++
+	}
+
 	if len(works) > 0 && c.resyncer != nil {
 		ids := make([]int64, 0, len(works))
 		for w := range works {
 			ids = append(ids, w)
 		}
 		if err := c.resyncer.UpsertWorksToIndex(ctx, ids); err != nil {
-			c.logger.Warn("reapply lang: works index resync failed", "err", err)
+			c.logger.Warn("reapply overrides: works index resync failed", "err", err)
 		}
 	}
-	return len(items), nil
+	return total, nil
 }
 
 // captureScalar возвращает текущее значение колонки books как JSONB {"v": …}.
