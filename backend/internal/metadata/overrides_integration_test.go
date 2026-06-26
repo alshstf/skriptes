@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log/slog"
 	"testing"
@@ -179,6 +180,72 @@ func TestOverrides_LangReapply_Integration(t *testing.T) {
 	require.NoError(t, ctl.RevertOverride(ctx, "book", bookID, "lang"))
 	require.Equal(t, "ru", ovText(t, ctx, pool, bookID, "lang"))
 	require.False(t, ovLedgerExists(t, ctx, pool, "book", bookID, "lang"))
+}
+
+// TestOverrides_WorkGenres_Integration — genres M:N (PR5): материализация набора
+// жанров на все живые издания работы, per-edition снапшот original, ре-апплай после
+// импорта (replaceBookGenres перетирает), откат к свежеимпортированному набору.
+func TestOverrides_WorkGenres_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Жанр", "жанр тест")
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "G1", "Книга", "книга", "ru", "", "", "")
+	var workID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id=$1`, bookID).Scan(&workID))
+	seedBookGenres(t, ctx, pool, bookID, "sf")
+	require.Equal(t, []string{"sf"}, ovGenres(t, ctx, pool, bookID))
+
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	// override набора жанров работы → {adv, det}; материализуется на издание.
+	require.NoError(t, ctl.SetOverride(ctx, "work", workID, "genres", json.RawMessage(`{"codes":["det","adv"]}`), 0))
+	require.Equal(t, []string{"adv", "det"}, ovGenres(t, ctx, pool, bookID))
+
+	// симулируем ре-импорт: replaceBookGenres перетирает на {sf}.
+	seedBookGenres(t, ctx, pool, bookID, "sf")
+	require.Equal(t, []string{"sf"}, ovGenres(t, ctx, pool, bookID))
+	// ReapplyAfterImport → снова {adv, det}, original ← свежий снапшот {sf}.
+	n, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, n, 1)
+	require.Equal(t, []string{"adv", "det"}, ovGenres(t, ctx, pool, bookID))
+	require.JSONEq(t, fmt.Sprintf(`{"editions":{"%d":["sf"]}}`, bookID),
+		ovLedgerOriginal(t, ctx, pool, "work", workID, "genres"))
+
+	// откат → свежеимпортированный {sf}.
+	require.NoError(t, ctl.RevertOverride(ctx, "work", workID, "genres"))
+	require.Equal(t, []string{"sf"}, ovGenres(t, ctx, pool, bookID))
+	require.False(t, ovLedgerExists(t, ctx, pool, "work", workID, "genres"))
+}
+
+// seedBookGenres переписывает book_genres издания на codes (создаёт жанры по коду).
+func seedBookGenres(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int64, codes ...string) {
+	t.Helper()
+	_, err := pool.Exec(ctx, `DELETE FROM book_genres WHERE book_id=$1`, bookID)
+	require.NoError(t, err)
+	for _, c := range codes {
+		var gid int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO genres (fb2_code) VALUES ($1) ON CONFLICT (fb2_code) DO UPDATE SET fb2_code=EXCLUDED.fb2_code RETURNING id`,
+			c).Scan(&gid))
+		_, err := pool.Exec(ctx, `INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`, bookID, gid)
+		require.NoError(t, err)
+	}
+}
+
+// ovGenres — fb2-коды жанров издания (отсортированы).
+func ovGenres(t *testing.T, ctx context.Context, pool *pgxpool.Pool, bookID int64) []string {
+	t.Helper()
+	var codes []string
+	require.NoError(t, pool.QueryRow(ctx, `
+		SELECT COALESCE(array_agg(g.fb2_code ORDER BY g.fb2_code), '{}')
+		FROM book_genres bg JOIN genres g ON g.id=bg.genre_id WHERE bg.book_id=$1`, bookID).Scan(&codes))
+	return codes
 }
 
 func ovEditionYear(t *testing.T, ctx context.Context, pool *pgxpool.Pool, id int64) int {

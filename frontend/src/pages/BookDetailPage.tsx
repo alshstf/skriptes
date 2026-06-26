@@ -1,6 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { BookText, BookOpen, BookHeart, Check, ChevronRight, X, Library, Globe } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { GenresEditor } from '@/components/GenresEditor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -169,15 +169,11 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 </p>
               ) : null}
 
-              {book.genres.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {book.genres.map((g) => (
-                    <Badge key={g.id} variant="secondary" className="font-normal">
-                      {g.display}
-                    </Badge>
-                  ))}
-                </div>
-              ) : null}
+              <GenresEditor
+                workId={book.work_id ?? 0}
+                genres={book.genres}
+                overridden={workOverridden.includes('genres')}
+              />
 
               {/* Полка + «Детали файла» — в шапке у обложки (над панелью оценок):
                   заполняют место рядом с обложкой, это метаданные/организация книги.

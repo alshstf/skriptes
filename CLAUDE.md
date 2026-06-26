@@ -649,10 +649,27 @@ iOS-устройстве; визуально проверять симуляци
   (зовётся из `runStartupImport` ПОСЛЕ `imp.Run`): обновляет `original_value` на свежеимпорт.
   значение → ре-материализует оверрайд → таргетный ресинк works-индекса. UI: lang-бейдж в
   `EditionRow` редактируем СЕЛЕКТОМ (`InlineEditableField` `kind='lang'` → `<select>` из
-  `useLanguages()`). ⚠️ OPDS books-индекс (`lang`) на правке НЕ ресинкается — как и title
-  (PR2): вторично, освежается полным импортом. `overrideCtl` создаётся РАНЬШЕ (сразу после
-  `imp`) — нужен `runStartupImport` для ре-апплая.
-- **PR5+ (план):** жанры/авторы (M:N); перенос между сериями.
+  `useLanguages()`). UI-уточнение: lang редактируем и в `CardSignalRow` карточки (book-level,
+  таргет — представляющее издание `book.id`), т.к. секция «Издания» есть только при ≥2
+  изданиях; селект отдаёт ВЕСЬ ISO 639-1 (`useLanguageOptions` в `lib/content.ts`, имена через
+  `Intl.DisplayNames('ru')`), а не только языки коллекции — мислейбл правят на отсутствующий
+  язык. ⚠️ OPDS books-индекс (`lang`) на правке НЕ ресинкается — как и title (PR2): вторично,
+  освежается полным импортом. `overrideCtl` создаётся РАНЬШЕ (сразу после `imp`) — нужен
+  `runStartupImport` для ре-апплая.
+- **PR5 (сделано):** `genres` (M:N, work-level). Жанры карточки/works-индекса = union
+  `book_genres` всех живых изданий работы (`queryWorkGenres`/`workDocSelect`), поэтому
+  оверрайд набора кодов материализуется в `book_genres` ВСЕХ изданий (одинаковый набор →
+  union = набор; читается всеми путями БЕЗ COALESCE — это не `works.*`-колонка). `original_value`
+  — per-edition снапшот кодов (точный откат). Импорт (`replaceBookGenres`) перетирает →
+  `ReapplyAfterImport` ре-применяет (проход по `field='genres'`: свежий снапшот в `original` →
+  ре-материализация → ресинк works-индекса). Диспетчер `SetOverride`/`RevertOverride`:
+  `kind='work' && field='genres'` → `setWorkGenres`/`revertWorkGenres` (M:N-хелперы на общем
+  интерфейсе `pgxExec` — годятся и для tx, и для пула в ре-апплае). UI: `components/GenresEditor.tsx`
+  — чипы + (ховер/лонг-тап) поповер с поиском и мультиселектом (`Command` cmdk) по `useGenres()`;
+  `useLongPress` вынесен в `lib/useLongPress.ts`. ⚠️ OPDS books-индекс на правке НЕ ресинкается
+  (как lang/title).
+- **PR6+ (план):** авторы (M:N — резолв/создание + `primary_author_id` + инвалидация кэшей
+  авторов); перенос между сериями.
 
 ## Где что искать (карта по реальным путям)
 

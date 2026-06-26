@@ -1,4 +1,5 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { useLongPress } from '@/lib/useLongPress';
 import { Pencil, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -81,28 +82,6 @@ function PlainValue({
       <span className={cn('text-foreground/80', mono && 'font-mono break-all')}>{display}</span>
     </span>
   );
-}
-
-// useLongPress — лонг-тап (тач) для вызова меню правки. preventDefault на
-// contextmenu подавляет нативное long-press-меню браузера.
-function useLongPress(onLongPress: () => void, ms = 450) {
-  const timer = useRef<number | null>(null);
-  const clear = () => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = null;
-    }
-  };
-  return {
-    onTouchStart: () => {
-      clear();
-      timer.current = window.setTimeout(onLongPress, ms);
-    },
-    onTouchEnd: clear,
-    onTouchMove: clear,
-    onTouchCancel: clear,
-    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
-  };
 }
 
 function AdminEditable({
