@@ -194,7 +194,7 @@ func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
 		OpenLibrary:       true,
 		Wikidata:          true,
 		WholeCollection:   false,
-		OpenLibraryRPM:    60,
+		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
@@ -348,7 +348,7 @@ func DefaultExternalRatingConfig() ExternalRatingConfig {
 		OpenLibrary:       true,
 		WholeCollection:   false,
 		GoogleBooksRPM:    60,
-		OpenLibraryRPM:    60,
+		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
 	}
@@ -427,7 +427,7 @@ func DefaultWorkGroupingConfig() WorkGroupingConfig {
 		OpenLibrary:       true,
 		Wikidata:          true,
 		WholeCollection:   false,
-		OpenLibraryRPM:    60,
+		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,

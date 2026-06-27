@@ -58,6 +58,21 @@ const (
 	extRatingTaskTimeout    = 60 * time.Second
 )
 
+// olRPMCap — потолок RPM для OpenLibrary по ДОКУМЕНТИРОВАННОМУ лимиту (100 запросов/
+// IP/5 мин = 20/мин; сверх → 429/таймауты/reset). Держим запас 18 и КЛАМПИМ для всех
+// OL-воркеров данных/поиска (рейтинг/год/группировка) — иначе дефолт 60 (1 req/s)
+// втрое превышал лимит и OL троттлил. covers — свой olCoverRPMCap (тот же 18, иной API).
+const olRPMCap = 18
+
+// clampOLRPM прижимает сконфигурированный OL-RPM к olRPMCap (0/без-лимита → cap;
+// меньше — оставляем, админ может быть ещё вежливее).
+func clampOLRPM(rpm int) int {
+	if rpm <= 0 || rpm > olRPMCap {
+		return olRPMCap
+	}
+	return rpm
+}
+
 // NewExternalRatingBackfiller строит воркер с per-source rate-gate'ами по cfg.
 func NewExternalRatingBackfiller(pool *pgxpool.Pool, gb, ol RatingProvider, cfg ExternalRatingBackfillConfig, logger *slog.Logger) *ExternalRatingBackfiller {
 	if logger == nil {
@@ -68,7 +83,7 @@ func NewExternalRatingBackfiller(pool *pgxpool.Pool, gb, ol RatingProvider, cfg 
 		gbGate: &rateGate{}, olGate: &rateGate{},
 	}
 	b.gbGate.setRPM(cfg.GoogleBooksRPM)
-	b.olGate.setRPM(cfg.OpenLibraryRPM)
+	b.olGate.setRPM(clampOLRPM(cfg.OpenLibraryRPM))
 	return b
 }
 
