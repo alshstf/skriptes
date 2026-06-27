@@ -149,6 +149,9 @@ func run() error {
 	fb2Provider := metadata.NewFb2Provider()
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient)
 	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient).WithAPIKey(cfg.GoogleBooksAPIKey)
+	// Диагностика: без ключа GB-запросы уходят анонимно → 429 и не видны в usage
+	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
+	logger.Info("google books provider configured", "api_key_set", cfg.GoogleBooksAPIKey != "")
 	wikiProvider := metadata.NewWikipediaProvider(httpClient)
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
 	enricher, err := metadata.New(
