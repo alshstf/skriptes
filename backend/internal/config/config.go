@@ -46,6 +46,12 @@ type Config struct {
 	CookieDomain   string   `env:"SKRIPTES_COOKIE_DOMAIN"`
 	AllowedOrigins []string `env:"SKRIPTES_ALLOWED_ORIGINS" envSeparator:"," envDefault:"https://skriptes.localhost"`
 
+	// Анти-брутфорс логина (считаются только НЕУДАЧНЫЕ попытки). Лимит на окно:
+	// IP — 10/5мин, email — 20/15мин по умолчанию. **0 = слой выключен** (для
+	// инстансов за своим WAF или в доверенной LAN). Secure-by-default: включён.
+	LoginRateLimitIP    int `env:"SKRIPTES_LOGIN_RATELIMIT_IP"    envDefault:"10"`
+	LoginRateLimitEmail int `env:"SKRIPTES_LOGIN_RATELIMIT_EMAIL" envDefault:"20"`
+
 	// SMTP для send-to-Kindle. Если SMTPHost пустой — функция
 	// отключена (handler вернёт 503), и фронт скроет кнопку.
 	// Для Gmail: smtp.gmail.com:587 + app-password (не основной).

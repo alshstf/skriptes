@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/netip"
+	"strings"
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/auth"
@@ -21,6 +22,10 @@ type AuthDeps struct {
 	CookieSecure   bool   // false для пюре-HTTP dev, true в проде / за TLS
 	CookieDomain   string // пустая строка = текущий host
 	AllowedOrigins []string
+	// Анти-брутфорс логина: лимит неудач на окно (IP — 5мин, email — 15мин).
+	// 0 = слой выключен (см. config SKRIPTES_LOGIN_RATELIMIT_*).
+	LoginRateLimitIP    int
+	LoginRateLimitEmail int
 }
 
 // userCtxKey — ключ для хранения текущего пользователя в request context.
@@ -47,6 +52,19 @@ type userResponse struct {
 }
 
 func handleLogin(d AuthDeps) http.HandlerFunc {
+	// Анти-брутфорс (считаем только неудачи): по IP и по email, лимиты из конфига
+	// (0 = слой выключен — для инстансов за своим WAF / в доверенной LAN). По умолч.
+	// IP 10/5мин (одна точка долбит), email 20/15мин (анти-IP-ротация на аккаунт, но
+	// не запирает легитимного). Первичный гейт публикации — Cloudflare Access; это
+	// defense-in-depth + второй слой к CF edge rate-limit (см. деплой-гайд).
+	ipThrottle := newLoginThrottle(d.LoginRateLimitIP, 5*time.Minute)
+	emailThrottle := newLoginThrottle(d.LoginRateLimitEmail, 15*time.Minute)
+	if d.LoginRateLimitIP > 0 {
+		go ipThrottle.cleanupLoop()
+	}
+	if d.LoginRateLimitEmail > 0 {
+		go emailThrottle.cleanupLoop()
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req loginRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&req); err != nil {
@@ -57,12 +75,21 @@ func handleLogin(d AuthDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "email and password required"})
 			return
 		}
+		ipKey := throttleIP(r)
+		emailKey := strings.ToLower(strings.TrimSpace(req.Email))
+		if ipThrottle.over(ipKey) || emailThrottle.over(emailKey) {
+			w.Header().Set("Retry-After", "300")
+			writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too many attempts, try again later"})
+			return
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		meta := auth.SessionMetadata{IP: clientIP(r), UserAgent: r.UserAgent()}
 		user, token, err := d.Service.Login(ctx, req.Email, req.Password, meta)
 		if err != nil {
 			if errors.Is(err, auth.ErrInvalidPassword) {
+				ipThrottle.fail(ipKey)
+				emailThrottle.fail(emailKey)
 				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid email or password"})
 				return
 			}
