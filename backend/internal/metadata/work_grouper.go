@@ -118,7 +118,7 @@ func NewWorkGrouper(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupCon
 	if cfg.OpenLibrary && ol != nil {
 		g.resolvers = append(g.resolvers, ol)
 		gate := &rateGate{}
-		gate.setRPM(cfg.OpenLibraryRPM)
+		gate.setRPM(clampOLRPM(cfg.OpenLibraryRPM))
 		g.gates[ol.Name()] = gate
 	}
 	if cfg.Wikidata && wd != nil {

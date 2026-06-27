@@ -66,7 +66,7 @@ func NewYearBackfiller(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfill
 		pool: pool, ol: ol, wd: wd, cfg: cfg, resyncer: resyncer, logger: logger,
 		olGate: &rateGate{}, wdGate: &rateGate{},
 	}
-	b.olGate.setRPM(cfg.OpenLibraryRPM)
+	b.olGate.setRPM(clampOLRPM(cfg.OpenLibraryRPM))
 	b.wdGate.setRPM(cfg.WikidataRPM)
 	return b
 }
