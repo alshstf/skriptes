@@ -29,7 +29,11 @@ func newLoginThrottle(limit int, window time.Duration) *loginThrottle {
 
 // over сообщает, что по key уже исчерпан лимит неудач в текущем окне (read-only —
 // проверяем ДО попытки логина, чтобы не тратить bcrypt на заблокированный ключ).
+// limit <= 0 → слой выключен (всегда false).
 func (t *loginThrottle) over(key string) bool {
+	if t == nil || t.limit <= 0 {
+		return false
+	}
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	w := t.hits[key]
@@ -37,7 +41,11 @@ func (t *loginThrottle) over(key string) bool {
 }
 
 // fail регистрирует неудачную попытку по key (новое окно либо инкремент текущего).
+// limit <= 0 → no-op.
 func (t *loginThrottle) fail(key string) {
+	if t == nil || t.limit <= 0 {
+		return
+	}
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	now := time.Now()

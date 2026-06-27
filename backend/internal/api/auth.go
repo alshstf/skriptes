@@ -22,6 +22,10 @@ type AuthDeps struct {
 	CookieSecure   bool   // false для пюре-HTTP dev, true в проде / за TLS
 	CookieDomain   string // пустая строка = текущий host
 	AllowedOrigins []string
+	// Анти-брутфорс логина: лимит неудач на окно (IP — 5мин, email — 15мин).
+	// 0 = слой выключен (см. config SKRIPTES_LOGIN_RATELIMIT_*).
+	LoginRateLimitIP    int
+	LoginRateLimitEmail int
 }
 
 // userCtxKey — ключ для хранения текущего пользователя в request context.
@@ -48,14 +52,19 @@ type userResponse struct {
 }
 
 func handleLogin(d AuthDeps) http.HandlerFunc {
-	// Анти-брутфорс (считаем только неудачи): по IP — 10/5мин (одна точка долбит),
-	// по email — 20/15мин, щедрее (анти-IP-ротация на один аккаунт, но не запирает
-	// легитимного юзера). Первичный гейт для публикации — Cloudflare Access; это
+	// Анти-брутфорс (считаем только неудачи): по IP и по email, лимиты из конфига
+	// (0 = слой выключен — для инстансов за своим WAF / в доверенной LAN). По умолч.
+	// IP 10/5мин (одна точка долбит), email 20/15мин (анти-IP-ротация на аккаунт, но
+	// не запирает легитимного). Первичный гейт публикации — Cloudflare Access; это
 	// defense-in-depth + второй слой к CF edge rate-limit (см. деплой-гайд).
-	ipThrottle := newLoginThrottle(10, 5*time.Minute)
-	emailThrottle := newLoginThrottle(20, 15*time.Minute)
-	go ipThrottle.cleanupLoop()
-	go emailThrottle.cleanupLoop()
+	ipThrottle := newLoginThrottle(d.LoginRateLimitIP, 5*time.Minute)
+	emailThrottle := newLoginThrottle(d.LoginRateLimitEmail, 15*time.Minute)
+	if d.LoginRateLimitIP > 0 {
+		go ipThrottle.cleanupLoop()
+	}
+	if d.LoginRateLimitEmail > 0 {
+		go emailThrottle.cleanupLoop()
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req loginRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&req); err != nil {

@@ -25,3 +25,17 @@ func TestLoginThrottle(t *testing.T) {
 	require.False(t, tr.over(k)) // окно протухло → снова пускаем
 	tr.cleanup()                 // не паникует на пустом/протухшем
 }
+
+// TestLoginThrottle_Disabled — limit<=0 полностью выключает слой; nil-safe.
+func TestLoginThrottle_Disabled(t *testing.T) {
+	tr := newLoginThrottle(0, time.Minute)
+	const k = "1.2.3.4"
+	for i := 0; i < 100; i++ {
+		tr.fail(k)
+	}
+	require.False(t, tr.over(k)) // лимит 0 → никогда не блокирует
+
+	var nilTr *loginThrottle
+	require.False(t, nilTr.over(k))
+	require.NotPanics(t, func() { nilTr.fail(k) })
+}
