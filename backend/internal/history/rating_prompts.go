@@ -37,6 +37,7 @@ func (s *Service) RecordAcquisition(ctx context.Context, userID, bookID int64) e
 	if err != nil {
 		return fmt.Errorf("record acquisition: %w", err)
 	}
+	s.mark(bookID)
 	return nil
 }
 

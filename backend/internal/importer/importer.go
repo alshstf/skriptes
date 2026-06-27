@@ -416,7 +416,16 @@ const workDocSelect = `
 				WHERE b.work_id = w.id AND b.deleted = false
 				GROUP BY a.id, a.last_name
 			) x
-		), '{}')
+		), '{}'),
+		COALESCE((
+			SELECT count(*) FROM views v
+			JOIN books b ON b.id = v.book_id
+			WHERE b.work_id = w.id AND b.deleted = false
+		), 0) + 3 * COALESCE((
+			SELECT count(*) FROM reads r
+			JOIN books b ON b.id = r.book_id
+			WHERE b.work_id = w.id AND b.deleted = false
+		), 0)
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
 
@@ -439,11 +448,12 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
 			&seriesID, &series, &d.EditionCount, &year,
-			&d.Langs, &d.Genres, &d.Authors, &d.AuthorIDs); err != nil {
+			&d.Langs, &d.Genres, &d.Authors, &d.AuthorIDs, &d.Popularity); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
-		// Popularity у работы = 0: в PG её нет (поле books-индекса обновляется
-		// отдельным процессом и в works пока не агрегируется).
+		// Popularity работы = вовлечённость инстанса: Σ изданий (views + 3×reads),
+		// считается в workDocSelect. Свежесть между ресинками держит PopularityTracker
+		// (таргетный upsert работы при просмотре/чтении). sort=popularity на /books.
 		if seriesID != nil && series != "" {
 			d.Series = series
 			d.SeriesID = seriesID

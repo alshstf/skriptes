@@ -28,11 +28,24 @@ var ErrNotFound = errors.New("not found")
 // Service — единая точка для всех операций с историей.
 // Все методы потокобезопасны (pgxpool сам управляет конкурентным доступом).
 type Service struct {
-	pool *pgxpool.Pool
+	pool        *pgxpool.Pool
+	markEngaged func(bookID int64) // hook: новая вовлечённость книги (для popularity)
 }
 
 func New(pool *pgxpool.Pool) *Service {
 	return &Service{pool: pool}
+}
+
+// SetEngagementHook регистрирует callback, который зовётся после фиксации
+// просмотра/чтения книги (RecordView/RecordRead/RecordAcquisition) — им
+// PopularityTracker помечает работу для пересчёта популярности в works-индексе.
+// Неблокирующий, nil-safe. Зовётся один раз при wiring.
+func (s *Service) SetEngagementHook(f func(bookID int64)) { s.markEngaged = f }
+
+func (s *Service) mark(bookID int64) {
+	if s.markEngaged != nil {
+		s.markEngaged(bookID)
+	}
 }
 
 // RecordView — фиксирует факт открытия карточки книги пользователем.
@@ -47,6 +60,7 @@ func (s *Service) RecordView(ctx context.Context, userID, bookID int64) error {
 	if err != nil {
 		return fmt.Errorf("insert view: %w", err)
 	}
+	s.mark(bookID)
 	return nil
 }
 
@@ -71,6 +85,7 @@ func (s *Service) RecordRead(ctx context.Context, userID, bookID int64) error {
 	if err != nil {
 		return fmt.Errorf("upsert read: %w", err)
 	}
+	s.mark(bookID)
 	return nil
 }
 
