@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/netip"
+	"strings"
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/auth"
@@ -47,6 +48,14 @@ type userResponse struct {
 }
 
 func handleLogin(d AuthDeps) http.HandlerFunc {
+	// Анти-брутфорс (считаем только неудачи): по IP — 10/5мин (одна точка долбит),
+	// по email — 20/15мин, щедрее (анти-IP-ротация на один аккаунт, но не запирает
+	// легитимного юзера). Первичный гейт для публикации — Cloudflare Access; это
+	// defense-in-depth + второй слой к CF edge rate-limit (см. деплой-гайд).
+	ipThrottle := newLoginThrottle(10, 5*time.Minute)
+	emailThrottle := newLoginThrottle(20, 15*time.Minute)
+	go ipThrottle.cleanupLoop()
+	go emailThrottle.cleanupLoop()
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req loginRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&req); err != nil {
@@ -57,12 +66,21 @@ func handleLogin(d AuthDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "email and password required"})
 			return
 		}
+		ipKey := throttleIP(r)
+		emailKey := strings.ToLower(strings.TrimSpace(req.Email))
+		if ipThrottle.over(ipKey) || emailThrottle.over(emailKey) {
+			w.Header().Set("Retry-After", "300")
+			writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too many attempts, try again later"})
+			return
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		meta := auth.SessionMetadata{IP: clientIP(r), UserAgent: r.UserAgent()}
 		user, token, err := d.Service.Login(ctx, req.Email, req.Password, meta)
 		if err != nil {
 			if errors.Is(err, auth.ErrInvalidPassword) {
+				ipThrottle.fail(ipKey)
+				emailThrottle.fail(emailKey)
 				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid email or password"})
 				return
 			}
