@@ -165,16 +165,26 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 // (LEFT JOIN): жанры в личном избранном пользователь закрепляет сверху на
 // странице «Жанры». userID == 0 (аноним / OPDS) → IsFavorite всегда false.
 func (s *Service) ListGenres(ctx context.Context, userID int64) ([]GenreEntry, error) {
+	// book_count считаем ОДНИМ проходом по book_genres (CTE + GROUP BY), а не
+	// коррелированным подзапросом на КАЖДЫЙ из ~268 жанров — иначе на большой
+	// коллекции (сотни тысяч книг) запрос уходил за 5-сек таймаут хендлера → 500,
+	// особенно на холодном PG-кэше после рестарта.
 	rows, err := s.pool.Query(ctx, `
+		WITH counts AS (
+			SELECT bg.genre_id, COUNT(*)::int AS cnt
+			FROM book_genres bg
+			JOIN books b ON b.id = bg.book_id
+			WHERE b.deleted = false
+			GROUP BY bg.genre_id
+		)
 		SELECT g.id, g.fb2_code,
 		       COALESCE(NULLIF(g.name_ru, ''), NULLIF(g.name_en, ''), g.fb2_code) AS display,
-		       (SELECT COUNT(*) FROM book_genres bg
-		         JOIN books b ON b.id = bg.book_id
-		         WHERE bg.genre_id = g.id AND b.deleted = false)::int AS book_count,
+		       COALESCE(c.cnt, 0) AS book_count,
 		       COALESCE(p.fb2_code, '') AS category_code,
 		       COALESCE(p.name_ru, '')  AS category_name,
 		       (ufg.genre_id IS NOT NULL) AS is_favorite
 		FROM genres g
+		LEFT JOIN counts c ON c.genre_id = g.id
 		LEFT JOIN genres p ON p.id = g.parent_id
 		LEFT JOIN user_favorite_genres ufg ON ufg.genre_id = g.id AND ufg.user_id = $1
 		WHERE g.fb2_code NOT LIKE 'cat:%'
