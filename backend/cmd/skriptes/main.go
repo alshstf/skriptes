@@ -117,6 +117,13 @@ func run() error {
 	authSvc := auth.New(pool, 0)
 	catalogSvc := catalog.New(pool)
 	historySvc := history.New(pool)
+	// Популярность works-индекса = вовлечённость инстанса (Σ изданий: views + 3×reads,
+	// считается в workDocSelect). Трекер помечает работу при просмотре/чтении и батчем
+	// (раз в 30с) таргетно ре-апсертит изменившиеся в индекс — свежесть между полными
+	// ресинками без upsert'а на каждое событие. sort=popularity на /books.
+	popTracker := importer.NewPopularityTracker(imp, logger)
+	historySvc.SetEngagementHook(popTracker.MarkBook)
+	go popTracker.Run(ctx(), 30*time.Second)
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 

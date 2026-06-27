@@ -475,8 +475,15 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   ДЛЯ OPDS (скачивание по id издания). Новый `works` (1 док/работа, БЕЗ distinct)
   — для веба: фасетные счётчики считают РАБОТЫ, а не издания. `importer/index.go`:
   `workDoc` + `configureWorksIndex` (searchable title/authors/series; filterable
-  genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). Популярности
-  у works нет (в PG её нет — поле books-индекса; в works = 0).
+  genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). **Популярность
+  works = вовлечённость инстанса**: Σ изданий (`count(views) + 3×count(reads)`), считается
+  в `workDocSelect` (миграция 0029 — индексы `views(book_id)`/`reads(book_id)` для COUNT;
+  `reads` — PK(user,book), макс 1/книгу → основной сигнал `views`-лог). Свежесть между
+  полными ресинками держит `importer.PopularityTracker`: `history.Service` хук
+  (`SetEngagementHook`) метит книгу при `RecordView`/`RecordRead`/`RecordAcquisition` →
+  трекер раз в 30с батчем таргетно `UpsertWorksToIndex` изменившихся работ. `sort=popularity`
+  на `/books` (раньше works держали 0 — сортировать было нечем). ⚠️ books-индекс (OPDS)
+  popularity по-прежнему 0 — там вторично.
 - **Ресинк works-индекса** (`importer/importer.go`): `ResyncWorksIndex` (полный
   upsert всех живых работ, батчи по id, UNION авторов/жанров/языков подзапросами,
   year = COALESCE(work.written_year, min года изданий)), `UpsertWorksToIndex(ids)` /
