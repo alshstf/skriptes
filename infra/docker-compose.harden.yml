@@ -1,0 +1,105 @@
+# Overlay безопасного хардненинга для ПУБЛИЧНОГО (DMZ) деплоя.
+#
+# Накладывается ПОВЕРХ базового или release-compose:
+#   docker compose -f docker-compose.release.yml -f docker-compose.harden.yml up -d
+# С туннелем Cloudflare (профиль public добавляет сервис cloudflared):
+#   docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
+#                  --profile public up -d
+#
+# Принципы: non-root + cap_drop ALL + read-only FS + no-new-privileges + лимиты,
+# НИГДЕ нет docker.sock. Внутренние стораджи (postgres/meilisearch) — без read-only
+# (пишут в свои volume'ы) и без агрессивного cap_drop (нужны капы для user-drop),
+# но с no-new-privileges + лимитами. Интернет-фейсинг (backend/frontend/caddy) —
+# полный хардненинг. Книги = ЛОКАЛЬНАЯ копия (BOOKS_HOST_PATH — локальный путь, НЕ
+# NFS-mount; синкается односторонне с NAS). См. план secure-publish.
+services:
+  postgres:
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  meilisearch:
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  backend:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    # /cache — named volume (writable) из базы; books/inpx — :ro; корень FS read-only.
+    # Конвертер fb2cng пишет во временные каталоги под /cache и в /tmp.
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  frontend:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # nginx-unprivileged: non-root (uid 101), слушает 8080 (>1024 → NET_BIND_SERVICE
+    # НЕ нужен, нулевые капы), пишет pid/temp под /tmp → одного tmpfs /tmp хватает
+    # под read-only FS.
+    read_only: true
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  caddy:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE # caddy слушает :80/:443
+    read_only: true
+    tmpfs:
+      - /tmp
+    # /data, /config — named volumes (writable).
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  # Cloudflare Tunnel — ИСХОДЯЩЕЕ соединение к Cloudflare (0 входящих портов на
+  # роутере, origin-IP скрыт). Стартует только с `--profile public`. Ingress
+  # (public hostname → http://caddy:80) настраивается в дашборде Cloudflare Zero
+  # Trust (token-managed tunnel). Cloudflare Access вешается там же: близкие → app,
+  # owner-only → /admin; /opds НЕ публиковать.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    profiles:
+      - public
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    depends_on:
+      caddy:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 128m

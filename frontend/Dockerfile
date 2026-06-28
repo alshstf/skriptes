@@ -17,12 +17,15 @@ COPY . .
 RUN npm run build
 
 # ── runtime ─────────────────────────────────────────────────────
-FROM nginx:${NGINX_VERSION}
+# nginx-unprivileged: работает под non-root (uid 101), слушает 8080, пишет pid/temp
+# в /tmp. Дружит с read-only FS + cap_drop ALL (нулевые капы) — для безопасной
+# публикации (DMZ); homelab'у это безвредно лучше. См. docker-compose.harden.yml.
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080
 # 127.0.0.1, а не localhost: в alpine localhost резолвится в IPv6 ::1, где
 # nginx не слушает → wget получал "connection refused" и контейнер вечно висел
 # unhealthy (хотя снаружи отдавал 200). Стиль (-q --spider, 127.0.0.1) — как у
 # остальных healthcheck в compose.
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -q --spider http://127.0.0.1/ || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -q --spider http://127.0.0.1:8080/ || exit 1
