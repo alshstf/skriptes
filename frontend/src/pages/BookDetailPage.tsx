@@ -23,7 +23,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
-import { formatBytes } from '@/lib/format';
+import { formatBytes, translationLine } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
@@ -405,10 +405,12 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
 /**
  * CardSignalRow — компактная строка сигналов под заголовком: год · 🌐 внешний
  * рейтинг (Tooltip с источником) · 📖 средняя оценка читателей (count) · язык
- * (именем) · «оригинал: язык» (fb2 src-lang, для переводных). Пустые сигналы
- * скрываются; экранизации сюда НЕ выносим — для них на карточке есть отдельная
- * секция AdaptationsSection (на плашке-списка 🎬 нужен, на карточке дублировал
- * бы). Зеркалит идею BookMeta для плашки списка.
+ * (именем). Под ней — тихая строка «титульного листа»: «Перевод с французского
+ * — Гинзбург Ю. А.» (переводчик ОТКРЫТОГО издания + язык оригинала одной
+ * естественной фразой; полное имя — в тултипе и «Деталях файла»). Пустые
+ * сигналы скрываются; экранизации сюда НЕ выносим — для них на карточке есть
+ * отдельная секция AdaptationsSection (на плашке-списка 🎬 нужен, на карточке
+ * дублировал бы). Зеркалит идею BookMeta для плашки списка.
  */
 function CardSignalRow({ book }: { book: Book }) {
   const langMap = useLanguageMap();
@@ -420,22 +422,22 @@ function CardSignalRow({ book }: { book: Book }) {
   const hasReader = avg !== undefined && count > 0;
   const langName = book.lang ? (langMap.get(book.lang) ?? book.lang) : null;
   // Язык оригинала — только когда известен И отличается от языка издания
-  // (совпадение = книга в оригинале, строка была бы шумом).
+  // (совпадение = книга в оригинале, фраза была бы шумом).
   const srcLangName =
     book.src_lang && book.src_lang !== book.lang
       ? (srcLangMap.get(book.src_lang) ?? langMap.get(book.src_lang) ?? book.src_lang)
       : null;
-  // Переводчик ОТКРЫТОГО издания — сразу видно рядом с языком: «Русский
-  // (пер.: Гинзбург Ю. А.)». При ≥2 изданиях per-edition переводчики видны и в
-  // секции «Издания»; здесь — открытого (консистентно с lang, он тоже его).
+  // Переводчик ОТКРЫТОГО издания (консистентно с lang — он тоже открытого).
+  // При ≥2 изданиях per-edition переводчики видны и в секции «Издания».
   const opened = (book.editions ?? []).find((e) => e.id === book.id) ?? book.editions?.[0];
   const translator = opened?.translator;
+  const translation = translationLine(srcLangName, translator);
 
-  if (!book.written_year && !ext && !hasReader && !langName && !srcLangName && !translator)
-    return null;
+  if (!book.written_year && !ext && !hasReader && !langName && !translation) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+    <div className="space-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
       {book.written_year ? (
         <InlineEditableField
           targetKind="work"
@@ -469,27 +471,26 @@ function CardSignalRow({ book }: { book: Book }) {
         </span>
       ) : null}
       {langName ? (
-        // Язык + переводчик держим одним flex-элементом (gap-1, не gap-x-3
-        // строки) — читается как единое «Русский (пер.: …)».
-        <span className="inline-flex flex-wrap items-center gap-1">
-          <InlineEditableField
-            targetKind="book"
-            targetID={book.id}
-            field="lang"
-            value={book.lang}
-            kind="lang"
-            label="Язык"
-            overridden={(ov.data?.book[String(book.id)] ?? []).includes('lang')}
-            layout="heading"
-          >
-            <span>{langName}</span>
-          </InlineEditableField>
-          {translator ? <span title="Переводчик">(пер.: {translator})</span> : null}
-        </span>
-      ) : translator ? (
-        <span title="Переводчик">пер.: {translator}</span>
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="lang"
+          value={book.lang}
+          kind="lang"
+          label="Язык"
+          overridden={(ov.data?.book[String(book.id)] ?? []).includes('lang')}
+          layout="heading"
+        >
+          <span>{langName}</span>
+        </InlineEditableField>
       ) : null}
-      {srcLangName ? <span title="Язык оригинала">оригинал: {srcLangName}</span> : null}
+      </div>
+      {translation ? (
+        // Тихая строка «титульного листа»: полное имя переводчика — в тултипе.
+        <p className="text-xs text-muted-foreground" title={translator || undefined}>
+          {translation}
+        </p>
+      ) : null}
     </div>
   );
 }
