@@ -425,8 +425,14 @@ function CardSignalRow({ book }: { book: Book }) {
     book.src_lang && book.src_lang !== book.lang
       ? (srcLangMap.get(book.src_lang) ?? langMap.get(book.src_lang) ?? book.src_lang)
       : null;
+  // Переводчик ОТКРЫТОГО издания — сразу видно рядом с языком: «Русский
+  // (пер.: Гинзбург Ю. А.)». При ≥2 изданиях per-edition переводчики видны и в
+  // секции «Издания»; здесь — открытого (консистентно с lang, он тоже его).
+  const opened = (book.editions ?? []).find((e) => e.id === book.id) ?? book.editions?.[0];
+  const translator = opened?.translator;
 
-  if (!book.written_year && !ext && !hasReader && !langName && !srcLangName) return null;
+  if (!book.written_year && !ext && !hasReader && !langName && !srcLangName && !translator)
+    return null;
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
@@ -463,18 +469,25 @@ function CardSignalRow({ book }: { book: Book }) {
         </span>
       ) : null}
       {langName ? (
-        <InlineEditableField
-          targetKind="book"
-          targetID={book.id}
-          field="lang"
-          value={book.lang}
-          kind="lang"
-          label="Язык"
-          overridden={(ov.data?.book[String(book.id)] ?? []).includes('lang')}
-          layout="heading"
-        >
-          <span>{langName}</span>
-        </InlineEditableField>
+        // Язык + переводчик держим одним flex-элементом (gap-1, не gap-x-3
+        // строки) — читается как единое «Русский (пер.: …)».
+        <span className="inline-flex flex-wrap items-center gap-1">
+          <InlineEditableField
+            targetKind="book"
+            targetID={book.id}
+            field="lang"
+            value={book.lang}
+            kind="lang"
+            label="Язык"
+            overridden={(ov.data?.book[String(book.id)] ?? []).includes('lang')}
+            layout="heading"
+          >
+            <span>{langName}</span>
+          </InlineEditableField>
+          {translator ? <span title="Переводчик">(пер.: {translator})</span> : null}
+        </span>
+      ) : translator ? (
+        <span title="Переводчик">пер.: {translator}</span>
       ) : null}
       {srcLangName ? <span title="Язык оригинала">оригинал: {srcLangName}</span> : null}
     </div>
@@ -600,6 +613,10 @@ function FileDetails({ book }: { book: Book }) {
   // с EditionsSection по ключу ['overrides', workId]).
   const ov = useOverrides(book.work_id ?? undefined);
   const overridden = ov.data?.book[String(book.id)] ?? [];
+  // Издательские атрибуты открытого издания (translator/publisher/isbn живут в
+  // EditionRef, не на Book) — паритет с EditionRow: при единственном издании
+  // секции «Издания» нет, и раньше их было вообще негде увидеть/править.
+  const opened = (book.editions ?? []).find((e) => e.id === book.id) ?? book.editions?.[0];
   return (
     <details className="group text-sm">
       <summary className="flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
@@ -613,6 +630,37 @@ function FileDetails({ book }: { book: Book }) {
         <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
         <Field label="Архив" value={book.archive} mono />
         <Field label="Размер" value={formatBytes(book.size_bytes)} />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="translator"
+          value={opened?.translator}
+          kind="text"
+          label="Переводчик"
+          overridden={overridden.includes('translator')}
+          layout="grid"
+        />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="publisher"
+          value={opened?.publisher}
+          kind="text"
+          label="Издатель"
+          overridden={overridden.includes('publisher')}
+          layout="grid"
+        />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="isbn"
+          value={opened?.isbn}
+          kind="text"
+          label="ISBN"
+          overridden={overridden.includes('isbn')}
+          layout="grid"
+          mono
+        />
         {/* Год издания редактируем у админа (кейс Чарушина: edition_year=1000). */}
         <InlineEditableField
           targetKind="book"
