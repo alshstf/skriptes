@@ -112,6 +112,7 @@ func run() error {
 	go func() {
 		runOnceWorksIndexSync(ctx(), pool, imp, logger)
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
+		runOnceSrcLangSync(ctx(), pool, imp, logger)
 	}()
 
 	authSvc := auth.New(pool, 0)
@@ -611,6 +612,37 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 		logger.Warn("work title localize: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work title localization done", "lang", dom, "changed", len(changed))
+}
+
+// runOnceSrcLangSync — разовый полный ресинк works-индекса после появления поля
+// src_lang (язык оригинала, фасет/фильтр на /books): существующие доки его не
+// имеют, а filterable-атрибут применяет ConfigureWorksIndex на каждом старте.
+// Гейт app_settings.src_lang_synced_v1: один раз на апгрейде, дальше no-op
+// (дальше src_lang доезжает полным ресинком импорта и авто-ресинком прогрева —
+// Prewarmer.maybeResyncSrcLangs). Зовётся ПОСЛЕ runOnceWorksIndexSync: на свежем
+// инстансе тот уже наполнил индекс доками с src_lang — тогда этот шаг ставит
+// флаг по нулевой работе быстро (повторный полный ресинк идемпотентен).
+func runOnceSrcLangSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "src_lang_synced_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("src_lang sync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := imp.ResyncWorksIndex(ctx)
+	if err != nil {
+		logger.Warn("src_lang works resync failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("src_lang sync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time src_lang works resync done", "count", n)
 }
 
 // findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.

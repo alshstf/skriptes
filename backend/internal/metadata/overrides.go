@@ -1040,12 +1040,13 @@ func deleteLedger(ctx context.Context, tx pgx.Tx, kind string, targetID int64, f
 	return err
 }
 
-// normalizeBookValue — нормализация перед записью в колонку. lang → lower+trim
-// (зеркало importer.normalizeLang; региональный субтег фронт не присылает).
+// normalizeBookValue — нормализация перед записью в колонку. lang → полные
+// правила normalizeLangCode (lower+trim+срез субтега; фронт субтег не присылает,
+// но канонизируем defensively — зеркало importer.normalizeLang).
 func normalizeBookValue(column string, v any) any {
 	if column == "lang" {
 		if s, ok := v.(string); ok {
-			return strings.ToLower(strings.TrimSpace(s))
+			return normalizeLangCode(s)
 		}
 	}
 	return v

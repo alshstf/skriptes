@@ -386,13 +386,28 @@ func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) bool {
 	return written > 0
 }
 
+// normalizeLangCode — канонизация кода языка перед записью в колонку: lower +
+// trim + срез регионального/скриптового субтега (en-US → en). Зеркало
+// importer.normalizeLang (грабля №14): любой код, попадающий в books.lang /
+// books.src_lang, обязан быть нормализован, иначе фасеты/фильтры двоятся.
+func normalizeLangCode(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	if i := strings.IndexAny(s, "-_"); i >= 0 {
+		s = s[:i]
+	}
+	return s
+}
+
 // EnsureEditionMeta — локальная фаза извлечения атрибутов ИЗДАНИЯ из fb2
 // (фоновый прогрев). Пишет translator/isbn/publisher/edition_title/src_*/
 // fb2_doc_id (и edition_year — на случай, если year-фаза не запускалась), НЕ
 // перетирая уже заполненные значения (COALESCE). src_author_normalized
 // считается из display-формы src-автора. edition_meta_scanned_at ставим всегда —
 // чтобы прогрев не перечитывал книгу (отдельный от year-маркера).
-func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) {
+// Возвращает, был ли записан непустой src_lang (сигнал прогреву: язык оригинала —
+// фасет works-индекса, в конце прохода нужен ресинк). Книга проходит здесь один
+// раз (single-shot по маркеру), так что «извлекли непустой» ≈ «записали новый».
+func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) bool {
 	var em EditionMeta
 	if e.localEdition != nil {
 		m, err := e.localEdition.FetchEditionMeta(ctx, q)
@@ -402,6 +417,7 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) {
 		em = m
 	}
 	srcAuthorNorm := normalizePersonKey(em.SrcAuthor)
+	srcLang := normalizeLangCode(em.SrcLang) // fb2 шлёт и 'EN', и 'ru-RU' — канонизируем
 	if _, err := e.pool.Exec(ctx, `
 		UPDATE books SET
 			translator              = COALESCE(translator, NULLIF($2, '')),
@@ -416,9 +432,11 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) {
 			edition_meta_scanned_at = now()
 		WHERE id = $1
 	`, q.ID, em.Translator, em.ISBN, em.Publisher, em.EditionTitle,
-		em.SrcLang, em.SrcTitle, srcAuthorNorm, em.FB2DocID, em.EditionYear); err != nil {
+		srcLang, em.SrcTitle, srcAuthorNorm, em.FB2DocID, em.EditionYear); err != nil {
 		e.logger.Warn("metadata: edition meta write failed", "book_id", q.ID, "err", err)
+		return false
 	}
+	return srcLang != ""
 }
 
 // ensureAnnotation — общая реализация: обходит annotationProviders,

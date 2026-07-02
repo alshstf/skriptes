@@ -654,7 +654,7 @@ func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, exclud
 // isUnfilteredBrowse — «голый» browse первой страницы (без запроса/фильтров).
 // Только для него ListWorks делает fallback на books-индекс при пустом works.
 func isUnfilteredBrowse(p ListParams) bool {
-	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" &&
+	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" && p.SrcLang == "" &&
 		p.YearFrom == 0 && p.YearTo == 0 && p.SeriesID == 0 && p.AuthorID == 0 &&
 		p.Offset <= 0
 }
@@ -669,6 +669,11 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	}
 	if p.Lang != "" {
 		parts = append(parts, fmt.Sprintf("lang = %s", strconv.Quote(p.Lang)))
+	}
+	// Язык оригинала: src_lang[] есть ТОЛЬКО в works-индексе — в buildFilter
+	// (books/OPDS) не добавлять, там атрибут не filterable.
+	if p.SrcLang != "" {
+		parts = append(parts, fmt.Sprintf("src_lang = %s", strconv.Quote(p.SrcLang)))
 	}
 	if p.YearFrom > 0 {
 		parts = append(parts, fmt.Sprintf("year >= %d", p.YearFrom))
@@ -1047,6 +1052,9 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	// Work-центрично: Title/WrittenYear/Series/SerNo — уровня работы (works);
 	// lang/edition_year/cover/file/size/annotation — ОТКРЫТОГО издания (id в URL),
 	// для кнопок скачать/читать и обратной совместимости.
+	var srcLang pgtype.Text
+	// src_lang — открытого издания, иначе любого издания работы (переводы одной
+	// работы делят оригинал; поле в fb2 разрежённое — добираем с соседей).
 	err := s.pool.QueryRow(ctx, `
 		SELECT
 			b.id, b.lib_id, COALESCE(w.title, b.title), b.work_id,
@@ -1055,7 +1063,13 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			COALESCE(w.written_year, b.written_year), b.edition_year,
 			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
-			a.filename
+			a.filename,
+			COALESCE(b.src_lang, (
+				SELECT bb.src_lang FROM books bb
+				WHERE bb.work_id = b.work_id AND bb.deleted = false
+				  AND bb.src_lang IS NOT NULL
+				ORDER BY bb.id LIMIT 1
+			))
 		FROM books b
 		LEFT JOIN works w    ON w.id = b.work_id
 		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id)
@@ -1069,6 +1083,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		&serNo, &seriesID, &seriesTitle,
 		&b.FileName, &b.Ext, &b.SizeBytes, &b.Deleted,
 		&archive,
+		&srcLang,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -1079,6 +1094,9 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 
 	if lang.Valid {
 		b.Lang = lang.String
+	}
+	if srcLang.Valid {
+		b.SrcLang = srcLang.String
 	}
 	if dateAdded.Valid {
 		t := dateAdded.Time

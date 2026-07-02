@@ -108,15 +108,19 @@ type ListResponse struct {
 
 // Book — детальная карточка из PG (GET /api/books/:id).
 type Book struct {
-	ID        int64       `json:"id"`
-	LibID     string      `json:"lib_id"`
-	Title     string      `json:"title"`
-	Authors   []AuthorRef `json:"authors"`
-	Series    *SeriesRef  `json:"series,omitempty"`
-	SerNo     *int        `json:"ser_no,omitempty"`
-	Genres    []GenreRef  `json:"genres"`
-	Lang      string      `json:"lang,omitempty"`
-	DateAdded *time.Time  `json:"date_added,omitempty"`
+	ID      int64       `json:"id"`
+	LibID   string      `json:"lib_id"`
+	Title   string      `json:"title"`
+	Authors []AuthorRef `json:"authors"`
+	Series  *SeriesRef  `json:"series,omitempty"`
+	SerNo   *int        `json:"ser_no,omitempty"`
+	Genres  []GenreRef  `json:"genres"`
+	Lang    string      `json:"lang,omitempty"`
+	// SrcLang — язык оригинала переводной книги (fb2 <src-lang>): открытого
+	// издания, иначе любого издания работы (переводы одной работы делят
+	// оригинал). Пусто = оригинал/неизвестен (в fb2 поле разрежённое).
+	SrcLang   string     `json:"src_lang,omitempty"`
+	DateAdded *time.Time `json:"date_added,omitempty"`
 	// WrittenYear — год написания / первого издания произведения
 	// (fb2 <title-info><date> → внешние источники). EditionYear — год
 	// конкретного бумажного издания этого fb2 (<publish-info><year>).
@@ -195,6 +199,7 @@ type ListParams struct {
 	Offset   int
 	Genres   []string // OR-семантика: книга подходит, если у неё есть ХОТЯ БЫ один из жанров
 	Lang     string
+	SrcLang  string // язык ОРИГИНАЛА (fb2 src-lang); фасет ТОЛЬКО works-индекса — веб-список (books/OPDS его не индексирует)
 	YearFrom int
 	YearTo   int
 	SeriesID int64

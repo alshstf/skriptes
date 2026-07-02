@@ -71,7 +71,8 @@ type AuthorListParams struct {
 
 	Query           string   // ILIKE по authors.normalized_name (префикс)
 	Genres          []string // авторы, писавшие хотя бы в одном из этих жанров (fb2_code)
-	Langs           []string // авторы с хотя бы одной книгой на этих языках (lang/src_lang)
+	Langs           []string // авторы с хотя бы одной книгой-ИЗДАНИЕМ на этих языках (books.lang)
+	SrcLangs        []string // авторы с хотя бы одной книгой с этим языком ОРИГИНАЛА (books.src_lang)
 	YearFrom        int      // пересечение [year_from, year_to] с диапазоном лет активности
 	YearTo          int
 	HasAdaptations  bool    // только авторы, у книг которых есть экранизации
@@ -173,14 +174,27 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 
 	if len(p.Langs) > 0 {
 		n := addArg(p.Langs)
-		// Язык оригинала или язык издания: книга совпадает, если её lang ИЛИ
-		// src_lang (нормализованные) попали в выбранные. Нормализуем на лету
-		// (lower+btrim) — defensive, хотя импорт уже нормализует lang.
+		// Язык ИЗДАНИЯ (books.lang). Раньше этот фильтр матчил lang∪src_lang
+		// одним условием — расщеплён на два независимых («Язык» и «Язык
+		// оригинала», как на /books). Нормализуем на лету (lower+btrim) —
+		// defensive, хотя импорт уже нормализует lang.
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" WHERE ba.author_id = a.id"+
-				" AND (lower(btrim(b.lang)) = ANY($%d::text[]) OR lower(btrim(b.src_lang)) = ANY($%d::text[]))"+
-				renderExclusion()+")", n, n))
+				" AND lower(btrim(b.lang)) = ANY($%d::text[])"+
+				renderExclusion()+")", n))
+	}
+
+	if len(p.SrcLangs) > 0 {
+		n := addArg(p.SrcLangs)
+		// Язык ОРИГИНАЛА (books.src_lang из fb2 <src-lang>) — независимый фильтр.
+		// Поле разрежённое: книга без src_lang (оригинал/не просканирована) под
+		// фильтр не попадает — precision > recall, как и на /books.
+		where = append(where, fmt.Sprintf(
+			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
+				" WHERE ba.author_id = a.id"+
+				" AND lower(btrim(b.src_lang)) = ANY($%d::text[])"+
+				renderExclusion()+")", n))
 	}
 
 	if p.YearFrom > 0 || p.YearTo > 0 {
