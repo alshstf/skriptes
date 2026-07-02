@@ -105,6 +105,7 @@ export type BooksSearch = {
   page?: number;
   genres?: string[];
   lang?: string;
+  src_lang?: string; // язык ОРИГИНАЛА (fb2 src-lang), независим от языка издания
   year_from?: number;
   year_to?: number;
   series_id?: number;
@@ -120,7 +121,8 @@ export type BooksSearch = {
 export type AuthorsSearch = {
   q?: string;
   genres?: string[];
-  langs?: string[];
+  langs?: string[]; // язык ИЗДАНИЯ (books.lang)
+  src_langs?: string[]; // язык ОРИГИНАЛА (books.src_lang) — независимый фильтр
   year_from?: number;
   year_to?: number;
   has_adaptations?: boolean;
@@ -163,6 +165,7 @@ export const booksRoute = createRoute({
       page: asNumber(search.page),
       genres: asStringArray(search.genres),
       lang: asString(search.lang),
+      src_lang: asString(search.src_lang),
       year_from: asNumber(search.year_from),
       year_to: asNumber(search.year_to),
       series_id: asNumber(search.series_id),
@@ -200,6 +203,7 @@ const authorsListRoute = createRoute({
       q: asString(search.q),
       genres: asStringArray(search.genres),
       langs: asStringArray(search.langs),
+      src_langs: asStringArray(search.src_langs),
       year_from: asNumber(search.year_from),
       year_to: asNumber(search.year_to),
       has_adaptations: asBool(search.has_adaptations),

@@ -37,7 +37,7 @@ import { useInfiniteBooks, type BookListItem } from '@/lib/books';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 
 const PAGE_SIZE = 20;
-const FACETS = ['genres', 'lang', 'year'];
+const FACETS = ['genres', 'lang', 'src_lang', 'year'];
 
 export function BooksPage() {
   // Все фильтры живут в URL-search → удобно делиться ссылками и refresh
@@ -74,6 +74,7 @@ export function BooksPage() {
   const filters: FiltersValue = {
     genres: search.genres ?? [],
     lang: search.lang ?? '',
+    srcLang: search.src_lang ?? '',
     yearFrom: search.year_from ?? 0,
     yearTo: search.year_to ?? 0,
     sort: search.sort ?? '',
@@ -86,6 +87,7 @@ export function BooksPage() {
           ...prev,
           genres: next.genres.length > 0 ? next.genres : undefined,
           lang: next.lang || undefined,
+          src_lang: next.srcLang || undefined,
           year_from: next.yearFrom || undefined,
           year_to: next.yearTo || undefined,
           sort: next.sort || undefined,
@@ -110,6 +112,7 @@ export function BooksPage() {
     limit: PAGE_SIZE,
     genres: filters.genres,
     lang: filters.lang,
+    srcLang: filters.srcLang,
     yearFrom: filters.yearFrom,
     yearTo: filters.yearTo,
     seriesId: search.series_id,
@@ -162,6 +165,7 @@ export function BooksPage() {
   const totalActive =
     filters.genres.length +
     (filters.lang ? 1 : 0) +
+    (filters.srcLang ? 1 : 0) +
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.sort ? 1 : 0) +
     (search.series_id ? 1 : 0) +

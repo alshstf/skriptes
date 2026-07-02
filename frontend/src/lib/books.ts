@@ -107,6 +107,8 @@ export type BookFilters = {
   offset?: number;
   genres?: string[];
   lang?: string;
+  /** Язык ОРИГИНАЛА (fb2 src-lang) — независимый от языка издания фильтр. */
+  srcLang?: string;
   yearFrom?: number;
   yearTo?: number;
   seriesId?: number;
@@ -170,6 +172,9 @@ export type Book = {
   ser_no?: number;
   genres: GenreRef[];
   lang?: string;
+  /** Язык оригинала переводной книги (fb2 src-lang): открытого издания, иначе
+   *  любого издания работы. Undefined — оригинал/неизвестен (поле разрежённое). */
+  src_lang?: string;
   date_added?: string;
   /** Год написания / первого издания произведения (fb2 title-info/date →
    *  внешние источники). Питает гистограмму на страницах автора/серии. */
@@ -223,6 +228,7 @@ function buildBooksParams(opts: BookFilters, limit: number, offset: number): str
   params.set('offset', String(offset));
   if (opts.genres && opts.genres.length > 0) params.set('genres', opts.genres.join(','));
   if (opts.lang) params.set('lang', opts.lang);
+  if (opts.srcLang) params.set('src_lang', opts.srcLang);
   if (opts.yearFrom) params.set('year_from', String(opts.yearFrom));
   if (opts.yearTo) params.set('year_to', String(opts.yearTo));
   if (opts.seriesId) params.set('series_id', String(opts.seriesId));

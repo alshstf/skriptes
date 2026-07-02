@@ -71,6 +71,31 @@ export function useLanguageMap(): Map<string, string> {
   return map;
 }
 
+/**
+ * useSrcLanguages — ЯЗЫКИ ОРИГИНАЛА коллекции (books.src_lang из fb2) с числом
+ * книг: опции фильтра «Язык оригинала» в разделе «Авторы» + display-имена для
+ * src-фасета /books (язык оригинала может отсутствовать среди языков ИЗДАНИЙ —
+ * useLanguageMap его не резолвит).
+ */
+export function useSrcLanguages() {
+  return useQuery<LanguageItem[]>({
+    queryKey: ['languages', 'src'],
+    queryFn: async () => {
+      const r = await apiFetch<LanguagesResponse>('/api/languages?src=1');
+      return r.items;
+    },
+    staleTime: 5 * 60_000,
+  });
+}
+
+/** useSrcLanguageMap — Map код→display для языков оригинала (зеркало useLanguageMap). */
+export function useSrcLanguageMap(): Map<string, string> {
+  const q = useSrcLanguages();
+  const map = new Map<string, string>();
+  for (const l of q.data ?? []) map.set(l.code, l.display);
+  return map;
+}
+
 // ISO 639-1 — все 2-буквенные коды языков. Имена резолвим через Intl.DisplayNames
 // на язык интерфейса (ru), без хардкода. Импорт нормализует lang именно до 2 букв
 // (грабля №14), поэтому этот набор полный и достаточный.
