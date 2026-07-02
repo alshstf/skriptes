@@ -27,7 +27,7 @@ import { formatBytes } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
-import { useLanguageMap } from '@/lib/content';
+import { useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -405,20 +405,28 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
 /**
  * CardSignalRow — компактная строка сигналов под заголовком: год · 🌐 внешний
  * рейтинг (Tooltip с источником) · 📖 средняя оценка читателей (count) · язык
- * (именем). Пустые сигналы скрываются; экранизации сюда НЕ выносим — для них
- * на карточке есть отдельная секция AdaptationsSection (на плашке-списка 🎬
- * нужен, на карточке дублировал бы). Зеркалит идею BookMeta для плашки списка.
+ * (именем) · «оригинал: язык» (fb2 src-lang, для переводных). Пустые сигналы
+ * скрываются; экранизации сюда НЕ выносим — для них на карточке есть отдельная
+ * секция AdaptationsSection (на плашке-списка 🎬 нужен, на карточке дублировал
+ * бы). Зеркалит идею BookMeta для плашки списка.
  */
 function CardSignalRow({ book }: { book: Book }) {
   const langMap = useLanguageMap();
+  const srcLangMap = useSrcLanguageMap();
   const ov = useOverrides(book.work_id ?? undefined);
   const ext = externalRatingDisplay(book);
   const avg = book.rating_avg;
   const count = book.rating_count ?? 0;
   const hasReader = avg !== undefined && count > 0;
   const langName = book.lang ? (langMap.get(book.lang) ?? book.lang) : null;
+  // Язык оригинала — только когда известен И отличается от языка издания
+  // (совпадение = книга в оригинале, строка была бы шумом).
+  const srcLangName =
+    book.src_lang && book.src_lang !== book.lang
+      ? (srcLangMap.get(book.src_lang) ?? langMap.get(book.src_lang) ?? book.src_lang)
+      : null;
 
-  if (!book.written_year && !ext && !hasReader && !langName) return null;
+  if (!book.written_year && !ext && !hasReader && !langName && !srcLangName) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
@@ -468,6 +476,7 @@ function CardSignalRow({ book }: { book: Book }) {
           <span>{langName}</span>
         </InlineEditableField>
       ) : null}
+      {srcLangName ? <span title="Язык оригинала">оригинал: {srcLangName}</span> : null}
     </div>
   );
 }

@@ -15,6 +15,7 @@ import { FiltersSidebar, type FiltersValue } from './FiltersSidebar';
 const emptyFilters: FiltersValue = {
   genres: [],
   lang: '',
+  srcLang: '',
   yearFrom: 0,
   yearTo: 0,
   sort: '',
@@ -329,5 +330,42 @@ describe('FiltersSidebar', () => {
     );
     await user.selectOptions(screen.getByLabelText('Сортировка'), 'year_desc');
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ sort: 'year_desc' }));
+  });
+
+  it('фасет src_lang рендерит секцию «Язык оригинала»; выбор дёргает onChange.srcLang', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={onChange}
+          // lang и src_lang — НЕЗАВИСИМЫЕ фасеты: en есть только в src_lang.
+          facets={{ lang: { ru: 12 }, src_lang: { en: 4, fr: 1 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    expect(await screen.findByText('Язык оригинала')).toBeInTheDocument();
+    // /api/languages в моках 404 → label = сам код. Опция 'en' существует
+    // только в секции src_lang (lang-фасет несёт лишь ru).
+    await user.click(screen.getByRole('button', { name: /en\s*4/ }));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ srcLang: 'en' }));
+  });
+
+  it('без src_lang-фасета секция «Язык оригинала» не рендерится', () => {
+    render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          facets={{ lang: { ru: 12 } }}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    expect(screen.queryByText('Язык оригинала')).not.toBeInTheDocument();
   });
 });
