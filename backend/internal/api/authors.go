@@ -16,8 +16,9 @@ import (
 //
 // Фильтры приходят query-параметрами (см. catalog.AuthorListParams):
 //
-//	q, genres (CSV), langs (CSV), year_from/year_to, has_adaptations,
-//	min_rating, favorites_only, sort, limit/offset.
+//	q, genres (CSV), langs (CSV, язык издания), src_langs (CSV, язык оригинала),
+//	year_from/year_to, has_adaptations, min_rating, favorites_only, sort,
+//	limit/offset.
 //
 // Видимость контента (admin ∪ персональные скрытые жанры/языки) применяется к
 // агрегатам так же, как на карточке автора/серии — чтобы скрытый контент не
@@ -29,6 +30,7 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 			Query:           q.Get("q"),
 			Genres:          splitCSV(q.Get("genres")),
 			Langs:           splitCSV(q.Get("langs")),
+			SrcLangs:        splitCSV(q.Get("src_langs")),
 			YearFrom:        parseIntOr(q.Get("year_from"), 0),
 			YearTo:          parseIntOr(q.Get("year_to"), 0),
 			HasAdaptations:  parseBool(q.Get("has_adaptations")),

@@ -27,7 +27,8 @@ type Prewarmer struct {
 	cfg       PrewarmConfig
 	resyncer  YearResyncer // nil → авто-ресинк года выключен
 
-	yearChanged atomic.Int64 // сколько книг получили written_year за текущий проход
+	yearChanged    atomic.Int64 // сколько книг получили written_year за текущий проход
+	srcLangChanged atomic.Int64 // сколько книг получили src_lang (язык оригинала) за проход
 }
 
 // PrewarmConfig — что и как обрабатывать (из settings.CoverConfig: под-тумблеры
@@ -46,6 +47,16 @@ type PrewarmConfig struct {
 // актуальны без ручной кнопки.
 type YearResyncer interface {
 	ResyncYears(ctx context.Context) (int, error)
+}
+
+// WorksResyncer — полный ресинк works-индекса (реализуется *importer.Importer).
+// Прогрев дёргает после прохода, в котором у книг появился src_lang (язык
+// оригинала — фасет works-индекса): edition-меты в workDoc иначе доехали бы
+// только со следующим полным импортом. Optional capability через type-assert
+// resyncer'а (зеркало WorksIndexSyncer у work_grouper) — сигнатуру NewPrewarmer
+// не расширяем.
+type WorksResyncer interface {
+	ResyncWorksIndex(ctx context.Context) (int, error)
 }
 
 const (
@@ -119,6 +130,7 @@ func (p *Prewarmer) drain(ctx context.Context) int {
 		return 0
 	}
 	p.yearChanged.Store(0)
+	p.srcLangChanged.Store(0)
 	total := 0
 	var cursor int64
 	for {
@@ -142,6 +154,7 @@ func (p *Prewarmer) drain(ctx context.Context) int {
 		cursor = batch[len(batch)-1].id
 	}
 	p.maybeResyncYears(ctx)
+	p.maybeResyncSrcLangs(ctx)
 	return total
 }
 
@@ -155,6 +168,25 @@ func (p *Prewarmer) maybeResyncYears(ctx context.Context) {
 		p.logger.Warn("collection processing: resync years failed", "err", err)
 	} else {
 		p.logger.Info("collection processing: years resynced to meili", "changed", p.yearChanged.Load(), "synced", n)
+	}
+}
+
+// maybeResyncSrcLangs — полный ресинк works-индекса, если за проход у книг
+// появился src_lang (фасет «Язык оригинала» на /books). Полный, а не таргетный:
+// зеркало ResyncYears (тот тоже идёт по всей коллекции), а проход прогрева с
+// новыми src_lang и так занимает на порядки дольше ресинка.
+func (p *Prewarmer) maybeResyncSrcLangs(ctx context.Context) {
+	if !p.cfg.Years || p.srcLangChanged.Load() == 0 || ctx.Err() != nil {
+		return
+	}
+	wr, ok := p.resyncer.(WorksResyncer)
+	if !ok {
+		return
+	}
+	if n, err := wr.ResyncWorksIndex(ctx); err != nil {
+		p.logger.Warn("collection processing: resync src_lang (works) failed", "err", err)
+	} else {
+		p.logger.Info("collection processing: src_lang resynced to works index", "changed", p.srcLangChanged.Load(), "synced", n)
 	}
 }
 
@@ -246,7 +278,9 @@ func (p *Prewarmer) processOne(ctx context.Context, b prewarmBook) {
 			}
 		}
 		if !b.editionScanned {
-			p.enricher.EnsureEditionMeta(taskCtx, q)
+			if p.enricher.EnsureEditionMeta(taskCtx, q) {
+				p.srcLangChanged.Add(1)
+			}
 		}
 	}
 	// Троттлинг IO между книгами (низкая интенсивность на медленных дисках).

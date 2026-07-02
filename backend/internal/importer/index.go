@@ -67,6 +67,7 @@ type workDoc struct {
 	Genres          []string `json:"genres"`
 	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
 	Langs           []string `json:"lang"`           // массив языков всех изданий работы
+	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
 	Popularity      int64    `json:"popularity"`     // сумма популярности изданий
 	EditionCount    int      `json:"edition_count"`
 }
@@ -86,7 +87,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "year", "series_id", "author_ids"}
+	filterable := []any{"genres", "lang", "src_lang", "year", "series_id", "author_ids"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}

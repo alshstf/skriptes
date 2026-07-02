@@ -66,6 +66,7 @@ func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.Ha
 			Offset:   parseIntOr(q.Get("offset"), 0),
 			Genres:   splitCSV(q.Get("genres")),
 			Lang:     q.Get("lang"),
+			SrcLang:  q.Get("src_lang"),
 			YearFrom: parseIntOr(q.Get("year_from"), 0),
 			YearTo:   parseIntOr(q.Get("year_to"), 0),
 			SeriesID: parseInt64Or(q.Get("series_id"), 0),

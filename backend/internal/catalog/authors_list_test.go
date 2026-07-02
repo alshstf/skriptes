@@ -259,6 +259,24 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.True(t, got[f.tolstoy])
 	require.False(t, got[f.asimovID], "Азимов только на en")
 
+	// langs и src_langs РАСЩЕПЛЕНЫ (раньше langs матчил lang∪src_lang одним
+	// условием): langs=en — по ЯЗЫКУ ИЗДАНИЯ (Кинг k-en/k2, Азимов az);
+	// src_langs=en — по ЯЗЫКУ ОРИГИНАЛА (только Кинг: k-ru несёт src_lang=en;
+	// у Азимова lang=en, но src_lang пуст — под src-фильтр НЕ попадает).
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Langs: []string{"en"}})
+	require.NoError(t, err)
+	got = ids(res)
+	require.True(t, got[f.kingID])
+	require.True(t, got[f.asimovID])
+	require.False(t, got[f.tolstoy], "у Толстого нет en-изданий")
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{SrcLangs: []string{"en"}})
+	require.NoError(t, err)
+	got = ids(res)
+	require.True(t, got[f.kingID], "k-ru: src_lang=en")
+	require.False(t, got[f.asimovID], "lang=en ≠ src_lang=en (поле оригинала пусто)")
+	require.False(t, got[f.tolstoy])
+
 	// year_from/year_to — 1950..1960 ловит только Азимова (1951).
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{YearFrom: 1950, YearTo: 1960})
 	require.NoError(t, err)

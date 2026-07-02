@@ -50,6 +50,8 @@ func handleListGenres(d CatalogDeps) http.HandlerFunc {
 
 // handleListLanguages — GET /api/languages. Полный список языков коллекции
 // (код + display-имя + число книг), отсортированный по популярности.
+// `?src=1` — вместо языков изданий отдаёт ЯЗЫКИ ОРИГИНАЛА (books.src_lang):
+// опции фильтра «Язык оригинала» в разделе «Авторы».
 //
 // Список НЕ фильтруется по скрытым языкам: его потребляют разделы «Контент»
 // в админке/профиле, где скрытые языки как раз надо показать (чтобы их
@@ -59,7 +61,11 @@ func handleListLanguages(d CatalogDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		items, err := d.Service.ListLanguages(ctx)
+		list := d.Service.ListLanguages
+		if r.URL.Query().Get("src") == "1" {
+			list = d.Service.ListSrcLanguages
+		}
+		items, err := list(ctx)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return

@@ -115,3 +115,35 @@ func (s *Service) ListLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	}
 	return out, nil
 }
+
+// ListSrcLanguages — все ЯЗЫКИ ОРИГИНАЛА (books.src_lang из fb2 <src-lang>),
+// встречающиеся в живых книгах, с числом книг. Зеркало ListLanguages: опции
+// фильтра «Язык оригинала» в разделе «Авторы» (на /books опции даёт фасет
+// works-индекса). Поле разрежённое — список обычно короче языков изданий.
+func (s *Service) ListSrcLanguages(ctx context.Context) ([]LanguageEntry, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT lower(btrim(src_lang)) AS code, count(*)::int
+		FROM books
+		WHERE deleted = false AND src_lang IS NOT NULL AND btrim(src_lang) <> ''
+		GROUP BY lower(btrim(src_lang))
+		ORDER BY count(*) DESC, code
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("list src languages: %w", err)
+	}
+	defer rows.Close()
+
+	out := make([]LanguageEntry, 0, 8)
+	for rows.Next() {
+		var e LanguageEntry
+		if err := rows.Scan(&e.Code, &e.BookCount); err != nil {
+			return nil, fmt.Errorf("scan src language: %w", err)
+		}
+		e.Display = LanguageDisplay(e.Code)
+		out = append(out, e)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return out, nil
+}

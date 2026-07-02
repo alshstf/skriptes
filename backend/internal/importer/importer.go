@@ -387,6 +387,12 @@ const workDocSelect = `
 			  AND b.lang IS NOT NULL AND btrim(b.lang) <> ''
 		), '{}'),
 		COALESCE((
+			SELECT array_agg(DISTINCT lower(btrim(b.src_lang)))
+			FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+			  AND b.src_lang IS NOT NULL AND btrim(b.src_lang) <> ''
+		), '{}'),
+		COALESCE((
 			SELECT array_agg(DISTINCT g.fb2_code)
 			FROM books b
 			JOIN book_genres bg ON bg.book_id = b.id
@@ -448,7 +454,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
 			&seriesID, &series, &d.EditionCount, &year,
-			&d.Langs, &d.Genres, &d.Authors, &d.AuthorIDs, &d.Popularity); err != nil {
+			&d.Langs, &d.SrcLangs, &d.Genres, &d.Authors, &d.AuthorIDs, &d.Popularity); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
 		// Popularity работы = вовлечённость инстанса: Σ изданий (views + 3×reads),
@@ -465,6 +471,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		// nil-слайсы → пустые, чтобы Meili получал [] а не null.
 		if d.Langs == nil {
 			d.Langs = []string{}
+		}
+		if d.SrcLangs == nil {
+			d.SrcLangs = []string{}
 		}
 		if d.Genres == nil {
 			d.Genres = []string{}

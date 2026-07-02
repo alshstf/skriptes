@@ -44,6 +44,20 @@ func TestBuildFilter_Empty(t *testing.T) {
 	}
 }
 
+// buildWorksFilter: src_lang (язык оригинала) — фильтр ТОЛЬКО works-индекса;
+// buildFilter (books/OPDS) его игнорирует — там атрибут не filterable.
+func TestBuildWorksFilter_SrcLang(t *testing.T) {
+	got := buildWorksFilter(ListParams{Lang: "ru", SrcLang: "en"}, nil)
+	want := `lang = "ru" AND src_lang = "en"`
+	if got != want {
+		t.Fatalf("buildWorksFilter mismatch:\n got: %s\nwant: %s", got, want)
+	}
+	// books-фильтр src_lang НЕ знает (не filterable в books-индексе).
+	if got := buildFilter(ListParams{SrcLang: "en"}); got != "" {
+		t.Fatalf("buildFilter must ignore SrcLang, got %q", got)
+	}
+}
+
 func TestExclusionFilter(t *testing.T) {
 	if got := exclusionFilter(nil, nil); got != "" {
 		t.Fatalf("nil exclusions → empty, got %q", got)
