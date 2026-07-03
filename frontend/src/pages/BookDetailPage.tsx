@@ -23,11 +23,11 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
-import { formatBytes } from '@/lib/format';
+import { formatBytes, translationLine } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
-import { useLanguageMap } from '@/lib/content';
+import { useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -405,23 +405,39 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
 /**
  * CardSignalRow — компактная строка сигналов под заголовком: год · 🌐 внешний
  * рейтинг (Tooltip с источником) · 📖 средняя оценка читателей (count) · язык
- * (именем). Пустые сигналы скрываются; экранизации сюда НЕ выносим — для них
- * на карточке есть отдельная секция AdaptationsSection (на плашке-списка 🎬
- * нужен, на карточке дублировал бы). Зеркалит идею BookMeta для плашки списка.
+ * (именем). Под ней — тихая строка «титульного листа»: «Перевод с французского
+ * — Гинзбург Ю. А.» (переводчик ОТКРЫТОГО издания + язык оригинала одной
+ * естественной фразой; полное имя — в тултипе и «Деталях файла»). Пустые
+ * сигналы скрываются; экранизации сюда НЕ выносим — для них на карточке есть
+ * отдельная секция AdaptationsSection (на плашке-списка 🎬 нужен, на карточке
+ * дублировал бы). Зеркалит идею BookMeta для плашки списка.
  */
 function CardSignalRow({ book }: { book: Book }) {
   const langMap = useLanguageMap();
+  const srcLangMap = useSrcLanguageMap();
   const ov = useOverrides(book.work_id ?? undefined);
   const ext = externalRatingDisplay(book);
   const avg = book.rating_avg;
   const count = book.rating_count ?? 0;
   const hasReader = avg !== undefined && count > 0;
   const langName = book.lang ? (langMap.get(book.lang) ?? book.lang) : null;
+  // Язык оригинала — только когда известен И отличается от языка издания
+  // (совпадение = книга в оригинале, фраза была бы шумом).
+  const srcLangName =
+    book.src_lang && book.src_lang !== book.lang
+      ? (srcLangMap.get(book.src_lang) ?? langMap.get(book.src_lang) ?? book.src_lang)
+      : null;
+  // Переводчик ОТКРЫТОГО издания (консистентно с lang — он тоже открытого).
+  // При ≥2 изданиях per-edition переводчики видны и в секции «Издания».
+  const opened = (book.editions ?? []).find((e) => e.id === book.id) ?? book.editions?.[0];
+  const translator = opened?.translator;
+  const translation = translationLine(srcLangName, translator);
 
-  if (!book.written_year && !ext && !hasReader && !langName) return null;
+  if (!book.written_year && !ext && !hasReader && !langName && !translation) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+    <div className="space-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
       {book.written_year ? (
         <InlineEditableField
           targetKind="work"
@@ -467,6 +483,13 @@ function CardSignalRow({ book }: { book: Book }) {
         >
           <span>{langName}</span>
         </InlineEditableField>
+      ) : null}
+      </div>
+      {translation ? (
+        // Тихая строка «титульного листа»: полное имя переводчика — в тултипе.
+        <p className="text-xs text-muted-foreground" title={translator || undefined}>
+          {translation}
+        </p>
       ) : null}
     </div>
   );
@@ -591,6 +614,10 @@ function FileDetails({ book }: { book: Book }) {
   // с EditionsSection по ключу ['overrides', workId]).
   const ov = useOverrides(book.work_id ?? undefined);
   const overridden = ov.data?.book[String(book.id)] ?? [];
+  // Издательские атрибуты открытого издания (translator/publisher/isbn живут в
+  // EditionRef, не на Book) — паритет с EditionRow: при единственном издании
+  // секции «Издания» нет, и раньше их было вообще негде увидеть/править.
+  const opened = (book.editions ?? []).find((e) => e.id === book.id) ?? book.editions?.[0];
   return (
     <details className="group text-sm">
       <summary className="flex cursor-pointer list-none items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
@@ -604,6 +631,37 @@ function FileDetails({ book }: { book: Book }) {
         <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
         <Field label="Архив" value={book.archive} mono />
         <Field label="Размер" value={formatBytes(book.size_bytes)} />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="translator"
+          value={opened?.translator}
+          kind="text"
+          label="Переводчик"
+          overridden={overridden.includes('translator')}
+          layout="grid"
+        />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="publisher"
+          value={opened?.publisher}
+          kind="text"
+          label="Издатель"
+          overridden={overridden.includes('publisher')}
+          layout="grid"
+        />
+        <InlineEditableField
+          targetKind="book"
+          targetID={book.id}
+          field="isbn"
+          value={opened?.isbn}
+          kind="text"
+          label="ISBN"
+          overridden={overridden.includes('isbn')}
+          layout="grid"
+          mono
+        />
         {/* Год издания редактируем у админа (кейс Чарушина: edition_year=1000). */}
         <InlineEditableField
           targetKind="book"

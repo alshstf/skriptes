@@ -22,7 +22,7 @@ import {
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useGenreMap } from '@/lib/genres';
-import { useEffectiveContent, useLanguageMap, useLanguages } from '@/lib/content';
+import { useEffectiveContent, useLanguageMap, useLanguages, useSrcLanguages } from '@/lib/content';
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
 import { useAuthorsList, type AuthorListItem, type AuthorsListParams } from '@/lib/authors';
 import { cn } from '@/lib/utils';
@@ -45,7 +45,8 @@ type AuthorsNavigate = (opts: {
 // на карточку автора и возврат назад (раньше были в локальном стейте).
 type AuthorsFilters = {
   genres: string[];
-  langs: string[];
+  langs: string[]; // язык ИЗДАНИЯ (books.lang)
+  srcLangs: string[]; // язык ОРИГИНАЛА (books.src_lang) — независимый фильтр
   yearFrom: number;
   yearTo: number;
   hasAdaptations: boolean;
@@ -79,6 +80,7 @@ export function AuthorsPage() {
   const filters: AuthorsFilters = {
     genres: search.genres ?? [],
     langs: search.langs ?? [],
+    srcLangs: search.src_langs ?? [],
     yearFrom: search.year_from ?? 0,
     yearTo: search.year_to ?? 0,
     hasAdaptations: search.has_adaptations ?? false,
@@ -96,6 +98,7 @@ export function AuthorsPage() {
         ...prev,
         genres: next.genres.length > 0 ? next.genres : undefined,
         langs: next.langs.length > 0 ? next.langs : undefined,
+        src_langs: next.srcLangs.length > 0 ? next.srcLangs : undefined,
         year_from: next.yearFrom || undefined,
         year_to: next.yearTo || undefined,
         has_adaptations: next.hasAdaptations || undefined,
@@ -113,6 +116,7 @@ export function AuthorsPage() {
     query: debouncedQuery,
     genres: filters.genres,
     langs: filters.langs,
+    srcLangs: filters.srcLangs,
     yearFrom: filters.yearFrom,
     yearTo: filters.yearTo,
     hasAdaptations: filters.hasAdaptations,
@@ -132,6 +136,7 @@ export function AuthorsPage() {
   const totalActive =
     filters.genres.length +
     filters.langs.length +
+    filters.srcLangs.length +
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.hasAdaptations ? 1 : 0) +
     (filters.minRating ? 1 : 0) +
@@ -544,11 +549,21 @@ function AuthorsFiltersSidebar({
         showCounts={false}
       />
 
-      {/* Языки */}
+      {/* Языки изданий (books.lang). */}
       <LanguagesFilter
         selected={value.langs}
         hiddenCodes={effective.data?.hidden_languages}
         onChange={(langs) => onChange({ ...value, langs })}
+      />
+
+      {/* Язык оригинала (books.src_lang) — независимый фильтр (раньше был слит
+          с языком издания одним условием). Скрытые языки не применяем:
+          видимость контента считается по языку ИЗДАНИЯ. */}
+      <LanguagesFilter
+        title="Язык оригинала"
+        src
+        selected={value.srcLangs}
+        onChange={(srcLangs) => onChange({ ...value, srcLangs })}
       />
     </aside>
   );
@@ -556,19 +571,26 @@ function AuthorsFiltersSidebar({
 
 /**
  * LanguagesFilter — мультиселект языков (чекбоксы). Список языков коллекции
- * из /api/languages; скрытые (admin ∪ персональные) прячем, кроме уже
- * выбранных (чтобы фильтр можно было снять).
+ * из /api/languages (src=true → языки ОРИГИНАЛА из ?src=1); скрытые (admin ∪
+ * персональные) прячем, кроме уже выбранных (чтобы фильтр можно было снять).
  */
 function LanguagesFilter({
   selected,
   hiddenCodes,
   onChange,
+  title = 'Язык',
+  src = false,
 }: {
   selected: string[];
   hiddenCodes?: string[];
   onChange: (next: string[]) => void;
+  title?: string;
+  src?: boolean;
 }) {
-  const langsQ = useLanguages();
+  // Оба хука безусловно (правила хуков); в сайдбаре так и так живут обе секции.
+  const editionLangsQ = useLanguages();
+  const srcLangsQ = useSrcLanguages();
+  const langsQ = src ? srcLangsQ : editionLangsQ;
   const items = useMemo(() => {
     const hidden = new Set(hiddenCodes ?? []);
     const sel = new Set(selected);
@@ -584,7 +606,7 @@ function LanguagesFilter({
 
   return (
     <div className="space-y-2">
-      <div className="text-xs font-medium text-muted-foreground uppercase">Язык</div>
+      <div className="text-xs font-medium text-muted-foreground uppercase">{title}</div>
       <ul className="space-y-0.5 max-h-64 overflow-y-auto pr-1">
         {items.map((l) => (
           <li key={l.code}>
@@ -595,9 +617,8 @@ function LanguagesFilter({
                 checked={selected.includes(l.code)}
                 onChange={(e) => toggle(l.code, e.target.checked)}
               />
-              {/* Без числа: book_count — счётчик КНИГ, а список об авторах
-                  (и фильтр матчит lang ИЛИ src_lang) — число вводило в
-                  заблуждение (4 английских книги ↔ 6 авторов). */}
+              {/* Без числа: book_count — счётчик КНИГ, а список об авторах —
+                  число вводило в заблуждение (4 английских книги ↔ 6 авторов). */}
               <span className="flex-1 truncate text-sm">{l.display}</span>
             </label>
           </li>

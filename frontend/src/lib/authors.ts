@@ -55,7 +55,8 @@ export type AuthorListResponse = {
 export type AuthorsListParams = {
   query?: string;
   genres?: string[];
-  langs?: string[];
+  langs?: string[]; // язык ИЗДАНИЯ (books.lang)
+  srcLangs?: string[]; // язык ОРИГИНАЛА (books.src_lang) — независимый фильтр
   yearFrom?: number;
   yearTo?: number;
   hasAdaptations?: boolean;
@@ -72,6 +73,7 @@ function buildQuery(p: AuthorsListParams): string {
   if (p.query && p.query.trim()) sp.set('q', p.query.trim());
   if (p.genres && p.genres.length > 0) sp.set('genres', p.genres.join(','));
   if (p.langs && p.langs.length > 0) sp.set('langs', p.langs.join(','));
+  if (p.srcLangs && p.srcLangs.length > 0) sp.set('src_langs', p.srcLangs.join(','));
   if (p.yearFrom) sp.set('year_from', String(p.yearFrom));
   if (p.yearTo) sp.set('year_to', String(p.yearTo));
   if (p.hasAdaptations) sp.set('has_adaptations', '1');

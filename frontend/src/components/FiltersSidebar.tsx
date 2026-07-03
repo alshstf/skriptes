@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { useGenreMap } from '@/lib/genres';
-import { useEffectiveContent, useLanguageMap } from '@/lib/content';
+import { useEffectiveContent, useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import type { FacetDistribution } from '@/lib/books';
 
@@ -25,6 +25,8 @@ import type { FacetDistribution } from '@/lib/books';
 export type FiltersValue = {
   genres: string[];
   lang: string;
+  /** Язык ОРИГИНАЛА (fb2 src-lang) — независимый от языка издания фильтр. */
+  srcLang: string;
   yearFrom: number;
   yearTo: number;
   sort: '' | 'year_desc' | 'year_asc' | 'popularity';
@@ -58,6 +60,9 @@ export function FiltersSidebar({
   const hiddenGenres = effective.data?.hidden_genres;
   // Резолвим код языка фасета (ru) в имя (Русский). Фолбэк — сам код.
   const langMap = useLanguageMap();
+  // Языки оригинала — отдельная карта: src-язык может отсутствовать среди
+  // языков ИЗДАНИЙ коллекции (langMap его не знает).
+  const srcLangMap = useSrcLanguageMap();
   return (
     <aside className="space-y-6 text-sm" aria-label="Фильтры">
       <div className="flex items-center justify-between">
@@ -94,6 +99,15 @@ export function FiltersSidebar({
         facets={facets}
         onChange={(lang) => onChange({ ...value, lang })}
         labelFor={(code) => langMap.get(code) ?? code}
+      />
+
+      <FacetRadios
+        title="Язык оригинала"
+        selected={value.srcLang}
+        facetKey="src_lang"
+        facets={facets}
+        onChange={(srcLang) => onChange({ ...value, srcLang })}
+        labelFor={(code) => srcLangMap.get(code) ?? langMap.get(code) ?? code}
       />
     </aside>
   );
@@ -275,6 +289,7 @@ export function ActiveFilterChips({
   // когда useGenres ещё в полёте; редкий случай).
   const genreMap = useGenreMap();
   const langMap = useLanguageMap();
+  const srcLangMap = useSrcLanguageMap();
   const chips: { label: string; onRemove: () => void }[] = [];
   for (const g of value.genres) {
     const display = genreMap.get(g)?.display ?? g;
@@ -288,6 +303,12 @@ export function ActiveFilterChips({
     chips.push({
       label: `Язык: ${langMap.get(value.lang) ?? value.lang}`,
       onRemove: () => onChange({ ...value, lang: '' }),
+    });
+  }
+  if (value.srcLang) {
+    chips.push({
+      label: `Оригинал: ${srcLangMap.get(value.srcLang) ?? langMap.get(value.srcLang) ?? value.srcLang}`,
+      onRemove: () => onChange({ ...value, srcLang: '' }),
     });
   }
   if (value.yearFrom || value.yearTo) {
