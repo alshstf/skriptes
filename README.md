@@ -4,41 +4,54 @@
 [![release](https://img.shields.io/github/v/release/alshstf/skriptes?include_prereleases&sort=semver)](https://github.com/alshstf/skriptes/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Каталогизатор домашней библиотеки fb2-книг. Импортирует метаданные из INPX (формат MyHomeLib / Flibusta / Lib.rus.ec), хранит их в PostgreSQL, индексирует в Meilisearch, отдаёт книги на лету с конвертацией в epub / kepub / azw8 / kfx (через [fb2cng](https://github.com/rupor-github/fb2cng)). Сами архивы книг не копирует — читает из read-only volume.
+Каталогизатор домашней библиотеки fb2-книг. Импортирует метаданные из INPX (формат MyHomeLib / Flibusta / Lib.rus.ec), хранит их в PostgreSQL, индексирует в Meilisearch, отдаёт книги на лету с конвертацией в epub / kepub / azw8 / kfx (через [fb2cng](https://github.com/rupor-github/fb2cng)). Сами архивы книг не копирует — читает из read-only volume. Читать можно во встроенном веб-ридере, скачать, отправить на Kindle или подключить e-reader по OPDS.
 
-Карточки автоматически обогащаются из открытых источников: обложки и аннотации из fb2 / Open Library / Google Books, биографии и портреты авторов из Wikipedia, экранизации книг через Wikidata. Готовые epub можно скачать или сразу отправить на Kindle через email.
+Карточки обогащаются из fb2 и открытых источников: обложки, аннотации, года написания, внешние рейтинги (Open Library / Google Books), биографии и портреты авторов (Wikipedia), экранизации книг (Wikidata). Издания одной книги (переводы, переиздания) группируются в логические «работы» — дубли схлопываются в поиске и списках.
 
-> **Status:** alpha. API и схема могут поменяться без deprecation; для первых пользователей и обратной связи.
+> **Status:** активная разработка (1.x). Обновления между minor-версиями штатные (миграции применяются автоматически); API может меняться без deprecation-цикла.
 
 ## Возможности
 
 **Каталог и поиск**
-- Мгновенный опечаткостойкий поиск по названию / автору / серии (Meilisearch)
-- Браузинг по авторам и сериям с обратными ссылками; статистика по автору (топ-жанры, серии, гистограмма по годам)
-- Фильтры по жанру / языку / году; персонализированный re-ranking по истории просмотров
-- Избранное на книги, авторов и серии
+- Мгновенный опечаткостойкий поиск по названию / автору / серии (Meilisearch) + командная палитра (Cmd+K) и hero-поиск на Главной
+- **Работы и издания**: переводы/переиздания одной книги группируются в логическую «работу» (автоматически + ручные merge/split у админа) — в поиске и списках нет дублей, на карточке видны все издания
+- Разделы **Авторы** (фильтры: жанры, языки, года активности, рейтинги, экранизации) и **Жанры**; статистика по автору (топ-жанры, серии, гистограмма по годам написания)
+- Фильтры по жанру / языку / **языку оригинала** / году написания; персонализированный re-ranking по истории просмотров
+- **Главная**: «Продолжить чтение» и «Новинки по подпискам» (подписка-колокольчик на авторов и серии)
+- **Избранное** книг (★) и личные **полки** (коллекции) с drag-and-drop переносом
+- **Оценки**: свои оценки книг 1–5 + средняя по инстансу; отдельный «внешний рейтинг» (LIBRATE из INPX / Google Books / Open Library)
+- **Видимость контента**: скрытие жанров/языков глобально (админ) и персонально (профиль)
+- **Правка каталога** (админ): inline-редактирование любых полей книги прямо на карточке — название, года, серия/номер, жанры, авторы, язык, ISBN/издатель/переводчик; правки переживают ре-импорт и обогащение, откатываются
 
 **Чтение и доставка**
+- **Встроенный веб-ридер** (foliate-js) с сохранением позиции и прогрессом чтения; PWA — ставится на телефон, обложки офлайн
 - Скачивание в **epub3 / epub2 / kepub / azw8 / kfx / fb2** (passthrough) с конвертацией на лету
+- **OPDS-каталог** (`/opds`, HTTP Basic) для e-reader-клиентов: KOReader, Moon+ Reader и т.п.; fb2 отдаётся без конвертации
 - **Send-to-Kindle** через SMTP: одна или несколько целей (`@kindle.com`), выбор адресата перед отправкой
 - Кэш сконвертированных файлов — повторное скачивание мгновенно
 
 **Обогащение карточек**
 - **Обложки** книг — fb2 (~99% хит-рейт на русскоязычной коллекции) → Open Library → Google Books
 - **Аннотации** — из fb2 → OL works.description → Google Books
-- **Биографии и портреты авторов** — Wikipedia REST API (полный intro section) + Open Library как fallback, разворачиваемый текст для длинных био
-- **Экранизации книг** — через Wikidata SPARQL (P144 "based on"): фильмы и сериалы, отсортированные по известности (число языковых Wikipedia на статью), с постерами и прямыми ссылками на Кинопоиск / IMDb
+- **Год написания** — fb2 `<title-info><date>` → OL first_publish_year → Wikidata; отдельно — год издания из fb2
+- **Язык оригинала и переводчик** — из fb2 (`<src-lang>`, translator); на карточке — строка «Перевод с французского — …»
+- **Внешний рейтинг** — Google Books / Open Library, когда в INPX нет LIBRATE
+- **Биографии и портреты авторов** — Wikipedia REST API (полный intro section) + Open Library как fallback
+- **Экранизации книг** — через Wikidata SPARQL (P144 "based on"): фильмы и сериалы с постерами и ссылками на Кинопоиск / IMDb
 
-Обогащение **lazy**: запускается при первом открытии карточки, кэшируется в БД и `/cache/covers/`, повторные открытия мгновенны.
+Режим обогащения настраивается в админке «Фоновые операции» **на каждый тип данных**: Выкл / Лениво (при первом открытии карточки) / Фоном (воркеры проходят всю коллекцию с rate-limit'ами). Результаты кэшируются в БД и `/cache`; неудачные попытки можно сбросить кнопкой и перепройти.
+
+> ⚠️ Для обогащения из **Google Books нужен API-ключ** (`SKRIPTES_GOOGLE_BOOKS_API_KEY`): анонимные запросы GB отбивает по общей квоте (429), т.е. без ключа GB-обогащение фактически не работает. См. «Внешние источники данных».
 
 **Аутентификация**
-- Мульти-пользователь, локальная аутентификация (cookie-сессии, bcrypt)
-- Роли admin / user; admin создаёт пользователей из CLI
+- Мульти-пользователь, локальная аутентификация (cookie-сессии, bcrypt); регистрация закрыта — пользователей создаёт админ в разделе администрирования (первый админ — CLI-командой при установке)
+- Роли admin / user; **rate-limit логина** (анти-брутфорс, настраиваемый)
 
 **Развёртывание**
 - Один `docker compose up`, все 5 сервисов; авто-TLS через Caddy для `*.localhost`
-- Multi-arch образы (linux/amd64 + linux/arm64)
+- Multi-arch образы (linux/amd64 + linux/arm64); backend и frontend работают **non-root** (frontend — nginx-unprivileged)
 - Идемпотентный импорт INPX — повторный запуск на том же файле no-op (sha256 хэш-чек)
+- Для публикации в интернет — **hardening-overlay** (`docker-compose.harden.yml`: cap_drop/read-only/лимиты + Cloudflare Tunnel), см. раздел ниже
 
 ---
 
@@ -63,10 +76,10 @@
                 └─────────────────┘
 ```
 
-- **backend** — REST API, импорт INPX, чтение книг из zip, конвертация через fbc, обогащение метаданными
-- **frontend** — SPA с авторизацией, листингами, поиском, скачиванием, страницей профиля
-- **postgres** — каталог (книги, авторы, серии, жанры, пользователи, сессии, history, экранизации)
-- **meilisearch** — поисковый индекс книг (typo-tolerant, instant)
+- **backend** — REST API + OPDS, импорт INPX, чтение книг из zip, конвертация через fbc, обогащение метаданными (non-root)
+- **frontend** — SPA с авторизацией, листингами, поиском, ридером, скачиванием (nginx-unprivileged: non-root, слушает 8080)
+- **postgres** — каталог (книги/работы, авторы, серии, жанры, пользователи, сессии, history, оценки, экранизации)
+- **meilisearch** — поисковые индексы (typo-tolerant, instant): `works` для веба, `books` для OPDS
 - **caddy** — reverse-proxy, TLS
 
 Чувствительные данные (книги, метаданные пользователей) **не покидают сервер**; внешние API дёргаются только для обогащения карточек (Wikipedia, Wikidata, Open Library, Google Books) без отправки личных данных.
@@ -80,7 +93,7 @@
 - Docker 24+ и `docker compose` 2+
 - Каталог где лежат zip-архивы с книгами (например `/srv/library/books`)
 - Каталог где лежат `*.inpx` (часто тот же)
-- Резерв ~2 ГБ под PG / Meilisearch / cache
+- Резерв под данные зависит от размера коллекции: на десятки тысяч книг хватит ~2 ГБ, на сотни тысяч PG + Meilisearch занимают **десятки ГБ** (плюс кэш обложек/конвертаций — настраиваемый LRU-бюджет)
 
 #### Шаги
 
@@ -98,6 +111,8 @@ curl -fO  $RAW/Caddyfile
 #    BOOKS_HOST_PATH=/srv/library/books    # путь к zip-архивам
 #    INPX_HOST_PATH=/srv/library/inpx      # путь к *.inpx
 #    SKRIPTES_VERSION=1.6.0               # тег релиза
+#    Рекомендуется сразу задать и SKRIPTES_GOOGLE_BOOKS_API_KEY —
+#    без него обогащение из Google Books не работает (см. «Внешние источники»).
 $EDITOR .env
 
 # 4) запустите стек
@@ -182,6 +197,20 @@ docker compose \
 
 Готовый пример nginx-секции — в комментариях `docker-compose.no-caddy.override.yml`. Не забудьте обновить `SKRIPTES_HOST` и `SKRIPTES_ALLOWED_ORIGINS` в `.env` под ваш реальный домен — без них CSRF middleware backend'а отбросит мутирующие запросы (login, send-to-kindle и т.п.).
 
+### Публичный доступ из интернета (hardening-overlay)
+
+Выставлять стек в интернет «как есть» не стоит. Для публичного деплоя в репо есть overlay `infra/docker-compose.harden.yml` (+ шаблон `infra/.env.public.example`):
+
+```bash
+docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
+               --env-file .env --profile public up -d
+```
+
+- **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
+- **Cloudflare Tunnel** (сервис `cloudflared` под `--profile public`): исходящее соединение к Cloudflare — **ноль входящих портов** на роутере, origin-IP скрыт. Токен туннеля — `CLOUDFLARE_TUNNEL_TOKEN` в `.env`; public hostname (→ `http://caddy:80`) и identity-гейт **Cloudflare Access** (email-код, отдельная политика на `/admin`) настраиваются в дашборде Zero Trust.
+- ⚠️ `/opds` наружу не публикуйте: его HTTP Basic несовместим с Cloudflare Access (закройте Access-политикой Deny или не добавляйте путь).
+- Второй слой к app-rate-limit'у логина — WAF rate-limit на `/api/auth/login` в Cloudflare.
+
 ---
 
 ## Send-to-Kindle (настройка)
@@ -221,9 +250,24 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 
 ---
 
+## OPDS для e-reader'ов
+
+Каталог доступен по `https://<ваш-хост>/opds` (OPDS 1.2). В e-reader-клиенте (KOReader, Moon+ Reader, CoolReader и т.п.) добавьте каталог с **HTTP Basic**-авторизацией — логин/пароль вашей учётки skriptes. Навигация: новинки / авторы / серии / жанры / поиск. Форматы: **fb2 первым** (отдаётся из архива без конвертации — мгновенно), epub/kepub/azw8 — конвертация на лету. Скачивание через OPDS учитывается как «приобретение» (питает блок «Оцените прочитанное»).
+
+⚠️ При публикации инстанса в интернет `/opds` наружу не выставляйте: HTTP Basic несовместим с identity-гейтом Cloudflare Access (см. «Публичный доступ»).
+
+---
+
 ## Конфигурация (env reference)
 
-Все переменные читаются из `.env` (см. `infra/.env.example` как шаблон).
+Все переменные читаются из `.env` (см. `infra/.env.example` как шаблон; для публичного деплоя — `infra/.env.public.example`).
+
+### Общее
+
+| Переменная | Дефолт | Описание |
+|---|---|---|
+| `COMPOSE_PROJECT_NAME` | `skriptes` | Префикс имён контейнеров/volume'ов |
+| `TZ` | `UTC` | Часовой пояс контейнеров (например `Europe/Moscow`) |
 
 ### PostgreSQL
 
@@ -254,6 +298,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_INPX_ROOT` | `/data/inpx` | Путь внутри контейнера |
 | `SKRIPTES_CACHE_ROOT` | `/cache` | Кэш конвертированных файлов и обложек |
 | `SKRIPTES_FBC_PATH` | `fbc` | Путь к fbc-бинарю (вшит в образ) |
+| `SKRIPTES_GOOGLE_BOOKS_API_KEY` | (пусто) | API-ключ Google Books — **обязателен для GB-обогащения** (обложки/рейтинги/группировка): анонимные запросы GB отбивает 429 по общей квоте. Google Cloud Console → включить Books API → Credentials → API key; free-квота ≈1000 запросов/день на проект |
 | `BACKEND_PORT` | `8080` | Порт на хосте (только 127.0.0.1; основной доступ через Caddy) |
 
 ### Auth / Cookies
@@ -263,6 +308,8 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_COOKIE_SECURE` | `true` | `false` только для чистого-HTTP dev |
 | `SKRIPTES_COOKIE_DOMAIN` | (пусто) | Пусто = текущий host |
 | `SKRIPTES_ALLOWED_ORIGINS` | `https://skriptes.localhost` | CSV-список разрешённых Origin'ов для мутирующих запросов (CSRF) |
+| `SKRIPTES_LOGIN_RATELIMIT_IP` | `10` | Анти-брутфорс: лимит **неудачных** логинов с одного IP за 5-минутное окно (за Cloudflare берётся `CF-Connecting-IP`). `0` = слой выключен |
+| `SKRIPTES_LOGIN_RATELIMIT_EMAIL` | `20` | То же per-email за 15-минутное окно (щедрее, чтобы атакующий не мог залочить чужой аккаунт). `0` = выключен |
 
 ### Send-to-Kindle / SMTP
 
@@ -296,17 +343,17 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 
 ## Внешние источники данных
 
-Backend дёргает следующие открытые API при первом открытии карточки книги или автора (lazy enrichment). Запросы анонимные, без OAuth и токенов; ничего личного наружу не передаётся (только название книги / имя автора для поиска).
+Backend дёргает следующие открытые API — лениво при первом открытии карточки и/или фоновыми воркерами (режим на каждый тип данных — в админке «Фоновые операции»). Ничего личного наружу не передаётся: только название книги / имя автора для поиска; для переводных книг внешний поиск идёт по **оригинальному** названию и латинскому имени автора (из fb2 `src-title-info`) — по русскому переводу западные источники ничего не находят.
 
-| Источник | Что берём | Документация |
-|---|---|---|
-| **Open Library** | Обложки книг, аннотации (works.description) | [openlibrary.org/developers/api](https://openlibrary.org/developers/api) |
-| **Google Books** | Обложки и аннотации (fallback после OL) | [developers.google.com/books](https://developers.google.com/books) |
-| **Wikipedia REST API** | Биография автора (полный intro section), портреты | [en.wikipedia.org/api/rest_v1/](https://en.wikipedia.org/api/rest_v1/) |
-| **Wikidata SPARQL** | Экранизации книг (P144 "based on"); идентификаторы Кинопоиска (P2603) и IMDb (P345); постеры (P18); популярность (sitelinks) | [query.wikidata.org](https://query.wikidata.org/) |
-| **Wikimedia Commons** | Постеры экранизаций по Wikidata-P18 | [commons.wikimedia.org](https://commons.wikimedia.org/) |
+| Источник | Что берём | Аутентификация | Документация |
+|---|---|---|---|
+| **Open Library** | Обложки, аннотации, год первой публикации, рейтинги, work-ключи (группировка изданий), фото авторов | Не нужна, но обязателен осмысленный User-Agent (шлём сами) | [openlibrary.org/developers/api](https://openlibrary.org/developers/api) |
+| **Google Books** | Обложки, аннотации, рейтинги (fallback/дополнение к OL) | **Нужен API-ключ** (`SKRIPTES_GOOGLE_BOOKS_API_KEY`) — анонимные запросы получают 429 по общей квоте | [developers.google.com/books](https://developers.google.com/books) |
+| **Wikipedia REST API** | Биография автора (полный intro section), портреты | — | [en.wikipedia.org/api/rest_v1/](https://en.wikipedia.org/api/rest_v1/) |
+| **Wikidata SPARQL** | Экранизации книг (P144 "based on") с идентификаторами Кинопоиска/IMDb и постерами; год публикации (P577); QID работ (группировка) | — | [query.wikidata.org](https://query.wikidata.org/) |
+| **Wikimedia Commons** | Постеры экранизаций по Wikidata-P18 | — | [commons.wikimedia.org](https://commons.wikimedia.org/) |
 
-Если какой-то источник недоступен (нет сети, упал rate-limit) — backend просто переходит к следующему в цепочке и не валит остальной флоу. Результаты enrichment'а кэшируются в БД и на диске (`/cache/covers/{sha256.ext}`).
+**Rate-limit'ы.** Фоновые воркеры ходят во внешние API с настраиваемым RPM, а Open Library дополнительно **автоматически прижимается к 18 запросам/мин** (документированный лимит OL ≈20/мин; обложки — свой лимит 100/IP за 5 мин) — задрать выше из настроек не выйдет, и это осознанно: выше лимита OL начинает резать соединения. Если источник недоступен — backend переходит к следующему в цепочке; неудачные попытки учитываются per-source и **не долбятся повторно** (перепроверить после улучшений — кнопка «Сбросить неудачные попытки» в админке). Результаты кэшируются в БД и на диске (`/cache`).
 
 ---
 
@@ -317,8 +364,11 @@ Backend дёргает следующие открытые API при перво
 - Cookie — `HttpOnly`, `SameSite=Lax`, `Secure` (если `SKRIPTES_COOKIE_SECURE=true`)
 - CSRF — Origin/Referer-чек на мутирующих методах через middleware
 - Защита от user enumeration — login всегда отвечает одинаково при неверном email и неверном пароле, плюс «балансировочный» bcrypt при unknown email чтобы timing не выдавал
+- **Rate-limit логина** — считает только **неудачные** попытки (легитимного пользователя не лочит): по IP (10 за 5 мин; за Cloudflare — `CF-Connecting-IP`) и по email (20 за 15 мин), ответ 429 + `Retry-After`. Настраивается, `0` = выключить (инстанс за своим WAF)
+- Регистрация закрыта (invite-only: пользователей создаёт админ), публичного password-reset нет
+- Контейнеры backend и frontend — **non-root**; для публичного деплоя есть hardening-overlay (cap_drop ALL, read-only FS, no-new-privileges, Cloudflare Tunnel — см. «Публичный доступ»)
 
-В alpha-релизе **нет**: rate-limit'а на login (защита bcrypt cost=12 + сетевой перебор), 2FA, OIDC. Это для домашнего сервера с доверенной сетью.
+Пока **нет**: 2FA, OIDC. Базовый сценарий — домашний сервер в доверенной сети; для публикации наружу используйте hardening-overlay + identity-гейт на краю (Cloudflare Access).
 
 ---
 

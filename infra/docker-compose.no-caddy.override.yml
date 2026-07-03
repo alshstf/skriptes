@@ -47,4 +47,5 @@ services:
 
   frontend:
     ports:
-      - "127.0.0.1:${FRONTEND_HOST_PORT:-3000}:80"
+      # :8080 — фронт на nginx-unprivileged (non-root) слушает 8080, не 80.
+      - "127.0.0.1:${FRONTEND_HOST_PORT:-3000}:8080"
