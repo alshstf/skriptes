@@ -267,6 +267,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/work-grouping/stop", handleWorkGroupingStop(d.Settings))
 					r.Post("/admin/works/split", handleWorkSplit(d.Settings))
 					r.Post("/admin/works/merge", handleWorkMerge(d.Settings))
+					r.Post("/admin/works/regroup", handleWorksRegroup(d.Settings))
 					// Локальные оверрайды метаданных (ручная корректура каталога).
 					r.Get("/admin/overrides", handleListOverrides(d.Settings))
 					r.Post("/admin/overrides", handleSetOverride(d.Settings))

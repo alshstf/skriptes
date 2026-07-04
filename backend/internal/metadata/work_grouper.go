@@ -55,6 +55,10 @@ type WorksIndexSyncer interface {
 // работы. API мапит это в 400.
 var ErrSplitAnchor = errors.New("cannot split the anchor edition of a work")
 
+// ErrRegroupBusy — RegroupWorks отклонён: идёт фоновая группировка (recovery
+// требует чистого прогона — сначала остановить воркер в админке).
+var ErrRegroupBusy = errors.New("background grouping is running — stop it first")
+
 type WorkGrouper struct {
 	pool      *pgxpool.Pool
 	resolvers []WorkKeyResolver    // включённые внешние источники (Tier-2), в порядке приоритета
@@ -972,6 +976,252 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	// Синк поиска: target upsert, поглощённые работы — удалить из works-индекса.
 	c.syncSearchAfterManual([]int64{target}, gcDeleted)
 	return target, nil
+}
+
+// RegroupResult — итог пере-группировки работ (ответ админ-ручки).
+type RegroupResult struct {
+	DryRun        bool  `json:"dry_run"`
+	Works         int   `json:"works"`          // найдено работ из запрошенных
+	Authors       int   `json:"authors"`        // затронуто авторов
+	EditionsSplit int   `json:"editions_split"` // изданий вынесено в синглтоны
+	LookupsPurged int64 `json:"lookups_purged"` // удалено found-строк book_work_lookups
+	// Predicted — dry-run-прогноз: сколько Tier-1-кластеров дадут издания каждой
+	// работы (1 = варианты написания одного произведения, разбирать нечего;
+	// >1 = кандидат на разбор). JSON-ключи — work_id строками.
+	Predicted map[int64]int `json:"predicted_clusters,omitempty"`
+	// SkippedNoAuthor — работы без primary_author_id: пере-группировка идёт по
+	// автору, такие разбираются вручную (split с карточки).
+	SkippedNoAuthor []int64 `json:"skipped_no_author,omitempty"`
+}
+
+// RegroupWorks — массовый разбор ошибочно слитых работ (recovery после бага
+// Tier-2-без-SrcTitle, см. audit-fixes-roadmap). На каждую работу: все
+// НЕ-якорные издания выносятся в собственные singleton-работы, у всех изданий
+// снимается work_scanned_at, чистятся 'found'-строки book_work_lookups
+// (отравленные ключи иначе сольют всё обратно на следующем Tier-2-проходе;
+// not_found/error остаются — они держат TTL-вежливость к источникам) и
+// сбрасывается works.ext_ids (его провенанс сломан тем же багом). Затем по
+// каждому затронутому автору СИНХРОННО прогоняется Tier-1/1.5 (без сети) —
+// корректные слияния (переводы одного произведения) собираются обратно,
+// ошибочные (разные тома/романы) остаются раздельными; Tier-2 доделает фоновый
+// краулер уже с фиксом. Один detached-синк поиска на весь вызов.
+//
+// dryRun=true — только прогноз (Predicted), никаких записей.
+//
+// Пользовательские данные НЕ переносятся сознательно: book_ratings /
+// book_rating_prompts / feed_dismissals (work-level) остаются на исходной
+// работе — там же остаётся якорное издание, то есть работа, чьё название
+// пользователь видел. Всё book-level (reads/views/полки/★) едет с изданиями.
+func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64, dryRun bool) (RegroupResult, error) {
+	res := RegroupResult{DryRun: dryRun}
+	if len(workIDs) == 0 {
+		return res, fmt.Errorf("no work ids")
+	}
+	// Не гоняем разбор параллельно с фоновым воркером: гонка идемпотентна на
+	// уровне строк, но чистый прогон проще верифицировать (ops-чеклист recovery
+	// требует выключить воркер).
+	if st := c.Status(); st.Running {
+		return res, ErrRegroupBusy
+	}
+
+	// Дедуп + группировка запрошенных работ по автору.
+	seen := map[int64]struct{}{}
+	byAuthor := map[int64][]int64{}
+	rows, err := c.pool.Query(ctx,
+		`SELECT id, COALESCE(primary_author_id, 0) FROM works WHERE id = ANY($1)`, workIDs)
+	if err != nil {
+		return res, fmt.Errorf("load works: %w", err)
+	}
+	for rows.Next() {
+		var id, author int64
+		if err := rows.Scan(&id, &author); err != nil {
+			rows.Close()
+			return res, err
+		}
+		if _, dup := seen[id]; dup {
+			continue
+		}
+		seen[id] = struct{}{}
+		if author == 0 {
+			res.SkippedNoAuthor = append(res.SkippedNoAuthor, id)
+			continue
+		}
+		byAuthor[author] = append(byAuthor[author], id)
+		res.Works++
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return res, err
+	}
+	res.Authors = len(byAuthor)
+	if dryRun {
+		res.Predicted = map[int64]int{}
+	}
+
+	// Tier-1-only группировщик; resyncer НЕ передаём — синк поиска делаем один
+	// на весь вызов (syncSearchAfterManual ниже), touched/deleted копим в g.
+	g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
+	var touched []int64
+
+	for author, works := range byAuthor {
+		if ctx.Err() != nil {
+			return res, ctx.Err()
+		}
+		if dryRun {
+			books, err := g.loadAuthorBooks(ctx, author)
+			if err != nil {
+				return res, fmt.Errorf("load author %d books: %w", author, err)
+			}
+			for _, w := range works {
+				var subset []groupBook
+				for _, b := range books {
+					if b.workID == w {
+						subset = append(subset, b)
+					}
+				}
+				uf := clusterTier1(subset)
+				roots := map[int]struct{}{}
+				for i := range subset {
+					roots[uf.find(i)] = struct{}{}
+				}
+				res.Predicted[w] = len(roots)
+			}
+			continue
+		}
+
+		newWorks, splitN, purged, err := c.regroupSplitWorks(ctx, works)
+		if err != nil {
+			return res, fmt.Errorf("author %d: %w", author, err)
+		}
+		res.EditionsSplit += splitN
+		res.LookupsPurged += purged
+		touched = append(touched, works...)
+		touched = append(touched, newWorks...)
+
+		// Синхронный Tier-1/1.5 re-group: синглтоны собираются обратно в
+		// корректные работы. Ошибка не фатальна — книги остаются кандидатами
+		// (work_scanned_at NULL), их подберёт фоновый воркер.
+		if err := g.groupAuthorTier1(ctx, author); err != nil {
+			c.logger.Warn("regroup: tier-1 re-group failed — candidates left for background worker",
+				"author_id", author, "err", err)
+		}
+	}
+
+	if !dryRun {
+		// Итоговый синк поиска: touched = старые + новые + изменённые re-group'ом
+		// работы минус GC'нутые; deleted = GC re-group'а (в нашей фазе split
+		// работы не пустеют — якорь остаётся, синглтоны непусты по построению).
+		for id := range g.touchedWorks {
+			touched = append(touched, id)
+		}
+		deleted := keysOf(g.deletedWorks)
+		c.syncSearchAfterManual(survivors(dedupInt64s(touched), deleted), deleted)
+	}
+	return res, nil
+}
+
+// regroupSplitWorks — транзакционная фаза разбора работ (батч одного автора):
+// вынос не-якорных изданий в синглтоны + сброс маркеров/лежалых внешних ключей.
+// Возвращает id новых работ, число вынесенных изданий и число вычищенных
+// found-lookups.
+func (c *WorkGroupController) regroupSplitWorks(ctx context.Context, works []int64) (newWorks []int64, splitN int, purged int64, err error) {
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	var affectedBooks []int64
+	for _, w := range works {
+		// Якорь (title-derived, синхронен с books.anchorEditionID и guard'ом
+		// SplitEditions) остаётся в исходной работе — держит её идентичность и
+		// work-level пользовательские данные (оценки/промпты/dismissals).
+		var anchor int64
+		aerr := tx.QueryRow(ctx, `
+			SELECT bb.id FROM books bb
+			JOIN works ww ON ww.id = bb.work_id
+			WHERE bb.work_id = $1 AND bb.deleted = false
+			ORDER BY (bb.normalized_title = ww.normalized_title) DESC, bb.id
+			LIMIT 1
+		`, w).Scan(&anchor)
+		if errors.Is(aerr, pgx.ErrNoRows) {
+			continue // работа без живых изданий — нечего разбирать
+		}
+		if aerr != nil {
+			return nil, 0, 0, fmt.Errorf("anchor of work %d: %w", w, aerr)
+		}
+		others, oerr := scanInt64s(ctx, tx, `
+			SELECT id FROM books WHERE work_id = $1 AND deleted = false AND id <> $2 ORDER BY id`, w, anchor)
+		if oerr != nil {
+			return nil, 0, 0, oerr
+		}
+		for _, bid := range others {
+			var newID int64
+			if err := tx.QueryRow(ctx, `
+				INSERT INTO works (title, normalized_title, primary_author_id, written_year, written_year_source, series_id, ser_no)
+				SELECT b.title, b.normalized_title,
+				       (SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1),
+				       b.written_year, b.written_year_source, b.series_id, b.ser_no
+				FROM books b WHERE b.id = $1
+				RETURNING id
+			`, bid).Scan(&newID); err != nil {
+				return nil, 0, 0, fmt.Errorf("create singleton work for book %d: %w", bid, err)
+			}
+			if _, err := tx.Exec(ctx,
+				`UPDATE books SET work_id = $1, work_scanned_at = NULL WHERE id = $2`, newID, bid); err != nil {
+				return nil, 0, 0, fmt.Errorf("reassign book %d: %w", bid, err)
+			}
+			newWorks = append(newWorks, newID)
+			splitN++
+		}
+		// Якорь тоже становится кандидатом re-group'а.
+		if _, err := tx.Exec(ctx,
+			`UPDATE books SET work_scanned_at = NULL WHERE id = $1`, anchor); err != nil {
+			return nil, 0, 0, fmt.Errorf("unmark anchor %d: %w", anchor, err)
+		}
+		affectedBooks = append(affectedBooks, anchor)
+		affectedBooks = append(affectedBooks, others...)
+	}
+
+	if len(affectedBooks) > 0 {
+		tag, perr := tx.Exec(ctx,
+			`DELETE FROM book_work_lookups WHERE book_id = ANY($1) AND outcome = 'found'`, affectedBooks)
+		if perr != nil {
+			return nil, 0, 0, fmt.Errorf("purge lookups: %w", perr)
+		}
+		purged = tag.RowsAffected()
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE works SET ext_ids = '{}'::jsonb, updated_at = now() WHERE id = ANY($1)`, works); err != nil {
+		return nil, 0, 0, fmt.Errorf("reset ext_ids: %w", err)
+	}
+	allWorks := append(append([]int64{}, works...), newWorks...)
+	if err := recomputeWorkAggregates(ctx, tx, allWorks); err != nil {
+		return nil, 0, 0, err
+	}
+	if dom, derr := dominantLang(ctx, tx); derr == nil && dom != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, dom, allWorks); err != nil {
+			return nil, 0, 0, fmt.Errorf("localize work titles: %w", err)
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return nil, 0, 0, err
+	}
+	return newWorks, splitN, purged, nil
+}
+
+// dedupInt64s — уникальные значения с сохранением порядка.
+func dedupInt64s(in []int64) []int64 {
+	seen := make(map[int64]struct{}, len(in))
+	out := make([]int64, 0, len(in))
+	for _, v := range in {
+		if _, dup := seen[v]; dup {
+			continue
+		}
+		seen[v] = struct{}{}
+		out = append(out, v)
+	}
+	return out
 }
 
 // survivors — элементы all, которых нет в removed (для синка works-индекса
