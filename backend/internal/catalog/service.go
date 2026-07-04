@@ -348,8 +348,12 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]GenreCount, error) {
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
 	args := append([]any{authorID, limit}, exArgs...)
+	// count(DISTINCT работа), не count(*) по book_genres: у многоиздательных
+	// работ жанр повторяется на каждом издании, и счётчик одного жанра обгонял
+	// «N книг» автора (546 > 499, прод-аудит P2 #8). Зеркало счётчика серий ниже.
 	rows, err := s.pool.Query(ctx, `
-		SELECT g.fb2_code, COALESCE(NULLIF(g.name_ru,''), NULLIF(g.name_en,''), g.fb2_code), count(*) as cnt
+		SELECT g.fb2_code, COALESCE(NULLIF(g.name_ru,''), NULLIF(g.name_en,''), g.fb2_code),
+		       count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt
 		FROM book_authors ba
 		JOIN books b      ON b.id = ba.book_id AND b.deleted = false
 		JOIN book_genres bg ON bg.book_id = b.id

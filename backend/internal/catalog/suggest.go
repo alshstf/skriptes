@@ -28,7 +28,7 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT a.id, a.last_name, a.first_name, a.middle_name,
-		       (SELECT COUNT(*) FROM book_authors ba
+		       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
 		        JOIN books b ON b.id = ba.book_id
 		        WHERE ba.author_id = a.id AND b.deleted = false) AS cnt
 		FROM authors a
@@ -77,7 +77,7 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([
 	rows, err := s.pool.Query(ctx, `
 		SELECT s.id, s.title,
 		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '') AS author_name,
-		       (SELECT COUNT(*) FROM books b
+		       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM books b
 		        WHERE b.series_id = s.id AND b.deleted = false) AS cnt
 		FROM series s
 		LEFT JOIN authors a ON a.id = s.author_id
