@@ -701,6 +701,40 @@ func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 	return len(srcs) > 1 || len(sers) > 1
 }
 
+// reassignWorkUserData переносит WORK-LEVEL пользовательские данные (оценки,
+// отложенные промпты оценки, скрытия ленты) с поглощаемых работ (losers) на
+// каноническую ДО их GC. Без этого FK `ON DELETE CASCADE` при `DELETE FROM works`
+// удалил бы оценку/интент пользователя безвозвратно при слиянии работ. Здесь
+// строки только КОПИРУЮТСЯ на canonical; оригиналы на losers снесёт сам CASCADE
+// при GC. PK всех трёх таблиц — (user_id, work_id); при конфликте (пользователь
+// взаимодействовал и с целью, и с источником — редкая двойная оценка до-мерджевых
+// фрагментов одной книги) выигрывает уже существующая на цели строка
+// (ON CONFLICT DO NOTHING).
+//
+// book-level данные (reads/views/полки/★ — keyed по books.id) НЕ трогаем: они
+// едут с изданиями, уже переназначенными на canonical.
+func reassignWorkUserData(ctx context.Context, ex pgxExec, canonical int64, losers []int64) error {
+	if canonical == 0 || len(losers) == 0 {
+		return nil
+	}
+	for _, q := range []string{
+		`INSERT INTO book_ratings (user_id, work_id, rating, rated_at)
+		 SELECT user_id, $1, rating, rated_at FROM book_ratings WHERE work_id = ANY($2)
+		 ON CONFLICT (user_id, work_id) DO NOTHING`,
+		`INSERT INTO book_rating_prompts (user_id, work_id, state, snoozed_until, updated_at)
+		 SELECT user_id, $1, state, snoozed_until, updated_at FROM book_rating_prompts WHERE work_id = ANY($2)
+		 ON CONFLICT (user_id, work_id) DO NOTHING`,
+		`INSERT INTO feed_dismissals (user_id, work_id, dismissed_at)
+		 SELECT user_id, $1, dismissed_at FROM feed_dismissals WHERE work_id = ANY($2)
+		 ON CONFLICT (user_id, work_id) DO NOTHING`,
+	} {
+		if _, err := ex.Exec(ctx, q, canonical, losers); err != nil {
+			return fmt.Errorf("reassign work user data: %w", err)
+		}
+	}
+	return nil
+}
+
 // apply — транзакционно применяет кластеры: переназначает work_id на каноническую
 // работу, чистит опустевшие works, пересчитывает edition_count/written_year/
 // series, мержит ext_ids, помечает кандидатов work_scanned_at.
@@ -729,15 +763,22 @@ func (g *WorkGrouper) apply(ctx context.Context, authorID int64, books []groupBo
 	for root, idxs := range clusters {
 		canonical := pickCanonicalWork(books, idxs)
 		var moved []int64
+		loserSet := map[int64]struct{}{} // поглощаемые работы кластера (для переноса user-data)
 		for _, i := range idxs {
 			if books[i].workID != canonical {
 				moved = append(moved, books[i].id)
 				affected[books[i].workID] = struct{}{}
+				loserSet[books[i].workID] = struct{}{}
 			}
 		}
 		if len(moved) > 0 {
 			if _, err := tx.Exec(ctx, `UPDATE books SET work_id = $1 WHERE id = ANY($2)`, canonical, moved); err != nil {
 				return fmt.Errorf("reassign work_id: %w", err)
+			}
+			// Перенести оценки/промпты/скрытия с поглощаемых работ на каноническую
+			// ДО GC (иначе CASCADE удалит их при DELETE FROM works ниже).
+			if err := reassignWorkUserData(ctx, tx, canonical, keysOf(loserSet)); err != nil {
+				return err
 			}
 			g.merged.Add(int64(len(moved)))
 		}
@@ -1004,6 +1045,11 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	if _, err := tx.Exec(ctx, `UPDATE books SET work_id = $1 WHERE work_id = ANY($2)`, target, others); err != nil {
 		return 0, fmt.Errorf("reassign merge editions: %w", err)
 	}
+	// Перенести work-level пользовательские данные с поглощаемых работ на target
+	// ДО GC (иначе CASCADE удалит оценки пользователя при DELETE FROM works).
+	if err := reassignWorkUserData(ctx, tx, target, others); err != nil {
+		return 0, err
+	}
 	gcDeleted, err := scanInt64s(ctx, tx, `
 		DELETE FROM works w WHERE w.id = ANY($1) AND NOT EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id)
 		RETURNING w.id
@@ -1066,10 +1112,13 @@ type RegroupResult struct {
 // (pauseWorkerForRegroup); свитчер в админке на это время дизейблится
 // (WorkGroupStatus.Regrouping).
 //
-// Пользовательские данные НЕ переносятся сознательно: book_ratings /
-// book_rating_prompts / feed_dismissals (work-level) остаются на исходной
-// работе — там же остаётся якорное издание, то есть работа, чьё название
-// пользователь видел. Всё book-level (reads/views/полки/★) едет с изданиями.
+// Пользовательские work-level данные (book_ratings / book_rating_prompts /
+// feed_dismissals) при разборе остаются на исходной работе — она НЕ GC'ится
+// (сохраняет якорное издание, то есть работа, чьё название пользователь видел),
+// поэтому CASCADE их не трогает; переносить некуда и незачем. Всё book-level
+// (reads/views/полки/★) едет с изданиями. Ср. merge-направление (apply/MergeWorks):
+// там поглощаемая работа GC'ится, поэтому её user-data переносится на каноническую
+// через reassignWorkUserData ДО GC.
 func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64, dryRun bool) (RegroupResult, error) {
 	res := RegroupResult{DryRun: dryRun}
 	if len(workIDs) == 0 {
