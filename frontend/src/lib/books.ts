@@ -113,7 +113,7 @@ export type BookFilters = {
   yearTo?: number;
   seriesId?: number;
   authorId?: number;
-  sort?: '' | 'year_desc' | 'year_asc' | 'popularity';
+  sort?: '' | 'year_desc' | 'year_asc';
   facets?: string[];
 };
 

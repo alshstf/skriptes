@@ -187,6 +187,7 @@ export function BooksPage() {
           facets={firstPage?.facets}
           totalActive={totalActive}
           onReset={resetAll}
+          hasQuery={debouncedQuery !== ''}
         />
       </div>
 
@@ -271,6 +272,7 @@ export function BooksPage() {
                   facets={firstPage?.facets}
                   totalActive={totalActive}
                   onReset={resetAll}
+                  hasQuery={debouncedQuery !== ''}
                 />
               </div>
               <SheetFooter className="border-t">

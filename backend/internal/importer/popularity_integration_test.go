@@ -51,10 +51,12 @@ func worksDocPopularity(ctx context.Context, mgr meili.ServiceManager, workID in
 	return doc.Popularity, err
 }
 
-// Полный ресинк обязан пересчитывать popularity из живой вовлечённости
-// (views + 3×reads по изданиям работы) — регресс на «мёртвый sort=popularity»:
+// Полный ресинк обязан пересчитывать popularity из сигналов известности,
+// включая живую вовлечённость — регресс на «мёртвый sort=popularity»:
 // поле добавили в workDocSelect без бампа гейта, и на стабильном деплое
-// ресинк не запускался, оставляя во всех доках 0.
+// ресинк не запускался, оставляя во всех доках 0. Проверка относительная
+// (база после импорта + дельта вовлечённости): у книг фикстуры есть свои
+// LIBRATE-сигналы, абсолют зависел бы от того, какая книга первая по id.
 func TestResyncWorksIndex_PopularityFromEngagement(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")
@@ -64,9 +66,15 @@ func TestResyncWorksIndex_PopularityFromEngagement(t *testing.T) {
 
 	imp, mgr, userID, bookID, workID, execSQL := popularitySetup(t, ctx)
 
-	// 2 просмотра + 1 read → популярность работы = 2 + 3×1 = 5.
+	popBefore, err := worksDocPopularity(ctx, mgr, workID)
+	require.NoError(t, err)
+
+	// 2 просмотра (·20) + 1 read (·60) + 1 оценка (·100) → +200 к базе работы
+	// (веса — константы popW* в popularity.go; оценка заодно проверяет сигнал
+	// book_ratings в workDocSelect).
 	execSQL(`INSERT INTO views (user_id, book_id) VALUES ($1, $2), ($1, $2)`, userID, bookID)
 	execSQL(`INSERT INTO reads (user_id, book_id, updated_at) VALUES ($1, $2, now())`, userID, bookID)
+	execSQL(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1, $2, 5)`, userID, workID)
 
 	n, err := imp.ResyncWorksIndex(ctx)
 	require.NoError(t, err)
@@ -74,9 +82,11 @@ func TestResyncWorksIndex_PopularityFromEngagement(t *testing.T) {
 
 	pop, err := worksDocPopularity(ctx, mgr, workID)
 	require.NoError(t, err)
-	require.EqualValues(t, 5, pop, "popularity = count(views) + 3*count(reads)")
+	require.EqualValues(t, popBefore+200, pop,
+		"дельта вовлечённости = 2·view + read + оценка = 2·20 + 60 + 100")
 
-	// И сортировка выносит эту работу наверх.
+	// И сортировка выносит эту работу наверх: +200 вовлечённости больше максимума
+	// базовых сигналов фикстуры (синглтон с LIBRATE 5 → 160, без экранизаций).
 	res, err := mgr.Index("works").SearchWithContext(ctx, "", &meili.SearchRequest{
 		Limit: 1,
 		Sort:  []string{"popularity:desc"},
@@ -101,11 +111,14 @@ func TestPopularityTracker_FlushUpsertsWork(t *testing.T) {
 
 	imp, mgr, userID, bookID, workID, execSQL := popularitySetup(t, ctx)
 
-	// Вовлечённость появилась ПОСЛЕ импорта → в индексе пока 0.
+	popBefore, err := worksDocPopularity(ctx, mgr, workID)
+	require.NoError(t, err)
+
+	// Вовлечённость появилась ПОСЛЕ импорта → док держит популярность импорта.
 	execSQL(`INSERT INTO views (user_id, book_id) VALUES ($1, $2)`, userID, bookID)
 	pop, err := worksDocPopularity(ctx, mgr, workID)
 	require.NoError(t, err)
-	require.EqualValues(t, 0, pop, "до флаша трекера док держит популярность импорта")
+	require.EqualValues(t, popBefore, pop, "до флаша трекера док держит популярность импорта")
 
 	tr := importer.NewPopularityTracker(imp, nil)
 	tctx, tcancel := context.WithCancel(ctx)
@@ -115,6 +128,6 @@ func TestPopularityTracker_FlushUpsertsWork(t *testing.T) {
 
 	require.Eventually(t, func() bool {
 		p, err := worksDocPopularity(ctx, mgr, workID)
-		return err == nil && p >= 1
-	}, 20*time.Second, 200*time.Millisecond, "трекер должен доапсертить работу с popularity>=1")
+		return err == nil && p >= popBefore+20
+	}, 20*time.Second, 200*time.Millisecond, "трекер должен доапсертить работу (+20 за просмотр)")
 }

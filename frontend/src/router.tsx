@@ -110,7 +110,7 @@ export type BooksSearch = {
   year_to?: number;
   series_id?: number;
   author_id?: number;
-  sort?: 'year_desc' | 'year_asc' | 'popularity';
+  sort?: 'year_desc' | 'year_asc';
 };
 
 // AuthorsSearch — URL-стейт списка авторов (раздел «Авторы»). Как BooksSearch:
@@ -170,8 +170,9 @@ export const booksRoute = createRoute({
       year_to: asNumber(search.year_to),
       series_id: asNumber(search.series_id),
       author_id: asNumber(search.author_id),
-      sort:
-        sort === 'year_desc' || sort === 'year_asc' || sort === 'popularity' ? sort : undefined,
+      // 'popularity' больше не значение UI: дефолтный порядок и так
+      // популярность-ordered (старые URL молча падают в дефолт — порядок тот же).
+      sort: sort === 'year_desc' || sort === 'year_asc' ? sort : undefined,
     };
   },
   component: BooksPage,

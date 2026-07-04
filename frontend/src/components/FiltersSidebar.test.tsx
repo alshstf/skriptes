@@ -332,6 +332,39 @@ describe('FiltersSidebar', () => {
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ sort: 'year_desc' }));
   });
 
+  it('лейбл дефолтной сортировки контекстный; пункта «По популярности» нет', () => {
+    // Без запроса дефолт = браузинг, а браузинг упорядочен популярностью
+    // (popularity:desc — последний ranking rule) → честный лейбл.
+    const { rerender } = render(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          totalActive={0}
+          onReset={() => {}}
+        />,
+      ),
+    );
+    const select = screen.getByLabelText('Сортировка');
+    expect(select).toHaveTextContent('Сначала популярные');
+    expect(select).not.toHaveTextContent('По релевантности');
+    // Отдельного пункта «По популярности» больше нет (был дублем дефолта).
+    expect(select).not.toHaveTextContent('По популярности');
+
+    rerender(
+      wrap(
+        <FiltersSidebar
+          value={emptyFilters}
+          onChange={() => {}}
+          totalActive={0}
+          onReset={() => {}}
+          hasQuery
+        />,
+      ),
+    );
+    expect(screen.getByLabelText('Сортировка')).toHaveTextContent('По релевантности');
+  });
+
   it('фасет src_lang рендерит секцию «Язык оригинала»; выбор дёргает onChange.srcLang', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
