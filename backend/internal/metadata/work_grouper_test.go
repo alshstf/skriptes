@@ -148,3 +148,47 @@ func TestExtFieldFor(t *testing.T) {
 	require.Equal(t, "ol_work", extFieldFor("openlibrary"))
 	require.Equal(t, "wd_qid", extFieldFor("wikidata"))
 }
+
+// tier2BucketConflicts — гейт union'а по внешнему work_key: конфликт оригиналов
+// или номеров тома внутри бакета = ошибочный резолв, не сливать.
+func TestTier2BucketConflicts(t *testing.T) {
+	books := []groupBook{
+		{id: 1, srcTitleNorm: "original a", serNo: 0}, // 0
+		{id: 2, srcTitleNorm: "original b", serNo: 0}, // 1
+		{id: 3, srcTitleNorm: "", serNo: 0},           // 2
+		{id: 4, srcTitleNorm: "original a", serNo: 3}, // 3
+		{id: 5, srcTitleNorm: "original a", serNo: 4}, // 4
+		{id: 6, srcTitleNorm: "", serNo: 3},           // 5
+	}
+	cases := []struct {
+		name string
+		idxs []int
+		want bool
+	}{
+		{"разные непустые src — конфликт", []int{0, 1}, true},
+		{"одинаковый src — ок", []int{0, 3}, false},
+		{"пустой src не конфликтует с непустым", []int{0, 2}, false},
+		{"оба пустых — ок", []int{2, 5}, false},
+		{"разные ненулевые ser_no — конфликт (разные тома)", []int{3, 4}, true},
+		{"ser_no 0 не конфликтует с ненулевым", []int{0, 3}, false},
+		{"одиночный бакет — ок", []int{1}, false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.want, tier2BucketConflicts(books, tc.idxs))
+		})
+	}
+}
+
+// Tier-1.5, mixed-кейс: пустой src не «мостит» конфликт двух разных оригиналов —
+// бакет с конфликтом пропускается ЦЕЛИКОМ (и книга без src тоже не сливается).
+func TestClusterTier1_Tier15_EmptySrcDoesNotBridgeConflict(t *testing.T) {
+	books := []groupBook{
+		{id: 1, workID: 1, normTitle: "книга а", lang: "ru", seriesID: 5, serNo: 3,
+			srcTitleNorm: "original a", srcLang: "en"},
+		{id: 2, workID: 2, normTitle: "книга б", lang: "ru", seriesID: 5, serNo: 3,
+			srcTitleNorm: "original b", srcLang: "en"},
+		{id: 3, workID: 3, normTitle: "книга в", lang: "ru", seriesID: 5, serNo: 3}, // src пуст
+	}
+	require.Equal(t, [][]int64{{1}, {2}, {3}}, clustersOf(books, clusterTier1(books)))
+}

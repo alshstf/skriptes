@@ -170,15 +170,19 @@ func TestWorkGrouper_Tier15_Series_Integration(t *testing.T) {
 	require.Equal(t, 2, editions, "edition_count работы #7 = 2")
 }
 
-// fakeWorkResolver — внешний резолвер для Tier-2-теста.
+// fakeWorkResolver — внешний резолвер для Tier-2-теста. Записывает полученные
+// WorkQuery (drainAll синхронен — гонок нет), чтобы тесты могли проверить
+// содержимое запроса (например, что для перевода прокинут SrcTitle).
 type fakeWorkResolver struct {
-	name string
-	key  string
-	err  error
+	name    string
+	key     string
+	err     error
+	queries []WorkQuery
 }
 
 func (f *fakeWorkResolver) Name() string { return f.name }
-func (f *fakeWorkResolver) ResolveWorkKey(context.Context, WorkQuery) (string, error) {
+func (f *fakeWorkResolver) ResolveWorkKey(_ context.Context, q WorkQuery) (string, error) {
+	f.queries = append(f.queries, q)
 	return f.key, f.err
 }
 
@@ -444,4 +448,95 @@ func TestWorkGroupCoverage_LiveEditionsOnly(t *testing.T) {
 	require.Equal(t, 2, cov.Works, "работа удалённого издания не раздувает счётчик книг")
 	require.Equal(t, 0, cov.MultiEditionWorks)
 	require.Equal(t, 0, cov.Scanned)
+}
+
+// Регресс фикса SrcTitle: внешний Tier-2-запрос для переводного издания несёт
+// оригинальное название (иначе OL/Wikidata резолвят по переводу + автору и
+// возвращают один «популярный» work на любой том/язык — мега-слияния, прод-кейс
+// Гарри Поттера: 38 изданий / 18 названий / 8 языков в одной работе).
+func TestWorkGrouper_Tier2_QueryCarriesSrcTitle(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Роулинг", "роулинг джоан")
+	b1 := seedGroupBook(t, ctx, pool, collID, archID, author, "R1",
+		"Гарри Поттер и Принц-полукровка", "гарри поттер и принц-полукровка", "ru",
+		"Harry Potter and the Half-Blood Prince", "en", "rowling joanne")
+
+	fake := &fakeWorkResolver{name: "openlibrary", key: "OLHP6W"}
+	g := NewWorkGrouper(pool, fake, nil, WorkGroupConfig{
+		OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24,
+	}, nil, quiet)
+	g.drainAll(ctx)
+
+	require.NotEmpty(t, fake.queries, "резолвер должен быть вызван для одиночки")
+	var seen bool
+	for _, q := range fake.queries {
+		if q.BookID != b1 {
+			continue
+		}
+		seen = true
+		require.Equal(t, "Harry Potter and the Half-Blood Prince", q.SrcTitle,
+			"переводное издание обязано нести оригинал в SrcTitle")
+	}
+	require.True(t, seen, "запрос по seeded-книге должен был уйти")
+}
+
+// Defensive-гейт Tier-2: один и тот же внешний work_key при РАЗНЫХ оригиналах
+// (ошибочный резолв источника) НЕ сливает издания и не пишет ext_ids — гейт
+// защищает и от отравленных book_work_lookups, записанных до фикса SrcTitle.
+func TestWorkGrouper_Tier2_ConflictingSrcNotMerged(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Роулинг", "роулинг джоан")
+	// Прод-кейс: болгарские издания РАЗНЫХ томов, ошибочно резолвящиеся в один ключ.
+	b1 := seedGroupBook(t, ctx, pool, collID, archID, author, "R1",
+		"Огненият бокал", "огненият бокал", "bg",
+		"Harry Potter and the Goblet of Fire", "en", "rowling joanne")
+	b2 := seedGroupBook(t, ctx, pool, collID, archID, author, "R2",
+		"Затворникът от Азкабан", "затворникът от азкабан", "bg",
+		"Harry Potter and the Prisoner of Azkaban", "en", "rowling joanne")
+
+	fake := &fakeWorkResolver{name: "openlibrary", key: "OLSAMEW"}
+	g := NewWorkGrouper(pool, fake, nil, WorkGroupConfig{
+		OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24,
+	}, nil, quiet)
+	g.drainAll(ctx)
+
+	require.NotEqual(t, workIDOf(t, ctx, pool, b1), workIDOf(t, ctx, pool, b2),
+		"издания с разными оригиналами не должны сливаться даже при общем внешнем ключе")
+
+	// lookups записаны (учёт попыток сохраняется)…
+	var found int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_work_lookups WHERE source='openlibrary' AND outcome='found' AND work_key='OLSAMEW'`).Scan(&found))
+	require.Equal(t, 2, found)
+	// …но конфликтный ключ не материализован в ext_ids ни одной работы.
+	var extCount int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM works WHERE ext_ids->>'ol_work' = 'OLSAMEW'`).Scan(&extCount))
+	require.Equal(t, 0, extCount, "конфликтный бакет не должен писать ext_ids")
 }

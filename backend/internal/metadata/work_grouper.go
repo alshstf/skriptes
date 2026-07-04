@@ -374,6 +374,7 @@ type groupBook struct {
 	title         string
 	normTitle     string
 	lang          string
+	srcTitle      string // исходный <src-title-info><book-title> — для внешних запросов Tier-2
 	srcTitleNorm  string
 	srcAuthorNorm string
 	srcLang       string
@@ -438,14 +439,13 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 	var out []groupBook
 	for rows.Next() {
 		var b groupBook
-		var srcTitle string
 		if err := rows.Scan(&b.id, &b.workID, &b.title, &b.normTitle, &b.lang,
-			&srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
+			&b.srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
 			&b.seriesID, &b.serNo,
 			&b.scanned, &b.lastName, &b.firstName); err != nil {
 			return nil, err
 		}
-		b.srcTitleNorm = normalizePersonKey(srcTitle)
+		b.srcTitleNorm = normalizePersonKey(b.srcTitle)
 		out = append(out, b)
 	}
 	return out, rows.Err()
@@ -568,14 +568,15 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		if uf.size(i) > 1 {
 			continue
 		}
+		// SrcTitle (оригинал) КРИТИЧЕН для переводов: без него резолверы ищут по
+		// переводному названию + автор, и OL/Wikidata возвращают один и тот же
+		// «популярный» work на любой том/язык → мега-слияния разных романов в
+		// одну работу (прод-кейс Гарри Поттера: 38 изданий / 18 названий / 8
+		// языков). Для оригиналов SrcTitle пуст — резолверы берут Title.
 		q := WorkQuery{
-			BookID: b.id, Title: b.title, ISBN: b.isbn, Lang: b.lang,
+			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: b.isbn, Lang: b.lang,
 			Authors: []string{fullName(b.lastName, b.firstName)}, LastName: b.lastName, FirstName: b.firstName,
 		}
-		// src-название (оригинал) даёт лучший хит для переводов.
-		// srcTitleNorm нормализован — для запроса нужен исходный src_title; его нет
-		// в groupBook, поэтому используем normTitle как fallback (для оригиналов это
-		// и есть название). Для переводов с пустым результатом останется одиночкой.
 		for _, r := range g.resolvers {
 			name := r.Name()
 			if !g.isDue(lookups[b.id][name], now) {
@@ -606,8 +607,17 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		}
 	}
 	// Союз по совпавшим внешним work_key + сбор ext_ids на корень кластера.
+	// Defensive-гейт (зеркало Tier-1.5): конфликтный бакет НЕ союзим и ext_ids
+	// не пишем — внешний ключ, объединяющий издания с разными оригиналами или
+	// разными номерами тома, почти наверняка ошибочный резолв (и защищает от
+	// «отравленных» lookups, записанных до фикса SrcTitle). Precision > recall.
 	for bk, idxs := range keyBuckets {
 		src, workKey := splitKey(bk)
+		if len(idxs) > 1 && tier2BucketConflicts(books, idxs) {
+			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting src_title/ser_no)",
+				"source", src, "work_key", workKey, "editions", len(idxs))
+			continue
+		}
 		for j := 1; j < len(idxs); j++ {
 			uf.union(idxs[0], idxs[j])
 		}
@@ -618,6 +628,24 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		extByRoot[root][extFieldFor(src)] = workKey
 	}
 	return extByRoot
+}
+
+// tier2BucketConflicts — правда, если бакет одного внешнего work_key содержит
+// ≥2 разных непустых srcTitleNorm (конфликт оригиналов — зеркало гейта
+// Tier-1.5) ИЛИ ≥2 разных ненулевых ser_no (разные тома серии). Пустые
+// значения конфликтом не считаются. Чистая функция (тестируемо).
+func tier2BucketConflicts(books []groupBook, idxs []int) bool {
+	srcs := map[string]struct{}{}
+	sers := map[int]struct{}{}
+	for _, i := range idxs {
+		if s := books[i].srcTitleNorm; s != "" {
+			srcs[s] = struct{}{}
+		}
+		if n := books[i].serNo; n > 0 {
+			sers[n] = struct{}{}
+		}
+	}
+	return len(srcs) > 1 || len(sers) > 1
 }
 
 // apply — транзакционно применяет кластеры: переназначает work_id на каноническую
