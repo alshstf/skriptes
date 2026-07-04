@@ -748,29 +748,38 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
+	// DISTINCT ON по работе: прогресс на двух изданиях одной книги — это ОДНА
+	// строка «Продолжить чтение» (самое свежее/дальше прочитанное издание), а
+	// не дубли (прод-аудит P2 #6). COALESCE(work_id, -id) — синглтон без работы
+	// не коллизирует с реальными work_id (тот же приём, что в счётчиках каталога).
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.id, b.work_id, b.title, b.lib_id, ser.title,
-		       COALESCE(r.fraction, 0), r.updated_at,
-		       COALESCE(b.cover_path, (
-		           SELECT bb.cover_path FROM books bb
-		           WHERE bb.work_id = b.work_id AND bb.deleted = false
-		             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
-		           ORDER BY bb.id LIMIT 1
-		       ), ''),
-		       COALESCE(
-		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
-		           ARRAY[]::text[]
-		       )
-		FROM reads r
-		JOIN books b ON b.id = r.book_id AND b.deleted = false
-		LEFT JOIN series ser ON ser.id = b.series_id
-		LEFT JOIN book_authors ba ON ba.book_id = b.id
-		LEFT JOIN authors a ON a.id = ba.author_id
-		WHERE r.user_id = $1
-		  AND r.completed_at IS NULL
-		  AND COALESCE(r.fraction, 0) > 0
-		GROUP BY b.id, b.work_id, b.title, b.lib_id, ser.title, r.fraction, r.updated_at, b.cover_path
-		ORDER BY r.updated_at DESC
+		SELECT id, work_id, title, lib_id, ser_title, fraction, updated_at, cover, authors
+		FROM (
+			SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
+			       b.id, b.work_id, b.title, b.lib_id, ser.title AS ser_title,
+			       COALESCE(r.fraction, 0) AS fraction, r.updated_at,
+			       COALESCE(b.cover_path, (
+			           SELECT bb.cover_path FROM books bb
+			           WHERE bb.work_id = b.work_id AND bb.deleted = false
+			             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
+			           ORDER BY bb.id LIMIT 1
+			       ), '') AS cover,
+			       COALESCE(
+			           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
+			           ARRAY[]::text[]
+			       ) AS authors
+			FROM reads r
+			JOIN books b ON b.id = r.book_id AND b.deleted = false
+			LEFT JOIN series ser ON ser.id = b.series_id
+			LEFT JOIN book_authors ba ON ba.book_id = b.id
+			LEFT JOIN authors a ON a.id = ba.author_id
+			WHERE r.user_id = $1
+			  AND r.completed_at IS NULL
+			  AND COALESCE(r.fraction, 0) > 0
+			GROUP BY b.id, b.work_id, b.title, b.lib_id, ser.title, r.fraction, r.updated_at, b.cover_path
+			ORDER BY COALESCE(b.work_id, -b.id), r.updated_at DESC, COALESCE(r.fraction, 0) DESC, b.id
+		) t
+		ORDER BY t.updated_at DESC
 		LIMIT $2
 	`, userID, limit)
 	if err != nil {
