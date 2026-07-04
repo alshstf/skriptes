@@ -184,7 +184,22 @@ README — для пользователя, проверяются ОБА.
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.7.3** — хотфикс пересборки (#186): `regroupSplitWorks` звал
+трогают. Текущая версия — **1.8.0** — **популярность = интегральная «известность»**, 4 PR
+(#188-191, план `~/.claude/plans/popularity-renown-plan.md`). Было: popularity работы =
+вовлечённость инстанса (`Σ изданий: views + 3×reads`) — на проде ненулевая у 79 книг из
+509k, дефолтный browse = «что сам открывал + случайный хвост», а пункт «По популярности»
+байт-в-байт дублировал дефолт. Стало: popularity = `computeWorkPopularity`
+(`importer/popularity.go`) из сырых сигналов — edition_count, max LIBRATE, голоса
+внешнего рейтинга, экранизация, views/reads/оценки + внешние счётчики известности
+(`works.fantlab_marks`/`ol_ratings_count`/`ol_want_count`/`wd_sitelinks`, наполняет
+opt-in воркер `metadata/renown_backfill.go`: Фантлаб `search-works`, OL `search.json`,
+Wikidata `wbgetentities→sitelinks`); log2-сжатие счётчиков, веса-константы popW*. PR1
+(#188) формула+честный UI (пункт-дубль убран, лейбл контекстный), PR2 (#189)
+`popularityBoost` в re-ranking'е suggest/поиска (hero+Cmd+K), PR3 (#190) воркер Фантлаб+OL,
+PR4 (#191) Wikidata sitelinks. Схема works-индекса v2→**v5** (полный ресинк на старте).
+clampOLRPM 18→60 (политика OL 2026-05: 1 req/s / 3 req/s с UA). ⚠️ После деплоя: включить
+воркер «Известность» в админке (opt-in, голова ~60-70k работ за часы). До неё **1.7.3** —
+хотфикс пересборки (#186): `regroupSplitWorks` звал
 `dominantLang` (полнотабличный GROUP BY по books, 462k) в транзакции КАЖДОГО автора →
 пересбор шёл ~40 работ/мин, ETA ~12ч; теперь язык вычисляется один раз на весь
 RegroupWorks/RegroupAll и передаётся параметром. ⚠️ Урок: `dominantLang` — дорогой,
