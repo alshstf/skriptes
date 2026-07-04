@@ -294,6 +294,47 @@ func TestService_WorksIndex(t *testing.T) {
 	require.NotNil(t, wfac.Facets)
 	require.Contains(t, wfac.Facets, "genres")
 	require.Contains(t, wfac.Facets, "lang")
+
+	// ── Пагинация: offset кратен limit → page-режим Meili, Total точный
+	//    (TotalHits) и на глубокой странице; страницы не пересекаются.
+	page1, err := svc.ListWorks(ctx, books.ListParams{Limit: 7})
+	require.NoError(t, err)
+	page2, err := svc.ListWorks(ctx, books.ListParams{Limit: 7, Offset: 7})
+	require.NoError(t, err)
+	require.Equal(t, int64(stats.BooksIndexed), page2.Total, "точный total и на 2-й странице")
+	require.NotEmpty(t, page2.Items)
+	seen := map[int64]bool{}
+	for _, it := range page1.Items {
+		seen[it.ID] = true
+	}
+	for _, it := range page2.Items {
+		require.False(t, seen[it.ID], "страницы page-режима не должны пересекаться")
+	}
+
+	// Некратный offset → fallback на Limit/Offset (оценка total; на малой
+	// фикстуре она точна).
+	odd, err := svc.ListWorks(ctx, books.ListParams{Limit: 7, Offset: 3})
+	require.NoError(t, err)
+	require.Equal(t, int64(stats.BooksIndexed), odd.Total)
+	require.NotEmpty(t, odd.Items)
+
+	// ── Симуляция прод-капа maxTotalHits: за потолком Meili возвращает ПУСТЫЕ
+	//    hits, а не ошибку — фиксируем контракт «пусто, не 5xx» независимо от
+	//    версии Meili (реальный кап на 20-книжной фикстуре не воспроизводится).
+	task, err := mgr.Index("works").UpdatePaginationWithContext(ctx,
+		&meili.Pagination{MaxTotalHits: 5})
+	require.NoError(t, err)
+	_, err = mgr.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+	require.NoError(t, err)
+	capped, err := svc.ListWorks(ctx, books.ListParams{Limit: 5, Offset: 10})
+	require.NoError(t, err, "запрос за потолком maxTotalHits не должен падать")
+	require.Empty(t, capped.Items)
+	// Возвращаем боевой потолок (тест — последний, но не оставляем сюрприз).
+	task, err = mgr.Index("works").UpdatePaginationWithContext(ctx,
+		&meili.Pagination{MaxTotalHits: importer.MeiliMaxTotalHits})
+	require.NoError(t, err)
+	_, err = mgr.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+	require.NoError(t, err)
 }
 
 // TestService_GetReturnsEditions — Get отдаёт work-level карточку с массивом

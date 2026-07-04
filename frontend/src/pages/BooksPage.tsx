@@ -276,7 +276,7 @@ export function BooksPage() {
               <SheetFooter className="border-t">
                 <Button onClick={() => setFiltersOpen(false)}>
                   {firstPage
-                    ? `Показать ${firstPage.total} ${pluralBooks(firstPage.total)}`
+                    ? `Показать ${firstPage.total.toLocaleString('ru-RU')} ${pluralBooks(firstPage.total)}`
                     : 'Показать'}
                 </Button>
               </SheetFooter>
@@ -287,7 +287,8 @@ export function BooksPage() {
 
         {firstPage ? (
           <p className="text-sm text-muted-foreground tabular-nums">
-            {firstPage.total} {pluralBooks(firstPage.total)} · {firstPage.processing_ms}мс
+            {firstPage.total.toLocaleString('ru-RU')} {pluralBooks(firstPage.total)} ·{' '}
+            {firstPage.processing_ms}мс
           </p>
         ) : null}
 

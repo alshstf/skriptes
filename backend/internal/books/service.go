@@ -23,6 +23,12 @@ import (
 // ищут здесь, чтобы фасеты считали РАБОТЫ; OPDS остаётся на индексе "books".
 const worksIndexName = "works"
 
+// meiliMaxTotalHits — потолок пагинации Meili. Зеркало importer.MeiliMaxTotalHits
+// (books не импортирует importer; синхронность держит тест в
+// service_guard_test.go). За этим потолком Meili возвращает пустые hits, поэтому
+// List/ListWorks отвечают пустой страницей сами, не тратя запрос.
+const meiliMaxTotalHits = 1_000_000
+
 // langCacheTTL — как долго кэшировать вселенную языков коллекции (нужна для
 // корректного скрытия мультиязычных работ: показать работу, если у неё есть
 // издание на видимом языке).
@@ -70,7 +76,12 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		return ListResponse{Items: []ListItem{}, Limit: params.Limit, Offset: params.Offset}, nil
 	}
 	limit := clampInt(params.Limit, 1, 100, 20)
-	offset := clampInt(params.Offset, 0, 10_000, 0)
+	offset := clampInt(params.Offset, 0, meiliMaxTotalHits, 0)
+	// За потолком Meili данных нет: отдаём пустую страницу, а не 5xx и не
+	// повтор последней (повтор зацикливал бы infinite-scroll фронта).
+	if offset+limit > meiliMaxTotalHits {
+		return ListResponse{Items: []ListItem{}, Limit: limit, Offset: offset}, nil
+	}
 
 	// Решаем, применяем ли re-ranking. Условия:
 	//   - есть PersonaSource и UserID > 0;
@@ -260,7 +271,11 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		return ListResponse{Items: []ListItem{}, Limit: params.Limit, Offset: params.Offset}, nil
 	}
 	limit := clampInt(params.Limit, 1, 100, 20)
-	offset := clampInt(params.Offset, 0, 10_000, 0)
+	offset := clampInt(params.Offset, 0, meiliMaxTotalHits, 0)
+	// Зеркало guard'а List: за потолком Meili — пустая страница, не ошибка.
+	if offset+limit > meiliMaxTotalHits {
+		return ListResponse{Items: []ListItem{}, Limit: limit, Offset: offset}, nil
+	}
 
 	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
@@ -277,10 +292,20 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		visibleLangs = s.allLangs(ctx)
 	}
 
-	req := &meilisearch.SearchRequest{
-		Limit:            meiliLimit,
-		Offset:           int64(offset),
-		ShowRankingScore: rerank,
+	req := &meilisearch.SearchRequest{ShowRankingScore: rerank}
+	// Точный total: режим Page/HitsPerPage даёт exhaustive TotalHits вместо
+	// EstimatedTotalHits, который Meili может занижать оценкой — заголовок
+	// «N книг» совпадает с фасетными счётчиками. Применим, когда offset
+	// выражается целым числом страниц окна meiliLimit (реальный трафик:
+	// infinite-scroll шлёт offset = k*limit, rerank бывает только при offset 0);
+	// иначе — fallback на Limit/Offset с оценкой. Page и Offset в одном
+	// запросе не смешивать.
+	if offset%int(meiliLimit) == 0 {
+		req.HitsPerPage = meiliLimit
+		req.Page = int64(offset)/meiliLimit + 1
+	} else {
+		req.Limit = meiliLimit
+		req.Offset = int64(offset)
 	}
 	if f := buildWorksFilter(params, visibleLangs); f != "" {
 		req.Filter = f
@@ -339,9 +364,11 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	s.hydrateWorkCovers(ctx, items)
 	HydrateListMeta(ctx, s.pool, items)
 
-	total := res.EstimatedTotalHits
-	if total == 0 && res.TotalHits > 0 {
-		total = res.TotalHits
+	// Page-режим кладёт точный счётчик в TotalHits (EstimatedTotalHits = 0),
+	// offset-fallback — наоборот.
+	total := res.TotalHits
+	if total == 0 && res.EstimatedTotalHits > 0 {
+		total = res.EstimatedTotalHits
 	}
 	return ListResponse{
 		Items:       items,
