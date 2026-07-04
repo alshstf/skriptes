@@ -703,3 +703,72 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
 	require.Equal(t, 2, worksCount)
 }
+
+// RegroupAll — глобальный пересбор: мульти-работы ВСЕХ авторов разбираются и
+// собираются заново (кнопка «Пересобрать группировки» в админке). Мини-сценарий:
+// у двух авторов по мега-работе (чужой роман внутри), после пересбора чужие
+// романы — отдельные работы, прогресс обнулён, воркер восстановлен.
+func TestRegroupAll_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	// Мега-работа автора: перевод + чужой роман, слитые (симуляция старого бага).
+	mkMega := func(last, norm, keepTitle, keepNorm, keepSrc, strayTitle, strayNorm, straySrc string) (megaWork, keep, stray int64) {
+		author := seedGroupAuthor(t, ctx, pool, last, norm)
+		keep = seedGroupBook(t, ctx, pool, collID, archID, author, "K-"+norm,
+			keepTitle, keepNorm, "ru", keepSrc, "en", norm)
+		stray = seedGroupBook(t, ctx, pool, collID, archID, author, "S-"+norm,
+			strayTitle, strayNorm, "ru", straySrc, "en", norm)
+		megaWork = workIDOf(t, ctx, pool, keep)
+		orphan := workIDOf(t, ctx, pool, stray)
+		_, err := pool.Exec(ctx,
+			`UPDATE books SET work_id=$1, work_scanned_at=now() WHERE id = ANY($2)`,
+			megaWork, []int64{keep, stray})
+		require.NoError(t, err)
+		_, err = pool.Exec(ctx, `DELETE FROM works WHERE id=$1`, orphan)
+		require.NoError(t, err)
+		_, err = pool.Exec(ctx, `UPDATE works SET edition_count=2 WHERE id=$1`, megaWork)
+		require.NoError(t, err)
+		return megaWork, keep, stray
+	}
+	w1, k1, s1 := mkMega("Роулинг", "роулинг джоан",
+		"Принц-полукровка", "принц-полукровка", "Harry Potter and the Half-Blood Prince",
+		"Кубок огня", "кубок огня", "Harry Potter and the Goblet of Fire")
+	w2, k2, s2 := mkMega("Кинг", "кинг стивен",
+		"Оно", "оно", "It",
+		"Сияние", "сияние", "The Shining")
+
+	ctl := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	require.NoError(t, ctl.RegroupAll())
+	// Повторный запуск, пока идёт, — busy.
+	err := ctl.RegroupAll()
+	if err != nil {
+		require.ErrorIs(t, err, ErrRegroupBusy)
+	} // гонка: мог уже завершиться — тогда второй прогон тоже валиден (no-op)
+
+	require.Eventually(t, func() bool {
+		return !ctl.Status().Regrouping
+	}, 60*time.Second, 200*time.Millisecond, "пересбор должен завершиться")
+
+	// Чужие романы вынесены; «свои» издания остались в исходных работах (якоря).
+	require.Equal(t, w1, workIDOf(t, ctx, pool, k1))
+	require.NotEqual(t, w1, workIDOf(t, ctx, pool, s1), "Кубок отделён от Полукровки")
+	require.Equal(t, w2, workIDOf(t, ctx, pool, k2))
+	require.NotEqual(t, w2, workIDOf(t, ctx, pool, s2), "Сияние отделено от Оно")
+
+	st := ctl.Status()
+	require.Zero(t, st.RegroupDone, "прогресс обнулён")
+	require.Zero(t, st.RegroupTotal)
+	require.False(t, st.Running, "воркер (был выключен) не включился сам")
+}
