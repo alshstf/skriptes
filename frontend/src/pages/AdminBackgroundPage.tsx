@@ -1635,7 +1635,17 @@ export function AdminBackgroundPage() {
             <TypeRow
               title="Известность"
               mode={renownMode}
-              coverage={nCov ? `${nCov.with_any} из ${nCov.head_total}` : '—'}
+              coverage={
+                nCov
+                  ? // Знаменатель — вселенная текущего охвата: «вся коллекция» → все
+                    // работы, иначе «голова». max с числителем защищает от инверсии
+                    // (счётчики вне головы остаются, если раньше гоняли всю коллекцию).
+                    `${nCov.with_any} из ${Math.max(
+                      nq.data?.whole_collection ? nCov.total : nCov.head_total,
+                      nCov.with_any,
+                    )}`
+                  : '—'
+              }
             >
               <ModeSelector
                 idPrefix="renown"
