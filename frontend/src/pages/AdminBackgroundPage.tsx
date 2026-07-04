@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { AlertTriangle, ChevronRight, Flame, Info, RotateCcw, Square, Trash2 } from 'lucide-react';
+import { AlertTriangle, ChevronRight, Flame, Info, Loader2, RotateCcw, Square, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
@@ -45,6 +45,7 @@ import {
   useUpdateWorkGroupingSettings,
   useRunWorkGrouping,
   useStopWorkGrouping,
+  useStopWorksRegroup,
   type CoverCacheSettings,
   type CollectionInput,
   type Intensity,
@@ -435,6 +436,7 @@ export function AdminBackgroundPage() {
   const updateWg = useUpdateWorkGroupingSettings();
   const runWg = useRunWorkGrouping();
   const stopWg = useStopWorkGrouping();
+  const stopRegroup = useStopWorksRegroup();
 
   // ── Числовые поля (общий SaveBar) ──
   const [minFreeMB, setMinFreeMB] = useState('');
@@ -580,6 +582,11 @@ export function AdminBackgroundPage() {
   const wgMode: Mode = (wq.data?.enabled ?? false) ? 'bg' : 'off';
   const wgRunning = wq.data?.work_grouping_running ?? false;
   const wgOnce = wq.data?.work_grouping_mode === 'once';
+  // Идёт массовый разбор работ (regroup): воркер приостановлен инструментом,
+  // управление им на это время блокируем (включение встало бы в очередь).
+  const wgRegrouping = wq.data?.work_regroup_running ?? false;
+  const wgRegroupDone = wq.data?.work_regroup_done ?? 0;
+  const wgRegroupTotal = wq.data?.work_regroup_total ?? 0;
   const wgCov = wq.data?.coverage;
   const applyWg = async (patch: Partial<WorkGroupingInput>, msg: string) => {
     if (!wq.data) return;
@@ -604,6 +611,14 @@ export function AdminBackgroundPage() {
       toast.success('Останавливаю проход');
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
+    }
+  };
+  const onStopRegroup = async () => {
+    try {
+      await stopRegroup.mutateAsync();
+      toast.success('Отменяю разбор — обработанные авторы останутся разобранными');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось отменить разбор');
     }
   };
 
@@ -1509,9 +1524,55 @@ export function AdminBackgroundPage() {
                 value={wgMode}
                 twoState
                 help={MODE_HELP_WG}
-                disabled={updateWg.isPending}
+                disabled={updateWg.isPending || wgRegrouping}
                 onChange={(m) => void applyWg({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
               />
+              {wgRegrouping ? (
+                <Callout icon={<Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin" aria-hidden />}>
+                  <div className="w-full space-y-2">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <span className="text-pretty">
+                        Идёт массовый разбор работ
+                        {wgRegroupTotal > 0 ? (
+                          <>
+                            {' '}
+                            — обработано{' '}
+                            <span className="font-medium tabular-nums">
+                              {wgRegroupDone} из {wgRegroupTotal}
+                            </span>
+                          </>
+                        ) : null}
+                        . Воркер приостановлен автоматически и вернётся в прежнее состояние
+                        после завершения.
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onStopRegroup}
+                        disabled={stopRegroup.isPending}
+                      >
+                        <Square className="size-4" aria-hidden />
+                        {stopRegroup.isPending ? 'Отмена…' : 'Отменить разбор'}
+                      </Button>
+                    </div>
+                    {wgRegroupTotal > 0 ? (
+                      <div
+                        className="h-1.5 w-full overflow-hidden rounded-full bg-muted"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={wgRegroupTotal}
+                        aria-valuenow={wgRegroupDone}
+                        aria-label="Прогресс разбора работ"
+                      >
+                        <div
+                          className="h-full rounded-full bg-foreground/70 transition-[width] duration-500"
+                          style={{ width: `${Math.min(100, Math.round((wgRegroupDone / wgRegroupTotal) * 100))}%` }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                </Callout>
+              ) : null}
               <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
                 Несколько fb2-файлов одной книги (разные издания/переводы) схлопываются в одну
                 карточку. Tier-1 — локально (название+язык, оригинал из «src-title-info», точный
@@ -1555,7 +1616,7 @@ export function AdminBackgroundPage() {
                           {stopWg.isPending ? 'Остановка…' : 'Остановить проход'}
                         </Button>
                       ) : (
-                        <Button variant="outline" size="sm" onClick={onRunWg} disabled={wgRunning || runWg.isPending}>
+                        <Button variant="outline" size="sm" onClick={onRunWg} disabled={wgRunning || wgRegrouping || runWg.isPending}>
                           <Flame className="size-4" aria-hidden />
                           {runWg.isPending ? 'Запуск…' : 'Прогнать разово'}
                         </Button>

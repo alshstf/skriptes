@@ -533,6 +533,12 @@ export type WorkGroupingSettings = {
   // статус воркера (read-only)
   work_grouping_running: boolean;
   work_grouping_mode: 'off' | 'continuous' | 'once';
+  // идёт массовый разбор работ (POST /admin/works/regroup): воркер приостановлен
+  // инструментом, попытки включения встанут в очередь — свитчер дизейблим.
+  // done/total — прогресс разбора в работах (счётчик «обработано N из M»).
+  work_regroup_running?: boolean;
+  work_regroup_done?: number;
+  work_regroup_total?: number;
   // покрытие (read-only)
   coverage: {
     books: number;
@@ -561,7 +567,12 @@ export function useWorkGroupingSettings() {
     queryKey: [...WORK_GROUP_KEY],
     queryFn: () => apiFetch<WorkGroupingSettings>('/api/admin/work-grouping'),
     staleTime: 10_000,
-    refetchInterval: (query) => (query.state.data?.work_grouping_running ? 3000 : false),
+    // Поллим и во время фонового воркера, и во время массового разбора работ
+    // (regroup) — индикатор и разблокировка контролов обновляются сами.
+    refetchInterval: (query) =>
+      query.state.data?.work_grouping_running || query.state.data?.work_regroup_running
+        ? 3000
+        : false,
   });
 }
 
@@ -588,6 +599,18 @@ export function useStopWorkGrouping() {
   return useMutation({
     mutationFn: () =>
       apiFetch<{ status: string }>('/api/admin/work-grouping/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
+  });
+}
+
+// Отмена идущего массового разбора работ (regroup) — если подвис или идёт
+// дольше ожидаемого. Обработанные авторы остаются разобранными (и синкнутся
+// в поиск), воркер восстановится автоматически.
+export function useStopWorksRegroup() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/works/regroup/stop', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
   });
 }

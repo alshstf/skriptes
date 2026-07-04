@@ -136,6 +136,76 @@ func handleWorkSplit(d SettingsDeps) http.HandlerFunc {
 	}
 }
 
+// handleWorksRegroup — POST /api/admin/works/regroup. Массовый разбор ошибочно
+// слитых работ (recovery после Tier-2-без-SrcTitle): не-якорные издания →
+// синглтоны, purge found-lookups, сброс ext_ids, синхронный Tier-1 re-group по
+// автору. Body: {"work_ids":[...], "dry_run":bool}. dry_run — только прогноз
+// (сколько Tier-1-кластеров дадут издания каждой работы), без записей.
+func handleWorksRegroup(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.WorkGroup == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "work grouping disabled"})
+			return
+		}
+		var body struct {
+			WorkIDs []int64 `json:"work_ids"`
+			DryRun  bool    `json:"dry_run"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256*1024)).Decode(&body); err != nil || len(body.WorkIDs) == 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "work_ids required"})
+			return
+		}
+		// Батчи ограничены: recovery идёт порциями (по detection-отчёту), а
+		// хендлер держит запрос синхронно.
+		if len(body.WorkIDs) > 500 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "too many work_ids (max 500 per call)"})
+			return
+		}
+		timeout := 30 * time.Second
+		if !body.DryRun {
+			timeout = 5 * time.Minute // split+re-group сотен работ + пересчёты агрегатов
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), timeout)
+		defer cancel()
+		out, err := d.WorkGroup.RegroupWorks(ctx, body.WorkIDs, body.DryRun)
+		if err != nil {
+			if errors.Is(err, metadata.ErrRegroupBusy) {
+				writeJSON(w, http.StatusConflict, map[string]string{"error": "уже идёт другой разбор работ"})
+				return
+			}
+			// Отмена оператором — не ошибка: отдаём частичный результат
+			// (обработанные авторы закоммичены и синкнуты). Canceled ставим и
+			// здесь — отмена могла прилететь ещё до первой записи (тогда все
+			// счётчики нулевые).
+			if errors.Is(err, context.Canceled) {
+				out.Canceled = true
+				writeJSON(w, http.StatusOK, out)
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "regroup failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, out)
+	}
+}
+
+// handleWorksRegroupStop — POST /api/admin/works/regroup/stop. Отменяет идущий
+// разбор (кнопка «Отменить разбор» в админке — если разбор подвис или идёт
+// дольше ожидаемого). Обработанные авторы остаются разобранными.
+func handleWorksRegroupStop(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.WorkGroup == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "work grouping disabled"})
+			return
+		}
+		if !d.WorkGroup.StopRegroup() {
+			writeJSON(w, http.StatusConflict, map[string]string{"error": "нет активного разбора"})
+			return
+		}
+		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
+	}
+}
+
 // handleWorkMerge — POST /api/admin/works/merge. Ручное объединение работ.
 // Body: {"work_ids":[...], "target": <optional>}.
 func handleWorkMerge(d SettingsDeps) http.HandlerFunc {

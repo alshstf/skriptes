@@ -55,6 +55,11 @@ type WorksIndexSyncer interface {
 // работы. API мапит это в 400.
 var ErrSplitAnchor = errors.New("cannot split the anchor edition of a work")
 
+// ErrRegroupBusy — RegroupWorks отклонён: уже идёт другой разбор. Фоновый
+// воркер инструмент приостанавливает/восстанавливает сам (pauseWorkerForRegroup),
+// а вот два параллельных разбора не имеют смысла.
+var ErrRegroupBusy = errors.New("another regroup is already running")
+
 type WorkGrouper struct {
 	pool      *pgxpool.Pool
 	resolvers []WorkKeyResolver    // включённые внешние источники (Tier-2), в порядке приоритета
@@ -974,6 +979,366 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	return target, nil
 }
 
+// RegroupResult — итог пере-группировки работ (ответ админ-ручки).
+type RegroupResult struct {
+	DryRun bool `json:"dry_run"`
+	// Canceled — разбор прерван оператором (StopRegroup): счётчики ниже
+	// отражают ЧАСТИЧНЫЙ прогресс (обработанные авторы закоммичены и синкнуты).
+	Canceled      bool  `json:"canceled,omitempty"`
+	Works         int   `json:"works"`          // найдено работ из запрошенных
+	Authors       int   `json:"authors"`        // затронуто авторов
+	EditionsSplit int   `json:"editions_split"` // изданий вынесено в синглтоны
+	LookupsPurged int64 `json:"lookups_purged"` // удалено found-строк book_work_lookups
+	// Predicted — dry-run-прогноз: сколько Tier-1-кластеров дадут издания каждой
+	// работы (1 = варианты написания одного произведения, разбирать нечего;
+	// >1 = кандидат на разбор). JSON-ключи — work_id строками.
+	Predicted map[int64]int `json:"predicted_clusters,omitempty"`
+	// SkippedNoAuthor — работы без primary_author_id: пере-группировка идёт по
+	// автору, такие разбираются вручную (split с карточки).
+	SkippedNoAuthor []int64 `json:"skipped_no_author,omitempty"`
+}
+
+// RegroupWorks — массовый разбор ошибочно слитых работ (recovery после бага
+// Tier-2-без-SrcTitle, см. audit-fixes-roadmap). На каждую работу: все
+// НЕ-якорные издания выносятся в собственные singleton-работы, у всех изданий
+// снимается work_scanned_at, чистятся 'found'-строки book_work_lookups
+// (отравленные ключи иначе сольют всё обратно на следующем Tier-2-проходе;
+// not_found/error остаются — они держат TTL-вежливость к источникам) и
+// сбрасывается works.ext_ids (его провенанс сломан тем же багом). Затем по
+// каждому затронутому автору СИНХРОННО прогоняется Tier-1/1.5 (без сети) —
+// корректные слияния (переводы одного произведения) собираются обратно,
+// ошибочные (разные тома/романы) остаются раздельными; Tier-2 доделает фоновый
+// краулер уже с фиксом. Один detached-синк поиска на весь вызов.
+//
+// dryRun=true — только прогноз (Predicted), никаких записей.
+//
+// Фоновый воркер группировки на время боевого разбора приостанавливается
+// АВТОМАТИЧЕСКИ и восстанавливается в прежнее (или запрошенное во время
+// разбора) состояние — оператору не нужно выключать его руками
+// (pauseWorkerForRegroup); свитчер в админке на это время дизейблится
+// (WorkGroupStatus.Regrouping).
+//
+// Пользовательские данные НЕ переносятся сознательно: book_ratings /
+// book_rating_prompts / feed_dismissals (work-level) остаются на исходной
+// работе — там же остаётся якорное издание, то есть работа, чьё название
+// пользователь видел. Всё book-level (reads/views/полки/★) едет с изданиями.
+func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64, dryRun bool) (RegroupResult, error) {
+	res := RegroupResult{DryRun: dryRun}
+	if len(workIDs) == 0 {
+		return res, fmt.Errorf("no work ids")
+	}
+	// Фоновый воркер приостанавливаем САМИ и восстанавливаем «как было» после
+	// (не полагаемся на то, что оператор выключит руками): гонка с воркером
+	// идемпотентна на уровне строк, но чистый прогон проще верифицировать.
+	// dry-run только читает — пауза не нужна. Параллельный второй разбор —
+	// ErrRegroupBusy.
+	if !dryRun {
+		restore, err := c.pauseWorkerForRegroup()
+		if err != nil {
+			return res, err
+		}
+		defer restore()
+		// Регистрируем cancel идущего разбора — кнопка «Отменить разбор» в
+		// админке (StopRegroup) прерывает между авторами / внутри per-author
+		// транзакции (та откатится целиком). Уже обработанные авторы остаются
+		// разобранными и синкаются в поиск ниже.
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithCancel(ctx)
+		c.mu.Lock()
+		c.regroupCancel = cancel
+		c.mu.Unlock()
+		defer func() {
+			c.mu.Lock()
+			c.regroupCancel = nil
+			c.regroupDone, c.regroupTotal = 0, 0
+			c.mu.Unlock()
+			cancel()
+		}()
+	}
+
+	// Дедуп + группировка запрошенных работ по автору.
+	seen := map[int64]struct{}{}
+	byAuthor := map[int64][]int64{}
+	rows, err := c.pool.Query(ctx,
+		`SELECT id, COALESCE(primary_author_id, 0) FROM works WHERE id = ANY($1)`, workIDs)
+	if err != nil {
+		return res, fmt.Errorf("load works: %w", err)
+	}
+	for rows.Next() {
+		var id, author int64
+		if err := rows.Scan(&id, &author); err != nil {
+			rows.Close()
+			return res, err
+		}
+		if _, dup := seen[id]; dup {
+			continue
+		}
+		seen[id] = struct{}{}
+		if author == 0 {
+			res.SkippedNoAuthor = append(res.SkippedNoAuthor, id)
+			continue
+		}
+		byAuthor[author] = append(byAuthor[author], id)
+		res.Works++
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return res, err
+	}
+	res.Authors = len(byAuthor)
+	if dryRun {
+		res.Predicted = map[int64]int{}
+	} else {
+		// Прогресс для счётчика в админке («обработано N из M работ»);
+		// поллинг статуса читает done/total, инкремент — после каждого автора.
+		c.mu.Lock()
+		c.regroupDone, c.regroupTotal = 0, res.Works
+		c.mu.Unlock()
+	}
+
+	// Tier-1-only группировщик; resyncer НЕ передаём — синк поиска делаем один
+	// на весь вызов (syncSearchAfterManual ниже), touched/deleted копим в g.
+	g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
+	var touched []int64
+
+	var runErr error
+	for author, works := range byAuthor {
+		if ctx.Err() != nil {
+			runErr = ctx.Err()
+			break
+		}
+		if dryRun {
+			books, err := g.loadAuthorBooks(ctx, author)
+			if err != nil {
+				return res, fmt.Errorf("load author %d books: %w", author, err)
+			}
+			for _, w := range works {
+				var subset []groupBook
+				for _, b := range books {
+					if b.workID == w {
+						subset = append(subset, b)
+					}
+				}
+				uf := clusterTier1(subset)
+				roots := map[int]struct{}{}
+				for i := range subset {
+					roots[uf.find(i)] = struct{}{}
+				}
+				res.Predicted[w] = len(roots)
+			}
+			continue
+		}
+
+		newWorks, splitN, purged, err := c.regroupSplitWorks(ctx, works)
+		if err != nil {
+			// break, а не return: уже разобранные авторы закоммичены — их надо
+			// досинкать в поиск ниже (в т.ч. при отмене разбора).
+			runErr = fmt.Errorf("author %d: %w", author, err)
+			break
+		}
+		res.EditionsSplit += splitN
+		res.LookupsPurged += purged
+		touched = append(touched, works...)
+		touched = append(touched, newWorks...)
+
+		// Синхронный Tier-1/1.5 re-group: синглтоны собираются обратно в
+		// корректные работы. Ошибка не фатальна — книги остаются кандидатами
+		// (work_scanned_at NULL), их подберёт фоновый воркер.
+		if err := g.groupAuthorTier1(ctx, author); err != nil {
+			c.logger.Warn("regroup: tier-1 re-group failed — candidates left for background worker",
+				"author_id", author, "err", err)
+		}
+		c.mu.Lock()
+		c.regroupDone += len(works)
+		c.mu.Unlock()
+	}
+
+	if !dryRun && len(touched) > 0 {
+		// Итоговый синк поиска: touched = старые + новые + изменённые re-group'ом
+		// работы минус GC'нутые; deleted = GC re-group'а (в нашей фазе split
+		// работы не пустеют — якорь остаётся, синглтоны непусты по построению).
+		// Выполняется и при отмене/ошибке — уже закоммиченные авторы досинкиваются.
+		for id := range g.touchedWorks {
+			touched = append(touched, id)
+		}
+		deleted := keysOf(g.deletedWorks)
+		c.syncSearchAfterManual(survivors(dedupInt64s(touched), deleted), deleted)
+	}
+	if runErr != nil && errors.Is(runErr, context.Canceled) {
+		res.Canceled = true
+		c.logger.Info("regroup: canceled by operator — processed authors kept",
+			"editions_split", res.EditionsSplit)
+	}
+	return res, runErr
+}
+
+// StopRegroup — отменяет идущий разбор работ (кнопка «Отменить разбор»).
+// Прерывание — между авторами или откатом текущей per-author транзакции;
+// уже обработанные авторы остаются разобранными (и синкаются в поиск).
+// Возвращает false, если активного разбора нет.
+func (c *WorkGroupController) StopRegroup() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.regroupCancel == nil {
+		return false
+	}
+	c.regroupCancel()
+	c.logger.Info("regroup: stop requested")
+	return true
+}
+
+// pauseWorkerForRegroup — приостанавливает фоновую группировку на время
+// RegroupWorks и возвращает restore-функцию. Restore включает воркер обратно,
+// если он работал ДО разбора ИЛИ его пытались включить ВО ВРЕМЯ (Start/RunOnce
+// в окне regroupActive не стартуют, а помечают pending*). Прерванный one-shot
+// проход перезапускается best-effort (RunOnce откажется, если continuous уже
+// поднят или прежняя горутина ещё не доотменилась, — проход просто ручной,
+// повтор дешёв). Отмена контекста воркера распространяется быстро (циклы
+// проверяют ctx, транзакции apply короткие); теоретический хвост одного
+// докатывающегося apply идемпотентен на уровне строк.
+func (c *WorkGroupController) pauseWorkerForRegroup() (restore func(), err error) {
+	c.mu.Lock()
+	if c.regroupActive {
+		c.mu.Unlock()
+		return nil, ErrRegroupBusy
+	}
+	c.regroupActive = true
+	wasCont := c.contCancel != nil
+	wasOnce := c.onceCancel != nil
+	c.mu.Unlock()
+
+	if wasCont {
+		c.Stop()
+	}
+	if wasOnce {
+		c.StopOnce()
+	}
+	if wasCont || wasOnce {
+		c.logger.Info("work grouping: worker paused for regroup", "continuous", wasCont, "once", wasOnce)
+	}
+	return func() {
+		c.mu.Lock()
+		c.regroupActive = false
+		startCont := wasCont || c.pendingStart
+		startOnce := wasOnce || c.pendingOnce
+		c.pendingStart, c.pendingOnce = false, false
+		c.mu.Unlock()
+		if startCont {
+			c.Start()
+		}
+		if startOnce {
+			c.RunOnce()
+		}
+		if startCont || startOnce {
+			c.logger.Info("work grouping: worker resumed after regroup", "continuous", startCont, "once", startOnce)
+		}
+	}, nil
+}
+
+// regroupSplitWorks — транзакционная фаза разбора работ (батч одного автора):
+// вынос не-якорных изданий в синглтоны + сброс маркеров/лежалых внешних ключей.
+// Возвращает id новых работ, число вынесенных изданий и число вычищенных
+// found-lookups.
+func (c *WorkGroupController) regroupSplitWorks(ctx context.Context, works []int64) (newWorks []int64, splitN int, purged int64, err error) {
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	var affectedBooks []int64
+	for _, w := range works {
+		// Якорь (title-derived, синхронен с books.anchorEditionID и guard'ом
+		// SplitEditions) остаётся в исходной работе — держит её идентичность и
+		// work-level пользовательские данные (оценки/промпты/dismissals).
+		var anchor int64
+		aerr := tx.QueryRow(ctx, `
+			SELECT bb.id FROM books bb
+			JOIN works ww ON ww.id = bb.work_id
+			WHERE bb.work_id = $1 AND bb.deleted = false
+			ORDER BY (bb.normalized_title = ww.normalized_title) DESC, bb.id
+			LIMIT 1
+		`, w).Scan(&anchor)
+		if errors.Is(aerr, pgx.ErrNoRows) {
+			continue // работа без живых изданий — нечего разбирать
+		}
+		if aerr != nil {
+			return nil, 0, 0, fmt.Errorf("anchor of work %d: %w", w, aerr)
+		}
+		others, oerr := scanInt64s(ctx, tx, `
+			SELECT id FROM books WHERE work_id = $1 AND deleted = false AND id <> $2 ORDER BY id`, w, anchor)
+		if oerr != nil {
+			return nil, 0, 0, oerr
+		}
+		for _, bid := range others {
+			var newID int64
+			if err := tx.QueryRow(ctx, `
+				INSERT INTO works (title, normalized_title, primary_author_id, written_year, written_year_source, series_id, ser_no)
+				SELECT b.title, b.normalized_title,
+				       (SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1),
+				       b.written_year, b.written_year_source, b.series_id, b.ser_no
+				FROM books b WHERE b.id = $1
+				RETURNING id
+			`, bid).Scan(&newID); err != nil {
+				return nil, 0, 0, fmt.Errorf("create singleton work for book %d: %w", bid, err)
+			}
+			if _, err := tx.Exec(ctx,
+				`UPDATE books SET work_id = $1, work_scanned_at = NULL WHERE id = $2`, newID, bid); err != nil {
+				return nil, 0, 0, fmt.Errorf("reassign book %d: %w", bid, err)
+			}
+			newWorks = append(newWorks, newID)
+			splitN++
+		}
+		// Якорь тоже становится кандидатом re-group'а.
+		if _, err := tx.Exec(ctx,
+			`UPDATE books SET work_scanned_at = NULL WHERE id = $1`, anchor); err != nil {
+			return nil, 0, 0, fmt.Errorf("unmark anchor %d: %w", anchor, err)
+		}
+		affectedBooks = append(affectedBooks, anchor)
+		affectedBooks = append(affectedBooks, others...)
+	}
+
+	if len(affectedBooks) > 0 {
+		tag, perr := tx.Exec(ctx,
+			`DELETE FROM book_work_lookups WHERE book_id = ANY($1) AND outcome = 'found'`, affectedBooks)
+		if perr != nil {
+			return nil, 0, 0, fmt.Errorf("purge lookups: %w", perr)
+		}
+		purged = tag.RowsAffected()
+	}
+	if _, err := tx.Exec(ctx,
+		`UPDATE works SET ext_ids = '{}'::jsonb, updated_at = now() WHERE id = ANY($1)`, works); err != nil {
+		return nil, 0, 0, fmt.Errorf("reset ext_ids: %w", err)
+	}
+	allWorks := append(append([]int64{}, works...), newWorks...)
+	if err := recomputeWorkAggregates(ctx, tx, allWorks); err != nil {
+		return nil, 0, 0, err
+	}
+	if dom, derr := dominantLang(ctx, tx); derr == nil && dom != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, dom, allWorks); err != nil {
+			return nil, 0, 0, fmt.Errorf("localize work titles: %w", err)
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return nil, 0, 0, err
+	}
+	return newWorks, splitN, purged, nil
+}
+
+// dedupInt64s — уникальные значения с сохранением порядка.
+func dedupInt64s(in []int64) []int64 {
+	seen := make(map[int64]struct{}, len(in))
+	out := make([]int64, 0, len(in))
+	for _, v := range in {
+		if _, dup := seen[v]; dup {
+			continue
+		}
+		seen[v] = struct{}{}
+		out = append(out, v)
+	}
+	return out
+}
+
 // survivors — элементы all, которых нет в removed (для синка works-индекса
 // после split: старые работы, пережившие GC).
 func survivors(all, removed []int64) []int64 {
@@ -1184,6 +1549,13 @@ func (u *unionFind) size(x int) int { return u.sz[u.find(x)] }
 type WorkGroupStatus struct {
 	Running bool   `json:"work_grouping_running"`
 	Mode    string `json:"work_grouping_mode"` // "off" | "continuous" | "once"
+	// Regrouping — идёт RegroupWorks: воркер приостановлен, попытки включения
+	// ставятся в очередь (UI дизейблит свитчер на это время).
+	Regrouping bool `json:"work_regroup_running"`
+	// Прогресс идущего разбора: обработано работ из запрошенных (инкремент —
+	// по-авторными порциями). Вне разбора — нули.
+	RegroupDone  int `json:"work_regroup_done"`
+	RegroupTotal int `json:"work_regroup_total"`
 }
 
 // WorkGroupCoverage — покрытие группировки для админ-статистики.
@@ -1205,6 +1577,18 @@ type WorkGroupController struct {
 	cfg        WorkGroupConfig
 	contCancel context.CancelFunc
 	onceCancel context.CancelFunc
+
+	// regroupActive — идёт RegroupWorks: воркер приостановлен им самим, Start/
+	// RunOnce не стартуют, а помечают pending* — восстановление после разбора
+	// учтёт и «как было», и запросы включения, пришедшие во время разбора.
+	// regroupCancel — отмена идущего разбора (StopRegroup);
+	// regroupDone/Total — его прогресс в работах (для счётчика в админке).
+	regroupActive bool
+	pendingStart  bool
+	pendingOnce   bool
+	regroupCancel context.CancelFunc
+	regroupDone   int
+	regroupTotal  int
 }
 
 func NewWorkGroupController(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, resyncer WorkIDResyncer, logger *slog.Logger) *WorkGroupController {
@@ -1220,6 +1604,9 @@ func (c *WorkGroupController) Status() WorkGroupStatus {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	switch {
+	case c.regroupActive:
+		return WorkGroupStatus{Running: false, Mode: "off", Regrouping: true,
+			RegroupDone: c.regroupDone, RegroupTotal: c.regroupTotal}
 	case c.onceCancel != nil:
 		return WorkGroupStatus{Running: true, Mode: "once"}
 	case c.contCancel != nil:
@@ -1233,6 +1620,13 @@ func (c *WorkGroupController) Start() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.contCancel != nil || !c.ready() {
+		return
+	}
+	// Во время RegroupWorks воркер не стартуем — ставим запрос в очередь:
+	// restore-фаза разбора включит его сама (см. pauseWorkerForRegroup).
+	if c.regroupActive {
+		c.pendingStart = true
+		c.logger.Info("work grouping: start deferred — regroup in progress")
 		return
 	}
 	ctx, cancel := context.WithCancel(context.Background())
@@ -1279,6 +1673,13 @@ func (c *WorkGroupController) RunOnce() {
 	c.mu.Lock()
 	if c.onceCancel != nil || c.contCancel != nil || !c.ready() {
 		c.mu.Unlock()
+		return
+	}
+	// Во время RegroupWorks проход не стартуем — очередь (зеркало Start).
+	if c.regroupActive {
+		c.pendingOnce = true
+		c.mu.Unlock()
+		c.logger.Info("work grouping: one-shot pass deferred — regroup in progress")
 		return
 	}
 	ctx, cancel := context.WithCancel(context.Background())

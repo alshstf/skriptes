@@ -540,3 +540,166 @@ func TestWorkGrouper_Tier2_ConflictingSrcNotMerged(t *testing.T) {
 		`SELECT count(*) FROM works WHERE ext_ids->>'ol_work' = 'OLSAMEW'`).Scan(&extCount))
 	require.Equal(t, 0, extCount, "конфликтный бакет не должен писать ext_ids")
 }
+
+// TestRegroupWorks_MiniHP — recovery-сценарий «мини-Гарри-Поттер»: в одну работу
+// ошибочно слиты два перевода Принца-полукровки (один оригинал) и болгарский
+// «Кубок огня» (ДРУГОЙ роман), у всех — отравленные found-lookups с общим
+// ключом и ext_ids на работе. RegroupWorks обязан: вынести не-якорные издания,
+// вычистить found-lookups, сбросить ext_ids, синхронно собрать переводы одного
+// оригинала обратно (Tier-1), оставить чужой роман отдельной работой и НЕ
+// тронуть пользовательскую оценку исходной работы.
+func TestRegroupWorks_MiniHP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	author := seedGroupAuthor(t, ctx, pool, "Роулинг", "роулинг джоан")
+	e1 := seedGroupBook(t, ctx, pool, collID, archID, author, "R1",
+		"Гарри Поттер и Принц-полукровка", "гарри поттер и принц-полукровка", "ru",
+		"Harry Potter and the Half-Blood Prince", "en", "rowling joanne")
+	e2 := seedGroupBook(t, ctx, pool, collID, archID, author, "R2",
+		"Принц-полукровка (народный перевод)", "принц-полукровка (народный перевод)", "ru",
+		"Harry Potter and the Half-Blood Prince", "en", "rowling joanne")
+	e3 := seedGroupBook(t, ctx, pool, collID, archID, author, "R3",
+		"Огненият бокал", "огненият бокал", "bg",
+		"Harry Potter and the Goblet of Fire", "en", "rowling joanne")
+
+	// Симулируем состоявшееся мега-слияние: все издания в работе e1 (её title ==
+	// works.title → e1 будет якорем), «чужие» singleton-работы GC'нуты, на работе
+	// — ошибочный внешний ключ, издания scanned.
+	megaWork := workIDOf(t, ctx, pool, e1)
+	orphan2, orphan3 := workIDOf(t, ctx, pool, e2), workIDOf(t, ctx, pool, e3)
+	_, err := pool.Exec(ctx,
+		`UPDATE books SET work_id=$1, work_scanned_at=now() WHERE id = ANY($2)`,
+		megaWork, []int64{e1, e2, e3})
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `DELETE FROM works WHERE id = ANY($1)`, []int64{orphan2, orphan3})
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx,
+		`UPDATE works SET edition_count=3, ext_ids='{"ol_work":"OLBADW"}'::jsonb WHERE id=$1`, megaWork)
+	require.NoError(t, err)
+	for _, b := range []int64{e1, e2, e3} {
+		_, err = pool.Exec(ctx, `
+			INSERT INTO book_work_lookups (book_id, source, outcome, work_key)
+			VALUES ($1, 'openlibrary', 'found', 'OLBADW')`, b)
+		require.NoError(t, err)
+	}
+	// Пользовательская оценка на слитой работе — обязана пережить разбор.
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('rg@example.com', 'RG', 'x', 'user') RETURNING id`).Scan(&userID))
+	_, err = pool.Exec(ctx,
+		`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1, $2, 5)`, userID, megaWork)
+	require.NoError(t, err)
+
+	ctl := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+
+	// Параллельный ВТОРОЙ разбор отклоняется (воркер группировки инструмент
+	// приостанавливает сам — см. проверку автопаузы на боевом разборе ниже).
+	ctl.mu.Lock()
+	ctl.regroupActive = true
+	ctl.mu.Unlock()
+	_, err = ctl.RegroupWorks(ctx, []int64{megaWork}, false)
+	require.ErrorIs(t, err, ErrRegroupBusy)
+	ctl.mu.Lock()
+	ctl.regroupActive = false
+	ctl.mu.Unlock()
+
+	// Dry-run: прогноз 2 кластера (переводы одного оригинала + чужой роман),
+	// данные не тронуты.
+	dry, err := ctl.RegroupWorks(ctx, []int64{megaWork}, true)
+	require.NoError(t, err)
+	require.True(t, dry.DryRun)
+	require.Equal(t, 2, dry.Predicted[megaWork], "Tier-1 должен предсказать 2 кластера")
+	var worksCount int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
+	require.Equal(t, 1, worksCount, "dry-run ничего не пишет")
+
+	// Боевой разбор. «Работающий» continuous-воркер симулируем фейковым
+	// cancel'ом: RegroupWorks обязан сам его приостановить (Status.Regrouping
+	// на время разбора) и после — восстановить настоящим Start().
+	ctl.mu.Lock()
+	ctl.contCancel = func() {}
+	ctl.mu.Unlock()
+	res, err := ctl.RegroupWorks(ctx, []int64{megaWork}, false)
+	require.NoError(t, err)
+	require.Equal(t, 1, res.Works)
+	require.Equal(t, 1, res.Authors)
+	require.Equal(t, 2, res.EditionsSplit, "два не-якорных издания вынесены")
+	require.EqualValues(t, 3, res.LookupsPurged, "все found-lookups вычищены")
+	st := ctl.Status()
+	require.True(t, st.Running, "воркер восстановлен после разбора")
+	require.Equal(t, "continuous", st.Mode)
+	require.False(t, st.Regrouping)
+	ctl.Stop() // прибираем воркера, поднятого restore-фазой
+
+	// Переводы одного оригинала собрались обратно в исходную работу (якорь там).
+	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e1))
+	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2), "тот же оригинал → та же работа")
+	w3 := workIDOf(t, ctx, pool, e3)
+	require.NotEqual(t, megaWork, w3, "чужой роман остался отдельной работой")
+
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
+	require.Equal(t, 2, worksCount)
+
+	// Лежалые внешние ключи вычищены (иначе Tier-2 сольёт обратно).
+	var foundCount int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_work_lookups WHERE outcome='found'`).Scan(&foundCount))
+	require.Equal(t, 0, foundCount)
+	var extIDs string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT ext_ids::text FROM works WHERE id=$1`, megaWork).Scan(&extIDs))
+	require.Equal(t, "{}", extIDs)
+
+	// Агрегаты пересчитаны; оценка не потерялась; издания снова scanned.
+	var ec int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT edition_count FROM works WHERE id=$1`, megaWork).Scan(&ec))
+	require.Equal(t, 2, ec)
+	require.NoError(t, pool.QueryRow(ctx, `SELECT edition_count FROM works WHERE id=$1`, w3).Scan(&ec))
+	require.Equal(t, 1, ec)
+	var ratings int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_ratings WHERE work_id=$1 AND user_id=$2`, megaWork, userID).Scan(&ratings))
+	require.Equal(t, 1, ratings, "оценка осталась на работе с якорем")
+	var unscanned int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM books WHERE work_scanned_at IS NULL AND deleted=false`).Scan(&unscanned))
+	require.Equal(t, 0, unscanned, "re-group пометил все издания scanned")
+
+	// Идемпотентность: повторный разбор ничего не ломает.
+	res2, err := ctl.RegroupWorks(ctx, []int64{megaWork}, false)
+	require.NoError(t, err)
+	require.Equal(t, 1, res2.EditionsSplit, "повторный разбор выносит e2 и собирает обратно")
+	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2))
+
+	// Отмена: StopRegroup без активного разбора — false; отменённый контекст
+	// прерывает разбор (обёрнутый context.Canceled), состояние контроллера
+	// восстановлено (regroupActive снят restore-фазой), данные не поломаны.
+	require.False(t, ctl.StopRegroup(), "без активного разбора отменять нечего")
+	cctx, ccancel := context.WithCancel(ctx)
+	ccancel()
+	_, err = ctl.RegroupWorks(cctx, []int64{megaWork}, false)
+	require.ErrorIs(t, err, context.Canceled)
+	st = ctl.Status()
+	require.False(t, st.Regrouping, "regroupActive снят restore-фазой")
+	require.Zero(t, st.RegroupDone, "прогресс обнулён после разбора")
+	require.Zero(t, st.RegroupTotal)
+	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2), "отменённый разбор не тронул данные")
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
+	require.Equal(t, 2, worksCount)
+}
