@@ -572,27 +572,27 @@ func (c *RenownBackfillController) Coverage(ctx context.Context) (RenownCoverage
 	if c.pool == nil {
 		return out, nil
 	}
+	// head_total — set-based (UNION), а НЕ per-work EXISTS: коррелированный EXISTS
+	// по book_adaptations/books на КАЖДУЮ из ~500k works уходил за 5с (прод-краш
+	// 1.8.0: таймаут → nil coverage). UNION трёх дешёвых множеств
+	// (переиздания ∪ экранизация ∪ LIBRATE) считается за доли секунды.
 	if err := c.pool.QueryRow(ctx, `
-		SELECT count(*),
-		       count(*) FILTER (WHERE
-		           COALESCE(w.edition_count, 1) >= 2
-		           OR EXISTS (
-		               SELECT 1 FROM book_adaptations ad
-		               JOIN books bb ON bb.id = ad.book_id
-		               WHERE bb.work_id = w.id AND bb.deleted = false
-		           )
-		           OR EXISTS (
-		               SELECT 1 FROM books bb
-		               WHERE bb.work_id = w.id AND bb.deleted = false AND bb.rating > 0
-		           )
-		       ),
-		       count(*) FILTER (WHERE w.fantlab_marks IS NOT NULL
-		           OR w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL
-		           OR w.wd_sitelinks IS NOT NULL),
-		       count(*) FILTER (WHERE w.fantlab_marks IS NOT NULL),
-		       count(*) FILTER (WHERE w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL),
-		       count(*) FILTER (WHERE w.wd_sitelinks IS NOT NULL)
-		FROM works w
+		SELECT
+		  (SELECT count(*) FROM works),
+		  (SELECT count(*) FROM (
+		      SELECT id AS work_id FROM works WHERE COALESCE(edition_count, 1) >= 2
+		      UNION
+		      SELECT bb.work_id FROM book_adaptations ad JOIN books bb ON bb.id = ad.book_id
+		        WHERE bb.deleted = false AND bb.work_id IS NOT NULL
+		      UNION
+		      SELECT bb.work_id FROM books bb
+		        WHERE bb.deleted = false AND bb.rating > 0 AND bb.work_id IS NOT NULL
+		  ) head),
+		  (SELECT count(*) FROM works WHERE fantlab_marks IS NOT NULL
+		      OR ol_ratings_count IS NOT NULL OR ol_want_count IS NOT NULL OR wd_sitelinks IS NOT NULL),
+		  (SELECT count(*) FROM works WHERE fantlab_marks IS NOT NULL),
+		  (SELECT count(*) FROM works WHERE ol_ratings_count IS NOT NULL OR ol_want_count IS NOT NULL),
+		  (SELECT count(*) FROM works WHERE wd_sitelinks IS NOT NULL)
 	`).Scan(&out.Total, &out.HeadTotal, &out.WithAny, &out.WithFantlab, &out.WithOL, &out.WithWD); err != nil {
 		return out, err
 	}

@@ -1249,7 +1249,7 @@ export function AdminBackgroundPage() {
                   {clearCovers.isPending ? 'Очистка…' : 'Очистить кэш'}
                 </Button>
               </div>
-              {xCov && Object.keys(xCov.by_source).length > 0 ? (
+              {xCov?.by_source && Object.keys(xCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="w-full text-muted-foreground/80">Из внешних добавлено:</span>
                   {Object.entries(xCov.by_source)
@@ -1375,7 +1375,7 @@ export function AdminBackgroundPage() {
                   </p>
                 </div>
               )}
-              {yCov && Object.keys(yCov.by_source).length > 0 ? (
+              {yCov?.by_source && Object.keys(yCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   {Object.entries(yCov.by_source)
                     .sort((a, b) => b[1] - a[1])
@@ -1617,7 +1617,7 @@ export function AdminBackgroundPage() {
                   ) : null}
                 </>
               ) : null}
-              {rCov && Object.keys(rCov.by_source).length > 0 ? (
+              {rCov?.by_source && Object.keys(rCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="w-full text-muted-foreground/80">Из внешних добавлено:</span>
                   {Object.entries(rCov.by_source)
@@ -1742,7 +1742,7 @@ export function AdminBackgroundPage() {
                   ) : null}
                 </>
               ) : null}
-              {nCov && Object.keys(nCov.by_source).length > 0 ? (
+              {nCov?.by_source && Object.keys(nCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="w-full text-muted-foreground/80">Найдено источниками:</span>
                   {Object.entries(nCov.by_source)

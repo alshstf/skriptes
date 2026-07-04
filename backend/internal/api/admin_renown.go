@@ -34,7 +34,10 @@ func toRenownBackfillConfig(c settings.RenownConfig) metadata.RenownBackfillConf
 }
 
 func renownState(ctx context.Context, d SettingsDeps, cfg settings.RenownConfig) renownResponse {
-	resp := renownResponse{RenownConfig: cfg}
+	// BySource инициализируем непустой картой: если Coverage() ошибётся (напр.
+	// таймаут тяжёлого запроса на большой коллекции), JSON не должен отдать
+	// by_source: null — фронт делает Object.keys(by_source) и падал бы.
+	resp := renownResponse{RenownConfig: cfg, Coverage: metadata.RenownCoverage{BySource: map[string]int{}}}
 	if d.Renown != nil {
 		resp.RenownBackfillStatus = d.Renown.Status()
 		if cov, err := d.Renown.Coverage(ctx); err == nil {
@@ -47,7 +50,8 @@ func renownState(ctx context.Context, d SettingsDeps, cfg settings.RenownConfig)
 // handleGetRenown — GET /api/admin/renown. Конфиг + состояние воркера + покрытие.
 func handleGetRenown(d SettingsDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		// 15с (а не 5): Coverage head_total на большой коллекции считается дольше 5с.
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 		defer cancel()
 		cfg, err := d.Store.Renown(ctx)
 		if err != nil {
