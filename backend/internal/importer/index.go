@@ -16,6 +16,15 @@ const booksIndex = "books"
 // идёт по id издания, схлопывание делает distinct).
 const worksIndex = "works"
 
+// MeiliMaxTotalHits — потолок пагинации/подсчёта ОБОИХ индексов (books, works).
+// Meili-дефолт 1000 капил EstimatedTotalHits (счётчик «N книг» на /books всегда
+// показывал 1000 на большой коллекции) и молча обрезал deep-paging: за капом
+// Meili возвращает пустые hits. Значение с запасом больше коллекции (~470k
+// изданий); память заранее не аллоцируется — это только верхняя граница
+// глубины. books.Service зеркалит константу (meiliMaxTotalHits) как guard
+// глубины offset — тест-синхронизатор в books/service_guard_test.go.
+const MeiliMaxTotalHits = 1_000_000
+
 // bookDoc — документ для индекса "books" в Meilisearch.
 // id используется как primary key (совпадает с books.id в Postgres).
 type bookDoc struct {
@@ -98,6 +107,10 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 		&[]string{"words", "typo", "proximity", "attribute", "sort", "exactness", "popularity:desc"}); err != nil {
 		return fmt.Errorf("works update ranking: %w", err)
 	}
+	if _, err := idx.UpdatePaginationWithContext(ctx,
+		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
+		return fmt.Errorf("works update pagination: %w", err)
+	}
 	return nil
 }
 
@@ -140,6 +153,10 @@ func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	if _, err := idx.UpdateRankingRulesWithContext(ctx,
 		&[]string{"words", "typo", "proximity", "attribute", "sort", "exactness", "popularity:desc"}); err != nil {
 		return fmt.Errorf("update ranking: %w", err)
+	}
+	if _, err := idx.UpdatePaginationWithContext(ctx,
+		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
+		return fmt.Errorf("update pagination: %w", err)
 	}
 	return nil
 }

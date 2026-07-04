@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { bySeriesOrder, computeMergeSuggestions, type BookListItem } from './books';
+import {
+  bySeriesOrder,
+  computeMergeSuggestions,
+  nextBooksPageParam,
+  type BookListItem,
+} from './books';
 
 function bk(id: number, title: string, seriesOrder?: number): BookListItem {
   return { id, title, authors: [], lib_id: String(id), series_order: seriesOrder };
@@ -73,5 +78,32 @@ describe('computeMergeSuggestions', () => {
       mb({ id: 4, work_id: 4, ser_no: 2 }),
     ];
     expect(computeMergeSuggestions(books).map((s) => s.serNo)).toEqual([2, 5]);
+  });
+});
+
+describe('nextBooksPageParam', () => {
+  const page = (count: number, limit: number, offset: number, total: number) => ({
+    items: Array.from({ length: count }, (_, i) => mb({ id: i + 1 })),
+    limit,
+    offset,
+    total,
+  });
+
+  it('полная страница и есть ещё → следующий offset', () => {
+    expect(nextBooksPageParam(page(20, 20, 0, 100))).toBe(20);
+    expect(nextBooksPageParam(page(20, 20, 40, 100))).toBe(60);
+  });
+
+  it('короткая страница → конец, даже если total больше (переоценка Meili)', () => {
+    expect(nextBooksPageParam(page(7, 20, 0, 1000))).toBeUndefined();
+  });
+
+  it('пустая страница → конец (за потолком maxTotalHits бэкенд отдаёт пусто)', () => {
+    expect(nextBooksPageParam(page(0, 20, 1000, 5000))).toBeUndefined();
+  });
+
+  it('next >= total → конец', () => {
+    expect(nextBooksPageParam(page(20, 20, 80, 100))).toBeUndefined();
+    expect(nextBooksPageParam(page(20, 20, 0, 20))).toBeUndefined();
   });
 });

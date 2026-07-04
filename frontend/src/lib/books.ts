@@ -263,13 +263,25 @@ export function useInfiniteBooks(opts: Omit<BookFilters, 'offset'>) {
       apiFetch<BookListResponse>(`/api/books?${buildBooksParams(opts, limit, pageParam)}`, {
         signal,
       }),
-    getNextPageParam: (lastPage) => {
-      const next = lastPage.offset + lastPage.limit;
-      return next < lastPage.total ? next : undefined;
-    },
+    getNextPageParam: nextBooksPageParam,
     placeholderData: keepPreviousData,
     staleTime: 10_000,
   });
+}
+
+/**
+ * nextBooksPageParam — offset следующей страницы infinite-набора или undefined
+ * (конец). Короткая/пустая страница = реальный конец выдачи, даже если total
+ * больше: для текстовых запросов total может быть оценкой Meili, и без этого
+ * стопа переоценка зацикливала бы авто-подгрузку пустых страниц (BooksPage
+ * дёргает fetchNextPage, пока hasNextPage). Вынесен ради unit-тестов.
+ */
+export function nextBooksPageParam(
+  lastPage: Pick<BookListResponse, 'items' | 'limit' | 'offset' | 'total'>,
+): number | undefined {
+  if (lastPage.items.length < lastPage.limit) return undefined;
+  const next = lastPage.offset + lastPage.limit;
+  return next < lastPage.total ? next : undefined;
 }
 
 /**
