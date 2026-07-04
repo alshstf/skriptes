@@ -603,6 +603,17 @@ export function useStopWorkGrouping() {
   });
 }
 
+// Глобальный пересбор группировок: все мульти-работы разбираются и собираются
+// заново по текущим правилам (фоном; прогресс/отмена — в статусе work-grouping).
+export function useRegroupAllWorks() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/works/regroup-all', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...WORK_GROUP_KEY] }),
+  });
+}
+
 // Отмена идущего массового разбора работ (regroup) — если подвис или идёт
 // дольше ожидаемого. Обработанные авторы остаются разобранными (и синкнутся
 // в поиск), воркер восстановится автоматически.

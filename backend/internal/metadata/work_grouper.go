@@ -1235,6 +1235,120 @@ func (c *WorkGroupController) StopRegroup() bool {
 	return true
 }
 
+// RegroupAll — ГЛОБАЛЬНЫЙ пересбор группировок (кнопка «Пересобрать
+// группировки заново» в админке): все мульти-издательные работы разбираются
+// и собираются заново по текущим правилам Tier-1 (тот же механизм, что у
+// точечного RegroupWorks, по-авторно), отравленные found-lookups и ext_ids
+// чистятся, Tier-2 дорезолвит фоновый краулер. Работает ФОНОМ (зеркало
+// RunOnce): прогресс — work_regroup_done/total в статусе, отмена —
+// StopRegroup (обработанные авторы остаются пересобранными), воркер
+// группировки приостанавливается и восстанавливается автоматически.
+// ⚠️ Ручные merge/split тоже пересобираются: признака «склеено руками» в
+// данных нет (корректные слияния Tier-1 соберёт обратно сам). Один
+// detached-синк поиска в конце. ErrRegroupBusy — уже идёт другой разбор.
+func (c *WorkGroupController) RegroupAll() error {
+	restore, err := c.pauseWorkerForRegroup()
+	if err != nil {
+		return err
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	c.mu.Lock()
+	c.regroupCancel = cancel
+	c.mu.Unlock()
+
+	go func() {
+		defer func() {
+			c.mu.Lock()
+			c.regroupCancel = nil
+			c.regroupDone, c.regroupTotal = 0, 0
+			c.mu.Unlock()
+			cancel()
+			restore()
+		}()
+
+		// Все мульти-работы, сгруппированные по автору. Синглтоны пересобирать
+		// нечего (split — no-op), работы без primary-автора пропускаем (как в
+		// RegroupWorks — пере-группировка идёт по автору).
+		rows, qerr := c.pool.Query(ctx, `
+			SELECT w.id, w.primary_author_id FROM works w
+			WHERE COALESCE(w.edition_count, 1) >= 2 AND w.primary_author_id IS NOT NULL
+			ORDER BY w.primary_author_id, w.id`)
+		if qerr != nil {
+			c.logger.Warn("regroup all: load works failed", "err", qerr)
+			return
+		}
+		byAuthor := map[int64][]int64{}
+		var authorOrder []int64
+		total := 0
+		for rows.Next() {
+			var id, author int64
+			if err := rows.Scan(&id, &author); err != nil {
+				rows.Close()
+				c.logger.Warn("regroup all: scan failed", "err", err)
+				return
+			}
+			if _, seen := byAuthor[author]; !seen {
+				authorOrder = append(authorOrder, author)
+			}
+			byAuthor[author] = append(byAuthor[author], id)
+			total++
+		}
+		rows.Close()
+		if err := rows.Err(); err != nil {
+			c.logger.Warn("regroup all: rows err", "err", err)
+			return
+		}
+		c.mu.Lock()
+		c.regroupDone, c.regroupTotal = 0, total
+		c.mu.Unlock()
+		c.logger.Info("regroup all: started", "works", total, "authors", len(authorOrder))
+
+		g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
+		var touched []int64
+		var purged int64
+		split, canceled := 0, false
+		for _, author := range authorOrder {
+			if ctx.Err() != nil {
+				canceled = true
+				break
+			}
+			works := byAuthor[author]
+			newWorks, n, p, err := c.regroupSplitWorks(ctx, works)
+			if err != nil {
+				if errors.Is(err, context.Canceled) {
+					canceled = true
+					break
+				}
+				// Один сломавшийся автор не валит весь пересбор.
+				c.logger.Warn("regroup all: author failed — skipped", "author_id", author, "err", err)
+				continue
+			}
+			split += n
+			purged += p
+			touched = append(touched, works...)
+			touched = append(touched, newWorks...)
+			if err := g.groupAuthorTier1(ctx, author); err != nil {
+				c.logger.Warn("regroup all: tier-1 re-group failed — candidates left for background worker",
+					"author_id", author, "err", err)
+			}
+			c.mu.Lock()
+			c.regroupDone += len(works)
+			c.mu.Unlock()
+		}
+
+		if len(touched) > 0 {
+			for id := range g.touchedWorks {
+				touched = append(touched, id)
+			}
+			deleted := keysOf(g.deletedWorks)
+			c.syncSearchAfterManual(survivors(dedupInt64s(touched), deleted), deleted)
+		}
+		c.logger.Info("regroup all: done",
+			"works", total, "editions_split", split, "lookups_purged", purged, "canceled", canceled)
+	}()
+	return nil
+}
+
 // pauseWorkerForRegroup — приостанавливает фоновую группировку на время
 // RegroupWorks и возвращает restore-функцию. Restore включает воркер обратно,
 // если он работал ДО разбора ИЛИ его пытались включить ВО ВРЕМЯ (Start/RunOnce

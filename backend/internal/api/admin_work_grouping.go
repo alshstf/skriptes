@@ -189,6 +189,28 @@ func handleWorksRegroup(d SettingsDeps) http.HandlerFunc {
 	}
 }
 
+// handleWorksRegroupAll — POST /api/admin/works/regroup-all. ГЛОБАЛЬНЫЙ
+// пересбор группировок (кнопка в админке): все мульти-работы разбираются и
+// собираются заново по текущим правилам, работает фоном; прогресс и отмена —
+// через статус work-grouping (work_regroup_*).
+func handleWorksRegroupAll(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.WorkGroup == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "work grouping disabled"})
+			return
+		}
+		if err := d.WorkGroup.RegroupAll(); err != nil {
+			if errors.Is(err, metadata.ErrRegroupBusy) {
+				writeJSON(w, http.StatusConflict, map[string]string{"error": "уже идёт другой разбор работ"})
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "regroup failed"})
+			return
+		}
+		writeJSON(w, http.StatusAccepted, map[string]string{"status": "started"})
+	}
+}
+
 // handleWorksRegroupStop — POST /api/admin/works/regroup/stop. Отменяет идущий
 // разбор (кнопка «Отменить разбор» в админке — если разбор подвис или идёт
 // дольше ожидаемого). Обработанные авторы остаются разобранными.

@@ -45,6 +45,7 @@ import {
   useUpdateWorkGroupingSettings,
   useRunWorkGrouping,
   useStopWorkGrouping,
+  useRegroupAllWorks,
   useStopWorksRegroup,
   type CoverCacheSettings,
   type CollectionInput,
@@ -437,6 +438,7 @@ export function AdminBackgroundPage() {
   const runWg = useRunWorkGrouping();
   const stopWg = useStopWorkGrouping();
   const stopRegroup = useStopWorksRegroup();
+  const regroupAll = useRegroupAllWorks();
 
   // ── Числовые поля (общий SaveBar) ──
   const [minFreeMB, setMinFreeMB] = useState('');
@@ -619,6 +621,24 @@ export function AdminBackgroundPage() {
       toast.success('Отменяю разбор — обработанные авторы останутся разобранными');
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось отменить разбор');
+    }
+  };
+  const onRegroupAll = async () => {
+    if (
+      !window.confirm(
+        'Пересобрать все группировки заново?\n\n' +
+          'Все объединения изданий будут разобраны и собраны заново по текущим правилам, ' +
+          'ошибочные внешние ключи очищены (их перепроверит фоновый воркер). ' +
+          'Ручные объединения/разъединения тоже будут пересобраны. ' +
+          'Идёт в фоне; прогресс и отмена — здесь же.',
+      )
+    )
+      return;
+    try {
+      await regroupAll.mutateAsync();
+      toast.success('Пересбор группировок запущен');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить пересбор');
     }
   };
 
@@ -1579,6 +1599,27 @@ export function AdminBackgroundPage() {
                 дубль). Tier-2 — внешний Work ID (OpenLibrary / Wikidata). Никогда не сливает книги
                 разных авторов; при сомнении оставляет отдельной книгой.
               </Callout>
+              {/* Глобальный пересбор: доступен независимо от режима воркера —
+                  джоба сама приостанавливает и восстанавливает его. Кнопка
+                  прячется на время идущего разбора (его занимает индикатор). */}
+              {!wgRegrouping ? (
+                <div className="space-y-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onRegroupAll}
+                    disabled={regroupAll.isPending}
+                  >
+                    <RotateCcw className="size-4" aria-hidden />
+                    {regroupAll.isPending ? 'Запуск…' : 'Пересобрать группировки'}
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-pretty">
+                    Разбирает все объединения и собирает заново по текущим правилам — чинит
+                    ошибочно слитые книги (например, разные тома серии в одной карточке).
+                    Ручные объединения тоже пересобираются.
+                  </p>
+                </div>
+              ) : null}
               {wgMode === 'bg' ? (
                 <>
                   <div className="space-y-2">
