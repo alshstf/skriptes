@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -247,6 +248,9 @@ type workHit struct {
 	Year         *int     `json:"year"`
 	Langs        []string `json:"lang"`
 	EditionCount int      `json:"edition_count"`
+	// Popularity — интегральная «известность» работы (computeWorkPopularity
+	// в importer). Питает popularityBoost в re-ranking'е поиска/подсказок.
+	Popularity int64 `json:"popularity"`
 }
 
 func (wh workHit) toListItem() ListItem {
@@ -351,17 +355,24 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 				_ = json.Unmarshal(raw, &score)
 			}
 		}
-		scored = append(scored, scoredItem{item: wh.toListItem(), base: score})
+		scored = append(scored, scoredItem{
+			item: wh.toListItem(), base: score, pop: popularityBoost(wh.Popularity),
+		})
 	}
 
 	if rerank {
-		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
-		if err == nil && !profile.IsEmpty() {
+		// Тот же финальный score, что у SuggestWorks (persona + известность) —
+		// иначе hero-подсказки и /books по одному запросу дают разный порядок.
+		// Буст known-книг только в rerank-окне (offset 0, есть запрос): browse
+		// и глубокие страницы остаются чистым Meili-порядком (pop проставлен,
+		// но без sortByFinalScore не влияет) — пере-сортировка первой страницы
+		// при пагинации дублировала/теряла бы элементы.
+		if profile, err := s.persona.PersonaProfile(ctx, params.UserID); err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
-			sortByFinalScore(scored)
-			if len(scored) > limit {
-				scored = scored[:limit]
-			}
+		}
+		sortByFinalScore(scored)
+		if len(scored) > limit {
+			scored = scored[:limit]
 		}
 	}
 
@@ -394,26 +405,27 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	}, nil
 }
 
-// SuggestWorks — typeahead по индексу works (Cmd+K). Зеркало Suggest.
+// SuggestWorks — typeahead по индексу works (Cmd+K + hero-поиск Главной).
+// Зеркало Suggest, но с re-ranking'ом по известности: окно limit×3 и
+// ShowRankingScore — ВСЕГДА (не только у залогиненных с persona), финальный
+// score = base + persona + popularityBoost. Известная книга перевешивает
+// БЛИЗКИЙ по релевантности матч, но не явно лучший. Чистая арифметика на уже
+// полученных хитах — latency не растёт (гидраций не добавляем).
 func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, userID int64, excludeGenres, excludeLangs []string) ([]ListItem, error) {
 	if s.meili == nil || strings.TrimSpace(query) == "" {
 		return []ListItem{}, nil
 	}
 	limit = clampInt(limit, 1, 20, 5)
-	rerank := s.persona != nil && userID > 0
-	meiliLimit := int64(limit)
-	if rerank {
-		meiliLimit = int64(limit * 3)
-		if meiliLimit > 20 {
-			meiliLimit = 20
-		}
+	meiliLimit := int64(limit * 3)
+	if meiliLimit > 20 {
+		meiliLimit = 20
 	}
 
 	var visibleLangs []string
 	if len(excludeLangs) > 0 {
 		visibleLangs = s.allLangs(ctx)
 	}
-	req := &meilisearch.SearchRequest{Limit: meiliLimit, ShowRankingScore: rerank}
+	req := &meilisearch.SearchRequest{Limit: meiliLimit, ShowRankingScore: true}
 	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs); f != "" {
 		req.Filter = f
 	}
@@ -429,23 +441,22 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 			continue
 		}
 		score := 0.0
-		if rerank {
-			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
-				_ = json.Unmarshal(raw, &score)
-			}
+		if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+			_ = json.Unmarshal(raw, &score)
 		}
-		scored = append(scored, scoredItem{item: wh.toListItem(), base: score})
+		scored = append(scored, scoredItem{
+			item: wh.toListItem(), base: score, pop: popularityBoost(wh.Popularity),
+		})
 	}
 
-	if rerank {
-		profile, err := s.persona.PersonaProfile(ctx, userID)
-		if err == nil && !profile.IsEmpty() {
+	if s.persona != nil && userID > 0 {
+		if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
-			sortByFinalScore(scored)
-			if len(scored) > limit {
-				scored = scored[:limit]
-			}
 		}
+	}
+	sortByFinalScore(scored)
+	if len(scored) > limit {
+		scored = scored[:limit]
 	}
 
 	out := make([]ListItem, 0, len(scored))
@@ -909,11 +920,12 @@ func subtractLangs(universe, remove []string) []string {
 // ── Re-ranking ──────────────────────────────────────────────────
 
 // scoredItem — Item + базовый score из Meili (если включали ShowRankingScore)
-// + persona-бонус. final = base + personal.
+// + persona-бонус + буст известности. final = base + personal + pop.
 type scoredItem struct {
 	item     ListItem
 	base     float64
 	personal float64
+	pop      float64
 }
 
 // Коэффициенты бонусов. Подобраны под Meili-_rankingScore в [0,1]:
@@ -989,12 +1001,29 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
 	}
 }
 
-// sortByFinalScore — стабильная сортировка по убыванию (base+personal),
+// popBoostScale — вес известности в финальном score поиска/подсказок.
+// Meili-_rankingScore живёт в [0,1]; log2-сжатая популярность с этим весом
+// даёт «классике» (p≈1000) +0.10, домашнему чтению (p≈100) +0.07 — хватает,
+// чтобы перевесить БЛИЗКИЙ матч (разница base ≤0.1), но не явно лучший:
+// точный запрос редкой книги по-прежнему находит её первой.
+const popBoostScale = 0.01
+
+// popularityBoost — вклад интегральной «известности» работы (поле popularity
+// works-индекса) в финальный score re-ranking'а.
+func popularityBoost(popularity int64) float64 {
+	if popularity <= 0 {
+		return 0
+	}
+	return popBoostScale * math.Log2(1+float64(popularity))
+}
+
+// sortByFinalScore — стабильная сортировка по убыванию (base+personal+pop),
 // сохраняет порядок Meili при равных score. Стабильность важна: если
 // у двух хитов нет бонусов, они должны остаться в meili-порядке.
 func sortByFinalScore(scored []scoredItem) {
 	sort.SliceStable(scored, func(i, j int) bool {
-		return (scored[i].base + scored[i].personal) > (scored[j].base + scored[j].personal)
+		return (scored[i].base + scored[i].personal + scored[i].pop) >
+			(scored[j].base + scored[j].personal + scored[j].pop)
 	})
 }
 
