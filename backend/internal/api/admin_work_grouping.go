@@ -170,7 +170,7 @@ func handleWorksRegroup(d SettingsDeps) http.HandlerFunc {
 		out, err := d.WorkGroup.RegroupWorks(ctx, body.WorkIDs, body.DryRun)
 		if err != nil {
 			if errors.Is(err, metadata.ErrRegroupBusy) {
-				writeJSON(w, http.StatusConflict, map[string]string{"error": "остановите фоновую группировку перед разбором"})
+				writeJSON(w, http.StatusConflict, map[string]string{"error": "уже идёт другой разбор работ"})
 				return
 			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "regroup failed"})

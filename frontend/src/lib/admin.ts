@@ -533,6 +533,9 @@ export type WorkGroupingSettings = {
   // статус воркера (read-only)
   work_grouping_running: boolean;
   work_grouping_mode: 'off' | 'continuous' | 'once';
+  // идёт массовый разбор работ (POST /admin/works/regroup): воркер приостановлен
+  // инструментом, попытки включения встанут в очередь — свитчер дизейблим.
+  work_regroup_running?: boolean;
   // покрытие (read-only)
   coverage: {
     books: number;

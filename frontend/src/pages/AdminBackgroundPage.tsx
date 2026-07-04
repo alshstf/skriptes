@@ -580,6 +580,9 @@ export function AdminBackgroundPage() {
   const wgMode: Mode = (wq.data?.enabled ?? false) ? 'bg' : 'off';
   const wgRunning = wq.data?.work_grouping_running ?? false;
   const wgOnce = wq.data?.work_grouping_mode === 'once';
+  // Идёт массовый разбор работ (regroup): воркер приостановлен инструментом,
+  // управление им на это время блокируем (включение встало бы в очередь).
+  const wgRegrouping = wq.data?.work_regroup_running ?? false;
   const wgCov = wq.data?.coverage;
   const applyWg = async (patch: Partial<WorkGroupingInput>, msg: string) => {
     if (!wq.data) return;
@@ -1509,9 +1512,15 @@ export function AdminBackgroundPage() {
                 value={wgMode}
                 twoState
                 help={MODE_HELP_WG}
-                disabled={updateWg.isPending}
+                disabled={updateWg.isPending || wgRegrouping}
                 onChange={(m) => void applyWg({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
               />
+              {wgRegrouping ? (
+                <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                  Идёт массовый разбор работ (regroup) — воркер приостановлен автоматически и
+                  вернётся в прежнее состояние после завершения.
+                </Callout>
+              ) : null}
               <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
                 Несколько fb2-файлов одной книги (разные издания/переводы) схлопываются в одну
                 карточку. Tier-1 — локально (название+язык, оригинал из «src-title-info», точный
@@ -1555,7 +1564,7 @@ export function AdminBackgroundPage() {
                           {stopWg.isPending ? 'Остановка…' : 'Остановить проход'}
                         </Button>
                       ) : (
-                        <Button variant="outline" size="sm" onClick={onRunWg} disabled={wgRunning || runWg.isPending}>
+                        <Button variant="outline" size="sm" onClick={onRunWg} disabled={wgRunning || wgRegrouping || runWg.isPending}>
                           <Flame className="size-4" aria-hidden />
                           {runWg.isPending ? 'Запуск…' : 'Прогнать разово'}
                         </Button>

@@ -605,14 +605,15 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 
 	ctl := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
 
-	// Занятость: при «работающем» воркере разбор отклоняется.
+	// Параллельный ВТОРОЙ разбор отклоняется (воркер группировки инструмент
+	// приостанавливает сам — см. проверку автопаузы на боевом разборе ниже).
 	ctl.mu.Lock()
-	ctl.contCancel = func() {}
+	ctl.regroupActive = true
 	ctl.mu.Unlock()
 	_, err = ctl.RegroupWorks(ctx, []int64{megaWork}, false)
 	require.ErrorIs(t, err, ErrRegroupBusy)
 	ctl.mu.Lock()
-	ctl.contCancel = nil
+	ctl.regroupActive = false
 	ctl.mu.Unlock()
 
 	// Dry-run: прогноз 2 кластера (переводы одного оригинала + чужой роман),
@@ -626,13 +627,23 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
 	require.Equal(t, 1, worksCount, "dry-run ничего не пишет")
 
-	// Боевой разбор.
+	// Боевой разбор. «Работающий» continuous-воркер симулируем фейковым
+	// cancel'ом: RegroupWorks обязан сам его приостановить (Status.Regrouping
+	// на время разбора) и после — восстановить настоящим Start().
+	ctl.mu.Lock()
+	ctl.contCancel = func() {}
+	ctl.mu.Unlock()
 	res, err := ctl.RegroupWorks(ctx, []int64{megaWork}, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, res.Works)
 	require.Equal(t, 1, res.Authors)
 	require.Equal(t, 2, res.EditionsSplit, "два не-якорных издания вынесены")
 	require.EqualValues(t, 3, res.LookupsPurged, "все found-lookups вычищены")
+	st := ctl.Status()
+	require.True(t, st.Running, "воркер восстановлен после разбора")
+	require.Equal(t, "continuous", st.Mode)
+	require.False(t, st.Regrouping)
+	ctl.Stop() // прибираем воркера, поднятого restore-фазой
 
 	// Переводы одного оригинала собрались обратно в исходную работу (якорь там).
 	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e1))
