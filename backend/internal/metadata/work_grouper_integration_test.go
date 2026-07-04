@@ -694,7 +694,10 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 	ccancel()
 	_, err = ctl.RegroupWorks(cctx, []int64{megaWork}, false)
 	require.ErrorIs(t, err, context.Canceled)
-	require.False(t, ctl.Status().Regrouping, "regroupActive снят restore-фазой")
+	st = ctl.Status()
+	require.False(t, st.Regrouping, "regroupActive снят restore-фазой")
+	require.Zero(t, st.RegroupDone, "прогресс обнулён после разбора")
+	require.Zero(t, st.RegroupTotal)
 	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2), "отменённый разбор не тронул данные")
 	require.NoError(t, pool.QueryRow(ctx,
 		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))

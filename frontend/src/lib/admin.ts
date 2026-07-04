@@ -535,7 +535,10 @@ export type WorkGroupingSettings = {
   work_grouping_mode: 'off' | 'continuous' | 'once';
   // идёт массовый разбор работ (POST /admin/works/regroup): воркер приостановлен
   // инструментом, попытки включения встанут в очередь — свитчер дизейблим.
+  // done/total — прогресс разбора в работах (счётчик «обработано N из M»).
   work_regroup_running?: boolean;
+  work_regroup_done?: number;
+  work_regroup_total?: number;
   // покрытие (read-only)
   coverage: {
     books: number;

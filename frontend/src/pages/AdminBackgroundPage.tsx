@@ -585,6 +585,8 @@ export function AdminBackgroundPage() {
   // Идёт массовый разбор работ (regroup): воркер приостановлен инструментом,
   // управление им на это время блокируем (включение встало бы в очередь).
   const wgRegrouping = wq.data?.work_regroup_running ?? false;
+  const wgRegroupDone = wq.data?.work_regroup_done ?? 0;
+  const wgRegroupTotal = wq.data?.work_regroup_total ?? 0;
   const wgCov = wq.data?.coverage;
   const applyWg = async (patch: Partial<WorkGroupingInput>, msg: string) => {
     if (!wq.data) return;
@@ -1527,20 +1529,47 @@ export function AdminBackgroundPage() {
               />
               {wgRegrouping ? (
                 <Callout icon={<Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin" aria-hidden />}>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <span className="text-pretty">
-                      Идёт массовый разбор работ (regroup) — воркер приостановлен автоматически и
-                      вернётся в прежнее состояние после завершения.
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={onStopRegroup}
-                      disabled={stopRegroup.isPending}
-                    >
-                      <Square className="size-4" aria-hidden />
-                      {stopRegroup.isPending ? 'Отмена…' : 'Отменить разбор'}
-                    </Button>
+                  <div className="w-full space-y-2">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <span className="text-pretty">
+                        Идёт массовый разбор работ
+                        {wgRegroupTotal > 0 ? (
+                          <>
+                            {' '}
+                            — обработано{' '}
+                            <span className="font-medium tabular-nums">
+                              {wgRegroupDone} из {wgRegroupTotal}
+                            </span>
+                          </>
+                        ) : null}
+                        . Воркер приостановлен автоматически и вернётся в прежнее состояние
+                        после завершения.
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onStopRegroup}
+                        disabled={stopRegroup.isPending}
+                      >
+                        <Square className="size-4" aria-hidden />
+                        {stopRegroup.isPending ? 'Отмена…' : 'Отменить разбор'}
+                      </Button>
+                    </div>
+                    {wgRegroupTotal > 0 ? (
+                      <div
+                        className="h-1.5 w-full overflow-hidden rounded-full bg-muted"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={wgRegroupTotal}
+                        aria-valuenow={wgRegroupDone}
+                        aria-label="Прогресс разбора работ"
+                      >
+                        <div
+                          className="h-full rounded-full bg-foreground/70 transition-[width] duration-500"
+                          style={{ width: `${Math.min(100, Math.round((wgRegroupDone / wgRegroupTotal) * 100))}%` }}
+                        />
+                      </div>
+                    ) : null}
                   </div>
                 </Callout>
               ) : null}

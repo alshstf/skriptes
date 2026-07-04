@@ -1050,6 +1050,7 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 		defer func() {
 			c.mu.Lock()
 			c.regroupCancel = nil
+			c.regroupDone, c.regroupTotal = 0, 0
 			c.mu.Unlock()
 			cancel()
 		}()
@@ -1087,6 +1088,12 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 	res.Authors = len(byAuthor)
 	if dryRun {
 		res.Predicted = map[int64]int{}
+	} else {
+		// Прогресс для счётчика в админке («обработано N из M работ»);
+		// поллинг статуса читает done/total, инкремент — после каждого автора.
+		c.mu.Lock()
+		c.regroupDone, c.regroupTotal = 0, res.Works
+		c.mu.Unlock()
 	}
 
 	// Tier-1-only группировщик; resyncer НЕ передаём — синк поиска делаем один
@@ -1141,6 +1148,9 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 			c.logger.Warn("regroup: tier-1 re-group failed — candidates left for background worker",
 				"author_id", author, "err", err)
 		}
+		c.mu.Lock()
+		c.regroupDone += len(works)
+		c.mu.Unlock()
 	}
 
 	if !dryRun && len(touched) > 0 {
@@ -1542,6 +1552,10 @@ type WorkGroupStatus struct {
 	// Regrouping — идёт RegroupWorks: воркер приостановлен, попытки включения
 	// ставятся в очередь (UI дизейблит свитчер на это время).
 	Regrouping bool `json:"work_regroup_running"`
+	// Прогресс идущего разбора: обработано работ из запрошенных (инкремент —
+	// по-авторными порциями). Вне разбора — нули.
+	RegroupDone  int `json:"work_regroup_done"`
+	RegroupTotal int `json:"work_regroup_total"`
 }
 
 // WorkGroupCoverage — покрытие группировки для админ-статистики.
@@ -1567,11 +1581,14 @@ type WorkGroupController struct {
 	// regroupActive — идёт RegroupWorks: воркер приостановлен им самим, Start/
 	// RunOnce не стартуют, а помечают pending* — восстановление после разбора
 	// учтёт и «как было», и запросы включения, пришедшие во время разбора.
-	// regroupCancel — отмена идущего разбора (StopRegroup).
+	// regroupCancel — отмена идущего разбора (StopRegroup);
+	// regroupDone/Total — его прогресс в работах (для счётчика в админке).
 	regroupActive bool
 	pendingStart  bool
 	pendingOnce   bool
 	regroupCancel context.CancelFunc
+	regroupDone   int
+	regroupTotal  int
 }
 
 func NewWorkGroupController(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, resyncer WorkIDResyncer, logger *slog.Logger) *WorkGroupController {
@@ -1588,7 +1605,8 @@ func (c *WorkGroupController) Status() WorkGroupStatus {
 	defer c.mu.Unlock()
 	switch {
 	case c.regroupActive:
-		return WorkGroupStatus{Running: false, Mode: "off", Regrouping: true}
+		return WorkGroupStatus{Running: false, Mode: "off", Regrouping: true,
+			RegroupDone: c.regroupDone, RegroupTotal: c.regroupTotal}
 	case c.onceCancel != nil:
 		return WorkGroupStatus{Running: true, Mode: "once"}
 	case c.contCancel != nil:
