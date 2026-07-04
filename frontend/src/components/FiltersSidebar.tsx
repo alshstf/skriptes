@@ -206,7 +206,10 @@ function FacetRadios({
   return (
     <div className="space-y-2">
       <div className="text-xs font-medium text-muted-foreground uppercase">{title}</div>
-      <ul className="space-y-1">
+      {/* max-h + свой скролл: языков в коллекции ~30, и два полных списка
+          («Язык» + «Язык оригинала») раскатывали сайдбар в простыню
+          (прод-аудит P3). Зеркало паттерна /authors. */}
+      <ul className="space-y-1 max-h-64 overflow-y-auto pr-1">
         <li>
           <button
             type="button"

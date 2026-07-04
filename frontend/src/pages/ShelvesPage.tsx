@@ -375,6 +375,9 @@ function RenameShelfDialog({ collection }: { collection: Collection }) {
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogTitle>Переименовать полку</DialogTitle>
+        {/* Radix требует Description (или aria-describedby) у DialogContent —
+            без него console-warning и пустая связка для скринридера. */}
+        <DialogDescription className="sr-only">Введите новое название полки.</DialogDescription>
         <Input
           autoFocus
           value={name}
