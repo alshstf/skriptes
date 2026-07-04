@@ -493,7 +493,28 @@ func clusterTier1(books []groupBook) *unionFind {
 		}
 	}
 	unionBucket(byTitleLang)
-	unionBucket(byDoc)
+	// byDoc — с гейтами: fb2_doc_id в коллекциях бывает МУСОРНЫМ (конвертеры
+	// штампуют один UUID на пачку разных книг — на проде один doc_id стоял на
+	// 104 изданиях в 77 работах, а разные романы ГП делили точный UUID; отсюда
+	// мега-слияния «Азкабан+Кубок+Полукровка»). Не союзим бакет при конфликте
+	// src/ser_no и при разных названиях без единого src-свидетельства:
+	// легитимный кейс byDoc (переименованный дубль одного файла) обычно
+	// сохраняет название (его добьёт и byTitleLang), а разно-названные
+	// переводы одной книги несут src-title-info.
+	for _, idxs := range byDoc {
+		if len(idxs) < 2 {
+			continue
+		}
+		if tier2BucketConflicts(books, idxs) {
+			continue
+		}
+		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
+			continue
+		}
+		for j := 1; j < len(idxs); j++ {
+			uf.union(idxs[0], idxs[j])
+		}
+	}
 	unionBucket(byTrans)
 	// Перевод ↔ оригинал: src(название,язык) перевода == (normTitle,lang) оригинала.
 	for i, b := range books {
@@ -505,10 +526,14 @@ func clusterTier1(books []groupBook) *unionFind {
 		}
 	}
 	// Tier-1.5: один том серии (series_id, ser_no) у одного автора ⇒ одна работа —
-	// ловит разно-названные переводы без <src-title-info> и без сети. Гейт точности:
-	// если в бакете ≥2 РАЗНЫХ непустых srcTitleNorm (конфликт оригиналов) — НЕ
-	// союзим (это разные книги с одинаковым ser_no), оставляем другим тирам/ручному
-	// merge. Пустой src конфликтом не считается.
+	// ловит разно-названные переводы без <src-title-info> и без сети. Гейты точности:
+	// (1) ≥2 РАЗНЫХ непустых srcTitleNorm (конфликт оригиналов) — НЕ союзим (это
+	// разные книги с одинаковым ser_no); пустой src конфликтом не считается.
+	// (2) Разные названия БЕЗ единого src-свидетельства — НЕ союзим: кривой ser_no
+	// («узник Азкабана» с №4 рядом с «Кубком Огня» №4, все без src — реальный
+	// прод-кейс) неотличим от разно-названных переводов одного тома; без src
+	// доказательств нет — precision > recall, оставляем Tier-2/merge-подсказкам.
+	// Кейс Страйка жив: там у одного из переводов src непустой (свидетельство).
 	for _, idxs := range bySeriesNo {
 		if len(idxs) < 2 {
 			continue
@@ -522,11 +547,34 @@ func clusterTier1(books []groupBook) *unionFind {
 		if len(srcs) > 1 {
 			continue // конфликт оригиналов — разные книги под одним ser_no
 		}
+		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
+			continue // разно-названные без src-свидетельства — не рискуем
+		}
 		for j := 1; j < len(idxs); j++ {
 			uf.union(idxs[0], idxs[j])
 		}
 	}
 	return uf
+}
+
+// distinctNormTitles — число разных normalized_title в бакете.
+func distinctNormTitles(books []groupBook, idxs []int) int {
+	m := map[string]struct{}{}
+	for _, i := range idxs {
+		m[books[i].normTitle] = struct{}{}
+	}
+	return len(m)
+}
+
+// hasSrcEvidence — есть ли в бакете хоть одно издание с непустым src-title
+// (свидетельство «это перевод такого-то оригинала»).
+func hasSrcEvidence(books []groupBook, idxs []int) bool {
+	for _, i := range idxs {
+		if books[i].srcTitleNorm != "" {
+			return true
+		}
+	}
+	return false
 }
 
 // applyTier2 — для кандидатов-одиночек (после Tier-1) резолвит внешний Work ID,
