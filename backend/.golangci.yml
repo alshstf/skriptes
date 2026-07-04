@@ -21,6 +21,9 @@ linters:
     gosec:
       excludes:
         - G104
+    misspell:
+      ignore-rules:
+        - autor # имя полей API Фантлаба (autor_rusname и т.п.)
     revive:
       rules:
         - name: var-naming

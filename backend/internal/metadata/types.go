@@ -215,3 +215,21 @@ type RatingProvider interface {
 	Name() string
 	FetchRating(ctx context.Context, q WorkQuery) (RatingResult, error)
 }
+
+// RenownResult — счётчики «известности» работы у внешнего источника (сигналы
+// интегральной популярности, не рейтинг): Ratings — число оценок (Fantlab
+// markcount / OL ratings_count), Want — размер полки want-to-read (только OL).
+type RenownResult struct {
+	Ratings int
+	Want    int
+}
+
+// RenownProvider — внешний источник счётчиков известности работы (Fantlab /
+// OpenLibrary) для дозаполнения works.fantlab_marks / ol_*_count. Возвращает
+// RenownResult (Ratings+Want > 0) либо ErrNotFound; прочие ошибки — сетевые/
+// HTTP (воркер помечает source как error, ретрай по TTL). Name() совпадает со
+// строкой source в work_renown_lookups ("fantlab" | "openlibrary").
+type RenownProvider interface {
+	Name() string
+	FetchRenown(ctx context.Context, q WorkQuery) (RenownResult, error)
+}

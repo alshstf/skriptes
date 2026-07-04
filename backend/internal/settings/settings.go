@@ -194,7 +194,7 @@ func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
 		OpenLibrary:       true,
 		Wikidata:          true,
 		WholeCollection:   false,
-		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
+		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
@@ -320,6 +320,76 @@ func (s *Store) SetCoverEnrichment(ctx context.Context, cfg CoverEnrichmentConfi
 	return nil
 }
 
+const renownEnrichmentKey = "renown_enrichment"
+
+// RenownConfig — настройки фонового дозаполнения счётчиков «известности» работ
+// (works.fantlab_marks / ol_ratings_count / ol_want_count) из Fantlab и
+// OpenLibrary — сигналы интегральной популярности (сортировка/ранжирование).
+// Зеркало ExternalRatingConfig, но work-level. WholeCollection: false = только
+// «голова» коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE), true = все работы.
+// FoundRefreshDays — TTL освежения найденных счётчиков (известность растёт).
+type RenownConfig struct {
+	Enabled           bool `json:"enabled"`
+	Fantlab           bool `json:"fantlab"`
+	OpenLibrary       bool `json:"openlibrary"`
+	WholeCollection   bool `json:"whole_collection"`
+	FantlabRPM        int  `json:"fantlab_rpm"`
+	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	FoundRefreshDays  int  `json:"found_refresh_days"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultRenownConfig — воркер выключен (opt-in), оба источника включены,
+// охват «голова коллекции», вежливые rate-limit'ы и TTL.
+func DefaultRenownConfig() RenownConfig {
+	return RenownConfig{
+		Enabled:           false,
+		Fantlab:           true,
+		OpenLibrary:       true,
+		WholeCollection:   false,
+		FantlabRPM:        30, // лимиты api.fantlab.ru не документированы — вежливо
+		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
+		FoundRefreshDays:  180,
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// Renown читает настройки дозаполнения известности; нет оверрайда в БД —
+// отдаёт дефолты (мердж поверх DefaultRenownConfig).
+func (s *Store) Renown(ctx context.Context) (RenownConfig, error) {
+	cfg := DefaultRenownConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, renownEnrichmentKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read renown settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultRenownConfig(), fmt.Errorf("decode renown settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetRenown сохраняет настройки дозаполнения известности (upsert).
+func (s *Store) SetRenown(ctx context.Context, cfg RenownConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode renown settings: %w", err)
+	}
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, renownEnrichmentKey, raw); err != nil {
+		return fmt.Errorf("save renown settings: %w", err)
+	}
+	return nil
+}
+
 const externalRatingEnrichmentKey = "external_rating_enrichment"
 
 // ExternalRatingConfig — настройки фонового дозаполнения books.external_rating
@@ -348,7 +418,7 @@ func DefaultExternalRatingConfig() ExternalRatingConfig {
 		OpenLibrary:       true,
 		WholeCollection:   false,
 		GoogleBooksRPM:    60,
-		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
+		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
 	}
@@ -427,7 +497,7 @@ func DefaultWorkGroupingConfig() WorkGroupingConfig {
 		OpenLibrary:       true,
 		Wikidata:          true,
 		WholeCollection:   false,
-		OpenLibraryRPM:    18, // док-лимит OL ~20/мин (100/IP/5мин); запас как у covers
+		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,

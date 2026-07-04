@@ -62,7 +62,7 @@ func TestMigrateAndPool(t *testing.T) {
 		"metadata_overrides",
 		"reads", "series", "sessions",
 		"user_collection_books", "user_collections", "user_favorite_genres",
-		"user_settings", "users", "views", "works",
+		"user_settings", "users", "views", "work_renown_lookups", "works",
 	}
 	rows, err := pool.Query(ctx, `
 		SELECT tablename FROM pg_tables

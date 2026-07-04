@@ -282,6 +282,30 @@ func run() error {
 		externalRatingCtl.Start()
 	}
 
+	// Фоновое дозаполнение счётчиков «известности» работ (works.fantlab_marks /
+	// ol_ratings_count / ol_want_count) из Fantlab и OpenLibrary — сигналы
+	// интегральной популярности (computeWorkPopularity). Work-level зеркало
+	// внешнего рейтинга; после найденного — таргетный ресинк works-индекса (imp).
+	renownCfg, err := settingsStore.Renown(ctx())
+	if err != nil {
+		logger.Warn("read renown settings — using defaults", "err", err)
+		renownCfg = settings.DefaultRenownConfig()
+	}
+	fantlabProvider := metadata.NewFantlabProvider(olHTTPClient)
+	renownCtl := metadata.NewRenownBackfillController(pool, fantlabProvider, olProvider, imp, metadata.RenownBackfillConfig{
+		Fantlab:           renownCfg.Fantlab,
+		OpenLibrary:       renownCfg.OpenLibrary,
+		WholeCollection:   renownCfg.WholeCollection,
+		FantlabRPM:        renownCfg.FantlabRPM,
+		OpenLibraryRPM:    renownCfg.OpenLibraryRPM,
+		FoundRefreshDays:  renownCfg.FoundRefreshDays,
+		NotFoundRetryDays: renownCfg.NotFoundRetryDays,
+		ErrorRetryHours:   renownCfg.ErrorRetryHours,
+	}, logger)
+	if renownCfg.Enabled {
+		renownCtl.Start()
+	}
+
 	// Фоновые воркеры «людей и экранизаций» из внешних источников (external-only,
 	// без fb2): био/фото авторов (Wikipedia/OL) и экранизации книг (Wikidata).
 	// Оба opt-in; используют существующие маркеры metadata_fetched_at /
@@ -387,6 +411,7 @@ func run() error {
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
 			YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl,
 			ExternalRating: externalRatingCtl,
+			Renown:         renownCtl,
 			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
 			WorkGroup: workGroupCtl,
 			Overrides: overrideCtl,

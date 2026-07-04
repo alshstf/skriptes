@@ -33,6 +33,11 @@ import {
   useResetYearLookups,
   useResetCoverLookups,
   useResetRatingLookups,
+  useRenownSettings,
+  useUpdateRenownSettings,
+  useRunRenown,
+  useStopRenown,
+  useResetRenownLookups,
   useBioAdaptationSettings,
   useUpdateBioAdaptationSettings,
   useRunBioBackfill,
@@ -56,6 +61,8 @@ import {
   type CoverEnrichmentInput,
   type ExternalRatingSettings,
   type ExternalRatingInput,
+  type RenownSettings,
+  type RenownInput,
   type BioAdaptationSettings,
   type BioAdaptationInput,
   type EnrichmentGates,
@@ -106,6 +113,7 @@ const SOURCE_LABELS: Record<string, string> = {
   openlibrary: 'OpenLibrary',
   wikidata: 'Wikidata',
   googlebooks: 'Google Books',
+  fantlab: 'Фантлаб',
   manual: 'вручную',
   unknown: 'прочее',
 };
@@ -197,6 +205,21 @@ function buildExtRatingInput(d: ExternalRatingSettings, patch: Partial<ExternalR
   };
 }
 
+function buildRenownInput(d: RenownSettings, patch: Partial<RenownInput>): RenownInput {
+  return {
+    enabled: d.enabled,
+    fantlab: d.fantlab,
+    openlibrary: d.openlibrary,
+    whole_collection: d.whole_collection,
+    fantlab_rpm: d.fantlab_rpm,
+    openlibrary_rpm: d.openlibrary_rpm,
+    found_refresh_days: d.found_refresh_days,
+    not_found_retry_days: d.not_found_retry_days,
+    error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
 const MODE_HELP_WG: Record<'off' | 'bg', string> = {
   off: 'Издания не группируются — каждый fb2-файл остаётся отдельной книгой.',
   bg: 'Слияние изданий в логические книги по всей коллекции (локально + внешние Work ID).',
@@ -205,6 +228,11 @@ const MODE_HELP_WG: Record<'off' | 'bg', string> = {
 const MODE_HELP_RATING: Record<'off' | 'bg', string> = {
   off: 'Внешний рейтинг из сети не запрашивается (остаётся только LIBRATE, если есть).',
   bg: 'Дозаполнять внешний рейтинг (Google Books / OpenLibrary) по книгам без рейтинга.',
+};
+
+const MODE_HELP_RENOWN: Record<'off' | 'bg', string> = {
+  off: 'Счётчики известности из сети не запрашиваются (популярность — только из локальных сигналов).',
+  bg: 'Дозаполнять счётчики известности (Фантлаб / OpenLibrary) — усиливают сортировку по популярности.',
 };
 
 // ── Презентационные примитивы аккордеона ──
@@ -403,6 +431,7 @@ export function AdminBackgroundPage() {
   const yq = useYearEnrichmentSettings();
   const xq = useCoverEnrichmentSettings();
   const rq = useExternalRatingSettings();
+  const nq = useRenownSettings();
   const bq = useBioAdaptationSettings();
   const gq = useEnrichmentGates();
   const wq = useWorkGroupingSettings();
@@ -427,9 +456,13 @@ export function AdminBackgroundPage() {
   const updateRating = useUpdateExternalRatingSettings();
   const runRating = useRunExternalRating();
   const stopRating = useStopExternalRating();
+  const updateRenown = useUpdateRenownSettings();
+  const runRenown = useRunRenown();
+  const stopRenown = useStopRenown();
   const resetYear = useResetYearLookups();
   const resetCover = useResetCoverLookups();
   const resetRating = useResetRatingLookups();
+  const resetRenown = useResetRenownLookups();
   const runBio = useRunBioBackfill();
   const stopBio = useStopBioBackfill();
   const runAdapt = useRunAdaptationBackfill();
@@ -488,6 +521,17 @@ export function AdminBackgroundPage() {
       ratingInit.current = true;
     }
   }, [rq.data]);
+
+  const [flRpmN, setFlRpmN] = useState('');
+  const [olRpmN, setOlRpmN] = useState('');
+  const renownInit = useRef(false);
+  useEffect(() => {
+    if (nq.data && !renownInit.current) {
+      setFlRpmN(String(nq.data.fantlab_rpm));
+      setOlRpmN(String(nq.data.openlibrary_rpm));
+      renownInit.current = true;
+    }
+  }, [nq.data]);
 
   const [biosRpm, setBiosRpm] = useState('');
   const [adaptRpm, setAdaptRpm] = useState('');
@@ -663,6 +707,27 @@ export function AdminBackgroundPage() {
     void applyRating({ [which]: v, enabled: gb || ol }, 'Применено');
   };
 
+  // ── Известность (Фантлаб / OpenLibrary) — самостоятельный воркер ──
+  const renownMode: Mode = (nq.data?.enabled ?? false) ? 'bg' : 'off';
+  const renownRunning = nq.data?.renown_running ?? false;
+  const renownOnce = nq.data?.renown_mode === 'once';
+  const nCov = nq.data?.coverage;
+  const applyRenown = async (patch: Partial<RenownInput>, msg: string) => {
+    if (!nq.data) return;
+    try {
+      await updateRenown.mutateAsync(buildRenownInput(nq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
+  const toggleRenownProvider = (which: 'fantlab' | 'openlibrary', v: boolean) => {
+    if (!nq.data) return;
+    const fl = which === 'fantlab' ? v : nq.data.fantlab;
+    const ol = which === 'openlibrary' ? v : nq.data.openlibrary;
+    void applyRenown({ [which]: v, enabled: fl || ol }, 'Применено');
+  };
+
   // ── Живое применение прочих тумблеров/настроек ──
   const applyCol = async (patch: Partial<CollectionInput>, msg: string) => {
     if (!cq.data) return;
@@ -761,9 +826,12 @@ export function AdminBackgroundPage() {
   const onStopCover = action(() => stopCover.mutateAsync(), 'Останавливаю…');
   const onRunRating = action(() => runRating.mutateAsync(), 'Дозаполнение рейтинга запущено');
   const onStopRating = action(() => stopRating.mutateAsync(), 'Останавливаю…');
+  const onRunRenown = action(() => runRenown.mutateAsync(), 'Дозаполнение известности запущено');
+  const onStopRenown = action(() => stopRenown.mutateAsync(), 'Останавливаю…');
   const onResetYear = resetAction(() => resetYear.mutateAsync());
   const onResetCover = resetAction(() => resetCover.mutateAsync());
   const onResetRating = resetAction(() => resetRating.mutateAsync());
+  const onResetRenown = resetAction(() => resetRenown.mutateAsync());
   const onRunBio = action(() => runBio.mutateAsync(), 'Дозаполнение биографий запущено');
   const onStopBio = action(() => stopBio.mutateAsync(), 'Останавливаю…');
   const onRunAdapt = action(() => runAdapt.mutateAsync(), 'Поиск экранизаций запущен');
@@ -813,20 +881,24 @@ export function AdminBackgroundPage() {
   const coverInvalid = [olRpmC, gbRpmC].some(badNum);
   const ratingDirty = !!rq.data && (gbRpmR !== String(rq.data.googlebooks_rpm) || olRpmR !== String(rq.data.openlibrary_rpm));
   const ratingInvalid = [gbRpmR, olRpmR].some(badNum);
+  const renownDirty = !!nq.data && (flRpmN !== String(nq.data.fantlab_rpm) || olRpmN !== String(nq.data.openlibrary_rpm));
+  const renownInvalid = [flRpmN, olRpmN].some(badNum);
   const baDirty = !!bq.data && (biosRpm !== String(bq.data.bios_rpm) || adaptRpm !== String(bq.data.adaptations_rpm));
   const baInvalid = [biosRpm, adaptRpm].some(badNum);
 
   const lowFloorWarn = !badNum(minFreeMB) && num(minFreeMB) < MIN_FREE_WARN_MB;
 
-  const dirty = colDirty || yearDirty || coverDirty || ratingDirty || baDirty;
+  const dirty = colDirty || yearDirty || coverDirty || ratingDirty || renownDirty || baDirty;
   const saveInvalid =
     (colDirty && colInvalid) ||
     (yearDirty && yearInvalid) ||
     (coverDirty && coverInvalid) ||
     (ratingDirty && ratingInvalid) ||
+    (renownDirty && renownInvalid) ||
     (baDirty && baInvalid);
   const saving =
-    updateCol.isPending || updateYear.isPending || updateCover.isPending || updateRating.isPending || updateBa.isPending;
+    updateCol.isPending || updateYear.isPending || updateCover.isPending || updateRating.isPending ||
+    updateRenown.isPending || updateBa.isPending;
 
   const onReset = () => {
     if (cq.data) {
@@ -846,6 +918,10 @@ export function AdminBackgroundPage() {
     if (rq.data) {
       setGbRpmR(String(rq.data.googlebooks_rpm));
       setOlRpmR(String(rq.data.openlibrary_rpm));
+    }
+    if (nq.data) {
+      setFlRpmN(String(nq.data.fantlab_rpm));
+      setOlRpmN(String(nq.data.openlibrary_rpm));
     }
     if (bq.data) {
       setBiosRpm(String(bq.data.bios_rpm));
@@ -889,6 +965,13 @@ export function AdminBackgroundPage() {
         );
         setGbRpmR(String(saved.googlebooks_rpm));
         setOlRpmR(String(saved.openlibrary_rpm));
+      }
+      if (renownDirty && !renownInvalid && nq.data) {
+        const saved = await updateRenown.mutateAsync(
+          buildRenownInput(nq.data, { fantlab_rpm: num(flRpmN), openlibrary_rpm: num(olRpmN) }),
+        );
+        setFlRpmN(String(saved.fantlab_rpm));
+        setOlRpmN(String(saved.openlibrary_rpm));
       }
       if (baDirty && !baInvalid && bq.data) {
         const saved = await updateBa.mutateAsync(
@@ -1523,6 +1606,107 @@ export function AdminBackgroundPage() {
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="w-full text-muted-foreground/80">Из внешних добавлено:</span>
                   {Object.entries(rCov.by_source)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([src, n]) => (
+                      <span key={src} className="tabular-nums">
+                        {SOURCE_LABELS[src] ?? src}: {n}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+            </TypeRow>
+
+            {/* ИЗВЕСТНОСТЬ (счётчики Фантлаб/OL → популярность работ) */}
+            <TypeRow
+              title="Известность"
+              mode={renownMode}
+              coverage={nCov ? `${nCov.with_any} из ${nCov.head_total}` : '—'}
+            >
+              <ModeSelector
+                idPrefix="renown"
+                value={renownMode}
+                twoState
+                help={MODE_HELP_RENOWN}
+                disabled={updateRenown.isPending}
+                onChange={(m) => void applyRenown({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
+              />
+              <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                Счётчики известности книги в мире (число оценок на Фантлабе, оценки и полка
+                «хочу прочитать» Open Library) — усиливают сортировку по популярности и порядок
+                каталога. По умолчанию обходится «голова» коллекции: работы с переизданиями,
+                экранизацией или рейтингом LIBRATE.
+              </Callout>
+              {renownMode === 'bg' ? (
+                <>
+                  <div className="space-y-2">
+                    <FieldLabel>Источники (только внешние)</FieldLabel>
+                    <SourceSwitch
+                      id="renown-src-fl"
+                      label="Фантлаб (число оценок)"
+                      checked={nq.data?.fantlab ?? false}
+                      disabled={updateRenown.isPending}
+                      onChange={(v) => toggleRenownProvider('fantlab', v)}
+                    />
+                    <SourceSwitch
+                      id="renown-src-ol"
+                      label="OpenLibrary (оценки + want-to-read)"
+                      checked={nq.data?.openlibrary ?? false}
+                      disabled={updateRenown.isPending}
+                      onChange={(v) => toggleRenownProvider('openlibrary', v)}
+                    />
+                    <p className="text-xs text-muted-foreground text-pretty">
+                      Фантлаб силён на русскоязычной фантастике (нативный русский поиск),
+                      OpenLibrary — на переводной мировой литературе (поиск по оригиналу).
+                    </p>
+                  </div>
+                  {nq.data?.fantlab || nq.data?.openlibrary ? (
+                    <div className="space-y-3 border-t border-border pt-3">
+                      <ScopeControl
+                        whole={nq.data?.whole_collection ?? false}
+                        disabled={updateRenown.isPending}
+                        onChange={(v) => void applyRenown({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: голова коллекции')}
+                        warning="Вся коллекция: счётчики запрашиваются и для одиночных безвестных работ — сотни тысяч запросов, очень долго. Обычно достаточно «головы»."
+                      />
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <label htmlFor="renown-fl-rpm" className="text-sm">
+                            Фантлаб, зап./мин
+                          </label>
+                          <Input id="renown-fl-rpm" type="number" min={0} value={flRpmN} onChange={(e) => setFlRpmN(e.target.value)} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label htmlFor="renown-ol-rpm" className="text-sm">
+                            OpenLibrary, зап./мин
+                          </label>
+                          <Input id="renown-ol-rpm" type="number" min={0} value={olRpmN} onChange={(e) => setOlRpmN(e.target.value)} />
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {renownOnce ? (
+                          <Button variant="outline" size="sm" onClick={onStopRenown} disabled={stopRenown.isPending}>
+                            <Square className="size-4" aria-hidden />
+                            {stopRenown.isPending ? 'Остановка…' : 'Остановить проход'}
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" onClick={onRunRenown} disabled={renownRunning || runRenown.isPending}>
+                            <Flame className="size-4" aria-hidden />
+                            {runRenown.isPending ? 'Запуск…' : 'Прогнать разово'}
+                          </Button>
+                        )}
+                        <Button variant="outline" size="sm" onClick={onResetRenown} disabled={resetRenown.isPending}>
+                          <RotateCcw className="size-4" aria-hidden />
+                          {resetRenown.isPending ? 'Сброс…' : 'Сбросить неудачные'}
+                        </Button>
+                      </div>
+                      {renownRunning ? <RunningDot continuous={!renownOnce} /> : null}
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
+              {nCov && Object.keys(nCov.by_source).length > 0 ? (
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  <span className="w-full text-muted-foreground/80">Найдено источниками:</span>
+                  {Object.entries(nCov.by_source)
                     .sort((a, b) => b[1] - a[1])
                     .map(([src, n]) => (
                       <span key={src} className="tabular-nums">
