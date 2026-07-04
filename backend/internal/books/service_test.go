@@ -241,6 +241,13 @@ func TestService_WorksIndex(t *testing.T) {
 	require.Equal(t, "Кадетский корпус. Книга 2", wsearch.Items[0].Title)
 	workID := wsearch.Items[0].ID
 
+	// ── matchingStrategy=all: слово, которого нет ни в одном доке, обнуляет
+	//    выдачу (Meili-дефолт «last» молча ронял хвостовые слова — «гарри
+	//    <мусор>» матчил то же, что «гарри», прод-аудит P1 #5).
+	wnone, err := svc.ListWorks(ctx, books.ListParams{Query: "Кадетский абракадабрище", Limit: 5})
+	require.NoError(t, err)
+	require.Empty(t, wnone.Items, "матчиться должны ВСЕ слова запроса")
+
 	wb, err := svc.GetWork(ctx, workID, nil, nil)
 	require.NoError(t, err)
 	require.Equal(t, "Кадетский корпус. Книга 2", wb.Title)
