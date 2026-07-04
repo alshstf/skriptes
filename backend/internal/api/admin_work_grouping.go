@@ -173,10 +173,36 @@ func handleWorksRegroup(d SettingsDeps) http.HandlerFunc {
 				writeJSON(w, http.StatusConflict, map[string]string{"error": "уже идёт другой разбор работ"})
 				return
 			}
+			// Отмена оператором — не ошибка: отдаём частичный результат
+			// (обработанные авторы закоммичены и синкнуты). Canceled ставим и
+			// здесь — отмена могла прилететь ещё до первой записи (тогда все
+			// счётчики нулевые).
+			if errors.Is(err, context.Canceled) {
+				out.Canceled = true
+				writeJSON(w, http.StatusOK, out)
+				return
+			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "regroup failed"})
 			return
 		}
 		writeJSON(w, http.StatusOK, out)
+	}
+}
+
+// handleWorksRegroupStop — POST /api/admin/works/regroup/stop. Отменяет идущий
+// разбор (кнопка «Отменить разбор» в админке — если разбор подвис или идёт
+// дольше ожидаемого). Обработанные авторы остаются разобранными.
+func handleWorksRegroupStop(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.WorkGroup == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "work grouping disabled"})
+			return
+		}
+		if !d.WorkGroup.StopRegroup() {
+			writeJSON(w, http.StatusConflict, map[string]string{"error": "нет активного разбора"})
+			return
+		}
+		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
 	}
 }
 

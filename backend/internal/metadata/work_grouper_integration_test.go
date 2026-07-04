@@ -685,4 +685,18 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, res2.EditionsSplit, "повторный разбор выносит e2 и собирает обратно")
 	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2))
+
+	// Отмена: StopRegroup без активного разбора — false; отменённый контекст
+	// прерывает разбор (обёрнутый context.Canceled), состояние контроллера
+	// восстановлено (regroupActive снят restore-фазой), данные не поломаны.
+	require.False(t, ctl.StopRegroup(), "без активного разбора отменять нечего")
+	cctx, ccancel := context.WithCancel(ctx)
+	ccancel()
+	_, err = ctl.RegroupWorks(cctx, []int64{megaWork}, false)
+	require.ErrorIs(t, err, context.Canceled)
+	require.False(t, ctl.Status().Regrouping, "regroupActive снят restore-фазой")
+	require.Equal(t, megaWork, workIDOf(t, ctx, pool, e2), "отменённый разбор не тронул данные")
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM works WHERE primary_author_id=$1`, author).Scan(&worksCount))
+	require.Equal(t, 2, worksCount)
 }

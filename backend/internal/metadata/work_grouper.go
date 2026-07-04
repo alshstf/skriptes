@@ -981,7 +981,10 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 
 // RegroupResult — итог пере-группировки работ (ответ админ-ручки).
 type RegroupResult struct {
-	DryRun        bool  `json:"dry_run"`
+	DryRun bool `json:"dry_run"`
+	// Canceled — разбор прерван оператором (StopRegroup): счётчики ниже
+	// отражают ЧАСТИЧНЫЙ прогресс (обработанные авторы закоммичены и синкнуты).
+	Canceled      bool  `json:"canceled,omitempty"`
 	Works         int   `json:"works"`          // найдено работ из запрошенных
 	Authors       int   `json:"authors"`        // затронуто авторов
 	EditionsSplit int   `json:"editions_split"` // изданий вынесено в синглтоны
@@ -1035,6 +1038,21 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 			return res, err
 		}
 		defer restore()
+		// Регистрируем cancel идущего разбора — кнопка «Отменить разбор» в
+		// админке (StopRegroup) прерывает между авторами / внутри per-author
+		// транзакции (та откатится целиком). Уже обработанные авторы остаются
+		// разобранными и синкаются в поиск ниже.
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithCancel(ctx)
+		c.mu.Lock()
+		c.regroupCancel = cancel
+		c.mu.Unlock()
+		defer func() {
+			c.mu.Lock()
+			c.regroupCancel = nil
+			c.mu.Unlock()
+			cancel()
+		}()
 	}
 
 	// Дедуп + группировка запрошенных работ по автору.
@@ -1076,9 +1094,11 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 	g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
 	var touched []int64
 
+	var runErr error
 	for author, works := range byAuthor {
 		if ctx.Err() != nil {
-			return res, ctx.Err()
+			runErr = ctx.Err()
+			break
 		}
 		if dryRun {
 			books, err := g.loadAuthorBooks(ctx, author)
@@ -1104,7 +1124,10 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 
 		newWorks, splitN, purged, err := c.regroupSplitWorks(ctx, works)
 		if err != nil {
-			return res, fmt.Errorf("author %d: %w", author, err)
+			// break, а не return: уже разобранные авторы закоммичены — их надо
+			// досинкать в поиск ниже (в т.ч. при отмене разбора).
+			runErr = fmt.Errorf("author %d: %w", author, err)
+			break
 		}
 		res.EditionsSplit += splitN
 		res.LookupsPurged += purged
@@ -1120,17 +1143,38 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 		}
 	}
 
-	if !dryRun {
+	if !dryRun && len(touched) > 0 {
 		// Итоговый синк поиска: touched = старые + новые + изменённые re-group'ом
 		// работы минус GC'нутые; deleted = GC re-group'а (в нашей фазе split
 		// работы не пустеют — якорь остаётся, синглтоны непусты по построению).
+		// Выполняется и при отмене/ошибке — уже закоммиченные авторы досинкиваются.
 		for id := range g.touchedWorks {
 			touched = append(touched, id)
 		}
 		deleted := keysOf(g.deletedWorks)
 		c.syncSearchAfterManual(survivors(dedupInt64s(touched), deleted), deleted)
 	}
-	return res, nil
+	if runErr != nil && errors.Is(runErr, context.Canceled) {
+		res.Canceled = true
+		c.logger.Info("regroup: canceled by operator — processed authors kept",
+			"editions_split", res.EditionsSplit)
+	}
+	return res, runErr
+}
+
+// StopRegroup — отменяет идущий разбор работ (кнопка «Отменить разбор»).
+// Прерывание — между авторами или откатом текущей per-author транзакции;
+// уже обработанные авторы остаются разобранными (и синкаются в поиск).
+// Возвращает false, если активного разбора нет.
+func (c *WorkGroupController) StopRegroup() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.regroupCancel == nil {
+		return false
+	}
+	c.regroupCancel()
+	c.logger.Info("regroup: stop requested")
+	return true
 }
 
 // pauseWorkerForRegroup — приостанавливает фоновую группировку на время
@@ -1523,9 +1567,11 @@ type WorkGroupController struct {
 	// regroupActive — идёт RegroupWorks: воркер приостановлен им самим, Start/
 	// RunOnce не стартуют, а помечают pending* — восстановление после разбора
 	// учтёт и «как было», и запросы включения, пришедшие во время разбора.
+	// regroupCancel — отмена идущего разбора (StopRegroup).
 	regroupActive bool
 	pendingStart  bool
 	pendingOnce   bool
+	regroupCancel context.CancelFunc
 }
 
 func NewWorkGroupController(pool *pgxpool.Pool, ol, wd WorkKeyResolver, cfg WorkGroupConfig, resyncer WorkIDResyncer, logger *slog.Logger) *WorkGroupController {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { AlertTriangle, ChevronRight, Flame, Info, RotateCcw, Square, Trash2 } from 'lucide-react';
+import { AlertTriangle, ChevronRight, Flame, Info, Loader2, RotateCcw, Square, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
@@ -45,6 +45,7 @@ import {
   useUpdateWorkGroupingSettings,
   useRunWorkGrouping,
   useStopWorkGrouping,
+  useStopWorksRegroup,
   type CoverCacheSettings,
   type CollectionInput,
   type Intensity,
@@ -435,6 +436,7 @@ export function AdminBackgroundPage() {
   const updateWg = useUpdateWorkGroupingSettings();
   const runWg = useRunWorkGrouping();
   const stopWg = useStopWorkGrouping();
+  const stopRegroup = useStopWorksRegroup();
 
   // ── Числовые поля (общий SaveBar) ──
   const [minFreeMB, setMinFreeMB] = useState('');
@@ -607,6 +609,14 @@ export function AdminBackgroundPage() {
       toast.success('Останавливаю проход');
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось остановить');
+    }
+  };
+  const onStopRegroup = async () => {
+    try {
+      await stopRegroup.mutateAsync();
+      toast.success('Отменяю разбор — обработанные авторы останутся разобранными');
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось отменить разбор');
     }
   };
 
@@ -1516,9 +1526,22 @@ export function AdminBackgroundPage() {
                 onChange={(m) => void applyWg({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
               />
               {wgRegrouping ? (
-                <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-                  Идёт массовый разбор работ (regroup) — воркер приостановлен автоматически и
-                  вернётся в прежнее состояние после завершения.
+                <Callout icon={<Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin" aria-hidden />}>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <span className="text-pretty">
+                      Идёт массовый разбор работ (regroup) — воркер приостановлен автоматически и
+                      вернётся в прежнее состояние после завершения.
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onStopRegroup}
+                      disabled={stopRegroup.isPending}
+                    >
+                      <Square className="size-4" aria-hidden />
+                      {stopRegroup.isPending ? 'Отмена…' : 'Отменить разбор'}
+                    </Button>
+                  </div>
                 </Callout>
               ) : null}
               <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
