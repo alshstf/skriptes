@@ -456,6 +456,93 @@ export function useResetRatingLookups() {
   });
 }
 
+// ── Известность (Fantlab / OpenLibrary → популярность работ) ─────────
+
+export type RenownSettings = {
+  enabled: boolean;
+  fantlab: boolean;
+  openlibrary: boolean;
+  // режим охвата: false = «голова» коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE),
+  // true = все работы
+  whole_collection: boolean;
+  fantlab_rpm: number;
+  openlibrary_rpm: number;
+  found_refresh_days: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  renown_running: boolean;
+  renown_mode: 'off' | 'continuous' | 'once';
+  // покрытие (read-only)
+  coverage: {
+    total: number;
+    head_total: number; // размер «головы» (кандидаты дефолтного охвата)
+    with_any: number; // работы с хоть одним счётчиком
+    with_fantlab: number;
+    with_ol: number;
+    by_source: Record<string, number>;
+  };
+};
+
+// RenownInput — тело PUT (только конфиг, без read-only полей).
+export type RenownInput = {
+  enabled: boolean;
+  fantlab: boolean;
+  openlibrary: boolean;
+  whole_collection: boolean;
+  fantlab_rpm: number;
+  openlibrary_rpm: number;
+  found_refresh_days: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const RENOWN_KEY = ['admin', 'renown'] as const;
+
+export function useRenownSettings() {
+  return useQuery<RenownSettings>({
+    queryKey: [...RENOWN_KEY],
+    queryFn: () => apiFetch<RenownSettings>('/api/admin/renown'),
+    staleTime: 10_000,
+    refetchInterval: (query) => (query.state.data?.renown_running ? 3000 : false),
+  });
+}
+
+export function useUpdateRenownSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: RenownInput) =>
+      apiFetch<RenownSettings>('/api/admin/renown', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...RENOWN_KEY], data),
+  });
+}
+
+export function useRunRenown() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => apiFetch<{ status: string }>('/api/admin/renown/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...RENOWN_KEY] }),
+  });
+}
+
+export function useStopRenown() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => apiFetch<{ status: string }>('/api/admin/renown/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...RENOWN_KEY] }),
+  });
+}
+
+// useResetRenownLookups — сброс неудачных попыток (not_found/error) по известности.
+export function useResetRenownLookups() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/renown/reset-failed', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...RENOWN_KEY] }),
+  });
+}
+
 // ── Биографии авторов + Экранизации книг (внешние, фоном) ─────────────
 
 export type BioAdaptationSettings = {

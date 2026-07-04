@@ -59,6 +59,27 @@ func TestComputeWorkPopularity(t *testing.T) {
 		more = base
 		more.UserRatings = 1
 		require.Greater(t, computeWorkPopularity(more), p0, "user ratings")
+
+		more = base
+		more.FantlabMarks = 100
+		require.Greater(t, computeWorkPopularity(more), p0, "fantlab marks")
+
+		more = base
+		more.OLRatings = 50
+		require.Greater(t, computeWorkPopularity(more), p0, "ol ratings")
+
+		more = base
+		more.OLWant = 50
+		require.Greater(t, computeWorkPopularity(more), p0, "ol want-to-read")
+	})
+
+	t.Run("внешние счётчики известности (renown)", func(t *testing.T) {
+		// Метро 2033: 6724 оценки Фантлаба → 30·log2(6725) ≈ 381.
+		fl := computeWorkPopularity(workPopSignals{EditionCount: 1, FantlabMarks: 6724})
+		require.InDelta(t, 381, fl, 1)
+		// 36 оценок + 302 want-to-read у OL → 25·log2(339) ≈ 210.
+		ol := computeWorkPopularity(workPopSignals{EditionCount: 1, OLRatings: 36, OLWant: 302})
+		require.InDelta(t, 210, ol, 1)
 	})
 
 	t.Run("потолок edition_count", func(t *testing.T) {

@@ -21,6 +21,7 @@ type SettingsDeps struct {
 	YearBackfill       *metadata.YearBackfillController
 	CoverBackfill      *metadata.CoverBackfillController
 	ExternalRating     *metadata.ExternalRatingBackfillController
+	Renown             *metadata.RenownBackfillController
 	AuthorBackfill     *metadata.AuthorBackfillController
 	AdaptationBackfill *metadata.AdaptationBackfillController
 	WorkGroup          *metadata.WorkGroupController

@@ -136,6 +136,33 @@ func TestSettings_ExternalRatingRoundTrip(t *testing.T) {
 	require.Equal(t, want, got)
 }
 
+func TestSettings_RenownRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, «голова»).
+	got, err := store.Renown(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultRenownConfig(), got)
+	require.False(t, got.Enabled, "по умолчанию воркер выключен")
+	require.False(t, got.WholeCollection, "по умолчанию только «голова» коллекции")
+
+	// Сохранили выбор «только Фантлаб» + вся коллекция — читается обратно.
+	want := settings.RenownConfig{
+		Enabled: true, Fantlab: true, OpenLibrary: false, WholeCollection: true,
+		FantlabRPM: 10, OpenLibraryRPM: 0, FoundRefreshDays: 30, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+	}
+	require.NoError(t, store.SetRenown(ctx, want))
+	got, err = store.Renown(ctx)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 func TestSettings_BioAdaptationRoundTrip(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")
