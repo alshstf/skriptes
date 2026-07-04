@@ -296,7 +296,11 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		visibleLangs = s.allLangs(ctx)
 	}
 
-	req := &meilisearch.SearchRequest{ShowRankingScore: rerank}
+	// «all»: документ обязан матчить ВСЕ слова запроса. Meili-дефолт «last»
+	// прогрессивно роняет хвостовые слова — «гарри <мусор>» матчил то же, что
+	// «гарри» (прод-аудит P1 #5): лишние/опечатанные слова не сужали выдачу.
+	// Suggest/Cmd+K сознательно остаются на «last» — нечёткость typeahead полезна.
+	req := &meilisearch.SearchRequest{ShowRankingScore: rerank, MatchingStrategy: meilisearch.All}
 	// Точный total: режим Page/HitsPerPage даёт exhaustive TotalHits вместо
 	// EstimatedTotalHits, который Meili может занижать оценкой — заголовок
 	// «N книг» совпадает с фасетными счётчиками. Применим, когда offset
