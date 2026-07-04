@@ -587,14 +587,20 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   — для веба: фасетные счётчики считают РАБОТЫ, а не издания. `importer/index.go`:
   `workDoc` + `configureWorksIndex` (searchable title/authors/series; filterable
   genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). **Популярность
-  works = вовлечённость инстанса**: Σ изданий (`count(views) + 3×count(reads)`), считается
-  в `workDocSelect` (миграция 0029 — индексы `views(book_id)`/`reads(book_id)` для COUNT;
-  `reads` — PK(user,book), макс 1/книгу → основной сигнал `views`-лог). Свежесть между
+  works = интегральная «известность»** (с 1.8.x, план `~/.claude/plans/popularity-renown-plan.md`):
+  `workDocSelect` отдаёт СЫРЫЕ сигналы (edition_count, max LIBRATE, max голосов внешнего
+  рейтинга, наличие экранизации, views/reads, count оценок book_ratings), формула —
+  `importer/popularity.go::computeWorkPopularity` (веса-константы popW*, log2-сжатие
+  счётчиков; юнит-тест фиксирует поведение). Меняешь формулу/веса → бамп
+  `WorksIndexSchemaVersion` (полный ресинк). Свежесть между
   полными ресинками держит `importer.PopularityTracker`: `history.Service` хук
   (`SetEngagementHook`) метит книгу при `RecordView`/`RecordRead`/`RecordAcquisition` →
-  трекер раз в 30с батчем таргетно `UpsertWorksToIndex` изменившихся работ. `sort=popularity`
-  на `/books` (раньше works держали 0 — сортировать было нечем). ⚠️ books-индекс (OPDS)
-  popularity по-прежнему 0 — там вторично.
+  трекер раз в 30с батчем таргетно `UpsertWorksToIndex` изменившихся работ (flush идёт
+  через тот же scanWorkDocs → формула применяется автоматически). ⚠️ Пункта UI
+  «По популярности» на `/books` больше НЕТ (был байт-в-байт дублем дефолта на пустом
+  запросе — popularity:desc последний ranking rule); лейбл дефолтной сортировки
+  контекстный (пустой q → «Сначала популярные»), `buildSort` ветку "popularity" держит
+  для back-compat API. ⚠️ books-индекс (OPDS) popularity по-прежнему 0 — там вторично.
 - **Ресинк works-индекса** (`importer/importer.go`): `ResyncWorksIndex` (полный
   upsert всех живых работ, батчи по id, UNION авторов/жанров/языков подзапросами,
   year = COALESCE(work.written_year, min года изданий)), `UpsertWorksToIndex(ids)` /

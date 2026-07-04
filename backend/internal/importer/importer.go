@@ -373,8 +373,9 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 // ResyncWorksIndex на ближайшем старте. Без этого новое поле тихо остаётся
 // нулевым на стабильном деплое: так popularity (#160) был мёртв всю 1.5.x —
 // гейт v1 стоял с #91, полный ресинк не запускался.
-// v1 — базовый набор (#91); v2 — popularity (#160) + src_lang (#165).
-const WorksIndexSchemaVersion = 2
+// v1 — базовый набор (#91); v2 — popularity (#160) + src_lang (#165);
+// v3 — popularity = интегральная «известность» (computeWorkPopularity).
+const WorksIndexSchemaVersion = 3
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -443,10 +444,27 @@ const workDocSelect = `
 			SELECT count(*) FROM views v
 			JOIN books b ON b.id = v.book_id
 			WHERE b.work_id = w.id AND b.deleted = false
-		), 0) + 3 * COALESCE((
+		), 0),
+		COALESCE((
 			SELECT count(*) FROM reads r
 			JOIN books b ON b.id = r.book_id
 			WHERE b.work_id = w.id AND b.deleted = false
+		), 0),
+		COALESCE((
+			SELECT max(b.rating) FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+		), 0),
+		COALESCE((
+			SELECT max(b.external_rating_count) FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+		), 0),
+		EXISTS(
+			SELECT 1 FROM book_adaptations a
+			JOIN books b ON b.id = a.book_id
+			WHERE b.work_id = w.id AND b.deleted = false
+		),
+		COALESCE((
+			SELECT count(*) FROM book_ratings br WHERE br.work_id = w.id
 		), 0)
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
@@ -467,15 +485,21 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			seriesID *int64
 			series   string
 			year     *int16
+			sig      workPopSignals
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
 			&seriesID, &series, &d.EditionCount, &year,
-			&d.Langs, &d.SrcLangs, &d.Genres, &d.Authors, &d.AuthorIDs, &d.Popularity); err != nil {
+			&d.Langs, &d.SrcLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
+			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
+			&sig.HasAdaptation, &sig.UserRatings); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
-		// Popularity работы = вовлечённость инстанса: Σ изданий (views + 3×reads),
-		// считается в workDocSelect. Свежесть между ресинками держит PopularityTracker
-		// (таргетный upsert работы при просмотре/чтении). sort=popularity на /books.
+		// Popularity работы = интегральная «известность»: workDocSelect отдаёт сырые
+		// сигналы, формула — computeWorkPopularity (popularity.go). Свежесть между
+		// полными ресинками держит PopularityTracker (таргетный upsert работы при
+		// просмотре/чтении — flush идёт через этот же скан).
+		sig.EditionCount = int64(d.EditionCount)
+		d.Popularity = computeWorkPopularity(sig)
 		if seriesID != nil && series != "" {
 			d.Series = series
 			d.SeriesID = seriesID

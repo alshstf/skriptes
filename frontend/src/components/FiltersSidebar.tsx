@@ -29,14 +29,17 @@ export type FiltersValue = {
   srcLang: string;
   yearFrom: number;
   yearTo: number;
-  sort: '' | 'year_desc' | 'year_asc' | 'popularity';
+  sort: '' | 'year_desc' | 'year_asc';
 };
 
+// Отдельного пункта «По популярности» нет намеренно: popularity:desc — последний
+// ranking rule works-индекса, т.е. дефолт на пустом запросе УЖЕ отсортирован по
+// популярности (пункт был бы байт-в-байт дублем дефолта). Лейбл дефолта поэтому
+// контекстный: есть запрос → «По релевантности», нет → «Сначала популярные».
 const SORT_OPTIONS: { value: FiltersValue['sort']; label: string }[] = [
   { value: '', label: 'По релевантности' },
   { value: 'year_desc', label: 'Сначала новые' },
   { value: 'year_asc', label: 'Сначала старые' },
-  { value: 'popularity', label: 'По популярности' },
 ];
 
 export function FiltersSidebar({
@@ -45,12 +48,15 @@ export function FiltersSidebar({
   facets,
   totalActive,
   onReset,
+  hasQuery = false,
 }: {
   value: FiltersValue;
   onChange: (next: FiltersValue) => void;
   facets?: FacetDistribution;
   totalActive: number;
   onReset: () => void;
+  /** Есть ли поисковый запрос — меняет лейбл дефолтной сортировки. */
+  hasQuery?: boolean;
 }) {
   // Скрытые из выдачи жанры/языки (admin ∪ персональные) — не показываем
   // их в панели фильтров. Бэкенд уже исключает их из выдачи; это для
@@ -77,6 +83,7 @@ export function FiltersSidebar({
       <SortBlock
         value={value.sort}
         onChange={(sort) => onChange({ ...value, sort })}
+        hasQuery={hasQuery}
       />
 
       <YearBlock
@@ -116,9 +123,11 @@ export function FiltersSidebar({
 function SortBlock({
   value,
   onChange,
+  hasQuery,
 }: {
   value: FiltersValue['sort'];
   onChange: (next: FiltersValue['sort']) => void;
+  hasQuery: boolean;
 }) {
   const id = useId();
   return (
@@ -134,7 +143,7 @@ function SortBlock({
       >
         {SORT_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>
-            {o.label}
+            {o.value === '' && !hasQuery ? 'Сначала популярные' : o.label}
           </option>
         ))}
       </select>
