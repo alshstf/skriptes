@@ -22,9 +22,11 @@ func toRenownBackfillConfig(c settings.RenownConfig) metadata.RenownBackfillConf
 	return metadata.RenownBackfillConfig{
 		Fantlab:           c.Fantlab,
 		OpenLibrary:       c.OpenLibrary,
+		Wikidata:          c.Wikidata,
 		WholeCollection:   c.WholeCollection,
 		FantlabRPM:        c.FantlabRPM,
 		OpenLibraryRPM:    c.OpenLibraryRPM,
+		WikidataRPM:       c.WikidataRPM,
 		FoundRefreshDays:  c.FoundRefreshDays,
 		NotFoundRetryDays: c.NotFoundRetryDays,
 		ErrorRetryHours:   c.ErrorRetryHours,
@@ -66,8 +68,8 @@ func handleUpdateRenown(d SettingsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
 			return
 		}
-		if cfg.FantlabRPM < 0 || cfg.OpenLibraryRPM < 0 || cfg.FoundRefreshDays < 0 ||
-			cfg.NotFoundRetryDays < 0 || cfg.ErrorRetryHours < 0 {
+		if cfg.FantlabRPM < 0 || cfg.OpenLibraryRPM < 0 || cfg.WikidataRPM < 0 ||
+			cfg.FoundRefreshDays < 0 || cfg.NotFoundRetryDays < 0 || cfg.ErrorRetryHours < 0 {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "values must be non-negative"})
 			return
 		}

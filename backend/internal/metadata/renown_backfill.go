@@ -13,8 +13,8 @@ import (
 )
 
 // RenownBackfiller — фоновое дозаполнение внешних счётчиков «известности» работ
-// (works.fantlab_marks / ol_ratings_count / ol_want_count) из Fantlab и
-// OpenLibrary. Зеркало ExternalRatingBackfiller, но WORK-level: известность —
+// (works.fantlab_marks / ol_ratings_count / ol_want_count / wd_sitelinks) из
+// Fantlab, OpenLibrary и Wikidata. Зеркало ExternalRatingBackfiller, но WORK-level: известность —
 // свойство работы, кандидаты — работы, учёт попыток — work_renown_lookups,
 // а после записи — таргетный ресинк works-индекса (пересчёт интегральной
 // популярности computeWorkPopularity, куда счётчики входят слагаемыми).
@@ -28,11 +28,13 @@ type RenownBackfiller struct {
 	pool     *pgxpool.Pool
 	fl       RenownProvider // nil → источник недоступен
 	ol       RenownProvider
+	wd       RenownProvider
 	resyncer WorksIndexSyncer // nil → без таргетного ресинка (наполнится полным)
 	logger   *slog.Logger
 	cfg      RenownBackfillConfig
 	flGate   *rateGate
 	olGate   *rateGate
+	wdGate   *rateGate
 
 	found atomic.Int64 // счётчиков найдено за проход (для логов)
 
@@ -45,9 +47,11 @@ type RenownBackfiller struct {
 type RenownBackfillConfig struct {
 	Fantlab           bool
 	OpenLibrary       bool
+	Wikidata          bool
 	WholeCollection   bool
 	FantlabRPM        int
 	OpenLibraryRPM    int
+	WikidataRPM       int
 	FoundRefreshDays  int // известность растёт — found освежаем, но редко
 	NotFoundRetryDays int
 	ErrorRetryHours   int
@@ -74,22 +78,23 @@ func clampFantlabRPM(rpm int) int {
 }
 
 // NewRenownBackfiller строит воркер с per-source rate-gate'ами по cfg.
-func NewRenownBackfiller(pool *pgxpool.Pool, fl, ol RenownProvider, resyncer WorksIndexSyncer, cfg RenownBackfillConfig, logger *slog.Logger) *RenownBackfiller {
+func NewRenownBackfiller(pool *pgxpool.Pool, fl, ol, wd RenownProvider, resyncer WorksIndexSyncer, cfg RenownBackfillConfig, logger *slog.Logger) *RenownBackfiller {
 	if logger == nil {
 		logger = slog.Default()
 	}
 	b := &RenownBackfiller{
-		pool: pool, fl: fl, ol: ol, resyncer: resyncer, cfg: cfg, logger: logger,
-		flGate: &rateGate{}, olGate: &rateGate{},
+		pool: pool, fl: fl, ol: ol, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger,
+		flGate: &rateGate{}, olGate: &rateGate{}, wdGate: &rateGate{},
 	}
 	b.flGate.setRPM(clampFantlabRPM(cfg.FantlabRPM))
 	b.olGate.setRPM(clampOLRPM(cfg.OpenLibraryRPM))
+	b.wdGate.setRPM(cfg.WikidataRPM)
 	return b
 }
 
 // Run — долгоживущий цикл: дозаполнить due-работы, поспать, пересканить.
 func (b *RenownBackfiller) Run(ctx context.Context) {
-	if b.pool == nil || (b.fl == nil && b.ol == nil) {
+	if b.pool == nil || (b.fl == nil && b.ol == nil && b.wd == nil) {
 		return
 	}
 	b.logger.Info("renown backfill: started", "workers", renownWorkers, "whole_collection", b.cfg.WholeCollection)
@@ -122,6 +127,7 @@ type renownCandidate struct {
 	authors       []string
 	lastName      string
 	firstName     string
+	wdQID         string // works.ext_ids->>'wd_qid' — хинт для источника wikidata
 }
 
 // candidateCond — SQL-условие выбора кандидатов по режиму охвата.
@@ -178,7 +184,8 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		           JOIN books bb  ON bb.id = ba.book_id
 		           WHERE bb.work_id = w.id AND bb.deleted = false
 		       ), '{}'),
-		       COALESCE(pa.last_name, ''), COALESCE(pa.first_name, '')
+		       COALESCE(pa.last_name, ''), COALESCE(pa.first_name, ''),
+		       COALESCE(w.ext_ids->>'wd_qid', '')
 		FROM works w
 		LEFT JOIN authors pa ON pa.id = w.primary_author_id
 		JOIN LATERAL (
@@ -203,7 +210,7 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		var c renownCandidate
 		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.isbn,
 			&c.srcTitle, &c.srcAuthorNorm, &c.srcLang,
-			&c.authors, &c.lastName, &c.firstName); err != nil {
+			&c.authors, &c.lastName, &c.firstName, &c.wdQID); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -237,7 +244,8 @@ type renownSource struct {
 
 // sources — включённые источники с per-source запросом: Fantlab ищет нативно
 // (works.title локализован на язык библиотеки, кириллический автор), OL — по
-// оригиналу для переводных (src_title + латинский автор, как rating/cover).
+// оригиналу для переводных (src_title + латинский автор, как rating/cover),
+// Wikidata — резолв QID по названию (или готовый QID из ext_ids) → sitelinks.
 func (b *RenownBackfiller) sources(c renownCandidate) []renownSource {
 	base := WorkQuery{
 		BookID:    c.id, // work id: для WorkQuery это только контекст логов
@@ -264,6 +272,15 @@ func (b *RenownBackfiller) sources(c renownCandidate) []renownSource {
 		q.Lang = lang
 		out = append(out, renownSource{b.ol, b.olGate, q})
 	}
+	if b.cfg.Wikidata && b.wd != nil {
+		q := base
+		q.Title = c.title
+		q.SrcTitle = c.srcTitle // резолвер сам предпочтёт оригинал
+		q.Authors = c.authors
+		q.Lang = c.lang
+		q.WikidataQID = c.wdQID // готовый QID из Tier-2 — резолв пропускается
+		out = append(out, renownSource{b.wd, b.wdGate, q})
+	}
 	return out
 }
 
@@ -289,7 +306,7 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 		cancel()
 
 		switch {
-		case ferr == nil && res.Ratings+res.Want > 0:
+		case ferr == nil && res.total() > 0:
 			b.writeRenown(ctx, c.id, name, res)
 			b.upsertLookup(ctx, c.id, name, "found")
 			b.found.Add(1)
@@ -321,6 +338,9 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 		_, err = b.pool.Exec(ctx,
 			`UPDATE works SET ol_ratings_count = $2, ol_want_count = $3, updated_at = now() WHERE id = $1`,
 			workID, res.Ratings, res.Want)
+	case "wikidata":
+		_, err = b.pool.Exec(ctx,
+			`UPDATE works SET wd_sitelinks = $2, updated_at = now() WHERE id = $1`, workID, res.Sitelinks)
 	default:
 		err = fmt.Errorf("unknown renown source %q", source)
 	}
@@ -412,6 +432,7 @@ type RenownCoverage struct {
 	WithAny     int            `json:"with_any"`
 	WithFantlab int            `json:"with_fantlab"`
 	WithOL      int            `json:"with_ol"`
+	WithWD      int            `json:"with_wd"`
 	BySource    map[string]int `json:"by_source"`
 }
 
@@ -419,6 +440,7 @@ type RenownBackfillController struct {
 	pool     *pgxpool.Pool
 	fl       RenownProvider
 	ol       RenownProvider
+	wd       RenownProvider
 	resyncer WorksIndexSyncer
 	logger   *slog.Logger
 
@@ -428,15 +450,15 @@ type RenownBackfillController struct {
 	onceCancel context.CancelFunc
 }
 
-func NewRenownBackfillController(pool *pgxpool.Pool, fl, ol RenownProvider, resyncer WorksIndexSyncer, cfg RenownBackfillConfig, logger *slog.Logger) *RenownBackfillController {
+func NewRenownBackfillController(pool *pgxpool.Pool, fl, ol, wd RenownProvider, resyncer WorksIndexSyncer, cfg RenownBackfillConfig, logger *slog.Logger) *RenownBackfillController {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &RenownBackfillController{pool: pool, fl: fl, ol: ol, resyncer: resyncer, cfg: cfg, logger: logger}
+	return &RenownBackfillController{pool: pool, fl: fl, ol: ol, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
 }
 
 func (c *RenownBackfillController) ready() bool {
-	return c.pool != nil && (c.fl != nil || c.ol != nil)
+	return c.pool != nil && (c.fl != nil || c.ol != nil || c.wd != nil)
 }
 
 // ResetFailedLookups удаляет неудачные попытки (not_found/error) из
@@ -473,7 +495,7 @@ func (c *RenownBackfillController) Start() {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	c.contCancel = cancel
-	b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.resyncer, c.cfg, c.logger)
+	b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.wd, c.resyncer, c.cfg, c.logger)
 	go b.Run(ctx)
 	c.logger.Info("renown backfill: continuous job started")
 }
@@ -523,7 +545,7 @@ func (c *RenownBackfillController) RunOnce() {
 	cfg := c.cfg
 	c.mu.Unlock()
 	go func() {
-		b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.resyncer, cfg, c.logger)
+		b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.wd, c.resyncer, cfg, c.logger)
 		n := b.drain(ctx)
 		cancel()
 		c.mu.Lock()
@@ -565,11 +587,13 @@ func (c *RenownBackfillController) Coverage(ctx context.Context) (RenownCoverage
 		           )
 		       ),
 		       count(*) FILTER (WHERE w.fantlab_marks IS NOT NULL
-		           OR w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL),
+		           OR w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL
+		           OR w.wd_sitelinks IS NOT NULL),
 		       count(*) FILTER (WHERE w.fantlab_marks IS NOT NULL),
-		       count(*) FILTER (WHERE w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL)
+		       count(*) FILTER (WHERE w.ol_ratings_count IS NOT NULL OR w.ol_want_count IS NOT NULL),
+		       count(*) FILTER (WHERE w.wd_sitelinks IS NOT NULL)
 		FROM works w
-	`).Scan(&out.Total, &out.HeadTotal, &out.WithAny, &out.WithFantlab, &out.WithOL); err != nil {
+	`).Scan(&out.Total, &out.HeadTotal, &out.WithAny, &out.WithFantlab, &out.WithOL, &out.WithWD); err != nil {
 		return out, err
 	}
 	rows, err := c.pool.Query(ctx, `

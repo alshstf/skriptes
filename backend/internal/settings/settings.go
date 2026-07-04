@@ -332,9 +332,11 @@ type RenownConfig struct {
 	Enabled           bool `json:"enabled"`
 	Fantlab           bool `json:"fantlab"`
 	OpenLibrary       bool `json:"openlibrary"`
+	Wikidata          bool `json:"wikidata"`
 	WholeCollection   bool `json:"whole_collection"`
 	FantlabRPM        int  `json:"fantlab_rpm"`
 	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
+	WikidataRPM       int  `json:"wikidata_rpm"`
 	FoundRefreshDays  int  `json:"found_refresh_days"`
 	NotFoundRetryDays int  `json:"not_found_retry_days"`
 	ErrorRetryHours   int  `json:"error_retry_hours"`
@@ -347,9 +349,11 @@ func DefaultRenownConfig() RenownConfig {
 		Enabled:           false,
 		Fantlab:           true,
 		OpenLibrary:       true,
+		Wikidata:          true,
 		WholeCollection:   false,
 		FantlabRPM:        30, // лимиты api.fantlab.ru не документированы — вежливо
 		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
+		WikidataRPM:       20, // как у года/группировки (глобальный бюджет 200/мин с UA)
 		FoundRefreshDays:  180,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,

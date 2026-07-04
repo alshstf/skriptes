@@ -154,8 +154,9 @@ func TestSettings_RenownRoundTrip(t *testing.T) {
 
 	// Сохранили выбор «только Фантлаб» + вся коллекция — читается обратно.
 	want := settings.RenownConfig{
-		Enabled: true, Fantlab: true, OpenLibrary: false, WholeCollection: true,
-		FantlabRPM: 10, OpenLibraryRPM: 0, FoundRefreshDays: 30, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+		Enabled: true, Fantlab: true, OpenLibrary: false, Wikidata: false, WholeCollection: true,
+		FantlabRPM: 10, OpenLibraryRPM: 0, WikidataRPM: 5,
+		FoundRefreshDays: 30, NotFoundRetryDays: 30, ErrorRetryHours: 6,
 	}
 	require.NoError(t, store.SetRenown(ctx, want))
 	got, err = store.Renown(ctx)

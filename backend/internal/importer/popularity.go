@@ -30,6 +30,7 @@ const (
 	popWUserRating  = 100.0 // осознанная оценка 1–5 — самый сильный локальный сигнал
 	popWFantlab     = 30.0  // ·log2(1+fantlab_marks): Метро 2033 (6724)→~381
 	popWOLRenown    = 25.0  // ·log2(1+ol_ratings+ol_want): ГП №1 (~21k)→~359
+	popWWDSitelinks = 40.0  // ·log2(1+wd_sitelinks): ГП 104→~268, МиМ 78→~252
 	popEditionCap   = 64    // потолок edition_count в формуле (санитарный)
 )
 
@@ -48,6 +49,7 @@ type workPopSignals struct {
 	FantlabMarks int64 // fantlab_marks — число оценок на fantlab.ru
 	OLRatings    int64 // ol_ratings_count — число оценок на Open Library
 	OLWant       int64 // ol_want_count — полка want-to-read на Open Library
+	WDSitelinks  int64 // wd_sitelinks — языковые разделы Википедии со статьёй
 }
 
 // computeWorkPopularity собирает интегральную известность из сырых сигналов.
@@ -75,6 +77,9 @@ func computeWorkPopularity(s workPopSignals) int64 {
 	}
 	if ol := s.OLRatings + s.OLWant; ol > 0 {
 		p += popWOLRenown * math.Log2(1+float64(ol))
+	}
+	if s.WDSitelinks > 0 {
+		p += popWWDSitelinks * math.Log2(1+float64(s.WDSitelinks))
 	}
 	p += popWView*float64(s.Views) + popWRead*float64(s.Reads) + popWUserRating*float64(s.UserRatings)
 	return int64(math.Round(p))

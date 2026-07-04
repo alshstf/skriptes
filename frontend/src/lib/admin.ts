@@ -462,11 +462,13 @@ export type RenownSettings = {
   enabled: boolean;
   fantlab: boolean;
   openlibrary: boolean;
+  wikidata: boolean;
   // режим охвата: false = «голова» коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE),
   // true = все работы
   whole_collection: boolean;
   fantlab_rpm: number;
   openlibrary_rpm: number;
+  wikidata_rpm: number;
   found_refresh_days: number;
   not_found_retry_days: number;
   error_retry_hours: number;
@@ -480,6 +482,7 @@ export type RenownSettings = {
     with_any: number; // работы с хоть одним счётчиком
     with_fantlab: number;
     with_ol: number;
+    with_wd: number;
     by_source: Record<string, number>;
   };
 };
@@ -489,9 +492,11 @@ export type RenownInput = {
   enabled: boolean;
   fantlab: boolean;
   openlibrary: boolean;
+  wikidata: boolean;
   whole_collection: boolean;
   fantlab_rpm: number;
   openlibrary_rpm: number;
+  wikidata_rpm: number;
   found_refresh_days: number;
   not_found_retry_days: number;
   error_retry_hours: number;

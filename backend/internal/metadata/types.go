@@ -175,6 +175,10 @@ type WorkQuery struct {
 	Authors   []string // display-имена авторов книги
 	LastName  string   // primary-автор, для precision-гейта
 	FirstName string
+	// WikidataQID — уже известный QID работы (из works.ext_ids, если Tier-2
+	// группировки его резолвил) — позволяет источнику wikidata пропустить
+	// дорогой резолв по названию. Пустой — резолвим сами.
+	WikidataQID string
 }
 
 // WorkKeyResolver — внешний источник идентификатора работы (OpenLibrary Work /
@@ -218,11 +222,16 @@ type RatingProvider interface {
 
 // RenownResult — счётчики «известности» работы у внешнего источника (сигналы
 // интегральной популярности, не рейтинг): Ratings — число оценок (Fantlab
-// markcount / OL ratings_count), Want — размер полки want-to-read (только OL).
+// markcount / OL ratings_count), Want — размер полки want-to-read (только OL),
+// Sitelinks — число языковых разделов Википедии со статьёй (только Wikidata).
 type RenownResult struct {
-	Ratings int
-	Want    int
+	Ratings   int
+	Want      int
+	Sitelinks int
 }
+
+// total — суммарный сигнал (для проверки «источник что-то нашёл»).
+func (r RenownResult) total() int { return r.Ratings + r.Want + r.Sitelinks }
 
 // RenownProvider — внешний источник счётчиков известности работы (Fantlab /
 // OpenLibrary) для дозаполнения works.fantlab_marks / ol_*_count. Возвращает

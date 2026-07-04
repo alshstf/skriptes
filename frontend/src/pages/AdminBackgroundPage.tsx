@@ -210,9 +210,11 @@ function buildRenownInput(d: RenownSettings, patch: Partial<RenownInput>): Renow
     enabled: d.enabled,
     fantlab: d.fantlab,
     openlibrary: d.openlibrary,
+    wikidata: d.wikidata,
     whole_collection: d.whole_collection,
     fantlab_rpm: d.fantlab_rpm,
     openlibrary_rpm: d.openlibrary_rpm,
+    wikidata_rpm: d.wikidata_rpm,
     found_refresh_days: d.found_refresh_days,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
@@ -524,11 +526,13 @@ export function AdminBackgroundPage() {
 
   const [flRpmN, setFlRpmN] = useState('');
   const [olRpmN, setOlRpmN] = useState('');
+  const [wdRpmN, setWdRpmN] = useState('');
   const renownInit = useRef(false);
   useEffect(() => {
     if (nq.data && !renownInit.current) {
       setFlRpmN(String(nq.data.fantlab_rpm));
       setOlRpmN(String(nq.data.openlibrary_rpm));
+      setWdRpmN(String(nq.data.wikidata_rpm));
       renownInit.current = true;
     }
   }, [nq.data]);
@@ -721,11 +725,12 @@ export function AdminBackgroundPage() {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
     }
   };
-  const toggleRenownProvider = (which: 'fantlab' | 'openlibrary', v: boolean) => {
+  const toggleRenownProvider = (which: 'fantlab' | 'openlibrary' | 'wikidata', v: boolean) => {
     if (!nq.data) return;
     const fl = which === 'fantlab' ? v : nq.data.fantlab;
     const ol = which === 'openlibrary' ? v : nq.data.openlibrary;
-    void applyRenown({ [which]: v, enabled: fl || ol }, 'Применено');
+    const wd = which === 'wikidata' ? v : nq.data.wikidata;
+    void applyRenown({ [which]: v, enabled: fl || ol || wd }, 'Применено');
   };
 
   // ── Живое применение прочих тумблеров/настроек ──
@@ -881,8 +886,12 @@ export function AdminBackgroundPage() {
   const coverInvalid = [olRpmC, gbRpmC].some(badNum);
   const ratingDirty = !!rq.data && (gbRpmR !== String(rq.data.googlebooks_rpm) || olRpmR !== String(rq.data.openlibrary_rpm));
   const ratingInvalid = [gbRpmR, olRpmR].some(badNum);
-  const renownDirty = !!nq.data && (flRpmN !== String(nq.data.fantlab_rpm) || olRpmN !== String(nq.data.openlibrary_rpm));
-  const renownInvalid = [flRpmN, olRpmN].some(badNum);
+  const renownDirty =
+    !!nq.data &&
+    (flRpmN !== String(nq.data.fantlab_rpm) ||
+      olRpmN !== String(nq.data.openlibrary_rpm) ||
+      wdRpmN !== String(nq.data.wikidata_rpm));
+  const renownInvalid = [flRpmN, olRpmN, wdRpmN].some(badNum);
   const baDirty = !!bq.data && (biosRpm !== String(bq.data.bios_rpm) || adaptRpm !== String(bq.data.adaptations_rpm));
   const baInvalid = [biosRpm, adaptRpm].some(badNum);
 
@@ -922,6 +931,7 @@ export function AdminBackgroundPage() {
     if (nq.data) {
       setFlRpmN(String(nq.data.fantlab_rpm));
       setOlRpmN(String(nq.data.openlibrary_rpm));
+      setWdRpmN(String(nq.data.wikidata_rpm));
     }
     if (bq.data) {
       setBiosRpm(String(bq.data.bios_rpm));
@@ -968,10 +978,15 @@ export function AdminBackgroundPage() {
       }
       if (renownDirty && !renownInvalid && nq.data) {
         const saved = await updateRenown.mutateAsync(
-          buildRenownInput(nq.data, { fantlab_rpm: num(flRpmN), openlibrary_rpm: num(olRpmN) }),
+          buildRenownInput(nq.data, {
+            fantlab_rpm: num(flRpmN),
+            openlibrary_rpm: num(olRpmN),
+            wikidata_rpm: num(wdRpmN),
+          }),
         );
         setFlRpmN(String(saved.fantlab_rpm));
         setOlRpmN(String(saved.openlibrary_rpm));
+        setWdRpmN(String(saved.wikidata_rpm));
       }
       if (baDirty && !baInvalid && bq.data) {
         const saved = await updateBa.mutateAsync(
@@ -1654,12 +1669,20 @@ export function AdminBackgroundPage() {
                       disabled={updateRenown.isPending}
                       onChange={(v) => toggleRenownProvider('openlibrary', v)}
                     />
+                    <SourceSwitch
+                      id="renown-src-wd"
+                      label="Wikidata (число языковых разделов Википедии)"
+                      checked={nq.data?.wikidata ?? false}
+                      disabled={updateRenown.isPending}
+                      onChange={(v) => toggleRenownProvider('wikidata', v)}
+                    />
                     <p className="text-xs text-muted-foreground text-pretty">
                       Фантлаб силён на русскоязычной фантастике (нативный русский поиск),
-                      OpenLibrary — на переводной мировой литературе (поиск по оригиналу).
+                      OpenLibrary — на переводной мировой литературе (поиск по оригиналу),
+                      Wikidata — на классике и мейнстриме (сколько Википедий пишут о книге).
                     </p>
                   </div>
-                  {nq.data?.fantlab || nq.data?.openlibrary ? (
+                  {nq.data?.fantlab || nq.data?.openlibrary || nq.data?.wikidata ? (
                     <div className="space-y-3 border-t border-border pt-3">
                       <ScopeControl
                         whole={nq.data?.whole_collection ?? false}
@@ -1679,6 +1702,12 @@ export function AdminBackgroundPage() {
                             OpenLibrary, зап./мин
                           </label>
                           <Input id="renown-ol-rpm" type="number" min={0} value={olRpmN} onChange={(e) => setOlRpmN(e.target.value)} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label htmlFor="renown-wd-rpm" className="text-sm">
+                            Wikidata, зап./мин
+                          </label>
+                          <Input id="renown-wd-rpm" type="number" min={0} value={wdRpmN} onChange={(e) => setWdRpmN(e.target.value)} />
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
