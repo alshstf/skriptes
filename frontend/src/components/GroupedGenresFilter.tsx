@@ -381,9 +381,12 @@ function groupByCategory(
 
   // effectiveCount — динамический (от текущего поиска через facets) если
   // есть, иначе статический total. Используется и для сортировки, и
-  // для подсчёта sum'ы у категории.
+  // для подсчёта sum'ы у категории. При АКТИВНЫХ фасетах отсутствие кода
+  // означает «0 книг под текущим запросом» — фолбэк на глобальный
+  // book_count здесь давал категории почти глобальный агрегат («Наука
+  // 61374» под запросом из 115 книг, прод-аудит P3).
   const effective = (g: GenreItem) =>
-    facets?.[g.code] ?? g.book_count ?? 0;
+    facets ? (facets[g.code] ?? 0) : (g.book_count ?? 0);
 
   const out: GroupedCategory[] = [];
   for (const [name, leafs] of map) {
