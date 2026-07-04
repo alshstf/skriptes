@@ -1147,6 +1147,15 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 	// Tier-1-only группировщик; resyncer НЕ передаём — синк поиска делаем один
 	// на весь вызов (syncSearchAfterManual ниже), touched/deleted копим в g.
 	g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
+	// Доминирующий язык — один раз на вызов (см. regroupSplitWorks).
+	domLang := ""
+	if !dryRun {
+		if dom, derr := dominantLang(ctx, c.pool); derr == nil {
+			domLang = dom
+		} else {
+			c.logger.Warn("regroup: dominant lang lookup failed — skip title localization", "err", derr)
+		}
+	}
 	var touched []int64
 
 	var runErr error
@@ -1177,7 +1186,7 @@ func (c *WorkGroupController) RegroupWorks(ctx context.Context, workIDs []int64,
 			continue
 		}
 
-		newWorks, splitN, purged, err := c.regroupSplitWorks(ctx, works)
+		newWorks, splitN, purged, err := c.regroupSplitWorks(ctx, works, domLang)
 		if err != nil {
 			// break, а не return: уже разобранные авторы закоммичены — их надо
 			// досинкать в поиск ниже (в т.ч. при отмене разбора).
@@ -1304,6 +1313,13 @@ func (c *WorkGroupController) RegroupAll() error {
 		c.logger.Info("regroup all: started", "works", total, "authors", len(authorOrder))
 
 		g := NewWorkGrouper(c.pool, nil, nil, WorkGroupConfig{}, nil, c.logger)
+		// Доминирующий язык — один раз на весь пересбор (см. regroupSplitWorks).
+		domLang := ""
+		if dom, derr := dominantLang(ctx, c.pool); derr == nil {
+			domLang = dom
+		} else {
+			c.logger.Warn("regroup all: dominant lang lookup failed — skip title localization", "err", derr)
+		}
 		var touched []int64
 		var purged int64
 		split, canceled := 0, false
@@ -1313,7 +1329,7 @@ func (c *WorkGroupController) RegroupAll() error {
 				break
 			}
 			works := byAuthor[author]
-			newWorks, n, p, err := c.regroupSplitWorks(ctx, works)
+			newWorks, n, p, err := c.regroupSplitWorks(ctx, works, domLang)
 			if err != nil {
 				if errors.Is(err, context.Canceled) {
 					canceled = true
@@ -1399,9 +1415,12 @@ func (c *WorkGroupController) pauseWorkerForRegroup() (restore func(), err error
 
 // regroupSplitWorks — транзакционная фаза разбора работ (батч одного автора):
 // вынос не-якорных изданий в синглтоны + сброс маркеров/лежалых внешних ключей.
-// Возвращает id новых работ, число вынесенных изданий и число вычищенных
-// found-lookups.
-func (c *WorkGroupController) regroupSplitWorks(ctx context.Context, works []int64) (newWorks []int64, splitN int, purged int64, err error) {
+// domLang — доминирующий язык библиотеки, вычисленный ОДИН раз на весь вызов
+// (dominantLang — полнотабличный агрегат по books; на 462k книг per-author
+// вызов давал ~1.5с/автора и ETA пересбора ~12ч — прод-инцидент 1.7.2).
+// Пустой domLang — локализацию заголовков пропускаем. Возвращает id новых
+// работ, число вынесенных изданий и число вычищенных found-lookups.
+func (c *WorkGroupController) regroupSplitWorks(ctx context.Context, works []int64, domLang string) (newWorks []int64, splitN int, purged int64, err error) {
 	tx, err := c.pool.Begin(ctx)
 	if err != nil {
 		return nil, 0, 0, err
@@ -1476,8 +1495,8 @@ func (c *WorkGroupController) regroupSplitWorks(ctx context.Context, works []int
 	if err := recomputeWorkAggregates(ctx, tx, allWorks); err != nil {
 		return nil, 0, 0, err
 	}
-	if dom, derr := dominantLang(ctx, tx); derr == nil && dom != "" {
-		if _, err := recomputeWorkTitles(ctx, tx, dom, allWorks); err != nil {
+	if domLang != "" {
+		if _, err := recomputeWorkTitles(ctx, tx, domLang, allWorks); err != nil {
 			return nil, 0, 0, fmt.Errorf("localize work titles: %w", err)
 		}
 	}
