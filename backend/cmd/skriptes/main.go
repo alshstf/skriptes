@@ -540,15 +540,18 @@ func runOnceWorkIDResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.
 }
 
 // runOnceWorksIndexSync применяет настройки индекса works на каждом старте
-// (идемпотентно) и разово делает полный ResyncWorksIndex на апгрейде (гейт
-// app_settings.works_index_synced_v1). Веб-список/Cmd+K ищут по works-индексу —
-// без этого на стабильном деплое без импорта индекс был бы пустым. Дальше
+// (идемпотентно) и разово делает полный ResyncWorksIndex на апгрейде. Гейт
+// app_settings версионирован схемой дока (importer.WorksIndexSyncedFlagKey):
+// бамп importer.WorksIndexSchemaVersion форсит ресинк на ближайшем старте —
+// иначе новое вычисляемое поле workDoc тихо остаётся нулевым на стабильном
+// деплое (так popularity был мёртв всю 1.5.x). Веб-список/Cmd+K ищут по
+// works-индексу — без ресинка на свежем инстансе индекс был бы пустым. Дальше
 // индекс поддерживают импорт (полный ресинк) и таргетные синки группировки/года.
 func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
 	if err := imp.ConfigureWorksIndex(ctx); err != nil {
 		logger.Warn("meili configure works index at startup failed", "err", err)
 	}
-	const flag = "works_index_synced_v1"
+	flag := importer.WorksIndexSyncedFlagKey()
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("works index sync: check flag failed — skip", "err", err)
@@ -567,7 +570,12 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
 		logger.Warn("works index sync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
-	logger.Info("one-time works index resync done", "count", n)
+	// GC устаревших версий ключа — не копить мусор при бампах схемы.
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM app_settings WHERE key LIKE 'works_index_synced_v%' AND key <> $1`, flag); err != nil {
+		logger.Warn("works index sync: gc old flag keys failed", "err", err)
+	}
+	logger.Info("one-time works index resync done", "count", n, "flag", flag)
 }
 
 // runOnceWorkTitleLocalize — разовый backfill: локализует works.title на
@@ -622,6 +630,8 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 // Prewarmer.maybeResyncSrcLangs). Зовётся ПОСЛЕ runOnceWorksIndexSync: на свежем
 // инстансе тот уже наполнил индекс доками с src_lang — тогда этот шаг ставит
 // флаг по нулевой работе быстро (повторный полный ресинк идемпотентен).
+// ⚠️ Новым изменениям схемы workDoc отдельный гейт НЕ заводить — бампать
+// importer.WorksIndexSchemaVersion (см. runOnceWorksIndexSync).
 func runOnceSrcLangSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
 	const flag = "src_lang_synced_v1"
 	var done bool

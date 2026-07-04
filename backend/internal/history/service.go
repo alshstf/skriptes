@@ -106,6 +106,10 @@ func (s *Service) MarkRead(ctx context.Context, userID, bookID int64) error {
 	if err != nil {
 		return fmt.Errorf("mark read: %w", err)
 	}
+	// reads-строка создана/обновлена → популярность работы могла измениться;
+	// без mark отметка «прочитано» не доезжала до works-индекса до следующего
+	// полного ресинка.
+	s.mark(bookID)
 	return nil
 }
 
@@ -335,6 +339,10 @@ func (s *Service) SavePosition(ctx context.Context, userID, bookID int64, pos st
 	if err != nil {
 		return fmt.Errorf("save position: %w", err)
 	}
+	// Чтение в веб-ридере = вовлечённость (upsert reads учитывается в
+	// popularity). Ридер шлёт позицию с дебаунсом, mark — вставка в map под
+	// mutex, flush дедуплицирует — дёшево.
+	s.mark(bookID)
 	return nil
 }
 

@@ -366,6 +366,22 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 
 // ── works-индекс: полный ресинк + таргетные upsert/delete ───────
 
+// WorksIndexSchemaVersion — версия схемы документа works-индекса (workDoc +
+// workDocSelect). ПРАВИЛО: меняешь состав или семантику вычисляемых полей —
+// инкрементируй. Ключ one-shot гейта ресинка в main.go строится от этой
+// константы (works_index_synced_v<N>), поэтому бамп ФОРСИТ полный
+// ResyncWorksIndex на ближайшем старте. Без этого новое поле тихо остаётся
+// нулевым на стабильном деплое: так popularity (#160) был мёртв всю 1.5.x —
+// гейт v1 стоял с #91, полный ресинк не запускался.
+// v1 — базовый набор (#91); v2 — popularity (#160) + src_lang (#165).
+const WorksIndexSchemaVersion = 2
+
+// WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
+// в app_settings, версионированный схемой дока.
+func WorksIndexSyncedFlagKey() string {
+	return fmt.Sprintf("works_index_synced_v%d", WorksIndexSchemaVersion)
+}
+
 // workDocSelect — общий список колонок для построения workDoc из PG. Агрегаты
 // (авторы/жанры/языки/популярность) считаются по ЖИВЫМ изданиям работы
 // подзапросами (а не GROUP BY с JOIN'ами) — без декартова взрыва строк.

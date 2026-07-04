@@ -98,5 +98,8 @@ func (t *PopularityTracker) flush(ctx context.Context) {
 		t.logger.Warn("popularity flush: upsert works failed", "count", len(workIDs), "err", err)
 		return
 	}
-	t.logger.Debug("popularity flushed to works index", "books", len(books), "works", len(workIDs))
+	// Info, не Debug: на прод-уровне логов это единственное свидетельство, что
+	// живая вовлечённость доезжает до индекса. Не чаще раза в тик (30с) и
+	// только при изменениях — не зашумит.
+	t.logger.Info("popularity flushed to works index", "books", len(books), "works", len(workIDs))
 }
