@@ -257,7 +257,11 @@ func (wh workHit) toListItem() ListItem {
 	}
 	if len(wh.Langs) > 0 {
 		langs := append([]string(nil), wh.Langs...)
-		sort.Strings(langs) // детерминированный представительный язык для чипа
+		// Фолбэк до гидрации: алфавитно-первый язык union'а изданий. НЕ финальное
+		// значение — hydrateWorkRepresentative перекроет языком ПРЕДСТАВИТЕЛЬНОГО
+		// издания (union[0] систематически показывал «en» у русских переводных
+		// работ: 'e' < 'r', прод-аудит P1 #3).
+		sort.Strings(langs)
 		li.Lang = langs[0]
 	}
 	return li
@@ -361,8 +365,13 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	for _, sc := range scored {
 		items = append(items, sc.item)
 	}
-	s.hydrateWorkCovers(ctx, items)
+	// Порядок важен: HydrateListMeta ставит work-level сигналы (оценка читателей,
+	// экранизации, рейтинг глобального представителя), затем rep-гидрация
+	// перекрывает lang/обложку/внешний рейтинг значениями ВИДИМОГО представителя
+	// (с учётом персональных скрытий) — список консистентен с карточкой (GetWork
+	// выбирает то же издание тем же каскадом).
 	HydrateListMeta(ctx, s.pool, items)
+	s.hydrateWorkRepresentative(ctx, items, params.ExcludeGenres, params.ExcludeLangs)
 
 	// Page-режим кладёт точный счётчик в TotalHits (EstimatedTotalHits = 0),
 	// offset-fallback — наоборот.
@@ -499,6 +508,47 @@ func (s *Service) hydrateWorkCovers(ctx context.Context, items []ListItem) {
 	}
 }
 
+// hydrateWorkRepresentative перекрывает на works-выдаче lang / обложку /
+// внешний рейтинг значениями ВИДИМОГО представительного издания (каскад
+// representativeEditions с учётом скрытий) — список показывает то же, что
+// покажет карточка (GetWork выбирает издание тем же каскадом). Зовётся ПОСЛЕ
+// HydrateListMeta: рейтинг представителя авторитетнее MAX-агрегата (в т.ч.
+// пустой — карточка тоже покажет пусто). Ошибки не фатальны (остаётся фолбэк
+// toListItem/WorkMeta). items[i].ID здесь = works.id.
+func (s *Service) hydrateWorkRepresentative(ctx context.Context, items []ListItem, excludeGenres, excludeLangs []string) {
+	if s.pool == nil || len(items) == 0 {
+		return
+	}
+	ids := make([]int64, 0, len(items))
+	for _, it := range items {
+		ids = append(ids, it.ID)
+	}
+	reps, err := s.representativeEditions(ctx, ids, excludeGenres, excludeLangs)
+	if err != nil {
+		return
+	}
+	for i := range items {
+		rep, ok := reps[items[i].ID]
+		if !ok {
+			continue
+		}
+		if rep.Lang != "" {
+			items[i].Lang = rep.Lang
+		}
+		switch {
+		case rep.CoverPath != "":
+			items[i].CoverPath = rep.CoverPath
+			items[i].CoverEditionID = rep.ID
+		case rep.FallbackCoverPath != "":
+			items[i].CoverPath = rep.FallbackCoverPath
+			items[i].CoverEditionID = rep.FallbackCoverID
+		}
+		items[i].EditionCount = rep.EditionCount
+		items[i].ExternalRating = rep.ExternalRating
+		items[i].ExternalRatingSource = rep.ExternalRatingSource
+	}
+}
+
 // listItemWorkID — id логической книги для item: WorkID (если задан, как в
 // catalog-выдаче автора/серии) либо ID (в works-выдаче ID = works.id).
 func listItemWorkID(it ListItem) int64 {
@@ -518,12 +568,13 @@ type ListMeta struct {
 	HasAdaptations       bool
 }
 
-// WorkMeta — батч-агрегат НЕ-user сигналов по work_id: внешний рейтинг
-// (max COALESCE(rating, external_rating) по изданиям) + источник топ-издания
-// (как у авторов), оценка читателей (avg book_ratings по работе) + число,
-// наличие экранизаций. Переиспользуется HydrateListMeta (books.ListItem) и
-// collections (полки, свой DTO). Ошибки молча игнорируются (плашка деградирует
-// до базовой, как с обложками).
+// WorkMeta — батч-агрегат НЕ-user сигналов по work_id: внешний рейтинг +
+// источник ПРЕДСТАВИТЕЛЬНОГО издания (тот же каскад, что у карточки — раньше
+// MAX по изданиям расходился с ней: список «🌐5», карточка «🌐3», прод-аудит
+// P1 #4), оценка читателей (avg book_ratings по работе) + число, наличие
+// экранизаций. Переиспользуется HydrateListMeta (books.ListItem) и collections
+// (полки, свой DTO). Ошибки молча игнорируются (плашка деградирует до базовой,
+// как с обложками).
 func WorkMeta(ctx context.Context, pool *pgxpool.Pool, workIDs []int64) map[int64]ListMeta {
 	out := map[int64]ListMeta{}
 	if pool == nil || len(workIDs) == 0 {
@@ -531,16 +582,23 @@ func WorkMeta(ctx context.Context, pool *pgxpool.Pool, workIDs []int64) map[int6
 	}
 	rows, err := pool.Query(ctx, `
 		SELECT w.id,
-		  (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM books b
-		     WHERE b.work_id = w.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)),
-		  (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END FROM books b
-		     WHERE b.work_id = w.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)
-		     ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id LIMIT 1),
+		  COALESCE(rep.rating, rep.external_rating)::float8,
+		  CASE WHEN rep.rating IS NOT NULL THEN 'library' ELSE rep.external_rating_source END,
 		  (SELECT avg(br.rating)::float8 FROM book_ratings br WHERE br.work_id = w.id),
 		  (SELECT count(*)::int FROM book_ratings br WHERE br.work_id = w.id),
 		  EXISTS (SELECT 1 FROM books b JOIN book_adaptations ad ON ad.book_id = b.id
 		          WHERE b.work_id = w.id AND b.deleted = false)
-		FROM works w WHERE w.id = ANY($1)
+		FROM works w
+		LEFT JOIN LATERAL (
+		    SELECT b.rating, b.external_rating, b.external_rating_source
+		    FROM books b
+		    WHERE b.work_id = w.id AND b.deleted = false
+		    ORDER BY COALESCE(b.normalized_title = w.normalized_title, false) DESC,
+		             (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
+		             b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
+		    LIMIT 1
+		) rep ON true
+		WHERE w.id = ANY($1)
 	`, workIDs)
 	if err != nil {
 		return out
@@ -651,31 +709,106 @@ func (s *Service) GetWork(ctx context.Context, workID int64, excludeGenres, excl
 // visibleWorkEditionID — id представительного ВИДИМОГО издания работы (обложка в
 // приоритете, затем язык/год издания/id). Применяет те же исключения, что и
 // список: издание видимо, если его язык не скрыт И ни один жанр не скрыт.
-func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, excludeGenres, excludeLangs []string) (int64, error) {
-	var id int64
+// repEdition — представительное издание работы: ЕДИНЫЙ источник lang/обложки/
+// внешнего рейтинга работы для списка (/books) и карточки (GetWork). До него
+// список брал язык как union[0] (алфавитно → «en» у русских переводов) и
+// рейтинг как MAX по изданиям — расходясь с карточкой (прод-аудит P1 #3/#4).
+type repEdition struct {
+	ID                   int64
+	Lang                 string
+	CoverPath            string
+	ExternalRating       *float64
+	ExternalRatingSource *string
+	EditionCount         int
+	// Fallback-обложка: любое издание с обложкой, если у представителя её нет
+	// (обложка лучше плейсхолдера; карточка ведёт себя так же — COALESCE по id).
+	FallbackCoverID   int64
+	FallbackCoverPath string
+}
+
+// representativeEditions — батч-выбор представительного издания работ по
+// каскаду: якорь (normalized_title == названию работы) > есть обложка > lang >
+// свежий edition_year > меньший id, среди ВИДИМЫХ изданий (exclusions).
+// Каскад — единственный: его же использует visibleWorkEditionID (карточка).
+func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, excludeGenres, excludeLangs []string) (map[int64]repEdition, error) {
+	out := make(map[int64]repEdition, len(workIDs))
+	if s.pool == nil || len(workIDs) == 0 {
+		return out, nil
+	}
 	// COALESCE(..,'{}') — nil-слайс pgx кодирует как NULL, а `<> ALL(NULL)` даёт
 	// NULL (не TRUE) и отсёк бы все издания. Пустой массив → корректно: <> ALL(чисто)
 	// = TRUE, = ANY(пусто) = FALSE.
-	err := s.pool.QueryRow(ctx, `
-		SELECT b.id FROM books b
-		WHERE b.work_id = $1 AND b.deleted = false
-		  AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
-		  AND NOT EXISTS (
-		      SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
-		      WHERE bg.book_id = b.id AND g.fb2_code = ANY(COALESCE($2::text[], '{}'))
-		  )
-		ORDER BY COALESCE(b.normalized_title = (SELECT normalized_title FROM works WHERE id = $1), false) DESC,
-		         (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
-		         b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
-		LIMIT 1
-	`, workID, excludeGenres, excludeLangs).Scan(&id)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return 0, ErrNotFound
+	rows, err := s.pool.Query(ctx, `
+		SELECT w.id, COALESCE(rep.id, 0), COALESCE(rep.lang, ''), COALESCE(rep.cover_path, ''),
+		       COALESCE(rep.rating, rep.external_rating)::float8,
+		       CASE WHEN rep.rating IS NOT NULL THEN 'library' ELSE rep.external_rating_source END,
+		       COALESCE(w.edition_count, 1),
+		       COALESCE(fb.id, 0), COALESCE(fb.cover_path, '')
+		FROM works w
+		LEFT JOIN LATERAL (
+		    SELECT b.id, b.lang, b.cover_path, b.rating, b.external_rating, b.external_rating_source
+		    FROM books b
+		    WHERE b.work_id = w.id AND b.deleted = false
+		      AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
+		      AND NOT EXISTS (
+		          SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
+		          WHERE bg.book_id = b.id AND g.fb2_code = ANY(COALESCE($2::text[], '{}'))
+		      )
+		    ORDER BY COALESCE(b.normalized_title = w.normalized_title, false) DESC,
+		             (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
+		             b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
+		    LIMIT 1
+		) rep ON true
+		LEFT JOIN LATERAL (
+		    SELECT b.id, b.cover_path FROM books b
+		    WHERE b.work_id = w.id AND b.deleted = false
+		      AND b.cover_path IS NOT NULL AND b.cover_path <> ''
+		    ORDER BY b.id
+		    LIMIT 1
+		) fb ON true
+		WHERE w.id = ANY($1)
+	`, workIDs, excludeGenres, excludeLangs)
+	if err != nil {
+		return nil, fmt.Errorf("pick representative editions: %w", err)
 	}
+	defer rows.Close()
+	for rows.Next() {
+		var (
+			workID int64
+			r      repEdition
+			rating pgtype.Float8
+			source pgtype.Text
+		)
+		if err := rows.Scan(&workID, &r.ID, &r.Lang, &r.CoverPath, &rating, &source,
+			&r.EditionCount, &r.FallbackCoverID, &r.FallbackCoverPath); err != nil {
+			return nil, err
+		}
+		if r.ID == 0 {
+			continue // нет видимых изданий — работы нет для этого пользователя
+		}
+		if rating.Valid {
+			v := rating.Float64
+			r.ExternalRating = &v
+		}
+		if source.Valid && source.String != "" {
+			src := source.String
+			r.ExternalRatingSource = &src
+		}
+		out[workID] = r
+	}
+	return out, rows.Err()
+}
+
+func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, excludeGenres, excludeLangs []string) (int64, error) {
+	reps, err := s.representativeEditions(ctx, []int64{workID}, excludeGenres, excludeLangs)
 	if err != nil {
 		return 0, fmt.Errorf("pick visible edition: %w", err)
 	}
-	return id, nil
+	rep, ok := reps[workID]
+	if !ok {
+		return 0, ErrNotFound
+	}
+	return rep.ID, nil
 }
 
 // isUnfilteredBrowse — «голый» browse первой страницы (без запроса/фильтров).
