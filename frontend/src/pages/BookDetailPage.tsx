@@ -17,6 +17,7 @@ import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
 import { useOverrides } from '@/lib/admin';
 import { useMe } from '@/lib/auth';
+import { RegroupWorkButton } from '@/components/RegroupWorkButton';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -256,8 +257,12 @@ function EditionsSection({ book }: { book: Book }) {
             {editions.length}
           </span>
         </h3>
-        {/* Админ: вынести ошибочно слитые издания в отдельную книгу (сам скрыт у не-админа). */}
-        <SplitEditionsDialog editions={editions} workTitle={book.title} />
+        {/* Админ: точечный пересбор работы + вынос изданий в отдельную книгу
+            (оба сами скрыты у не-админа). */}
+        <div className="flex items-center gap-1">
+          <RegroupWorkButton workId={book.work_id} />
+          <SplitEditionsDialog editions={editions} workTitle={book.title} />
+        </div>
       </div>
       <ul className="space-y-2">
         {editions.map((e) => (

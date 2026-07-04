@@ -603,6 +603,36 @@ export function useStopWorkGrouping() {
   });
 }
 
+// RegroupResult — ответ точечного пересбора (POST /admin/works/regroup).
+export type RegroupResult = {
+  dry_run: boolean;
+  canceled?: boolean;
+  works: number;
+  editions_split: number;
+  lookups_purged: number;
+  // dry-run: work_id (строкой) → сколько книг получится из изданий работы.
+  predicted_clusters?: Record<string, number>;
+};
+
+// Точечный пересбор работы (кнопка «Пересобрать» на карточке, admin): издания
+// разбираются в синглтоны (с чисткой ошибочных внешних ключей) и собираются
+// заново по текущим правилам Tier-1. dryRun — прогноз без записей.
+export function useRegroupWork() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { workId: number; dryRun?: boolean }) =>
+      apiFetch<RegroupResult>('/api/admin/works/regroup', {
+        method: 'POST',
+        body: { work_ids: [vars.workId], dry_run: vars.dryRun ?? false },
+      }),
+    onSuccess: (_r, vars) => {
+      if (!vars.dryRun) invalidateCatalog(qc);
+    },
+    onError: (e) =>
+      toast.error(`Не удалось пересобрать: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
 // Глобальный пересбор группировок: все мульти-работы разбираются и собираются
 // заново по текущим правилам (фоном; прогресс/отмена — в статусе work-grouping).
 export function useRegroupAllWorks() {
