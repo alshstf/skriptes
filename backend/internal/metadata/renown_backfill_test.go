@@ -36,22 +36,24 @@ func TestRenownBackfiller_isDue(t *testing.T) {
 
 type fakeRenownProvider struct {
 	name string
-	res  RenownResult // Ratings+Want>0 → found; иначе ErrNotFound
+	res  RenownResult // total()>0 → found; иначе ErrNotFound
 	err  error
 
 	mu    sync.Mutex
 	calls int
+	qids  []string // WikidataQID из входящих запросов (проверка хинта)
 }
 
 func (f *fakeRenownProvider) Name() string { return f.name }
-func (f *fakeRenownProvider) FetchRenown(context.Context, WorkQuery) (RenownResult, error) {
+func (f *fakeRenownProvider) FetchRenown(_ context.Context, q WorkQuery) (RenownResult, error) {
 	f.mu.Lock()
 	f.calls++
+	f.qids = append(f.qids, q.WikidataQID)
 	f.mu.Unlock()
 	if f.err != nil {
 		return RenownResult{}, f.err
 	}
-	if f.res.Ratings+f.res.Want <= 0 {
+	if f.res.total() <= 0 {
 		return RenownResult{}, ErrNotFound
 	}
 	return f.res, nil
@@ -122,7 +124,7 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 6724}}
 	ol := &fakeRenownProvider{name: "openlibrary", res: RenownResult{Ratings: 36, Want: 302}}
 	syncer := &fakeWorksSyncer{}
-	bf := NewRenownBackfiller(pool, fl, ol, syncer,
+	bf := NewRenownBackfiller(pool, fl, ol, nil, syncer,
 		RenownBackfillConfig{Fantlab: true, OpenLibrary: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
 	require.Equal(t, 1, bf.drain(ctx), "кандидат только head-работа")
 	gotFl, gotOlr, gotOlw := readCounters(headWork)
@@ -142,7 +144,7 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	// Безвестный синглтон — НЕ кандидат в режиме «головы»…
 	tailWork := mkWork("Безвестная книга", 1, nil)
 	fl2 := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 5}}
-	bf2 := NewRenownBackfiller(pool, fl2, nil, syncer,
+	bf2 := NewRenownBackfiller(pool, fl2, nil, nil, syncer,
 		RenownBackfillConfig{Fantlab: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
 	bf2.drain(ctx)
 	gotFl, _, _ = readCounters(tailWork)
@@ -157,16 +159,33 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	require.Equal(t, 5, *gotFl)
 
 	// «Вся коллекция» — берёт и безвестный синглтон.
-	bf3 := NewRenownBackfiller(pool, fl2, nil, syncer,
+	bf3 := NewRenownBackfiller(pool, fl2, nil, nil, syncer,
 		RenownBackfillConfig{Fantlab: true, WholeCollection: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
 	bf3.drain(ctx)
 	gotFl, _, _ = readCounters(tailWork)
 	require.NotNil(t, gotFl, "вся коллекция: синглтон стал кандидатом")
 
+	// Wikidata: sitelinks пишутся в свою колонку, готовый QID из ext_ids
+	// доезжает до провайдера хинтом (резолв пропускается).
+	wdWork := mkWork("Мастер и Маргарита", 2, nil)
+	_, err := pool.Exec(ctx,
+		`UPDATE works SET ext_ids = '{"wd_qid":"Q188538"}'::jsonb WHERE id = $1`, wdWork)
+	require.NoError(t, err)
+	wd := &fakeRenownProvider{name: "wikidata", res: RenownResult{Sitelinks: 78}}
+	bf5 := NewRenownBackfiller(pool, nil, nil, wd, syncer,
+		RenownBackfillConfig{Wikidata: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
+	bf5.drain(ctx)
+	var sitelinks *int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT wd_sitelinks FROM works WHERE id=$1`, wdWork).Scan(&sitelinks))
+	require.NotNil(t, sitelinks)
+	require.Equal(t, 78, *sitelinks)
+	require.Contains(t, wd.qids, "Q188538", "QID из ext_ids передаётся провайдеру хинтом")
+
 	// not_found помечается и не долбится повторно.
 	nfWork := mkWork("Не найдётся", 2, nil)
 	nf := &fakeRenownProvider{name: "fantlab"} // нулевой результат → ErrNotFound
-	bf4 := NewRenownBackfiller(pool, nf, nil, syncer,
+	bf4 := NewRenownBackfiller(pool, nf, nil, nil, syncer,
 		RenownBackfillConfig{Fantlab: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
 	bf4.drain(ctx)
 	var outcome string

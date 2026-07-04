@@ -292,12 +292,14 @@ func run() error {
 		renownCfg = settings.DefaultRenownConfig()
 	}
 	fantlabProvider := metadata.NewFantlabProvider(olHTTPClient)
-	renownCtl := metadata.NewRenownBackfillController(pool, fantlabProvider, olProvider, imp, metadata.RenownBackfillConfig{
+	renownCtl := metadata.NewRenownBackfillController(pool, fantlabProvider, olProvider, wdAdaptations, imp, metadata.RenownBackfillConfig{
 		Fantlab:           renownCfg.Fantlab,
 		OpenLibrary:       renownCfg.OpenLibrary,
+		Wikidata:          renownCfg.Wikidata,
 		WholeCollection:   renownCfg.WholeCollection,
 		FantlabRPM:        renownCfg.FantlabRPM,
 		OpenLibraryRPM:    renownCfg.OpenLibraryRPM,
+		WikidataRPM:       renownCfg.WikidataRPM,
 		FoundRefreshDays:  renownCfg.FoundRefreshDays,
 		NotFoundRetryDays: renownCfg.NotFoundRetryDays,
 		ErrorRetryHours:   renownCfg.ErrorRetryHours,

@@ -71,6 +71,10 @@ func TestComputeWorkPopularity(t *testing.T) {
 		more = base
 		more.OLWant = 50
 		require.Greater(t, computeWorkPopularity(more), p0, "ol want-to-read")
+
+		more = base
+		more.WDSitelinks = 20
+		require.Greater(t, computeWorkPopularity(more), p0, "wd sitelinks")
 	})
 
 	t.Run("внешние счётчики известности (renown)", func(t *testing.T) {
@@ -80,6 +84,9 @@ func TestComputeWorkPopularity(t *testing.T) {
 		// 36 оценок + 302 want-to-read у OL → 25·log2(339) ≈ 210.
 		ol := computeWorkPopularity(workPopSignals{EditionCount: 1, OLRatings: 36, OLWant: 302})
 		require.InDelta(t, 210, ol, 1)
+		// «Мастер и Маргарита»: 78 sitelinks → 40·log2(79) ≈ 252.
+		wd := computeWorkPopularity(workPopSignals{EditionCount: 1, WDSitelinks: 78})
+		require.InDelta(t, 252, wd, 1)
 	})
 
 	t.Run("потолок edition_count", func(t *testing.T) {
