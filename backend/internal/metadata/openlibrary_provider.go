@@ -116,6 +116,10 @@ type olSearchDoc struct {
 	Key              string   `json:"key"` // "/works/OL12345W"
 	FirstPublishYear int      `json:"first_publish_year"`
 	AuthorName       []string `json:"author_name"`
+	// Счётчики известности (FetchRenown). ⚠️ Solr-schema search-полей OL
+	// официально «не гарантированно стабильна» — парсим defensively.
+	RatingsCount    int `json:"ratings_count"`
+	WantToReadCount int `json:"want_to_read_count"`
 }
 
 // ResolveWorkKey — внешний идентификатор работы OpenLibrary для группировки
@@ -260,6 +264,60 @@ func (p *OpenLibraryProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 		return RatingResult{}, ErrNotFound
 	}
 	return RatingResult{Average: *rr.Summary.Average, Count: rr.Summary.Count}, nil
+}
+
+// FetchRenown — счётчики известности работы из OL search: ratings_count +
+// want_to_read_count прямо в поисковой выдаче (батч-friendly, отдельные
+// ratings.json/bookshelves.json не нужны). Переводы одной книги у OL — РАЗНЫЕ
+// records («Метро 2033» и "Metro 2033" раздельно), поэтому суммируем счётчики
+// всех докoв, прошедших гейт по автору (title= уже сужает выдачу до названия).
+// Для переводных книг ищем по оригиналу (SrcTitle) — как ResolveWorkKey.
+// Реализует RenownProvider.
+func (p *OpenLibraryProvider) FetchRenown(ctx context.Context, q WorkQuery) (RenownResult, error) {
+	title := q.SrcTitle
+	if title == "" {
+		title = q.Title
+	}
+	if strings.TrimSpace(title) == "" {
+		return RenownResult{}, ErrNotFound
+	}
+	v := url.Values{}
+	v.Set("title", title)
+	if len(q.Authors) > 0 {
+		v.Set("author", q.Authors[0])
+	}
+	v.Set("limit", "5")
+	v.Set("fields", "key,author_name,ratings_count,want_to_read_count")
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
+	if err != nil {
+		return RenownResult{}, fmt.Errorf("build renown search: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return RenownResult{}, fmt.Errorf("ol renown search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return RenownResult{}, ErrNotFound
+	}
+	var sr olSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return RenownResult{}, fmt.Errorf("decode renown search: %w", err)
+	}
+	gate := AuthorQuery{LastName: q.LastName, FirstName: q.FirstName}
+	var out RenownResult
+	for _, d := range sr.Docs {
+		if !anyAuthorMatches(gate, d.AuthorName) {
+			continue
+		}
+		out.Ratings += d.RatingsCount
+		out.Want += d.WantToReadCount
+	}
+	if out.Ratings+out.Want <= 0 {
+		return RenownResult{}, ErrNotFound
+	}
+	return out, nil
 }
 
 // FetchYear — год первого издания произведения из OpenLibrary search

@@ -28,6 +28,8 @@ const (
 	popWView        = 20.0  // просмотр карточки на инстансе
 	popWRead        = 60.0  // отметка «прочитано»/чтение
 	popWUserRating  = 100.0 // осознанная оценка 1–5 — самый сильный локальный сигнал
+	popWFantlab     = 30.0  // ·log2(1+fantlab_marks): Метро 2033 (6724)→~381
+	popWOLRenown    = 25.0  // ·log2(1+ol_ratings+ol_want): ГП №1 (~21k)→~359
 	popEditionCap   = 64    // потолок edition_count в формуле (санитарный)
 )
 
@@ -42,6 +44,10 @@ type workPopSignals struct {
 	// одной работы резолвятся в ту же внешнюю запись, сумма даст двойной счёт
 	HasAdaptation bool
 	UserRatings   int64 // count(book_ratings) по работе
+	// Внешние счётчики известности (works.*, наполняет metadata/renown_backfill).
+	FantlabMarks int64 // fantlab_marks — число оценок на fantlab.ru
+	OLRatings    int64 // ol_ratings_count — число оценок на Open Library
+	OLWant       int64 // ol_want_count — полка want-to-read на Open Library
 }
 
 // computeWorkPopularity собирает интегральную известность из сырых сигналов.
@@ -63,6 +69,12 @@ func computeWorkPopularity(s workPopSignals) int64 {
 	}
 	if s.HasAdaptation {
 		p += popWAdaptation
+	}
+	if s.FantlabMarks > 0 {
+		p += popWFantlab * math.Log2(1+float64(s.FantlabMarks))
+	}
+	if ol := s.OLRatings + s.OLWant; ol > 0 {
+		p += popWOLRenown * math.Log2(1+float64(ol))
 	}
 	p += popWView*float64(s.Views) + popWRead*float64(s.Reads) + popWUserRating*float64(s.UserRatings)
 	return int64(math.Round(p))

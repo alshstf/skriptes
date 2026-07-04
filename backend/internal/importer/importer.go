@@ -374,8 +374,9 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 // нулевым на стабильном деплое: так popularity (#160) был мёртв всю 1.5.x —
 // гейт v1 стоял с #91, полный ресинк не запускался.
 // v1 — базовый набор (#91); v2 — popularity (#160) + src_lang (#165);
-// v3 — popularity = интегральная «известность» (computeWorkPopularity).
-const WorksIndexSchemaVersion = 3
+// v3 — popularity = интегральная «известность» (computeWorkPopularity);
+// v4 — внешние счётчики известности (fantlab_marks / ol_*) в формуле.
+const WorksIndexSchemaVersion = 4
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -465,7 +466,10 @@ const workDocSelect = `
 		),
 		COALESCE((
 			SELECT count(*) FROM book_ratings br WHERE br.work_id = w.id
-		), 0)
+		), 0),
+		COALESCE(w.fantlab_marks, 0),
+		COALESCE(w.ol_ratings_count, 0),
+		COALESCE(w.ol_want_count, 0)
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
 
@@ -491,7 +495,8 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			&seriesID, &series, &d.EditionCount, &year,
 			&d.Langs, &d.SrcLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
-			&sig.HasAdaptation, &sig.UserRatings); err != nil {
+			&sig.HasAdaptation, &sig.UserRatings,
+			&sig.FantlabMarks, &sig.OLRatings, &sig.OLWant); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
 		// Popularity работы = интегральная «известность»: workDocSelect отдаёт сырые

@@ -250,6 +250,13 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/external-rating/run", handleExternalRatingNow(d.Settings))
 					r.Post("/admin/external-rating/stop", handleExternalRatingStop(d.Settings))
 					r.Post("/admin/external-rating/reset-failed", handleResetRatingLookups(d.Settings))
+					// Известность (Fantlab/OpenLibrary) — фоновый воркер дозаполнения
+					// счётчиков works.fantlab_marks / ol_* (сигналы популярности).
+					r.Get("/admin/renown", handleGetRenown(d.Settings))
+					r.Put("/admin/renown", handleUpdateRenown(d.Settings))
+					r.Post("/admin/renown/run", handleRenownNow(d.Settings))
+					r.Post("/admin/renown/stop", handleRenownStop(d.Settings))
+					r.Post("/admin/renown/reset-failed", handleResetRenownLookups(d.Settings))
 					// Раздел «Биографии + Экранизации — внешние»: фоновые воркеры
 					// био/фото авторов (Wikipedia/OL) и экранизаций книг (Wikidata).
 					r.Get("/admin/bio-adaptation-enrichment", handleGetBioAdaptation(d.Settings))
