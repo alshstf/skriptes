@@ -179,7 +179,29 @@ README — для пользователя, проверяются ОБА.
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.6.0** — **«Язык оригинала» как отдельная сущность** (fb2
+трогают. Текущая версия — **1.7.0** — **фиксы прод-аудита P0** (роадмап
+`~/.claude/plans/audit-fixes-roadmap.md`, отчёт `prod-audit-2026-07.md`), 4 PR (#171-174):
+(1) **честный total и deep-paging** — Meili-дефолт `maxTotalHits=1000` капил счётчик «N книг»
+и молча обрезал скролл; теперь `importer.MeiliMaxTotalHits=1M` в pagination ОБОИХ индексов
+(configure* на каждом старте), `ListWorks` при offset кратном limit → Page/HitsPerPage
+(точный `TotalHits`), guard за потолком → пустая страница (не 5xx и не повтор — повтор
+зацикливал infinite-scroll; внутренний кламп offset 10k снят), фронт останавливает подгрузку
+по короткой странице (`nextBooksPageParam`); (2) **живость popularity** — гейт works-ресинка
+версионирован схемой дока: `importer.WorksIndexSchemaVersion` (сейчас 2) →
+`works_index_synced_v<N>`, бамп константы форсит полный ресинк (⚠️ меняешь workDoc/
+workDocSelect — инкрементируй, отдельные гейты типа src_lang_synced_v1 больше НЕ заводить);
+закрыты дыры трекера — `MarkRead`/`SavePosition` не звали `s.mark()` (ридер и «прочитано» не
+двигали популярность до полного ресинка; контракт-тест хука на все 5 писателей в views/reads);
+(3) **Tier-2 группировки ищет по оригиналу** — `WorkQuery.SrcTitle` из `groupBook.srcTitle`
+(без него OL/WD резолвили переводы по переводному названию → мега-слияния: у ГП 38 изданий/
+18 названий/8 языков в одной работе) + defensive-гейт `tier2BucketConflicts` (union по
+внешнему ключу пропускается при ≥2 разных src_title или ser_no в бакете, ext_ids не пишется);
+(4) **RegroupWorks** — массовый разбор ошибочно слитых работ, см. граблю №15. ⚠️ Важный урок
+аудита: «`sort=popularity` == релевантность байт-в-байт» на пустом запросе — это BY DESIGN
+(`popularity:desc` — последний ranking rule обоих индексов, browse и так popularity-ordered),
+НЕ доказательство мёртвых данных. До неё **1.6.1** — docs-ревизия README + фикс
+`docker-compose.no-caddy.override.yml` (host-порт фронта :80 → :8080 после
+nginx-unprivileged; no-caddy деплой был молча сломан с 1.6.0). До неё **1.6.0** — **«Язык оригинала» как отдельная сущность** (fb2
 `<src-lang>`, extraction был с 0018 — теперь выведен в продукт): фасет/фильтр «Язык оригинала»
 на `/books` (works-индекс несёт `src_lang[]` = union по изданиям, миграция 0030 нормализует
 существующие коды + `metadata.normalizeLangCode` при записи; разовый ресинк под гейтом
@@ -465,6 +487,22 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   серии/автора. Все компоненты сами скрываются у не-админа (`useMe().role`).
   merge/split детачнуто синкают поиск через `syncSearchAfterManual` (ResyncWorkIDs
   + works-индекс).
+- **RegroupWorks (1.7.0) — массовый разбор ошибочно слитых работ** (recovery после
+  Tier-2-без-SrcTitle): `WorkGroupController.RegroupWorks(workIDs, dryRun)` +
+  `POST /admin/works/regroup` (≤500 работ/вызов) + `/regroup/stop` (отмена). На работу:
+  не-якорные издания → синглтоны (якорь держит идентичность и work-level данные —
+  `book_ratings`/промпты/dismissals остаются), `work_scanned_at`=NULL у всех изданий,
+  **purge `found`-строк `book_work_lookups`** (отравленные ключи иначе сольют обратно;
+  not_found/error остаются — TTL) + сброс `works.ext_ids`; затем синхронный Tier-1/1.5 по
+  автору собирает корректные слияния обратно; один detached-синк поиска на вызов.
+  `dry_run` — прогноз (сколько Tier-1-кластеров дадут издания работы; 1 = варианты
+  написания, >1 = кандидат). Фоновый воркер **приостанавливается сам** и
+  восстанавливается после (`pauseWorkerForRegroup`; Start/RunOnce в окне разбора →
+  pending-очередь); прогресс в статусе (`work_regroup_done/total`) — админка показывает
+  счётчик+прогрессбар и кнопку «Отменить разбор» (отмена = между авторами/откат текущей
+  per-author tx, сделанное остаётся и досинкивается). Detection слитых: SQL по
+  `count(DISTINCT src_norm)>=2 OR count(DISTINCT ser_no)>=2` внутри работы — см.
+  `~/.claude/plans/audit-fixes-roadmap.md` (Задача 2, recovery-процедура на прод).
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
   (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу
