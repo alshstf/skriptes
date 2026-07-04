@@ -61,9 +61,13 @@ func TestClusterTier1(t *testing.T) {
 	})
 
 	t.Run("fb2_doc_id — точный дубль файла", func(t *testing.T) {
+		// Общий doc_id сливает ОДНОимённые дубли; разно-названные без
+		// src-свидетельства — больше НЕТ (мусорные doc_id конвертеров стояли
+		// на десятках разных книг — прод-кейс мега-работы ГП, см.
+		// TestClusterTier1_DocIDGates).
 		books := []groupBook{
 			{id: 1, workID: 1, normTitle: "a", lang: "ru", docID: "guid-xyz"},
-			{id: 2, workID: 2, normTitle: "b", lang: "ru", docID: "guid-xyz"},
+			{id: 2, workID: 2, normTitle: "a", lang: "en", docID: "guid-xyz"},
 			{id: 3, workID: 3, normTitle: "c", lang: "ru", docID: ""},
 		}
 		require.Equal(t, [][]int64{{1, 2}, {3}}, clustersOf(books, clusterTier1(books)))
@@ -191,4 +195,57 @@ func TestClusterTier1_Tier15_EmptySrcDoesNotBridgeConflict(t *testing.T) {
 		{id: 3, workID: 3, normTitle: "книга в", lang: "ru", seriesID: 5, serNo: 3}, // src пуст
 	}
 	require.Equal(t, [][]int64{{1}, {2}, {3}}, clustersOf(books, clusterTier1(books)))
+}
+
+// Прод-кейсы Tier-1-hardening: мусорные fb2_doc_id и кривой ser_no склеивали
+// РАЗНЫЕ романы в одну работу (мега-работа ГП: Азкабан+Кубок+Полукровка).
+func TestClusterTier1_DocIDGates(t *testing.T) {
+	t.Run("общий doc_id у разных томов (конфликт ser_no) НЕ сливает", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "гарри поттер и принц-полукровка", lang: "ru",
+				docID: "91390809-84FA", seriesID: 5, serNo: 6},
+			{id: 2, workID: 2, normTitle: "гарри поттер и узник азкабана", lang: "ru",
+				docID: "91390809-84FA", seriesID: 5, serNo: 3},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("общий doc_id у разных названий без src-свидетельства НЕ сливает", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "первая книга", lang: "ru", docID: "C4BEFDB9-junk"},
+			{id: 2, workID: 2, normTitle: "вторая книга", lang: "ru", docID: "C4BEFDB9-junk"},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("переименованный дубль с общим doc_id и src-свидетельством сливается", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "хоббит", lang: "ru", docID: "DOC-1",
+				srcTitleNorm: "the hobbit", srcLang: "en"},
+			{id: 2, workID: 2, normTitle: "хоббит, туда и обратно", lang: "ru", docID: "DOC-1"},
+		}
+		require.Equal(t, [][]int64{{1, 2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("точный дубль (одинаковое название) с общим doc_id сливается как раньше", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "оно", lang: "ru", docID: "DOC-2"},
+			{id: 2, workID: 2, normTitle: "оно", lang: "en", docID: "DOC-2"},
+		}
+		require.Equal(t, [][]int64{{1, 2}}, clustersOf(books, clusterTier1(books)))
+	})
+}
+
+// Tier-1.5: кривой ser_no («узник Азкабана» с №4 рядом с «Кубком Огня» №4,
+// все без src — прод-кейс серии 3848) больше не сливает разно-названные
+// издания без src-свидетельства.
+func TestClusterTier1_Tier15_MislabeledSerNo(t *testing.T) {
+	books := []groupBook{
+		{id: 1, workID: 1, normTitle: "гарри поттер и огненная чаша", lang: "ru", seriesID: 3848, serNo: 4},
+		{id: 2, workID: 2, normTitle: "гарри поттер и огненная чаша", lang: "ru", seriesID: 3848, serNo: 4},
+		{id: 3, workID: 3, normTitle: "гарри поттер и узник азкабана", lang: "ru", seriesID: 3848, serNo: 4},
+	}
+	// Одноимённые «Чаши» сливает byTitleLang; «Азкабан» без src-свидетельства
+	// в бакет не затягивается.
+	require.Equal(t, [][]int64{{1, 2}, {3}}, clustersOf(books, clusterTier1(books)))
 }
