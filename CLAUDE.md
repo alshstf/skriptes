@@ -184,7 +184,15 @@ README — для пользователя, проверяются ОБА.
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.8.0** — **популярность = интегральная «известность»**, 4 PR
+трогают. Текущая версия — **1.8.1** — хотфиксы поверх 1.8.0, 2 PR: (#194) **каскадная
+потеря оценок при merge работ** — `book_ratings`/`book_rating_prompts`/`feed_dismissals`
+(FK `work_id ON DELETE CASCADE`) удалялись при GC поглощаемой работы; `reassignWorkUserData`
+переносит их на каноническую ДО GC (в `apply`+`MergeWorks`, ON CONFLICT → target; split/
+RegroupWorks не затронуты — источник сохраняет якорь). (#195) **прод-краш «Фоновых операций»**:
+renown Coverage-запрос с per-work EXISTS на ~500k works уходил за 5с таймаута → `by_source: null`
+→ фронт `Object.keys(null)`; фикс — null-guard by_source (4 секции) + non-nil `BySource` в
+state + `head_total` на set-based UNION (5.38с→1.13с) + таймаут 5→15с. До неё
+**1.8.0** — **популярность = интегральная «известность»**, 4 PR
 (#188-191, план `~/.claude/plans/popularity-renown-plan.md`). Было: popularity работы =
 вовлечённость инстанса (`Σ изданий: views + 3×reads`) — на проде ненулевая у 79 книг из
 509k, дефолтный browse = «что сам открывал + случайный хвост», а пункт «По популярности»
