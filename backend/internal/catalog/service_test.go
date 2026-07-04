@@ -177,6 +177,27 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Empty(t, sHidden.Books, "скрытый язык исключается из книг серии")
 	require.Empty(t, sHidden.YearStats, "год скрытых книг серии не идёт в гистограмму")
 
+	// ── Регресс P2 #8: второе издание той же работы (те же жанры) НЕ раздувает
+	//    счётчики жанров автора — считаем работы, не строки book_genres.
+	var e2 int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, work_id)
+		SELECT b.collection_id, b.archive_id, 'GC2', 'gc2.fb2', 'fb2', b.title, b.normalized_title, 'ru', b.work_id
+		FROM books b WHERE b.id = $1 RETURNING id`, a.Books[0].ID).Scan(&e2))
+	_, err = pool.Exec(ctx,
+		`INSERT INTO book_genres (book_id, genre_id) SELECT $1, genre_id FROM book_genres WHERE book_id = $2`,
+		e2, a.Books[0].ID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx,
+		`INSERT INTO book_authors (book_id, author_id, position) VALUES ($1, $2, 0)`, e2, authorID)
+	require.NoError(t, err)
+	aMulti, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	require.NoError(t, err)
+	require.Len(t, aMulti.TopGenres, 3)
+	for _, g := range aMulti.TopGenres {
+		require.Equal(t, 1, g.Count, "жанр считает работы, не издания (546>499-баг)")
+	}
+
 	// Контроль: без исключения книга снова видна.
 	aBack, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
 	require.NoError(t, err)
