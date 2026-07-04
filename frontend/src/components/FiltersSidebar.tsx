@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
-import { useGenreMap } from '@/lib/genres';
+import { collapseGenreChips, useGenreMap, useGenres } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import type { FacetDistribution } from '@/lib/books';
@@ -288,10 +288,23 @@ export function ActiveFilterChips({
   // жанров уже подгружен. Иначе показываем сырой код (fallback
   // когда useGenres ещё в полёте; редкий случай).
   const genreMap = useGenreMap();
+  const allGenres = useGenres().data ?? [];
   const langMap = useLanguageMap();
   const srcLangMap = useSrcLanguageMap();
   const chips: { label: string; onRemove: () => void }[] = [];
-  for (const g of value.genres) {
+  // Полностью выбранная категория — ОДИН чип «вся категория», а не чип на
+  // каждый поджанр: клик по категории в сайдбаре выбирает все её leaf'ы, и
+  // строка чипов разрасталась в 6 рядов (прод-аудит P2 #7). Крестик снимает
+  // всю категорию разом. Пока справочник в полёте — фолбэк на по-жанровые чипы.
+  const { fullCategories, rest } = collapseGenreChips(value.genres, allGenres);
+  for (const cat of fullCategories) {
+    chips.push({
+      label: `Жанр: ${cat.name} (вся категория)`,
+      onRemove: () =>
+        onChange({ ...value, genres: value.genres.filter((x) => !cat.codes.includes(x)) }),
+    });
+  }
+  for (const g of rest) {
     const display = genreMap.get(g)?.display ?? g;
     chips.push({
       label: `Жанр: ${display}`,

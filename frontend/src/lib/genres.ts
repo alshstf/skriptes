@@ -97,3 +97,37 @@ export function useToggleFavoriteGenre() {
     },
   });
 }
+
+/**
+ * collapseGenreChips — схлопывает полностью выбранные категории жанров в
+ * агрегированные чипы. Категория «полная», когда выбраны ВСЕ её leaf-жанры
+ * (и их ≥2 — одиночный жанр остаётся обычным чипом). rest — выбранные коды,
+ * не вошедшие в полные категории, в исходном порядке. Пустой справочник
+ * (запрос в полёте) → всё в rest (фолбэк на прежнее поведение). Чистая
+ * функция — тестируется без рендера.
+ */
+export function collapseGenreChips(
+  selected: string[],
+  allGenres: GenreItem[],
+): { fullCategories: { name: string; codes: string[] }[]; rest: string[] } {
+  const byCategory = new Map<string, string[]>();
+  for (const g of allGenres) {
+    const cat = g.category_name ?? '';
+    if (!cat) continue;
+    const bucket = byCategory.get(cat);
+    if (bucket) {
+      bucket.push(g.code);
+    } else {
+      byCategory.set(cat, [g.code]);
+    }
+  }
+  const selSet = new Set(selected);
+  const consumed = new Set<string>();
+  const fullCategories: { name: string; codes: string[] }[] = [];
+  for (const [name, codes] of byCategory) {
+    if (codes.length < 2 || !codes.every((c) => selSet.has(c))) continue;
+    fullCategories.push({ name, codes });
+    for (const c of codes) consumed.add(c);
+  }
+  return { fullCategories, rest: selected.filter((c) => !consumed.has(c)) };
+}
