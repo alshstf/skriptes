@@ -510,7 +510,13 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   NULL`). apply транзакционно: каноника = work с большинством членов (тай → min
   id), GC опустевших works, пересчёт `edition_count`/`written_year`/`series`,
   `ext_ids` += work_key. Ручные `SplitEditions`/`MergeWorks` (стабильны, т.к.
-  scanned-книги не переобрабатываются).
+  scanned-книги не переобрабатываются). ⚠️ **MERGE-пути (`apply`+`MergeWorks`) ОБЯЗАНЫ
+  звать `reassignWorkUserData(canonical, losers)` ДО GC** — переносят work-level
+  `book_ratings`/`book_rating_prompts`/`feed_dismissals` (все PK `(user_id,work_id)`,
+  FK `ON DELETE CASCADE`) с поглощаемых работ на каноническую, иначе GC сносит оценки
+  пользователя безвозвратно (ON CONFLICT → target побеждает). Split/RegroupWorks
+  переносить НЕ нужно: источник сохраняет якорь, не GC'ится. book-level (reads/views/
+  полки/★) keyed по books.id — едет с изданиями само.
 - Настройки `settings.WorkGroupingConfig` (ключ `work_grouping`, зеркало
   year/cover). API `api/admin_work_grouping.go` (`/admin/work-grouping`
   GET/PUT/run/stop + `/admin/works/split`,`/merge`). Фронт — секция

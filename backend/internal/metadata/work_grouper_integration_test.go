@@ -303,6 +303,123 @@ func TestWorkAggregates_SplitReDerivesSeries(t *testing.T) {
 	require.Equal(t, 1, cn)
 }
 
+// TestMergeWorks_PreservesUserData — регресс на каскадную потерю оценок: при
+// слиянии работ WORK-level пользовательские данные (оценки/промпты/скрытия ленты)
+// поглощаемой работы ПЕРЕЕЗЖАЮТ на target через reassignWorkUserData, а не
+// теряются от FK ON DELETE CASCADE при GC. Конфликт (юзер взаимодействовал и с
+// target, и с loser) разрешается в пользу target.
+func TestMergeWorks_PreservesUserData(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	author := seedGroupAuthor(t, ctx, pool, "Автор", "автор тест")
+
+	// target и loser — две singleton-работы; loser поглотится в target.
+	targetBook := seedGroupBook(t, ctx, pool, collID, archID, author, "A", "Книга", "книга", "ru", "", "", "")
+	loserBook := seedGroupBook(t, ctx, pool, collID, archID, author, "B", "Книга (перевод)", "книга (перевод)", "ru", "", "", "")
+	target := workIDOf(t, ctx, pool, targetBook)
+	loser := workIDOf(t, ctx, pool, loserBook)
+
+	var u1, u2 int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u1@x','U1','x','user') RETURNING id`).Scan(&u1))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u2@x','U2','x','user') RETURNING id`).Scan(&u2))
+
+	exec := func(sql string, args ...any) { _, err := pool.Exec(ctx, sql, args...); require.NoError(t, err) }
+	// u1 оценил и target (3), и loser (5) → конфликт при merge, победит target=3.
+	exec(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,3)`, u1, target)
+	exec(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,5)`, u1, loser)
+	// u2 оценил только loser (2) → должен переехать на target.
+	exec(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,2)`, u2, loser)
+	// промпт и скрытие ленты на loser у u2 → тоже переезжают.
+	exec(`INSERT INTO book_rating_prompts (user_id, work_id, state) VALUES ($1,$2,'never')`, u2, loser)
+	exec(`INSERT INTO feed_dismissals (user_id, work_id) VALUES ($1,$2)`, u2, loser)
+
+	c := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	_, err := c.MergeWorks(ctx, []int64{target, loser}, target)
+	require.NoError(t, err)
+
+	require.Equal(t, target, workIDOf(t, ctx, pool, loserBook), "loser-книга переехала в target")
+	var loserExists bool
+	require.NoError(t, pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM works WHERE id=$1)`, loser).Scan(&loserExists))
+	require.False(t, loserExists, "loser-работа GC'нута")
+
+	// Оценки на target: u1=3 (конфликт → target победил), u2=2 (переехала с loser).
+	ratings := map[int64]int{}
+	rows, err := pool.Query(ctx, `SELECT user_id, rating FROM book_ratings WHERE work_id=$1`, target)
+	require.NoError(t, err)
+	for rows.Next() {
+		var uid int64
+		var r int
+		require.NoError(t, rows.Scan(&uid, &r))
+		ratings[uid] = r
+	}
+	rows.Close()
+	require.NoError(t, rows.Err())
+	require.Equal(t, map[int64]int{u1: 3, u2: 2}, ratings,
+		"u1 сохранил target-оценку (конфликт), u2 переехал с loser — ничего не потеряно")
+
+	var prompts, dismissals int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_rating_prompts WHERE work_id=$1 AND user_id=$2`, target, u2).Scan(&prompts))
+	require.Equal(t, 1, prompts, "промпт оценки переехал на target")
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM feed_dismissals WHERE work_id=$1 AND user_id=$2`, target, u2).Scan(&dismissals))
+	require.Equal(t, 1, dismissals, "скрытие ленты переехало на target")
+}
+
+// TestTier1Merge_PreservesRatings — оценка переживает и АВТО-merge (Tier-1 apply),
+// не только ручной MergeWorks: оба зовут reassignWorkUserData перед GC.
+func TestTier1Merge_PreservesRatings(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	author := seedGroupAuthor(t, ctx, pool, "Толкин", "толкин")
+
+	orig := seedGroupBook(t, ctx, pool, collID, archID, author, "L1", "The Hobbit", "the hobbit", "en", "", "", "")
+	tr1 := seedGroupBook(t, ctx, pool, collID, archID, author, "L2", "Хоббит", "хоббит", "ru", "The Hobbit", "en", "толкин")
+	wTr1 := workIDOf(t, ctx, pool, tr1) // работа перевода — поглотится
+
+	var u int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('r@x','R','x','user') RETURNING id`).Scan(&u))
+	_, err := pool.Exec(ctx, `INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,4)`, u, wTr1)
+	require.NoError(t, err)
+
+	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	g.drainAll(ctx)
+
+	wOrig := workIDOf(t, ctx, pool, orig)
+	require.Equal(t, wOrig, workIDOf(t, ctx, pool, tr1), "перевод слит с оригиналом")
+
+	// Оценка пережила авто-merge: теперь на выжившей канонической работе.
+	var rating int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT rating FROM book_ratings WHERE user_id=$1 AND work_id=$2`, u, wOrig).Scan(&rating))
+	require.Equal(t, 4, rating, "оценка перевода пережила Tier-1 merge на канонической работе")
+}
+
 // TestSplitEditions_AnchorProtected — якорное издание (title-derived: его
 // название == названию работы) нельзя вынести через split; не-якорь — можно.
 func TestSplitEditions_AnchorProtected(t *testing.T) {
