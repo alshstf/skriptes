@@ -31,7 +31,9 @@ func toExternalRatingBackfillConfig(c settings.ExternalRatingConfig) metadata.Ex
 }
 
 func externalRatingState(ctx context.Context, d SettingsDeps, cfg settings.ExternalRatingConfig) externalRatingResponse {
-	resp := externalRatingResponse{ExternalRatingConfig: cfg}
+	// BySource — непустая карта: на ошибке Coverage() JSON не должен отдать
+	// by_source: null (фронт делает Object.keys и падал бы).
+	resp := externalRatingResponse{ExternalRatingConfig: cfg, Coverage: metadata.ExternalRatingCoverage{BySource: map[string]int{}}}
 	if d.ExternalRating != nil {
 		resp.ExternalRatingBackfillStatus = d.ExternalRating.Status()
 		if cov, err := d.ExternalRating.Coverage(ctx); err == nil {
