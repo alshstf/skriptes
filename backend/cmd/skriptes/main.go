@@ -35,6 +35,23 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
+// version — версия сборки, впекается линкером при релизе
+// (Dockerfile: -ldflags "-X main.version=${VERSION}", release.yml передаёт тег
+// v1.9.0). "dev" — локальная сборка без бампа. Приоритетнее env SKRIPTES_VERSION:
+// на проде образ обычно пинится moving-тегом `latest`, и env="latest" неинформативен —
+// а впечённая версия точна (это реальный собранный тег). См. effectiveVersion.
+var version = "dev"
+
+// effectiveVersion — что показать в UI/логах: впечённая версия сборки (без
+// ведущего «v»), иначе fallback на env SKRIPTES_VERSION (envVersion). Так образ
+// `:latest`, собранный из тега v1.9.0, рапортует «1.9.0», а не «latest».
+func effectiveVersion(envVersion string) string {
+	if v := strings.TrimPrefix(version, "v"); v != "" && v != "dev" {
+		return v
+	}
+	return envVersion
+}
+
 func main() {
 	if err := run(); err != nil {
 		slog.Error("fatal", "err", err)
@@ -386,7 +403,7 @@ func run() error {
 	}
 
 	router := api.NewRouter(api.Deps{
-		Version: cfg.Version,
+		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
 		Auth: api.AuthDeps{
 			Service:             authSvc,
@@ -452,7 +469,7 @@ func run() error {
 	defer stop()
 
 	go func() {
-		logger.Info("http server starting", "addr", cfg.HTTPAddr, "version", cfg.Version)
+		logger.Info("http server starting", "addr", cfg.HTTPAddr, "version", effectiveVersion(cfg.Version))
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("http server failed", "err", err)
 			stop()
