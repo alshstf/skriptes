@@ -24,6 +24,12 @@ type OpenLibraryProvider struct {
 	httpClient *http.Client
 	searchURL  string // override для тестов; по умолчанию https://openlibrary.org/search.json
 	coverURL   string // override для тестов; по умолчанию https://covers.openlibrary.org
+
+	// occupationGate — слой 2 точности матчинга автора (P106), зеркало
+	// WikipediaProvider.occupationGate. nil = выключен. Отсекает однофамильца-
+	// не-писателя ПОСЛЕ имя-гейта. QID берём бесплатно из remote_ids.wikidata
+	// детальной записи автора (в отличие от wiki, где нужен отдельный pageprops).
+	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
 }
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
@@ -41,6 +47,15 @@ func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
 func (p *OpenLibraryProvider) WithEndpoints(searchURL, coverURL string) *OpenLibraryProvider {
 	p.searchURL = searchURL
 	p.coverURL = coverURL
+	return p
+}
+
+// WithOccupationGate включает слой 2 точности для авторского матчинга OL:
+// после имя-гейта проверяет профессию кандидата (Wikidata P106) по
+// remote_ids.wikidata и отвергает явных не-писателей. nil = выкл. Реализация —
+// та же WikidataAdaptationsProvider.OccupationVerdict, что и у wiki-пути.
+func (p *OpenLibraryProvider) WithOccupationGate(fn func(ctx context.Context, qid string) (OccupationVerdict, error)) *OpenLibraryProvider {
+	p.occupationGate = fn
 	return p
 }
 
@@ -532,6 +547,19 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 		return nil, fmt.Errorf("decode author detail: %w", err)
 	}
 	detail.OLID = olid
+
+	// Слой 2 (опционально): профессия P106. Имя-гейт пропускает однофамильца с
+	// тем же ФИО, но другой профессией; QID берём бесплатно из remote_ids.wikidata
+	// (доп. запрос не нужен). Отвергаем ТОЛЬКО явного не-писателя; нет QID /
+	// unknown / ошибка сети — оставляем (precision-preserving, как на wiki-пути).
+	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если wiki-гейт
+	// отверг однофамильца (ErrNotFound), enricher идёт к OL — без этого гейта OL
+	// отдал бы того же не-писателя, и wiki-отказ «протёк» бы сюда.
+	if p.occupationGate != nil && detail.RemoteIDs.Wikidata != "" {
+		if v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata); err == nil && v == OccupationNonWriter {
+			return nil, ErrNotFound
+		}
+	}
 	return &detail, nil
 }
 
@@ -598,7 +626,13 @@ type olAuthorSearchResponse struct {
 }
 
 type olAuthor struct {
-	OLID   string  `json:"-"` // заполняем сами после search
-	Bio    any     `json:"bio"`
-	Photos []int64 `json:"photos"`
+	OLID      string  `json:"-"` // заполняем сами после search
+	Bio       any     `json:"bio"`
+	Photos    []int64 `json:"photos"`
+	RemoteIDs struct {
+		// Wikidata QID автора ("Q7243") — зацепка для слоя 2 (P106). У OL это
+		// одно из многих remote_ids; пустая строка = OL не слинковал автора с
+		// Wikidata (тогда гейт не зовём).
+		Wikidata string `json:"wikidata"`
+	} `json:"remote_ids"`
 }
