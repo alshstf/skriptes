@@ -20,9 +20,9 @@ import (
 // популярности computeWorkPopularity, куда счётчики входят слагаемыми).
 //
 // Режим охвата (WholeCollection):
-//   - false (дефолт): «голова» коллекции — работы с ≥2 изданиями ИЛИ
+//   - false (дефолт): ядро коллекции — работы с ≥2 изданиями ИЛИ
 //     экранизацией ИЛИ LIBRATE-рейтингом (на проде ~60–70k из 500k): там
-//     внешний сигнал вероятен, и именно голова определяет «золотую полку»;
+//     внешний сигнал вероятен, и именно ядро определяет «золотую полку»;
 //   - true: все работы (долго — сотни тысяч rate-gated запросов).
 type RenownBackfiller struct {
 	pool     *pgxpool.Pool
@@ -424,7 +424,7 @@ type RenownBackfillStatus struct {
 }
 
 // RenownCoverage — покрытие счётчиками известности (для админ-статистики).
-// HeadTotal — размер «головы» (кандидаты дефолтного охвата), WithFantlab/
+// HeadTotal — размер ядра (кандидаты дефолтного охвата), WithFantlab/
 // WithOL — работы с заполненными счётчиками, BySource — found-строки lookups.
 type RenownCoverage struct {
 	Total       int            `json:"total"`

@@ -326,7 +326,7 @@ const renownEnrichmentKey = "renown_enrichment"
 // (works.fantlab_marks / ol_ratings_count / ol_want_count) из Fantlab и
 // OpenLibrary — сигналы интегральной популярности (сортировка/ранжирование).
 // Зеркало ExternalRatingConfig, но work-level. WholeCollection: false = только
-// «голова» коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE), true = все работы.
+// ядро коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE), true = все работы.
 // FoundRefreshDays — TTL освежения найденных счётчиков (известность растёт).
 type RenownConfig struct {
 	Enabled           bool `json:"enabled"`
@@ -343,7 +343,7 @@ type RenownConfig struct {
 }
 
 // DefaultRenownConfig — воркер выключен (opt-in), оба источника включены,
-// охват «голова коллекции», вежливые rate-limit'ы и TTL.
+// охват «ядро коллекции», вежливые rate-limit'ы и TTL.
 func DefaultRenownConfig() RenownConfig {
 	return RenownConfig{
 		Enabled:           false,

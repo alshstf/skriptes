@@ -97,7 +97,7 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	require.NoError(t, pool.QueryRow(ctx,
 		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
 
-	// mkWork — работа + N изданий (edition_count определяет «голову»).
+	// mkWork — работа + N изданий (edition_count определяет ядро).
 	mkWork := func(title string, editions int, rating *int) int64 {
 		var workID int64
 		require.NoError(t, pool.QueryRow(ctx, `
@@ -141,21 +141,21 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	bf.drain(ctx)
 	require.Equal(t, callsBefore, fl.callCount(), "свежий found не переспрашивается")
 
-	// Безвестный синглтон — НЕ кандидат в режиме «головы»…
+	// Безвестный синглтон — НЕ кандидат в режиме ядра…
 	tailWork := mkWork("Безвестная книга", 1, nil)
 	fl2 := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 5}}
 	bf2 := NewRenownBackfiller(pool, fl2, nil, nil, syncer,
 		RenownBackfillConfig{Fantlab: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
 	bf2.drain(ctx)
 	gotFl, _, _ = readCounters(tailWork)
-	require.Nil(t, gotFl, "голова: синглтон без сигналов не кандидат")
+	require.Nil(t, gotFl, "ядро: синглтон без сигналов не кандидат")
 
 	// …но кандидат при LIBRATE-рейтинге издания.
 	five := 5
 	libWork := mkWork("Книга с LIBRATE", 1, &five)
 	bf2.drain(ctx)
 	gotFl, _, _ = readCounters(libWork)
-	require.NotNil(t, gotFl, "LIBRATE-издание делает работу кандидатом головы")
+	require.NotNil(t, gotFl, "LIBRATE-издание делает работу кандидатом ядра")
 	require.Equal(t, 5, *gotFl)
 
 	// «Вся коллекция» — берёт и безвестный синглтон.

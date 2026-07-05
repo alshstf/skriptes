@@ -463,7 +463,7 @@ export type RenownSettings = {
   fantlab: boolean;
   openlibrary: boolean;
   wikidata: boolean;
-  // режим охвата: false = «голова» коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE),
+  // режим охвата: false = ядро коллекции (≥2 изданий ∪ экранизация ∪ LIBRATE),
   // true = все работы
   whole_collection: boolean;
   fantlab_rpm: number;
@@ -478,7 +478,7 @@ export type RenownSettings = {
   // покрытие (read-only)
   coverage: {
     total: number;
-    head_total: number; // размер «головы» (кандидаты дефолтного охвата)
+    head_total: number; // размер ядра (кандидаты дефолтного охвата)
     with_any: number; // работы с хоть одним счётчиком
     with_fantlab: number;
     with_ol: number;
