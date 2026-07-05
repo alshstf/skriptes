@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import { BookOpen, MoreHorizontal, Download, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -33,6 +33,8 @@ export function EditionActions({
   const send = useSendToKindle();
   const [sending, setSending] = useState(false);
   const targets = targetsQ.data ?? [];
+  // Возврат на текущую книгу после настройки Kindle (navigate replace на /me).
+  const returnTo = useLocation().href;
 
   async function doSend(t: KindleTarget) {
     setSending(true);
@@ -88,7 +90,7 @@ export function EditionActions({
           </DropdownMenuLabel>
           {targets.length === 0 ? (
             <DropdownMenuItem asChild>
-              <Link to="/me" className="cursor-pointer">
+              <Link to="/me" search={{ returnTo }} className="cursor-pointer">
                 Настроить Kindle…
               </Link>
             </DropdownMenuItem>

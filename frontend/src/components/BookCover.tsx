@@ -48,10 +48,16 @@ export function BookCover({
   // Инициализируем из кэша исхода: если по этому url уже был 404 — сразу
   // плейсхолдер, без повторного запроса и мелькания при ре-маунте.
   const [failed, setFailed] = useState(() => url != null && coverOutcome.get(url) === false);
+  // loaded — картинка уже проявлена. Инициализируем из кэша: если url уже
+  // грузился успешно (виртуализированная строка вернулась в окно), рисуем сразу
+  // непрозрачной, БЕЗ повторного fade-in — иначе каждый ре-маунт при скролле
+  // моргал бы проявлением.
+  const [loaded, setLoaded] = useState(() => url != null && coverOutcome.get(url) === true);
   // При смене URL синхронизируемся с кэшем (а не сбрасываем в false: иначе
   // при возврате 404-обложки в окно снова мелькал бы запрос → плейсхолдер).
   useEffect(() => {
     setFailed(url != null && coverOutcome.get(url) === false);
+    setLoaded(url != null && coverOutcome.get(url) === true);
   }, [url]);
 
   const base = cn(
@@ -60,19 +66,31 @@ export function BookCover({
   );
 
   if (url && !failed) {
+    // Картинка внутри серого бокса (bg-muted `base`) и проявляется fade-in'ом:
+    // на first-paint при скролле виден стабильный плейсхолдер-бокс, а обложка
+    // плавно «наплывает» вместо резкого выскакивания (мелькания). Уже
+    // загруженные (кэш) стартуют непрозрачными — без повторного фейда.
     return (
-      <img
-        src={url}
-        alt={`Обложка: ${title}`}
-        className={cn(base, 'object-cover')}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => coverOutcome.set(url, true)}
-        onError={() => {
-          coverOutcome.set(url, false);
-          setFailed(true);
-        }}
-      />
+      <div className={base}>
+        <img
+          src={url}
+          alt={`Обложка: ${title}`}
+          className={cn(
+            'h-full w-full object-cover transition-opacity duration-300 motion-reduce:transition-none',
+            loaded ? 'opacity-100' : 'opacity-0',
+          )}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => {
+            coverOutcome.set(url, true);
+            setLoaded(true);
+          }}
+          onError={() => {
+            coverOutcome.set(url, false);
+            setFailed(true);
+          }}
+        />
+      </div>
     );
   }
 

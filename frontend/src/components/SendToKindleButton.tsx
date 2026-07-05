@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Tablet, ChevronDown } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,6 +34,8 @@ export function SendToKindleButton({
   const targetsQ = useKindleTargets();
   const send = useSendToKindle();
   const [sendingTo, setSendingTo] = useState<number | null>(null);
+  // Текущий путь — чтобы /me вернул на эту книгу (navigate replace, паттерн ридера).
+  const returnTo = useLocation().href;
 
   const targets = targetsQ.data ?? [];
   const disabled = send.isPending || targetsQ.isLoading;
@@ -57,7 +59,13 @@ export function SendToKindleButton({
   if (targetsQ.isSuccess && targets.length === 0) {
     return (
       <Button variant="outline" size="sm" asChild>
-        <Link to="/me" className="gap-2" aria-label="Настроить Kindle" title="Настроить Kindle">
+        <Link
+          to="/me"
+          search={{ returnTo }}
+          className="gap-2"
+          aria-label="Настроить Kindle"
+          title="Настроить Kindle"
+        >
           <Tablet className="size-4" aria-hidden />
           <span className={labelCls}>Настроить Kindle</span>
         </Link>

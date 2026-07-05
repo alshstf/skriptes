@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Mail, Trash2, Pencil, Check, X, User as UserIcon, KeyRound, Star } from 'lucide-react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import { Mail, Trash2, Pencil, Check, X, User as UserIcon, KeyRound, Star, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,9 +31,24 @@ import { ApiError } from '@/lib/api';
 export function ProfilePage() {
   const me = useMe();
   const targetsQ = useKindleTargets();
+  const navigate = useNavigate();
+  // returnTo — приход с карточки книги («Настроить Kindle»). replace: не копим
+  // историю (паттерн «К карточке» ридера), возврат ведёт ровно назад на книгу.
+  const { returnTo } = useSearch({ strict: false }) as { returnTo?: string };
 
   return (
     <article className="space-y-6">
+      {returnTo ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2 gap-1 self-start text-muted-foreground"
+          onClick={() => void navigate({ to: returnTo, replace: true })}
+        >
+          <ChevronLeft className="size-4" aria-hidden />
+          Назад к книге
+        </Button>
+      ) : null}
       <ProfileTabs />
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Профиль</h1>
