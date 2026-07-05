@@ -248,6 +248,13 @@ const shelvesRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/me',
+  // returnTo — куда вернуться после настройки (напр. «Настроить Kindle» с карточки
+  // книги). Принимаем ТОЛЬКО внутренний путь (один ведущий '/'); protocol-relative
+  // '//host' и внешние URL отбрасываем (анти-open-redirect).
+  validateSearch: (search: Record<string, unknown>): { returnTo?: string } => {
+    const rt = asString(search.returnTo);
+    return { returnTo: rt && rt.startsWith('/') && !rt.startsWith('//') ? rt : undefined };
+  },
   component: ProfilePage,
 });
 

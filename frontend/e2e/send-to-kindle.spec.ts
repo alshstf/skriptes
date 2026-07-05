@@ -17,7 +17,31 @@ test('send-to-kindle: no targets → "Настроить Kindle" link to /me', a
   await page.goto('/books/19');
   const setupLink = page.getByRole('link', { name: /Настроить Kindle/ });
   await expect(setupLink).toBeVisible({ timeout: 10_000 });
-  await expect(setupLink).toHaveAttribute('href', '/me');
+  // Ведёт на /me и несёт returnTo текущей книги (возврат с профиля).
+  await expect(setupLink).toHaveAttribute('href', /^\/me\?.*returnTo=/);
+});
+
+test('send-to-kindle: "Настроить Kindle" → профиль → «Назад к книге» возвращает', async ({
+  mockedPage: page,
+}) => {
+  await page.route(/\/api\/me\/kindle-targets$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"items":[]}' }),
+  );
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(bookDetailFixture),
+    }),
+  );
+  await page.goto('/books/19');
+  await page.getByRole('link', { name: /Настроить Kindle/ }).click();
+  // На профиле, returnTo в URL, есть кнопка возврата.
+  await expect(page).toHaveURL(/\/me\?.*returnTo=/);
+  const back = page.getByRole('button', { name: /Назад к книге/ });
+  await expect(back).toBeVisible({ timeout: 10_000 });
+  await back.click();
+  await expect(page).toHaveURL(/\/books\/19$/);
 });
 
 test('send-to-kindle: single target → direct send button', async ({ mockedPage: page }) => {
