@@ -332,11 +332,19 @@ function ScopeControl({
   disabled,
   onChange,
   warning,
+  fallbackLabel = 'Только пропуски fb2',
+  fallbackHint = 'Дозаполняются только книги, у которых локальный fb2-проход прошёл, но данных не дал (дешевле).',
 }: {
   whole: boolean;
   disabled?: boolean;
   onChange: (whole: boolean) => void;
   warning: string;
+  // Лейбл кнопки и пояснение узкого режима зависят от воркера: у обложек/года/
+  // рейтинга это «пропуски fb2» (что локальный проход не заполнил), у известности —
+  // «голова коллекции» (работы с уже имеющимися сигналами известности). Дефолт —
+  // fb2-семантика; известность переопределяет.
+  fallbackLabel?: string;
+  fallbackHint?: string;
 }) {
   return (
     <div className="space-y-1.5">
@@ -350,7 +358,7 @@ function ScopeControl({
           disabled={disabled}
           onClick={() => onChange(false)}
         >
-          Только пропуски fb2
+          {fallbackLabel}
         </Button>
         <Button
           type="button"
@@ -366,9 +374,7 @@ function ScopeControl({
       {whole ? (
         <Callout icon={<AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>{warning}</Callout>
       ) : (
-        <p className="text-xs text-muted-foreground text-pretty">
-          Дозаполняются только книги, у которых локальный fb2-проход прошёл, но данных не дал (дешевле).
-        </p>
+        <p className="text-xs text-muted-foreground text-pretty">{fallbackHint}</p>
       )}
     </div>
   );
@@ -1698,6 +1704,8 @@ export function AdminBackgroundPage() {
                         whole={nq.data?.whole_collection ?? false}
                         disabled={updateRenown.isPending}
                         onChange={(v) => void applyRenown({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: голова коллекции')}
+                        fallbackLabel="Голова коллекции"
+                        fallbackHint="Дозаполняются только работы с локальными сигналами известности — несколько изданий, экранизация или библиотечный рейтинг. Дешевле и объективнее: внешний запрос уходит туда, где известность вероятна."
                         warning="Вся коллекция: счётчики запрашиваются и для одиночных безвестных работ — сотни тысяч запросов, очень долго. Обычно достаточно «головы»."
                       />
                       <div className="grid grid-cols-2 gap-3">
