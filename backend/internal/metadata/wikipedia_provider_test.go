@@ -325,6 +325,67 @@ func TestOpenLibrary_AuthorPhotoHappyPath(t *testing.T) {
 	require.Equal(t, jpegBytes, string(body))
 }
 
+// TestOpenLibrary_OccupationGate — слой 2 на OL-пути. QID берётся из
+// remote_ids.wikidata детальной записи (доп. запроса нет). NonWriter →
+// отвергаем; Writer/Unknown/ошибка/нет-QID → пропускаем.
+func TestOpenLibrary_OccupationGate(t *testing.T) {
+	const olid = "OL777A"
+	const bio = "Некий Тёзка — совпал по имени."
+
+	cases := []struct {
+		name      string
+		qid       string // "" = remote_ids без wikidata
+		verdict   OccupationVerdict
+		gateErr   error
+		wantFound bool
+	}{
+		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
+		{"writer accepted", "Q2", OccupationWriter, nil, true},
+		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
+		{"gate error accepted", "Q4", OccupationNonWriter, context.DeadlineExceeded, true},
+		{"no wikidata skips gate", "", OccupationNonWriter, nil, true},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case strings.HasSuffix(r.URL.Path, "/search/authors.json"):
+					_, _ = io.WriteString(w, `{"docs":[{"key":"/authors/`+olid+`","name":"Тёзка Некий"}]}`)
+				case strings.HasSuffix(r.URL.Path, "/authors/"+olid+".json"):
+					remote := "{}"
+					if c.qid != "" {
+						remote = `{"wikidata":` + jsonString(c.qid) + `}`
+					}
+					_, _ = io.WriteString(w, `{"bio":`+jsonString(bio)+`,"photos":[],"remote_ids":`+remote+`}`)
+				default:
+					http.NotFound(w, r)
+				}
+			}))
+			defer srv.Close()
+
+			gateCalled := false
+			p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL).
+				WithOccupationGate(func(_ context.Context, qid string) (OccupationVerdict, error) {
+					gateCalled = true
+					require.Equal(t, c.qid, qid)
+					return c.verdict, c.gateErr
+				})
+			got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{
+				LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий",
+			})
+			if c.wantFound {
+				require.NoError(t, err)
+				require.Equal(t, bio, got)
+			} else {
+				require.ErrorIs(t, err, ErrNotFound)
+			}
+			if c.qid == "" {
+				require.False(t, gateCalled, "без remote_ids.wikidata гейт звать не нужно")
+			}
+		})
+	}
+}
+
 func TestOpenLibrary_AuthorPhotoNoPositiveIDs(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {

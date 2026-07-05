@@ -557,10 +557,16 @@ MediaWiki `pageprops.wikibase_item`) → спрашивает `occupationGate(qi
 одной писательской)→**отвергнуть**, `Unknown` (нет P106 / нет QID / ошибка
 сети)→**не отвергать** (precision-preserving: не режем валидных без размеченной
 профессии; ошибка апстрима тоже Unknown — транзиент не должен терять автора).
-Провязка в `main.go`: `NewWikipediaProvider(...).WithOccupationGate(wdAdaptations.OccupationVerdict)`.
-⚠️ Гейт только на Wikipedia-пути (главный источник bio/фото); OL-путь
-(`OpenLibraryProvider.authorSearch`) пока без P106 — follow-up (нужен свой резолв
-OL→Wikidata QID). Дальше — якорь на книгах автора.
+Провязка в `main.go`: тот же гейт на ОБА авторских провайдера —
+`NewWikipediaProvider(...).WithOccupationGate(...)` и
+`NewOpenLibraryProvider(...).WithOccupationGate(...)`. **OL-путь тоже покрыт**
+(`OpenLibraryProvider.authorSearch`): QID берётся БЕСПЛАТНО из
+`remote_ids.wikidata` детальной записи `/authors/{OLID}.json` (доп. запрос, как
+`pageprops` у wiki, НЕ нужен), гейт в конце `authorSearch` — та же осторожная
+логика. ⚠️ Важно из-за цепочки провайдеров `[wikipedia, openlibrary]`: если
+wiki-гейт отверг однофамильца (`ErrNotFound`), enricher идёт к OL — без OL-гейта
+OL отдал бы того же не-писателя и wiki-отказ «протёк» бы сюда. Дальше — якорь на
+книгах автора.
 
 Уже сохранённые ДО гейта неверные матчи он не чистит —
 для фото поможет «Очистить фото» (Q1, перекачает уже через гейт).

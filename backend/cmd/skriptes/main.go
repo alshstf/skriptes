@@ -169,7 +169,6 @@ func run() error {
 	olHTTPClient := metadata.NewEnricherHTTPClient(20 * time.Second)
 	gbHTTPClient := metadata.NewEnricherHTTPClient(10 * time.Second)
 	fb2Provider := metadata.NewFb2Provider()
-	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient)
 	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient).WithAPIKey(cfg.GoogleBooksAPIKey).WithCountry(cfg.GoogleBooksCountry)
 	// Диагностика: без ключа GB-запросы уходят анонимно → 429 и не видны в usage
 	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
@@ -178,8 +177,11 @@ func run() error {
 	// Слой 2 точности обогащения авторов: после имя-гейта резолв автора
 	// проверяет профессию кандидата (Wikidata P106) и отсекает однофамильцев-
 	// не-писателей. Реализацию (OccupationVerdict) держит wdAdaptations — у него
-	// уже есть SPARQL-клиент.
+	// уже есть SPARQL-клиент. Гейт на ОБОИХ авторских путях: Wikipedia (QID через
+	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
+	// wiki-отказ по профессии протёк бы в OL-fallback (цепочка bio/photo).
 	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
+	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
