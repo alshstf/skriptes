@@ -526,8 +526,25 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
 Встроен в `WikipediaProvider.resolveTitle` (bio+photo) и
 `OpenLibraryProvider.authorSearch`. Философия — **precision > recall**: лучше
 пустая карточка, чем чужие био/фото. Гейт only по фамилии, если имени нет.
-Это первый «быстрый слой»; дальше — occupation=writer (Wikidata P106) и якорь
-на книгах автора. Уже сохранённые ДО гейта неверные матчи он не чистит —
+
+**Слой 2 (реализован) — профессия P106.** Имя-гейт пропускает однофамильца с
+ТЕМ ЖЕ ФИО, но другой профессией (писатель vs. его тёзка-политик/спортсмен).
+Поверх имя-гейта `WikipediaProvider.resolveTitle` (если включён
+`WithOccupationGate`) резолвит страницу → Wikidata QID (`resolvePageQID`,
+MediaWiki `pageprops.wikibase_item`) → спрашивает `occupationGate(qid)`. Реализация
+гейта — `WikidataAdaptationsProvider.OccupationVerdict` (`wikidata_occupation.go`):
+один SPARQL считает ВСЕ занятости `P106` и писательские (класс через `P279*`
+доходит до writer Q36180 / author Q482980 — подклассы novelist/poet/playwright
+ловятся обходом сами). Вердикт: `Writer`→принять, `NonWriter` (профессии есть, ни
+одной писательской)→**отвергнуть**, `Unknown` (нет P106 / нет QID / ошибка
+сети)→**не отвергать** (precision-preserving: не режем валидных без размеченной
+профессии; ошибка апстрима тоже Unknown — транзиент не должен терять автора).
+Провязка в `main.go`: `NewWikipediaProvider(...).WithOccupationGate(wdAdaptations.OccupationVerdict)`.
+⚠️ Гейт только на Wikipedia-пути (главный источник bio/фото); OL-путь
+(`OpenLibraryProvider.authorSearch`) пока без P106 — follow-up (нужен свой резолв
+OL→Wikidata QID). Дальше — якорь на книгах автора.
+
+Уже сохранённые ДО гейта неверные матчи он не чистит —
 для фото поможет «Очистить фото» (Q1, перекачает уже через гейт).
 
 ### 14. Коды языка нормализуются (lower+trim); видимость контента — и в каталоге

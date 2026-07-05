@@ -23,6 +23,12 @@ import (
 type WikipediaProvider struct {
 	httpClient *http.Client
 	apiRoot    string // override для тестов; продакшен — пустая (используем https://{lang}.wikipedia.org)
+
+	// occupationGate — слой 2 точности (см. resolveTitle). nil = выключен.
+	// Инъектируется WithOccupationGate из main (реализация —
+	// WikidataAdaptationsProvider.OccupationVerdict). Отдельная функция, а не
+	// прямая зависимость на Wikidata-провайдер: разрыв связности + тестируемость.
+	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
 }
 
 // wikiUserAgent — Wikimedia требует осмысленный User-Agent на REST API,
@@ -45,6 +51,15 @@ func NewWikipediaProvider(httpClient *http.Client) *WikipediaProvider {
 // сервером для всех "языков" в тестах.
 func (p *WikipediaProvider) WithAPIRoot(root string) *WikipediaProvider {
 	p.apiRoot = root
+	return p
+}
+
+// WithOccupationGate включает слой 2 точности: после имя-гейта резолв автора
+// дополнительно спрашивает Wikidata о профессии (P106) кандидата и отвергает
+// явных не-писателей. nil-функция (по умолчанию) = гейт выключен. Реализация —
+// WikidataAdaptationsProvider.OccupationVerdict; провязка в main.
+func (p *WikipediaProvider) WithOccupationGate(fn func(ctx context.Context, qid string) (OccupationVerdict, error)) *WikipediaProvider {
+	p.occupationGate = fn
 	return p
 }
 
@@ -232,7 +247,65 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 	if !authorNameMatches(q, titles[0]) {
 		return "", ErrNotFound
 	}
+	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
+	// однофамильцев-не-писателей (полное совпадение ФИО у писателя и его тёзки
+	// другой профессии). Резолвим страницу → Wikidata QID → occupationGate.
+	// Отвергаем ТОЛЬКО при явном не-писателе; ошибка/нет QID/unknown — оставляем
+	// (precision-preserving: не режем валидных без размеченной профессии).
+	if p.occupationGate != nil {
+		if qid, err := p.resolvePageQID(ctx, lang, titles[0]); err == nil && qid != "" {
+			if verdict, err := p.occupationGate(ctx, qid); err == nil && verdict == OccupationNonWriter {
+				return "", ErrNotFound
+			}
+		}
+	}
 	return titles[0], nil
+}
+
+// resolvePageQID — Wikidata QID статьи через MediaWiki pageprops
+// (prop=pageprops&ppprop=wikibase_item). Нужен слою 2, чтобы спросить о
+// профессии сущности. Пустой QID (у страницы нет Wikidata-связи) — не ошибка,
+// вызывающий трактует как «не проверить».
+func (p *WikipediaProvider) resolvePageQID(ctx context.Context, lang, title string) (string, error) {
+	v := url.Values{}
+	v.Set("action", "query")
+	v.Set("prop", "pageprops")
+	v.Set("ppprop", "wikibase_item")
+	v.Set("redirects", "1")
+	v.Set("titles", title)
+	v.Set("format", "json")
+	v.Set("formatversion", "2")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.baseURL(lang)+"/w/api.php?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build pageprops: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", wikiUserAgent)
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("wikipedia pageprops: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", statusErr(resp.StatusCode)
+	}
+	var body struct {
+		Query struct {
+			Pages []struct {
+				PageProps struct {
+					WikibaseItem string `json:"wikibase_item"`
+				} `json:"pageprops"`
+			} `json:"pages"`
+		} `json:"query"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		return "", fmt.Errorf("decode pageprops: %w", err)
+	}
+	if len(body.Query.Pages) == 0 {
+		return "", nil
+	}
+	return body.Query.Pages[0].PageProps.WikibaseItem, nil
 }
 
 func (p *WikipediaProvider) downloadImage(ctx context.Context, src string) (*CoverImage, error) {

@@ -116,6 +116,79 @@ func TestWikipedia_BioGate_AcceptsRightPerson(t *testing.T) {
 	require.Equal(t, bio, got)
 }
 
+// wikiGatedMockServer — мок с поддержкой pageprops (для слоя 2): action=query
+// отвечает по параметру prop — pageprops отдаёт wikibase_item=qid, extracts —
+// биографию. Пустой qid → страница без Wikidata-связи (гейт не сработает).
+func wikiGatedMockServer(t *testing.T, title, qid, extract string) *httptest.Server {
+	t.Helper()
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/w/api.php" {
+			http.NotFound(w, r)
+			return
+		}
+		switch r.URL.Query().Get("action") {
+		case "opensearch":
+			_ = json.NewEncoder(w).Encode([]any{r.URL.Query().Get("search"), []string{title}, []string{}, []string{}})
+		case "query":
+			if r.URL.Query().Get("prop") == "pageprops" {
+				pp := "{}"
+				if qid != "" {
+					pp = `{"wikibase_item":` + jsonString(qid) + `}`
+				}
+				_, _ = io.WriteString(w, `{"query":{"pages":[{"pageprops":`+pp+`}]}}`)
+				return
+			}
+			_, _ = io.WriteString(w, `{"query":{"pages":[{"extract":`+jsonString(extract)+`}]}}`)
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+}
+
+// TestWikipedia_OccupationGate — слой 2: имя совпало, но профессия решает.
+// NonWriter → отвергаем; Writer/Unknown/ошибка/пустой-QID → пропускаем.
+func TestWikipedia_OccupationGate(t *testing.T) {
+	const bio = "Некий Тёзка Иванович — совпал по имени."
+	q := AuthorQuery{LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий Иванович"}
+
+	cases := []struct {
+		name      string
+		qid       string
+		verdict   OccupationVerdict
+		gateErr   error
+		wantFound bool
+	}{
+		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
+		{"writer accepted", "Q2", OccupationWriter, nil, true},
+		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
+		{"gate error accepted", "Q4", OccupationNonWriter, context.DeadlineExceeded, true},
+		{"empty qid skips gate", "", OccupationNonWriter, nil, true},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			srv := wikiGatedMockServer(t, "Тёзка, Некий Иванович", c.qid, bio)
+			defer srv.Close()
+			gateCalled := false
+			p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
+				WithOccupationGate(func(_ context.Context, qid string) (OccupationVerdict, error) {
+					gateCalled = true
+					require.Equal(t, c.qid, qid)
+					return c.verdict, c.gateErr
+				})
+			got, err := p.FetchAuthorBio(context.Background(), q)
+			if c.wantFound {
+				require.NoError(t, err)
+				require.Equal(t, bio, got)
+			} else {
+				require.ErrorIs(t, err, ErrNotFound)
+			}
+			if c.qid == "" {
+				require.False(t, gateCalled, "при пустом QID гейт звать не нужно")
+			}
+		})
+	}
+}
+
 func TestWikipedia_PhotoHappyPath(t *testing.T) {
 	// Этот тест собирает сервер вручную (а не через wikiMockServer),
 	// потому что thumbnail.source должен указывать абсолютно на сам же
