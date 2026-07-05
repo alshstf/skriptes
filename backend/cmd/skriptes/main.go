@@ -94,7 +94,7 @@ func run() error {
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
-	go runStartupImport(ctx(), imp, overrideCtl, cfg.InpxRoot, logger)
+	go runStartupImport(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, logger)
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
@@ -110,6 +110,10 @@ func run() error {
 	// ей нужен сконфигурированный works-индекс для таргетного ресинка
 	// изменённых работ (порядок между отдельными горутинами не гарантирован).
 	go func() {
+		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
+		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
+		// стоять, иначе первая выдача уйдёт без типов до следующего ресинка.
+		runOnceWorkKindClassify(ctx(), pool, logger)
 		runOnceWorksIndexSync(ctx(), pool, imp, logger)
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
@@ -473,7 +477,7 @@ func run() error {
 // безопасно благодаря пер-записной транзакции).
 func ctx() context.Context { return context.Background() }
 
-func runStartupImport(ctx context.Context, imp *importer.Importer, overrideCtl *metadata.OverrideController, inpxRoot string, logger *slog.Logger) {
+func runStartupImport(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, inpxRoot string, logger *slog.Logger) {
 	files, err := findInpxFiles(inpxRoot)
 	if err != nil {
 		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
@@ -499,6 +503,15 @@ func runStartupImport(ctx context.Context, imp *importer.Importer, overrideCtl *
 		logger.Warn("reapply metadata overrides after import failed", "err", err)
 	} else if n > 0 {
 		logger.Info("reapplied metadata overrides after import", "count", n)
+	}
+	// Классифицировать НОВЫЕ работы импорта (сборники/антологии). Идемпотентно и
+	// дёшево; правит только kind_source IS NULL/'heuristic', полный ресинк индекса
+	// в конце imp.Run уже забрал kind для ранее классифицированных — свежие метки
+	// подтянутся следующим ресинком (некритично: новинки редко сборники).
+	if n, err := metadata.ClassifyWorkKinds(ctx, pool); err != nil {
+		logger.Warn("classify work kinds after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("classified work kinds after import", "count", n)
 	}
 }
 
@@ -530,6 +543,34 @@ func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Im
 		logger.Warn("lang resync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time lang resync to meili done", "count", n)
+}
+
+// runOnceWorkKindClassify — разовый эвристический бэкфилл типов работ
+// (works.kind: сборник/антология/том собрания — миграция 0034). Гейтится флагом
+// app_settings.work_kind_classified_v1. Зовётся ДО runOnceWorksIndexSync в той же
+// горутине: бамп схемы индекса (v6, поле kind) ресинкает все доки — kind должен
+// уже стоять. Дальше типы поддерживает вызов после импорта (runStartupImport).
+func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "work_kind_classified_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work kind classify: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := metadata.ClassifyWorkKinds(ctx, pool)
+	if err != nil {
+		logger.Warn("work kind classify failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work kind classify: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time work kind classification done", "count", n)
 }
 
 // runOnceWorkIDResync разово синкает books.work_id в Meili. distinctAttribute=

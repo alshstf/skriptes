@@ -392,8 +392,13 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	// висят пустыми на карточке автора. Счётчик cnt тоже = число видимых книг.
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
 	args := append([]any{authorID}, exArgs...)
+	// all_comp: серия, ЦЕЛИКОМ состоящая из сборников/антологий/томов собраний
+	// (works.kind ≠ NULL у всех работ) — серия-паразит («Шекли. Сборники»,
+	// «ПСС в 90 томах»). Фронт выносит такие из списка серий автора в секцию
+	// «Сборники и антологии». NULL work_id → false (консервативно — не сборник).
 	rows, err := s.pool.Query(ctx, `
-		SELECT s.id, s.title, count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt
+		SELECT s.id, s.title, count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt,
+		       bool_and((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id) IS NOT NULL) as all_comp
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN series s ON s.id = b.series_id
@@ -408,7 +413,7 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	var out []SeriesWithCount
 	for rows.Next() {
 		var sc SeriesWithCount
-		if err := rows.Scan(&sc.ID, &sc.Title, &sc.Count); err != nil {
+		if err := rows.Scan(&sc.ID, &sc.Title, &sc.Count, &sc.AllCompilations); err != nil {
 			return nil, err
 		}
 		out = append(out, sc)
@@ -430,7 +435,8 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		       ),
 		       b.written_year, b.edition_year, b.normalized_title,
 		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL),
-		       b.work_id
+		       b.work_id,
+		       COALESCE((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id), '')
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN archives ar ON ar.id = b.archive_id
@@ -471,7 +477,7 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			workID      pgtype.Int8
 		)
 		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth,
-			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID); err != nil {
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID, &b.Kind); err != nil {
 			return nil, nil, err
 		}
 		// Дубликат-издание уже виденной работы → только счётчик, в список не добавляем.

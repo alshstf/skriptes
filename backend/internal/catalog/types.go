@@ -95,10 +95,14 @@ type GenreCount struct {
 }
 
 // SeriesWithCount — серия + сколько книг этого автора в ней.
+// AllCompilations — серия целиком из сборников/антологий/томов собраний
+// (works.kind ≠ NULL у всех работ, серия-паразит вроде «Шекли. Сборники»):
+// фронт уводит её из списка серий автора в секцию «Сборники и антологии».
 type SeriesWithCount struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
-	Count int    `json:"count"`
+	ID              int64  `json:"id"`
+	Title           string `json:"title"`
+	Count           int    `json:"count"`
+	AllCompilations bool   `json:"all_compilations,omitempty"`
 }
 
 // AuthorSuggest — строка в typeahead-выдаче авторов.

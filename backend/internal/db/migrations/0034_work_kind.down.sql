@@ -1,0 +1,3 @@
+DROP INDEX IF EXISTS idx_works_kind;
+ALTER TABLE works DROP COLUMN IF EXISTS kind_source;
+ALTER TABLE works DROP COLUMN IF EXISTS kind;
