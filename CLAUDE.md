@@ -147,7 +147,12 @@ override > fantlab > heuristic — **fantlab-типизация реализов
 `ContentConfig.HideCompilations` → `ContentResolver.Exclusions` (3-й результат) → Meili
 `kind NOT IN [...]` в ListWorks/SuggestWorks + kind-клауза `bookExclusionClause` (карточки
 автора/серии); прямые ссылки НЕ блокируются (зеркало политики жанров/языков), список авторов
-и лента подписок сознательно не фильтруются; план
+и лента подписок сознательно не фильтруются; **loose coupling статистики автора**:
+сборники/их серии БЕЗУСЛОВНО (не opt-in) вне АГРЕГАТОВ автора — `catalog.notCompilationClause`
+(`COALESCE((SELECT wk.kind …),'')=''`) в book_count/годах/жанрах/языках/рейтинге/экранизациях
+(`ListAuthorsFiltered` через `renderAggExclusion`, `GetAuthor` в query-агрегатах); НЕ трогает
+базовую видимость автора, `fav_books` (личное избранное) и СПИСОК книг карточки (сборники
+видны в своей секции); план
 `~/.claude/plans/compilations-author-page-plan.md`);
 до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,

@@ -385,3 +385,54 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	require.Equal(t, f.kingID, res.Items[0].ID)
 	require.Equal(t, 1, res.Items[0].BookCount, "horror исключён и в агрегатах под name-фильтром")
 }
+
+// TestListAuthorsFiltered_LooseCompilations — loose coupling: сборники ВСЕГДА
+// вне агрегатов/статистики автора в списке авторов (счётчик, языки, годы,
+// экранизации, рейтинг, топ-жанры), безусловно. Помечаем главную работу Кинга
+// (ru+en, рейтинг 5, экранизация, 1986, horror) сборником — у автора остаётся
+// только вторая работа (en, sf, 1977, без рейтинга/экранизации).
+func TestListAuthorsFiltered_LooseCompilations(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+	f := seedAuthorsList(t, ctx, pool)
+	svc := catalog.New(pool)
+
+	_, err := pool.Exec(ctx, `UPDATE works SET kind='collection', kind_source='heuristic'
+		WHERE id = (SELECT work_id FROM books WHERE lib_id = 'k-ru')`)
+	require.NoError(t, err)
+
+	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{UserID: f.userID})
+	require.NoError(t, err)
+	var king catalog.AuthorListItem
+	for _, it := range res.Items {
+		if it.ID == f.kingID {
+			king = it
+		}
+	}
+	require.NotZero(t, king.ID, "автор остаётся в списке по второй (не-сборник) работе")
+
+	require.Equal(t, 1, king.BookCount, "сборник вне счётчика — осталась 1 работа")
+	require.NotContains(t, king.Languages, "ru", "ru был только у работы-сборника")
+	require.Contains(t, king.Languages, "en", "en остаётся (вторая работа)")
+	require.False(t, king.HasAdaptations, "экранизация была у работы-сборника")
+	require.Nil(t, king.ExternalRating, "рейтинг 5 был у сборника; у второй работы рейтинга нет")
+	require.Nil(t, king.ReaderRating, "оценки читателей были у работы-сборника")
+	require.Equal(t, 0, king.ReaderRatingCount)
+	require.NotNil(t, king.YearsActive)
+	require.Equal(t, 1977, king.YearsActive.From, "1986 был у сборника; активность = год второй работы")
+	require.Equal(t, 1977, king.YearsActive.To)
+	genreCodes := make([]string, 0, len(king.TopGenres))
+	for _, g := range king.TopGenres {
+		genreCodes = append(genreCodes, g.Code)
+	}
+	require.NotContains(t, genreCodes, "sf_horror", "жанр сборника не в чипсах автора")
+	require.Contains(t, genreCodes, "sf", "жанр второй работы остаётся")
+
+	// fav_books НЕ трогается loose coupling (личное избранное пользователя):
+	// книга Кинга в избранном относится к работе-сборнику, но fav_books её считает.
+	require.Equal(t, 1, king.FavoritedBooksCount, "избранное пользователя не зависит от типа работы")
+}

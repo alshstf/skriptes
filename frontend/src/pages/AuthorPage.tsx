@@ -206,9 +206,9 @@ function AuthorBooks({ author }: { author: Author }) {
           <section className="space-y-2">
             <h2 className="flex items-center gap-2 text-base font-medium">
               <BookOpen className="size-4" aria-hidden /> Книги
-              {author.books_total > author.books.length ? (
+              {author.books_total > flat.length ? (
                 <span className="text-sm font-normal text-muted-foreground">
-                  (показаны последние {author.books.length} из {author.books_total})
+                  (показаны последние {flat.length} из {author.books_total})
                 </span>
               ) : null}
             </h2>

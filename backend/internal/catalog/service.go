@@ -45,6 +45,16 @@ func New(pool *pgxpool.Pool) *Service {
 // позиционного аргумента ($N). Пустые срезы → "" + нет доп. аргументов (no-op),
 // поэтому хелпер безопасно звать всегда. Возвращает фрагмент и аргументы, которые
 // нужно дописать в конец списка args запроса (в том же порядке).
+// notCompilationClause — безусловное исключение книг-сборников (works.kind ≠ NULL)
+// из АГРЕГАТОВ и СТАТИСТИКИ автора (счётчики, годы, жанры, языки, рейтинг,
+// экранизации). Loose coupling: сборник/антология/том собрания — свойство самого
+// сборника, не «что написал автор», поэтому не раздувает счётчики и не искажает
+// статистику. Алиас книги в подзапросе — `b`. В отличие от opt-in
+// hideCompilations (убирает книги из выдачи целиком), применяется ВСЕГДА. НЕ
+// применяется к списку книг карточки (сборники видны в своей секции) и к базовой
+// видимости автора.
+const notCompilationClause = ` AND COALESCE((SELECT wk.kind FROM works wk WHERE wk.id = b.work_id), '') = ''`
+
 func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string, hideCompilations bool) (clause string, args []any) {
 	n := startArg
 	var b strings.Builder
@@ -105,7 +115,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 		SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id
-		WHERE ba.author_id = $1 AND b.deleted = false`+exClause,
+		WHERE ba.author_id = $1 AND b.deleted = false`+exClause+notCompilationClause,
 		countArgs...).Scan(&a.BookCount); err != nil {
 		return Author{}, fmt.Errorf("count books: %w", err)
 	}
@@ -364,7 +374,7 @@ func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limi
 		JOIN books b      ON b.id = ba.book_id AND b.deleted = false
 		JOIN book_genres bg ON bg.book_id = b.id
 		JOIN genres g     ON g.id = bg.genre_id
-		WHERE ba.author_id = $1`+exClause+`
+		WHERE ba.author_id = $1`+exClause+notCompilationClause+`
 		GROUP BY g.fb2_code, g.name_ru, g.name_en
 		ORDER BY cnt DESC, g.fb2_code
 		LIMIT $2
@@ -577,7 +587,7 @@ func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excl
 		SELECT b.written_year::int AS year, b.id, b.title
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL`+exClause+`
+		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`
 		ORDER BY b.written_year, b.title
 	`, args...)
 	if err != nil {
@@ -605,23 +615,23 @@ func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excl
 	err := s.pool.QueryRow(ctx, `
 		SELECT
 		  (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+`),
+		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+notCompilationClause+`),
 		  (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
 		     FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+`
+		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+notCompilationClause+`
 		     ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id LIMIT 1),
 		  (SELECT avg(br.rating)::float8 FROM book_ratings br WHERE br.work_id IN (
 		     SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+`)),
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+notCompilationClause+`)),
 		  (SELECT count(*)::int FROM book_ratings br WHERE br.work_id IN (
 		     SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+`)),
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+notCompilationClause+`)),
 		  EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		     JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = $1`+exClause+`),
+		     JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = $1`+exClause+notCompilationClause+`),
 		  (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`),
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`),
 		  (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`)
+		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`)
 	`, args...).Scan(&extRating, &extSource, &readerAvg, &readerCnt, &hasAdapt, &yrFrom, &yrTo)
 	if err != nil {
 		return fmt.Errorf("query author meta: %w", err)
@@ -656,11 +666,11 @@ func (s *Service) queryAuthorLanguages(ctx context.Context, id int64, excludeGen
 		SELECT code, count(*) AS cnt FROM (
 			SELECT NULLIF(lower(btrim(b.lang)), '') AS code
 			FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
-			WHERE ba.author_id = $1`+exClause+`
+			WHERE ba.author_id = $1`+exClause+notCompilationClause+`
 			UNION ALL
 			SELECT NULLIF(lower(btrim(b.src_lang)), '') AS code
 			FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
-			WHERE ba.author_id = $1`+exClause+`
+			WHERE ba.author_id = $1`+exClause+notCompilationClause+`
 		) t
 		WHERE code IS NOT NULL
 		GROUP BY code
