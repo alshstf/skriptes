@@ -135,7 +135,7 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	if err := idx.flush(ctx); err != nil {
 		return stats, fmt.Errorf("flush meili: %w", err)
 	}
-	if err := markCollectionImported(ctx, im.deps.Pool, collectionID, hash); err != nil {
+	if err := markCollectionImported(ctx, im.deps.Pool, collectionID, hash, ix.Version); err != nil {
 		return stats, fmt.Errorf("mark collection imported: %w", err)
 	}
 

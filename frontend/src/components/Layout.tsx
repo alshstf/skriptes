@@ -13,6 +13,7 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { MainNavBar, MainNavTrigger } from '@/components/MainNav';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import { useAppearance } from '@/lib/appearance';
+import { useVersion, formatCollectionVersion } from '@/lib/version';
 import { HeroSearchContext } from '@/lib/heroSearch';
 import { cn } from '@/lib/utils';
 import { useState, type ReactNode } from 'react';
@@ -30,6 +31,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="min-h-dvh flex flex-col">
         <Header user={me.data ?? null} heroSearchVisible={heroSearchVisible} />
         <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">{children}</main>
+        <VersionFooter />
       </div>
     </HeroSearchContext.Provider>
   );
@@ -80,6 +82,28 @@ function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisi
         </div>
       </div>
     </header>
+  );
+}
+
+// VersionFooter — ненавязчивая строка внизу страницы: версия Skriptes +
+// версия импортированной коллекции (понять, подтянулся ли новый INPX).
+// pb-safe: home-indicator в iOS PWA. Публичная ручка — виден и до логина.
+function VersionFooter() {
+  const { data } = useVersion();
+  if (!data?.version) return null;
+  // Версия коллекции: приоритет — version.info нового INPX; если его ещё нет
+  // (коллекция импортирована до фичи, а импорт с тех пор пропускался как
+  // неизменный) — фолбэк на дату последнего импорта, чтобы строка не пустовала.
+  const coll = data.collection_version
+    ? `коллекция ${formatCollectionVersion(data.collection_version)}`
+    : data.collection_imported_at
+      ? `коллекция от ${data.collection_imported_at.slice(0, 10)}`
+      : null;
+  return (
+    <footer className="mx-auto w-full max-w-6xl px-4 pt-6 pb-6 text-center text-xs text-muted-foreground/60">
+      <span>skriptes {data.version}</span>
+      {coll ? <span> · {coll}</span> : null}
+    </footer>
   );
 }
 
