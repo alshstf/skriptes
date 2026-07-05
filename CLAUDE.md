@@ -133,9 +133,17 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0033_collection_version` (`collections.inpx_version` — version.info
+Текущая верхняя — `0034_work_kind` (`works.kind`/`kind_source` — тип работы:
+collection/anthology/omnibus, NULL=обычная; эвристический классификатор
+`metadata/work_kind.go::ClassifyWorkKinds` — title-паттерн + серия-паразит (ТОЛЬКО мн.ч.
+«Сборники»; ед.ч. «(сборник)» — librusec-разворот на рассказы, НЕ метим) + ≥4 авторов;
+runOnce-гейт `work_kind_classified_v1` + вызов после импорта; kind_source: приоритет
+override > fantlab > heuristic; kind в works-индексе (schema v6, filterable) → секция
+«Сборники и антологии» внизу карточки автора, план
+`~/.claude/plans/compilations-author-page-plan.md`);
+до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,
-отдаётся публичной ручкой `/api/version` вместе с версией Skriptes → футер `Layout.tsx`);
+отдаётся публичной ручкой `/api/version` вместе с версией Skriptes → подвал меню пользователя в `Layout.tsx`);
 до неё `0032_work_wd_sitelinks` (`works.wd_sitelinks` — число языковых
 разделов Википедии со статьёй, сигнал известности от источника wikidata renown-воркера);
 до неё `0031_work_renown` (внешние счётчики известности на `works`:

@@ -149,7 +149,11 @@ export function AuthorPage() {
  *  - если у автора нет серий — плоский список без всякой группировки.
  *
  * Порядок секций: серии в порядке, который пришёл с backend (он сейчас
- * по убыванию числа книг), потом "Вне серий".
+ * по убыванию числа книг), потом "Вне серий", в САМОМ низу — «Сборники и
+ * антологии»: одиночные работы с kind (сборник/антология/том собрания) +
+ * серии-целиком-из-сборников (all_compilations: «Шекли. Сборники», «ПСС в
+ * N томах») — чтобы они не тонули среди романов и не выглядели авторскими
+ * циклами (паттерн Fantlab/MusicBrainz: разделять, не скрывать).
  */
 function AuthorBooks({ author }: { author: Author }) {
   if (author.books.length === 0) {
@@ -160,39 +164,23 @@ function AuthorBooks({ author }: { author: Author }) {
     );
   }
 
-  const hasSeries = (author.series ?? []).length > 0;
+  const allSeries = author.series ?? [];
+  const mainSeries = allSeries.filter((s) => !s.all_compilations);
+  const compSeries = allSeries.filter((s) => s.all_compilations);
+  const hasSeries = mainSeries.length > 0;
 
-  // Без серий — плоский список как раньше.
-  if (!hasSeries) {
-    return (
-      <section className="space-y-2">
-        <h2 className="flex items-center gap-2 text-base font-medium">
-          <BookOpen className="size-4" aria-hidden /> Книги
-          {author.books_total > author.books.length ? (
-            <span className="text-sm font-normal text-muted-foreground">
-              (показаны последние {author.books.length} из {author.books_total})
-            </span>
-          ) : null}
-        </h2>
-        <ul className="space-y-1">
-          {author.books.map((b) => (
-            <li key={b.id}>
-              <BookListItem book={b} showSeries={false} />
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  }
-
-  // С сериями — группируем по series_id.
+  // Группировка по series_id (нужна и для плоского режима — серии-сборники
+  // там тоже уходят вниз).
   const bySeries = new Map<number, BookListItemType[]>();
   const standalone: BookListItemType[] = [];
+  const compStandalone: BookListItemType[] = [];
   for (const b of author.books) {
     if (b.series_id != null) {
       const arr = bySeries.get(b.series_id) ?? [];
       arr.push(b);
       bySeries.set(b.series_id, arr);
+    } else if (b.kind) {
+      compStandalone.push(b); // сборник вне серий → в секцию сборников
     } else {
       standalone.push(b);
     }
@@ -203,9 +191,44 @@ function AuthorBooks({ author }: { author: Author }) {
     arr.sort(bySeriesOrder);
   }
 
+  const compilations = (
+    <CompilationsSection series={compSeries} bySeries={bySeries} standalone={compStandalone} />
+  );
+
+  // Без обычных серий — плоский список как раньше (сборники всё равно внизу).
+  if (!hasSeries) {
+    const flat = author.books.filter(
+      (b) => !b.kind && !compSeries.some((s) => s.id === b.series_id),
+    );
+    return (
+      <div className="space-y-4">
+        {flat.length > 0 ? (
+          <section className="space-y-2">
+            <h2 className="flex items-center gap-2 text-base font-medium">
+              <BookOpen className="size-4" aria-hidden /> Книги
+              {author.books_total > author.books.length ? (
+                <span className="text-sm font-normal text-muted-foreground">
+                  (показаны последние {author.books.length} из {author.books_total})
+                </span>
+              ) : null}
+            </h2>
+            <ul className="space-y-1">
+              {flat.map((b) => (
+                <li key={b.id}>
+                  <BookListItem book={b} showSeries={false} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+        {compilations}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {(author.series ?? []).map((s) => (
+      {mainSeries.map((s) => (
         <SeriesSection
           key={s.id}
           series={s}
@@ -213,7 +236,82 @@ function AuthorBooks({ author }: { author: Author }) {
         />
       ))}
       {standalone.length > 0 ? <StandaloneSection books={standalone} /> : null}
+      {compilations}
     </div>
+  );
+}
+
+/**
+ * CompilationsSection — «Сборники и антологии» в самом низу карточки автора:
+ * серии-целиком-из-сборников (группами с заголовком-ссылкой) + одиночные
+ * работы-сборники вне серий. Ничего не скрываем — только отделяем от
+ * основных книг. Секция сама прячется, если нечего показать.
+ */
+function CompilationsSection({
+  series,
+  bySeries,
+  standalone,
+}: {
+  series: SeriesWithCount[];
+  bySeries: Map<number, BookListItemType[]>;
+  standalone: BookListItemType[];
+}) {
+  const total = standalone.length + series.reduce((n, s) => n + s.count, 0);
+  if (total === 0) return null;
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
+          <Badge
+            variant="outline"
+            className="px-1.5 py-0 text-[10px] font-medium uppercase tracking-wider"
+          >
+            Сборники
+          </Badge>
+          Сборники и антологии
+          <span className="text-sm font-normal text-muted-foreground tabular-nums">
+            {total} {pluralBooks(total)}
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-3">
+        {series.map((s) => {
+          const books = (bySeries.get(s.id) ?? []).slice().sort(bySeriesOrder);
+          return (
+            <div key={s.id} className="space-y-1">
+              <h3 className="text-sm font-medium">
+                <Link
+                  to="/series/$id"
+                  params={{ id: String(s.id) }}
+                  className="hover:underline"
+                >
+                  {s.title}
+                </Link>{' '}
+                <span className="font-normal text-muted-foreground tabular-nums">
+                  {s.count} {pluralBooks(s.count)}
+                </span>
+              </h3>
+              <ul className="space-y-1">
+                {books.map((b) => (
+                  <li key={b.id}>
+                    <BookListItem book={b} showSeries={false} showSerNo={true} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+        {standalone.length > 0 ? (
+          <ul className="space-y-1">
+            {standalone.map((b) => (
+              <li key={b.id}>
+                <BookListItem book={b} showSeries={false} />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 

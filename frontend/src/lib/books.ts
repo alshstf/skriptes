@@ -33,6 +33,10 @@ export type BookListItem = {
   // /works/{work_id ?? id}. В /books-выдаче id уже = works.id (work_id опущен);
   // в каталоге автора/серии id = издание, а work_id несёт id работы.
   work_id?: number;
+  // kind — тип работы: отсутствует/'' = обычное произведение, иначе
+  // 'collection' (авторский сборник) | 'anthology' | 'omnibus' (том собрания).
+  // Карточка автора выносит kind≠'' в секцию «Сборники и антологии».
+  kind?: string;
   // cover_edition_id — id издания для on-demand обложки (/api/covers/book/{id}),
   // т.к. в /books-выдаче id = works.id. Заполняется в /books-листинге.
   cover_edition_id?: number;

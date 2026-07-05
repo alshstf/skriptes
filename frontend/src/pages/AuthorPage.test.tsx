@@ -137,6 +137,55 @@ describe('AuthorPage', () => {
     expect(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
+  it('сборники: kind-книги и серии-сборники уходят в секцию «Сборники и антологии»', async () => {
+    const withComps = {
+      ...fixture,
+      book_count: 5,
+      books_total: 5,
+      series: [
+        { id: 7, title: 'Петля [Алексеев]', count: 1 },
+        // Серия целиком из сборников — НЕ должна выглядеть авторским циклом.
+        { id: 9, title: 'Алексеев, Евгений. Сборники', count: 1, all_compilations: true },
+      ],
+      books: [
+        { id: 19, title: 'Кадетский корпус. Книга 2', authors: ['A'], series: 'Петля [Алексеев]', series_id: 7, ser_no: 2, lib_id: '1' },
+        { id: 20, title: 'Записки одиночки', authors: ['A'], lib_id: '2' },
+        // Одиночный сборник вне серий → в секцию сборников, не в «Вне серий».
+        { id: 21, title: 'Избранные произведения. Том II', authors: ['A'], kind: 'omnibus', lib_id: '3' },
+        // Книга серии-сборников → в группу серии внутри секции сборников.
+        { id: 22, title: 'Ранние рассказы', authors: ['A'], series: 'Алексеев, Евгений. Сборники', series_id: 9, kind: 'omnibus', lib_id: '4' },
+      ],
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify(withComps), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    );
+    render(wrap(<AuthorPage />));
+    // Секция сборников есть и содержит обе работы.
+    const heading = await screen.findByText('Сборники и антологии');
+    expect(heading).toBeInTheDocument();
+    expect(screen.getByText('Избранные произведения. Том II')).toBeInTheDocument();
+    expect(screen.getByText('Ранние рассказы')).toBeInTheDocument();
+    // Серия-сборники НЕ рендерится как обычная секция «Серия» (бейджей «Серия»
+    // ровно один — у «Петли»), но её заголовок-ссылка есть в секции сборников.
+    expect(screen.getAllByText('Серия')).toHaveLength(1);
+    const compSeriesLinks = screen
+      .getAllByRole('link')
+      .filter((l) => l.getAttribute('href') === '/series/9');
+    expect(compSeriesLinks.length).toBeGreaterThan(0);
+    // Обычные книги остались в своих секциях.
+    expect(screen.getByText('Вне серий')).toBeInTheDocument();
+    expect(screen.getByText('Записки одиночки')).toBeInTheDocument();
+    // Секция сборников — В САМОМ НИЗУ: после «Вне серий» в DOM.
+    const standalone = screen.getByText('Вне серий');
+    expect(standalone.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('при enrichment_fetched и пустой bio сразу показывает fallback, а не скелетон', async () => {
     vi.stubGlobal(
       'fetch',

@@ -76,6 +76,11 @@ type ListItem struct {
 	// заполняется; в catalog-выдаче (автор/серия) ID = представительное ИЗДАНИЕ,
 	// поэтому WorkID несёт id работы для ссылки. Фронт: /works/{work_id ?? id}.
 	WorkID int64 `json:"work_id,omitempty"`
+	// Kind — тип работы (works.kind): "" — обычное произведение, иначе
+	// collection (авторский сборник) | anthology | omnibus (том собрания
+	// сочинений). Карточка автора выносит kind≠"" в секцию «Сборники и
+	// антологии». Заполняется catalog-выдачей (автор/серия).
+	Kind string `json:"kind,omitempty"`
 
 	// Сигналы для обогащённой плашки (как строка автора). Не-user поля
 	// (ExternalRating/Source, ReaderRating/Count, HasAdaptations) гидрируются

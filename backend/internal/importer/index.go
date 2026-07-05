@@ -79,6 +79,11 @@ type workDoc struct {
 	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
 	Popularity      int64    `json:"popularity"`     // сумма популярности изданий
 	EditionCount    int      `json:"edition_count"`
+	// Kind — тип работы: "" (обычное произведение) | collection | anthology |
+	// omnibus (works.kind, миграция 0034). Пишем ВСЕГДА (пустую строку для
+	// обычных), чтобы NOT-фильтр «скрыть сборники» не зависел от поведения
+	// Meili на отсутствующем поле.
+	Kind string `json:"kind"`
 }
 
 // configureWorksIndex создаёт и настраивает индекс works идемпотентно.
@@ -96,7 +101,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "src_lang", "year", "series_id", "author_ids"}
+	filterable := []any{"genres", "lang", "src_lang", "year", "series_id", "author_ids", "kind"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}

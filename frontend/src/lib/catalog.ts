@@ -3,7 +3,10 @@ import { apiFetch } from './api';
 import type { BookListItem } from './books';
 
 export type GenreCount = { code: string; display: string; count: number };
-export type SeriesWithCount = { id: number; title: string; count: number };
+// all_compilations — серия целиком из сборников/антологий/томов собраний
+// (works.kind у всех работ): уводится из списка серий автора в секцию
+// «Сборники и антологии» внизу карточки.
+export type SeriesWithCount = { id: number; title: string; count: number; all_compilations?: boolean };
 export type YearBook = { id: number; title: string };
 /** Точка гистограммы «по годам написания»: год, число книг и сами книги
  *  (для тултипа — что именно написано в этот год). */
