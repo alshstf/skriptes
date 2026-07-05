@@ -7,6 +7,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// workKindClassifyLockID — произвольный, но фиксированный ключ pg_advisory_lock,
+// под которым сериализуется ClassifyWorkKinds (см. её док). Значение не
+// пересекается с другими advisory-локами кодовой базы (их пока нет).
+const workKindClassifyLockID = 0x776b636c61737379 // "wkclassy" в hex
+
 // ClassifyWorkKinds — эвристическая типизация работ: сборники/антологии/тома
 // собраний сочинений (works.kind) отделяются от обычных произведений, чтобы
 // карточка автора могла вынести их в отдельную секцию (план
@@ -29,12 +34,36 @@ import (
 //
 // Один SQL-проход на сигнал (полнотабличный, но по индексируемым выражениям) —
 // зовётся редко: runOnce-гейт на старте + после импорта (новые работы).
+//
+// ⚠️ Сериализуется session-level advisory-lock'ом: на ПЕРВОМ деплое фичи
+// runOnce-классификация (горутина старта) и after-import классификация
+// (в runStartupImport) стартуют одновременно, оба делают полнотабличные
+// UPDATE works в разном порядке блокировки строк → deadlock, один падает
+// (наблюдали на проде 1.9.0). Лок гарантирует, что второй вызов ЖДЁТ первый,
+// а не конфликтует (первый расставит kind → второй пройдёт по 0 строк).
 func ClassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
 	var total int64
 
+	// Захватываем отдельное соединение под advisory-lock: лок сессионный
+	// (держится тем conn, что его взял), поэтому и UPDATE'ы гоним по нему —
+	// одна сессия на всю критическую секцию.
+	conn, err := pool.Acquire(ctx)
+	if err != nil {
+		return 0, fmt.Errorf("acquire conn: %w", err)
+	}
+	defer conn.Release()
+	if _, err := conn.Exec(ctx, `SELECT pg_advisory_lock($1)`, workKindClassifyLockID); err != nil {
+		return 0, fmt.Errorf("advisory lock: %w", err)
+	}
+	// Разлочиваем на context.Background(): если исходный ctx уже отменён (напр.
+	// шатдаун), Exec по нему был бы no-op и лок повис бы до конца сессии conn.
+	defer func() {
+		_, _ = conn.Exec(context.Background(), `SELECT pg_advisory_unlock($1)`, workKindClassifyLockID)
+	}()
+
 	// 1. Title-паттерн самой работы. ~* — регистронезависимо; \m/\M — границы
 	// слова в PG-регекспах (word start/end).
-	tag, err := pool.Exec(ctx, `
+	tag, err := conn.Exec(ctx, `
 		UPDATE works w SET kind = CASE
 			WHEN w.title ~* '\m(антолог(ия|ии)|anthology)\M' THEN 'anthology'
 			WHEN w.title ~* '(собрание сочинений|избранн(ое|ые) произведения|\momnibus\M)' THEN 'omnibus'
@@ -55,7 +84,7 @@ func ClassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
 	// Ед.ч. «(сборник)» — librusec-РАЗВОРОТ одного сборника на отдельные
 	// fb2-рассказы («Тринадцать загадочных случаев (сборник)»): её члены —
 	// рассказы, не сборники, метить их нельзя (снято с прод-данных 2026-07-05).
-	tag, err = pool.Exec(ctx, `
+	tag, err = conn.Exec(ctx, `
 		UPDATE works w SET kind = CASE
 			WHEN s.title ~* '\mантолог' THEN 'anthology'
 			ELSE 'omnibus'
@@ -72,7 +101,7 @@ func ClassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
 
 	// 3. Многоавторность (сильнейший сигнал — последним): ≥4 уникальных авторов
 	// по живым изданиям работы → антология.
-	tag, err = pool.Exec(ctx, `
+	tag, err = conn.Exec(ctx, `
 		UPDATE works w SET kind = 'anthology', kind_source = 'heuristic'
 		WHERE (w.kind_source IS NULL OR w.kind_source = 'heuristic')
 		  AND w.kind IS DISTINCT FROM 'anthology'
