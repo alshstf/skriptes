@@ -110,7 +110,7 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 
 	var body struct {
@@ -171,7 +171,7 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 	var s wikiSummary
 	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
@@ -209,7 +209,7 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 	// opensearch отдаёт массив [string, []string, []string, []string]:
 	// [запрос, [титулы], [сниппеты], [ссылки]]. Декодим как json.RawMessage'ы.
@@ -247,7 +247,7 @@ func (p *WikipediaProvider) downloadImage(ctx context.Context, src string) (*Cov
 	}
 	if resp.StatusCode != http.StatusOK {
 		_ = resp.Body.Close()
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 	mime := resp.Header.Get("Content-Type")
 	if mime == "" || !strings.HasPrefix(mime, "image/") {

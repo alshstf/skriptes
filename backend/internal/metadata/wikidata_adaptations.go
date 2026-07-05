@@ -157,7 +157,7 @@ func (p *WikidataAdaptationsProvider) searchEntities(ctx context.Context, title,
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 
 	var body struct {

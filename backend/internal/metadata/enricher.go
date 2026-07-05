@@ -749,12 +749,14 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 		return
 	}
 
+	transient := false
 	for _, p := range e.authorPhotoProviders {
 		img, err := p.FetchAuthorPhoto(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
 		if err != nil {
+			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
 			e.logger.Info("metadata: author photo provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
 			continue
 		}
@@ -778,7 +780,13 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 		return
 	}
 
-	// Все провайдеры мимо — отмечаем попытку, чтобы фронт мог решить
+	// Транзиентная ошибка (429/битый ключ/сеть) — НЕ помечаем: иначе один сбой
+	// навсегда пометил бы автора «без фото» (single-shot по metadata_fetched_at),
+	// и ленивый путь больше не перепробовал бы. Пусть ретрай состоится.
+	if transient {
+		return
+	}
+	// Все провайдеры честно мимо — отмечаем попытку, чтобы фронт мог решить
 	// "polling сдался" и показать fallback. Совместимо с EnsureAuthorBio:
 	// они оба пишут metadata_fetched_at независимо, последний раз обновлённый
 	// время используется как "момент последней попытки enrichment'а".
@@ -808,12 +816,14 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		return
 	}
 
+	transient := false
 	for _, p := range e.authorBioProviders {
 		text, err := p.FetchAuthorBio(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
 		if err != nil {
+			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
 			e.logger.Info("metadata: author bio provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
 			continue
 		}
@@ -831,7 +841,12 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		return
 	}
 
-	// Все провайдеры мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
+	// Транзиентная ошибка — не помечаем (см. EnsureAuthorPhoto): 429/битый ключ
+	// не должен навсегда пометить автора «без биографии».
+	if transient {
+		return
+	}
+	// Все провайдеры честно мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
 	// ленивый путь не дёргал bio заново на каждый заход на карточку. Маркер
 	// metadata_fetched_at у автора общий для bio+photo; respect его и
 	// triggerAuthorEnrichmentAsync, и фронтовый polling (single-shot, как у
@@ -879,12 +894,14 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 		return // уже пробовали; ретрай — отдельный механизм (вне scope этой версии)
 	}
 
+	transient := false
 	for _, p := range e.adaptationProviders {
 		items, err := p.FetchAdaptations(ctx, q)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
 		if err != nil {
+			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
 			e.logger.Info("metadata: adaptations provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
 			continue
 		}
@@ -898,7 +915,12 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 		return
 	}
 
-	// Все провайдеры мимо: помечаем попытку чтобы UI показал fallback.
+	// Транзиентная ошибка — не помечаем: иначе 429/сбой Wikidata навсегда
+	// пометил бы книгу «без экранизаций» (single-shot по adaptations_fetched_at).
+	if transient {
+		return
+	}
+	// Все провайдеры честно мимо: помечаем попытку чтобы UI показал fallback.
 	if _, err := e.pool.Exec(ctx,
 		`UPDATE books SET adaptations_fetched_at = now() WHERE id = $1`, q.ID,
 	); err != nil {
