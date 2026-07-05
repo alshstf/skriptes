@@ -38,6 +38,11 @@ type Config struct {
 	// анонимной квоте. Получить: Google Cloud Console → APIs → Books API → API key.
 	// Пусто = GB-обогащение работать практически не будет (быстро упрётся в 429).
 	GoogleBooksAPIKey string `env:"SKRIPTES_GOOGLE_BOOKS_API_KEY"`
+	// GoogleBooksCountry — ISO 3166-1 alpha-2 для параметра country= в вызовах
+	// Google Books. ОБЯЗАТЕЛЕН для серверного/облачного деплоя: без него GB не
+	// может геолоцировать IP и отдаёт "Cannot determine user location…" (пусто).
+	// Дефолт US — самая полная выдача. Разбор: groups.google.com/g/google-appengine/c/C-IoRG7Z7VI
+	GoogleBooksCountry string `env:"SKRIPTES_GOOGLE_BOOKS_COUNTRY" envDefault:"US"`
 
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
