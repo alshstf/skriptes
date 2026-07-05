@@ -26,6 +26,10 @@ export type LanguageItem = {
 export type ContentSettings = {
   hidden_genres: string[];
   hidden_languages: string[];
+  // «Скрывать сборники» (антологии/тома собраний) из выдачи целиком —
+  // opt-in персональная настройка (дефолт false). Только в профиле,
+  // admin-эндпоинт поле игнорирует.
+  hide_compilations?: boolean;
 };
 
 export type MyContentSettings = ContentSettings & {

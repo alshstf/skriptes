@@ -79,7 +79,7 @@ func TestService_CoverageFixture(t *testing.T) {
 	for _, last := range []string{"Альфа", "Бета"} {
 		var id int64
 		require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = $1`, last).Scan(&id))
-		a, err := svc.GetAuthor(ctx, id, 0, nil, nil)
+		a, err := svc.GetAuthor(ctx, id, 0, nil, nil, false)
 		require.NoError(t, err)
 		require.Equal(t, 1, a.BookCount, "%s: книга соавторства должна быть на карточке", last)
 		require.Len(t, a.Books, 1)
@@ -90,7 +90,7 @@ func TestService_CoverageFixture(t *testing.T) {
 	// (3) Серия без номеров: группируется, книги без ser_no, упорядочены по title.
 	var seriesAuthorID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Серий'`).Scan(&seriesAuthorID))
-	sa, err := svc.GetAuthor(ctx, seriesAuthorID, 0, nil, nil)
+	sa, err := svc.GetAuthor(ctx, seriesAuthorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Len(t, sa.Series, 1)
 	require.Equal(t, "Безномерная серия", sa.Series[0].Title)
@@ -103,7 +103,7 @@ func TestService_CoverageFixture(t *testing.T) {
 	// (4) Плодовитый автор: счётчик = реальное число, список книг урезан до 500.
 	var prolificID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Плодовит'`).Scan(&prolificID))
-	pa, err := svc.GetAuthor(ctx, prolificID, 0, nil, nil)
+	pa, err := svc.GetAuthor(ctx, prolificID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, prolific, pa.BookCount, "счётчик книг — полный")
 	require.Len(t, pa.Books, 500, "список книг автора упирается в потолок 500")

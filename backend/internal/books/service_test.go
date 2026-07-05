@@ -259,7 +259,7 @@ func TestService_WorksIndex(t *testing.T) {
 	require.ErrorIs(t, err, books.ErrNotFound)
 
 	// ── SuggestWorks → тот же work id, что ListWorks.
-	wsugg, err := svc.SuggestWorks(ctx, "Кадетский", 5, 0, nil, nil)
+	wsugg, err := svc.SuggestWorks(ctx, "Кадетский", 5, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, wsugg)
 	require.Equal(t, "Кадетский корпус. Книга 2", wsugg[0].Title)

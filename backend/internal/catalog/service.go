@@ -45,7 +45,7 @@ func New(pool *pgxpool.Pool) *Service {
 // позиционного аргумента ($N). Пустые срезы → "" + нет доп. аргументов (no-op),
 // поэтому хелпер безопасно звать всегда. Возвращает фрагмент и аргументы, которые
 // нужно дописать в конец списка args запроса (в том же порядке).
-func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string) (clause string, args []any) {
+func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string, hideCompilations bool) (clause string, args []any) {
 	n := startArg
 	var b strings.Builder
 	if len(excludeLangs) > 0 {
@@ -58,13 +58,19 @@ func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string) (cl
 			" WHERE bgx.book_id = b.id AND gx.fb2_code = ANY($%d::text[]))", n)
 		args = append(args, excludeGenres)
 	}
+	// «Скрывать сборники» (opt-in профильная настройка): книга скрыта, если её
+	// работа помечена kind (сборник/антология/том собрания). NULL work_id →
+	// видна (обычная книга).
+	if hideCompilations {
+		b.WriteString(" AND COALESCE((SELECT wk.kind FROM works wk WHERE wk.id = b.work_id), '') = ''")
+	}
 	return b.String(), args
 }
 
 // GetAuthor — карточка автора. excludeGenres/excludeLangs — скрытые жанры/языки
 // (видимость контента), применяются к счётчику книг и списку книг, чтобы на
 // карточке не всплывал контент, скрытый глобально/персонально (как в /books).
-func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string) (Author, error) {
+func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string, hideCompilations bool) (Author, error) {
 	var (
 		a         Author
 		bio       pgtype.Text
@@ -90,7 +96,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.EnrichmentFetched = fetchedAt.Valid
 
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	countArgs := append([]any{id}, exArgs...)
 	// Считаем ЛОГИЧЕСКИЕ книги (работы), а не издания — иначе счётчик «N книг»
 	// разойдётся со схлопнутым списком. COALESCE(-id) — defensive на случай
@@ -105,13 +111,13 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.BooksTotal = a.BookCount
 
-	genres, err := s.queryAuthorTopGenres(ctx, id, 5, excludeGenres, excludeLangs)
+	genres, err := s.queryAuthorTopGenres(ctx, id, 5, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
 	a.TopGenres = genres
 
-	series, err := s.queryAuthorSeries(ctx, id, excludeGenres, excludeLangs)
+	series, err := s.queryAuthorSeries(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
@@ -120,7 +126,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	// 500 — потолок для самых плодовитых авторов (Asimov ~500, Stephen
 	// King ~80). Группировка по сериям на фронте требует полного списка,
 	// поэтому усечение в 50 как раньше уже не работает.
-	bookList, refs, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs)
+	bookList, refs, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
@@ -135,7 +141,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	// по work_id (как в /books). User-поля (favorite/read) — в api-слое.
 	books.HydrateListMeta(ctx, s.pool, a.Books)
 
-	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs)
+	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
@@ -143,10 +149,10 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 
 	// Агрегаты-зеркало строки списка (рейтинги/экранизации/годы + языки), чтобы
 	// карточка показывала то же, что компактный список авторов.
-	if err := s.queryAuthorMeta(ctx, &a, id, excludeGenres, excludeLangs); err != nil {
+	if err := s.queryAuthorMeta(ctx, &a, id, excludeGenres, excludeLangs, hideCompilations); err != nil {
 		return Author{}, err
 	}
-	langs, err := s.queryAuthorLanguages(ctx, id, excludeGenres, excludeLangs)
+	langs, err := s.queryAuthorLanguages(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
@@ -168,7 +174,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 //
 // Если userID > 0, дополнительно считается ReadCount (сколько книг серии
 // уже скачивал текущий пользователь). YearStats считаются всегда.
-func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string) (Series, error) {
+func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string, hideCompilations bool) (Series, error) {
 	var (
 		out      Series
 		authorID pgtype.Int8
@@ -191,7 +197,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		out.AuthorID = &v
 	}
 
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	bookArgs := append([]any{id}, exArgs...)
 
 	// Все авторы книг серии (по числу работ убыв.) — серия может содержать книги
@@ -328,7 +334,7 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	// Обогащённая плашка (как в /books): рейтинги/экранизации по work_id.
 	books.HydrateListMeta(ctx, s.pool, out.Books)
 
-	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs)
+	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Series{}, err
 	}
@@ -345,8 +351,8 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	return out, nil
 }
 
-func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]GenreCount, error) {
-	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
+func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string, hideCompilations bool) ([]GenreCount, error) {
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID, limit}, exArgs...)
 	// count(DISTINCT работа), не count(*) по book_genres: у многоиздательных
 	// работ жанр повторяется на каждом издании, и счётчик одного жанра обгонял
@@ -382,15 +388,15 @@ func (s *Service) queryAuthorTopGenres(ctx context.Context, authorID int64, limi
 // автора без поиска, т.к. перенос внутри автора — частый кейс). Админ-контекст, без
 // исключений видимости.
 func (s *Service) ListAuthorSeries(ctx context.Context, authorID int64) ([]SeriesWithCount, error) {
-	return s.queryAuthorSeries(ctx, authorID, nil, nil)
+	return s.queryAuthorSeries(ctx, authorID, nil, nil, false)
 }
 
-func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]SeriesWithCount, error) {
+func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]SeriesWithCount, error) {
 	// Исключения по контенту режут книги ДО группировки → серия, у которой не
 	// осталось видимых книг, просто не попадает в результат (INNER JOIN + WHERE).
 	// Так серии-дубли на скрытых языках («Cormoran Strike» при скрытом en) не
 	// висят пустыми на карточке автора. Счётчик cnt тоже = число видимых книг.
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID}, exArgs...)
 	// all_comp: серия, ЦЕЛИКОМ состоящая из сборников/антологий/томов собраний
 	// (works.kind ≠ NULL у всех работ) — серия-паразит («Шекли. Сборники»,
@@ -421,10 +427,10 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	return out, rows.Err()
 }
 
-func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string) ([]books.ListItem, []BookYearRef, error) {
+func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string, hideCompilations bool) ([]books.ListItem, []BookYearRef, error) {
 	// Исключения занимают $3.. (после $1 author, $2 limit); LIMIT остаётся $2
 	// независимо от позиции в строке — позиционные аргументы по номеру.
-	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID, limit}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.id, COALESCE((SELECT ww.title FROM works ww WHERE ww.id = b.work_id), b.title), b.lib_id, b.lang, b.date_added,
@@ -564,8 +570,8 @@ const yearStatsBooksCap = 50
 // date_added). Книги без written_year отбрасываются — пока год не
 // извлечён/недоступен, столбик рисовать не из чего. К каждому году
 // прикладываем список книг (id+title) для тултипа на фронте.
-func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string) ([]YearCount, error) {
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]YearCount, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.written_year::int AS year, b.id, b.title
@@ -584,8 +590,8 @@ func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excl
 // внешний рейтинг + источник топ-издания, оценка читателей + число, наличие
 // экранизаций, годы активности (по written_year). Языки — отдельно
 // (queryAuthorLanguages). Все подзапросы — по видимым книгам (exClause).
-func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excludeGenres, excludeLangs []string) error {
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excludeGenres, excludeLangs []string, hideCompilations bool) error {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{id}, exArgs...)
 	var (
 		extRating pgtype.Float8
@@ -643,8 +649,8 @@ func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excl
 // queryAuthorLanguages — языки изданий автора (lang∪src_lang, нормализованные
 // lower+btrim, граблю №14), по убыванию числа книг. Single-author зеркало
 // fillAuthorLanguages из списка.
-func (s *Service) queryAuthorLanguages(ctx context.Context, id int64, excludeGenres, excludeLangs []string) ([]string, error) {
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+func (s *Service) queryAuthorLanguages(ctx context.Context, id int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]string, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{id}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT code, count(*) AS cnt FROM (
@@ -731,8 +737,8 @@ func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int
 
 // querySeriesYearStats — то же самое для серии: распределение книг в
 // серии по году написания (written_year) + список книг каждого года.
-func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64, excludeGenres, excludeLangs []string) ([]YearCount, error) {
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]YearCount, error) {
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{seriesID}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT b.written_year::int AS year, b.id, b.title

@@ -22,9 +22,16 @@ const contentKey = "content"
 //
 // Пустые срезы = ничего не скрыто (всё видно) — безопасный дефолт: новый
 // жанр/язык, появившийся в коллекции, по умолчанию виден.
+//
+// HideCompilations — скрывать сборники/антологии/тома собраний (works.kind ≠
+// NULL) из выдачи целиком (opt-in, дефолт false): агрессивная персональная
+// настройка поверх базового секционирования на карточке автора. Поле есть и в
+// admin-конфиге (объединение admin ∪ user в Exclusions), но admin-UI его пока
+// не выставляет — переключатель только в профиле.
 type ContentConfig struct {
-	HiddenGenres    []string `json:"hidden_genres"`
-	HiddenLanguages []string `json:"hidden_languages"`
+	HiddenGenres     []string `json:"hidden_genres"`
+	HiddenLanguages  []string `json:"hidden_languages"`
+	HideCompilations bool     `json:"hide_compilations,omitempty"`
 }
 
 // DefaultContentConfig — ничего не скрыто. Срезы не-nil, чтобы JSON-ответ
@@ -206,17 +213,20 @@ func (r *ContentResolver) SetUser(ctx context.Context, userID int64, cfg Content
 // discovery (список/поиск/фасеты/панель фильтров). userID == 0 → только
 // admin. Ошибка чтения персонального конфига не фатальна: admin-исключения
 // всё равно применяются (деградируем мягко).
-func (r *ContentResolver) Exclusions(ctx context.Context, userID int64) (genres, langs []string) {
+// Третий результат — скрывать ли сборники (admin ∪ user, см. HideCompilations).
+func (r *ContentResolver) Exclusions(ctx context.Context, userID int64) (genres, langs []string, hideCompilations bool) {
 	admin := r.Admin()
 	genres = admin.HiddenGenres
 	langs = admin.HiddenLanguages
+	hideCompilations = admin.HideCompilations
 	if userID > 0 {
 		if u, err := r.store.UserContent(ctx, userID); err == nil {
 			genres = unionCodes(genres, u.HiddenGenres)
 			langs = unionCodes(langs, u.HiddenLanguages)
+			hideCompilations = hideCompilations || u.HideCompilations
 		}
 	}
-	return genres, langs
+	return genres, langs, hideCompilations
 }
 
 // AdminHides — hard-block проверка: скрыт ли контент книги ГЛОБАЛЬНО

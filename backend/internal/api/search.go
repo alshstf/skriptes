@@ -68,8 +68,9 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 		// Скрытые из выдачи жанры/языки (admin ∪ персональные) — палитра
 		// поиска не должна подсказывать книги, которых нет в основном списке.
 		var exGenres, exLangs []string
+		var hideComps bool
 		if content.Resolver != nil {
-			exGenres, exLangs = content.Resolver.Exclusions(r.Context(), userID)
+			exGenres, exLangs, hideComps = content.Resolver.Exclusions(r.Context(), userID)
 		}
 
 		var (
@@ -87,7 +88,7 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 			}
 			// SuggestWorks: палитра отдаёт работы (id = works.id), ссылки ведут
 			// на /works/{id} — как и веб-список. OPDS-поиск остаётся на Suggest.
-			items, err := bd.Service.SuggestWorks(ctx, q, limit, userID, exGenres, exLangs)
+			items, err := bd.Service.SuggestWorks(ctx, q, limit, userID, exGenres, exLangs, hideComps)
 			if err == nil {
 				bookItems = items
 			}

@@ -440,7 +440,7 @@ func (s *Service) fillAuthorTopGenres(
 	excludeGenres, excludeLangs []string,
 ) error {
 	// $1 — массив author_id; исключения — $2.. (bookExclusionClause со startArg=2).
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, false)
 	args := append([]any{ids}, exArgs...)
 	rows, err := s.pool.Query(ctx, `
 		SELECT author_id, fb2_code, display, cnt FROM (
@@ -486,7 +486,7 @@ func (s *Service) fillAuthorLanguages(
 	ctx context.Context, ids []int64, idx map[int64]int, out []AuthorListItem,
 	excludeGenres, excludeLangs []string,
 ) error {
-	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs)
+	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, false)
 	args := append([]any{ids}, exArgs...)
 	// UNION ALL по lang и src_lang: считаем каждый язык-источник как сигнал
 	// «автор есть на этом языке». NULLIF('') отсекает пустые после btrim.

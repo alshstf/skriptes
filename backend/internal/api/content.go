@@ -23,6 +23,9 @@ type ContentDeps struct {
 type contentSettings struct {
 	HiddenGenres    []string `json:"hidden_genres"`
 	HiddenLanguages []string `json:"hidden_languages"`
+	// HideCompilations — «Скрывать сборники» (opt-in, только персональные
+	// настройки профиля; admin-UI переключатель не показывает).
+	HideCompilations bool `json:"hide_compilations,omitempty"`
 }
 
 // meContentResponse — персональные скрытые + глобально скрытые (admin),
@@ -31,6 +34,7 @@ type contentSettings struct {
 type meContentResponse struct {
 	HiddenGenres         []string `json:"hidden_genres"`
 	HiddenLanguages      []string `json:"hidden_languages"`
+	HideCompilations     bool     `json:"hide_compilations"`
 	AdminHiddenGenres    []string `json:"admin_hidden_genres"`
 	AdminHiddenLanguages []string `json:"admin_hidden_languages"`
 }
@@ -123,6 +127,7 @@ func handleGetMeContent(d ContentDeps) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, meContentResponse{
 			HiddenGenres:         orEmpty(user.HiddenGenres),
 			HiddenLanguages:      orEmpty(user.HiddenLanguages),
+			HideCompilations:     user.HideCompilations,
 			AdminHiddenGenres:    orEmpty(admin.HiddenGenres),
 			AdminHiddenLanguages: orEmpty(admin.HiddenLanguages),
 		})
@@ -145,7 +150,7 @@ func handleUpdateMeContent(d ContentDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		cfg := settings.ContentConfig{HiddenGenres: body.HiddenGenres, HiddenLanguages: body.HiddenLanguages}
+		cfg := settings.ContentConfig{HiddenGenres: body.HiddenGenres, HiddenLanguages: body.HiddenLanguages, HideCompilations: body.HideCompilations}
 		if err := d.Resolver.SetUser(ctx, u.ID, cfg); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save content settings failed"})
 			return
@@ -159,6 +164,7 @@ func handleUpdateMeContent(d ContentDeps) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, meContentResponse{
 			HiddenGenres:         orEmpty(user.HiddenGenres),
 			HiddenLanguages:      orEmpty(user.HiddenLanguages),
+			HideCompilations:     user.HideCompilations,
 			AdminHiddenGenres:    orEmpty(admin.HiddenGenres),
 			AdminHiddenLanguages: orEmpty(admin.HiddenLanguages),
 		})
@@ -175,10 +181,11 @@ func handleEffectiveContent(d ContentDeps) http.HandlerFunc {
 		if u, ok := UserFromContext(r.Context()); ok {
 			uid = u.ID
 		}
-		genres, langs := d.Resolver.Exclusions(r.Context(), uid)
+		genres, langs, hideComps := d.Resolver.Exclusions(r.Context(), uid)
 		writeJSON(w, http.StatusOK, contentSettings{
-			HiddenGenres:    orEmpty(genres),
-			HiddenLanguages: orEmpty(langs),
+			HiddenGenres:     orEmpty(genres),
+			HiddenLanguages:  orEmpty(langs),
+			HideCompilations: hideComps,
 		})
 	}
 }

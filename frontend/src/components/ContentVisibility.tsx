@@ -149,6 +149,35 @@ export function ContentEditor({
 // LOCKED_HINT — текст тултипа для пунктов, скрытых администратором.
 const LOCKED_HINT = 'Скрыто администратором — изменить нельзя';
 
+/**
+ * HideRow — одиночная строка «Скрыть …» вне списков (профильная настройка
+ * «Скрывать сборники»): та же семантика креста и тач-зона, что у листьев
+ * языков/жанров, но без счётчика и locked-состояния.
+ */
+export function HideRow({
+  label,
+  hidden,
+  onToggle,
+}: {
+  label: string;
+  hidden: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={hidden}
+      aria-label={label}
+      onClick={onToggle}
+      className="flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded px-2 py-2 text-left hover:bg-accent/40"
+    >
+      <HideBox state={hidden ? 'on' : 'off'} />
+      <span className="flex-1 truncate text-sm">{label}</span>
+    </button>
+  );
+}
+
 // ── Языки ───────────────────────────────────────────────────────────
 
 export function LanguageVisibilityList({

@@ -411,7 +411,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 // score = base + persona + popularityBoost. Известная книга перевешивает
 // БЛИЗКИЙ по релевантности матч, но не явно лучший. Чистая арифметика на уже
 // полученных хитах — latency не растёт (гидраций не добавляем).
-func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, userID int64, excludeGenres, excludeLangs []string) ([]ListItem, error) {
+func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, userID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]ListItem, error) {
 	if s.meili == nil || strings.TrimSpace(query) == "" {
 		return []ListItem{}, nil
 	}
@@ -426,7 +426,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 		visibleLangs = s.allLangs(ctx)
 	}
 	req := &meilisearch.SearchRequest{Limit: meiliLimit, ShowRankingScore: true}
-	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs); f != "" {
+	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs, hideCompilations); f != "" {
 		req.Filter = f
 	}
 	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, query, req)
@@ -904,17 +904,28 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	if clause := worksLangExclusion(p.ExcludeLangs, visibleLangs); clause != "" {
 		parts = append(parts, clause)
 	}
+	if p.ExcludeCompilations {
+		parts = append(parts, compilationsExclusion)
+	}
 	return strings.Join(parts, " AND ")
 }
 
+// compilationsExclusion — meili-фильтр «скрыть сборники» (works.kind, схема v6).
+// NOT IN (а не kind = ”): работает и для доков без поля kind (до-v6 хвосты) —
+// отсутствующее поле проходит NOT-фильтр, т.е. считается обычной работой.
+const compilationsExclusion = `kind NOT IN ["collection", "anthology", "omnibus"]`
+
 // worksExclusionFilter — только исключения (для SuggestWorks).
-func worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs []string) string {
+func worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs []string, hideCompilations bool) string {
 	var parts []string
 	if c := notInClause("genres", excludeGenres); c != "" {
 		parts = append(parts, c)
 	}
 	if c := worksLangExclusion(excludeLangs, visibleLangs); c != "" {
 		parts = append(parts, c)
+	}
+	if hideCompilations {
+		parts = append(parts, compilationsExclusion)
 	}
 	return strings.Join(parts, " AND ")
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { Layers } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileTabs } from '@/components/ProfileTabs';
-import { ContentEditor } from '@/components/ContentVisibility';
+import { ContentEditor, HideRow } from '@/components/ContentVisibility';
 import { SaveBar } from '@/components/SaveBar';
 import { useMyContent, useUpdateMyContent, useLanguages, sameSet } from '@/lib/content';
 import { useGenres } from '@/lib/genres';
@@ -25,22 +27,29 @@ export function ProfileContentPage() {
 
   const [hiddenGenres, setHiddenGenres] = useState<string[]>([]);
   const [hiddenLangs, setHiddenLangs] = useState<string[]>([]);
+  const [hideComps, setHideComps] = useState(false);
 
   useEffect(() => {
     if (content.data) {
       setHiddenGenres(content.data.hidden_genres);
       setHiddenLangs(content.data.hidden_languages);
+      setHideComps(content.data.hide_compilations ?? false);
     }
   }, [content.data]);
 
   const dirty = content.data
     ? !sameSet(hiddenGenres, content.data.hidden_genres) ||
-      !sameSet(hiddenLangs, content.data.hidden_languages)
+      !sameSet(hiddenLangs, content.data.hidden_languages) ||
+      hideComps !== (content.data.hide_compilations ?? false)
     : false;
 
   const onSave = async () => {
     try {
-      await update.mutateAsync({ hidden_genres: hiddenGenres, hidden_languages: hiddenLangs });
+      await update.mutateAsync({
+        hidden_genres: hiddenGenres,
+        hidden_languages: hiddenLangs,
+        hide_compilations: hideComps,
+      });
       toast.success('Настройки контента сохранены');
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось сохранить');
@@ -51,6 +60,7 @@ export function ProfileContentPage() {
     if (content.data) {
       setHiddenGenres(content.data.hidden_genres);
       setHiddenLangs(content.data.hidden_languages);
+      setHideComps(content.data.hide_compilations ?? false);
     }
   };
 
@@ -91,9 +101,32 @@ export function ProfileContentPage() {
           onChangeGenres={setHiddenGenres}
           onChangeLanguages={setHiddenLangs}
           footer={
-            dirty ? (
-              <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
-            ) : null
+            <>
+              {/* Сборники — третья карточка формы (тот же паттерн «отметь →
+                  Сохрани», что языки/жанры): базово сборники лишь уходят в
+                  отдельную секцию карточки автора, этот крест прячет их совсем. */}
+              <Card>
+                <CardContent className="space-y-3 sm:max-w-md">
+                  <h2 className="flex items-center gap-2 text-base font-semibold">
+                    <Layers className="size-4" aria-hidden />
+                    Сборники
+                  </h2>
+                  <HideRow
+                    label="Скрывать сборники и антологии"
+                    hidden={hideComps}
+                    onToggle={() => setHideComps((v) => !v)}
+                  />
+                  <p className="text-xs text-muted-foreground text-pretty">
+                    Авторские сборники, антологии и тома собраний сочинений исчезнут из
+                    списка книг, поиска и карточек авторов. Прямые ссылки продолжат
+                    открываться.
+                  </p>
+                </CardContent>
+              </Card>
+              {dirty ? (
+                <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
+              ) : null}
+            </>
           }
         />
       )}
