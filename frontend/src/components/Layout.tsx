@@ -31,7 +31,6 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="min-h-dvh flex flex-col">
         <Header user={me.data ?? null} heroSearchVisible={heroSearchVisible} />
         <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">{children}</main>
-        <VersionFooter />
       </div>
     </HeroSearchContext.Provider>
   );
@@ -85,25 +84,30 @@ function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisi
   );
 }
 
-// VersionFooter — ненавязчивая строка внизу страницы: версия Skriptes +
-// версия импортированной коллекции (понять, подтянулся ли новый INPX).
-// pb-safe: home-indicator в iOS PWA. Публичная ручка — виден и до логина.
-function VersionFooter() {
+// MenuVersion — ненавязчивая версия в подвале меню пользователя (dropdown под
+// аватаром). НЕ футер страницы: на контентных `/books` с бесконечным скроллом
+// низ страницы недостижим (следующий чанк догружается раньше). Меню же доступно
+// с любой страницы и открывается осознанно — версия всегда под рукой.
+function MenuVersion() {
   const { data } = useVersion();
   if (!data?.version) return null;
   // Версия коллекции: приоритет — version.info нового INPX; если его ещё нет
   // (коллекция импортирована до фичи, а импорт с тех пор пропускался как
-  // неизменный) — фолбэк на дату последнего импорта, чтобы строка не пустовала.
+  // неизменный) — фолбэк на дату последнего импорта («от …»), чтобы понять,
+  // подтянулся ли новый INPX.
   const coll = data.collection_version
     ? `коллекция ${formatCollectionVersion(data.collection_version)}`
     : data.collection_imported_at
       ? `коллекция от ${data.collection_imported_at.slice(0, 10)}`
       : null;
   return (
-    <footer className="mx-auto w-full max-w-6xl px-4 pt-6 pb-6 text-center text-xs text-muted-foreground/60">
-      <span>skriptes {data.version}</span>
-      {coll ? <span> · {coll}</span> : null}
-    </footer>
+    <>
+      <DropdownMenuSeparator />
+      <div className="px-2 py-1.5 text-xs leading-relaxed text-muted-foreground/70 select-text">
+        <div>skriptes {data.version}</div>
+        {coll ? <div>{coll}</div> : null}
+      </div>
+    </>
   );
 }
 
@@ -148,6 +152,7 @@ function UserMenu({ user }: { user: User }) {
           <LogOut className="mr-2 size-4" aria-hidden />
           Выйти
         </DropdownMenuItem>
+        <MenuVersion />
       </DropdownMenuContent>
     </DropdownMenu>
   );
