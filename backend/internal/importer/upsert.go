@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -42,11 +43,13 @@ func upsertCollection(ctx context.Context, pool *pgxpool.Pool, inpxFilename, nam
 	return id, prevHash, nil
 }
 
-// markCollectionImported проставляет хэш и время после успешного импорта.
-func markCollectionImported(ctx context.Context, pool *pgxpool.Pool, collectionID int64, hash string) error {
+// markCollectionImported проставляет хэш, время и версию INPX (version.info)
+// после успешного импорта. version — содержимое version.info как есть (пустое →
+// NULL, если файла не было).
+func markCollectionImported(ctx context.Context, pool *pgxpool.Pool, collectionID int64, hash, version string) error {
 	_, err := pool.Exec(ctx,
-		`UPDATE collections SET last_inpx_hash = $1, last_imported_at = now() WHERE id = $2`,
-		hash, collectionID)
+		`UPDATE collections SET last_inpx_hash = $1, last_imported_at = now(), inpx_version = NULLIF($3, '') WHERE id = $2`,
+		hash, collectionID, strings.TrimSpace(version))
 	return err
 }
 

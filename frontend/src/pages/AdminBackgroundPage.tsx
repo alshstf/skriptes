@@ -332,11 +332,19 @@ function ScopeControl({
   disabled,
   onChange,
   warning,
+  fallbackLabel = 'Только пропуски fb2',
+  fallbackHint = 'Дозаполняются только книги, у которых локальный fb2-проход прошёл, но данных не дал (дешевле).',
 }: {
   whole: boolean;
   disabled?: boolean;
   onChange: (whole: boolean) => void;
   warning: string;
+  // Лейбл кнопки и пояснение узкого режима зависят от воркера: у обложек/года/
+  // рейтинга это «пропуски fb2» (что локальный проход не заполнил), у известности —
+  // «ядро коллекции» (работы с уже имеющимися сигналами известности). Дефолт —
+  // fb2-семантика; известность переопределяет.
+  fallbackLabel?: string;
+  fallbackHint?: string;
 }) {
   return (
     <div className="space-y-1.5">
@@ -350,7 +358,7 @@ function ScopeControl({
           disabled={disabled}
           onClick={() => onChange(false)}
         >
-          Только пропуски fb2
+          {fallbackLabel}
         </Button>
         <Button
           type="button"
@@ -366,9 +374,7 @@ function ScopeControl({
       {whole ? (
         <Callout icon={<AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>{warning}</Callout>
       ) : (
-        <p className="text-xs text-muted-foreground text-pretty">
-          Дозаполняются только книги, у которых локальный fb2-проход прошёл, но данных не дал (дешевле).
-        </p>
+        <p className="text-xs text-muted-foreground text-pretty">{fallbackHint}</p>
       )}
     </div>
   );
@@ -1638,8 +1644,8 @@ export function AdminBackgroundPage() {
               coverage={
                 nCov
                   ? // Знаменатель — вселенная текущего охвата: «вся коллекция» → все
-                    // работы, иначе «голова». max с числителем защищает от инверсии
-                    // (счётчики вне головы остаются, если раньше гоняли всю коллекцию).
+                    // работы, иначе ядро. max с числителем защищает от инверсии
+                    // (счётчики вне ядра остаются, если раньше гоняли всю коллекцию).
                     `${nCov.with_any} из ${Math.max(
                       nq.data?.whole_collection ? nCov.total : nCov.head_total,
                       nCov.with_any,
@@ -1658,7 +1664,7 @@ export function AdminBackgroundPage() {
               <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
                 Счётчики известности книги в мире (число оценок на Фантлабе, оценки и полка
                 «хочу прочитать» Open Library) — усиливают сортировку по популярности и порядок
-                каталога. По умолчанию обходится «голова» коллекции: работы с переизданиями,
+                каталога. По умолчанию обходится ядро коллекции: работы с переизданиями,
                 экранизацией или рейтингом LIBRATE.
               </Callout>
               {renownMode === 'bg' ? (
@@ -1697,8 +1703,10 @@ export function AdminBackgroundPage() {
                       <ScopeControl
                         whole={nq.data?.whole_collection ?? false}
                         disabled={updateRenown.isPending}
-                        onChange={(v) => void applyRenown({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: голова коллекции')}
-                        warning="Вся коллекция: счётчики запрашиваются и для одиночных безвестных работ — сотни тысяч запросов, очень долго. Обычно достаточно «головы»."
+                        onChange={(v) => void applyRenown({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: ядро коллекции')}
+                        fallbackLabel="Ядро коллекции"
+                        fallbackHint="Дозаполняется только ядро коллекции — работы с несколькими изданиями, экранизацией или библиотечным рейтингом. Дешевле и объективнее: внешний запрос уходит туда, где известность вероятна."
+                        warning="Вся коллекция: счётчики запрашиваются и для одиночных безвестных работ — сотни тысяч запросов, очень долго. Обычно достаточно ядра."
                       />
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">

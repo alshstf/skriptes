@@ -83,7 +83,7 @@ func NewRouter(d Deps) http.Handler {
 	}
 
 	r.Route("/api", func(r chi.Router) {
-		r.Get("/version", version(d.Version))
+		r.Get("/version", version(d.Version, d.DB))
 		if d.Auth.Service != nil {
 			// Публичные auth-эндпоинты.
 			r.Post("/auth/login", handleLogin(d.Auth))
@@ -322,9 +322,30 @@ func readyz(pool *pgxpool.Pool) http.HandlerFunc {
 	}
 }
 
-func version(v string) http.HandlerFunc {
-	return func(w http.ResponseWriter, _ *http.Request) {
-		writeJSON(w, http.StatusOK, map[string]string{"version": v})
+// version — публичная ручка с версией Skriptes + версией импортированной коллекции
+// (version.info последнего импортированного INPX) и временем импорта. Коллекция
+// обычно одна; берём самую свежеимпортированную. DB-ошибка не фатальна — отдаём
+// хотя бы версию приложения.
+func version(v string, db *pgxpool.Pool) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		resp := map[string]any{"version": v}
+		if db != nil {
+			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+			defer cancel()
+			var cv *string
+			var importedAt *time.Time
+			if err := db.QueryRow(ctx,
+				`SELECT inpx_version, last_imported_at FROM collections
+				 ORDER BY last_imported_at DESC NULLS LAST LIMIT 1`).Scan(&cv, &importedAt); err == nil {
+				if cv != nil {
+					resp["collection_version"] = *cv
+				}
+				if importedAt != nil {
+					resp["collection_imported_at"] = importedAt.Format(time.RFC3339)
+				}
+			}
+		}
+		writeJSON(w, http.StatusOK, resp)
 	}
 }
 

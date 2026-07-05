@@ -145,12 +145,12 @@ func TestSettings_RenownRoundTrip(t *testing.T) {
 	pool := startSettingsPG(t, ctx)
 	store := settings.New(pool)
 
-	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, «голова»).
+	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, ядро).
 	got, err := store.Renown(ctx)
 	require.NoError(t, err)
 	require.Equal(t, settings.DefaultRenownConfig(), got)
 	require.False(t, got.Enabled, "по умолчанию воркер выключен")
-	require.False(t, got.WholeCollection, "по умолчанию только «голова» коллекции")
+	require.False(t, got.WholeCollection, "по умолчанию только ядро коллекции")
 
 	// Сохранили выбор «только Фантлаб» + вся коллекция — читается обратно.
 	want := settings.RenownConfig{

@@ -133,7 +133,10 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0032_work_wd_sitelinks` (`works.wd_sitelinks` — число языковых
+Текущая верхняя — `0033_collection_version` (`collections.inpx_version` — version.info
+последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,
+отдаётся публичной ручкой `/api/version` вместе с версией Skriptes → футер `Layout.tsx`);
+до неё `0032_work_wd_sitelinks` (`works.wd_sitelinks` — число языковых
 разделов Википедии со статьёй, сигнал известности от источника wikidata renown-воркера);
 до неё `0031_work_renown` (внешние счётчики известности на `works`:
 `fantlab_marks`/`ol_ratings_count`/`ol_want_count` + `work_renown_lookups` — сигналы

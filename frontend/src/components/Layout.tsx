@@ -13,6 +13,7 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { MainNavBar, MainNavTrigger } from '@/components/MainNav';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import { useAppearance } from '@/lib/appearance';
+import { useVersion, formatCollectionVersion } from '@/lib/version';
 import { HeroSearchContext } from '@/lib/heroSearch';
 import { cn } from '@/lib/utils';
 import { useState, type ReactNode } from 'react';
@@ -83,6 +84,33 @@ function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisi
   );
 }
 
+// MenuVersion — ненавязчивая версия в подвале меню пользователя (dropdown под
+// аватаром). НЕ футер страницы: на контентных `/books` с бесконечным скроллом
+// низ страницы недостижим (следующий чанк догружается раньше). Меню же доступно
+// с любой страницы и открывается осознанно — версия всегда под рукой.
+function MenuVersion() {
+  const { data } = useVersion();
+  if (!data?.version) return null;
+  // Версия коллекции: приоритет — version.info нового INPX; если его ещё нет
+  // (коллекция импортирована до фичи, а импорт с тех пор пропускался как
+  // неизменный) — фолбэк на дату последнего импорта («от …»), чтобы понять,
+  // подтянулся ли новый INPX.
+  const coll = data.collection_version
+    ? `коллекция ${formatCollectionVersion(data.collection_version)}`
+    : data.collection_imported_at
+      ? `коллекция от ${data.collection_imported_at.slice(0, 10)}`
+      : null;
+  return (
+    <>
+      <DropdownMenuSeparator />
+      <div className="px-2 py-1.5 text-xs leading-relaxed text-muted-foreground/70 select-text">
+        <div>skriptes {data.version}</div>
+        {coll ? <div>{coll}</div> : null}
+      </div>
+    </>
+  );
+}
+
 function UserMenu({ user }: { user: User }) {
   const logout = useLogout();
   const navigate = useNavigate();
@@ -124,6 +152,7 @@ function UserMenu({ user }: { user: User }) {
           <LogOut className="mr-2 size-4" aria-hidden />
           Выйти
         </DropdownMenuItem>
+        <MenuVersion />
       </DropdownMenuContent>
     </DropdownMenu>
   );
