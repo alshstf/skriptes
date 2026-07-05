@@ -187,7 +187,21 @@ README — для пользователя, проверяются ОБА.
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.8.2** — полировка, 2 PR (#197, #198): (#197) **скрытые
+трогают. Текущая версия — **1.8.3** — фикс внешнего обогащения, 1 PR (#200): **транзиентная
+ошибка провайдера ≠ not_found**. Провайдеры (GB/OL/Wikipedia/Wikidata) мапили ЛЮБОЙ HTTP-не-200
+в `ErrNotFound`, а backfill на `ErrNotFound` пишет `outcome='not_found'` с TTL 90 дней → один
+429/битый ключ/5xx отравлял книгу «не обогащается» на 90 дней. Диагноз с прода: 109 992 GB
+`not_found`, 0 `found`, 0 вызовов под ключом в консоли Google. Три корня: (1) GB-ключ в `.env`
+обрезан (`zaSy…` вместо `AIzaSy…`, len 37 vs 39) → `400 API_KEY_INVALID`; (2)
+`GoogleBooksProvider.FetchRating` ЗАБЫВАЛ `addKey` → рейтинг-запросы шли анонимно (429); (3)
+не-200 → `ErrNotFound`. Фикс: `metadata.statusErr(code)` (`types.go`, новый `ErrUpstream`) — 404 →
+`ErrNotFound` (честное отсутствие path-запросов), 429/400/403/5xx → `ErrUpstream` (транзиент →
+backfill пишет `'error'`, короткий ретрай); проставлен во всех 22 статус-чеках 4 провайдеров.
+`FetchRating` теперь зовёт `addKey`. Marker-воркеры (bio/photo/adaptations, single-shot по
+`*_fetched_at`) не помечают попытку при транзиенте (флаг `transient`). Граблю №20. ⚠️ Уже
+накопленные `not_found` фикс не чистит (в пределах TTL) — после деплоя жать «Сбросить неудачные
+попытки». ⚠️ GB отдаёт `averageRating`/`ratingsCount` парой, но гейтит по параметру `country`
+(не шлём) — с `country=US` отдача растёт (follow-up). До неё **1.8.2** — полировка, 2 PR (#197, #198): (#197) **скрытые
 языки — и из сгруппированных изданий**: карточка `/works/{id}` показывала издания на
 скрытом (админкой ∥ личными преференсами) языке, если они сгруппированы в одну работу;
 `books.GetWork` фильтрует `b.Editions` через `visibleEditions(editions, excludeLangs)`
