@@ -198,6 +198,7 @@ function buildExtRatingInput(d: ExternalRatingSettings, patch: Partial<ExternalR
     openlibrary: d.openlibrary,
     whole_collection: d.whole_collection,
     googlebooks_rpm: d.googlebooks_rpm,
+    googlebooks_daily_cap: d.googlebooks_daily_cap,
     openlibrary_rpm: d.openlibrary_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
@@ -520,11 +521,13 @@ export function AdminBackgroundPage() {
   }, [xq.data]);
 
   const [gbRpmR, setGbRpmR] = useState('');
+  const [gbCapR, setGbCapR] = useState('');
   const [olRpmR, setOlRpmR] = useState('');
   const ratingInit = useRef(false);
   useEffect(() => {
     if (rq.data && !ratingInit.current) {
       setGbRpmR(String(rq.data.googlebooks_rpm));
+      setGbCapR(String(rq.data.googlebooks_daily_cap));
       setOlRpmR(String(rq.data.openlibrary_rpm));
       ratingInit.current = true;
     }
@@ -890,8 +893,12 @@ export function AdminBackgroundPage() {
   const yearInvalid = [olRpmY, wdRpmY].some(badNum);
   const coverDirty = !!xq.data && (olRpmC !== String(xq.data.openlibrary_rpm) || gbRpmC !== String(xq.data.googlebooks_rpm));
   const coverInvalid = [olRpmC, gbRpmC].some(badNum);
-  const ratingDirty = !!rq.data && (gbRpmR !== String(rq.data.googlebooks_rpm) || olRpmR !== String(rq.data.openlibrary_rpm));
-  const ratingInvalid = [gbRpmR, olRpmR].some(badNum);
+  const ratingDirty =
+    !!rq.data &&
+    (gbRpmR !== String(rq.data.googlebooks_rpm) ||
+      gbCapR !== String(rq.data.googlebooks_daily_cap) ||
+      olRpmR !== String(rq.data.openlibrary_rpm));
+  const ratingInvalid = [gbRpmR, gbCapR, olRpmR].some(badNum);
   const renownDirty =
     !!nq.data &&
     (flRpmN !== String(nq.data.fantlab_rpm) ||
@@ -932,6 +939,7 @@ export function AdminBackgroundPage() {
     }
     if (rq.data) {
       setGbRpmR(String(rq.data.googlebooks_rpm));
+      setGbCapR(String(rq.data.googlebooks_daily_cap));
       setOlRpmR(String(rq.data.openlibrary_rpm));
     }
     if (nq.data) {
@@ -977,9 +985,10 @@ export function AdminBackgroundPage() {
       }
       if (ratingDirty && !ratingInvalid && rq.data) {
         const saved = await updateRating.mutateAsync(
-          buildExtRatingInput(rq.data, { googlebooks_rpm: num(gbRpmR), openlibrary_rpm: num(olRpmR) }),
+          buildExtRatingInput(rq.data, { googlebooks_rpm: num(gbRpmR), googlebooks_daily_cap: num(gbCapR), openlibrary_rpm: num(olRpmR) }),
         );
         setGbRpmR(String(saved.googlebooks_rpm));
+        setGbCapR(String(saved.googlebooks_daily_cap));
         setOlRpmR(String(saved.openlibrary_rpm));
       }
       if (renownDirty && !renownInvalid && nq.data) {
@@ -1599,6 +1608,16 @@ export function AdminBackgroundPage() {
                             OpenLibrary, зап./мин
                           </label>
                           <Input id="rating-ol-rpm" type="number" min={0} value={olRpmR} onChange={(e) => setOlRpmR(e.target.value)} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label htmlFor="rating-gb-cap" className="text-sm">
+                            Google Books, вызовов/сутки
+                          </label>
+                          <Input id="rating-gb-cap" type="number" min={0} value={gbCapR} onChange={(e) => setGbCapR(e.target.value)} />
+                          <p className="text-xs text-muted-foreground text-pretty">
+                            Free-квота GB API — ~1000 запросов/сутки на проект. Сверх лимита воркер
+                            пропускает GB до завтра (OpenLibrary работает как обычно). 0 — без ограничения.
+                          </p>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
