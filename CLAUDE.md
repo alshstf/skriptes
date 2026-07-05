@@ -138,8 +138,11 @@ collection/anthology/omnibus, NULL=обычная; эвристический к
 `metadata/work_kind.go::ClassifyWorkKinds` — title-паттерн + серия-паразит (ТОЛЬКО мн.ч.
 «Сборники»; ед.ч. «(сборник)» — librusec-разворот на рассказы, НЕ метим) + ≥4 авторов;
 runOnce-гейт `work_kind_classified_v1` + вызов после импорта; kind_source: приоритет
-override > fantlab > heuristic; kind в works-индексе (schema v6, filterable) → секция
-«Сборники и антологии» внизу карточки автора, план
+override > fantlab > heuristic — **fantlab-типизация реализована**: `work_type_id` приходит в
+том же ответе search-works renown-воркера (`fantlab.go::fantlabKind`: 3→collection,
+17/56→anthology, роман/повесть/рассказ→"novel" = снять ошибочную эвристику kind→NULL;
+пишет `renown_backfill.go::writeRenown`, override неприкосновенен); kind в works-индексе
+(schema v6, filterable) → секция «Сборники и антологии» внизу карточки автора, план
 `~/.claude/plans/compilations-author-page-plan.md`);
 до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,

@@ -55,6 +55,30 @@ type fantlabMatch struct {
 	AutorRusName    string `json:"autor_rusname"`
 	AllAutorRusName string `json:"all_autor_rusname"`
 	MarkCount       int    `json:"markcount"`
+	WorkTypeID      int    `json:"work_type_id"` // тип произведения (справочник fantlabKind)
+}
+
+// fantlabKind — маппинг fantlab work_type_id → works.kind. Справочник снят с
+// живого API 2026-07-05 (у Фантлаба строгая курируемая типизация — их метка
+// надёжнее нашей эвристики):
+//   - 3 «сборник» → collection; 17 «антология» (sic, "antology"), 56 «серия
+//     антологий» → anthology;
+//   - 1 роман, 44 повесть, 45 рассказ, 21 микрорассказ, 5 стихотворение,
+//     8 сказка, 41 комикс → "novel": уверенно ОБЫЧНОЕ произведение — снимает
+//     ошибочную эвристику (works.kind → NULL);
+//   - остальное (4 цикл — это серия, не сборник; 7 прочее; 11/12 эссе/статья;
+//     46/49/52 очерк/отрывок/рецензия; незнакомые id) → "" — не решаем.
+func fantlabKind(workTypeID int) string {
+	switch workTypeID {
+	case 3:
+		return "collection"
+	case 17, 56:
+		return "anthology"
+	case 1, 44, 45, 21, 5, 8, 41:
+		return "novel"
+	default:
+		return ""
+	}
 }
 
 // FetchRenown — число оценок произведения (markcount). Precision > recall
@@ -98,7 +122,7 @@ func (p *FantlabProvider) FetchRenown(ctx context.Context, q WorkQuery) (RenownR
 		if !anyAuthorMatches(gate, fantlabAuthorCandidates(m)) {
 			continue
 		}
-		return RenownResult{Ratings: m.MarkCount}, nil
+		return RenownResult{Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID)}, nil
 	}
 	return RenownResult{}, ErrNotFound
 }

@@ -334,6 +334,21 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 	case "fantlab":
 		_, err = b.pool.Exec(ctx,
 			`UPDATE works SET fantlab_marks = $2, updated_at = now() WHERE id = $1`, workID, res.Ratings)
+		// Типизация от Фантлаба (курируемая — надёжнее эвристики): collection/
+		// anthology → пишем kind; "novel" — уверенно обычное произведение →
+		// СНИМАЕМ ошибочную эвристику (kind → NULL). kind_source='fantlab' в
+		// обоих случаях (запоминаем уверенность — эвристика не перетрёт, см.
+		// ClassifyWorkKinds). Ручной override неприкосновенен. "" (цикл/статья/
+		// незнакомый тип) — не решаем, ничего не трогаем.
+		if err == nil && res.Kind != "" {
+			kind := &res.Kind
+			if res.Kind == "novel" {
+				kind = nil
+			}
+			_, err = b.pool.Exec(ctx, `
+				UPDATE works SET kind = $2, kind_source = 'fantlab', updated_at = now()
+				WHERE id = $1 AND kind_source IS DISTINCT FROM 'override'`, workID, kind)
+		}
 	case "openlibrary":
 		_, err = b.pool.Exec(ctx,
 			`UPDATE works SET ol_ratings_count = $2, ol_want_count = $3, updated_at = now() WHERE id = $1`,
