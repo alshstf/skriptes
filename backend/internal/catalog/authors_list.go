@@ -138,6 +138,17 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		}
 		return sb.String()
 	}
+	// renderAggExclusion — renderExclusion + ВСЕГДА исключение сборников (loose
+	// coupling): сборники/антологии/тома собраний (works.kind) не входят в
+	// АГРЕГАТЫ и СТАТИСТИКУ автора (book_count, годы, жанры, языки, рейтинг,
+	// экранизации, сортировки/фильтры) — они свойство сборника, не «что написал
+	// автор». В отличие от opt-in hideCompilations (скрывает книги из выдачи),
+	// это безусловно и не зависит от настроек. НЕ применяется к базовой
+	// видимости автора (появляется по любой книге) и к fav_books (личное
+	// избранное пользователя).
+	renderAggExclusion := func() string {
+		return renderExclusion() + notCompilationClause
+	}
 
 	// where — условия-фильтры для авторов (склеиваются через AND). Каждый
 	// предикат — EXISTS по видимым книгам автора (либо строка автора). Эти
@@ -169,7 +180,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" JOIN book_genres bg ON bg.book_id = b.id JOIN genres g ON g.id = bg.genre_id"+
-				" WHERE ba.author_id = a.id AND g.fb2_code = ANY($%d::text[])"+renderExclusion()+")", n))
+				" WHERE ba.author_id = a.id AND g.fb2_code = ANY($%d::text[])"+renderAggExclusion()+")", n))
 	}
 
 	if len(p.Langs) > 0 {
@@ -182,7 +193,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" WHERE ba.author_id = a.id"+
 				" AND lower(btrim(b.lang)) = ANY($%d::text[])"+
-				renderExclusion()+")", n))
+				renderAggExclusion()+")", n))
 	}
 
 	if len(p.SrcLangs) > 0 {
@@ -194,7 +205,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" WHERE ba.author_id = a.id"+
 				" AND lower(btrim(b.src_lang)) = ANY($%d::text[])"+
-				renderExclusion()+")", n))
+				renderAggExclusion()+")", n))
 	}
 
 	if p.YearFrom > 0 || p.YearTo > 0 {
@@ -211,20 +222,20 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			yearCond += fmt.Sprintf(" AND b.written_year <= $%d", n)
 		}
 		where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-			" WHERE ba.author_id = a.id AND "+yearCond+renderExclusion()+")")
+			" WHERE ba.author_id = a.id AND "+yearCond+renderAggExclusion()+")")
 	}
 
 	if p.HasAdaptations {
 		where = append(where,
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id"+renderExclusion()+")")
+				" JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id"+renderAggExclusion()+")")
 	}
 
 	if p.MinRating > 0 {
 		n := addArg(p.MinRating)
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" WHERE ba.author_id = a.id AND COALESCE(b.rating, b.external_rating) >= $%d"+renderExclusion()+")", n))
+				" WHERE ba.author_id = a.id AND COALESCE(b.rating, b.external_rating) >= $%d"+renderAggExclusion()+")", n))
 	}
 
 	if p.MinReaderRating > 0 {
@@ -232,7 +243,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		where = append(where, fmt.Sprintf(
 			"(SELECT avg(br.rating) FROM book_ratings br WHERE br.work_id IN ("+
 				"SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
-				" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL"+renderExclusion()+")) >= $%d", n))
+				" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL"+renderAggExclusion()+")) >= $%d", n))
 	}
 
 	whereSQL := ""
@@ -269,19 +280,19 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	var phase1Order string
 	switch p.Sort {
 	case "book_count":
-		ex := renderExclusion()
+		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))"+
 			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
 			" WHERE ba.author_id = a.id AND b.deleted = false%s) DESC,"+
 			" a.last_name, a.first_name, a.middle_name, a.id", ex)
 	case "rating":
-		ex := renderExclusion()
+		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT max(COALESCE(b.rating, b.external_rating))::float8"+
 			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
 			" WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%s)"+
 			" DESC NULLS LAST, a.last_name, a.id", ex)
 	case "reader_rating":
-		ex := renderExclusion()
+		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT avg(br.rating)::float8 FROM book_ratings br"+
 			" WHERE br.work_id IN (SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
 			" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%s))"+
@@ -307,15 +318,15 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	limitN := addArg(p.Limit)
 	offsetN := addArg(p.Offset)
 	userN := addArg(p.UserID)
-	exBookCount := renderExclusion()
+	exBookCount := renderAggExclusion()
 	exFavBooks := renderExclusion()
-	exYrFrom := renderExclusion()
-	exYrTo := renderExclusion()
-	exAdapt := renderExclusion()
-	exRating := renderExclusion()
-	exRatingSrc := renderExclusion()
-	exReaderAvg := renderExclusion()
-	exReaderCnt := renderExclusion()
+	exYrFrom := renderAggExclusion()
+	exYrTo := renderAggExclusion()
+	exAdapt := renderAggExclusion()
+	exRating := renderAggExclusion()
+	exRatingSrc := renderAggExclusion()
+	exReaderAvg := renderAggExclusion()
+	exReaderCnt := renderAggExclusion()
 
 	// CTE page (фаза 1, FROM authors a) + богатый SELECT (фаза 2, FROM page a —
 	// тот же алиас `a`, поэтому подзапросы по a.id не меняются).
@@ -454,7 +465,7 @@ func (s *Service) fillAuthorTopGenres(
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
 			JOIN book_genres bg ON bg.book_id = b.id
 			JOIN genres g ON g.id = bg.genre_id
-			WHERE ba.author_id = ANY($1::bigint[])`+exClause+`
+			WHERE ba.author_id = ANY($1::bigint[])`+exClause+notCompilationClause+`
 			GROUP BY ba.author_id, g.fb2_code, g.name_ru, g.name_en
 		) t
 		WHERE rn <= 5
@@ -495,12 +506,12 @@ func (s *Service) fillAuthorLanguages(
 			SELECT ba.author_id, NULLIF(lower(btrim(b.lang)), '') AS code
 			FROM book_authors ba
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
-			WHERE ba.author_id = ANY($1::bigint[])`+exClause+`
+			WHERE ba.author_id = ANY($1::bigint[])`+exClause+notCompilationClause+`
 			UNION ALL
 			SELECT ba.author_id, NULLIF(lower(btrim(b.src_lang)), '') AS code
 			FROM book_authors ba
 			JOIN books b ON b.id = ba.book_id AND b.deleted = false
-			WHERE ba.author_id = ANY($1::bigint[])`+exClause+`
+			WHERE ba.author_id = ANY($1::bigint[])`+exClause+notCompilationClause+`
 		) t
 		WHERE code IS NOT NULL
 		GROUP BY author_id, code

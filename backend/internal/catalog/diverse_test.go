@@ -113,11 +113,10 @@ func TestService_DiverseFixture(t *testing.T) {
 	require.Equal(t, 0, del.BookCount)
 	require.Empty(t, del.Books)
 
-	// (5) «Скрывать сборники»: работа с kind исчезает из карточки автора,
-	// обычная остаётся; без флага — обе видны.
+	// (5) hideCompilations (opt-in): помеченная сборником работа исчезает из
+	// СПИСКА книг карточки; без флага — остаётся (её выносит секция сборников).
 	var compAuthor int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Жанров'`).Scan(&compAuthor))
-	// Метим работу «Чистая фантастика» сборником.
 	_, err = pool.Exec(ctx, `
 		UPDATE works SET kind='collection', kind_source='heuristic'
 		WHERE id = (SELECT b.work_id FROM books b WHERE b.title = 'Чистая фантастика' LIMIT 1)`)
@@ -126,8 +125,41 @@ func TestService_DiverseFixture(t *testing.T) {
 	require.NoError(t, err)
 	noComps, err := svc.GetAuthor(ctx, compAuthor, 0, nil, nil, true)
 	require.NoError(t, err)
-	require.Greater(t, withComps.BookCount, noComps.BookCount, "hideCompilations уменьшает счётчик")
+	require.Greater(t, len(withComps.Books), len(noComps.Books), "hideCompilations убирает сборник из списка книг")
 	for _, b := range noComps.Books {
-		require.NotEqual(t, "Чистая фантастика", b.Title, "помеченная сборником работа скрыта")
+		require.NotEqual(t, "Чистая фантастика", b.Title, "со скрытием сборник вне списка")
 	}
+	var inWith bool
+	for _, b := range withComps.Books {
+		if b.Title == "Чистая фантастика" {
+			inWith = true
+		}
+	}
+	require.True(t, inWith, "без скрытия сборник в списке (для секции)")
+
+	// (6) LOOSE COUPLING: сборники ВСЕГДА вне счётчика/статистики автора,
+	// независимо от hideCompilations. book_count одинаков в обоих режимах и
+	// НЕ считает помеченную сборником работу.
+	require.Equal(t, withComps.BookCount, noComps.BookCount,
+		"book_count не зависит от hideCompilations — сборники всегда вне счётчика")
+	require.Equal(t, 1, withComps.BookCount, "из 2 работ автора одна помечена сборником → счёт 1")
+
+	// (6b) Языковые чипсы: метим EN-работы Гэлбрейта сборником → в языках
+	// остаётся только ru (loose coupling статистики), но книги остаются видны.
+	var galb int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Гэлбрейт'`).Scan(&galb))
+	before, err := svc.GetAuthor(ctx, galb, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Contains(t, before.Languages, "en")
+	require.Contains(t, before.Languages, "ru")
+	_, err = pool.Exec(ctx, `
+		UPDATE works SET kind='anthology', kind_source='heuristic'
+		WHERE id IN (SELECT b.work_id FROM books b WHERE b.title IN ('The Cuckoo''s Calling','The Silkworm'))`)
+	require.NoError(t, err)
+	after, err := svc.GetAuthor(ctx, galb, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.NotContains(t, after.Languages, "en", "язык сборника не входит в чипсы автора")
+	require.Contains(t, after.Languages, "ru")
+	require.Less(t, after.BookCount, before.BookCount, "сборники не в счётчике")
+	require.NotEmpty(t, after.Books, "но книги остаются видны (в секции)")
 }
