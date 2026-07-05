@@ -90,7 +90,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 
 	var sr gbSearchResponse
@@ -120,7 +120,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}
 	if coverResp.StatusCode != http.StatusOK {
 		_ = coverResp.Body.Close()
-		return nil, ErrNotFound
+		return nil, statusErr(coverResp.StatusCode)
 	}
 
 	mime := coverResp.Header.Get("Content-Type")
@@ -160,6 +160,7 @@ func (p *GoogleBooksProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 	if q.Lang != "" {
 		v.Set("langRestrict", q.Lang)
 	}
+	p.addKey(v) // без ключа GB отдаёт 429 по анонимной квоте — FetchRating его ЗАБЫВАЛ: все запросы рейтинга уходили анонимно (0 вызовов под ключом → 429 → not_found)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
 		return RatingResult{}, fmt.Errorf("build request: %w", err)
@@ -171,7 +172,7 @@ func (p *GoogleBooksProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return RatingResult{}, ErrNotFound
+		return RatingResult{}, statusErr(resp.StatusCode)
 	}
 	var sr gbSearchResponse
 	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
@@ -244,7 +245,7 @@ func (p *GoogleBooksProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 
 	var sr gbSearchResponse

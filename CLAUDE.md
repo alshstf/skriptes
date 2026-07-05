@@ -897,6 +897,26 @@ iOS-устройстве; визуально проверять симуляци
   (`series.title` — ломает upsert-ключ при ре-импорте, отдельный кейс). **Базовая фича оверрайдов
   (все поля + M:N + перенос серий) — закрыта PR1–7.**
 
+### 20. Внешние провайдеры: транзиентная ошибка ≠ «не найдено» (иначе отравление lookups)
+
+Провайдеры обогащения (`metadata/*_provider.go`, `fantlab.go`, `wikidata_*.go`) на HTTP-не-200
+ОБЯЗАНЫ различать: **404 → `ErrNotFound`** (честное отсутствие для path-запросов `/isbn/{isbn}.json`,
+`/works/{key}/ratings.json`; search-эндпоинты не 404), **429/400/403/5xx → `ErrUpstream`** (транзиент/
+битый ключ). Хелпер — `metadata.statusErr(code)` (`types.go`). Почему это критично: backfill-воркеры
+(`cover/external_rating/year/renown`) на `ErrNotFound` пишут `book_*_lookups.outcome='not_found'` с TTL
+90 дней, на прочие ошибки — `'error'` (короткий ретрай). Раньше провайдеры возвращали `ErrNotFound` на
+ЛЮБОЙ не-200 → один 429/битый ключ отравлял книгу как «не обогащается» на 90 дней. **Реальный прод-кейс
+(2026-07):** GB-ключ в `.env` был обрезан (`zaSy…` вместо `AIzaSy…`) → `400 API_KEY_INVALID`; плюс
+`GoogleBooksProvider.FetchRating` ЗАБЫВАЛ `addKey` → рейтинг-запросы уходили анонимно (429). Итог: 110k
+GB `not_found`, 0 вызовов под ключом в консоли Google, воркер их не перепроверял. Фикс: `statusErr` во
+всех провайдерах + `addKey` в FetchRating. Marker-воркеры (bio/photo/adaptations, single-shot по
+`metadata_fetched_at`/`adaptations_fetched_at`) — тоже НЕ помечают попытку при транзиенте (флаг
+`transient` в `EnsureAuthorBio/Photo/Adaptations`). ⚠️ Уже накопленные `not_found`/`error` фикс НЕ
+чистит (в пределах TTL) — после деплоя жать «Сбросить неудачные попытки» в админке, чтобы перепройти.
+⚠️ Урок: `--force-recreate` на прод-контейнере с NFS-томом (`skriptes_books`, addr по hostname) может
+уронить его, если DNS хоста не резолвит адрес тома (латентно до рестарта) — не пересоздавать прод-контейнеры
+без нужды.
+
 ## Где что искать (карта по реальным путям)
 
 | Я ищу… | Файл |

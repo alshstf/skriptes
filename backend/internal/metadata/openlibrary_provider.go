@@ -74,7 +74,7 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 
 	var sr olSearchResponse
@@ -97,7 +97,7 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}
 	if coverResp.StatusCode != http.StatusOK {
 		_ = coverResp.Body.Close()
-		return nil, ErrNotFound
+		return nil, statusErr(coverResp.StatusCode)
 	}
 
 	mime := coverResp.Header.Get("Content-Type")
@@ -164,7 +164,7 @@ func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 	var sr olSearchResponse
 	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
@@ -195,7 +195,7 @@ func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 	var ed struct {
 		Works []struct {
@@ -249,7 +249,7 @@ func (p *OpenLibraryProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return RatingResult{}, ErrNotFound
+		return RatingResult{}, statusErr(resp.StatusCode)
 	}
 	var rr struct {
 		Summary struct {
@@ -299,7 +299,7 @@ func (p *OpenLibraryProvider) FetchRenown(ctx context.Context, q WorkQuery) (Ren
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return RenownResult{}, ErrNotFound
+		return RenownResult{}, statusErr(resp.StatusCode)
 	}
 	var sr olSearchResponse
 	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
@@ -347,7 +347,7 @@ func (p *OpenLibraryProvider) FetchYear(ctx context.Context, q BookQuery) (int, 
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return 0, ErrNotFound
+		return 0, statusErr(resp.StatusCode)
 	}
 
 	var sr olSearchResponse
@@ -395,7 +395,7 @@ func (p *OpenLibraryProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(resp.StatusCode)
 	}
 
 	var sr olSearchResponse
@@ -419,7 +419,7 @@ func (p *OpenLibraryProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	}
 	defer func() { _ = workResp.Body.Close() }()
 	if workResp.StatusCode != http.StatusOK {
-		return "", ErrNotFound
+		return "", statusErr(workResp.StatusCode)
 	}
 
 	var work struct {
@@ -494,7 +494,7 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(resp.StatusCode)
 	}
 
 	var sr olAuthorSearchResponse
@@ -524,7 +524,7 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	}
 	defer func() { _ = detailResp.Body.Close() }()
 	if detailResp.StatusCode != http.StatusOK {
-		return nil, ErrNotFound
+		return nil, statusErr(detailResp.StatusCode)
 	}
 
 	var detail olAuthor
@@ -577,7 +577,7 @@ func (p *OpenLibraryProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuer
 	}
 	if imgResp.StatusCode != http.StatusOK {
 		_ = imgResp.Body.Close()
-		return nil, ErrNotFound
+		return nil, statusErr(imgResp.StatusCode)
 	}
 	mime := imgResp.Header.Get("Content-Type")
 	if mime == "" || !strings.HasPrefix(mime, "image/") {

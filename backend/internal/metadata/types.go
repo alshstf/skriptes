@@ -3,12 +3,36 @@ package metadata
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
+	"net/http"
 )
 
 // ErrNotFound — провайдер не нашёл данных для книги; не считается
 // фатальной ошибкой, оркестратор просто пробует следующий.
 var ErrNotFound = errors.New("metadata not found")
+
+// ErrUpstream — транзиентная/операционная ошибка внешнего источника (429 rate
+// limit, 400/403 невалидный/ограниченный ключ, 5xx). ВАЖНО: это НЕ ErrNotFound.
+// Backfill-воркеры (cover/rating/year/renown) на ErrNotFound пишут outcome
+// "not_found" с длинным TTL (90 дней), а на прочие ошибки — "error" с коротким
+// ретраем. Раньше провайдеры возвращали ErrNotFound на любой не-200 → один
+// 429/битый ключ ОТРАВЛЯЛ книгу как «не обогащается» на 90 дней (кейс GB: 110k
+// книг в not_found из-за анонимных 429 и невалидного ключа, воркер их не
+// перепроверял). Теперь транзиент → ErrUpstream → короткий ретрай.
+var ErrUpstream = errors.New("upstream error")
+
+// statusErr классифицирует не-2xx HTTP-статус внешнего провайдера:
+//   - 404 → ErrNotFound (честное отсутствие для path-запросов вида
+//     /isbn/{isbn}.json ∥ /works/{key}/ratings.json; search-эндпоинты не 404,
+//     у них «не найдено» = 200 с пустым списком);
+//   - всё остальное (429/400/403/5xx) → ErrUpstream (транзиент, короткий ретрай).
+func statusErr(code int) error {
+	if code == http.StatusNotFound {
+		return ErrNotFound
+	}
+	return fmt.Errorf("%w: status %d", ErrUpstream, code)
+}
 
 // BookQuery — что мы ищем. Передаётся в провайдеры; конкретный
 // набор полей зависит от того, что нужно искать.
