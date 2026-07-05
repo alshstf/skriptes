@@ -94,6 +94,34 @@ export function useDeleteAdminUser() {
   });
 }
 
+// ── Брендинг инстанса (таб «Общее») ──
+
+export type BrandingSettings = { instance_name: string };
+
+const BRANDING_KEY = ['admin', 'branding'] as const;
+
+export function useBrandingSettings() {
+  return useQuery<BrandingSettings>({
+    queryKey: [...BRANDING_KEY],
+    queryFn: () => apiFetch<BrandingSettings>('/api/admin/branding'),
+    staleTime: 30_000,
+  });
+}
+
+export function useUpdateBrandingSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: BrandingSettings) =>
+      apiFetch<BrandingSettings>('/api/admin/branding', { method: 'PUT', body: vars }),
+    onSuccess: (data) => {
+      qc.setQueryData([...BRANDING_KEY], data);
+      // Публичный /api/version отдаёт instance_name — инвалидируем, чтобы
+      // заголовок Главной и <title> вкладки сразу подхватили новое имя.
+      void qc.invalidateQueries({ queryKey: ['version'] });
+    },
+  });
+}
+
 // ── Обработка коллекции (парсинг fb2: обложки/аннотации/года + кэш) ──
 
 export type Intensity = 'low' | 'medium' | 'high';

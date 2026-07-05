@@ -18,6 +18,7 @@ import { BookCover } from '@/components/BookCover';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
+import { useInstanceName } from '@/lib/version';
 import {
   useContinueReading,
   useSubscriptionFeed,
@@ -65,6 +66,7 @@ function HeroSearch() {
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setHeroSearchVisible } = useHeroSearch();
   const heroRef = useRef<HTMLDivElement>(null);
+  const instanceName = useInstanceName();
 
   const { data, isFetching } = useSuggest(debounced, 5);
 
@@ -106,7 +108,7 @@ function HeroSearch() {
 
   return (
     <section className="flex min-h-[42vh] flex-col justify-center space-y-5 pb-2 pt-4 text-center sm:block sm:min-h-0 sm:space-y-4 sm:pb-0 sm:pt-8">
-      <h1 className="text-3xl font-semibold tracking-tight">Skriptes</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">{instanceName}</h1>
       {/* Скрим: пока открыт дропдаун — затемняем страницу, чтобы результаты
           читались как отдельный слой, а не сливались с карточками под ними.
           Инпут и дропдаун выше скрима (wrapper z-40), скрим — z-30. */}

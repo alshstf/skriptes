@@ -190,6 +190,36 @@ func TestSettings_BioAdaptationRoundTrip(t *testing.T) {
 	require.Equal(t, want, got)
 }
 
+// TestSettings_BrandingRoundTrip — пустая БД → дефолт (Skriptes); upsert;
+// пустое имя после мерджа возвращается дефолтом (инвариант непустого имени).
+func TestSettings_BrandingRoundTrip(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startSettingsPG(t, ctx)
+	store := settings.New(pool)
+
+	// Нет оверрайда → дефолт.
+	got, err := store.Branding(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultBrandingConfig(), got)
+	require.Equal(t, settings.DefaultInstanceName, got.InstanceName)
+
+	// Сохранили — читается обратно (upsert).
+	require.NoError(t, store.SetBranding(ctx, settings.BrandingConfig{InstanceName: "Моя библиотека"}))
+	got, err = store.Branding(ctx)
+	require.NoError(t, err)
+	require.Equal(t, "Моя библиотека", got.InstanceName)
+
+	// Пустое имя в хранилище → на чтении отдаём дефолт (инвариант).
+	require.NoError(t, store.SetBranding(ctx, settings.BrandingConfig{InstanceName: ""}))
+	got, err = store.Branding(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.DefaultInstanceName, got.InstanceName)
+}
+
 // TestSettings_ContentRoundTrip — глобальные и персональные настройки
 // видимости: дефолты на пустой БД, upsert+нормализация (дедуп/сортировка),
 // объединение admin ∪ user через ContentResolver.

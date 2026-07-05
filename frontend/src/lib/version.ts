@@ -5,9 +5,14 @@ import { apiFetch } from './api';
 // импортированной коллекции (version.info последнего INPX) и время импорта.
 export type VersionInfo = {
   version: string;
+  instance_name?: string;
   collection_version?: string;
   collection_imported_at?: string;
 };
+
+// DEFAULT_INSTANCE_NAME — фолбэк, пока /api/version не загрузился (зеркало
+// settings.DefaultInstanceName на бэке).
+export const DEFAULT_INSTANCE_NAME = 'Skriptes';
 
 export function useVersion() {
   return useQuery<VersionInfo>({
@@ -16,6 +21,13 @@ export function useVersion() {
     staleTime: 5 * 60_000,
     retry: false,
   });
+}
+
+// useInstanceName — отображаемое имя инстанса (заголовок Главной, <title>).
+// Всегда непустое: до загрузки версии — дефолт.
+export function useInstanceName(): string {
+  const { data } = useVersion();
+  return data?.instance_name?.trim() || DEFAULT_INSTANCE_NAME;
 }
 
 // formatCollectionVersion — version.info часто YYYYMMDD; показываем как дату,

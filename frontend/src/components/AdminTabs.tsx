@@ -6,6 +6,7 @@ import { Link } from '@tanstack/react-router';
  * Явно читается как переключатель разделов.
  */
 const tabs = [
+  { to: '/admin/general', label: 'Общее' },
   { to: '/admin/users', label: 'Пользователи' },
   { to: '/admin/content', label: 'Контент' },
   { to: '/admin/background', label: 'Фоновые операции' },
