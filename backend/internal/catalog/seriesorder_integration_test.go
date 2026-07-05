@@ -68,7 +68,7 @@ func TestService_SeriesOrderCascade(t *testing.T) {
 	titles := func(seriesTitle string) []string {
 		var sid int64
 		require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM series WHERE title=$1`, seriesTitle).Scan(&sid))
-		s, err := svc.GetSeries(ctx, sid, 0, nil, nil)
+		s, err := svc.GetSeries(ctx, sid, 0, nil, nil, false)
 		require.NoError(t, err)
 		out := make([]string, len(s.Books))
 		for i, b := range s.Books {

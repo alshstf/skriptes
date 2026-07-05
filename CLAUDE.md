@@ -139,7 +139,11 @@ collection/anthology/omnibus, NULL=обычная; эвристический к
 «Сборники»; ед.ч. «(сборник)» — librusec-разворот на рассказы, НЕ метим) + ≥4 авторов;
 runOnce-гейт `work_kind_classified_v1` + вызов после импорта; kind_source: приоритет
 override > fantlab > heuristic; kind в works-индексе (schema v6, filterable) → секция
-«Сборники и антологии» внизу карточки автора, план
+«Сборники и антологии» внизу карточки автора; **профильная настройка «Скрывать сборники»**
+(opt-in, дефолт выкл): `ContentConfig.HideCompilations` → `ContentResolver.Exclusions`
+(3-й результат) → Meili `kind NOT IN [...]` в ListWorks/SuggestWorks + kind-клауза
+`bookExclusionClause` (карточки автора/серии); прямые ссылки НЕ блокируются (зеркало политики
+жанров/языков), список авторов и лента подписок сознательно не фильтруются; план
 `~/.claude/plans/compilations-author-page-plan.md`);
 до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,

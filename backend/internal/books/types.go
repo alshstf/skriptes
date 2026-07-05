@@ -219,6 +219,10 @@ type ListParams struct {
 	// жанром или скрытым языком не попадает в список/поиск/фасеты.
 	ExcludeGenres []string
 	ExcludeLangs  []string
+	// ExcludeCompilations — скрыть сборники/антологии/тома собраний (opt-in
+	// профильная настройка): works-фильтр `kind NOT IN [...]`. Применяется
+	// только в works-путях (веб) — books-индекс (OPDS) поля kind не несёт.
+	ExcludeCompilations bool
 
 	// UserID — если >0 и не задан Sort/AuthorID/SeriesID, выдача пере-
 	// сортировывается персонализированным re-ranking'ом (см. List).

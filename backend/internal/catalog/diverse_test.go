@@ -74,7 +74,7 @@ func TestService_DiverseFixture(t *testing.T) {
 
 	var normID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Норм'`).Scan(&normID))
-	norm, err := svc.GetAuthor(ctx, normID, 0, nil, nil)
+	norm, err := svc.GetAuthor(ctx, normID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 3, norm.BookCount, "книга без языка существует и считается")
 
@@ -82,12 +82,12 @@ func TestService_DiverseFixture(t *testing.T) {
 	//     только русская серия (английская пустеет после фильтра и исчезает).
 	var galbraithID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Гэлбрейт'`).Scan(&galbraithID))
-	full, err := svc.GetAuthor(ctx, galbraithID, 0, nil, nil)
+	full, err := svc.GetAuthor(ctx, galbraithID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Len(t, full.Series, 2, "без фильтра — обе языковые серии")
 	require.Equal(t, 4, full.BookCount)
 
-	hidEn, err := svc.GetAuthor(ctx, galbraithID, 0, nil, []string{"en"})
+	hidEn, err := svc.GetAuthor(ctx, galbraithID, 0, nil, []string{"en"}, false)
 	require.NoError(t, err)
 	require.Len(t, hidEn.Series, 1, "со скрытым en пустая англ. серия не показывается")
 	require.Equal(t, "Корморан Страйк", hidEn.Series[0].Title)
@@ -99,7 +99,7 @@ func TestService_DiverseFixture(t *testing.T) {
 	// (3) Скрытие по жанру: книга с erotica исчезает, чистая фантастика остаётся.
 	var genreID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Жанров'`).Scan(&genreID))
-	hidEro, err := svc.GetAuthor(ctx, genreID, 0, []string{"erotica"}, nil)
+	hidEro, err := svc.GetAuthor(ctx, genreID, 0, []string{"erotica"}, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, hidEro.BookCount, "книга со скрытым жанром исключена")
 	require.Len(t, hidEro.Books, 1)
@@ -108,8 +108,26 @@ func TestService_DiverseFixture(t *testing.T) {
 	// (4) Удалённая книга: автор есть, но книг 0 (deleted скрыт везде).
 	var delID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Удалён'`).Scan(&delID))
-	del, err := svc.GetAuthor(ctx, delID, 0, nil, nil)
+	del, err := svc.GetAuthor(ctx, delID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 0, del.BookCount)
 	require.Empty(t, del.Books)
+
+	// (5) «Скрывать сборники»: работа с kind исчезает из карточки автора,
+	// обычная остаётся; без флага — обе видны.
+	var compAuthor int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Жанров'`).Scan(&compAuthor))
+	// Метим работу «Чистая фантастика» сборником.
+	_, err = pool.Exec(ctx, `
+		UPDATE works SET kind='collection', kind_source='heuristic'
+		WHERE id = (SELECT b.work_id FROM books b WHERE b.title = 'Чистая фантастика' LIMIT 1)`)
+	require.NoError(t, err)
+	withComps, err := svc.GetAuthor(ctx, compAuthor, 0, nil, nil, false)
+	require.NoError(t, err)
+	noComps, err := svc.GetAuthor(ctx, compAuthor, 0, nil, nil, true)
+	require.NoError(t, err)
+	require.Greater(t, withComps.BookCount, noComps.BookCount, "hideCompilations уменьшает счётчик")
+	for _, b := range noComps.Books {
+		require.NotEqual(t, "Чистая фантастика", b.Title, "помеченная сборником работа скрыта")
+	}
 }

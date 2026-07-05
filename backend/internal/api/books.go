@@ -84,7 +84,7 @@ func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.Ha
 		}
 		// Скрытые из выдачи жанры/языки (admin ∪ персональные).
 		if content.Resolver != nil {
-			params.ExcludeGenres, params.ExcludeLangs = content.Resolver.Exclusions(r.Context(), userID)
+			params.ExcludeGenres, params.ExcludeLangs, params.ExcludeCompilations = content.Resolver.Exclusions(r.Context(), userID)
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
@@ -167,7 +167,10 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 			if u, ok := UserFromContext(r.Context()); ok {
 				userID = u.ID
 			}
-			exGenres, exLangs = content.Resolver.Exclusions(r.Context(), userID)
+			// hideCompilations сознательно игнорируем: персональное скрытие
+			// убирает сборники из выдачи, но не блокирует прямую ссылку
+			// (зеркало политики скрытых жанров/языков).
+			exGenres, exLangs, _ = content.Resolver.Exclusions(r.Context(), userID)
 		}
 		b, err := d.Service.GetWork(ctx, workID, exGenres, exLangs)
 		if err != nil {

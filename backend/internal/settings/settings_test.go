@@ -236,9 +236,10 @@ func TestSettings_ContentRoundTrip(t *testing.T) {
 	// Resolver: Exclusions = admin ∪ user; AdminHides — только глобальные.
 	r := settings.NewContentResolver(store)
 	require.NoError(t, r.Load(ctx))
-	g, l := r.Exclusions(ctx, uid)
+	g, l, hideComps := r.Exclusions(ctx, uid)
 	require.ElementsMatch(t, []string{"erotica", "porno", "detective"}, g)
 	require.ElementsMatch(t, []string{"bg"}, l)
+	require.False(t, hideComps, "дефолт — сборники не скрываются")
 	require.True(t, r.AdminHides([]string{"erotica"}, "en"))
 	require.False(t, r.AdminHides([]string{"detective"}, "en"), "персональный жанр не должен блокироваться глобально")
 

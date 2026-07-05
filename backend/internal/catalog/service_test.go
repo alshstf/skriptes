@@ -58,7 +58,7 @@ func TestService_CollapsesEditionsByWork(t *testing.T) {
 
 	svc := catalog.New(pool)
 
-	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, a.BookCount, "две издания одной работы = одна логическая книга")
 	require.Len(t, a.Books, 1, "карточка автора схлопнута до одной работы")
@@ -66,7 +66,7 @@ func TestService_CollapsesEditionsByWork(t *testing.T) {
 	require.Len(t, a.Series, 1)
 	require.Equal(t, 1, a.Series[0].Count, "счётчик серии — по работам, не изданиям")
 
-	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil)
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, s.BookCount, "серия: одна логическая книга")
 	require.Len(t, s.Books, 1)
@@ -110,7 +110,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 		`SELECT id FROM authors WHERE normalized_name = 'алексеев евгений артёмович'`,
 	).Scan(&authorID))
 
-	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, "Алексеев", a.LastName)
 	require.Equal(t, "Алексеев Евгений Артёмович", a.FullName)
@@ -145,7 +145,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Contains(t, a.Languages, "ru", "языки изданий на карточке")
 
 	// Series detail
-	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil)
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, "Петля [Алексеев]", s.Title)
 	require.NotNil(t, s.AuthorID)
@@ -162,7 +162,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	_, err = pool.Exec(ctx, `UPDATE books SET lang = 'zz' WHERE id = $1`, a.Books[0].ID)
 	require.NoError(t, err)
 
-	aHidden, err := svc.GetAuthor(ctx, authorID, 0, nil, []string{"zz"})
+	aHidden, err := svc.GetAuthor(ctx, authorID, 0, nil, []string{"zz"}, false)
 	require.NoError(t, err)
 	require.Equal(t, 0, aHidden.BookCount, "скрытый язык исключается из счётчика книг автора")
 	require.Empty(t, aHidden.Books, "скрытый язык исключается из списка книг автора")
@@ -172,7 +172,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Empty(t, aHidden.TopGenres, "жанры скрытых книг не учитываются")
 	require.Empty(t, aHidden.YearStats, "год скрытых книг не идёт в гистограмму")
 
-	sHidden, err := svc.GetSeries(ctx, seriesID, 0, nil, []string{"zz"})
+	sHidden, err := svc.GetSeries(ctx, seriesID, 0, nil, []string{"zz"}, false)
 	require.NoError(t, err)
 	require.Empty(t, sHidden.Books, "скрытый язык исключается из книг серии")
 	require.Empty(t, sHidden.YearStats, "год скрытых книг серии не идёт в гистограмму")
@@ -191,7 +191,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	_, err = pool.Exec(ctx,
 		`INSERT INTO book_authors (book_id, author_id, position) VALUES ($1, $2, 0)`, e2, authorID)
 	require.NoError(t, err)
-	aMulti, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	aMulti, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Len(t, aMulti.TopGenres, 3)
 	for _, g := range aMulti.TopGenres {
@@ -199,14 +199,14 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	}
 
 	// Контроль: без исключения книга снова видна.
-	aBack, err := svc.GetAuthor(ctx, authorID, 0, nil, nil)
+	aBack, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Len(t, aBack.Books, 1)
 
 	// Negative: несуществующий id
-	_, err = svc.GetAuthor(ctx, 99999999, 0, nil, nil)
+	_, err = svc.GetAuthor(ctx, 99999999, 0, nil, nil, false)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
-	_, err = svc.GetSeries(ctx, 99999999, 0, nil, nil)
+	_, err = svc.GetSeries(ctx, 99999999, 0, nil, nil, false)
 	require.ErrorIs(t, err, catalog.ErrNotFound)
 
 	// Suggest: префиксное совпадение по нормализованному имени.
@@ -272,11 +272,11 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	a2, err := svc.GetAuthor(ctx, authorID, userID, nil, nil)
+	a2, err := svc.GetAuthor(ctx, authorID, userID, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, a2.ReadCount)
 
-	s2, err := svc.GetSeries(ctx, seriesID, userID, nil, nil)
+	s2, err := svc.GetSeries(ctx, seriesID, userID, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, 1, s2.ReadCount)
 }

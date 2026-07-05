@@ -45,7 +45,7 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 			params.UserID = u.ID
 		}
 		if content.Resolver != nil {
-			params.ExcludeGenres, params.ExcludeLangs = content.Resolver.Exclusions(r.Context(), params.UserID)
+			params.ExcludeGenres, params.ExcludeLangs, _ = content.Resolver.Exclusions(r.Context(), params.UserID)
 		}
 		// 15с (не 5): список авторов считает агрегаты подзапросами, а на больших
 		// библиотеках под нагрузкой фоновых воркеров запас нужен. Основной фикс —

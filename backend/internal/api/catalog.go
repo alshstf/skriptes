@@ -129,11 +129,12 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content
 		// Видимость контента: на карточке автора не показываем книги со скрытыми
 		// жанрами/языками (admin ∪ персональные), как и в /books.
 		var exGenres, exLangs []string
+		var hideComps bool
 		if content.Resolver != nil {
-			exGenres, exLangs = content.Resolver.Exclusions(ctx, userID)
+			exGenres, exLangs, hideComps = content.Resolver.Exclusions(ctx, userID)
 		}
 
-		a, err := d.Service.GetAuthor(ctx, id, userID, exGenres, exLangs)
+		a, err := d.Service.GetAuthor(ctx, id, userID, exGenres, exLangs, hideComps)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "author not found"})
@@ -237,11 +238,12 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta 
 
 		// Видимость контента: книги серии со скрытыми жанрами/языками не показываем.
 		var exGenres, exLangs []string
+		var hideComps bool
 		if content.Resolver != nil {
-			exGenres, exLangs = content.Resolver.Exclusions(ctx, userID)
+			exGenres, exLangs, hideComps = content.Resolver.Exclusions(ctx, userID)
 		}
 
-		s, err := d.Service.GetSeries(ctx, id, userID, exGenres, exLangs)
+		s, err := d.Service.GetSeries(ctx, id, userID, exGenres, exLangs, hideComps)
 		if err != nil {
 			if errors.Is(err, catalog.ErrNotFound) {
 				writeJSON(w, http.StatusNotFound, map[string]string{"error": "series not found"})
