@@ -718,7 +718,43 @@ func (s *Service) GetWork(ctx context.Context, workID int64, excludeGenres, excl
 	if err != nil {
 		return Book{}, err
 	}
-	return s.Get(ctx, repID)
+	b, err := s.Get(ctx, repID)
+	if err != nil {
+		return b, err
+	}
+	// Скрытые языки (админ ∪ личные) убираем и из списка изданий работы: если язык
+	// выключен, пользователь не должен видеть издания на нём, даже сгруппированные
+	// в эту работу. Открытое издание (repID) выбрано видимым выше, поэтому из списка
+	// не выпадет. Top-level поля (lang/обложка) — тоже от видимого представителя.
+	// Счётчик изданий на карточке фронт берёт из editions.length — фильтрация
+	// массива автоматически делает его консистентным.
+	if len(excludeLangs) > 0 {
+		b.Editions = visibleEditions(b.Editions, excludeLangs)
+	}
+	return b, nil
+}
+
+// visibleEditions отбрасывает издания на скрытых языках. Нормализация lower+trim
+// зеркалит SQL lower(btrim(lang)) и importer.normalizeLang — сравниваем канонично
+// с обеих сторон. Пустой excludeLangs → исходный слайс без копии.
+func visibleEditions(editions []EditionRef, excludeLangs []string) []EditionRef {
+	if len(excludeLangs) == 0 || len(editions) == 0 {
+		return editions
+	}
+	hidden := make(map[string]struct{}, len(excludeLangs))
+	for _, l := range excludeLangs {
+		if n := strings.ToLower(strings.TrimSpace(l)); n != "" {
+			hidden[n] = struct{}{}
+		}
+	}
+	out := make([]EditionRef, 0, len(editions))
+	for _, e := range editions {
+		if _, hit := hidden[strings.ToLower(strings.TrimSpace(e.Lang))]; hit {
+			continue
+		}
+		out = append(out, e)
+	}
+	return out
 }
 
 // visibleWorkEditionID — id представительного ВИДИМОГО издания работы (обложка в
