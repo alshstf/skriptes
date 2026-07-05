@@ -170,7 +170,7 @@ func run() error {
 	gbHTTPClient := metadata.NewEnricherHTTPClient(10 * time.Second)
 	fb2Provider := metadata.NewFb2Provider()
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient)
-	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient).WithAPIKey(cfg.GoogleBooksAPIKey)
+	gbProvider := metadata.NewGoogleBooksProvider(gbHTTPClient).WithAPIKey(cfg.GoogleBooksAPIKey).WithCountry(cfg.GoogleBooksCountry)
 	// Диагностика: без ключа GB-запросы уходят анонимно → 429 и не видны в usage
 	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
 	logger.Info("google books provider configured", "api_key_set", cfg.GoogleBooksAPIKey != "")

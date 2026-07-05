@@ -301,6 +301,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_CACHE_ROOT` | `/cache` | Кэш конвертированных файлов и обложек |
 | `SKRIPTES_FBC_PATH` | `fbc` | Путь к fbc-бинарю (вшит в образ) |
 | `SKRIPTES_GOOGLE_BOOKS_API_KEY` | (пусто) | API-ключ Google Books — **обязателен для GB-обогащения** (обложки/рейтинги/группировка): анонимные запросы GB отбивает 429 по общей квоте. Google Cloud Console → включить Books API → Credentials → API key; free-квота ≈1000 запросов/день на проект |
+| `SKRIPTES_GOOGLE_BOOKS_COUNTRY` | `US` | ISO 3166-1 alpha-2 для параметра `country` в Google Books (обязателен для облачного деплоя — без него GB отдаёт geo-ошибку) |
 | `BACKEND_PORT` | `8080` | Порт на хосте (только 127.0.0.1; основной доступ через Caddy) |
 
 ### Auth / Cookies

@@ -104,3 +104,28 @@ var lastServerURL string
 
 func storeServerURL(_ *testing.T, u string) { lastServerURL = u }
 func srv2URL(_ *testing.T) string           { return lastServerURL }
+
+// TestGoogleBooks_CountryAndNoLangRestrict — country= обязателен (шлётся всегда,
+// дефолт US; иначе GB в облаке отдаёт geo-ошибку), а langRestrict больше НЕ
+// шлётся (резал валидные переводные издания — ресёрч 2026-07-05).
+func TestGoogleBooks_CountryAndNoLangRestrict(t *testing.T) {
+	var gotCountry, gotLang string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotCountry = r.URL.Query().Get("country")
+		gotLang = r.URL.Query().Get("langRestrict")
+		_, _ = io.WriteString(w, `{"items":[]}`)
+	}))
+	defer srv.Close()
+
+	// Дефолтная страна US, Lang в запросе игнорируется (langRestrict не шлём).
+	p := NewGoogleBooksProvider(srv.Client()).WithEndpoint(srv.URL)
+	_, _ = p.FetchRating(context.Background(), WorkQuery{Title: "T", Authors: []string{"A"}, Lang: "ru"})
+	require.Equal(t, "US", gotCountry, "country=US шлётся по умолчанию")
+	require.Empty(t, gotLang, "langRestrict больше не шлётся")
+
+	// Переопределение страны.
+	gotCountry = ""
+	p2 := NewGoogleBooksProvider(srv.Client()).WithEndpoint(srv.URL).WithCountry("RU")
+	_, _ = p2.FetchCover(context.Background(), BookQuery{Title: "T", Authors: []string{"A"}, Lang: "en"})
+	require.Equal(t, "RU", gotCountry)
+}

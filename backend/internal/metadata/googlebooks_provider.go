@@ -21,7 +21,16 @@ type GoogleBooksProvider struct {
 	httpClient *http.Client
 	apiURL     string // override для тестов
 	apiKey     string // SKRIPTES_GOOGLE_BOOKS_API_KEY; пусто = анонимно (429-prone)
+	country    string // ISO 3166-1 alpha-2 для параметра country= (дефолт US)
 }
+
+// defaultGBCountry — страна по умолчанию для параметра country=. Для серверного/
+// облачного деплоя country ОБЯЗАТЕЛЕН: без него GB не может геолоцировать IP и
+// отдаёт "Cannot determine user location for geographically restricted operation"
+// (пусто/ошибка) — недокументированное поведение, разбор:
+// https://groups.google.com/g/google-appengine/c/C-IoRG7Z7VI. US даёт самую полную
+// выдачу (в т.ч. чаще присутствует averageRating — рынок Google Play Books).
+const defaultGBCountry = "US"
 
 func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
 	if httpClient == nil {
@@ -30,6 +39,7 @@ func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
 	return &GoogleBooksProvider{
 		httpClient: httpClient,
 		apiURL:     "https://www.googleapis.com/books/v1/volumes",
+		country:    defaultGBCountry,
 	}
 }
 
@@ -46,10 +56,24 @@ func (p *GoogleBooksProvider) WithAPIKey(key string) *GoogleBooksProvider {
 	return p
 }
 
-// addKey доклеивает key= к запросу, если ключ задан.
-func (p *GoogleBooksProvider) addKey(v url.Values) {
+// WithCountry переопределяет ISO 3166-1 alpha-2 код для country= (пусто —
+// оставить дефолт US; НЕ снимает параметр, т.к. без него GB ломается в облаке).
+func (p *GoogleBooksProvider) WithCountry(code string) *GoogleBooksProvider {
+	if code != "" {
+		p.country = code
+	}
+	return p
+}
+
+// addParams доклеивает общие query-параметры ко ВСЕМ вызовам GB API: key= (если
+// задан) и country= (обязателен для серверного деплоя). projection не трогаем —
+// дефолт full (в lite нет averageRating/ratingsCount).
+func (p *GoogleBooksProvider) addParams(v url.Values) {
 	if p.apiKey != "" {
 		v.Set("key", p.apiKey)
+	}
+	if p.country != "" {
+		v.Set("country", p.country)
 	}
 }
 
@@ -73,10 +97,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	v := url.Values{}
 	v.Set("q", query.String())
 	v.Set("maxResults", "1")
-	if q.Lang != "" {
-		v.Set("langRestrict", q.Lang)
-	}
-	p.addKey(v)
+	p.addParams(v)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
@@ -157,10 +178,7 @@ func (p *GoogleBooksProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 	v := url.Values{}
 	v.Set("q", query)
 	v.Set("maxResults", "5")
-	if q.Lang != "" {
-		v.Set("langRestrict", q.Lang)
-	}
-	p.addKey(v) // без ключа GB отдаёт 429 по анонимной квоте — FetchRating его ЗАБЫВАЛ: все запросы рейтинга уходили анонимно (0 вызовов под ключом → 429 → not_found)
+	p.addParams(v) // key + country; без ключа → аноним 429, без country → geo-ошибка в облаке
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
 		return RatingResult{}, fmt.Errorf("build request: %w", err)
@@ -229,10 +247,7 @@ func (p *GoogleBooksProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	v := url.Values{}
 	v.Set("q", query.String())
 	v.Set("maxResults", "1")
-	if q.Lang != "" {
-		v.Set("langRestrict", q.Lang)
-	}
-	p.addKey(v)
+	p.addParams(v)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+v.Encode(), nil)
 	if err != nil {
