@@ -7,8 +7,8 @@ import "testing"
 // ResyncWorksIndex на ближайшем старте (см. main.go::runOnceWorksIndexSync).
 // Меняешь схему — инкрементируй константу и обнови ожидание здесь.
 func TestWorksIndexSyncedFlagKey(t *testing.T) {
-	// v6 — kind (сборники/антологии, миграция 0034).
-	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v6"; got != want {
+	// v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра).
+	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v7"; got != want {
 		t.Fatalf("WorksIndexSyncedFlagKey() = %q, want %q", got, want)
 	}
 }

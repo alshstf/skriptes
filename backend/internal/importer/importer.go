@@ -377,8 +377,9 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 // v3 — popularity = интегральная «известность» (computeWorkPopularity);
 // v4 — внешние счётчики известности (fantlab_marks / ol_*) в формуле;
 // v5 — wd_sitelinks (Wikidata) в формуле;
-// v6 — kind (тип работы: сборник/антология/том собрания; миграция 0034).
-const WorksIndexSchemaVersion = 6
+// v6 — kind (тип работы: сборник/антология/том собрания; миграция 0034);
+// v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра).
+const WorksIndexSchemaVersion = 7
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -411,6 +412,15 @@ const workDocSelect = `
 			FROM books b
 			WHERE b.work_id = w.id AND b.deleted = false
 			  AND b.src_lang IS NOT NULL AND btrim(b.src_lang) <> ''
+		), '{}'),
+		COALESCE((
+			-- orig_lang = ЭФФЕКТИВНЫЙ оригинал: src_lang, а пусто → язык издания
+			-- (натив сам себе оригинал). На нём фильтр «Язык оригинала».
+			SELECT array_agg(DISTINCT lower(btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang))))
+			FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+			  AND COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang) IS NOT NULL
+			  AND btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang)) <> ''
 		), '{}'),
 		COALESCE((
 			SELECT array_agg(DISTINCT g.fb2_code)
@@ -497,7 +507,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
 			&seriesID, &series, &d.EditionCount, &year,
-			&d.Langs, &d.SrcLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
+			&d.Langs, &d.SrcLangs, &d.OrigLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
 			&sig.FantlabMarks, &sig.OLRatings, &sig.OLWant, &sig.WDSitelinks,
@@ -524,6 +534,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		}
 		if d.SrcLangs == nil {
 			d.SrcLangs = []string{}
+		}
+		if d.OrigLangs == nil {
+			d.OrigLangs = []string{}
 		}
 		if d.Genres == nil {
 			d.Genres = []string{}

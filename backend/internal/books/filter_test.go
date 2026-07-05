@@ -44,11 +44,13 @@ func TestBuildFilter_Empty(t *testing.T) {
 	}
 }
 
-// buildWorksFilter: src_lang (язык оригинала) — фильтр ТОЛЬКО works-индекса;
-// buildFilter (books/OPDS) его игнорирует — там атрибут не filterable.
+// buildWorksFilter: язык оригинала фильтруется по orig_lang (эффективный
+// оригинал = src_lang ?? язык издания) — ТОЛЬКО works-индекса; buildFilter
+// (books/OPDS) его игнорирует (атрибут не filterable). URL-параметр значения
+// остаётся SrcLang.
 func TestBuildWorksFilter_SrcLang(t *testing.T) {
 	got := buildWorksFilter(ListParams{Lang: "ru", SrcLang: "en"}, nil)
-	want := `lang = "ru" AND src_lang = "en"`
+	want := `lang = "ru" AND orig_lang = "en"`
 	if got != want {
 		t.Fatalf("buildWorksFilter mismatch:\n got: %s\nwant: %s", got, want)
 	}

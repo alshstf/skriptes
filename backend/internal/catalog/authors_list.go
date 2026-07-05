@@ -198,13 +198,14 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 
 	if len(p.SrcLangs) > 0 {
 		n := addArg(p.SrcLangs)
-		// Язык ОРИГИНАЛА (books.src_lang из fb2 <src-lang>) — независимый фильтр.
-		// Поле разрежённое: книга без src_lang (оригинал/не просканирована) под
-		// фильтр не попадает — precision > recall, как и на /books.
+		// Язык ОРИГИНАЛА (эффективный: src_lang, а пусто → язык издания) —
+		// зеркало works-индексного orig_lang и /books-фильтра. «оригинал:
+		// французский» ловит и переводы с французского, и нативно-французских
+		// авторов.
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" WHERE ba.author_id = a.id"+
-				" AND lower(btrim(b.src_lang)) = ANY($%d::text[])"+
+				" AND lower(btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang))) = ANY($%d::text[])"+
 				renderAggExclusion()+")", n))
 	}
 
