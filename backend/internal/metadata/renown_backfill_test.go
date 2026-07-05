@@ -196,3 +196,78 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	bf4.drain(ctx)
 	require.Equal(t, nfCalls, nf.callCount(), "свежий not_found не переспрашивается")
 }
+
+// TestRenownBackfiller_WritesKind — типизация от Фантлаба: collection/anthology
+// пишутся в works.kind (source='fantlab'), "novel" СНИМАЕТ ошибочную эвристику
+// (kind → NULL), ручной override неприкосновенен.
+func TestRenownBackfiller_WritesKind(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	mkWork := func(title string, kind, kindSource *string) int64 {
+		var workID int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO works (title, normalized_title, edition_count, kind, kind_source)
+			VALUES ($1, lower($1), 2, $2, $3) RETURNING id`,
+			title, kind, kindSource).Scan(&workID))
+		for i := 0; i < 2; i++ {
+			_, err := pool.Exec(ctx, `
+				INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+				VALUES ($1,$2,$3||$4,'f','fb2',$3,lower($3),$5)`,
+				collID, archID, title, strconv.Itoa(i), workID)
+			require.NoError(t, err)
+		}
+		return workID
+	}
+	kindOf := func(id int64) (kind, source string) {
+		require.NoError(t, pool.QueryRow(ctx,
+			`SELECT COALESCE(kind,''), COALESCE(kind_source,'') FROM works WHERE id=$1`, id).Scan(&kind, &source))
+		return kind, source
+	}
+	run := func(res RenownResult) *RenownBackfiller {
+		fl := &fakeRenownProvider{name: "fantlab", res: res}
+		return NewRenownBackfiller(pool, fl, nil, nil, &fakeWorksSyncer{},
+			RenownBackfillConfig{Fantlab: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
+	}
+
+	// 1. Фантлаб говорит «сборник» → kind=collection, source=fantlab.
+	w1 := mkWork("Лавка миров", nil, nil)
+	run(RenownResult{Ratings: 310, Kind: "collection"}).drain(ctx)
+	k, src := kindOf(w1)
+	require.Equal(t, "collection", k)
+	require.Equal(t, "fantlab", src)
+
+	// 2. Эвристика ошиблась (heuristic-метка), Фантлаб уверен «роман» →
+	// kind СНИМАЕТСЯ (NULL), source=fantlab (эвристика больше не вернёт).
+	h, hs := "omnibus", "heuristic"
+	w2 := mkWork("Ложно помеченный роман", &h, &hs)
+	run(RenownResult{Ratings: 42, Kind: "novel"}).drain(ctx)
+	k, src = kindOf(w2)
+	require.Empty(t, k, "novel от Фантлаба снимает ошибочную эвристику")
+	require.Equal(t, "fantlab", src)
+
+	// 3. Ручной override неприкосновенен.
+	o, os := "anthology", "override"
+	w3 := mkWork("Руками помеченная антология", &o, &os)
+	run(RenownResult{Ratings: 7, Kind: "novel"}).drain(ctx)
+	k, src = kindOf(w3)
+	require.Equal(t, "anthology", k, "override не перетирается фантлабом")
+	require.Equal(t, "override", src)
+
+	// 4. Kind="" (цикл/статья/незнакомый тип) — ничего не трогает.
+	w4 := mkWork("Цикл без решения", &h, &hs)
+	run(RenownResult{Ratings: 5, Kind: ""}).drain(ctx)
+	k, src = kindOf(w4)
+	require.Equal(t, "omnibus", k, "пустой Kind не трогает существующую метку")
+	require.Equal(t, "heuristic", src)
+}
