@@ -21,6 +21,7 @@ import { ProfilePage } from '@/pages/ProfilePage';
 import { ProfileContentPage } from '@/pages/ProfileContentPage';
 import { ProfileAppearancePage } from '@/pages/ProfileAppearancePage';
 import { ReaderPage } from '@/pages/ReaderPage';
+import { AdminGeneralPage } from '@/pages/AdminGeneralPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { AdminContentPage } from '@/pages/AdminContentPage';
 import { AdminBackgroundPage } from '@/pages/AdminBackgroundPage';
@@ -274,6 +275,13 @@ async function requireAdmin(context: RouterContext) {
   }
 }
 
+const adminGeneralRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/admin/general',
+  beforeLoad: ({ context }) => requireAdmin(context),
+  component: AdminGeneralPage,
+});
+
 const adminUsersRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/admin/users',
@@ -318,6 +326,7 @@ const routeTree = rootRoute.addChildren([
     profileRoute,
     profileContentRoute,
     profileAppearanceRoute,
+    adminGeneralRoute,
     adminUsersRoute,
     adminContentRoute,
     adminBackgroundRoute,

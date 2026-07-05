@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/opds"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 // Deps собирает все зависимости HTTP-роутера.
@@ -222,6 +223,9 @@ func NewRouter(d Deps) http.Handler {
 				r.Delete("/admin/users/{id}", handleDeleteUser(d.Auth))
 				// Раздел «Кэш обложек»: рантайм-настройки + статистика + очистка.
 				if d.Settings.Store != nil {
+					// Брендинг инстанса (имя в заголовке/вкладке) — таб «Общее».
+					r.Get("/admin/branding", handleGetBranding(d.Settings))
+					r.Put("/admin/branding", handleUpdateBranding(d.Settings))
 					r.Get("/admin/cover-cache", handleGetCoverSettings(d.Settings))
 					r.Put("/admin/cover-cache", handleUpdateCoverSettings(d.Settings))
 					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
@@ -328,7 +332,10 @@ func readyz(pool *pgxpool.Pool) http.HandlerFunc {
 // хотя бы версию приложения.
 func version(v string, db *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		resp := map[string]any{"version": v}
+		// instance_name — глобальный брендинг (app_settings.branding), правит
+		// админ; дефолт Skriptes. Всегда отдаём непустое значение, чтобы фронту
+		// не приходилось хардкодить fallback.
+		resp := map[string]any{"version": v, "instance_name": settings.DefaultInstanceName}
 		if db != nil {
 			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 			defer cancel()
@@ -342,6 +349,14 @@ func version(v string, db *pgxpool.Pool) http.HandlerFunc {
 				}
 				if importedAt != nil {
 					resp["collection_imported_at"] = importedAt.Format(time.RFC3339)
+				}
+			}
+			var brandingRaw []byte
+			if err := db.QueryRow(ctx,
+				`SELECT value FROM app_settings WHERE key = 'branding'`).Scan(&brandingRaw); err == nil {
+				var b settings.BrandingConfig
+				if json.Unmarshal(brandingRaw, &b) == nil && b.InstanceName != "" {
+					resp["instance_name"] = b.InstanceName
 				}
 			}
 		}

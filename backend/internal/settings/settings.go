@@ -545,6 +545,63 @@ func (s *Store) SetWorkGrouping(ctx context.Context, cfg WorkGroupingConfig) err
 	return nil
 }
 
+const brandingKey = "branding"
+
+// DefaultInstanceName — имя инстанса по умолчанию (когда оверрайда в БД нет).
+const DefaultInstanceName = "Skriptes"
+
+// BrandingConfig — брендинг инстанса: пока только отображаемое имя (заголовок
+// Главной + <title> вкладки). Глобальная настройка (правит только админ),
+// читается публично через /api/version. Механизм — тот же app_settings KV,
+// что у cover_cache.
+type BrandingConfig struct {
+	InstanceName string `json:"instance_name"`
+}
+
+// DefaultBrandingConfig — дефолтное имя инстанса.
+func DefaultBrandingConfig() BrandingConfig {
+	return BrandingConfig{InstanceName: DefaultInstanceName}
+}
+
+// Branding читает брендинг; нет оверрайда в БД — дефолт (мердж поверх
+// DefaultBrandingConfig). Пустое имя после мерджа → возвращаем дефолт (инвариант:
+// имя непустое).
+func (s *Store) Branding(ctx context.Context) (BrandingConfig, error) {
+	cfg := DefaultBrandingConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, brandingKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read branding settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultBrandingConfig(), fmt.Errorf("decode branding settings: %w", err)
+	}
+	if cfg.InstanceName == "" {
+		cfg.InstanceName = DefaultInstanceName
+	}
+	return cfg, nil
+}
+
+// SetBranding сохраняет брендинг (upsert). Вызывающий обязан валидировать имя
+// (trim/непустое/лимит длины) до вызова.
+func (s *Store) SetBranding(ctx context.Context, cfg BrandingConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode branding settings: %w", err)
+	}
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, brandingKey, raw); err != nil {
+		return fmt.Errorf("save branding settings: %w", err)
+	}
+	return nil
+}
+
 const bioAdaptationKey = "bio_adaptation_enrichment"
 
 // BioAdaptationConfig — настройки фонового дозаполнения «людей и экранизаций» из

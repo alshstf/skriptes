@@ -13,16 +13,22 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { MainNavBar, MainNavTrigger } from '@/components/MainNav';
 import { useMe, useLogout, type User } from '@/lib/auth';
 import { useAppearance } from '@/lib/appearance';
-import { useVersion, formatCollectionVersion } from '@/lib/version';
+import { useVersion, useInstanceName, formatCollectionVersion } from '@/lib/version';
 import { HeroSearchContext } from '@/lib/heroSearch';
 import { cn } from '@/lib/utils';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 export function Layout({ children }: { children: ReactNode }) {
   const me = useMe();
   // Подтягиваем серверную настройку внешнего вида и зеркалим в localStorage,
   // чтобы стиль чипов применился на любой странице (даже до захода в профиль).
   useAppearance();
+  // Заголовок вкладки браузера = имя инстанса (index.html держит статичный
+  // фолбэк «skriptes» до гидрации). Один эффект на приложение — Layout-обёртка.
+  const instanceName = useInstanceName();
+  useEffect(() => {
+    document.title = instanceName;
+  }, [instanceName]);
   // Видим ли hero-поиск Главной — управляет видимостью кнопки поиска в хэдере
   // (см. heroSearch.ts). Дефолт false: на остальных страницах кнопка видна.
   const [heroSearchVisible, setHeroSearchVisible] = useState(false);

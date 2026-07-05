@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/settings"
@@ -51,6 +53,50 @@ func coverStats(d SettingsDeps, cfg settings.CoverConfig) coverSettingsResponse 
 		resp.PrewarmStatus = d.Prewarm.Status()
 	}
 	return resp
+}
+
+// maxInstanceNameLen — потолок длины имени инстанса (влезает в заголовок/вкладку).
+const maxInstanceNameLen = 60
+
+// handleGetBranding — GET /api/admin/branding. Текущее имя инстанса (или дефолт).
+func handleGetBranding(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		cfg, err := d.Store.Branding(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, cfg)
+	}
+}
+
+// handleUpdateBranding — PUT /api/admin/branding. Имя триммится; пустое → дефолт;
+// длиннее лимита — 400. Публичный /api/version сразу начнёт отдавать новое имя.
+func handleUpdateBranding(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var cfg settings.BrandingConfig
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&cfg); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
+			return
+		}
+		cfg.InstanceName = strings.TrimSpace(cfg.InstanceName)
+		if utf8.RuneCountInString(cfg.InstanceName) > maxInstanceNameLen {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "name too long"})
+			return
+		}
+		if cfg.InstanceName == "" {
+			cfg.InstanceName = settings.DefaultInstanceName
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		if err := d.Store.SetBranding(ctx, cfg); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save settings failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, cfg)
+	}
 }
 
 // handleGetCoverSettings — GET /api/admin/cover-cache. Конфиг + статистика.
