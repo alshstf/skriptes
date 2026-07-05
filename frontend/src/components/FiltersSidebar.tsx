@@ -111,7 +111,7 @@ export function FiltersSidebar({
       <FacetRadios
         title="Язык оригинала"
         selected={value.srcLang}
-        facetKey="src_lang"
+        facetKey="orig_lang"
         facets={facets}
         onChange={(srcLang) => onChange({ ...value, srcLang })}
         labelFor={(code) => srcLangMap.get(code) ?? langMap.get(code) ?? code}

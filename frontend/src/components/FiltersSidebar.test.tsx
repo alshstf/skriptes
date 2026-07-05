@@ -365,7 +365,7 @@ describe('FiltersSidebar', () => {
     expect(screen.getByLabelText('Сортировка')).toHaveTextContent('По релевантности');
   });
 
-  it('фасет src_lang рендерит секцию «Язык оригинала»; выбор дёргает onChange.srcLang', async () => {
+  it('фасет orig_lang рендерит секцию «Язык оригинала»; выбор дёргает onChange.srcLang', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
@@ -373,8 +373,9 @@ describe('FiltersSidebar', () => {
         <FiltersSidebar
           value={emptyFilters}
           onChange={onChange}
-          // lang и src_lang — НЕЗАВИСИМЫЕ фасеты: en есть только в src_lang.
-          facets={{ lang: { ru: 12 }, src_lang: { en: 4, fr: 1 } }}
+          // lang и orig_lang (эффективный оригинал) — НЕЗАВИСИМЫЕ фасеты: en есть
+          // только в orig_lang. Значение фильтра по-прежнему кладётся в srcLang.
+          facets={{ lang: { ru: 12 }, orig_lang: { en: 4, fr: 1 } }}
           totalActive={0}
           onReset={() => {}}
         />,
@@ -382,7 +383,7 @@ describe('FiltersSidebar', () => {
     );
     expect(await screen.findByText('Язык оригинала')).toBeInTheDocument();
     // /api/languages в моках 404 → label = сам код. Опция 'en' существует
-    // только в секции src_lang (lang-фасет несёт лишь ru).
+    // только в секции orig_lang (lang-фасет несёт лишь ru).
     await user.click(screen.getByRole('button', { name: /en\s*4/ }));
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ srcLang: 'en' }));
   });

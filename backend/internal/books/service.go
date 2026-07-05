@@ -881,10 +881,12 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	if p.Lang != "" {
 		parts = append(parts, fmt.Sprintf("lang = %s", strconv.Quote(p.Lang)))
 	}
-	// Язык оригинала: src_lang[] есть ТОЛЬКО в works-индексе — в buildFilter
-	// (books/OPDS) не добавлять, там атрибут не filterable.
+	// Язык оригинала: фильтруем по orig_lang[] (эффективный оригинал = src_lang
+	// ?? язык издания) — «оригинал: французский» ловит и переводы с французского,
+	// и нативно-французские книги. Поле есть ТОЛЬКО в works-индексе (в buildFilter
+	// для books/OPDS не добавлять — там атрибут не filterable).
 	if p.SrcLang != "" {
-		parts = append(parts, fmt.Sprintf("src_lang = %s", strconv.Quote(p.SrcLang)))
+		parts = append(parts, fmt.Sprintf("orig_lang = %s", strconv.Quote(p.SrcLang)))
 	}
 	if p.YearFrom > 0 {
 		parts = append(parts, fmt.Sprintf("year >= %d", p.YearFrom))

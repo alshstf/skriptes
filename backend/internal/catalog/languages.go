@@ -116,16 +116,20 @@ func (s *Service) ListLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	return out, nil
 }
 
-// ListSrcLanguages — все ЯЗЫКИ ОРИГИНАЛА (books.src_lang из fb2 <src-lang>),
-// встречающиеся в живых книгах, с числом книг. Зеркало ListLanguages: опции
-// фильтра «Язык оригинала» в разделе «Авторы» (на /books опции даёт фасет
-// works-индекса). Поле разрежённое — список обычно короче языков изданий.
+// ListSrcLanguages — все ЭФФЕКТИВНЫЕ ЯЗЫКИ ОРИГИНАЛА живых книг с числом книг:
+// src_lang (fb2 <src-lang>), а где пусто — язык издания (натив сам себе
+// оригинал). Опции фильтра «Язык оригинала» на /books и в «Авторах» — на том же
+// поле, что works-индексный фасет orig_lang. Так «оригинал: французский» ловит и
+// переводы с французского, и нативно-французские книги; и любой язык коллекции
+// (включая русский для «всей русской литературы») доступен как опция.
 func (s *Service) ListSrcLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT lower(btrim(src_lang)) AS code, count(*)::int
+		SELECT lower(btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang))) AS code, count(*)::int
 		FROM books
-		WHERE deleted = false AND src_lang IS NOT NULL AND btrim(src_lang) <> ''
-		GROUP BY lower(btrim(src_lang))
+		WHERE deleted = false
+		  AND COALESCE(NULLIF(btrim(src_lang), ''), lang) IS NOT NULL
+		  AND btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang)) <> ''
+		GROUP BY lower(btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang)))
 		ORDER BY count(*) DESC, code
 	`)
 	if err != nil {

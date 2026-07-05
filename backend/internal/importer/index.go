@@ -77,8 +77,14 @@ type workDoc struct {
 	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
 	Langs           []string `json:"lang"`           // массив языков всех изданий работы
 	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
-	Popularity      int64    `json:"popularity"`     // сумма популярности изданий
-	EditionCount    int      `json:"edition_count"`
+	// OrigLangs — ЭФФЕКТИВНЫЙ язык оригинала: src_lang, а если пусто — язык
+	// издания (натив = сам себе оригинал). На нём стоит фильтр «Язык оригинала»
+	// (/books, авторы): «оригинал: французский» ловит и переводы с французского
+	// (src_lang=fr), и нативно-французские (lang=fr, src_lang пуст). SrcLangs
+	// остаётся сырым — карточка показывает «Перевод с …» только у переводов.
+	OrigLangs    []string `json:"orig_lang"`
+	Popularity   int64    `json:"popularity"` // сумма популярности изданий
+	EditionCount int      `json:"edition_count"`
 	// Kind — тип работы: "" (обычное произведение) | collection | anthology |
 	// omnibus (works.kind, миграция 0034). Пишем ВСЕГДА (пустую строку для
 	// обычных), чтобы NOT-фильтр «скрыть сборники» не зависел от поведения
@@ -101,7 +107,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "src_lang", "year", "series_id", "author_ids", "kind"}
+	filterable := []any{"genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}
