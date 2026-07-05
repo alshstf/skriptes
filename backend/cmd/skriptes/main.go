@@ -174,8 +174,12 @@ func run() error {
 	// Диагностика: без ключа GB-запросы уходят анонимно → 429 и не видны в usage
 	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
 	logger.Info("google books provider configured", "api_key_set", cfg.GoogleBooksAPIKey != "")
-	wikiProvider := metadata.NewWikipediaProvider(httpClient)
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
+	// Слой 2 точности обогащения авторов: после имя-гейта резолв автора
+	// проверяет профессию кандидата (Wikidata P106) и отсекает однофамильцев-
+	// не-писателей. Реализацию (OccupationVerdict) держит wdAdaptations — у него
+	// уже есть SPARQL-клиент.
+	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
