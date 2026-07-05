@@ -291,13 +291,14 @@ func run() error {
 		extRatingCfg = settings.DefaultExternalRatingConfig()
 	}
 	externalRatingCtl := metadata.NewExternalRatingBackfillController(pool, gbProvider, olProvider, metadata.ExternalRatingBackfillConfig{
-		GoogleBooks:       extRatingCfg.GoogleBooks,
-		OpenLibrary:       extRatingCfg.OpenLibrary,
-		WholeCollection:   extRatingCfg.WholeCollection,
-		GoogleBooksRPM:    extRatingCfg.GoogleBooksRPM,
-		OpenLibraryRPM:    extRatingCfg.OpenLibraryRPM,
-		NotFoundRetryDays: extRatingCfg.NotFoundRetryDays,
-		ErrorRetryHours:   extRatingCfg.ErrorRetryHours,
+		GoogleBooks:         extRatingCfg.GoogleBooks,
+		OpenLibrary:         extRatingCfg.OpenLibrary,
+		WholeCollection:     extRatingCfg.WholeCollection,
+		GoogleBooksRPM:      extRatingCfg.GoogleBooksRPM,
+		GoogleBooksDailyCap: extRatingCfg.GoogleBooksDailyCap,
+		OpenLibraryRPM:      extRatingCfg.OpenLibraryRPM,
+		NotFoundRetryDays:   extRatingCfg.NotFoundRetryDays,
+		ErrorRetryHours:     extRatingCfg.ErrorRetryHours,
 	}, logger)
 	if extRatingCfg.Enabled {
 		externalRatingCtl.Start()

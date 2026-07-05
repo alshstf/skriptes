@@ -381,6 +381,8 @@ export type ExternalRatingSettings = {
   // режим охвата: false = только пробелы (без любого рейтинга), true = вся коллекция
   whole_collection: boolean;
   googlebooks_rpm: number;
+  // дневной кап вызовов Google Books (free-квота ~1000/сутки); 0 = без лимита
+  googlebooks_daily_cap: number;
   openlibrary_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
@@ -403,6 +405,7 @@ export type ExternalRatingInput = {
   openlibrary: boolean;
   whole_collection: boolean;
   googlebooks_rpm: number;
+  googlebooks_daily_cap: number;
   openlibrary_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;

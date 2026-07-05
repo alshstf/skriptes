@@ -20,13 +20,14 @@ type externalRatingResponse struct {
 
 func toExternalRatingBackfillConfig(c settings.ExternalRatingConfig) metadata.ExternalRatingBackfillConfig {
 	return metadata.ExternalRatingBackfillConfig{
-		GoogleBooks:       c.GoogleBooks,
-		OpenLibrary:       c.OpenLibrary,
-		WholeCollection:   c.WholeCollection,
-		GoogleBooksRPM:    c.GoogleBooksRPM,
-		OpenLibraryRPM:    c.OpenLibraryRPM,
-		NotFoundRetryDays: c.NotFoundRetryDays,
-		ErrorRetryHours:   c.ErrorRetryHours,
+		GoogleBooks:         c.GoogleBooks,
+		OpenLibrary:         c.OpenLibrary,
+		WholeCollection:     c.WholeCollection,
+		GoogleBooksRPM:      c.GoogleBooksRPM,
+		GoogleBooksDailyCap: c.GoogleBooksDailyCap,
+		OpenLibraryRPM:      c.OpenLibraryRPM,
+		NotFoundRetryDays:   c.NotFoundRetryDays,
+		ErrorRetryHours:     c.ErrorRetryHours,
 	}
 }
 

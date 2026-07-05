@@ -403,28 +403,30 @@ const externalRatingEnrichmentKey = "external_rating_enrichment"
 // оставить только Google Books). WholeCollection: false = только пробелы (книги
 // без любого рейтинга), true = вся коллекция (даже книги с LIBRATE).
 type ExternalRatingConfig struct {
-	Enabled           bool `json:"enabled"`
-	GoogleBooks       bool `json:"googlebooks"`
-	OpenLibrary       bool `json:"openlibrary"`
-	WholeCollection   bool `json:"whole_collection"`
-	GoogleBooksRPM    int  `json:"googlebooks_rpm"`
-	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
-	NotFoundRetryDays int  `json:"not_found_retry_days"`
-	ErrorRetryHours   int  `json:"error_retry_hours"`
+	Enabled             bool `json:"enabled"`
+	GoogleBooks         bool `json:"googlebooks"`
+	OpenLibrary         bool `json:"openlibrary"`
+	WholeCollection     bool `json:"whole_collection"`
+	GoogleBooksRPM      int  `json:"googlebooks_rpm"`
+	GoogleBooksDailyCap int  `json:"googlebooks_daily_cap"` // дневной кап вызовов GB (free ~1000/сутки); 0 = без лимита
+	OpenLibraryRPM      int  `json:"openlibrary_rpm"`
+	NotFoundRetryDays   int  `json:"not_found_retry_days"`
+	ErrorRetryHours     int  `json:"error_retry_hours"`
 }
 
 // DefaultExternalRatingConfig — воркер выключен (opt-in), оба источника включены,
 // режим «только пробелы», вежливые rate-limit'ы и TTL.
 func DefaultExternalRatingConfig() ExternalRatingConfig {
 	return ExternalRatingConfig{
-		Enabled:           false,
-		GoogleBooks:       true,
-		OpenLibrary:       true,
-		WholeCollection:   false,
-		GoogleBooksRPM:    60,
-		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
-		NotFoundRetryDays: 90,
-		ErrorRetryHours:   24,
+		Enabled:             false,
+		GoogleBooks:         true,
+		OpenLibrary:         true,
+		WholeCollection:     false,
+		GoogleBooksRPM:      60,
+		GoogleBooksDailyCap: 1000, // free-квота GB API ~1000 запросов/сутки на проект
+		OpenLibraryRPM:      60,   // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
+		NotFoundRetryDays:   90,
+		ErrorRetryHours:     24,
 	}
 }
 
