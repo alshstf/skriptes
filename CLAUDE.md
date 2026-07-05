@@ -648,6 +648,13 @@ fallback по `enrichment_fetched`. Тот же принцип у экраниз
   `lang IN [видимые]` (видимые = вселенная−скрытые, кэш `allLangs` 5 мин), т.е.
   работа видна, если есть издание на видимом языке (мультиязычную работу не прячем
   целиком из-за одного скрытого языка). Вселенная неизвестна → fallback `NOT IN`.
+  ⚠️ **Внутри карточки скрытые языки тоже режутся**: `GetWork` после `Get(repID)`
+  прогоняет `Editions` через `visibleEditions(editions, excludeLangs)` — издания на
+  скрытом языке не показываются даже сгруппированные в видимую работу (счётчик
+  секции = `editions.length`, консистентен сам). Открытое издание repID — видимое
+  по построению `visibleWorkEditionID`. Back-compat `/books/{id}` (`handleGetBook`→
+  `Get` без exclusions) НЕ фильтрует — вторично, туда ходят только прямые старые
+  ссылки; discovery-ссылки идут на `/works/{id}`.
 - **Маршрут `/works/{id}`** (основной для карточки): `api/works.go`-нет, ручка
   `handleGetWork` в `api/books.go` (общий хелпер `writeBookCard` с `handleGetBook`);
   router `/works/{id}` без bookGate (видимость решает `GetWork`→404). `/books/{id}`
