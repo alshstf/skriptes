@@ -135,3 +135,45 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, coll))
 	require.Equal(t, "collection", k)
 }
+
+// TestClassifyWorkKinds_ConcurrentNoDeadlock — регрессия на deadlock первого
+// деплоя: runOnce-классификация и after-import классификация стартовали
+// одновременно, полнотабличные UPDATE works в разном порядке строк → deadlock,
+// один вызов падал. Advisory-lock сериализует их. Здесь бьём НЕСКОЛЬКИМИ
+// параллельными вызовами — с локом ВСЕ должны завершиться без ошибки.
+func TestClassifyWorkKinds_ConcurrentNoDeadlock(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	auth := seedGroupAuthor(t, ctx, pool, "Шекли", "шекли роберт")
+	// Достаточно строк, чтобы UPDATE'ы реально трогали работы (иначе лок не под
+	// нагрузкой). Половина — сборники по названию, чтобы был ненулевой UPDATE.
+	for i := 0; i < 40; i++ {
+		title := "Роман номер " + string(rune('A'+i%26))
+		if i%2 == 0 {
+			title = "Сборник рассказов " + string(rune('A'+i%26))
+		}
+		seedGroupBook(t, ctx, pool, collID, archID, auth,
+			"CC"+string(rune('A'+i%26))+string(rune('0'+i/26)),
+			title, title, "ru", "", "", "")
+	}
+
+	const workers = 6
+	errs := make(chan error, workers)
+	start := make(chan struct{})
+	for w := 0; w < workers; w++ {
+		go func() {
+			<-start // синхронный старт — максимизируем перекрытие UPDATE'ов
+			_, err := ClassifyWorkKinds(ctx, pool)
+			errs <- err
+		}()
+	}
+	close(start)
+	for w := 0; w < workers; w++ {
+		require.NoError(t, <-errs, "конкурентная классификация не должна ловить deadlock")
+	}
+}
