@@ -62,9 +62,9 @@ func TestService_HistoryFlow(t *testing.T) {
 	require.Len(t, recent, 1)
 	require.Equal(t, bookID, recent[0].ID)
 
-	// read (upsert): два вызова не должны добавить строки
-	require.NoError(t, svc.RecordRead(ctx, userID, bookID))
-	require.NoError(t, svc.RecordRead(ctx, userID, bookID))
+	// acquisition (upsert reads): два вызова не должны добавить строки
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, bookID))
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, bookID))
 	var readsCount int
 	require.NoError(t, pool.QueryRow(ctx,
 		`SELECT count(*) FROM reads WHERE user_id = $1 AND book_id = $2`,
@@ -72,10 +72,10 @@ func TestService_HistoryFlow(t *testing.T) {
 	).Scan(&readsCount))
 	require.Equal(t, 1, readsCount)
 
-	// IsRead: RecordRead не должен ставить completed_at → false.
+	// IsRead: acquisition не ставит completed_at → false.
 	isRead, err := svc.IsRead(ctx, userID, bookID)
 	require.NoError(t, err)
-	require.False(t, isRead, "RecordRead не считается прочитыванием — только download/access")
+	require.False(t, isRead, "приобретение (download/Kindle) не считается прочитыванием")
 
 	// MarkRead — явная отметка прочитанным. Идемпотентна.
 	require.NoError(t, svc.MarkRead(ctx, userID, bookID))
@@ -271,7 +271,7 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 			VALUES ($1,$2,$3,$3,'fb2','Оно','оно',$4) RETURNING id`, collID, archID, lib, workID).Scan(&id))
 		return id
 	}
-	_ = mk("L1")
+	e0 := mk("L1")
 	e2 := mk("L2")
 
 	svc := history.New(pool)
@@ -309,6 +309,19 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, set[workID].Fraction)
 	require.InDelta(t, 0.5, *set[workID].Fraction, 0.001, "макс. прогресс по изданиям работы")
+
+	// UnmarkRead — work-wide (находка аудита «снять не срабатывало»): отметка
+	// стоит на e2, кнопка «снять» шлёт ДРУГОЕ издание той же работы (e0) —
+	// сняться должна вся работа, а не только e0 (иначе no-op).
+	require.NoError(t, svc.UnmarkRead(ctx, userID, e0))
+	rd, _, err = svc.WorkReadStatus(ctx, userID, workID)
+	require.NoError(t, err)
+	require.False(t, rd, "снятие с любого издания снимает отметку со всей работы")
+	// Сама reads-строка e2 сохранена (re-ranking сигнал), снят только completed_at.
+	var readsRows int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM reads WHERE user_id = $1 AND book_id = $2`, userID, e2).Scan(&readsRows))
+	require.Equal(t, 1, readsRows)
 }
 
 // TestService_Ratings — пользовательские оценки (work-level): set/update/remove,
@@ -535,8 +548,8 @@ func TestService_ContinueReading(t *testing.T) {
 	f2 := 0.9
 	require.NoError(t, svc.SavePosition(ctx, userID, finished, "cfi-2", &f2))
 	require.NoError(t, svc.MarkRead(ctx, userID, finished))
-	// untouched: только RecordRead (fraction остаётся NULL/0) → не в выдаче.
-	require.NoError(t, svc.RecordRead(ctx, userID, untouched))
+	// untouched: только приобретение (fraction остаётся NULL/0) → не в выдаче.
+	require.NoError(t, svc.RecordAcquisition(ctx, userID, untouched))
 
 	items, err = svc.ContinueReading(ctx, userID, 20)
 	require.NoError(t, err)
