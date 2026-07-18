@@ -14,11 +14,12 @@ import (
 // (Meili не нужен — ListAuthorsFiltered работает по PG) и возвращает id'шники
 // сущностей, нужные тестам фильтров/агрегатов.
 type authorsListFixture struct {
-	pool     *pgxpool.Pool
-	userID   int64
-	kingID   int64 // Кинг — 2 книги (ru/en издания одной работы + ещё одна), рейтинг 5, экранизация, в избранном (автор+книга)
-	asimovID int64 // Азимов — 1 книга sf, год 1951
-	tolstoy  int64 // Толстой — 1 книга prose, без LIBRATE, но web-рейтинг 4.2
+	pool      *pgxpool.Pool
+	userID    int64
+	kingID    int64 // Кинг — 2 книги (ru/en издания одной работы + ещё одна), рейтинг 5, экранизация, в избранном (автор+книга)
+	asimovID  int64 // Азимов — 1 книга sf, год 1951
+	tolstoy   int64 // Толстой — 1 книга prose, без LIBRATE, но web-рейтинг 4.2
+	serviceID int64 // «Коллектив авторов» — служебный (is_service), с видимой книгой; вне списка
 }
 
 func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) authorsListFixture {
@@ -146,6 +147,14 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,5),($3,$2,2)`, f.userID, kingWork, u2)
 	require.NoError(t, err)
 
+	// Служебный автор (агрегат-псевдоавтор) с видимой книгой: в СПИСОК /authors
+	// попадать не должен (миграция 0036), карточка по прямой ссылке работает.
+	f.serviceID = mkAuthor("Коллектив авторов", "коллектив авторов")
+	mkBook(bookOpt{lib: "svc", lang: "ru", authorID: f.serviceID, genreID: gProse})
+	_, err = pool.Exec(ctx,
+		`UPDATE authors SET is_service = true, is_service_source = 'heuristic' WHERE id = $1`, f.serviceID)
+	require.NoError(t, err)
+
 	return f
 }
 
@@ -237,8 +246,26 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 		return m
 	}
 
+	// Служебный автор (is_service) — вне списка целиком: и в голой выдаче, и под
+	// своим ru-языковым фильтром его нет (миграция 0036, находка аудита про
+	// «Коллектив авторов» в топе плодовитых). Карточка по прямой ссылке работает.
+	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	require.False(t, ids(res)[f.serviceID], "служебный автор скрыт из списка")
+	require.Equal(t, 3, res.Total, "Кинг + Азимов + Толстой, без служебного")
+	a, err := svc.GetAuthor(ctx, f.serviceID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.True(t, a.IsService, "карточка по прямой ссылке работает и несёт is_service")
+	// Ручное снятие метки возвращает в список; source='manual'.
+	require.NoError(t, svc.SetAuthorService(ctx, f.serviceID, false))
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	require.True(t, ids(res)[f.serviceID], "после снятия метки автор снова в списке")
+	require.NoError(t, svc.SetAuthorService(ctx, f.serviceID, true)) // вернуть для остальных ассертов
+	require.ErrorIs(t, svc.SetAuthorService(ctx, 999999, true), catalog.ErrNotFound)
+
 	// q — префикс по normalized_name.
-	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Query: "кинг"})
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Query: "кинг"})
 	require.NoError(t, err)
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])

@@ -22,6 +22,11 @@ type Author struct {
 	// "Описание отсутствует" по тому же принципу, что у книг.
 	EnrichmentFetched bool `json:"enrichment_fetched,omitempty"`
 
+	// IsService — «служебный автор» (агрегат-псевдоавтор: «Коллектив
+	// авторов», «Народные сказки»…): скрыт из списка /authors, карточка по
+	// прямой ссылке работает. Правится admin-переключателем (миграция 0036).
+	IsService bool `json:"is_service,omitempty"`
+
 	BookCount  int               `json:"book_count"`
 	TopGenres  []GenreCount      `json:"top_genres,omitempty"`
 	Series     []SeriesWithCount `json:"series,omitempty"`

@@ -874,6 +874,27 @@ function invalidateCatalog(qc: QueryClient) {
 }
 
 /** useMergeWorks — объединить работы в одну (work_ids ≥ 2; target опционален). */
+/** useSetAuthorService — ручная метка «служебный автор» (агрегат-псевдоавтор,
+ *  скрыт из списка /authors) в обе стороны. is_service_source='manual' на
+ *  бэке защищает решение от эвристики. */
+export function useSetAuthorService() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { authorId: number; isService: boolean }) =>
+      apiFetch<{ is_service: boolean }>(`/api/admin/authors/${vars.authorId}/service`, {
+        method: 'PUT',
+        body: { is_service: vars.isService },
+      }),
+    onSuccess: (_data, vars) => {
+      void qc.invalidateQueries({ queryKey: ['author', String(vars.authorId)] });
+      void qc.invalidateQueries({ queryKey: ['authors'] });
+      toast.success(vars.isService ? 'Автор помечен как служебный' : 'Метка «служебный» снята');
+    },
+    onError: (e) =>
+      toast.error(`Не удалось изменить метку: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
 export function useMergeWorks() {
   const qc = useQueryClient();
   return useMutation({

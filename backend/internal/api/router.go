@@ -216,6 +216,10 @@ func NewRouter(d Deps) http.Handler {
 			// Отдельный r.Group чтобы requireAdmin не дублировался на user-роутах.
 			r.Group(func(r chi.Router) {
 				r.Use(requireAdmin(d.Auth))
+				// Ручная метка «служебный автор» (агрегат-псевдоавтор вне списка /authors).
+				if d.Catalog.Service != nil {
+					r.Put("/admin/authors/{id}/service", handleSetAuthorService(d.Catalog))
+				}
 				r.Get("/admin/users", handleListUsers(d.Auth))
 				r.Post("/admin/users", handleCreateUser(d.Auth))
 				r.Patch("/admin/users/{id}", handleUpdateUser(d.Auth))

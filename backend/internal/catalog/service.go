@@ -80,6 +80,23 @@ func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string, hid
 // GetAuthor — карточка автора. excludeGenres/excludeLangs — скрытые жанры/языки
 // (видимость контента), применяются к счётчику книг и списку книг, чтобы на
 // карточке не всплывал контент, скрытый глобально/персонально (как в /books).
+// SetAuthorService — ручная admin-метка «служебный автор» (в обе стороны).
+// is_service_source='manual' защищает решение от эвристики
+// metadata.ClassifyServiceAuthors (она не трогает manual-строки).
+// ErrNotFound — автора нет.
+func (s *Service) SetAuthorService(ctx context.Context, id int64, isService bool) error {
+	tag, err := s.pool.Exec(ctx, `
+		UPDATE authors SET is_service = $2, is_service_source = 'manual' WHERE id = $1
+	`, id, isService)
+	if err != nil {
+		return fmt.Errorf("set author service: %w", err)
+	}
+	if tag.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
 func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres, excludeLangs []string, hideCompilations bool) (Author, error) {
 	var (
 		a         Author
@@ -88,9 +105,9 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 		fetchedAt pgtype.Timestamptz
 	)
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, last_name, first_name, middle_name, bio, photo_path, metadata_fetched_at
+		SELECT id, last_name, first_name, middle_name, bio, photo_path, metadata_fetched_at, is_service
 		FROM authors WHERE id = $1
-	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &bio, &photoPath, &fetchedAt)
+	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &bio, &photoPath, &fetchedAt, &a.IsService)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Author{}, ErrNotFound
