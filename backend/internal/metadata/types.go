@@ -225,6 +225,20 @@ type YearProvider interface {
 	FetchYear(ctx context.Context, q BookQuery) (int, error)
 }
 
+// SrcLangProvider — внешний источник ЯЗЫКА ОРИГИНАЛА произведения для
+// дозаполнения books.src_lang (перевод без fb2 <src-lang>). Возвращает
+// нормализованный ISO 639-1 код («fr») либо ErrNotFound — книга не сопоставлена
+// / язык не размечен / precision-гейты источника отсекли неоднозначность;
+// прочие ошибки — сетевые/HTTP (воркер помечает 'error', короткий ретрай).
+// Name() должен совпадать со строкой source в book_src_lang_lookups.
+// v1 реализация одна — Wikidata P407 (см. wikidata_srclang.go); OpenLibrary
+// сознательно НЕ источник: поля «язык оригинала» у него нет, а languages
+// работы — union языков всех изданий (для оригинала это гадание).
+type SrcLangProvider interface {
+	Name() string
+	FetchSrcLang(ctx context.Context, q BookQuery) (string, error)
+}
+
 // RatingResult — внешний рейтинг произведения: средняя (шкала 1–5) + число
 // голосов у источника. Count помогает выбрать более надёжный источник, когда
 // их несколько (больше голосов — выше доверие).

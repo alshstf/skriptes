@@ -545,6 +545,74 @@ func (s *Store) SetWorkGrouping(ctx context.Context, cfg WorkGroupingConfig) err
 	return nil
 }
 
+const srcLangEnrichmentKey = "src_lang_enrichment"
+
+// SrcLangEnrichmentConfig — настройки фонового дозаполнения books.src_lang
+// (язык оригинала) из внешних источников. Зеркало YearEnrichmentConfig, но
+// источник v1 один — Wikidata (P407 с precision-гейтами: ровно один ISO-код и
+// он ≠ языку издания; нативы src_lang не получают — их закрывает производный
+// orig_lang works-индекса). OpenLibrary сознательно не источник: поля «язык
+// оригинала» у него нет. Воркер opt-in (Enabled=false по умолчанию).
+//
+//	WholeCollection — false (дефолт) = только книги, у которых локальный
+//	                  fb2-скан издания прошёл (edition_meta_scanned_at NOT NULL),
+//	                  но оригинала не дал; true = все книги без src_lang.
+type SrcLangEnrichmentConfig struct {
+	Enabled           bool `json:"enabled"`
+	Wikidata          bool `json:"wikidata"`
+	WholeCollection   bool `json:"whole_collection"`
+	WikidataRPM       int  `json:"wikidata_rpm"`
+	NotFoundRetryDays int  `json:"not_found_retry_days"`
+	ErrorRetryHours   int  `json:"error_retry_hours"`
+}
+
+// DefaultSrcLangEnrichmentConfig — воркер выключен (opt-in), Wikidata включена,
+// режим фолбэка, вежливый rate-limit и TTL.
+func DefaultSrcLangEnrichmentConfig() SrcLangEnrichmentConfig {
+	return SrcLangEnrichmentConfig{
+		Enabled:           false,
+		Wikidata:          true,
+		WholeCollection:   false,
+		WikidataRPM:       20, // как у года/группировки (глобальный бюджет с UA)
+		NotFoundRetryDays: 90,
+		ErrorRetryHours:   24,
+	}
+}
+
+// SrcLangEnrichment читает настройки дозаполнения языка оригинала; нет
+// оверрайда в БД — дефолты (мердж поверх DefaultSrcLangEnrichmentConfig).
+func (s *Store) SrcLangEnrichment(ctx context.Context) (SrcLangEnrichmentConfig, error) {
+	cfg := DefaultSrcLangEnrichmentConfig()
+	var raw []byte
+	err := s.pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, srcLangEnrichmentKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return cfg, nil
+	}
+	if err != nil {
+		return cfg, fmt.Errorf("read src_lang enrichment settings: %w", err)
+	}
+	if err := json.Unmarshal(raw, &cfg); err != nil {
+		return DefaultSrcLangEnrichmentConfig(), fmt.Errorf("decode src_lang enrichment settings: %w", err)
+	}
+	return cfg, nil
+}
+
+// SetSrcLangEnrichment сохраняет настройки (upsert).
+func (s *Store) SetSrcLangEnrichment(ctx context.Context, cfg SrcLangEnrichmentConfig) error {
+	raw, err := json.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("encode src_lang enrichment settings: %w", err)
+	}
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, $2, now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+	`, srcLangEnrichmentKey, raw); err != nil {
+		return fmt.Errorf("save src_lang enrichment settings: %w", err)
+	}
+	return nil
+}
+
 const brandingKey = "branding"
 
 // DefaultInstanceName — имя инстанса по умолчанию (когда оверрайда в БД нет).

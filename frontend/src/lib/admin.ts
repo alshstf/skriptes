@@ -316,6 +316,84 @@ export function useResetYearLookups() {
   });
 }
 
+// ── Язык оригинала: дозаполнение src_lang из Wikidata (P407) ──────────────
+
+export type SrcLangEnrichmentSettings = {
+  enabled: boolean;
+  wikidata: boolean;
+  // false = фолбэк (fb2-скан прошёл, оригинала не дал), true = вся коллекция
+  whole_collection: boolean;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+  // статус воркера (read-only)
+  src_lang_backfill_running: boolean;
+  src_lang_backfill_mode: 'off' | 'continuous' | 'once';
+  // покрытие src_lang (read-only); by_source — только внешние found
+  coverage: {
+    total: number;
+    with_src_lang: number;
+    by_source: Record<string, number>;
+  };
+};
+
+// SrcLangEnrichmentInput — тело PUT (только конфиг, без read-only полей).
+export type SrcLangEnrichmentInput = {
+  enabled: boolean;
+  wikidata: boolean;
+  whole_collection: boolean;
+  wikidata_rpm: number;
+  not_found_retry_days: number;
+  error_retry_hours: number;
+};
+
+const SRC_LANG_KEY = ['admin', 'src-lang-enrichment'] as const;
+
+export function useSrcLangEnrichmentSettings() {
+  return useQuery<SrcLangEnrichmentSettings>({
+    queryKey: [...SRC_LANG_KEY],
+    queryFn: () => apiFetch<SrcLangEnrichmentSettings>('/api/admin/src-lang-enrichment'),
+    staleTime: 10_000,
+    refetchInterval: (query) => (query.state.data?.src_lang_backfill_running ? 3000 : false),
+  });
+}
+
+export function useUpdateSrcLangEnrichmentSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: SrcLangEnrichmentInput) =>
+      apiFetch<SrcLangEnrichmentSettings>('/api/admin/src-lang-enrichment', { method: 'PUT', body: vars }),
+    onSuccess: (data) => qc.setQueryData([...SRC_LANG_KEY], data),
+  });
+}
+
+export function useRunSrcLangBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/src-lang-enrichment/run', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...SRC_LANG_KEY] }),
+  });
+}
+
+export function useStopSrcLangBackfill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ status: string }>('/api/admin/src-lang-enrichment/stop', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...SRC_LANG_KEY] }),
+  });
+}
+
+export function useResetSrcLangLookups() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/src-lang-enrichment/reset-failed', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...SRC_LANG_KEY] }),
+  });
+}
+
 // ── Обложки: дозаполнение cover_path из внешних источников (OL / GB) ──────
 
 export type CoverEnrichmentSettings = {

@@ -266,6 +266,27 @@ func run() error {
 		yearBackfillCtl.Start()
 	}
 
+	// Дозаполнение языка оригинала (books.src_lang) из Wikidata (P407 с
+	// precision-гейтами) для переводов без fb2 <src-lang>. Зеркало year-воркера:
+	// opt-in, rate-limit + учёт (book_src_lang_lookups). Источник один —
+	// Wikidata; OL сознательно не источник (поля «язык оригинала» у него нет).
+	// imp — WorksIndexSyncer: таргетный ресинк src_lang[]/orig_lang[] работ.
+	srcLangCfg, err := settingsStore.SrcLangEnrichment(ctx())
+	if err != nil {
+		logger.Warn("read src_lang enrichment settings — using defaults", "err", err)
+		srcLangCfg = settings.DefaultSrcLangEnrichmentConfig()
+	}
+	srcLangBackfillCtl := metadata.NewSrcLangBackfillController(pool, wdAdaptations, metadata.SrcLangBackfillConfig{
+		Wikidata:          srcLangCfg.Wikidata,
+		WholeCollection:   srcLangCfg.WholeCollection,
+		WikidataRPM:       srcLangCfg.WikidataRPM,
+		NotFoundRetryDays: srcLangCfg.NotFoundRetryDays,
+		ErrorRetryHours:   srcLangCfg.ErrorRetryHours,
+	}, imp, logger)
+	if srcLangCfg.Enabled {
+		srcLangBackfillCtl.Start()
+	}
+
 	// Дозаполнение обложек из внешних источников (OpenLibrary → Google Books)
 	// для книг без cover_path из fb2. Зеркало year-воркера: opt-in, per-source
 	// rate-limit + учёт (book_cover_lookups). Сохранение делает тот же enricher.
@@ -439,7 +460,8 @@ func run() error {
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
 		Settings: api.SettingsDeps{
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
-			YearBackfill: yearBackfillCtl, CoverBackfill: coverBackfillCtl,
+			YearBackfill: yearBackfillCtl, SrcLangBackfill: srcLangBackfillCtl,
+			CoverBackfill:  coverBackfillCtl,
 			ExternalRating: externalRatingCtl,
 			Renown:         renownCtl,
 			AuthorBackfill: authorBackfillCtl, AdaptationBackfill: adaptationBackfillCtl,
