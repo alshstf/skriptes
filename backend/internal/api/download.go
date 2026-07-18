@@ -108,7 +108,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 // handleEpub — GET /api/books/{id}/epub. Inline-эндпоинт для in-browser
 // ридера (foliate-js): жёстко epub3-формат, без Content-Disposition
 // attachment (чтобы fetch не упирался в политики download-prompt'а
-// в SPA-окружении). НЕ дёргает RecordRead — учёт открытия книги в
+// в SPA-окружении). НЕ пишет в reads — учёт открытия книги в
 // ридере идёт через PUT /api/books/{id}/position при первом сохранении
 // позиции; download остаётся отдельной аналитикой.
 //

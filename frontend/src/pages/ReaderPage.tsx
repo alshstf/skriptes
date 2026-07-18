@@ -217,9 +217,28 @@ export function ReaderPage() {
             // СВОИ записи в общей session history (перелистывание/секции), и
             // back мог увести в ридер ДРУГОГО издания, а не на карточку (баг,
             // который заметил юзер). replace не добавляет записей и всегда ведёт
-            // на карточку (work-страницу), а browser-back с карточки — на то,
+            // на карточку, а browser-back с карточки — на то,
             // что было ДО ридера (список/карточка), но не обратно в ридер.
-            void navigate({ to: '/books/$id', params: { id: String(bookId) }, replace: true });
+            //
+            // Ведём на РАБОТУ (/works/{work_id}) — основной маршрут карточки
+            // (находка аудита: раньше вели на /books/{editionId}, URL «съезжал»
+            // на издание). work_id берём из кэша карточки (если пришли с неё),
+            // иначе один лёгкий fetch; при любой ошибке — фолбэк на /books/{id}.
+            void (async () => {
+              try {
+                const cached = qc.getQueryData<Book>(['book', String(bookId)]);
+                const workID =
+                  cached?.work_id ??
+                  (await apiFetch<Book>(`/api/books/${bookId}`)).work_id;
+                if (workID) {
+                  await navigate({ to: '/works/$id', params: { id: String(workID) }, replace: true });
+                  return;
+                }
+              } catch {
+                // сеть/404 — фолбэк ниже
+              }
+              await navigate({ to: '/books/$id', params: { id: String(bookId) }, replace: true });
+            })();
           }}
           aria-label="Вернуться к карточке книги"
         >

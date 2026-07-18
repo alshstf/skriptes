@@ -47,13 +47,12 @@ func TestEngagementHook_CoversAllWriters(t *testing.T) {
 	svc.SetEngagementHook(func(id int64) { marked = append(marked, id) })
 
 	require.NoError(t, svc.RecordView(ctx, userID, bookID))
-	require.NoError(t, svc.RecordRead(ctx, userID, bookID))
 	require.NoError(t, svc.RecordAcquisition(ctx, userID, bookID))
 	require.NoError(t, svc.MarkRead(ctx, userID, bookID))
 	fr := 0.42
 	require.NoError(t, svc.SavePosition(ctx, userID, bookID, "epubcfi(/6/2)", &fr))
 
-	require.Len(t, marked, 5, "каждый писатель в views/reads должен дёрнуть хук")
+	require.Len(t, marked, 4, "каждый писатель в views/reads должен дёрнуть хук")
 	for _, id := range marked {
 		require.Equal(t, bookID, id)
 	}

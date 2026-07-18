@@ -26,7 +26,7 @@ type RateableItem struct {
 // скачивание). acquired_at ставится один раз (COALESCE — самое раннее не
 // перетирается повторными скачиваниями); по нему через задержку книга станет
 // пригодной к запросу оценки. updated_at бампается всегда (слабый сигнал интереса
-// для re-ranking, как старый RecordRead).
+// для re-ranking).
 func (s *Service) RecordAcquisition(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO reads (user_id, book_id, acquired_at, updated_at)

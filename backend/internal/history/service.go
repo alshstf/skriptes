@@ -37,7 +37,7 @@ func New(pool *pgxpool.Pool) *Service {
 }
 
 // SetEngagementHook регистрирует callback, который зовётся после фиксации
-// просмотра/чтения книги (RecordView/RecordRead/RecordAcquisition) — им
+// просмотра/чтения книги (RecordView/RecordAcquisition/MarkRead/SavePosition) — им
 // PopularityTracker помечает работу для пересчёта популярности в works-индексе.
 // Неблокирующий, nil-safe. Зовётся один раз при wiring.
 func (s *Service) SetEngagementHook(f func(bookID int64)) { s.markEngaged = f }
@@ -64,30 +64,10 @@ func (s *Service) RecordView(ctx context.Context, userID, bookID int64) error {
 	return nil
 }
 
-// RecordRead — фиксирует факт скачивания/открытия книги.
-//
-// Слово "read" здесь в смысле "accessed" (download или fetch ридером),
-// НЕ "completed". Сигнал «прочитано» — это reads.completed_at IS NOT NULL,
-// устанавливается явно через MarkRead. RecordRead используется для
-// re-ranking (книга, к которой обращались, — слабый сигнал интереса)
-// и для тёплой памяти reads-row, на которую later может прийти
-// SavePosition или MarkRead.
-//
-// reads имеет PRIMARY KEY (user_id, book_id) — повторные вызовы
-// обновляют updated_at; last_pos и completed_at не трогаем.
-func (s *Service) RecordRead(ctx context.Context, userID, bookID int64) error {
-	_, err := s.pool.Exec(ctx, `
-		INSERT INTO reads (user_id, book_id, updated_at)
-		VALUES ($1, $2, now())
-		ON CONFLICT (user_id, book_id)
-		DO UPDATE SET updated_at = now()
-	`, userID, bookID)
-	if err != nil {
-		return fmt.Errorf("upsert read: %w", err)
-	}
-	s.mark(bookID)
-	return nil
-}
+// (Бывший RecordRead — «факт скачивания/открытия» — удалён как мёртвый код:
+// ни одного прод-вызова, его роль давно закрывает RecordAcquisition
+// (rating_prompts.go — download/Kindle пишет reads.acquired_at) и
+// SavePosition (ридер). Находка аудита 2026-07.)
 
 // MarkRead — пользователь явно отметил книгу как прочитанную.
 // Идемпотентна: повторный вызов перетирает completed_at тем же now() —
@@ -116,10 +96,24 @@ func (s *Service) MarkRead(ctx context.Context, userID, bookID int64) error {
 // UnmarkRead — снять отметку «прочитано». Сама запись в reads остаётся
 // (важно для re-ranking сигналов: пользователь интересовался книгой,
 // даже если потом передумал её считать прочитанной).
+//
+// Снимает СО ВСЕХ изданий работы книги, а не только с bookID: карточка
+// показывает work-level статус (WorkReadStatus — прочитано ХОТЬ ОДНО издание),
+// а кнопка «снять» шлёт id представительного издания. Если отметка стояла на
+// ДРУГОМ издании той же работы (дочитал в ридере издание A, карточка
+// представляет B) — точечное снятие с B было no-op и «снять» визуально не
+// срабатывало (находка аудита). Намерение пользователя — «работа не
+// прочитана», выполняем его целиком. UNION с самим bookID — на случай
+// книги без work_id (легаси-инвариант).
 func (s *Service) UnmarkRead(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
 		UPDATE reads SET completed_at = NULL, updated_at = now()
-		WHERE user_id = $1 AND book_id = $2
+		WHERE user_id = $1 AND book_id IN (
+			SELECT b2.id FROM books b1
+			JOIN books b2 ON b2.work_id = b1.work_id
+			WHERE b1.id = $2 AND b1.work_id IS NOT NULL
+			UNION SELECT $2::bigint
+		)
 	`, userID, bookID)
 	if err != nil {
 		return fmt.Errorf("unmark read: %w", err)

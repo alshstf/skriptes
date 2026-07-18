@@ -106,7 +106,7 @@ func NewPopularityTracker(im *Importer, logger *slog.Logger) *PopularityTracker 
 }
 
 // MarkBook помечает книгу как получившую новую вовлечённость (зовётся после
-// RecordView/RecordRead). Неблокирующе, безопасно из нескольких горутин; nil-трекер
+// RecordView/RecordAcquisition/MarkRead/SavePosition). Неблокирующе, безопасно из нескольких горутин; nil-трекер
 // и пустой id — no-op.
 func (t *PopularityTracker) MarkBook(bookID int64) {
 	if t == nil || bookID <= 0 {
