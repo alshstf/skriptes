@@ -31,6 +31,11 @@ import {
   useRunExternalRating,
   useStopExternalRating,
   useResetYearLookups,
+  useSrcLangEnrichmentSettings,
+  useUpdateSrcLangEnrichmentSettings,
+  useRunSrcLangBackfill,
+  useStopSrcLangBackfill,
+  useResetSrcLangLookups,
   useResetCoverLookups,
   useResetRatingLookups,
   useRenownSettings,
@@ -57,6 +62,8 @@ import {
   type Intensity,
   type YearEnrichmentSettings,
   type YearEnrichmentInput,
+  type SrcLangEnrichmentSettings,
+  type SrcLangEnrichmentInput,
   type CoverEnrichmentSettings,
   type CoverEnrichmentInput,
   type ExternalRatingSettings,
@@ -146,6 +153,23 @@ function buildYearInput(d: YearEnrichmentSettings, patch: Partial<YearEnrichment
     wikidata: d.wikidata,
     whole_collection: d.whole_collection,
     openlibrary_rpm: d.openlibrary_rpm,
+    wikidata_rpm: d.wikidata_rpm,
+    not_found_retry_days: d.not_found_retry_days,
+    error_retry_hours: d.error_retry_hours,
+    ...patch,
+  };
+}
+
+const MODE_HELP_SRC_LANG: Record<'off' | 'bg', string> = {
+  off: 'Не дозаполнять. Язык оригинала остаётся только там, где его дал fb2.',
+  bg: 'Фоновый воркер спрашивает Wikidata о языке оригинала переводов, у которых fb2 его не дал.',
+};
+
+function buildSrcLangInput(d: SrcLangEnrichmentSettings, patch: Partial<SrcLangEnrichmentInput>): SrcLangEnrichmentInput {
+  return {
+    enabled: d.enabled,
+    wikidata: d.wikidata,
+    whole_collection: d.whole_collection,
     wikidata_rpm: d.wikidata_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
@@ -438,6 +462,7 @@ export function AdminBackgroundPage() {
   // ── Запросы ──
   const cq = useCoverCacheSettings();
   const yq = useYearEnrichmentSettings();
+  const sq = useSrcLangEnrichmentSettings();
   const xq = useCoverEnrichmentSettings();
   const rq = useExternalRatingSettings();
   const nq = useRenownSettings();
@@ -460,6 +485,10 @@ export function AdminBackgroundPage() {
   const stopCol = useStopPrewarmCoverCache();
   const runYear = useRunYearBackfill();
   const stopYear = useStopYearBackfill();
+  const updateSrcLang = useUpdateSrcLangEnrichmentSettings();
+  const runSrcLang = useRunSrcLangBackfill();
+  const stopSrcLang = useStopSrcLangBackfill();
+  const resetSrcLang = useResetSrcLangLookups();
   const runCover = useRunCoverBackfill();
   const stopCover = useStopCoverBackfill();
   const updateRating = useUpdateExternalRatingSettings();
@@ -508,6 +537,15 @@ export function AdminBackgroundPage() {
       yearInit.current = true;
     }
   }, [yq.data]);
+
+  const [wdRpmS, setWdRpmS] = useState('');
+  const srcLangInit = useRef(false);
+  useEffect(() => {
+    if (sq.data && !srcLangInit.current) {
+      setWdRpmS(String(sq.data.wikidata_rpm));
+      srcLangInit.current = true;
+    }
+  }, [sq.data]);
 
   const [olRpmC, setOlRpmC] = useState('');
   const [gbRpmC, setGbRpmC] = useState('');
@@ -770,6 +808,20 @@ export function AdminBackgroundPage() {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
     }
   };
+  // ── Язык оригинала (Wikidata P407) — самостоятельный воркер ──
+  const srcLangMode: Mode = (sq.data?.enabled ?? false) ? 'bg' : 'off';
+  const srcLangRunning = sq.data?.src_lang_backfill_running ?? false;
+  const srcLangOnce = sq.data?.src_lang_backfill_mode === 'once';
+  const sCov = sq.data?.coverage;
+  const applySrcLang = async (patch: Partial<SrcLangEnrichmentInput>, msg: string) => {
+    if (!sq.data) return;
+    try {
+      await updateSrcLang.mutateAsync(buildSrcLangInput(sq.data, patch));
+      toast.success(msg);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось применить');
+    }
+  };
 
   // ── Живое редактирование источников (режим «Фоном») ──
   // fb2 — локальный синк (общий мастер prewarm пересчитываем из объединения).
@@ -836,6 +888,9 @@ export function AdminBackgroundPage() {
   const onStopCol = action(() => stopCol.mutateAsync(), 'Останавливаю…');
   const onRunYear = action(() => runYear.mutateAsync(), 'Дозаполнение запущено');
   const onStopYear = action(() => stopYear.mutateAsync(), 'Останавливаю…');
+  const onRunSrcLang = action(() => runSrcLang.mutateAsync(), 'Дозаполнение языка оригинала запущено');
+  const onStopSrcLang = action(() => stopSrcLang.mutateAsync(), 'Останавливаю…');
+  const onResetSrcLang = resetAction(() => resetSrcLang.mutateAsync());
   const onRunCover = action(() => runCover.mutateAsync(), 'Дозаполнение запущено');
   const onStopCover = action(() => stopCover.mutateAsync(), 'Останавливаю…');
   const onRunRating = action(() => runRating.mutateAsync(), 'Дозаполнение рейтинга запущено');
@@ -891,6 +946,8 @@ export function AdminBackgroundPage() {
   const colInvalid = [minFreeMB, coverBudgetMB, posterMB, photoMB].some(badNum);
   const yearDirty = !!yq.data && (olRpmY !== String(yq.data.openlibrary_rpm) || wdRpmY !== String(yq.data.wikidata_rpm));
   const yearInvalid = [olRpmY, wdRpmY].some(badNum);
+  const srcLangDirty = !!sq.data && wdRpmS !== String(sq.data.wikidata_rpm);
+  const srcLangInvalid = badNum(wdRpmS);
   const coverDirty = !!xq.data && (olRpmC !== String(xq.data.openlibrary_rpm) || gbRpmC !== String(xq.data.googlebooks_rpm));
   const coverInvalid = [olRpmC, gbRpmC].some(badNum);
   const ratingDirty =
@@ -910,17 +967,18 @@ export function AdminBackgroundPage() {
 
   const lowFloorWarn = !badNum(minFreeMB) && num(minFreeMB) < MIN_FREE_WARN_MB;
 
-  const dirty = colDirty || yearDirty || coverDirty || ratingDirty || renownDirty || baDirty;
+  const dirty = colDirty || yearDirty || srcLangDirty || coverDirty || ratingDirty || renownDirty || baDirty;
   const saveInvalid =
     (colDirty && colInvalid) ||
     (yearDirty && yearInvalid) ||
+    (srcLangDirty && srcLangInvalid) ||
     (coverDirty && coverInvalid) ||
     (ratingDirty && ratingInvalid) ||
     (renownDirty && renownInvalid) ||
     (baDirty && baInvalid);
   const saving =
-    updateCol.isPending || updateYear.isPending || updateCover.isPending || updateRating.isPending ||
-    updateRenown.isPending || updateBa.isPending;
+    updateCol.isPending || updateYear.isPending || updateSrcLang.isPending || updateCover.isPending ||
+    updateRating.isPending || updateRenown.isPending || updateBa.isPending;
 
   const onReset = () => {
     if (cq.data) {
@@ -932,6 +990,9 @@ export function AdminBackgroundPage() {
     if (yq.data) {
       setOlRpmY(String(yq.data.openlibrary_rpm));
       setWdRpmY(String(yq.data.wikidata_rpm));
+    }
+    if (sq.data) {
+      setWdRpmS(String(sq.data.wikidata_rpm));
     }
     if (xq.data) {
       setOlRpmC(String(xq.data.openlibrary_rpm));
@@ -976,6 +1037,12 @@ export function AdminBackgroundPage() {
         setOlRpmY(String(saved.openlibrary_rpm));
         setWdRpmY(String(saved.wikidata_rpm));
       }
+      if (srcLangDirty && !srcLangInvalid && sq.data) {
+        const saved = await updateSrcLang.mutateAsync(
+          buildSrcLangInput(sq.data, { wikidata_rpm: num(wdRpmS) }),
+        );
+        setWdRpmS(String(saved.wikidata_rpm));
+      }
       if (coverDirty && !coverInvalid && xq.data) {
         const saved = await updateCover.mutateAsync(
           buildCoverInput(xq.data, { openlibrary_rpm: num(olRpmC), googlebooks_rpm: num(gbRpmC) }),
@@ -1019,6 +1086,7 @@ export function AdminBackgroundPage() {
   // ── Покрытия ──
   const yCov = yq.data?.coverage;
   const yPct = yCov && yCov.total > 0 ? Math.round((yCov.with_year / yCov.total) * 100) : 0;
+  const sCovPct = sCov && sCov.total > 0 ? Math.round((sCov.with_src_lang / sCov.total) * 100) : 0;
   const xCov = xq.data?.coverage;
   const xPct = xCov && xCov.total > 0 ? Math.round((xCov.with_cover / xCov.total) * 100) : 0;
   const rPct = rCov && rCov.total > 0 ? Math.round((rCov.with_rating / rCov.total) * 100) : 0;
@@ -1393,6 +1461,76 @@ export function AdminBackgroundPage() {
               {yCov?.by_source && Object.keys(yCov.by_source).length > 0 ? (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   {Object.entries(yCov.by_source)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([src, n]) => (
+                      <span key={src} className="tabular-nums">
+                        {SOURCE_LABELS[src] ?? src}: {n}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+            </TypeRow>
+
+            {/* ЯЗЫК ОРИГИНАЛА (src_lang из Wikidata P407) */}
+            <TypeRow
+              title="Язык оригинала"
+              mode={srcLangMode}
+              coverage={sCov ? `оригинал у ${sCovPct}%` : '—'}
+            >
+              <ModeSelector
+                idPrefix="srclang"
+                value={srcLangMode}
+                twoState
+                help={MODE_HELP_SRC_LANG}
+                disabled={updateSrcLang.isPending}
+                onChange={(m) => void applySrcLang({ enabled: m === 'bg' }, `Режим: ${MODE_LABEL[m]}`)}
+              />
+              <Callout icon={<Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+                Язык оригинала переводов, у которых fb2 его не дал: воркер спрашивает Wikidata
+                (свойство «язык произведения») и принимает ответ только когда он однозначен
+                (ровно один язык) и отличается от языка издания. Нативные книги язык оригинала
+                не получают — их фильтр «Язык оригинала» и так находит по языку издания.
+              </Callout>
+              {srcLangMode === 'bg' ? (
+                <div className="space-y-3 border-t border-border pt-3">
+                  <ScopeControl
+                    whole={sq.data?.whole_collection ?? false}
+                    disabled={updateSrcLang.isPending}
+                    onChange={(v) => void applySrcLang({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: только пропуски fb2')}
+                    warning="Вся коллекция: Wikidata спрашивается и по книгам, которых локальный fb2-проход ещё не касался — сотни тысяч запросов, очень долго. Обычно достаточно пропусков fb2."
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label htmlFor="srclang-wd-rpm" className="text-sm">
+                        Wikidata, зап./мин
+                      </label>
+                      <Input id="srclang-wd-rpm" type="number" min={0} value={wdRpmS} onChange={(e) => setWdRpmS(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {srcLangOnce ? (
+                      <Button variant="outline" size="sm" onClick={onStopSrcLang} disabled={stopSrcLang.isPending}>
+                        <Square className="size-4" aria-hidden />
+                        {stopSrcLang.isPending ? 'Остановка…' : 'Остановить проход'}
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" onClick={onRunSrcLang} disabled={srcLangRunning || runSrcLang.isPending}>
+                        <Flame className="size-4" aria-hidden />
+                        {runSrcLang.isPending ? 'Запуск…' : 'Прогнать разово'}
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" onClick={onResetSrcLang} disabled={resetSrcLang.isPending}>
+                      <RotateCcw className="size-4" aria-hidden />
+                      {resetSrcLang.isPending ? 'Сброс…' : 'Сбросить неудачные'}
+                    </Button>
+                  </div>
+                  {srcLangRunning ? <RunningDot continuous={!srcLangOnce} /> : null}
+                </div>
+              ) : null}
+              {sCov?.by_source && Object.keys(sCov.by_source).length > 0 ? (
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  <span className="w-full text-muted-foreground/80">Найдено источниками:</span>
+                  {Object.entries(sCov.by_source)
                     .sort((a, b) => b[1] - a[1])
                     .map(([src, n]) => (
                       <span key={src} className="tabular-nums">

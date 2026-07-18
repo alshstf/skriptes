@@ -21,6 +21,7 @@ type SettingsDeps struct {
 	Metadata           *metadata.Enricher
 	Prewarm            *metadata.PrewarmController
 	YearBackfill       *metadata.YearBackfillController
+	SrcLangBackfill    *metadata.SrcLangBackfillController
 	CoverBackfill      *metadata.CoverBackfillController
 	ExternalRating     *metadata.ExternalRatingBackfillController
 	Renown             *metadata.RenownBackfillController

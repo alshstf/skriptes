@@ -240,6 +240,13 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/year-enrichment/run", handleYearBackfillNow(d.Settings))
 					r.Post("/admin/year-enrichment/stop", handleYearBackfillStop(d.Settings))
 					r.Post("/admin/year-enrichment/reset-failed", handleResetYearLookups(d.Settings))
+					// Раздел «Язык оригинала»: дозаполнение src_lang из Wikidata
+					// (P407) — настройки + воркер.
+					r.Get("/admin/src-lang-enrichment", handleGetSrcLangEnrichment(d.Settings))
+					r.Put("/admin/src-lang-enrichment", handleUpdateSrcLangEnrichment(d.Settings))
+					r.Post("/admin/src-lang-enrichment/run", handleSrcLangBackfillNow(d.Settings))
+					r.Post("/admin/src-lang-enrichment/stop", handleSrcLangBackfillStop(d.Settings))
+					r.Post("/admin/src-lang-enrichment/reset-failed", handleResetSrcLangLookups(d.Settings))
 					// Раздел «Обложки — внешние»: дозаполнение cover_path из
 					// OpenLibrary/Google Books — настройки + воркер.
 					r.Get("/admin/cover-enrichment", handleGetCoverEnrichment(d.Settings))
