@@ -161,6 +161,13 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// видимости учитываются renderExclusion().
 	where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 		" WHERE ba.author_id = a.id"+renderExclusion()+")")
+	// Служебные авторы (агрегаты-псевдоавторы: «Коллектив авторов», «Народные
+	// сказки», «Газета Завтра»…) — вон из СПИСКА и всех его сортировок (они
+	// замусоривали топ «плодовитых», находка аудита). Карточка по прямой ссылке
+	// (с карточки книги) и suggest/Cmd+K сознательно НЕ фильтруются — найти
+	// агрегат намеренно можно. Метки: эвристика ClassifyServiceAuthors +
+	// admin-переключатель на карточке автора.
+	where = append(where, "NOT a.is_service")
 
 	if q := strings.TrimSpace(p.Query); q != "" {
 		// Префиксный ILIKE по normalized_name (как в SuggestAuthors): GIN

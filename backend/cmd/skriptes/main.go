@@ -131,6 +131,9 @@ func run() error {
 		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
 		// стоять, иначе первая выдача уйдёт без типов до следующего ресинка.
 		runOnceWorkKindClassify(ctx(), pool, logger)
+		// Служебные авторы works-индекс не трогают (авторская, не works-сущность) —
+		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
+		runOnceServiceAuthorClassify(ctx(), pool, logger)
 		runOnceWorksIndexSync(ctx(), pool, imp, logger)
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
@@ -559,6 +562,14 @@ func runStartupImport(ctx context.Context, pool *pgxpool.Pool, imp *importer.Imp
 	} else if n > 0 {
 		logger.Info("classified work kinds after import", "count", n)
 	}
+	// Разметить НОВЫХ служебных авторов импорта («Коллектив авторов» и т.п.) —
+	// агрегаты-псевдоавторы вне списка /authors. Идемпотентно; ручные метки
+	// (is_service_source='manual') не перетирает.
+	if n, err := metadata.ClassifyServiceAuthors(ctx, pool); err != nil {
+		logger.Warn("classify service authors after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("classified service authors after import", "count", n)
+	}
 }
 
 // runOnceLangResync разово синкает нормализованные коды языка в Meili. Миграция
@@ -617,6 +628,33 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *sl
 		logger.Warn("work kind classify: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time work kind classification done", "count", n)
+}
+
+// runOnceServiceAuthorClassify — разовый эвристический бэкфилл «служебных
+// авторов» (агрегатов-псевдоавторов) на существующей коллекции. Гейт
+// service_authors_classified_v1: один раз на апгрейде; дальше новых метит
+// after-import вызов. Зеркало runOnceWorkKindClassify.
+func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "service_authors_classified_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("service author classify: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := metadata.ClassifyServiceAuthors(ctx, pool)
+	if err != nil {
+		logger.Warn("service author classify failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("service author classify: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time service author classification done", "count", n)
 }
 
 // runOnceWorkIDResync разово синкает books.work_id в Meili. distinctAttribute=

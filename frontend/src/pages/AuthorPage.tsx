@@ -12,6 +12,9 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
+import { useSetAuthorService } from '@/lib/admin';
+import { useMe } from '@/lib/auth';
+import { Switch } from '@/components/ui/switch';
 import { useLanguageMap } from '@/lib/content';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -122,6 +125,7 @@ export function AuthorPage() {
               {langNames.length > 0 ? (
                 <p className="text-xs text-muted-foreground">{langNames.join(', ')}</p>
               ) : null}
+              <ServiceAuthorToggle author={a} />
             </div>
           </div>
 
@@ -133,6 +137,30 @@ export function AuthorPage() {
 
       <AuthorBooks author={a} />
     </article>
+  );
+}
+
+/**
+ * ServiceAuthorToggle — admin-переключатель «служебный автор» (агрегат-
+ * псевдоавтор: «Коллектив авторов», «Народные сказки»…). Служебные скрыты из
+ * списка /authors (и его сортировок), карточка по прямой ссылке и Cmd+K
+ * работают. Ручное решение (manual) эвристика не перетирает. Не-админ не
+ * видит ничего.
+ */
+function ServiceAuthorToggle({ author }: { author: Author }) {
+  const { data: me } = useMe();
+  const setService = useSetAuthorService();
+  if (me?.role !== 'admin') return null;
+  return (
+    <label className="flex w-fit items-center gap-2 pt-1 text-xs text-muted-foreground">
+      <Switch
+        checked={author.is_service ?? false}
+        disabled={setService.isPending}
+        onCheckedChange={(v) => setService.mutate({ authorId: author.id, isService: v })}
+        aria-label="Служебный автор"
+      />
+      Служебный автор (скрыт из списка авторов)
+    </label>
   );
 }
 

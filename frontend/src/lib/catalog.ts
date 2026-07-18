@@ -45,6 +45,9 @@ export type Author = {
   photo_path?: string;
   /** Была ли попытка enrichment'а (для UI fallback "Описание отсутствует"). */
   enrichment_fetched?: boolean;
+  /** «Служебный автор» (агрегат-псевдоавтор): скрыт из списка /authors;
+   *  правится admin-переключателем на карточке. */
+  is_service?: boolean;
   /** Запрос инициировал ленивое дозаполнение года (порядок книг в серии мог
    *  «упасть» на фолбэк) — фронт поллит и переставляет порядок по series_order. */
   year_enrichment_pending?: boolean;
