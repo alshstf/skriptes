@@ -98,19 +98,25 @@ func (b *SrcLangBackfiller) drain(ctx context.Context) int {
 	b.changedBooks = nil
 	b.changedMu.Unlock()
 	total := 0
-	var cursor int64
-	for ctx.Err() == nil {
-		batch, err := b.fetchBatch(ctx, cursor, srcLangBackfillBatchSize)
-		if err != nil {
-			b.logger.Warn("src_lang backfill: fetch batch failed", "err", err)
-			break
+	// Двухфазный обход «сначала ядро, потом хвост» (bookCoreCond): голова books
+	// на реальном проде — современный самиздат-натив, весь not_found (замер
+	// 2026-07-19: 528/528); переводы известных книг живут в ядре (переиздания/
+	// экранизации/LIBRATE) — идём к ним первыми.
+	for _, phaseCond := range []string{"AND " + bookCoreCond, "AND NOT " + bookCoreCond} {
+		var cursor int64
+		for ctx.Err() == nil {
+			batch, err := b.fetchBatch(ctx, cursor, srcLangBackfillBatchSize, phaseCond)
+			if err != nil {
+				b.logger.Warn("src_lang backfill: fetch batch failed", "err", err)
+				break
+			}
+			if len(batch) == 0 {
+				break
+			}
+			b.processBatch(ctx, batch)
+			total += len(batch)
+			cursor = batch[len(batch)-1].id
 		}
-		if len(batch) == 0 {
-			break
-		}
-		b.processBatch(ctx, batch)
-		total += len(batch)
-		cursor = batch[len(batch)-1].id
 	}
 	// src_lang живёт в works-индексе (src_lang[] + производный orig_lang[]) —
 	// таргетно пере-собираем работы изменённых книг, чтобы фильтр «Язык
@@ -161,7 +167,9 @@ func (b *SrcLangBackfiller) candidateCond() string {
 	return "(b.src_lang IS NULL OR btrim(b.src_lang) = '') AND b.edition_meta_scanned_at IS NOT NULL"
 }
 
-func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]yearCandidate, error) {
+// fetchBatch — страница кандидатов keyset'ом по id. phaseCond — доп. условие
+// фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
+func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
@@ -175,11 +183,12 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
 		  AND %s
+		  %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond())
+	`, b.candidateCond(), phaseCond)
 	rows, err := b.pool.Query(ctx, q, afterID, limit)
 	if err != nil {
 		return nil, err

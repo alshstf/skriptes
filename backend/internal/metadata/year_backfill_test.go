@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -128,6 +129,69 @@ func (f *fakeYearProvider) Name() string { return f.name }
 func (f *fakeYearProvider) FetchYear(context.Context, BookQuery) (int, error) {
 	f.calls++
 	return f.year, f.err
+}
+
+// orderYearProvider — фейк, записывающий ПОРЯДОК обработанных book_id.
+type orderYearProvider struct {
+	mu  sync.Mutex
+	ids []int64
+}
+
+func (f *orderYearProvider) Name() string { return "openlibrary" }
+func (f *orderYearProvider) FetchYear(_ context.Context, q BookQuery) (int, error) {
+	f.mu.Lock()
+	f.ids = append(f.ids, q.ID)
+	f.mu.Unlock()
+	return 0, ErrNotFound
+}
+
+// TestYearBackfiller_CoreFirst — приоритизация «ядро сначала» (bookCoreCond):
+// книга ядра (работа с 2 изданиями) обрабатывается РАНЬШЕ хвостовой, даже если
+// хвостовая имеет меньший id (наивный id-порядок шёл бы к ней первым).
+func TestYearBackfiller_CoreFirst(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+
+	mkBook := func(lib string, workID any) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, year_local_scanned_at, work_id)
+			VALUES ($1,$2,$3,'f','fb2','T','t', now(), $4) RETURNING id`,
+			collID, archID, lib, workID).Scan(&id))
+		return id
+	}
+
+	// Хвостовая книга — ПЕРВОЙ (меньший id), синглтон-работа.
+	var tailWork, coreWork int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Хвост','хвост') RETURNING id`).Scan(&tailWork))
+	tail := mkBook("L-tail", tailWork)
+	// Ядро — работа с ДВУМЯ изданиями (bookCoreCond: переиздания).
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Ядро','ядро') RETURNING id`).Scan(&coreWork))
+	core1 := mkBook("L-core1", coreWork)
+	core2 := mkBook("L-core2", coreWork)
+
+	prov := &orderYearProvider{}
+	bf := NewYearBackfiller(pool, prov, nil,
+		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
+	require.Equal(t, 3, bf.drain(ctx))
+
+	require.Len(t, prov.ids, 3)
+	// Первые двое — издания ядра (в любом порядке: батч конкурентный), хвост — последним.
+	require.ElementsMatch(t, []int64{core1, core2}, prov.ids[:2], "ядро идёт первым")
+	require.Equal(t, tail, prov.ids[2], "хвост — после ядра")
 }
 
 func TestYearBackfiller_Integration(t *testing.T) {
