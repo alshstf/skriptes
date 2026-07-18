@@ -110,19 +110,25 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 	b.changedBooks = nil
 	b.changedMu.Unlock()
 	total := 0
-	var cursor int64
-	for ctx.Err() == nil {
-		batch, err := b.fetchBatch(ctx, cursor, yearBackfillBatchSize)
-		if err != nil {
-			b.logger.Warn("year backfill: fetch batch failed", "err", err)
-			break
+	// Двухфазный обход «сначала ядро, потом хвост» (bookCoreCond): год приходит
+	// знаменитым/переиздаваемым книгам на дни раньше, полнота прохода не меняется.
+	// Кандидат, обработанный в фазе ядра, во второй фазе не всплывает (условия
+	// взаимоисключающие); TTL lookups страхует от повторов между пересканами.
+	for _, phaseCond := range []string{"AND " + bookCoreCond, "AND NOT " + bookCoreCond} {
+		var cursor int64
+		for ctx.Err() == nil {
+			batch, err := b.fetchBatch(ctx, cursor, yearBackfillBatchSize, phaseCond)
+			if err != nil {
+				b.logger.Warn("year backfill: fetch batch failed", "err", err)
+				break
+			}
+			if len(batch) == 0 {
+				break
+			}
+			b.processBatch(ctx, batch)
+			total += len(batch)
+			cursor = batch[len(batch)-1].id
 		}
-		if len(batch) == 0 {
-			break
-		}
-		b.processBatch(ctx, batch)
-		total += len(batch)
-		cursor = batch[len(batch)-1].id
 	}
 	// Авто-синк Meili-поля year, если за проход год у книг появился.
 	if b.resyncer != nil && b.yearChanged.Load() > 0 && ctx.Err() == nil {
@@ -184,7 +190,9 @@ func (b *YearBackfiller) candidateCond() string {
 	return "b.written_year IS NULL AND b.year_local_scanned_at IS NOT NULL"
 }
 
-func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]yearCandidate, error) {
+// fetchBatch — страница кандидатов keyset'ом по id. phaseCond — доп. условие
+// фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
+func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
@@ -198,11 +206,12 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
 		  AND %s
+		  %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond())
+	`, b.candidateCond(), phaseCond)
 	rows, err := b.pool.Query(ctx, q, afterID, limit)
 	if err != nil {
 		return nil, err
