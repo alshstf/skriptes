@@ -11,7 +11,11 @@ import (
 //
 //	renown = maxPop + renownWBreadth·log₂(1 + N)
 //
-// где maxPop — максимум computeWorkPopularity по НЕ-сборниковым работам автора,
+// где maxPop — максимум computeWorkPopularityExternal по НЕ-сборниковым работам
+// автора (ТОЛЬКО внешние сигналы: издания/LIBRATE/голоса/экранизации/Фантлаб/
+// OL/Wikipedia — БЕЗ личных views/reads/оценок инстанса, иначе накликанный
+// владельцем самиздат обгонял бы Толстого; личная вовлечённость — сигнал для
+// дефолта /books, но не для «известности» автора),
 // N — число «значимых» работ (popularity ≥ renownSignificantPop). MAX-семантика
 // принципиальна: сумма не дала бы плодовитому самиздату (50 работ по 100–160 от
 // LIBRATE → ~841) обогнать автора одного хита (pop 2000 → 2120); log-бонус за
@@ -78,8 +82,11 @@ func (im *Importer) RecomputeAuthorRenown(ctx context.Context) (int64, error) {
 			break
 		}
 		for _, d := range docs {
-			if d.Kind != "" || d.Popularity <= 0 {
-				continue // сборники и работы без сигналов вклада не дают
+			// renownPop — ТОЛЬКО внешние сигналы (computeWorkPopularityExternal):
+			// личные просмотры/чтения/оценки владельца не делают автора
+			// «известным» (иначе накликанный самиздат обгонял бы Толстого).
+			if d.Kind != "" || d.renownPop <= 0 {
+				continue // сборники и работы без внешних сигналов вклада не дают
 			}
 			for _, aid := range d.AuthorIDs {
 				a := byAuthor[aid]
@@ -87,10 +94,10 @@ func (im *Importer) RecomputeAuthorRenown(ctx context.Context) (int64, error) {
 					a = &agg{}
 					byAuthor[aid] = a
 				}
-				if d.Popularity > a.maxPop {
-					a.maxPop = d.Popularity
+				if d.renownPop > a.maxPop {
+					a.maxPop = d.renownPop
 				}
-				if d.Popularity >= renownSignificantPop {
+				if d.renownPop >= renownSignificantPop {
 					a.n++
 				}
 			}

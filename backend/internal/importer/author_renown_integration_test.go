@@ -96,6 +96,22 @@ func TestRecomputeAuthorRenown(t *testing.T) {
 	require.NoError(t, err)
 	require.Zero(t, n)
 
+	// Внутриинстансная вовлечённость (views/reads/оценки владельца) известность
+	// НЕ надувает: renown считается по computeWorkPopularityExternal.
+	var uid int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('r@e','R','x','user') RETURNING id`).Scan(&uid))
+	for range 20 {
+		_, err = pool.Exec(ctx, `INSERT INTO views (user_id, book_id) VALUES ($1,$2)`, uid, b1)
+		require.NoError(t, err)
+	}
+	_, err = pool.Exec(ctx, `INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,5)`, uid, w1)
+	require.NoError(t, err)
+	n, err = imp.RecomputeAuthorRenown(ctx)
+	require.NoError(t, err)
+	require.Zero(t, n, "накликанная вовлечённость не меняет известность")
+	require.EqualValues(t, 350, renown(classic))
+
 	// Хит удалён → W1 без живых изданий: classic пересчитан (136+120=256),
 	// coauthor выпал из множества «с известностью» → сброс в 0.
 	_, err = pool.Exec(ctx, `UPDATE books SET deleted = true WHERE id = $1`, b1)

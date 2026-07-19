@@ -532,6 +532,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		// просмотре/чтении — flush идёт через этот же скан).
 		sig.EditionCount = int64(d.EditionCount)
 		d.Popularity = computeWorkPopularity(sig)
+		// Для известности АВТОРА — только внешние сигналы (без views/reads/
+		// оценок): поле неэкспортируемое, в Meili-док не сериализуется.
+		d.renownPop = computeWorkPopularityExternal(sig)
 		if seriesID != nil && series != "" {
 			d.Series = series
 			d.SeriesID = seriesID

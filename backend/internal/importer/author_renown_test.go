@@ -37,3 +37,21 @@ func TestComputeAuthorRenown(t *testing.T) {
 		t.Fatalf("широта корпуса не компенсирует: классик %d <= одиночка %d", classic, louderOneHit)
 	}
 }
+
+// Внутриинстансная вовлечённость (просмотры/чтения/оценки) НЕ участвует в
+// сырье известности автора: сотня личных открытий карточки самиздата не
+// делает его автора «известным» (реальный кейс ревью: накликанные в тестах
+// фикстурные авторы всплыли над Толстым).
+func TestComputeWorkPopularityExternal_IgnoresEngagement(t *testing.T) {
+	base := workPopSignals{LibrateMax: 5, EditionCount: 3}
+	engaged := base
+	engaged.Views, engaged.Reads, engaged.UserRatings = 500, 50, 10
+
+	if computeWorkPopularityExternal(base) != computeWorkPopularityExternal(engaged) {
+		t.Fatal("вовлечённость просочилась во внешнюю популярность")
+	}
+	// Санити: обычная (полная) популярность вовлечённость учитывает.
+	if computeWorkPopularity(engaged) <= computeWorkPopularity(base) {
+		t.Fatal("полная популярность должна расти от вовлечённости")
+	}
+}
