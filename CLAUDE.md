@@ -248,7 +248,23 @@ README — для пользователя, проверяются ОБА.
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.10.0** — **дебаг-сессия «Разум и чувства»: work-level язык
+трогают. Текущая версия — **1.11.0** — **«Сначала известные»: зрелый дефолт раздела /authors**,
+3 PR (#227–#229, план `~/.claude/plans/cryptic-roaming-turing.md`; мотиватор — прод-топ-15
+алфавитного дефолта состоял из «#DerApotheker»/«$maille Ledy»/«+Digital Books»). (#227)
+**materialized `authors.renown`** (миграция **0038** + partial-индекс
+`authors_renown_idx WHERE NOT is_service`): формула `importer/author_renown.go` =
+max(`computeWorkPopularityExternal` по НЕ-сборниковым работам) + 120·log₂(1+N значимых,
+порог 120); **только ВНЕШНИЕ сигналы** (без личных views/reads/оценок — катч ревью:
+накликанный самиздат всплывал над Толстым; для /books вовлечённость остаётся — семантики
+разведены); пересчёт `RecomputeAuthorRenown` (advisory lock, скан через
+workDocSelect/scanWorkDocs → `workDoc.renownPop`) в трёх точках: runOnce-гейт
+`author_renown_computed_v1` (бампить при смене формулы!), after-import, после
+результативного drain воркера «Известность». (#228) **дефолт сортировки** ("" и `renown`) =
+`renown DESC` + алфавитный хвост; **`authorAlphaOrder`** — единый чистый алфавитный ключ
+(normalized_name без ведущих спецсимволов, NULLS LAST; ⚠️ C-locale: alpine-PG не умеет
+lower()/[[:alpha:]] для кириллицы → ЯВНЫЙ класс символов) во всех сортировках. (#229)
+фронт: «Сначала известные» (дефолт, в URL не пишется) / «По алфавиту» (`sort=name` теперь
+явный) + README/CLAUDE.md. До неё **1.10.0** — **дебаг-сессия «Разум и чувства»: work-level язык
 оригинала + честный бейдж изданий + постеры из TMDB**, 3 PR (#223–#225), план родился из
 прод-скриншотов пользователя (Остин/Барбери). (#223) **orig_lang стал WORK-LEVEL** (схема
 works-индекса v7→**v8**, полный ресинк на старте): оригинал(ы) работы = union непустых
