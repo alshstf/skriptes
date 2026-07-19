@@ -387,6 +387,9 @@ func run() error {
 	if baCfg.Adaptations {
 		adaptationBackfillCtl.Start()
 	}
+	// Per-source тумблер TMDB-постеров (админка «Экранизации»): применяем
+	// сохранённое значение на старте (дефолт true; без env-ключа — no-op).
+	enricher.SetTMDBPostersEnabled(baCfg.TMDBPosters)
 
 	// Группировка изданий (fb2-файлов) в логические книги (works): Tier-1
 	// локально (название+язык, <src-title-info>, fb2_doc_id) + Tier-2 внешние
