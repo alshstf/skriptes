@@ -63,7 +63,9 @@ export type AuthorsListParams = {
   minRating?: number;
   minReaderRating?: number;
   favoritesOnly?: boolean;
-  sort?: '' | 'name' | 'book_count' | 'rating' | 'reader_rating';
+  // 'renown' (= '' = дефолт бэка, «Сначала известные») на сервер не шлётся;
+  // 'name' — явный алфавит, теперь УХОДИТ в запрос (дефолт сменился).
+  sort?: '' | 'renown' | 'name' | 'book_count' | 'rating' | 'reader_rating';
   limit?: number;
   offset?: number;
 };
@@ -80,7 +82,7 @@ function buildQuery(p: AuthorsListParams): string {
   if (p.minRating) sp.set('min_rating', String(p.minRating));
   if (p.minReaderRating) sp.set('min_reader_rating', String(p.minReaderRating));
   if (p.favoritesOnly) sp.set('favorites_only', '1');
-  if (p.sort && p.sort !== 'name') sp.set('sort', p.sort);
+  if (p.sort && p.sort !== 'renown') sp.set('sort', p.sort);
   sp.set('limit', String(p.limit ?? 50));
   if (p.offset) sp.set('offset', String(p.offset));
   return sp.toString();

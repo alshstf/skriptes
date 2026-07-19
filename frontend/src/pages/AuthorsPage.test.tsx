@@ -123,6 +123,22 @@ describe('AuthorsPage', () => {
     expect(screen.getByText(/^2 автора$/)).toBeInTheDocument();
   });
 
+  it('дефолтная сортировка — «Сначала известные», дефолт не активный фильтр', async () => {
+    render(wrap(<AuthorsPage />));
+    await screen.findByRole('heading', { level: 3, name: 'Кинг Стивен' });
+
+    // Селект(ы) сортировки (десктоп-сайдбар; мобильный дровер не смонтирован).
+    const select = screen.getAllByLabelText('Сортировка')[0] as HTMLSelectElement;
+    expect(select.value).toBe('renown');
+    const labels = Array.from(select.options).map((o) => o.textContent);
+    expect(labels[0]).toBe('Сначала известные');
+    expect(labels).toContain('По алфавиту');
+    expect(labels).not.toContain('По имени');
+
+    // Дефолтная сортировка НЕ считается активным фильтром (нет кнопки «Сбросить»).
+    expect(screen.queryByRole('button', { name: 'Сбросить' })).not.toBeInTheDocument();
+  });
+
   it('показывает пустой стейт callout-ом, если авторов нет', async () => {
     stubFetch({ items: [], total: 0 });
     render(wrap(<AuthorsPage />));
