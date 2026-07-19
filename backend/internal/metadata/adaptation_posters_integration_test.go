@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -113,4 +114,102 @@ func TestEnsureAdaptations_PosterLifecycle(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, n, "книга с постер-дырой отправлена на перепроход")
 	require.Nil(t, fetchedAt())
+}
+
+// Авто-перепроверка постер-дыр (RecheckPosterHoles): у совсем нового фильма
+// постера на TMDB в момент первого фетча ещё нет (честный ErrNotFound → маркер
+// книги ставится), но он появляется позже — фаза воркера дозаливает его САМА
+// по TTL poster_checked_at, без ручной кнопки. TMDB-id персистится из SPARQL
+// (миграция 0037), перепроверка — чистый TMDB-вызов без SPARQL.
+func TestRecheckPosterHoles_NewFilmPosterAppearsLater(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Остин", "остин джейн")
+	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "A2", "Чувство и чувствительность", "чувство и чувствительность", "ru", "", "", "")
+
+	// Один сервер на два амплуа: TMDB API (/3/movie/…) и image-CDN (/t/p/…).
+	var posterAvailable atomic.Bool
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/3/movie/"):
+			if posterAvailable.Load() {
+				_, _ = w.Write([]byte(`{"poster_path":"/new-film.jpg"}`))
+			} else {
+				_, _ = w.Write([]byte(`{"poster_path":null}`))
+			}
+		case strings.HasPrefix(r.URL.Path, "/t/p/"):
+			w.Header().Set("Content-Type", "image/jpeg")
+			_, _ = w.Write([]byte("jpeg-bytes"))
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer srv.Close()
+
+	provider := &fakeAdaptationProvider{items: []Adaptation{{
+		Provider:    "wikidata",
+		ExtID:       "Q135436961",
+		Title:       "Чувство и чувствительность",
+		Kind:        "film",
+		TMDBMovieID: "999001", // P4947 есть, а постера на TMDB пока нет
+	}}}
+	enricher, err := New(pool, filepath.Join(t.TempDir(), "covers"),
+		nil, nil, nil, nil, []AdaptationProvider{provider},
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	require.NoError(t, err)
+	enricher.WithTMDBPosters(NewTMDBPosterProvider("k").WithBaseURLs(srv.URL, srv.URL))
+
+	row := func() (poster *string, tmdbID *string, checkedAt *time.Time) {
+		require.NoError(t, pool.QueryRow(ctx, `
+			SELECT poster_path, tmdb_movie_id, poster_checked_at
+			FROM book_adaptations WHERE book_id = $1`, bookID).Scan(&poster, &tmdbID, &checkedAt))
+		return
+	}
+
+	// 1) Первый фетч: постера честно нет (не транзиент!) → строка с TMDB-id,
+	// постер NULL, маркер книги СТОИТ (книга больше не pending), checked_at есть.
+	enricher.EnsureAdaptations(ctx, BookQuery{ID: bookID})
+	poster, tmdbID, checkedAt := row()
+	require.Nil(t, poster)
+	require.NotNil(t, tmdbID)
+	require.Equal(t, "999001", *tmdbID, "TMDB-id персистится из SPARQL-ответа")
+	require.NotNil(t, checkedAt)
+	var marker *time.Time
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT adaptations_fetched_at FROM books WHERE id = $1`, bookID).Scan(&marker))
+	require.NotNil(t, marker, "честное отсутствие постера — не транзиент, маркер ставится")
+
+	// 2) TTL не истёк → дыра не трогается.
+	checked, filled, err := enricher.RecheckPosterHoles(ctx, 10)
+	require.NoError(t, err)
+	require.Zero(t, checked, "свежепроверенная дыра ждёт TTL")
+
+	// 3) TTL истёк, постера всё ещё нет → checked_at отодвинут, постера нет.
+	_, err = pool.Exec(ctx,
+		`UPDATE book_adaptations SET poster_checked_at = now() - interval '8 days' WHERE book_id = $1`, bookID)
+	require.NoError(t, err)
+	checked, filled, err = enricher.RecheckPosterHoles(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 1, checked)
+	require.Zero(t, filled)
+	poster, _, checkedAt = row()
+	require.Nil(t, poster)
+	require.WithinDuration(t, time.Now(), *checkedAt, time.Minute, "следующая проверка отодвинута на TTL")
+
+	// 4) Постер появился на TMDB → следующая перепроверка дозаливает его.
+	posterAvailable.Store(true)
+	_, err = pool.Exec(ctx,
+		`UPDATE book_adaptations SET poster_checked_at = now() - interval '8 days' WHERE book_id = $1`, bookID)
+	require.NoError(t, err)
+	checked, filled, err = enricher.RecheckPosterHoles(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 1, checked)
+	require.Equal(t, 1, filled, "постер нового фильма дозалит автоматически")
+	poster, _, _ = row()
+	require.NotNil(t, poster)
 }

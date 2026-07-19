@@ -359,7 +359,7 @@ Backend дёргает следующие открытые API — лениво 
 | **Wikipedia REST API** | Биография автора (полный intro section), портреты | — | [en.wikipedia.org/api/rest_v1/](https://en.wikipedia.org/api/rest_v1/) |
 | **Wikidata SPARQL** | Экранизации книг (P144 "based on") с идентификаторами Кинопоиска/IMDb и постерами; год публикации (P577); QID работ (группировка); число sitelinks — в скольких Википедиях есть статья о книге (сигнал известности) | — | [query.wikidata.org](https://query.wikidata.org/) |
 | **Wikimedia Commons** | Постеры экранизаций по Wikidata-P18 | — | [commons.wikimedia.org](https://commons.wikimedia.org/) |
-| **The Movie Database (TMDB)** | Постеры экранизаций по TMDB-id из Wikidata (P4947/P4983) — приоритетный источник: Commons у фильмов почти пуст (постеры копирайтные) | **Нужен API-ключ** (`SKRIPTES_TMDB_API_KEY`), бесплатный | [developer.themoviedb.org](https://developer.themoviedb.org/) |
+| **The Movie Database (TMDB)** | Постеры экранизаций по TMDB-id из Wikidata (P4947/P4983) — приоритетный источник: Commons у фильмов почти пуст (постеры копирайтные). Постер-дыры (в т.ч. совсем новые фильмы, у которых постера ещё нет) перепроверяются автоматически раз в неделю | **Нужен API-ключ** (`SKRIPTES_TMDB_API_KEY`), бесплатный | [developer.themoviedb.org](https://developer.themoviedb.org/) |
 
 > This product uses the TMDB API but is not endorsed or certified by TMDB. (Обязательная атрибуция условий TMDB; включая ключ, вы принимаете их [условия](https://www.themoviedb.org/api-terms-of-use).)
 

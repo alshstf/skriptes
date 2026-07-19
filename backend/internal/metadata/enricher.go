@@ -1026,13 +1026,22 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 			p := it.Popularity
 			popularity = &p
 		}
+		// tmdb_movie_id/tmdb_tv_id персистятся (свежие из SPARQL приоритетнее
+		// старых) — авто-фаза перепроверки постер-дыр (RecheckPosterHoles)
+		// ходит по ним в TMDB без повторного SPARQL. poster_checked_at = «когда
+		// последний раз пытались получить постер» (TTL авто-фазы).
 		_, err := tx.Exec(ctx, `
 			INSERT INTO book_adaptations
-				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10)
+				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity,
+				 tmdb_movie_id, tmdb_tv_id, poster_checked_at)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10, NULLIF($11,''), NULLIF($12,''), now())
 			ON CONFLICT (book_id, provider, ext_id) DO UPDATE SET
-				poster_path = COALESCE(book_adaptations.poster_path, EXCLUDED.poster_path)
-		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity)
+				poster_path = COALESCE(book_adaptations.poster_path, EXCLUDED.poster_path),
+				tmdb_movie_id = COALESCE(EXCLUDED.tmdb_movie_id, book_adaptations.tmdb_movie_id),
+				tmdb_tv_id = COALESCE(EXCLUDED.tmdb_tv_id, book_adaptations.tmdb_tv_id),
+				poster_checked_at = now()
+		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity,
+			it.TMDBMovieID, it.TMDBTVID)
 		if err != nil {
 			return fmt.Errorf("insert adaptation %s: %w", it.ExtID, err)
 		}
@@ -1048,6 +1057,91 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 		return fmt.Errorf("commit tx: %w", err)
 	}
 	return nil
+}
+
+// posterRecheckTTL — как часто перепроверять постер-дыры с известным TMDB-id
+// (RecheckPosterHoles). Постеры новых фильмов появляются на TMDB за дни-недели
+// до релиза; недельный шаг ловит их без нагрузки (чистый TMDB API, без SPARQL).
+const posterRecheckTTL = 7 * 24 * time.Hour
+
+// RecheckPosterHoles — авто-фаза воркера «Экранизации»: перепроверить постеры
+// адаптаций, у которых постера нет, но известен TMDB-id (персистится из
+// SPARQL, миграция 0037). Кейс: совсем новый фильм — в момент первого фетча
+// TMDB честно без постера (ErrNotFound → маркер книги ставится), а через
+// недели постер появляется; без этой фазы его дозаливала бы только ручная
+// кнопка «Дозаполнить постеры». Поштучный TTL poster_checked_at (не маркер
+// книги!): найден → дыра закрыта навсегда; всё ещё нет → следующая проверка
+// через posterRecheckTTL; транзиент (429/сеть) → checked_at не трогаем,
+// ретрай в следующем цикле. Возвращает (сколько проверено, сколько залито).
+func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int, error) {
+	if e.tmdbPosters == nil || e.pool == nil || limit <= 0 {
+		return 0, 0, nil // без TMDB-ключа перепроверять нечем (P18 — только через SPARQL)
+	}
+	rows, err := e.pool.Query(ctx, `
+		SELECT id, book_id, COALESCE(tmdb_movie_id, ''), COALESCE(tmdb_tv_id, '')
+		FROM book_adaptations
+		WHERE poster_path IS NULL
+		  AND (tmdb_movie_id IS NOT NULL OR tmdb_tv_id IS NOT NULL)
+		  AND (poster_checked_at IS NULL OR poster_checked_at < $1)
+		ORDER BY poster_checked_at ASC NULLS FIRST, id
+		LIMIT $2`, time.Now().Add(-posterRecheckTTL), limit)
+	if err != nil {
+		return 0, 0, fmt.Errorf("recheck posters: query holes: %w", err)
+	}
+	type hole struct {
+		id, bookID    int64
+		movieID, tvID string
+	}
+	holes := make([]hole, 0, limit)
+	for rows.Next() {
+		var h hole
+		if err := rows.Scan(&h.id, &h.bookID, &h.movieID, &h.tvID); err != nil {
+			rows.Close()
+			return 0, 0, err
+		}
+		holes = append(holes, h)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return 0, 0, err
+	}
+
+	checked, filled := 0, 0
+	for _, h := range holes {
+		if ctx.Err() != nil {
+			break
+		}
+		u, err := e.tmdbPosters.PosterURL(ctx, h.movieID, h.tvID)
+		switch {
+		case err == nil && u != "":
+			path, derr := e.downloadPoster(ctx, u)
+			if derr != nil {
+				// Транзиент скачивания — checked_at не трогаем, ретрай в следующем цикле.
+				e.logger.Info("metadata: recheck poster download failed", "book_id", h.bookID, "err", derr)
+				continue
+			}
+			if _, uerr := e.pool.Exec(ctx,
+				`UPDATE book_adaptations SET poster_path = $1, poster_checked_at = now() WHERE id = $2`,
+				path, h.id); uerr != nil {
+				e.logger.Warn("metadata: recheck poster update failed", "id", h.id, "err", uerr)
+				continue
+			}
+			checked++
+			filled++
+		case errors.Is(err, ErrNotFound):
+			// Постера всё ещё нет — отодвигаем следующую проверку на TTL.
+			if _, uerr := e.pool.Exec(ctx,
+				`UPDATE book_adaptations SET poster_checked_at = now() WHERE id = $1`, h.id); uerr != nil {
+				e.logger.Warn("metadata: recheck poster mark failed", "id", h.id, "err", uerr)
+				continue
+			}
+			checked++
+		default:
+			// ErrUpstream/сеть — попытку не засчитываем (checked_at не трогаем).
+			e.logger.Info("metadata: recheck poster lookup failed", "book_id", h.bookID, "err", err)
+		}
+	}
+	return checked, filled, nil
 }
 
 // resolvePosterURL — URL постера адаптации: TMDB (по P4947/P4983) в

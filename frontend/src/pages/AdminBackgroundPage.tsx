@@ -1702,8 +1702,10 @@ export function AdminBackgroundPage() {
                   Сейчас: {formatBytes(cq.data?.poster_cache_size_bytes ?? 0)}
                 </p>
                 <p className="text-xs text-muted-foreground text-pretty">
-                  «Дозаполнить» перепройдёт книги, у чьих экранизаций постера нет: с ключом TMDB
-                  (env SKRIPTES_TMDB_API_KEY) покрытие постеров близко к полному.
+                  «Дозаполнить» — разовый бутстрап: перепройдёт книги, у чьих экранизаций постера
+                  нет (с ключом TMDB, env SKRIPTES_TMDB_API_KEY, покрытие близко к полному). Дальше
+                  постер-дыры перепроверяются автоматически (раз в неделю на фильм) — постеры
+                  совсем новых фильмов появятся сами.
                 </p>
               </div>
             </TypeRow>
