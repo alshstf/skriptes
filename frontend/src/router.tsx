@@ -130,7 +130,8 @@ export type AuthorsSearch = {
   min_rating?: number;
   min_reader_rating?: number;
   favorites_only?: boolean;
-  sort?: 'book_count' | 'rating' | 'reader_rating';
+  // 'renown' («Сначала известные») — дефолт, в URL не живёт; 'name' — явный алфавит.
+  sort?: 'name' | 'book_count' | 'rating' | 'reader_rating';
 };
 
 function asString(v: unknown): string | undefined {
@@ -213,7 +214,9 @@ const authorsListRoute = createRoute({
       min_reader_rating: asNumber(search.min_reader_rating),
       favorites_only: asBool(search.favorites_only),
       sort:
-        sort === 'book_count' || sort === 'rating' || sort === 'reader_rating' ? sort : undefined,
+        sort === 'name' || sort === 'book_count' || sort === 'rating' || sort === 'reader_rating'
+          ? sort
+          : undefined,
     };
   },
   component: AuthorsPage,

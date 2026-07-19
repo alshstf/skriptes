@@ -87,7 +87,7 @@ export function AuthorsPage() {
     minRating: search.min_rating ?? 0,
     minReaderRating: search.min_reader_rating ?? 0,
     favoritesOnly: search.favorites_only ?? false,
-    sort: search.sort ?? 'name',
+    sort: search.sort ?? 'renown',
   };
 
   // Применение фильтров пишет URL (нулевые/дефолтные значения вырезаем) и
@@ -105,7 +105,7 @@ export function AuthorsPage() {
         min_rating: next.minRating || undefined,
         min_reader_rating: next.minReaderRating || undefined,
         favorites_only: next.favoritesOnly || undefined,
-        sort: next.sort && next.sort !== 'name' ? next.sort : undefined,
+        sort: next.sort && next.sort !== 'renown' ? next.sort : undefined,
       }),
       replace: true,
     });
@@ -142,7 +142,7 @@ export function AuthorsPage() {
     (filters.minRating ? 1 : 0) +
     (filters.minReaderRating ? 1 : 0) +
     (filters.favoritesOnly ? 1 : 0) +
-    (filters.sort !== 'name' ? 1 : 0);
+    (filters.sort !== 'renown' ? 1 : 0);
 
   const resetAll = () => {
     setQueryInput('');
@@ -393,8 +393,13 @@ function AuthorAvatar({ photoPath, fullName }: { photoPath?: string; fullName: s
 
 // ── панель фильтров ─────────────────────────────────────────────────
 
+// «Сначала известные» — дефолт (authors.renown, зеркало «Сначала популярные»
+// на /books): раньше дефолтом был алфавит по сырому имени, и наверху плавал
+// сетевой самиздат со спецсимволами («#DerApotheker»). Алфавит остался явным
+// пунктом — теперь по чистому ключу (спецсимвольные под своей буквой).
 const SORT_OPTIONS: { value: AuthorsFilters['sort']; label: string }[] = [
-  { value: 'name', label: 'По имени' },
+  { value: 'renown', label: 'Сначала известные' },
+  { value: 'name', label: 'По алфавиту' },
   { value: 'book_count', label: 'По числу книг' },
   { value: 'rating', label: 'По внешнему рейтингу' },
   { value: 'reader_rating', label: 'По оценке читателей' },
