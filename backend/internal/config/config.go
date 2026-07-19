@@ -44,6 +44,14 @@ type Config struct {
 	// Дефолт US — самая полная выдача. Разбор: groups.google.com/g/google-appengine/c/C-IoRG7Z7VI
 	GoogleBooksCountry string `env:"SKRIPTES_GOOGLE_BOOKS_COUNTRY" envDefault:"US"`
 
+	// TMDBAPIKey — ключ The Movie Database (v3 api_key). Приоритетный источник
+	// ПОСТЕРОВ экранизаций (id приходит из Wikidata P4947/P4983 — поиска нет):
+	// Commons P18 у фильмов почти пуст (постеры копирайтные, покрытие ~16%),
+	// TMDB — тот же источник, что у Plex. Ключ бесплатный: themoviedb.org →
+	// Settings → API. Пусто = постеры только из Commons P18, как раньше.
+	// Условие TMDB — атрибуция в UI/README (см. README, «Внешние API»).
+	TMDBAPIKey string `env:"SKRIPTES_TMDB_API_KEY"`
+
 	// Auth / cookie. CookieSecure=false ставится в чистом-HTTP dev;
 	// в проде / за TLS должно быть true. AllowedOrigins — список origin'ов,
 	// откуда разрешены мутирующие запросы (защита от CSRF).

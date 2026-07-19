@@ -304,6 +304,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_FBC_PATH` | `fbc` | Путь к fbc-бинарю (вшит в образ) |
 | `SKRIPTES_GOOGLE_BOOKS_API_KEY` | (пусто) | API-ключ Google Books — **обязателен для GB-обогащения** (обложки/рейтинги/группировка): анонимные запросы GB отбивает 429 по общей квоте. Google Cloud Console → включить Books API → Credentials → API key; free-квота ≈1000 запросов/день на проект |
 | `SKRIPTES_GOOGLE_BOOKS_COUNTRY` | `US` | ISO 3166-1 alpha-2 для параметра `country` в Google Books (обязателен для облачного деплоя — без него GB отдаёт geo-ошибку) |
+| `SKRIPTES_TMDB_API_KEY` | (пусто) | Ключ **The Movie Database** (v3 api_key) — приоритетный источник **постеров экранизаций** (id из Wikidata, поиска по названию нет; тот же источник, что у Plex). Бесплатно: themoviedb.org → Settings → API. Пусто = постеры только из Wikimedia Commons (P18, покрытие ~16%) |
 | `BACKEND_PORT` | `8080` | Порт на хосте (только 127.0.0.1; основной доступ через Caddy) |
 
 ### Auth / Cookies
@@ -358,6 +359,9 @@ Backend дёргает следующие открытые API — лениво 
 | **Wikipedia REST API** | Биография автора (полный intro section), портреты | — | [en.wikipedia.org/api/rest_v1/](https://en.wikipedia.org/api/rest_v1/) |
 | **Wikidata SPARQL** | Экранизации книг (P144 "based on") с идентификаторами Кинопоиска/IMDb и постерами; год публикации (P577); QID работ (группировка); число sitelinks — в скольких Википедиях есть статья о книге (сигнал известности) | — | [query.wikidata.org](https://query.wikidata.org/) |
 | **Wikimedia Commons** | Постеры экранизаций по Wikidata-P18 | — | [commons.wikimedia.org](https://commons.wikimedia.org/) |
+| **The Movie Database (TMDB)** | Постеры экранизаций по TMDB-id из Wikidata (P4947/P4983) — приоритетный источник: Commons у фильмов почти пуст (постеры копирайтные) | **Нужен API-ключ** (`SKRIPTES_TMDB_API_KEY`), бесплатный | [developer.themoviedb.org](https://developer.themoviedb.org/) |
+
+> This product uses the TMDB API but is not endorsed or certified by TMDB. (Обязательная атрибуция условий TMDB; включая ключ, вы принимаете их [условия](https://www.themoviedb.org/api-terms-of-use).)
 
 **Rate-limit'ы.** У Google Books free-tier — квота ~1000 запросов/сутки на проект; воркер рейтинга держит настраиваемый **дневной кап вызовов GB** (по умолчанию 1000, в админке «Внешний рейтинг»), сверх — пропускает GB до следующих суток, чтобы не ловить шторм 429. Фоновые воркеры ходят во внешние API с настраиваемым RPM, а Open Library дополнительно **автоматически прижимается к 60 запросам/мин** (актуальная политика OL, май 2026: 1 запрос/с анонимно, 3/с с идентифицирующим User-Agent; обложки — свой лимит 100/IP за 5 мин, там потолок 18/мин) — задрать выше из настроек не выйдет, и это осознанно: выше лимита OL начинает резать соединения. Фантлаб лимиты не документирует — держим вежливый потолок 60/мин (дефолт 30). Если источник недоступен — backend переходит к следующему в цепочке; неудачные попытки учитываются per-source и **не долбятся повторно** (перепроверить после улучшений — кнопка «Сбросить неудачные попытки» в админке). Результаты кэшируются в БД и на диске (`/cache`).
 

@@ -126,6 +126,7 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 					"image":         "http://commons.wikimedia.org/wiki/Special:FilePath/Poster.jpg",
 					"kindLabel":     "film",
 					"sitelinks":     "47",
+					"tmdbMovie":     "4584",
 				},
 				{
 					"film":      "http://www.wikidata.org/entity/Q67890",
@@ -133,6 +134,7 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 					"year":      "1965",
 					"kindLabel": "film",
 					"sitelinks": "82",
+					"tmdbTv":    "13892",
 				},
 			},
 		},
@@ -158,6 +160,9 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 	// Кинопоиск приоритетнее IMDb (см. pickExtURL).
 	require.Equal(t, "https://www.kinopoisk.ru/film/44567/", got[0].ExtURL)
 	require.Equal(t, 47, got[0].Popularity)
+	// TMDB-id (P4947/P4983) пробрасываются в Adaptation — источник постеров.
+	require.Equal(t, "4584", got[0].TMDBMovieID)
+	require.Empty(t, got[0].TMDBTVID)
 
 	require.Equal(t, "Q67890", got[1].ExtID)
 	require.NotNil(t, got[1].Year)
@@ -165,6 +170,7 @@ func TestWikidataAdaptations_HappyPath(t *testing.T) {
 	// Нет ни Кинопоиска, ни IMDb → fallback на Wikidata.
 	require.Equal(t, "https://www.wikidata.org/wiki/Q67890", got[1].ExtURL)
 	require.Equal(t, 82, got[1].Popularity)
+	require.Equal(t, "13892", got[1].TMDBTVID)
 }
 
 func TestPickExtURL(t *testing.T) {
