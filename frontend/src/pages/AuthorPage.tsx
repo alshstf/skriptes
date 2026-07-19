@@ -10,6 +10,8 @@ import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
+import { AuthorTimeline } from '@/components/AuthorTimeline';
+import { useAuthorEvents } from '@/lib/authorEvents';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { useSetAuthorService } from '@/lib/admin';
@@ -132,6 +134,8 @@ export function AuthorPage() {
           <AuthorBio bio={a.bio} enrichmentExhausted={enrichmentExhausted} />
         </CardContent>
       </Card>
+
+      <AuthorTimelineSection author={a} />
 
       <AuthorStats author={a} />
 
@@ -431,6 +435,26 @@ function StandaloneSection({ books }: { books: BookListItemType[] }) {
 // Прячется если ничего показать: нет year_stats и нет downloads.
 // Гистограмма скрывается отдельно если в распределении < 2 точек:
 // одинокий столбик ничего не сообщает.
+/**
+ * AuthorTimelineSection — «Жизнь и книги». Секция сама решает, показываться ли:
+ * бэкенд считает критерий «не скучно» (eligible: ≥5 нетривиальных событий И ≥2
+ * книги с годом написания) — у среднего автора Wikidata даёт 1–3 факта, и лента
+ * из «родился / умер» ценности не несёт. eligible=false → не рендерим ВООБЩЕ,
+ * включая скелетон: пустая рамка на карточке выглядит поломкой.
+ */
+function AuthorTimelineSection({ author }: { author: Author }) {
+  const { data } = useAuthorEvents(author.id);
+  if (!data?.eligible) return null;
+  const events = data.items.filter((e) => !e.hidden);
+  return (
+    <AuthorTimeline
+      events={events}
+      yearStats={author.year_stats ?? []}
+      attribution={data.attribution}
+    />
+  );
+}
+
 function AuthorStats({ author }: { author: import('@/lib/catalog').Author }) {
   const years = author.year_stats ?? [];
   const showHistogram = years.length >= 2;
