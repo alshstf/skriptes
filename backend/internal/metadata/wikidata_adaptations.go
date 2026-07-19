@@ -228,13 +228,15 @@ LIMIT 20
 // при агрегации.
 func (p *WikidataAdaptationsProvider) queryAdaptations(ctx context.Context, bookQID string) ([]Adaptation, error) {
 	query := fmt.Sprintf(`
-SELECT ?film ?filmLabel ?year ?directorLabel ?imdbId ?kinopoiskId ?image ?kindLabel ?sitelinks WHERE {
+SELECT ?film ?filmLabel ?year ?directorLabel ?imdbId ?kinopoiskId ?image ?kindLabel ?sitelinks ?tmdbMovie ?tmdbTv WHERE {
   ?film wdt:P144 wd:%s .
   OPTIONAL { ?film wdt:P577 ?date . BIND(YEAR(?date) AS ?year) }
   OPTIONAL { ?film wdt:P57 ?director . }
   OPTIONAL { ?film wdt:P345 ?imdbId . }
   OPTIONAL { ?film wdt:P2603 ?kinopoiskId . }
   OPTIONAL { ?film wdt:P18 ?image . }
+  OPTIONAL { ?film wdt:P4947 ?tmdbMovie . }
+  OPTIONAL { ?film wdt:P4983 ?tmdbTv . }
   OPTIONAL { ?film wdt:P31 ?kind . }
   OPTIONAL { ?film wikibase:sitelinks ?sitelinks . }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en".
@@ -312,6 +314,8 @@ func (p *WikidataAdaptationsProvider) runSPARQLAdaptations(ctx context.Context, 
 			Image:       b["image"].Value,
 			Kind:        b["kindLabel"].Value,
 			Sitelinks:   b["sitelinks"].Value,
+			TMDBMovieID: b["tmdbMovie"].Value,
+			TMDBTVID:    b["tmdbTv"].Value,
 		}
 		if row.FilmURI == "" {
 			continue
@@ -366,6 +370,8 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		kinopoiskID string
 		image       string
 		sitelinks   string
+		tmdbMovieID string
+		tmdbTVID    string
 		directors   []string // в порядке появления, без дублей
 		dirSet      map[string]struct{}
 	}
@@ -399,6 +405,12 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		if a.sitelinks == "" {
 			a.sitelinks = r.Sitelinks
 		}
+		if a.tmdbMovieID == "" {
+			a.tmdbMovieID = r.TMDBMovieID
+		}
+		if a.tmdbTVID == "" {
+			a.tmdbTVID = r.TMDBTVID
+		}
 		if r.Director != "" {
 			if _, seen := a.dirSet[r.Director]; !seen {
 				a.dirSet[r.Director] = struct{}{}
@@ -412,13 +424,15 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		a := byFilm[uri]
 		qid := extractQID(uri)
 		ad := Adaptation{
-			Provider:  "wikidata",
-			ExtID:     qid,
-			Title:     strings.TrimSpace(a.title),
-			Director:  strings.Join(a.directors, ", "),
-			Kind:      mapWikidataKind(a.kind),
-			PosterURL: p.posterURL(a.image),
-			ExtURL:    pickExtURL(a.kinopoiskID, a.imdbID, qid),
+			Provider:    "wikidata",
+			ExtID:       qid,
+			Title:       strings.TrimSpace(a.title),
+			Director:    strings.Join(a.directors, ", "),
+			Kind:        mapWikidataKind(a.kind),
+			PosterURL:   p.posterURL(a.image),
+			ExtURL:      pickExtURL(a.kinopoiskID, a.imdbID, qid),
+			TMDBMovieID: a.tmdbMovieID,
+			TMDBTVID:    a.tmdbTVID,
 		}
 		if a.year != "" {
 			if n, err := strconv.Atoi(a.year); err == nil && n > 1800 && n < 2200 {
@@ -496,6 +510,8 @@ type sparqlAdaptationRow struct {
 	Image       string
 	Kind        string
 	Sitelinks   string // целое число как строка (xsd:integer из SPARQL)
+	TMDBMovieID string // P4947 — TMDb film ID (приоритетный источник постера)
+	TMDBTVID    string // P4983 — TMDb TV series ID
 }
 
 // extractQID — выдёргивает Q-id из URI типа

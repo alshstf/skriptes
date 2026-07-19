@@ -15,6 +15,7 @@ import {
   useUpdateCoverCacheSettings,
   useClearCoverCache,
   useClearPosterCache,
+  useRefillPosters,
   useClearPhotoCache,
   usePrewarmCoverCache,
   useStopPrewarmCoverCache,
@@ -480,6 +481,7 @@ export function AdminBackgroundPage() {
   const clearCovers = useClearCoverCache();
   const clearPosters = useClearPosterCache();
   const clearPhotos = useClearPhotoCache();
+  const refillPosters = useRefillPosters();
 
   const runCol = usePrewarmCoverCache();
   const stopCol = useStopPrewarmCoverCache();
@@ -920,6 +922,20 @@ export function AdminBackgroundPage() {
     () => clearPhotos.mutateAsync(),
     'Фото очищены',
   );
+  const onRefillPosters = async () => {
+    if (
+      !window.confirm(
+        'Перепройти книги с экранизациями без постера? Воркер «Экранизации» (или открытие карточки) дозальёт постеры — источник TMDB, если задан ключ.',
+      )
+    )
+      return;
+    try {
+      const r = await refillPosters.mutateAsync();
+      toast.success(`Отправлено на перепроход книг: ${r.reset}`);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось запустить дозаполнение');
+    }
+  };
 
   // ── Состояния воркеров ──
   const colRunning = cq.data?.prewarm_running ?? false;
@@ -1677,9 +1693,19 @@ export function AdminBackgroundPage() {
                     <Trash2 className="size-4" aria-hidden />
                     {clearPosters.isPending ? 'Очистка…' : 'Очистить постеры'}
                   </Button>
+                  <Button variant="outline" size="sm" onClick={onRefillPosters} disabled={refillPosters.isPending}>
+                    <RotateCcw className="size-4" aria-hidden />
+                    {refillPosters.isPending ? 'Запуск…' : 'Дозаполнить постеры'}
+                  </Button>
                 </div>
                 <p className="text-xs tabular-nums text-muted-foreground">
                   Сейчас: {formatBytes(cq.data?.poster_cache_size_bytes ?? 0)}
+                </p>
+                <p className="text-xs text-muted-foreground text-pretty">
+                  «Дозаполнить» — разовый бутстрап: перепройдёт книги, у чьих экранизаций постера
+                  нет (с ключом TMDB, env SKRIPTES_TMDB_API_KEY, покрытие близко к полному). Дальше
+                  постер-дыры перепроверяются автоматически (раз в неделю на фильм) — постеры
+                  совсем новых фильмов появятся сами.
                 </p>
               </div>
             </TypeRow>

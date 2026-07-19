@@ -73,6 +73,9 @@ services:
       # запросы к GB уходят анонимно → 429 и НЕ видны в usage проекта.
       SKRIPTES_GOOGLE_BOOKS_API_KEY: ${SKRIPTES_GOOGLE_BOOKS_API_KEY:-}
       SKRIPTES_GOOGLE_BOOKS_COUNTRY: ${SKRIPTES_GOOGLE_BOOKS_COUNTRY:-US}
+      # Ключ TMDB (v3 api_key) — приоритетный источник ПОСТЕРОВ экранизаций
+      # (id из Wikidata P4947/P4983). Пусто = постеры только из Commons P18 (~16%).
+      SKRIPTES_TMDB_API_KEY: ${SKRIPTES_TMDB_API_KEY:-}
       SKRIPTES_BOOKS_ROOT: /data/books
       SKRIPTES_INPX_ROOT: /data/inpx
       SKRIPTES_CACHE_ROOT: /cache

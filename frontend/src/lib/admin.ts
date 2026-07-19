@@ -201,6 +201,19 @@ export function useClearPosterCache() {
   });
 }
 
+// useRefillPosters — «Дозаполнить постеры»: сброс маркера adaptations_fetched_at
+// у книг с экранизациями БЕЗ постера → воркер «Экранизации» (или lazy при
+// открытии карточки) перепройдёт их и дозальёт постеры (с TMDB-источником,
+// если на сервере задан SKRIPTES_TMDB_API_KEY).
+export function useRefillPosters() {
+  return useMutation({
+    mutationFn: () =>
+      apiFetch<{ reset: number }>('/api/admin/adaptation-enrichment/refill-posters', {
+        method: 'POST',
+      }),
+  });
+}
+
 export function useClearPhotoCache() {
   const qc = useQueryClient();
   return useMutation({

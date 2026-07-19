@@ -33,6 +33,10 @@ const (
 	adaptationBackfillWorkers        = 2
 	adaptationBackfillRescanInterval = 30 * time.Minute
 	adaptationBackfillTaskTimeout    = 90 * time.Second // SPARQL медленный
+	// Сколько постер-дыр перепроверять за цикл (фаза RecheckPosterHoles —
+	// чистые TMDB-вызовы без SPARQL, дёшево; при цикле 30 мин это до ~24k
+	// проверок/сутки, дальше поштучный TTL 7 дней сам разрежает поток).
+	adaptationPosterRecheckBatch = 500
 )
 
 // NewAdaptationBackfiller строит воркер с rate-gate по rpm (книг в минуту).
@@ -59,11 +63,29 @@ func (b *AdaptationBackfiller) Run(ctx context.Context) {
 		if n > 0 {
 			b.logger.Info("adaptation backfill: pass complete", "processed", n)
 		}
+		b.recheckPosters(ctx)
+		if ctx.Err() != nil {
+			return
+		}
 		select {
 		case <-ctx.Done():
 			return
 		case <-time.After(adaptationBackfillRescanInterval):
 		}
+	}
+}
+
+// recheckPosters — фаза перепроверки постер-дыр (TMDB по персистнутым id, без
+// SPARQL): постеры новых фильмов появляются на TMDB позже первого фетча — эта
+// фаза дозаливает их автоматически, без ручной кнопки. no-op без TMDB-ключа.
+func (b *AdaptationBackfiller) recheckPosters(ctx context.Context) {
+	checked, filled, err := b.enricher.RecheckPosterHoles(ctx, adaptationPosterRecheckBatch)
+	if err != nil {
+		b.logger.Warn("adaptation backfill: poster recheck failed", "err", err)
+		return
+	}
+	if checked > 0 {
+		b.logger.Info("adaptation backfill: poster holes rechecked", "checked", checked, "filled", filled)
 	}
 }
 
@@ -263,6 +285,7 @@ func (c *AdaptationBackfillController) RunOnce() {
 	go func() {
 		b := NewAdaptationBackfiller(c.pool, c.enricher, rpm, c.logger)
 		n := b.drain(ctx)
+		b.recheckPosters(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil

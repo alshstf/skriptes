@@ -42,8 +42,9 @@ type Enricher struct {
 	posterCache      *CoverCache // /cache/posters
 	photoCache       *CoverCache // /cache/author-photos
 	logger           *slog.Logger
-	posterHTTPClient *http.Client  // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
-	extractSem       chan struct{} // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
+	posterHTTPClient *http.Client        // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
+	tmdbPosters      *TMDBPosterProvider // приоритетный источник постеров (P4947/P4983); nil → только Commons P18
+	extractSem       chan struct{}       // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
 
 	inflightMu          sync.Mutex
 	inflightCover       map[int64]struct{}
@@ -115,6 +116,15 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 	if c != nil {
 		e.posterHTTPClient = c
 	}
+	return e
+}
+
+// WithTMDBPosters подключает TMDB как приоритетный источник постеров
+// экранизаций (по P4947/P4983 из того же SPARQL-ответа). nil / не вызван →
+// постеры только из Commons P18 (покрытие ~16%: постеры копирайтные,
+// Commons их почти не хостит).
+func (e *Enricher) WithTMDBPosters(p *TMDBPosterProvider) *Enricher {
+	e.tmdbPosters = p
 	return e
 }
 
@@ -552,6 +562,12 @@ func (e *Enricher) PhotoCacheSize() int64 {
 // ClearPosterCache — удалить файлы постеров + занулить висячие
 // book_adaptations.poster_path (постеры не воссоздаются из локали — без
 // зануления остались бы битые `?`). Возвращает число удалённых файлов.
+//
+// Дополнительно сбрасывает adaptations_fetched_at у книг с экранизациями
+// (зеркало healPosters) — иначе «Очистить постеры» была необратимой потерей:
+// воркер берёт только NULL-маркер, lazy — только status=pending, и
+// перекачать постеры было некому. Теперь семантика кнопки — «очистить и
+// перекачать» (как у «Очистить фото»).
 func (e *Enricher) ClearPosterCache(ctx context.Context) (int, error) {
 	if e.posterCache == nil {
 		return 0, nil
@@ -563,7 +579,33 @@ func (e *Enricher) ClearPosterCache(ctx context.Context) (int, error) {
 	if _, derr := e.pool.Exec(ctx, `UPDATE book_adaptations SET poster_path = NULL WHERE poster_path IS NOT NULL`); derr != nil {
 		e.logger.Warn("metadata: clear poster_path failed", "err", derr)
 	}
+	if _, derr := e.pool.Exec(ctx, `
+		UPDATE books SET adaptations_fetched_at = NULL
+		WHERE adaptations_fetched_at IS NOT NULL
+		  AND EXISTS (SELECT 1 FROM book_adaptations ad WHERE ad.book_id = books.id)`); derr != nil {
+		e.logger.Warn("metadata: reset adaptations markers after poster clear failed", "err", derr)
+	}
 	return removed, nil
+}
+
+// RefillMissingPosters — сброс adaptations_fetched_at у книг, у которых есть
+// экранизации БЕЗ постера: следующий проход воркера «Экранизации» (или lazy
+// при открытии карточки) перезапросит Wikidata — теперь с TMDB-источником —
+// и дозальёт постеры в существующие строки (ON CONFLICT ... COALESCE).
+// Возвращает число книг, отправленных на перепроход. Книги, у которых все
+// постеры на месте или экранизаций нет, не трогаются.
+func (e *Enricher) RefillMissingPosters(ctx context.Context) (int, error) {
+	tag, err := e.pool.Exec(ctx, `
+		UPDATE books SET adaptations_fetched_at = NULL
+		WHERE adaptations_fetched_at IS NOT NULL
+		  AND EXISTS (
+		      SELECT 1 FROM book_adaptations ad
+		      WHERE ad.book_id = books.id AND ad.poster_path IS NULL
+		  )`)
+	if err != nil {
+		return 0, fmt.Errorf("refill posters: reset markers: %w", err)
+	}
+	return int(tag.RowsAffected()), nil
 }
 
 // ClearPhotoCache — удалить файлы фото авторов + занулить висячие
@@ -929,23 +971,43 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 }
 
 // saveAdaptations — пишем найденные адаптации в БД одной транзакцией:
-// сначала скачиваем все постеры (если есть PosterURL) → пишем строки →
-// обновляем adaptations_fetched_at. ON CONFLICT DO NOTHING — повторный
-// вызов с теми же ext_id не дублирует.
+// сначала скачиваем все постеры (TMDB по P4947/P4983 приоритетно, фолбэк —
+// Commons P18) → пишем строки → обновляем adaptations_fetched_at. ON
+// CONFLICT ... COALESCE — повторный вызов с теми же ext_id не дублирует,
+// но ДОЗАПИСЫВАЕТ постер в существующую строку.
+//
+// Маркер НЕ ставится, если постер-источники были, но ни одно скачивание не
+// удалось (транзиент: сеть/429/ErrCacheFull) — иначе один сбой в момент
+// единственного фетча терял постеры навсегда (single-shot: воркер берёт
+// только NULL-маркер, lazy — только status=pending). Строки при этом
+// пишутся; следующий заход дозальёт постеры через COALESCE. Честное
+// отсутствие источников (нет ни TMDB-id, ни P18) маркер ставит как раньше.
 func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Adaptation) error {
 	// Скачиваем постеры до транзакции — IO не должен держать lock.
-	posters := make([]string, len(items)) // путь в /cache/covers или ""
+	posters := make([]string, len(items)) // путь в /cache/posters или ""
+	attempted, saved := 0, 0
 	for i, it := range items {
-		if it.PosterURL == "" {
+		src, transient := e.resolvePosterURL(ctx, bookID, it)
+		if src == "" {
+			if transient {
+				attempted++ // источник был (TMDB-id), апстрим сбоил — попытка без успеха
+			}
 			continue
 		}
-		path, err := e.downloadPoster(ctx, it.PosterURL)
+		attempted++
+		path, err := e.downloadPoster(ctx, src)
 		if err != nil {
 			// Постер опционален — лог и идём дальше.
-			e.logger.Info("metadata: download poster failed", "book_id", bookID, "url", it.PosterURL, "err", err)
+			e.logger.Info("metadata: download poster failed", "book_id", bookID, "url", src, "err", err)
 			continue
 		}
 		posters[i] = path
+		saved++
+	}
+	markFetched := attempted == 0 || saved > 0
+	if !markFetched {
+		e.logger.Info("metadata: all poster downloads failed, keeping book pending",
+			"book_id", bookID, "attempted", attempted)
 	}
 
 	tx, err := e.pool.Begin(ctx)
@@ -964,26 +1026,144 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 			p := it.Popularity
 			popularity = &p
 		}
+		// tmdb_movie_id/tmdb_tv_id персистятся (свежие из SPARQL приоритетнее
+		// старых) — авто-фаза перепроверки постер-дыр (RecheckPosterHoles)
+		// ходит по ним в TMDB без повторного SPARQL. poster_checked_at = «когда
+		// последний раз пытались получить постер» (TTL авто-фазы).
 		_, err := tx.Exec(ctx, `
 			INSERT INTO book_adaptations
-				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10)
+				(book_id, provider, ext_id, title, year, director, kind, poster_path, ext_url, popularity,
+				 tmdb_movie_id, tmdb_tv_id, poster_checked_at)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8,''), NULLIF($9,''), $10, NULLIF($11,''), NULLIF($12,''), now())
 			ON CONFLICT (book_id, provider, ext_id) DO UPDATE SET
-				poster_path = COALESCE(book_adaptations.poster_path, EXCLUDED.poster_path)
-		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity)
+				poster_path = COALESCE(book_adaptations.poster_path, EXCLUDED.poster_path),
+				tmdb_movie_id = COALESCE(EXCLUDED.tmdb_movie_id, book_adaptations.tmdb_movie_id),
+				tmdb_tv_id = COALESCE(EXCLUDED.tmdb_tv_id, book_adaptations.tmdb_tv_id),
+				poster_checked_at = now()
+		`, bookID, it.Provider, it.ExtID, it.Title, it.Year, nullIfEmpty(it.Director), it.Kind, posters[i], it.ExtURL, popularity,
+			it.TMDBMovieID, it.TMDBTVID)
 		if err != nil {
 			return fmt.Errorf("insert adaptation %s: %w", it.ExtID, err)
 		}
 	}
-	if _, err := tx.Exec(ctx,
-		`UPDATE books SET adaptations_fetched_at = now() WHERE id = $1`, bookID,
-	); err != nil {
-		return fmt.Errorf("mark adaptations_fetched_at: %w", err)
+	if markFetched {
+		if _, err := tx.Exec(ctx,
+			`UPDATE books SET adaptations_fetched_at = now() WHERE id = $1`, bookID,
+		); err != nil {
+			return fmt.Errorf("mark adaptations_fetched_at: %w", err)
+		}
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return fmt.Errorf("commit tx: %w", err)
 	}
 	return nil
+}
+
+// posterRecheckTTL — как часто перепроверять постер-дыры с известным TMDB-id
+// (RecheckPosterHoles). Постеры новых фильмов появляются на TMDB за дни-недели
+// до релиза; недельный шаг ловит их без нагрузки (чистый TMDB API, без SPARQL).
+const posterRecheckTTL = 7 * 24 * time.Hour
+
+// RecheckPosterHoles — авто-фаза воркера «Экранизации»: перепроверить постеры
+// адаптаций, у которых постера нет, но известен TMDB-id (персистится из
+// SPARQL, миграция 0037). Кейс: совсем новый фильм — в момент первого фетча
+// TMDB честно без постера (ErrNotFound → маркер книги ставится), а через
+// недели постер появляется; без этой фазы его дозаливала бы только ручная
+// кнопка «Дозаполнить постеры». Поштучный TTL poster_checked_at (не маркер
+// книги!): найден → дыра закрыта навсегда; всё ещё нет → следующая проверка
+// через posterRecheckTTL; транзиент (429/сеть) → checked_at не трогаем,
+// ретрай в следующем цикле. Возвращает (сколько проверено, сколько залито).
+func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int, error) {
+	if e.tmdbPosters == nil || e.pool == nil || limit <= 0 {
+		return 0, 0, nil // без TMDB-ключа перепроверять нечем (P18 — только через SPARQL)
+	}
+	rows, err := e.pool.Query(ctx, `
+		SELECT id, book_id, COALESCE(tmdb_movie_id, ''), COALESCE(tmdb_tv_id, '')
+		FROM book_adaptations
+		WHERE poster_path IS NULL
+		  AND (tmdb_movie_id IS NOT NULL OR tmdb_tv_id IS NOT NULL)
+		  AND (poster_checked_at IS NULL OR poster_checked_at < $1)
+		ORDER BY poster_checked_at ASC NULLS FIRST, id
+		LIMIT $2`, time.Now().Add(-posterRecheckTTL), limit)
+	if err != nil {
+		return 0, 0, fmt.Errorf("recheck posters: query holes: %w", err)
+	}
+	type hole struct {
+		id, bookID    int64
+		movieID, tvID string
+	}
+	holes := make([]hole, 0, limit)
+	for rows.Next() {
+		var h hole
+		if err := rows.Scan(&h.id, &h.bookID, &h.movieID, &h.tvID); err != nil {
+			rows.Close()
+			return 0, 0, err
+		}
+		holes = append(holes, h)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return 0, 0, err
+	}
+
+	checked, filled := 0, 0
+	for _, h := range holes {
+		if ctx.Err() != nil {
+			break
+		}
+		u, err := e.tmdbPosters.PosterURL(ctx, h.movieID, h.tvID)
+		switch {
+		case err == nil && u != "":
+			path, derr := e.downloadPoster(ctx, u)
+			if derr != nil {
+				// Транзиент скачивания — checked_at не трогаем, ретрай в следующем цикле.
+				e.logger.Info("metadata: recheck poster download failed", "book_id", h.bookID, "err", derr)
+				continue
+			}
+			if _, uerr := e.pool.Exec(ctx,
+				`UPDATE book_adaptations SET poster_path = $1, poster_checked_at = now() WHERE id = $2`,
+				path, h.id); uerr != nil {
+				e.logger.Warn("metadata: recheck poster update failed", "id", h.id, "err", uerr)
+				continue
+			}
+			checked++
+			filled++
+		case errors.Is(err, ErrNotFound):
+			// Постера всё ещё нет — отодвигаем следующую проверку на TTL.
+			if _, uerr := e.pool.Exec(ctx,
+				`UPDATE book_adaptations SET poster_checked_at = now() WHERE id = $1`, h.id); uerr != nil {
+				e.logger.Warn("metadata: recheck poster mark failed", "id", h.id, "err", uerr)
+				continue
+			}
+			checked++
+		default:
+			// ErrUpstream/сеть — попытку не засчитываем (checked_at не трогаем).
+			e.logger.Info("metadata: recheck poster lookup failed", "book_id", h.bookID, "err", err)
+		}
+	}
+	return checked, filled, nil
+}
+
+// resolvePosterURL — URL постера адаптации: TMDB (по P4947/P4983) в
+// приоритете, Commons P18 — фолбэк. Возвращает ("", true) при транзиентном
+// отказе TMDB без P18-фолбэка — вызывающий не считает такую попытку
+// окончательной (маркер не ставится при нуле успехов).
+func (e *Enricher) resolvePosterURL(ctx context.Context, bookID int64, it Adaptation) (string, bool) {
+	if e.tmdbPosters != nil && (it.TMDBMovieID != "" || it.TMDBTVID != "") {
+		u, err := e.tmdbPosters.PosterURL(ctx, it.TMDBMovieID, it.TMDBTVID)
+		switch {
+		case err == nil && u != "":
+			return u, false
+		case errors.Is(err, ErrNotFound):
+			// TMDB честно без постера — пробуем P18.
+		case err != nil:
+			e.logger.Info("metadata: tmdb poster lookup failed", "book_id", bookID, "ext_id", it.ExtID, "err", err)
+			if it.PosterURL == "" {
+				return "", true // транзиент без фолбэка — не хороним постер
+			}
+		}
+	}
+	return it.PosterURL, false
 }
 
 // downloadPoster — скачивает картинку по URL, кэширует в /cache/covers

@@ -139,6 +139,12 @@ type Adaptation struct {
 	PosterURL  string
 	ExtURL     string
 	Popularity int
+	// TMDBMovieID / TMDBTVID — id в The Movie Database (Wikidata P4947 /
+	// P4983, тот же SPARQL-ответ). Приоритетный источник постера: TMDB
+	// хостит настоящие постеры, а Commons (P18) у фильмов почти пуст —
+	// постеры копирайтные (см. TMDBPosterProvider).
+	TMDBMovieID string
+	TMDBTVID    string
 }
 
 // AdaptationProvider — поставщик списка экранизаций для книги. В

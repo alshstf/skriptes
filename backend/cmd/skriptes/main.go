@@ -198,6 +198,12 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("metadata init: %w", err)
 	}
+	// TMDB — приоритетный источник постеров экранизаций (по P4947/P4983 из
+	// SPARQL-ответа Wikidata). Без ключа — только Commons P18 (~16% покрытия).
+	if cfg.TMDBAPIKey != "" {
+		enricher.WithTMDBPosters(metadata.NewTMDBPosterProvider(cfg.TMDBAPIKey))
+	}
+	logger.Info("tmdb poster provider configured", "api_key_set", cfg.TMDBAPIKey != "")
 	// Рантайм-настройки кэша обложек: дефолты в коде, оверрайды в БД
 	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
 	// (бюджет LRU + пол свободного места) на старте.

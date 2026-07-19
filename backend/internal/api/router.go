@@ -235,6 +235,9 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/cover-cache/clear", handleClearCoverCache(d.Settings))
 					r.Post("/admin/cover-cache/clear-posters", handleClearPosterCache(d.Settings))
 					r.Post("/admin/cover-cache/clear-photos", handleClearPhotoCache(d.Settings))
+					// «Дозаполнить постеры»: перепройти книги с экранизациями без
+					// постера (TMDB-источник, если сконфигурирован).
+					r.Post("/admin/adaptation-enrichment/refill-posters", handleRefillPosters(d.Settings))
 					r.Post("/admin/cover-cache/prewarm", handlePrewarmNow(d.Settings))
 					r.Post("/admin/cover-cache/prewarm/stop", handlePrewarmStop(d.Settings))
 					// Раздел «Год издания»: дозаполнение written_year из внешних

@@ -228,6 +228,28 @@ func handleClearPosterCache(d SettingsDeps) http.HandlerFunc {
 	}
 }
 
+// handleRefillPosters — POST /api/admin/adaptation-enrichment/refill-posters.
+// Сбрасывает adaptations_fetched_at у книг с экранизациями без постера —
+// воркер «Экранизации» (или lazy при открытии карточки) перепройдёт их и
+// дозальёт постеры (с TMDB-источником, если сконфигурирован ключ).
+// Отвечает {"reset": N} — сколько книг отправлено на перепроход.
+func handleRefillPosters(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Metadata == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "metadata disabled"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		n, err := d.Metadata.RefillMissingPosters(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "refill failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int{"reset": n})
+	}
+}
+
 // handleClearPhotoCache — POST /api/admin/cover-cache/clear-photos. Удаляет
 // файлы фото авторов + зануляет висячие photo_path.
 func handleClearPhotoCache(d SettingsDeps) http.HandlerFunc {
