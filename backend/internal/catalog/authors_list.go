@@ -8,6 +8,19 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// authorAlphaOrder — алфавитный ключ сортировки авторов (фрагмент ORDER BY,
+// алиас `a` работает и в фазе 1 (authors a), и в фазе 2 (page a — CTE несёт
+// normalized_name)). Ключ — normalized_name с ОТРЕЗАННЫМИ ведущими не-буквенными
+// символами: сетевые псевдонимы «#DerApotheker»/«$maille Ledy»/«+Digital Books»
+// сортируются по первой букве, а не всплывают над всем алфавитом; имя из одних
+// символов уходит в конец (NULLIF → NULLS LAST).
+//
+// ⚠️ C-locale: прод-Postgres — postgres:17-alpine (musl), где lower() и
+// POSIX-классы [[:alpha:]] НЕ работают для кириллицы. Поэтому ключ строится на
+// normalized_name (lower уже сделан В GO при импорте, Unicode-честно) и с
+// ЯВНЫМ классом символов вместо [[:alpha:]]. Класс расширяем при нужде.
+const authorAlphaOrder = `NULLIF(regexp_replace(a.normalized_name::text, '^[^0-9a-zа-яёіїєґў]+', ''), '') NULLS LAST, a.normalized_name, a.id`
+
 // authors_list.go — раздел «Авторы» (GET /api/authors): постраничный список
 // авторов с фильтрами и агрегатами. В отличие от ListAuthors (enumerate.go,
 // лёгкий OPDS-список «id + имя + счётчик»), здесь собираем богатую карточку
@@ -80,8 +93,10 @@ type AuthorListParams struct {
 	MinReaderRating float64 // минимальная средняя оценка читателей по работам автора (≥ этого)
 	FavoritesOnly   bool    // только авторы из favorite_authors текущего юзера
 
-	Sort   string // "name" (дефолт) | "book_count" | "rating" | "reader_rating"
-	Limit  int    // ≤ 500, дефолт 50
+	// Sort: "" | "renown" (дефолт — «Сначала известные», authors.renown DESC) |
+	// "name" (алфавит по чистому ключу) | "book_count" | "rating" | "reader_rating".
+	Sort   string
+	Limit  int // ≤ 500, дефолт 50
 	Offset int
 
 	// Исключения видимости контента (admin ∪ персональные): авторы остаются
@@ -291,42 +306,52 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// «query failed». sort=name работал (сортировка по индексируемым колонкам →
 	// LIMIT применяется сразу), а sort=rating/book_count/reader_rating — нет.
 
-	// Сортировка фазы 1: базовые колонки (name) либо ОДИН коррелированный агрегат
-	// (свои exclusion-плейсхолдеры — видимость учитывается и в ключе сортировки).
+	// Сортировка фазы 1: базовые колонки (renown/name) либо ОДИН коррелированный
+	// агрегат (свои exclusion-плейсхолдеры — видимость учитывается и в ключе).
 	var phase1Order string
 	switch p.Sort {
 	case "book_count":
 		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))"+
 			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
-			" WHERE ba.author_id = a.id AND b.deleted = false%s) DESC,"+
-			" a.last_name, a.first_name, a.middle_name, a.id", ex)
+			" WHERE ba.author_id = a.id AND b.deleted = false%s) DESC, %s", ex, authorAlphaOrder)
 	case "rating":
 		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT max(COALESCE(b.rating, b.external_rating))::float8"+
 			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
 			" WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%s)"+
-			" DESC NULLS LAST, a.last_name, a.id", ex)
+			" DESC NULLS LAST, %s", ex, authorAlphaOrder)
 	case "reader_rating":
 		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT avg(br.rating)::float8 FROM book_ratings br"+
 			" WHERE br.work_id IN (SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
 			" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%s))"+
-			" DESC NULLS LAST, a.last_name, a.id", ex)
+			" DESC NULLS LAST, %s", ex, authorAlphaOrder)
+	case "name":
+		// Явный алфавит — по ЧИСТОМУ ключу: «#DerApotheker» сортируется как
+		// «derapotheker», имя из одних символов — в конец (NULLS LAST).
+		phase1Order = "ORDER BY " + authorAlphaOrder
 	default:
-		phase1Order = "ORDER BY a.last_name, a.first_name, a.middle_name, a.id"
+		// Дефолт («» и "renown") — «Сначала известные»: materialized
+		// authors.renown (см. importer/author_renown.go), index-scan по
+		// authors_renown_idx; хвост без известности — по чистому алфавиту.
+		phase1Order = "ORDER BY a.renown DESC, " + authorAlphaOrder
 	}
 
 	// Финальная сортировка фазы 2 — по тем же критериям, но по готовым алиасам
 	// страницы (≤Limit строк, дёшево; secondary-ключи доступны как алиасы).
-	orderSQL := "ORDER BY a.last_name, a.first_name, a.middle_name, a.id"
+	var orderSQL string
 	switch p.Sort {
 	case "book_count":
-		orderSQL = "ORDER BY book_count DESC, a.last_name, a.id"
+		orderSQL = "ORDER BY book_count DESC, " + authorAlphaOrder
 	case "rating":
 		orderSQL = "ORDER BY external_rating DESC NULLS LAST, book_count DESC, a.id"
 	case "reader_rating":
 		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
+	case "name":
+		orderSQL = "ORDER BY " + authorAlphaOrder
+	default:
+		orderSQL = "ORDER BY a.renown DESC, " + authorAlphaOrder
 	}
 
 	// Аргументы фазы 1 (limit/offset) и фазы 2 (userID + exclusion на каждый
@@ -348,7 +373,8 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// тот же алиас `a`, поэтому подзапросы по a.id не меняются).
 	query := fmt.Sprintf(`
 		WITH page AS (
-		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path
+		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
+		           a.normalized_name, a.renown
 		    FROM authors a%[1]s
 		    %[2]s
 		    LIMIT $%[3]d OFFSET $%[4]d

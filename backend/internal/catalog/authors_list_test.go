@@ -512,3 +512,64 @@ func TestListAuthorsFiltered_LooseCompilations(t *testing.T) {
 	// книга Кинга в избранном относится к работе-сборнику, но fav_books её считает.
 	require.Equal(t, 1, king.FavoritedBooksCount, "избранное пользователя не зависит от типа работы")
 }
+
+// TestListAuthorsFiltered_RenownSortAndAlpha — дефолт «Сначала известные»
+// (authors.renown DESC) + вылеченный алфавитный ключ: спецсимвольные сетевые
+// псевдонимы («#Кинг-фанфик») сортируются по первой букве, а не над всем
+// алфавитом; имя из одних символов — в конец. Прод-мотиватор: топ-15 алфавита
+// был «#DerApotheker / $maille Ledy / +Digital Books».
+func TestListAuthorsFiltered_RenownSortAndAlpha(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPostgres(t, ctx)
+	f := seedAuthorsList(t, ctx, pool)
+	svc := catalog.New(pool)
+
+	// Спецсимвольные авторы (renown 0) с видимыми книгами.
+	seedJunk := func(last, norm string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO authors (last_name, normalized_name) VALUES ($1,$2) RETURNING id`, last, norm).Scan(&id))
+		var bid int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang)
+			SELECT b.collection_id, b.archive_id, $1::text, 'f', 'fb2', $1::text, $1::text, 'ru' FROM books b LIMIT 1
+			RETURNING id`, "junk-"+norm).Scan(&bid))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bid, id)
+		require.NoError(t, err)
+		return id
+	}
+	junkKing := seedJunk("#Кинг-фанфик", "#кинг-фанфик")
+	symbols := seedJunk("***", "***")
+
+	// Известность: Кинг > Азимов, остальные 0.
+	_, err := pool.Exec(ctx, `UPDATE authors SET renown = 500 WHERE id = $1`, f.kingID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE authors SET renown = 300 WHERE id = $1`, f.asimovID)
+	require.NoError(t, err)
+
+	order := func(sort string) []int64 {
+		res, lerr := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: sort})
+		require.NoError(t, lerr)
+		ids := make([]int64, 0, len(res.Items))
+		for _, it := range res.Items {
+			ids = append(ids, it.ID)
+		}
+		return ids
+	}
+
+	// Дефолт ("" ≡ "renown"): известные первыми, хвост renown=0 — по чистому
+	// алфавиту («#кинг-фанфик» под «к» ПЕРЕД «толстой»), символы — в конце.
+	want := []int64{f.kingID, f.asimovID, junkKing, f.tolstoy, symbols}
+	require.Equal(t, want, order(""), "дефолт — Сначала известные")
+	require.Equal(t, want, order("renown"), `"renown" ≡ дефолту`)
+
+	// Явный алфавит: чистый ключ («кинг стивен» < «кинг-фанфик»: пробел < дефис),
+	// чисто-символьное имя — последним (NULLS LAST).
+	require.Equal(t,
+		[]int64{f.asimovID, f.kingID, junkKing, f.tolstoy, symbols},
+		order("name"), "алфавит по чистому ключу")
+}
