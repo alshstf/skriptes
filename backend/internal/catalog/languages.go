@@ -116,20 +116,32 @@ func (s *Service) ListLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	return out, nil
 }
 
-// ListSrcLanguages — все ЭФФЕКТИВНЫЕ ЯЗЫКИ ОРИГИНАЛА живых книг с числом книг:
-// src_lang (fb2 <src-lang>), а где пусто — язык издания (натив сам себе
-// оригинал). Опции фильтра «Язык оригинала» на /books и в «Авторах» — на том же
-// поле, что works-индексный фасет orig_lang. Так «оригинал: французский» ловит и
-// переводы с французского, и нативно-французские книги; и любой язык коллекции
-// (включая русский для «всей русской литературы») доступен как опция.
+// ListSrcLanguages — все ЭФФЕКТИВНЫЕ ЯЗЫКИ ОРИГИНАЛА коллекции с числом РАБОТ.
+// Семантика WORK-LEVEL (зеркало orig_lang works-индекса, схема v8): у изданий
+// одной работы оригинал один, поэтому оригинал(ы) работы = union непустых
+// src_lang её изданий, и только когда src_lang нет ни у одного издания —
+// работа нативна (union языков изданий). Перевод-сирота (испанское издание без
+// fb2 <src-lang> при русском соседе с src_lang=en) больше не предлагает
+// «оригинал: испанский» как опцию. Опции фильтра «Язык оригинала» на /books и
+// в «Авторах»; любой язык коллекции (включая русский для всей нативной русской
+// литературы) остаётся доступен как опция через lang-фолбэк.
+// Один GROUP BY-проход по books (паттерн ListGenres из 1.4.1 — без per-язык
+// подзапросов), синглтоны без work_id группируются ключом -id.
 func (s *Service) ListSrcLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT lower(btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang))) AS code, count(*)::int
-		FROM books
-		WHERE deleted = false
-		  AND COALESCE(NULLIF(btrim(src_lang), ''), lang) IS NOT NULL
-		  AND btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang)) <> ''
-		GROUP BY lower(btrim(COALESCE(NULLIF(btrim(src_lang), ''), lang)))
+		WITH per_work AS (
+			SELECT
+				array_agg(DISTINCT lower(btrim(src_lang)))
+					FILTER (WHERE src_lang IS NOT NULL AND btrim(src_lang) <> '') AS src_codes,
+				array_agg(DISTINCT lower(btrim(lang)))
+					FILTER (WHERE lang IS NOT NULL AND btrim(lang) <> '') AS lang_codes
+			FROM books
+			WHERE deleted = false
+			GROUP BY COALESCE(work_id, -id)
+		)
+		SELECT code, count(*)::int
+		FROM per_work, unnest(COALESCE(src_codes, lang_codes)) AS code
+		GROUP BY code
 		ORDER BY count(*) DESC, code
 	`)
 	if err != nil {

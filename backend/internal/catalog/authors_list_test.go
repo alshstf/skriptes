@@ -305,6 +305,54 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.True(t, got[f.asimovID], "az: lang=en, src_lang пуст → эффективный оригинал en (натив)")
 	require.False(t, got[f.tolstoy], "Толстой — ru-оригинал")
 
+	// РЕГРЕСС (works-схема v8, work-level оригинал): перевод-сирота НЕ делает
+	// автора «оригиналом» языка своего издания. У Остин работа из двух изданий:
+	// ru (src_lang=en) + es (src_lang ПУСТ — испанский перевод без fb2
+	// <src-lang>). Оригинал работы известен от ru-соседа → {en}: «оригинал:
+	// испанский» и «оригинал: русский» её НЕ ловят (прод-кейс «Разум и чувства»).
+	var austenID, austenWork int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Остин','остин джейн') RETURNING id`).Scan(&austenID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title, primary_author_id) VALUES ('Разум и чувства','разум и чувства',$1) RETURNING id`,
+		austenID).Scan(&austenWork))
+	seedEdition := func(lib, lang string, srcLang any) {
+		var bid int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, src_lang, work_id)
+			SELECT b.collection_id, b.archive_id, $1::text, 'f', 'fb2', $1::text, $1::text, $2::text, $3::text, $4 FROM books b LIMIT 1
+			RETURNING id`, lib, lang, srcLang, austenWork).Scan(&bid))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bid, austenID)
+		require.NoError(t, err)
+	}
+	seedEdition("austen-ru", "ru", "en")
+	seedEdition("austen-es", "es", nil)
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{SrcLangs: []string{"es"}})
+	require.NoError(t, err)
+	require.False(t, ids(res)[austenID], "es-издание без src_lang при en-соседе по работе — НЕ испанский оригинал")
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{SrcLangs: []string{"ru"}})
+	require.NoError(t, err)
+	require.False(t, ids(res)[austenID], "ru-издание Остин — перевод, не оригинал")
+	require.True(t, ids(res)[f.tolstoy], "Толстой — настоящий ru-натив (lang-фолбэк работает)")
+
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{SrcLangs: []string{"en"}})
+	require.NoError(t, err)
+	require.True(t, ids(res)[austenID], "оригинал работы Остин известен от ru-соседа: en")
+
+	// Опции фильтра «Язык оригинала» — та же work-level семантика: испанский
+	// перевод-сирота не предлагается опцией, en/ru остаются.
+	srcLangs, err := svc.ListSrcLanguages(ctx)
+	require.NoError(t, err)
+	srcCodes := map[string]bool{}
+	for _, l := range srcLangs {
+		srcCodes[l.Code] = true
+	}
+	require.False(t, srcCodes["es"], "'es' не предлагается: у es-издания есть en-сосед по работе")
+	require.True(t, srcCodes["en"])
+	require.True(t, srcCodes["ru"])
+
 	// year_from/year_to — 1950..1960 ловит только Азимова (1951).
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{YearFrom: 1950, YearTo: 1960})
 	require.NoError(t, err)

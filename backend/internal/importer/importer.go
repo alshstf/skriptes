@@ -378,8 +378,11 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 // v4 — внешние счётчики известности (fantlab_marks / ol_*) в формуле;
 // v5 — wd_sitelinks (Wikidata) в формуле;
 // v6 — kind (тип работы: сборник/антология/том собрания; миграция 0034);
-// v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра).
-const WorksIndexSchemaVersion = 7
+// v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра);
+// v8 — orig_lang стал WORK-LEVEL: union непустых src_lang изданий, фолбэк —
+//
+//	union языков изданий (перевод-сирота без src_lang больше не «натив»).
+const WorksIndexSchemaVersion = 8
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -414,13 +417,22 @@ const workDocSelect = `
 			  AND b.src_lang IS NOT NULL AND btrim(b.src_lang) <> ''
 		), '{}'),
 		COALESCE((
-			-- orig_lang = ЭФФЕКТИВНЫЙ оригинал: src_lang, а пусто → язык издания
-			-- (натив сам себе оригинал). На нём фильтр «Язык оригинала».
-			SELECT array_agg(DISTINCT lower(btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang))))
+			-- orig_lang = ЭФФЕКТИВНЫЙ оригинал РАБОТЫ (v8, work-level). У изданий
+			-- одной работы оригинал ОДИН, поэтому: есть хоть один непустой
+			-- src_lang → оригинал(ы) работы = union src_lang; издания без src_lang
+			-- при этом НЕ нативы (перевод-сирота на испанский без fb2 <src-lang>
+			-- не делает Остин «оригинал: испанский»). src_lang нет ни у кого →
+			-- работа нативна: union языков изданий. array_agg по нулю строк даёт
+			-- NULL → COALESCE проваливается на lang-фолбэк.
+			SELECT array_agg(DISTINCT lower(btrim(b.src_lang)))
 			FROM books b
 			WHERE b.work_id = w.id AND b.deleted = false
-			  AND COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang) IS NOT NULL
-			  AND btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang)) <> ''
+			  AND b.src_lang IS NOT NULL AND btrim(b.src_lang) <> ''
+		), (
+			SELECT array_agg(DISTINCT lower(btrim(b.lang)))
+			FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+			  AND b.lang IS NOT NULL AND btrim(b.lang) <> ''
 		), '{}'),
 		COALESCE((
 			SELECT array_agg(DISTINCT g.fb2_code)

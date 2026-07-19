@@ -7,8 +7,9 @@ import "testing"
 // ResyncWorksIndex на ближайшем старте (см. main.go::runOnceWorksIndexSync).
 // Меняешь схему — инкрементируй константу и обнови ожидание здесь.
 func TestWorksIndexSyncedFlagKey(t *testing.T) {
-	// v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра).
-	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v7"; got != want {
+	// v8 — orig_lang стал work-level: union непустых src_lang изданий, фолбэк —
+	// union языков изданий (перевод-сирота без src_lang — больше не «натив»).
+	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v8"; got != want {
 		t.Fatalf("WorksIndexSyncedFlagKey() = %q, want %q", got, want)
 	}
 }
