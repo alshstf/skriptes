@@ -205,15 +205,23 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 
 	if len(p.SrcLangs) > 0 {
 		n := addArg(p.SrcLangs)
-		// Язык ОРИГИНАЛА (эффективный: src_lang, а пусто → язык издания) —
-		// зеркало works-индексного orig_lang и /books-фильтра. «оригинал:
-		// французский» ловит и переводы с французского, и нативно-французских
-		// авторов.
+		// Язык ОРИГИНАЛА, WORK-LEVEL (зеркало orig_lang works-индекса v8):
+		// оригинал(ы) работы = непустые src_lang её изданий, и только когда
+		// src_lang нет ни у одного издания — работа нативна (язык издания).
+		// Книга автора матчит, если src_lang кого-то из со-изданий её работы ∈
+		// набора, ИЛИ её lang ∈ набора при полном отсутствии src_lang у работы
+		// (перевод-сирота на испанский при русском соседе с src_lang=en больше
+		// не делает автора «оригинал: испанский»). Со-издания ищутся по индексу
+		// books(work_id); `s.id = b.id` — defensive на случай книги без work_id.
+		sibling := " FROM books s WHERE (s.work_id = b.work_id OR s.id = b.id) AND s.deleted = false" +
+			" AND s.src_lang IS NOT NULL AND btrim(s.src_lang) <> ''"
 		where = append(where, fmt.Sprintf(
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" WHERE ba.author_id = a.id"+
-				" AND lower(btrim(COALESCE(NULLIF(btrim(b.src_lang), ''), b.lang))) = ANY($%d::text[])"+
-				renderAggExclusion()+")", n))
+				" AND (EXISTS (SELECT 1"+sibling+" AND lower(btrim(s.src_lang)) = ANY($%d::text[]))"+
+				" OR (lower(btrim(b.lang)) = ANY($%d::text[])"+
+				" AND NOT EXISTS (SELECT 1"+sibling+")))"+
+				renderAggExclusion()+")", n, n))
 	}
 
 	if p.YearFrom > 0 || p.YearTo > 0 {
