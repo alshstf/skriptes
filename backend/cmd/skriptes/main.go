@@ -19,6 +19,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/authorevents"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/collections"
@@ -187,8 +188,11 @@ func run() error {
 	// уже есть SPARQL-клиент. Гейт на ОБОИХ авторских путях: Wikipedia (QID через
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
 	// wiki-отказ по профессии протёк бы в OL-fallback (цепочка bio/photo).
-	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
-	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
+	// QID автора, зарезолвленный bio-путями (pageprops / remote_ids), персистится
+	// в authors.ext_ids->>'wd_qid' — сырьё био-таймлайна (EnsureAuthorEvents).
+	qidSink := metadata.AuthorQIDPersister(pool, logger)
+	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict).WithQIDSink(qidSink)
+	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithOccupationGate(wdAdaptations.OccupationVerdict).WithQIDSink(qidSink)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
@@ -208,6 +212,9 @@ func run() error {
 		enricher.WithTMDBPosters(metadata.NewTMDBPosterProvider(cfg.TMDBAPIKey))
 	}
 	logger.Info("tmdb poster provider configured", "api_key_set", cfg.TMDBAPIKey != "")
+	// Био-таймлайн: Wikidata-скелет событий жизни автора. Фолбэк-резолв QID
+	// (когда bio-путь ещё не персистил) идёт через тот же P106-гейт.
+	enricher.WithAuthorEvents(metadata.NewWikidataEventsProvider(sparqlClient), wdAdaptations.OccupationVerdict)
 	// Рантайм-настройки кэша обложек: дефолты в коде, оверрайды в БД
 	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
 	// (бюджет LRU + пол свободного места) на старте.
@@ -471,6 +478,9 @@ func run() error {
 			YearBackfill: yearBackfillCtl, Settings: settingsStore,
 		},
 		Adaptations: api.AdaptationsDeps{Service: adaptations.New(pool)},
+		// Био-таймлайн: события жизни автора (Wikidata-скелет; QID из bio-путей
+		// либо фолбэк-резолв с P106-гейтом).
+		AuthorEvents: api.AuthorEventsDeps{Service: authorevents.New(pool)},
 		Settings: api.SettingsDeps{
 			Store: settingsStore, Metadata: enricher, Prewarm: prewarmCtl,
 			YearBackfill: yearBackfillCtl, SrcLangBackfill: srcLangBackfillCtl,
