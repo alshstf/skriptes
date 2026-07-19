@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -44,6 +45,7 @@ type Enricher struct {
 	logger           *slog.Logger
 	posterHTTPClient *http.Client        // для скачивания PosterURL экранизаций; nil → берётся http.DefaultClient
 	tmdbPosters      *TMDBPosterProvider // приоритетный источник постеров (P4947/P4983); nil → только Commons P18
+	tmdbEnabled      atomic.Bool         // рантайм-тумблер TMDB из админки (дефолт true, см. New)
 	extractSem       chan struct{}       // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
 
 	inflightMu          sync.Mutex
@@ -88,7 +90,7 @@ func New(
 	if err != nil {
 		return nil, err
 	}
-	return &Enricher{
+	e := &Enricher{
 		coverProviders:       coverProviders,
 		annotationProviders:  annotationProviders,
 		authorPhotoProviders: authorPhotoProviders,
@@ -107,7 +109,9 @@ func New(
 		inflightAuthorPhoto:  map[int64]struct{}{},
 		inflightAuthorBio:    map[int64]struct{}{},
 		inflightAdaptations:  map[int64]struct{}{},
-	}, nil
+	}
+	e.tmdbEnabled.Store(true) // дефолт вкл; рантайм-тумблер — SetTMDBPostersEnabled
+	return e, nil
 }
 
 // WithPosterHTTPClient — для тестов: подменить HTTP-клиент для скачивания
@@ -126,6 +130,19 @@ func (e *Enricher) WithPosterHTTPClient(c *http.Client) *Enricher {
 func (e *Enricher) WithTMDBPosters(p *TMDBPosterProvider) *Enricher {
 	e.tmdbPosters = p
 	return e
+}
+
+// SetTMDBPostersEnabled — рантайм-тумблер источника TMDB (админка,
+// «Экранизации» → «Источники постеров»; per-source паттерн как у GB/OL в
+// рейтинге/годе). Выключен → ведём себя как без провайдера: постеры только
+// из Commons P18, авто-перепроверка дыр — no-op. Применяется без рестарта.
+func (e *Enricher) SetTMDBPostersEnabled(on bool) {
+	e.tmdbEnabled.Store(on)
+}
+
+// tmdbPostersActive — TMDB сконфигурирован И включён тумблером.
+func (e *Enricher) tmdbPostersActive() bool {
+	return e.tmdbPosters != nil && e.tmdbEnabled.Load()
 }
 
 // WithLocalYear подключает локальный fb2-источник года (без сети) для
@@ -1074,7 +1091,7 @@ const posterRecheckTTL = 7 * 24 * time.Hour
 // через posterRecheckTTL; транзиент (429/сеть) → checked_at не трогаем,
 // ретрай в следующем цикле. Возвращает (сколько проверено, сколько залито).
 func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int, error) {
-	if e.tmdbPosters == nil || e.pool == nil || limit <= 0 {
+	if !e.tmdbPostersActive() || e.pool == nil || limit <= 0 {
 		return 0, 0, nil // без TMDB-ключа перепроверять нечем (P18 — только через SPARQL)
 	}
 	rows, err := e.pool.Query(ctx, `
@@ -1149,7 +1166,7 @@ func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int,
 // отказе TMDB без P18-фолбэка — вызывающий не считает такую попытку
 // окончательной (маркер не ставится при нуле успехов).
 func (e *Enricher) resolvePosterURL(ctx context.Context, bookID int64, it Adaptation) (string, bool) {
-	if e.tmdbPosters != nil && (it.TMDBMovieID != "" || it.TMDBTVID != "") {
+	if e.tmdbPostersActive() && (it.TMDBMovieID != "" || it.TMDBTVID != "") {
 		u, err := e.tmdbPosters.PosterURL(ctx, it.TMDBMovieID, it.TMDBTVID)
 		switch {
 		case err == nil && u != "":
