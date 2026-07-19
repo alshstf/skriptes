@@ -49,6 +49,7 @@ type Enricher struct {
 	// Био-таймлайн (события жизни автора): Wikidata-скелет + фолбэк-резолв QID
 	// с occupation-гейтом. nil → EnsureAuthorEvents no-op.
 	wdEvents      *WikidataEventsProvider
+	wikiEvents    *WikipediaProvider
 	eventsQIDGate func(ctx context.Context, qid string) (OccupationVerdict, error)
 
 	inflightMu           sync.Mutex

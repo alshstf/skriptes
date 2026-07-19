@@ -494,3 +494,59 @@ func (p *WikidataEventsProvider) ResolveAuthorQID(ctx context.Context, fullName 
 	}
 	return "", ErrNotFound
 }
+
+// FetchSitelinks — заголовки статей Википедии для QID (wbgetentities →
+// sitelinks, только ruwiki/enwiki). Нужен Wikipedia-экстрактору вех: резолв
+// статьи ЧЕРЕЗ QID точнее opensearch по имени — QID уже прошёл имя+P106 гейты
+// bio-пути. Пустая мапа = статей нет (не ошибка).
+func (p *WikidataEventsProvider) FetchSitelinks(ctx context.Context, qid string) (map[string]string, error) {
+	if err := p.gate.wait(ctx); err != nil {
+		return nil, fmt.Errorf("%w: wdqs gate: %v", ErrUpstream, err)
+	}
+	q := url.Values{}
+	q.Set("action", "wbgetentities")
+	q.Set("ids", qid)
+	q.Set("props", "sitelinks")
+	q.Set("sitefilter", "ruwiki|enwiki")
+	q.Set("format", "json")
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+q.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build sitelinks request: %w", err)
+	}
+	req.Header.Set("User-Agent", wdUserAgent)
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("%w: sitelinks: %v", ErrUpstream, err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return nil, statusErr(resp.StatusCode)
+	}
+	var body struct {
+		// Зеркало FetchAuthorMilestones: Action API маскирует транзиент под
+		// HTTP 200 + error-JSON без entities. Без проверки «нет статей» и
+		// «источник упал» неразличимы → маркер встал бы навсегда (грабля №20).
+		// missing-сущность приходит как entities[qid].missing, не как error.
+		Error struct {
+			Code string `json:"code"`
+		} `json:"error"`
+		Entities map[string]struct {
+			Sitelinks map[string]struct {
+				Title string `json:"title"`
+			} `json:"sitelinks"`
+		} `json:"entities"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		return nil, fmt.Errorf("decode sitelinks: %w", err)
+	}
+	if body.Error.Code != "" {
+		return nil, fmt.Errorf("%w: wikidata api error: %s", ErrUpstream, body.Error.Code)
+	}
+	out := map[string]string{}
+	for _, ent := range body.Entities {
+		for site, link := range ent.Sitelinks {
+			out[strings.TrimSuffix(site, "wiki")] = link.Title
+		}
+	}
+	return out, nil
+}

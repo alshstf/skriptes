@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -14,10 +15,19 @@ import (
 // внешней известностью; на проде ~19k из 138k): у безвестных авторов
 // событий всё равно нет, а бюджет WDQS не резиновый.
 //
-// PR-1: только Wikidata-скелет; Wikipedia-вехи из текста — PR-2.
+// Два источника: Wikidata-скелет (обязательный) + Wikipedia-вехи из текста
+// биографии (опционально, WithAuthorEventsWiki).
 func (e *Enricher) WithAuthorEvents(p *WikidataEventsProvider, occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)) *Enricher {
 	e.wdEvents = p
 	e.eventsQIDGate = occupationGate
+	return e
+}
+
+// WithAuthorEventsWiki — Wikipedia-экстрактор вех (rule-based «предложение с
+// годом» по биозоне статьи; статья резолвится sitelink'ом QID, не поиском по
+// имени). Обычно тот же инстанс WikipediaProvider, что и у bio-пути.
+func (e *Enricher) WithAuthorEventsWiki(p *WikipediaProvider) *Enricher {
+	e.wikiEvents = p
 	return e
 }
 
@@ -31,16 +41,17 @@ func (e *Enricher) EnsureAuthorEvents(ctx context.Context, authorID int64) {
 	defer e.unlock(e.inflightAuthorEvents, authorID)
 
 	var (
-		renown    int64
-		fetchedAt *time.Time
-		qid       string
-		fullName  string
+		renown        int64
+		fetchedAt     *time.Time
+		qid           string
+		lastN, firstN string
+		middleN       string
 	)
 	if err := e.pool.QueryRow(ctx, `
 		SELECT renown, events_fetched_at, COALESCE(ext_ids->>'wd_qid', ''),
-		       TRIM(CONCAT_WS(' ', last_name, first_name, middle_name))
+		       COALESCE(last_name,''), COALESCE(first_name,''), COALESCE(middle_name,'')
 		FROM authors WHERE id = $1`, authorID,
-	).Scan(&renown, &fetchedAt, &qid, &fullName); err != nil {
+	).Scan(&renown, &fetchedAt, &qid, &lastN, &firstN, &middleN); err != nil {
 		e.logger.Warn("metadata: query author for events failed", "author_id", authorID, "err", err)
 		return
 	}
@@ -50,24 +61,35 @@ func (e *Enricher) EnsureAuthorEvents(ctx context.Context, authorID int64) {
 
 	transient := false
 	// QID: приоритет — bio-derived из ext_ids (прошёл имя+P106 гейты);
-	// фолбэк — резолв по имени с occupation-гейтом.
+	// фолбэк — резолв по имени с occupation-гейтом. Два порядка имени:
+	// wbsearchentities матчит лейблы, а они в естественном порядке — по
+	// «Иггульден Конн» (наш «Фамилия Имя») поиск даёт 0, по «Конн Иггульден»
+	// находит (живой замер 2026-07-19).
 	if qid == "" {
-		resolved, err := e.wdEvents.ResolveAuthorQID(ctx, fullName, e.eventsQIDGate)
-		switch {
-		case err == nil && resolved != "":
-			qid = resolved
-			if _, uerr := e.pool.Exec(ctx, `
-				UPDATE authors
-				SET ext_ids = jsonb_set(COALESCE(ext_ids, '{}'::jsonb), '{wd_qid}', to_jsonb($1::text))
-				WHERE id = $2 AND COALESCE(ext_ids->>'wd_qid', '') = ''`, resolved, authorID); uerr != nil {
-				e.logger.Warn("metadata: persist resolved wd_qid failed", "author_id", authorID, "err", uerr)
+		names := []string{strings.TrimSpace(strings.Join([]string{lastN, firstN, middleN}, " "))}
+		if firstN != "" && lastN != "" {
+			names = append(names, strings.TrimSpace(firstN+" "+lastN))
+		}
+		for _, name := range names {
+			resolved, err := e.wdEvents.ResolveAuthorQID(ctx, name, e.eventsQIDGate)
+			switch {
+			case err == nil && resolved != "":
+				qid = resolved
+				if _, uerr := e.pool.Exec(ctx, `
+					UPDATE authors
+					SET ext_ids = jsonb_set(COALESCE(ext_ids, '{}'::jsonb), '{wd_qid}', to_jsonb($1::text))
+					WHERE id = $2 AND COALESCE(ext_ids->>'wd_qid', '') = ''`, resolved, authorID); uerr != nil {
+					e.logger.Warn("metadata: persist resolved wd_qid failed", "author_id", authorID, "err", uerr)
+				}
+			case errors.Is(err, ErrNotFound):
+				// Честно не нашли — пробуем следующий порядок имени; после
+				// последнего маркер ставится (не долбим Wikidata на каждый заход).
+				continue
+			default:
+				transient = true
+				e.logger.Info("metadata: author qid resolve failed", "author_id", authorID, "err", err)
 			}
-		case errors.Is(err, ErrNotFound):
-			// Честно не нашли писателя с таким именем — событий не будет,
-			// маркер поставим (не долбим Wikidata на каждый заход).
-		default:
-			transient = true
-			e.logger.Info("metadata: author qid resolve failed", "author_id", authorID, "err", err)
+			break
 		}
 	}
 
@@ -81,6 +103,18 @@ func (e *Enricher) EnsureAuthorEvents(ctx context.Context, authorID int64) {
 			events = evs
 		}
 	}
+	// Wikipedia-вехи: биозона статьи (по sitelink QID) → предложения с годом.
+	// Транзиент любого шага = маркер не ставим (следующая попытка добьёт);
+	// честное отсутствие статьи/вех — не транзиент, скелет сохраняем как есть.
+	if qid != "" && !transient && e.wikiEvents != nil {
+		wiki, werr := e.fetchWikiMilestones(ctx, qid, events)
+		if werr != nil {
+			transient = true
+			e.logger.Info("metadata: wiki milestones fetch failed", "author_id", authorID, "qid", qid, "err", werr)
+		} else {
+			events = mergeAuthorEvents(events, wiki)
+		}
+	}
 	if transient {
 		return // ретрай следующим lazy-заходом/воркером — маркер не ставим
 	}
@@ -89,6 +123,41 @@ func (e *Enricher) EnsureAuthorEvents(ctx context.Context, authorID int64) {
 		return
 	}
 	e.logger.Info("metadata: author events saved", "author_id", authorID, "count", len(events))
+}
+
+// fetchWikiMilestones — статья через sitelink QID (ru приоритетно, затем en —
+// порядок как у bio), годы жизни для lifespan-фильтра — из Wikidata-скелета.
+// Возвращает (nil, nil) при честном отсутствии статьи или вех; ошибка =
+// транзиент (не ставить маркер).
+func (e *Enricher) fetchWikiMilestones(ctx context.Context, qid string, wdEvents []AuthorEvent) ([]AuthorEvent, error) {
+	links, err := e.wdEvents.FetchSitelinks(ctx, qid)
+	if err != nil {
+		return nil, err
+	}
+	birth, death := 0, 0
+	for _, ev := range wdEvents {
+		switch ev.Type {
+		case EventBirth:
+			birth = ev.YearFrom
+		case EventDeath:
+			death = ev.YearFrom
+		}
+	}
+	for _, lang := range []string{"ru", "en"} {
+		title := links[lang]
+		if title == "" {
+			continue
+		}
+		milestones, merr := e.wikiEvents.FetchAuthorMilestones(ctx, lang, title, birth, death)
+		if errors.Is(merr, ErrNotFound) {
+			continue // статья-призрак — пробуем следующий язык
+		}
+		if merr != nil {
+			return nil, merr
+		}
+		return milestones, nil // первая статья с текстом; дедуп ×2 — сознательно нет
+	}
+	return nil, nil
 }
 
 // saveAuthorEvents — транзакционный upsert событий + чистка выпавших +
@@ -131,12 +200,19 @@ func (e *Enricher) saveAuthorEvents(ctx context.Context, authorID int64, events 
 	// Выпавшие из нового набора не-hidden строки обработанных источников —
 	// удалить (актуализация при изменении данных источника). hidden-строки
 	// остаются: их admin скрыл сознательно, потерять пометку нельзя.
-	for _, src := range []string{"wikidata"} {
+	for _, src := range []string{"wikidata", "wikipedia"} {
+		keys := keysBySource[src]
+		if keys == nil {
+			// nil-слайс pgx кодирует NULL-массивом → NOT(x=ANY(NULL)) = NULL →
+			// prune молча не удалял бы ничего; пустой источник = чистим всё
+			// не-hidden (актуализация).
+			keys = []string{}
+		}
 		if _, err := tx.Exec(ctx, `
 			DELETE FROM author_events
 			WHERE author_id = $1 AND source = $2 AND hidden = false
 			  AND NOT (ext_key = ANY($3::text[]))`,
-			authorID, src, keysBySource[src]); err != nil {
+			authorID, src, keys); err != nil {
 			return fmt.Errorf("prune stale %s events: %w", src, err)
 		}
 	}

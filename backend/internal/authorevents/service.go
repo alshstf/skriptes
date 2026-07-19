@@ -34,6 +34,15 @@ type Event struct {
 	Hidden *bool `json:"hidden,omitempty"`
 }
 
+// SourceAttribution — источник данных таймлайна для подвала секции.
+// Wikipedia-цитаты — CC BY-SA, атрибуция ссылкой на статью юридически
+// обязательна; Wikidata — CC0 (упоминаем из вежливости).
+type SourceAttribution struct {
+	Source  string `json:"source"`
+	License string `json:"license"`
+	URL     string `json:"url,omitempty"`
+}
+
 // Response — события + статус обогащения + критерий показа.
 type Response struct {
 	Items []Event `json:"items"`
@@ -44,6 +53,8 @@ type Response struct {
 	// секцию не рендерит вовсе (сырьё в items всё равно отдаём — админу
 	// полезно видеть, почему скучно).
 	Eligible bool `json:"eligible"`
+	// Attribution — по одной записи на источник, встретившийся в items.
+	Attribution []SourceAttribution `json:"attribution,omitempty"`
 }
 
 // Пороги критерия «показывать таймлайн» (валидированы замерами 2026-07:
@@ -98,6 +109,7 @@ func (s *Service) List(ctx context.Context, authorID int64, isAdmin bool) (Respo
 	defer rows.Close()
 
 	nontrivial := 0
+	attrURL := map[string]string{}
 	for rows.Next() {
 		var (
 			ev     Event
@@ -119,10 +131,22 @@ func (s *Service) List(ctx context.Context, authorID int64, isAdmin bool) (Respo
 		if !hidden && ev.Weight >= nontrivialWeight {
 			nontrivial++
 		}
+		if _, ok := attrURL[ev.Source]; !ok || (attrURL[ev.Source] == "" && ev.URL != "") {
+			attrURL[ev.Source] = ev.URL
+		}
 		resp.Items = append(resp.Items, ev)
 	}
 	if err := rows.Err(); err != nil {
 		return Response{}, err
+	}
+	for _, src := range []string{"wikidata", "wikipedia"} {
+		if u, ok := attrURL[src]; ok {
+			lic := "CC0"
+			if src == "wikipedia" {
+				lic = "CC BY-SA 4.0" // цитаты — атрибуция ссылкой обязательна
+			}
+			resp.Attribution = append(resp.Attribution, SourceAttribution{Source: src, License: lic, URL: u})
+		}
 	}
 
 	if nontrivial >= minNontrivialEvents {
