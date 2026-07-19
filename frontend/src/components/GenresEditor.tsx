@@ -26,13 +26,17 @@ import { cn } from '@/lib/utils';
  */
 export function GenresEditor({
   workId,
-  genres,
+  genres: genresProp,
   overridden = false,
 }: {
   workId: number;
-  genres: GenreRef[];
+  // ⚠️ Может прийти null: у книги без жанров бэкенд отдаёт `"genres": null`
+  // (omitempty на срезе). Без этого guard карточка книги падала в белый
+  // экран на `genres.length` — воспроизводится, если админ снял все жанры.
+  genres: GenreRef[] | null | undefined;
   overridden?: boolean;
 }) {
+  const genres = genresProp ?? [];
   const me = useMe();
   if (me.data?.role !== 'admin') {
     if (genres.length === 0) return null;

@@ -88,7 +88,9 @@ func (p *WikipediaProvider) FetchAuthorMilestones(ctx context.Context, lang, tit
 var (
 	wikiHeadingRe = regexp.MustCompile(`^(==+)\s*(.*?)\s*==+\s*$`)
 	// Био-зона: заголовки 2-го уровня о жизни (не «Библиография»/«Память»).
-	bioHeadingRe = regexp.MustCompile(`(?i)биограф|жизн|детств|юност|молодые годы|последние годы|творч|biography|life|childhood|youth|career`)
+	// «Семья»/«Дети» — тоже биография: смерти детей и браки часто есть только
+	// там (у Достоевского смерть дочери Сони — строка списка в «Семье»).
+	bioHeadingRe = regexp.MustCompile(`(?i)биограф|жизн|детств|юност|молодые годы|последние годы|творч|сем(ья|ьи)|дети|личн|biography|life|childhood|youth|career|family|personal`)
 	yearRe       = regexp.MustCompile(`\b(1[0-9]{3}|20[0-2][0-9])\b`)
 
 	// Библиографический мусор: издания, тома, страницы (ловит списки
@@ -144,11 +146,24 @@ func extractWikiMilestones(lang, articleURL, text string, birth, death int) []Au
 		if len(runes) < 20 || len(runes) > 400 {
 			continue
 		}
-		year := milestoneYear(sent, birth, death)
+		// Обрывок: сплиттер разорвал предложение на скобке/тире/сокращении и
+		// фрагмент начинается с середины мысли («…Анны 2-й степени — 1832) и
+		// поселился в Даровом»). Такие как формулировка нечитаемы, а вес по
+		// ключевым словам получают наравне с настоящими вехами. Ловим по двум
+		// признакам: начало не как у предложения И непарная закрывающая скобка
+		// (второе важнее — обрывок часто начинается с заглавной, если разрез
+		// пришёлся на имя собственное).
+		if !startsSentence(runes[0]) || danglingParen(sent) {
+			continue
+		}
+		year := familyDeathYear(sent, birth, death)
+		if year == 0 {
+			year = milestoneYear(sent, birth, death)
+		}
 		if year == 0 {
 			continue
 		}
-		if biblioRe.MatchString(sent) || posthumousRe.MatchString(sent) {
+		if biblioRe.MatchString(sent) || posthumousRe.MatchString(sent) || longQuote(sent) {
 			continue
 		}
 		typ := classifyMilestone(quotedRe.ReplaceAllString(sent, "«…»"))
@@ -181,18 +196,102 @@ func extractWikiMilestones(lang, articleURL, text string, birth, death int) []Au
 	return out
 }
 
+var (
+	// «Дочь София (1868—1868) родилась в Женеве, где … скончалась» — типовая
+	// строка секции «Семья». Год смерти близкого есть ТОЛЬКО в скобках, а
+	// Wikidata о таких детях часто вовсе не знает (у Достоевского в P40 только
+	// двое выживших) — то есть без этого паттерна теряется сильнейшее событие
+	// биографии: «Идиот» написан в год смерти дочери.
+	familyRangeRe = regexp.MustCompile(`\((1[0-9]{3})\s*[—–-]\s*(1[0-9]{3}|20[0-2][0-9])\)`)
+	deathMarkerRe = regexp.MustCompile(`(?i)сконча|умер|погиб|не прожил`)
+)
+
+// familyDeathYear — год смерти близкого из «(1868—1868) … скончалась».
+// 0, если паттерна нет или год вне жизни автора.
+func familyDeathYear(sent string, birth, death int) int {
+	if !deathMarkerRe.MatchString(sent) {
+		return 0
+	}
+	m := familyRangeRe.FindStringSubmatch(sent)
+	if m == nil {
+		return 0
+	}
+	y, err := strconv.Atoi(m[2])
+	if err != nil || y == 0 {
+		return 0
+	}
+	if (birth > 0 && y < birth) || (death > 0 && y > death) {
+		return 0
+	}
+	return y
+}
+
+// longQuote — предложение с длинной прямой речью: цитата из письма или
+// дневника, а не событие («В частности, графиня писала: „Заявляю ещё, что Лев
+// Николаевич ни разу перед смертью…“» получала вес утраты из-за слова
+// «смертью»). Названия произведений короче порога и не задеваются.
+func longQuote(s string) bool {
+	for _, m := range quotedRe.FindAllString(s, -1) {
+		if len([]rune(m)) > 40 {
+			return true
+		}
+	}
+	// Непарная кавычка: цитата не закрылась в пределах предложения — значит
+	// сплиттер разрезал её посередине («…графиня писала: «Заявляю ещё, что Лев
+	// Николаевич ни разу перед смертью не…»). Обрывок цитаты — не событие.
+	return strings.Count(s, "«") != strings.Count(s, "»")
+}
+
+// danglingParen — непарная закрывающая скобка: верный признак того, что
+// сплиттер разрезал предложение внутри скобок.
+func danglingParen(s string) bool {
+	depth := 0
+	for _, r := range s {
+		switch r {
+		case '(':
+			depth++
+		case ')':
+			if depth == 0 {
+				return true
+			}
+			depth--
+		}
+	}
+	return false
+}
+
+// startsSentence — начинается ли фрагмент как настоящее предложение: заглавная
+// буква (лат/кир), цифра или открывающая кавычка. Строчная, «)», «—» — признак
+// того, что сплиттер разрезал предложение посередине.
+func startsSentence(r rune) bool {
+	switch {
+	case r >= 'А' && r <= 'Я', r == 'Ё':
+		return true
+	case r >= 'A' && r <= 'Z':
+		return true
+	case r >= '0' && r <= '9':
+		return true
+	case r == '«' || r == '"':
+		return true
+	}
+	return false
+}
+
 // bioZone — секции 2-го уровня с «биографическими» заголовками; статья без
 // таковых (короткая, без структуры) → первые 60% текста (хвост статей —
 // библиография/память/ссылки, там шум).
 func bioZone(text string) string {
 	lines := strings.Split(text, "\n")
 	var bio []string
-	inBio, sawBioHeading := false, false
+	// Преамбула (до первого заголовка) — часть биозоны: там сжатая суть
+	// биографии, и порой единственное упоминание ключевого факта («осуждён по
+	// делу петрашевцев на четыре года каторги» у Достоевского — только там).
+	inBio, sawHeading := true, false
 	for _, line := range lines {
 		if m := wikiHeadingRe.FindStringSubmatch(line); m != nil {
 			if len(m[1]) == 2 { // уровень 2 («== X ==») переключает зону
 				inBio = bioHeadingRe.MatchString(m[2])
-				sawBioHeading = sawBioHeading || inBio
+				sawHeading = true
 			}
 			continue // сами заголовки в текст не идут
 		}
@@ -200,7 +299,11 @@ func bioZone(text string) string {
 			bio = append(bio, line)
 		}
 	}
-	if sawBioHeading {
+	// Статья со структурой: преамбула + био-секции, остальное отрезано
+	// заголовками. Fallback «первые 60%» нужен только бесструктурным статьям —
+	// иначе он рубил преамбулу на полуслове (у статьи с одной лишь
+	// «Библиографией» терялась половина фактов).
+	if sawHeading {
 		return strings.Join(bio, "\n")
 	}
 	runes := []rune(text)

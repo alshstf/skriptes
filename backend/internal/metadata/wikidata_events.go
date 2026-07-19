@@ -139,7 +139,13 @@ SELECT ?prop ?date ?prec ?end ?who ?whoLabel ?placeLabel WHERE {
     wd:%[1]s wdt:P40 ?who . ?who p:P569/psv:P569 ?dv . ?dv wikibase:timeValue ?date ; wikibase:timePrecision ?prec .
   } UNION {
     BIND("P570rel" AS ?prop)
-    { wd:%[1]s wdt:P22 ?who } UNION { wd:%[1]s wdt:P25 ?who } UNION { wd:%[1]s wdt:P3373 ?who }
+    # Смерти близких: родители, сиблинги, супруги и ДЕТИ. Смерть ребёнка —
+    # сильнейшее событие биографии («Идиот» написан в год смерти дочери Сони),
+    # а из текста статьи она достаётся плохо: в «Семье» это строка списка
+    # «Дочь София (1868—1868) … скончалась» без явного года события.
+    { wd:%[1]s wdt:P22 ?who } UNION { wd:%[1]s wdt:P25 ?who }
+    UNION { wd:%[1]s wdt:P3373 ?who } UNION { wd:%[1]s wdt:P40 ?who }
+    UNION { wd:%[1]s wdt:P26 ?who }
     ?who p:P570/psv:P570 ?dv . ?dv wikibase:timeValue ?date ; wikibase:timePrecision ?prec .
   } UNION {
     BIND("P551" AS ?prop)
