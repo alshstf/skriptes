@@ -52,7 +52,10 @@ func TestListWorks_RepresentativeEdition(t *testing.T) {
 		VALUES ($1, $2, 'EN1', 'en1.fb2', 'fb2', 'The English Edition', 'the english edition',
 		        'en', $3, 'en-cover.jpg', 5.0, 'google_books')
 		RETURNING id`, collID, archID, workID).Scan(&enID))
-	_, err = pool.Exec(ctx, `UPDATE works SET edition_count = 2 WHERE id = $1`, workID)
+	// Колонка works.edition_count НАРОЧНО кривая (99): бейдж обязан считать
+	// живые издания сам, а не читать потенциально устаревшую колонку (она не
+	// пересчитывается после soft-delete импорта до следующей группировки).
+	_, err = pool.Exec(ctx, `UPDATE works SET edition_count = 99 WHERE id = $1`, workID)
 	require.NoError(t, err)
 	// Meili-док работы получает langs = union (en, ru) — почва для union[0]-бага.
 	require.NoError(t, imp.UpsertWorksToIndex(ctx, []int64{workID}))
@@ -80,7 +83,7 @@ func TestListWorks_RepresentativeEdition(t *testing.T) {
 	// Обложки у якоря нет → fallback на единственную обложку работы (как карточка).
 	require.Equal(t, "en-cover.jpg", it.CoverPath)
 	require.Equal(t, enID, it.CoverEditionID)
-	require.Equal(t, 2, it.EditionCount)
+	require.Equal(t, 2, it.EditionCount, "живой счёт изданий, не устаревшая колонка works.edition_count")
 
 	// Консистентность с карточкой: GetWork выбирает то же издание.
 	card, err := svc.GetWork(ctx, workID, nil, nil)
@@ -99,8 +102,13 @@ func TestListWorks_RepresentativeEdition(t *testing.T) {
 	require.EqualValues(t, 5, *itEn.ExternalRating)
 	require.NotNil(t, itEn.ExternalRatingSource)
 	require.Equal(t, "google_books", *itEn.ExternalRatingSource)
+	// Бейдж «N изданий» = ВИДИМЫЕ издания (прод-кейс «Разум и чувства»: бейдж
+	// обещал «4 изданий», карточка при скрытых языках показывала одно без
+	// секции «Издания»). ru скрыт → бейдж 1, консистентно с карточкой.
+	require.Equal(t, 1, itEn.EditionCount, "бейдж = видимые издания при скрытом ru")
 	cardEn, err := svc.GetWork(ctx, workID, nil, []string{"ru"})
 	require.NoError(t, err)
 	require.Equal(t, enID, cardEn.ID, "карточка при скрытии ru — английское издание")
 	require.Equal(t, itEn.Lang, cardEn.Lang)
+	require.Len(t, cardEn.Editions, 1, "карточка показывает столько же изданий, сколько обещал бейдж")
 }

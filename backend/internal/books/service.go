@@ -793,7 +793,19 @@ func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, e
 		SELECT w.id, COALESCE(rep.id, 0), COALESCE(rep.lang, ''), COALESCE(rep.cover_path, ''),
 		       COALESCE(rep.rating, rep.external_rating)::float8,
 		       CASE WHEN rep.rating IS NOT NULL THEN 'library' ELSE rep.external_rating_source END,
-		       COALESCE(w.edition_count, 1),
+		       (
+		           -- Счётчик изданий для бейджа «N изданий» = ЖИВЫЕ издания с
+		           -- НЕ-скрытым языком — зеркало visibleEditions карточки (только
+		           -- lang, без genre-фильтра rep-LATERAL'а: карточка жанры
+		           -- per-edition не режет). Раньше здесь была колонка
+		           -- works.edition_count (все живые издания): бейдж обещал «4
+		           -- изданий», а карточка при скрытых языках показывала одно —
+		           -- прод-кейс «Разум и чувства». Живой count заодно не зависит от
+		           -- устаревания works.edition_count после soft-delete импорта.
+		           SELECT count(*)::int FROM books b
+		           WHERE b.work_id = w.id AND b.deleted = false
+		             AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
+		       ),
 		       COALESCE(fb.id, 0), COALESCE(fb.cover_path, '')
 		FROM works w
 		LEFT JOIN LATERAL (
