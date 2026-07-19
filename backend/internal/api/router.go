@@ -137,6 +137,7 @@ func NewRouter(d Deps) http.Handler {
 						// Био-таймлайн: события жизни автора (эндпоинт сам
 						// служит lazy-триггером, фронт поллит до done).
 						r.Get("/authors/{id}/events", handleListAuthorEvents(d.AuthorEvents, d.Metadata))
+						r.Get("/works/{id}/life-events", handleWorkLifeEvents(d.AuthorEvents, d.Metadata))
 					}
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))

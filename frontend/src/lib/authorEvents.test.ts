@@ -5,6 +5,7 @@ import {
   spansAt,
   TIMELINE_GAP_MIN,
   pluralYears,
+  relationPhrase,
   type AuthorEvent,
 } from './authorEvents';
 
@@ -84,5 +85,32 @@ describe('pluralYears', () => {
     expect(pluralYears(5)).toBe('5 лет');
     expect(pluralYears(13)).toBe('13 лет');
     expect(pluralYears(21)).toBe('21 год');
+  });
+});
+
+describe('relationPhrase', () => {
+  const base = { id: 1, source: 'wikidata', type: 'loss', date_precision: 'year', title: 'X', weight: 5 } as const;
+
+  it('годовые формулировки без месячной точности (грабля №21)', () => {
+    expect(relationPhrase({ ...base, year_from: 1868, relation: 'same_year' })).toBe('в тот же год');
+    expect(relationPhrase({ ...base, year_from: 1850, year_to: 1854, relation: 'during' })).toBe(
+      'тянулось с 1850 по 1854',
+    );
+    expect(relationPhrase({ ...base, year_from: 1866, relation: 'years_after', years_gap: 2 })).toBe(
+      'за 2 года до',
+    );
+    expect(relationPhrase({ ...base, year_from: 1945, relation: 'delayed', years_gap: 24 })).toBe(
+      'за 24 года до этого',
+    );
+  });
+
+  it('русская плюрализация лет', () => {
+    const p = (gap: number) =>
+      relationPhrase({ ...base, year_from: 1900, relation: 'years_after', years_gap: gap });
+    expect(p(1)).toBe('за 1 год до');
+    expect(p(3)).toBe('за 3 года до');
+    expect(p(5)).toBe('за 5 лет до');
+    expect(p(11)).toBe('за 11 лет до'); // 11-19 — исключение
+    expect(p(21)).toBe('за 21 год до');
   });
 });

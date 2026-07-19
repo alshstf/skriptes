@@ -8,6 +8,7 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
+import { AuthorLifeSection } from '@/components/AuthorLifeSection';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
@@ -225,6 +226,11 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             "Экранизаций не найдено" — лишний шум.
           */}
           {!book.deleted ? <AdaptationsSection bookId={book.id} /> : null}
+
+          {/* «В жизни автора в это время» — оборотная сторона таймлайна
+              автора: что происходило, пока писалась ЭТА книга. Секция сама
+              скрывается, когда связей нет (см. AuthorLifeSection). */}
+          {!book.deleted && book.work_id ? <AuthorLifeSection workId={book.work_id} /> : null}
 
           {/* Админ: присоединить другую книгу (дубль вне общей серии/автора).
               Тихий ряд внизу; сам скрыт у не-админа (тогда обёртка пуста). */}

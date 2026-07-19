@@ -56,6 +56,42 @@ func handleListAuthorEvents(d AuthorEventsDeps, meta MetadataDeps) http.HandlerF
 	}
 }
 
+// handleWorkLifeEvents — GET /api/works/{id}/life-events: блок «В жизни автора
+// в это время» на карточке книги. Тот же lazy-триггер, что у таймлайна автора
+// (события общие), поэтому открытая карточка книги тоже прогревает автора.
+func handleWorkLifeEvents(d AuthorEventsDeps, meta MetadataDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+
+		isAdmin := false
+		if u, ok := auth.UserFromContext(r.Context()); ok && u.Role == auth.RoleAdmin {
+			isAdmin = true
+		}
+
+		res, err := d.Service.ListForWork(ctx, id, isAdmin)
+		if err != nil {
+			if errors.Is(err, authorevents.ErrWorkNotFound) {
+				writeJSON(w, http.StatusNotFound, map[string]string{"error": "work not found"})
+				return
+			}
+			slog.Error("list work life events failed", "work_id", id, "err", err)
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		// События автора ещё не тянули — триггерим (карточка книги поллит сама).
+		if res.AuthorID > 0 && !res.Eligible {
+			triggerAuthorEventsAsync(meta, res.AuthorID)
+		}
+		writeJSON(w, http.StatusOK, res)
+	}
+}
+
 // triggerAuthorEventsAsync — fire-and-forget EnsureAuthorEvents с детачнутым
 // контекстом (SPARQL медленный — 90с бюджет, зеркало adaptations-триггера).
 func triggerAuthorEventsAsync(meta MetadataDeps, authorID int64) {

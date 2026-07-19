@@ -75,6 +75,47 @@ export function useAuthorEvents(id: number | string | undefined) {
   });
 }
 
+/** Связь события с годом написания книги (считает бэкенд). */
+export type EventRelation = 'same_year' | 'during' | 'years_after' | 'delayed';
+
+export type LifeEvent = AuthorEvent & {
+  relation: EventRelation;
+  /** Сколько лет прошло — для years_after/delayed. */
+  years_gap?: number;
+};
+
+export type WorkLifeEventsResponse = {
+  author_id: number;
+  author_name: string;
+  written_year?: number;
+  items: LifeEvent[];
+  eligible: boolean;
+  attribution?: EventAttribution[];
+};
+
+/**
+ * useWorkLifeEvents — блок «В жизни автора в это время» на карточке книги.
+ * Эндпоинт сам триггерит обогащение автора, поэтому поллим, пока блок не
+ * станет eligible (данные общие с таймлайном автора).
+ */
+export function useWorkLifeEvents(workId: number | undefined) {
+  return useQuery<WorkLifeEventsResponse>({
+    queryKey: ['work-life-events', String(workId)],
+    queryFn: ({ signal }) =>
+      apiFetch<WorkLifeEventsResponse>(`/api/works/${workId}/life-events`, { signal }),
+    enabled: !!workId,
+    refetchInterval: (q) => {
+      const d = q.state.data;
+      // Нет автора или года написания — ждать нечего, связей не будет.
+      if (!d || !d.author_id || !d.written_year) return false;
+      if (d.eligible) return false;
+      if (q.state.dataUpdateCount > EVENTS_POLL_MAX_TRIES) return false;
+      return 3_000;
+    },
+    staleTime: 60_000,
+  });
+}
+
 /**
  * Год написания книги → сами книги (правая сторона таймлайна). Совместим с
  * catalog.YearCount: books там опционален (в гистограмме нужен только count).
@@ -175,6 +216,26 @@ function maxWeight(row: TimelineRow): number {
  */
 export function relatedYears(year: number): number[] {
   return [year - 2, year - 1, year];
+}
+
+/**
+ * relationPhrase — человеческая формулировка связи. ТОЛЬКО годовая точность
+ * (грабля №21): «в год», «за N лет до» — и никаких месяцев, даже если у
+ * события известен день.
+ */
+export function relationPhrase(it: LifeEvent): string {
+  switch (it.relation) {
+    case 'same_year':
+      return 'в тот же год';
+    case 'during':
+      return it.year_to ? `тянулось с ${it.year_from} по ${it.year_to}` : 'в это время';
+    case 'years_after':
+      return `за ${pluralYears(it.years_gap ?? 0)} до`;
+    case 'delayed':
+      return `за ${pluralYears(it.years_gap ?? 0)} до этого`;
+    default:
+      return String(it.year_from);
+  }
 }
 
 /** Русская плюрализация лет: 1 год / 3 года / 5 лет / 11 лет / 21 год. */
