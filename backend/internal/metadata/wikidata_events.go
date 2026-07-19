@@ -139,7 +139,13 @@ SELECT ?prop ?date ?prec ?end ?who ?whoLabel ?placeLabel WHERE {
     wd:%[1]s wdt:P40 ?who . ?who p:P569/psv:P569 ?dv . ?dv wikibase:timeValue ?date ; wikibase:timePrecision ?prec .
   } UNION {
     BIND("P570rel" AS ?prop)
-    { wd:%[1]s wdt:P22 ?who } UNION { wd:%[1]s wdt:P25 ?who } UNION { wd:%[1]s wdt:P3373 ?who }
+    # Смерти близких: родители, сиблинги, супруги и ДЕТИ. Смерть ребёнка —
+    # сильнейшее событие биографии («Идиот» написан в год смерти дочери Сони),
+    # а из текста статьи она достаётся плохо: в «Семье» это строка списка
+    # «Дочь София (1868—1868) … скончалась» без явного года события.
+    { wd:%[1]s wdt:P22 ?who } UNION { wd:%[1]s wdt:P25 ?who }
+    UNION { wd:%[1]s wdt:P3373 ?who } UNION { wd:%[1]s wdt:P40 ?who }
+    UNION { wd:%[1]s wdt:P26 ?who }
     ?who p:P570/psv:P570 ?dv . ?dv wikibase:timeValue ?date ; wikibase:timePrecision ?prec .
   } UNION {
     BIND("P551" AS ?prop)
@@ -493,4 +499,60 @@ func (p *WikidataEventsProvider) ResolveAuthorQID(ctx context.Context, fullName 
 		// подтверждённого писателя, иначе рискуем чужой биографией.
 	}
 	return "", ErrNotFound
+}
+
+// FetchSitelinks — заголовки статей Википедии для QID (wbgetentities →
+// sitelinks, только ruwiki/enwiki). Нужен Wikipedia-экстрактору вех: резолв
+// статьи ЧЕРЕЗ QID точнее opensearch по имени — QID уже прошёл имя+P106 гейты
+// bio-пути. Пустая мапа = статей нет (не ошибка).
+func (p *WikidataEventsProvider) FetchSitelinks(ctx context.Context, qid string) (map[string]string, error) {
+	if err := p.gate.wait(ctx); err != nil {
+		return nil, fmt.Errorf("%w: wdqs gate: %v", ErrUpstream, err)
+	}
+	q := url.Values{}
+	q.Set("action", "wbgetentities")
+	q.Set("ids", qid)
+	q.Set("props", "sitelinks")
+	q.Set("sitefilter", "ruwiki|enwiki")
+	q.Set("format", "json")
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.apiURL+"?"+q.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build sitelinks request: %w", err)
+	}
+	req.Header.Set("User-Agent", wdUserAgent)
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("%w: sitelinks: %v", ErrUpstream, err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return nil, statusErr(resp.StatusCode)
+	}
+	var body struct {
+		// Зеркало FetchAuthorMilestones: Action API маскирует транзиент под
+		// HTTP 200 + error-JSON без entities. Без проверки «нет статей» и
+		// «источник упал» неразличимы → маркер встал бы навсегда (грабля №20).
+		// missing-сущность приходит как entities[qid].missing, не как error.
+		Error struct {
+			Code string `json:"code"`
+		} `json:"error"`
+		Entities map[string]struct {
+			Sitelinks map[string]struct {
+				Title string `json:"title"`
+			} `json:"sitelinks"`
+		} `json:"entities"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		return nil, fmt.Errorf("decode sitelinks: %w", err)
+	}
+	if body.Error.Code != "" {
+		return nil, fmt.Errorf("%w: wikidata api error: %s", ErrUpstream, body.Error.Code)
+	}
+	out := map[string]string{}
+	for _, ent := range body.Entities {
+		for site, link := range ent.Sitelinks {
+			out[strings.TrimSuffix(site, "wiki")] = link.Title
+		}
+	}
+	return out, nil
 }

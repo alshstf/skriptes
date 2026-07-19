@@ -214,7 +214,7 @@ func run() error {
 	logger.Info("tmdb poster provider configured", "api_key_set", cfg.TMDBAPIKey != "")
 	// Био-таймлайн: Wikidata-скелет событий жизни автора. Фолбэк-резолв QID
 	// (когда bio-путь ещё не персистил) идёт через тот же P106-гейт.
-	enricher.WithAuthorEvents(metadata.NewWikidataEventsProvider(sparqlClient), wdAdaptations.OccupationVerdict)
+	enricher.WithAuthorEvents(metadata.NewWikidataEventsProvider(sparqlClient), wdAdaptations.OccupationVerdict).WithAuthorEventsWiki(wikiProvider)
 	// Рантайм-настройки кэша обложек: дефолты в коде, оверрайды в БД
 	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
 	// (бюджет LRU + пол свободного места) на старте.
