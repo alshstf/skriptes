@@ -188,6 +188,7 @@ func TestRecheckPosterHoles_NewFilmPosterAppearsLater(t *testing.T) {
 	checked, filled, err := enricher.RecheckPosterHoles(ctx, 10)
 	require.NoError(t, err)
 	require.Zero(t, checked, "свежепроверенная дыра ждёт TTL")
+	require.Zero(t, filled)
 
 	// 3) TTL истёк, постера всё ещё нет → checked_at отодвинут, постера нет.
 	_, err = pool.Exec(ctx,
