@@ -1,7 +1,6 @@
 package metadata
 
 import (
-	"strings"
 	"testing"
 )
 
@@ -39,6 +38,9 @@ func TestAssembleWikidataEvents(t *testing.T) {
 		// Война (P1344) и арест (P793) — по ключевым словам лейбла.
 		evRow(map[string]string{"prop": "P1344", "date": "1854-01-01T00:00:00Z", "who": "http://www.wikidata.org/entity/Q4", "whoLabel": "Крымская война"}),
 		evRow(map[string]string{"prop": "P793", "date": "1849-04-23T00:00:00Z", "who": "http://www.wikidata.org/entity/Q5", "whoLabel": "арест петрашевцев"}),
+		// Посмертное significant event (реальный кейс Толстого: «сожжение книг
+		// в нацистской Германии», 1933 при смерти 1910) — lifespan-фильтр.
+		evRow(map[string]string{"prop": "P793", "date": "1933-05-10T00:00:00Z", "who": "http://www.wikidata.org/entity/Q6", "whoLabel": "сожжение книг"}),
 		// Сущность без человеческого лейбла (Wikidata отдаёт сам QID).
 		evRow(map[string]string{"prop": "P26", "date": "1900-01-01T00:00:00Z", "who": "http://www.wikidata.org/entity/Q999", "whoLabel": "Q999"}),
 	}
@@ -75,15 +77,19 @@ func TestAssembleWikidataEvents(t *testing.T) {
 		t.Fatalf("P1344 война: %+v", byType)
 	}
 	if byType[EventPersecution] != 1 {
-		t.Fatalf("P793 арест → persecution: %+v", byType)
+		t.Fatalf("P793 арест → persecution (посмертный 1933 — отфильтрован): %+v", byType)
+	}
+	if _, posthumous := byKey["P793:Q6:1933"]; posthumous {
+		t.Fatalf("событие после смерти автора должно отбрасываться lifespan-фильтром")
 	}
 
 	res, ok := byKey["P551:-:1837"]
 	if !ok || res.YearTo == nil || *res.YearTo != 1841 {
 		t.Fatalf("residence-период 1837–1841: %+v", res)
 	}
-	if res.Title != "Жил: Москва" {
-		t.Fatalf("формулировка residence: %q", res.Title)
+	// Title не дублирует Place (UI композитит «title · place»).
+	if res.Title != "Жил" || res.Place != "Москва" {
+		t.Fatalf("формулировка residence: %q / %q", res.Title, res.Place)
 	}
 
 	marriage := byKey["P26:Q463650:1862"]
@@ -105,7 +111,7 @@ func TestAssembleWikidataEvents(t *testing.T) {
 	}
 
 	birth := byKey["P569:-:1828"]
-	if !strings.Contains(birth.Title, "Ясная Поляна") || birth.Weight != 0 {
+	if birth.Title != "Родился" || birth.Place != "Ясная Поляна" || birth.Weight != 0 {
 		t.Fatalf("рождение: %+v", birth)
 	}
 }

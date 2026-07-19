@@ -273,8 +273,10 @@ func assembleWikidataEvents(qid string, rows []map[string]struct {
 		if y == 0 {
 			continue
 		}
-		// Смерть родителя/сиблинга — событие жизни автора, только пока автор жив.
-		if r.prop == "P570rel" {
+		// Любое не-якорное событие — событие жизни автора, только пока автор
+		// жив: смерть сиблинга до рождения, посмертная премия или «сожжение
+		// книг в 1933» у умершего в 1910 — не биография (смоук Толстого).
+		if r.prop != "P569" && r.prop != "P570" {
 			if (birthYear != 0 && y < birthYear) || (deathYear != 0 && y > deathYear) {
 				continue
 			}
@@ -303,18 +305,14 @@ func assembleWikidataEvents(qid string, rows []map[string]struct {
 			ev.YearTo = &ey
 		}
 
+		// Контракт формулировок: Title НЕ дублирует Place — UI сам композитит
+		// «title · place», когда place непуст.
 		who := cleanLabel(r.whoLabel, r.who)
 		switch r.prop {
 		case "P569":
 			ev.Type, ev.Title = EventBirth, "Родился"
-			if r.place != "" {
-				ev.Title = "Родился — " + r.place
-			}
 		case "P570":
 			ev.Type, ev.Title = EventDeath, "Умер"
-			if r.place != "" {
-				ev.Title = "Умер — " + r.place
-			}
 		case "P26":
 			ev.Type, ev.Title = EventLove, "Брак"
 			if who != "" {
@@ -331,11 +329,7 @@ func assembleWikidataEvents(qid string, rows []map[string]struct {
 				ev.Title = "Смерть близкого: " + who
 			}
 		case "P551":
-			ev.Type, ev.Title = EventResidence, "Место жизни"
-			if r.place != "" {
-				ev.Title = "Жил: " + r.place
-				ev.Place = r.place
-			}
+			ev.Type, ev.Title = EventResidence, "Жил"
 		case "P69":
 			ev.Type, ev.Title = EventEducation, "Учёба"
 			if who != "" {
