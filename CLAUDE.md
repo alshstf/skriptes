@@ -779,6 +779,12 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   `api/books.go::handleGetBook`).
 - Бейдж «N изданий»: `BookListItem` + `BooksPage::BookCard`;
   `hydrateCovers` догидрачивает `edition_count` (+ обложку из любого издания).
+  ⚠️ На пути /books (`representativeEditions`) счётчик = число ЖИВЫХ изданий с
+  НЕ-скрытым языком (живой count, зеркало `visibleEditions` карточки), НЕ
+  колонка `works.edition_count` — иначе бейдж «4 изданий» расходился с
+  карточкой, показывающей одно видимое (прод-кейс «Разум и чувства» при
+  скрытых языках; заодно не зависит от устаревания колонки после
+  soft-delete импорта).
 - ⚠️ Ридер: «К карточке» = `navigate(replace)` на карточку, НЕ
   `window.history.back()` (foliate в iframe плодит свои history-записи →
   back уводил в чужой ридер). `/foliate-reader.html` в PWA
