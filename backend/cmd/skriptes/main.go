@@ -137,6 +137,10 @@ func run() error {
 		runOnceWorksIndexSync(ctx(), pool, imp, logger)
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
+		// Известность авторов — ПОСЛЕ ресинка works-индекса: оба гоняют один и
+		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
+		// этому моменту classифицирован — сборники вне вклада).
+		runOnceAuthorRenown(ctx(), pool, imp, logger)
 	}()
 
 	authSvc := auth.New(pool, 0)
@@ -576,6 +580,14 @@ func runStartupImport(ctx context.Context, pool *pgxpool.Pool, imp *importer.Imp
 	} else if n > 0 {
 		logger.Info("classified service authors after import", "count", n)
 	}
+	// Пересчитать известность авторов (authors.renown — дефолтная сортировка
+	// /authors): импорт мог привезти новые издания/сигналы. Идемпотентно,
+	// advisory lock сериализует с runOnce-гейтом старта.
+	if n, err := imp.RecomputeAuthorRenown(ctx); err != nil {
+		logger.Warn("author renown recompute after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("author renown recomputed after import", "authors_updated", n)
+	}
 }
 
 // runOnceLangResync разово синкает нормализованные коды языка в Meili. Миграция
@@ -661,6 +673,35 @@ func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logge
 		logger.Warn("service author classify: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time service author classification done", "count", n)
+}
+
+// runOnceAuthorRenown — разовый пересчёт authors.renown (дефолтная сортировка
+// /authors «Сначала известные», миграция 0038). Гейт ВЕРСИОНИРОВАН формулой:
+// меняешь computeAuthorRenown/веса (importer/author_renown.go) — бампни ключ
+// (v1 → v2), иначе на стабильном деплое пересчёт по новой формуле не запустится
+// (грабля «мёртвого popularity» 1.5.x). Дальше свежесть держат after-import и
+// хук воркера «Известность».
+func runOnceAuthorRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "author_renown_computed_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("author renown: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := imp.RecomputeAuthorRenown(ctx)
+	if err != nil {
+		logger.Warn("author renown recompute failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("author renown: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time author renown recompute done", "authors_updated", n)
 }
 
 // runOnceWorkIDResync разово синкает books.work_id в Meili. distinctAttribute=
