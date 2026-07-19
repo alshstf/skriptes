@@ -4,6 +4,7 @@ import {
   relatedYears,
   spansAt,
   TIMELINE_GAP_MIN,
+  pluralYears,
   type AuthorEvent,
 } from './authorEvents';
 
@@ -73,5 +74,15 @@ describe('relatedYears', () => {
 describe('TIMELINE_GAP_MIN', () => {
   it('разрыв схлопывается от 4 лет — соседние годы остаются рядом', () => {
     expect(TIMELINE_GAP_MIN).toBe(4);
+  });
+});
+
+describe('pluralYears', () => {
+  it('склоняет годы по-русски (в разрывах оси было «3 лет»)', () => {
+    expect(pluralYears(1)).toBe('1 год');
+    expect(pluralYears(3)).toBe('3 года');
+    expect(pluralYears(5)).toBe('5 лет');
+    expect(pluralYears(13)).toBe('13 лет');
+    expect(pluralYears(21)).toBe('21 год');
   });
 });

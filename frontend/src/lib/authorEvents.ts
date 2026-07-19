@@ -176,3 +176,13 @@ function maxWeight(row: TimelineRow): number {
 export function relatedYears(year: number): number[] {
   return [year - 2, year - 1, year];
 }
+
+/** Русская плюрализация лет: 1 год / 3 года / 5 лет / 11 лет / 21 год. */
+export function pluralYears(years: number): string {
+  const n = Math.abs(years) % 100;
+  const n1 = n % 10;
+  if (n > 10 && n < 20) return `${years} лет`;
+  if (n1 === 1) return `${years} год`;
+  if (n1 >= 2 && n1 <= 4) return `${years} года`;
+  return `${years} лет`;
+}

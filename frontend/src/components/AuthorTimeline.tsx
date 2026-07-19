@@ -26,6 +26,7 @@ import {
   collapseRows,
   relatedYears,
   spansAt,
+  pluralYears,
   TIMELINE_GAP_MIN,
   type AuthorEvent,
   type AuthorEventType,
@@ -285,10 +286,10 @@ function YearGap({ years, gridRow }: { years: number; gridRow: number }) {
     <li
       style={{ gridRow }}
       className="col-start-1 flex flex-col items-center gap-0.5 border-x py-1 text-muted-foreground/60 sm:col-start-2"
-      aria-label={`${years} лет без записей`}
+      aria-label={`${pluralYears(years)} без записей`}
     >
       <span className="bg-card px-1 text-[10px] leading-none">· · ·</span>
-      <span className="bg-card px-1 text-[10px] leading-none whitespace-nowrap">{years} лет</span>
+      <span className="bg-card px-1 text-[10px] leading-none whitespace-nowrap">{pluralYears(years)}</span>
     </li>
   );
 }
