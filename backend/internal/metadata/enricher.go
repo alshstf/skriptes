@@ -46,12 +46,18 @@ type Enricher struct {
 	tmdbPosters      *TMDBPosterProvider // приоритетный источник постеров (P4947/P4983); nil → только Commons P18
 	extractSem       chan struct{}       // семафор на одновременные on-demand извлечения из zip (защита сетевого диска)
 
-	inflightMu          sync.Mutex
-	inflightCover       map[int64]struct{}
-	inflightAnnotate    map[int64]struct{}
-	inflightAuthorPhoto map[int64]struct{}
-	inflightAuthorBio   map[int64]struct{}
-	inflightAdaptations map[int64]struct{}
+	// Био-таймлайн (события жизни автора): Wikidata-скелет + фолбэк-резолв QID
+	// с occupation-гейтом. nil → EnsureAuthorEvents no-op.
+	wdEvents      *WikidataEventsProvider
+	eventsQIDGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+
+	inflightMu           sync.Mutex
+	inflightCover        map[int64]struct{}
+	inflightAnnotate     map[int64]struct{}
+	inflightAuthorPhoto  map[int64]struct{}
+	inflightAuthorBio    map[int64]struct{}
+	inflightAdaptations  map[int64]struct{}
+	inflightAuthorEvents map[int64]struct{}
 }
 
 // New создаёт Enricher и обеспечивает существование coverRoot.
@@ -107,6 +113,7 @@ func New(
 		inflightAuthorPhoto:  map[int64]struct{}{},
 		inflightAuthorBio:    map[int64]struct{}{},
 		inflightAdaptations:  map[int64]struct{}{},
+		inflightAuthorEvents: map[int64]struct{}{},
 	}, nil
 }
 

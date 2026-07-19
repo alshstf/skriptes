@@ -29,8 +29,10 @@ type Deps struct {
 	Metadata    MetadataDeps
 	Kindle      KindleDeps
 	Adaptations AdaptationsDeps
-	Settings    SettingsDeps
-	Content     ContentDeps
+	// AuthorEvents — био-таймлайн (события жизни автора ⟷ книги).
+	AuthorEvents AuthorEventsDeps
+	Settings     SettingsDeps
+	Content      ContentDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -131,6 +133,11 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/authors", handleListAuthors(d.Catalog, d.Content))
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
 					r.Get("/authors/{id}/series", handleAuthorSeries(d.Catalog)) // серии автора (пикер переноса)
+					if d.AuthorEvents.Service != nil {
+						// Био-таймлайн: события жизни автора (эндпоинт сам
+						// служит lazy-триггером, фронт поллит до done).
+						r.Get("/authors/{id}/events", handleListAuthorEvents(d.AuthorEvents, d.Metadata))
+					}
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))
 					r.Get("/languages", handleListLanguages(d.Catalog))
