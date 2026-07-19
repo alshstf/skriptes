@@ -49,6 +49,9 @@ type Config struct {
 	// Commons P18 у фильмов почти пуст (постеры копирайтные, покрытие ~16%),
 	// TMDB — тот же источник, что у Plex. Ключ бесплатный: themoviedb.org →
 	// Settings → API. Пусто = постеры только из Commons P18, как раньше.
+	// Принимается ЛЮБОЙ из двух креденшалов TMDB: короткий «API Key» (v3,
+	// query-параметр) или длинный «API Read Access Token» (v4, JWT "eyJ…",
+	// Bearer-заголовок) — тип определяется по префиксу автоматически.
 	// Условие TMDB — атрибуция в UI/README (см. README, «Внешние API»).
 	TMDBAPIKey string `env:"SKRIPTES_TMDB_API_KEY"`
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -75,9 +76,21 @@ func (p *TMDBPosterProvider) PosterURL(ctx context.Context, movieID, tvID string
 		return "", nil
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.baseURL+path+"?api_key="+p.apiKey, nil)
+	// TMDB выдаёт ДВА креденшала: короткий v3 «API Key» (query-параметр
+	// api_key) и длинный v4 «API Read Access Token» (JWT, всегда начинается с
+	// "eyJ", идёт Bearer-заголовком). Принимаем ЛЮБОЙ — перепутать их на
+	// странице настроек TMDB слишком легко, а v4-токен там заметнее.
+	u := p.baseURL + path
+	bearer := strings.HasPrefix(p.apiKey, "eyJ")
+	if !bearer {
+		u += "?api_key=" + p.apiKey
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return "", fmt.Errorf("build tmdb request: %w", err)
+	}
+	if bearer {
+		req.Header.Set("Authorization", "Bearer "+p.apiKey)
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", wdUserAgent)

@@ -304,7 +304,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_FBC_PATH` | `fbc` | Путь к fbc-бинарю (вшит в образ) |
 | `SKRIPTES_GOOGLE_BOOKS_API_KEY` | (пусто) | API-ключ Google Books — **обязателен для GB-обогащения** (обложки/рейтинги/группировка): анонимные запросы GB отбивает 429 по общей квоте. Google Cloud Console → включить Books API → Credentials → API key; free-квота ≈1000 запросов/день на проект |
 | `SKRIPTES_GOOGLE_BOOKS_COUNTRY` | `US` | ISO 3166-1 alpha-2 для параметра `country` в Google Books (обязателен для облачного деплоя — без него GB отдаёт geo-ошибку) |
-| `SKRIPTES_TMDB_API_KEY` | (пусто) | Ключ **The Movie Database** (v3 api_key) — приоритетный источник **постеров экранизаций** (id из Wikidata, поиска по названию нет; тот же источник, что у Plex). Бесплатно: themoviedb.org → Settings → API. Пусто = постеры только из Wikimedia Commons (P18, покрытие ~16%) |
+| `SKRIPTES_TMDB_API_KEY` | (пусто) | Ключ **The Movie Database** (v3 api_key) — приоритетный источник **постеров экранизаций** (id из Wikidata, поиска по названию нет; тот же источник, что у Plex). Бесплатно: themoviedb.org → Settings → API; подойдёт и короткий «API Key» (v3), и длинный «API Read Access Token» (v4, eyJ…) — тип определяется автоматически. Пусто = постеры только из Wikimedia Commons (P18, покрытие ~16%) |
 | `BACKEND_PORT` | `8080` | Порт на хосте (только 127.0.0.1; основной доступ через Caddy) |
 
 ### Auth / Cookies

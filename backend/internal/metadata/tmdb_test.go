@@ -51,6 +51,33 @@ func TestTMDBPosterURL_TVFallbackID(t *testing.T) {
 	}
 }
 
+// v4 «API Read Access Token» (JWT, "eyJ…") принимается наравне с v3-ключом:
+// уходит Bearer-заголовком, api_key в query не передаётся.
+func TestTMDBPosterURL_V4ReadToken(t *testing.T) {
+	var gotAuth, gotQueryKey string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotAuth = r.Header.Get("Authorization")
+		gotQueryKey = r.URL.Query().Get("api_key")
+		_, _ = w.Write([]byte(`{"poster_path":"/p.jpg"}`))
+	}))
+	defer srv.Close()
+	p := NewTMDBPosterProvider("eyJhbGciOiJIUzI1NiJ9.token").WithBaseURLs(srv.URL, "https://img.example")
+
+	u, err := p.PosterURL(context.Background(), "1", "")
+	if err != nil {
+		t.Fatalf("unexpected err: %v", err)
+	}
+	if u == "" {
+		t.Fatal("expected poster url")
+	}
+	if want := "Bearer eyJhbGciOiJIUzI1NiJ9.token"; gotAuth != want {
+		t.Fatalf("Authorization = %q, want %q", gotAuth, want)
+	}
+	if gotQueryKey != "" {
+		t.Fatalf("api_key в query не должен передаваться с v4-токеном, got %q", gotQueryKey)
+	}
+}
+
 func TestTMDBPosterURL_NoIDs(t *testing.T) {
 	p := NewTMDBPosterProvider("k")
 	u, err := p.PosterURL(context.Background(), "", "")
