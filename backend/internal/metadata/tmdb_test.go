@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func newTMDBTestServer(t *testing.T, status int, body string) *httptest.Server {
@@ -48,6 +49,25 @@ func TestTMDBPosterURL_TVFallbackID(t *testing.T) {
 	}
 	if gotPath != "/3/tv/13892" {
 		t.Fatalf("path = %q, want /3/tv/13892", gotPath)
+	}
+}
+
+// Собственный потолок TMDB (tmdbRPM) живёт в провайдере — его проходят все
+// пути вызова, независимо от RPM воркера «Экранизации».
+func TestTMDBPosterURL_RateGate(t *testing.T) {
+	srv := newTMDBTestServer(t, http.StatusOK, `{"poster_path":"/p.jpg"}`)
+	defer srv.Close()
+	p := NewTMDBPosterProvider("k").WithBaseURLs(srv.URL, "https://img.example")
+
+	start := time.Now()
+	for range 3 {
+		if _, err := p.PosterURL(context.Background(), "1", ""); err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+	}
+	// 3 вызова = минимум 2 интервала гейта между ними.
+	if elapsed, min := time.Since(start), 2*(time.Minute/tmdbRPM); elapsed < min {
+		t.Fatalf("3 вызова за %v (< %v) — гейт tmdbRPM не работает", elapsed, min)
 	}
 }
 

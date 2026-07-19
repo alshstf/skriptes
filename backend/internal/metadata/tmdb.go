@@ -31,17 +31,31 @@ type TMDBPosterProvider struct {
 	baseURL    string // https://api.themoviedb.org
 	imageBase  string // https://image.tmdb.org
 	httpClient *http.Client
+	gate       *rateGate // собственный потолок TMDB — см. tmdbRPM
 }
+
+// tmdbRPM — жёсткий внутренний потолок вызовов TMDB API (зеркало clampOLRPM у
+// OpenLibrary: не настраивается из админки осознанно). Гейт живёт В ПРОВАЙДЕРЕ,
+// поэтому его проходят ВСЕ пути — первичный фетч воркера, lazy при открытии
+// карточки и авто-перепроверка постер-дыр: сколько бы ни накрутили RPM воркера
+// «Экранизации» (книг/мин × несколько адаптаций на книгу), суммарный темп к
+// TMDB не превысит этот предел. 600/мин = 10 req/s — в 5 раз ниже
+// документированного лимита TMDB (~50 req/s, developer.themoviedb.org/docs/
+// rate-limiting) и с запасом выше любого нашего штатного темпа.
+const tmdbRPM = 600
 
 // NewTMDBPosterProvider создаёт провайдер. Пустой ключ допустим на уровне
 // типа, но main не конструирует провайдер без ключа (без него TMDB → 401).
 func NewTMDBPosterProvider(apiKey string) *TMDBPosterProvider {
-	return &TMDBPosterProvider{
+	p := &TMDBPosterProvider{
 		apiKey:     apiKey,
 		baseURL:    "https://api.themoviedb.org",
 		imageBase:  "https://image.tmdb.org",
 		httpClient: &http.Client{Timeout: 15 * time.Second},
+		gate:       &rateGate{},
 	}
+	p.gate.setRPM(tmdbRPM)
+	return p
 }
 
 // WithBaseURLs — для тестов: подменить API и image-хосты на httptest.
@@ -74,6 +88,10 @@ func (p *TMDBPosterProvider) PosterURL(ctx context.Context, movieID, tvID string
 		path = "/3/tv/" + tvID
 	default:
 		return "", nil
+	}
+	// Собственный потолок TMDB (tmdbRPM) — до сети, на всех путях вызова.
+	if err := p.gate.wait(ctx); err != nil {
+		return "", fmt.Errorf("%w: tmdb gate: %v", ErrUpstream, err)
 	}
 
 	// TMDB выдаёт ДВА креденшала: короткий v3 «API Key» (query-параметр
