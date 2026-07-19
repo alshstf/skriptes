@@ -85,6 +85,16 @@ func computeWorkPopularity(s workPopSignals) int64 {
 	return int64(math.Round(p))
 }
 
+// computeWorkPopularityExternal — популярность работы БЕЗ внутриинстансных
+// сигналов (views/reads/оценки пользователей). Питает ИЗВЕСТНОСТЬ АВТОРА
+// (authors.renown): «известность» — внешняя величина, и сотня личных открытий
+// карточки не должна поднимать самиздат над Толстым (в отличие от дефолта
+// /books, где личная вовлечённость — осознанная часть discovery).
+func computeWorkPopularityExternal(s workPopSignals) int64 {
+	s.Views, s.Reads, s.UserRatings = 0, 0, 0
+	return computeWorkPopularity(s)
+}
+
 // PopularityTracker накапливает book_id'ы с новой вовлечённостью (просмотр/чтение)
 // и периодически таргетно ре-апсертит их РАБОТЫ в works-индекс — популярность
 // пересчитывается из сырых сигналов workDocSelect (computeWorkPopularity). Дёшево:

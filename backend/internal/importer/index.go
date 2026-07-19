@@ -90,6 +90,11 @@ type workDoc struct {
 	// обычных), чтобы NOT-фильтр «скрыть сборники» не зависел от поведения
 	// Meili на отсутствующем поле.
 	Kind string `json:"kind"`
+
+	// renownPop — популярность работы БЕЗ внутриинстансной вовлечённости
+	// (computeWorkPopularityExternal) — сырьё для authors.renown. Неэкспортируемое:
+	// в Meili-док НЕ сериализуется (это не поле индекса).
+	renownPop int64
 }
 
 // configureWorksIndex создаёт и настраивает индекс works идемпотентно.

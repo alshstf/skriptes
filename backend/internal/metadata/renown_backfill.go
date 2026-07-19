@@ -106,12 +106,40 @@ func (b *RenownBackfiller) Run(ctx context.Context) {
 		if n > 0 {
 			b.logger.Info("renown backfill: pass complete", "processed", n, "renown_found", b.found.Load())
 		}
+		b.recomputeAuthorRenown(ctx)
 		select {
 		case <-ctx.Done():
 			return
 		case <-time.After(renownRescanInterval):
 		}
 	}
+}
+
+// AuthorRenownRecomputer — опциональная способность resyncer'а (реализует
+// importer.Importer) пересчитать authors.renown. Type-assert — паттерн
+// WorksIndexSyncer у группировки: metadata не тянет пакет importer.
+type AuthorRenownRecomputer interface {
+	RecomputeAuthorRenown(ctx context.Context) (int64, error)
+}
+
+// recomputeAuthorRenown — пересчёт известности АВТОРОВ после прохода, в котором
+// воркер реально нашёл новые сигналы (found > 0): дефолтная сортировка /authors
+// (authors.renown) питается теми же счётчиками. Пустые проходы (раз в 30 мин)
+// пересчёт не гоняют.
+func (b *RenownBackfiller) recomputeAuthorRenown(ctx context.Context) {
+	if b.found.Load() == 0 || ctx.Err() != nil {
+		return
+	}
+	rec, ok := b.resyncer.(AuthorRenownRecomputer)
+	if !ok {
+		return
+	}
+	n, err := rec.RecomputeAuthorRenown(ctx)
+	if err != nil {
+		b.logger.Warn("renown backfill: author renown recompute failed", "err", err)
+		return
+	}
+	b.logger.Info("renown backfill: author renown recomputed", "authors_updated", n)
 }
 
 // renownCandidate — работа + поля представительного издания для построения
@@ -562,6 +590,7 @@ func (c *RenownBackfillController) RunOnce() {
 	go func() {
 		b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.wd, c.resyncer, cfg, c.logger)
 		n := b.drain(ctx)
+		b.recomputeAuthorRenown(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil
