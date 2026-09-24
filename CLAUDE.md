@@ -160,7 +160,7 @@ override > fantlab > heuristic — **fantlab-типизация реализов
 (`ListAuthorsFiltered` через `renderAggExclusion`, `GetAuthor` в query-агрегатах); НЕ трогает
 базовую видимость автора, `fav_books` (личное избранное) и СПИСОК книг карточки (сборники
 видны в своей секции); план
-`~/.claude/plans/compilations-author-page-plan.md`);
+`.claude/plans/compilations-author-page-plan.md`);
 до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,
 отдаётся публичной ручкой `/api/version` вместе с версией Skriptes → подвал меню пользователя в `Layout.tsx`);
@@ -249,7 +249,7 @@ merge → аннотированный тег `vX.Y.Z` (identity-флаги, с�
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
 трогают. Текущая версия — **1.11.0** — **«Сначала известные»: зрелый дефолт раздела /authors**,
-3 PR (#227–#229, план `~/.claude/plans/cryptic-roaming-turing.md`; мотиватор — прод-топ-15
+3 PR (#227–#229, план `.claude/plans/authors-renown-default-plan.md`; мотиватор — прод-топ-15
 алфавитного дефолта состоял из «#DerApotheker»/«$maille Ledy»/«+Digital Books»). (#227)
 **materialized `authors.renown`** (миграция **0038** + partial-индекс
 `authors_renown_idx WHERE NOT is_service`): формула `importer/author_renown.go` =
@@ -353,7 +353,7 @@ session-level `pg_advisory_lock` (ключ `workKindClassifyLockID`) на отд
 country + кап заработают сразу; уже накопленные GB `not_found` фикс не чистит — жать «Сбросить
 неудачные попытки» (грабля №20), чтобы воркер перепрошёл с country и в рамках капа. До неё
 **1.9.0** — **сборники и антологии как отдельная сущность**, 4 PR
-(#202–#205, план `~/.claude/plans/compilations-author-page-plan.md`). У плодовитых авторов
+(#202–#205, план `.claude/plans/compilations-author-page-plan.md`). У плодовитых авторов
 (Толкин, Шекли, Асприн) сборники/антологии/тома собраний засоряли карточку (тонули среди
 романов, серии-паразиты выглядели авторскими циклами). Тип работы — новая сущность `works.kind`
 (миграция 0034, схема works-индекса v6). PR1 (#202) — эвристический классификатор
@@ -413,7 +413,7 @@ renown Coverage-запрос с per-work EXISTS на ~500k works уходил з
 → фронт `Object.keys(null)`; фикс — null-guard by_source (4 секции) + non-nil `BySource` в
 state + `head_total` на set-based UNION (5.38с→1.13с) + таймаут 5→15с. До неё
 **1.8.0** — **популярность = интегральная «известность»**, 4 PR
-(#188-191, план `~/.claude/plans/popularity-renown-plan.md`). Было: popularity работы =
+(#188-191, план `.claude/plans/popularity-renown-plan.md`). Было: popularity работы =
 вовлечённость инстанса (`Σ изданий: views + 3×reads`) — на проде ненулевая у 79 книг из
 509k, дефолтный browse = «что сам открывал + случайный хвост», а пункт «По популярности»
 байт-в-байт дублировал дефолт. Стало: popularity = `computeWorkPopularity`
@@ -464,7 +464,7 @@ Meili-дефолт «last» молча ронял хвостовые слова 
 query-scoped (без фолбэка на глобальный book_count при активных фасетах), max-h у списков
 языков, aria-describedby диалога переименования полки. До неё
 **1.7.0** — **фиксы прод-аудита P0** (роадмап
-`~/.claude/plans/audit-fixes-roadmap.md`, отчёт `prod-audit-2026-07.md`), 4 PR (#171-174):
+`.claude/plans/audit-fixes-roadmap.md`, отчёт `prod-audit-2026-07.md`), 4 PR (#171-174):
 (1) **честный total и deep-paging** — Meili-дефолт `maxTotalHits=1000` капил счётчик «N книг»
 и молча обрезал скролл; теперь `importer.MeiliMaxTotalHits=1M` в pagination ОБОИХ индексов
 (configure* на каждом старте), `ListWorks` при offset кратном limit → Page/HitsPerPage
@@ -758,7 +758,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
 ### 15. Книга (Work) vs издание (fb2-файл) — переход к FRBR, идёт по фазам
 
 Большой рефактор: логическая **книга** (`works`) над физическими **изданиями**
-(строка `books` = один fb2-файл). План — `~/.claude/plans/joyful-gliding-lerdorf.md`.
+(строка `books` = один fb2-файл). План — `.claude/plans/works-editions-frbr-plan.md`.
 **Phase 1 (сделано) — только фундамент данных, read-path'ы НЕ тронуты:**
 - Миграция `0017_works`: таблица `works` (Work-level поля: каноническое
   название, primary_author_id, written_year, series_id/ser_no, ext_ids,
@@ -850,7 +850,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   счётчик+прогрессбар и кнопку «Отменить разбор» (отмена = между авторами/откат текущей
   per-author tx, сделанное остаётся и досинкивается). Detection слитых: SQL по
   `count(DISTINCT src_norm)>=2 OR count(DISTINCT ser_no)>=2` внутри работы — см.
-  `~/.claude/plans/audit-fixes-roadmap.md` (Задача 2, recovery-процедура на прод).
+  `.claude/plans/audit-fixes-roadmap.md` (Задача 2, recovery-процедура на прод).
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
   (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу
@@ -905,7 +905,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   — для веба: фасетные счётчики считают РАБОТЫ, а не издания. `importer/index.go`:
   `workDoc` + `configureWorksIndex` (searchable title/authors/series; filterable
   genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). **Популярность
-  works = интегральная «известность»** (с 1.8.x, план `~/.claude/plans/popularity-renown-plan.md`):
+  works = интегральная «известность»** (с 1.8.x, план `.claude/plans/popularity-renown-plan.md`):
   `workDocSelect` отдаёт СЫРЫЕ сигналы (edition_count, max LIBRATE, max голосов внешнего
   рейтинга, наличие экранизации, views/reads, count оценок book_ratings + внешние счётчики
   известности `works.fantlab_marks`/`ol_ratings_count`/`ol_want_count` — их наполняет
@@ -1089,7 +1089,7 @@ iOS-устройстве; визуально проверять симуляци
 («Редактировать»/«Отменить правку»), правка **in-place** (без отдельной панели). Применён к
 заголовку (`layout='heading'`, оборачивает `CardTitle`), году в `CardSignalRow`, полям издания
 в `EditionRow`/`FileDetails`. Не-админ видит обычный текст. **План —
-`~/.claude/plans/cryptic-roaming-turing.md`.**
+`.claude/plans/metadata-overrides-plan.md`.**
 - **PR1 (сделано):** фундамент + edition-СКАЛЯРЫ (`edition_year`/`isbn`/`publisher`/
   `translator`/`edition_title`) — не индексируются и не перетираются импортом, поэтому
   материализуются прямо в `books.*` без ресинка/ре-апплая/гейтов. Шипает кейс Чарушина
@@ -1218,9 +1218,15 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 | Релиз (CI) | `.github/workflows/release.yml` (триггер — тег `v*.*.*`) |
 | TLS + reverse-proxy | `infra/Caddyfile` |
 
-## Что лежит вне репо (но тоже релевантно)
+## Что лежит вне git (но тоже релевантно)
 
-- **Roadmap / план фаз** — `~/.claude/plans/cozy-zooming-popcorn.md`. Что
+- **Планы** — `.claude/plans/` в ОСНОВНОМ чекауте (не в git: игнор в глобальном
+  `~/.config/git/ignore`; конвенция — в `~/.claude/CLAUDE.md`). Из worktree — по
+  абсолютному пути основного чекаута. Все ссылки `.claude/plans/…` в этом файле —
+  оттуда. До 2026-09-24 планы жили в `~/.claude/plans/` со случайными именами
+  (`cryptic-roaming-turing.md` и т.п.) — её сносит автоочистка Claude Code
+  (`cleanupPeriodDays`), планы восстановлены из транскриптов под смысловыми именами.
+- **Roadmap / план фаз** — `.claude/plans/roadmap.md`. Что
   сделано, что в работе, что отложено и почему. Перед началом новой фичи
   заглянуть.
 - **Auto-memory пользователя** — `~/.claude/projects/<encoded>/memory/`.
