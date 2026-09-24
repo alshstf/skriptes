@@ -15,16 +15,15 @@ golang-migrate) на бэке, React + Vite + TanStack Router + shadcn/ui на �
 Postgres + Meilisearch + Caddy в docker compose. Книги физически живут на
 read-only volume и конвертируются на лету через fb2cng.
 
-## Рабочее окружение — только основной чекаут
+## Рабочее окружение
 
-Все правки, сборки, тесты и git — в основном чекауте
-`/Users/alexandershustov/projects/skriptes`, **не в `.claude/worktrees/...`**.
-Worktree путает: docker build context `../frontend` / `../backend` берёт
-исходники из той папки, откуда запущен compose, поэтому «редактирую в одной,
-собираю из другой» = старый бандл и расхождение веток (см. также грабли №1).
-Если сессия вдруг стартовала в worktree — сразу `cd` в основной чекаут и работай
-там. Ветки под PR создаём прямо в основном чекауте. (Явное предпочтение
-пользователя, 2026-05-29.)
+Как по умолчанию в Claude Code: каждая сессия — в своём worktree
+(`.claude/worktrees/<имя>`), ветка под PR создаётся там же; в основной чекаут
+из worktree-сессии не пишем (прежнее правило «только основной чекаут» отменено
+2026-09-25). Для Docker это значит: собирай из того worktree, где правки (грабля
+№1), а `infra/.env` (в `.gitignore`) есть только в основном чекауте — в worktree
+перед `docker compose` сделать симлинк:
+`ln -s /Users/alexandershustov/projects/skriptes/infra/.env infra/.env`.
 
 ## Быстрые команды
 
@@ -37,8 +36,8 @@ cd frontend && npx playwright test        # ловит layout-регрессии
 # поднять локально + увидеть свои изменения
 cd infra && docker compose build backend frontend && \
             docker compose up -d --force-recreate backend frontend
-# context: ../backend и ../frontend — то есть git pull в основном чекауте
-# (НЕ в worktree) перед билдом, иначе подтянутся старые исходники
+# context: ../backend и ../frontend — собирается тот чекаут, откуда запущен
+# compose: запускай из worktree с правками, иначе поедут старые исходники
 
 # проверить что новый bundle действительно поехал
 docker compose exec frontend ls /usr/share/nginx/html/assets/
@@ -51,11 +50,12 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/
 
 ### 1. Frontend bundle не обновляется после `docker compose build`
 
-Vite хэширует имя бандла по контенту. Если `git pull` подтянул новые исходники
-**в worktree, а не в основной чекаут**, build возьмёт старое содержимое из
-`../frontend` (build context в `infra/docker-compose.yml`) и выдаст тот же хэш.
-Делай `git pull` в `/Users/<...>/projects/skriptes` (или в любом основном
-чекауте), не только в `.claude/worktrees/...`.
+Vite хэширует имя бандла по контенту. Build context `../frontend` (в
+`infra/docker-compose.yml`) — это чекаут, ИЗ КОТОРОГО запущен compose. Правки в
+одном worktree, а `docker compose build` из другого (или из основного чекаута) →
+build возьмёт старое содержимое и выдаст тот же хэш. Собирай из того worktree, где
+правки (compose-проект у всех чекаутов один — `skriptes`, так что пересоберётся
+тот же стек).
 
 Если что-то не сходится — `docker compose build --no-cache frontend` снимает
 кэш слоя COPY.
@@ -160,7 +160,7 @@ override > fantlab > heuristic — **fantlab-типизация реализов
 (`ListAuthorsFiltered` через `renderAggExclusion`, `GetAuthor` в query-агрегатах); НЕ трогает
 базовую видимость автора, `fav_books` (личное избранное) и СПИСОК книг карточки (сборники
 видны в своей секции); план
-`.claude/plans/compilations-author-page-plan.md`);
+`~/projects/plans/skriptes/compilations-author-page-plan.md`);
 до неё `0033_collection_version` (`collections.inpx_version` — version.info
 последнего импортированного INPX; заполняет `markCollectionImported` из `inpx.Open→ix.Version`,
 отдаётся публичной ручкой `/api/version` вместе с версией Skriptes → подвал меню пользователя в `Layout.tsx`);
@@ -249,7 +249,7 @@ merge → аннотированный тег `vX.Y.Z` (identity-флаги, с�
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
 трогают. Текущая версия — **1.11.0** — **«Сначала известные»: зрелый дефолт раздела /authors**,
-3 PR (#227–#229, план `.claude/plans/authors-renown-default-plan.md`; мотиватор — прод-топ-15
+3 PR (#227–#229, план `~/projects/plans/skriptes/authors-renown-default-plan.md`; мотиватор — прод-топ-15
 алфавитного дефолта состоял из «#DerApotheker»/«$maille Ledy»/«+Digital Books»). (#227)
 **materialized `authors.renown`** (миграция **0038** + partial-индекс
 `authors_renown_idx WHERE NOT is_service`): формула `importer/author_renown.go` =
@@ -353,7 +353,7 @@ session-level `pg_advisory_lock` (ключ `workKindClassifyLockID`) на отд
 country + кап заработают сразу; уже накопленные GB `not_found` фикс не чистит — жать «Сбросить
 неудачные попытки» (грабля №20), чтобы воркер перепрошёл с country и в рамках капа. До неё
 **1.9.0** — **сборники и антологии как отдельная сущность**, 4 PR
-(#202–#205, план `.claude/plans/compilations-author-page-plan.md`). У плодовитых авторов
+(#202–#205, план `~/projects/plans/skriptes/compilations-author-page-plan.md`). У плодовитых авторов
 (Толкин, Шекли, Асприн) сборники/антологии/тома собраний засоряли карточку (тонули среди
 романов, серии-паразиты выглядели авторскими циклами). Тип работы — новая сущность `works.kind`
 (миграция 0034, схема works-индекса v6). PR1 (#202) — эвристический классификатор
@@ -413,7 +413,7 @@ renown Coverage-запрос с per-work EXISTS на ~500k works уходил з
 → фронт `Object.keys(null)`; фикс — null-guard by_source (4 секции) + non-nil `BySource` в
 state + `head_total` на set-based UNION (5.38с→1.13с) + таймаут 5→15с. До неё
 **1.8.0** — **популярность = интегральная «известность»**, 4 PR
-(#188-191, план `.claude/plans/popularity-renown-plan.md`). Было: popularity работы =
+(#188-191, план `~/projects/plans/skriptes/popularity-renown-plan.md`). Было: popularity работы =
 вовлечённость инстанса (`Σ изданий: views + 3×reads`) — на проде ненулевая у 79 книг из
 509k, дефолтный browse = «что сам открывал + случайный хвост», а пункт «По популярности»
 байт-в-байт дублировал дефолт. Стало: popularity = `computeWorkPopularity`
@@ -464,7 +464,7 @@ Meili-дефолт «last» молча ронял хвостовые слова 
 query-scoped (без фолбэка на глобальный book_count при активных фасетах), max-h у списков
 языков, aria-describedby диалога переименования полки. До неё
 **1.7.0** — **фиксы прод-аудита P0** (роадмап
-`.claude/plans/audit-fixes-roadmap.md`, отчёт `prod-audit-2026-07.md`), 4 PR (#171-174):
+`~/projects/plans/skriptes/audit-fixes-roadmap.md`, отчёт `prod-audit-2026-07.md`), 4 PR (#171-174):
 (1) **честный total и deep-paging** — Meili-дефолт `maxTotalHits=1000` капил счётчик «N книг»
 и молча обрезал скролл; теперь `importer.MeiliMaxTotalHits=1M` в pagination ОБОИХ индексов
 (configure* на каждом старте), `ListWorks` при offset кратном limit → Page/HitsPerPage
@@ -758,7 +758,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
 ### 15. Книга (Work) vs издание (fb2-файл) — переход к FRBR, идёт по фазам
 
 Большой рефактор: логическая **книга** (`works`) над физическими **изданиями**
-(строка `books` = один fb2-файл). План — `.claude/plans/works-editions-frbr-plan.md`.
+(строка `books` = один fb2-файл). План — `~/projects/plans/skriptes/works-editions-frbr-plan.md`.
 **Phase 1 (сделано) — только фундамент данных, read-path'ы НЕ тронуты:**
 - Миграция `0017_works`: таблица `works` (Work-level поля: каноническое
   название, primary_author_id, written_year, series_id/ser_no, ext_ids,
@@ -850,7 +850,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   счётчик+прогрессбар и кнопку «Отменить разбор» (отмена = между авторами/откат текущей
   per-author tx, сделанное остаётся и досинкивается). Detection слитых: SQL по
   `count(DISTINCT src_norm)>=2 OR count(DISTINCT ser_no)>=2` внутри работы — см.
-  `.claude/plans/audit-fixes-roadmap.md` (Задача 2, recovery-процедура на прод).
+  `~/projects/plans/skriptes/audit-fixes-roadmap.md` (Задача 2, recovery-процедура на прод).
 **Phase 3 (сделано) — поиск/список схлопываются по работе (Meili distinct):**
 - `bookDoc.WorkID` + `distinctAttribute=work_id` на индексе `books`
   (`importer/index.go`) → OPDS отдаёт ОДНО издание на логическую книгу
@@ -905,7 +905,7 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   — для веба: фасетные счётчики считают РАБОТЫ, а не издания. `importer/index.go`:
   `workDoc` + `configureWorksIndex` (searchable title/authors/series; filterable
   genres/lang/year/series_id/author_ids; lang — МАССИВ языков изданий). **Популярность
-  works = интегральная «известность»** (с 1.8.x, план `.claude/plans/popularity-renown-plan.md`):
+  works = интегральная «известность»** (с 1.8.x, план `~/projects/plans/skriptes/popularity-renown-plan.md`):
   `workDocSelect` отдаёт СЫРЫЕ сигналы (edition_count, max LIBRATE, max голосов внешнего
   рейтинга, наличие экранизации, views/reads, count оценок book_ratings + внешние счётчики
   известности `works.fantlab_marks`/`ol_ratings_count`/`ol_want_count` — их наполняет
@@ -1089,7 +1089,7 @@ iOS-устройстве; визуально проверять симуляци
 («Редактировать»/«Отменить правку»), правка **in-place** (без отдельной панели). Применён к
 заголовку (`layout='heading'`, оборачивает `CardTitle`), году в `CardSignalRow`, полям издания
 в `EditionRow`/`FileDetails`. Не-админ видит обычный текст. **План —
-`.claude/plans/metadata-overrides-plan.md`.**
+`~/projects/plans/skriptes/metadata-overrides-plan.md`.**
 - **PR1 (сделано):** фундамент + edition-СКАЛЯРЫ (`edition_year`/`isbn`/`publisher`/
   `translator`/`edition_title`) — не индексируются и не перетираются импортом, поэтому
   материализуются прямо в `books.*` без ресинка/ре-апплая/гейтов. Шипает кейс Чарушина
@@ -1220,13 +1220,12 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 
 ## Что лежит вне git (но тоже релевантно)
 
-- **Планы** — `.claude/plans/` в ОСНОВНОМ чекауте (не в git: игнор в глобальном
-  `~/.config/git/ignore`; конвенция — в `~/.claude/CLAUDE.md`). Из worktree — по
-  абсолютному пути основного чекаута. Все ссылки `.claude/plans/…` в этом файле —
-  оттуда. До 2026-09-24 планы жили в `~/.claude/plans/` со случайными именами
+- **Планы** — `~/projects/plans/skriptes/` (приватный репо `alshstf/plans`, вне
+  чекаутов — доступен из любой сессии; конвенция — в `~/.claude/CLAUDE.md`). До
+  2026-09-24 планы жили в `~/.claude/plans/` со случайными именами
   (`cryptic-roaming-turing.md` и т.п.) — её сносит автоочистка Claude Code
-  (`cleanupPeriodDays`), планы восстановлены из транскриптов под смысловыми именами.
-- **Roadmap / план фаз** — `.claude/plans/roadmap.md`. Что
+  (`cleanupPeriodDays`); планы восстановлены из транскриптов под смысловыми именами.
+- **Roadmap / план фаз** — `~/projects/plans/skriptes/roadmap.md`. Что
   сделано, что в работе, что отложено и почему. Перед началом новой фичи
   заглянуть.
 - **Auto-memory пользователя** — `~/.claude/projects/<encoded>/memory/`.
