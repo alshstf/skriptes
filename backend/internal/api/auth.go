@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/http"
 	"net/netip"
-	"strings"
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/auth"
@@ -26,6 +25,9 @@ type AuthDeps struct {
 	// 0 = слой выключен (см. config SKRIPTES_LOGIN_RATELIMIT_*).
 	LoginRateLimitIP    int
 	LoginRateLimitEmail int
+	// TrustCFConnectingIP — брать IP клиента для лимита из CF-Connecting-IP. Только
+	// если к бэкенду ходят исключительно через Cloudflare (SKRIPTES_TRUST_CF_CONNECTING_IP).
+	TrustCFConnectingIP bool
 }
 
 // userCtxKey — ключ для хранения текущего пользователя в request context.
@@ -51,20 +53,11 @@ type userResponse struct {
 	User auth.User `json:"user"`
 }
 
-func handleLogin(d AuthDeps) http.HandlerFunc {
-	// Анти-брутфорс (считаем только неудачи): по IP и по email, лимиты из конфига
-	// (0 = слой выключен — для инстансов за своим WAF / в доверенной LAN). По умолч.
-	// IP 10/5мин (одна точка долбит), email 20/15мин (анти-IP-ротация на аккаунт, но
-	// не запирает легитимного). Первичный гейт публикации — Cloudflare Access; это
-	// defense-in-depth + второй слой к CF edge rate-limit (см. деплой-гайд).
-	ipThrottle := newLoginThrottle(d.LoginRateLimitIP, 5*time.Minute)
-	emailThrottle := newLoginThrottle(d.LoginRateLimitEmail, 15*time.Minute)
-	if d.LoginRateLimitIP > 0 {
-		go ipThrottle.cleanupLoop()
-	}
-	if d.LoginRateLimitEmail > 0 {
-		go emailThrottle.cleanupLoop()
-	}
+// handleLogin — POST /api/auth/login. Анти-брутфорс (считаем только неудачи): по IP и
+// по email, лимиты из конфига (0 = слой выключен — для инстансов за своим WAF / в
+// доверенной LAN). По умолч. IP 10/5мин (одна точка долбит), email 20/15мин
+// (анти-IP-ротация на аккаунт, но не запирает легитимного). th общий с OPDS Basic-auth.
+func handleLogin(d AuthDeps, th *authThrottles) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req loginRequest
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&req); err != nil {
@@ -75,9 +68,8 @@ func handleLogin(d AuthDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "email and password required"})
 			return
 		}
-		ipKey := throttleIP(r)
-		emailKey := strings.ToLower(strings.TrimSpace(req.Email))
-		if ipThrottle.over(ipKey) || emailThrottle.over(emailKey) {
+		ipKey, emailKey := th.keys(r, req.Email)
+		if th.over(ipKey, emailKey) {
 			w.Header().Set("Retry-After", "300")
 			writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too many attempts, try again later"})
 			return
@@ -88,8 +80,7 @@ func handleLogin(d AuthDeps) http.HandlerFunc {
 		user, token, err := d.Service.Login(ctx, req.Email, req.Password, meta)
 		if err != nil {
 			if errors.Is(err, auth.ErrInvalidPassword) {
-				ipThrottle.fail(ipKey)
-				emailThrottle.fail(emailKey)
+				th.fail(ipKey, emailKey)
 				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid email or password"})
 				return
 			}

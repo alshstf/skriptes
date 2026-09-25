@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"slices"
 	"time"
@@ -72,7 +73,11 @@ func requireAdmin(d AuthDeps) func(http.Handler) http.Handler {
 // в e-reader'е); тело — короткий plain-text, OPDS-клиент его покажет.
 //
 // realm — строка в WWW-Authenticate; по соглашению "skriptes OPDS".
-func requireBasicAuth(d AuthDeps) func(http.Handler) http.Handler {
+//
+// Неудачи тратят тот же бюджет th, что и форма логина: иначе OPDS — обход лимита
+// для перебора пароля (e-reader шлёт credentials каждым запросом, так что успешные
+// запросы бюджет не тратят).
+func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Handler {
 	const realm = "skriptes OPDS"
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -82,10 +87,19 @@ func requireBasicAuth(d AuthDeps) func(http.Handler) http.Handler {
 				http.Error(w, "authentication required", http.StatusUnauthorized)
 				return
 			}
+			ipKey, emailKey := th.keys(r, email)
+			if th.over(ipKey, emailKey) {
+				w.Header().Set("Retry-After", "300")
+				http.Error(w, "too many attempts, try again later", http.StatusTooManyRequests)
+				return
+			}
 			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 			defer cancel()
 			user, err := d.Service.ValidateCredentials(ctx, email, password)
 			if err != nil {
+				if errors.Is(err, auth.ErrInvalidPassword) {
+					th.fail(ipKey, emailKey)
+				}
 				// ValidateCredentials имеет timing-mitigation, мы не различаем
 				// "нет такого" и "неверный пароль" в ответе.
 				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`", charset="UTF-8"`)

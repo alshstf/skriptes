@@ -453,6 +453,7 @@ func run() error {
 			AllowedOrigins:      cfg.AllowedOrigins,
 			LoginRateLimitIP:    cfg.LoginRateLimitIP,
 			LoginRateLimitEmail: cfg.LoginRateLimitEmail,
+			TrustCFConnectingIP: cfg.TrustCFConnectingIP,
 		},
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},

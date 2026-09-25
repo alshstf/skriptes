@@ -1,0 +1,44 @@
+# Caddyfile для ПУБЛИЧНОГО деплоя: вход прямо из интернета (на роутере проброшены
+# 443 и 80 на хост), TLS — Let's Encrypt, Caddy получает и продлевает сертификат сам.
+# Подключается overlay'ем docker-compose.harden.yml вместо infra/Caddyfile.
+#
+# SKRIPTES_HOST — публичное имя (A-запись на внешний IP). Порт 80 нужен для
+# редиректа на https и как запасной путь проверки ACME; основной — TLS-ALPN на 443.
+
+{$SKRIPTES_HOST} {
+	encode zstd gzip
+
+	# Заголовки «настоящего IP клиента» из запроса не доверяем: без Cloudflare/CDN их
+	# ставит сам клиент. chi.RealIP в backend предпочитает True-Client-IP и X-Real-IP,
+	# а лимит логина при SKRIPTES_TRUST_CF_CONNECTING_IP=true — CF-Connecting-IP;
+	# подделав их, клиент обходил бы лимит попыток входа по IP. Реальный адрес backend
+	# берёт из X-Forwarded-For, который Caddy выставляет сам (входящий не доверяется).
+	request_header -Cf-Connecting-Ip
+	request_header -True-Client-Ip
+	request_header -X-Real-Ip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		# SAMEORIGIN, а не DENY: ридер открывает /foliate-reader.html во фрейме.
+		X-Frame-Options SAMEORIGIN
+		-Server
+	}
+
+	# OPDS наружу НЕ публикуем: HTTP Basic, e-reader'ы — только из домашней сети.
+	@opds path /opds /opds/*
+	handle @opds {
+		respond 404
+	}
+
+	@api path /api/* /healthz /readyz
+	handle @api {
+		reverse_proxy backend:8080
+	}
+
+	# Всё остальное → frontend (nginx-unprivileged слушает 8080, SPA-фолбэк)
+	handle {
+		reverse_proxy frontend:8080
+	}
+}

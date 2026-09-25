@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -24,6 +26,20 @@ func TestLoginThrottle(t *testing.T) {
 	time.Sleep(55 * time.Millisecond)
 	require.False(t, tr.over(k)) // окно протухло → снова пускаем
 	tr.cleanup()                 // не паникует на пустом/протухшем
+}
+
+// TestThrottleIP_CFHeader — CF-Connecting-IP учитывается ТОЛЬКО при trustCF: без
+// Cloudflare этот заголовок ставит сам клиент, и доверие к нему = обход лимита по IP.
+func TestThrottleIP_CFHeader(t *testing.T) {
+	r := httptest.NewRequest(http.MethodPost, "/api/auth/login", nil)
+	r.RemoteAddr = "203.0.113.7:51234"
+	r.Header.Set("CF-Connecting-IP", "198.51.100.1")
+
+	require.Equal(t, "203.0.113.7", throttleIP(r, false)) // заголовок игнорируется
+	require.Equal(t, "198.51.100.1", throttleIP(r, true)) // за Cloudflare — берём его
+
+	r.Header.Del("CF-Connecting-IP")
+	require.Equal(t, "203.0.113.7", throttleIP(r, true)) // нет заголовка → RemoteAddr
 }
 
 // TestLoginThrottle_Disabled — limit<=0 полностью выключает слой; nil-safe.

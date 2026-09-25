@@ -67,6 +67,11 @@ type Config struct {
 	// инстансов за своим WAF или в доверенной LAN). Secure-by-default: включён.
 	LoginRateLimitIP    int `env:"SKRIPTES_LOGIN_RATELIMIT_IP"    envDefault:"10"`
 	LoginRateLimitEmail int `env:"SKRIPTES_LOGIN_RATELIMIT_EMAIL" envDefault:"20"`
+	// IP клиента для лимита — из CF-Connecting-IP. Включать ТОЛЬКО если к бэкенду
+	// ходят исключительно через Cloudflare (proxy/tunnel): без Cloudflare заголовок
+	// ставит сам клиент и обходит лимит по IP. Дефолт — false (IP из X-Forwarded-For
+	// вашего reverse-proxy).
+	TrustCFConnectingIP bool `env:"SKRIPTES_TRUST_CF_CONNECTING_IP" envDefault:"false"`
 
 	// SMTP для send-to-Kindle. Если SMTPHost пустой — функция
 	// отключена (handler вернёт 503), и фронт скроет кнопку.

@@ -1217,6 +1217,7 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 | Docker compose (dev / release) | `infra/docker-compose.yml` / `infra/docker-compose.release.yml` |
 | Релиз (CI) | `.github/workflows/release.yml` (триггер — тег `v*.*.*`) |
 | TLS + reverse-proxy | `infra/Caddyfile` |
+| Публичный деплой (DMZ, вход прямо из интернета) | `infra/docker-compose.harden.yml` (хардненинг + монтирует `infra/Caddyfile.public` вместо базового) + `infra/.env.public.example`. `Caddyfile.public`: TLS Let's Encrypt, вырезает присланные клиентом `CF-Connecting-IP`/`True-Client-IP`/`X-Real-IP` (иначе подделка IP → обход лимита входа; `chi.RealIP` предпочитает True-Client-IP/X-Real-IP), `/opds` → 404 (OPDS наружу не публикуем). Лимит неудачных входов — `api/login_throttle.go::authThrottles`: ОДИН экземпляр на роутер, общий для `/api/auth/login` и OPDS Basic-auth (раньше OPDS был обходом лимита); `CF-Connecting-IP` учитывается только при `SKRIPTES_TRUST_CF_CONNECTING_IP=true`. Cloudflare Tunnel отвергнут (с домашнего Дом.ру не держится) — runbook `~/projects/plans/skriptes/dmz-port-forward-runbook.md` |
 
 ## Что лежит вне git (но тоже релевантно)
 
