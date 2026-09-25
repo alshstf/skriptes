@@ -76,13 +76,54 @@ func (t *loginThrottle) cleanupLoop() {
 	}
 }
 
-// throttleIP — IP клиента для лимитера. За Cloudflare берём CF-Connecting-IP (его
-// клиент через CF подделать не может); иначе — RemoteAddr (chi.RealIP уже учёл
-// X-Forwarded-For). Публичный инстанс ходит ТОЛЬКО через Cloudflare-туннель, прямого
-// доступа к origin нет — поэтому CF-Connecting-IP здесь доверенный.
-func throttleIP(r *http.Request) string {
-	if cf := strings.TrimSpace(r.Header.Get("CF-Connecting-IP")); cf != "" {
-		return cf
+// authThrottles — общие лимитеры неудачных входов по IP и email. Один экземпляр на
+// роутер: форма логина и OPDS Basic-auth тратят ОДИН бюджет, иначе OPDS — обходной
+// путь перебора пароля без лимита (каждая попытка — ещё и bcrypt на сервере).
+type authThrottles struct {
+	ip      *loginThrottle
+	email   *loginThrottle
+	trustCF bool
+}
+
+func newAuthThrottles(d AuthDeps) *authThrottles {
+	t := &authThrottles{
+		ip:      newLoginThrottle(d.LoginRateLimitIP, 5*time.Minute),
+		email:   newLoginThrottle(d.LoginRateLimitEmail, 15*time.Minute),
+		trustCF: d.TrustCFConnectingIP,
+	}
+	if d.LoginRateLimitIP > 0 {
+		go t.ip.cleanupLoop()
+	}
+	if d.LoginRateLimitEmail > 0 {
+		go t.email.cleanupLoop()
+	}
+	return t
+}
+
+// keys — ключи лимитеров для попытки входа с данным email.
+func (t *authThrottles) keys(r *http.Request, email string) (ipKey, emailKey string) {
+	return throttleIP(r, t.trustCF), strings.ToLower(strings.TrimSpace(email))
+}
+
+func (t *authThrottles) over(ipKey, emailKey string) bool {
+	return t.ip.over(ipKey) || t.email.over(emailKey)
+}
+
+func (t *authThrottles) fail(ipKey, emailKey string) {
+	t.ip.fail(ipKey)
+	t.email.fail(emailKey)
+}
+
+// throttleIP — IP клиента для лимитера. CF-Connecting-IP берём ТОЛЬКО при
+// trustCF (SKRIPTES_TRUST_CF_CONNECTING_IP): за Cloudflare его ставит край и клиент
+// подделать не может, а без Cloudflare это обычный заголовок — клиент подставит
+// любой и обойдёт лимит по IP. Иначе — RemoteAddr (chi.RealIP уже учёл
+// X-Forwarded-For от reverse-proxy).
+func throttleIP(r *http.Request, trustCF bool) string {
+	if trustCF {
+		if cf := strings.TrimSpace(r.Header.Get("CF-Connecting-IP")); cf != "" {
+			return cf
+		}
 	}
 	return clientIP(r).String()
 }

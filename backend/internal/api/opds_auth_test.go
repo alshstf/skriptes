@@ -115,6 +115,54 @@ func TestOPDS_BasicAuth(t *testing.T) {
 	require.Contains(t, string(body), "/opds/search?q={searchTerms}")
 }
 
+// TestOPDS_BasicAuthRateLimited — неудачи OPDS Basic-auth тратят тот же бюджет, что и
+// форма логина: исчерпав лимит по IP через /opds, нельзя ни продолжать там, ни уйти
+// перебирать на /api/auth/login (раньше OPDS был обходом лимита без ограничений).
+func TestOPDS_BasicAuthRateLimited(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := startOPDSAuthPostgres(t, ctx)
+	authSvc := auth.New(pool, 0)
+	const (
+		email    = "opds-limit@example.com"
+		password = "test-password-1234"
+	)
+	_, err := authSvc.CreateUser(ctx, email, "OPDS Limit", password, auth.RoleUser)
+	require.NoError(t, err)
+
+	router := api.NewRouter(api.Deps{
+		Auth: api.AuthDeps{Service: authSvc, LoginRateLimitIP: 2, LoginRateLimitEmail: 100},
+		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{}, opds.Deps{})},
+	})
+	srv := httptest.NewServer(router)
+	defer srv.Close()
+
+	opdsGet := func(pass string) int {
+		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/opds/", nil)
+		req.SetBasicAuth(email, pass)
+		resp, err := http.DefaultClient.Do(req)
+		require.NoError(t, err)
+		_ = resp.Body.Close()
+		return resp.StatusCode
+	}
+
+	require.Equal(t, http.StatusUnauthorized, opdsGet("wrong-1"))
+	require.Equal(t, http.StatusUnauthorized, opdsGet("wrong-2"))
+	// Лимит по IP исчерпан — даже верный пароль не проверяется.
+	require.Equal(t, http.StatusTooManyRequests, opdsGet(password))
+
+	// Бюджет общий с формой логина.
+	resp, err := http.Post(srv.URL+"/api/auth/login", "application/json",
+		strings.NewReader(`{"email":"`+email+`","password":"`+password+`"}`))
+	require.NoError(t, err)
+	_ = resp.Body.Close()
+	require.Equal(t, http.StatusTooManyRequests, resp.StatusCode)
+}
+
 func startOPDSAuthPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
 	t.Helper()
 	pgC, err := postgres.Run(ctx,

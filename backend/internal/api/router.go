@@ -64,9 +64,16 @@ func NewRouter(d Deps) http.Handler {
 	// вместо session cookie + CSRF), отдельный media-type — другие
 	// клиенты, другая лента эндпоинтов. Монтируется только если
 	// сконфигурен Handler И есть Auth.Service (нужен ValidateCredentials).
+	// Лимитер неудачных входов — один на роутер: форма логина и OPDS Basic-auth
+	// тратят общий бюджет (см. authThrottles).
+	var th *authThrottles
+	if d.Auth.Service != nil {
+		th = newAuthThrottles(d.Auth)
+	}
+
 	if d.OPDS.Handler != nil && d.Auth.Service != nil {
 		r.Route("/opds", func(r chi.Router) {
-			r.Use(requireBasicAuth(d.Auth))
+			r.Use(requireBasicAuth(d.Auth, th))
 			h := d.OPDS.Handler
 			r.Get("/", h.Root)
 			r.Get("/opensearch.xml", h.OpenSearchDescription)
@@ -87,7 +94,7 @@ func NewRouter(d Deps) http.Handler {
 		r.Get("/version", version(d.Version, d.DB))
 		if d.Auth.Service != nil {
 			// Публичные auth-эндпоинты.
-			r.Post("/auth/login", handleLogin(d.Auth))
+			r.Post("/auth/login", handleLogin(d.Auth, th))
 			r.Post("/auth/logout", handleLogout(d.Auth))
 			// Защищённые: требуют валидной session-cookie.
 			r.Group(func(r chi.Router) {

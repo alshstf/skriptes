@@ -55,7 +55,7 @@
 - Один `docker compose up`, все 5 сервисов; авто-TLS через Caddy для `*.localhost`
 - Multi-arch образы (linux/amd64 + linux/arm64); backend и frontend работают **non-root** (frontend — nginx-unprivileged)
 - Идемпотентный импорт INPX — повторный запуск на том же файле no-op (sha256 хэш-чек)
-- Для публикации в интернет — **hardening-overlay** (`docker-compose.harden.yml`: cap_drop/read-only/лимиты + Cloudflare Tunnel), см. раздел ниже
+- Для публикации в интернет — **hardening-overlay** (`docker-compose.harden.yml`: cap_drop/read-only/лимиты + публичный `Caddyfile.public` с TLS Let's Encrypt), см. раздел ниже
 
 ---
 
@@ -206,14 +206,16 @@ docker compose \
 Выставлять стек в интернет «как есть» не стоит. Для публичного деплоя в репо есть overlay `infra/docker-compose.harden.yml` (+ шаблон `infra/.env.public.example`):
 
 ```bash
+# рядом с compose-файлами: .env (из .env.public.example), Caddyfile, Caddyfile.public
 docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
-               --env-file .env --profile public up -d
+               --env-file .env up -d
 ```
 
+- **Вход напрямую**: на роутере пробросьте 443 (и 80 — редирект на https и запасная проверка ACME) на хост, A-запись `SKRIPTES_HOST` — на внешний IP. Caddy сам получит и продлит сертификат Let's Encrypt. Хост лучше изолировать (отдельная VM/VLAN, без доступа в домашнюю сеть).
+- **`Caddyfile.public`** (overlay монтирует его вместо базового): HSTS и базовые security-заголовки; вырезает присланные клиентом `CF-Connecting-IP` / `True-Client-IP` / `X-Real-IP` (иначе ими подделывается IP и обходится лимит попыток входа); `/opds` отдаёт 404 — OPDS наружу не публикуется.
 - **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
-- **Cloudflare Tunnel** (сервис `cloudflared` под `--profile public`): исходящее соединение к Cloudflare — **ноль входящих портов** на роутере, origin-IP скрыт. Токен туннеля — `CLOUDFLARE_TUNNEL_TOKEN` в `.env`; public hostname (→ `http://caddy:80`) и identity-гейт **Cloudflare Access** (email-код, отдельная политика на `/admin`) настраиваются в дашборде Zero Trust.
-- ⚠️ `/opds` наружу не публикуйте: его HTTP Basic несовместим с Cloudflare Access (закройте Access-политикой Deny или не добавляйте путь).
-- Второй слой к app-rate-limit'у логина — WAF rate-limit на `/api/auth/login` в Cloudflare.
+- **Лимит попыток входа** общий для формы логина и OPDS (раньше перебор через OPDS Basic-auth не ограничивался). `SKRIPTES_TRUST_CF_CONNECTING_IP=true` — только если весь трафик идёт через Cloudflare.
+- Если DNS домена у Cloudflare — запись в режиме «DNS only»: из России проксируемый Cloudflare с 2025 года режется провайдерами.
 
 ---
 
@@ -258,7 +260,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 
 Каталог доступен по `https://<ваш-хост>/opds` (OPDS 1.2). В e-reader-клиенте (KOReader, Moon+ Reader, CoolReader и т.п.) добавьте каталог с **HTTP Basic**-авторизацией — логин/пароль вашей учётки skriptes. Навигация: новинки / авторы / серии / жанры / поиск. Форматы: **fb2 первым** (отдаётся из архива без конвертации — мгновенно), epub/kepub/azw8 — конвертация на лету. Скачивание через OPDS учитывается как «приобретение» (питает блок «Оцените прочитанное»).
 
-⚠️ При публикации инстанса в интернет `/opds` наружу не выставляйте: HTTP Basic несовместим с identity-гейтом Cloudflare Access (см. «Публичный доступ»).
+⚠️ При публикации инстанса в интернет `/opds` наружу не выставляйте: `Caddyfile.public` отдаёт на него 404 (см. «Публичный доступ»); e-reader'ы — из домашней сети.
 
 ---
 
@@ -314,8 +316,9 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_COOKIE_SECURE` | `true` | `false` только для чистого-HTTP dev |
 | `SKRIPTES_COOKIE_DOMAIN` | (пусто) | Пусто = текущий host |
 | `SKRIPTES_ALLOWED_ORIGINS` | `https://skriptes.localhost` | CSV-список разрешённых Origin'ов для мутирующих запросов (CSRF) |
-| `SKRIPTES_LOGIN_RATELIMIT_IP` | `10` | Анти-брутфорс: лимит **неудачных** логинов с одного IP за 5-минутное окно (за Cloudflare берётся `CF-Connecting-IP`). `0` = слой выключен |
+| `SKRIPTES_LOGIN_RATELIMIT_IP` | `10` | Анти-брутфорс: лимит **неудачных** входов (форма логина + OPDS) с одного IP за 5-минутное окно. `0` = слой выключен |
 | `SKRIPTES_LOGIN_RATELIMIT_EMAIL` | `20` | То же per-email за 15-минутное окно (щедрее, чтобы атакующий не мог залочить чужой аккаунт). `0` = выключен |
+| `SKRIPTES_TRUST_CF_CONNECTING_IP` | `false` | Брать IP клиента для лимита из `CF-Connecting-IP`. `true` — только если к бэкенду ходят исключительно через Cloudflare, иначе клиент подставит заголовок сам |
 
 ### Send-to-Kindle / SMTP
 
@@ -374,11 +377,11 @@ Backend дёргает следующие открытые API — лениво 
 - Cookie — `HttpOnly`, `SameSite=Lax`, `Secure` (если `SKRIPTES_COOKIE_SECURE=true`)
 - CSRF — Origin/Referer-чек на мутирующих методах через middleware
 - Защита от user enumeration — login всегда отвечает одинаково при неверном email и неверном пароле, плюс «балансировочный» bcrypt при unknown email чтобы timing не выдавал
-- **Rate-limit логина** — считает только **неудачные** попытки (легитимного пользователя не лочит): по IP (10 за 5 мин; за Cloudflare — `CF-Connecting-IP`) и по email (20 за 15 мин), ответ 429 + `Retry-After`. Настраивается, `0` = выключить (инстанс за своим WAF)
+- **Rate-limit логина** — считает только **неудачные** попытки (легитимного пользователя не лочит): по IP (10 за 5 мин) и по email (20 за 15 мин), общий для формы логина и OPDS, ответ 429 + `Retry-After`. Настраивается, `0` = выключить (инстанс за своим WAF)
 - Регистрация закрыта (invite-only: пользователей создаёт админ), публичного password-reset нет
-- Контейнеры backend и frontend — **non-root**; для публичного деплоя есть hardening-overlay (cap_drop ALL, read-only FS, no-new-privileges, Cloudflare Tunnel — см. «Публичный доступ»)
+- Контейнеры backend и frontend — **non-root**; для публичного деплоя есть hardening-overlay (cap_drop ALL, read-only FS, no-new-privileges, `Caddyfile.public` с TLS — см. «Публичный доступ»)
 
-Пока **нет**: 2FA, OIDC. Базовый сценарий — домашний сервер в доверенной сети; для публикации наружу используйте hardening-overlay + identity-гейт на краю (Cloudflare Access).
+Пока **нет**: 2FA, OIDC. Базовый сценарий — домашний сервер в доверенной сети; для публикации наружу используйте hardening-overlay + `Caddyfile.public` на изолированном хосте.
 
 ---
 

@@ -67,6 +67,8 @@ services:
       # Анти-брутфорс логина (неудачи на окно): IP 5мин / email 15мин. 0 = выключить.
       SKRIPTES_LOGIN_RATELIMIT_IP: ${SKRIPTES_LOGIN_RATELIMIT_IP:-10}
       SKRIPTES_LOGIN_RATELIMIT_EMAIL: ${SKRIPTES_LOGIN_RATELIMIT_EMAIL:-20}
+      # IP для лимита из CF-Connecting-IP — ТОЛЬКО если весь трафик идёт через Cloudflare.
+      SKRIPTES_TRUST_CF_CONNECTING_IP: ${SKRIPTES_TRUST_CF_CONNECTING_IP:-false}
       SKRIPTES_SMTP_HOST: ${SKRIPTES_SMTP_HOST:-}
       SKRIPTES_SMTP_PORT: ${SKRIPTES_SMTP_PORT:-587}
       SKRIPTES_SMTP_USER: ${SKRIPTES_SMTP_USER:-}
