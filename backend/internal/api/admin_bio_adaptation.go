@@ -83,6 +83,10 @@ func handleUpdateBioAdaptation(d SettingsDeps) http.HandlerFunc {
 			d.AdaptationBackfill.SetConfig(cfg.AdaptationsRPM)
 			d.AdaptationBackfill.SetEnabled(cfg.Adaptations)
 		}
+		// Per-source тумблер TMDB-постеров — применяется в рантайме без рестарта.
+		if d.Metadata != nil {
+			d.Metadata.SetTMDBPostersEnabled(cfg.TMDBPosters)
+		}
 		writeJSON(w, http.StatusOK, bioAdaptationState(ctx, d, cfg))
 	}
 }

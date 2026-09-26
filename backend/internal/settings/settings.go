@@ -689,6 +689,12 @@ type BioAdaptationConfig struct {
 	Adaptations    bool `json:"adaptations"`
 	BiosRPM        int  `json:"bios_rpm"`
 	AdaptationsRPM int  `json:"adaptations_rpm"`
+	// TMDBPosters — использовать TMDB как источник постеров экранизаций
+	// (per-source тумблер, зеркало выбора источников у рейтинга/года).
+	// Дефолт true; без env-ключа SKRIPTES_TMDB_API_KEY тумблер фактически
+	// no-op (провайдер не сконструирован). Back-compat: конфиги, сохранённые
+	// до появления поля, читаются поверх дефолта → true.
+	TMDBPosters bool `json:"tmdb_posters"`
 }
 
 // DefaultBioAdaptationConfig — оба воркера выключены (opt-in), вежливые лимиты.
@@ -698,6 +704,7 @@ func DefaultBioAdaptationConfig() BioAdaptationConfig {
 		Adaptations:    false,
 		BiosRPM:        30,
 		AdaptationsRPM: 20,
+		TMDBPosters:    true,
 	}
 }
 
