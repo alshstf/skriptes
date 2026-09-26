@@ -22,6 +22,14 @@ type Config struct {
 	InpxRoot  string `env:"SKRIPTES_INPX_ROOT"  envDefault:"/data/inpx"`
 	CacheRoot string `env:"SKRIPTES_CACHE_ROOT" envDefault:"/cache"`
 
+	// InpxFiles — какие *.inpx из InpxRoot импортировать (имена через запятую).
+	// Пусто — все. Нужен, когда в каталоге лежит несколько INPX одной
+	// библиотеки (например, папка торрент-раздачи).
+	InpxFiles []string `env:"SKRIPTES_INPX_FILES" envSeparator:","`
+	// InpxWatchInterval — как часто проверять INPX на изменения и импортировать
+	// новый без рестарта. 0 — только при старте.
+	InpxWatchInterval time.Duration `env:"SKRIPTES_INPX_WATCH_INTERVAL" envDefault:"10m"`
+
 	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
 	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
 	// искать в $PATH.

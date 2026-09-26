@@ -34,6 +34,7 @@ type SrcLangBackfiller struct {
 	resyncer WorksIndexSyncer // nil → без таргетного ресинка works-индекса
 
 	langChanged atomic.Int64 // сколько книг получили src_lang за проход
+	lookedUp    atomic.Int64 // сколько запросов к источнику сделано за проход (для логов)
 
 	changedMu    sync.Mutex
 	changedBooks []int64 // id книг с новым src_lang (для works-индекса: src_lang[]/orig_lang[])
@@ -81,8 +82,8 @@ func (b *SrcLangBackfiller) Run(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			b.logger.Info("src_lang backfill: pass complete", "processed", n)
+		if lookups := b.lookedUp.Load(); n > 0 && lookups > 0 {
+			b.logger.Info("src_lang backfill: pass complete", "candidates", n, "lookups", lookups, "src_lang_found", b.langChanged.Load())
 		}
 		select {
 		case <-ctx.Done():
@@ -94,6 +95,7 @@ func (b *SrcLangBackfiller) Run(ctx context.Context) {
 
 func (b *SrcLangBackfiller) drain(ctx context.Context) int {
 	b.langChanged.Store(0)
+	b.lookedUp.Store(0)
 	b.changedMu.Lock()
 	b.changedBooks = nil
 	b.changedMu.Unlock()
@@ -169,6 +171,8 @@ func (b *SrcLangBackfiller) candidateCond() string {
 
 // fetchBatch — страница кандидатов keyset'ом по id. phaseCond — доп. условие
 // фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
+// Только кандидаты, которых пора спросить (dueCond), — остальных проход не
+// перечитывает.
 func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
@@ -184,12 +188,14 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 		WHERE b.deleted = false
 		  AND %s
 		  %s
+		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond(), phaseCond)
-	rows, err := b.pool.Query(ctx, q, afterID, limit)
+	`, b.candidateCond(), phaseCond, dueCond("book_src_lang_lookups", "book_id", "b.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -223,6 +229,14 @@ func (b *SrcLangBackfiller) processBatch(ctx context.Context, batch []yearCandid
 	wg.Wait()
 }
 
+// sourceNames — имя источника, если он включён (как в учёте попыток).
+func (b *SrcLangBackfiller) sourceNames() []string {
+	if !b.cfg.Wikidata || b.wd == nil {
+		return nil
+	}
+	return []string{b.wd.Name()}
+}
+
 func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 	if !b.cfg.Wikidata || b.wd == nil {
 		return
@@ -245,6 +259,7 @@ func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 		cancel()
 		return // воркер останавливают — выходим, ничего не помечая
 	}
+	b.lookedUp.Add(1)
 	code, ferr := b.wd.FetchSrcLang(taskCtx, q)
 	cancel()
 
@@ -292,20 +307,14 @@ func (b *SrcLangBackfiller) loadLookups(ctx context.Context, bookID int64) (map[
 	return out, rows.Err()
 }
 
+// ttl — сроки перепроверки: found окончательный, not_found / error — по конфигу.
+func (b *SrcLangBackfiller) ttl() lookupTTL {
+	return retryTTL(b.cfg.NotFoundRetryDays, b.cfg.ErrorRetryHours)
+}
+
 // isDue — зеркало YearBackfiller.isDue на TTL этого воркера.
 func (b *SrcLangBackfiller) isDue(l lookupRow, now time.Time) bool {
-	switch l.outcome {
-	case "":
-		return true
-	case "found":
-		return false
-	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.NotFoundRetryDays)*24*time.Hour
-	case "error":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.ErrorRetryHours)*time.Hour
-	default:
-		return true
-	}
+	return b.ttl().isDue(l, now)
 }
 
 func (b *SrcLangBackfiller) writeFound(ctx context.Context, bookID int64, source, code string) error {
@@ -468,7 +477,7 @@ func (c *SrcLangBackfillController) RunOnce() {
 		c.mu.Lock()
 		c.onceCancel = nil
 		c.mu.Unlock()
-		c.logger.Info("src_lang backfill: one-shot pass done", "processed", n)
+		c.logger.Info("src_lang backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
 	}()
 }
 

@@ -14,6 +14,10 @@
 # но с no-new-privileges + лимитами. Интернет-фейсинг (backend/frontend/caddy) —
 # полный хардненинг. Книги — локальный путь на хосте (BOOKS_HOST_PATH), не
 # сетевой mount из LAN.
+#
+# Лимиты памяти postgres/meilisearch — из env (PG_MEM_LIMIT / MEILI_MEM_LIMIT). Дефолт
+# 2g — с запасом для коллекции ~550 тыс. книг: после полного импорта librusec оба
+# держатся около 0,9 ГБ, а пики (индексация Meili, тяжёлые запросы PG) выше.
 services:
   postgres:
     security_opt:
@@ -21,15 +25,20 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: ${PG_MEM_LIMIT:-2g}
 
   meilisearch:
     security_opt:
       - no-new-privileges:true
+    # По умолчанию Meili берёт под индексацию до ⅔ памяти ХОСТА, а не лимита
+    # контейнера — на большой коллекции индексация упиралась бы в лимит. Держим
+    # заметно ниже MEILI_MEM_LIMIT (поднимаете лимит — поднимите и это).
+    environment:
+      MEILI_MAX_INDEXING_MEMORY: ${MEILI_MAX_INDEXING_MEMORY:-1Gb}
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: ${MEILI_MEM_LIMIT:-2g}
 
   backend:
     security_opt:

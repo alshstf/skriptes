@@ -36,7 +36,8 @@ type RenownBackfiller struct {
 	olGate   *rateGate
 	wdGate   *rateGate
 
-	found atomic.Int64 // счётчиков найдено за проход (для логов)
+	found    atomic.Int64 // счётчиков найдено за проход (для логов)
+	lookedUp atomic.Int64 // запросов к источникам за проход (для логов)
 
 	mu      sync.Mutex
 	touched []int64 // работы с новыми счётчиками — на таргетный ресинк
@@ -103,8 +104,8 @@ func (b *RenownBackfiller) Run(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			b.logger.Info("renown backfill: pass complete", "processed", n, "renown_found", b.found.Load())
+		if lookups := b.lookedUp.Load(); n > 0 && lookups > 0 {
+			b.logger.Info("renown backfill: pass complete", "candidates", n, "lookups", lookups, "renown_found", b.found.Load())
 		}
 		b.recomputeAuthorRenown(ctx)
 		select {
@@ -179,6 +180,7 @@ func (b *RenownBackfiller) candidateCond() string {
 
 func (b *RenownBackfiller) drain(ctx context.Context) int {
 	b.found.Store(0)
+	b.lookedUp.Store(0)
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -201,6 +203,8 @@ func (b *RenownBackfiller) drain(ctx context.Context) int {
 func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]renownCandidate, error) {
 	// e — представительное издание работы (якорь → min id): его src_*/isbn/lang
 	// питают внешний запрос; JOIN LATERAL заодно требует ≥1 живого издания.
+	// dueCond — только работы, которые пора спросить хотя бы у одного
+	// включённого источника: остальных проход не перечитывает.
 	q := fmt.Sprintf(`
 		SELECT w.id, w.title,
 		       COALESCE(e.lang, ''), COALESCE(e.isbn, ''),
@@ -225,10 +229,12 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		) e ON true
 		WHERE w.id > $1
 		  AND %s
+		  AND %s
 		ORDER BY w.id
 		LIMIT $2
-	`, b.candidateCond())
-	rows, err := b.pool.Query(ctx, q, afterID, limit)
+	`, b.candidateCond(), dueCond("work_renown_lookups", "work_id", "w.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -312,6 +318,21 @@ func (b *RenownBackfiller) sources(c renownCandidate) []renownSource {
 	return out
 }
 
+// sourceNames — имена включённых источников (как в учёте попыток); тот же
+// отбор, что в sources, без построения запросов.
+func (b *RenownBackfiller) sourceNames() []string {
+	var out []string
+	for _, p := range []struct {
+		on bool
+		pr RenownProvider
+	}{{b.cfg.Fantlab, b.fl}, {b.cfg.OpenLibrary, b.ol}, {b.cfg.Wikidata, b.wd}} {
+		if p.on && p.pr != nil {
+			out = append(out, p.pr.Name())
+		}
+	}
+	return out
+}
+
 func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 	lookups, err := b.loadLookups(ctx, c.id)
 	if err != nil {
@@ -330,6 +351,7 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 			cancel()
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		b.lookedUp.Add(1)
 		res, ferr := src.provider.FetchRenown(taskCtx, src.query)
 		cancel()
 
@@ -426,25 +448,17 @@ func (b *RenownBackfiller) loadLookups(ctx context.Context, workID int64) (map[s
 	return out, rows.Err()
 }
 
-// isDue — пора ли (пере)спрашивать источник: нет строки → да; found → по
-// FoundRefreshDays (известность растёт, но медленно; 0 = не освежать);
-// not_found / error — по своим TTL.
+// ttl — сроки перепроверки: found освежаем по FoundRefreshDays (известность
+// растёт, но медленно; 0 = не освежать), not_found / error — по своим TTL.
+func (b *RenownBackfiller) ttl() lookupTTL {
+	t := retryTTL(b.cfg.NotFoundRetryDays, b.cfg.ErrorRetryHours)
+	t.found = time.Duration(b.cfg.FoundRefreshDays) * 24 * time.Hour
+	return t
+}
+
+// isDue — пора ли (пере)спрашивать источник (см. ttl).
 func (b *RenownBackfiller) isDue(l lookupRow, now time.Time) bool {
-	switch l.outcome {
-	case "":
-		return true
-	case "found":
-		if b.cfg.FoundRefreshDays <= 0 {
-			return false
-		}
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.FoundRefreshDays)*24*time.Hour
-	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.NotFoundRetryDays)*24*time.Hour
-	case "error":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.ErrorRetryHours)*time.Hour
-	default:
-		return true
-	}
+	return b.ttl().isDue(l, now)
 }
 
 func (b *RenownBackfiller) upsertLookup(ctx context.Context, workID int64, source, outcome string) {
@@ -595,7 +609,7 @@ func (c *RenownBackfillController) RunOnce() {
 		c.mu.Lock()
 		c.onceCancel = nil
 		c.mu.Unlock()
-		c.logger.Info("renown backfill: one-shot pass done", "processed", n)
+		c.logger.Info("renown backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
 	}()
 }
 

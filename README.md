@@ -54,7 +54,7 @@
 **Развёртывание**
 - Один `docker compose up`, все 5 сервисов; авто-TLS через Caddy для `*.localhost`
 - Multi-arch образы (linux/amd64 + linux/arm64); backend и frontend работают **non-root** (frontend — nginx-unprivileged)
-- Идемпотентный импорт INPX — повторный запуск на том же файле no-op (sha256 хэш-чек)
+- Идемпотентный импорт INPX — повторный запуск на том же файле no-op (sha256 хэш-чек); новый INPX подхватывается сам, без рестарта
 - Для публикации в интернет — **hardening-overlay** (`docker-compose.harden.yml`: cap_drop/read-only/лимиты + публичный `Caddyfile.public` с TLS Let's Encrypt), см. раздел ниже
 
 ---
@@ -138,9 +138,10 @@ docker compose -f docker-compose.release.yml --env-file .env run --rm \
 
 ### Импорт INPX
 
-- Положите файл `*.inpx` в каталог `INPX_HOST_PATH` **до** запуска backend (или перезапустите его — `docker compose restart backend`).
-- Backend на старте сканирует каталог и запускает импорт каждого `*.inpx`. Прогресс — в логах: `docker compose logs -f backend`.
-- Импорт **идемпотентный**: повторный старт на том же файле — no-op (хэш-чек). Чтобы переимпортировать — замените файл новой версией.
+- Положите файл `*.inpx` в каталог `INPX_HOST_PATH`. Backend на старте импортирует каждый `*.inpx` из каталога, а потом раз в `SKRIPTES_INPX_WATCH_INTERVAL` (по умолчанию 10 минут) проверяет каталог и сам импортирует новый или изменённый файл — **без рестарта**, когда его запись закончилась (размер и время изменения этого файла не менялись между двумя проверками). Если импорт упал (например, недоступна БД или Meilisearch), он повторяется на каждой следующей проверке, пока не пройдёт. Прогресс — в логах: `docker compose logs -f backend`.
+- Импорт **идемпотентный**: повторный импорт того же файла — no-op (хэш-чек). Чтобы обновить коллекцию — замените файл новой версией **под тем же именем**: коллекция определяется именем INPX-файла.
+- ⚠️ **Не указывайте `INPX_HOST_PATH` папкой торрент-раздачи.** Раздача может переименовать INPX (lib.rus.ec в сентябре 2026: `librusec_local_fb2.inpx` → `librusec_flib.inpx` + `librusec_mhl.inpx`) или положить рядом второй INPX той же библиотеки. Новый файл с теми же книгами (совпадают архивы и `LIBID`) backend **не импортирует**, иначе каждая книга появилась бы в каталоге дважды, и пишет в лог `INPX skipped`. Надёжнее отдельная папка, куда вы кладёте один проверенный INPX под постоянным именем (копируйте во временное имя без `.inpx` и переименовывайте — так недописанный файл не попадёт в импорт). Второй вариант — перечислить нужные файлы в `SKRIPTES_INPX_FILES`: без списка при чистой установке импортируется первый по алфавиту файл (у lib.rus.ec это `librusec_flib.inpx`), а остальные с теми же книгами пропускаются.
+- Для раздачи lib.rus.ec берите **`librusec_mhl.inpx`** — это формат MyHomeLib, продолжение прежнего `librusec_local_fb2.inpx`. `librusec_flib.inpx` — те же книги в формате FLibrary; его совместимость со skriptes не проверялась. Чтобы обновить уже импортированную коллекцию, положите `librusec_mhl.inpx` под прежним именем `librusec_local_fb2.inpx` — тогда это обычный повторный импорт той же коллекции.
 
 ### Где должны лежать архивы с книгами?
 
@@ -216,6 +217,8 @@ docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
 - **Вход напрямую**: на роутере пробросьте 443 (и 80 — редирект на https и запасная проверка ACME) на хост, A-запись `SKRIPTES_HOST` — на внешний IP. Caddy сам получит и продлит сертификат Let's Encrypt. Хост лучше изолировать (отдельная VM/VLAN, без доступа в домашнюю сеть).
 - **`Caddyfile.public`** (overlay монтирует его вместо базового): HSTS и базовые security-заголовки; вырезает присланные клиентом `CF-Connecting-IP` / `True-Client-IP` / `X-Real-IP` (иначе ими подделывается IP и обходится лимит попыток входа). **Админ-API (`/api/admin/*`) и OPDS — только из доверенных сетей** `SKRIPTES_LAN_CIDRS` (CIDR через пробел, например `192.168.0.0/24 10.50.0.1/32` — домашняя подсеть и адрес роутера в DMZ при NAT reflection): снаружи админка отвечает 403, OPDS — 404. Не задана — закрыто для всех; `0.0.0.0/0 ::/0` — открыть всем (не рекомендуется: у админа нет 2FA). Адреса проверяются по реальному адресу соединения, заголовками их не подделать.
 - **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
+- **Память**: на коллекции ~550 тыс. книг postgres и meilisearch держат около 0,9 ГБ каждый. Лимиты overlay — `PG_MEM_LIMIT` / `MEILI_MEM_LIMIT` (дефолт `2g`), индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM.
+- **Только TCP 443**: HTTP/3 (QUIC по UDP 443) в Caddyfile выключен — пробрасывать UDP не нужно.
 - **Лимит попыток входа** общий для формы логина и OPDS (раньше перебор через OPDS Basic-auth не ограничивался). `SKRIPTES_TRUST_CF_CONNECTING_IP=true` — только если весь трафик идёт через Cloudflare.
 - Если DNS домена у Cloudflare — запись в режиме «DNS only»: из России проксируемый Cloudflare с 2025 года режется провайдерами.
 
@@ -285,6 +288,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `POSTGRES_PASSWORD` | `skriptes` | Пароль БД (поменяйте в проде!) |
 | `POSTGRES_DB` | `skriptes` | Имя БД |
 | `POSTGRES_PORT` | `5432` | Порт на хосте (биндится только на 127.0.0.1) |
+| `PG_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера postgres |
 
 ### Meilisearch
 
@@ -293,6 +297,8 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `MEILI_MASTER_KEY` | (пусто) | Master-key. В dev можно пусто; для прода обязательно ≥16 байт |
 | `MEILI_PORT` | `7700` | Порт на хосте (только 127.0.0.1) |
 | `MEILI_ENV` | `development` | Поставьте `production` для prod-режима (требует master key) |
+| `MEILI_MAX_INDEXING_MEMORY` | `1Gb` | Только hardening-overlay: память под индексацию (держите ниже `MEILI_MEM_LIMIT`) |
+| `MEILI_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера meilisearch |
 
 ### Backend
 
@@ -304,6 +310,8 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_VERSION` | `dev` | Тег для отображения (для релиза = тег образа) |
 | `SKRIPTES_BOOKS_ROOT` | `/data/books` | Путь внутри контейнера, не меняйте без причины |
 | `SKRIPTES_INPX_ROOT` | `/data/inpx` | Путь внутри контейнера |
+| `SKRIPTES_INPX_FILES` | (пусто) | Какие `*.inpx` импортировать — имена через запятую; пусто = все из `INPX_HOST_PATH` |
+| `SKRIPTES_INPX_WATCH_INTERVAL` | `10m` | Как часто проверять INPX и импортировать новый/изменённый без рестарта (Go-формат: `10m`, `1h`); `0` — только при старте |
 | `SKRIPTES_CACHE_ROOT` | `/cache` | Кэш конвертированных файлов и обложек |
 | `SKRIPTES_FBC_PATH` | `fbc` | Путь к fbc-бинарю (вшит в образ) |
 | `SKRIPTES_GOOGLE_BOOKS_API_KEY` | (пусто) | API-ключ Google Books — **обязателен для GB-обогащения** (обложки/рейтинги/группировка): анонимные запросы GB отбивает 429 по общей квоте. Google Cloud Console → включить Books API → Credentials → API key; free-квота ≈1000 запросов/день на проект |

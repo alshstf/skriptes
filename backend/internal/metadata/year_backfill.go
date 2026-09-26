@@ -32,6 +32,7 @@ type YearBackfiller struct {
 	resyncer YearResyncer // nil → без авто-ресинка Meili-года
 
 	yearChanged atomic.Int64 // сколько книг получили written_year за проход
+	lookedUp    atomic.Int64 // сколько запросов к источникам сделано за проход (для логов)
 
 	changedMu    sync.Mutex // processBatch гоняет writeFound из нескольких горутин
 	changedBooks []int64    // id книг, у которых год появился (для works-индекса)
@@ -83,8 +84,8 @@ func (b *YearBackfiller) Run(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			b.logger.Info("year backfill: pass complete", "processed", n)
+		if lookups := b.lookedUp.Load(); n > 0 && lookups > 0 {
+			b.logger.Info("year backfill: pass complete", "candidates", n, "lookups", lookups)
 		}
 		select {
 		case <-ctx.Done():
@@ -106,6 +107,7 @@ type yearCandidate struct {
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
 	b.yearChanged.Store(0)
+	b.lookedUp.Store(0)
 	b.changedMu.Lock()
 	b.changedBooks = nil
 	b.changedMu.Unlock()
@@ -192,6 +194,8 @@ func (b *YearBackfiller) candidateCond() string {
 
 // fetchBatch — страница кандидатов keyset'ом по id. phaseCond — доп. условие
 // фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
+// Только кандидаты, которых пора спросить хотя бы у одного включённого
+// источника (dueCond), — остальных проход не перечитывает.
 func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
@@ -207,12 +211,14 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		WHERE b.deleted = false
 		  AND %s
 		  %s
+		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond(), phaseCond)
-	rows, err := b.pool.Query(ctx, q, afterID, limit)
+	`, b.candidateCond(), phaseCond, dueCond("book_year_lookups", "book_id", "b.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -264,6 +270,15 @@ func (b *YearBackfiller) sources() []yearSource {
 	return out
 }
 
+// sourceNames — имена включённых источников (как они записаны в учёте попыток).
+func (b *YearBackfiller) sourceNames() []string {
+	var out []string
+	for _, src := range b.sources() {
+		out = append(out, src.provider.Name())
+	}
+	return out
+}
+
 func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
@@ -284,6 +299,7 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 			cancel()
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		b.lookedUp.Add(1)
 		year, ferr := src.provider.FetchYear(taskCtx, q)
 		cancel()
 
@@ -338,21 +354,15 @@ func (b *YearBackfiller) loadLookups(ctx context.Context, bookID int64) (map[str
 	return out, rows.Err()
 }
 
+// ttl — сроки перепроверки: found окончательный, not_found / error — по конфигу.
+func (b *YearBackfiller) ttl() lookupTTL {
+	return retryTTL(b.cfg.NotFoundRetryDays, b.cfg.ErrorRetryHours)
+}
+
 // isDue — пора ли (пере)спрашивать источник: нет строки → да; found → нет;
 // not_found / error → да, если старше соответствующего TTL.
 func (b *YearBackfiller) isDue(l lookupRow, now time.Time) bool {
-	switch l.outcome {
-	case "":
-		return true // строки не было
-	case "found":
-		return false
-	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.NotFoundRetryDays)*24*time.Hour
-	case "error":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.ErrorRetryHours)*time.Hour
-	default:
-		return true
-	}
+	return b.ttl().isDue(l, now)
 }
 
 func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source string, year int) error {
@@ -563,7 +573,7 @@ func (c *YearBackfillController) RunOnce() {
 		c.mu.Lock()
 		c.onceCancel = nil
 		c.mu.Unlock()
-		c.logger.Info("year backfill: one-shot pass done", "processed", n)
+		c.logger.Info("year backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
 	}()
 }
 
