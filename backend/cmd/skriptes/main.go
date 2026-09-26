@@ -548,7 +548,8 @@ func ctx() context.Context { return context.Background() }
 
 // runImportLoop — импорт INPX на старте и затем без рестарта: раз в interval
 // проверяет каталог (размер/mtime) и импортирует новые или изменённые файлы,
-// когда их запись закончилась (#247). Один цикл на процесс, поэтому два импорта
+// когда их запись закончилась (#247); файл, импорт которого упал, повторяется
+// на следующей проверке. Один цикл на процесс, поэтому два импорта
 // одновременно не идут. interval <= 0 — только стартовый импорт.
 func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
 	inpxRoot string, only []string, interval time.Duration, logger *slog.Logger) {
@@ -564,7 +565,7 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 			logger.Info("startup import — no INPX files found", "root", inpxRoot)
 		} else {
 			logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
-			runImportPass(ctx, pool, imp, overrideCtl, files, logger)
+			runImportPass(ctx, pool, imp, overrideCtl, watch, files, logger)
 			logger.Info("startup import finished")
 		}
 	}
@@ -581,34 +582,42 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 			return
 		case <-ticker.C:
 		}
-		changed, err := watch.Poll()
+		ready, err := watch.Poll()
 		if err != nil {
 			logger.Warn("inpx watch: scan failed", "root", inpxRoot, "err", err)
 			continue
 		}
-		if len(changed) == 0 {
+		if len(ready) == 0 {
 			continue
 		}
-		logger.Info("inpx changed — importing without restart", "files", changed)
-		runImportPass(ctx, pool, imp, overrideCtl, changed, logger)
+		// Новые, изменённые или не импортировавшиеся из-за ошибки файлы.
+		logger.Info("inpx watch: importing without restart", "files", ready)
+		runImportPass(ctx, pool, imp, overrideCtl, watch, ready, logger)
 		logger.Info("inpx import finished")
 	}
 }
 
 // runImportPass импортирует файлы по очереди и делает общие шаги после импорта.
-func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, files []string, logger *slog.Logger) {
+// Удачный импорт и осознанный пропуск отмечаются в watch; упавший — нет, его
+// watch вернёт на следующей проверке.
+func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
+	watch *importer.InpxWatch, files []string, logger *slog.Logger) {
 	for _, f := range files {
 		_, err := imp.Run(ctx, f) // статистика логируется изнутри Run
 		var overlap *importer.OverlapError
 		switch {
+		case err == nil:
+			watch.MarkDone(f)
 		case errors.As(err, &overlap):
 			// Переименованный раздачей INPX или второй INPX той же библиотеки:
-			// импорт продублировал бы каталог (#250).
+			// импорт продублировал бы каталог (#250). Не повторяем, пока файл
+			// не изменится.
 			logger.Warn("INPX skipped — its books are already imported from another INPX file; "+
 				"keep one INPX of a library under a stable name or list it in SKRIPTES_INPX_FILES",
 				"file", overlap.File, "collection", overlap.Collection, "collection_file", overlap.CollectionFile,
 				"matched", overlap.Matched, "sampled", overlap.Sampled)
-		case err != nil:
+			watch.MarkDone(f)
+		default:
 			logger.Error("import failed for file", "file", f, "err", err)
 		}
 	}
