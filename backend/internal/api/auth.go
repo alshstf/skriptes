@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/netip"
 	"time"
 
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/skriptes/skriptes/backend/internal/auth"
 )
 
@@ -70,6 +72,7 @@ func handleLogin(d AuthDeps, th *authThrottles) http.HandlerFunc {
 		}
 		ipKey, emailKey := th.keys(r, req.Email)
 		if th.over(ipKey, emailKey) {
+			slog.Warn("login throttled", "via", "form", "ip", ipKey, "email", emailKey)
 			w.Header().Set("Retry-After", "300")
 			writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too many attempts, try again later"})
 			return
@@ -80,6 +83,9 @@ func handleLogin(d AuthDeps, th *authThrottles) http.HandlerFunc {
 		user, token, err := d.Service.Login(ctx, req.Email, req.Password, meta)
 		if err != nil {
 			if errors.Is(err, auth.ErrInvalidPassword) {
+				// Для алертов (Loki/Telegram) и возможного fail2ban/CrowdSec: без этой
+				// строки подбор пароля в публичном инстансе не виден вовсе.
+				slog.Warn("login failed", "via", "form", "ip", ipKey, "email", emailKey)
 				th.fail(ipKey, emailKey)
 				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid email or password"})
 				return
@@ -146,10 +152,13 @@ func clearSessionCookie(w http.ResponseWriter, d AuthDeps) {
 	})
 }
 
-// clientIP делает best-effort извлечение IP клиента из запроса.
-// chi.RealIP уже обрабатывает X-Forwarded-For в RemoteAddr — здесь просто
-// парсим RemoteAddr в netip.Addr.
+// clientIP — IP клиента: то, что положил middleware.ClientIPFromXFF (правое
+// значение XFF от нашего прокси), иначе — адрес TCP-соединения (прямой вызов,
+// dev). r.RemoteAddr middleware не трогает — там всегда адрес прокси.
 func clientIP(r *http.Request) netip.Addr {
+	if ip := middleware.GetClientIPAddr(r.Context()); ip.IsValid() {
+		return ip
+	}
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		host = r.RemoteAddr

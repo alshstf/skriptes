@@ -46,7 +46,12 @@ func NewRouter(d Deps) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
+	// IP клиента — самое правое значение X-Forwarded-For, т.е. выставленное
+	// ближайшим прокси (Caddy перезаписывает XFF сам, клиентский не доверяется).
+	// middleware.RealIP больше не используем: он верил True-Client-IP/X-Real-IP/
+	// левому XFF от клиента (GO-2026-5774/5775/5777). Контракт: backend доступен
+	// ТОЛЬКО через один reverse-proxy, выставляющий XFF; без XFF — RemoteAddr.
+	r.Use(middleware.ClientIPFromXFF())
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 

@@ -528,7 +528,7 @@ func (h *Handler) Cover(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	full := filepath.Join(h.cfg.CoversRoot, name)
-	if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(h.cfg.CoversRoot)) {
+	if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(h.cfg.CoversRoot)+string(filepath.Separator)) {
 		http.NotFound(w, r)
 		return
 	}

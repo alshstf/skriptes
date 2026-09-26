@@ -9,10 +9,11 @@
 	encode zstd gzip
 
 	# Заголовки «настоящего IP клиента» из запроса не доверяем: без Cloudflare/CDN их
-	# ставит сам клиент. chi.RealIP в backend предпочитает True-Client-IP и X-Real-IP,
-	# а лимит логина при SKRIPTES_TRUST_CF_CONNECTING_IP=true — CF-Connecting-IP;
-	# подделав их, клиент обходил бы лимит попыток входа по IP. Реальный адрес backend
-	# берёт из X-Forwarded-For, который Caddy выставляет сам (входящий не доверяется).
+	# ставит сам клиент. Backend берёт IP из самого правого значения X-Forwarded-For,
+	# которое Caddy выставляет сам (входящий XFF от недоверенного клиента он не
+	# принимает); True-Client-IP/X-Real-IP backend не читает, а CF-Connecting-IP —
+	# только при SKRIPTES_TRUST_CF_CONNECTING_IP=true. Вырезаем их всё равно — на
+	# случай, если флаг включат по ошибке или что-то в цепочке начнёт им верить.
 	request_header -Cf-Connecting-Ip
 	request_header -True-Client-Ip
 	request_header -X-Real-Ip

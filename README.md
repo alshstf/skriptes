@@ -127,7 +127,7 @@ docker compose -f docker-compose.release.yml --env-file .env ps
 # 5) создайте первого admin-пользователя
 #    -e SKRIPTES_SEED_PASSWORD=<пароль>  передаёт пароль через переменную окружения
 docker compose -f docker-compose.release.yml --env-file .env run --rm \
-  -e SKRIPTES_SEED_PASSWORD=secret123 \
+  -e SKRIPTES_SEED_PASSWORD=change-me-long-pass \
   --entrypoint skriptes-seed backend \
   --email me@example.com --display-name "Me" --no-prompt
 
@@ -374,12 +374,14 @@ Backend дёргает следующие открытые API — лениво 
 
 ## Безопасность
 
-- Пароли — **bcrypt** cost=12, явный лимит 72 байта (bcrypt тихо обрезает дальше)
-- Сессии — opaque-токены 256 бит из `crypto/rand`, в PG-таблице `sessions` с TTL 30 дней
+- Пароли — **bcrypt** cost=12, минимум **12 символов** (для новых и сменяемых), явный лимит 72 байта (bcrypt тихо обрезает дальше)
+- Сессии — opaque-токены 256 бит из `crypto/rand`, TTL 30 дней; в PG-таблице `sessions` хранится только **SHA-256 токена** — утёкший дамп или бэкап не даёт войти под чужой сессией
 - Cookie — `HttpOnly`, `SameSite=Lax`, `Secure` (если `SKRIPTES_COOKIE_SECURE=true`)
 - CSRF — Origin/Referer-чек на мутирующих методах через middleware
 - Защита от user enumeration — login всегда отвечает одинаково при неверном email и неверном пароле, плюс «балансировочный» bcrypt при unknown email чтобы timing не выдавал
 - **Rate-limit логина** — считает только **неудачные** попытки (легитимного пользователя не лочит): по IP (10 за 5 мин) и по email (20 за 15 мин), общий для формы логина и OPDS, ответ 429 + `Retry-After`. Настраивается, `0` = выключить (инстанс за своим WAF)
+- Неудачные входы и срабатывания лимита пишутся в лог backend (`login failed` / `login throttled` с IP, email и каналом `form`/`opds`) — на них удобно вешать оповещения
+- IP клиента — самое правое значение `X-Forwarded-For`, выставленное ближайшим reverse-proxy (Caddy перезаписывает его сам); `True-Client-IP`/`X-Real-IP` не учитываются. Backend должен быть доступен только через прокси
 - Регистрация закрыта (invite-only: пользователей создаёт админ), публичного password-reset нет
 - Контейнеры backend и frontend — **non-root**; для публичного деплоя есть hardening-overlay (cap_drop ALL, read-only FS, no-new-privileges, `Caddyfile.public` с TLS — см. «Публичный доступ»)
 

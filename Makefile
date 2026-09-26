@@ -62,9 +62,9 @@ migrate: ## Применить миграции (бэкенд делает эт�
 	$(COMPOSE) run --rm --no-deps backend skriptes-seed --help >/dev/null 2>&1 || true
 	@echo "ℹ︎  миграции применяются автоматически при старте backend; если нужно отдельно — запустите backend и сразу остановите"
 
-seed-admin: ## Создать admin-пользователя (требует EMAIL и PASSWORD; пример: make seed-admin EMAIL=me@x.com PASSWORD=secret123)
+seed-admin: ## Создать admin-пользователя (требует EMAIL и PASSWORD; пример: make seed-admin EMAIL=me@x.com PASSWORD=change-me-long-pass)
 	@if [ -z "$(EMAIL)" ] || [ -z "$(PASSWORD)" ]; then \
-		echo "Usage: make seed-admin EMAIL=you@example.com PASSWORD=secret123 [DISPLAY_NAME='Your Name']"; \
+		echo "Usage: make seed-admin EMAIL=you@example.com PASSWORD=change-me-long-pass [DISPLAY_NAME='Your Name']"; \
 		exit 2; \
 	fi
 	$(COMPOSE) run --rm \

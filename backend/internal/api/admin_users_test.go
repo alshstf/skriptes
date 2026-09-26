@@ -76,7 +76,7 @@ func TestAdminEndpoints(t *testing.T) {
 		map[string]any{
 			"email":        "new@example.com",
 			"display_name": "New",
-			"password":     "newpass1234",
+			"password":     "newpass123456",
 			"role":         "user",
 		}, "https://test.local")
 	require.Equal(t, http.StatusCreated, resp.StatusCode)
@@ -118,16 +118,16 @@ func TestAdminEndpoints(t *testing.T) {
 
 	// ── ResetPassword: успех + новые сессии работают ─────────────
 	resp = do(t, srv.URL+"/api/admin/users/"+itoa(created.ID)+"/password", http.MethodPatch, adminCookie,
-		map[string]any{"new_password": "newpass2025"}, "https://test.local")
+		map[string]any{"new_password": "newpass202512"}, "https://test.local")
 	require.Equal(t, http.StatusNoContent, resp.StatusCode)
 	// Старый пароль больше не залогинит
 	resp = doRaw(t, srv.URL+"/api/auth/login", http.MethodPost, "",
-		map[string]any{"email": "new@example.com", "password": "newpass1234"},
+		map[string]any{"email": "new@example.com", "password": "newpass123456"},
 		"https://test.local")
 	require.Equal(t, http.StatusUnauthorized, resp.StatusCode)
 	// Новый — да
 	resp = doRaw(t, srv.URL+"/api/auth/login", http.MethodPost, "",
-		map[string]any{"email": "new@example.com", "password": "newpass2025"},
+		map[string]any{"email": "new@example.com", "password": "newpass202512"},
 		"https://test.local")
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 

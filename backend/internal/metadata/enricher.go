@@ -633,7 +633,9 @@ func (e *Enricher) ResolveCachedFile(name string) (string, bool) {
 			continue
 		}
 		full := c.Path(name)
-		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(c.Root())) {
+		// Строго ВНУТРИ корня: префикс с разделителем, иначе проходил бы соседний
+		// каталог с тем же началом имени (covers → covers-x) и сам корень.
+		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(c.Root())+string(filepath.Separator)) {
 			continue // path traversal
 		}
 		if fileExists(full) {
