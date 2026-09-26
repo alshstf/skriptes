@@ -8,6 +8,7 @@ import (
 
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/inpx/inpxtest"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +22,7 @@ func TestImport_OverlappingCollectionSkipped(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
 	dir := t.TempDir()

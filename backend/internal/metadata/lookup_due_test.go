@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -45,7 +46,7 @@ func TestDueCond_MatchesIsDue(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var collID, archID int64
 	require.NoError(t, pool.QueryRow(ctx,
