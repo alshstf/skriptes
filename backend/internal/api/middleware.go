@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"net/http"
 	"slices"
 	"time"
@@ -89,6 +90,7 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			}
 			ipKey, emailKey := th.keys(r, email)
 			if th.over(ipKey, emailKey) {
+				slog.Warn("login throttled", "via", "opds", "ip", ipKey, "email", emailKey)
 				w.Header().Set("Retry-After", "300")
 				http.Error(w, "too many attempts, try again later", http.StatusTooManyRequests)
 				return
@@ -98,6 +100,7 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			user, err := d.Service.ValidateCredentials(ctx, email, password)
 			if err != nil {
 				if errors.Is(err, auth.ErrInvalidPassword) {
+					slog.Warn("login failed", "via", "opds", "ip", ipKey, "email", emailKey)
 					th.fail(ipKey, emailKey)
 				}
 				// ValidateCredentials имеет timing-mitigation, мы не различаем

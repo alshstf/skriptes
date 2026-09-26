@@ -141,12 +141,12 @@ test('me: смена пароля — submit disabled пока поля нева
   await expect(submit).toBeDisabled();
 
   await page.getByLabel('Текущий пароль').fill('current-pass');
-  await page.getByLabel('Новый пароль (мин. 8 символов)').fill('short'); // < 8
+  await page.getByLabel('Новый пароль (мин. 12 символов)').fill('short'); // < 12
   await page.getByLabel('Повторите новый пароль').fill('short');
   await expect(submit).toBeDisabled();
-  await expect(page.getByText('Минимум 8 символов.')).toBeVisible();
+  await expect(page.getByText('Минимум 12 символов.')).toBeVisible();
 
-  await page.getByLabel('Новый пароль (мин. 8 символов)').fill('long-enough-1');
+  await page.getByLabel('Новый пароль (мин. 12 символов)').fill('long-enough-1');
   await page.getByLabel('Повторите новый пароль').fill('mismatched');
   await expect(submit).toBeDisabled();
   await expect(page.getByText('Пароли не совпадают.')).toBeVisible();
@@ -168,7 +168,7 @@ test('me: смена пароля — успешный submit, toast', async ({ 
   await page.goto('/me');
   await page.getByRole('button', { name: 'Сменить пароль' }).click();
   await page.getByLabel('Текущий пароль').fill('old-password-1');
-  await page.getByLabel('Новый пароль (мин. 8 символов)').fill('new-password-1');
+  await page.getByLabel('Новый пароль (мин. 12 символов)').fill('new-password-1');
   await page.getByLabel('Повторите новый пароль').fill('new-password-1');
   await page.getByRole('button', { name: 'Обновить' }).click();
 

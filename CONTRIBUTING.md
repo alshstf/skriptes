@@ -10,7 +10,7 @@ cd skriptes
 cp infra/.env.example infra/.env
 $EDITOR infra/.env       # минимум — BOOKS_HOST_PATH / INPX_HOST_PATH
 make up                  # build + up (использует infra/docker-compose.yml)
-make seed-admin EMAIL=me@example.com PASSWORD=secret123 DISPLAY_NAME="Me"
+make seed-admin EMAIL=me@example.com PASSWORD=change-me-long-pass DISPLAY_NAME="Me"
 open https://skriptes.localhost
 ```
 
@@ -95,7 +95,7 @@ make test              # backend-test + frontend-test
 make lint              # backend-lint + frontend-lint
 
 # admin
-make seed-admin EMAIL=me@example.com PASSWORD=secret123 [DISPLAY_NAME="Me"]
+make seed-admin EMAIL=me@example.com PASSWORD=change-me-long-pass [DISPLAY_NAME="Me"]
 ```
 
 ## Тестовая фикстура

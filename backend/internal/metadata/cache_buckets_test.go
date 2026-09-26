@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -46,6 +47,25 @@ func TestEnricher_SeparateBuckets(t *testing.T) {
 	require.True(t, ok, "постер НЕ тронут очисткой обложек")
 	_, ok = e.ResolveCachedFile(photoName)
 	require.True(t, ok, "фото НЕ тронуто очисткой обложек")
+}
+
+// TestEnricher_ResolveCachedFile_NoSiblingTraversal — имя с «../» не выводит из
+// бакета даже в соседний каталог с тем же началом имени (covers → covers-evil):
+// раньше проверка HasPrefix была без разделителя и такой путь пропускала.
+func TestEnricher_ResolveCachedFile_NoSiblingTraversal(t *testing.T) {
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+	dir := t.TempDir()
+	e, err := New(nil, filepath.Join(dir, "covers"), nil, nil, nil, nil, nil, quiet)
+	require.NoError(t, err)
+
+	evil := filepath.Join(dir, "covers-evil")
+	require.NoError(t, os.MkdirAll(evil, 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(evil, "secret.txt"), []byte("x"), 0o600))
+
+	_, ok := e.ResolveCachedFile("../covers-evil/secret.txt")
+	require.False(t, ok, "соседний каталог с похожим именем не должен отдаваться")
+	_, ok = e.ResolveCachedFile(".")
+	require.False(t, ok, "сам корень бакета — не файл обложки")
 }
 
 // TestEnricher_HealDanglingAssets — висячие указатели (файла нет) зануляются +

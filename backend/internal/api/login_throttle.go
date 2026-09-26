@@ -117,8 +117,8 @@ func (t *authThrottles) fail(ipKey, emailKey string) {
 // throttleIP — IP клиента для лимитера. CF-Connecting-IP берём ТОЛЬКО при
 // trustCF (SKRIPTES_TRUST_CF_CONNECTING_IP): за Cloudflare его ставит край и клиент
 // подделать не может, а без Cloudflare это обычный заголовок — клиент подставит
-// любой и обойдёт лимит по IP. Иначе — RemoteAddr (chi.RealIP уже учёл
-// X-Forwarded-For от reverse-proxy).
+// любой и обойдёт лимит по IP. Иначе — clientIP (правое значение XFF от нашего
+// reverse-proxy, см. ClientIPFromXFF в роутере; без XFF — адрес соединения).
 func throttleIP(r *http.Request, trustCF bool) string {
 	if trustCF {
 		if cf := strings.TrimSpace(r.Header.Get("CF-Connecting-IP")); cf != "" {

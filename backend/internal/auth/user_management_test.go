@@ -39,7 +39,7 @@ func TestUserManagement(t *testing.T) {
 	svc := auth.New(pool, 4)
 
 	// ── CreateUser happy path ─────────────────────────────────────
-	admin1, err := svc.CreateUser(ctx, "admin1@example.com", "Admin1", "password123", auth.RoleAdmin)
+	admin1, err := svc.CreateUser(ctx, "admin1@example.com", "Admin1", "password12345", auth.RoleAdmin)
 	require.NoError(t, err)
 	require.Equal(t, "admin1@example.com", admin1.Email)
 	require.Equal(t, auth.RoleAdmin, admin1.Role)
@@ -47,15 +47,18 @@ func TestUserManagement(t *testing.T) {
 	// password too short → ErrPasswordTooShort
 	_, err = svc.CreateUser(ctx, "short@example.com", "Short", "1234567", auth.RoleUser)
 	require.ErrorIs(t, err, auth.ErrPasswordTooShort)
+	// длина — в символах, не в байтах: 6 кириллических букв = 12 байт, но коротко
+	_, err = svc.CreateUser(ctx, "short@example.com", "Short", "пароль", auth.RoleUser)
+	require.ErrorIs(t, err, auth.ErrPasswordTooShort)
 
 	// email taken → ErrEmailTaken
-	_, err = svc.CreateUser(ctx, "admin1@example.com", "Dup", "anotherpass", auth.RoleUser)
+	_, err = svc.CreateUser(ctx, "admin1@example.com", "Dup", "anotherpass12", auth.RoleUser)
 	require.ErrorIs(t, err, auth.ErrEmailTaken)
 
 	// Создаём ещё пару юзеров
-	bob, err := svc.CreateUser(ctx, "bob@example.com", "Bob", "bobpass1234", auth.RoleUser)
+	bob, err := svc.CreateUser(ctx, "bob@example.com", "Bob", "bobpass123456", auth.RoleUser)
 	require.NoError(t, err)
-	carol, err := svc.CreateUser(ctx, "carol@example.com", "Carol", "carolpass12", auth.RoleAdmin)
+	carol, err := svc.CreateUser(ctx, "carol@example.com", "Carol", "carolpass1234", auth.RoleAdmin)
 	require.NoError(t, err)
 
 	// ── ListUsers ────────────────────────────────────────────────
@@ -102,7 +105,7 @@ func TestUserManagement(t *testing.T) {
 	// ── ResetPassword + session invalidation ─────────────────────
 	// Создаём 3 сессии для bob (имитируем 3 устройства).
 	for i := 0; i < 3; i++ {
-		_, _, err := svc.Login(ctx, "bob2@example.com", "bobpass1234", auth.SessionMetadata{})
+		_, _, err := svc.Login(ctx, "bob2@example.com", "bobpass123456", auth.SessionMetadata{})
 		require.NoError(t, err)
 	}
 	require.Equal(t, 3, countSessions(t, ctx, pool, bob.ID))
@@ -113,7 +116,7 @@ func TestUserManagement(t *testing.T) {
 	require.Equal(t, 0, countSessions(t, ctx, pool, bob.ID))
 
 	// Старый пароль больше не работает.
-	_, _, err = svc.Login(ctx, "bob2@example.com", "bobpass1234", auth.SessionMetadata{})
+	_, _, err = svc.Login(ctx, "bob2@example.com", "bobpass123456", auth.SessionMetadata{})
 	require.ErrorIs(t, err, auth.ErrInvalidPassword)
 	// Новый — работает.
 	_, _, err = svc.Login(ctx, "bob2@example.com", "newbobpass11", auth.SessionMetadata{})
@@ -137,7 +140,7 @@ func TestUserManagement(t *testing.T) {
 	require.Equal(t, 3, countSessions(t, ctx, pool, bob.ID), "при wrong current сессии не трогаем")
 
 	// Right current password → success, остаётся только keepToken
-	err = svc.ChangePassword(ctx, bob.ID, "newbobpass11", "bobpass2025", keepToken)
+	err = svc.ChangePassword(ctx, bob.ID, "newbobpass11", "bobpass202512", keepToken)
 	require.NoError(t, err)
 	require.Equal(t, 1, countSessions(t, ctx, pool, bob.ID))
 	require.True(t, sessionExists(t, ctx, pool, keepToken), "keepToken должен сохраниться")
@@ -168,7 +171,7 @@ func countSessions(t *testing.T, ctx context.Context, pool *pgxpool.Pool, userID
 func sessionExists(t *testing.T, ctx context.Context, pool *pgxpool.Pool, token string) bool {
 	t.Helper()
 	var n int
-	require.NoError(t, pool.QueryRow(ctx, `SELECT COUNT(*) FROM sessions WHERE token = $1`, token).Scan(&n))
+	require.NoError(t, pool.QueryRow(ctx, `SELECT COUNT(*) FROM sessions WHERE token = $1`, auth.HashSessionToken(token)).Scan(&n))
 	return n == 1
 }
 
