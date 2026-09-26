@@ -6,13 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/collections"
-	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestCollectionsFlow — полный жизненный цикл полки на реальном PG.
@@ -24,7 +20,7 @@ func TestCollectionsFlow(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startCollectionsPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	// Seed: 2 пользователя + библиотечная коллекция (collections = INPX-импорт,
 	// НЕ user_collections) + архив + 2 живые книги + 1 deleted.
@@ -170,7 +166,7 @@ func TestCollections_FavoritesGuards(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	pool := startCollectionsPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var u int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -199,28 +195,4 @@ func TestCollections_FavoritesGuards(t *testing.T) {
 	require.GreaterOrEqual(t, len(list), 2)
 	require.Equal(t, "favorites", list[0].Kind, "служебная «Избранное» закреплена сверху")
 	require.Equal(t, "Избранное", list[0].Name)
-}
-
-func startCollectionsPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := tcpostgres.Run(ctx,
-		"postgres:17-alpine",
-		tcpostgres.WithDatabase("skriptes_test"),
-		tcpostgres.WithUsername("skriptes"),
-		tcpostgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }

@@ -6,15 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	meili "github.com/meilisearch/meilisearch-go"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
 	tcmeili "github.com/testcontainers/testcontainers-go/modules/meilisearch"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // fixtureINPX живёт в backend/internal/inpx/testdata/test.inpx.
@@ -31,7 +27,7 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool, dsn := startPostgres(t, ctx)
+	pool, dsn := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -151,7 +147,7 @@ func TestRun_FullPipeline_OnFixture(t *testing.T) {
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books`).Scan(&bookCount))
 	require.Equal(t, 20, bookCount)
 
-	_ = dsn // dsn используется внутри startPostgres, оставлено для отладки
+	_ = dsn // DSN тесту не нужен, оставлен для отладки
 }
 
 // TestResyncYears_PushesWrittenYearToMeili — после импорта Meili-поле year
@@ -165,7 +161,7 @@ func TestResyncYears_PushesWrittenYearToMeili(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
 
@@ -215,7 +211,7 @@ func TestImport_MeiliDistinctByWork(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
 	abs, err := filepath.Abs(fixtureINPX)
@@ -254,33 +250,6 @@ func TestImport_MeiliDistinctByWork(t *testing.T) {
 }
 
 // ── helpers ────────────────────────────────────────────────────
-
-func startPostgres(t *testing.T, ctx context.Context) (*pgxpool.Pool, string) {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-
-	return pool, dsn
-}
 
 func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Helper()

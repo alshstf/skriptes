@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +22,7 @@ func TestOverrides_EditionScalar_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Чарушин", "чарушин евгений")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "C1", "Рассказы", "рассказы", "ru", "", "", "")
@@ -73,7 +74,7 @@ func TestOverrides_WorkFields_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Тест", "тест ворк")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "W1", "Старое", "старое", "ru", "", "", "")
@@ -156,7 +157,7 @@ func TestOverrides_LangReapply_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Ланг", "ланг тест")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "L1", "Книга", "книга", "ru", "", "", "")
@@ -191,7 +192,7 @@ func TestOverrides_WorkGenres_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Жанр", "жанр тест")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "G1", "Книга", "книга", "ru", "", "", "")
@@ -257,7 +258,7 @@ func TestOverrides_WorkAuthors_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	authorA := seedGroupAuthor(t, ctx, pool, "Алфа", "алфа автор")
 	authorB := seedGroupAuthor(t, ctx, pool, "Бета", "бета автор")
@@ -331,7 +332,7 @@ func TestOverrides_WorkSeries_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Серия", "серия тест")
 	seriesA := seedSeries(t, ctx, pool, "Серия А", author)
@@ -388,7 +389,7 @@ func TestOverrides_ReapplyNoClobber_PreservesOriginal(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Регресс", "регресс тест")
 	seriesB := seedSeries(t, ctx, pool, "Серия Б", author)
