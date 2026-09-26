@@ -3,6 +3,12 @@
 	# Для прод-домена замените на реальный + email.
 	# email you@example.com
 	auto_https disable_redirects
+
+	# Без HTTP/3: compose публикует только TCP 443, QUIC (UDP 443) снаружи недоступен,
+	# а объявленный alt-svc h3 заставлял браузер пробовать его впустую.
+	servers {
+		protocols h1 h2
+	}
 }
 
 {$SKRIPTES_HOST} {

@@ -216,6 +216,8 @@ docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
 - **Вход напрямую**: на роутере пробросьте 443 (и 80 — редирект на https и запасная проверка ACME) на хост, A-запись `SKRIPTES_HOST` — на внешний IP. Caddy сам получит и продлит сертификат Let's Encrypt. Хост лучше изолировать (отдельная VM/VLAN, без доступа в домашнюю сеть).
 - **`Caddyfile.public`** (overlay монтирует его вместо базового): HSTS и базовые security-заголовки; вырезает присланные клиентом `CF-Connecting-IP` / `True-Client-IP` / `X-Real-IP` (иначе ими подделывается IP и обходится лимит попыток входа). **Админ-API (`/api/admin/*`) и OPDS — только из доверенных сетей** `SKRIPTES_LAN_CIDRS` (CIDR через пробел, например `192.168.0.0/24 10.50.0.1/32` — домашняя подсеть и адрес роутера в DMZ при NAT reflection): снаружи админка отвечает 403, OPDS — 404. Не задана — закрыто для всех; `0.0.0.0/0 ::/0` — открыть всем (не рекомендуется: у админа нет 2FA). Адреса проверяются по реальному адресу соединения, заголовками их не подделать.
 - **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
+- **Память**: на коллекции ~550 тыс. книг postgres и meilisearch держат около 0,9 ГБ каждый. Лимиты overlay — `PG_MEM_LIMIT` / `MEILI_MEM_LIMIT` (дефолт `2g`), индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM.
+- **Только TCP 443**: HTTP/3 (QUIC по UDP 443) в Caddyfile выключен — пробрасывать UDP не нужно.
 - **Лимит попыток входа** общий для формы логина и OPDS (раньше перебор через OPDS Basic-auth не ограничивался). `SKRIPTES_TRUST_CF_CONNECTING_IP=true` — только если весь трафик идёт через Cloudflare.
 - Если DNS домена у Cloudflare — запись в режиме «DNS only»: из России проксируемый Cloudflare с 2025 года режется провайдерами.
 
@@ -285,6 +287,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `POSTGRES_PASSWORD` | `skriptes` | Пароль БД (поменяйте в проде!) |
 | `POSTGRES_DB` | `skriptes` | Имя БД |
 | `POSTGRES_PORT` | `5432` | Порт на хосте (биндится только на 127.0.0.1) |
+| `PG_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера postgres |
 
 ### Meilisearch
 
@@ -293,6 +296,8 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `MEILI_MASTER_KEY` | (пусто) | Master-key. В dev можно пусто; для прода обязательно ≥16 байт |
 | `MEILI_PORT` | `7700` | Порт на хосте (только 127.0.0.1) |
 | `MEILI_ENV` | `development` | Поставьте `production` для prod-режима (требует master key) |
+| `MEILI_MAX_INDEXING_MEMORY` | `1Gb` | Только hardening-overlay: память под индексацию (держите ниже `MEILI_MEM_LIMIT`) |
+| `MEILI_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера meilisearch |
 
 ### Backend
 
