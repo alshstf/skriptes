@@ -6,16 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	meili "github.com/meilisearch/meilisearch-go"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
 	tcmeili "github.com/testcontainers/testcontainers-go/modules/meilisearch"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 const fixtureINPX = "../inpx/testdata/test.inpx"
@@ -31,7 +27,7 @@ func TestService_HistoryFlow(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -253,7 +249,7 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var userID, collID, archID, workID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -332,7 +328,7 @@ func TestService_Ratings(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var u1, u2, workID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -399,7 +395,7 @@ func TestService_RatingPrompts(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var userID, collID, archID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -507,7 +503,7 @@ func TestService_ContinueReading(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var userID, collID, archID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -571,7 +567,7 @@ func TestService_SubscriptionFeed(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var userID, collID, archID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -700,7 +696,7 @@ func TestService_FavoriteGenres(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var userID, gID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -733,30 +729,6 @@ func TestService_FavoriteGenres(t *testing.T) {
 }
 
 // ── helpers (повтор из других пакетов) ─────────────────────────
-
-func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
-}
 
 func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Helper()

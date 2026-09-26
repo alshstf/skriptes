@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,7 +54,7 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -116,7 +117,7 @@ func TestWorkGrouper_Tier15_Series_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -192,7 +193,7 @@ func TestWorkGrouper_Tier2_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -240,7 +241,7 @@ func TestWorkAggregates_SplitReDerivesSeries(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -314,7 +315,7 @@ func TestMergeWorks_PreservesUserData(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -387,7 +388,7 @@ func TestTier1Merge_PreservesRatings(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -428,7 +429,7 @@ func TestSplitEditions_AnchorProtected(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -495,7 +496,7 @@ func TestWorkGrouper_Tier1NoNetwork_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -543,7 +544,7 @@ func TestWorkGroupCoverage_LiveEditionsOnly(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -577,7 +578,7 @@ func TestWorkGrouper_Tier2_QueryCarriesSrcTitle(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -619,7 +620,7 @@ func TestWorkGrouper_Tier2_ConflictingSrcNotMerged(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -671,7 +672,7 @@ func TestRegroupWorks_MiniHP(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -831,7 +832,7 @@ func TestRegroupAll_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64

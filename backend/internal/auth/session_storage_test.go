@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,7 +21,7 @@ func TestSessionTokenStoredHashed(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startUserMgmtPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	svc := auth.New(pool, 4)
 
 	const email, pass = "hash@example.com", "long-enough-password"
@@ -61,7 +62,7 @@ func TestHashLegacySessionTokens(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startUserMgmtPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	svc := auth.New(pool, 4)
 
 	u, err := svc.CreateUser(ctx, "legacy@example.com", "Legacy", "long-enough-password", auth.RoleUser)

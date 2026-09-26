@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,7 +32,7 @@ func TestWorkGrouper_LocalizesTitle_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 	collID, archID := seedTitleFixture(t, ctx, pool)
 
@@ -70,7 +71,7 @@ func TestRecomputeWorkTitles_Behavior(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Тест", "тест автор")
 

@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -35,7 +36,7 @@ func TestEnsureAdaptations_PosterLifecycle(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Остин", "остин джейн")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "A1", "Разум и чувства", "разум и чувства", "ru", "", "", "")
@@ -127,7 +128,7 @@ func TestRecheckPosterHoles_NewFilmPosterAppearsLater(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	author := seedGroupAuthor(t, ctx, pool, "Остин", "остин джейн")
 	bookID := seedGroupBook(t, ctx, pool, collID, archID, author, "A2", "Чувство и чувствительность", "чувство и чувствительность", "ru", "", "", "")

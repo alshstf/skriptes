@@ -9,6 +9,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 	"github.com/skriptes/skriptes/backend/internal/inpx/inpxtest"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +23,7 @@ func TestImport_DuplicateAuthorInRecord(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	path, err := inpxtest.WriteINPX(t.TempDir(), "dup.inpx", []inpxtest.Book{
@@ -62,7 +63,7 @@ func TestCaches_RolledBackIDNotCached(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	c := importer.NewTestCaches()
 	a := inpx.Author{LastName: "Откатов", FirstName: "Иван"}
 

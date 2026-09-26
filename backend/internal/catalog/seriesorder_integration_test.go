@@ -8,6 +8,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/inpx/inpxtest"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +23,7 @@ func TestService_SeriesOrderCascade(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	// Во всех сериях ser_no = 0 (не задан) → каскад уходит на следующий уровень.

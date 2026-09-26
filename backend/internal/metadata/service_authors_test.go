@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,7 +20,7 @@ func TestClassifyServiceAuthors_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	mk := func(last, first, norm string) int64 {
 		var id int64
@@ -86,7 +87,7 @@ func TestClassifyServiceAuthors_ConcurrentNoDeadlock(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	seedServiceAuthors(t, ctx, pool, 30)
 
 	const workers = 4
