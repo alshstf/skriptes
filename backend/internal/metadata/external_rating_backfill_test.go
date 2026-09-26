@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -68,7 +69,7 @@ func TestExternalRatingBackfiller_Integration(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64
@@ -165,7 +166,7 @@ func TestExternalRatingBackfiller_GBCapNotDue(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID, bookID int64
@@ -225,7 +226,7 @@ func TestGBDailyCap_SeedFromDB(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	var collID, archID int64

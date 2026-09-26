@@ -10,12 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestLocalProviderFilter — чисто, без docker. Гарантирует ключевой
@@ -59,7 +55,7 @@ func TestPrewarmer_FillsCoverAndAnnotationFromFb2(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	// fb2 с annotation + coverpage внутри zip.
 	rawJPEG := []byte("JPEG-COVER-BYTES")
@@ -152,7 +148,7 @@ func TestPrewarmer_AutoResyncsYears(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 
 	fb2 := []byte(`<?xml version="1.0" encoding="UTF-8"?>
@@ -192,30 +188,4 @@ func TestPrewarmer_AutoResyncsYears(t *testing.T) {
 	var cover *string
 	require.NoError(t, pool.QueryRow(ctx, `SELECT cover_path FROM books WHERE id=$1`, bookID).Scan(&cover))
 	require.Nil(t, cover, "под-тумблер обложек выключен — обложку не извлекаем")
-}
-
-func startPGForPrewarm(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }

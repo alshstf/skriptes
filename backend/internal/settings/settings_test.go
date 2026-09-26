@@ -5,13 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/settings"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestSettings_CoverRoundTrip — пустая БД → дефолты; после SetCover →
@@ -22,7 +18,7 @@ func TestSettings_CoverRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты.
@@ -62,7 +58,7 @@ func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (воркер выключен — opt-in).
@@ -88,7 +84,7 @@ func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (воркер выключен — opt-in).
@@ -115,7 +111,7 @@ func TestSettings_ExternalRatingRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, фолбэк).
@@ -142,7 +138,7 @@ func TestSettings_RenownRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (воркер выключен — opt-in, оба источника, ядро).
@@ -170,7 +166,7 @@ func TestSettings_BioAdaptationRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (оба воркера выключены — opt-in).
@@ -196,7 +192,7 @@ func TestSettings_SrcLangEnrichmentRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолты (воркер выключен — opt-in, Wikidata вкл, фолбэк).
@@ -226,7 +222,7 @@ func TestSettings_BrandingRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолт.
@@ -257,7 +253,7 @@ func TestSettings_ContentRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Глобальный: нет оверрайда → дефолт (ничего не скрыто).
@@ -315,7 +311,7 @@ func TestSettings_AppearanceRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	var uid int64
@@ -350,7 +346,7 @@ func TestSettings_EnrichmentGatesRoundTrip(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startSettingsPG(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	store := settings.New(pool)
 
 	// Нет оверрайда → дефолт (ничего не выключено).
@@ -392,29 +388,6 @@ func TestEnrichmentGateResolver_NilSafe(t *testing.T) {
 	var r *settings.EnrichmentGateResolver
 	require.Equal(t, settings.DefaultEnrichmentGates(), r.Gates())
 	require.False(t, r.Gates().CoverDisabled)
-}
-
-func startSettingsPG(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }
 
 // TestCoverConfig_EffectiveLimits — чистый юнит (без docker): прогрев ON

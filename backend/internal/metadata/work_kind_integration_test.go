@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -41,7 +42,7 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	asprin := seedGroupAuthor(t, ctx, pool, "Асприн", "асприн роберт")
 
@@ -147,7 +148,7 @@ func TestClassifyWorkKinds_ConcurrentNoDeadlock(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	auth := seedGroupAuthor(t, ctx, pool, "Шекли", "шекли роберт")
 	// Достаточно строк, чтобы UPDATE'ы реально трогали работы (иначе лок не под

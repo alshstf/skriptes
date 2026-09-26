@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -77,7 +78,7 @@ func TestEnricher_HealDanglingAssets(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 	e, err := New(pool, filepath.Join(t.TempDir(), "covers"), nil, nil, nil, nil, nil, quiet)
 	require.NoError(t, err)

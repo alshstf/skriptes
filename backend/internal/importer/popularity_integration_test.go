@@ -9,6 +9,7 @@ import (
 
 	meili "github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,7 +18,7 @@ import (
 // хелперы вызывающего.
 func popularitySetup(t *testing.T, ctx context.Context) (imp *importer.Importer, mgr meili.ServiceManager, userID, bookID, workID int64, execSQL func(sql string, args ...any)) {
 	t.Helper()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr = startMeilisearch(t, ctx)
 	imp = importer.New(importer.Deps{Pool: pool, Meili: mgr})
 	abs, err := filepath.Abs(fixtureINPX)

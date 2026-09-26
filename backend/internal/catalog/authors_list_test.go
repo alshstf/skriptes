@@ -7,6 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -181,7 +182,7 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
 
@@ -234,7 +235,7 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
 
@@ -403,7 +404,7 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
 
@@ -473,7 +474,7 @@ func TestListAuthorsFiltered_LooseCompilations(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
 
@@ -524,7 +525,7 @@ func TestListAuthorsFiltered_RenownSortAndAlpha(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
 
