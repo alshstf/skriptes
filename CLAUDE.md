@@ -269,7 +269,20 @@ PostgreSQL/Meilisearch (дамп/миграция данных); миграци�
 merge → аннотированный тег `vX.Y.Z` (identity-флаги, см. ниже) → `release.yml`
 собирает multi-arch образы в ghcr. Moving-теги `latest` / `{major}.{minor}` /
 `{major}` ставятся ТОЛЬКО на stable (без `-` в теге); пре-релизы `-beta` их не
-трогают. Текущая версия — **1.11.0** — **«Сначала известные»: зрелый дефолт раздела /authors**,
+трогают. Текущая версия — **1.12.0** — **безопасность под прямую публикацию из DMZ**
+(Cloudflare Access больше не прикрывает вход), 2 PR (#240, #241), ревью
+`~/projects/plans/skriptes/public-exposure-security-review.md`. (#240) **вход**: IP клиента —
+`middleware.ClientIPFromXFF()` вместо устаревшего `RealIP` (GO-2026-5774/5775/5777 — подделка
+IP обходила лимит попыток); `sessions.token` = SHA-256 токена (`auth.hashSessionToken`), старые
+сессии переводит идемпотентный `HashLegacySessionTokens` на старте (НЕ миграция — номер 0039
+заняли открытые PR таймлайна, см. граблю №6); логи `login failed`/`login throttled`; пароль ≥12
+символов (считаются руны, не байты); проверка путей кэша с разделителем. (#241) **CSP фронта**
+(`frontend/nginx-security-headers.conf`, `script-src 'self'`) — скрипты внутри fb2/EPUB в ридере
+больше не выполняются с правами сайта; e2e гоняются под CSP; `Caddyfile.public` пускает
+`/api/admin/*` и `/opds` только из `SKRIPTES_LAN_CIDRS`. ⚠️ Публичный деплой: задать
+`SKRIPTES_LAN_CIDRS` в `.env` и взять новый `Caddyfile.public` (иначе админка/OPDS закрыты для
+всех; образы сами по себе ничего не ломают — Caddyfile лежит рядом с compose). До неё
+**1.11.0** — **«Сначала известные»: зрелый дефолт раздела /authors**,
 3 PR (#227–#229, план `~/projects/plans/skriptes/authors-renown-default-plan.md`; мотиватор — прод-топ-15
 алфавитного дефолта состоял из «#DerApotheker»/«$maille Ledy»/«+Digital Books»). (#227)
 **materialized `authors.renown`** (миграция **0038** + partial-индекс
