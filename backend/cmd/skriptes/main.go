@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"sort"
 	"strings"
 	"syscall"
 	"time"
@@ -101,7 +100,9 @@ func run() error {
 	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
 	logger.Info("meilisearch client configured", "url", cfg.MeiliURL)
 
-	// Стартовый scan: импортируем все *.inpx из каталога SKRIPTES_INPX_ROOT.
+	// Стартовый scan: импортируем все *.inpx из каталога SKRIPTES_INPX_ROOT
+	// (или только SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL
+	// подхватываем новый/изменённый INPX без рестарта.
 	// Идемпотентно: повторные старты на тех же файлах — no-op за счёт хэш-проверки.
 	// Не блокируем HTTP — крутим в горутине; если /readyz нужно учитывать импорт,
 	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
@@ -111,7 +112,7 @@ func run() error {
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
-	go runStartupImport(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, logger)
+	go runImportLoop(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
@@ -545,26 +546,72 @@ func run() error {
 // безопасно благодаря пер-записной транзакции).
 func ctx() context.Context { return context.Background() }
 
-func runStartupImport(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, inpxRoot string, logger *slog.Logger) {
-	files, err := findInpxFiles(inpxRoot)
+// runImportLoop — импорт INPX на старте и затем без рестарта: раз в interval
+// проверяет каталог (размер/mtime) и импортирует новые или изменённые файлы,
+// когда их запись закончилась (#247). Один цикл на процесс, поэтому два импорта
+// одновременно не идут. interval <= 0 — только стартовый импорт.
+func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
+	inpxRoot string, only []string, interval time.Duration, logger *slog.Logger) {
+	watch := importer.NewInpxWatch(inpxRoot, only)
+	files, missing, err := watch.Baseline()
 	if err != nil {
 		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
+	} else {
+		if len(missing) > 0 {
+			logger.Warn("SKRIPTES_INPX_FILES lists files that are not in inpx root", "root", inpxRoot, "missing", missing)
+		}
+		if len(files) == 0 {
+			logger.Info("startup import — no INPX files found", "root", inpxRoot)
+		} else {
+			logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
+			runImportPass(ctx, pool, imp, overrideCtl, files, logger)
+			logger.Info("startup import finished")
+		}
+	}
+	if interval <= 0 {
+		logger.Info("inpx watch disabled — new INPX is imported on restart only")
 		return
 	}
-	if len(files) == 0 {
-		logger.Info("startup import — no INPX files found", "root", inpxRoot)
-		return
-	}
-	logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
-	for _, f := range files {
-		stats, err := imp.Run(ctx, f)
+	logger.Info("inpx watch started", "root", inpxRoot, "interval", interval)
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+		}
+		changed, err := watch.Poll()
 		if err != nil {
-			logger.Error("startup import failed for file", "file", f, "err", err)
+			logger.Warn("inpx watch: scan failed", "root", inpxRoot, "err", err)
 			continue
 		}
-		_ = stats // важная статистика уже залогирована изнутри Run
+		if len(changed) == 0 {
+			continue
+		}
+		logger.Info("inpx changed — importing without restart", "files", changed)
+		runImportPass(ctx, pool, imp, overrideCtl, changed, logger)
+		logger.Info("inpx import finished")
 	}
-	logger.Info("startup import finished")
+}
+
+// runImportPass импортирует файлы по очереди и делает общие шаги после импорта.
+func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, files []string, logger *slog.Logger) {
+	for _, f := range files {
+		_, err := imp.Run(ctx, f) // статистика логируется изнутри Run
+		var overlap *importer.OverlapError
+		switch {
+		case errors.As(err, &overlap):
+			// Переименованный раздачей INPX или второй INPX той же библиотеки:
+			// импорт продублировал бы каталог (#250).
+			logger.Warn("INPX skipped — its books are already imported from another INPX file; "+
+				"keep one INPX of a library under a stable name or list it in SKRIPTES_INPX_FILES",
+				"file", overlap.File, "collection", overlap.Collection, "collection_file", overlap.CollectionFile,
+				"matched", overlap.Matched, "sampled", overlap.Sampled)
+		case err != nil:
+			logger.Error("import failed for file", "file", f, "err", err)
+		}
+	}
 	// Ре-применить ручные оверрайды полей, которые импорт ПЕРЕЗАПИСЫВАЕТ (lang) —
 	// иначе ре-импорт коллекции сбросил бы правки (грабля №19).
 	if n, err := overrideCtl.ReapplyAfterImport(ctx); err != nil {
@@ -861,32 +908,6 @@ func runOnceSrcLangSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.I
 		logger.Warn("src_lang sync: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
 	logger.Info("one-time src_lang works resync done", "count", n)
-}
-
-// findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.
-func findInpxFiles(root string) ([]string, error) {
-	if root == "" {
-		return nil, nil
-	}
-	entries, err := os.ReadDir(root)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	var out []string
-	for _, e := range entries {
-		if e.IsDir() {
-			continue
-		}
-		name := e.Name()
-		if strings.HasSuffix(strings.ToLower(name), ".inpx") {
-			out = append(out, filepath.Join(root, name))
-		}
-	}
-	sort.Strings(out)
-	return out, nil
 }
 
 func newLogger(level, format string) *slog.Logger {
