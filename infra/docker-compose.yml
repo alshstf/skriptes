@@ -60,6 +60,10 @@ services:
       SKRIPTES_TMDB_API_KEY: ${SKRIPTES_TMDB_API_KEY:-}
       SKRIPTES_BOOKS_ROOT: /data/books
       SKRIPTES_INPX_ROOT: /data/inpx
+      # Какие *.inpx импортировать (имена через запятую); пусто — все из INPX_HOST_PATH.
+      SKRIPTES_INPX_FILES: ${SKRIPTES_INPX_FILES:-}
+      # Как часто проверять INPX и импортировать новый без рестарта; 0 — только при старте.
+      SKRIPTES_INPX_WATCH_INTERVAL: ${SKRIPTES_INPX_WATCH_INTERVAL:-10m}
       SKRIPTES_CACHE_ROOT: /cache
       SKRIPTES_COOKIE_SECURE: ${SKRIPTES_COOKIE_SECURE:-true}
       SKRIPTES_COOKIE_DOMAIN: ${SKRIPTES_COOKIE_DOMAIN:-}

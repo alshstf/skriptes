@@ -13,8 +13,8 @@
 //
 // Что не сделано (намеренно, для PR 5):
 //   - Нет background queue (river) — импорт запускается синхронно из main.
-//   - Нет API/UI триггеров — только startup-time scan.
-//   - Нет fsnotify-watcher.
+//   - Нет API/UI триггеров — импорт при старте и по изменению INPX в каталоге
+//     (InpxWatch: опрос размера/mtime раз в SKRIPTES_INPX_WATCH_INTERVAL, не fsnotify).
 //   - Нет SSE-прогресса.
 package importer
 
@@ -88,6 +88,19 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		return stats, fmt.Errorf("open inpx: %w", err)
 	}
 	defer func() { _ = ix.Close() }()
+
+	// Новый INPX с книгами, которые уже есть в другой коллекции (переименованный
+	// раздачей или второй INPX той же библиотеки), не импортируем: он продублировал
+	// бы каталог. Коллекцию не заводим — см. OverlapError.
+	known, err := collectionKnown(ctx, im.deps.Pool, filepath.Base(inpxPath))
+	if err != nil {
+		return stats, err
+	}
+	if !known {
+		if err := checkOverlap(ctx, im.deps.Pool, ix, filepath.Base(inpxPath)); err != nil {
+			return stats, err
+		}
+	}
 
 	collectionName := ix.Collection.Name
 	if collectionName == "" {
