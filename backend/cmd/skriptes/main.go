@@ -144,6 +144,14 @@ func run() error {
 	}()
 
 	authSvc := auth.New(pool, 0)
+	// Сессии до 1.12.0 хранили сырой токен — переводим в SHA-256 (идемпотентно, на
+	// каждом старте; см. HashLegacySessionTokens). Ошибка не фатальна: такие сессии
+	// просто не пройдут проверку, пользователь войдёт заново.
+	if n, err := authSvc.HashLegacySessionTokens(ctx()); err != nil {
+		logger.Error("hash legacy session tokens", "err", err)
+	} else if n > 0 {
+		logger.Info("legacy session tokens hashed", "count", n)
+	}
 	catalogSvc := catalog.New(pool)
 	historySvc := history.New(pool)
 	// Популярность works-индекса = вовлечённость инстанса (Σ изданий: views + 3×reads,

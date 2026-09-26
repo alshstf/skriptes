@@ -133,7 +133,7 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0039_hash_session_tokens` (`sessions.token` = hex SHA-256 токена из cookie, а не сам токен — `auth.hashSessionToken`; миграция хэширует живые сессии через `encode(sha256(convert_to(token,'UTF8')),'hex')`, никого не разлогинивая; down = удалить все сессии); до неё `0038_author_renown` (materialized `authors.renown` + partial-индекс `authors_renown_idx`, см. релиз 1.11.0); до неё `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
+Текущая верхняя — `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
 `tmdb_tv_id`/`poster_checked_at` — TMDB-id из Wikidata P4947/P4983 персистятся
 при записи адаптации + поштучный TTL перепроверки постер-дыр; частичный индекс
 `idx_book_adaptations_poster_hole`; авто-фаза `RecheckPosterHoles` воркера
@@ -182,6 +182,13 @@ override > fantlab > heuristic — **fantlab-типизация реализов
 `0019_book_work_lookups` (граблю №15). Backend хранит applied version в
 `schema_migrations` (golang-migrate), править уже-применённые .sql имеет смысл только
 до push'а.
+
+⚠️ **Номер миграции — на момент МЕРЖА, не создания ветки.** Параллельные ветки (разные
+сессии) легко берут один и тот же номер (так 2026-09-26 столкнулись `0039_author_events`
+и хэш сессий). Кто мержится вторым — перенумеровывается ДО мержа: golang-migrate на проде,
+уже стоящем на N, миграцию с меньшим номером молча пропустит. Разовое преобразование
+данных без смены схемы — не миграция, а идемпотентный шаг на старте backend (пример —
+`auth.HashLegacySessionTokens`).
 
 ### 7. PR'ы идут через CI + watcher, merge только когда зелёное
 
@@ -1231,7 +1238,7 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 | Docker compose (dev / release) | `infra/docker-compose.yml` / `infra/docker-compose.release.yml` |
 | Релиз (CI) | `.github/workflows/release.yml` (триггер — тег `v*.*.*`) |
 | TLS + reverse-proxy | `infra/Caddyfile` |
-| Публичный деплой (DMZ, вход прямо из интернета) | `infra/docker-compose.harden.yml` (хардненинг + монтирует `infra/Caddyfile.public` вместо базового) + `infra/.env.public.example`. `Caddyfile.public`: TLS Let's Encrypt, вырезает присланные клиентом `CF-Connecting-IP`/`True-Client-IP`/`X-Real-IP` (защита в глубину от подделки IP → обхода лимита входа; backend их и так не читает, см. ниже), `/opds` → 404 (OPDS наружу не публикуем). Лимит неудачных входов — `api/login_throttle.go::authThrottles`: ОДИН экземпляр на роутер, общий для `/api/auth/login` и OPDS Basic-auth (раньше OPDS был обходом лимита); `CF-Connecting-IP` учитывается только при `SKRIPTES_TRUST_CF_CONNECTING_IP=true`. **IP клиента** — `middleware.ClientIPFromXFF()` (правое значение XFF от нашего прокси) → `api/auth.go::clientIP` (`GetClientIPAddr`, иначе RemoteAddr); `middleware.RealIP` НЕ использовать (GO-2026-5774/5775/5777: верит True-Client-IP/X-Real-IP/левому XFF). Неудачи/429 логируются `slog.Warn` `login failed`/`login throttled` (via form|opds, ip, email). Сессии хранятся хэшем (миграция 0039), минимум пароля 12 (`auth.MinPasswordLen` = фронт `lib/auth.ts::MIN_PASSWORD_LEN`). Ревью безопасности публикации — `~/projects/plans/skriptes/public-exposure-security-review.md`. Cloudflare Tunnel отвергнут (с домашнего Дом.ру не держится) — runbook `~/projects/plans/skriptes/dmz-port-forward-runbook.md` |
+| Публичный деплой (DMZ, вход прямо из интернета) | `infra/docker-compose.harden.yml` (хардненинг + монтирует `infra/Caddyfile.public` вместо базового) + `infra/.env.public.example`. `Caddyfile.public`: TLS Let's Encrypt, вырезает присланные клиентом `CF-Connecting-IP`/`True-Client-IP`/`X-Real-IP` (защита в глубину от подделки IP → обхода лимита входа; backend их и так не читает, см. ниже), `/opds` → 404 (OPDS наружу не публикуем). Лимит неудачных входов — `api/login_throttle.go::authThrottles`: ОДИН экземпляр на роутер, общий для `/api/auth/login` и OPDS Basic-auth (раньше OPDS был обходом лимита); `CF-Connecting-IP` учитывается только при `SKRIPTES_TRUST_CF_CONNECTING_IP=true`. **IP клиента** — `middleware.ClientIPFromXFF()` (правое значение XFF от нашего прокси) → `api/auth.go::clientIP` (`GetClientIPAddr`, иначе RemoteAddr); `middleware.RealIP` НЕ использовать (GO-2026-5774/5775/5777: верит True-Client-IP/X-Real-IP/левому XFF). Неудачи/429 логируются `slog.Warn` `login failed`/`login throttled` (via form|opds, ip, email). Сессии хранятся хэшем (`auth.hashSessionToken`; старые сырые токены переводит идемпотентный `HashLegacySessionTokens` на старте — не миграция), минимум пароля 12 (`auth.MinPasswordLen` = фронт `lib/auth.ts::MIN_PASSWORD_LEN`). Ревью безопасности публикации — `~/projects/plans/skriptes/public-exposure-security-review.md`. Cloudflare Tunnel отвергнут (с домашнего Дом.ру не держится) — runbook `~/projects/plans/skriptes/dmz-port-forward-runbook.md` |
 
 ## Что лежит вне git (но тоже релевантно)
 

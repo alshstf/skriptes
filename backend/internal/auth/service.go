@@ -229,6 +229,24 @@ func (s *Service) Logout(ctx context.Context, token string) error {
 	return err
 }
 
+// HashLegacySessionTokens переводит сессии, записанные до хэширования (сырой токен
+// в sessions.token), в SHA-256 — тем же выражением, что hashSessionToken, поэтому
+// пользователи не разлогиниваются. Зовётся на каждом старте и идемпотентен: хэш —
+// 64 hex-символа, сырой токен — 43 символа base64url, второй раз строка не попадёт.
+//
+// Не миграция нарочно: схема не меняется, а номер миграции делили бы параллельные
+// ветки — у той, что смержится второй, golang-migrate на проде пропустил бы
+// миграцию с меньшим номером.
+func (s *Service) HashLegacySessionTokens(ctx context.Context) (int64, error) {
+	tag, err := s.pool.Exec(ctx, `
+		UPDATE sessions SET token = encode(sha256(convert_to(token, 'UTF8')), 'hex')
+		WHERE token !~ '^[0-9a-f]{64}$'`)
+	if err != nil {
+		return 0, fmt.Errorf("hash legacy session tokens: %w", err)
+	}
+	return tag.RowsAffected(), nil
+}
+
 // CleanupExpiredSessions удаляет все сессии где expires_at <= now().
 // Можно вызывать по cron. Не критично — middleware и так фильтрует.
 func (s *Service) CleanupExpiredSessions(ctx context.Context) (int64, error) {
