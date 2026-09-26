@@ -133,7 +133,7 @@ func TestExternalRatingBackfiller_Integration(t *testing.T) {
 		`SELECT outcome FROM book_external_rating_lookups WHERE book_id=$1 AND source='googlebooks'`, nfBook).Scan(&outcome))
 	require.Equal(t, "not_found", outcome)
 	callsBefore := nfProv.calls
-	bf3.drain(ctx)
+	require.Equal(t, 0, bf3.drain(ctx), "свежий not_found не выбирается кандидатом (срок проверяет SQL)")
 	require.Equal(t, callsBefore, nfProv.calls, "свежий not_found не перепрашивается (TTL)")
 
 	// фолбэк НЕ берёт книгу с LIBRATE (rating не NULL).
@@ -154,6 +154,49 @@ func TestExternalRatingBackfiller_Integration(t *testing.T) {
 	require.NotNil(t, avg, "вся коллекция: web-рейтинг проставлен даже при LIBRATE")
 	require.InDelta(t, 3.0, *avg, 0.001)
 	require.Equal(t, "googlebooks", *src)
+}
+
+// TestExternalRatingBackfiller_GBCapNotDue — при выбранной дневной квоте GB книга,
+// которую пора спросить только у GB, не выбирается кандидатом (иначе проход
+// перечитывал бы её до смены суток без единого запроса); OL при этом работает.
+func TestExternalRatingBackfiller_GBCapNotDue(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := startPGForPrewarm(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID, bookID int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
+		VALUES ($1,$2,'L1','f','fb2','t','t') RETURNING id`, collID, archID).Scan(&bookID))
+
+	capped := func(b *ExternalRatingBackfiller) *ExternalRatingBackfiller {
+		b.gbDay = time.Now().UTC().Format("2006-01-02") // квота на сегодня уже выбрана
+		b.gbUsed = 1
+		return b
+	}
+	cfg := ExternalRatingBackfillConfig{GoogleBooks: true, GoogleBooksDailyCap: 1, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+
+	gb := &fakeRatingProvider{name: googleBooksSource, res: RatingResult{Average: 4, Count: 10}}
+	onlyGB := capped(NewExternalRatingBackfiller(pool, gb, nil, cfg, quiet))
+	require.Equal(t, 0, onlyGB.drain(ctx), "спросить можно только GB, а квота выбрана → не кандидат")
+	require.Zero(t, gb.calls)
+
+	ol := &fakeRatingProvider{name: "openlibrary"} // not_found
+	cfg.OpenLibrary = true
+	withOL := capped(NewExternalRatingBackfiller(pool, gb, ol, cfg, quiet))
+	require.Equal(t, 1, withOL.drain(ctx), "OL спросить можно → кандидат")
+	require.Zero(t, gb.calls, "GB за квотой не вызывается")
+	require.Equal(t, 1, ol.calls)
+	require.Equal(t, int64(1), withOL.lookedUp.Load())
+
+	require.Equal(t, 0, withOL.drain(ctx), "OL свежий not_found, GB за квотой → больше не кандидат")
+	require.Equal(t, 1, ol.calls)
 }
 
 // TestGBDailyCap — чистая логика дневного капа (без БД, gbDay помечен сегодня,
