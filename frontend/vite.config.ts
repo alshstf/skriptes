@@ -3,6 +3,18 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
+import fs from 'node:fs';
+
+// CSP — единственный источник правды nginx-security-headers.conf (его include'ит
+// nginx прод-образа). Здесь — тот же заголовок для `vite preview`, на котором
+// гоняются Playwright e2e: нарушение CSP в приложении или ридере ловится тестами.
+// В dev-сервер НЕ ставим: Vite dev вставляет inline-скрипт React Refresh.
+function readCSP(): string {
+  const conf = fs.readFileSync(path.resolve(__dirname, 'nginx-security-headers.conf'), 'utf8');
+  const m = conf.match(/^add_header Content-Security-Policy "([^"]+)" always;$/m);
+  if (!m) throw new Error('nginx-security-headers.conf: не найден add_header Content-Security-Policy');
+  return m[1];
+}
 
 export default defineConfig({
   plugins: [
@@ -153,6 +165,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  preview: {
+    headers: { 'Content-Security-Policy': readCSP() },
   },
   server: {
     port: 5173,

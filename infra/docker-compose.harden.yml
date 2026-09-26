@@ -72,9 +72,13 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+    # Доверенные сети для админ-API и OPDS (см. Caddyfile.public). Пусто/не задано →
+    # закрыто для всех; дом — напр. «192.168.0.0/24 10.50.0.1/32».
+    environment:
+      SKRIPTES_LAN_CIDRS: ${SKRIPTES_LAN_CIDRS:-127.0.0.1/32}
     # Публичный Caddyfile (TLS Let's Encrypt, вырезание поддельных IP-заголовков,
-    # /opds → 404) вместо базового: тот же путь в контейнере — compose заменяет
-    # монтирование базы. /data (сертификаты), /config — named volumes (writable).
+    # админ-API и OPDS только из SKRIPTES_LAN_CIDRS) вместо базового: тот же путь
+    # в контейнере — compose заменяет монтирование базы. /data (сертификаты), /config — named volumes (writable).
     volumes:
       - ./Caddyfile.public:/etc/caddy/Caddyfile:ro
     deploy:

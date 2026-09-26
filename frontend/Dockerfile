@@ -22,6 +22,8 @@ RUN npm run build
 # публикации (DMZ); homelab'у это безвредно лучше. См. docker-compose.harden.yml.
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Не в conf.d: всё оттуда include'ится на уровне http, а это сниппет для location.
+COPY nginx-security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 8080
 # 127.0.0.1, а не localhost: в alpine localhost резолвится в IPv6 ::1, где

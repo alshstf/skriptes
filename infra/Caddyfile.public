@@ -26,13 +26,32 @@
 		-Server
 	}
 
-	# OPDS наружу НЕ публикуем: HTTP Basic, e-reader'ы — только из домашней сети.
-	@opds path /opds /opds/*
-	handle @opds {
+	# Админ-API и OPDS — только из доверенных сетей (дом): SKRIPTES_LAN_CIDRS, CIDR
+	# через пробел. Не задана → 127.0.0.1/32, то есть ни для кого: закрыто по
+	# умолчанию. Открыть всем — «0.0.0.0/0 ::/0».
+	# Админка: снаружи 403 — у админа нет 2FA, и пароль не должен быть единственным
+	# барьером. SPA-страницы /admin/* сами данных не отдают, достаточно закрыть API.
+	# OPDS: снаружи 404 — HTTP Basic, e-reader'ы ходят только из дома.
+	# Путь в матчере Caddy сравнивает без учёта регистра, после декодирования %XX и
+	# склейки «//» — обходы вроде /API/admin или /api//admin сюда тоже попадают.
+	@admin_outside {
+		path /api/admin /api/admin/*
+		not remote_ip {$SKRIPTES_LAN_CIDRS:127.0.0.1/32}
+	}
+	handle @admin_outside {
+		header Content-Type application/json
+		respond `{"error":"администрирование доступно только из домашней сети"}` 403
+	}
+
+	@opds_outside {
+		path /opds /opds/*
+		not remote_ip {$SKRIPTES_LAN_CIDRS:127.0.0.1/32}
+	}
+	handle @opds_outside {
 		respond 404
 	}
 
-	@api path /api/* /healthz /readyz
+	@api path /api/* /opds /opds/* /healthz /readyz
 	handle @api {
 		reverse_proxy backend:8080
 	}
