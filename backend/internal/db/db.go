@@ -63,13 +63,9 @@ func pingWithRetry(ctx context.Context, pool *pgxpool.Pool, attempts int, backof
 
 // Migrate применяет все pending up-миграции. На уже накатанной БД — no-op.
 func Migrate(dsn string) error {
-	src, err := iofs.New(migrationsFS, "migrations")
+	m, err := newMigrate(dsn)
 	if err != nil {
-		return fmt.Errorf("iofs source: %w", err)
-	}
-	m, err := migrate.NewWithSourceInstance("iofs", src, toMigrateURL(dsn))
-	if err != nil {
-		return fmt.Errorf("migrate init: %w", err)
+		return err
 	}
 	defer func() {
 		_, _ = m.Close()
@@ -78,6 +74,18 @@ func Migrate(dsn string) error {
 		return fmt.Errorf("migrate up: %w", err)
 	}
 	return nil
+}
+
+func newMigrate(dsn string) (*migrate.Migrate, error) {
+	src, err := iofs.New(migrationsFS, "migrations")
+	if err != nil {
+		return nil, fmt.Errorf("iofs source: %w", err)
+	}
+	m, err := migrate.NewWithSourceInstance("iofs", src, toMigrateURL(dsn))
+	if err != nil {
+		return nil, fmt.Errorf("migrate init: %w", err)
+	}
+	return m, nil
 }
 
 // toMigrateURL переписывает 'postgres://...' / 'postgresql://...' в 'pgx5://...',
