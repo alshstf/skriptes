@@ -1223,7 +1223,7 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 | Я ищу… | Файл |
 |---|---|
 | Парсер INPX | `backend/internal/inpx/parser.go` |
-| INPX → upsert в PG + Meili | `backend/internal/importer/` |
+| INPX → upsert в PG + Meili | `backend/internal/importer/` — каждая запись в своей транзакции; кэши id авторов/серий/жанров/архивов (`cache.go`) ДВУХУРОВНЕВЫЕ: новый id лежит в `staged` и попадает в общий кэш только после Commit записи (иначе id из отката = FK-ошибки у всех следующих книг того же автора; прод 2026-09-26 — 22 книги); дубль автора в записи схлопывается |
 | Список книг с фильтрами/фасетами/сортировкой | `backend/internal/books/` + `backend/internal/api/books.go` |
 | Поисковая логика + re-ranking | `backend/internal/books/service.go` — `scoredItem`/`sortByFinalScore` (final = Meili `_rankingScore` + `applyPersonaBoost` + `popularityBoost`); буст известности: SuggestWorks (hero + Cmd+K) — всем и всегда, ListWorks — в rerank-окне (offset 0, есть q); browse/глубокие страницы — чистый Meili-порядок |
 | Enrichment (cover, annotation, bio, adaptations) | `backend/internal/metadata/` |

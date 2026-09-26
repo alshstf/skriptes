@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -679,7 +680,13 @@ func (im *Importer) processRecord(
 	if err != nil {
 		return err
 	}
-	defer func() { _ = tx.Rollback(ctx) }()
+	committed := false
+	defer func() {
+		_ = tx.Rollback(ctx)
+		if !committed {
+			caches.dropStaged() // id из отката в общий кэш не пускаем (см. cacheSet)
+		}
+	}()
 
 	q := txQuerier{tx}
 
@@ -696,6 +703,11 @@ func (im *Importer) processRecord(
 		aid, err := caches.ensureAuthor(ctx, q, a)
 		if err != nil {
 			return err
+		}
+		// Один автор дважды в записи (реальный INPX: «Неканонический классик», lib_id
+		// 518072) — второй INSERT в book_authors упал бы на PK и откатил всю книгу.
+		if slices.Contains(authorIDs, aid) {
+			continue
 		}
 		authorIDs = append(authorIDs, aid)
 	}
@@ -787,6 +799,8 @@ func (im *Importer) processRecord(
 	if err := tx.Commit(ctx); err != nil {
 		return err
 	}
+	committed = true
+	caches.commitStaged()
 
 	stats.Books++
 	if res.Created {
