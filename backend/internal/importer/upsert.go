@@ -28,19 +28,19 @@ func hashFile(path string) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-// upsertCollection возвращает id коллекции и предыдущий хэш INPX (если был).
-// inpxFilename — basename файла, name — имя из collection.info.
-func upsertCollection(ctx context.Context, pool *pgxpool.Pool, inpxFilename, name string) (id int64, prevHash string, err error) {
-	row := pool.QueryRow(ctx, `
+// upsertCollection возвращает id коллекции INPX-файла (создаёт при первом
+// импорте). inpxFilename — basename файла, name — имя из collection.info.
+func upsertCollection(ctx context.Context, pool *pgxpool.Pool, inpxFilename, name string) (int64, error) {
+	var id int64
+	if err := pool.QueryRow(ctx, `
 		INSERT INTO collections (name, inpx_filename)
 		VALUES ($1, $2)
 		ON CONFLICT (inpx_filename) DO UPDATE SET name = EXCLUDED.name
-		RETURNING id, COALESCE(last_inpx_hash, '')
-	`, name, inpxFilename)
-	if err := row.Scan(&id, &prevHash); err != nil {
-		return 0, "", fmt.Errorf("upsert collection: %w", err)
+		RETURNING id
+	`, name, inpxFilename).Scan(&id); err != nil {
+		return 0, fmt.Errorf("upsert collection: %w", err)
 	}
-	return id, prevHash, nil
+	return id, nil
 }
 
 // markCollectionImported проставляет хэш, время и версию INPX (version.info)
@@ -53,13 +53,15 @@ func markCollectionImported(ctx context.Context, pool *pgxpool.Pool, collectionI
 	return err
 }
 
-// upsertArchive возвращает id записи archives для (collection_id, filename).
+// upsertArchive возвращает id записи archives по имени файла: архив один на все
+// коллекции (все лежат в BOOKS_ROOT). collection_id — коллекция, которая
+// описала архив последней.
 func upsertArchive(ctx context.Context, q querier, collectionID int64, filename string) (int64, error) {
 	var id int64
 	err := q.QueryRow(ctx, `
 		INSERT INTO archives (collection_id, filename)
 		VALUES ($1, $2)
-		ON CONFLICT (collection_id, filename) DO UPDATE SET filename = EXCLUDED.filename
+		ON CONFLICT (filename) DO UPDATE SET collection_id = EXCLUDED.collection_id
 		RETURNING id
 	`, collectionID, filename).Scan(&id)
 	if err != nil {
@@ -173,7 +175,8 @@ type upsertBookResult struct {
 }
 
 // upsertBook делает INSERT ON CONFLICT DO UPDATE; идемпотентно по
-// (collection_id, archive_id, lib_id).
+// (archive_id, lib_id) — одна строка на файл книги, из какого бы INPX она ни
+// пришла (миграция 0039). collection_id — INPX, который описал книгу последним.
 func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, error) {
 	var id int64
 	var inserted bool
@@ -185,7 +188,8 @@ func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, e
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
 		)
-		ON CONFLICT (collection_id, archive_id, lib_id) DO UPDATE SET
+		ON CONFLICT (archive_id, lib_id) DO UPDATE SET
+			collection_id    = EXCLUDED.collection_id,
 			file_name        = EXCLUDED.file_name,
 			ext              = EXCLUDED.ext,
 			size_bytes       = EXCLUDED.size_bytes,

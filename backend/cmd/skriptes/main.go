@@ -108,7 +108,7 @@ func run() error {
 	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
 	// Один импортёр на процесс: его использует и стартовый скан, и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
-	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
+	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
@@ -136,6 +136,13 @@ func run() error {
 		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
 		runOnceServiceAuthorClassify(ctx(), pool, logger)
 		runOnceWorksIndexSync(ctx(), pool, imp, logger)
+		// Миграция 0039 могла схлопнуть дубли книг — убрать их из поиска (индексы
+		// к этому моменту сконфигурированы). Без дублей — no-op.
+		if n, err := imp.PurgeDedupedDocs(ctx()); err != nil {
+			logger.Warn("search cleanup after book dedup failed — will retry next start", "err", err)
+		} else if n > 0 {
+			logger.Info("search cleanup after book dedup done", "books_removed", n)
+		}
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
 		// Известность авторов — ПОСЛЕ ресинка works-индекса: оба гоняют один и
@@ -609,11 +616,11 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		case err == nil:
 			watch.MarkDone(f)
 		case errors.As(err, &overlap):
-			// Переименованный раздачей INPX или второй INPX той же библиотеки:
-			// импорт продублировал бы каталог (#250). Не повторяем, пока файл
-			// не изменится.
-			logger.Warn("INPX skipped — its books are already imported from another INPX file; "+
-				"keep one INPX of a library under a stable name or list it in SKRIPTES_INPX_FILES",
+			// Рядом лежит второй INPX той же библиотеки (#250): каждый выпуск
+			// импортировался бы дважды, метаданные перезаписывали бы друг друга.
+			// Не повторяем, пока файл не изменится.
+			logger.Warn("INPX skipped — another INPX in use describes the same books; "+
+				"keep one INPX of a library or list the one to use in SKRIPTES_INPX_FILES",
 				"file", overlap.File, "collection", overlap.Collection, "collection_file", overlap.CollectionFile,
 				"matched", overlap.Matched, "sampled", overlap.Sampled)
 			watch.MarkDone(f)

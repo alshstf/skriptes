@@ -26,10 +26,10 @@ type cacheSet struct {
 }
 
 type cacheMaps struct {
-	author  map[string]int64     // normalized name → id
-	series  map[seriesKey]int64  // (norm title, author id) → id
-	genre   map[string]int64     // fb2 code → id
-	archive map[archiveKey]int64 // (collection_id, filename) → id
+	author  map[string]int64    // normalized name → id
+	series  map[seriesKey]int64 // (norm title, author id) → id
+	genre   map[string]int64    // fb2 code → id
+	archive map[string]int64    // имя файла архива → id
 }
 
 type seriesKey struct {
@@ -37,17 +37,12 @@ type seriesKey struct {
 	authorID int64 // 0 если без автора
 }
 
-type archiveKey struct {
-	collectionID int64
-	filename     string
-}
-
 func newCacheMaps(author, series, genre, archive int) cacheMaps {
 	return cacheMaps{
 		author:  make(map[string]int64, author),
 		series:  make(map[seriesKey]int64, series),
 		genre:   make(map[string]int64, genre),
-		archive: make(map[archiveKey]int64, archive),
+		archive: make(map[string]int64, archive),
 	}
 }
 
@@ -131,17 +126,16 @@ func (c *cacheSet) ensureGenre(ctx context.Context, q querier, code string) (int
 }
 
 func (c *cacheSet) ensureArchive(ctx context.Context, q querier, collectionID int64, filename string) (int64, error) {
-	key := archiveKey{collectionID: collectionID, filename: filename}
-	if id, ok := c.archive[key]; ok {
+	if id, ok := c.archive[filename]; ok {
 		return id, nil
 	}
-	if id, ok := c.staged.archive[key]; ok {
+	if id, ok := c.staged.archive[filename]; ok {
 		return id, nil
 	}
 	id, err := upsertArchive(ctx, q, collectionID, filename)
 	if err != nil {
 		return 0, err
 	}
-	c.staged.archive[key] = id
+	c.staged.archive[filename] = id
 	return id, nil
 }
