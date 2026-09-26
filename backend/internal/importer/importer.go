@@ -8,8 +8,9 @@
 //   - In-memory кэши (authorCache, seriesCache, genreCache, archiveCache)
 //     избавляют от повторных round-trip-ов в БД для часто встречающихся
 //     значений в пределах одного импорта.
-//   - Идемпотентность: UNIQUE (collection_id, archive_id, lib_id) на books
-//     гарантирует, что повторный импорт того же INPX даёт ту же таблицу.
+//   - Идемпотентность: UNIQUE (archive_id, lib_id) на books — одна строка на
+//     файл книги, из какого бы INPX она ни пришла; повторный импорт того же
+//     INPX (или переименованного) даёт ту же таблицу.
 //
 // Что не сделано (намеренно, для PR 5):
 //   - Нет background queue (river) — импорт запускается синхронно из main.
@@ -52,6 +53,10 @@ type Deps struct {
 	Pool   *pgxpool.Pool
 	Meili  meilisearch.ServiceManager
 	Logger *slog.Logger
+	// InpxFiles — SKRIPTES_INPX_FILES: какие INPX выбраны для импорта (пусто —
+	// все в каталоге). Нужен, чтобы отличить второй INPX той же библиотеки
+	// рядом (пропуск) от переименованного (продолжение), см. OverlapError.
+	InpxFiles []string
 }
 
 // Importer — оркестратор импорта одного INPX.
@@ -89,33 +94,41 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	}
 	defer func() { _ = ix.Close() }()
 
-	// Новый INPX с книгами, которые уже есть в другой коллекции (переименованный
-	// раздачей или второй INPX той же библиотеки), не импортируем: он продублировал
-	// бы каталог. Коллекцию не заводим — см. OverlapError.
-	known, err := collectionKnown(ctx, im.deps.Pool, filepath.Base(inpxPath))
+	file := filepath.Base(inpxPath)
+	prevHash, err := collectionHash(ctx, im.deps.Pool, file)
 	if err != nil {
 		return stats, err
 	}
-	if !known {
-		if err := checkOverlap(ctx, im.deps.Pool, ix, filepath.Base(inpxPath)); err != nil {
-			return stats, err
-		}
-	}
-
-	collectionName := ix.Collection.Name
-	if collectionName == "" {
-		collectionName = filepath.Base(inpxPath)
-	}
-	collectionID, prevHash, err := upsertCollection(ctx, im.deps.Pool, filepath.Base(inpxPath), collectionName)
-	if err != nil {
-		return stats, err
-	}
-
 	if prevHash == hash {
 		stats.Skipped = true
 		stats.Duration = time.Since(start)
 		logger.Info("import skipped — INPX unchanged", "hash", hash)
 		return stats, nil
+	}
+
+	// Книги этого INPX уже числятся за другим INPX? Тот ещё в каталоге — второй
+	// INPX той же библиотеки, пропускаем; ушёл — раздача переименовала файл,
+	// продолжаем те же книги (см. OverlapError).
+	owner, err := overlapOwner(ctx, im.deps.Pool, ix, file)
+	if err != nil {
+		return stats, err
+	}
+	if owner != nil {
+		if inpxInUse(filepath.Dir(inpxPath), owner.CollectionFile, im.deps.InpxFiles) {
+			return stats, owner
+		}
+		logger.Info("INPX continues books of another INPX that is no longer in use (renamed by the distribution?)",
+			"previous_file", owner.CollectionFile, "collection", owner.Collection,
+			"matched", owner.Matched, "sampled", owner.Sampled)
+	}
+
+	collectionName := ix.Collection.Name
+	if collectionName == "" {
+		collectionName = file
+	}
+	collectionID, err := upsertCollection(ctx, im.deps.Pool, file, collectionName)
+	if err != nil {
+		return stats, err
 	}
 
 	if err := configureIndex(ctx, im.deps.Meili); err != nil {
@@ -661,6 +674,11 @@ func (im *Importer) UpsertWorksToIndex(ctx context.Context, ids []int64) error {
 // DeleteWorksFromIndex удаляет документы работ из индекса works (после GC работ
 // при группировке / split / merge). Дожидается задачи.
 func (im *Importer) DeleteWorksFromIndex(ctx context.Context, ids []int64) error {
+	return im.deleteDocs(ctx, worksIndex, ids)
+}
+
+// deleteDocs удаляет документы из индекса по id и дожидается задачи.
+func (im *Importer) deleteDocs(ctx context.Context, index string, ids []int64) error {
 	if len(ids) == 0 {
 		return nil
 	}
@@ -668,17 +686,16 @@ func (im *Importer) DeleteWorksFromIndex(ctx context.Context, ids []int64) error
 	for i, id := range ids {
 		strIDs[i] = strconv.FormatInt(id, 10)
 	}
-	idx := im.deps.Meili.Index(worksIndex)
-	task, err := idx.DeleteDocumentsWithContext(ctx, strIDs, nil)
+	task, err := im.deps.Meili.Index(index).DeleteDocumentsWithContext(ctx, strIDs, nil)
 	if err != nil {
-		return fmt.Errorf("meili delete work docs: %w", err)
+		return fmt.Errorf("meili delete %s docs: %w", index, err)
 	}
 	final, err := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
 	if err != nil {
-		return fmt.Errorf("wait works delete task %d: %w", task.TaskUID, err)
+		return fmt.Errorf("wait %s delete task %d: %w", index, task.TaskUID, err)
 	}
 	if final.Status != meilisearch.TaskStatusSucceeded {
-		return fmt.Errorf("works delete task %d status %s: %v", final.UID, final.Status, final.Error)
+		return fmt.Errorf("%s delete task %d status %s: %v", index, final.UID, final.Status, final.Error)
 	}
 	return nil
 }
