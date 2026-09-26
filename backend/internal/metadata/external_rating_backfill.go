@@ -36,7 +36,8 @@ type ExternalRatingBackfiller struct {
 	gbGate *rateGate
 	olGate *rateGate
 
-	found atomic.Int64 // сколько рейтингов добавлено за проход (для логов)
+	found    atomic.Int64 // сколько рейтингов добавлено за проход (для логов)
+	lookedUp atomic.Int64 // сколько запросов к источникам сделано за проход (для логов)
 
 	// Дневной кап вызовов Google Books: у free-tier GB API квота ~1000
 	// запросов/сутки на проект, сверх — 429 (наблюдали шторм 429 после
@@ -61,16 +62,36 @@ func (b *ExternalRatingBackfiller) gbDailyCapAllows(ctx context.Context) bool {
 	}
 	b.gbMu.Lock()
 	defer b.gbMu.Unlock()
-	today := time.Now().UTC().Format("2006-01-02")
-	if today != b.gbDay {
-		b.gbDay = today
-		b.gbUsed = b.countGBCallsToday(ctx)
-	}
+	b.gbRollDayLocked(ctx)
 	if b.gbUsed >= limit {
 		return false
 	}
 	b.gbUsed++
 	return true
+}
+
+// gbDailyCapExhausted — дневная квота GB уже выбрана (счётчик не трогает).
+// Такой GB не считается «пора» при выборке кандидатов: иначе книги, которым
+// нужен только GB, перечитывались бы каждый проход впустую до смены суток.
+func (b *ExternalRatingBackfiller) gbDailyCapExhausted(ctx context.Context) bool {
+	limit := b.cfg.GoogleBooksDailyCap
+	if limit <= 0 {
+		return false
+	}
+	b.gbMu.Lock()
+	defer b.gbMu.Unlock()
+	b.gbRollDayLocked(ctx)
+	return b.gbUsed >= limit
+}
+
+// gbRollDayLocked — на смене UTC-суток (и при первом вызове после рестарта)
+// пересеять счётчик из БД. Под gbMu.
+func (b *ExternalRatingBackfiller) gbRollDayLocked(ctx context.Context) {
+	today := time.Now().UTC().Format("2006-01-02")
+	if today != b.gbDay {
+		b.gbDay = today
+		b.gbUsed = b.countGBCallsToday(ctx)
+	}
 }
 
 // countGBCallsToday — сколько GB-вызовов уже сделано за текущие UTC-сутки
@@ -151,8 +172,8 @@ func (b *ExternalRatingBackfiller) Run(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			b.logger.Info("external rating backfill: pass complete", "processed", n, "ratings_found", b.found.Load())
+		if lookups := b.lookedUp.Load(); n > 0 && lookups > 0 {
+			b.logger.Info("external rating backfill: pass complete", "candidates", n, "lookups", lookups, "ratings_found", b.found.Load())
 		}
 		select {
 		case <-ctx.Done():
@@ -185,6 +206,7 @@ func (b *ExternalRatingBackfiller) candidateCond() string {
 
 func (b *ExternalRatingBackfiller) drain(ctx context.Context) int {
 	b.found.Store(0)
+	b.lookedUp.Store(0)
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -203,6 +225,8 @@ func (b *ExternalRatingBackfiller) drain(ctx context.Context) int {
 	return total
 }
 
+// fetchBatch — страница кандидатов keyset'ом по id: только те, кого пора
+// спросить хотя бы у одного включённого источника (dueCond).
 func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]extRatingCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''), COALESCE(b.isbn, ''),
@@ -221,12 +245,14 @@ func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
 		  AND %s
+		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond())
-	rows, err := b.pool.Query(ctx, q, afterID, limit)
+	`, b.candidateCond(), dueCond("book_external_rating_lookups", "book_id", "b.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.dueSourceNames(ctx), b.ttl())...)
+	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -280,6 +306,20 @@ func (b *ExternalRatingBackfiller) sources() []ratingSource {
 	return out
 }
 
+// dueSourceNames — имена источников, которых можно спрашивать сейчас: включённые,
+// кроме GB с выбранной дневной квотой.
+func (b *ExternalRatingBackfiller) dueSourceNames(ctx context.Context) []string {
+	var out []string
+	for _, src := range b.sources() {
+		name := src.provider.Name()
+		if name == googleBooksSource && b.gbDailyCapExhausted(ctx) {
+			continue
+		}
+		out = append(out, name)
+	}
+	return out
+}
+
 func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingCandidate) {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
@@ -322,6 +362,7 @@ func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingC
 			cancel()
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		b.lookedUp.Add(1)
 		res, ferr := src.provider.FetchRating(taskCtx, q)
 		cancel()
 
@@ -377,21 +418,15 @@ func (b *ExternalRatingBackfiller) loadLookups(ctx context.Context, bookID int64
 	return out, rows.Err()
 }
 
+// ttl — сроки перепроверки: found окончательный, not_found / error — по конфигу.
+func (b *ExternalRatingBackfiller) ttl() lookupTTL {
+	return retryTTL(b.cfg.NotFoundRetryDays, b.cfg.ErrorRetryHours)
+}
+
 // isDue — пора ли (пере)спрашивать источник: нет строки → да; found → нет;
 // not_found / error → да, если старше соответствующего TTL.
 func (b *ExternalRatingBackfiller) isDue(l lookupRow, now time.Time) bool {
-	switch l.outcome {
-	case "":
-		return true
-	case "found":
-		return false
-	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.NotFoundRetryDays)*24*time.Hour
-	case "error":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.ErrorRetryHours)*time.Hour
-	default:
-		return true
-	}
+	return b.ttl().isDue(l, now)
 }
 
 func (b *ExternalRatingBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string) {
@@ -538,7 +573,7 @@ func (c *ExternalRatingBackfillController) RunOnce() {
 		c.mu.Lock()
 		c.onceCancel = nil
 		c.mu.Unlock()
-		c.logger.Info("external rating backfill: one-shot pass done", "processed", n)
+		c.logger.Info("external rating backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
 	}()
 }
 
