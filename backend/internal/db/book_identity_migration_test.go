@@ -8,10 +8,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestMigration0039_DedupBooks — база, куда импортированы два INPX одной
@@ -25,22 +23,7 @@ func TestMigration0039_DedupBooks(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForAll(
-				wait.ForLog("database system is ready to accept connections").WithOccurrence(2),
-				wait.ForListeningPort("5432/tcp"),
-			).WithStartupTimeoutDefault(60*time.Second),
-		),
-	)
-	testcontainers.CleanupContainer(t, pgC)
-	require.NoError(t, err)
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
+	dsn := testpg.DSN(t, ctx)
 
 	require.NoError(t, db.MigrateTo(dsn, 38))
 	pool, err := db.NewPool(ctx, dsn)

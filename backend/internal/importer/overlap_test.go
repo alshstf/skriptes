@@ -127,7 +127,7 @@ func TestPurgeDedupedDocs(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
 
