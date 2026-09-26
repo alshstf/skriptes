@@ -133,7 +133,16 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
+Текущая верхняя — `0039_author_events` (таблица `author_events` — события
+жизни автора для био-таймлайна: source/ext_key (идемпотентность), event_type,
+year_from/year_to (период), date_from+date_precision, title/quote/place/url,
+weight, `hidden` (курирование, переживает refetch), llm_polished; UNIQUE
+(author_id,source,ext_key) + индекс (author_id,year_from);
+`authors.events_fetched_at` — single-shot маркер; см. граблю №21); до неё
+`0038_author_renown` (`authors.renown` + partial-индекс `authors_renown_idx
+WHERE NOT is_service` — материализованная «известность» автора для дефолтной
+сортировки /authors, см. карту «Авторы»); до неё `0037_adaptation_tmdb`
+(`book_adaptations.tmdb_movie_id`/
 `tmdb_tv_id`/`poster_checked_at` — TMDB-id из Wikidata P4947/P4983 персистятся
 при записи адаптации + поштучный TTL перепроверки постер-дыр; частичный индекс
 `idx_book_adaptations_poster_hole`; авто-фаза `RecheckPosterHoles` воркера
@@ -1205,6 +1214,37 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 уронить его, если DNS хоста не резолвит адрес тома (латентно до рестарта) — не пересоздавать прод-контейнеры
 без нужды.
 
+### 21. Био-таймлайн автора — инварианты данных (hidden, QID, годовая арифметика)
+
+Фича «события жизни автора ⟷ книги» (план `~/.claude/plans/cryptic-roaming-turing.md`,
+ТЗ v2 в `cozy-zooming-popcorn.md:463-503`; v1 провалилась — причины в ТЗ). Реализация
+идёт PR'ами: **PR-1 (сделан)** — данные + Wikidata-скелет; PR-2 Wikipedia-вехи, PR-3/4 UI,
+PR-5 воркер+админка+LLM. Инварианты, которые нельзя ломать:
+
+- **`author_events.hidden` переживает refetch.** Курирование = «скрыть событие» (админ).
+  Upsert в `saveAuthorEvents` (`metadata/author_events.go`) сознательно НЕ трогает
+  `hidden` в `DO UPDATE`; prune выпавших из источника строк — только `NOT hidden`.
+  Любой новый писатель в `author_events` обязан сохранять это (интеграционный тест
+  `TestEnsureAuthorEvents` фиксирует).
+- **QID автора — в существующем `authors.ext_ids->>'wd_qid'`** (зеркало works).
+  Персистится из ОБОИХ bio-путей через `metadata.AuthorQIDPersister` (`author_qid.go`):
+  `WikipediaProvider.WithQIDSink` (QID после occupation-гейта в `resolveTitle`) и
+  `OpenLibraryProvider.WithQIDSink` (`remote_ids.wikidata` детальной записи). Bio-derived
+  QID приоритетен (прошёл имя-гейт + P106 — защита от казуса «Q46405 ≠ Пратчетт»);
+  первый записанный выигрывает (jsonb_set только если пусто). Фолбэк-резолв в
+  `EnsureAuthorEvents` — `wbsearchentities` + occupation-гейт, берём ТОЛЬКО `Writer`.
+- **Связки «книга ⟷ событие» — только годовая арифметика.** `written_year` — год без
+  месяца; фразы вида «в год смерти дочери», «через N лет после» — честны, месячной
+  точности НЕТ и выводить её в UI нельзя (даже когда у события `date_precision='day'`).
+- **Гейт охвата — `authors.renown > 0`** (ядро ~19k на проде), single-shot по
+  `events_fetched_at`; транзиент SPARQL маркер НЕ ставит (грабля №20). Lazy-триггер —
+  сам `GET /api/authors/{id}/events` (status=pending → детач 90с), зеркало adaptations.
+- **Критерий «не скучно»** — `authorevents.Service.List`: eligible = ≥5 нетривиальных
+  (weight≥2, не hidden) И ≥2 книги с `written_year`; eligible=false → фронт (PR-3/4)
+  секцию НЕ рендерит вовсе. Пороги — константы в `internal/authorevents/service.go`.
+- Wikipedia-цитаты (придут в PR-2) — CC BY-SA, атрибуция в подвале секции обязательна;
+  Wikidata — CC0.
+
 ## Где что искать (карта по реальным путям)
 
 | Я ищу… | Файл |
@@ -1225,6 +1265,7 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 | Команда поиска (typeahead) | `frontend/src/components/CommandPalette.tsx` (Cmd+K); тот же `useSuggest` (`lib/suggest.ts`) — hero-поиск на Главной |
 | Новая Главная (hero + динам. блоки) | `frontend/src/pages/HomePage.tsx` + `frontend/src/lib/home.ts` (фид) · бэк: `history/service.go::ContinueReading`/`SubscriptionFeed`/`DismissFeedItem` (новинки = добавленные ПОСЛЕ подписки на автора/серию; `feed_dismissals` — скрытые) |
 | Раздел «Авторы» (список + фильтры) | `frontend/src/pages/AuthorsPage.tsx` + `frontend/src/lib/authors.ts` · бэк: `catalog/authors_list.go::ListAuthorsFiltered` + `api/authors.go` (только авторы с ≥1 видимой книгой; фильтр языка матчит lang∪src_lang). **Дефолтная сортировка — «Сначала известные»** (materialized `authors.renown`, миграция 0038, partial-индекс `authors_renown_idx WHERE NOT is_service`): формула `importer/author_renown.go::computeAuthorRenown` = max(`computeWorkPopularity` по НЕ-сборниковым работам) + 120·log₂(1+N значимых, порог 120) — переиспользует формулу works-индекса, в SQL не дублируется; пересчёт `RecomputeAuthorRenown` (advisory lock) в трёх точках: runOnce-гейт `author_renown_computed_v1` (⚠️ бампить при смене формулы!), after-import, после результативного drain воркера «Известность» (`AuthorRenownRecomputer` type-assert). «По алфавиту» — явный пункт (`sort=name` теперь живёт в URL) по ЧИСТОМУ ключу `authorAlphaOrder`: normalized_name без ведущих спецсимволов («#DerApotheker» под «d», чисто-символьные в конец); ⚠️ **C-locale**: postgres:17-alpine (musl) — `lower()`/`[[:alpha:]]` НЕ работают для кириллицы, поэтому ключ на normalized_name (lower сделан в Go) + ЯВНЫЙ класс `[0-9a-zа-яёіїєґў]`. **Фильтры/поиск/сортировка живут в URL-search** (`AuthorsSearch`/`validateSearch` в `router.tsx`, зеркало `/books`; `renown`-дефолт в URL не пишется) — переживают возврат с карточки автора. Список несёт `external_rating_source` (источник топ-рейтинга, в тултипе); карточка автора (`catalog.GetAuthor`→`queryAuthorMeta`/`queryAuthorLanguages`, `AuthorPage.tsx`) дублирует те же агрегаты — рейтинги/языки/экранизации/годы. Общий формат рейтинга/ярлык источника — `lib/ratingDisplay.ts` |
+| Био-таймлайн автора (события жизни ⟷ книги) | SPARQL-провайдер: `metadata/wikidata_events.go` (`WikidataEventsProvider` — один UNION-запрос P569/P570/P26/P40/P570-родных/P551/P69/P166/P793/P1344/P2632, `assembleWikidataEvents`: lifespan-фильтр, дедуп, кап наград ≤3, precision, русские формулировки; `ResolveAuthorQID` — фолбэк-резолв с occupation-гейтом) · пайплайн: `metadata/author_events.go::EnsureAuthorEvents` (renown-гейт + single-shot `events_fetched_at` + hidden-инвариант upsert'а) · QID-персист: `metadata/author_qid.go` + `WithQIDSink` на wikipedia/OL-провайдерах · читающий сервис + критерий eligible: `internal/authorevents/service.go` · API: `api/authorevents.go` (`GET /api/authors/{id}/events`, lazy-триггер) · грабля №21; план `~/.claude/plans/cryptic-roaming-turing.md` |
 | Раздел «Жанры» + личные полки | `frontend/src/pages/GenresPage.tsx` + `frontend/src/lib/collections.ts` + `components/AddToShelfDialog.tsx` · бэк: `internal/collections/service.go` + `api/collections.go`; избранное жанров — `history` + `catalog.ListGenres(userID)`. **`/shelves` (ShelvesPage): DnD-перенос книги между полками** (@dnd-kit; Pointer+Touch(long-press)+Keyboard сенсоры) — `useMoveBookBetweenShelves` = add(целевая)+remove(исходная) через те же collection-эндпоинты (для «Избранного» тоже, ★ синкается `invalidateFavoriteSide`) |
 | Сайдбар фильтров | `frontend/src/components/FiltersSidebar.tsx` + `GroupedGenresFilter.tsx` (проп `showCounts` — на /authors книжные счётчики скрыты) |
 | Видимость контента (скрыть жанры/языки) | `backend/internal/settings/content.go` (resolver, `Exclusions`=admin∪user) + `backend/internal/api/content.go` + `frontend/src/components/ContentVisibility.tsx` (Admin/Profile). **Исключения применяются И в `/books` (Meili-фильтр), И на карточках автора/серии** (`catalog/service.go::bookExclusionClause` в `GetAuthor`/`GetSeries`) — иначе скрытый контент течёт в каталог (см. граблю №14) |

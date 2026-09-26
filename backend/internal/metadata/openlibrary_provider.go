@@ -30,6 +30,15 @@ type OpenLibraryProvider struct {
 	// не-писателя ПОСЛЕ имя-гейта. QID берём бесплатно из remote_ids.wikidata
 	// детальной записи автора (в отличие от wiki, где нужен отдельный pageprops).
 	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+
+	// qidSink — персист QID автора из remote_ids.wikidata (см. AuthorQIDSink).
+	qidSink AuthorQIDSink
+}
+
+// WithQIDSink подключает персист Wikidata QID автора (сырьё био-таймлайна).
+func (p *OpenLibraryProvider) WithQIDSink(sink AuthorQIDSink) *OpenLibraryProvider {
+	p.qidSink = sink
+	return p
 }
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
@@ -559,6 +568,10 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 		if v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata); err == nil && v == OccupationNonWriter {
 			return nil, ErrNotFound
 		}
+	}
+	// QID из remote_ids прошёл гейты → персистим для био-таймлайна.
+	if p.qidSink != nil && detail.RemoteIDs.Wikidata != "" {
+		p.qidSink(ctx, q.ID, detail.RemoteIDs.Wikidata)
 	}
 	return &detail, nil
 }

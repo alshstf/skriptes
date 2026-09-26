@@ -29,6 +29,16 @@ type WikipediaProvider struct {
 	// WikidataAdaptationsProvider.OccupationVerdict). Отдельная функция, а не
 	// прямая зависимость на Wikidata-провайдер: разрыв связности + тестируемость.
 	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+
+	// qidSink — персист QID автора, зарезолвленного bio-путём (см.
+	// AuthorQIDSink). nil = не персистим (тесты/выключено).
+	qidSink AuthorQIDSink
+}
+
+// WithQIDSink подключает персист Wikidata QID автора (сырьё био-таймлайна).
+func (p *WikipediaProvider) WithQIDSink(sink AuthorQIDSink) *WikipediaProvider {
+	p.qidSink = sink
+	return p
 }
 
 // wikiUserAgent — Wikimedia требует осмысленный User-Agent на REST API,
@@ -256,6 +266,11 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 		if qid, err := p.resolvePageQID(ctx, lang, titles[0]); err == nil && qid != "" {
 			if verdict, err := p.occupationGate(ctx, qid); err == nil && verdict == OccupationNonWriter {
 				return "", ErrNotFound
+			}
+			// QID прошёл оба гейта (имя + профессия) → персистим для
+			// био-таймлайна (раньше выбрасывался).
+			if p.qidSink != nil {
+				p.qidSink(ctx, q.ID, qid)
 			}
 		}
 	}
