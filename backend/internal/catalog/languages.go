@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 )
 
 // LanguageEntry — строка в списке языков коллекции (для панели фильтров и
@@ -128,6 +129,21 @@ func (s *Service) ListLanguages(ctx context.Context) ([]LanguageEntry, error) {
 // Один GROUP BY-проход по books (паттерн ListGenres из 1.4.1 — без per-язык
 // подзапросов), синглтоны без work_id группируются ключом -id.
 func (s *Service) ListSrcLanguages(ctx context.Context) ([]LanguageEntry, error) {
+	s.srcLangsMu.Lock()
+	defer s.srcLangsMu.Unlock()
+	if s.srcLangs != nil && time.Since(s.srcLangsAt) < srcLangsTTL {
+		return s.srcLangs, nil
+	}
+	out, err := s.listSrcLanguages(ctx)
+	if err != nil {
+		return nil, err
+	}
+	s.srcLangs, s.srcLangsAt = out, time.Now()
+	return out, nil
+}
+
+// listSrcLanguages — сам запрос опций «Язык оригинала» (без кэша).
+func (s *Service) listSrcLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	rows, err := s.pool.Query(ctx, `
 		WITH per_work AS (
 			SELECT

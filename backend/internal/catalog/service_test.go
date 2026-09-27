@@ -207,7 +207,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 
 	// Suggest: префиксное совпадение по нормализованному имени.
 	// "алек" → должны попасть Алексеев и Алексеева Адель Ивановна.
-	authorSugg, err := svc.SuggestAuthors(ctx, "алек", 5)
+	authorSugg, err := svc.SuggestAuthors(ctx, "алек", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, authorSugg)
 	var foundAlekseev bool
@@ -220,17 +220,34 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.True(t, foundAlekseev, "ожидаем Алексеева в suggest по 'алек'")
 
 	// Пустой запрос → пустой срез без ошибки.
-	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5)
+	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.Empty(t, authorEmpty)
 
 	// Suggest series: префикс "пет" по нормализованному заголовку.
-	seriesSugg, err := svc.SuggestSeries(ctx, "пет", 5)
+	seriesSugg, err := svc.SuggestSeries(ctx, "пет", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, seriesSugg)
 	require.Equal(t, "Петля [Алексеев]", seriesSugg[0].Title)
 	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
 	require.Equal(t, 1, seriesSugg[0].BookCount)
+
+	// Видимость (#289): у Алексеева все книги на языке, который скрыт, — ни он,
+	// ни его серия в подсказки не попадают (карточка открылась бы с 0 книг).
+	var alekLangs []string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT array_agg(DISTINCT b.lang) FROM books b JOIN book_authors ba ON ba.book_id = b.id
+		JOIN authors a ON a.id = ba.author_id WHERE a.normalized_name = 'алексеев евгений артёмович'`).Scan(&alekLangs))
+	hidden, err := svc.SuggestAuthors(ctx, "алексеев евг", 5, nil, alekLangs, false)
+	require.NoError(t, err)
+	require.Empty(t, hidden, "автор только со скрытыми книгами не подсказывается")
+	hiddenSeries, err := svc.SuggestSeries(ctx, "пет", 5, nil, alekLangs, false)
+	require.NoError(t, err)
+	require.Empty(t, hiddenSeries, "серия только со скрытыми книгами не подсказывается")
+
+	// % и _ в запросе — текст, а не шаблон LIKE (#309): «%» не находит всех.
+	pct, err := svc.SuggestAuthors(ctx, "%", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, pct)
 
 	// ── YearStats: у Алексеева ровно 1 книга с проставленным written_year →
 	// одна точка в гистограмме по году написания.
