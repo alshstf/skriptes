@@ -95,15 +95,10 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
 
-	// Расширяем окно meili-запроса при rerank: получаем ~3*limit (capped 50)
-	// чтобы было что переупорядочивать; вернём всё равно limit.
+	// Пересортировка — только ВНУТРИ страницы, которую отдал Meili (окно = limit):
+	// с расширенным окном (3×limit) первая страница забирала элементы, которые
+	// Meili отдаст и второй странице, а свои «лишние» теряла (#277).
 	meiliLimit := int64(limit)
-	if rerank {
-		meiliLimit = int64(limit * 3)
-		if meiliLimit > 50 {
-			meiliLimit = 50
-		}
-	}
 
 	req := &meilisearch.SearchRequest{
 		Limit:            meiliLimit,
@@ -145,9 +140,6 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		if err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
 			sortByFinalScore(scored)
-			if len(scored) > limit {
-				scored = scored[:limit]
-			}
 		}
 	}
 
@@ -287,13 +279,10 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 
 	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
+	// Пересортировка — только ВНУТРИ страницы Meili (окно = limit), как в List:
+	// с окном 3×limit первая страница теряла и дублировала работы при прокрутке
+	// (прод: 95 потерянных работ на 32 запросах, #277).
 	meiliLimit := int64(limit)
-	if rerank {
-		meiliLimit = int64(limit * 3)
-		if meiliLimit > 50 {
-			meiliLimit = 50
-		}
-	}
 
 	var visibleLangs []string
 	if len(params.ExcludeLangs) > 0 {
@@ -363,17 +352,14 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	if rerank {
 		// Тот же финальный score, что у SuggestWorks (persona + известность) —
 		// иначе hero-подсказки и /books по одному запросу дают разный порядок.
-		// Буст known-книг только в rerank-окне (offset 0, есть запрос): browse
-		// и глубокие страницы остаются чистым Meili-порядком (pop проставлен,
-		// но без sortByFinalScore не влияет) — пере-сортировка первой страницы
-		// при пагинации дублировала/теряла бы элементы.
+		// Буст known-книг только на первой странице с запросом: browse и
+		// следующие страницы — чистый Meili-порядок. Пересортировка не меняет
+		// СОСТАВ страницы (окно = limit), только порядок внутри — страницы
+		// стыкуются без потерь и повторов.
 		if profile, err := s.persona.PersonaProfile(ctx, params.UserID); err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
 		}
 		sortByFinalScore(scored)
-		if len(scored) > limit {
-			scored = scored[:limit]
-		}
 	}
 
 	items := make([]ListItem, 0, len(scored))
