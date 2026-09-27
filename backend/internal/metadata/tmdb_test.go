@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -132,5 +133,28 @@ func TestTMDBPosterURL_ErrorMapping(t *testing.T) {
 				t.Fatalf("err = %v, want %v", err, tc.want)
 			}
 		})
+	}
+}
+
+// Сетевая ошибка TMDB не должна нести ключ API: net/http кладёт в *url.Error полный
+// URL, а v3-ключ идёт в query (alshstf/plans#7).
+func TestTMDBPosterURL_NetworkErrorHidesAPIKey(t *testing.T) {
+	srv := httptest.NewServer(http.NotFoundHandler())
+	base := srv.URL
+	srv.Close() // соединение будет отклонено
+	p := NewTMDBPosterProvider("topsecretv3key").WithBaseURLs(base, "https://img.example")
+
+	_, err := p.PosterURL(context.Background(), "1645", "")
+	if err == nil {
+		t.Fatal("ждали сетевую ошибку")
+	}
+	if !errors.Is(err, ErrUpstream) {
+		t.Errorf("сетевая ошибка должна быть ErrUpstream (транзиент): %v", err)
+	}
+	if strings.Contains(err.Error(), "topsecretv3key") {
+		t.Errorf("ключ в тексте ошибки: %v", err)
+	}
+	if !strings.Contains(err.Error(), "api_key=REDACTED") {
+		t.Errorf("ждали замаскированный URL: %v", err)
 	}
 }

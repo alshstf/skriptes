@@ -29,6 +29,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
+	"github.com/skriptes/skriptes/backend/internal/logredact"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
@@ -969,7 +970,8 @@ func newLogger(level, format string) *slog.Logger {
 	if err := lvl.UnmarshalText([]byte(level)); err != nil {
 		lvl = slog.LevelInfo
 	}
-	opts := &slog.HandlerOptions{Level: lvl}
+	// ReplaceAttr: ключи API из URL в ошибках net/http не должны попадать в журнал.
+	opts := &slog.HandlerOptions{Level: lvl, ReplaceAttr: logredact.ReplaceAttr}
 	var h slog.Handler
 	if format == "text" {
 		h = slog.NewTextHandler(os.Stdout, opts)
