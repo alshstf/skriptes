@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthorPage } from './AuthorPage';
 
@@ -106,6 +106,45 @@ describe('AuthorPage', () => {
     expect(screen.getByText('Записки одиночки')).toBeInTheDocument();
     // Псевдосекция для книг вне серий.
     expect(screen.getByText('Вне серий')).toBeInTheDocument();
+  });
+
+  it('межавторская серия — не среди циклов: книга «Вне серий», серия внизу свёрнута', async () => {
+    const withMulti = {
+      ...fixture,
+      series: [...fixture.series, { id: 9, title: 'Мини-Шарм', count: 1, multi: true }],
+      books: [
+        ...fixture.books,
+        {
+          id: 21,
+          title: 'Любовь в Париже',
+          authors: ['Алексеев Евгений Артёмович'],
+          series: 'Мини-Шарм',
+          series_id: 9,
+          ser_no: 722,
+          lib_id: '749082',
+        },
+      ],
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify(withMulti), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    );
+    render(wrap(<AuthorPage />));
+    await screen.findByRole('heading', { level: 1, name: 'Алексеев Евгений Артёмович' });
+    // Книга серии — в списке автора (вне серий), без отдельной карточки серии.
+    expect(screen.getByText('Любовь в Париже')).toBeInTheDocument();
+    const toggle = screen.getByRole('button', { name: /Межавторские и издательские серии/ });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    const seriesLinks = () =>
+      screen.queryAllByRole('link').filter((l) => l.getAttribute('href') === '/series/9');
+    expect(seriesLinks()).toHaveLength(0);
+    fireEvent.click(toggle);
+    expect(seriesLinks()).toHaveLength(1);
   });
 
   it('уточнение тёзки — под именем автора', async () => {

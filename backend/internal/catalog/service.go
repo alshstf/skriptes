@@ -208,12 +208,12 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		authorID pgtype.Int8
 	)
 	err := s.pool.QueryRow(ctx, `
-		SELECT s.id, s.title, s.author_id,
+		SELECT s.id, s.title, COALESCE(s.kind, ''), s.author_id,
 		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '')
 		FROM series s
 		LEFT JOIN authors a ON a.id = s.author_id
 		WHERE s.id = $1
-	`, id).Scan(&out.ID, &out.Title, &authorID, &out.AuthorName)
+	`, id).Scan(&out.ID, &out.Title, &out.Kind, &authorID, &out.AuthorName)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Series{}, ErrNotFound
@@ -432,12 +432,13 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	// «Сборники и антологии». NULL work_id → false (консервативно — не сборник).
 	rows, err := s.pool.Query(ctx, `
 		SELECT s.id, s.title, count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt,
-		       bool_and((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id) IS NOT NULL) as all_comp
+		       bool_and((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id) IS NOT NULL) as all_comp,
+		       COALESCE(s.kind, '') = 'multi' AS multi
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN series s ON s.id = b.series_id
 		WHERE ba.author_id = $1`+exClause+`
-		GROUP BY s.id, s.title
+		GROUP BY s.id, s.title, s.kind
 		ORDER BY cnt DESC, s.normalized_title
 	`, args...)
 	if err != nil {
@@ -447,7 +448,7 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	var out []SeriesWithCount
 	for rows.Next() {
 		var sc SeriesWithCount
-		if err := rows.Scan(&sc.ID, &sc.Title, &sc.Count, &sc.AllCompilations); err != nil {
+		if err := rows.Scan(&sc.ID, &sc.Title, &sc.Count, &sc.AllCompilations, &sc.Multi); err != nil {
 			return nil, err
 		}
 		out = append(out, sc)

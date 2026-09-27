@@ -110,6 +110,9 @@ type SeriesWithCount struct {
 	Title           string `json:"title"`
 	Count           int    `json:"count"`
 	AllCompilations bool   `json:"all_compilations,omitempty"`
+	// Multi — межавторская/издательская серия (series.kind='multi'): на карточке
+	// автора — не среди его циклов, а внизу свёрнутым блоком.
+	Multi bool `json:"multi,omitempty"`
 }
 
 // AuthorSuggest — строка в typeahead-выдаче авторов.
@@ -145,6 +148,7 @@ type SeriesAuthorRef struct {
 type Series struct {
 	ID         int64             `json:"id"`
 	Title      string            `json:"title"`
+	Kind       string            `json:"kind,omitempty"` // "multi" — межавторская/издательская
 	AuthorID   *int64            `json:"author_id,omitempty"`
 	AuthorName string            `json:"author_name,omitempty"`
 	Authors    []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)

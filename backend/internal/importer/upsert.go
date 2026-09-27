@@ -142,7 +142,7 @@ func existingPlainAuthor(ctx context.Context, q querier, norm string) (int64, bo
 
 // upsertSeries возвращает id серии для (normalized_title, author_id).
 // Если author_id = 0 — серия без привязки к автору.
-func upsertSeries(ctx context.Context, q querier, title string, authorID int64) (int64, error) {
+func upsertSeries(ctx context.Context, q querier, title string, authorID int64, multi bool) (int64, error) {
 	norm := normalize(title)
 	if norm == "" {
 		return 0, fmt.Errorf("empty normalized series title")
@@ -162,14 +162,23 @@ func upsertSeries(ctx context.Context, q querier, title string, authorID int64) 
 			`SELECT id FROM series WHERE normalized_title = $1 AND author_id IS NULL`,
 			norm).Scan(&id)
 		if err == nil {
+			if multi {
+				if _, err := q.Exec(ctx, `UPDATE series SET kind = 'multi' WHERE id = $1 AND kind IS NULL`, id); err != nil {
+					return 0, fmt.Errorf("mark series %q multi: %w", norm, err)
+				}
+			}
 			return id, nil
 		}
 		if err != pgx.ErrNoRows {
 			return 0, fmt.Errorf("lookup series %q: %w", norm, err)
 		}
+		var kind any
+		if multi {
+			kind = "multi"
+		}
 		err = q.QueryRow(ctx,
-			`INSERT INTO series (title, normalized_title, author_id) VALUES ($1, $2, NULL) RETURNING id`,
-			title, norm).Scan(&id)
+			`INSERT INTO series (title, normalized_title, author_id, kind) VALUES ($1, $2, NULL, $3) RETURNING id`,
+			title, norm, kind).Scan(&id)
 		if err != nil {
 			return 0, fmt.Errorf("insert series %q: %w", norm, err)
 		}

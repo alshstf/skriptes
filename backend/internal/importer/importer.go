@@ -146,7 +146,15 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		logger.Info("import: authors split into namesakes", "authors", n)
 	}
 
+	// Межавторские/издательские серии (≥3 разных первых авторов) — одна серия на
+	// название, а не «цикл» у каждого автора (см. multi_series.go).
+	multi, err := im.planMultiSeries(ctx, ix)
+	if err != nil {
+		return stats, fmt.Errorf("plan multi-author series: %w", err)
+	}
+
 	caches := newCaches()
+	caches.multiSeries = multi
 	idx := newIndexer(im.deps.Meili, 1000)
 
 	// Прогрев archives внутри одной транзакции? Не нужно: это редкие upsert-ы,
@@ -181,6 +189,11 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		logger.Warn("import: fix stale work series failed", "err", err)
 	} else if n > 0 {
 		logger.Info("import: stale work series fixed", "works", n)
+	}
+	if n, err := moveSeriesSubscriptions(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: move series subscriptions failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: series subscriptions moved to multi-author series", "subscriptions", n)
 	}
 	if n, err := deleteEmptySeries(ctx, im.deps.Pool); err != nil {
 		logger.Warn("import: delete empty series failed", "err", err)

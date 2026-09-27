@@ -6,7 +6,14 @@ export type GenreCount = { code: string; display: string; count: number };
 // all_compilations — серия целиком из сборников/антологий/томов собраний
 // (works.kind у всех работ): уводится из списка серий автора в секцию
 // «Сборники и антологии» внизу карточки.
-export type SeriesWithCount = { id: number; title: string; count: number; all_compilations?: boolean };
+export type SeriesWithCount = {
+  id: number;
+  title: string;
+  count: number;
+  all_compilations?: boolean;
+  /** Межавторская/издательская серия (≥3 разных авторов) — не цикл автора. */
+  multi?: boolean;
+};
 export type YearBook = { id: number; title: string };
 /** Точка гистограммы «по годам написания»: год, число книг и сами книги
  *  (для тултипа — что именно написано в этот год). */
@@ -74,6 +81,8 @@ export function useAuthorSeries(authorId: number | undefined, enabled: boolean) 
 export type Series = {
   id: number;
   title: string;
+  /** "multi" — межавторская/издательская серия. */
+  kind?: string;
   author_id?: number;
   author_name?: string;
   /** Все авторы книг серии (серия может содержать книги нескольких авторов). */

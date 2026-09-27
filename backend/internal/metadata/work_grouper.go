@@ -426,7 +426,9 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		SELECT b.id, b.work_id, b.title, b.normalized_title::text, COALESCE(b.lang,''),
 		       COALESCE(b.src_title,''), COALESCE(b.src_author_normalized::text,''), COALESCE(b.src_lang,''),
 		       COALESCE(b.fb2_doc_id,''), COALESCE(b.isbn,''),
-		       COALESCE(b.series_id, 0), COALESCE(b.ser_no, 0),
+		       -- Tier-1.5 — только авторские циклы: номер в межавторской/издательской
+		       -- серии (series.kind='multi') не говорит, что это тот же том.
+		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
 		       a.last_name, COALESCE(a.first_name,'')
 		FROM books b
