@@ -133,7 +133,7 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0040_author_name_note` (уточнение тёзки `authors.name_note`, автор уникален по (имя, уточнение), журнал `author_splits` — грабля №22); до неё `0039_book_identity_archive_libid` (книга = (архив, lib_id), схлопывание дублей из двух INPX одной библиотеки, см. карту «INPX → upsert»); до неё `0038_author_renown`; до неё `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
+Текущая верхняя — `0041_series_kind` (`series.kind='multi'` — межавторская/издательская серия, грабля №22); до неё `0040_author_name_note` (уточнение тёзки `authors.name_note`, автор уникален по (имя, уточнение), журнал `author_splits` — грабля №22); до неё `0039_book_identity_archive_libid` (книга = (архив, lib_id), схлопывание дублей из двух INPX одной библиотеки, см. карту «INPX → upsert»); до неё `0038_author_renown`; до неё `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
 `tmdb_tv_id`/`poster_checked_at` — TMDB-id из Wikidata P4947/P4983 персистятся
 при записи адаптации + поштучный TTL перепроверки постер-дыр; частичный индекс
 `idx_book_adaptations_poster_hole`; авто-фаза `RecheckPosterHoles` воркера
@@ -1278,7 +1278,16 @@ bio/photo/metadata_fetched_at (решение владельца — могли 
 уточнения из старого файла ложится на наследника (`existingPlainAuthor`). После импорта:
 `fixWorkPrimaryAuthors` и `fixStaleWorkSeries` (импорт сам НЕ обновляет автора/серию работы) +
 `deleteEmptySeries`. Показ: `books.DisplayNote` — номера `#NNN` не отдаём наружу нигде (решение
-владельца); поле `note` у автора в карточке/списке/подсказках/ссылках книги. План —
+владельца); поле `note` у автора в карточке/списке/подсказках/ссылках книги.
+**Межавторские/издательские серии** (librusec 2026-09 проставил издательские серии 113 тыс. книг):
+серия заводилась по (название, первый автор) → «Мини-Шарм» дробилась на тысячи «циклов». Теперь
+`importer.planMultiSeries`: название с ≥3 разными первыми авторами в INPX (решение владельца) —
+одна серия без автора, `series.kind='multi'` (признак липкий — берётся и из базы); «циклы»-обрывки
+сливаются (подписки переносит `moveSeriesSubscriptions`, работы — `fixStaleWorkSeries`, пустые
+удаляет `deleteEmptySeries`). Tier-1.5 группировки работ такие серии игнорирует. Карточка автора:
+флаг `multi` у серии → не среди циклов, книги — «Вне серий», сами серии — свёрнутым блоком в самом
+низу (`MultiSeriesSection`); страница серии — «Межавторская или издательская серия», в шапке ≤5
+авторов + «и ещё N». План —
 `~/projects/plans/skriptes/inpx-2026-09-authors-series-plan.md`, issue #257.
 
 ## Где что искать (карта по реальным путям)

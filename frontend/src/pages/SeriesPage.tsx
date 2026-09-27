@@ -13,6 +13,11 @@ import { useSeries, type Series } from '@/lib/catalog';
 import { bySeriesOrder } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 
+
+// В шапке — самые плодовитые авторы серии (бэкенд сортирует по числу книг);
+// у издательской серии их сотни.
+const MAX_HEADER_AUTHORS = 5;
+
 export function SeriesPage() {
   const { id } = useParams({ strict: false }) as { id: string };
   const { data: s, isLoading, error } = useSeries(id);
@@ -52,10 +57,13 @@ export function SeriesPage() {
           </h1>
           <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
         </div>
+        {s.kind === 'multi' ? (
+          <p className="text-sm text-muted-foreground">Межавторская или издательская серия</p>
+        ) : null}
         {s.authors && s.authors.length > 0 ? (
           <p className="text-sm">
             <span className="text-muted-foreground">{s.authors.length > 1 ? 'Авторы:' : 'Автор:'}</span>{' '}
-            {s.authors.map((a, i) => (
+            {s.authors.slice(0, MAX_HEADER_AUTHORS).map((a, i) => (
               <span key={a.id}>
                 {i > 0 ? ', ' : ''}
                 <Link to="/authors/$id" params={{ id: String(a.id) }} className="hover:underline">
@@ -63,6 +71,9 @@ export function SeriesPage() {
                 </Link>
               </span>
             ))}
+            {s.authors.length > MAX_HEADER_AUTHORS ? (
+              <span className="text-muted-foreground"> и ещё {s.authors.length - MAX_HEADER_AUTHORS}</span>
+            ) : null}
           </p>
         ) : s.author_name && s.author_id ? (
           <p className="text-sm">

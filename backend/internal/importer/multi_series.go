@@ -1,0 +1,91 @@
+package importer
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/inpx"
+)
+
+// multiSeriesMinAuthors — с какого числа разных первых авторов серия считается
+// межавторской/издательской (решение владельца: 3; план
+// inpx-2026-09-authors-series). librusec с выпуска 2026-09 проставляет книгам
+// издательские серии («Мини-Шарм», «Любовный роман (Центрполиграф)»), а серия у
+// нас заводилась по паре «название + первый автор» — одна издательская серия
+// дробилась на тысячи «циклов», по одному в карточке каждого автора.
+const multiSeriesMinAuthors = 3
+
+// planMultiSeries — проход по INPX до импорта: названия серий, под которыми
+// книги ≥ multiSeriesMinAuthors разных первых авторов, плюс уже помеченные
+// такими в базе (признак липкий — иначе серия, у которой в следующем выпуске
+// окажется двое авторов, снова развалилась бы на «циклы»).
+func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[string]bool, error) {
+	authorsBySeries := map[string]map[string]struct{}{}
+	err := ix.Each(func(_ inpx.InpFile, rec inpx.Record) error {
+		if rec.Series == "" || len(rec.Authors) == 0 {
+			return nil
+		}
+		title := normalize(rec.Series)
+		if title == "" {
+			return nil
+		}
+		set := authorsBySeries[title]
+		if set == nil {
+			set = map[string]struct{}{}
+			authorsBySeries[title] = set
+		}
+		set[authorKey(rec.Authors[0])] = struct{}{}
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("scan series authors: %w", err)
+	}
+	multi := map[string]bool{}
+	for title, set := range authorsBySeries {
+		if len(set) >= multiSeriesMinAuthors {
+			multi[title] = true
+		}
+	}
+	rows, err := im.deps.Pool.Query(ctx, `SELECT normalized_title::text FROM series WHERE kind = 'multi'`)
+	if err != nil {
+		return nil, fmt.Errorf("load multi series: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var title string
+		if err := rows.Scan(&title); err != nil {
+			return nil, err
+		}
+		multi[title] = true
+	}
+	return multi, rows.Err()
+}
+
+// moveSeriesSubscriptions — подписки на прежние «циклы» автора с названием
+// межавторской серии, из которых импорт увёл все книги в общую серию, —
+// переносятся на общую. Пустые «циклы» потом удалит deleteEmptySeries.
+func moveSeriesSubscriptions(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
+	const fragments = `
+		FROM series frag
+		JOIN series m ON m.kind = 'multi' AND m.author_id IS NULL
+		             AND m.normalized_title = frag.normalized_title AND m.id <> frag.id
+		WHERE frag.author_id IS NOT NULL
+		  AND NOT EXISTS (SELECT 1 FROM books b WHERE b.series_id = frag.id)`
+	tag, err := pool.Exec(ctx, `
+		INSERT INTO favorite_series (user_id, series_id)
+		SELECT f.user_id, m.id
+		FROM favorite_series f
+		JOIN (SELECT frag.id AS frag_id, m.id `+fragments+`) x ON x.frag_id = f.series_id
+		JOIN series m ON m.id = x.id
+		ON CONFLICT DO NOTHING`)
+	if err != nil {
+		return 0, fmt.Errorf("copy series subscriptions: %w", err)
+	}
+	if _, err := pool.Exec(ctx, `
+		DELETE FROM favorite_series f
+		WHERE f.series_id IN (SELECT frag.id `+fragments+`)`); err != nil {
+		return 0, fmt.Errorf("drop fragment subscriptions: %w", err)
+	}
+	return tag.RowsAffected(), nil
+}

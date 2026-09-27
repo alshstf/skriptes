@@ -23,6 +23,9 @@ import (
 type cacheSet struct {
 	cacheMaps
 	staged cacheMaps
+	// multiSeries — названия (normalize) межавторских/издательских серий этого
+	// импорта (planMultiSeries): одна серия на название, без автора.
+	multiSeries map[string]bool
 }
 
 type cacheMaps struct {
@@ -95,6 +98,10 @@ func (c *cacheSet) ensureAuthor(ctx context.Context, q querier, a inpx.Author) (
 }
 
 func (c *cacheSet) ensureSeries(ctx context.Context, q querier, title string, authorID int64) (int64, error) {
+	multi := c.multiSeries[normalize(title)]
+	if multi {
+		authorID = 0 // межавторская/издательская — одна серия на название, без автора
+	}
 	key := seriesKey{norm: normalize(title), authorID: authorID}
 	if id, ok := c.series[key]; ok {
 		return id, nil
@@ -102,7 +109,7 @@ func (c *cacheSet) ensureSeries(ctx context.Context, q querier, title string, au
 	if id, ok := c.staged.series[key]; ok {
 		return id, nil
 	}
-	id, err := upsertSeries(ctx, q, title, authorID)
+	id, err := upsertSeries(ctx, q, title, authorID, multi)
 	if err != nil {
 		return 0, err
 	}
