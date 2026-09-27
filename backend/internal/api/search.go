@@ -98,7 +98,7 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 			if cat.Service == nil {
 				return
 			}
-			items, err := cat.Service.SuggestAuthors(ctx, q, limit)
+			items, err := cat.Service.SuggestAuthors(ctx, q, limit, exGenres, exLangs, hideComps)
 			if err == nil {
 				authorItems = items
 			}
@@ -108,7 +108,7 @@ func handleSuggest(bd BooksDeps, cat CatalogDeps, hist HistoryDeps, content Cont
 			if cat.Service == nil {
 				return
 			}
-			items, err := cat.Service.SuggestSeries(ctx, q, limit)
+			items, err := cat.Service.SuggestSeries(ctx, q, limit, exGenres, exLangs, hideComps)
 			if err == nil {
 				seriesItems = items
 			}

@@ -19,7 +19,11 @@ import (
 //     выбрать seq scan, но при ~50-100K авторов это всё ещё <50 мс.
 //   - сортировка: сначала префиксные совпадения, затем по числу книг
 //     (популярные наверху), потом по нормализованному имени для стабильности.
-func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) ([]AuthorSuggest, error) {
+//   - видимость (грабля №14, #289): счётчик — по живым книгам, не скрытым
+//     жанрами/языками/«Скрывать сборники» (как в списке и на карточке); авторы
+//     без видимых книг не подсказываются — иначе «Вазов Иван (170)» при скрытом
+//     болгарском вёл на карточку с 0 книг.
+func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, excludeGenres, excludeLangs []string, hideCompilations bool) ([]AuthorSuggest, error) {
 	q := strings.TrimSpace(query)
 	if q == "" {
 		return []AuthorSuggest{}, nil
@@ -27,18 +31,24 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 	if limit <= 0 || limit > 20 {
 		limit = 5
 	}
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
+	args := append([]any{escapeLike(q), limit}, exArgs...)
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, ''),
-		       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
-		        JOIN books b ON b.id = ba.book_id
-		        WHERE ba.author_id = a.id AND b.deleted = false) AS cnt
-		FROM authors a
-		WHERE a.normalized_name::text ILIKE '%' || $1 || '%'
-		ORDER BY (a.normalized_name::text ILIKE $1 || '%') DESC,
-		         cnt DESC, a.normalized_name::text
+		SELECT id, last_name, first_name, middle_name, note, cnt FROM (
+			SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '') AS note,
+			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
+			        JOIN books b ON b.id = ba.book_id
+			        WHERE ba.author_id = a.id AND b.deleted = false`+exClause+`) AS cnt,
+			       (a.normalized_name::text ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       a.normalized_name::text AS nn
+			FROM authors a
+			WHERE a.normalized_name::text ILIKE '%' || $1 || '%' ESCAPE '\'
+		) x
+		WHERE cnt > 0
+		ORDER BY prefix DESC, cnt DESC, nn
 		LIMIT $2
-	`, q, limit)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query author suggestions: %w", err)
 	}
@@ -69,7 +79,9 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 // trigram GIN index (так "страйк" находит «Корморан Страйк» — не первое слово);
 // префиксные совпадения ранжируются выше. AuthorName заполняется LEFT JOIN
 // если серия привязана к одному автору (это поле опционально в схеме).
-func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([]SeriesSuggest, error) {
+// Видимость — как у SuggestAuthors (#289): пустые и целиком скрытые серии не
+// подсказываются.
+func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, excludeGenres, excludeLangs []string, hideCompilations bool) ([]SeriesSuggest, error) {
 	q := strings.TrimSpace(query)
 	if q == "" {
 		return []SeriesSuggest{}, nil
@@ -77,19 +89,25 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([
 	if limit <= 0 || limit > 20 {
 		limit = 5
 	}
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
+	args := append([]any{escapeLike(q), limit}, exArgs...)
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT s.id, s.title,
-		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '') AS author_name,
-		       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM books b
-		        WHERE b.series_id = s.id AND b.deleted = false) AS cnt
-		FROM series s
-		LEFT JOIN authors a ON a.id = s.author_id
-		WHERE s.normalized_title::text ILIKE '%' || $1 || '%'
-		ORDER BY (s.normalized_title::text ILIKE $1 || '%') DESC,
-		         cnt DESC, s.normalized_title::text
+		SELECT id, title, author_name, cnt FROM (
+			SELECT s.id, s.title,
+			       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '') AS author_name,
+			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM books b
+			        WHERE b.series_id = s.id AND b.deleted = false`+exClause+`) AS cnt,
+			       (s.normalized_title::text ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       s.normalized_title::text AS nt
+			FROM series s
+			LEFT JOIN authors a ON a.id = s.author_id
+			WHERE s.normalized_title::text ILIKE '%' || $1 || '%' ESCAPE '\'
+		) x
+		WHERE cnt > 0
+		ORDER BY prefix DESC, cnt DESC, nt
 		LIMIT $2
-	`, q, limit)
+	`, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query series suggestions: %w", err)
 	}
@@ -113,4 +131,10 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int) ([
 		})
 	}
 	return out, rows.Err()
+}
+
+// escapeLike экранирует спецсимволы LIKE (%, _ и сам \) — запрос пользователя
+// ищется как текст, а не как шаблон (#309).
+func escapeLike(s string) string {
+	return strings.NewReplacer(`\`, `\\`, `%`, `\%`, `_`, `\_`).Replace(s)
 }

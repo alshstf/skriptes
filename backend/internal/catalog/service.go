@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -20,7 +22,17 @@ var ErrNotFound = errors.New("not found")
 // потому что здесь логика агрегаций и SQL-джойнов, а не Meili-поиска.
 type Service struct {
 	pool *pgxpool.Pool
+
+	// srcLangs — кэш опций «Язык оригинала» (ListSrcLanguages): GROUP BY по всем
+	// живым книгам — 3,3–3,7 с на 469 тыс. книг при таймауте ручки 5 с (#303), а
+	// меняется только импортом и обогащением src_lang.
+	srcLangsMu sync.Mutex
+	srcLangs   []LanguageEntry
+	srcLangsAt time.Time
 }
+
+// srcLangsTTL — сколько держать опции «Язык оригинала» в памяти.
+const srcLangsTTL = 10 * time.Minute
 
 func New(pool *pgxpool.Pool) *Service {
 	return &Service{pool: pool}
@@ -154,7 +166,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	// 500 — потолок для самых плодовитых авторов (Asimov ~500, Stephen
 	// King ~80). Группировка по сериям на фронте требует полного списка,
 	// поэтому усечение в 50 как раньше уже не работает.
-	bookList, refs, err := s.queryAuthorBooks(ctx, id, 500, excludeGenres, excludeLangs, hideCompilations)
+	bookList, refs, err := s.queryAuthorBooks(ctx, id, authorWorksCap, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
 		return Author{}, err
 	}
@@ -456,12 +468,31 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	return out, rows.Err()
 }
 
+// authorWorksCap — предохранитель карточки автора: сколько РАБОТ отдавать. На
+// проде (librusec, 469 тыс. книг) максимум ~910 работ («Народные сказки»); до
+// #274 предел был 500 и стоял на ИЗДАНИЯХ до схлопывания в работы — у 19
+// авторов (Толстой, Брэдбери, Азимов, Кристи…) пропадали книги. Переменная —
+// чтобы тест мог поставить маленький предел.
+var authorWorksCap = 5000
+
 func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit int, excludeGenres, excludeLangs []string, hideCompilations bool) ([]books.ListItem, []BookYearRef, error) {
-	// Исключения занимают $3.. (после $1 author, $2 limit); LIMIT остаётся $2
-	// независимо от позиции в строке — позиционные аргументы по номеру.
+	// Исключения занимают $3.. (после $1 author, $2 limit) и участвуют в обоих
+	// запросах — позиционные аргументы переиспользуются по номеру.
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID, limit}, exArgs...)
+	// Сначала работы автора (свежие первыми, не больше limit), потом ВСЕ их
+	// видимые издания: предел считается по работам, а счётчик изданий работы —
+	// полный.
 	rows, err := s.pool.Query(ctx, `
+		WITH aw AS (
+			SELECT COALESCE(b.work_id, -b.id) AS wk
+			FROM book_authors ba
+			JOIN books b ON b.id = ba.book_id AND b.deleted = false
+			WHERE ba.author_id = $1`+exClause+`
+			GROUP BY 1
+			ORDER BY max(b.date_added) DESC NULLS LAST, 1
+			LIMIT $2
+		)
 		SELECT b.id, COALESCE((SELECT ww.title FROM works ww WHERE ww.id = b.work_id), b.title), b.lib_id, b.lang, b.date_added,
 		       ser.id, ser.title, COALESCE((SELECT ww.ser_no FROM works ww WHERE ww.id = b.work_id), b.ser_no),
 		       COALESCE(
@@ -479,9 +510,9 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		LEFT JOIN book_authors ba2 ON ba2.book_id = b.id
 		LEFT JOIN authors a2 ON a2.id = ba2.author_id
 		WHERE ba.author_id = $1`+exClause+`
+		  AND COALESCE(b.work_id, -b.id) IN (SELECT wk FROM aw)
 		GROUP BY b.id, ser.id, ser.title, ar.filename
 		ORDER BY b.date_added DESC NULLS LAST, b.normalized_title
-		LIMIT $2
 	`, args...)
 	if err != nil {
 		return nil, nil, fmt.Errorf("query author books: %w", err)
