@@ -7,10 +7,14 @@ import (
 )
 
 type Config struct {
-	HTTPAddr  string `env:"SKRIPTES_HTTP_ADDR" envDefault:":8080"`
-	LogLevel  string `env:"SKRIPTES_LOG_LEVEL" envDefault:"info"`
-	LogFormat string `env:"SKRIPTES_LOG_FORMAT" envDefault:"json"`
-	Version   string `env:"SKRIPTES_VERSION" envDefault:"dev"`
+	HTTPAddr string `env:"SKRIPTES_HTTP_ADDR" envDefault:":8080"`
+	// MetricsAddr — адрес отдельного HTTP-сервера с метриками Prometheus (/metrics),
+	// например ":9091". Пусто — выключено. Наружу не публикуется: в публичном деплое
+	// его забирает сборщик из доверенной сети через внутренний сайт Caddy :9180.
+	MetricsAddr string `env:"SKRIPTES_METRICS_ADDR"`
+	LogLevel    string `env:"SKRIPTES_LOG_LEVEL" envDefault:"info"`
+	LogFormat   string `env:"SKRIPTES_LOG_FORMAT" envDefault:"json"`
+	Version     string `env:"SKRIPTES_VERSION" envDefault:"dev"`
 
 	DatabaseURL     string        `env:"SKRIPTES_DATABASE_URL" envDefault:"postgres://skriptes:skriptes@localhost:5432/skriptes?sslmode=disable"`
 	DatabaseTimeout time.Duration `env:"SKRIPTES_DATABASE_TIMEOUT" envDefault:"60s"`

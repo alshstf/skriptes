@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // SrcLangBackfiller — фоновое дозаполнение books.src_lang (язык оригинала) из
@@ -334,6 +336,7 @@ func (b *SrcLangBackfiller) writeFound(ctx context.Context, bookID int64, source
 }
 
 func (b *SrcLangBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome, code string) {
+	metrics.EnrichmentLookups.WithLabelValues("src_lang", source, outcome).Inc()
 	var cptr *string
 	if code != "" {
 		cptr = &code

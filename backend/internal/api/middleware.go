@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // requireAuth — middleware: на каждый защищённый запрос вытаскивает
@@ -91,6 +92,7 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			ipKey, emailKey := th.keys(r, email)
 			if th.over(ipKey, emailKey) {
 				slog.Warn("login throttled", "via", "opds", "ip", ipKey, "email", emailKey)
+				metrics.LoginThrottled.WithLabelValues("opds").Inc()
 				w.Header().Set("Retry-After", "300")
 				http.Error(w, "too many attempts, try again later", http.StatusTooManyRequests)
 				return
@@ -101,6 +103,7 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			if err != nil {
 				if errors.Is(err, auth.ErrInvalidPassword) {
 					slog.Warn("login failed", "via", "opds", "ip", ipKey, "email", emailKey)
+					metrics.LoginFailures.WithLabelValues("opds").Inc()
 					th.fail(ipKey, emailKey)
 				}
 				// ValidateCredentials имеет timing-mitigation, мы не различаем

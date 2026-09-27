@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // ExternalRatingBackfiller — фоновое дозаполнение books.external_rating из
@@ -430,6 +432,7 @@ func (b *ExternalRatingBackfiller) isDue(l lookupRow, now time.Time) bool {
 }
 
 func (b *ExternalRatingBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string) {
+	metrics.EnrichmentLookups.WithLabelValues("external_rating", source, outcome).Inc()
 	if _, err := b.pool.Exec(ctx, `
 		INSERT INTO book_external_rating_lookups (book_id, source, outcome, checked_at)
 		VALUES ($1, $2, $3, now())

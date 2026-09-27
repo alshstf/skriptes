@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // CoverBackfiller — фоновое дозаполнение cover_path из ВНЕШНИХ источников
@@ -307,6 +309,7 @@ func (b *CoverBackfiller) isDue(l lookupRow, now time.Time) bool {
 }
 
 func (b *CoverBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string) {
+	metrics.EnrichmentLookups.WithLabelValues("cover", source, outcome).Inc()
 	if _, err := b.pool.Exec(ctx, `
 		INSERT INTO book_cover_lookups (book_id, source, outcome, checked_at)
 		VALUES ($1, $2, $3, now())

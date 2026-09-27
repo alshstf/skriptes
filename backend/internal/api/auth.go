@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // Имя cookie для сессии. HttpOnly + SameSite=Lax + (опц.) Secure.
@@ -73,6 +74,7 @@ func handleLogin(d AuthDeps, th *authThrottles) http.HandlerFunc {
 		ipKey, emailKey := th.keys(r, req.Email)
 		if th.over(ipKey, emailKey) {
 			slog.Warn("login throttled", "via", "form", "ip", ipKey, "email", emailKey)
+			metrics.LoginThrottled.WithLabelValues("form").Inc()
 			w.Header().Set("Retry-After", "300")
 			writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too many attempts, try again later"})
 			return
@@ -86,6 +88,7 @@ func handleLogin(d AuthDeps, th *authThrottles) http.HandlerFunc {
 				// Для алертов (Loki/Telegram) и возможного fail2ban/CrowdSec: без этой
 				// строки подбор пароля в публичном инстансе не виден вовсе.
 				slog.Warn("login failed", "via", "form", "ip", ipKey, "email", emailKey)
+				metrics.LoginFailures.WithLabelValues("form").Inc()
 				th.fail(ipKey, emailKey)
 				writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid email or password"})
 				return
