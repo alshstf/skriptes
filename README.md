@@ -116,7 +116,7 @@ curl -fO  $RAW/Caddyfile
 # 3) поправьте .env — минимум эти три значения:
 #    BOOKS_HOST_PATH=/srv/library/books    # путь к zip-архивам
 #    INPX_HOST_PATH=/srv/library/inpx      # путь к *.inpx
-#    SKRIPTES_VERSION=1.13.0              # тег релиза
+#    SKRIPTES_VERSION=1.14.0              # тег релиза
 #    Рекомендуется сразу задать и SKRIPTES_GOOGLE_BOOKS_API_KEY —
 #    без него обогащение из Google Books не работает (см. «Внешние источники»).
 $EDITOR .env
