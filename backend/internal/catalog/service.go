@@ -105,9 +105,9 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 		fetchedAt pgtype.Timestamptz
 	)
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, last_name, first_name, middle_name, bio, photo_path, metadata_fetched_at, is_service
+		SELECT id, last_name, first_name, middle_name, COALESCE(name_note, ''), bio, photo_path, metadata_fetched_at, is_service
 		FROM authors WHERE id = $1
-	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &bio, &photoPath, &fetchedAt, &a.IsService)
+	`, id).Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &a.Note, &bio, &photoPath, &fetchedAt, &a.IsService)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Author{}, ErrNotFound
@@ -115,6 +115,7 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 		return Author{}, fmt.Errorf("query author: %w", err)
 	}
 	a.FullName = fullName(a.LastName, a.FirstName, a.MiddleName)
+	a.Note = books.DisplayNote(a.Note)
 	if bio.Valid {
 		a.Bio = bio.String
 	}

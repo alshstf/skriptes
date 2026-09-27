@@ -26,7 +26,7 @@ type cacheSet struct {
 }
 
 type cacheMaps struct {
-	author  map[string]int64    // normalized name → id
+	author  map[string]int64    // authorKey (имя + уточнение) → id
 	series  map[seriesKey]int64 // (norm title, author id) → id
 	genre   map[string]int64    // fb2 code → id
 	archive map[string]int64    // имя файла архива → id
@@ -79,7 +79,7 @@ func (c *cacheSet) dropStaged() {
 }
 
 func (c *cacheSet) ensureAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) {
-	key := normalizedAuthorName(a)
+	key := authorKey(a)
 	if id, ok := c.author[key]; ok {
 		return id, nil
 	}

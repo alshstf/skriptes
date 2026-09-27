@@ -1478,12 +1478,12 @@ func (s *Service) GenresAndLang(ctx context.Context, id int64) ([]string, string
 // (workID), либо по одному изданию (bookID), если работа не определена.
 func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([]AuthorRef, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT a.id, a.last_name, a.first_name, a.middle_name
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '')
 		FROM authors a
 		JOIN book_authors ba ON ba.author_id = a.id
 		JOIN books b         ON b.id = ba.book_id
 		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
-		GROUP BY a.id, a.last_name, a.first_name, a.middle_name
+		GROUP BY a.id, a.last_name, a.first_name, a.middle_name, a.name_note
 		ORDER BY min(ba.position), a.last_name
 	`, workID, bookID)
 	if err != nil {
@@ -1493,10 +1493,11 @@ func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([
 	var out []AuthorRef
 	for rows.Next() {
 		var a AuthorRef
-		if err := rows.Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName); err != nil {
+		if err := rows.Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &a.Note); err != nil {
 			return nil, err
 		}
 		a.FullName = fullName(a)
+		a.Note = DisplayNote(a.Note)
 		out = append(out, a)
 	}
 	return out, rows.Err()
@@ -1608,6 +1609,16 @@ func (s *Service) anchorEditionID(ctx context.Context, workID, bookID int64) int
 }
 
 // fullName собирает "Lastname Firstname Middlename" пропуская пустые куски.
+// DisplayNote — уточнение автора для показа: номера вида «#17465» (что они
+// значат в librusec, не подтверждено) не показываем нигде — решение владельца.
+func DisplayNote(note string) string {
+	note = strings.TrimSpace(note)
+	if len(note) > 1 && note[0] == '#' && strings.Trim(note[1:], "0123456789") == "" {
+		return ""
+	}
+	return note
+}
+
 func fullName(a AuthorRef) string {
 	parts := make([]string, 0, 3)
 	if a.LastName != "" {

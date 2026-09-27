@@ -61,6 +61,11 @@ var DefaultSchema = Schema{
 // Author — автор книги; части ФИО приходят в AUTHOR через ','.
 type Author struct {
 	LastName, FirstName, MiddleName string
+	// Note — уточнение из квадратных скобок в фамилии, как есть: librusec с
+	// выпуска 2026-09 так различает тёзок («Антоний [Блум]», «Гибсон
+	// [фантаст]», «Афанасьев [#17465]»). LastName при этом — без скобок.
+	// Смысл содержимого (номер, профессия, настоящее имя) не толкуем.
+	Note string
 }
 
 // Record — одна нормализованная запись из .inp.
@@ -235,7 +240,7 @@ func parseAuthors(s string) []Author {
 		a := Author{}
 		segs := strings.SplitN(p, string(personSep), 3)
 		if len(segs) > 0 {
-			a.LastName = strings.TrimSpace(segs[0])
+			a.LastName, a.Note = splitNameNote(segs[0])
 		}
 		if len(segs) > 1 {
 			a.FirstName = strings.TrimSpace(segs[1])
@@ -250,6 +255,24 @@ func parseAuthors(s string) []Author {
 		out = append(out, a)
 	}
 	return out
+}
+
+// splitNameNote отделяет уточнение в квадратных скобках от фамилии:
+// «Гибсон [фантаст]» → («Гибсон», «фантаст»). Берётся первая пара скобок;
+// без скобок — фамилия как есть и пустое уточнение.
+func splitNameNote(s string) (name, note string) {
+	s = strings.TrimSpace(s)
+	open := strings.IndexByte(s, '[')
+	if open < 0 {
+		return s, ""
+	}
+	closeRel := strings.IndexByte(s[open:], ']')
+	if closeRel < 0 {
+		return s, ""
+	}
+	note = strings.TrimSpace(s[open+1 : open+closeRel])
+	name = strings.Join(strings.Fields(s[:open]+" "+s[open+closeRel+1:]), " ")
+	return name, note
 }
 
 // splitMulti режет multi-value поле по ':' и отбрасывает пустые элементы

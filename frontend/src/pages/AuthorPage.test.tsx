@@ -108,6 +108,21 @@ describe('AuthorPage', () => {
     expect(screen.getByText('Вне серий')).toBeInTheDocument();
   });
 
+  it('уточнение тёзки — под именем автора', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(JSON.stringify({ ...fixture, note: 'фантаст' }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    );
+    render(wrap(<AuthorPage />));
+    await screen.findByRole('heading', { level: 1, name: 'Алексеев Евгений Артёмович' });
+    expect(screen.getByText('фантаст')).toBeInTheDocument();
+  });
+
   it('сортирует книги серии по series_order, а не по порядку массива', async () => {
     const reordered = {
       ...fixture,

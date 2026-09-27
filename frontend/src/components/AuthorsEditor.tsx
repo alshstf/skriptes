@@ -36,7 +36,12 @@ export function AuthorsEditor({
         {authors.map((a, i) => (
           <span key={a.id}>
             {i > 0 ? ', ' : ''}
-            <Link to="/authors/$id" params={{ id: String(a.id) }} className="hover:underline">
+            <Link
+              to="/authors/$id"
+              params={{ id: String(a.id) }}
+              className="hover:underline"
+              title={a.note || undefined}
+            >
               {a.full_name}
             </Link>
           </span>
@@ -129,7 +134,10 @@ function AdminAuthors({
                 candidates.map((a) => (
                   <CommandItem key={a.id} value={String(a.id)} onSelect={() => add(a)}>
                     <Plus className="mr-2 size-4 shrink-0 text-muted-foreground" aria-hidden />
-                    <span className="flex-1 truncate">{a.full_name}</span>
+                    <span className="flex-1 truncate">
+                      {a.full_name}
+                      {a.note ? <span className="text-muted-foreground"> · {a.note}</span> : null}
+                    </span>
                     <span className="ml-2 shrink-0 text-xs text-muted-foreground">{a.book_count} кн.</span>
                   </CommandItem>
                 ))

@@ -127,6 +127,8 @@ export type AuthorRef = {
   first_name?: string;
   middle_name?: string;
   full_name: string;
+  /** Уточнение, отличающее тёзок («Блум», «фантаст»); номера librusec бэкенд не отдаёт. */
+  note?: string;
 };
 
 export type SeriesRef = { id: number; title: string };

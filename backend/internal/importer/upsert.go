@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -76,20 +77,67 @@ func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) 
 	if norm == "" {
 		return 0, fmt.Errorf("empty normalized author name")
 	}
+	note := strings.TrimSpace(a.Note)
+	if note == "" {
+		// Запись без уточнения, а тёзки с этим именем уже разделены (файл более
+		// старого выпуска): ложимся на наследника прежней записи, а если
+		// разделения не было, но автор с этим именем один — на него. Иначе
+		// появился бы лишний «автор без уточнения».
+		id, ok, err := existingPlainAuthor(ctx, q, norm)
+		if err != nil {
+			return 0, err
+		}
+		if ok {
+			return id, nil
+		}
+	}
+	var noteArg any
+	if note != "" {
+		noteArg = note
+	}
 	var id int64
 	err := q.QueryRow(ctx, `
-		INSERT INTO authors (last_name, first_name, middle_name, normalized_name)
-		VALUES ($1, $2, $3, $4)
-		ON CONFLICT (normalized_name) DO UPDATE SET
+		INSERT INTO authors (last_name, first_name, middle_name, normalized_name, name_note)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (normalized_name, (lower(COALESCE(name_note, '')))) DO UPDATE SET
 			last_name   = COALESCE(NULLIF(EXCLUDED.last_name,   ''), authors.last_name),
 			first_name  = COALESCE(NULLIF(EXCLUDED.first_name,  ''), authors.first_name),
 			middle_name = COALESCE(NULLIF(EXCLUDED.middle_name, ''), authors.middle_name)
 		RETURNING id
-	`, a.LastName, a.FirstName, a.MiddleName, norm).Scan(&id)
+	`, a.LastName, a.FirstName, a.MiddleName, norm, noteArg).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("upsert author %q: %w", norm, err)
 	}
 	return id, nil
+}
+
+// existingPlainAuthor — куда положить автора без уточнения: запись без
+// уточнения → наследник разделённой записи (author_splits) → единственный
+// автор с этим именем. ok=false — нужна новая запись.
+func existingPlainAuthor(ctx context.Context, q querier, norm string) (int64, bool, error) {
+	var id int64
+	err := q.QueryRow(ctx, `
+		SELECT id FROM (
+			SELECT id, 0 AS prio FROM authors WHERE normalized_name = $1 AND name_note IS NULL
+			UNION ALL
+			SELECT s.old_author_id, 1 FROM author_splits s
+			WHERE s.base_name = $1 AND s.is_heir AND s.old_author_id IS NOT NULL
+			  -- вариант без уточнения, не ставший наследником, — отдельный тёзка
+			  AND NOT EXISTS (SELECT 1 FROM author_splits p
+			                  WHERE p.base_name = $1 AND p.note = '' AND NOT p.is_heir)
+			UNION ALL
+			SELECT min(id), 2 FROM authors WHERE normalized_name = $1 HAVING count(*) = 1
+		) c
+		ORDER BY prio
+		LIMIT 1
+	`, norm).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return 0, false, nil
+	}
+	if err != nil {
+		return 0, false, fmt.Errorf("find author %q: %w", norm, err)
+	}
+	return id, true, nil
 }
 
 // upsertSeries возвращает id серии для (normalized_title, author_id).

@@ -55,6 +55,7 @@
 - Один `docker compose up`, все 5 сервисов; авто-TLS через Caddy для `*.localhost`
 - Multi-arch образы (linux/amd64 + linux/arm64); backend и frontend работают **non-root** (frontend — nginx-unprivileged)
 - Идемпотентный импорт INPX — повторный запуск на том же файле no-op (sha256 хэш-чек); новый INPX подхватывается сам, без рестарта
+- Тёзки: если INPX различает авторов уточнением в скобках (lib.rus.ec с 2026-09: «Антоний [Блум]»), это отдельные авторы с уточнением на карточке; прежняя запись с подписками достаётся тому, кому принадлежит большинство её книг
 - Для публикации в интернет — **hardening-overlay** (`docker-compose.harden.yml`: cap_drop/read-only/лимиты + публичный `Caddyfile.public` с TLS Let's Encrypt), см. раздел ниже
 
 ---

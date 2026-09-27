@@ -12,6 +12,8 @@ type Author struct {
 	FirstName  string `json:"first_name,omitempty"`
 	MiddleName string `json:"middle_name,omitempty"`
 	FullName   string `json:"full_name"`
+	// Note — уточнение, отличающее тёзок («Блум», «фантаст»), см. books.DisplayNote.
+	Note string `json:"note,omitempty"`
 
 	// Био и фото из metadata-enrichment (Wikipedia/OL). Заполняются
 	// лениво при первом GET /api/authors/{id}, как и поля у Book.
@@ -116,6 +118,7 @@ type SeriesWithCount struct {
 type AuthorSuggest struct {
 	ID         int64  `json:"id"`
 	FullName   string `json:"full_name"`
+	Note       string `json:"note,omitempty"`
 	BookCount  int    `json:"book_count"`
 	IsFavorite bool   `json:"is_favorite,omitempty"`
 }

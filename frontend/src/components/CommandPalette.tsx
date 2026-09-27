@@ -147,6 +147,7 @@ export function CommandPalette() {
                         <div className="flex min-w-0 flex-col flex-1">
                           <span className="truncate">{a.full_name}</span>
                           <span className="truncate text-xs text-muted-foreground">
+                            {a.note ? `${a.note} · ` : ''}
                             {a.book_count} {pluralBooks(a.book_count)}
                           </span>
                         </div>

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/skriptes/skriptes/backend/internal/books"
 )
 
 // authorAlphaOrder — алфавитный ключ сортировки авторов (фрагмент ORDER BY,
@@ -35,6 +36,7 @@ const authorAlphaOrder = `NULLIF(regexp_replace(a.normalized_name::text, '^[^0-9
 type AuthorListItem struct {
 	ID        int64  `json:"id"`
 	FullName  string `json:"full_name"`
+	Note      string `json:"note,omitempty"` // уточнение тёзки, см. books.DisplayNote
 	PhotoPath string `json:"photo_path,omitempty"`
 	// BookCount — число ЛОГИЧЕСКИХ книг (работ) автора (видимых; скрытый
 	// контент исключён). DISTINCT по work_id, чтобы издания не двоили счёт.
@@ -374,12 +376,12 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	query := fmt.Sprintf(`
 		WITH page AS (
 		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
-		           a.normalized_name, a.renown
+		           a.normalized_name, a.renown, a.name_note
 		    FROM authors a%[1]s
 		    %[2]s
 		    LIMIT $%[3]d OFFSET $%[4]d
 		)
-		SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path, COALESCE(a.name_note, ''),
 		       (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false%[6]s)::int AS book_count,
@@ -430,19 +432,21 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		var (
 			it                  AuthorListItem
 			last, first, middle string
+			note                string
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
 			extRating           pgtype.Float8
 			extSource           pgtype.Text
 			readerAvg           pgtype.Float8
 		)
-		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo,
+		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo, &note,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
 			&yrFrom, &yrTo, &it.HasAdaptations, &extRating, &extSource,
 			&readerAvg, &it.ReaderRatingCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
 		it.FullName = fullName(last, first, middle)
+		it.Note = books.DisplayNote(note)
 		if photo.Valid {
 			it.PhotoPath = photo.String
 		}
