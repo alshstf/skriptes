@@ -217,12 +217,18 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	}
 
 	// Индекс works (фасеты по работам) перестраиваем после импорта: новые
-	// singleton-работы + актуальный год/агрегаты. Upsert-only — осиротевшие
-	// доки чистят таргетные удаления в точках GC (группировка/split/merge).
+	// singleton-работы + актуальный год/агрегаты. Ресинк только добавляет и
+	// обновляет — документы удалённых книг и опустевших работ убирает сверка.
 	if n, rerr := im.ResyncWorksIndex(ctx); rerr != nil {
 		logger.Warn("import: resync works index failed", "err", rerr)
 	} else if n > 0 {
 		logger.Info("import: works index resynced", "count", n)
+	}
+	if r, rerr := im.ReconcileIndexes(ctx); rerr != nil {
+		logger.Warn("import: reconcile search indexes failed", "err", rerr)
+	} else if r.WorksRemoved+r.WorksAdded+r.BooksRemoved > 0 {
+		logger.Info("import: search indexes reconciled", "works_removed", r.WorksRemoved,
+			"works_added", r.WorksAdded, "books_removed", r.BooksRemoved)
 	}
 
 	stats.Authors = len(caches.author)
