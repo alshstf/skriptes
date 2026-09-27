@@ -53,6 +53,13 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 		{LibID: "810034", Title: "Красная шкатулка", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 4},
 		{LibID: "810035", Title: "Смерть в пиковом положении", Authors: []string{"Голдсборо,Роберт"}, Series: "Ниро Вульф"},
 		{LibID: "810036", Title: "Пропавший", Authors: []string{"Другой,Автор"}, Series: "Ниро Вульф"},
+		// «Рассказы» у четырёх авторов без доминирующего — жанровое слово, не
+		// издательская серия: у каждого своя.
+		{LibID: "810041", Title: "Анюта", Authors: []string{"Чехов,Антон,Павлович"}, Series: "Рассказы"},
+		{LibID: "810042", Title: "Анна на шее", Authors: []string{"Чехов,Антон,Павлович"}, Series: "Рассказы"},
+		{LibID: "810043", Title: "Головастик", Authors: []string{"Белаш,Александр"}, Series: "Рассказы"},
+		{LibID: "810044", Title: "Приключения Иля", Authors: []string{"Алексеев,Иван"}, Series: "Рассказы"},
+		{LibID: "810045", Title: "Маленькие рассказы", Authors: []string{"Булычев,Кир"}, Series: "Рассказы"},
 	}
 	two := append([]inpxtest.Book{
 		{LibID: "810011", Title: "Любовь в Париже", Authors: []string{"Иванова,Анна"}, Series: "Мини-Шарм", SerNo: 1},
@@ -89,6 +96,12 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	require.Equal(t, wolfe, seriesOf("810034"))
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, wolfe))
 	require.NotEqual(t, wolfe, seriesOf("810035"))
+	// Жанровое название — своя серия у каждого автора, общей нет.
+	chekhov := seriesOf("810041")
+	require.Equal(t, chekhov, seriesOf("810042"))
+	require.NotEqual(t, chekhov, seriesOf("810043"))
+	require.NotEqual(t, seriesOf("810043"), seriesOf("810044"))
+	require.Zero(t, q(`SELECT count(*) FROM series WHERE normalized_title = 'рассказы' AND (kind IS NOT NULL OR author_id IS NULL)`))
 
 	// Следующий выпуск: под названием снова двое — серия остаётся общей.
 	run(append(append([]inpxtest.Book(nil), two...),

@@ -3,6 +3,8 @@ package importer
 import (
 	"context"
 	"fmt"
+	"strings"
+	"unicode"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
@@ -26,6 +28,9 @@ const multiSeriesMinAuthors = 3
 // ошибки атрибуции), а не издательская серия: прогон на librusec 2026-09 —
 // «Ниро Вульф» (Стаут, 309 из 313), «Колесо времени» (Джордан, 83 из 88); таких
 // названий 941 из 6 200 с ≥3 авторами.
+//
+// Названия из одних жанровых слов («Рассказы», «Повести и рассказы») не
+// становятся межавторскими ни из INPX, ни из базы — см. isGenericSeriesTitle.
 func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[string]bool, error) {
 	booksBySeries := map[string]map[string]int{} // название → первый автор → книг
 	err := ix.Each(func(_ inpx.InpFile, rec inpx.Record) error {
@@ -49,7 +54,7 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 	}
 	multi := map[string]bool{}
 	for title, byAuthor := range booksBySeries {
-		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor) {
+		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor) && !isGenericSeriesTitle(title) {
 			multi[title] = true
 		}
 	}
@@ -63,9 +68,56 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 		if err := rows.Scan(&title); err != nil {
 			return nil, err
 		}
-		multi[title] = true
+		if !isGenericSeriesTitle(title) {
+			multi[title] = true
+		}
 	}
 	return multi, rows.Err()
+}
+
+// genericSeriesWords — жанровые слова, из которых состоит «серия» вида
+// «Рассказы», «Повести и рассказы», «Мемуары, дневники, письма» (решение
+// владельца 2026-09-27). В INPX и fb2 у серии нет идентификатора, только
+// название, а такие названия у разных авторов совпадают сами собой: в
+// librusec 2026-09 серия «Рассказы» у 276 авторов (у Чехова 51 книга) — это
+// «рассказы этого автора», а не одна издательская серия.
+var genericSeriesWords = map[string]bool{
+	"рассказы": true, "рассказ": true, "рассказов": true,
+	"повести": true, "повесть": true, "повестей": true,
+	"романы": true, "роман": true, "романов": true,
+	"сказки": true, "сказка": true, "сказок": true,
+	"стихи": true, "стихов": true, "стихотворения": true, "стихотворение": true, "стихотворений": true,
+	"поэмы": true, "поэма": true, "поэм": true,
+	"пьесы": true, "пьеса": true, "пьес": true,
+	"статьи": true, "статья": true, "статей": true,
+	"очерки": true, "очерк": true, "очерков": true,
+	"новеллы": true, "новелла": true, "новелл": true,
+	"эссе": true, "миниатюры": true, "басни": true, "притчи": true, "фельетоны": true, "юморески": true,
+	"публицистика": true, "проза": true, "поэзия": true, "драматургия": true,
+	"мемуары": true, "воспоминания": true, "дневники": true, "письма": true, "интервью": true,
+	"сборник": true, "сборники": true, "избранное": true, "избранные": true,
+	"произведения": true, "сочинения": true,
+	"stories": true, "short": true, "novels": true, "poems": true, "essays": true,
+}
+
+// isGenericSeriesTitle — нормализованное название серии целиком из
+// genericSeriesWords (через пробел, запятую, «и»). Такая серия не становится
+// межавторской: у каждого автора своя, как было до kind='multi'.
+func isGenericSeriesTitle(title string) bool {
+	words := strings.FieldsFunc(title, func(r rune) bool {
+		return unicode.IsSpace(r) || r == ',' || r == '.' || r == ';'
+	})
+	generic := false
+	for _, w := range words {
+		if w == "и" {
+			continue
+		}
+		if !genericSeriesWords[w] {
+			return false
+		}
+		generic = true
+	}
+	return generic
 }
 
 // hasDominantAuthor — у одного автора не меньше половины книг серии.
