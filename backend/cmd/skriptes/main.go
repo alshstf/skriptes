@@ -141,6 +141,7 @@ func run() error {
 		}
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
+		runOnceSrcLangCanonical(ctx(), pool, imp, logger)
 		// Серии работ, которые выпуск INPX проставил уже импортированным книгам (#275):
 		// индекс сконфигурирован и наполнен — досинкиваем только изменённые работы.
 		runOnceWorkSeriesSync(ctx(), pool, imp, logger)
@@ -1003,6 +1004,45 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 		logger.Warn("work title localize: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work title localization done", "lang", dom, "changed", len(changed))
+}
+
+// runOnceSrcLangCanonical — разовая канонизация books.src_lang к ISO 639-1
+// (metadata.CanonicalizeSrcLangs: spa→es, jp→ja, «английски»→en, мусор → NULL,
+// #287) + таргетный ресинк works-индекса изменённых работ (фасет «Язык
+// оригинала»). Гейт src_lang_canonical_v1; новые значения канонизирует запись
+// (EnsureEditionMeta). Поменял таблицу langcode — бампни версию.
+func runOnceSrcLangCanonical(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "src_lang_canonical_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("src_lang canonicalize: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, err := metadata.CanonicalizeSrcLangs(ctx, pool)
+	if err != nil {
+		logger.Warn("src_lang canonicalize failed — will retry next start", "err", err)
+		return
+	}
+	// Ресинк ДО флага: упадёт — на следующем старте значения уже канонические
+	// (works пуст), и индекс досинкнётся полным ресинком как фолбэк.
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("src_lang canonicalize: works index resync failed — full resync fallback", "err", err)
+			if _, rerr := imp.ResyncWorksIndex(ctx); rerr != nil {
+				logger.Warn("src_lang canonicalize: full works index resync failed — retry next start", "err", rerr)
+				return
+			}
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("src_lang canonicalize: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time src_lang canonicalization done", "works", len(works))
 }
 
 // runOnceSrcLangSync — разовый полный ресинк works-индекса после появления поля
