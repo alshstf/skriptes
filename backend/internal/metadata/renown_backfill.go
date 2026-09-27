@@ -41,8 +41,9 @@ type RenownBackfiller struct {
 	found    atomic.Int64 // счётчиков найдено за проход (для логов)
 	lookedUp atomic.Int64 // запросов к источникам за проход (для логов)
 
-	mu      sync.Mutex
-	touched []int64 // работы с новыми счётчиками — на таргетный ресинк
+	mu        sync.Mutex
+	touched   []int64 // работы с новыми счётчиками — на таргетный ресинк
+	passWorks []int64 // то же за весь проход — на пересчёт известности их авторов
 }
 
 // RenownBackfillConfig — рантайм-параметры воркера (зеркало
@@ -119,25 +120,30 @@ func (b *RenownBackfiller) Run(ctx context.Context) {
 }
 
 // AuthorRenownRecomputer — опциональная способность resyncer'а (реализует
-// importer.Importer) пересчитать authors.renown. Type-assert — паттерн
-// WorksIndexSyncer у группировки: metadata не тянет пакет importer.
+// importer.Importer) пересчитать authors.renown авторов заданных работ.
+// Type-assert — паттерн WorksIndexSyncer у группировки: metadata не тянет пакет
+// importer.
 type AuthorRenownRecomputer interface {
-	RecomputeAuthorRenown(ctx context.Context) (int64, error)
+	RecomputeAuthorRenownFor(ctx context.Context, workIDs []int64) (int64, error)
 }
 
-// recomputeAuthorRenown — пересчёт известности АВТОРОВ после прохода, в котором
-// воркер реально нашёл новые сигналы (found > 0): дефолтная сортировка /authors
-// (authors.renown) питается теми же счётчиками. Пустые проходы (раз в 30 мин)
-// пересчёт не гоняют.
+// recomputeAuthorRenown — пересчёт известности АВТОРОВ работ, у которых проход
+// нашёл новые сигналы: дефолтная сортировка /authors (authors.renown) питается
+// теми же счётчиками. Пустые проходы (раз в 30 мин) пересчёт не гоняют; полный
+// пересчёт по всем работам здесь не нужен (#300).
 func (b *RenownBackfiller) recomputeAuthorRenown(ctx context.Context) {
-	if b.found.Load() == 0 || ctx.Err() != nil {
+	b.mu.Lock()
+	works := b.passWorks
+	b.passWorks = nil
+	b.mu.Unlock()
+	if len(works) == 0 || ctx.Err() != nil {
 		return
 	}
 	rec, ok := b.resyncer.(AuthorRenownRecomputer)
 	if !ok {
 		return
 	}
-	n, err := rec.RecomputeAuthorRenown(ctx)
+	n, err := rec.RecomputeAuthorRenownFor(ctx, works)
 	if err != nil {
 		b.logger.Warn("renown backfill: author renown recompute failed", "err", err)
 		return
@@ -183,6 +189,9 @@ func (b *RenownBackfiller) candidateCond() string {
 func (b *RenownBackfiller) drain(ctx context.Context) int {
 	b.found.Store(0)
 	b.lookedUp.Store(0)
+	b.mu.Lock()
+	b.passWorks = nil
+	b.mu.Unlock()
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -375,6 +384,7 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 	if gotAny {
 		b.mu.Lock()
 		b.touched = append(b.touched, c.id)
+		b.passWorks = append(b.passWorks, c.id)
 		b.mu.Unlock()
 	}
 }
