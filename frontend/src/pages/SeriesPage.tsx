@@ -95,7 +95,10 @@ export function SeriesPage() {
       ) : (
         <div className="space-y-2">
           {/* Админ-подсказки + ручное объединение (оба сами скрываются у не-админа). */}
-          <MergeSuggestions books={s.books} />
+          {/* Подсказки «один том — одна книга» опираются на номер тома; в
+              межавторской/издательской серии номера у разных книг совпадают —
+              подсказки предлагали бы склеить разные романы. */}
+          {s.kind !== 'multi' ? <MergeSuggestions books={s.books} /> : null}
           <div className="flex justify-end empty:hidden">
             <MergeWorksDialog books={s.books} />
           </div>
