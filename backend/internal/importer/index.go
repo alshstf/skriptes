@@ -25,6 +25,12 @@ const worksIndex = "works"
 // глубины offset — тест-синхронизатор в books/service_guard_test.go.
 const MeiliMaxTotalHits = 1_000_000
 
+// MeiliMaxValuesPerFacet — сколько значений фасета отдаёт Meili. По умолчанию 100
+// по алфавиту: в коллекции ~350 жанров и ~170 языков оригинала, и «русский»,
+// «фантастика» и всё после буквы «f» в фасет не попадали (#276). Порядок в
+// фильтрах наводит фронт.
+const MeiliMaxValuesPerFacet = 1000
+
 // bookDoc — документ для индекса "books" в Meilisearch.
 // id используется как primary key (совпадает с books.id в Postgres).
 type bookDoc struct {
@@ -127,6 +133,10 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
 		return fmt.Errorf("works update pagination: %w", err)
 	}
+	if _, err := idx.UpdateFacetingWithContext(ctx,
+		&meilisearch.Faceting{MaxValuesPerFacet: MeiliMaxValuesPerFacet}); err != nil {
+		return fmt.Errorf("works update faceting: %w", err)
+	}
 	return nil
 }
 
@@ -173,6 +183,10 @@ func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	if _, err := idx.UpdatePaginationWithContext(ctx,
 		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
 		return fmt.Errorf("update pagination: %w", err)
+	}
+	if _, err := idx.UpdateFacetingWithContext(ctx,
+		&meilisearch.Faceting{MaxValuesPerFacet: MeiliMaxValuesPerFacet}); err != nil {
+		return fmt.Errorf("update faceting: %w", err)
 	}
 	return nil
 }
