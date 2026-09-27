@@ -779,6 +779,7 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 	if len(e.authorPhotoProviders) == 0 {
 		return
 	}
+	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorPhoto, q.ID) {
 		return
 	}
@@ -841,11 +842,63 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 	}
 }
 
+// withNamesakeContext дополняет запрос автора тем, что нужно для различения
+// тёзок: уточнением, признаком «есть тёзки» и названиями его книг (самые
+// издаваемые работы; оригинальные названия переводов — тоже, для OL/enwiki).
+// Ошибка чтения — запрос как был (строгий режим не включится, как до тёзок).
+func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) AuthorQuery {
+	if q.ID == 0 || e.pool == nil {
+		return q
+	}
+	var titles []string
+	if err := e.pool.QueryRow(ctx, `
+		SELECT COALESCE(a.name_note, ''),
+		       EXISTS (SELECT 1 FROM authors x WHERE x.normalized_name = a.normalized_name AND x.id <> a.id),
+		       COALESCE((
+		           SELECT array_agg(s.title) FROM (
+		               SELECT v.title FROM (
+		                   SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
+		                          COALESCE(w.title, b.title) AS local_title, NULLIF(btrim(b.src_title), '') AS src_title,
+		                          COALESCE(w.edition_count, 1) AS n
+		                   FROM book_authors ba
+		                   JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		                   LEFT JOIN works w ON w.id = b.work_id
+		                   WHERE ba.author_id = a.id
+		                   ORDER BY COALESCE(b.work_id, -b.id), b.id
+		               ) bw, LATERAL (VALUES (bw.local_title), (bw.src_title)) v(title)
+		               WHERE v.title IS NOT NULL
+		               ORDER BY bw.n DESC
+		               LIMIT 6
+		           ) s
+		       ), '{}')
+		FROM authors a WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles); err != nil {
+		e.logger.Warn("metadata: load namesake context failed", "author_id", q.ID, "err", err)
+		return q
+	}
+	q.BookTitles = dedupeStrings(titles)
+	return q
+}
+
+func dedupeStrings(in []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(in))
+	for _, s := range in {
+		k := strings.ToLower(strings.TrimSpace(s))
+		if k == "" || seen[k] {
+			continue
+		}
+		seen[k] = true
+		out = append(out, strings.TrimSpace(s))
+	}
+	return out
+}
+
 // EnsureAuthorBio — параллельно EnsureAuthorPhoto, но пишет authors.bio.
 func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 	if len(e.authorBioProviders) == 0 {
 		return
 	}
+	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorBio, q.ID) {
 		return
 	}
