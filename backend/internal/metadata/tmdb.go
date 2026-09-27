@@ -115,7 +115,7 @@ func (p *TMDBPosterProvider) PosterURL(ctx context.Context, movieID, tvID string
 
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("%w: tmdb: %v", ErrUpstream, err)
+		return "", fmt.Errorf("%w: tmdb: %v", ErrUpstream, redactURLError(err))
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
