@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -101,20 +102,35 @@ func (p *WikidataAdaptationsProvider) FetchAdaptations(ctx context.Context, q Bo
 // кандидатов из wbsearchentities (он не различает "роман" от "альбома"
 // от "телешоу" — фильтрация по P31 и автору делается SPARQL'ом).
 func (p *WikidataAdaptationsProvider) resolveBookQID(ctx context.Context, q BookQuery) (string, error) {
+	// failure — сбой поиска или проверки кандидата (429 под троттлингом, сеть):
+	// если ни один кандидат не подтвердился, это не «не найдено» — нужный мог
+	// быть среди непроверенных. Раньше сбой превращался в ErrNotFound: lookups
+	// писали not_found на 90 дней, экранизации — «нет» навсегда (грабля №20, #281).
+	var failure error
 	for _, lang := range bookSearchLangs(q.Lang) {
 		qids, err := p.searchEntities(ctx, q.Title, lang)
 		if err != nil {
+			if !errors.Is(err, ErrNotFound) {
+				failure = err
+			}
 			continue
 		}
 		for _, qid := range qids {
 			ok, err := p.validateBookQID(ctx, qid, q.Authors)
 			if err != nil {
+				failure = err
 				continue
 			}
 			if ok {
 				return qid, nil
 			}
 		}
+	}
+	if failure != nil {
+		if errors.Is(failure, ErrUpstream) {
+			return "", failure
+		}
+		return "", fmt.Errorf("%w: wikidata: %w", ErrUpstream, failure)
 	}
 	return "", ErrNotFound
 }
@@ -346,7 +362,8 @@ func (p *WikidataAdaptationsProvider) doSPARQL(ctx context.Context, query string
 	}
 	if resp.StatusCode != http.StatusOK {
 		_ = resp.Body.Close()
-		return nil, fmt.Errorf("sparql status %d", resp.StatusCode)
+		// Любой не-200 SPARQL-эндпоинта — сбой (429 троттлинга, 5xx), не «нет данных».
+		return nil, fmt.Errorf("%w: sparql status %d", ErrUpstream, resp.StatusCode)
 	}
 	return resp.Body, nil
 }

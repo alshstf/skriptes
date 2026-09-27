@@ -155,12 +155,17 @@ func (b *AuthorBackfiller) processOne(ctx context.Context, a authorCandidate) {
 		MiddleName: a.middleName,
 		FullName:   a.fullName,
 	}
-	b.enricher.EnsureAuthorBio(taskCtx, q)
-	b.enricher.EnsureAuthorPhoto(taskCtx, q)
-	// Гарантированно помечаем «попытка была», даже если провайдеры пусты или
-	// ничего не нашли — чтобы кандидат не выбирался повторно каждый проход.
-	if _, err := b.pool.Exec(ctx,
+	bioTransient := b.enricher.EnsureAuthorBio(taskCtx, q)
+	photoTransient := b.enricher.EnsureAuthorPhoto(taskCtx, q)
+	if bioTransient || photoTransient {
+		// Сбой источника — не «не найдено»: маркер снимаем, пока нет био или
+		// фото, — следующий проход повторит недостающее (#293). Раньше маркер
+		// ставился здесь безусловно, и сбой навсегда оставлял автора без био.
+		b.enricher.ReopenAuthorIfIncomplete(ctx, a.id)
+	} else if _, err := b.pool.Exec(ctx,
 		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1 AND metadata_fetched_at IS NULL`, a.id); err != nil {
+		// Провайдеры пусты или честно ничего не нашли — помечаем попытку, чтобы
+		// кандидат не выбирался повторно каждый проход.
 		b.logger.Warn("author backfill: mark fetched_at failed", "author_id", a.id, "err", err)
 	}
 	b.done.Add(1)

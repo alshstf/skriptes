@@ -2,6 +2,7 @@ package metadata
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"strings"
@@ -186,4 +187,57 @@ func TestAdaptationBackfiller_Integration(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, cov.Total)
 	require.Equal(t, 1, cov.WithAdaptations)
+}
+
+// flakyBioProvider — источник биографий, который то сбоит (ErrUpstream), то отвечает.
+type flakyBioProvider struct {
+	err error
+	bio string
+}
+
+func (f *flakyBioProvider) Name() string { return "wikipedia" }
+func (f *flakyBioProvider) FetchAuthorBio(context.Context, AuthorQuery) (string, error) {
+	if f.err != nil {
+		return "", f.err
+	}
+	return f.bio, nil
+}
+
+// TestAuthorBackfiller_TransientDoesNotMark — #293: сбой источника биографий не
+// помечает автора «обработан» (маркер общий с фото: фото честно не найдено —
+// раньше маркер ставился всё равно, и биография не запрашивалась больше никогда).
+// Когда источник ожил, следующий проход находит биографию и ставит маркер.
+func TestAuthorBackfiller_TransientDoesNotMark(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	bioProv := &flakyBioProvider{err: fmt.Errorf("%w: connection reset by peer", ErrUpstream)}
+	enricher, err := New(pool, t.TempDir(), nil, nil,
+		[]AuthorPhotoProvider{&fakePhotoProvider{}}, []AuthorBioProvider{bioProv}, nil, quiet)
+	require.NoError(t, err)
+
+	var id int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Немцова', 'немцова') RETURNING id`).Scan(&id))
+	fetched := func() bool {
+		var at *time.Time
+		require.NoError(t, pool.QueryRow(ctx, `SELECT metadata_fetched_at FROM authors WHERE id = $1`, id).Scan(&at))
+		return at != nil
+	}
+
+	bf := NewAuthorBackfiller(pool, enricher, 0, quiet)
+	bf.drain(ctx)
+	require.False(t, fetched(), "сбой источника — автор остаётся кандидатом")
+
+	bioProv.err, bioProv.bio = nil, "Биография."
+	bf.drain(ctx)
+	require.True(t, fetched(), "источник ожил — биография найдена, маркер стоит")
+	var bio string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT bio FROM authors WHERE id = $1`, id).Scan(&bio))
+	require.Equal(t, "Биография.", bio)
 }
