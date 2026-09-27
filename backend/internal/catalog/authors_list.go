@@ -7,6 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/skriptes/skriptes/backend/internal/books"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // authorAlphaOrder — алфавитный ключ сортировки авторов (фрагмент ORDER BY,
@@ -187,10 +188,11 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	where = append(where, "NOT a.is_service")
 
 	if q := strings.TrimSpace(p.Query); q != "" {
-		// Префиксный ILIKE по normalized_name (как в SuggestAuthors): GIN
-		// trigram index ускоряет на длинных запросах.
-		n := addArg(q)
-		where = append(where, fmt.Sprintf("a.normalized_name::text ILIKE $%d || '%%'", n))
+		// Префиксный ILIKE по normalized_name без различия «ё»/«е» (как в
+		// SuggestAuthors, #278): GIN trigram index по тому же выражению
+		// (authors_name_yo_trgm) ускоряет на длинных запросах.
+		n := addArg(textnorm.FoldYo(escapeLike(q)))
+		where = append(where, fmt.Sprintf(`replace(a.normalized_name::text, 'ё', 'е') ILIKE $%d || '%%' ESCAPE '\'`, n))
 	}
 
 	if p.FavoritesOnly && p.UserID > 0 {

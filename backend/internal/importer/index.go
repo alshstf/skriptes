@@ -65,7 +65,27 @@ func (im *Importer) ConfigureIndex(ctx context.Context) error {
 // ConfigureIndex — вызывать на каждом старте, чтобы индекс существовал и имел
 // нужные filterable/sortable атрибуты даже на стабильном деплое без импорта.
 func (im *Importer) ConfigureWorksIndex(ctx context.Context) error {
-	return configureWorksIndex(ctx, im.deps.Meili)
+	return configureWorksIndex(ctx, im.deps.Meili, im.foldedSearchReady(ctx))
+}
+
+// foldedSearchSchemaVersion — версия схемы works-индекса, с которой у документов
+// есть поля title_s/authors_s/series_s (свёртка «ё»→«е», #278).
+const foldedSearchSchemaVersion = 9
+
+// foldedSearchReady — индекс уже полностью пересобран схемой со свёрнутыми
+// полями, и искать можно по ним. До этого поиск остаётся на прежних полях:
+// переключись он сразу, на время полного ресинка (минуты) старые документы
+// без свёрнутых полей не находились бы вовсе. Смена searchableAttributes —
+// переиндексация всего индекса в Meili, поэтому переключение одно.
+func (im *Importer) foldedSearchReady(ctx context.Context) bool {
+	if im.deps.Pool == nil {
+		return false
+	}
+	var v int
+	err := im.deps.Pool.QueryRow(ctx, `
+		SELECT COALESCE(max(substring(key FROM 'works_index_synced_v([0-9]+)')::int), 0)
+		FROM app_settings WHERE key LIKE 'works_index_synced_v%'`).Scan(&v)
+	return err == nil && v >= foldedSearchSchemaVersion
 }
 
 // workDoc — документ индекса "works". id = works.id (primary key). Поля авторов/
@@ -78,11 +98,16 @@ type workDoc struct {
 	Authors         []string `json:"authors"`
 	AuthorIDs       []int64  `json:"author_ids"`
 	Series          string   `json:"series,omitempty"`
-	SeriesID        *int64   `json:"series_id,omitempty"`
-	Genres          []string `json:"genres"`
-	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
-	Langs           []string `json:"lang"`           // массив языков всех изданий работы
-	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
+	// Поисковые копии title/authors/series со свёрткой «ё»→«е» (textnorm.FoldYo):
+	// Meili не приравнивает их, а показывать надо исходное написание (#278).
+	TitleSearch   string   `json:"title_s"`
+	AuthorsSearch []string `json:"authors_s"`
+	SeriesSearch  string   `json:"series_s,omitempty"`
+	SeriesID      *int64   `json:"series_id,omitempty"`
+	Genres        []string `json:"genres"`
+	Year          *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
+	Langs         []string `json:"lang"`           // массив языков всех изданий работы
+	SrcLangs      []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
 	// OrigLangs — ЭФФЕКТИВНЫЙ язык оригинала: src_lang, а если пусто — язык
 	// издания (натив = сам себе оригинал). На нём стоит фильтр «Язык оригинала»
 	// (/books, авторы): «оригинал: французский» ловит и переводы с французского
@@ -104,8 +129,9 @@ type workDoc struct {
 }
 
 // configureWorksIndex создаёт и настраивает индекс works идемпотентно.
-// Без distinctAttribute: каждый документ уже = одна работа.
-func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) error {
+// Без distinctAttribute: каждый документ уже = одна работа. foldedSearch —
+// искать по свёрнутым копиям полей (см. foldedSearchReady).
+func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, foldedSearch bool) error {
 	idx := m.Index(worksIndex)
 	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
 		Uid:        worksIndex,
@@ -115,7 +141,11 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 			return fmt.Errorf("create works index: %w", err)
 		}
 	}
-	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
+	searchable := []string{"title", "authors", "series"}
+	if foldedSearch {
+		searchable = []string{"title_s", "authors_s", "series_s"}
+	}
+	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &searchable); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
 	filterable := []any{"genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}

@@ -17,6 +17,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // worksIndexName — индекс логических книг (works) в Meili. Зеркало
@@ -318,7 +319,8 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		req.Facets = params.Facets
 	}
 
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, params.Query, req)
+	// Поля works-индекса свёрнуты «ё»→«е» (#278) — запрос тоже.
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(params.Query), req)
 	if err != nil {
 		return ListResponse{}, fmt.Errorf("meili works search: %w", err)
 	}
@@ -415,7 +417,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs, hideCompilations); f != "" {
 		req.Filter = f
 	}
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, query, req)
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(query), req)
 	if err != nil {
 		return nil, fmt.Errorf("meili works search: %w", err)
 	}
