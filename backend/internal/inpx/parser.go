@@ -137,9 +137,7 @@ func ParseRecord(line []byte, schema Schema) (Record, error) {
 		default:
 			name = fmt.Sprintf("_extra%d", i-len(schema))
 		}
-		if err := assignField(&rec, name, string(f)); err != nil {
-			return Record{}, fmt.Errorf("field %s: %w", name, err)
-		}
+		assignField(&rec, name, string(f))
 	}
 	return rec, nil
 }
@@ -176,7 +174,7 @@ func ParseInp(r io.Reader, schema Schema, fn func(Record) error) error {
 
 // ── вспомогательные ────────────────────────────────────────────
 
-func assignField(rec *Record, name, raw string) error {
+func assignField(rec *Record, name, raw string) {
 	switch name {
 	case FieldAuthor:
 		rec.Authors = parseAuthors(raw)
@@ -185,19 +183,19 @@ func assignField(rec *Record, name, raw string) error {
 	case FieldTitle:
 		rec.Title = raw
 	case FieldSeries:
-		rec.Series = raw
+		// Без пробелов по краям: в librusec 2026-09 встречается серия из одних
+		// пробелов (импорт падал на «empty normalized series title») и с
+		// хвостовым пробелом (переписывал бы название существующей серии).
+		rec.Series = strings.TrimSpace(raw)
 	case FieldSerNo:
-		n, err := parseIntOrZero(raw)
-		if err != nil {
-			return err
-		}
-		rec.SerNo = n
+		rec.SerNo = lenientInt(rec, name, raw)
 	case FieldFile:
 		rec.File = raw
 	case FieldSize:
 		n, err := parseInt64OrZero(raw)
 		if err != nil {
-			return err
+			keepRaw(rec, name, raw)
+			n = 0
 		}
 		rec.Size = n
 	case FieldLibID:
@@ -212,11 +210,7 @@ func assignField(rec *Record, name, raw string) error {
 	case FieldLang:
 		rec.Lang = raw
 	case FieldLibRate:
-		n, err := parseIntOrZero(raw)
-		if err != nil {
-			return err
-		}
-		rec.Rating = n
+		rec.Rating = lenientInt(rec, name, raw)
 	case FieldKeywords:
 		rec.Keywords = raw
 	default:
@@ -225,7 +219,6 @@ func assignField(rec *Record, name, raw string) error {
 		}
 		rec.Extra[name] = raw
 	}
-	return nil
 }
 
 // parseAuthors режет AUTHOR-поле по ':' (трейлинговый ':' игнорируется).
@@ -290,6 +283,27 @@ func splitMulti(s string) []string {
 		}
 	}
 	return out
+}
+
+// lenientInt — числовое поле записи: нечисловое значение считается пустым (0),
+// а исходный текст остаётся в Extra. Одна кривая запись не должна обрывать
+// разбор всего .inp: в librusec 2026-09 у 130 книг SERNO вида «1995 01»
+// (похоже на год и номер выпуска периодики — смысл не толкуем, грабля №8).
+func lenientInt(rec *Record, name, raw string) int {
+	n, err := parseIntOrZero(raw)
+	if err != nil {
+		keepRaw(rec, name, raw)
+		return 0
+	}
+	return n
+}
+
+// keepRaw сохраняет нераспознанное значение поля в Extra.
+func keepRaw(rec *Record, name, raw string) {
+	if rec.Extra == nil {
+		rec.Extra = map[string]string{}
+	}
+	rec.Extra[name] = raw
 }
 
 func parseIntOrZero(s string) (int, error) {
