@@ -147,6 +147,9 @@ func run() error {
 		}
 		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
 		runOnceSrcLangSync(ctx(), pool, imp, logger)
+		// Серии работ, которые выпуск INPX проставил уже импортированным книгам (#275):
+		// индекс сконфигурирован и наполнен — досинкиваем только изменённые работы.
+		runOnceWorkSeriesSync(ctx(), pool, imp, logger)
 		// Известность авторов — ПОСЛЕ ресинка works-индекса: оба гоняют один и
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
@@ -886,6 +889,48 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		logger.Warn("works index sync: gc old flag keys failed", "err", err)
 	}
 	logger.Info("one-time works index resync done", "count", n, "flag", flag)
+}
+
+// runOnceWorkSeriesSync — разовый бэкфилл #275: до 1.15.2 импорт не переносил в
+// работу серию, которую выпуск INPX впервые проставил её изданиям (librusec
+// 2026-09 — серии у 113 тыс. книг), — у ~98 тыс. работ не было серии: /books её
+// не показывал, фильтр и поиск по серии не находили. Дальше то же делает каждый
+// импорт (importer.syncWorkSeries). Изменённые работы досинкиваются в индекс
+// порциями — UpsertWorksToIndex грузит документы одним запросом.
+func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_series_synced_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work series sync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	ids, err := imp.SyncWorkSeries(ctx)
+	if err != nil {
+		logger.Warn("work series sync failed — will retry next start", "err", err)
+		return
+	}
+	const batch = 5000
+	for start := 0; start < len(ids); start += batch {
+		end := min(start+batch, len(ids))
+		if err := imp.UpsertWorksToIndex(ctx, ids[start:end]); err != nil {
+			// Флаг не ставим: следующий старт пересчитает (PG уже согласован —
+			// SyncWorkSeries вернёт пусто) — поэтому досинкиваем весь индекс.
+			logger.Warn("work series sync: works index upsert failed — full resync next start", "err", err)
+			if _, derr := pool.Exec(ctx, `DELETE FROM app_settings WHERE key = $1`, importer.WorksIndexSyncedFlagKey()); derr != nil {
+				logger.Warn("work series sync: reset works index flag failed", "err", derr)
+			}
+			return
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work series sync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time work series sync done", "works", len(ids))
 }
 
 // runOnceWorkTitleLocalize — разовый backfill: локализует works.title на

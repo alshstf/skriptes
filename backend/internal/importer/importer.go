@@ -185,10 +185,12 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	} else if n > 0 {
 		logger.Info("import: work primary authors fixed", "works", n)
 	}
-	if n, err := fixStaleWorkSeries(ctx, im.deps.Pool); err != nil {
-		logger.Warn("import: fix stale work series failed", "err", err)
-	} else if n > 0 {
-		logger.Info("import: stale work series fixed", "works", n)
+	// Работы подхватывают серию изданий (в том числе впервые проставленную
+	// выпуском); индекс works обновит полный ресинк ниже.
+	if ids, err := syncWorkSeries(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: sync work series failed", "err", err)
+	} else if len(ids) > 0 {
+		logger.Info("import: work series synced", "works", len(ids))
 	}
 	if n, err := moveSeriesSubscriptions(ctx, im.deps.Pool); err != nil {
 		logger.Warn("import: move series subscriptions failed", "err", err)

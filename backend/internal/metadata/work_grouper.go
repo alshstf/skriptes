@@ -922,10 +922,13 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 			SELECT w2.id AS work_id, sub.series_id, sub.ser_no
 			FROM works w2
 			LEFT JOIN LATERAL (
+				-- Авторский цикл важнее межавторской серии (тот же порядок, что у
+				-- importer.syncWorkSeries — иначе импорт и группировка спорили бы).
 				SELECT b.series_id, b.ser_no
 				FROM books b
+				LEFT JOIN series s ON s.id = b.series_id
 				WHERE b.work_id = w2.id AND b.deleted = false AND b.series_id IS NOT NULL
-				ORDER BY b.ser_no NULLS LAST, b.id
+				ORDER BY (s.kind IS NULL) DESC, b.ser_no NULLS LAST, b.id
 				LIMIT 1
 			) sub ON true
 			WHERE w2.id = ANY($1)
