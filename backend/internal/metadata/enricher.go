@@ -775,26 +775,27 @@ const EnrichDeadline = 30 * time.Second
 // EnsureAuthorPhoto — гарантирует наличие authors.photo_path. Файл
 // сохраняется в тот же /cache/covers — у него content-addressable
 // имя, коллизий с обложками книг быть не может.
-func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
+// Возвращает true, если источник ответил сбоем (429/сеть/битый ключ): попытка
+// не помечена, вызывающий снимает общий маркер (ReopenAuthorIfIncomplete).
+func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) (transient bool) {
 	if len(e.authorPhotoProviders) == 0 {
-		return
+		return false
 	}
 	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorPhoto, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightAuthorPhoto, q.ID)
 
 	var existing *string
 	if err := e.pool.QueryRow(ctx, `SELECT photo_path FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
 		e.logger.Warn("metadata: query author photo failed", "author_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if existing != nil && *existing != "" {
-		return
+		return false
 	}
 
-	transient := false
 	for _, p := range e.authorPhotoProviders {
 		img, err := p.FetchAuthorPhoto(ctx, q)
 		if errors.Is(err, ErrNotFound) {
@@ -822,14 +823,14 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 			continue
 		}
 		e.logger.Info("metadata: author photo saved", "provider", p.Name(), "author_id", q.ID, "file", filename)
-		return
+		return false
 	}
 
 	// Транзиентная ошибка (429/битый ключ/сеть) — НЕ помечаем: иначе один сбой
 	// навсегда пометил бы автора «без фото» (single-shot по metadata_fetched_at),
 	// и ленивый путь больше не перепробовал бы. Пусть ретрай состоится.
 	if transient {
-		return
+		return true
 	}
 	// Все провайдеры честно мимо — отмечаем попытку, чтобы фронт мог решить
 	// "polling сдался" и показать fallback. Совместимо с EnsureAuthorBio:
@@ -840,6 +841,7 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 	); err != nil {
 		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
 	}
+	return false
 }
 
 // withNamesakeContext дополняет запрос автора тем, что нужно для различения
@@ -894,26 +896,26 @@ func dedupeStrings(in []string) []string {
 }
 
 // EnsureAuthorBio — параллельно EnsureAuthorPhoto, но пишет authors.bio.
-func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
+// Возвращает true при сбое источника — как EnsureAuthorPhoto.
+func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) (transient bool) {
 	if len(e.authorBioProviders) == 0 {
-		return
+		return false
 	}
 	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorBio, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightAuthorBio, q.ID)
 
 	var existing *string
 	if err := e.pool.QueryRow(ctx, `SELECT bio FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
 		e.logger.Warn("metadata: query author bio failed", "author_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if existing != nil && *existing != "" {
-		return
+		return false
 	}
 
-	transient := false
 	for _, p := range e.authorBioProviders {
 		text, err := p.FetchAuthorBio(ctx, q)
 		if errors.Is(err, ErrNotFound) {
@@ -935,13 +937,13 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 			continue
 		}
 		e.logger.Info("metadata: author bio saved", "provider", p.Name(), "author_id", q.ID, "len", len(text))
-		return
+		return false
 	}
 
 	// Транзиентная ошибка — не помечаем (см. EnsureAuthorPhoto): 429/битый ключ
 	// не должен навсегда пометить автора «без биографии».
 	if transient {
-		return
+		return true
 	}
 	// Все провайдеры честно мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
 	// ленивый путь не дёргал bio заново на каждый заход на карточку. Маркер
@@ -952,6 +954,21 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1 AND metadata_fetched_at IS NULL`, q.ID,
 	); err != nil {
 		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
+	}
+	return false
+}
+
+// ReopenAuthorIfIncomplete снимает у автора маркер metadata_fetched_at, пока у
+// него нет биографии или фото, — после сбоя источника (EnsureAuthorBio/Photo
+// вернули transient). Маркер общий для био и фото: без этого сбой биографии при
+// найденном (или честно не найденном) фото навсегда оставлял автора без
+// биографии — воркер и ленивый путь выбирают только авторов без маркера (#293).
+// Следующий проход повторит только недостающее: найденное Ensure* пропускает.
+func (e *Enricher) ReopenAuthorIfIncomplete(ctx context.Context, authorID int64) {
+	if _, err := e.pool.Exec(ctx, `
+		UPDATE authors SET metadata_fetched_at = NULL
+		WHERE id = $1 AND (COALESCE(bio, '') = '' OR COALESCE(photo_path, '') = '')`, authorID); err != nil {
+		e.logger.Warn("metadata: reopen author after transient failure", "author_id", authorID, "err", err)
 	}
 }
 

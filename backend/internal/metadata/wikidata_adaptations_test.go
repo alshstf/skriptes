@@ -317,3 +317,25 @@ func TestExtractQID(t *testing.T) {
 	require.Equal(t, "Q1", extractQID("https://www.wikidata.org/entity/Q1"))
 	require.Equal(t, "", extractQID("not-a-wikidata-uri"))
 }
+
+// Сбой проверки кандидата (429 от SPARQL под троттлингом) — не «не найдено»:
+// иначе lookups писали not_found на 90 дней, а экранизации — «нет» навсегда (#281).
+func TestWikidataAdaptations_ThrottledValidationIsUpstream(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/sparql" {
+			w.WriteHeader(http.StatusTooManyRequests)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"search":[{"id":"Q11111"}]}`))
+	}))
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+
+	_, err := p.FetchAdaptations(context.Background(), BookQuery{
+		Title:   "Анна Каренина",
+		Authors: []string{"Толстой Лев"},
+	})
+	require.ErrorIs(t, err, ErrUpstream)
+	require.NotErrorIs(t, err, ErrNotFound)
+}
