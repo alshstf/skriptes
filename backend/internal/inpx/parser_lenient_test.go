@@ -33,3 +33,16 @@ func TestParseRecord_LenientNumbers(t *testing.T) {
 		t.Fatalf("ParseInp: err=%v, records=%d, want 2", err, n)
 	}
 }
+
+func TestParseRecord_SeriesTrimmed(t *testing.T) {
+	for raw, want := range map[string]string{"   ": "", "Тьма... и ее объятья ": "Тьма... и ее объятья", "Цикл": "Цикл"} {
+		fields := []string{"Автор,Имя,", "sf", "Книга", raw, "", "1", "10", "1", "0", "fb2", "", "ru", "", ""}
+		rec, err := ParseRecord([]byte(strings.Join(fields, "\x04")), DefaultSchema)
+		if err != nil {
+			t.Fatalf("ParseRecord: %v", err)
+		}
+		if rec.Series != want {
+			t.Errorf("series %q → %q, want %q", raw, rec.Series, want)
+		}
+	}
+}

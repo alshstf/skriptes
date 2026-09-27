@@ -178,7 +178,10 @@ func assignField(rec *Record, name, raw string) {
 	case FieldTitle:
 		rec.Title = raw
 	case FieldSeries:
-		rec.Series = raw
+		// Без пробелов по краям: в librusec 2026-09 встречается серия из одних
+		// пробелов (импорт падал на «empty normalized series title») и с
+		// хвостовым пробелом (переписывал бы название существующей серии).
+		rec.Series = strings.TrimSpace(raw)
 	case FieldSerNo:
 		rec.SerNo = lenientInt(rec, name, raw)
 	case FieldFile:
