@@ -43,6 +43,9 @@ func TestClassifyServiceAuthors_Integration(t *testing.T) {
 	gazeta := mk("Газета Завтра", "", "газета завтра")
 	unknown := mk("неизвестный", "Автор", "неизвестный автор")
 	zhurnal := mk("Журнал «Если»", "", "журнал «если»")
+	// librusec: категория в фамилии, «Автор неизвестен» в имени (#297).
+	category := mk("Эротика и секс", "Автор неизвестен", "эротика и секс автор неизвестен --")
+	reversed := mk("Автор неизвестен -- Античная литература", "", "автор неизвестен -- античная литература")
 
 	// Негативные: люди, похожие на паттерны только частично.
 	gardner := mk("Гарднер", "Лиза", "гарднер лиза")
@@ -57,9 +60,9 @@ func TestClassifyServiceAuthors_Integration(t *testing.T) {
 
 	n, err := ClassifyServiceAuthors(ctx, pool)
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, n, int64(5))
+	require.GreaterOrEqual(t, n, int64(7))
 
-	for _, id := range []int64{collective, tales, gazeta, unknown, zhurnal} {
+	for _, id := range []int64{collective, tales, gazeta, unknown, zhurnal, category, reversed} {
 		s, src := svcOf(id)
 		require.True(t, s, "агрегат-псевдоавтор должен быть помечен (id=%d)", id)
 		require.Equal(t, "heuristic", src)

@@ -385,7 +385,29 @@ func (im *Importer) ResyncLangs(ctx context.Context) (int, error) {
 // доки его не имели) и после прохода группировки (merge меняет work_id у
 // изданий). Зеркало ResyncLangs. Возвращает число обновлённых документов.
 func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
-	rows, err := im.deps.Pool.Query(ctx, `SELECT id, COALESCE(work_id, 0) FROM books WHERE deleted = false`)
+	return im.resyncWorkIDs(ctx, `SELECT id, COALESCE(work_id, 0) FROM books WHERE deleted = false`)
+}
+
+// ResyncWorkIDsFor — то же для изданий работ workIDs: после группировки и ручных
+// split/merge меняется work_id только у изданий затронутых работ (перенесённые
+// издания лежат в канонической или новой работе — она тоже в списке). Полный
+// проход переписывал work_id всем 465 тыс. документам много раз в сутки (#300).
+func (im *Importer) ResyncWorkIDsFor(ctx context.Context, workIDs []int64) (int, error) {
+	total := 0
+	const chunk = 5000
+	for i := 0; i < len(workIDs); i += chunk {
+		n, err := im.resyncWorkIDs(ctx,
+			`SELECT id, work_id FROM books WHERE deleted = false AND work_id = ANY($1)`, workIDs[i:min(i+chunk, len(workIDs))])
+		total += n
+		if err != nil {
+			return total, err
+		}
+	}
+	return total, nil
+}
+
+func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any) (int, error) {
+	rows, err := im.deps.Pool.Query(ctx, query, args...)
 	if err != nil {
 		return 0, fmt.Errorf("query work_id: %w", err)
 	}

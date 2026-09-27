@@ -102,19 +102,13 @@ func run() error {
 	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
 	logger.Info("meilisearch client configured", "url", cfg.MeiliURL)
 
-	// Стартовый scan: импортируем все *.inpx из каталога SKRIPTES_INPX_ROOT
-	// (или только SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL
-	// подхватываем новый/изменённый INPX без рестарта.
-	// Идемпотентно: повторные старты на тех же файлах — no-op за счёт хэш-проверки.
-	// Не блокируем HTTP — крутим в горутине; если /readyz нужно учитывать импорт,
-	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
-	// Один импортёр на процесс: его использует и стартовый скан, и ручная
+	// Один импортёр на процесс: его использует и импорт INPX (стартовый скан +
+	// слежение, запускается в конце горутины разовых шагов ниже), и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
 	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
-	go runImportLoop(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
@@ -163,6 +157,13 @@ func run() error {
 			logger.Info("search index reconcile done", "works_removed", r.WorksRemoved,
 				"works_added", r.WorksAdded, "books_removed", r.BooksRemoved, "books_missing", r.BooksMissing)
 		}
+		// Импорт INPX — после разовых шагов, а не параллельно с ними: и те, и шаги
+		// после импорта массово пишут в works, вперемешку ловили deadlock (#300).
+		// Стартовый скан всех *.inpx из SKRIPTES_INPX_ROOT (или только
+		// SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL — новый
+		// или изменённый INPX без рестарта. Повторный старт на тех же файлах —
+		// no-op за счёт хэш-проверки. HTTP не ждёт ни того, ни другого.
+		runImportLoop(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
 	}()
 
 	authSvc := auth.New(pool, 0)
@@ -644,11 +645,15 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	}
 }
 
-// runImportPass импортирует файлы по очереди и делает общие шаги после импорта.
+// runImportPass импортирует файлы по очереди и делает общие шаги после импорта —
+// только если хоть один файл реально импортировался (или упал на полпути: записи
+// коммитятся по одной). На старте без нового INPX шаги не нужны: оверрайды,
+// классификация и известность уже посчитаны по тем же данным (#300).
 // Удачный импорт и осознанный пропуск отмечаются в watch; упавший — нет, его
 // watch вернёт на следующей проверке.
 func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
 	watch *importer.InpxWatch, files []string, logger *slog.Logger) {
+	imported := false
 	for _, f := range files {
 		metrics.ImportStarted()
 		stats, err := imp.Run(ctx, f) // статистика логируется изнутри Run
@@ -659,6 +664,7 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 			if stats.Records == 0 { // файл не менялся — Run вышел, не читая записи
 				metrics.ImportFinished("unchanged", metrics.ImportResult{})
 			} else {
+				imported = true
 				metrics.ImportFinished("ok", metrics.ImportResult{
 					Records: stats.Records, BooksInserted: stats.BooksInserted,
 					RecordErrors: stats.Errors, Duration: stats.Duration,
@@ -675,9 +681,13 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 				"matched", overlap.Matched, "sampled", overlap.Sampled)
 			watch.MarkDone(f)
 		default:
+			imported = true
 			metrics.ImportFinished("failed", metrics.ImportResult{})
 			logger.Error("import failed for file", "file", f, "err", err)
 		}
+	}
+	if !imported {
+		return
 	}
 	// Ре-применить ручные оверрайды полей, которые импорт ПЕРЕЗАПИСЫВАЕТ (lang) —
 	// иначе ре-импорт коллекции сбросил бы правки (грабля №19).
@@ -773,10 +783,12 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *sl
 
 // runOnceServiceAuthorClassify — разовый эвристический бэкфилл «служебных
 // авторов» (агрегатов-псевдоавторов) на существующей коллекции. Гейт
-// service_authors_classified_v1: один раз на апгрейде; дальше новых метит
-// after-import вызов. Зеркало runOnceWorkKindClassify.
+// service_authors_classified_vN: один раз на апгрейде; дальше новых метит
+// after-import вызов. Зеркало runOnceWorkKindClassify. Расширил правило
+// (authorkind.ServiceNamePatterns) — бампни версию, иначе старые записи
+// разметятся только при следующем импорте (v2: «Категория | Автор неизвестен», #297).
 func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "service_authors_classified_v1"
+	const flag = "service_authors_classified_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("service author classify: check flag failed — skip", "err", err)
@@ -948,11 +960,12 @@ func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 // стало иноязычное издание» — карточка и works-поиск показывали английский
 // заголовок при русских изданиях. Изменённые работы таргетно ресинкаются в
 // works-индекс (поиск по локализованному названию начинает находить).
-// Гейт app_settings.work_title_localized_v1: один раз на апгрейде, дальше no-op
+// Гейт app_settings.work_title_localized_vN: один раз на апгрейде, дальше no-op
 // (новые такие работы локализует группировка в apply). Зовётся ПОСЛЕ
-// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен.
+// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен. Сменил правило
+// выбора названия — бампни версию (v2: самое частое название изданий, #306).
 func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_title_localized_v1"
+	const flag = "work_title_localized_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work title localize: check flag failed — skip", "err", err)
@@ -965,6 +978,12 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 	if err != nil {
 		logger.Warn("work title localize failed — will retry next start", "err", err)
 		return
+	}
+	// Эвристический тип (сборник/антология) мог держаться на прежнем названии.
+	if len(changed) > 0 {
+		if _, err := metadata.ReclassifyWorkKinds(ctx, pool, changed); err != nil {
+			logger.Warn("work title localize: reclassify kinds failed", "err", err)
+		}
 	}
 	// Ресинк индекса для изменённых работ ДО установки флага: если он упадёт, не
 	// фиксируем гейт — на следующем старте title уже локализованы (changed=∅),

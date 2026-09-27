@@ -35,12 +35,12 @@ import (
 // edition_meta_scanned_at IS NOT NULL, чтобы были src-ключи). После обработки
 // книга помечается work_scanned_at, чтобы не гонять повторно (TTL для Tier-2 —
 // в book_work_lookups).
-// WorkIDResyncer пере-синкивает Meili-поле work_id из books.work_id
-// (реализуется *importer.Importer). Группировка дёргает после прохода, в
-// котором work_id у изданий менялся — чтобы distinctAttribute=work_id в поиске
-// схлопывал по актуальной работе.
+// WorkIDResyncer пере-синкивает Meili-поле work_id из books.work_id для
+// изданий заданных работ (реализуется *importer.Importer). Группировка дёргает
+// после прохода, в котором work_id у изданий менялся — чтобы
+// distinctAttribute=work_id в поиске схлопывал по актуальной работе.
 type WorkIDResyncer interface {
-	ResyncWorkIDs(ctx context.Context) (int, error)
+	ResyncWorkIDsFor(ctx context.Context, workIDs []int64) (int, error)
 }
 
 // WorksIndexSyncer — таргетный синк индекса works в Meili (реализуется
@@ -268,7 +268,8 @@ func (g *WorkGrouper) resetPassState() {
 // work_id (distinct/OPDS) + таргетный works-индекс (upsert изменённых, delete GC).
 func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
 	if g.resyncer != nil && g.merged.Load() > 0 && ctx.Err() == nil {
-		if n, err := g.resyncer.ResyncWorkIDs(ctx); err != nil {
+		// Перенесённые издания — в канонических работах, те в touchedWorks.
+		if n, err := g.resyncer.ResyncWorkIDsFor(ctx, keysOf(g.touchedWorks)); err != nil {
 			g.logger.Warn("work grouping: resync work_id to meili failed", "err", err)
 		} else {
 			g.logger.Info("work grouping: work_id resynced to meili", "merged", g.merged.Load(), "synced", n)
@@ -1598,14 +1599,15 @@ func survivors(all, removed []int64) []int64 {
 
 // syncSearchAfterManual — детачнутый синк поиска после РУЧНЫХ split/merge:
 // books-индекс (work_id для distinct/OPDS) + таргетный works-индекс. В фоне,
-// чтобы не держать админ-запрос на полном ResyncWorkIDs.
+// чтобы не держать админ-запрос на синке. touched — все работы, куда попали
+// перенесённые издания (новые работы split'а, выжившая работа merge'а).
 func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
 	if c.resyncer == nil {
 		return
 	}
 	go func() {
 		ctx := context.Background()
-		if _, err := c.resyncer.ResyncWorkIDs(ctx); err != nil {
+		if _, err := c.resyncer.ResyncWorkIDsFor(ctx, touched); err != nil {
 			c.logger.Warn("manual work edit: resync work_id failed", "err", err)
 		}
 		syncer, ok := c.resyncer.(WorksIndexSyncer)

@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/authorkind"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 )
 
@@ -52,9 +53,20 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 	if err != nil {
 		return nil, fmt.Errorf("scan series authors: %w", err)
 	}
+	service, err := im.serviceAuthorKeys(ctx)
+	if err != nil {
+		return nil, err
+	}
+	isService := func(key string) bool {
+		if v, ok := service[key]; ok {
+			return v
+		}
+		name, _, _ := strings.Cut(key, "\x00")
+		return authorkind.IsServiceName(name)
+	}
 	multi := map[string]bool{}
 	for title, byAuthor := range booksBySeries {
-		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor) && !isGenericSeriesTitle(title) {
+		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor, isService) && !isGenericSeriesTitle(title) {
 			multi[title] = true
 		}
 	}
@@ -121,13 +133,46 @@ func isGenericSeriesTitle(title string) bool {
 }
 
 // hasDominantAuthor — у одного автора не меньше половины книг серии.
-func hasDominantAuthor(byAuthor map[string]int) bool {
+// Служебный автор («Журнал «Вокруг света»», «Анекдоты | Автор неизвестен»)
+// доминирующим не бывает: серия журнала или сборника с чужими книгами — это
+// издательская серия, а не чей-то цикл (прод 2026-09: «Вокруг света (журнал)» —
+// 418 из 452 у журнала и 18 обрывков-«циклов» у остальных авторов, #298). Его
+// книги при этом входят в общее число.
+func hasDominantAuthor(byAuthor map[string]int, isService func(key string) bool) bool {
 	total, top := 0, 0
-	for _, n := range byAuthor {
+	for key, n := range byAuthor {
 		total += n
-		top = max(top, n)
+		if !isService(key) {
+			top = max(top, n)
+		}
 	}
 	return top*2 >= total
+}
+
+// serviceAuthorKeys — решения о служебности авторов, уже принятые в базе
+// (authorKey → is_service): метки эвристики и ручные в обе стороны (админ снял
+// метку — автор снова может быть доминирующим). Авторов, которых в базе нет
+// (свежая база, новые имена выпуска), planMultiSeries проверяет правилом
+// authorkind напрямую.
+func (im *Importer) serviceAuthorKeys(ctx context.Context) (map[string]bool, error) {
+	rows, err := im.deps.Pool.Query(ctx, `
+		SELECT normalized_name::text, lower(btrim(COALESCE(name_note, ''))), is_service
+		FROM authors
+		WHERE is_service OR is_service_source = 'manual'`)
+	if err != nil {
+		return nil, fmt.Errorf("load service authors: %w", err)
+	}
+	defer rows.Close()
+	res := map[string]bool{}
+	for rows.Next() {
+		var name, note string
+		var svc bool
+		if err := rows.Scan(&name, &note, &svc); err != nil {
+			return nil, err
+		}
+		res[name+"\x00"+note] = svc // формат authorKey
+	}
+	return res, rows.Err()
 }
 
 // moveSeriesSubscriptions — подписки на прежние «циклы» автора с названием
