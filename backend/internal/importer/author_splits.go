@@ -336,32 +336,53 @@ func fixWorkPrimaryAuthors(ctx context.Context, pool *pgxpool.Pool) (int64, erro
 	return tag.RowsAffected(), nil
 }
 
-// fixStaleWorkSeries — работам, чья серия больше не стоит ни у одного живого
-// издания (импорт обновляет серию книги, но не работы — после разделения тёзок
-// книга уходит в серию нового автора), берёт серию и номер представительного
-// издания (якорь → min id; может быть и «без серии»). Ручные правки серии/номера
-// не трогает.
-func fixStaleWorkSeries(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
-	tag, err := pool.Exec(ctx, `
-		UPDATE works w SET series_id = p.series_id, ser_no = p.ser_no, updated_at = now()
-		FROM (
-			SELECT DISTINCT ON (w2.id) w2.id AS work_id, b.series_id, b.ser_no
-			FROM works w2
-			JOIN books b ON b.work_id = w2.id AND b.deleted = false
-			WHERE w2.series_id IS NOT NULL
-			  AND NOT EXISTS (
-			      SELECT 1 FROM books b2
-			      WHERE b2.work_id = w2.id AND b2.deleted = false AND b2.series_id = w2.series_id)
-			  AND NOT EXISTS (
-			      SELECT 1 FROM metadata_overrides o
-			      WHERE o.target_kind = 'work' AND o.target_id = w2.id AND o.field IN ('series', 'ser_no'))
-			ORDER BY w2.id, (b.normalized_title = w2.normalized_title) DESC, b.id
-		) p
-		WHERE w.id = p.work_id`)
+// syncWorkSeries выставляет работам серию и номер представительного издания
+// там, где они разошлись: серия работы больше не стоит ни у одного живого издания
+// (разделение тёзок, правки выпуска), серии у работы нет, а у изданий появилась
+// (выпуск 2026-09 впервые проставил серии 113 тыс. книг, #275), или сменился
+// номер. Импорт обновляет серию книги, но не работы, — без этого шага работа
+// оставалась без серии: /books её не показывал, фильтр и поиск по серии не
+// находили. Представитель — издание с серией, авторский цикл важнее
+// межавторской серии, потом меньший номер, потом id (тот же порядок, что у
+// recomputeWorkAggregates в группировке). Ручные правки серии/номера не трогает.
+// Возвращает id изменённых работ.
+func syncWorkSeries(ctx context.Context, pool *pgxpool.Pool) ([]int64, error) {
+	rows, err := pool.Query(ctx, `
+		WITH rep AS (
+			SELECT DISTINCT ON (b.work_id) b.work_id, b.series_id, b.ser_no
+			FROM books b
+			LEFT JOIN series s ON s.id = b.series_id
+			WHERE b.deleted = false AND b.work_id IS NOT NULL
+			ORDER BY b.work_id, (b.series_id IS NOT NULL) DESC, (s.kind IS NULL) DESC,
+			         b.ser_no NULLS LAST, b.id
+		)
+		UPDATE works w SET series_id = rep.series_id, ser_no = rep.ser_no, updated_at = now()
+		FROM rep
+		WHERE w.id = rep.work_id
+		  AND (w.series_id IS DISTINCT FROM rep.series_id OR w.ser_no IS DISTINCT FROM rep.ser_no)
+		  AND NOT EXISTS (
+		      SELECT 1 FROM metadata_overrides o
+		      WHERE o.target_kind = 'work' AND o.target_id = w.id AND o.field IN ('series', 'ser_no'))
+		RETURNING w.id`)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return tag.RowsAffected(), nil
+	defer rows.Close()
+	var ids []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	return ids, rows.Err()
+}
+
+// SyncWorkSeries — syncWorkSeries для разового бэкфилла на старте (новая серия
+// уже импортированных книг не доехала до работ до #275).
+func (im *Importer) SyncWorkSeries(ctx context.Context) ([]int64, error) {
+	return syncWorkSeries(ctx, im.deps.Pool)
 }
 
 // deleteEmptySeries — удаляет серии без книг и работ, на которые никто не
