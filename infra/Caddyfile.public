@@ -6,6 +6,10 @@
 # редиректа на https и как запасной путь проверки ACME; основной — TLS-ALPN на 443.
 
 {
+	# Метрики HTTP-серверов Caddy (запросы, коды, задержки) — отдаются только
+	# внутренним сайтом :9180 ниже, на основной сайт не выходят.
+	metrics
+
 	# Только HTTP/1.1 и HTTP/2. По умолчанию Caddy включает и HTTP/3 (QUIC по UDP 443)
 	# и объявляет его заголовком alt-svc, но compose публикует только TCP 443 и роутер
 	# пробрасывает только TCP: браузер пробовал бы QUIC впустую и откатывался на h2.
@@ -16,6 +20,14 @@
 
 {$SKRIPTES_HOST} {
 	encode zstd gzip
+
+	# Журнал запросов — JSON в stdout (дальше docker/journald). Caddy сам вырезает из
+	# него Cookie и Authorization; остаются IP посетителей и пути запросов (в том числе
+	# поисковые запросы из URL) — учитывайте при хранении журналов.
+	log {
+		output stdout
+		format json
+	}
 
 	# Заголовки «настоящего IP клиента» из запроса не доверяем: без Cloudflare/CDN их
 	# ставит сам клиент. Backend берёт IP из самого правого значения X-Forwarded-For,
@@ -70,4 +82,25 @@
 	handle {
 		reverse_proxy frontend:8080
 	}
+}
+
+# Метрики для сборщика из доверенной сети (Prometheus / Grafana Alloy):
+#   /metrics/skriptes — приложение (backend, SKRIPTES_METRICS_ADDR), /metrics/caddy — Caddy.
+# Обычный HTTP без TLS на отдельном порту: compose публикует его на SKRIPTES_METRICS_BIND
+# (по умолчанию 127.0.0.1 — только сам хост), пускает только SKRIPTES_METRICS_CIDRS
+# (адрес соединения, заголовками не подделать; не задана → 127.0.0.1/32, то есть никого).
+# Порты, опубликованные Docker, обходят ufw — ограничивайте доступ ещё и на роутере.
+:9180 {
+	@collector remote_ip {$SKRIPTES_METRICS_CIDRS:127.0.0.1/32}
+	handle @collector {
+		handle /metrics/caddy {
+			metrics
+		}
+		handle /metrics/skriptes {
+			rewrite * /metrics
+			reverse_proxy backend:9091
+		}
+		respond 404
+	}
+	respond 403
 }

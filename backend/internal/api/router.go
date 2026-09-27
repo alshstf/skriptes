@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
@@ -52,6 +53,8 @@ func NewRouter(d Deps) http.Handler {
 	// левому XFF от клиента (GO-2026-5774/5775/5777). Контракт: backend доступен
 	// ТОЛЬКО через один reverse-proxy, выставляющий XFF; без XFF — RemoteAddr.
 	r.Use(middleware.ClientIPFromXFF())
+	// Метрики запросов — до Recoverer: 500 после паники тоже попадает в счётчик.
+	r.Use(metrics.HTTPMiddleware)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 

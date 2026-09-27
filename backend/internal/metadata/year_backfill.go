@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // YearBackfiller — фоновое дозаполнение written_year из ВНЕШНИХ источников
@@ -383,6 +385,7 @@ func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source st
 }
 
 func (b *YearBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string, year int) {
+	metrics.EnrichmentLookups.WithLabelValues("year", source, outcome).Inc()
 	var yptr *int
 	if year > 0 {
 		yptr = &year

@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // RenownBackfiller — фоновое дозаполнение внешних счётчиков «известности» работ
@@ -462,6 +464,7 @@ func (b *RenownBackfiller) isDue(l lookupRow, now time.Time) bool {
 }
 
 func (b *RenownBackfiller) upsertLookup(ctx context.Context, workID int64, source, outcome string) {
+	metrics.EnrichmentLookups.WithLabelValues("renown", source, outcome).Inc()
 	if _, err := b.pool.Exec(ctx, `
 		INSERT INTO work_renown_lookups (work_id, source, outcome, checked_at)
 		VALUES ($1, $2, $3, now())

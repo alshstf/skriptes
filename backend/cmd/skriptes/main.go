@@ -30,6 +30,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
@@ -527,6 +528,29 @@ func run() error {
 	sigCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	// Метрики Prometheus — отдельный внутренний сервер, не основной сайт: наружу его не
+	// публикуем (в публичном деплое — внутренний сайт Caddy :9180 только для сборщика).
+	// Если не поднялся — пишем ошибку, приложение работает дальше.
+	var metricsSrv *http.Server
+	if cfg.MetricsAddr != "" {
+		metrics.SetBuildInfo(effectiveVersion(cfg.Version))
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", metrics.Handler())
+		metricsSrv = &http.Server{
+			Addr:              cfg.MetricsAddr,
+			Handler:           mux,
+			ReadHeaderTimeout: 10 * time.Second,
+			ReadTimeout:       30 * time.Second,
+			WriteTimeout:      30 * time.Second,
+		}
+		go func() {
+			logger.Info("metrics server starting", "addr", cfg.MetricsAddr)
+			if err := metricsSrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				logger.Error("metrics server failed", "err", err)
+			}
+		}()
+	}
+
 	go func() {
 		logger.Info("http server starting", "addr", cfg.HTTPAddr, "version", effectiveVersion(cfg.Version))
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -540,6 +564,9 @@ func run() error {
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
+	if metricsSrv != nil {
+		_ = metricsSrv.Shutdown(shutdownCtx)
+	}
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		return fmt.Errorf("graceful shutdown: %w", err)
 	}
@@ -610,12 +637,22 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
 	watch *importer.InpxWatch, files []string, logger *slog.Logger) {
 	for _, f := range files {
-		_, err := imp.Run(ctx, f) // статистика логируется изнутри Run
+		metrics.ImportStarted()
+		stats, err := imp.Run(ctx, f) // статистика логируется изнутри Run
 		var overlap *importer.OverlapError
 		switch {
 		case err == nil:
 			watch.MarkDone(f)
+			if stats.Records == 0 { // файл не менялся — Run вышел, не читая записи
+				metrics.ImportFinished("unchanged", metrics.ImportResult{})
+			} else {
+				metrics.ImportFinished("ok", metrics.ImportResult{
+					Records: stats.Records, BooksInserted: stats.BooksInserted,
+					RecordErrors: stats.Errors, Duration: stats.Duration,
+				})
+			}
 		case errors.As(err, &overlap):
+			metrics.ImportFinished("skipped", metrics.ImportResult{})
 			// Рядом лежит второй INPX той же библиотеки (#250): каждый выпуск
 			// импортировался бы дважды, метаданные перезаписывали бы друг друга.
 			// Не повторяем, пока файл не изменится.
@@ -625,6 +662,7 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 				"matched", overlap.Matched, "sampled", overlap.Sampled)
 			watch.MarkDone(f)
 		default:
+			metrics.ImportFinished("failed", metrics.ImportResult{})
 			logger.Error("import failed for file", "file", f, "err", err)
 		}
 	}

@@ -13,6 +13,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // WorkGrouper — фоновая группировка ИЗДАНИЙ (строк books) в логические КНИГИ
@@ -1682,6 +1684,7 @@ func (g *WorkGrouper) isDue(l workLookupRow, now time.Time) bool {
 }
 
 func (g *WorkGrouper) upsertWorkLookup(ctx context.Context, bookID int64, source, outcome, workKey string) {
+	metrics.EnrichmentLookups.WithLabelValues("work_grouping", source, outcome).Inc()
 	var kptr *string
 	if workKey != "" {
 		kptr = &workKey
