@@ -950,11 +950,12 @@ func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 // стало иноязычное издание» — карточка и works-поиск показывали английский
 // заголовок при русских изданиях. Изменённые работы таргетно ресинкаются в
 // works-индекс (поиск по локализованному названию начинает находить).
-// Гейт app_settings.work_title_localized_v1: один раз на апгрейде, дальше no-op
+// Гейт app_settings.work_title_localized_vN: один раз на апгрейде, дальше no-op
 // (новые такие работы локализует группировка в apply). Зовётся ПОСЛЕ
-// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен.
+// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен. Сменил правило
+// выбора названия — бампни версию (v2: самое частое название изданий, #306).
 func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_title_localized_v1"
+	const flag = "work_title_localized_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work title localize: check flag failed — skip", "err", err)
@@ -967,6 +968,12 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 	if err != nil {
 		logger.Warn("work title localize failed — will retry next start", "err", err)
 		return
+	}
+	// Эвристический тип (сборник/антология) мог держаться на прежнем названии.
+	if len(changed) > 0 {
+		if _, err := metadata.ReclassifyWorkKinds(ctx, pool, changed); err != nil {
+			logger.Warn("work title localize: reclassify kinds failed", "err", err)
+		}
 	}
 	// Ресинк индекса для изменённых работ ДО установки флага: если он упадёт, не
 	// фиксируем гейт — на следующем старте title уже локализованы (changed=∅),

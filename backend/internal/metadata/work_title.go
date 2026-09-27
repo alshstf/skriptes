@@ -33,14 +33,21 @@ func dominantLang(ctx context.Context, ex queryRower) (string, error) {
 }
 
 // recomputeWorkTitles переписывает works.title/normalized_title на заголовок
-// издания работы в языке domLang (предпочитая обложку → edition_year → id) —
-// ТОЛЬКО для работ, у которых такое издание ЕСТЬ; остальные не трогаются.
+// издания работы в языке domLang — ТОЛЬКО для работ, у которых такое издание
+// ЕСТЬ; остальные не трогаются.
 //
 // Зачем: при слиянии «перевод + оригинал» каноникой могло стать иноязычное
 // издание, и works.title оставался, например, английским («Another Fine Myth»),
 // хотя в библиотеке книга известна по русскому переводу. Карточка (COALESCE(
 // w.title, b.title)) и works-индекс брали этот английский заголовок → рассинхрон
 // со списком (b.title представителя) и провал поиска по русскому названию.
+//
+// Какое из изданий в domLang: название, под которым вышло БОЛЬШЕ всего изданий
+// (без различия «ё»/«е»), а не «новейшее с обложкой» — иначе работа из семи
+// «Золотых телят» называлась «Собрание сочинений в 2 томах. Том 2. Золотой
+// теленок» (прод 2026-09: 167 таких работ, #306). При равенстве — текущее
+// название работы (не прыгает между проходами), затем самое частое написание,
+// обложка, новейшее издание, id.
 //
 // ids == nil → все работы. Возвращает id работ, чьё название реально изменилось
 // (для таргетного ресинка works-индекса). Идемпотентно (UPDATE ... IS DISTINCT).
@@ -50,23 +57,34 @@ func recomputeWorkTitles(ctx context.Context, ex interface {
 	if domLang == "" {
 		return nil, nil
 	}
-	// pick: на каждую работу — лучшее издание в domLang (DISTINCT ON по work_id).
-	// Фильтр lang = domLang в CTE ⇒ работы без издания в этом языке в pick не
-	// попадают и UPDATE их не трогает (сохраняют текущее каноническое название —
-	// не ломаем работы, у которых перевода на язык библиотеки просто нет).
-	// $2::bigint[] IS NULL (nil-slice от pgx) → без фильтра по ids = все работы.
+	// ed: издания работы в domLang. Фильтр lang = domLang ⇒ работы без издания в
+	// этом языке в pick не попадают и UPDATE их не трогает (сохраняют текущее
+	// каноническое название — не ломаем работы, у которых перевода на язык
+	// библиотеки просто нет). $2::bigint[] IS NULL (nil-slice от pgx) → без
+	// фильтра по ids = все работы.
 	const q = `
-		WITH pick AS (
-			SELECT DISTINCT ON (b.work_id)
-			       b.work_id AS wid, b.title AS title, b.normalized_title AS ntitle
+		WITH ed AS (
+			SELECT b.id, b.work_id, b.title, b.normalized_title,
+			       translate(b.normalized_title::text, 'ё', 'е') AS folded,
+			       (b.cover_path IS NOT NULL AND b.cover_path <> '') AS has_cover,
+			       b.edition_year,
+			       count(*) OVER (PARTITION BY b.work_id, translate(b.normalized_title::text, 'ё', 'е')) AS n_folded,
+			       count(*) OVER (PARTITION BY b.work_id, b.normalized_title::text) AS n_exact
 			FROM books b
 			WHERE b.deleted = false AND b.work_id IS NOT NULL
 			  AND lower(btrim(b.lang)) = $1
 			  AND ($2::bigint[] IS NULL OR b.work_id = ANY($2))
-			ORDER BY b.work_id,
-			         (b.cover_path IS NOT NULL AND b.cover_path <> '') DESC,
-			         b.edition_year DESC NULLS LAST,
-			         b.id
+		), pick AS (
+			SELECT DISTINCT ON (ed.work_id)
+			       ed.work_id AS wid, ed.title AS title, ed.normalized_title AS ntitle
+			FROM ed JOIN works cur ON cur.id = ed.work_id
+			ORDER BY ed.work_id,
+			         ed.n_folded DESC,
+			         (ed.folded = translate(cur.normalized_title::text, 'ё', 'е')) DESC,
+			         ed.n_exact DESC,
+			         ed.has_cover DESC,
+			         ed.edition_year DESC NULLS LAST,
+			         ed.id
 		)
 		UPDATE works w
 		SET title = pick.title, normalized_title = pick.ntitle, updated_at = now()

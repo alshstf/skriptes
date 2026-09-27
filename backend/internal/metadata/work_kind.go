@@ -42,6 +42,19 @@ const workKindClassifyLockID = 0x776b636c61737379 // "wkclassy" в hex
 // (наблюдали на проде 1.9.0). Лок гарантирует, что второй вызов ЖДЁТ первый,
 // а не конфликтует (первый расставит kind → второй пройдёт по 0 строк).
 func ClassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
+	return classifyWorkKinds(ctx, pool, nil)
+}
+
+// ReclassifyWorkKinds — ClassifyWorkKinds, но у работ ids эвристический тип
+// сначала сбрасывается: он мог держаться на прежнем названии («Собрание
+// сочинений… Золотой теленок» → «Золотой теленок», #306), а обратной очистки
+// у эвристики нет. Сигналы, которые остались (серия-паразит, ≥4 авторов),
+// вернут тип тем же проходом. Метки fantlab/override не трогаются.
+func ReclassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool, ids []int64) (int64, error) {
+	return classifyWorkKinds(ctx, pool, ids)
+}
+
+func classifyWorkKinds(ctx context.Context, pool *pgxpool.Pool, reset []int64) (int64, error) {
 	var total int64
 
 	// Захватываем отдельное соединение под advisory-lock: лок сессионный
@@ -60,6 +73,14 @@ func ClassifyWorkKinds(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
 	defer func() {
 		_, _ = conn.Exec(context.Background(), `SELECT pg_advisory_unlock($1)`, workKindClassifyLockID)
 	}()
+
+	if len(reset) > 0 {
+		if _, err := conn.Exec(ctx, `
+			UPDATE works SET kind = NULL, kind_source = NULL
+			WHERE id = ANY($1) AND kind_source = 'heuristic'`, reset); err != nil {
+			return 0, fmt.Errorf("reset heuristic kinds: %w", err)
+		}
+	}
 
 	// 1. Title-паттерн самой работы. ~* — регистронезависимо; \m/\M — границы
 	// слова в PG-регекспах (word start/end).

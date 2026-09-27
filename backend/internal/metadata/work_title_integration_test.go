@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"strings"
 	"testing"
 	"time"
 
@@ -102,4 +103,60 @@ func TestRecomputeWorkTitles_Behavior(t *testing.T) {
 	changed2, err := recomputeWorkTitles(ctx, pool, "ru", []int64{widA, widB})
 	require.NoError(t, err)
 	require.Empty(t, changed2, "повторный пересчёт — без изменений")
+}
+
+// TestRecomputeWorkTitles_MostFrequent — #306: название работы — самое частое
+// среди изданий (без различия «ё»/«е»), а не новейшее издание с обложкой;
+// при равенстве остаётся текущее. Эвристический тип, державшийся на прежнем
+// названии, снимает ReclassifyWorkKinds.
+func TestRecomputeWorkTitles_MostFrequent(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Ильф", "ильф илья")
+
+	// Работа A: том собрания сочинений (новейший, с обложкой) + три отдельных
+	// издания «Золотой телёнок/теленок».
+	vol := seedGroupBook(t, ctx, pool, collID, archID, author, "C1",
+		"Собрание сочинений в 2 томах. Том 2. Золотой теленок", "собрание сочинений в 2 томах. том 2. золотой теленок", "ru", "", "", "")
+	widA := workIDOf(t, ctx, pool, vol)
+	for i, tt := range []string{"Золотой телёнок", "Золотой телёнок", "Золотой теленок"} {
+		id := seedGroupBook(t, ctx, pool, collID, archID, author, "C"+string(rune('2'+i)), tt, strings.ToLower(tt), "ru", "", "", "")
+		_, err := pool.Exec(ctx, `UPDATE books SET work_id=$1 WHERE id=$2`, widA, id)
+		require.NoError(t, err)
+	}
+	_, err := pool.Exec(ctx, `UPDATE books SET cover_path='c.jpg', edition_year=2020 WHERE id=$1`, vol)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE works SET title=$2, normalized_title=lower($2), kind='omnibus', kind_source='heuristic' WHERE id=$1`,
+		widA, "Собрание сочинений в 2 томах. Том 2. Золотой теленок")
+	require.NoError(t, err)
+
+	// Работа B: два разных названия по одному изданию — остаётся текущее.
+	b1 := seedGroupBook(t, ctx, pool, collID, archID, author, "D1", "Двенадцать стульев", "двенадцать стульев", "ru", "", "", "")
+	widB := workIDOf(t, ctx, pool, b1)
+	b2 := seedGroupBook(t, ctx, pool, collID, archID, author, "D2", "12 стульев", "12 стульев", "ru", "", "", "")
+	_, err = pool.Exec(ctx, `UPDATE books SET work_id=$1, cover_path='c.jpg', edition_year=2021 WHERE id=$2`, widB, b2)
+	require.NoError(t, err)
+
+	changed, err := recomputeWorkTitles(ctx, pool, "ru", []int64{widA, widB})
+	require.NoError(t, err)
+	require.ElementsMatch(t, []int64{widA}, changed)
+	var title, kind string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT title FROM works WHERE id=$1`, widA).Scan(&title))
+	require.Equal(t, "Золотой телёнок", title, "самое частое название, самое частое написание")
+	require.NoError(t, pool.QueryRow(ctx, `SELECT title FROM works WHERE id=$1`, widB).Scan(&title))
+	require.Equal(t, "Двенадцать стульев", title, "при равенстве — текущее название")
+
+	_, err = ReclassifyWorkKinds(ctx, pool, changed)
+	require.NoError(t, err)
+	require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(kind,'') FROM works WHERE id=$1`, widA).Scan(&kind))
+	require.Empty(t, kind, "тип «собрание сочинений» держался на прежнем названии")
+
+	changed, err = recomputeWorkTitles(ctx, pool, "ru", []int64{widA, widB})
+	require.NoError(t, err)
+	require.Empty(t, changed, "повторный пересчёт — без изменений")
 }
