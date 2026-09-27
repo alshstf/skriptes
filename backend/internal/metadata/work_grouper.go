@@ -288,6 +288,16 @@ func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
 	}
 }
 
+// firstAuthorCond — «ba — первый автор книги b»: нет автора с меньшей позицией
+// (при равной — с меньшим id). Фильтр идёт ОТ book_authors по индексу
+// author_id; прежний JOIN LATERAL по всем книгам с фильтром поверх него не давал
+// использовать индекс — полный скан books на каждого автора, 2,6–3,4 с вместо
+// ~10 мс, PG на 1,5–2,5 ядрах часами после импорта (#282).
+func firstAuthorCond(ba string) string {
+	return fmt.Sprintf(`NOT EXISTS (SELECT 1 FROM book_authors x WHERE x.book_id = %[1]s.book_id
+		AND (x.position < %[1]s.position OR (x.position = %[1]s.position AND x.author_id < %[1]s.author_id)))`, ba)
+}
+
 func (g *WorkGrouper) candidateCond() string {
 	if g.cfg.WholeCollection {
 		return "b.work_scanned_at IS NULL"
@@ -297,15 +307,13 @@ func (g *WorkGrouper) candidateCond() string {
 
 func (g *WorkGrouper) fetchCandidateAuthors(ctx context.Context, after int64, limit int) ([]int64, error) {
 	q := fmt.Sprintf(`
-		SELECT DISTINCT pa.author_id
+		SELECT DISTINCT ba.author_id
 		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
-		WHERE b.deleted = false AND %s AND pa.author_id > $1
-		ORDER BY pa.author_id
+		JOIN book_authors ba ON ba.book_id = b.id
+		WHERE b.deleted = false AND %s AND ba.author_id > $1 AND %s
+		ORDER BY ba.author_id
 		LIMIT $2
-	`, g.candidateCond())
+	`, g.candidateCond(), firstAuthorCond("ba"))
 	rows, err := g.pool.Query(ctx, q, after, limit)
 	if err != nil {
 		return nil, err
@@ -333,18 +341,16 @@ func (g *WorkGrouper) fetchTier2Authors(ctx context.Context, after int64, limit 
 		ttlDays = 1
 	}
 	rows, err := g.pool.Query(ctx, `
-		SELECT DISTINCT pa.author_id
+		SELECT DISTINCT ba.author_id
 		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
+		JOIN book_authors ba ON ba.book_id = b.id AND `+firstAuthorCond("ba")+`
 		JOIN works w ON w.id = b.work_id
 		WHERE b.deleted = false
 		  AND w.edition_count = 1
 		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.outcome = 'found')
 		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.checked_at > now() - make_interval(days => $3))
-		  AND pa.author_id > $1
-		ORDER BY pa.author_id
+		  AND ba.author_id > $1
+		ORDER BY ba.author_id
 		LIMIT $2
 	`, after, limit, ttlDays)
 	if err != nil {
@@ -433,12 +439,10 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
 		       a.last_name, COALESCE(a.first_name,'')
-		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
-		JOIN authors a ON a.id = pa.author_id
-		WHERE b.deleted = false AND pa.author_id = $1
+		FROM book_authors ba
+		JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		JOIN authors a ON a.id = ba.author_id
+		WHERE ba.author_id = $1 AND `+firstAuthorCond("ba")+`
 		ORDER BY b.id
 	`, authorID)
 	if err != nil {
