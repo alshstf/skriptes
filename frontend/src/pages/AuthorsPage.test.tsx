@@ -55,6 +55,7 @@ const authorsFixture = {
     {
       id: 7,
       full_name: 'Толстой Лев',
+      note: 'граф',
       book_count: 1,
       is_favorite: false,
       favorited_books_count: 0,
@@ -114,6 +115,8 @@ describe('AuthorsPage', () => {
 
     // Толстой: без «в избранном» (favorited_books_count=0) и без звезды.
     expect(screen.getByRole('heading', { level: 3, name: 'Толстой Лев' })).toBeInTheDocument();
+    // Уточнение тёзки — рядом с именем.
+    expect(screen.getByText('граф')).toBeInTheDocument();
 
     // Ссылка строки ведёт на /authors/{id}.
     const link = screen.getByRole('link', { name: /Кинг Стивен/ });

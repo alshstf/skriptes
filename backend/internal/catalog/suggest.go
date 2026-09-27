@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"strings"
+
+	"github.com/skriptes/skriptes/backend/internal/books"
 )
 
 // SuggestAuthors — typeahead по авторам.
@@ -27,7 +29,7 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 	}
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT a.id, a.last_name, a.first_name, a.middle_name,
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, ''),
 		       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
 		        JOIN books b ON b.id = ba.book_id
 		        WHERE ba.author_id = a.id AND b.deleted = false) AS cnt
@@ -46,14 +48,16 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int) (
 		var (
 			id                  int64
 			last, first, middle string
+			note                string
 			cnt                 int
 		)
-		if err := rows.Scan(&id, &last, &first, &middle, &cnt); err != nil {
+		if err := rows.Scan(&id, &last, &first, &middle, &note, &cnt); err != nil {
 			return nil, err
 		}
 		out = append(out, AuthorSuggest{
 			ID:        id,
 			FullName:  fullName(last, first, middle),
+			Note:      books.DisplayNote(note),
 			BookCount: cnt,
 		})
 	}

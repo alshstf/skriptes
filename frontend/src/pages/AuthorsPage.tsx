@@ -292,6 +292,7 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
       <div className="min-w-0 flex-1 space-y-1">
         <div className="flex items-center gap-1.5">
           <h3 className="text-base font-medium leading-tight">{author.full_name}</h3>
+          {author.note ? <span className="truncate text-sm text-muted-foreground">{author.note}</span> : null}
           {author.is_favorite ? (
             // Подписка на автора — колокольчик (монохром), не «избранное».
             <Bell className="size-3.5 shrink-0 fill-foreground" aria-label="Подписан" />

@@ -138,6 +138,14 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		return stats, fmt.Errorf("configure works meili: %w", err)
 	}
 
+	// Тёзки, которых файл различает уточнением в скобках, а у нас они одна
+	// запись: наследник прежней записи выбирается ДО импорта (см. author_splits.go).
+	if n, err := im.planAuthorSplits(ctx, ix, file); err != nil {
+		return stats, fmt.Errorf("plan author splits: %w", err)
+	} else if n > 0 {
+		logger.Info("import: authors split into namesakes", "authors", n)
+	}
+
 	caches := newCaches()
 	idx := newIndexer(im.deps.Meili, 1000)
 
@@ -161,6 +169,23 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 
 	if err := idx.flush(ctx); err != nil {
 		return stats, fmt.Errorf("flush meili: %w", err)
+	}
+	// Книги могли уйти к другим авторам (разделение тёзок, правки в выпуске) —
+	// основной автор работы и серии за ними не следят сами.
+	if n, err := fixWorkPrimaryAuthors(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: fix work primary authors failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: work primary authors fixed", "works", n)
+	}
+	if n, err := fixStaleWorkSeries(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: fix stale work series failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: stale work series fixed", "works", n)
+	}
+	if n, err := deleteEmptySeries(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: delete empty series failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: empty series deleted", "series", n)
 	}
 	if err := markCollectionImported(ctx, im.deps.Pool, collectionID, hash, ix.Version); err != nil {
 		return stats, fmt.Errorf("mark collection imported: %w", err)

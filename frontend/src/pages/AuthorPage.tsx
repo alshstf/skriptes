@@ -78,6 +78,7 @@ export function AuthorPage() {
                 </div>
                 <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
               </div>
+              {a.note ? <p className="-mt-1 text-sm text-muted-foreground">{a.note}</p> : null}
               {/* Сводка-зеркало строки списка: книги · годы · внешний рейтинг
                   (Globe, источник в тултипе) · оценка читателей (BookHeart). */}
               <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground tabular-nums">

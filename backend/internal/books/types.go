@@ -13,6 +13,8 @@ type AuthorRef struct {
 	FirstName  string `json:"first_name,omitempty"`
 	MiddleName string `json:"middle_name,omitempty"`
 	FullName   string `json:"full_name"`
+	// Note — уточнение, отличающее тёзок («Блум», «фантаст»); см. DisplayNote.
+	Note string `json:"note,omitempty"`
 }
 
 // SeriesRef — компактная ссылка на серию.
