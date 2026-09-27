@@ -46,6 +46,13 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	king := []inpxtest.Book{
 		{LibID: "810001", Title: "Стрелок", Authors: []string{"Кинг,Стивен"}, Series: "Тёмная башня", SerNo: 1},
 		{LibID: "810002", Title: "Извлечение троих", Authors: []string{"Кинг,Стивен"}, Series: "Тёмная башня", SerNo: 2},
+		// Трое авторов, но у Стаута половина книг и больше — его цикл, не издательская серия.
+		{LibID: "810031", Title: "Фер-де-ланс", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 1},
+		{LibID: "810032", Title: "Лига перепуганных", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 2},
+		{LibID: "810033", Title: "Резиновая лента", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 3},
+		{LibID: "810034", Title: "Красная шкатулка", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 4},
+		{LibID: "810035", Title: "Смерть в пиковом положении", Authors: []string{"Голдсборо,Роберт"}, Series: "Ниро Вульф"},
+		{LibID: "810036", Title: "Пропавший", Authors: []string{"Другой,Автор"}, Series: "Ниро Вульф"},
 	}
 	two := append([]inpxtest.Book{
 		{LibID: "810011", Title: "Любовь в Париже", Authors: []string{"Иванова,Анна"}, Series: "Мини-Шарм", SerNo: 1},
@@ -77,6 +84,11 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	// Авторский цикл не затронут.
 	tower := seriesOf("810001")
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, tower))
+	// Доминирующий автор — его цикл, у продолжателей свои «циклы», как раньше.
+	wolfe := seriesOf("810031")
+	require.Equal(t, wolfe, seriesOf("810034"))
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, wolfe))
+	require.NotEqual(t, wolfe, seriesOf("810035"))
 
 	// Следующий выпуск: под названием снова двое — серия остаётся общей.
 	run(append(append([]inpxtest.Book(nil), two...),

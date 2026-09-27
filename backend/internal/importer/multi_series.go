@@ -17,11 +17,17 @@ import (
 const multiSeriesMinAuthors = 3
 
 // planMultiSeries — проход по INPX до импорта: названия серий, под которыми
-// книги ≥ multiSeriesMinAuthors разных первых авторов, плюс уже помеченные
-// такими в базе (признак липкий — иначе серия, у которой в следующем выпуске
-// окажется двое авторов, снова развалилась бы на «циклы»).
+// книги ≥ multiSeriesMinAuthors разных первых авторов и ни у одного из них нет
+// половины книг, плюс уже помеченные такими в базе (признак липкий — иначе
+// серия, у которой в следующем выпуске окажется двое авторов, снова
+// развалилась бы на «циклы»).
+//
+// Доминирующий автор — это его цикл с редкими чужими книгами (продолжения,
+// ошибки атрибуции), а не издательская серия: прогон на librusec 2026-09 —
+// «Ниро Вульф» (Стаут, 309 из 313), «Колесо времени» (Джордан, 83 из 88); таких
+// названий 941 из 6 200 с ≥3 авторами.
 func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[string]bool, error) {
-	authorsBySeries := map[string]map[string]struct{}{}
+	booksBySeries := map[string]map[string]int{} // название → первый автор → книг
 	err := ix.Each(func(_ inpx.InpFile, rec inpx.Record) error {
 		if rec.Series == "" || len(rec.Authors) == 0 {
 			return nil
@@ -30,20 +36,20 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 		if title == "" {
 			return nil
 		}
-		set := authorsBySeries[title]
-		if set == nil {
-			set = map[string]struct{}{}
-			authorsBySeries[title] = set
+		byAuthor := booksBySeries[title]
+		if byAuthor == nil {
+			byAuthor = map[string]int{}
+			booksBySeries[title] = byAuthor
 		}
-		set[authorKey(rec.Authors[0])] = struct{}{}
+		byAuthor[authorKey(rec.Authors[0])]++
 		return nil
 	})
 	if err != nil {
 		return nil, fmt.Errorf("scan series authors: %w", err)
 	}
 	multi := map[string]bool{}
-	for title, set := range authorsBySeries {
-		if len(set) >= multiSeriesMinAuthors {
+	for title, byAuthor := range booksBySeries {
+		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor) {
 			multi[title] = true
 		}
 	}
@@ -60,6 +66,16 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 		multi[title] = true
 	}
 	return multi, rows.Err()
+}
+
+// hasDominantAuthor — у одного автора не меньше половины книг серии.
+func hasDominantAuthor(byAuthor map[string]int) bool {
+	total, top := 0, 0
+	for _, n := range byAuthor {
+		total += n
+		top = max(top, n)
+	}
+	return top*2 >= total
 }
 
 // moveSeriesSubscriptions — подписки на прежние «циклы» автора с названием
