@@ -60,19 +60,43 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 		{LibID: "810043", Title: "Головастик", Authors: []string{"Белаш,Александр"}, Series: "Рассказы"},
 		{LibID: "810044", Title: "Приключения Иля", Authors: []string{"Алексеев,Иван"}, Series: "Рассказы"},
 		{LibID: "810045", Title: "Маленькие рассказы", Authors: []string{"Булычев,Кир"}, Series: "Рассказы"},
+		// Больше половины книг у служебного автора (журнала) — всё равно
+		// издательская серия, не «цикл» журнала (#298).
+		{LibID: "810051", Title: "Вокруг света, 1961 №1", Authors: []string{"Журнал «Вокруг света»"}, Series: "Вокруг света (журнал)"},
+		{LibID: "810052", Title: "Вокруг света, 1961 №2", Authors: []string{"Журнал «Вокруг света»"}, Series: "Вокруг света (журнал)"},
+		{LibID: "810053", Title: "Вокруг света, 1961 №3", Authors: []string{"Журнал «Вокруг света»"}, Series: "Вокруг света (журнал)"},
+		{LibID: "810054", Title: "Звёздные корабли", Authors: []string{"Ефремов,Иван"}, Series: "Вокруг света (журнал)"},
+		{LibID: "810055", Title: "Остров погибших кораблей", Authors: []string{"Беляев,Александр"}, Series: "Вокруг света (журнал)"},
+		// То же, но админ снял с журнала метку служебного — его серия.
+		{LibID: "810061", Title: "Юность, 1970 №1", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810062", Title: "Юность, 1970 №2", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810063", Title: "Юность, 1970 №3", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810064", Title: "Звёздный билет", Authors: []string{"Аксёнов,Василий"}, Series: "Юность (журнал)"},
+		{LibID: "810065", Title: "Хроника времён", Authors: []string{"Гладилин,Анатолий"}, Series: "Юность (журнал)"},
 	}
 	two := append([]inpxtest.Book{
 		{LibID: "810011", Title: "Любовь в Париже", Authors: []string{"Иванова,Анна"}, Series: "Мини-Шарм", SerNo: 1},
 		{LibID: "810012", Title: "Любовь в Риме", Authors: []string{"Петрова,Мария"}, Series: "Мини-Шарм", SerNo: 2},
 	}, king...)
 
+	// Админ заранее снял с журнала «Юность» метку служебного.
+	_, err := pool.Exec(ctx, `INSERT INTO authors (last_name, normalized_name, is_service, is_service_source)
+		VALUES ('Журнал «Юность»', 'журнал «юность»', false, 'manual')`)
+	require.NoError(t, err)
+
 	// Двое авторов — пока «циклы» у каждого.
 	run(two)
 	ivanovaFrag := seriesOf("810011")
 	require.NotEqual(t, ivanovaFrag, seriesOf("810012"))
 	user := q(`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u@x','U','h','user') RETURNING id`)
-	_, err := pool.Exec(ctx, `INSERT INTO favorite_series (user_id, series_id) VALUES ($1, $2)`, user, ivanovaFrag)
+	_, err = pool.Exec(ctx, `INSERT INTO favorite_series (user_id, series_id) VALUES ($1, $2)`, user, ivanovaFrag)
 	require.NoError(t, err)
+	journal := seriesOf("810051")
+	for _, lib := range []string{"810052", "810053", "810054", "810055"} {
+		require.Equal(t, journal, seriesOf(lib))
+	}
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NULL AND kind = 'multi'`, journal),
+		"служебный автор не делает серию своим циклом")
 
 	// Третий автор — издательская серия: одна запись без автора.
 	three := append(append([]inpxtest.Book(nil), two...),
@@ -96,6 +120,11 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	require.Equal(t, wolfe, seriesOf("810034"))
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, wolfe))
 	require.NotEqual(t, wolfe, seriesOf("810035"))
+	// Ручное «не служебный» — журнал снова доминирующий: его цикл.
+	yunost := seriesOf("810061")
+	require.Equal(t, yunost, seriesOf("810063"))
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, yunost))
+	require.NotEqual(t, yunost, seriesOf("810064"))
 	// Жанровое название — своя серия у каждого автора, общей нет.
 	chekhov := seriesOf("810041")
 	require.Equal(t, chekhov, seriesOf("810042"))

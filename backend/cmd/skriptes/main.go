@@ -773,10 +773,12 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *sl
 
 // runOnceServiceAuthorClassify — разовый эвристический бэкфилл «служебных
 // авторов» (агрегатов-псевдоавторов) на существующей коллекции. Гейт
-// service_authors_classified_v1: один раз на апгрейде; дальше новых метит
-// after-import вызов. Зеркало runOnceWorkKindClassify.
+// service_authors_classified_vN: один раз на апгрейде; дальше новых метит
+// after-import вызов. Зеркало runOnceWorkKindClassify. Расширил правило
+// (authorkind.ServiceNamePatterns) — бампни версию, иначе старые записи
+// разметятся только при следующем импорте (v2: «Категория | Автор неизвестен», #297).
 func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "service_authors_classified_v1"
+	const flag = "service_authors_classified_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("service author classify: check flag failed — skip", "err", err)
