@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -204,48 +205,30 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 // правдоподобно совпадает с искомым автором (совпадает имя, а не только
 // фамилия). Без проверки opensearch по «Гарднер Лиза» вернул бы «Иван Гарднер»
 // (однофамилец) — мы бы показали чужие био/фото. Лучше «не нашли».
+// У автора с тёзками или уточнением (q.Strict) первый результат по имени не
+// годится вовсе — там resolveStrictTitle (подтверждение уточнением или книгой).
 func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q AuthorQuery) (string, error) {
-	v := url.Values{}
-	v.Set("action", "opensearch")
-	v.Set("search", q.FullName)
-	v.Set("limit", "1")
-	v.Set("namespace", "0") // только статьи, не категории
-	v.Set("format", "json")
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.baseURL(lang)+"/w/api.php?"+v.Encode(), nil)
-	if err != nil {
-		return "", fmt.Errorf("build opensearch: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", wikiUserAgent)
-	resp, err := p.httpClient.Do(req)
-	if err != nil {
-		return "", fmt.Errorf("wikipedia opensearch: %w", err)
-	}
-	defer func() { _ = resp.Body.Close() }()
-	if resp.StatusCode != http.StatusOK {
-		return "", statusErr(resp.StatusCode)
-	}
-	// opensearch отдаёт массив [string, []string, []string, []string]:
-	// [запрос, [титулы], [сниппеты], [ссылки]]. Декодим как json.RawMessage'ы.
-	var arr []json.RawMessage
-	if err := json.NewDecoder(resp.Body).Decode(&arr); err != nil {
-		return "", fmt.Errorf("decode opensearch: %w", err)
-	}
-	if len(arr) < 2 {
-		return "", ErrNotFound
-	}
-	var titles []string
-	if err := json.Unmarshal(arr[1], &titles); err != nil {
-		return "", fmt.Errorf("decode titles: %w", err)
-	}
-	if len(titles) == 0 {
-		return "", ErrNotFound
-	}
-	// Гейт по имени: первый хит opensearch матчит только фамилию — проверяем,
-	// что совпадает и имя. Не совпало → считаем «не нашли» (см. doc выше).
-	if !authorNameMatches(q, titles[0]) {
-		return "", ErrNotFound
+	var title string
+	if q.Strict() {
+		t, err := p.resolveStrictTitle(ctx, lang, q)
+		if err != nil {
+			return "", err
+		}
+		title = t
+	} else {
+		titles, err := p.opensearch(ctx, lang, q.FullName, 1)
+		if err != nil {
+			return "", err
+		}
+		if len(titles) == 0 {
+			return "", ErrNotFound
+		}
+		// Гейт по имени: первый хит opensearch матчит только фамилию — проверяем,
+		// что совпадает и имя. Не совпало → считаем «не нашли» (см. doc выше).
+		if !authorNameMatches(q, titles[0]) {
+			return "", ErrNotFound
+		}
+		title = titles[0]
 	}
 	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
 	// однофамильцев-не-писателей (полное совпадение ФИО у писателя и его тёзки
@@ -253,13 +236,52 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 	// Отвергаем ТОЛЬКО при явном не-писателе; ошибка/нет QID/unknown — оставляем
 	// (precision-preserving: не режем валидных без размеченной профессии).
 	if p.occupationGate != nil {
-		if qid, err := p.resolvePageQID(ctx, lang, titles[0]); err == nil && qid != "" {
+		if qid, err := p.resolvePageQID(ctx, lang, title); err == nil && qid != "" {
 			if verdict, err := p.occupationGate(ctx, qid); err == nil && verdict == OccupationNonWriter {
 				return "", ErrNotFound
 			}
 		}
 	}
-	return titles[0], nil
+	return title, nil
+}
+
+// opensearch — названия статей по префиксу/похожести (namespace 0).
+func (p *WikipediaProvider) opensearch(ctx context.Context, lang, search string, limit int) ([]string, error) {
+	v := url.Values{}
+	v.Set("action", "opensearch")
+	v.Set("search", search)
+	v.Set("limit", strconv.Itoa(limit))
+	v.Set("namespace", "0") // только статьи, не категории
+	v.Set("format", "json")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.baseURL(lang)+"/w/api.php?"+v.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("build opensearch: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", wikiUserAgent)
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("wikipedia opensearch: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return nil, statusErr(resp.StatusCode)
+	}
+	// opensearch отдаёт массив [string, []string, []string, []string]:
+	// [запрос, [титулы], [сниппеты], [ссылки]]. Декодим как json.RawMessage'ы.
+	var arr []json.RawMessage
+	if err := json.NewDecoder(resp.Body).Decode(&arr); err != nil {
+		return nil, fmt.Errorf("decode opensearch: %w", err)
+	}
+	if len(arr) < 2 {
+		return nil, nil
+	}
+	var titles []string
+	if err := json.Unmarshal(arr[1], &titles); err != nil {
+		return nil, fmt.Errorf("decode titles: %w", err)
+	}
+	return titles, nil
 }
 
 // resolvePageQID — Wikidata QID статьи через MediaWiki pageprops

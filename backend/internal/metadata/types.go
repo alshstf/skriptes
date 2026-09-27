@@ -90,7 +90,20 @@ type AuthorQuery struct {
 	MiddleName string
 	FullName   string // готовая склейка "Фамилия Имя Отчество"
 	Lang       string // ISO-код страны/языка автора, может быть пустой
+
+	// Тёзки (грабля №22). Enricher заполняет сам по ID (withNamesakeContext):
+	// Note — уточнение из INPX («Блум», «фантаст»), Namesakes — в базе есть
+	// другой автор с тем же именем, BookTitles — названия книг автора (свои и
+	// оригинальные) для якоря по книгам.
+	Note       string
+	Namesakes  bool
+	BookTitles []string
 }
+
+// Strict — автора нельзя искать просто по имени: у него есть тёзки или
+// уточнение. Кандидата принимаем, только если его подтвердило уточнение
+// (статья «ФИО (уточнение)» в Википедии) или одна из книг автора.
+func (q AuthorQuery) Strict() bool { return q.Note != "" || q.Namesakes }
 
 // AuthorPhotoProvider — поставщик портрета автора. Reuse CoverImage —
 // формат тот же (Reader + Mime + SourceID), кэш в /cache/covers тоже общий.

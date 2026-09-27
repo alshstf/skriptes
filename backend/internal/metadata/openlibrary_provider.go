@@ -494,39 +494,21 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	}
 
 	base := p.workBaseURL()
-	v := url.Values{}
-	v.Set("q", q.FullName)
-	v.Set("limit", "1")
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/search/authors.json?"+v.Encode(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("build author search: %w", err)
+	var olid string
+	if q.Strict() {
+		// Тёзки: первый по имени — просто самый известный из них; ищем по книгам.
+		key, err := p.strictAuthorKey(ctx, q)
+		if err != nil {
+			return nil, err
+		}
+		olid = key
+	} else {
+		key, err := p.authorKeyByName(ctx, base, q)
+		if err != nil {
+			return nil, err
+		}
+		olid = key
 	}
-	req.Header.Set("Accept", "application/json")
-	resp, err := p.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("ol author search: %w", err)
-	}
-	defer func() { _ = resp.Body.Close() }()
-	if resp.StatusCode != http.StatusOK {
-		return nil, statusErr(resp.StatusCode)
-	}
-
-	var sr olAuthorSearchResponse
-	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
-		return nil, fmt.Errorf("decode author search: %w", err)
-	}
-	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
-		return nil, ErrNotFound
-	}
-	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
-	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
-	if !authorNameMatches(q, sr.Docs[0].Name) {
-		return nil, ErrNotFound
-	}
-
-	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
-	olid := strings.TrimPrefix(sr.Docs[0].Key, "/authors/")
 
 	detailReq, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/authors/"+olid+".json", nil)
 	if err != nil {
@@ -561,6 +543,42 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 		}
 	}
 	return &detail, nil
+}
+
+// authorKeyByName — OLID первого автора поиска по имени, прошедшего имя-гейт.
+func (p *OpenLibraryProvider) authorKeyByName(ctx context.Context, base string, q AuthorQuery) (string, error) {
+	v := url.Values{}
+	v.Set("q", q.FullName)
+	v.Set("limit", "1")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/search/authors.json?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build author search: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("ol author search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", statusErr(resp.StatusCode)
+	}
+
+	var sr olAuthorSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return "", fmt.Errorf("decode author search: %w", err)
+	}
+	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		return "", ErrNotFound
+	}
+	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
+	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
+	if !authorNameMatches(q, sr.Docs[0].Name) {
+		return "", ErrNotFound
+	}
+	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
+	return strings.TrimPrefix(sr.Docs[0].Key, "/authors/"), nil
 }
 
 // FetchAuthorBio — bio из /authors/{OLID}.json.
