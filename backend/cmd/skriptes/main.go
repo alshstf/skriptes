@@ -154,6 +154,15 @@ func run() error {
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(ctx(), pool, imp, logger)
+		// Сверка индексов с PG на каждом старте (#283): убирает фантомы, которые
+		// оставили прошлые импорты или оборванный остановкой синк группировки
+		// (#270), и заполняет works-индекс, если Meili пуст после восстановления.
+		if r, err := imp.ReconcileIndexes(ctx()); err != nil {
+			logger.Warn("search index reconcile failed", "err", err)
+		} else {
+			logger.Info("search index reconcile done", "works_removed", r.WorksRemoved,
+				"works_added", r.WorksAdded, "books_removed", r.BooksRemoved, "books_missing", r.BooksMissing)
+		}
 	}()
 
 	authSvc := auth.New(pool, 0)

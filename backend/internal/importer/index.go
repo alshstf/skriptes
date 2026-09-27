@@ -252,6 +252,20 @@ func isMeiliAlreadyExists(err error) bool {
 	return contains(err.Error(), "index_already_exists")
 }
 
+// isMeiliIndexNotFound возвращает true если ошибка Meili — "index_not_found"
+// (индекса ещё нет — например, чистая установка или пустой Meili после
+// восстановления базы).
+func isMeiliIndexNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	mErr := &meilisearch.Error{}
+	if as := errorsAs(err, mErr); as && mErr.MeilisearchApiError.Code == "index_not_found" {
+		return true
+	}
+	return contains(err.Error(), "index_not_found")
+}
+
 // маленькие inline-обёртки чтобы не тащить fmt/strings в caller.
 func contains(s, sub string) bool {
 	return len(sub) <= len(s) && (s == sub || indexOf(s, sub) >= 0)
