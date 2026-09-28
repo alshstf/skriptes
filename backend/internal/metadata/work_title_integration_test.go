@@ -160,3 +160,45 @@ func TestRecomputeWorkTitles_MostFrequent(t *testing.T) {
 	require.NoError(t, err)
 	require.Empty(t, changed, "повторный пересчёт — без изменений")
 }
+
+// TestLocalizeWorkTitles_SyncsSingletons — #285: импорт переписал название
+// издания, а работа осталась со старым («Big Money» при единственном издании
+// «Дневники 1939-1945»). Работа из одного издания берёт его название на любом
+// языке; ручная правка названия не трогается.
+func TestLocalizeWorkTitles_SyncsSingletons(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Бунин", "бунин иван")
+
+	ru := seedGroupBook(t, ctx, pool, collID, archID, author, "E1", "Дневники 1939-1945", "дневники 1939-1945", "ru", "", "", "")
+	en := seedGroupBook(t, ctx, pool, collID, archID, author, "E2", "The Village", "the village", "en", "", "", "")
+	kept := seedGroupBook(t, ctx, pool, collID, archID, author, "E3", "Тёмные аллеи", "тёмные аллеи", "ru", "", "", "")
+	for _, id := range []int64{ru, en, kept} {
+		_, err := pool.Exec(ctx, `UPDATE works SET title = 'Big Money', normalized_title = 'big money' WHERE id = $1`, workIDOf(t, ctx, pool, id))
+		require.NoError(t, err)
+	}
+	_, err := pool.Exec(ctx, `INSERT INTO metadata_overrides (target_kind, target_id, field, override_value, original_value)
+		VALUES ('work', $1, 'title', '"Big Money"'::jsonb, '"Тёмные аллеи"'::jsonb)`, workIDOf(t, ctx, pool, kept))
+	require.NoError(t, err)
+
+	changed, _, err := LocalizeWorkTitles(ctx, pool)
+	require.NoError(t, err)
+	require.ElementsMatch(t, []int64{workIDOf(t, ctx, pool, ru), workIDOf(t, ctx, pool, en)}, changed)
+	title := func(book int64) string {
+		var s string
+		require.NoError(t, pool.QueryRow(ctx, `SELECT title FROM works WHERE id = $1`, workIDOf(t, ctx, pool, book)).Scan(&s))
+		return s
+	}
+	require.Equal(t, "Дневники 1939-1945", title(ru))
+	require.Equal(t, "The Village", title(en), "синглтон на другом языке — тоже")
+	require.Equal(t, "Big Money", title(kept), "ручная правка названия не трогается")
+
+	changed, _, err = LocalizeWorkTitles(ctx, pool)
+	require.NoError(t, err)
+	require.Empty(t, changed)
+}
