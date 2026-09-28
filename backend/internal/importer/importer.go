@@ -58,6 +58,10 @@ type Deps struct {
 	// все в каталоге). Нужен, чтобы отличить второй INPX той же библиотеки
 	// рядом (пропуск) от переименованного (продолжение), см. OverlapError.
 	InpxFiles []string
+	// MeiliURL / MeiliAPIKey — для запросов мимо клиента: swap индексов в
+	// meilisearch-go шлёт поле rename, которого Meili 1.13 не знает (400).
+	MeiliURL    string
+	MeiliAPIKey string
 }
 
 // Importer — оркестратор импорта одного INPX.
@@ -479,8 +483,10 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 //
 //	union языков изданий (перевод-сирота без src_lang больше не «натив»);
 //
-// v9 — title_s/authors_s/series_s: поисковые копии со свёрткой «ё»→«е» (#278).
-const WorksIndexSchemaVersion = 9
+// v9 — title_s/authors_s/series_s: поисковые копии со свёрткой «ё»→«е» (#278);
+// v10 — та же схема, но пересборка через временный индекс (RebuildWorksIndex):
+// после v9 у работ с «ё» в названии в Meili осталась битой близость слов.
+const WorksIndexSchemaVersion = 10
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -670,10 +676,14 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 
 // addWorkDocs upsert-ит документы в индекс works и дожидается задачи.
 func (im *Importer) addWorkDocs(ctx context.Context, docs []workDoc) error {
+	return im.addWorkDocsTo(ctx, worksIndex, docs)
+}
+
+func (im *Importer) addWorkDocsTo(ctx context.Context, uid string, docs []workDoc) error {
 	if len(docs) == 0 {
 		return nil
 	}
-	idx := im.deps.Meili.Index(worksIndex)
+	idx := im.deps.Meili.Index(uid)
 	pk := "id"
 	task, err := idx.AddDocumentsWithContext(ctx, docs, &meilisearch.DocumentOptions{PrimaryKey: &pk})
 	if err != nil {
@@ -694,6 +704,10 @@ func (im *Importer) addWorkDocs(ctx context.Context, docs []workDoc) error {
 // осиротевшие доки — это делают таргетные DeleteWorksFromIndex в точках GC).
 // Зовётся на старте (one-shot) и в конце импорта. Возвращает число доков.
 func (im *Importer) ResyncWorksIndex(ctx context.Context) (int, error) {
+	return im.resyncWorksInto(ctx, worksIndex)
+}
+
+func (im *Importer) resyncWorksInto(ctx context.Context, uid string) (int, error) {
 	const batchSize = 500
 	var cursor int64
 	total := 0
@@ -707,7 +721,7 @@ func (im *Importer) ResyncWorksIndex(ctx context.Context) (int, error) {
 		if len(docs) == 0 {
 			break
 		}
-		if err := im.addWorkDocs(ctx, docs); err != nil {
+		if err := im.addWorkDocsTo(ctx, uid, docs); err != nil {
 			return total, err
 		}
 		total += len(docs)

@@ -394,11 +394,18 @@ func TestService_GetReturnsEditions(t *testing.T) {
 
 func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Helper()
+	mgr, _, _ := startMeilisearchAddr(t, ctx)
+	return mgr
+}
+
+// startMeilisearchAddr — то же плюс адрес и ключ (для запросов мимо клиента).
+func startMeilisearchAddr(t *testing.T, ctx context.Context) (meili.ServiceManager, string, string) {
+	t.Helper()
 	const masterKey = "test-master-key-1234567890"
 	mC, err := tcmeili.Run(ctx, "getmeili/meilisearch:v1.13", tcmeili.WithMasterKey(masterKey))
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = mC.Terminate(context.Background()) })
 	addr, err := mC.Address(ctx)
 	require.NoError(t, err)
-	return meili.New(addr, meili.WithAPIKey(masterKey))
+	return meili.New(addr, meili.WithAPIKey(masterKey)), addr, masterKey
 }

@@ -24,22 +24,31 @@ func TestSearch_YoFolding(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 	pool := testpg.Pool(t, ctx)
-	mgr := startMeilisearch(t, ctx)
-	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	mgr, addr, key := startMeilisearchAddr(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr, MeiliURL: addr, MeiliAPIKey: key})
 	path, err := inpxtest.WriteINPX(t.TempDir(), "lib.inpx", []inpxtest.Book{
-		{LibID: "830001", Title: "Три мушкетёра", Authors: []string{"Дюма,Александр"}, Lang: "ru"},
+		{LibID: "830001", Title: "Три мушкетёра", Authors: []string{"Дюма,Александр"}, Lang: "ru", Rating: 5},
 		{LibID: "830002", Title: "Ёж", Authors: []string{"Козлов,Сергей"}, Series: "Сказки про Ёжика", Lang: "ru"},
 		{LibID: "830003", Title: "Семнадцать мгновений весны", Authors: []string{"Семёнов,Юлиан"}, Lang: "ru"},
 		{LibID: "830004", Title: "Мастер и Маргарита", Authors: []string{"Булгаков,Михаил"}, Lang: "ru"},
+		// Тезка без «ё» и без рейтинга: при равном совпадении выше должна быть
+		// известная книга, а не та, что написана через «е» (прод: Дюма был 40-м).
+		{LibID: "830005", Title: "Три мушкетера", Authors: []string{"Филатов,Леонид"}, Lang: "ru"},
 	})
 	require.NoError(t, err)
 	_, err = imp.Run(ctx, path)
 	require.NoError(t, err)
 
-	// Как на старте после разового ресинка: флаг схемы → поиск по свёрнутым полям.
+	// Как на старте (runOnceWorksIndexSync): пересборка во временном индексе +
+	// swap, потом флаг схемы и конфиг живого индекса (уже со свёрнутыми полями).
+	n, err := imp.RebuildWorksIndex(ctx)
+	require.NoError(t, err)
+	require.Equal(t, 5, n)
 	_, err = pool.Exec(ctx, `INSERT INTO app_settings (key, value) VALUES ($1, 'true'::jsonb)`, importer.WorksIndexSyncedFlagKey())
 	require.NoError(t, err)
 	require.NoError(t, imp.ConfigureWorksIndex(ctx))
+	_, err = mgr.GetIndexWithContext(ctx, "works_rebuild")
+	require.Error(t, err, "временный индекс удалён")
 
 	svc := books.New(pool, mgr, nil)
 	titles := func(q string) []string {
@@ -55,8 +64,9 @@ func TestSearch_YoFolding(t *testing.T) {
 	// который находится ТОЛЬКО по свёрнутым полям: у двухбуквенного слова нет
 	// опечаточной толерантности (а «мушкетера» нашлось бы и опечаткой).
 	require.Eventually(t, func() bool { return len(titles("еж")) == 1 }, 30*time.Second, 200*time.Millisecond)
-	require.Equal(t, []string{"Три мушкетёра"}, titles("три мушкетера"), "исходное написание в выдаче")
-	require.Equal(t, []string{"Три мушкетёра"}, titles("мушкетёра"))
+	require.Equal(t, []string{"Три мушкетёра", "Три мушкетера"}, titles("три мушкетера"),
+		"исходное написание в выдаче; «ё» не проигрывает ранжирование")
+	require.Equal(t, []string{"Три мушкетёра", "Три мушкетера"}, titles("мушкетёра"))
 	require.Equal(t, []string{"Ёж"}, titles("еж"), "короткое слово без опечатки")
 	require.Equal(t, []string{"Семнадцать мгновений весны"}, titles("семенов"), "по автору")
 	require.Equal(t, []string{"Ёж"}, titles("ежика"), "по серии")

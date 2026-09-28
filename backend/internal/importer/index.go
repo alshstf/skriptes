@@ -65,18 +65,19 @@ func (im *Importer) ConfigureIndex(ctx context.Context) error {
 // ConfigureIndex — вызывать на каждом старте, чтобы индекс существовал и имел
 // нужные filterable/sortable атрибуты даже на стабильном деплое без импорта.
 func (im *Importer) ConfigureWorksIndex(ctx context.Context) error {
-	return configureWorksIndex(ctx, im.deps.Meili, im.foldedSearchReady(ctx))
+	return configureWorksIndex(ctx, im.deps.Meili, worksIndex, im.foldedSearchReady(ctx))
 }
 
 // foldedSearchSchemaVersion — версия схемы works-индекса, с которой у документов
 // есть поля title_s/authors_s/series_s (свёртка «ё»→«е», #278).
 const foldedSearchSchemaVersion = 9
 
-// foldedSearchReady — индекс уже полностью пересобран схемой со свёрнутыми
-// полями, и искать можно по ним. До этого поиск остаётся на прежних полях:
-// переключись он сразу, на время полного ресинка (минуты) старые документы
-// без свёрнутых полей не находились бы вовсе. Смена searchableAttributes —
-// переиндексация всего индекса в Meili, поэтому переключение одно.
+// foldedSearchReady — индекс уже пересобран схемой со свёрнутыми полями
+// (RebuildWorksIndex собирает его сразу с ними), и искать можно по ним. До этого
+// живой индекс остаётся на прежних полях: переключи его ConfigureWorksIndex на
+// старте, старые документы без свёрнутых полей не находились бы, а переиндексация
+// Meili 1.13 при смене searchableAttributes ещё и оставляет битой близость слов
+// у документов, где свёрнутое слово отличается от прежнего (см. RebuildWorksIndex).
 func (im *Importer) foldedSearchReady(ctx context.Context) bool {
 	if im.deps.Pool == nil {
 		return false
@@ -128,13 +129,14 @@ type workDoc struct {
 	renownPop int64
 }
 
-// configureWorksIndex создаёт и настраивает индекс works идемпотентно.
-// Без distinctAttribute: каждый документ уже = одна работа. foldedSearch —
-// искать по свёрнутым копиям полей (см. foldedSearchReady).
-func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, foldedSearch bool) error {
-	idx := m.Index(worksIndex)
+// configureWorksIndex создаёт и настраивает индекс works (uid — живой или
+// временный для пересборки) идемпотентно. Без distinctAttribute: каждый
+// документ уже = одна работа. foldedSearch — искать по свёрнутым копиям полей
+// (см. foldedSearchReady).
+func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid string, foldedSearch bool) error {
+	idx := m.Index(uid)
 	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
-		Uid:        worksIndex,
+		Uid:        uid,
 		PrimaryKey: "id",
 	}); err != nil {
 		if !isMeiliAlreadyExists(err) {
