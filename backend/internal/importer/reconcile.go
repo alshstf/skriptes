@@ -13,7 +13,15 @@ type ReconcileResult struct {
 	WorksRemoved int // документы works без живой работы (удалены импортом, слиты группировкой)
 	WorksAdded   int // живые работы без документа (досинкованы)
 	BooksRemoved int // документы books (OPDS) удалённых книг
-	BooksMissing int // живые книги без документа — только в лог: их пишет импорт
+	BooksMissing int // живые книги без документа: их пишет импорт (см. BooksNeedReimport)
+	BooksLive    int // живых книг в PG
+}
+
+// BooksNeedReimport — в индексе книг (OPDS) нет заметной доли живых книг: так
+// бывает после восстановления базы из дампа на пустой Meili (#305). Документы
+// книг пишет только импорт, а он пропустит «неизменный» INPX — нужен полный.
+func (r ReconcileResult) BooksNeedReimport() bool {
+	return r.BooksLive > 0 && r.BooksMissing*10 >= r.BooksLive
 }
 
 // reconcilePageSize — сколько id за запрос выкачивать из Meili.
@@ -73,6 +81,7 @@ func (im *Importer) ReconcileIndexes(ctx context.Context) (ReconcileResult, erro
 	}
 	res.BooksRemoved = len(extra)
 	res.BooksMissing = len(missing)
+	res.BooksLive = len(liveBooks)
 	return res, nil
 }
 

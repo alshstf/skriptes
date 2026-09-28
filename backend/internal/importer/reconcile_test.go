@@ -79,5 +79,7 @@ func TestReconcileIndexes(t *testing.T) {
 	// Повторная сверка — ничего не меняет.
 	res, err = imp.ReconcileIndexes(ctx)
 	require.NoError(t, err)
-	require.Equal(t, importer.ReconcileResult{}, res)
+	require.Equal(t, importer.ReconcileResult{BooksLive: res.BooksLive}, res)
+	require.Positive(t, res.BooksLive)
+	require.False(t, res.BooksNeedReimport())
 }

@@ -158,6 +158,16 @@ func run() error {
 		} else {
 			logger.Info("search index reconcile done", "works_removed", r.WorksRemoved,
 				"works_added", r.WorksAdded, "books_removed", r.BooksRemoved, "books_missing", r.BooksMissing)
+			// Индекс книг почти пуст (база восстановлена из дампа на пустой Meili, #305) —
+			// его пишет только импорт: сбросить хэш, стартовый импорт ниже пройдёт полностью.
+			if r.BooksNeedReimport() {
+				if _, err := pool.Exec(c, `UPDATE collections SET last_inpx_hash = NULL`); err != nil {
+					logger.Warn("books index is missing documents; forcing full reimport failed", "err", err)
+				} else {
+					logger.Warn("books index is missing documents — full INPX reimport scheduled",
+						"missing", r.BooksMissing, "live", r.BooksLive)
+				}
+			}
 		}
 		// Импорт INPX — после разовых шагов, а не параллельно с ними: и те, и шаги
 		// после импорта массово пишут в works, вперемешку ловили deadlock (#300).
