@@ -175,13 +175,14 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 	}
 	page := body.Query.Pages[0]
 	if _, ok := page.PageProps["disambiguation"]; ok {
+		if !q.Strict() {
+			return p.intro(ctx, lang, asNamesake(q))
+		}
 		return "", ErrNotFound
 	}
 	// Редирект мог увести на другого человека («Флинт, Александра» →
-	// «Флит, Александр») — имя проверяем и у итоговой статьи; статья под
-	// псевдонимом годится, если называет автора («Акунин, Борис» — «настоящее
-	// имя — Григорий Шалвович Чхартишвили»).
-	if page.Title != "" && !authorNameMatches(q, page.Title) && !mentionsAuthor(page.Extract, q) {
+	// «Флит, Александр») — имя проверяем и у итоговой статьи (articleIsAuthor).
+	if !articleIsAuthor(q, page.Title, page.Extract) {
 		return "", ErrNotFound
 	}
 	return strings.TrimSpace(page.Extract), nil
@@ -206,6 +207,39 @@ func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery)
 		return img, nil
 	}
 	return nil, notFoundOr(failed)
+}
+
+// articleIsAuthor — итоговая статья (после редиректа) о нашем авторе:
+//   - имя совпадает с названием статьи;
+//   - или его называет начало статьи — там полное имя героя, в том числе
+//     латиницей: «Ри́чард Мэ́тисон (англ. Richard Burton Matheson…)» для
+//     «Матесон Ричард» (сверка между алфавитами допускает одну букву);
+//   - или статья под псевдонимом называет автора («Акунин, Борис» — «настоящее
+//     имя — Григорий Шалвович Чхартишвили»).
+func articleIsAuthor(q AuthorQuery, title, extract string) bool {
+	if title == "" {
+		return true
+	}
+	return authorNameMatches(q, title) || authorNameMatches(q, articleLead(extract)) || mentionsAuthor(extract, q)
+}
+
+// articleLead — начало статьи, где Википедия называет героя полным именем.
+func articleLead(extract string) string {
+	const leadRunes = 200
+	r := []rune(extract)
+	if len(r) > leadRunes {
+		r = r[:leadRunes]
+	}
+	return string(r)
+}
+
+// asNamesake — по имени автора в Википедии нашлась страница неоднозначности
+// («Дюма, Александр»: отец и сын) — значит, у него есть тёзки, и статью ищем как
+// для тёзки: по уточнению и книгам (resolveStrictTitle). Без этого автор с
+// известным тёзкой оставался без био и фото.
+func asNamesake(q AuthorQuery) AuthorQuery {
+	q.Namesakes = true
+	return q
 }
 
 // summary — opensearch для точного титла + summary endpoint.
@@ -240,11 +274,13 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	// disambiguation-страницы (type="disambiguation") нам бесполезны —
 	// extract там обычно общий типа "может означать...".
 	if s.Type == "disambiguation" {
+		if !q.Strict() {
+			return p.summary(ctx, lang, asNamesake(q))
+		}
 		return nil, ErrNotFound
 	}
-	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280);
-	// статья под псевдонимом годится, если называет автора (см. intro).
-	if s.Title != "" && !authorNameMatches(q, s.Title) && !mentionsAuthor(s.Extract, q) {
+	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280).
+	if !articleIsAuthor(q, s.Title, s.Extract) {
 		return nil, ErrNotFound
 	}
 	return &s, nil

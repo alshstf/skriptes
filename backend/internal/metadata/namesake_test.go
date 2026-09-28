@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -132,6 +133,63 @@ func TestWikipedia_StrictTitle(t *testing.T) {
 		require.Equal(t, "Гибсон, Уильям", got)
 		require.Equal(t, []string{"opensearch:1"}, *calls)
 	})
+}
+
+// TestWikipedia_DisambiguationFallsBackToStrict — по имени нашлась страница
+// неоднозначности («Дюма, Александр»: отец и сын) — статья ищется как для
+// тёзки, по книге. Перепроверка 1.16.0 из-за этого очистила био Дюма.
+func TestWikipedia_DisambiguationFallsBackToStrict(t *testing.T) {
+	const disambig = "Дюма, Александр"
+	const father = "Дюма, Александр (отец)"
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		qv := r.URL.Query()
+		switch {
+		case qv.Get("action") == "opensearch":
+			_ = json.NewEncoder(w).Encode([]any{qv.Get("search"), []string{disambig}, []string{}, []string{}})
+		case qv.Get("list") == "search" && qv.Get("srsearch") == `"Дюма" "Три мушкетёра"`:
+			_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"search": []any{
+				map[string]string{"title": father}, map[string]string{"title": "Три мушкетёра"},
+			}}})
+		case strings.Contains(qv.Get("prop"), "extracts"):
+			page := map[string]any{"title": qv.Get("titles")}
+			switch qv.Get("titles") {
+			case disambig:
+				page["extract"] = "Александр Дюма: Дюма, Александр (отец) — писатель; Дюма, Александр (сын) — писатель."
+				page["pageprops"] = map[string]string{"disambiguation": ""}
+			case father:
+				page["extract"] = "Александр Дюма (отец) — французский писатель."
+			default:
+				page["missing"] = true
+			}
+			_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"pages": []any{page}}})
+		case strings.HasPrefix(r.URL.Path, "/api/rest_v1/page/summary/"):
+			title, _ := url.PathUnescape(strings.TrimPrefix(r.URL.Path, "/api/rest_v1/page/summary/"))
+			s := map[string]any{"title": title, "type": "standard", "extract": "Александр Дюма — писатель."}
+			if title == disambig {
+				s["type"] = "disambiguation"
+			}
+			_ = json.NewEncoder(w).Encode(s)
+		default:
+			_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"search": []any{}}})
+		}
+	}))
+	t.Cleanup(srv.Close)
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	q := AuthorQuery{LastName: "Дюма", FirstName: "Александр", FullName: "Дюма Александр",
+		BookTitles: []string{"Три мушкетёра"}}
+
+	bio, err := p.intro(context.Background(), "ru", q)
+	require.NoError(t, err)
+	require.Equal(t, "Александр Дюма (отец) — французский писатель.", bio)
+
+	s, err := p.summary(context.Background(), "ru", q)
+	require.NoError(t, err)
+	require.Equal(t, father, s.Title)
+
+	// Без книг подтвердить некем — не найдено, а не список тёзок.
+	q.BookTitles = nil
+	_, err = p.intro(context.Background(), "ru", q)
+	require.ErrorIs(t, err, ErrNotFound)
 }
 
 func TestOpenLibrary_StrictAuthorKey(t *testing.T) {

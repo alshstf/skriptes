@@ -42,6 +42,11 @@ func TestAuthorNameMatches(t *testing.T) {
 		{"accept one-gap given name", "Блей", "Фритц", "Блей, Фриц", true},
 		{"reject one-gap surname", "Юрмин", "Георгий", "Юрин, Георгий Васильевич", false},
 		{"reject substituted given name", "Иванова", "Мария", "Иванова, Марина", false},
+		// Перепроверка 1.16.0: разные передачи иностранной фамилии в одном алфавите.
+		{"accept Г/Х in surname", "Херберт", "Фрэнк", "Герберт, Фрэнк", true},
+		{"accept З/С in surname", "Зузак", "Маркус", "Зусак, Маркус", true},
+		{"reject Ж/Ш in surname", "Жуков", "Георгий", "Шуков, Георгий", false},
+		{"reject vowel with Г/Х", "Херберт", "Фрэнк", "Гарберт, Фрэнк", false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -91,5 +96,21 @@ func TestMentionsAuthor(t *testing.T) {
 	}
 	if mentionsAuthor("Александр Флит — русский поэт", AuthorQuery{LastName: "Флинт", FirstName: "Александра"}) {
 		t.Error("другой человек — не упоминание")
+	}
+}
+
+func TestArticleIsAuthor(t *testing.T) {
+	matheson := AuthorQuery{LastName: "Матесон", FirstName: "Ричард"}
+	if !articleIsAuthor(matheson, "Мэтисон, Ричард",
+		"Ри́чард Мэ́тисон (англ. Richard Burton Matheson; 20 февраля 1926, Аллендейл) — американский писатель") {
+		t.Error("начало статьи называет автора латиницей — тот же человек")
+	}
+	if articleIsAuthor(AuthorQuery{LastName: "Флинт", FirstName: "Александра"}, "Флит, Александр",
+		"Алекса́ндр Ива́нович Флит (род. 1950) — российский поэт") {
+		t.Error("редирект на другого человека — не автор")
+	}
+	if articleIsAuthor(matheson, "Мэтисон, Ричард",
+		"Ри́чард Мэ́тисон (англ. Richard Mathison) — американский художник") {
+		t.Error("другая фамилия и латиницей — не автор")
 	}
 }

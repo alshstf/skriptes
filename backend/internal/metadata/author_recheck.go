@@ -21,7 +21,8 @@ import (
 //   - сбой источника — не трогаем, повтор в следующем проходе.
 // Изменения пишутся в author_meta_recheck (что было, что стало). Идём от самых
 // известных авторов: первыми исправляются видимые карточки. Прежние файлы фото
-// не удаляются — нужны для отката.
+// не удаляются — нужны для отката. Авторы, у которых прошлая перепроверка
+// что-то очистила, проходят заново: гейты с тех пор могли исправить.
 
 // AuthorRecheckStats — итог перепроверки.
 type AuthorRecheckStats struct {
@@ -92,7 +93,9 @@ func (r *AuthorRechecker) batch(ctx context.Context, since time.Time, lastRenown
 		SELECT id, last_name, first_name, middle_name,
 		       TRIM(CONCAT_WS(' ', last_name, first_name, middle_name)), renown
 		FROM authors
-		WHERE (COALESCE(bio, '') <> '' OR COALESCE(photo_path, '') <> '')
+		WHERE (COALESCE(bio, '') <> '' OR COALESCE(photo_path, '') <> ''
+		       OR EXISTS (SELECT 1 FROM author_meta_recheck r
+		                  WHERE r.author_id = authors.id AND r.action = 'cleared'))
 		  AND (metadata_fetched_at IS NULL OR metadata_fetched_at < $1)
 		  AND (renown, id) < ($2, $3)
 		ORDER BY renown DESC, id DESC
