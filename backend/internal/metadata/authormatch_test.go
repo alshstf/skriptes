@@ -30,6 +30,13 @@ func TestAuthorNameMatches(t *testing.T) {
 
 		// Совсем другая фамилия — мимо.
 		{"reject different surname", "Гарднер", "Лиза", "Лиза Симпсон", false},
+
+		// #280: в одном алфавите — только точное совпадение (опечатка ≠ другой человек).
+		{"reject cyrillic near-miss surname", "Фирсов", "Андрей", "Фурсов, Андрей Ильич", false},
+		{"reject cyrillic near-miss surname 2", "Каменова", "Анна", "Каменкова, Анна Владимировна", false},
+		{"reject cyrillic near-miss given", "Иванова", "Мария", "Иванова, Марина Сергеевна", false},
+		{"reject latin near-miss", "Gardner", "Lisa", "Lisa Garner", false},
+		{"accept cross-script near form", "Гарднер", "Лиза", "Lisa Gardner", true},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -55,5 +62,18 @@ func TestTranslitName(t *testing.T) {
 		if got := translitName(in); got != want {
 			t.Errorf("translitName(%q) = %q, want %q", in, got, want)
 		}
+	}
+}
+
+// #280: имя из одного слова («София», «2B») — только с подтверждением книгой.
+func TestAuthorQuery_StrictOneWord(t *testing.T) {
+	if !(AuthorQuery{LastName: "София"}).Strict() {
+		t.Error("фамилия без имени — строгий режим")
+	}
+	if (AuthorQuery{LastName: "Гарднер", FirstName: "Лиза"}).Strict() {
+		t.Error("фамилия и имя — обычный поиск")
+	}
+	if (AuthorQuery{FullName: "Достоевский Фёдор"}).Strict() {
+		t.Error("нет разбора на фамилию/имя — гейтить нечем, обычный поиск")
 	}
 }

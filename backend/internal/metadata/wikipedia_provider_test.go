@@ -161,7 +161,7 @@ func TestWikipedia_OccupationGate(t *testing.T) {
 		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
 		{"writer accepted", "Q2", OccupationWriter, nil, true},
 		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
-		{"gate error accepted", "Q4", OccupationNonWriter, context.DeadlineExceeded, true},
+		{"gate error is transient", "Q4", OccupationNonWriter, context.DeadlineExceeded, false},
 		{"empty qid skips gate", "", OccupationNonWriter, nil, true},
 	}
 	for _, c := range cases {
@@ -176,10 +176,14 @@ func TestWikipedia_OccupationGate(t *testing.T) {
 					return c.verdict, c.gateErr
 				})
 			got, err := p.FetchAuthorBio(context.Background(), q)
-			if c.wantFound {
+			switch {
+			case c.wantFound:
 				require.NoError(t, err)
 				require.Equal(t, bio, got)
-			} else {
+			case c.gateErr != nil:
+				// Сбой проверки профессии — временная ошибка, автор перепроверится (#280).
+				require.ErrorIs(t, err, ErrUpstream)
+			default:
 				require.ErrorIs(t, err, ErrNotFound)
 			}
 			if c.qid == "" {
@@ -342,7 +346,7 @@ func TestOpenLibrary_OccupationGate(t *testing.T) {
 		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
 		{"writer accepted", "Q2", OccupationWriter, nil, true},
 		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
-		{"gate error accepted", "Q4", OccupationNonWriter, context.DeadlineExceeded, true},
+		{"gate error is transient", "Q4", OccupationNonWriter, context.DeadlineExceeded, false},
 		{"no wikidata skips gate", "", OccupationNonWriter, nil, true},
 	}
 	for _, c := range cases {
@@ -373,10 +377,14 @@ func TestOpenLibrary_OccupationGate(t *testing.T) {
 			got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{
 				LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий",
 			})
-			if c.wantFound {
+			switch {
+			case c.wantFound:
 				require.NoError(t, err)
 				require.Equal(t, bio, got)
-			} else {
+			case c.gateErr != nil:
+				// Сбой проверки профессии — временная ошибка, автор перепроверится (#280).
+				require.ErrorIs(t, err, ErrUpstream)
+			default:
 				require.ErrorIs(t, err, ErrNotFound)
 			}
 			if c.qid == "" {
@@ -399,4 +407,37 @@ func TestOpenLibrary_AuthorPhotoNoPositiveIDs(t *testing.T) {
 	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
 	_, err := p.FetchAuthorPhoto(context.Background(), AuthorQuery{FullName: "X"})
 	require.ErrorIs(t, err, ErrNotFound)
+}
+
+// #280: страница неоднозначности и редирект на другого человека в пути био —
+// «не найдено»; сбой Википедии — временная ошибка, а не «не найдено».
+func TestWikipedia_BioRejectsDisambiguationAndForeignRedirect(t *testing.T) {
+	serve := func(page string, status int) *httptest.Server {
+		return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if status != http.StatusOK {
+				w.WriteHeader(status)
+				return
+			}
+			switch r.URL.Query().Get("action") {
+			case "opensearch":
+				_ = json.NewEncoder(w).Encode([]any{"", []string{"Козлов, Василий"}, []string{}, []string{}})
+			case "query":
+				_, _ = io.WriteString(w, `{"query":{"pages":[`+page+`]}}`)
+			}
+		}))
+	}
+	q := AuthorQuery{LastName: "Козлов", FirstName: "Василий", FullName: "Козлов Василий"}
+	for name, page := range map[string]string{
+		"disambiguation":   `{"title":"Козлов, Василий","extract":"Козлов, Василий — может означать:","pageprops":{"disambiguation":""}}`,
+		"foreign redirect": `{"title":"Козлов, Виктор Павлович","extract":"Виктор Козлов — футболист."}`,
+	} {
+		srv := serve(page, http.StatusOK)
+		_, err := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).FetchAuthorBio(context.Background(), q)
+		srv.Close()
+		require.ErrorIsf(t, err, ErrNotFound, name)
+	}
+	srv := serve(`{"title":"Козлов, Василий","extract":"писатель"}`, http.StatusTooManyRequests)
+	defer srv.Close()
+	_, err := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).FetchAuthorBio(context.Background(), q)
+	require.ErrorIs(t, err, ErrUpstream, "429 — не «не найдено»")
 }

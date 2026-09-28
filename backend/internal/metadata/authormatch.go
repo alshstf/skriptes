@@ -20,41 +20,61 @@ func authorNameMatches(q AuthorQuery, candidate string) bool {
 		return true // нет даже фамилии — нечем проверять
 	}
 	cand := nameTokens(candidate)
-	if !anyTokenMatches(cand, last) {
+	if !anyTokenMatches(cand, last, hasCyrillic(q.LastName)) {
 		return false // фамилии нет в кандидате — точно не он
 	}
 	first := translitName(q.FirstName)
 	if first == "" {
 		return true // имени нет — гейтим только по фамилии
 	}
-	return anyTokenMatches(cand, first) || initialMatches(cand, first)
+	return anyTokenMatches(cand, first, hasCyrillic(q.FirstName)) || initialMatches(cand, first)
+}
+
+// nameToken — токен имени кандидата латиницей и признак, что он был кириллицей.
+type nameToken struct {
+	lat string
+	cyr bool
+}
+
+func hasCyrillic(s string) bool {
+	for _, r := range s {
+		if _, ok := cyrToLat[r]; ok {
+			return true
+		}
+		if r >= 'А' && r <= 'я' {
+			return true
+		}
+	}
+	return false
 }
 
 // nameTokens — разбивает имя-кандидат на транслитерированные латиницей токены
 // (по пробелам/запятым/дефисам/точкам), пустые отбрасывает.
-func nameTokens(s string) []string {
+func nameTokens(s string) []nameToken {
 	fields := strings.FieldsFunc(s, func(r rune) bool {
-		return r == ' ' || r == ',' || r == '.' || r == '-' || r == '\t' || r == ' '
+		return r == ' ' || r == ',' || r == '.' || r == '-' || r == '\t' || r == '\u00a0'
 	})
-	out := make([]string, 0, len(fields))
+	out := make([]nameToken, 0, len(fields))
 	for _, f := range fields {
 		if t := translitName(f); t != "" {
-			out = append(out, t)
+			out = append(out, nameToken{lat: t, cyr: hasCyrillic(f)})
 		}
 	}
 	return out
 }
 
 // anyTokenMatches — есть ли среди токенов совпадение с target: точное либо с
-// расстоянием Левенштейна ≤1 для токенов длиной ≥3 (Лиза→liza ≈ Lisa→lisa,
-// Лев→lev ≈ Leo→leo). Совсем короткие (≤2) требуют точного совпадения, чтобы
-// не плодить ложные совпадения на инициалах/частицах.
-func anyTokenMatches(tokens []string, target string) bool {
+// расстоянием Левенштейна ≤1 для токенов длиной ≥3 — но только между разными
+// алфавитами, где расхождение даёт транслитерация (Лиза→liza ≈ Lisa→lisa,
+// Лев→lev ≈ Leo→leo). В одном алфавите — только точное: «Фирсов» ≈ «Фурсов»,
+// «Мария» ≈ «Марина» давали чужие био (#280). Совсем короткие (≤2) — тоже
+// только точно, чтобы не плодить совпадения на инициалах/частицах.
+func anyTokenMatches(tokens []nameToken, target string, targetCyr bool) bool {
 	for _, t := range tokens {
-		if t == target {
+		if t.lat == target {
 			return true
 		}
-		if len(target) >= 3 && len(t) >= 3 && levenshtein(t, target) <= 1 {
+		if t.cyr != targetCyr && len(target) >= 3 && len(t.lat) >= 3 && levenshtein(t.lat, target) <= 1 {
 			return true
 		}
 	}
@@ -63,12 +83,12 @@ func anyTokenMatches(tokens []string, target string) bool {
 
 // initialMatches — совпадение по инициалу: кандидат «Л.» (токен из одной буквы)
 // против имени «Лиза», или наоборот.
-func initialMatches(tokens []string, target string) bool {
+func initialMatches(tokens []nameToken, target string) bool {
 	if target == "" {
 		return false
 	}
 	for _, t := range tokens {
-		if len(t) == 1 && t[0] == target[0] {
+		if len(t.lat) == 1 && t.lat[0] == target[0] {
 			return true
 		}
 	}
