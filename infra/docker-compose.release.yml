@@ -50,6 +50,8 @@ services:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-}
       MEILI_ENV: ${MEILI_ENV:-development}
       MEILI_NO_ANALYTICS: "true"
+      # INFO пишет каждый /health (healthcheck раз в 10 с) — десятки тысяч строк в сутки.
+      MEILI_LOG_LEVEL: ${MEILI_LOG_LEVEL:-WARN}
     volumes:
       - meili_data:/meili_data
     healthcheck:

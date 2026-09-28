@@ -94,7 +94,7 @@ var (
 	// not_found | error (как в таблицах учёта *_lookups).
 	EnrichmentLookups = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_enrichment_lookups_total",
-		Help: "Запросы воркеров обогащения к внешним источникам по воркеру, источнику и исходу.",
+		Help: "Запросы обогащения к внешним источникам (фоновые воркеры и ленивое обогащение с карточек) по воркеру, источнику и исходу.",
 	}, []string{"worker", "source", "outcome"})
 )
 

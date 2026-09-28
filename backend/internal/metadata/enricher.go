@@ -14,6 +14,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/langcode"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // Enricher — оркестратор обогащения карточек книг (обложки + аннотации).
@@ -801,6 +802,7 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) (transi
 
 	for _, p := range e.authorPhotoProviders {
 		img, err := p.FetchAuthorPhoto(ctx, q)
+		observeLookup("author_photo", p.Name(), err, img != nil && img.Reader != nil)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
@@ -921,6 +923,7 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) (transien
 
 	for _, p := range e.authorBioProviders {
 		text, err := p.FetchAuthorBio(ctx, q)
+		observeLookup("author_bio", p.Name(), err, text != "")
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
@@ -1014,6 +1017,7 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 	transient := false
 	for _, p := range e.adaptationProviders {
 		items, err := p.FetchAdaptations(ctx, q)
+		observeLookup("adaptations", p.Name(), err, len(items) > 0)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
@@ -1226,6 +1230,7 @@ func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int,
 func (e *Enricher) resolvePosterURL(ctx context.Context, bookID int64, it Adaptation) (string, bool) {
 	if e.tmdbPosters != nil && (it.TMDBMovieID != "" || it.TMDBTVID != "") {
 		u, err := e.tmdbPosters.PosterURL(ctx, it.TMDBMovieID, it.TMDBTVID)
+		observeLookup("poster", "tmdb", err, u != "")
 		switch {
 		case err == nil && u != "":
 			return u, false
@@ -1281,4 +1286,21 @@ func nullIfEmpty(s string) *string {
 		return nil
 	}
 	return &s
+}
+
+// observeLookup — исход запроса к внешнему источнику в метрику
+// skriptes_enrichment_lookups_total (как у воркеров с учётом попыток): био, фото,
+// экранизации и постеры TMDB идут и из воркеров, и лениво с карточек, а
+// недоступность TMDB иначе видна только в логах (#310).
+func observeLookup(worker, source string, err error, found bool) {
+	outcome := "found"
+	switch {
+	case errors.Is(err, ErrNotFound):
+		outcome = "not_found"
+	case err != nil:
+		outcome = "error"
+	case !found:
+		outcome = "not_found"
+	}
+	metrics.EnrichmentLookups.WithLabelValues(worker, source, outcome).Inc()
 }
