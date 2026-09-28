@@ -27,7 +27,33 @@ func authorNameMatches(q AuthorQuery, candidate string) bool {
 	if first == "" {
 		return true // имени нет — гейтим только по фамилии
 	}
-	return anyTokenMatches(cand, first, hasCyrillic(q.FirstName)) || initialMatches(cand, first)
+	return anyTokenMatches(cand, first, hasCyrillic(q.FirstName)) || initialMatches(cand, first) ||
+		anyTokenOneGap(cand, first)
+}
+
+// anyTokenOneGap — имя отличается одной вставленной или пропущенной буквой
+// (Фритц/Фриц, Наталия/Наталья) — варианты передачи ИМЕНИ, в том числе в одном
+// алфавите. Замена буквы (Мария/Марина) — нет. Только для имени: у фамилий так
+// совпали бы разные люди («Юрмин»/«Юрин»).
+func anyTokenOneGap(tokens []nameToken, target string) bool {
+	if len(target) < 4 {
+		return false
+	}
+	for _, t := range tokens {
+		a, b := t.lat, target
+		if len(a) < len(b) {
+			a, b = b, a
+		}
+		if len(a) != len(b)+1 {
+			continue
+		}
+		for i := 0; i < len(a); i++ {
+			if a[:i]+a[i+1:] == b {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // nameToken — токен имени кандидата латиницей и признак, что он был кириллицей.
@@ -75,6 +101,11 @@ func anyTokenMatches(tokens []nameToken, target string, targetCyr bool) bool {
 			return true
 		}
 		if t.cyr != targetCyr && len(target) >= 3 && len(t.lat) >= 3 && levenshtein(t.lat, target) <= 1 {
+			return true
+		}
+		// В одном алфавите — только разница в удвоенных буквах (передача
+		// двойных согласных: «Флевеллинг» ~ «Флевелинг», «Коллинз» ~ «Колинз»).
+		if len(target) >= 5 && collapseDoubles(t.lat) == collapseDoubles(target) {
 			return true
 		}
 	}
@@ -171,4 +202,45 @@ func min3(a, b, c int) int {
 		m = c
 	}
 	return m
+}
+
+// collapseDoubles — подряд идущие одинаковые буквы сводятся к одной.
+func collapseDoubles(s string) string {
+	var b strings.Builder
+	var prev rune
+	for i, r := range s {
+		if i > 0 && r == prev {
+			continue
+		}
+		b.WriteRune(r)
+		prev = r
+	}
+	return b.String()
+}
+
+// mentionsAuthor — в тексте статьи есть и фамилия, и имя автора (без различия
+// регистра, ё/е и знаков ударения). Нужно, когда редирект ведёт на статью под
+// другим именем: псевдоним «Акунин, Борис» для «Чхартишвили Григорий» — это
+// тот же человек, если статья называет настоящее имя; «Флинт» → «Флит» — нет.
+func mentionsAuthor(text string, q AuthorQuery) bool {
+	norm := func(s string) string {
+		var b strings.Builder
+		for _, r := range strings.ToLower(s) {
+			switch r {
+			case '\u0301', '\u0300':
+				continue
+			case 'ё':
+				r = 'е'
+			}
+			b.WriteRune(r)
+		}
+		return b.String()
+	}
+	t := norm(text)
+	last := norm(strings.TrimSpace(q.LastName))
+	if last == "" || !strings.Contains(t, last) {
+		return false
+	}
+	first := norm(strings.TrimSpace(q.FirstName))
+	return first == "" || strings.Contains(t, first)
 }

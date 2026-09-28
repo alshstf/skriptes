@@ -178,8 +178,10 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 		return "", ErrNotFound
 	}
 	// Редирект мог увести на другого человека («Флинт, Александра» →
-	// «Флит, Александр») — имя проверяем и у итоговой статьи.
-	if page.Title != "" && !authorNameMatches(q, page.Title) {
+	// «Флит, Александр») — имя проверяем и у итоговой статьи; статья под
+	// псевдонимом годится, если называет автора («Акунин, Борис» — «настоящее
+	// имя — Григорий Шалвович Чхартишвили»).
+	if page.Title != "" && !authorNameMatches(q, page.Title) && !mentionsAuthor(page.Extract, q) {
 		return "", ErrNotFound
 	}
 	return strings.TrimSpace(page.Extract), nil
@@ -240,8 +242,9 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	if s.Type == "disambiguation" {
 		return nil, ErrNotFound
 	}
-	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280).
-	if s.Title != "" && !authorNameMatches(q, s.Title) {
+	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280);
+	// статья под псевдонимом годится, если называет автора (см. intro).
+	if s.Title != "" && !authorNameMatches(q, s.Title) && !mentionsAuthor(s.Extract, q) {
 		return nil, ErrNotFound
 	}
 	return &s, nil

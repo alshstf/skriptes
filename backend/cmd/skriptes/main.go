@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -13,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
@@ -479,6 +481,11 @@ func run() error {
 	if err := gatesResolver.Load(ctx()); err != nil {
 		logger.Warn("read enrichment gates — using defaults", "err", err)
 	}
+	// Перепроверка био и фото авторов текущими гейтами (#280) — фоном, около
+	// суток на 42 тыс. авторов; после рестарта продолжается с того же места.
+	metadata.Go(func(c context.Context) {
+		runAuthorMetaRecheck(c, pool, enricher, baCfg.BiosRPM, gatesResolver, logger)
+	})
 
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
@@ -1176,6 +1183,83 @@ func runOnceRegroupTitleConflicts(ctx context.Context, pool *pgxpool.Pool, wg *m
 	}
 	logger.Info("one-time regroup of title-conflict works done",
 		"stub_src_titles", stubs, "works", len(works), "editions_split", split)
+}
+
+// authorMetaRecheckKey — состояние перепроверки био и фото авторов в
+// app_settings: {"since": начало, "done": завершена}. Бампнуть версию —
+// запустить перепроверку заново (например, после новых гейтов матчинга).
+const authorMetaRecheckKey = "author_meta_recheck_v1"
+
+// runAuthorMetaRecheck — перепроверка биографий и фото авторов текущими гейтами
+// матчинга (metadata.AuthorRechecker, #280): подтверждённое остаётся, чужое
+// заменяется или очищается, изменения — в author_meta_recheck. Проходы
+// повторяются, пока у кого-то сбоит источник (раз в 30 минут). Не идёт, если
+// обогащение авторов выключено в админке.
+func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *metadata.Enricher, rpm int,
+	gates *settings.EnrichmentGateResolver, logger *slog.Logger) {
+	var state struct {
+		Since time.Time `json:"since"`
+		Done  bool      `json:"done"`
+	}
+	var raw []byte
+	err := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, authorMetaRecheckKey).Scan(&raw)
+	switch {
+	case errors.Is(err, pgx.ErrNoRows):
+		state.Since = time.Now().UTC()
+	case err != nil:
+		logger.Warn("author recheck: read state failed — skip", "err", err)
+		return
+	default:
+		if err := json.Unmarshal(raw, &state); err != nil {
+			logger.Warn("author recheck: bad state — skip", "err", err)
+			return
+		}
+	}
+	if state.Done {
+		return
+	}
+	save := func() {
+		b, _ := json.Marshal(state)
+		if _, err := pool.Exec(ctx, `
+			INSERT INTO app_settings (key, value, updated_at) VALUES ($1, $2, now())
+			ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`,
+			authorMetaRecheckKey, b); err != nil {
+			logger.Warn("author recheck: save state failed", "err", err)
+		}
+	}
+	save()
+	if rpm <= 0 {
+		rpm = settings.DefaultBioAdaptationConfig().BiosRPM
+	}
+	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger)
+	logger.Info("author recheck: started", "since", state.Since, "rpm", rpm)
+	for pass := 1; ; pass++ {
+		if gates != nil && gates.Gates().AuthorDisabled {
+			logger.Info("author recheck: author enrichment is disabled — paused")
+		} else {
+			st, err := r.Pass(ctx, state.Since)
+			if ctx.Err() != nil {
+				return
+			}
+			if err != nil {
+				logger.Warn("author recheck: pass failed", "pass", pass, "err", err)
+			}
+			logger.Info("author recheck: pass done", "pass", pass, "checked", st.Checked, "deferred", st.Deferred,
+				"bio_kept", st.BioKept, "bio_new", st.BioNew, "bio_cleared", st.BioClear,
+				"photo_kept", st.PhotoKept, "photo_new", st.PhotoNew, "photo_cleared", st.PhotoClr)
+			if err == nil && st.Deferred == 0 {
+				state.Done = true
+				save()
+				logger.Info("author recheck: done")
+				return
+			}
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(30 * time.Minute):
+		}
+	}
 }
 
 // runOnceSplitAlienEditions — разовый вынос изданий, у которых нет общих авторов

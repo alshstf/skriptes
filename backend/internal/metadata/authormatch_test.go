@@ -37,6 +37,11 @@ func TestAuthorNameMatches(t *testing.T) {
 		{"reject cyrillic near-miss given", "Иванова", "Мария", "Иванова, Марина Сергеевна", false},
 		{"reject latin near-miss", "Gardner", "Lisa", "Lisa Garner", false},
 		{"accept cross-script near form", "Гарднер", "Лиза", "Lisa Gardner", true},
+		// Выборка с прода: удвоенные буквы в фамилии, вставка/пропуск буквы в имени.
+		{"accept doubled letters in surname", "Флевеллинг", "Линн", "Флевелинг, Линн", true},
+		{"accept one-gap given name", "Блей", "Фритц", "Блей, Фриц", true},
+		{"reject one-gap surname", "Юрмин", "Георгий", "Юрин, Георгий Васильевич", false},
+		{"reject substituted given name", "Иванова", "Мария", "Иванова, Марина", false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -75,5 +80,16 @@ func TestAuthorQuery_StrictOneWord(t *testing.T) {
 	}
 	if (AuthorQuery{FullName: "Достоевский Фёдор"}).Strict() {
 		t.Error("нет разбора на фамилию/имя — гейтить нечем, обычный поиск")
+	}
+}
+
+// Статья под псевдонимом годится, если называет автора (#280).
+func TestMentionsAuthor(t *testing.T) {
+	q := AuthorQuery{LastName: "Чхартишвили", FirstName: "Григорий"}
+	if !mentionsAuthor("Бори\u0301с Аку\u0301нин (настоящее имя — Григо\u0301рий Ша\u0301лвович Чхартишви\u0301ли) — писатель", q) {
+		t.Error("ударения в тексте не мешают найти настоящее имя")
+	}
+	if mentionsAuthor("Александр Флит — русский поэт", AuthorQuery{LastName: "Флинт", FirstName: "Александра"}) {
+		t.Error("другой человек — не упоминание")
 	}
 }

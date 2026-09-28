@@ -58,7 +58,9 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 			return "", err
 		}
 		for _, h := range hits {
-			if authorNameMatches(q, h) {
+			// Имя — по основе названия: «Старый пруд (Басё)» — статья о хайку,
+			// а не о поэте, хотя «Басё» в уточнении есть (выборка с прода, #280).
+			if base, _ := splitQualifier(h); authorNameMatches(q, base) {
 				return h, nil
 			}
 		}

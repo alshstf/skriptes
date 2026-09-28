@@ -30,13 +30,18 @@ const (
 	OccupationNonWriter
 )
 
-// writerBaseClasses — корневые классы «писателя» для P279*-обхода: writer
-// (Q36180) и author (Q482980). Почти все писательские профессии
-// (novelist Q6625963, poet Q49757, playwright Q214917, screenwriter Q28389,
-// essayist, children's writer…) транзитивно наследуют от одного из них — так
-// что перечислять их поимённо не нужно, обход P279* ловит подклассы сам. Два
-// корня вместо одного — страховка от расхождений онтологии Wikidata.
-const writerBaseClasses = "wd:Q36180 wd:Q482980"
+// writerBaseClasses — корневые классы «пишущих» профессий для P279*-обхода:
+// writer (Q36180) и author (Q482980) — их подклассы (novelist, poet,
+// playwright, screenwriter, essayist…) обход ловит сам. Плюс те, кто пишет
+// нехудожественные книги каталога: scientist Q901, researcher Q1650915,
+// scholar Q2248623, academic Q3400985, university teacher Q1622272, historian
+// Q201788, philosopher Q4964182, journalist Q1930187, translator Q333634,
+// critic Q6430706, editor Q1607826, publicist Q1086863, jurist Q185351. Без них гейт считал
+// «не писателями» математика Гутера, историка Каткова, искусствоведа Бессонову
+// (выборка с прода 2026-09, #280) и отвергал их верные биографии. Отвергаем
+// по-прежнему, когда ни одной такой профессии нет: спортсмены, актёры, певцы.
+const writerBaseClasses = "wd:Q36180 wd:Q482980 wd:Q901 wd:Q1650915 wd:Q2248623 wd:Q3400985 wd:Q1622272 " +
+	"wd:Q201788 wd:Q4964182 wd:Q1930187 wd:Q333634 wd:Q6430706 wd:Q1607826 wd:Q1086863 wd:Q185351"
 
 // OccupationVerdict — по QID сущности определяет, писатель ли это. Один SPARQL:
 // считаем ВСЕ занятости (P106) и писательские (P106, чей класс через P279*
