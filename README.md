@@ -301,6 +301,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `MEILI_MASTER_KEY` | (пусто) | Master-key. В dev можно пусто; для прода обязательно ≥16 байт |
 | `MEILI_PORT` | `7700` | Порт на хосте (только 127.0.0.1) |
 | `MEILI_ENV` | `development` | Поставьте `production` для prod-режима (требует master key) |
+| `MEILI_LOG_LEVEL` | `WARN` | Уровень лога Meilisearch. На `INFO` он пишет каждую проверку `/health` — десятки тысяч строк в сутки |
 | `MEILI_MAX_INDEXING_MEMORY` | `1Gb` | Только hardening-overlay: память под индексацию (держите ниже `MEILI_MEM_LIMIT`) |
 | `MEILI_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера meilisearch |
 

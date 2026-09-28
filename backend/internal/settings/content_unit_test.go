@@ -58,3 +58,13 @@ func TestContentResolver_DefaultAdmin(t *testing.T) {
 		t.Error("дефолтный резолвер ничего не блокирует")
 	}
 }
+
+// #310: ненормализованные коды языков отбрасываются, а не приводятся к канону
+// («ru-RU» → «ru» скрыл бы русский).
+func TestContentConfig_NormalizeDropsDeadLangCodes(t *testing.T) {
+	c := ContentConfig{HiddenLanguages: []string{"de", "en-GB", "ru-RU", "RU", " fr", "zh_Hans", "bg", "de"}}
+	c.normalize()
+	if want := []string{"bg", "de"}; !reflect.DeepEqual(c.HiddenLanguages, want) {
+		t.Errorf("HiddenLanguages = %v, want %v", c.HiddenLanguages, want)
+	}
+}
