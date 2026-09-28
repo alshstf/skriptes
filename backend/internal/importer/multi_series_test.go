@@ -46,11 +46,22 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	king := []inpxtest.Book{
 		{LibID: "810001", Title: "Стрелок", Authors: []string{"Кинг,Стивен"}, Series: "Тёмная башня", SerNo: 1},
 		{LibID: "810002", Title: "Извлечение троих", Authors: []string{"Кинг,Стивен"}, Series: "Тёмная башня", SerNo: 2},
-		// Трое авторов, но у Стаута половина книг и больше — его цикл, не издательская серия.
+		// Трое авторов, но у Стаута 80% книг — его цикл, не издательская серия.
 		{LibID: "810031", Title: "Фер-де-ланс", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 1},
 		{LibID: "810032", Title: "Лига перепуганных", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 2},
 		{LibID: "810033", Title: "Резиновая лента", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 3},
 		{LibID: "810034", Title: "Красная шкатулка", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 4},
+		{LibID: "810037", Title: "Слишком много поваров", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 5},
+		{LibID: "810038", Title: "Бокал шампанского", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 6},
+		{LibID: "810039", Title: "Лучшие дома", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 7},
+		{LibID: "810040", Title: "Звонок в дверь", Authors: []string{"Стаут,Рекс"}, Series: "Ниро Вульф", SerNo: 8},
+		// У одного автора больше половины, но меньше 80% — издательская серия
+		// (прод: «Мировая классика» — Нагибин 58 из 78, #298).
+		{LibID: "810071", Title: "Зимний дуб", Authors: []string{"Нагибин,Юрий"}, Series: "Мировая классика"},
+		{LibID: "810072", Title: "Чистые пруды", Authors: []string{"Нагибин,Юрий"}, Series: "Мировая классика"},
+		{LibID: "810073", Title: "Старая черепаха", Authors: []string{"Нагибин,Юрий"}, Series: "Мировая классика"},
+		{LibID: "810074", Title: "Анна Каренина", Authors: []string{"Толстой,Лев"}, Series: "Мировая классика"},
+		{LibID: "810075", Title: "Госпожа Бовари", Authors: []string{"Флобер,Гюстав"}, Series: "Мировая классика"},
 		{LibID: "810035", Title: "Смерть в пиковом положении", Authors: []string{"Голдсборо,Роберт"}, Series: "Ниро Вульф"},
 		{LibID: "810036", Title: "Пропавший", Authors: []string{"Другой,Автор"}, Series: "Ниро Вульф"},
 		// «Рассказы» у четырёх авторов без доминирующего — жанровое слово, не
@@ -71,6 +82,11 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 		{LibID: "810061", Title: "Юность, 1970 №1", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
 		{LibID: "810062", Title: "Юность, 1970 №2", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
 		{LibID: "810063", Title: "Юность, 1970 №3", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810066", Title: "Юность, 1970 №4", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810067", Title: "Юность, 1970 №5", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810068", Title: "Юность, 1970 №6", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810069", Title: "Юность, 1970 №7", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
+		{LibID: "810070", Title: "Юность, 1970 №8", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
 		{LibID: "810064", Title: "Звёздный билет", Authors: []string{"Аксёнов,Василий"}, Series: "Юность (журнал)"},
 		{LibID: "810065", Title: "Хроника времён", Authors: []string{"Гладилин,Анатолий"}, Series: "Юность (журнал)"},
 	}
@@ -120,6 +136,12 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	require.Equal(t, wolfe, seriesOf("810034"))
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, wolfe))
 	require.NotEqual(t, wolfe, seriesOf("810035"))
+	classics := seriesOf("810071")
+	for _, lib := range []string{"810072", "810073", "810074", "810075"} {
+		require.Equal(t, classics, seriesOf(lib))
+	}
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NULL AND kind = 'multi'`, classics),
+		"60% у одного автора — издательская серия")
 	// Ручное «не служебный» — журнал снова доминирующий: его цикл.
 	yunost := seriesOf("810061")
 	require.Equal(t, yunost, seriesOf("810063"))

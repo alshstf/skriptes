@@ -132,6 +132,7 @@ func run() error {
 		// Служебные авторы works-индекс не трогают (авторская, не works-сущность) —
 		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
 		runOnceServiceAuthorClassify(c, pool, logger)
+		runOnceGenreAliases(c, pool, imp, logger)
 		runOnceWorksIndexSync(c, pool, imp, logger)
 		// Миграция 0039 могла схлопнуть дубли книг — убрать их из поиска (индексы
 		// к этому моменту сконфигурированы). Без дублей — no-op.
@@ -150,6 +151,9 @@ func run() error {
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
+		// Правила, которые применяет только импорт (межавторские серии), сменились —
+		// следующий импорт (ниже, в этой же горутине) пройдёт полностью.
+		runOnceForceReimport(c, pool, logger)
 		// Сверка индексов с PG на каждом старте (#283): убирает фантомы, которые
 		// оставили прошлые импорты или оборванный остановкой синк группировки
 		// (#270), и заполняет works-индекс, если Meili пуст после восстановления.
@@ -1039,6 +1043,68 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 		logger.Warn("work title localize: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work title localization done", "lang", dom, "changed", len(changed))
+}
+
+// runOnceGenreAliases — разовое слияние жанров-алиасов с кодами нашего словаря
+// (genres.MergeAliases: книги, избранное, скрытые жанры, ручные правки; adv_all →
+// adventure, #286) + ресинк works-индекса затронутых работ. Новые записи импорт
+// сводит сам (genres.CanonicalCodes). Гейт genre_aliases_merged_vN — бампать при
+// пополнении aliases.json.
+func runOnceGenreAliases(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "genre_aliases_merged_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("genre aliases: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, merged, err := genres.MergeAliases(ctx, pool)
+	if err != nil {
+		logger.Warn("genre aliases merge failed — will retry next start", "err", err)
+		return
+	}
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("genre aliases: works index resync failed — retry next start", "err", err)
+			return
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("genre aliases: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time genre aliases merge done", "codes", merged, "works", len(works))
+}
+
+// runOnceForceReimport — сменились правила, которые применяет только импорт
+// INPX (межавторские серии: порог доминирования 0,8 и служебные авторы, #298) —
+// сбросить хэш коллекций, чтобы ближайший импорт прошёл полностью, а не
+// пропустил неизменный файл. Импорт идемпотентен (~1 ч на 470 тыс. книг).
+// Гейт reimport_series_rules_vN — бампать при следующей такой смене правил.
+func runOnceForceReimport(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "reimport_series_rules_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("force reimport: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	tag, err := pool.Exec(ctx, `UPDATE collections SET last_inpx_hash = NULL WHERE last_inpx_hash IS NOT NULL`)
+	if err != nil {
+		logger.Warn("force reimport: reset inpx hash failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("force reimport: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time full reimport scheduled (series rules changed)", "collections", tag.RowsAffected())
 }
 
 // runOnceSrcLangCanonical — разовая канонизация books.src_lang к ISO 639-1
