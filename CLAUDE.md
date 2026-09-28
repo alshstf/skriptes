@@ -1042,9 +1042,12 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   ЧАСТОЕ название (без различия ё/е; при равенстве — текущее, чтобы не прыгало), а не
   «новейшее с обложкой» (было «Собрание сочинений в 2 томах. Том 2. Золотой теленок»
   при семи «Золотых телятах», #306); у переименованных разовым проходом работ
-  эвристический тип пересчитывается (`ReclassifyWorkKinds`). Точки: группировка `apply` +
+  эвристический тип пересчитывается (`ReclassifyWorkKinds`). Работа из одного
+  издания на ЛЮБОМ языке — название этого издания (`syncSingletonWorkTitles`). Тот же
+  `LocalizeWorkTitles` зовут шаги после импорта: импорт переписывает название издания,
+  но не работы («Big Money» при единственном издании «Дневники 1939-1945», #285). Точки: группировка `apply` +
   ручные merge/split (затронутые работы → в touchedWorks → таргетный ресинк индекса);
-  разовый backfill `runOnceWorkTitleLocalize` (гейт `app_settings.work_title_localized_v2`,
+  разовый backfill `runOnceWorkTitleLocalize` (гейт `app_settings.work_title_localized_v3`,
   ПОСЛЕ `runOnceWorksIndexSync`) + `UpsertWorksToIndex(changed)`. Представитель карточки
   `books.visibleWorkEditionID` предпочитает издание-якорь (`normalized_title ==
   works.normalized_title`) → обложка/lang/скачивание совпадают с локализованным title.

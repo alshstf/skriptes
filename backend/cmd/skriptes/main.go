@@ -708,6 +708,20 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if n > 0 {
 		logger.Info("reapplied metadata overrides after import", "count", n)
 	}
+	// Название работы — за изданиями: импорт переписывает название издания, но не
+	// работы (#285). Изменённые — пересчёт типа (мог держаться на названии) и
+	// таргетный ресинк works-индекса (полный ресинк импорта был раньше).
+	if changed, _, err := metadata.LocalizeWorkTitles(ctx, pool); err != nil {
+		logger.Warn("sync work titles after import failed", "err", err)
+	} else if len(changed) > 0 {
+		if _, err := metadata.ReclassifyWorkKinds(ctx, pool, changed); err != nil {
+			logger.Warn("reclassify kinds after title sync failed", "err", err)
+		}
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after title sync failed", "err", err)
+		}
+		logger.Info("work titles synced after import", "works", len(changed))
+	}
 	// Классифицировать НОВЫЕ работы импорта (сборники/антологии). Идемпотентно и
 	// дёшево; правит только kind_source IS NULL/'heuristic', полный ресинк индекса
 	// в конце imp.Run уже забрал kind для ранее классифицированных — свежие метки
@@ -980,9 +994,10 @@ func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 // Гейт app_settings.work_title_localized_vN: один раз на апгрейде, дальше no-op
 // (новые такие работы локализует группировка в apply). Зовётся ПОСЛЕ
 // runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен. Сменил правило
-// выбора названия — бампни версию (v2: самое частое название изданий, #306).
+// выбора названия — бампни версию (v2: самое частое название изданий, #306;
+// v3: работа из одного издания на любом языке — его название, #285).
 func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_title_localized_v2"
+	const flag = "work_title_localized_v3"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work title localize: check flag failed — skip", "err", err)
