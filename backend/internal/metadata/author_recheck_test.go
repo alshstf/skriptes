@@ -1,0 +1,123 @@
+package metadata
+
+import (
+	"context"
+	"io"
+	"log/slog"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/skriptes/skriptes/backend/internal/testpg"
+	"github.com/stretchr/testify/require"
+)
+
+type mapBioProvider struct {
+	bio map[string]string
+	err map[string]error
+}
+
+func (m *mapBioProvider) Name() string { return "wikipedia" }
+func (m *mapBioProvider) FetchAuthorBio(_ context.Context, q AuthorQuery) (string, error) {
+	if err := m.err[q.LastName]; err != nil {
+		return "", err
+	}
+	if b, ok := m.bio[q.LastName]; ok {
+		return b, nil
+	}
+	return "", ErrNotFound
+}
+
+type mapPhotoProvider struct{ img map[string]string }
+
+func (m *mapPhotoProvider) Name() string { return "wikipedia" }
+func (m *mapPhotoProvider) FetchAuthorPhoto(_ context.Context, q AuthorQuery) (*CoverImage, error) {
+	if s, ok := m.img[q.LastName]; ok {
+		return &CoverImage{Reader: io.NopCloser(strings.NewReader(s)), Mime: "image/jpeg"}, nil
+	}
+	return nil, ErrNotFound
+}
+
+// TestAuthorRechecker — #280: подтверждённое остаётся, чужое заменяется или
+// очищается (с журналом), при сбое источника автор не трогается и повторяется.
+func TestAuthorRechecker(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	bios := &mapBioProvider{
+		bio: map[string]string{"Кепт": "Своя биография", "Замен": "Правильная биография"},
+		err: map[string]error{"Сбой": ErrUpstream},
+	}
+	photos := &mapPhotoProvider{img: map[string]string{"Замен": "new-photo-bytes"}}
+	enricher, err := New(pool, t.TempDir(), nil, nil, []AuthorPhotoProvider{photos}, []AuthorBioProvider{bios}, nil, quiet)
+	require.NoError(t, err)
+
+	mk := func(last, bio, photo string, renown int) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO authors (last_name, first_name, normalized_name, bio, photo_path, metadata_fetched_at, renown)
+			VALUES ($1, 'Имя', lower($1) || ' имя', NULLIF($2, ''), NULLIF($3, ''), now() - interval '90 days', $4) RETURNING id`,
+			last, bio, photo, renown).Scan(&id))
+		return id
+	}
+	kept := mk("Кепт", "Своя биография", "", 10)
+	replaced := mk("Замен", "Чужая биография", "old.jpg", 5)
+	cleared := mk("Очист", "Биография однофамильца", "c.jpg", 3)
+	flaky := mk("Сбой", "Какая-то биография", "", 1)
+	empty := mk("Пусто", "", "", 100)
+
+	read := func(id int64) (string, string) {
+		var bio, photo string
+		require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(bio,''), COALESCE(photo_path,'') FROM authors WHERE id = $1`, id).Scan(&bio, &photo))
+		return bio, photo
+	}
+	since := time.Now()
+	r := NewAuthorRechecker(pool, enricher, 0, quiet)
+	st, err := r.Pass(ctx, since)
+	require.NoError(t, err)
+	require.Equal(t, 3, st.Checked)
+	require.Equal(t, 1, st.Deferred)
+	require.Equal(t, 1, st.BioKept)
+	require.Equal(t, 1, st.BioNew)
+	require.Equal(t, 1, st.BioClear)
+
+	bio, _ := read(kept)
+	require.Equal(t, "Своя биография", bio)
+	bio, photo := read(replaced)
+	require.Equal(t, "Правильная биография", bio)
+	require.NotEqual(t, "old.jpg", photo)
+	require.NotEmpty(t, photo)
+	bio, photo = read(cleared)
+	require.Empty(t, bio)
+	require.Empty(t, photo)
+	bio, _ = read(flaky)
+	require.Equal(t, "Какая-то биография", bio, "сбой источника — не трогаем")
+	bio, _ = read(empty)
+	require.Empty(t, bio)
+
+	var journal int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM author_meta_recheck`).Scan(&journal))
+	require.Equal(t, 4, journal, "замена био, замена фото, очистка био, очистка фото")
+	var oldBio string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT old_value FROM author_meta_recheck WHERE author_id = $1 AND field = 'bio'`, cleared).Scan(&oldBio))
+	require.Equal(t, "Биография однофамильца", oldBio, "журнал хранит прежнее для отката")
+
+	// Источник ожил — следующий проход добирает отложенного и только его.
+	delete(bios.err, "Сбой")
+	st, err = r.Pass(ctx, since)
+	require.NoError(t, err)
+	require.Equal(t, 1, st.Checked)
+	require.Zero(t, st.Deferred)
+	bio, _ = read(flaky)
+	require.Empty(t, bio, "гейты не нашли — очищено")
+
+	st, err = r.Pass(ctx, since)
+	require.NoError(t, err)
+	require.Zero(t, st.Checked, "всё перепроверено")
+}
