@@ -151,6 +151,7 @@ func run() error {
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
+		runOnceSplitAlienEditions(c, pool, imp, logger)
 		// Правила, которые применяет только импорт (межавторские серии), сменились —
 		// следующий импорт (ниже, в этой же горутине) пройдёт полностью.
 		runOnceForceReimport(c, pool, logger)
@@ -713,6 +714,14 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if n > 0 {
 		logger.Info("reapplied metadata overrides after import", "count", n)
 	}
+	// Издания, чьи авторы после импорта ни в чём не совпадают с якорем работы, —
+	// в свои работы (#285); затронутые — в оба индекса поиска.
+	if touched, err := metadata.SplitAlienEditions(ctx, pool); err != nil {
+		logger.Warn("split alien editions after import failed", "err", err)
+	} else if len(touched) > 0 {
+		syncSplitWorks(ctx, imp, touched, logger)
+		logger.Info("alien editions split after import", "works", len(touched))
+	}
 	// Название работы — за изданиями: импорт переписывает название издания, но не
 	// работы (#285). Изменённые — пересчёт типа (мог держаться на названии) и
 	// таргетный ресинк works-индекса (полный ресинк импорта был раньше).
@@ -1105,6 +1114,46 @@ func runOnceForceReimport(ctx context.Context, pool *pgxpool.Pool, logger *slog.
 		logger.Warn("force reimport: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time full reimport scheduled (series rules changed)", "collections", tag.RowsAffected())
+}
+
+// runOnceSplitAlienEditions — разовый вынос изданий, у которых нет общих авторов
+// с якорем своей работы (metadata.SplitAlienEditions, #285; прод — 174 издания).
+// Дальше то же делают шаги после импорта. Гейт alien_editions_split_v1.
+func runOnceSplitAlienEditions(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "alien_editions_split_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("split alien editions: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	touched, err := metadata.SplitAlienEditions(ctx, pool)
+	if len(touched) > 0 {
+		syncSplitWorks(ctx, imp, touched, logger)
+	}
+	if err != nil {
+		logger.Warn("split alien editions failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("split alien editions: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time alien editions split done", "works", len(touched))
+}
+
+// syncSplitWorks — поиск после выноса изданий: works-индекс (старые и новые
+// работы) и work_id изданий в books-индексе (OPDS схлопывает по нему).
+func syncSplitWorks(ctx context.Context, imp *importer.Importer, works []int64, logger *slog.Logger) {
+	if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+		logger.Warn("works index sync after edition split failed", "err", err)
+	}
+	if _, err := imp.ResyncWorkIDsFor(ctx, works); err != nil {
+		logger.Warn("work_id resync after edition split failed", "err", err)
+	}
 }
 
 // runOnceSrcLangCanonical — разовая канонизация books.src_lang к ISO 639-1
