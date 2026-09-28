@@ -429,6 +429,9 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) bool {
 		em = m
 	}
 	srcAuthorNorm := normalizePersonKey(em.SrcAuthor)
+	if isStubSrcTitle(em.SrcTitle) {
+		em.SrcTitle = "" // «(no data for original title)» — заглушка, не оригинал (#279)
+	}
 	// fb2 шлёт и 'EN', и 'ru-RU', и 'spa'/'jp'/«английски» — к ISO 639-1,
 	// нераспознанное не пишем (#287).
 	srcLang := langcode.Canonical(em.SrcLang)

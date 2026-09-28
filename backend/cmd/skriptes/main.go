@@ -124,6 +124,9 @@ func run() error {
 	// Локализацию works.title запускаем В ТОЙ ЖЕ горутине ПОСЛЕ синка индекса:
 	// ей нужен сконфигурированный works-индекс для таргетного ресинка
 	// изменённых работ (порядок между отдельными горутинами не гарантирован).
+	// Контроллер группировки создаётся ниже — разовому разбору склеек в цепочке
+	// он нужен; цепочка подождёт его здесь (инициализация main быстрая).
+	workGroupReady := make(chan *metadata.WorkGroupController, 1)
 	metadata.Go(func(c context.Context) {
 		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
 		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
@@ -152,6 +155,9 @@ func run() error {
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
+		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
+		// импорта: и разбор, и импорт массово пишут в works/books.
+		runOnceRegroupTitleConflicts(c, pool, <-workGroupReady, logger)
 		// Правила, которые применяет только импорт (межавторские серии), сменились —
 		// следующий импорт (ниже, в этой же горутине) пройдёт полностью.
 		runOnceForceReimport(c, pool, logger)
@@ -456,6 +462,7 @@ func run() error {
 	if wgCfg.Enabled {
 		workGroupCtl.Start()
 	}
+	workGroupReady <- workGroupCtl
 
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
@@ -1124,6 +1131,51 @@ func runOnceForceReimport(ctx context.Context, pool *pgxpool.Pool, logger *slog.
 		logger.Warn("force reimport: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time full reimport scheduled (series rules changed)", "collections", tag.RowsAffected())
+}
+
+// runOnceRegroupTitleConflicts — разовый разбор работ, склеенных до гейтов
+// Tier-2 #279 (разные названия одного языка без src-свидетельства, разные тома,
+// заглушка «(no data for original title)»): сначала заглушки src_title в базе
+// обнуляются, затем такие работы идут в RegroupWorks — неякорные издания в
+// синглтоны, found-lookups сброшены, Tier-1 собирает законные склейки обратно.
+// Гейт tier2_title_conflicts_regrouped_v1.
+func runOnceRegroupTitleConflicts(ctx context.Context, pool *pgxpool.Pool, wg *metadata.WorkGroupController, logger *slog.Logger) {
+	const flag = "tier2_title_conflicts_regrouped_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("regroup title conflicts: check flag failed — skip", "err", err)
+		return
+	}
+	if done || wg == nil {
+		return
+	}
+	stubs, err := metadata.CleanStubSrcTitles(ctx, pool)
+	if err != nil {
+		logger.Warn("regroup title conflicts: clean stub src titles failed — will retry next start", "err", err)
+		return
+	}
+	works, err := metadata.TitleConflictWorks(ctx, pool)
+	if err != nil {
+		logger.Warn("regroup title conflicts: find works failed — will retry next start", "err", err)
+		return
+	}
+	const batch = 500
+	split := 0
+	for i := 0; i < len(works); i += batch {
+		res, err := wg.RegroupWorks(ctx, works[i:min(i+batch, len(works))], false)
+		if err != nil {
+			logger.Warn("regroup title conflicts failed — will retry next start", "done", i, "total", len(works), "err", err)
+			return
+		}
+		split += res.EditionsSplit
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("regroup title conflicts: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time regroup of title-conflict works done",
+		"stub_src_titles", stubs, "works", len(works), "editions_split", split)
 }
 
 // runOnceSplitAlienEditions — разовый вынос изданий, у которых нет общих авторов
