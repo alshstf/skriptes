@@ -423,10 +423,10 @@ func (c *SrcLangBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewSrcLangBackfiller(c.pool, c.wd, c.cfg, c.resyncer, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("src_lang backfill: continuous job started")
 }
 
@@ -469,11 +469,11 @@ func (c *SrcLangBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewSrcLangBackfiller(c.pool, c.wd, cfg, c.resyncer, c.logger)
 		n := b.drain(ctx)
 		cancel()
@@ -481,7 +481,7 @@ func (c *SrcLangBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("src_lang backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

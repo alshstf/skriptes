@@ -71,18 +71,18 @@ func triggerBookEnrichmentAsync(d MetadataDeps, b books.Book) {
 		FB2Name:     b.FileName + "." + b.Ext,
 	}
 	if wantCover {
-		go func() {
-			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+		metadata.Go(func(base context.Context) {
+			ctx, cancel := context.WithTimeout(base, metadata.EnrichDeadline)
 			defer cancel()
 			d.Service.EnsureCover(ctx, q)
-		}()
+		})
 	}
 	if wantAnnotation {
-		go func() {
-			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+		metadata.Go(func(base context.Context) {
+			ctx, cancel := context.WithTimeout(base, metadata.EnrichDeadline)
 			defer cancel()
 			d.Service.EnsureAnnotation(ctx, q)
-		}()
+		})
 	}
 }
 

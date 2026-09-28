@@ -206,8 +206,8 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 		// запросом; пока оставим пустой — WikipediaProvider попробует
 		// ru-first, потом en, что покрывает наш каталог.
 	}
-	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+	metadata.Go(func(base context.Context) {
+		ctx, cancel := context.WithTimeout(base, metadata.EnrichDeadline)
 		defer cancel()
 		// Фото и био параллельно; после обоих — если источник ответил сбоем,
 		// снимаем общий маркер, чтобы следующий заход повторил недостающее (#293).
@@ -231,7 +231,7 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 		if photoTransient || bioTransient {
 			d.Service.ReopenAuthorIfIncomplete(ctx, a.ID)
 		}
-	}()
+	})
 }
 
 func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta MetadataDeps) http.HandlerFunc {

@@ -345,10 +345,10 @@ func (pc *PrewarmController) Start() {
 	if pc.contCancel != nil || !pc.ready() || !pc.cfg.hasWork() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	pc.contCancel = cancel
 	p := NewPrewarmer(pc.enricher, pc.pool, pc.booksRoot, pc.cfg, pc.resyncer, pc.logger)
-	go p.Run(ctx)
+	spawn(func() { p.Run(ctx) })
 	pc.logger.Info("collection processing: continuous job started")
 }
 
@@ -394,11 +394,11 @@ func (pc *PrewarmController) RunOnce() {
 		pc.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	pc.onceCancel = cancel
 	cfg := pc.cfg
 	pc.mu.Unlock()
-	go func() {
+	spawn(func() {
 		p := NewPrewarmer(pc.enricher, pc.pool, pc.booksRoot, cfg, pc.resyncer, pc.logger)
 		n := p.drain(ctx)
 		cancel()
@@ -406,7 +406,7 @@ func (pc *PrewarmController) RunOnce() {
 		pc.onceCancel = nil
 		pc.mu.Unlock()
 		pc.logger.Info("collection processing: one-shot pass done", "processed", n)
-	}()
+	})
 }
 
 // StopOnce отменяет идущий разовый прогон (между батчами).

@@ -112,47 +112,47 @@ func run() error {
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
-	go runOnceLangResync(ctx(), pool, imp, logger)
+	metadata.Go(func(c context.Context) { runOnceLangResync(c, pool, imp, logger) })
 	// Разовый синк work_id в Meili: distinctAttribute=work_id появился в Phase 3,
 	// существующие доки его не имели. Гейтится флагом, дальше no-op (после
 	// группировки work_id синкается её воркером).
-	go runOnceWorkIDResync(ctx(), pool, imp, logger)
+	metadata.Go(func(c context.Context) { runOnceWorkIDResync(c, pool, imp, logger) })
 	// Конфиг индекса works (на каждом старте) + разовый полный ресинк (на
 	// апгрейде). Дальше индекс поддерживают импорт (полный) и таргетные синки
 	// группировки/года. Гейтится флагом, в горутине — старт не блокирует.
 	// Локализацию works.title запускаем В ТОЙ ЖЕ горутине ПОСЛЕ синка индекса:
 	// ей нужен сконфигурированный works-индекс для таргетного ресинка
 	// изменённых работ (порядок между отдельными горутинами не гарантирован).
-	go func() {
+	metadata.Go(func(c context.Context) {
 		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
 		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
 		// стоять, иначе первая выдача уйдёт без типов до следующего ресинка.
-		runOnceWorkKindClassify(ctx(), pool, logger)
+		runOnceWorkKindClassify(c, pool, logger)
 		// Служебные авторы works-индекс не трогают (авторская, не works-сущность) —
 		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
-		runOnceServiceAuthorClassify(ctx(), pool, logger)
-		runOnceWorksIndexSync(ctx(), pool, imp, logger)
+		runOnceServiceAuthorClassify(c, pool, logger)
+		runOnceWorksIndexSync(c, pool, imp, logger)
 		// Миграция 0039 могла схлопнуть дубли книг — убрать их из поиска (индексы
 		// к этому моменту сконфигурированы). Без дублей — no-op.
-		if n, err := imp.PurgeDedupedDocs(ctx()); err != nil {
+		if n, err := imp.PurgeDedupedDocs(c); err != nil {
 			logger.Warn("search cleanup after book dedup failed — will retry next start", "err", err)
 		} else if n > 0 {
 			logger.Info("search cleanup after book dedup done", "books_removed", n)
 		}
-		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
-		runOnceSrcLangSync(ctx(), pool, imp, logger)
-		runOnceSrcLangCanonical(ctx(), pool, imp, logger)
+		runOnceWorkTitleLocalize(c, pool, imp, logger)
+		runOnceSrcLangSync(c, pool, imp, logger)
+		runOnceSrcLangCanonical(c, pool, imp, logger)
 		// Серии работ, которые выпуск INPX проставил уже импортированным книгам (#275):
 		// индекс сконфигурирован и наполнен — досинкиваем только изменённые работы.
-		runOnceWorkSeriesSync(ctx(), pool, imp, logger)
+		runOnceWorkSeriesSync(c, pool, imp, logger)
 		// Известность авторов — ПОСЛЕ ресинка works-индекса: оба гоняют один и
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
-		runOnceAuthorRenown(ctx(), pool, imp, logger)
+		runOnceAuthorRenown(c, pool, imp, logger)
 		// Сверка индексов с PG на каждом старте (#283): убирает фантомы, которые
 		// оставили прошлые импорты или оборванный остановкой синк группировки
 		// (#270), и заполняет works-индекс, если Meili пуст после восстановления.
-		if r, err := imp.ReconcileIndexes(ctx()); err != nil {
+		if r, err := imp.ReconcileIndexes(c); err != nil {
 			logger.Warn("search index reconcile failed", "err", err)
 		} else {
 			logger.Info("search index reconcile done", "works_removed", r.WorksRemoved,
@@ -164,8 +164,8 @@ func run() error {
 		// SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL — новый
 		// или изменённый INPX без рестарта. Повторный старт на тех же файлах —
 		// no-op за счёт хэш-проверки. HTTP не ждёт ни того, ни другого.
-		runImportLoop(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
-	}()
+		runImportLoop(c, pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
+	})
 
 	authSvc := auth.New(pool, 0)
 	// Сессии до 1.12.0 хранили сырой токен — переводим в SHA-256 (идемпотентно, на
@@ -184,7 +184,7 @@ func run() error {
 	// ресинками без upsert'а на каждое событие. sort=popularity на /books.
 	popTracker := importer.NewPopularityTracker(imp, logger)
 	historySvc.SetEngagementHook(popTracker.MarkBook)
-	go popTracker.Run(ctx(), 30*time.Second)
+	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 
@@ -258,7 +258,7 @@ func run() error {
 	// Самолечение висячих указателей постеров/фото (после старых очисток кэша,
 	// когда они лежали вместе с обложками): зануляем битые ссылки + даём
 	// дозаполнению их перекачать. В фоне, не блокируем старт HTTP.
-	go enricher.HealDanglingAssets(ctx())
+	metadata.Go(enricher.HealDanglingAssets)
 	// fb2 как локальный источник года (written_year/edition_year) для
 	// фонового прогрева — без сети, в том же проходе что обложки/аннотации.
 	enricher.WithLocalYear(fb2Provider)
@@ -577,22 +577,28 @@ func run() error {
 	<-sigCtx.Done()
 	logger.Info("shutting down")
 
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	// Порядок: сначала HTTP (новые запросы и ленивое обогащение не приходят),
+	// потом фоновые работы (воркеры, разовые шаги, импорт), и только потом —
+	// отложенный pool.Close. Иначе воркеры писали в закрытый пул и сыпали WARN
+	// «closed pool» на каждом деплое (#270). Docker ждёт 10 с до SIGKILL.
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if metricsSrv != nil {
 		_ = metricsSrv.Shutdown(shutdownCtx)
 	}
-	if err := srv.Shutdown(shutdownCtx); err != nil {
-		return fmt.Errorf("graceful shutdown: %w", err)
+	httpErr := srv.Shutdown(shutdownCtx)
+	if !metadata.Shutdown(4 * time.Second) {
+		logger.Warn("background work did not stop in time — closing anyway")
+	}
+	if httpErr != nil {
+		return fmt.Errorf("graceful shutdown: %w", httpErr)
 	}
 	logger.Info("bye")
 	return nil
 }
 
-// ctx — фоновый контекст для startup-сканера.
-// Отдельная функция чтобы было видно, что у скана нет shutdown-контекста
-// (импорт всё равно отрабатывает до конца, даже если процесс ловит SIGTERM —
-// безопасно благодаря пер-записной транзакции).
+// ctx — контекст синхронных шагов инициализации (загрузка настроек и т.п.).
+// Фоновые работы получают свой контекст от metadata.Go — его отменяет остановка.
 func ctx() context.Context { return context.Background() }
 
 // runImportLoop — импорт INPX на старте и затем без рестарта: раз в interval
@@ -681,6 +687,11 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 				"file", overlap.File, "collection", overlap.Collection, "collection_file", overlap.CollectionFile,
 				"matched", overlap.Matched, "sampled", overlap.Sampled)
 			watch.MarkDone(f)
+		case ctx.Err() != nil:
+			// Остановка процесса посреди импорта: записи коммитятся по одной,
+			// файл не отмечен — импорт продолжится на следующем старте.
+			logger.Info("import interrupted by shutdown", "file", f)
+			return
 		default:
 			imported = true
 			metrics.ImportFinished("failed", metrics.ImportResult{})
@@ -1096,5 +1107,43 @@ func newLogger(level, format string) *slog.Logger {
 	} else {
 		h = slog.NewJSONHandler(os.Stdout, opts)
 	}
-	return slog.New(h)
+	return slog.New(shutdownQuietHandler{Handler: h, stopping: metadata.Stopping})
+}
+
+// shutdownQuietHandler — во время остановки процесса ошибки отменённых фоновых
+// работ («context canceled», «closed pool») пишутся как INFO, а не WARN/ERROR:
+// это ожидаемый обрыв, а не сбой, и алерт на поток предупреждений не должен
+// срабатывать на каждом деплое (#270).
+type shutdownQuietHandler struct {
+	slog.Handler
+	stopping func() bool
+}
+
+func (h shutdownQuietHandler) Handle(ctx context.Context, r slog.Record) error {
+	if r.Level > slog.LevelInfo && h.stopping() && recordHasShutdownErr(r) {
+		r = r.Clone()
+		r.Level = slog.LevelInfo
+	}
+	return h.Handler.Handle(ctx, r)
+}
+
+func (h shutdownQuietHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return shutdownQuietHandler{Handler: h.Handler.WithAttrs(attrs), stopping: h.stopping}
+}
+
+func (h shutdownQuietHandler) WithGroup(name string) slog.Handler {
+	return shutdownQuietHandler{Handler: h.Handler.WithGroup(name), stopping: h.stopping}
+}
+
+func recordHasShutdownErr(r slog.Record) bool {
+	found := false
+	r.Attrs(func(a slog.Attr) bool {
+		if err, ok := a.Value.Any().(error); ok &&
+			(errors.Is(err, context.Canceled) || strings.Contains(err.Error(), "closed pool")) {
+			found = true
+			return false
+		}
+		return true
+	})
+	return found
 }
