@@ -105,7 +105,8 @@ func run() error {
 	// Один импортёр на процесс: его использует и импорт INPX (стартовый скан +
 	// слежение, запускается в конце горутины разовых шагов ниже), и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
-	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles})
+	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles,
+		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
@@ -920,9 +921,12 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 	if done {
 		return
 	}
-	n, err := imp.ResyncWorksIndex(ctx)
+	// Пересборка во временном индексе + swap, а не ресинк на месте: поиск
+	// работает всё время, и индекс сразу с настройками новой схемы (см.
+	// importer.RebuildWorksIndex — баг близости слов Meili при смене полей).
+	n, err := imp.RebuildWorksIndex(ctx)
 	if err != nil {
-		logger.Warn("works index resync failed — will retry next start", "err", err)
+		logger.Warn("works index rebuild failed — will retry next start", "err", err)
 		return
 	}
 	if _, err := pool.Exec(ctx,

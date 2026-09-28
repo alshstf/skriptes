@@ -7,8 +7,8 @@ import "testing"
 // ResyncWorksIndex на ближайшем старте (см. main.go::runOnceWorksIndexSync).
 // Меняешь схему — инкрементируй константу и обнови ожидание здесь.
 func TestWorksIndexSyncedFlagKey(t *testing.T) {
-	// v9 — поисковые копии title/authors/series со свёрткой «ё»→«е» (#278).
-	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v9"; got != want {
+	// v10 — пересборка через временный индекс (близость слов у «ё»-работ, #278).
+	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v10"; got != want {
 		t.Fatalf("WorksIndexSyncedFlagKey() = %q, want %q", got, want)
 	}
 }
