@@ -909,6 +909,11 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		`DELETE FROM app_settings WHERE key LIKE 'works_index_synced_v%' AND key <> $1`, flag); err != nil {
 		logger.Warn("works index sync: gc old flag keys failed", "err", err)
 	}
+	// Документы пересобраны — поиск можно переключать на поля новой схемы
+	// (свёртка «ё», см. importer.foldedSearchReady).
+	if err := imp.ConfigureWorksIndex(ctx); err != nil {
+		logger.Warn("meili configure works index after resync failed", "err", err)
+	}
 	logger.Info("one-time works index resync done", "count", n, "flag", flag)
 }
 

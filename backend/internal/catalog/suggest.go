@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/skriptes/skriptes/backend/internal/books"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // SuggestAuthors — typeahead по авторам.
@@ -14,7 +15,9 @@ import (
 //   - ПОДСТРОЧНОЕ совпадение по normalized_name (CITEXT), регистр-нечувствительно:
 //     "достоев" → "Достоевский …", но и "роберт" → "Гэлбрейт Роберт" (имя — не
 //     первое слово). Префиксные совпадения ранжируются выше (см. ORDER BY).
-//   - GIN trigram index (authors_normalized_trgm) ускоряет ILIKE '%…%' на
+//   - без различия «ё»/«е» (#278): «семенов» находит «Семёнов» — replace() с
+//     обеих сторон; GIN trigram index по тому же выражению
+//     (authors_name_yo_trgm, миграция 0042) ускоряет ILIKE '%…%' на
 //     запросах ≥3 символов; на коротких (1-2 символа) планировщик может
 //     выбрать seq scan, но при ~50-100K авторов это всё ещё <50 мс.
 //   - сортировка: сначала префиксные совпадения, затем по числу книг
@@ -32,7 +35,7 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 		limit = 5
 	}
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
-	args := append([]any{escapeLike(q), limit}, exArgs...)
+	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, last_name, first_name, middle_name, note, cnt FROM (
@@ -40,10 +43,10 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
 			        JOIN books b ON b.id = ba.book_id
 			        WHERE ba.author_id = a.id AND b.deleted = false`+exClause+`) AS cnt,
-			       (a.normalized_name::text ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       (replace(a.normalized_name::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
 			       a.normalized_name::text AS nn
 			FROM authors a
-			WHERE a.normalized_name::text ILIKE '%' || $1 || '%' ESCAPE '\'
+			WHERE replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
 		) x
 		WHERE cnt > 0
 		ORDER BY prefix DESC, cnt DESC, nn
@@ -90,7 +93,7 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 		limit = 5
 	}
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
-	args := append([]any{escapeLike(q), limit}, exArgs...)
+	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, title, author_name, cnt FROM (
@@ -98,11 +101,11 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 			       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '') AS author_name,
 			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM books b
 			        WHERE b.series_id = s.id AND b.deleted = false`+exClause+`) AS cnt,
-			       (s.normalized_title::text ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       (replace(s.normalized_title::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
 			       s.normalized_title::text AS nt
 			FROM series s
 			LEFT JOIN authors a ON a.id = s.author_id
-			WHERE s.normalized_title::text ILIKE '%' || $1 || '%' ESCAPE '\'
+			WHERE replace(s.normalized_title::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
 		) x
 		WHERE cnt > 0
 		ORDER BY prefix DESC, cnt DESC, nt

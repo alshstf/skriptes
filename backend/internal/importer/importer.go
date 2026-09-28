@@ -33,6 +33,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // normalizeLang приводит код языка к канонике: нижний регистр + trim + срез
@@ -134,7 +135,7 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	if err := configureIndex(ctx, im.deps.Meili); err != nil {
 		return stats, fmt.Errorf("configure meili: %w", err)
 	}
-	if err := configureWorksIndex(ctx, im.deps.Meili); err != nil {
+	if err := im.ConfigureWorksIndex(ctx); err != nil {
 		return stats, fmt.Errorf("configure works meili: %w", err)
 	}
 
@@ -476,8 +477,10 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра);
 // v8 — orig_lang стал WORK-LEVEL: union непустых src_lang изданий, фолбэк —
 //
-//	union языков изданий (перевод-сирота без src_lang больше не «натив»).
-const WorksIndexSchemaVersion = 8
+//	union языков изданий (перевод-сирота без src_lang больше не «натив»);
+//
+// v9 — title_s/authors_s/series_s: поисковые копии со свёрткой «ё»→«е» (#278).
+const WorksIndexSchemaVersion = 9
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -654,6 +657,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		if d.Authors == nil {
 			d.Authors = []string{}
 		}
+		d.TitleSearch = textnorm.FoldYo(d.Title)
+		d.AuthorsSearch = textnorm.FoldYoAll(d.Authors)
+		d.SeriesSearch = textnorm.FoldYo(d.Series)
 		if d.AuthorIDs == nil {
 			d.AuthorIDs = []int64{}
 		}
