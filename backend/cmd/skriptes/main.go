@@ -1306,17 +1306,18 @@ func newLogger(level, format string) *slog.Logger {
 	return slog.New(shutdownQuietHandler{Handler: h, stopping: metadata.Stopping})
 }
 
-// shutdownQuietHandler — во время остановки процесса ошибки отменённых фоновых
-// работ («context canceled», «closed pool») пишутся как INFO, а не WARN/ERROR:
-// это ожидаемый обрыв, а не сбой, и алерт на поток предупреждений не должен
-// срабатывать на каждом деплое (#270).
+// shutdownQuietHandler — ожидаемые обрывы пишутся как INFO, а не WARN/ERROR,
+// чтобы алерт на поток предупреждений не будил от штатной работы:
+//   - «context canceled» — всегда: отмену делает сам процесс (остановка, пауза
+//     воркера группировки под разбор — прод 1.15.5, клиент закрыл запрос);
+//   - «closed pool» — только во время остановки (#270): в другое время это сбой.
 type shutdownQuietHandler struct {
 	slog.Handler
 	stopping func() bool
 }
 
 func (h shutdownQuietHandler) Handle(ctx context.Context, r slog.Record) error {
-	if r.Level > slog.LevelInfo && h.stopping() && recordHasShutdownErr(r) {
+	if r.Level > slog.LevelInfo && recordHasExpectedErr(r, h.stopping()) {
 		r = r.Clone()
 		r.Level = slog.LevelInfo
 	}
@@ -1331,11 +1332,14 @@ func (h shutdownQuietHandler) WithGroup(name string) slog.Handler {
 	return shutdownQuietHandler{Handler: h.Handler.WithGroup(name), stopping: h.stopping}
 }
 
-func recordHasShutdownErr(r slog.Record) bool {
+func recordHasExpectedErr(r slog.Record, stopping bool) bool {
 	found := false
 	r.Attrs(func(a slog.Attr) bool {
-		if err, ok := a.Value.Any().(error); ok &&
-			(errors.Is(err, context.Canceled) || strings.Contains(err.Error(), "closed pool")) {
+		err, ok := a.Value.Any().(error)
+		if !ok {
+			return true
+		}
+		if errors.Is(err, context.Canceled) || (stopping && strings.Contains(err.Error(), "closed pool")) {
 			found = true
 			return false
 		}
