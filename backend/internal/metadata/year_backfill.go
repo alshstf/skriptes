@@ -518,10 +518,10 @@ func (c *YearBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewYearBackfiller(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("year backfill: continuous job started")
 }
 
@@ -565,11 +565,11 @@ func (c *YearBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
 		n := b.drain(ctx)
 		cancel()
@@ -577,7 +577,7 @@ func (c *YearBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("year backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
-	}()
+	})
 }
 
 // LazyBook — книга-кандидат для ленивого внешнего дозаполнения года.

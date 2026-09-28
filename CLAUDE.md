@@ -1325,6 +1325,7 @@ id серии нет ни в INPX, ни в fb2, а такие названия �
 | Конвертация формата | `backend/internal/converter/fb2cng.go` |
 | OPDS-каталог | `backend/internal/opds/` |
 | HTTP-роутер | `backend/internal/api/router.go` |
+| Фоновые горутины и остановка процесса | `metadata/lifecycle.go`: всё долгоживущее (воркеры и их разовые проходы, ленивое обогащение из ручек, разовые шаги старта, цикл импорта) — через `metadata.Go(func(ctx))` / `spawn`, а НЕ голый `go` + `context.Background()`. На SIGTERM `main`: HTTP Shutdown → `metadata.Shutdown(4s)` (отмена + ожидание) → отложенный `pool.Close`; иначе воркеры писали в закрытый пул и сыпали WARN «closed pool» на каждом деплое (#270). Остаточные обрывы (`context canceled`/`closed pool`) во время остановки логгер пишет INFO (`shutdownQuietHandler`); прерванный импорт — INFO `import interrupted by shutdown`, продолжится на следующем старте |
 | TanStack Router маршруты | `frontend/src/router.tsx` (`/`=Главная, `/authors`=список, `/genres`, `/books`, `/works/{id}`) |
 | Layout / навбар | `frontend/src/components/Layout.tsx` + `MainNav.tsx` (горизонт. навигация + бургер; `heroSearch.ts` — поиск в хэдере прячется пока виден hero Главной) |
 | Команда поиска (typeahead) | `frontend/src/components/CommandPalette.tsx` (Cmd+K); тот же `useSuggest` (`lib/suggest.ts`) — hero-поиск на Главной |

@@ -1321,12 +1321,12 @@ func (c *WorkGroupController) RegroupAll() error {
 	if err != nil {
 		return err
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.mu.Lock()
 	c.regroupCancel = cancel
 	c.mu.Unlock()
 
-	go func() {
+	spawn(func() {
 		defer func() {
 			c.mu.Lock()
 			c.regroupCancel = nil
@@ -1422,7 +1422,7 @@ func (c *WorkGroupController) RegroupAll() error {
 		}
 		c.logger.Info("regroup all: done",
 			"works", total, "editions_split", split, "lookups_purged", purged, "canceled", canceled)
-	}()
+	})
 	return nil
 }
 
@@ -1605,8 +1605,8 @@ func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
 	if c.resyncer == nil {
 		return
 	}
-	go func() {
-		ctx := context.Background()
+	spawn(func() {
+		ctx := workersCtx
 		if _, err := c.resyncer.ResyncWorkIDsFor(ctx, touched); err != nil {
 			c.logger.Warn("manual work edit: resync work_id failed", "err", err)
 		}
@@ -1624,7 +1624,7 @@ func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
 				c.logger.Warn("manual work edit: upsert works to index failed", "err", err)
 			}
 		}
-	}()
+	})
 }
 
 func scanInt64s(ctx context.Context, ex interface {
@@ -1873,10 +1873,10 @@ func (c *WorkGroupController) Start() {
 		c.logger.Info("work grouping: start deferred — regroup in progress")
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	g := NewWorkGrouper(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
-	go g.Run(ctx)
+	spawn(func() { g.Run(ctx) })
 	c.logger.Info("work grouping: continuous job started")
 }
 
@@ -1926,11 +1926,11 @@ func (c *WorkGroupController) RunOnce() {
 		c.logger.Info("work grouping: one-shot pass deferred — regroup in progress")
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		g := NewWorkGrouper(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
 		n := g.drainAll(ctx)
 		cancel()
@@ -1938,7 +1938,7 @@ func (c *WorkGroupController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("work grouping: one-shot pass done", "authors", n, "editions_merged", g.merged.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

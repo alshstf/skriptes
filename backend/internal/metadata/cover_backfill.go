@@ -395,10 +395,10 @@ func (c *CoverBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewCoverBackfiller(c.pool, c.enricher, c.ol, c.gb, c.cfg, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("cover backfill: continuous job started")
 }
 
@@ -442,11 +442,11 @@ func (c *CoverBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewCoverBackfiller(c.pool, c.enricher, c.ol, c.gb, cfg, c.logger)
 		n := b.drain(ctx)
 		cancel()
@@ -454,7 +454,7 @@ func (c *CoverBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("cover backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

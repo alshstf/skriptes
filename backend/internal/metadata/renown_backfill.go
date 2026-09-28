@@ -563,10 +563,10 @@ func (c *RenownBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.wd, c.resyncer, c.cfg, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("renown backfill: continuous job started")
 }
 
@@ -610,11 +610,11 @@ func (c *RenownBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewRenownBackfiller(c.pool, c.fl, c.ol, c.wd, c.resyncer, cfg, c.logger)
 		n := b.drain(ctx)
 		b.recomputeAuthorRenown(ctx)
@@ -623,7 +623,7 @@ func (c *RenownBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("renown backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

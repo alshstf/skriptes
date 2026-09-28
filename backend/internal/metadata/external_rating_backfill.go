@@ -518,10 +518,10 @@ func (c *ExternalRatingBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewExternalRatingBackfiller(c.pool, c.gb, c.ol, c.cfg, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("external rating backfill: continuous job started")
 }
 
@@ -565,11 +565,11 @@ func (c *ExternalRatingBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewExternalRatingBackfiller(c.pool, c.gb, c.ol, cfg, c.logger)
 		n := b.drain(ctx)
 		cancel()
@@ -577,7 +577,7 @@ func (c *ExternalRatingBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("external rating backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.
