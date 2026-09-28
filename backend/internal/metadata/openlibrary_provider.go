@@ -129,6 +129,7 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 type olSearchDoc struct {
 	CoverI           int64    `json:"cover_i"`
 	Key              string   `json:"key"` // "/works/OL12345W"
+	Title            string   `json:"title"`
 	FirstPublishYear int      `json:"first_publish_year"`
 	AuthorName       []string `json:"author_name"`
 	// Счётчики известности (FetchRenown). ⚠️ Solr-schema search-полей OL
@@ -148,7 +149,7 @@ type olSearchDoc struct {
 // Возвращает чистый OL Work ID ("OL12345W") либо ErrNotFound.
 func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (string, error) {
 	if isbn := normalizeISBN(q.ISBN); isbn != "" {
-		if key, err := p.resolveWorkByISBN(ctx, isbn); err == nil {
+		if key, err := p.resolveWorkByISBN(ctx, isbn, q); err == nil {
 			return key, nil
 		} else if !errors.Is(err, ErrNotFound) {
 			return "", err
@@ -167,7 +168,7 @@ func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (
 		v.Set("author", q.Authors[0])
 	}
 	v.Set("limit", "1")
-	v.Set("fields", "key,author_name")
+	v.Set("fields", "key,author_name,title")
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
 	if err != nil {
 		return "", fmt.Errorf("build work search: %w", err)
@@ -193,11 +194,18 @@ func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (
 	if !anyAuthorMatches(gate, sr.Docs[0].AuthorName) {
 		return "", ErrNotFound
 	}
+	// И по названию: у автора поиск по названию одного рассказа возвращал его
+	// самый известный сборник — рассказы склеивались в одну «работу» (#279).
+	if !workTitleFits(sr.Docs[0].Title, q) {
+		return "", ErrNotFound
+	}
 	return strings.TrimPrefix(sr.Docs[0].Key, "/works/"), nil
 }
 
 // resolveWorkByISBN: GET /isbn/{isbn}.json → works[0].key.
-func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string) (string, error) {
+// Название издания сверяется с книгой: fb2 отдельного рассказа несёт ISBN
+// бумажного сборника, откуда он взят, и по ISBN находилась работа сборника (#279).
+func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string, q WorkQuery) (string, error) {
 	u := strings.TrimRight(p.workBaseURL(), "/") + "/isbn/" + url.PathEscape(isbn) + ".json"
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
@@ -213,6 +221,7 @@ func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string
 		return "", statusErr(resp.StatusCode)
 	}
 	var ed struct {
+		Title string `json:"title"`
 		Works []struct {
 			Key string `json:"key"`
 		} `json:"works"`
@@ -223,7 +232,20 @@ func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string
 	if len(ed.Works) == 0 || ed.Works[0].Key == "" {
 		return "", ErrNotFound
 	}
+	if ed.Title != "" && !workTitleFits(ed.Title, q) {
+		return "", ErrNotFound
+	}
 	return strings.TrimPrefix(ed.Works[0].Key, "/works/"), nil
+}
+
+// workTitleFits — название найденной работы совпадает с книгой (с оригиналом
+// для переводов или с самим названием). Пустое название в ответе — не повод
+// отказывать: OL его не всегда отдаёт.
+func workTitleFits(found string, q WorkQuery) bool {
+	if strings.TrimSpace(found) == "" {
+		return true
+	}
+	return titlesMatch(found, q.SrcTitle) || titlesMatch(found, q.Title)
 }
 
 // anyAuthorMatches — проходит ли хоть один из кандидатов-имён гейт по автору.

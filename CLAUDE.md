@@ -873,6 +873,17 @@ OL отдал бы того же не-писателя и wiki-отказ «пр
   ручным merge (см. ниже). Tier-2 (opt-in, rate-gated, `book_work_lookups` TTL):
   внешний Work ID — `WorkKeyResolver` на OL (`/isbn/.json`→work, иначе
   title+author за гейтом `authorNameMatches`) и Wikidata (`resolveBookQID`→QID).
+  **Гейты Tier-2 (#279):** OL сверяет название найденной работы/издания с `title`/`src_title`
+  (`workTitleFits`/`titlesMatch`: fb2 рассказа несёт ISBN сборника, поиск по названию
+  рассказа находил сборник); ISBN, стоящий у книг автора с разными названиями, резолверу не
+  передаётся; бакет не склеивается при разных названиях одного языка без src-свидетельства
+  (`sameLangTitleConflict`) и разных номерах тома/книги/части (`volumeNumber` в
+  `tier2BucketConflicts`, заодно и для byDoc); заглушки `src_title` («(no data for original
+  title)», «???» — `isStubSrcTitle`) пусты при загрузке и извлечении. Склейки до гейтов разобрал
+  разовый `runOnceRegroupTitleConflicts` (`TitleConflictWorks` → `RegroupWorks`, гейт
+  `tier2_title_conflicts_regrouped_v1`; прод — ~2,6 тыс. работ, «Танька» Бунина с 37 рассказами).
+  Сознательная потеря: разные написания одной книги без src («Двенадцать стульев»/«12 стульев»)
+  расходятся — точность важнее.
   Кандидаты: `work_scanned_at IS NULL` (фолбэк — ещё `edition_meta_scanned_at NOT
   NULL`). apply транзакционно: каноника = work с большинством членов (тай → min
   id), GC опустевших works, пересчёт `edition_count`/`written_year`/`series`,

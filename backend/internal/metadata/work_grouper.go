@@ -459,6 +459,9 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 			&b.scanned, &b.lastName, &b.firstName); err != nil {
 			return nil, err
 		}
+		if isStubSrcTitle(b.srcTitle) {
+			b.srcTitle = "" // заглушка chitanka — не оригинал (#279)
+		}
 		b.srcTitleNorm = normalizePersonKey(b.srcTitle)
 		out = append(out, b)
 	}
@@ -618,6 +621,19 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 			}
 		}
 	}
+	// ISBN, который у автора стоит на книгах с разными названиями, — ISBN
+	// бумажного сборника в fb2 отдельных рассказов: по нему резолвер нашёл бы
+	// работу сборника для каждого из них (#279). Такой ISBN не передаём.
+	isbnTitles := map[string]map[string]struct{}{}
+	for _, b := range books {
+		if b.isbn == "" {
+			continue
+		}
+		if isbnTitles[b.isbn] == nil {
+			isbnTitles[b.isbn] = map[string]struct{}{}
+		}
+		isbnTitles[b.isbn][workTitleKey(b.normTitle)] = struct{}{}
+	}
 	now := time.Now()
 	for i, b := range books {
 		if ctx.Err() != nil {
@@ -635,8 +651,12 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		// «популярный» work на любой том/язык → мега-слияния разных романов в
 		// одну работу (прод-кейс Гарри Поттера: 38 изданий / 18 названий / 8
 		// языков). Для оригиналов SrcTitle пуст — резолверы берут Title.
+		isbn := b.isbn
+		if len(isbnTitles[isbn]) > 1 {
+			isbn = ""
+		}
 		q := WorkQuery{
-			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: b.isbn, Lang: b.lang,
+			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: isbn, Lang: b.lang,
 			Authors: []string{fullName(b.lastName, b.firstName)}, LastName: b.lastName, FirstName: b.firstName,
 		}
 		for _, r := range g.resolvers {
@@ -675,8 +695,8 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 	// «отравленных» lookups, записанных до фикса SrcTitle). Precision > recall.
 	for bk, idxs := range keyBuckets {
 		src, workKey := splitKey(bk)
-		if len(idxs) > 1 && tier2BucketConflicts(books, idxs) {
-			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting src_title/ser_no)",
+		if len(idxs) > 1 && (tier2BucketConflicts(books, idxs) || sameLangTitleConflict(books, idxs)) {
+			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting titles/src_title/ser_no/volume)",
 				"source", src, "work_key", workKey, "editions", len(idxs))
 			continue
 		}
@@ -694,11 +714,13 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 
 // tier2BucketConflicts — правда, если бакет одного внешнего work_key содержит
 // ≥2 разных непустых srcTitleNorm (конфликт оригиналов — зеркало гейта
-// Tier-1.5) ИЛИ ≥2 разных ненулевых ser_no (разные тома серии). Пустые
-// значения конфликтом не считаются. Чистая функция (тестируемо).
+// Tier-1.5), ≥2 разных ненулевых ser_no (разные тома серии) или ≥2 разных
+// номера тома/книги/части в названиях («Свечка. Том 1» + «Том 2», #279).
+// Пустые значения конфликтом не считаются. Чистая функция (тестируемо).
 func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 	srcs := map[string]struct{}{}
 	sers := map[int]struct{}{}
+	vols := map[string]struct{}{}
 	for _, i := range idxs {
 		if s := books[i].srcTitleNorm; s != "" {
 			srcs[s] = struct{}{}
@@ -706,8 +728,44 @@ func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 		if n := books[i].serNo; n > 0 {
 			sers[n] = struct{}{}
 		}
+		if v := volumeNumber(books[i].title); v != "" {
+			vols[v] = struct{}{}
+		}
 	}
-	return len(srcs) > 1 || len(sers) > 1
+	return len(srcs) > 1 || len(sers) > 1 || len(vols) > 1
+}
+
+// sameLangTitleConflict — в бакете есть издания одного языка с разными
+// названиями, и ни у одного из них нет src-свидетельства. Такой бакет Tier-2
+// не склеивает: внешний ключ (ISBN сборника, поиск по названию одного
+// рассказа) собирал в одну «работу» десятки разных текстов автора — «Танька»
+// Бунина с 37 рассказами (#279). Межъязыковые склейки (перевод + оригинал под
+// одним QID) этим не затрагиваются. Зеркало гейта Tier-1 «разные названия без
+// src-свидетельства».
+func sameLangTitleConflict(books []groupBook, idxs []int) bool {
+	type agg struct {
+		titles map[string]struct{}
+		src    bool
+	}
+	byLang := map[string]*agg{}
+	for _, i := range idxs {
+		b := books[i]
+		a := byLang[b.lang]
+		if a == nil {
+			a = &agg{titles: map[string]struct{}{}}
+			byLang[b.lang] = a
+		}
+		a.titles[workTitleKey(b.normTitle)] = struct{}{}
+		if b.srcTitleNorm != "" {
+			a.src = true
+		}
+	}
+	for _, a := range byLang {
+		if len(a.titles) > 1 && !a.src {
+			return true
+		}
+	}
+	return false
 }
 
 // reassignWorkUserData переносит WORK-LEVEL пользовательские данные (оценки,
