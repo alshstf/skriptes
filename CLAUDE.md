@@ -127,7 +127,7 @@ auto-memory как `feedback_visual_layout_testing`.
 ### 5. Миграции и Seed запускаются автоматически при старте backend
 
 Не нужно отдельно `migrate up`. Логи backend покажут `migrations applied` и
-`genres dictionary seeded entries=268` сразу после healthcheck. Если seed не
+`genres dictionary seeded entries=322` сразу после healthcheck. Если seed не
 сработал — справочник пустой и фронт покажет коды жанров вместо имён
 (fallback не молчит, видно сразу).
 
