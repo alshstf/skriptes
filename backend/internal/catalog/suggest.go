@@ -36,20 +36,33 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 	}
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
+	where, args := wordConditions("replace(a.normalized_name::text, 'ё', 'е')", q, args)
 
+	// Кандидаты — дёшево (без видимости, по известности authors.renown), видимые
+	// книги считаются только для них: раньше COUNT шёл по каждому совпадению (на
+	// «тол» — 2,5 тыс. авторов, 230 мс на нажатие; теперь 34 мс, #309). Слова
+	// запроса — каждое отдельно, поэтому «лев толстой» находит «Толстой Лев
+	// Николаевич»; совпадение фразы целиком — выше.
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, last_name, first_name, middle_name, note, cnt FROM (
+		WITH cand AS (
 			SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '') AS note,
+			       a.normalized_name::text AS nn,
+			       (replace(a.normalized_name::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       (replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\') AS phrase
+			FROM authors a
+			WHERE `+where+`
+			ORDER BY prefix DESC, phrase DESC, a.renown DESC, a.id
+			LIMIT `+suggestCandidates+`
+		)
+		SELECT id, last_name, first_name, middle_name, note, cnt FROM (
+			SELECT cand.*,
 			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM book_authors ba
 			        JOIN books b ON b.id = ba.book_id
-			        WHERE ba.author_id = a.id AND b.deleted = false`+exClause+`) AS cnt,
-			       (replace(a.normalized_name::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
-			       a.normalized_name::text AS nn
-			FROM authors a
-			WHERE replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
+			        WHERE ba.author_id = cand.id AND b.deleted = false`+exClause+`) AS cnt
+			FROM cand
 		) x
 		WHERE cnt > 0
-		ORDER BY prefix DESC, cnt DESC, nn
+		ORDER BY prefix DESC, phrase DESC, cnt DESC, nn
 		LIMIT $2
 	`, args...)
 	if err != nil {
@@ -94,21 +107,30 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 	}
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
+	where, args := wordConditions("replace(s.normalized_title::text, 'ё', 'е')", q, args)
 
+	// Как у авторов: дешёвые кандидаты, видимые книги — только для них (#309).
 	rows, err := s.pool.Query(ctx, `
+		WITH cand AS (
+			SELECT s.id, s.title, s.author_id, s.normalized_title::text AS nt,
+			       (replace(s.normalized_title::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
+			       (replace(s.normalized_title::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\') AS phrase
+			FROM series s
+			WHERE `+where+`
+			ORDER BY prefix DESC, phrase DESC,
+			         (SELECT count(*) FROM books b WHERE b.series_id = s.id) DESC, s.id
+			LIMIT `+suggestCandidates+`
+		)
 		SELECT id, title, author_name, cnt FROM (
-			SELECT s.id, s.title,
+			SELECT cand.id, cand.title, cand.prefix, cand.phrase, cand.nt,
 			       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '') AS author_name,
 			       (SELECT COUNT(DISTINCT COALESCE(b.work_id, -b.id)) FROM books b
-			        WHERE b.series_id = s.id AND b.deleted = false`+exClause+`) AS cnt,
-			       (replace(s.normalized_title::text, 'ё', 'е') ILIKE $1 || '%' ESCAPE '\') AS prefix,
-			       s.normalized_title::text AS nt
-			FROM series s
-			LEFT JOIN authors a ON a.id = s.author_id
-			WHERE replace(s.normalized_title::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
+			        WHERE b.series_id = cand.id AND b.deleted = false`+exClause+`) AS cnt
+			FROM cand
+			LEFT JOIN authors a ON a.id = cand.author_id
 		) x
 		WHERE cnt > 0
-		ORDER BY prefix DESC, cnt DESC, nt
+		ORDER BY prefix DESC, phrase DESC, cnt DESC, nt
 		LIMIT $2
 	`, args...)
 	if err != nil {
@@ -134,6 +156,26 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 		})
 	}
 	return out, rows.Err()
+}
+
+// suggestCandidates — сколько совпадений подсказки берём в точный подсчёт
+// видимых книг.
+const suggestCandidates = "50"
+
+// wordConditions — условие «каждое слово запроса есть в поле» (порядок слов
+// любой: «лев толстой» ~ «толстой лев николаевич»); слова дописываются в args.
+// Не больше 6 слов — дальше подсказка и так ничего не уточнит.
+func wordConditions(field, query string, args []any) (string, []any) {
+	words := strings.Fields(textnorm.FoldYo(escapeLike(query)))
+	if len(words) > 6 {
+		words = words[:6]
+	}
+	conds := make([]string, 0, len(words))
+	for _, w := range words {
+		args = append(args, w)
+		conds = append(conds, fmt.Sprintf(`%s ILIKE '%%' || $%d || '%%' ESCAPE '\'`, field, len(args)))
+	}
+	return strings.Join(conds, " AND "), args
 }
 
 // escapeLike экранирует спецсимволы LIKE (%, _ и сам \) — запрос пользователя

@@ -219,6 +219,16 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	}
 	require.True(t, foundAlekseev, "ожидаем Алексеева в suggest по 'алек'")
 
+	// Имя перед фамилией (#309): «евгений алексеев» находит «Алексеев Евгений».
+	reversed, err := svc.SuggestAuthors(ctx, "евгений алексеев", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, reversed)
+	require.Equal(t, "Алексеев Евгений Артёмович", reversed[0].FullName)
+	// Спецсимволы LIKE — текст, а не шаблон.
+	none, err := svc.SuggestAuthors(ctx, "%", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, none)
+
 	// Пустой запрос → пустой срез без ошибки.
 	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5, nil, nil, false)
 	require.NoError(t, err)
