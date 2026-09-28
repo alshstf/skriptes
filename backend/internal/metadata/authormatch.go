@@ -103,13 +103,30 @@ func anyTokenMatches(tokens []nameToken, target string, targetCyr bool) bool {
 		if t.cyr != targetCyr && len(target) >= 3 && len(t.lat) >= 3 && levenshtein(t.lat, target) <= 1 {
 			return true
 		}
-		// В одном алфавите — только разница в удвоенных буквах (передача
-		// двойных согласных: «Флевеллинг» ~ «Флевелинг», «Коллинз» ~ «Колинз»).
-		if len(target) >= 5 && collapseDoubles(t.lat) == collapseDoubles(target) {
+		// В одном алфавите — только разные передачи одного иностранного имени:
+		// удвоенные согласные («Флевеллинг» ~ «Флевелинг»), H как Г или Х
+		// («Херберт» ~ «Герберт»), S как З или С («Зузак» ~ «Зусак»).
+		if len(target) >= 5 && transcriptionKey(t.lat) == transcriptionKey(target) {
 			return true
 		}
 	}
 	return false
+}
+
+// transcriptionKey — ключ сравнения фамилии в одном алфавите: без удвоенных
+// букв, г→h и з→s (кроме «zh» — это Ж, не Ш). Гласные не трогаем: «Фирсов» и
+// «Фурсов» — разные люди (#280).
+func transcriptionKey(s string) string {
+	b := []byte(s)
+	for i, c := range b {
+		switch {
+		case c == 'g':
+			b[i] = 'h'
+		case c == 'z' && (i+1 == len(b) || b[i+1] != 'h'):
+			b[i] = 's'
+		}
+	}
+	return collapseDoubles(string(b))
 }
 
 // initialMatches — совпадение по инициалу: кандидат «Л.» (токен из одной буквы)

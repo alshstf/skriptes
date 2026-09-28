@@ -1188,7 +1188,9 @@ func runOnceRegroupTitleConflicts(ctx context.Context, pool *pgxpool.Pool, wg *m
 // authorMetaRecheckKey — состояние перепроверки био и фото авторов в
 // app_settings: {"since": начало, "done": завершена}. Бампнуть версию —
 // запустить перепроверку заново (например, после новых гейтов матчинга).
-const authorMetaRecheckKey = "author_meta_recheck_v1"
+// v2 (1.16.1): v1 очистила био у Дюма (страница неоднозначности), Херберта и
+// Зузака (другая передача фамилии в Википедии).
+const authorMetaRecheckKey = "author_meta_recheck_v2"
 
 // runAuthorMetaRecheck — перепроверка биографий и фото авторов текущими гейтами
 // матчинга (metadata.AuthorRechecker, #280): подтверждённое остаётся, чужое
