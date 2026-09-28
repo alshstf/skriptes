@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/langcode"
 )
 
 // Enricher — оркестратор обогащения карточек книг (обложки + аннотации).
@@ -427,7 +428,9 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) bool {
 		em = m
 	}
 	srcAuthorNorm := normalizePersonKey(em.SrcAuthor)
-	srcLang := normalizeLangCode(em.SrcLang) // fb2 шлёт и 'EN', и 'ru-RU' — канонизируем
+	// fb2 шлёт и 'EN', и 'ru-RU', и 'spa'/'jp'/«английски» — к ISO 639-1,
+	// нераспознанное не пишем (#287).
+	srcLang := langcode.Canonical(em.SrcLang)
 	if _, err := e.pool.Exec(ctx, `
 		UPDATE books SET
 			translator              = COALESCE(translator, NULLIF($2, '')),
