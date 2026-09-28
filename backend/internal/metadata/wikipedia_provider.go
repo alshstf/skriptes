@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -74,16 +75,39 @@ func (p *WikipediaProvider) Name() string { return "wikipedia" }
 //
 // Сначала пробуем родной язык автора (или ru по умолчанию), потом en.
 func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
+	var failed error
 	for _, lang := range p.langs(q.Lang) {
 		text, err := p.intro(ctx, lang, q)
 		if err != nil {
+			failed = keepTransient(failed, err)
 			continue
 		}
 		if text != "" {
 			return text, nil
 		}
 	}
-	return "", ErrNotFound
+	return "", notFoundOr(failed)
+}
+
+// keepTransient запоминает первую ошибку, которая не «не найдено».
+func keepTransient(prev, err error) error {
+	if prev == nil && !errors.Is(err, ErrNotFound) {
+		return err
+	}
+	return prev
+}
+
+// notFoundOr — итог перебора языков: если где-то был сбой (429, сеть,
+// проверка профессии), это не «не найдено» — иначе автор навсегда останется
+// без био (грабля №20, #280).
+func notFoundOr(failed error) error {
+	if failed == nil {
+		return ErrNotFound
+	}
+	if errors.Is(failed, ErrUpstream) {
+		return failed
+	}
+	return fmt.Errorf("%w: %w", ErrUpstream, failed)
 }
 
 // intro — полный текст intro-раздела через MediaWiki action API.
@@ -105,7 +129,11 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 
 	v := url.Values{}
 	v.Set("action", "query")
-	v.Set("prop", "extracts")
+	// pageprops.disambiguation — страница неоднозначности («Козлов, Василий»):
+	// у её QID нет профессии, гейт P106 её пропускал, и в био уходил список
+	// тёзок (#280). В пути фото то же отсекает summary().
+	v.Set("prop", "extracts|pageprops")
+	v.Set("ppprop", "disambiguation")
 	v.Set("exintro", "1")
 	v.Set("explaintext", "1")
 	v.Set("exsectionformat", "plain")
@@ -132,8 +160,10 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 	var body struct {
 		Query struct {
 			Pages []struct {
-				Missing bool   `json:"missing"`
-				Extract string `json:"extract"`
+				Title     string            `json:"title"`
+				Missing   bool              `json:"missing"`
+				Extract   string            `json:"extract"`
+				PageProps map[string]string `json:"pageprops"`
 			} `json:"pages"`
 		} `json:"query"`
 	}
@@ -143,13 +173,24 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 	if len(body.Query.Pages) == 0 || body.Query.Pages[0].Missing {
 		return "", ErrNotFound
 	}
-	return strings.TrimSpace(body.Query.Pages[0].Extract), nil
+	page := body.Query.Pages[0]
+	if _, ok := page.PageProps["disambiguation"]; ok {
+		return "", ErrNotFound
+	}
+	// Редирект мог увести на другого человека («Флинт, Александра» →
+	// «Флит, Александр») — имя проверяем и у итоговой статьи.
+	if page.Title != "" && !authorNameMatches(q, page.Title) {
+		return "", ErrNotFound
+	}
+	return strings.TrimSpace(page.Extract), nil
 }
 
 func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
+	var failed error
 	for _, lang := range p.langs(q.Lang) {
 		s, err := p.summary(ctx, lang, q)
 		if err != nil {
+			failed = keepTransient(failed, err)
 			continue
 		}
 		if s.Thumbnail.Source == "" {
@@ -157,11 +198,12 @@ func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery)
 		}
 		img, err := p.downloadImage(ctx, s.Thumbnail.Source)
 		if err != nil {
+			failed = keepTransient(failed, err)
 			continue
 		}
 		return img, nil
 	}
-	return nil, ErrNotFound
+	return nil, notFoundOr(failed)
 }
 
 // summary — opensearch для точного титла + summary endpoint.
@@ -196,6 +238,10 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	// disambiguation-страницы (type="disambiguation") нам бесполезны —
 	// extract там обычно общий типа "может означать...".
 	if s.Type == "disambiguation" {
+		return nil, ErrNotFound
+	}
+	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280).
+	if s.Title != "" && !authorNameMatches(q, s.Title) {
 		return nil, ErrNotFound
 	}
 	return &s, nil
@@ -233,11 +279,21 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
 	// однофамильцев-не-писателей (полное совпадение ФИО у писателя и его тёзки
 	// другой профессии). Резолвим страницу → Wikidata QID → occupationGate.
-	// Отвергаем ТОЛЬКО при явном не-писателе; ошибка/нет QID/unknown — оставляем
-	// (precision-preserving: не режем валидных без размеченной профессии).
+	// Отвергаем ТОЛЬКО при явном не-писателе; нет QID / профессия не размечена —
+	// оставляем (precision-preserving: не режем валидных без размеченной
+	// профессии). Сбой запроса (429, сеть) — временная ошибка, а не «принять»:
+	// автор перепроверится позже (#280, грабля №20).
 	if p.occupationGate != nil {
-		if qid, err := p.resolvePageQID(ctx, lang, title); err == nil && qid != "" {
-			if verdict, err := p.occupationGate(ctx, qid); err == nil && verdict == OccupationNonWriter {
+		qid, err := p.resolvePageQID(ctx, lang, title)
+		if err != nil {
+			return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
+		}
+		if qid != "" {
+			verdict, err := p.occupationGate(ctx, qid)
+			if err != nil {
+				return "", fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
+			}
+			if verdict == OccupationNonWriter {
 				return "", ErrNotFound
 			}
 		}

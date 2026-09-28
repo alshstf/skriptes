@@ -533,12 +533,18 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	// Слой 2 (опционально): профессия P106. Имя-гейт пропускает однофамильца с
 	// тем же ФИО, но другой профессией; QID берём бесплатно из remote_ids.wikidata
 	// (доп. запрос не нужен). Отвергаем ТОЛЬКО явного не-писателя; нет QID /
-	// unknown / ошибка сети — оставляем (precision-preserving, как на wiki-пути).
+	// unknown — оставляем (precision-preserving, как на wiki-пути); ошибка сети —
+	// временный сбой, автор перепроверится.
 	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если wiki-гейт
 	// отверг однофамильца (ErrNotFound), enricher идёт к OL — без этого гейта OL
 	// отдал бы того же не-писателя, и wiki-отказ «протёк» бы сюда.
 	if p.occupationGate != nil && detail.RemoteIDs.Wikidata != "" {
-		if v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata); err == nil && v == OccupationNonWriter {
+		v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata)
+		if err != nil {
+			// Сбой запроса — временная ошибка, а не «принять» (#280).
+			return nil, fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
+		}
+		if v == OccupationNonWriter {
 			return nil, ErrNotFound
 		}
 	}

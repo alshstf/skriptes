@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 // ErrNotFound — провайдер не нашёл данных для книги; не считается
@@ -101,9 +102,14 @@ type AuthorQuery struct {
 }
 
 // Strict — автора нельзя искать просто по имени: у него есть тёзки или
-// уточнение. Кандидата принимаем, только если его подтвердило уточнение
-// (статья «ФИО (уточнение)» в Википедии) или одна из книг автора.
-func (q AuthorQuery) Strict() bool { return q.Note != "" || q.Namesakes }
+// уточнение, или имя из одного слова («София», «2B», «ScrLock» — по одной
+// фамилии находились столица Болгарии, поп-дуэт и клавиша, #280). Кандидата
+// принимаем, только если его подтвердило уточнение (статья «ФИО (уточнение)» в
+// Википедии) или одна из книг автора.
+func (q AuthorQuery) Strict() bool {
+	oneWord := strings.TrimSpace(q.LastName) != "" && strings.TrimSpace(q.FirstName) == ""
+	return q.Note != "" || q.Namesakes || oneWord
+}
 
 // AuthorPhotoProvider — поставщик портрета автора. Reuse CoverImage —
 // формат тот же (Reader + Mime + SourceID), кэш в /cache/covers тоже общий.
