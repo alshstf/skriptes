@@ -32,6 +32,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
@@ -843,6 +844,9 @@ func (im *Importer) processRecord(
 		seriesPtr = &sid
 	}
 
+	// Алиасы жанров — к кодам нашего словаря (adv_all → adventure, #286); тот же
+	// набор уходит и в документ поиска ниже.
+	rec.Genres = genres.CanonicalCodes(rec.Genres)
 	genreIDs := make([]int64, 0, len(rec.Genres))
 	for _, g := range rec.Genres {
 		gid, err := caches.ensureGenre(ctx, q, g)
