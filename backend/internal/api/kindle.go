@@ -45,7 +45,9 @@ func handleListKindleTargets(d KindleDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+		// sender — адрес, с которого уходят книги: его добавляют в «Утверждённые
+		// отправители» Amazon. Пусто — отправка на сервере не настроена.
+		writeJSON(w, http.StatusOK, map[string]any{"items": items, "sender": d.Email.FromAddress()})
 	}
 }
 

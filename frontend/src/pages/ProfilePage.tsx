@@ -12,6 +12,7 @@ import { ProfileTabs } from '@/components/ProfileTabs';
 import { useRatingPromptSettings, useUpdateRatingPromptSettings } from '@/lib/ratings';
 import {
   useKindleTargets,
+  useKindleSender,
   useAddKindleTarget,
   useUpdateKindleTarget,
   useDeleteKindleTarget,
@@ -19,6 +20,7 @@ import {
 } from '@/lib/kindle';
 import { useMe, useUpdateMe, useChangeMyPassword, MIN_PASSWORD_LEN, type User } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
+import { KindleSenderHint } from '@/components/KindleSenderHint';
 
 /**
  * ProfilePage — настройки пользователя. Сейчас только Kindle-адресаты
@@ -31,6 +33,7 @@ import { ApiError } from '@/lib/api';
 export function ProfilePage() {
   const me = useMe();
   const targetsQ = useKindleTargets();
+  const senderQ = useKindleSender();
   const navigate = useNavigate();
   // returnTo — приход с карточки книги («Настроить Kindle»). replace: не копим
   // историю (паттерн «К карточке» ридера), возврат ведёт ровно назад на книгу.
@@ -69,9 +72,10 @@ export function ProfilePage() {
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             Адреса для функции «Отправить на Kindle». Можно указать несколько
-            (свой, жены, второй планшет). Не забудьте добавить отправителя в
-            «Утверждённые отправители» в настройках Amazon.
+            (свой, жены, второй планшет). Адрес отправителя ниже нужно один раз
+            разрешить в настройках Amazon.
           </p>
+          {senderQ.isSuccess ? <KindleSenderHint sender={senderQ.data} /> : null}
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
           {targetsQ.isLoading ? (

@@ -8,23 +8,34 @@ export type KindleTarget = {
   created_at: string;
 };
 
-type ListResponse = { items: KindleTarget[] };
+/** sender — адрес, с которого сервер отправляет книги (пусто — отправка не настроена). */
+type ListResponse = { items: KindleTarget[]; sender?: string };
 
 const KEY = ['me', 'kindle-targets'] as const;
+
+// Один запрос на оба хука: список и адрес отправителя приходят вместе.
+const listQuery = {
+  queryKey: [...KEY],
+  queryFn: ({ signal }: { signal: AbortSignal }) =>
+    apiFetch<ListResponse>('/api/me/kindle-targets', { signal }),
+  staleTime: 60_000,
+};
 
 /**
  * useKindleTargets — список Kindle-адресатов текущего пользователя.
  * Используется на странице профиля и в SendToKindleButton.
  */
 export function useKindleTargets() {
-  return useQuery<KindleTarget[]>({
-    queryKey: [...KEY],
-    queryFn: async ({ signal }) => {
-      const r = await apiFetch<ListResponse>('/api/me/kindle-targets', { signal });
-      return r.items;
-    },
-    staleTime: 60_000,
-  });
+  return useQuery({ ...listQuery, select: (r: ListResponse) => r.items });
+}
+
+/**
+ * useKindleSender — адрес, с которого сервер отправляет книги на Kindle
+ * (SKRIPTES_SMTP_FROM, иначе логин SMTP). Его добавляют в «Утверждённые
+ * отправители» Amazon. Пустая строка — отправка на сервере не настроена.
+ */
+export function useKindleSender() {
+  return useQuery({ ...listQuery, select: (r: ListResponse) => r.sender ?? '' });
 }
 
 export function useAddKindleTarget() {

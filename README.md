@@ -31,7 +31,7 @@
 - **Встроенный веб-ридер** (foliate-js) с сохранением позиции и прогрессом чтения; PWA — ставится на телефон, обложки офлайн
 - Скачивание в **epub3 / epub2 / kepub / azw8 / kfx / fb2** (passthrough) с конвертацией на лету
 - **OPDS-каталог** (`/opds`, HTTP Basic) для e-reader-клиентов: KOReader, Moon+ Reader и т.п.; fb2 отдаётся без конвертации
-- **Send-to-Kindle** через SMTP: одна или несколько целей (`@kindle.com`), выбор адресата перед отправкой
+- **Send-to-Kindle** через SMTP: одна или несколько целей (`@kindle.com`), выбор адресата перед отправкой; в профиле — адрес отправителя с подсказкой, как разрешить его в Amazon
 - Кэш сконвертированных файлов — повторное скачивание мгновенно
 
 **Обогащение карточек**
@@ -263,13 +263,55 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 
 #### 2. Добавьте FROM-адрес в «Утверждённые отправители» Amazon
 
-[amazon.com/hz/mycd/myx#/home/settings](https://www.amazon.com/hz/mycd/myx#/home/settings) → блок Personal Document Settings → Approved Personal Document E-mail List → Add a new approved e-mail address. Без этого Amazon молча отбросит письмо.
+Это делает **каждый читатель** в своём аккаунте Amazon. Адрес отправителя (`SKRIPTES_SMTP_FROM`, а если он пуст — `SKRIPTES_SMTP_USER`) показан в профиле, в карточке «Kindle-адресаты», с кнопкой копирования и подсказкой «Как разрешить его в Amazon». Путь в Amazon: [amazon.com/mycd](https://www.amazon.com/mycd) → Preferences → Personal Document Settings → Approved Personal Document E-mail List → Add a new approved e-mail address. Без этого Amazon молча отбросит письмо.
 
 #### 3. Зарегистрируйте Kindle-адрес в профиле
 
-На странице профиля (иконка шестерёнки в шапке) добавьте один или несколько `@kindle.com` адресов с человекочитаемыми лейблами («Мой Kindle», «Kindle жены»). На карточке книги появится кнопка «На Kindle» — при нескольких целях откроется выпадашка с выбором.
+Меню пользователя в шапке → «Профиль» → карточка «Kindle-адресаты»: добавьте один или несколько `@kindle.com` адресов с понятными названиями («Мой Kindle», «Kindle жены»). На карточке книги появится кнопка «На Kindle» — при нескольких адресах откроется выпадашка с выбором.
 
 Файл отправляется в **epub3** — формат, который Kindle принимает напрямую с 2022 г. без конвертации в kf8.
+
+#### Инструкция для читателей (можно переслать)
+
+Подставьте адрес вашего инстанса; адрес отправителя читатель увидит в своём профиле.
+
+```text
+Как настроить отправку книг из Skriptes на Kindle
+
+Skriptes отправляет книги на Kindle по почте. Amazon принимает письма только
+от адресов, которые вы сами разрешили, поэтому сначала разрешите адрес
+Skriptes, а потом добавьте в Skriptes свой адрес Kindle.
+
+1. РАЗРЕШИТЬ ОТПРАВИТЕЛЯ В AMAZON
+   1) В Skriptes откройте меню пользователя → «Профиль»: в карточке
+      «Kindle-адресаты» указан адрес отправителя книг — скопируйте его.
+   2) Откройте amazon.com/mycd (Manage Your Content and Devices) и войдите
+      в свой аккаунт Amazon. Если Kindle зарегистрирован в другом магазине
+      Amazon, откройте его адрес, например amazon.de/mycd.
+   3) Вкладка Preferences → раздел Personal Document Settings.
+   4) В блоке Approved Personal Document E-mail List нажмите
+      Add a new approved e-mail address, вставьте адрес отправителя
+      и нажмите Add Address.
+   5) В том же разделе, в блоке Send-to-Kindle E-Mail Settings, скопируйте
+      адрес своего Kindle: он оканчивается на @kindle.com. Если у вас несколько
+      Kindle или приложений Kindle, у каждого свой адрес.
+
+2. ДОБАВИТЬ СВОЙ KINDLE В SKRIPTES
+   В той же карточке «Kindle-адресаты» → «Добавить новый»: Название (например,
+   «Мой Kindle») и Email — ваш адрес …@kindle.com. Нажмите «Добавить».
+
+3. ОТПРАВИТЬ КНИГУ
+   На странице книги нажмите «На Kindle». Если адресов несколько, выберите
+   нужный. Через несколько минут книга появится в библиотеке Kindle; ридер
+   должен быть подключён к Wi-Fi.
+
+Если книга не пришла:
+- проверьте, что адрес отправителя в Amazon совпадает с указанным в профиле
+  символ в символ;
+- проверьте, что в Skriptes ваш адрес @kindle.com указан без ошибок;
+- от Amazon может прийти письмо с просьбой подтвердить запрос — откройте его
+  и подтвердите, книга придёт после этого.
+```
 
 ---
 
@@ -354,7 +396,7 @@ SKRIPTES_SMTP_USE_TLS=false           # false = STARTTLS, true = implicit TLS
 | `SKRIPTES_SMTP_PORT` | `587` | 587 для STARTTLS (Gmail), 465 для implicit TLS (Yandex) |
 | `SKRIPTES_SMTP_USER` | (пусто) | Логин SMTP-аккаунта |
 | `SKRIPTES_SMTP_PASSWORD` | (пусто) | App-password (НЕ основной пароль для Gmail / Яндекса) |
-| `SKRIPTES_SMTP_FROM` | (пусто) | From-адрес; пусто = берётся USER. Должен быть в «Утверждённых отправителях» Amazon |
+| `SKRIPTES_SMTP_FROM` | (пусто) | From-адрес; пусто = берётся USER. Должен быть в «Утверждённых отправителях» Amazon; читатели видят его в профиле |
 | `SKRIPTES_SMTP_USE_TLS` | `false` | `false` = STARTTLS на 587, `true` = implicit TLS на 465 |
 
 ### Тома (хост-пути)
