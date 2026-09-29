@@ -52,6 +52,20 @@ func New(cfg Config, logger *slog.Logger) *Sender {
 	return &Sender{cfg: cfg, dialer: d, logger: logger}
 }
 
+// FromAddress — адрес в заголовке From: SKRIPTES_SMTP_FROM, а если он пуст —
+// логин SMTP. Именно его пользователь добавляет в «Утверждённые отправители»
+// Amazon, поэтому профиль показывает тот же адрес, что уходит в письмах.
+// Пустая строка — отправка не настроена.
+func (s *Sender) FromAddress() string {
+	if s == nil {
+		return ""
+	}
+	if s.cfg.From != "" {
+		return s.cfg.From
+	}
+	return s.cfg.User
+}
+
 // Attachment — файл, прикрепляемый к письму.
 // Reader должен быть seekable: gomail.v2 копирует данные в buffer
 // перед SMTP-передачей.
@@ -74,11 +88,7 @@ func (s *Sender) Send(toAddr, subject, body string, att *Attachment) error {
 	}
 
 	m := gomail.NewMessage()
-	from := s.cfg.From
-	if from == "" {
-		from = s.cfg.User
-	}
-	m.SetHeader("From", from)
+	m.SetHeader("From", s.FromAddress())
 	m.SetHeader("To", toAddr)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/plain; charset=UTF-8", body)
