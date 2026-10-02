@@ -1236,7 +1236,10 @@ func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *met
 	if rpm <= 0 {
 		rpm = settings.DefaultBioAdaptationConfig().BiosRPM
 	}
-	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors()
+	// Два автора одновременно: один автор — несколько последовательных запросов к
+	// Википедии и Wikidata (~7 с), в один поток 140 тыс. авторов шли бы недели;
+	// темп держит RPM. Больше двух потоков Википедия отвечает 429 (сухой прогон).
+	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors().WithWorkers(2)
 	logger.Info("author recheck: started", "since", state.Since, "rpm", rpm)
 	for pass := 1; ; pass++ {
 		if gates != nil && gates.Gates().AuthorDisabled {

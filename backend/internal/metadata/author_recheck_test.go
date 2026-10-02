@@ -179,7 +179,7 @@ func TestAuthorRechecker_AllAuthors(t *testing.T) {
 
 	var since time.Time
 	require.NoError(t, pool.QueryRow(ctx, `SELECT now()`).Scan(&since))
-	st, err := NewAuthorRechecker(pool, enricher, 0, quiet).WithAllAuthors().Pass(ctx, since)
+	st, err := NewAuthorRechecker(pool, enricher, 0, quiet).WithAllAuthors().WithWorkers(3).Pass(ctx, since)
 	require.NoError(t, err)
 	require.Equal(t, 1, st.Checked)
 	require.Equal(t, 1, st.BioNew)

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -47,6 +48,18 @@ type AuthorRechecker struct {
 	logger   *slog.Logger
 	gate     *rateGate
 	all      bool // все авторы с книгами, а не только с био/фото (WithAllAuthors)
+	workers  int  // авторов одновременно (WithWorkers), по умолчанию 1
+}
+
+// WithWorkers — сколько авторов проверять одновременно. Темп всё равно держит
+// общий rateGate (RPM воркера биографий): параллельность лишь прячет задержки
+// источников — один автор это несколько последовательных запросов, и в один поток
+// перепроверка 140 тыс. авторов шла бы недели.
+func (r *AuthorRechecker) WithWorkers(n int) *AuthorRechecker {
+	if n > 0 {
+		r.workers = n
+	}
+	return r
 }
 
 // WithAllAuthors — перепроверять всех авторов с книгами (кроме служебных), в том
@@ -62,7 +75,7 @@ func NewAuthorRechecker(pool *pgxpool.Pool, enricher *Enricher, rpm int, logger 
 	if logger == nil {
 		logger = slog.Default()
 	}
-	r := &AuthorRechecker{pool: pool, enricher: enricher, logger: logger, gate: &rateGate{}}
+	r := &AuthorRechecker{pool: pool, enricher: enricher, logger: logger, gate: &rateGate{}, workers: 1}
 	r.gate.setRPM(rpm)
 	return r
 }
@@ -71,6 +84,7 @@ func NewAuthorRechecker(pool *pgxpool.Pool, enricher *Enricher, rpm int, logger 
 // Deferred > 0 — есть авторы со сбоем источника, нужен следующий проход.
 func (r *AuthorRechecker) Pass(ctx context.Context, since time.Time) (AuthorRecheckStats, error) {
 	var st AuthorRecheckStats
+	var mu sync.Mutex
 	var lastRenown int64 = 1 << 62
 	var lastID int64
 	for ctx.Err() == nil {
@@ -81,18 +95,44 @@ func (r *AuthorRechecker) Pass(ctx context.Context, since time.Time) (AuthorRech
 		if len(batch) == 0 {
 			break
 		}
+		jobs := make(chan authorCandidate)
+		var wg sync.WaitGroup
+		for w := 0; w < r.workers; w++ {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				for a := range jobs {
+					var one AuthorRecheckStats
+					r.checkOne(ctx, a, &one)
+					mu.Lock()
+					st.add(one)
+					mu.Unlock()
+				}
+			}()
+		}
 		for _, a := range batch {
-			if ctx.Err() != nil {
+			if r.gate.wait(ctx) != nil {
 				break
 			}
-			if err := r.gate.wait(ctx); err != nil {
-				return st, err
-			}
-			r.checkOne(ctx, a.cand, &st)
-			lastRenown, lastID = a.renown, a.cand.id
+			jobs <- a.cand
 		}
+		close(jobs)
+		wg.Wait()
+		last := batch[len(batch)-1]
+		lastRenown, lastID = last.renown, last.cand.id
 	}
 	return st, ctx.Err()
+}
+
+func (s *AuthorRecheckStats) add(o AuthorRecheckStats) {
+	s.Checked += o.Checked
+	s.Deferred += o.Deferred
+	s.BioKept += o.BioKept
+	s.BioNew += o.BioNew
+	s.BioClear += o.BioClear
+	s.PhotoKept += o.PhotoKept
+	s.PhotoNew += o.PhotoNew
+	s.PhotoClr += o.PhotoClr
 }
 
 type recheckCandidate struct {
