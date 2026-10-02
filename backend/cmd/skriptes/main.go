@@ -1190,8 +1190,10 @@ func runOnceRegroupTitleConflicts(ctx context.Context, pool *pgxpool.Pool, wg *m
 // app_settings: {"since": начало, "done": завершена}. Бампнуть версию —
 // запустить перепроверку заново (например, после новых гейтов матчинга).
 // v2 (1.16.1): v1 очистила био у Дюма (страница неоднозначности), Херберта и
-// Зузака (другая передача фамилии в Википедии).
-const authorMetaRecheckKey = "author_meta_recheck_v2"
+// Зузака (другая передача фамилии в Википедии). v3: после разбора ошибок
+// (case study #280) — новый поиск статьи, латинское имя, политика приёма; идёт по
+// ВСЕМ авторам с книгами (решение владельца 2026-10-02), ~140 тыс., ~3,5 суток.
+const authorMetaRecheckKey = "author_meta_recheck_v3"
 
 // runAuthorMetaRecheck — перепроверка биографий и фото авторов текущими гейтами
 // матчинга (metadata.AuthorRechecker, #280): подтверждённое остаётся, чужое
@@ -1234,7 +1236,7 @@ func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *met
 	if rpm <= 0 {
 		rpm = settings.DefaultBioAdaptationConfig().BiosRPM
 	}
-	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger)
+	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors()
 	logger.Info("author recheck: started", "since", state.Since, "rpm", rpm)
 	for pass := 1; ; pass++ {
 		if gates != nil && gates.Gates().AuthorDisabled {

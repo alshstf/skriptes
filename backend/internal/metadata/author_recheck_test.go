@@ -139,3 +139,60 @@ func TestAuthorRechecker(t *testing.T) {
 	require.NoError(t, err)
 	require.Zero(t, st.Checked, "всё перепроверено")
 }
+
+// v3 (#280): все авторы с книгами, в том числе без био и фото; без книг и
+// служебные — нет.
+func TestAuthorRechecker_AllAuthors(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	bios := &mapBioProvider{bio: map[string]string{"Безбио": "Найденная биография", "Безкниг": "x", "Служебный": "y"}}
+	enricher, err := New(pool, t.TempDir(), nil, nil, nil, []AuthorBioProvider{bios}, nil, quiet)
+	require.NoError(t, err)
+
+	var coll, arch int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&coll))
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, coll).Scan(&arch))
+	mk := func(last string, service, withBook bool) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO authors (last_name, first_name, normalized_name, is_service, metadata_fetched_at)
+			VALUES ($1, 'Имя', lower($1) || ' имя', $2, now() - interval '90 days') RETURNING id`, last, service).Scan(&id))
+		if withBook {
+			var b int64
+			require.NoError(t, pool.QueryRow(ctx, `
+				INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
+				VALUES ($1, $2, $3, $3, 'fb2', 'Книга', 'книга') RETURNING id`, coll, arch, last).Scan(&b))
+			_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2)`, b, id)
+			require.NoError(t, err)
+		}
+		return id
+	}
+	plain := mk("Безбио", false, true)
+	noBooks := mk("Безкниг", false, false)
+	service := mk("Служебный", true, true)
+
+	var since time.Time
+	require.NoError(t, pool.QueryRow(ctx, `SELECT now()`).Scan(&since))
+	st, err := NewAuthorRechecker(pool, enricher, 0, quiet).WithAllAuthors().Pass(ctx, since)
+	require.NoError(t, err)
+	require.Equal(t, 1, st.Checked)
+	require.Equal(t, 1, st.BioNew)
+
+	bio := func(id int64) string {
+		var b string
+		require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(bio,'') FROM authors WHERE id = $1`, id).Scan(&b))
+		return b
+	}
+	require.Equal(t, "Найденная биография", bio(plain))
+	require.Empty(t, bio(noBooks), "без книг — не автор каталога")
+	require.Empty(t, bio(service), "служебные не перепроверяем")
+	var action string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT action FROM author_meta_recheck WHERE author_id = $1`, plain).Scan(&action))
+	require.Equal(t, "added", action)
+}
