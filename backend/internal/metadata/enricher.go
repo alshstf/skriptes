@@ -784,7 +784,7 @@ const EnrichDeadline = 30 * time.Second
 // имя, коллизий с обложками книг быть не может.
 // Возвращает true, если источник ответил сбоем (429/сеть/битый ключ): попытка
 // не помечена, вызывающий снимает общий маркер (ReopenAuthorIfIncomplete).
-func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) (transient bool) {
+func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) bool {
 	if len(e.authorPhotoProviders) == 0 {
 		return false
 	}
@@ -810,9 +810,11 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) (transi
 			continue
 		}
 		if err != nil {
-			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
+			// 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: попытку не помечаем,
+			// и следующий источник не спрашиваем — его ответ при сбое более надёжного
+			// источника занял бы место верного (#347). Ретрай состоится позже.
 			e.logger.Info("metadata: author photo provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
-			continue
+			return true
 		}
 		if img == nil || img.Reader == nil {
 			continue
@@ -834,12 +836,9 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) (transi
 		return false
 	}
 
-	// Транзиентная ошибка (429/битый ключ/сеть) — НЕ помечаем: иначе один сбой
-	// навсегда пометил бы автора «без фото» (single-shot по metadata_fetched_at),
-	// и ленивый путь больше не перепробовал бы. Пусть ретрай состоится.
-	if transient {
-		return true
-	}
+	// Транзиентная ошибка (429/битый ключ/сеть) вернула true выше и попытку НЕ
+	// пометила: иначе один сбой навсегда пометил бы автора «без фото» (single-shot
+	// по metadata_fetched_at), и ленивый путь больше не перепробовал бы.
 	// Все провайдеры честно мимо — отмечаем попытку, чтобы фронт мог решить
 	// "polling сдался" и показать fallback. Совместимо с EnsureAuthorBio:
 	// они оба пишут metadata_fetched_at независимо, последний раз обновлённый
@@ -905,7 +904,7 @@ func dedupeStrings(in []string) []string {
 
 // EnsureAuthorBio — параллельно EnsureAuthorPhoto, но пишет authors.bio.
 // Возвращает true при сбое источника — как EnsureAuthorPhoto.
-func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) (transient bool) {
+func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) bool {
 	if len(e.authorBioProviders) == 0 {
 		return false
 	}
@@ -931,9 +930,9 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) (transien
 			continue
 		}
 		if err != nil {
-			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
+			// Сбой источника — как у фото: попытку не помечаем, нижний источник не берём (#347).
 			e.logger.Info("metadata: author bio provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
-			continue
+			return true
 		}
 		if text == "" {
 			continue
@@ -949,12 +948,8 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) (transien
 		return false
 	}
 
-	// Транзиентная ошибка — не помечаем (см. EnsureAuthorPhoto): 429/битый ключ
-	// не должен навсегда пометить автора «без биографии».
-	if transient {
-		return true
-	}
-	// Все провайдеры честно мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
+	// Все провайдеры честно мимо (сбой источника вернул true выше и попытку не
+	// пометил — см. EnsureAuthorPhoto) — помечаем попытку (как EnsureAuthorPhoto), чтобы
 	// ленивый путь не дёргал bio заново на каждый заход на карточку. Маркер
 	// metadata_fetched_at у автора общий для bio+photo; respect его и
 	// triggerAuthorEnrichmentAsync, и фронтовый polling (single-shot, как у

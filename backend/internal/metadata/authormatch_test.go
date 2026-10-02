@@ -47,6 +47,17 @@ func TestAuthorNameMatches(t *testing.T) {
 		{"accept З/С in surname", "Зузак", "Маркус", "Зусак, Маркус", true},
 		{"reject Ж/Ш in surname", "Жуков", "Георгий", "Шуков, Георгий", false},
 		{"reject vowel with Г/Х", "Херберт", "Фрэнк", "Гарберт, Фрэнк", false},
+		// #348: фамилия и имя из нескольких частей — по частям, частицы необязательны.
+		{"accept compound surname", "Ле Гуин", "Урсула К", "Ле Гуин, Урсула Крёбер", true},
+		{"accept compound surname latin", "Ле Гуин", "Урсула", "Ursula K. Le Guin", true},
+		{"accept hyphenated surname", "Сент-Экзюпери", "Антуан", "Сент-Экзюпери, Антуан де", true},
+		{"accept two-word surname", "Гарсиа Маркес", "Габриэль", "Гарсиа Маркес, Габриэль", true},
+		{"accept hyphenated given", "Гранже", "Жан-Кристоф", "Гранже, Жан-Кристоф", true},
+		{"accept particle case", "де Камп", "Лайон Спрэг", "Де Камп, Лайон Спрэг", true},
+		{"accept particle omitted", "ван Вогт", "Альфред", "Вогт, Альфред", true},
+		{"reject missing surname part", "Гарсиа Маркес", "Габриэль", "Гарсиа, Габриэль", false},
+		{"reject other hyphenated given", "Гранже", "Жан-Кристоф", "Гранже, Жан-Пьер", false},
+		{"reject compound other given", "Ле Гуин", "Урсула", "Ле Гуин, Чарльз", false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
