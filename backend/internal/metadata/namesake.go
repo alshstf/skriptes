@@ -67,7 +67,9 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 		for _, h := range hits {
 			// Имя — по основе названия: «Старый пруд (Басё)» — статья о хайку,
 			// а не о поэте, хотя «Басё» в уточнении есть (выборка с прода, #280).
-			if base, _ := splitQualifier(h); authorNameMatches(q, base) {
+			// Статьи-связки («Фёдор Достоевский и Яков Бутков», «X: Y») — не о
+			// человеке, хотя имя в них есть.
+			if base, _ := splitQualifier(h); !isLinkingTitle(base) && authorNameMatches(q, base) {
 				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TracePass, Input: book, Value: h})
 				return h, MatchConfirmed, nil
 			}
@@ -87,6 +89,12 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict", Outcome: TraceReject, Input: strictWhy(q),
 		Value: fmt.Sprintf("note=%q books=%d", note, len(q.BookTitles))})
 	return "", MatchName, ErrNotFound
+}
+
+// isLinkingTitle — название статьи о связи или произведении, а не о человеке:
+// «Фёдор Достоевский и Яков Бутков», «Лемони Сникет: 33 несчастья».
+func isLinkingTitle(t string) bool {
+	return strings.Contains(t, " и ") || strings.Contains(t, " and ") || strings.Contains(t, " & ") || strings.Contains(t, ":")
 }
 
 // strictWhy — почему автор пошёл строгим путём (для трассы).
