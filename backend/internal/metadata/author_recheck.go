@@ -5,12 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Перепроверка биографий и фото авторов (#280). 42 тыс. био скачаны в июне,
+// Перепроверка биографий и фото авторов (#280). v1/v2 — авторы с био/фото; v3
+// (WithAllAuthors) — все авторы с книгами, после разбора ошибок, нового поиска
+// статьи и политики приёма. История: 42 тыс. био скачаны в июне,
 // до гейтов профессии, тёзок, неоднозначности и точного совпадения фамилий; по
 // выборке аудита чужие — около 28%. Сбрасывать всё нельзя: карточки и список
 // авторов опустели бы на сутки. Вместо этого каждый автор с био или фото
@@ -44,13 +47,35 @@ type AuthorRechecker struct {
 	enricher *Enricher
 	logger   *slog.Logger
 	gate     *rateGate
+	all      bool // все авторы с книгами, а не только с био/фото (WithAllAuthors)
+	workers  int  // авторов одновременно (WithWorkers), по умолчанию 1
+}
+
+// WithWorkers — сколько авторов проверять одновременно. Темп всё равно держит
+// общий rateGate (RPM воркера биографий): параллельность лишь прячет задержки
+// источников — один автор это несколько последовательных запросов, и в один поток
+// перепроверка 140 тыс. авторов шла бы недели.
+func (r *AuthorRechecker) WithWorkers(n int) *AuthorRechecker {
+	if n > 0 {
+		r.workers = n
+	}
+	return r
+}
+
+// WithAllAuthors — перепроверять всех авторов с книгами (кроме служебных), в том
+// числе тех, у кого био и фото никогда не находились: поиск статьи и политика
+// приёма с тех пор изменились (v3, case study #280 — у 59 % известных авторов не
+// было био, в том числе у Ле Гуин и Гарсиа Маркеса).
+func (r *AuthorRechecker) WithAllAuthors() *AuthorRechecker {
+	r.all = true
+	return r
 }
 
 func NewAuthorRechecker(pool *pgxpool.Pool, enricher *Enricher, rpm int, logger *slog.Logger) *AuthorRechecker {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	r := &AuthorRechecker{pool: pool, enricher: enricher, logger: logger, gate: &rateGate{}}
+	r := &AuthorRechecker{pool: pool, enricher: enricher, logger: logger, gate: &rateGate{}, workers: 1}
 	r.gate.setRPM(rpm)
 	return r
 }
@@ -59,6 +84,7 @@ func NewAuthorRechecker(pool *pgxpool.Pool, enricher *Enricher, rpm int, logger 
 // Deferred > 0 — есть авторы со сбоем источника, нужен следующий проход.
 func (r *AuthorRechecker) Pass(ctx context.Context, since time.Time) (AuthorRecheckStats, error) {
 	var st AuthorRecheckStats
+	var mu sync.Mutex
 	var lastRenown int64 = 1 << 62
 	var lastID int64
 	for ctx.Err() == nil {
@@ -69,18 +95,44 @@ func (r *AuthorRechecker) Pass(ctx context.Context, since time.Time) (AuthorRech
 		if len(batch) == 0 {
 			break
 		}
+		jobs := make(chan authorCandidate)
+		var wg sync.WaitGroup
+		for w := 0; w < r.workers; w++ {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				for a := range jobs {
+					var one AuthorRecheckStats
+					r.checkOne(ctx, a, &one)
+					mu.Lock()
+					st.add(one)
+					mu.Unlock()
+				}
+			}()
+		}
 		for _, a := range batch {
-			if ctx.Err() != nil {
+			if r.gate.wait(ctx) != nil {
 				break
 			}
-			if err := r.gate.wait(ctx); err != nil {
-				return st, err
-			}
-			r.checkOne(ctx, a.cand, &st)
-			lastRenown, lastID = a.renown, a.cand.id
+			jobs <- a.cand
 		}
+		close(jobs)
+		wg.Wait()
+		last := batch[len(batch)-1]
+		lastRenown, lastID = last.renown, last.cand.id
 	}
 	return st, ctx.Err()
+}
+
+func (s *AuthorRecheckStats) add(o AuthorRecheckStats) {
+	s.Checked += o.Checked
+	s.Deferred += o.Deferred
+	s.BioKept += o.BioKept
+	s.BioNew += o.BioNew
+	s.BioClear += o.BioClear
+	s.PhotoKept += o.PhotoKept
+	s.PhotoNew += o.PhotoNew
+	s.PhotoClr += o.PhotoClr
 }
 
 type recheckCandidate struct {
@@ -93,13 +145,16 @@ func (r *AuthorRechecker) batch(ctx context.Context, since time.Time, lastRenown
 		SELECT id, last_name, first_name, middle_name,
 		       TRIM(CONCAT_WS(' ', last_name, first_name, middle_name)), renown
 		FROM authors
-		WHERE (COALESCE(bio, '') <> '' OR COALESCE(photo_path, '') <> ''
-		       OR EXISTS (SELECT 1 FROM author_meta_recheck r
-		                  WHERE r.author_id = authors.id AND r.action = 'cleared'))
+		WHERE CASE WHEN $4 THEN NOT is_service AND EXISTS (
+		              SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND NOT b.deleted
+		              WHERE ba.author_id = authors.id)
+		      ELSE COALESCE(bio, '') <> '' OR COALESCE(photo_path, '') <> ''
+		           OR EXISTS (SELECT 1 FROM author_meta_recheck r
+		                      WHERE r.author_id = authors.id AND r.action = 'cleared') END
 		  AND (metadata_fetched_at IS NULL OR metadata_fetched_at < $1)
 		  AND (renown, id) < ($2, $3)
 		ORDER BY renown DESC, id DESC
-		LIMIT 200`, since, lastRenown, lastID)
+		LIMIT 200`, since, lastRenown, lastID, r.all)
 	if err != nil {
 		return nil, fmt.Errorf("recheck candidates: %w", err)
 	}
