@@ -23,6 +23,7 @@ backend/                 # Go API + INPX-импортер + enrichment'ы
   cmd/
     skriptes/            # main HTTP-сервер
     skriptes-seed/       # CLI для создания admin-пользователей
+    skriptes-explain/    # сухой прогон обогащения авторов: решение и трасса по id
   internal/
     adaptations/         # сервис экранизаций (read из book_adaptations)
     api/                 # chi-роутер, handler'ы, middleware

@@ -79,6 +79,7 @@ func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (
 	for _, lang := range p.langs(q.Lang) {
 		text, err := p.intro(ctx, lang, q)
 		if err != nil {
+			traceRequestError(ctx, "wikipedia", lang, err)
 			failed = keepTransient(failed, err)
 			continue
 		}
@@ -87,6 +88,13 @@ func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (
 		}
 	}
 	return "", notFoundOr(failed)
+}
+
+// traceRequestError — сбой запроса (не «не найдено») в трассу.
+func traceRequestError(ctx context.Context, source, lang string, err error) {
+	if err != nil && !errors.Is(err, ErrNotFound) {
+		traceStep(ctx, TraceStep{Source: source, Lang: lang, Stage: "request", Outcome: TraceError, Value: err.Error()})
+	}
 }
 
 // keepTransient запоминает первую ошибку, которая не «не найдено».
@@ -171,42 +179,86 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 		return "", fmt.Errorf("decode extracts: %w", err)
 	}
 	if len(body.Query.Pages) == 0 || body.Query.Pages[0].Missing {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "extract", Outcome: TraceReject, Input: title, Value: "missing page"})
 		return "", ErrNotFound
 	}
 	page := body.Query.Pages[0]
 	if _, ok := page.PageProps["disambiguation"]; ok {
 		if !q.Strict() {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "disambiguation", Outcome: TraceInfo, Input: page.Title, Value: "retry as namesake"})
 			return p.intro(ctx, lang, asNamesake(q))
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "disambiguation", Outcome: TraceReject, Input: page.Title})
 		return "", ErrNotFound
 	}
 	// Редирект мог увести на другого человека («Флинт, Александра» →
 	// «Флит, Александр») — имя проверяем и у итоговой статьи (articleIsAuthor).
 	if !articleIsAuthor(q, page.Title, page.Extract) {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: page.Title, Value: articleLead(page.Extract)})
 		return "", ErrNotFound
 	}
-	return strings.TrimSpace(page.Extract), nil
+	text := strings.TrimSpace(page.Extract)
+	if text == "" {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "extract", Outcome: TraceReject, Input: page.Title, Value: "empty extract"})
+		return "", nil
+	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "accept", Outcome: TracePass, Value: page.Title})
+	return text, nil
 }
 
 func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
 	var failed error
 	for _, lang := range p.langs(q.Lang) {
-		s, err := p.summary(ctx, lang, q)
+		src, err := p.photoSource(ctx, lang, q)
 		if err != nil {
 			failed = keepTransient(failed, err)
 			continue
 		}
-		if s.Thumbnail.Source == "" {
+		if src == "" {
 			continue
 		}
-		img, err := p.downloadImage(ctx, s.Thumbnail.Source)
+		img, err := p.downloadImage(ctx, src)
 		if err != nil {
+			traceRequestError(ctx, "wikipedia", lang, err)
 			failed = keepTransient(failed, err)
 			continue
 		}
 		return img, nil
 	}
 	return nil, notFoundOr(failed)
+}
+
+// AuthorPhotoSource — адрес фото автора без скачивания (сухой прогон, #280):
+// тот же выбор статьи и языка, что у FetchAuthorPhoto.
+func (p *WikipediaProvider) AuthorPhotoSource(ctx context.Context, q AuthorQuery) (string, error) {
+	var failed error
+	for _, lang := range p.langs(q.Lang) {
+		src, err := p.photoSource(ctx, lang, q)
+		if err != nil {
+			failed = keepTransient(failed, err)
+			continue
+		}
+		if src != "" {
+			return src, nil
+		}
+	}
+	return "", notFoundOr(failed)
+}
+
+// photoSource — адрес миниатюры статьи об авторе в одном языке; "" — у статьи
+// нет картинки.
+func (p *WikipediaProvider) photoSource(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	s, err := p.summary(ctx, lang, q)
+	if err != nil {
+		traceRequestError(ctx, "wikipedia", lang, err)
+		return "", err
+	}
+	if s.Thumbnail.Source == "" {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "thumbnail", Outcome: TraceReject, Input: s.Title, Value: "no thumbnail"})
+		return "", nil
+	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "accept", Outcome: TracePass, Input: s.Title, Value: s.Thumbnail.Source})
+	return s.Thumbnail.Source, nil
 }
 
 // articleIsAuthor — итоговая статья (после редиректа) о нашем авторе:
@@ -275,12 +327,15 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	// extract там обычно общий типа "может означать...".
 	if s.Type == "disambiguation" {
 		if !q.Strict() {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "disambiguation", Outcome: TraceInfo, Input: s.Title, Value: "retry as namesake"})
 			return p.summary(ctx, lang, asNamesake(q))
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "disambiguation", Outcome: TraceReject, Input: s.Title})
 		return nil, ErrNotFound
 	}
 	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280).
 	if !articleIsAuthor(q, s.Title, s.Extract) {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: s.Title, Value: articleLead(s.Extract)})
 		return nil, ErrNotFound
 	}
 	return &s, nil
@@ -306,13 +361,16 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 			return "", err
 		}
 		if len(titles) == 0 {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
 			return "", ErrNotFound
 		}
 		// Гейт по имени: первый хит opensearch матчит только фамилию — проверяем,
 		// что совпадает и имя. Не совпало → считаем «не нашли» (см. doc выше).
 		if !authorNameMatches(q, titles[0]) {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TraceReject, Input: q.FullName, Value: titles[0]})
 			return "", ErrNotFound
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: q.FullName, Value: titles[0]})
 		title = titles[0]
 	}
 	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
@@ -327,17 +385,32 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 		if err != nil {
 			return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "qid", Outcome: TraceInfo, Input: title, Value: qid})
 		if qid != "" {
 			verdict, err := p.occupationGate(ctx, qid)
 			if err != nil {
 				return "", fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
 			}
+			traceOccupation(ctx, "wikipedia", lang, qid, verdict)
 			if verdict == OccupationNonWriter {
 				return "", ErrNotFound
 			}
 		}
 	}
 	return title, nil
+}
+
+// traceOccupation — вердикт проверки профессии в трассу: non-writer отвергает,
+// writer пропускает, unknown (нет P106) — не решает.
+func traceOccupation(ctx context.Context, source, lang, qid string, v OccupationVerdict) {
+	outcome := TraceInfo
+	switch v {
+	case OccupationWriter:
+		outcome = TracePass
+	case OccupationNonWriter:
+		outcome = TraceReject
+	}
+	traceStep(ctx, TraceStep{Source: source, Lang: lang, Stage: "occupation", Outcome: outcome, Input: qid, Value: v.String()})
 }
 
 // opensearch — названия статей по префиксу/похожести (namespace 0).

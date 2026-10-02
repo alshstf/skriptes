@@ -18,13 +18,15 @@ type mapBioProvider struct {
 }
 
 func (m *mapBioProvider) Name() string { return "wikipedia" }
-func (m *mapBioProvider) FetchAuthorBio(_ context.Context, q AuthorQuery) (string, error) {
+func (m *mapBioProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
 	if err := m.err[q.LastName]; err != nil {
 		return "", err
 	}
 	if b, ok := m.bio[q.LastName]; ok {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "ru", Stage: "accept", Outcome: TracePass, Value: q.LastName})
 		return b, nil
 	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "ru", Stage: "name_gate", Outcome: TraceReject, Value: "Однофамилец"})
 	return "", ErrNotFound
 }
 
@@ -76,7 +78,11 @@ func TestAuthorRechecker(t *testing.T) {
 		require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(bio,''), COALESCE(photo_path,'') FROM authors WHERE id = $1`, id).Scan(&bio, &photo))
 		return bio, photo
 	}
-	since := time.Now()
+	// since — по часам базы: metadata_fetched_at ставит её now(), и при расхождении
+	// часов процесса и контейнера в миллисекунды только что проверенный автор
+	// выглядел бы непроверенным (флак второго прохода).
+	var since time.Time
+	require.NoError(t, pool.QueryRow(ctx, `SELECT now()`).Scan(&since))
 	r := NewAuthorRechecker(pool, enricher, 0, quiet)
 	st, err := r.Pass(ctx, since)
 	require.NoError(t, err)
@@ -107,6 +113,18 @@ func TestAuthorRechecker(t *testing.T) {
 	require.NoError(t, pool.QueryRow(ctx,
 		`SELECT old_value FROM author_meta_recheck WHERE author_id = $1 AND field = 'bio'`, cleared).Scan(&oldBio))
 	require.Equal(t, "Биография однофамильца", oldBio, "журнал хранит прежнее для отката")
+	reason := func(id int64, field string) string {
+		var r *string
+		require.NoError(t, pool.QueryRow(ctx,
+			`SELECT reason FROM author_meta_recheck WHERE author_id = $1 AND field = $2`, id, field).Scan(&r))
+		if r == nil {
+			return ""
+		}
+		return *r
+	}
+	require.Equal(t, "wikipedia/ru: reject name_gate «Однофамилец»", reason(cleared, "bio"), "журнал хранит причину решения")
+	require.Equal(t, "wikipedia/ru: pass accept «Замен»", reason(replaced, "bio"))
+	require.Empty(t, reason(cleared, "photo"), "провайдер без трассы — причины нет (NULL)")
 
 	// Источник ожил — следующий проход добирает отложенного и только его.
 	delete(bios.err, "Сбой")
