@@ -428,25 +428,27 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 // resolveTitleUncached — поиск статьи без кэша (см. resolveTitle).
 func (p *WikipediaProvider) resolveTitleUncached(ctx context.Context, lang string, q AuthorQuery) (string, error) {
 	var title string
-	confirmed := false // статью нашёл строгий путь — по уточнению или книге
+	var match MatchKind
 	if q.Strict() {
-		t, err := p.resolveStrictTitle(ctx, lang, q)
+		t, m, err := p.resolveStrictTitle(ctx, lang, q)
 		if err != nil {
 			return "", err
 		}
-		title, confirmed = t, true
+		title, match = t, m
 	} else {
-		t, err := p.resolveByName(ctx, lang, q)
+		t, m, err := p.resolveByName(ctx, lang, q)
 		if errors.Is(err, errNamesakes) {
 			// Имени соответствуют несколько статей — у автора есть тёзки: первый
 			// результат поиска был бы просто самым известным из них (#280).
-			t, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
-			confirmed = err == nil
+			t, m, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
 		}
 		if err != nil {
 			return "", err
 		}
-		title = t
+		title, match = t, m
+	}
+	if match == MatchLoose && p.candidateCheck == nil {
+		return "", ErrNotFound // нестрогое имя без проверки книгой не принимаем
 	}
 	// Политика приёма (candidate_policy.go): гейт имени пропускает тёзку с тем же
 	// ФИО — решают профессия, годы, книги кандидата в Wikidata и профиль книг
@@ -458,7 +460,7 @@ func (p *WikipediaProvider) resolveTitleUncached(ctx context.Context, lang strin
 			return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
 		}
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "qid", Outcome: TraceInfo, Input: title, Value: qid})
-		ok, err := p.candidateCheck(ctx, q, "wikipedia", lang, title, qid, confirmed)
+		ok, err := p.candidateCheck(ctx, q, "wikipedia", lang, title, qid, match)
 		if err != nil {
 			return "", fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
 		}
@@ -510,13 +512,15 @@ func searchForms(q AuthorQuery) []string {
 // совпадения: одно — это оно, несколько — тёзки (errNamesakes). Раньше брался
 // только первый результат по полному имени — «Генри О» находил «Генри Лайон Олди»,
 // а «Кинселла Софи» не находил ничего.
-func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q AuthorQuery) (string, MatchKind, error) {
 	seen := false
+	var all []string
 	for _, form := range searchForms(q) {
 		titles, err := p.opensearch(ctx, lang, form, searchLimit)
 		if err != nil {
-			return "", err
+			return "", MatchName, err
 		}
+		all = append(all, titles...)
 		var matched []string
 		for _, t := range titles {
 			if authorNameMatches(q, t) && !slices.Contains(matched, t) {
@@ -526,19 +530,32 @@ func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q Au
 		switch {
 		case len(matched) == 1:
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: form, Value: matched[0]})
-			return matched[0], nil
+			return matched[0], MatchName, nil
 		case len(matched) > 1:
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "namesakes", Outcome: TraceInfo, Input: form, Value: strings.Join(matched, " | ")})
-			return "", errNamesakes
+			return "", MatchName, errNamesakes
 		case len(titles) > 0:
 			seen = true
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TraceReject, Input: form, Value: titles[0]})
 		}
 	}
+	// Ни одна статья не прошла гейт имени — может, имя передано иначе (Ширли/Шерли,
+	// Гуидо/Гвидо, Глик/Глейк). Единственный такой кандидат идёт дальше с пометкой:
+	// политика примет его только с книгой автора в Wikidata.
+	var loose []string
+	for _, t := range all {
+		if looseNameMatches(q, t) && !slices.Contains(loose, t) {
+			loose = append(loose, t)
+		}
+	}
+	if len(loose) == 1 {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_loose", Outcome: TraceInfo, Input: q.FullName, Value: loose[0]})
+		return loose[0], MatchLoose, nil
+	}
 	if !seen {
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
 	}
-	return "", ErrNotFound
+	return "", MatchName, ErrNotFound
 }
 
 // opensearch — названия статей по префиксу/похожести (namespace 0).

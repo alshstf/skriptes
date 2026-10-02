@@ -42,10 +42,11 @@ func (p *WikidataAdaptationsProvider) CandidateFacts(ctx context.Context, qid st
 	if qid == "" {
 		return f, nil
 	}
-	rows, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT ?occ ?occLabel (YEAR(?b) AS ?born) (YEAR(?d) AS ?died) WHERE {
+	rows, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT ?occ ?occLabel (YEAR(?b) AS ?born) (YEAR(?d) AS ?died) ?human WHERE {
   OPTIONAL { wd:%[1]s wdt:P106 ?occ . }
   OPTIONAL { wd:%[1]s wdt:P569 ?b . }
   OPTIONAL { wd:%[1]s wdt:P570 ?d . }
+  OPTIONAL { wd:%[1]s wdt:P31 wd:Q5 . BIND(true AS ?human) }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
 }`, qid))
 	if err != nil {
@@ -56,6 +57,9 @@ func (p *WikidataAdaptationsProvider) CandidateFacts(ctx context.Context, qid st
 		if occ := r["occ"]; occ != "" && !seen[occ] {
 			seen[occ] = true
 			f.Occupations = append(f.Occupations, r["occLabel"])
+		}
+		if r["human"] == "true" {
+			f.Human = true
 		}
 		f.Born = minYear(f.Born, r["born"])
 		f.Died = minYear(f.Died, r["died"])

@@ -589,7 +589,11 @@ func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q Author
 	// OL отдал бы того же человека, и отказ «протёк» бы сюда.
 	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "qid", Outcome: TraceInfo, Input: olid, Value: detail.RemoteIDs.Wikidata})
 	if p.candidateCheck != nil {
-		ok, err := p.candidateCheck(ctx, q, "openlibrary", "", detail.Name, detail.RemoteIDs.Wikidata, q.Strict())
+		match := MatchName
+		if q.Strict() {
+			match = MatchConfirmed // строгий путь OL — автор книги с нашим названием
+		}
+		ok, err := p.candidateCheck(ctx, q, "openlibrary", "", detail.Name, detail.RemoteIDs.Wikidata, match)
 		if err != nil {
 			return nil, fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
 		}

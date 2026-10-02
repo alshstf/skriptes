@@ -68,8 +68,8 @@ func TestWikipedia_Trace_Policy(t *testing.T) {
 		facts CandidateFacts
 		want  string
 	}{
-		{"non-writer", CandidateFacts{Occupations: []string{"футболист"}}, "wikipedia/ru: reject policy «non-writer»"},
-		{"writer", CandidateFacts{Occupations: []string{"писатель"}, Writer: true}, "wikipedia/ru: pass accept"},
+		{"non-writer", CandidateFacts{Human: true, Occupations: []string{"футболист"}}, "wikipedia/ru: reject policy «non-writer»"},
+		{"writer", CandidateFacts{Human: true, Occupations: []string{"писатель"}, Writer: true}, "wikipedia/ru: pass accept"},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			srv := wikiGatedMockServer(t, "Тёзка, Некий Иванович", "Q1", "Некий Иванович Тёзка — писатель.")

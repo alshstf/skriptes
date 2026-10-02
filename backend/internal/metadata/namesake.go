@@ -27,27 +27,31 @@ import (
 const strictBookTitles = 4
 
 // resolveStrictTitle — статья Википедии об авторе с тёзками (см. doc файла).
-func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+// Кроме подтверждения (MatchConfirmed) возвращает статью с точным названием для
+// однословного имени (MatchName): древние и восточные авторы («Тукарам»,
+// «Алкуин», «Терпандр») по книге не находятся, а статья о них называется так же;
+// политика примет её, только если это человек с пишущей профессией или темой книг.
+func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string, q AuthorQuery) (string, MatchKind, error) {
 	note := strings.TrimSpace(q.Note)
 	if note != "" && !numericNote(note) {
 		for _, base := range wikiTitleBases(q) {
 			title, ok, err := p.articleTitle(ctx, lang, base+" ("+note+")")
 			if err != nil {
-				return "", err
+				return "", MatchName, err
 			}
 			if ok {
 				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note_title", Outcome: TracePass, Input: base + " (" + note + ")", Value: title})
-				return title, nil
+				return title, MatchConfirmed, nil
 			}
 		}
 		titles, err := p.opensearch(ctx, lang, q.FullName, 10)
 		if err != nil {
-			return "", err
+			return "", MatchName, err
 		}
 		for _, t := range titles {
 			if _, qual := splitQualifier(t); qual != "" && noteMatchesQualifier(note, qual) && authorNameMatches(q, t) {
 				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note_qualifier", Outcome: TracePass, Input: note, Value: t})
-				return t, nil
+				return t, MatchConfirmed, nil
 			}
 		}
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note", Outcome: TraceInfo, Input: note, Value: strings.Join(titles, " | ")})
@@ -58,21 +62,31 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 		}
 		hits, err := p.searchText(ctx, lang, fmt.Sprintf("%q %q", q.LastName, book), 5)
 		if err != nil {
-			return "", err
+			return "", MatchName, err
 		}
 		for _, h := range hits {
 			// Имя — по основе названия: «Старый пруд (Басё)» — статья о хайку,
 			// а не о поэте, хотя «Басё» в уточнении есть (выборка с прода, #280).
 			if base, _ := splitQualifier(h); authorNameMatches(q, base) {
 				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TracePass, Input: book, Value: h})
-				return h, nil
+				return h, MatchConfirmed, nil
 			}
 		}
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TraceInfo, Input: book, Value: strings.Join(hits, " | ")})
 	}
+	if note == "" && !q.Namesakes && strings.TrimSpace(q.FirstName) == "" && strings.TrimSpace(q.LastName) != "" {
+		title, ok, err := p.articleTitle(ctx, lang, strings.TrimSpace(q.LastName))
+		if err != nil {
+			return "", MatchName, err
+		}
+		if ok && authorNameMatches(q, title) {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.exact_title", Outcome: TraceInfo, Input: q.LastName, Value: title})
+			return title, MatchName, nil
+		}
+	}
 	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict", Outcome: TraceReject, Input: strictWhy(q),
 		Value: fmt.Sprintf("note=%q books=%d", note, len(q.BookTitles))})
-	return "", ErrNotFound
+	return "", MatchName, ErrNotFound
 }
 
 // strictWhy — почему автор пошёл строгим путём (для трассы).
