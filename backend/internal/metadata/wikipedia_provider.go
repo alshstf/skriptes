@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -127,6 +128,7 @@ func notFoundOr(failed error) error {
 // первой секцией статьи (до первого ==Heading==), что для биографических
 // статей даёт идеальный preamble.
 func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	q = latinFor(ctx, "wikipedia", lang, q)
 	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return "", err
@@ -192,10 +194,17 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 		return "", ErrNotFound
 	}
 	// Редирект мог увести на другого человека («Флинт, Александра» →
-	// «Флит, Александр») — имя проверяем и у итоговой статьи (articleIsAuthor).
+	// «Флит, Александр») — имя проверяем и у итоговой статьи (articleIsAuthor), а
+	// псевдоним принимаем, если полный текст статьи называет автора.
 	if !articleIsAuthor(q, page.Title, page.Extract) {
-		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: page.Title, Value: articleLead(page.Extract)})
-		return "", ErrNotFound
+		ok, err := p.redirectNamesAuthor(ctx, lang, title, page.Title, q)
+		if err != nil {
+			return "", err
+		}
+		if !ok {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: page.Title, Value: articleLead(page.Extract)})
+			return "", ErrNotFound
+		}
 	}
 	text := strings.TrimSpace(page.Extract)
 	if text == "" {
@@ -275,6 +284,39 @@ func articleIsAuthor(q AuthorQuery, title, extract string) bool {
 	return authorNameMatches(q, title) || authorNameMatches(q, articleLead(extract)) || mentionsAuthor(extract, q)
 }
 
+// redirectNamesAuthor — название, найденное по имени автора, оказалось
+// перенаправлением на статью под другим именем, и начало статьи автора не называет
+// (псевдоним: «Йовил, Джек» → «Ньюман, Ким», «Сайер, Ги» → «Мумину, Ги»). Такую
+// статью принимаем, если автора называет её полный текст: псевдоним упоминают
+// дальше начала. Редирект на однофамильца («Флинт» → «Флит») автора не называет.
+func (p *WikipediaProvider) redirectNamesAuthor(ctx context.Context, lang, from, to string, q AuthorQuery) (bool, error) {
+	if from == "" || to == "" || from == to {
+		return false, nil
+	}
+	v := url.Values{}
+	v.Set("action", "query")
+	v.Set("prop", "extracts")
+	v.Set("explaintext", "1")
+	v.Set("titles", to)
+	v.Set("format", "json")
+	v.Set("formatversion", "2")
+	var body struct {
+		Query struct {
+			Pages []struct {
+				Extract string `json:"extract"`
+			} `json:"pages"`
+		} `json:"query"`
+	}
+	if err := p.apiGet(ctx, lang, v, &body); err != nil {
+		return false, err
+	}
+	if len(body.Query.Pages) == 0 || !mentionsAuthor(body.Query.Pages[0].Extract, q) {
+		return false, nil
+	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "pseudonym", Outcome: TracePass, Input: from, Value: to})
+	return true, nil
+}
+
 // articleLead — начало статьи, где Википедия называет героя полным именем.
 func articleLead(extract string) string {
 	const leadRunes = 200
@@ -296,6 +338,7 @@ func asNamesake(q AuthorQuery) AuthorQuery {
 
 // summary — opensearch для точного титла + summary endpoint.
 func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQuery) (*wikiSummary, error) {
+	q = latinFor(ctx, "wikipedia", lang, q)
 	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return nil, err
@@ -335,8 +378,14 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 	}
 	// summary идёт по редиректу — имя проверяем и у итоговой статьи (#280).
 	if !articleIsAuthor(q, s.Title, s.Extract) {
-		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: s.Title, Value: articleLead(s.Extract)})
-		return nil, ErrNotFound
+		ok, err := p.redirectNamesAuthor(ctx, lang, title, s.Title, q)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "article_is_author", Outcome: TraceReject, Input: s.Title, Value: articleLead(s.Extract)})
+			return nil, ErrNotFound
+		}
 	}
 	return &s, nil
 }
@@ -356,22 +405,16 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 		}
 		title = t
 	} else {
-		titles, err := p.opensearch(ctx, lang, q.FullName, 1)
+		t, err := p.resolveByName(ctx, lang, q)
+		if errors.Is(err, errNamesakes) {
+			// Имени соответствуют несколько статей — у автора есть тёзки: первый
+			// результат поиска был бы просто самым известным из них (#280).
+			t, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
+		}
 		if err != nil {
 			return "", err
 		}
-		if len(titles) == 0 {
-			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
-			return "", ErrNotFound
-		}
-		// Гейт по имени: первый хит opensearch матчит только фамилию — проверяем,
-		// что совпадает и имя. Не совпало → считаем «не нашли» (см. doc выше).
-		if !authorNameMatches(q, titles[0]) {
-			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TraceReject, Input: q.FullName, Value: titles[0]})
-			return "", ErrNotFound
-		}
-		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: q.FullName, Value: titles[0]})
-		title = titles[0]
+		title = t
 	}
 	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
 	// однофамильцев-не-писателей (полное совпадение ФИО у писателя и его тёзки
@@ -398,6 +441,78 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 		}
 	}
 	return title, nil
+}
+
+// latinFor — запрос для раздела на латинице (queryForLang) с шагом трассы, если
+// имя заменено на латинское.
+func latinFor(ctx context.Context, source, lang string, q AuthorQuery) AuthorQuery {
+	l := queryForLang(q, lang)
+	if l.FullName != q.FullName {
+		traceStep(ctx, TraceStep{Source: source, Lang: lang, Stage: "latin", Outcome: TraceInfo, Input: q.FullName, Value: l.FullName})
+	}
+	return l
+}
+
+// searchLimit — сколько результатов поиска смотреть на каждую форму имени.
+const searchLimit = 5
+
+// errNamesakes — имени автора соответствуют несколько разных статей.
+var errNamesakes = errors.New("several articles match the author name")
+
+// searchForms — формы имени для поиска статьи (case study #280): полное «Фамилия
+// Имя Отчество» (у русских авторов на него есть редиректы, и оно точнее всего),
+// «Фамилия Имя» (второго имени иностранца в названии статьи нет: по «Виндж Вернор
+// Стефан» статья «Виндж, Вернор» не находится) и «Имя Фамилия» — так названы
+// статьи под псевдонимами и о китайских авторах («Софи Кинселла», «Ли Чайлд»,
+// «Лю Цысинь» — в каталоге «Цысинь Лю»).
+func searchForms(q AuthorQuery) []string {
+	last := strings.TrimSpace(q.LastName)
+	first := strings.TrimSpace(q.FirstName)
+	middle := strings.TrimSpace(q.MiddleName)
+	if last == "" || first == "" {
+		return []string{strings.TrimSpace(q.FullName)}
+	}
+	forms := make([]string, 0, 3)
+	if middle != "" {
+		forms = append(forms, last+" "+first+" "+middle)
+	}
+	return append(forms, last+" "+first, first+" "+last)
+}
+
+// resolveByName — статья по имени автора: формы имени по очереди, до searchLimit
+// результатов на форму, гейт имени на каждый. Решает первая форма, давшая
+// совпадения: одно — это оно, несколько — тёзки (errNamesakes). Раньше брался
+// только первый результат по полному имени — «Генри О» находил «Генри Лайон Олди»,
+// а «Кинселла Софи» не находил ничего.
+func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	seen := false
+	for _, form := range searchForms(q) {
+		titles, err := p.opensearch(ctx, lang, form, searchLimit)
+		if err != nil {
+			return "", err
+		}
+		var matched []string
+		for _, t := range titles {
+			if authorNameMatches(q, t) && !slices.Contains(matched, t) {
+				matched = append(matched, t)
+			}
+		}
+		switch {
+		case len(matched) == 1:
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: form, Value: matched[0]})
+			return matched[0], nil
+		case len(matched) > 1:
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "namesakes", Outcome: TraceInfo, Input: form, Value: strings.Join(matched, " | ")})
+			return "", errNamesakes
+		case len(titles) > 0:
+			seen = true
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TraceReject, Input: form, Value: titles[0]})
+		}
+	}
+	if !seen {
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
+	}
+	return "", ErrNotFound
 }
 
 // traceOccupation — вердикт проверки профессии в трассу: non-writer отвергает,

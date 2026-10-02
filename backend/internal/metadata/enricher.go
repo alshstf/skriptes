@@ -879,8 +879,26 @@ func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) Autho
 		               ORDER BY bw.n DESC
 		               LIMIT 6
 		           ) s
-		       ), '{}')
-		FROM authors a WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles); err != nil {
+		       ), '{}'),
+		       -- Латинское имя из fb2 переводов: за которое голосует больше половины
+		       -- книг с латинским src-автором, кроме сборников (там в оригинале
+		       -- часто составитель).
+		       COALESCE((
+		           SELECT v.name FROM (
+		               SELECT lower(b.src_author_normalized::text) AS name, count(*) AS n,
+		                      sum(count(*)) OVER () AS total
+		               FROM book_authors ba
+		               JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		               LEFT JOIN works w ON w.id = b.work_id
+		               WHERE ba.author_id = a.id AND COALESCE(w.kind, '') = ''
+		                 AND b.src_author_normalized::text ~ '^[a-z]'
+		                 AND b.src_author_normalized::text !~ '[а-яё]'
+		               GROUP BY 1
+		               ORDER BY n DESC, name
+		               LIMIT 1
+		           ) v WHERE v.n * 2 > v.total
+		       ), '')
+		FROM authors a WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName); err != nil {
 		e.logger.Warn("metadata: load namesake context failed", "author_id", q.ID, "err", err)
 		return q
 	}

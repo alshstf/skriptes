@@ -21,6 +21,7 @@ type AuthorExplain struct {
 	Namesakes    bool          `json:"namesakes,omitempty"`
 	Strict       bool          `json:"strict,omitempty"`
 	BookTitles   []string      `json:"book_titles,omitempty"`
+	LatinName    string        `json:"latin_name,omitempty"` // имя латиницей из fb2 переводов
 	Renown       int64         `json:"renown"`
 	CurrentBio   string        `json:"current_bio,omitempty"`   // начало сохранённой био
 	CurrentPhoto string        `json:"current_photo,omitempty"` // имя файла в кэше фото
@@ -62,7 +63,7 @@ func (e *Enricher) ExplainAuthor(ctx context.Context, id int64) (AuthorExplain, 
 	q := e.withNamesakeContext(ctx, AuthorQuery{
 		ID: id, LastName: ex.LastName, FirstName: ex.FirstName, MiddleName: ex.MiddleName, FullName: fullName,
 	})
-	ex.Note, ex.Namesakes, ex.Strict, ex.BookTitles = q.Note, q.Namesakes, q.Strict(), q.BookTitles
+	ex.Note, ex.Namesakes, ex.Strict, ex.BookTitles, ex.LatinName = q.Note, q.Namesakes, q.Strict(), q.BookTitles, q.LatinName
 
 	var bt AuthorTrace
 	bctx := WithAuthorTrace(ctx, &bt)

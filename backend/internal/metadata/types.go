@@ -99,6 +99,97 @@ type AuthorQuery struct {
 	Note       string
 	Namesakes  bool
 	BookTitles []string
+	// LatinName — имя автора латиницей из fb2 его переводов (src_author_normalized:
+	// «фамилия имя отчество» в нижнем регистре), за которое голосует большинство
+	// книг, кроме сборников. Английская Википедия и OpenLibrary ищут по нему
+	// (latinQuery): по кириллице иностранца они не находят (case study #280).
+	LatinName string
+}
+
+// latinQuery — тот же автор латиницей для источников на латинице. Фамилия —
+// столько первых слов LatinName, сколько частей у нашей фамилии («Ле Гуин» →
+// «le guin»), имя — следующее слово, остальное — второе имя. ok=false — латинского
+// имени нет или оно не похоже на наше (первая буква фамилии не соответствует:
+// голос мог дать составитель антологии).
+func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
+	toks := strings.Fields(q.LatinName)
+	lastParts := strings.Fields(q.LastName)
+	n := len(lastParts)
+	if n == 0 || len(toks) < n || (strings.TrimSpace(q.FirstName) != "" && len(toks) < n+1) {
+		return q, false
+	}
+	if !sameInitialSound(translitName(lastParts[0]), translitName(toks[0])) {
+		return q, false
+	}
+	l := AuthorQuery{
+		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
+		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
+	}
+	if len(toks) > n {
+		l.FirstName = toks[n]
+	}
+	if len(toks) > n+1 {
+		l.MiddleName = strings.Join(toks[n+1:], " ")
+	}
+	return l, true
+}
+
+// queryForLang — запрос для раздела Википедии: латиницей для латинских разделов,
+// если латинское имя есть; иначе как есть.
+func queryForLang(q AuthorQuery, lang string) AuthorQuery {
+	switch lang {
+	case "ru", "uk", "be", "bg", "sr", "kk":
+		return q
+	}
+	if l, ok := q.latinQuery(); ok {
+		return l
+	}
+	return q
+}
+
+// sameInitialSound — первые буквы транслита кириллической фамилии и латинской
+// соответствуют друг другу: Г ~ H (Гюго — Hugo), Ф ~ Ph, Ц ~ C/Ts, К ~ C/Q, Х ~ H/Kh,
+// Й/И/Э ~ I/Y/J/E/A, В ~ V/W, Дж ~ J/G, З ~ Z/S.
+func sameInitialSound(cyrLat, lat string) bool {
+	if cyrLat == "" || lat == "" {
+		return false
+	}
+	class := func(s string) string {
+		switch {
+		case strings.HasPrefix(s, "dzh"):
+			return "j"
+		case strings.HasPrefix(s, "ph"):
+			return "f"
+		case strings.HasPrefix(s, "kh"):
+			return "h"
+		case strings.HasPrefix(s, "zh"):
+			return "zh"
+		case strings.HasPrefix(s, "ch"):
+			return "ch"
+		case strings.HasPrefix(s, "sh"), strings.HasPrefix(s, "sch"):
+			return "sh"
+		}
+		switch s[0] {
+		case 'g', 'h':
+			return "h"
+		case 'c', 'k', 'q':
+			return "k"
+		case 'i', 'y', 'j', 'e', 'a':
+			return "v0"
+		case 'v', 'w':
+			return "v"
+		case 'z', 's':
+			return "s"
+		}
+		return s[:1]
+	}
+	a, b := class(cyrLat), class(lat)
+	if a == b {
+		return true
+	}
+	// Ц передают и как C, и как Ts; Ч — Ch и Tch; Дж — J и G.
+	pairs := map[[2]string]bool{{"k", "t"}: true, {"ch", "t"}: true, {"j", "h"}: true, {"j", "v0"}: true}
+	return pairs[[2]string{a, b}] || pairs[[2]string{b, a}] || (a == "s" && b == "k") || (b == "s" && a == "k")
 }
 
 // Strict — автора нельзя искать просто по имени: у него есть тёзки или
