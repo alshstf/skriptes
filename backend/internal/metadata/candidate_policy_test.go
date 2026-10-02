@@ -20,7 +20,7 @@ func TestDecideCandidate(t *testing.T) {
 	}{
 		{
 			name:  "писатель — принять",
-			q:     AuthorQuery{LastName: "Анджеевский", FirstName: "Ежи", MinBookYear: 1990, Genres: []string{"prose_classic"}},
+			q:     AuthorQuery{LastName: "Анджеевский", FirstName: "Ежи", BooksYear: 1990, Genres: []string{"prose_classic"}},
 			title: "Анджеевский, Ежи", f: CandidateFacts{Human: true, Occupations: []string{"писатель", "политик"}, Writer: true, Born: 1909, Died: 1983},
 			want: true,
 		},
@@ -39,27 +39,39 @@ func TestDecideCandidate(t *testing.T) {
 		{
 			name: "космонавт у автора ЛитРПГ — сетевая литература без книги",
 			q: AuthorQuery{LastName: "Губарев", FirstName: "Алексей", MiddleName: "Александрович",
-				MinBookYear: 2019, NetShare: 1, Genres: []string{"network_literature", "sf_litrpg"}},
+				BooksYear: 2019, NetShare: 1, Genres: []string{"network_literature", "sf_litrpg"}},
 			title: "Губарев, Алексей Александрович",
-			f:     CandidateFacts{Human: true, Occupations: []string{"космонавт", "писатель"}, Writer: true, Born: 1931, Died: 2015},
+			f:     CandidateFacts{QID: "Q465748", Human: true, Occupations: []string{"космонавт", "писатель"}, Writer: true, Born: 1931, Died: 2015},
 			want:  false,
 		},
 		{
 			name: "писательница сетевой литературы со статьёй — принять",
-			q: AuthorQuery{LastName: "Звездная", FirstName: "Елена", MinBookYear: 2012, NetShare: 0.9,
+			q: AuthorQuery{LastName: "Звездная", FirstName: "Елена", BooksYear: 2012, NetShare: 0.9,
 				Genres: []string{"network_literature", "love_sf"}},
 			title: "Звёздная, Елена", f: CandidateFacts{Human: true, Occupations: []string{"писательница"}, Writer: true, Born: 1981},
 			want: true,
 		},
 		{
+			name:  "сетевой автор, статья без элемента Wikidata, ФИО совпало полностью",
+			q:     AuthorQuery{LastName: "Щепетнов", FirstName: "Евгений", MiddleName: "Владимирович", NetShare: 0.9},
+			title: "Щепетнов, Евгений Владимирович", f: CandidateFacts{},
+			want: true,
+		},
+		{
+			name:  "поэт XIX века с грязными жанрами — треть «сетевой» не повод",
+			q:     AuthorQuery{LastName: "Берг", FirstName: "Николай", NetShare: 0.34, BooksYear: 1860},
+			title: "Берг, Николай Васильевич", f: CandidateFacts{Human: true, Occupations: []string{"поэт"}, Writer: true, Born: 1823, Died: 1884},
+			want: true,
+		},
+		{
 			name:  "умер до 2000 — не автор сетевой литературы",
-			q:     AuthorQuery{LastName: "Воробьев", FirstName: "Николай", NetShare: 0.4},
+			q:     AuthorQuery{LastName: "Воробьев", FirstName: "Николай", NetShare: 0.6},
 			title: "Воробьёв, Николай Иванович", f: CandidateFacts{Human: true, Occupations: []string{"мелиоратор"}, Died: 1993},
 			want: false,
 		},
 		{
 			name:  "родился позже книг",
-			q:     AuthorQuery{LastName: "Никифоров", FirstName: "Сергей", MinBookYear: 1995},
+			q:     AuthorQuery{LastName: "Никифоров", FirstName: "Сергей", BooksYear: 1995},
 			title: "Никифоров, Сергей Игоревич", f: CandidateFacts{Human: true, Occupations: []string{"видеоблогер"}, Born: 1993},
 			want: false,
 		},
@@ -96,7 +108,7 @@ func TestDecideCandidate(t *testing.T) {
 		{
 			name: "генерал с военными мемуарами",
 			q: AuthorQuery{LastName: "Ротмистров", FirstName: "Павел", MiddleName: "Алексеевич",
-				MinBookYear: 1960, Genres: []string{"nonf_military", "nonf_biography"}},
+				BooksYear: 1960, Genres: []string{"nonf_military", "nonf_biography"}},
 			title: "Ротмистров, Павел Алексеевич", f: CandidateFacts{Human: true, Occupations: []string{"офицер"}, Born: 1901, Died: 1982},
 			want: true,
 		},
@@ -110,13 +122,13 @@ func TestDecideCandidate(t *testing.T) {
 		{
 			name: "не писатель, умер до книг",
 			q: AuthorQuery{LastName: "Миронов", FirstName: "Андрей", MiddleName: "Александрович",
-				MinBookYear: 2007, Genres: []string{"sci_medicine", "home_health"}},
+				BooksYear: 2007, Genres: []string{"sci_medicine", "home_health"}},
 			title: "Миронов, Андрей Александрович", f: CandidateFacts{Human: true, Occupations: []string{"врач"}, Born: 1941, Died: 1987},
 			want: false,
 		},
 		{
 			name:  "иностранный спортсмен с автобиографией",
-			q:     AuthorQuery{LastName: "Фуркад", FirstName: "Мартен", MinBookYear: 2016, Genres: []string{"home_sport", "nonf_biography"}},
+			q:     AuthorQuery{LastName: "Фуркад", FirstName: "Мартен", BooksYear: 2016, Genres: []string{"home_sport", "nonf_biography"}},
 			title: "Фуркад, Мартен", f: CandidateFacts{Human: true, Occupations: []string{"биатлонист"}, Born: 1988},
 			want: true,
 		},
@@ -138,6 +150,8 @@ func TestPatronymic(t *testing.T) {
 	require.True(t, patronymicMatches("Ротмистров, Павел Алексеевич", "Алексеевич"))
 	require.True(t, patronymicMatches("Берёзко, Георгий Сергеевич", "Сергеевич"))
 	require.False(t, patronymicMatches("Губарев, Алексей Юрьевич", "Александрович"))
+	require.False(t, patronymicConflict("Трускиновская, Далия Мееровна", "Мейеровна"), "одна буква — то же отчество")
+	require.True(t, patronymicMatches("Трускиновская, Далия Мееровна", "Мейеровна"))
 }
 
 func TestWorksAnchor(t *testing.T) {

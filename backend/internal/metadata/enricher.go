@@ -898,11 +898,13 @@ func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) Autho
 		               LIMIT 1
 		           ) v WHERE v.n * 2 > v.total
 		       ), ''),
-		       COALESCE(prof.min_year, 0), COALESCE(prof.net_share, 0), COALESCE(prof.genres, '{}')
+		       COALESCE(prof.min_year, 0)::int, COALESCE(prof.net_share, 0), COALESCE(prof.genres, '{}')
 		FROM authors a
 		-- Профиль книг для политики приёма кандидата (candidate_policy.go).
 		LEFT JOIN LATERAL (
-		    SELECT min(y.v) FILTER (WHERE y.v BETWEEN 1000 AND 2100) AS min_year,
+		    -- Типичный год книг — медиана, не минимум: самый ранний год ненадёжен
+		    -- (переложения древних текстов, ошибки дат: «книги с 1532» у Заболоцкого).
+		    SELECT percentile_disc(0.5) WITHIN GROUP (ORDER BY y.v) FILTER (WHERE y.v BETWEEN 1000 AND 2100) AS min_year,
 		           count(DISTINCT y.work) FILTER (WHERE y.net)::float8 / NULLIF(count(DISTINCT y.work), 0) AS net_share,
 		           (SELECT array_agg(DISTINCT g.fb2_code)
 		              FROM book_authors ba2
@@ -922,7 +924,7 @@ func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) Autho
 		        WHERE ba.author_id = a.id
 		    ) y
 		) prof ON true
-		WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName, &q.MinBookYear, &q.NetShare, &q.Genres); err != nil {
+		WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName, &q.BooksYear, &q.NetShare, &q.Genres); err != nil {
 		e.logger.Warn("metadata: load namesake context failed", "author_id", q.ID, "err", err)
 		return q
 	}

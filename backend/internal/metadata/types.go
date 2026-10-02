@@ -106,11 +106,12 @@ type AuthorQuery struct {
 	// (latinQuery): по кириллице иностранца они не находят (case study #280).
 	LatinName string
 	// Профиль книг автора для политики приёма кандидата (candidate_policy.go):
-	// самый ранний год книги (написания или издания, 0 — неизвестен), доля
-	// сетевой литературы среди работ и коды жанров.
-	MinBookYear int
-	NetShare    float64
-	Genres      []string
+	// типичный год книг — медиана годов написания или издания (0 — неизвестен;
+	// не минимум: переложения древних текстов и ошибки дат давали «книги с 1532»),
+	// доля сетевой литературы среди работ и коды жанров.
+	BooksYear int
+	NetShare  float64
+	Genres    []string
 }
 
 // cacheKey — всё, от чего зависит найденная статья: автор, имя, тёзки и книги
@@ -138,7 +139,7 @@ func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
 	l := AuthorQuery{
 		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
 		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
-		MinBookYear: q.MinBookYear, NetShare: q.NetShare, Genres: q.Genres,
+		BooksYear: q.BooksYear, NetShare: q.NetShare, Genres: q.Genres,
 	}
 	if len(toks) > n {
 		l.FirstName = toks[n]

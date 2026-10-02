@@ -136,11 +136,13 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 		return false, "loose name match without book in wikidata"
 	}
 	switch {
-	case f.Born > 0 && q.MinBookYear > 0 && f.Born > q.MinBookYear-12:
-		return false, fmt.Sprintf("born %d, books from %d", f.Born, q.MinBookYear)
-	case f.Died > 0 && f.Died < 2000 && q.NetShare >= 0.3:
+	case f.Born > 0 && q.BooksYear > 0 && f.Born > q.BooksYear-12:
+		return false, fmt.Sprintf("born %d, books from %d", f.Born, q.BooksYear)
+	case f.Died > 0 && f.Died < 2000 && q.NetShare >= 0.5:
 		return false, fmt.Sprintf("died %d, network literature", f.Died)
-	case q.NetShare >= 0.5 && !netlitWriter(f):
+	case q.NetShare >= 0.5 && !netlitWriter(f) && (f.QID != "" || !patronymicMatches(title, q.MiddleName)):
+		// Без элемента Wikidata (Щепетнов) судить по фактам нечем — полностью
+		// совпавшее ФИО с отчеством считаем подтверждением.
 		return false, "network literature without book confirmation"
 	case patronymicConflict(title, q.MiddleName):
 		return false, "other patronymic"
@@ -157,7 +159,7 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 		}
 		return false, f.occupationClass() + " without confirmation"
 	default: // non-writer
-		eraOK := f.Died == 0 || q.MinBookYear == 0 || f.Died >= q.MinBookYear-3
+		eraOK := f.Died == 0 || q.BooksYear == 0 || f.Died >= q.BooksYear-3
 		if topic && eraOK && (patOK || strings.TrimSpace(q.MiddleName) == "") {
 			return true, "non-writer, topic matches books"
 		}
@@ -170,7 +172,7 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 // 2005). Статьи о таких авторах редки, но есть (Елена Звёздная); космонавт-писатель
 // Губарев (1931–2015) у автора ЛитРПГ — нет.
 func netlitWriter(f CandidateFacts) bool {
-	return f.Writer && f.Born >= 1940 && (f.Died == 0 || f.Died >= 2005)
+	return f.Writer && (f.Born == 0 || f.Born >= 1940) && (f.Died == 0 || f.Died >= 2005)
 }
 
 func confirmWhy(patOK, topic bool) string {
@@ -241,7 +243,7 @@ func patronymicConflict(title, middle string) bool {
 		return false
 	}
 	for _, p := range pats {
-		if levenshtein(p, mid) <= 1 {
+		if levenshtein(translitName(p), translitName(mid)) <= 1 {
 			return false
 		}
 	}
@@ -257,7 +259,9 @@ func patronymicMatches(title, middle string) bool {
 	for _, t := range strings.FieldsFunc(strings.ReplaceAll(strings.ToLower(title), "ё", "е"), func(r rune) bool {
 		return r == ' ' || r == ',' || r == '.' || r == '(' || r == ')' || r == ' '
 	}) {
-		if levenshtein(t, mid) <= 1 {
+		// В транслите: levenshtein считает байты, а буква кириллицы — два байта
+		// («Мейеровна»/«Мееровна» — одна буква, а не две).
+		if levenshtein(translitName(t), translitName(mid)) <= 1 {
 			return true
 		}
 	}
