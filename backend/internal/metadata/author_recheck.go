@@ -205,9 +205,10 @@ func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, bioR
 }
 
 // fetchAuthorBio — био по провайдерам без учёта уже сохранённого и без записи.
-// transient — хоть один источник сбоил, а ни один не нашёл.
+// transient — источник сбоил раньше, чем кто-то нашёл: решение откладывается, и
+// следующий по приоритету источник не спрашиваем — иначе 429 Википедии отдавал
+// решение OpenLibrary, и перепроверка меняла верную био на чужую (#347).
 func (e *Enricher) fetchAuthorBio(ctx context.Context, q AuthorQuery) (string, bool) {
-	transient := false
 	for _, p := range e.authorBioProviders {
 		text, err := p.FetchAuthorBio(ctx, q)
 		observeLookup("author_bio", p.Name(), err, text != "")
@@ -215,21 +216,19 @@ func (e *Enricher) fetchAuthorBio(ctx context.Context, q AuthorQuery) (string, b
 			continue
 		}
 		if err != nil {
-			transient = true
-			continue
+			return "", true
 		}
 		if text != "" {
 			return text, false
 		}
 	}
-	return "", transient
+	return "", false
 }
 
 // fetchAuthorPhoto — фото по провайдерам, сохранённое в кэш (имя файла), без
-// записи в автора. transient — как у fetchAuthorBio; сбой сохранения в кэш —
-// тоже временный.
+// записи в автора. transient — как у fetchAuthorBio (нижний источник при сбое
+// верхнего не спрашиваем); сбой сохранения в кэш — тоже временный.
 func (e *Enricher) fetchAuthorPhoto(ctx context.Context, q AuthorQuery) (string, bool) {
-	transient := false
 	for _, p := range e.authorPhotoProviders {
 		img, err := p.FetchAuthorPhoto(ctx, q)
 		observeLookup("author_photo", p.Name(), err, img != nil && img.Reader != nil)
@@ -237,8 +236,7 @@ func (e *Enricher) fetchAuthorPhoto(ctx context.Context, q AuthorQuery) (string,
 			continue
 		}
 		if err != nil {
-			transient = true
-			continue
+			return "", true
 		}
 		if img == nil || img.Reader == nil {
 			continue
@@ -246,10 +244,9 @@ func (e *Enricher) fetchAuthorPhoto(ctx context.Context, q AuthorQuery) (string,
 		name, err := e.photoCache.Save(img.Reader, img.Mime)
 		_ = img.Reader.Close()
 		if err != nil {
-			transient = true
-			continue
+			return "", true
 		}
 		return name, false
 	}
-	return "", transient
+	return "", false
 }

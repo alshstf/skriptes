@@ -14,21 +14,65 @@ import "strings"
 // Если у автора нет имени (только фамилия) — гейтить нечем, совпадения по
 // фамилии достаточно (status quo для таких авторов). Так же отсекаются
 // disambiguation-страницы вида «Гарднер» (нет имени → не пройдёт гейт по имени).
+//
+// Фамилия и имя из нескольких частей («Ле Гуин», «Гарсиа Маркес», «Жан-Кристоф»)
+// сверяются по частям: каждая значимая часть должна быть среди слов кандидата,
+// частицы (де, ле, ван, фон…) необязательны. Раньше часть склеивалась в один
+// токен («leguin») и такие авторы не совпадали никогда (#348).
 func authorNameMatches(q AuthorQuery, candidate string) bool {
-	last := translitName(q.LastName)
-	if last == "" {
+	last := nameTokens(q.LastName)
+	if len(last) == 0 {
 		return true // нет даже фамилии — нечем проверять
 	}
 	cand := nameTokens(candidate)
-	if !anyTokenMatches(cand, last, hasCyrillic(q.LastName)) {
-		return false // фамилии нет в кандидате — точно не он
+	for _, p := range requiredParts(last) {
+		if !anyTokenMatches(cand, p.lat, p.cyr) {
+			return false // фамилии нет в кандидате — точно не он
+		}
 	}
-	first := translitName(q.FirstName)
-	if first == "" {
+	// Имя — первое слово поля целиком (дефисное «Жан-Кристоф» — обе части); дальше
+	// в поле бывают второе имя и инициал («Урсула К», «Лайон Спрэг») — их, как и
+	// отчество, не сверяем.
+	firstWord := ""
+	if w := strings.Fields(q.FirstName); len(w) > 0 {
+		firstWord = w[0]
+	}
+	first := nameTokens(firstWord)
+	if len(first) == 0 {
 		return true // имени нет — гейтим только по фамилии
 	}
-	return anyTokenMatches(cand, first, hasCyrillic(q.FirstName)) || initialMatches(cand, first) ||
-		anyTokenOneGap(cand, first)
+	for _, p := range requiredParts(first) {
+		if !anyTokenMatches(cand, p.lat, p.cyr) && !initialMatches(cand, p.lat) && !anyTokenOneGap(cand, p.lat) {
+			return false
+		}
+	}
+	return true
+}
+
+// nameParticles — частицы составных фамилий (латиницей после translitName): в
+// источнике их пишут по-разному или опускают («Вогт, Альфред ван», «Гуин»).
+var nameParticles = map[string]bool{
+	"de": true, "di": true, "da": true, "del": true, "della": true, "dello": true, "du": true, "dyu": true,
+	"le": true, "la": true, "van": true, "von": true, "fon": true, "der": true, "den": true, "ter": true,
+	"ten": true, "ibn": true, "ben": true, "bin": true, "al": true, "el": true, "o": true,
+}
+
+// requiredParts — части имени, которые обязаны совпасть: все, кроме частиц (если
+// имя из одних частиц — все).
+func requiredParts(parts []nameToken) []nameToken {
+	if len(parts) == 1 {
+		return parts
+	}
+	out := make([]nameToken, 0, len(parts))
+	for _, p := range parts {
+		if !nameParticles[p.lat] {
+			out = append(out, p)
+		}
+	}
+	if len(out) == 0 {
+		return parts
+	}
+	return out
 }
 
 // anyTokenOneGap — имя отличается одной вставленной или пропущенной буквой

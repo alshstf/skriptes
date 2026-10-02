@@ -72,8 +72,8 @@ func (e *Enricher) ExplainAuthor(ctx context.Context, id int64) (AuthorExplain, 
 			continue
 		}
 		if err != nil {
-			ex.Bio.Transient = true
-			continue
+			ex.Bio.Transient = true // как перепроверка: нижний источник при сбое не спрашиваем (#347)
+			break
 		}
 		if text != "" {
 			ex.Bio.Provider, ex.Bio.Value, ex.Bio.Transient = p.Name(), clipRunes(text, explainBioRunes), false
@@ -94,8 +94,8 @@ func (e *Enricher) ExplainAuthor(ctx context.Context, id int64) (AuthorExplain, 
 			continue
 		}
 		if err != nil {
-			ex.Photo.Transient = true
-			continue
+			ex.Photo.Transient = true // как перепроверка: нижний источник при сбое не спрашиваем (#347)
+			break
 		}
 		if src != "" {
 			ex.Photo.Provider, ex.Photo.Value, ex.Photo.Transient = p.Name(), src, false
