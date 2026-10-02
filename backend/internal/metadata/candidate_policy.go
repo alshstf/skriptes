@@ -286,4 +286,3 @@ func topicMatches(occupations, genres []string) bool {
 	}
 	return false
 }
-
