@@ -427,46 +427,63 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 
 // resolveTitleUncached — поиск статьи без кэша (см. resolveTitle).
 func (p *WikipediaProvider) resolveTitleUncached(ctx context.Context, lang string, q AuthorQuery) (string, error) {
-	var title string
-	var match MatchKind
 	if q.Strict() {
-		t, m, err := p.resolveStrictTitle(ctx, lang, q)
+		title, match, err := p.resolveStrictTitle(ctx, lang, q)
 		if err != nil {
 			return "", err
 		}
-		title, match = t, m
-	} else {
-		t, m, err := p.resolveByName(ctx, lang, q)
-		if errors.Is(err, errNamesakes) {
-			// Имени соответствуют несколько статей — у автора есть тёзки: первый
-			// результат поиска был бы просто самым известным из них (#280).
-			t, m, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
-		}
+		return p.acceptCandidate(ctx, lang, q, title, match)
+	}
+	title, match, namesakes, err := p.resolveByName(ctx, lang, q)
+	if errors.Is(err, errNamesakes) {
+		// Имени соответствуют несколько статей без уточнения — у автора есть тёзки:
+		// первый результат поиска был бы просто самым известным из них (#280).
+		title, match, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
 		if err != nil {
 			return "", err
 		}
-		title, match = t, m
+		return p.acceptCandidate(ctx, lang, q, title, match)
 	}
-	if match == MatchLoose && p.candidateCheck == nil {
-		return "", ErrNotFound // нестрогое имя без проверки книгой не принимаем
+	if err != nil {
+		return "", err
 	}
-	// Политика приёма (candidate_policy.go): гейт имени пропускает тёзку с тем же
-	// ФИО — решают профессия, годы, книги кандидата в Wikidata и профиль книг
-	// автора. Сбой запроса (429, сеть) — временная ошибка, а не «принять»: автор
-	// перепроверится позже (#280, грабля №20).
-	if p.candidateCheck != nil {
-		qid, err := p.resolvePageQID(ctx, lang, title)
+	got, err := p.acceptCandidate(ctx, lang, q, title, match)
+	if errors.Is(err, ErrNotFound) && namesakes {
+		// Основная статья (без уточнения) не подошла, а рядом есть статьи об
+		// одноимённых людях с уточнением — наш автор может быть среди них:
+		// строгий путь по книгам («Иванов, Юрий Иванович» футболист → «… (писатель)»).
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "namesakes", Outcome: TraceInfo, Input: title, Value: "primary rejected — retry as namesake"})
+		title, match, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
 		if err != nil {
-			return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
+			return "", err
 		}
-		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "qid", Outcome: TraceInfo, Input: title, Value: qid})
-		ok, err := p.candidateCheck(ctx, q, "wikipedia", lang, title, qid, match)
-		if err != nil {
-			return "", fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
+		return p.acceptCandidate(ctx, lang, q, title, match)
+	}
+	return got, err
+}
+
+// acceptCandidate — политика приёма (candidate_policy.go): гейт имени пропускает
+// тёзку с тем же ФИО — решают профессия, годы, книги кандидата в Wikidata и
+// профиль книг автора. Сбой запроса (429, сеть) — временная ошибка, а не «принять»:
+// автор перепроверится позже (#280, грабля №20).
+func (p *WikipediaProvider) acceptCandidate(ctx context.Context, lang string, q AuthorQuery, title string, match MatchKind) (string, error) {
+	if p.candidateCheck == nil {
+		if match == MatchLoose {
+			return "", ErrNotFound // нестрогое имя без проверки книгой не принимаем
 		}
-		if !ok {
-			return "", ErrNotFound
-		}
+		return title, nil
+	}
+	qid, err := p.resolvePageQID(ctx, lang, title)
+	if err != nil {
+		return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
+	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "qid", Outcome: TraceInfo, Input: title, Value: qid})
+	ok, err := p.candidateCheck(ctx, q, "wikipedia", lang, title, qid, match)
+	if err != nil {
+		return "", fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
+	}
+	if !ok {
+		return "", ErrNotFound
 	}
 	return title, nil
 }
@@ -512,28 +529,39 @@ func searchForms(q AuthorQuery) []string {
 // совпадения: одно — это оно, несколько — тёзки (errNamesakes). Раньше брался
 // только первый результат по полному имени — «Генри О» находил «Генри Лайон Олди»,
 // а «Кинселла Софи» не находил ничего.
-func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q AuthorQuery) (string, MatchKind, error) {
+func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q AuthorQuery) (string, MatchKind, bool, error) {
 	seen := false
 	var all []string
 	for _, form := range searchForms(q) {
 		titles, err := p.opensearch(ctx, lang, form, searchLimit)
 		if err != nil {
-			return "", MatchName, err
+			return "", MatchName, false, err
 		}
 		all = append(all, titles...)
-		var matched []string
+		var matched, primary []string
 		for _, t := range titles {
-			if authorNameMatches(q, t) && !slices.Contains(matched, t) {
-				matched = append(matched, t)
+			if !authorNameMatches(q, t) || slices.Contains(matched, t) || isDisambiguationTitle(t) {
+				continue
+			}
+			matched = append(matched, t)
+			if _, qual := splitQualifier(t); qual == "" {
+				primary = append(primary, t)
 			}
 		}
 		switch {
 		case len(matched) == 1:
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: form, Value: matched[0]})
-			return matched[0], MatchName, nil
+			return matched[0], MatchName, false, nil
+		case len(primary) == 1:
+			// Основная статья без уточнения и одноимённые с уточнением («Тургенев, Иван
+			// Сергеевич» и «… (учёный)»): по соглашению Википедии без уточнения —
+			// главный носитель имени. Берём её; не подойдёт — строгий путь.
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TracePass, Input: form,
+				Value: primary[0] + " (+" + strconv.Itoa(len(matched)-1) + " с уточнением)"})
+			return primary[0], MatchName, true, nil
 		case len(matched) > 1:
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "namesakes", Outcome: TraceInfo, Input: form, Value: strings.Join(matched, " | ")})
-			return "", MatchName, errNamesakes
+			return "", MatchName, true, errNamesakes
 		case len(titles) > 0:
 			seen = true
 			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_gate", Outcome: TraceReject, Input: form, Value: titles[0]})
@@ -550,12 +578,20 @@ func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q Au
 	}
 	if len(loose) == 1 {
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "name_loose", Outcome: TraceInfo, Input: q.FullName, Value: loose[0]})
-		return loose[0], MatchLoose, nil
+		return loose[0], MatchLoose, false, nil
 	}
 	if !seen {
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
 	}
-	return "", MatchName, ErrNotFound
+	return "", MatchName, false, ErrNotFound
+}
+
+// isDisambiguationTitle — название страницы неоднозначности по уточнению
+// («Достоевский, Фёдор Михайлович (значения)»): не кандидат и не тёзка.
+func isDisambiguationTitle(t string) bool {
+	_, qual := splitQualifier(t)
+	q := strings.ToLower(qual)
+	return q == "значения" || q == "disambiguation"
 }
 
 // opensearch — названия статей по префиксу/похожести (namespace 0).

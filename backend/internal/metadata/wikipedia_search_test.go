@@ -105,8 +105,24 @@ func TestWikipedia_ResolveByNameForms(t *testing.T) {
 			name: "несколько статей и книга не подтвердила — пусто",
 			q: AuthorQuery{LastName: "Иванов", FirstName: "Юрий", FullName: "Иванов Юрий",
 				BookTitles: []string{"Неизвестная книга"}},
-			search:  map[string][]string{"Иванов Юрий": {"Иванов, Юрий Иванович (футболист)", "Иванов, Юрий Михайлович"}},
+			search:  map[string][]string{"Иванов Юрий": {"Иванов, Юрий Иванович", "Иванов, Юрий Михайлович"}},
 			wantErr: ErrNotFound,
+		},
+		{
+			name: "основная статья без уточнения и одноимённые с уточнением — основная (Тургенев)",
+			q: AuthorQuery{LastName: "Тургенев", FirstName: "Иван", MiddleName: "Сергеевич", FullName: "Тургенев Иван Сергеевич",
+				BookTitles: []string{"Отцы и дети"}},
+			search: map[string][]string{"Тургенев Иван Сергеевич": {
+				"Тургенев, Иван Сергеевич", "Тургенев, Иван Сергеевич (учёный)", "Тургенев, Иван Сергеевич (значения)"}},
+			want:     "Тургенев, Иван Сергеевич",
+			wantCall: []string{"opensearch:Тургенев Иван Сергеевич"},
+		},
+		{
+			name: "страница «(значения)» — не тёзка (Достоевский)",
+			q:    AuthorQuery{LastName: "Достоевский", FirstName: "Федор", MiddleName: "Михайлович", FullName: "Достоевский Федор Михайлович"},
+			search: map[string][]string{"Достоевский Федор Михайлович": {
+				"Достоевский, Фёдор Михайлович", "Достоевский, Фёдор Михайлович (значения)"}},
+			want: "Достоевский, Фёдор Михайлович",
 		},
 		{
 			name:    "ничего не нашлось",
@@ -263,4 +279,24 @@ func TestWikipedia_LooseCandidate(t *testing.T) {
 	plain := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
 	_, err = plain.resolveTitle(ctx, "ru", q)
 	require.ErrorIs(t, err, ErrNotFound)
+}
+
+// Основная статья не прошла политику, рядом одноимённые с уточнением — строгий
+// путь по книгам находит нужную; статья-связка («X и Y») по книге не берётся.
+func TestWikipedia_PrimaryRejectedFallsBackToStrict(t *testing.T) {
+	ctx := context.Background()
+	q := AuthorQuery{LastName: "Иванов", FirstName: "Юрий", FullName: "Иванов Юрий", BookTitles: []string{"Повесть о море"}}
+	srv, _ := wikiFormsServer(t,
+		map[string][]string{"Иванов Юрий": {"Иванов, Юрий", "Иванов, Юрий (писатель)"}},
+		map[string][]string{`"Иванов" "Повесть о море"`: {"Юрий Иванов и Пётр Петров", "Иванов, Юрий (писатель)"}})
+	var checked []string
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
+		WithCandidateCheck(func(_ context.Context, _ AuthorQuery, _, _, title, _ string, m MatchKind) (bool, error) {
+			checked = append(checked, title)
+			return title != "Иванов, Юрий", nil // основная — футболист
+		})
+	got, err := p.resolveTitle(ctx, "ru", q)
+	require.NoError(t, err)
+	require.Equal(t, "Иванов, Юрий (писатель)", got)
+	require.Equal(t, []string{"Иванов, Юрий", "Иванов, Юрий (писатель)"}, checked, "связка пропущена, основная проверена первой")
 }
