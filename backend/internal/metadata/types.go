@@ -104,6 +104,12 @@ type AuthorQuery struct {
 	// книг, кроме сборников. Английская Википедия и OpenLibrary ищут по нему
 	// (latinQuery): по кириллице иностранца они не находят (case study #280).
 	LatinName string
+	// Профиль книг автора для политики приёма кандидата (candidate_policy.go):
+	// самый ранний год книги (написания или издания, 0 — неизвестен), доля
+	// сетевой литературы среди работ и коды жанров.
+	MinBookYear int
+	NetShare    float64
+	Genres      []string
 }
 
 // latinQuery — тот же автор латиницей для источников на латинице. Фамилия —
@@ -124,6 +130,7 @@ func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
 	l := AuthorQuery{
 		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
 		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
+		MinBookYear: q.MinBookYear, NetShare: q.NetShare, Genres: q.Genres,
 	}
 	if len(toks) > n {
 		l.FirstName = toks[n]

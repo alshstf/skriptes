@@ -27,11 +27,12 @@ type WikipediaProvider struct {
 	httpClient *http.Client
 	apiRoot    string // override для тестов; продакшен — пустая (используем https://{lang}.wikipedia.org)
 
-	// occupationGate — слой 2 точности (см. resolveTitle). nil = выключен.
-	// Инъектируется WithOccupationGate из main (реализация —
-	// WikidataAdaptationsProvider.OccupationVerdict). Отдельная функция, а не
-	// прямая зависимость на Wikidata-провайдер: разрыв связности + тестируемость.
-	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+	// candidateCheck — политика приёма кандидата (candidate_policy.go, см.
+	// resolveTitle). nil = выключена (принимается всё, что прошло гейт имени).
+	// Инъектируется WithCandidateCheck из main (NewCandidateCheck поверх
+	// WikidataAdaptationsProvider.CandidateFacts). Функция, а не прямая зависимость
+	// на Wikidata-провайдер: разрыв связности + тестируемость.
+	candidateCheck CandidateCheck
 }
 
 // wikiUserAgent — Wikimedia требует осмысленный User-Agent на REST API,
@@ -57,12 +58,11 @@ func (p *WikipediaProvider) WithAPIRoot(root string) *WikipediaProvider {
 	return p
 }
 
-// WithOccupationGate включает слой 2 точности: после имя-гейта резолв автора
-// дополнительно спрашивает Wikidata о профессии (P106) кандидата и отвергает
-// явных не-писателей. nil-функция (по умолчанию) = гейт выключен. Реализация —
-// WikidataAdaptationsProvider.OccupationVerdict; провязка в main.
-func (p *WikipediaProvider) WithOccupationGate(fn func(ctx context.Context, qid string) (OccupationVerdict, error)) *WikipediaProvider {
-	p.occupationGate = fn
+// WithCandidateCheck включает политику приёма кандидата: после гейта имени
+// статья проходит проверку по фактам Wikidata (профессия, годы, книги) и профилю
+// книг автора. nil (по умолчанию) = выключена. Провязка в main.
+func (p *WikipediaProvider) WithCandidateCheck(fn CandidateCheck) *WikipediaProvider {
+	p.candidateCheck = fn
 	return p
 }
 
@@ -398,46 +398,42 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 // годится вовсе — там resolveStrictTitle (подтверждение уточнением или книгой).
 func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q AuthorQuery) (string, error) {
 	var title string
+	confirmed := false // статью нашёл строгий путь — по уточнению или книге
 	if q.Strict() {
 		t, err := p.resolveStrictTitle(ctx, lang, q)
 		if err != nil {
 			return "", err
 		}
-		title = t
+		title, confirmed = t, true
 	} else {
 		t, err := p.resolveByName(ctx, lang, q)
 		if errors.Is(err, errNamesakes) {
 			// Имени соответствуют несколько статей — у автора есть тёзки: первый
 			// результат поиска был бы просто самым известным из них (#280).
 			t, err = p.resolveStrictTitle(ctx, lang, asNamesake(q))
+			confirmed = err == nil
 		}
 		if err != nil {
 			return "", err
 		}
 		title = t
 	}
-	// Слой 2 (опционально): проверка профессии P106. Имя-гейт пропускает
-	// однофамильцев-не-писателей (полное совпадение ФИО у писателя и его тёзки
-	// другой профессии). Резолвим страницу → Wikidata QID → occupationGate.
-	// Отвергаем ТОЛЬКО при явном не-писателе; нет QID / профессия не размечена —
-	// оставляем (precision-preserving: не режем валидных без размеченной
-	// профессии). Сбой запроса (429, сеть) — временная ошибка, а не «принять»:
-	// автор перепроверится позже (#280, грабля №20).
-	if p.occupationGate != nil {
+	// Политика приёма (candidate_policy.go): гейт имени пропускает тёзку с тем же
+	// ФИО — решают профессия, годы, книги кандидата в Wikidata и профиль книг
+	// автора. Сбой запроса (429, сеть) — временная ошибка, а не «принять»: автор
+	// перепроверится позже (#280, грабля №20).
+	if p.candidateCheck != nil {
 		qid, err := p.resolvePageQID(ctx, lang, title)
 		if err != nil {
 			return "", fmt.Errorf("%w: resolve wikidata qid: %w", ErrUpstream, err)
 		}
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "qid", Outcome: TraceInfo, Input: title, Value: qid})
-		if qid != "" {
-			verdict, err := p.occupationGate(ctx, qid)
-			if err != nil {
-				return "", fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
-			}
-			traceOccupation(ctx, "wikipedia", lang, qid, verdict)
-			if verdict == OccupationNonWriter {
-				return "", ErrNotFound
-			}
+		ok, err := p.candidateCheck(ctx, q, "wikipedia", lang, title, qid, confirmed)
+		if err != nil {
+			return "", fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
+		}
+		if !ok {
+			return "", ErrNotFound
 		}
 	}
 	return title, nil
@@ -513,19 +509,6 @@ func (p *WikipediaProvider) resolveByName(ctx context.Context, lang string, q Au
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "opensearch", Outcome: TraceReject, Input: q.FullName})
 	}
 	return "", ErrNotFound
-}
-
-// traceOccupation — вердикт проверки профессии в трассу: non-writer отвергает,
-// writer пропускает, unknown (нет P106) — не решает.
-func traceOccupation(ctx context.Context, source, lang, qid string, v OccupationVerdict) {
-	outcome := TraceInfo
-	switch v {
-	case OccupationWriter:
-		outcome = TracePass
-	case OccupationNonWriter:
-		outcome = TraceReject
-	}
-	traceStep(ctx, TraceStep{Source: source, Lang: lang, Stage: "occupation", Outcome: outcome, Input: qid, Value: v.String()})
 }
 
 // opensearch — названия статей по префиксу/похожести (namespace 0).

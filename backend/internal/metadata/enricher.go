@@ -897,8 +897,32 @@ func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) Autho
 		               ORDER BY n DESC, name
 		               LIMIT 1
 		           ) v WHERE v.n * 2 > v.total
-		       ), '')
-		FROM authors a WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName); err != nil {
+		       ), ''),
+		       COALESCE(prof.min_year, 0), COALESCE(prof.net_share, 0), COALESCE(prof.genres, '{}')
+		FROM authors a
+		-- Профиль книг для политики приёма кандидата (candidate_policy.go).
+		LEFT JOIN LATERAL (
+		    SELECT min(y.v) FILTER (WHERE y.v BETWEEN 1000 AND 2100) AS min_year,
+		           count(DISTINCT y.work) FILTER (WHERE y.net)::float8 / NULLIF(count(DISTINCT y.work), 0) AS net_share,
+		           (SELECT array_agg(DISTINCT g.fb2_code)
+		              FROM book_authors ba2
+		              JOIN books b2       ON b2.id = ba2.book_id AND b2.deleted = false
+		              JOIN book_genres bg ON bg.book_id = b2.id
+		              JOIN genres g       ON g.id = bg.genre_id
+		             WHERE ba2.author_id = a.id) AS genres
+		    FROM (
+		        SELECT COALESCE(b.work_id, -b.id) AS work,
+		               LEAST(COALESCE(w.written_year, b.written_year), b.edition_year) AS v,
+		               EXISTS (SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
+		                        WHERE bg.book_id = b.id
+		                          AND g.fb2_code IN ('network_literature', 'sf_litrpg', 'popadanec')) AS net
+		        FROM book_authors ba
+		        JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		        LEFT JOIN works w ON w.id = b.work_id
+		        WHERE ba.author_id = a.id
+		    ) y
+		) prof ON true
+		WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName, &q.MinBookYear, &q.NetShare, &q.Genres); err != nil {
 		e.logger.Warn("metadata: load namesake context failed", "author_id", q.ID, "err", err)
 		return q
 	}

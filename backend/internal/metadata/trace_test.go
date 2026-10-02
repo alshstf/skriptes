@@ -60,31 +60,40 @@ func TestWikipedia_Trace_NameGateReject(t *testing.T) {
 		"wikipedia/en: reject name_gate «Гарднер, Иван Алексеевич»", tr.Reason())
 }
 
-// Отказ по профессии: в трассе QID и вердикт; успех — шаг accept.
-func TestWikipedia_Trace_Occupation(t *testing.T) {
+// Политика приёма в трассе: QID, профессии с классом и решение; успех — accept.
+func TestWikipedia_Trace_Policy(t *testing.T) {
 	q := AuthorQuery{LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий Иванович"}
 	for _, c := range []struct {
-		verdict OccupationVerdict
-		want    string
+		name  string
+		facts CandidateFacts
+		want  string
 	}{
-		{OccupationNonWriter, "wikipedia/ru: reject occupation «non-writer»"},
-		{OccupationWriter, "wikipedia/ru: pass accept"},
+		{"non-writer", CandidateFacts{Occupations: []string{"футболист"}}, "wikipedia/ru: reject policy «non-writer»"},
+		{"writer", CandidateFacts{Occupations: []string{"писатель"}, Writer: true}, "wikipedia/ru: pass accept"},
 	} {
-		t.Run(c.verdict.String(), func(t *testing.T) {
+		t.Run(c.name, func(t *testing.T) {
 			srv := wikiGatedMockServer(t, "Тёзка, Некий Иванович", "Q1", "Некий Иванович Тёзка — писатель.")
 			defer srv.Close()
-			p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
-				WithOccupationGate(func(context.Context, string) (OccupationVerdict, error) { return c.verdict, nil })
+			check := NewCandidateCheck(func(_ context.Context, qid string) (CandidateFacts, error) {
+				f := c.facts
+				f.QID = qid
+				return f, nil
+			})
+			p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).WithCandidateCheck(check)
 			var tr AuthorTrace
 			_, _ = p.FetchAuthorBio(WithAuthorTrace(context.Background(), &tr), q)
 			require.True(t, strings.HasPrefix(tr.Reason(), c.want), tr.Reason())
-			var qid string
+			var qid, occ string
 			for _, s := range tr.Steps() {
-				if s.Stage == "qid" {
+				switch s.Stage {
+				case "qid":
 					qid = s.Value
+				case "occupation":
+					occ = s.Value
 				}
 			}
 			require.Equal(t, "Q1", qid)
+			require.Contains(t, occ, c.facts.Occupations[0])
 		})
 	}
 }

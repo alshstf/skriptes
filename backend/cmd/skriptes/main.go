@@ -237,14 +237,15 @@ func run() error {
 	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
 	logger.Info("google books provider configured", "api_key_set", cfg.GoogleBooksAPIKey != "")
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
-	// Слой 2 точности обогащения авторов: после имя-гейта резолв автора
-	// проверяет профессию кандидата (Wikidata P106) и отсекает однофамильцев-
-	// не-писателей. Реализацию (OccupationVerdict) держит wdAdaptations — у него
-	// уже есть SPARQL-клиент. Гейт на ОБОИХ авторских путях: Wikipedia (QID через
+	// Политика приёма кандидата-автора (metadata/candidate_policy.go): после
+	// гейта имени статья проходит проверку по фактам Wikidata (профессия, годы,
+	// книги — CandidateFacts держит wdAdaptations, у него уже есть SPARQL-клиент) и
+	// профилю книг автора. Проверка на ОБОИХ авторских путях: Wikipedia (QID через
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
-	// wiki-отказ по профессии протёк бы в OL-fallback (цепочка bio/photo).
-	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
-	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
+	// отказ Википедии протёк бы в OL-fallback (цепочка bio/photo).
+	candidateCheck := metadata.NewCandidateCheck(wdAdaptations.CandidateFacts)
+	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck)
+	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
