@@ -131,7 +131,7 @@ func TestWikipedia_StrictTitle(t *testing.T) {
 		got, err := p.resolveTitle(ctx, "ru", AuthorQuery{LastName: "Гибсон", FirstName: "Уильям", FullName: "Гибсон Уильям"})
 		require.NoError(t, err)
 		require.Equal(t, "Гибсон, Уильям", got)
-		require.Equal(t, []string{"opensearch:1"}, *calls)
+		require.Equal(t, []string{"opensearch:5"}, *calls, "первая форма имени нашла одну статью — остальные не спрашиваем")
 	})
 }
 
