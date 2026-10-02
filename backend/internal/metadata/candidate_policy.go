@@ -32,7 +32,7 @@ import (
 // CandidateFacts — что Wikidata знает о кандидате.
 type CandidateFacts struct {
 	QID         string
-	Human       bool     // P31 = человек (Q5): не статья о сериале, книге, месте
+	Human       bool     // человек, группа людей (дуэт: «Братья Стругацкие») или псевдоним (P31/P279*: Q5, Q16334295, Q61002) — не сериал, книга, место
 	Occupations []string // метки P106 (ru, иначе en)
 	Writer      bool     // есть профессия класса writer/author (P279*)
 	Adjacent    bool     // есть смежная пишущая: учёный, журналист, юрист… (writerBaseClasses без writer/author)
