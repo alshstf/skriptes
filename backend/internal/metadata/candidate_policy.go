@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"sync"
-	"time"
 )
 
 // Политика приёма кандидата — статьи (или автора OpenLibrary), найденной по имени
@@ -63,10 +61,10 @@ type CandidateFactsFunc func(ctx context.Context, qid string) (CandidateFacts, e
 type CandidateCheck func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, confirmed bool) (bool, error)
 
 // NewCandidateCheck — политика приёма поверх источника фактов. Факты кэшируются
-// по QID на candidateFactsTTL: цепочки био и фото ищут статью независимо, и без
+// по QID на lookupCacheTTL: цепочки био и фото ищут статью независимо, и без
 // кэша каждый автор спрашивал бы Wikidata дважды.
 func NewCandidateCheck(facts CandidateFactsFunc) CandidateCheck {
-	cache := newFactsCache(candidateFactsTTL, candidateFactsCacheSize)
+	cache := newTTLCache[CandidateFacts](lookupCacheTTL, lookupCacheSize)
 	return func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, confirmed bool) (bool, error) {
 		f := CandidateFacts{QID: qid}
 		if qid != "" {
@@ -289,51 +287,3 @@ func topicMatches(occupations, genres []string) bool {
 	return false
 }
 
-const (
-	candidateFactsTTL       = 10 * time.Minute
-	candidateFactsCacheSize = 2000
-)
-
-// factsCache — факты о кандидатах по QID с истечением; при переполнении
-// выбрасываются истёкшие, а если их нет — всё (кэш короткоживущий).
-type factsCache struct {
-	mu    sync.Mutex
-	ttl   time.Duration
-	size  int
-	items map[string]cachedFacts
-}
-
-type cachedFacts struct {
-	f  CandidateFacts
-	at time.Time
-}
-
-func newFactsCache(ttl time.Duration, size int) *factsCache {
-	return &factsCache{ttl: ttl, size: size, items: map[string]cachedFacts{}}
-}
-
-func (c *factsCache) get(qid string) (CandidateFacts, bool) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	it, ok := c.items[qid]
-	if !ok || time.Since(it.at) > c.ttl {
-		return CandidateFacts{}, false
-	}
-	return it.f, true
-}
-
-func (c *factsCache) put(qid string, f CandidateFacts) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	if len(c.items) >= c.size {
-		for k, it := range c.items {
-			if time.Since(it.at) > c.ttl {
-				delete(c.items, k)
-			}
-		}
-		if len(c.items) >= c.size {
-			c.items = map[string]cachedFacts{}
-		}
-	}
-	c.items[qid] = cachedFacts{f: f, at: time.Now()}
-}

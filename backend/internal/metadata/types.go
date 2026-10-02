@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -110,6 +111,13 @@ type AuthorQuery struct {
 	MinBookYear int
 	NetShare    float64
 	Genres      []string
+}
+
+// cacheKey — всё, от чего зависит найденная статья: автор, имя, тёзки и книги
+// (строгий путь подтверждает по ним).
+func (q AuthorQuery) cacheKey() string {
+	return strings.Join([]string{strconv.FormatInt(q.ID, 10), q.FullName, q.MiddleName, q.Note,
+		strconv.FormatBool(q.Strict()), strings.Join(q.BookTitles, "\x1f")}, "|")
 }
 
 // latinQuery — тот же автор латиницей для источников на латинице. Фамилия —

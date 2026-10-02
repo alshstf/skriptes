@@ -29,6 +29,15 @@ type OpenLibraryProvider struct {
 	// WikipediaProvider.candidateCheck. nil = выключена. QID берём бесплатно из
 	// remote_ids.wikidata детальной записи автора (у wiki нужен отдельный pageprops).
 	candidateCheck CandidateCheck
+
+	// authors — найденный автор (или «не найдено») по запросу: путь фото идёт
+	// следом за путём био и повторил бы поиск, детали и проверку кандидата.
+	authors *ttlCache[olAuthorResult]
+}
+
+type olAuthorResult struct {
+	author   *olAuthor
+	notFound bool
 }
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
@@ -36,6 +45,7 @@ func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
 	}
 	return &OpenLibraryProvider{
+		authors:    newTTLCache[olAuthorResult](lookupCacheTTL, lookupCacheSize),
 		httpClient: httpClient,
 		searchURL:  "https://openlibrary.org/search.json",
 		coverURL:   "https://covers.openlibrary.org",
@@ -510,6 +520,27 @@ func extractOLDescription(v any) string {
 func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
 	// Имена в OpenLibrary латиницей: иностранца ищем по латинскому имени из fb2.
 	q = latinFor(ctx, "openlibrary", "", q)
+	key := q.cacheKey()
+	if r, ok := p.authors.get(key); ok {
+		if r.notFound {
+			traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceReject, Value: "not found a moment ago"})
+			return nil, ErrNotFound
+		}
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceInfo, Value: r.author.OLID})
+		return r.author, nil
+	}
+	a, err := p.authorSearchUncached(ctx, q)
+	switch {
+	case err == nil:
+		p.authors.put(key, olAuthorResult{author: a})
+	case errors.Is(err, ErrNotFound):
+		p.authors.put(key, olAuthorResult{notFound: true})
+	}
+	return a, err
+}
+
+// authorSearchUncached — поиск автора без кэша (см. authorSearch).
+func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
 	if q.FullName == "" {
 		return nil, ErrNotFound
 	}

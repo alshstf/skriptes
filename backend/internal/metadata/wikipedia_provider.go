@@ -33,6 +33,15 @@ type WikipediaProvider struct {
 	// WikidataAdaptationsProvider.CandidateFacts). Функция, а не прямая зависимость
 	// на Wikidata-провайдер: разрыв связности + тестируемость.
 	candidateCheck CandidateCheck
+
+	// titles — найденная статья (или «не найдено») по автору и разделу: путь фото
+	// идёт следом за путём био и повторил бы поиск, QID и проверку кандидата.
+	titles *ttlCache[titleResult]
+}
+
+type titleResult struct {
+	title    string
+	notFound bool
 }
 
 // wikiUserAgent — Wikimedia требует осмысленный User-Agent на REST API,
@@ -44,7 +53,7 @@ func NewWikipediaProvider(httpClient *http.Client) *WikipediaProvider {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
 	}
-	return &WikipediaProvider{httpClient: httpClient}
+	return &WikipediaProvider{httpClient: httpClient, titles: newTTLCache[titleResult](lookupCacheTTL, lookupCacheSize)}
 }
 
 // WithAPIRoot переопределяет корень API (для httptest-серверов).
@@ -397,6 +406,27 @@ func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQu
 // У автора с тёзками или уточнением (q.Strict) первый результат по имени не
 // годится вовсе — там resolveStrictTitle (подтверждение уточнением или книгой).
 func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	key := lang + "|" + q.cacheKey()
+	if r, ok := p.titles.get(key); ok {
+		if r.notFound {
+			traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "cached", Outcome: TraceReject, Value: "not found a moment ago"})
+			return "", ErrNotFound
+		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "cached", Outcome: TraceInfo, Value: r.title})
+		return r.title, nil
+	}
+	title, err := p.resolveTitleUncached(ctx, lang, q)
+	switch {
+	case err == nil:
+		p.titles.put(key, titleResult{title: title})
+	case errors.Is(err, ErrNotFound):
+		p.titles.put(key, titleResult{notFound: true})
+	}
+	return title, err
+}
+
+// resolveTitleUncached — поиск статьи без кэша (см. resolveTitle).
+func (p *WikipediaProvider) resolveTitleUncached(ctx context.Context, lang string, q AuthorQuery) (string, error) {
 	var title string
 	confirmed := false // статью нашёл строгий путь — по уточнению или книге
 	if q.Strict() {
