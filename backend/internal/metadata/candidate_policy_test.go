@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -138,4 +139,22 @@ func TestWorksAnchor(t *testing.T) {
 	require.True(t, worksAnchor([]string{"Гробницы Атуана (роман)"}, []string{"Гробницы Атуана"}), "одно содержит другое")
 	require.False(t, worksAnchor([]string{"Он"}, []string{"Она"}), "короткие не сравниваем")
 	require.False(t, worksAnchor(nil, []string{"Левая рука тьмы"}))
+}
+
+// Факты по одному QID в пределах TTL запрашиваются один раз (био и фото).
+func TestCandidateCheck_FactsCached(t *testing.T) {
+	calls := 0
+	check := NewCandidateCheck(func(_ context.Context, qid string) (CandidateFacts, error) {
+		calls++
+		return CandidateFacts{QID: qid, Occupations: []string{"писатель"}, Writer: true}, nil
+	})
+	q := AuthorQuery{LastName: "Пелевин", FirstName: "Виктор"}
+	for i := 0; i < 3; i++ {
+		ok, err := check(context.Background(), q, "wikipedia", "ru", "Пелевин, Виктор Олегович", "Q1", false)
+		require.NoError(t, err)
+		require.True(t, ok)
+	}
+	require.Equal(t, 1, calls)
+	_, _ = check(context.Background(), q, "wikipedia", "ru", "Пелевин, Виктор Олегович", "Q2", false)
+	require.Equal(t, 2, calls, "другой QID — новый запрос")
 }
