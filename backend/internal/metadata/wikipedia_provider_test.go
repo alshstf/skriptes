@@ -169,12 +169,12 @@ func TestWikipedia_CandidateCheck(t *testing.T) {
 			defer srv.Close()
 			called := false
 			p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
-				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, confirmed bool) (bool, error) {
+				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, match MatchKind) (bool, error) {
 					called = true
 					require.Equal(t, "wikipedia", source)
 					require.Equal(t, "Тёзка, Некий Иванович", title)
 					require.Equal(t, c.qid, qid)
-					require.False(t, confirmed, "найдено по имени, не строгим путём")
+					require.Equal(t, MatchName, match, "найдено по имени, не строгим путём")
 					return c.accept, c.checkErr
 				})
 			got, err := p.FetchAuthorBio(context.Background(), q)
@@ -367,7 +367,7 @@ func TestOpenLibrary_CandidateCheck(t *testing.T) {
 
 			called := false
 			p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL).
-				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, _ bool) (bool, error) {
+				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, _ MatchKind) (bool, error) {
 					called = true
 					require.Equal(t, "openlibrary", source)
 					require.Equal(t, "Тёзка Некий", title)

@@ -26,6 +26,9 @@ func wikiFormsServer(t *testing.T, bySearch map[string][]string, hits map[string
 				titles = []string{}
 			}
 			_ = json.NewEncoder(w).Encode([]any{qv.Get("search"), titles, []string{}, []string{}})
+		case qv.Get("ppprop") == "wikibase_item": // QID статьи — без связи с Wikidata
+			_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"pages": []any{
+				map[string]any{"title": qv.Get("titles")}}}})
 		case qv.Get("list") == "search":
 			calls = append(calls, "search:"+qv.Get("srsearch"))
 			var out []map[string]string
@@ -237,4 +240,27 @@ func TestWikipedia_ResolveTitleCached(t *testing.T) {
 		require.ErrorIs(t, err, ErrNotFound)
 	}
 	require.Len(t, *calls, 4, "«не найдено» тоже кэшируется")
+}
+
+// Ни одна статья не прошла гейт имени, но одна совпала нестрого — кандидат с
+// пометкой MatchLoose (решает политика); без проверки кандидата — не принимаем.
+func TestWikipedia_LooseCandidate(t *testing.T) {
+	ctx := context.Background()
+	q := AuthorQuery{LastName: "Джексон", FirstName: "Ширли", FullName: "Джексон Ширли"}
+	srv, _ := wikiFormsServer(t, map[string][]string{"Джексон Ширли": {"Джексон, Шерли", "Джексон, Майкл"}}, nil)
+	var got MatchKind = -1
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
+		WithCandidateCheck(func(_ context.Context, _ AuthorQuery, _, _, title, _ string, m MatchKind) (bool, error) {
+			require.Equal(t, "Джексон, Шерли", title)
+			got = m
+			return true, nil
+		})
+	title, err := p.resolveTitle(ctx, "ru", q)
+	require.NoError(t, err)
+	require.Equal(t, "Джексон, Шерли", title)
+	require.Equal(t, MatchLoose, got)
+
+	plain := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	_, err = plain.resolveTitle(ctx, "ru", q)
+	require.ErrorIs(t, err, ErrNotFound)
 }

@@ -32,6 +32,7 @@ import (
 // CandidateFacts — что Wikidata знает о кандидате.
 type CandidateFacts struct {
 	QID         string
+	Human       bool     // человек, группа людей (дуэт: «Братья Стругацкие») или псевдоним (P31/P279*: Q5, Q16334295, Q61002) — не сериал, книга, место
 	Occupations []string // метки P106 (ru, иначе en)
 	Writer      bool     // есть профессия класса writer/author (P279*)
 	Adjacent    bool     // есть смежная пишущая: учёный, журналист, юрист… (writerBaseClasses без writer/author)
@@ -56,16 +57,28 @@ func (f CandidateFacts) occupationClass() string {
 // CandidateFactsFunc — источник фактов о кандидате по QID ("" — нет QID: пустые факты).
 type CandidateFactsFunc func(ctx context.Context, qid string) (CandidateFacts, error)
 
-// CandidateCheck — решение о кандидате; confirmed — кандидата нашёл строгий путь
-// (по книге или уточнению). Ошибка — сбой источника (временный).
-type CandidateCheck func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, confirmed bool) (bool, error)
+// MatchKind — как найден кандидат.
+type MatchKind int
+
+const (
+	// MatchName — по имени (гейт имени пройден).
+	MatchName MatchKind = iota
+	// MatchConfirmed — строгий путь подтвердил уточнением или книгой.
+	MatchConfirmed
+	// MatchLoose — имя совпало лишь нестрого (другая передача иностранного имени:
+	// Ширли/Шерли, Гуидо/Гвидо): принимается только с книгой автора в Wikidata.
+	MatchLoose
+)
+
+// CandidateCheck — решение о кандидате. Ошибка — сбой источника (временный).
+type CandidateCheck func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, match MatchKind) (bool, error)
 
 // NewCandidateCheck — политика приёма поверх источника фактов. Факты кэшируются
 // по QID на lookupCacheTTL: цепочки био и фото ищут статью независимо, и без
 // кэша каждый автор спрашивал бы Wikidata дважды.
 func NewCandidateCheck(facts CandidateFactsFunc) CandidateCheck {
 	cache := newTTLCache[CandidateFacts](lookupCacheTTL, lookupCacheSize)
-	return func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, confirmed bool) (bool, error) {
+	return func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, match MatchKind) (bool, error) {
 		f := CandidateFacts{QID: qid}
 		if qid != "" {
 			var ok bool
@@ -78,7 +91,7 @@ func NewCandidateCheck(facts CandidateFactsFunc) CandidateCheck {
 			}
 		}
 		traceOccupationFacts(ctx, source, lang, f)
-		ok, why := decideCandidate(q, title, f, confirmed)
+		ok, why := decideCandidate(q, title, f, match)
 		outcome := TraceReject
 		if ok {
 			outcome = TracePass
@@ -107,12 +120,20 @@ func traceOccupationFacts(ctx context.Context, source, lang string, f CandidateF
 }
 
 // decideCandidate — решение политики (см. doc файла) и его причина для трассы.
-func decideCandidate(q AuthorQuery, title string, f CandidateFacts, confirmed bool) (bool, string) {
-	if confirmed {
+func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchKind) (bool, string) {
+	// Статья не о человеке (сериал, цикл книг, место): строгий путь находит и такие —
+	// «Лемони Сникет: 33 несчастья» по книге «Скверное начало».
+	if f.QID != "" && !f.Human {
+		return false, "not a person"
+	}
+	if match == MatchConfirmed {
 		return true, "confirmed by strict path"
 	}
 	if worksAnchor(f.Works, q.BookTitles) {
 		return true, "book in wikidata (P50)"
+	}
+	if match == MatchLoose {
+		return false, "loose name match without book in wikidata"
 	}
 	switch {
 	case f.Born > 0 && q.MinBookYear > 0 && f.Born > q.MinBookYear-12:
@@ -264,6 +285,7 @@ var topicRules = []topicRule{
 	{[]string{"home_cooking"}, regexp.MustCompile(`повар|кулинар|шеф|chef|cook`)},
 	{[]string{"adv_geo", "travel"}, regexp.MustCompile(`путешественник|исследователь|альпинист|мореплаватель|explorer|traveler|traveller`)},
 	{[]string{"art", "visual_arts", "sci_culture", "design"}, regexp.MustCompile(`художник|архитектор|фотограф|дизайнер|скульптор|искусствовед|painter|architect|photographer|designer|sculptor|art historian`)},
+	{[]string{"sci_philosophy", "religion", "sci_religion", "antique"}, regexp.MustCompile(`философ|богослов|мыслитель|philosopher|theologian`)},
 }
 
 // topicMatches — профессия кандидата соответствует теме книг автора.

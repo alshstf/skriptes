@@ -305,3 +305,69 @@ func mentionsAuthor(text string, q AuthorQuery) bool {
 	first := norm(strings.TrimSpace(q.FirstName))
 	return first == "" || strings.Contains(t, first)
 }
+
+// looseNameMatches — имя кандидата совпадает с автором лишь нестрого: каждая
+// значимая часть фамилии и имени равна по «скелету» (looseKey) и отличается не
+// больше чем на 3 правки. Это разные передачи иностранного имени кириллицей
+// (Ширли/Шерли, Гуидо/Гвидо, Килуорт/Килворт, Глик/Глейк, Дзюнпэй/Дзюмпэй,
+// Муравейка/Муравейко), но так совпадают и разные люди (Фирсов/Фурсов) —
+// поэтому такой кандидат принимается только с книгой автора в Wikidata (MatchLoose).
+func looseNameMatches(q AuthorQuery, candidate string) bool {
+	cand := nameTokens(candidate)
+	parts := requiredParts(nameTokens(q.LastName))
+	if w := strings.Fields(q.FirstName); len(w) > 0 {
+		parts = append(parts, requiredParts(nameTokens(w[0]))...)
+	}
+	if len(parts) == 0 || len(cand) == 0 {
+		return false
+	}
+	for _, p := range parts {
+		pk := looseKey(p.lat)
+		if len(pk) < 2 {
+			return false
+		}
+		found := false
+		for _, t := range cand {
+			if t.lat == p.lat || (looseKey(t.lat) == pk && levenshtein(t.lat, p.lat) <= 3) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
+}
+
+// looseKey — «скелет» имени латиницей: без гласных (u, v, w, y — тоже: «у» и «в»
+// передают одно и то же, Гуидо/Гвидо), созвучные согласные сведены (k/c/q, s/z,
+// t/d, p/b, m/n, g/h), без удвоений; первая буква-гласная — «a».
+func looseKey(s string) string {
+	r := strings.NewReplacer("sch", "s", "sh", "s", "ch", "c", "zh", "s", "kh", "h", "ts", "c", "ph", "f", "th", "t", "dz", "c")
+	s = r.Replace(s)
+	var b strings.Builder
+	for i, c := range s {
+		switch c {
+		case 'a', 'e', 'i', 'o', 'u', 'y', 'v', 'w', 'j':
+			if i == 0 {
+				b.WriteByte('a')
+			}
+			continue
+		case 'c', 'k', 'q':
+			c = 'k'
+		case 'z':
+			c = 's'
+		case 'd':
+			c = 't'
+		case 'b':
+			c = 'p'
+		case 'm':
+			c = 'n'
+		case 'g':
+			c = 'h'
+		}
+		b.WriteRune(c)
+	}
+	return collapseDoubles(b.String())
+}
