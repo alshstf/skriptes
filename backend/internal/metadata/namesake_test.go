@@ -266,4 +266,24 @@ func TestEnricher_WithNamesakeContext(t *testing.T) {
 	require.False(t, q.Namesakes)
 	require.Equal(t, []string{"Чапаев и Пустота"}, q.BookTitles)
 	require.False(t, q.Strict(), "без тёзок и уточнения — обычный поиск")
+	require.Empty(t, q.LatinName, "русский автор — латинского имени нет")
+
+	// Латинское имя — за которое голосует большинство книг, кроме сборников.
+	leguin := id(`INSERT INTO authors (last_name, first_name, normalized_name) VALUES ('Ле Гуин','Урсула','ле гуин урсула') RETURNING id`)
+	srcBook := func(lib, srcAuthor, kind string) {
+		t.Helper()
+		w := id(`INSERT INTO works (title, normalized_title, kind) VALUES ($1, $2, NULLIF($3,'')) RETURNING id`, "w"+lib, "w"+lib, kind)
+		b := id(`INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, src_author_normalized, work_id)
+			VALUES ($1,$2,$3,$4,'fb2',$5,$6,$7,$8) RETURNING id`, coll, arch, lib, lib, lib, lib, srcAuthor, w)
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, b, leguin)
+		require.NoError(t, err)
+	}
+	srcBook("10", "le guin ursula k.", "")
+	srcBook("11", "le guin ursula k.", "")
+	srcBook("12", "le guin ursula", "")
+	srcBook("13", "ashley mike", "anthology")
+	srcBook("14", "datlow ellen", "anthology")
+	srcBook("15", "datlow ellen", "anthology")
+	q = e.withNamesakeContext(ctx, AuthorQuery{ID: leguin})
+	require.Equal(t, "le guin ursula k.", q.LatinName, "составители антологий не голосуют")
 }

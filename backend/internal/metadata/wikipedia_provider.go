@@ -128,6 +128,7 @@ func notFoundOr(failed error) error {
 // первой секцией статьи (до первого ==Heading==), что для биографических
 // статей даёт идеальный preamble.
 func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuery) (string, error) {
+	q = latinFor(ctx, "wikipedia", lang, q)
 	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return "", err
@@ -337,6 +338,7 @@ func asNamesake(q AuthorQuery) AuthorQuery {
 
 // summary — opensearch для точного титла + summary endpoint.
 func (p *WikipediaProvider) summary(ctx context.Context, lang string, q AuthorQuery) (*wikiSummary, error) {
+	q = latinFor(ctx, "wikipedia", lang, q)
 	title, err := p.resolveTitle(ctx, lang, q)
 	if err != nil {
 		return nil, err
@@ -439,6 +441,16 @@ func (p *WikipediaProvider) resolveTitle(ctx context.Context, lang string, q Aut
 		}
 	}
 	return title, nil
+}
+
+// latinFor — запрос для раздела на латинице (queryForLang) с шагом трассы, если
+// имя заменено на латинское.
+func latinFor(ctx context.Context, source, lang string, q AuthorQuery) AuthorQuery {
+	l := queryForLang(q, lang)
+	if l.FullName != q.FullName {
+		traceStep(ctx, TraceStep{Source: source, Lang: lang, Stage: "latin", Outcome: TraceInfo, Input: q.FullName, Value: l.FullName})
+	}
+	return l
 }
 
 // searchLimit — сколько результатов поиска смотреть на каждую форму имени.

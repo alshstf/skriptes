@@ -182,3 +182,37 @@ func TestWikipedia_PseudonymRedirect(t *testing.T) {
 		})
 	}
 }
+
+// Латинское имя для латинских источников (case study #280).
+func TestAuthorQuery_LatinQuery(t *testing.T) {
+	q := AuthorQuery{LastName: "Ле Гуин", FirstName: "Урсула К", FullName: "Ле Гуин Урсула К", LatinName: "le guin ursula k."}
+	l, ok := q.latinQuery()
+	require.True(t, ok)
+	require.Equal(t, "le guin", l.LastName)
+	require.Equal(t, "ursula", l.FirstName)
+	require.Equal(t, "k.", l.MiddleName)
+	require.True(t, authorNameMatches(l, "Ursula K. Le Guin"))
+
+	for _, c := range []struct {
+		last, first, latin string
+		ok                 bool
+	}{
+		{"Виндж", "Вернор", "vinge vernor", true},
+		{"Гюго", "Виктор", "hugo victor", true},
+		{"Цысинь", "Лю", "cixin liu", true},
+		{"Хемингуэй", "Эрнест", "hemingway ernest", true},
+		{"Джойс", "Джеймс", "joyce james", true},
+		{"Кинселла", "Софи", "wickham madeleine", false}, // настоящее имя, не наше
+		{"Старджон", "Теодор", "sturgeon theodore", true},
+		{"Кинселла", "Софи", "", false},
+		{"Кинселла", "Софи", "kinsella", false}, // у нас есть имя, у латинского — нет
+	} {
+		_, ok := AuthorQuery{LastName: c.last, FirstName: c.first, LatinName: c.latin}.latinQuery()
+		require.Equal(t, c.ok, ok, "%s %s ← %q", c.last, c.first, c.latin)
+	}
+
+	require.Equal(t, q, queryForLang(q, "ru"), "русская Википедия — по-русски")
+	require.Equal(t, "le guin ursula k.", queryForLang(q, "en").FullName)
+	noLatin := AuthorQuery{LastName: "Пушкин", FirstName: "Александр", FullName: "Пушкин Александр"}
+	require.Equal(t, noLatin, queryForLang(noLatin, "en"), "нет латинского имени — как раньше")
+}

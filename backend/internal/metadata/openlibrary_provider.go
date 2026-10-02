@@ -511,6 +511,8 @@ func extractOLDescription(v any) string {
 // authorSearch — общий шаг для bio и photo: ищем автора, возвращаем
 // его OLID + parsed details.
 func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
+	// Имена в OpenLibrary латиницей: иностранца ищем по латинскому имени из fb2.
+	q = latinFor(ctx, "openlibrary", "", q)
 	if q.FullName == "" {
 		return nil, ErrNotFound
 	}
