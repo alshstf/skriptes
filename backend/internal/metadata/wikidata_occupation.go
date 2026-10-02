@@ -46,7 +46,7 @@ func (p *WikidataAdaptationsProvider) CandidateFacts(ctx context.Context, qid st
   OPTIONAL { wd:%[1]s wdt:P106 ?occ . }
   OPTIONAL { wd:%[1]s wdt:P569 ?b . }
   OPTIONAL { wd:%[1]s wdt:P570 ?d . }
-  OPTIONAL { wd:%[1]s wdt:P31/wdt:P279* ?person . VALUES ?person { wd:Q5 wd:Q16334295 wd:Q61002 } BIND(true AS ?human) }
+  OPTIONAL { wd:%[1]s wdt:P31/wdt:P279* ?person . VALUES ?person { wd:Q5 wd:Q21070568 wd:Q16334295 wd:Q61002 } BIND(true AS ?human) }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
 }`, qid))
 	if err != nil {

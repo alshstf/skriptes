@@ -85,19 +85,22 @@ func (p *WikipediaProvider) Name() string { return "wikipedia" }
 //
 // Сначала пробуем родной язык автора (или ru по умолчанию), потом en.
 func (p *WikipediaProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
-	var failed error
 	for _, lang := range p.langs(q.Lang) {
 		text, err := p.intro(ctx, lang, q)
 		if err != nil {
 			traceRequestError(ctx, "wikipedia", lang, err)
-			failed = keepTransient(failed, err)
+			if stopOnFailure(err) {
+				// Сбой в одном разделе — следующий не спрашиваем: английская статья
+				// заняла бы место русской (#347, приёмка 1.19.1: Саймак).
+				return "", notFoundOr(err)
+			}
 			continue
 		}
 		if text != "" {
 			return text, nil
 		}
 	}
-	return "", notFoundOr(failed)
+	return "", ErrNotFound
 }
 
 // traceRequestError — сбой запроса (не «не найдено») в трассу.
@@ -107,12 +110,10 @@ func traceRequestError(ctx context.Context, source, lang string, err error) {
 	}
 }
 
-// keepTransient запоминает первую ошибку, которая не «не найдено».
-func keepTransient(prev, err error) error {
-	if prev == nil && !errors.Is(err, ErrNotFound) {
-		return err
-	}
-	return prev
+// stopOnFailure — ошибка не «не найдено» (429, сеть, проверка кандидата):
+// перебор языков останавливается, решение откладывается.
+func stopOnFailure(err error) bool {
+	return err != nil && !errors.Is(err, ErrNotFound)
 }
 
 // notFoundOr — итог перебора языков: если где-то был сбой (429, сеть,
@@ -225,11 +226,12 @@ func (p *WikipediaProvider) intro(ctx context.Context, lang string, q AuthorQuer
 }
 
 func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
-	var failed error
 	for _, lang := range p.langs(q.Lang) {
 		src, err := p.photoSource(ctx, lang, q)
 		if err != nil {
-			failed = keepTransient(failed, err)
+			if stopOnFailure(err) {
+				return nil, notFoundOr(err)
+			}
 			continue
 		}
 		if src == "" {
@@ -238,29 +240,32 @@ func (p *WikipediaProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery)
 		img, err := p.downloadImage(ctx, src)
 		if err != nil {
 			traceRequestError(ctx, "wikipedia", lang, err)
-			failed = keepTransient(failed, err)
+			if stopOnFailure(err) {
+				return nil, notFoundOr(err)
+			}
 			continue
 		}
 		return img, nil
 	}
-	return nil, notFoundOr(failed)
+	return nil, ErrNotFound
 }
 
 // AuthorPhotoSource — адрес фото автора без скачивания (сухой прогон, #280):
 // тот же выбор статьи и языка, что у FetchAuthorPhoto.
 func (p *WikipediaProvider) AuthorPhotoSource(ctx context.Context, q AuthorQuery) (string, error) {
-	var failed error
 	for _, lang := range p.langs(q.Lang) {
 		src, err := p.photoSource(ctx, lang, q)
 		if err != nil {
-			failed = keepTransient(failed, err)
+			if stopOnFailure(err) {
+				return "", notFoundOr(err)
+			}
 			continue
 		}
 		if src != "" {
 			return src, nil
 		}
 	}
-	return "", notFoundOr(failed)
+	return "", ErrNotFound
 }
 
 // photoSource — адрес миниатюры статьи об авторе в одном языке; "" — у статьи

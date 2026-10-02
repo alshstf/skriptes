@@ -300,3 +300,21 @@ func TestWikipedia_PrimaryRejectedFallsBackToStrict(t *testing.T) {
 	require.Equal(t, "Иванов, Юрий (писатель)", got)
 	require.Equal(t, []string{"Иванов, Юрий", "Иванов, Юрий (писатель)"}, checked, "связка пропущена, основная проверена первой")
 }
+
+// Сбой в русском разделе — английский не спрашиваем (#347, приёмка 1.19.1: Саймак
+// получил английскую био вместо русской из-за сбоя Wikidata на ru).
+func TestWikipedia_TransientStopsLanguages(t *testing.T) {
+	calls := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		http.Error(w, "slow down", http.StatusTooManyRequests)
+	}))
+	defer srv.Close()
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	_, err := p.FetchAuthorBio(context.Background(), AuthorQuery{LastName: "Саймак", FirstName: "Клиффорд", FullName: "Саймак Клиффорд"})
+	require.ErrorIs(t, err, ErrUpstream)
+	require.Equal(t, 1, calls, "после 429 в первом разделе запросов больше нет")
+	_, err = p.AuthorPhotoSource(context.Background(), AuthorQuery{LastName: "Саймак", FirstName: "Клиффорд", FullName: "Саймак Клиффорд"})
+	require.ErrorIs(t, err, ErrUpstream)
+	require.Equal(t, 2, calls)
+}

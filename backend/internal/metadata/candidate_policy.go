@@ -32,7 +32,7 @@ import (
 // CandidateFacts — что Wikidata знает о кандидате.
 type CandidateFacts struct {
 	QID         string
-	Human       bool     // человек, группа людей (дуэт: «Братья Стругацкие») или псевдоним (P31/P279*: Q5, Q16334295, Q61002) — не сериал, книга, место
+	Human       bool     // человек (в т. ч. «возможно вымышленный»: Гомер), группа людей («Братья Стругацкие») или псевдоним (P31/P279*: Q5, Q21070568, Q16334295, Q61002) — не сериал, книга, место
 	Occupations []string // метки P106 (ru, иначе en)
 	Writer      bool     // есть профессия класса writer/author (P279*)
 	Adjacent    bool     // есть смежная пишущая: учёный, журналист, юрист… (writerBaseClasses без writer/author)
@@ -140,7 +140,7 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 		return false, fmt.Sprintf("born %d, books from %d", f.Born, q.MinBookYear)
 	case f.Died > 0 && f.Died < 2000 && q.NetShare >= 0.3:
 		return false, fmt.Sprintf("died %d, network literature", f.Died)
-	case q.NetShare >= 0.5:
+	case q.NetShare >= 0.5 && !netlitWriter(f):
 		return false, "network literature without book confirmation"
 	case patronymicConflict(title, q.MiddleName):
 		return false, "other patronymic"
@@ -163,6 +163,14 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 		}
 		return false, "non-writer"
 	}
+}
+
+// netlitWriter — кандидат годится в авторы сетевой литературы без подтверждения
+// книгой: писатель, живший в её эпоху (родился после 1940, жив или умер не раньше
+// 2005). Статьи о таких авторах редки, но есть (Елена Звёздная); космонавт-писатель
+// Губарев (1931–2015) у автора ЛитРПГ — нет.
+func netlitWriter(f CandidateFacts) bool {
+	return f.Writer && f.Born >= 1940 && (f.Died == 0 || f.Died >= 2005)
 }
 
 func confirmWhy(patOK, topic bool) string {

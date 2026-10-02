@@ -45,6 +45,13 @@ func TestDecideCandidate(t *testing.T) {
 			want:  false,
 		},
 		{
+			name: "писательница сетевой литературы со статьёй — принять",
+			q: AuthorQuery{LastName: "Звездная", FirstName: "Елена", MinBookYear: 2012, NetShare: 0.9,
+				Genres: []string{"network_literature", "love_sf"}},
+			title: "Звёздная, Елена", f: CandidateFacts{Human: true, Occupations: []string{"писательница"}, Writer: true, Born: 1981},
+			want: true,
+		},
+		{
 			name:  "умер до 2000 — не автор сетевой литературы",
 			q:     AuthorQuery{LastName: "Воробьев", FirstName: "Николай", NetShare: 0.4},
 			title: "Воробьёв, Николай Иванович", f: CandidateFacts{Human: true, Occupations: []string{"мелиоратор"}, Died: 1993},
