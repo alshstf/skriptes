@@ -130,14 +130,15 @@ func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *A
 		return
 	}
 	// Без источников судить не о чем — поле не трогаем (иначе пустые провайдеры
-	// «очистили» бы всё).
+	// «очистили» бы всё). Причину решения по каждому полю пишем в журнал.
+	var bioTrace, photoTrace AuthorTrace
 	bio, bioTransient := oldBio, false
 	if len(r.enricher.authorBioProviders) > 0 {
-		bio, bioTransient = r.enricher.fetchAuthorBio(taskCtx, q)
+		bio, bioTransient = r.enricher.fetchAuthorBio(WithAuthorTrace(taskCtx, &bioTrace), q)
 	}
 	photo, photoTransient := oldPhoto, false
 	if len(r.enricher.authorPhotoProviders) > 0 && r.enricher.photoCache != nil {
-		photo, photoTransient = r.enricher.fetchAuthorPhoto(taskCtx, q)
+		photo, photoTransient = r.enricher.fetchAuthorPhoto(WithAuthorTrace(taskCtx, &photoTrace), q)
 	}
 	if bioTransient || photoTransient {
 		st.Deferred++ // маркер не трогаем — автор повторится в следующем проходе
@@ -159,7 +160,7 @@ func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *A
 	default:
 		st.PhotoNew++
 	}
-	if err := r.apply(ctx, a.id, oldBio, bio, oldPhoto, photo); err != nil {
+	if err := r.apply(ctx, a.id, oldBio, bio, bioTrace.Reason(), oldPhoto, photo, photoTrace.Reason()); err != nil {
 		r.logger.Warn("author recheck: write failed", "author_id", a.id, "err", err)
 		st.Deferred++
 		return
@@ -167,16 +168,16 @@ func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *A
 	st.Checked++
 }
 
-// apply пишет результат и журнал одной транзакцией и ставит маркер.
-func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, oldPhoto, photo string) error {
+// apply пишет результат и журнал (с причиной решения) одной транзакцией и ставит маркер.
+func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, bioReason, oldPhoto, photo, photoReason string) error {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
-	for _, f := range []struct{ field, col, old, new string }{
-		{"bio", "bio", oldBio, bio},
-		{"photo", "photo_path", oldPhoto, photo},
+	for _, f := range []struct{ field, col, old, new, reason string }{
+		{"bio", "bio", oldBio, bio, bioReason},
+		{"photo", "photo_path", oldPhoto, photo, photoReason},
 	} {
 		if f.old == f.new {
 			continue
@@ -192,8 +193,8 @@ func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, oldP
 			return err
 		}
 		if _, err := tx.Exec(ctx, `
-			INSERT INTO author_meta_recheck (author_id, field, action, old_value, new_value)
-			VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, ''))`, id, f.field, action, f.old, f.new); err != nil {
+			INSERT INTO author_meta_recheck (author_id, field, action, old_value, new_value, reason)
+			VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($6, ''))`, id, f.field, action, f.old, f.new, f.reason); err != nil {
 			return err
 		}
 	}

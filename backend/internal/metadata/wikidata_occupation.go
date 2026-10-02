@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
+	"strings"
 )
 
 // OccupationVerdict — вердикт проверки профессии (P106) кандидата-автора,
@@ -29,6 +31,17 @@ const (
 	// однофамилец-не-писатель — отвергаем.
 	OccupationNonWriter
 )
+
+func (v OccupationVerdict) String() string {
+	switch v {
+	case OccupationWriter:
+		return "writer"
+	case OccupationNonWriter:
+		return "non-writer"
+	default:
+		return "unknown"
+	}
+}
 
 // writerBaseClasses — корневые классы «пишущих» профессий для P279*-обхода:
 // writer (Q36180) и author (Q482980) — их подклассы (novelist, poet,
@@ -59,6 +72,9 @@ func (p *WikidataAdaptationsProvider) OccupationVerdict(ctx context.Context, qid
 	total, writer, err := p.runSPARQLOccupationCounts(ctx, query)
 	if err != nil {
 		return OccupationUnknown, err
+	}
+	if traceOn(ctx) && total > 0 {
+		p.traceOccupationLabels(ctx, qid)
 	}
 	switch {
 	case writer > 0:
@@ -101,4 +117,74 @@ func (p *WikidataAdaptationsProvider) runSPARQLOccupationCounts(ctx context.Cont
 		writer, _ = strconv.Atoi(v.Value)
 	}
 	return total, writer, nil
+}
+
+// traceOccupationLabels — для разбора ошибок (#280): какие именно профессии у
+// кандидата и какие из них засчитаны пишущими («*»). Только при включённой
+// трассе — обычный путь этих запросов не делает. Два лёгких запроса: подписи
+// профессий и «пишущие» (тем же обходом P279*, что у вердикта); совмещённый в
+// один запрос с сервисом подписей WDQS не успевал ответить. Сбой не мешает
+// решению: в трассу уходит текст ошибки.
+func (p *WikidataAdaptationsProvider) traceOccupationLabels(ctx context.Context, qid string) {
+	step := TraceStep{Source: "wikidata", Stage: "occupations", Outcome: TraceInfo, Input: qid}
+	labels, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT ?occ ?occLabel WHERE {
+  wd:%s wdt:P106 ?occ .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
+}`, qid))
+	if err != nil {
+		step.Value = "error: " + err.Error()
+		traceStep(ctx, step)
+		return
+	}
+	writers, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT DISTINCT ?occ WHERE {
+  wd:%s wdt:P106 ?occ . ?occ wdt:P279* ?base . VALUES ?base { %s }
+}`, qid, writerBaseClasses))
+	if err != nil {
+		step.Value = "error: " + err.Error()
+		traceStep(ctx, step)
+		return
+	}
+	isWriter := map[string]bool{}
+	for _, b := range writers {
+		isWriter[b["occ"]] = true
+	}
+	out := make([]string, 0, len(labels))
+	for _, b := range labels {
+		l := b["occLabel"]
+		if isWriter[b["occ"]] {
+			l += "*"
+		}
+		out = append(out, l)
+	}
+	sort.Strings(out)
+	step.Value = strings.Join(out, ", ")
+	traceStep(ctx, step)
+}
+
+// sparqlBindings — строки результата SPARQL как «переменная → значение».
+func (p *WikidataAdaptationsProvider) sparqlBindings(ctx context.Context, query string) ([]map[string]string, error) {
+	body, err := p.doSPARQL(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = body.Close() }()
+	var resp struct {
+		Results struct {
+			Bindings []map[string]struct {
+				Value string `json:"value"`
+			} `json:"bindings"`
+		} `json:"results"`
+	}
+	if err := json.NewDecoder(body).Decode(&resp); err != nil {
+		return nil, fmt.Errorf("decode sparql: %w", err)
+	}
+	out := make([]map[string]string, 0, len(resp.Results.Bindings))
+	for _, b := range resp.Results.Bindings {
+		row := make(map[string]string, len(b))
+		for k, v := range b {
+			row[k] = v.Value
+		}
+		out = append(out, row)
+	}
+	return out, nil
 }

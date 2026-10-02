@@ -560,12 +560,14 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если wiki-гейт
 	// отверг однофамильца (ErrNotFound), enricher идёт к OL — без этого гейта OL
 	// отдал бы того же не-писателя, и wiki-отказ «протёк» бы сюда.
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "qid", Outcome: TraceInfo, Input: olid, Value: detail.RemoteIDs.Wikidata})
 	if p.occupationGate != nil && detail.RemoteIDs.Wikidata != "" {
 		v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata)
 		if err != nil {
 			// Сбой запроса — временная ошибка, а не «принять» (#280).
 			return nil, fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
 		}
+		traceOccupation(ctx, "openlibrary", "", detail.RemoteIDs.Wikidata, v)
 		if v == OccupationNonWriter {
 			return nil, ErrNotFound
 		}
@@ -598,13 +600,16 @@ func (p *OpenLibraryProvider) authorKeyByName(ctx context.Context, base string, 
 		return "", fmt.Errorf("decode author search: %w", err)
 	}
 	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "search", Outcome: TraceReject, Input: q.FullName})
 		return "", ErrNotFound
 	}
 	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
 	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
 	if !authorNameMatches(q, sr.Docs[0].Name) {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "name_gate", Outcome: TraceReject, Input: q.FullName, Value: sr.Docs[0].Name})
 		return "", ErrNotFound
 	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "name_gate", Outcome: TracePass, Input: q.FullName, Value: sr.Docs[0].Name})
 	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
 	return strings.TrimPrefix(sr.Docs[0].Key, "/authors/"), nil
 }
@@ -613,35 +618,57 @@ func (p *OpenLibraryProvider) authorKeyByName(ctx context.Context, base string, 
 func (p *OpenLibraryProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
 	a, err := p.authorSearch(ctx, q)
 	if err != nil {
+		traceRequestError(ctx, "openlibrary", "", err)
 		return "", err
 	}
 	bio := extractOLDescription(a.Bio)
 	if bio == "" {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "bio", Outcome: TraceReject, Input: a.OLID, Value: "no bio"})
 		return "", ErrNotFound
 	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "accept", Outcome: TracePass, Value: a.OLID})
 	return bio, nil
+}
+
+// AuthorPhotoSource — адрес фото автора без скачивания (сухой прогон, #280).
+func (p *OpenLibraryProvider) AuthorPhotoSource(ctx context.Context, q AuthorQuery) (string, error) {
+	id, err := p.authorPhotoID(ctx, q)
+	if err != nil {
+		return "", err
+	}
+	return p.authorPhotoURL(id), nil
+}
+
+func (p *OpenLibraryProvider) authorPhotoURL(photoID int64) string {
+	return fmt.Sprintf("%s/a/id/%d-L.jpg", p.coverURL, photoID)
+}
+
+// authorPhotoID — первое фото из photos[] автора.
+func (p *OpenLibraryProvider) authorPhotoID(ctx context.Context, q AuthorQuery) (int64, error) {
+	a, err := p.authorSearch(ctx, q)
+	if err != nil {
+		traceRequestError(ctx, "openlibrary", "", err)
+		return 0, err
+	}
+	// photos[i] = -1 у OL означает "удалено/нет", фильтруем.
+	for _, id := range a.Photos {
+		if id > 0 {
+			traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "accept", Outcome: TracePass, Input: a.OLID, Value: p.authorPhotoURL(id)})
+			return id, nil
+		}
+	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "photo", Outcome: TraceReject, Input: a.OLID, Value: "no photo"})
+	return 0, ErrNotFound
 }
 
 // FetchAuthorPhoto — первое фото из photos[] автора.
 func (p *OpenLibraryProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
-	a, err := p.authorSearch(ctx, q)
+	photoID, err := p.authorPhotoID(ctx, q)
 	if err != nil {
 		return nil, err
 	}
-	// photos[i] = -1 у OL означает "удалено/нет", фильтруем.
-	var photoID int64
-	for _, id := range a.Photos {
-		if id > 0 {
-			photoID = id
-			break
-		}
-	}
-	if photoID == 0 {
-		return nil, ErrNotFound
-	}
 
-	imgReq, err := http.NewRequestWithContext(ctx, http.MethodGet,
-		fmt.Sprintf("%s/a/id/%d-L.jpg", p.coverURL, photoID), nil)
+	imgReq, err := http.NewRequestWithContext(ctx, http.MethodGet, p.authorPhotoURL(photoID), nil)
 	if err != nil {
 		return nil, fmt.Errorf("build photo request: %w", err)
 	}

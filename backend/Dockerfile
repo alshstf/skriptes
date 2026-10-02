@@ -18,7 +18,10 @@ RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
     -o /out/skriptes ./cmd/skriptes && \
     CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
     go build -trimpath -ldflags="-s -w" \
-    -o /out/skriptes-seed ./cmd/skriptes-seed
+    -o /out/skriptes-seed ./cmd/skriptes-seed && \
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
+    go build -trimpath -ldflags="-s -w" \
+    -o /out/skriptes-explain ./cmd/skriptes-explain
 
 # ── fb2cng fetcher ──────────────────────────────────────────────
 # Скачиваем готовый релиз fb2cng (бинарь называется `fbc`).
@@ -60,6 +63,7 @@ RUN apk add --no-cache ca-certificates tzdata gcompat && \
     chown -R skriptes:skriptes /cache
 COPY --from=builder /out/skriptes      /usr/local/bin/skriptes
 COPY --from=builder /out/skriptes-seed /usr/local/bin/skriptes-seed
+COPY --from=builder /out/skriptes-explain /usr/local/bin/skriptes-explain
 COPY --from=fb2cng  /opt/fb2cng/fbc    /usr/local/bin/fbc
 # Smoke-test: бинарь должен запускаться в финальном образе. Если
 # линковка снова рассинхронится (новая версия fb2cng / новый gcompat-gap

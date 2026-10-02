@@ -36,6 +36,7 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 				return "", err
 			}
 			if ok {
+				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note_title", Outcome: TracePass, Input: base + " (" + note + ")", Value: title})
 				return title, nil
 			}
 		}
@@ -45,9 +46,11 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 		}
 		for _, t := range titles {
 			if _, qual := splitQualifier(t); qual != "" && noteMatchesQualifier(note, qual) && authorNameMatches(q, t) {
+				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note_qualifier", Outcome: TracePass, Input: note, Value: t})
 				return t, nil
 			}
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.note", Outcome: TraceInfo, Input: note, Value: strings.Join(titles, " | ")})
 	}
 	for i, book := range q.BookTitles {
 		if i >= strictBookTitles {
@@ -61,11 +64,30 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 			// Имя — по основе названия: «Старый пруд (Басё)» — статья о хайку,
 			// а не о поэте, хотя «Басё» в уточнении есть (выборка с прода, #280).
 			if base, _ := splitQualifier(h); authorNameMatches(q, base) {
+				traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TracePass, Input: book, Value: h})
 				return h, nil
 			}
 		}
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TraceInfo, Input: book, Value: strings.Join(hits, " | ")})
 	}
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict", Outcome: TraceReject, Input: strictWhy(q),
+		Value: fmt.Sprintf("note=%q books=%d", note, len(q.BookTitles))})
 	return "", ErrNotFound
+}
+
+// strictWhy — почему автор пошёл строгим путём (для трассы).
+func strictWhy(q AuthorQuery) string {
+	var why []string
+	if strings.TrimSpace(q.Note) != "" {
+		why = append(why, "note")
+	}
+	if q.Namesakes {
+		why = append(why, "namesakes")
+	}
+	if strings.TrimSpace(q.LastName) != "" && strings.TrimSpace(q.FirstName) == "" {
+		why = append(why, "one-word name")
+	}
+	return strings.Join(why, ",")
 }
 
 // wikiTitleBases — как ruwiki называет статьи о людях: «Фамилия, Имя Отчество»,
@@ -218,11 +240,15 @@ func (p *OpenLibraryProvider) strictAuthorKey(ctx context.Context, q AuthorQuery
 		for _, d := range sr.Docs {
 			for j, name := range d.AuthorName {
 				if j < len(d.AuthorKey) && authorNameMatches(q, name) {
-					return strings.TrimPrefix(d.AuthorKey[j], "/authors/"), nil
+					key := strings.TrimPrefix(d.AuthorKey[j], "/authors/")
+					traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "strict.book", Outcome: TracePass, Input: book, Value: name + " " + key})
+					return key, nil
 				}
 			}
 		}
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "strict.book", Outcome: TraceInfo, Input: book, Value: fmt.Sprintf("%d docs", len(sr.Docs))})
 	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "strict", Outcome: TraceReject, Input: strictWhy(q), Value: fmt.Sprintf("books=%d", len(q.BookTitles))})
 	return "", ErrNotFound
 }
 
