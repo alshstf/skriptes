@@ -65,10 +65,11 @@ func run() error {
 	defer pool.Close()
 
 	// Провайдеры авторов — как в cmd/skriptes: Wikipedia → OpenLibrary, оба с
-	// проверкой профессии по Wikidata.
+	// политикой приёма кандидата по фактам Wikidata.
 	wd := metadata.NewWikidataAdaptationsProvider(&http.Client{Timeout: 15 * time.Second})
-	wiki := metadata.NewWikipediaProvider(&http.Client{Timeout: 10 * time.Second}).WithOccupationGate(wd.OccupationVerdict)
-	ol := metadata.NewOpenLibraryProvider(metadata.NewEnricherHTTPClient(20 * time.Second)).WithOccupationGate(wd.OccupationVerdict)
+	candidateCheck := metadata.NewCandidateCheck(wd.CandidateFacts)
+	wiki := metadata.NewWikipediaProvider(&http.Client{Timeout: 10 * time.Second}).WithCandidateCheck(candidateCheck)
+	ol := metadata.NewOpenLibraryProvider(metadata.NewEnricherHTTPClient(20 * time.Second)).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(pool, filepath.Join(cfg.CacheRoot, "covers"), nil, nil,
 		[]metadata.AuthorPhotoProvider{wiki, ol}, []metadata.AuthorBioProvider{wiki, ol}, nil, logger)
 	if err != nil {

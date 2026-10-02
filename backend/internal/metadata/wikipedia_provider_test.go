@@ -145,50 +145,50 @@ func wikiGatedMockServer(t *testing.T, title, qid, extract string) *httptest.Ser
 	}))
 }
 
-// TestWikipedia_OccupationGate — слой 2: имя совпало, но профессия решает.
-// NonWriter → отвергаем; Writer/Unknown/ошибка/пустой-QID → пропускаем.
-func TestWikipedia_OccupationGate(t *testing.T) {
+// TestWikipedia_CandidateCheck — политика приёма решает после гейта имени:
+// отказ → не найдено; ошибка → временный сбой; пустой QID — тоже решает политика.
+func TestWikipedia_CandidateCheck(t *testing.T) {
 	const bio = "Некий Тёзка Иванович — совпал по имени."
 	q := AuthorQuery{LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий Иванович"}
 
 	cases := []struct {
 		name      string
 		qid       string
-		verdict   OccupationVerdict
-		gateErr   error
+		accept    bool
+		checkErr  error
 		wantFound bool
 	}{
-		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
-		{"writer accepted", "Q2", OccupationWriter, nil, true},
-		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
-		{"gate error is transient", "Q4", OccupationNonWriter, context.DeadlineExceeded, false},
-		{"empty qid skips gate", "", OccupationNonWriter, nil, true},
+		{"rejected", "Q1", false, nil, false},
+		{"accepted", "Q2", true, nil, true},
+		{"check error is transient", "Q4", false, context.DeadlineExceeded, false},
+		{"empty qid — policy decides", "", true, nil, true},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			srv := wikiGatedMockServer(t, "Тёзка, Некий Иванович", c.qid, bio)
 			defer srv.Close()
-			gateCalled := false
+			called := false
 			p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL).
-				WithOccupationGate(func(_ context.Context, qid string) (OccupationVerdict, error) {
-					gateCalled = true
+				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, confirmed bool) (bool, error) {
+					called = true
+					require.Equal(t, "wikipedia", source)
+					require.Equal(t, "Тёзка, Некий Иванович", title)
 					require.Equal(t, c.qid, qid)
-					return c.verdict, c.gateErr
+					require.False(t, confirmed, "найдено по имени, не строгим путём")
+					return c.accept, c.checkErr
 				})
 			got, err := p.FetchAuthorBio(context.Background(), q)
 			switch {
 			case c.wantFound:
 				require.NoError(t, err)
 				require.Equal(t, bio, got)
-			case c.gateErr != nil:
-				// Сбой проверки профессии — временная ошибка, автор перепроверится (#280).
+			case c.checkErr != nil:
+				// Сбой проверки — временная ошибка, автор перепроверится (#280).
 				require.ErrorIs(t, err, ErrUpstream)
 			default:
 				require.ErrorIs(t, err, ErrNotFound)
 			}
-			if c.qid == "" {
-				require.False(t, gateCalled, "при пустом QID гейт звать не нужно")
-			}
+			require.True(t, called)
 		})
 	}
 }
@@ -329,25 +329,23 @@ func TestOpenLibrary_AuthorPhotoHappyPath(t *testing.T) {
 	require.Equal(t, jpegBytes, string(body))
 }
 
-// TestOpenLibrary_OccupationGate — слой 2 на OL-пути. QID берётся из
-// remote_ids.wikidata детальной записи (доп. запроса нет). NonWriter →
-// отвергаем; Writer/Unknown/ошибка/нет-QID → пропускаем.
-func TestOpenLibrary_OccupationGate(t *testing.T) {
+// TestOpenLibrary_CandidateCheck — политика приёма на OL-пути. QID берётся из
+// remote_ids.wikidata детальной записи (доп. запроса нет), имя кандидата — name.
+func TestOpenLibrary_CandidateCheck(t *testing.T) {
 	const olid = "OL777A"
 	const bio = "Некий Тёзка — совпал по имени."
 
 	cases := []struct {
 		name      string
 		qid       string // "" = remote_ids без wikidata
-		verdict   OccupationVerdict
-		gateErr   error
+		accept    bool
+		checkErr  error
 		wantFound bool
 	}{
-		{"non-writer rejected", "Q1", OccupationNonWriter, nil, false},
-		{"writer accepted", "Q2", OccupationWriter, nil, true},
-		{"unknown accepted", "Q3", OccupationUnknown, nil, true},
-		{"gate error is transient", "Q4", OccupationNonWriter, context.DeadlineExceeded, false},
-		{"no wikidata skips gate", "", OccupationNonWriter, nil, true},
+		{"rejected", "Q1", false, nil, false},
+		{"accepted", "Q2", true, nil, true},
+		{"check error is transient", "Q4", false, context.DeadlineExceeded, false},
+		{"no wikidata — policy decides", "", false, nil, false},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -360,19 +358,21 @@ func TestOpenLibrary_OccupationGate(t *testing.T) {
 					if c.qid != "" {
 						remote = `{"wikidata":` + jsonString(c.qid) + `}`
 					}
-					_, _ = io.WriteString(w, `{"bio":`+jsonString(bio)+`,"photos":[],"remote_ids":`+remote+`}`)
+					_, _ = io.WriteString(w, `{"name":"Тёзка Некий","bio":`+jsonString(bio)+`,"photos":[],"remote_ids":`+remote+`}`)
 				default:
 					http.NotFound(w, r)
 				}
 			}))
 			defer srv.Close()
 
-			gateCalled := false
+			called := false
 			p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL).
-				WithOccupationGate(func(_ context.Context, qid string) (OccupationVerdict, error) {
-					gateCalled = true
+				WithCandidateCheck(func(_ context.Context, _ AuthorQuery, source, _, title, qid string, _ bool) (bool, error) {
+					called = true
+					require.Equal(t, "openlibrary", source)
+					require.Equal(t, "Тёзка Некий", title)
 					require.Equal(t, c.qid, qid)
-					return c.verdict, c.gateErr
+					return c.accept, c.checkErr
 				})
 			got, err := p.FetchAuthorBio(context.Background(), AuthorQuery{
 				LastName: "Тёзка", FirstName: "Некий", FullName: "Тёзка Некий",
@@ -381,15 +381,12 @@ func TestOpenLibrary_OccupationGate(t *testing.T) {
 			case c.wantFound:
 				require.NoError(t, err)
 				require.Equal(t, bio, got)
-			case c.gateErr != nil:
-				// Сбой проверки профессии — временная ошибка, автор перепроверится (#280).
+			case c.checkErr != nil:
 				require.ErrorIs(t, err, ErrUpstream)
 			default:
 				require.ErrorIs(t, err, ErrNotFound)
 			}
-			if c.qid == "" {
-				require.False(t, gateCalled, "без remote_ids.wikidata гейт звать не нужно")
-			}
+			require.True(t, called)
 		})
 	}
 }

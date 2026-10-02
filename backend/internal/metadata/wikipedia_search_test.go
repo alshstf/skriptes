@@ -216,3 +216,25 @@ func TestAuthorQuery_LatinQuery(t *testing.T) {
 	noLatin := AuthorQuery{LastName: "Пушкин", FirstName: "Александр", FullName: "Пушкин Александр"}
 	require.Equal(t, noLatin, queryForLang(noLatin, "en"), "нет латинского имени — как раньше")
 }
+
+// Путь фото идёт следом за путём био — найденная статья (и «не найдено») берётся
+// из кэша, без повторного поиска.
+func TestWikipedia_ResolveTitleCached(t *testing.T) {
+	ctx := context.Background()
+	srv, calls := wikiFormsServer(t, map[string][]string{"Ли Чайлд": {"Ли Чайлд"}}, nil)
+	p := NewWikipediaProvider(srv.Client()).WithAPIRoot(srv.URL)
+	q := AuthorQuery{ID: 7, LastName: "Чайлд", FirstName: "Ли", FullName: "Чайлд Ли"}
+	for i := 0; i < 2; i++ {
+		got, err := p.resolveTitle(ctx, "ru", q)
+		require.NoError(t, err)
+		require.Equal(t, "Ли Чайлд", got)
+	}
+	require.Equal(t, []string{"opensearch:Чайлд Ли", "opensearch:Ли Чайлд"}, *calls, "второй раз — из кэша")
+
+	missing := AuthorQuery{ID: 8, LastName: "Нет", FirstName: "Такого", FullName: "Нет Такого"}
+	for i := 0; i < 2; i++ {
+		_, err := p.resolveTitle(ctx, "ru", missing)
+		require.ErrorIs(t, err, ErrNotFound)
+	}
+	require.Len(t, *calls, 4, "«не найдено» тоже кэшируется")
+}

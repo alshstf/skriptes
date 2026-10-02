@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -104,6 +105,19 @@ type AuthorQuery struct {
 	// книг, кроме сборников. Английская Википедия и OpenLibrary ищут по нему
 	// (latinQuery): по кириллице иностранца они не находят (case study #280).
 	LatinName string
+	// Профиль книг автора для политики приёма кандидата (candidate_policy.go):
+	// самый ранний год книги (написания или издания, 0 — неизвестен), доля
+	// сетевой литературы среди работ и коды жанров.
+	MinBookYear int
+	NetShare    float64
+	Genres      []string
+}
+
+// cacheKey — всё, от чего зависит найденная статья: автор, имя, тёзки и книги
+// (строгий путь подтверждает по ним).
+func (q AuthorQuery) cacheKey() string {
+	return strings.Join([]string{strconv.FormatInt(q.ID, 10), q.FullName, q.MiddleName, q.Note,
+		strconv.FormatBool(q.Strict()), strings.Join(q.BookTitles, "\x1f")}, "|")
 }
 
 // latinQuery — тот же автор латиницей для источников на латинице. Фамилия —
@@ -124,6 +138,7 @@ func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
 	l := AuthorQuery{
 		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
 		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
+		MinBookYear: q.MinBookYear, NetShare: q.NetShare, Genres: q.Genres,
 	}
 	if len(toks) > n {
 		l.FirstName = toks[n]

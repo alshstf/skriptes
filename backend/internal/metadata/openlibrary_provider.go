@@ -25,11 +25,19 @@ type OpenLibraryProvider struct {
 	searchURL  string // override для тестов; по умолчанию https://openlibrary.org/search.json
 	coverURL   string // override для тестов; по умолчанию https://covers.openlibrary.org
 
-	// occupationGate — слой 2 точности матчинга автора (P106), зеркало
-	// WikipediaProvider.occupationGate. nil = выключен. Отсекает однофамильца-
-	// не-писателя ПОСЛЕ имя-гейта. QID берём бесплатно из remote_ids.wikidata
-	// детальной записи автора (в отличие от wiki, где нужен отдельный pageprops).
-	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+	// candidateCheck — политика приёма кандидата (candidate_policy.go), зеркало
+	// WikipediaProvider.candidateCheck. nil = выключена. QID берём бесплатно из
+	// remote_ids.wikidata детальной записи автора (у wiki нужен отдельный pageprops).
+	candidateCheck CandidateCheck
+
+	// authors — найденный автор (или «не найдено») по запросу: путь фото идёт
+	// следом за путём био и повторил бы поиск, детали и проверку кандидата.
+	authors *ttlCache[olAuthorResult]
+}
+
+type olAuthorResult struct {
+	author   *olAuthor
+	notFound bool
 }
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
@@ -37,6 +45,7 @@ func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
 	}
 	return &OpenLibraryProvider{
+		authors:    newTTLCache[olAuthorResult](lookupCacheTTL, lookupCacheSize),
 		httpClient: httpClient,
 		searchURL:  "https://openlibrary.org/search.json",
 		coverURL:   "https://covers.openlibrary.org",
@@ -50,12 +59,10 @@ func (p *OpenLibraryProvider) WithEndpoints(searchURL, coverURL string) *OpenLib
 	return p
 }
 
-// WithOccupationGate включает слой 2 точности для авторского матчинга OL:
-// после имя-гейта проверяет профессию кандидата (Wikidata P106) по
-// remote_ids.wikidata и отвергает явных не-писателей. nil = выкл. Реализация —
-// та же WikidataAdaptationsProvider.OccupationVerdict, что и у wiki-пути.
-func (p *OpenLibraryProvider) WithOccupationGate(fn func(ctx context.Context, qid string) (OccupationVerdict, error)) *OpenLibraryProvider {
-	p.occupationGate = fn
+// WithCandidateCheck включает политику приёма кандидата для авторского матчинга
+// OL — та же, что у wiki-пути. nil = выкл.
+func (p *OpenLibraryProvider) WithCandidateCheck(fn CandidateCheck) *OpenLibraryProvider {
+	p.candidateCheck = fn
 	return p
 }
 
@@ -513,6 +520,27 @@ func extractOLDescription(v any) string {
 func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
 	// Имена в OpenLibrary латиницей: иностранца ищем по латинскому имени из fb2.
 	q = latinFor(ctx, "openlibrary", "", q)
+	key := q.cacheKey()
+	if r, ok := p.authors.get(key); ok {
+		if r.notFound {
+			traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceReject, Value: "not found a moment ago"})
+			return nil, ErrNotFound
+		}
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceInfo, Value: r.author.OLID})
+		return r.author, nil
+	}
+	a, err := p.authorSearchUncached(ctx, q)
+	switch {
+	case err == nil:
+		p.authors.put(key, olAuthorResult{author: a})
+	case errors.Is(err, ErrNotFound):
+		p.authors.put(key, olAuthorResult{notFound: true})
+	}
+	return a, err
+}
+
+// authorSearchUncached — поиск автора без кэша (см. authorSearch).
+func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
 	if q.FullName == "" {
 		return nil, ErrNotFound
 	}
@@ -554,23 +582,18 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	}
 	detail.OLID = olid
 
-	// Слой 2 (опционально): профессия P106. Имя-гейт пропускает однофамильца с
-	// тем же ФИО, но другой профессией; QID берём бесплатно из remote_ids.wikidata
-	// (доп. запрос не нужен). Отвергаем ТОЛЬКО явного не-писателя; нет QID /
-	// unknown — оставляем (precision-preserving, как на wiki-пути); ошибка сети —
-	// временный сбой, автор перепроверится.
-	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если wiki-гейт
-	// отверг однофамильца (ErrNotFound), enricher идёт к OL — без этого гейта OL
-	// отдал бы того же не-писателя, и wiki-отказ «протёк» бы сюда.
+	// Политика приёма (candidate_policy.go), QID — бесплатно из remote_ids.wikidata.
+	// Ошибка сети — временный сбой, автор перепроверится.
+	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если Википедия
+	// отвергла однофамильца (ErrNotFound), enricher идёт к OL — без этой проверки
+	// OL отдал бы того же человека, и отказ «протёк» бы сюда.
 	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "qid", Outcome: TraceInfo, Input: olid, Value: detail.RemoteIDs.Wikidata})
-	if p.occupationGate != nil && detail.RemoteIDs.Wikidata != "" {
-		v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata)
+	if p.candidateCheck != nil {
+		ok, err := p.candidateCheck(ctx, q, "openlibrary", "", detail.Name, detail.RemoteIDs.Wikidata, q.Strict())
 		if err != nil {
-			// Сбой запроса — временная ошибка, а не «принять» (#280).
-			return nil, fmt.Errorf("%w: occupation: %w", ErrUpstream, err)
+			return nil, fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
 		}
-		traceOccupation(ctx, "openlibrary", "", detail.RemoteIDs.Wikidata, v)
-		if v == OccupationNonWriter {
+		if !ok {
 			return nil, ErrNotFound
 		}
 	}
@@ -702,12 +725,13 @@ type olAuthorSearchResponse struct {
 
 type olAuthor struct {
 	OLID      string  `json:"-"` // заполняем сами после search
+	Name      string  `json:"name"`
 	Bio       any     `json:"bio"`
 	Photos    []int64 `json:"photos"`
 	RemoteIDs struct {
-		// Wikidata QID автора ("Q7243") — зацепка для слоя 2 (P106). У OL это
-		// одно из многих remote_ids; пустая строка = OL не слинковал автора с
-		// Wikidata (тогда гейт не зовём).
+		// Wikidata QID автора ("Q7243") — для политики приёма. У OL это одно из
+		// многих remote_ids; пустая строка = OL не слинковал автора с Wikidata
+		// (тогда фактов нет — политика решает по профилю книг).
 		Wikidata string `json:"wikidata"`
 	} `json:"remote_ids"`
 }
