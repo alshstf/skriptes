@@ -521,6 +521,36 @@ func TestListAuthorsFiltered_LooseCompilations(t *testing.T) {
 	require.NotContains(t, genreCodes, "sf_horror", "жанр сборника не в чипсах автора")
 	require.Contains(t, genreCodes, "sf", "жанр второй работы остаётся")
 
+	// #265: участник только чужой антологии (не основной автор ни одной работы,
+	// все его работы — сборники) в списке не показывается; автор собственного
+	// сборника — показывается, со счётчиком сборников.
+	var guest, owner int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO authors (last_name, normalized_name) VALUES ('Гость', 'гость') RETURNING id`).Scan(&guest))
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO authors (last_name, normalized_name) VALUES ('Составитель', 'составитель') RETURNING id`).Scan(&owner))
+	_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position)
+		SELECT id, $1, 5 FROM books WHERE lib_id = 'k-ru'`, guest)
+	require.NoError(t, err)
+	var ownWork int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO works (title, normalized_title, primary_author_id, kind, kind_source)
+		VALUES ('Свой сборник', 'свой сборник', $1, 'collection', 'heuristic') RETURNING id`, owner).Scan(&ownWork))
+	_, err = pool.Exec(ctx, `
+		WITH b AS (INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+		           SELECT collection_id, archive_id, 'own', 'f', 'fb2', 'Свой сборник', 'свой сборник', $2 FROM books LIMIT 1 RETURNING id)
+		INSERT INTO book_authors (book_id, author_id, position) SELECT id, $1, 0 FROM b`, owner, ownWork)
+	require.NoError(t, err)
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{UserID: f.userID})
+	require.NoError(t, err)
+	var ownerItem *catalog.AuthorListItem
+	for i, it := range res.Items {
+		require.NotEqual(t, guest, it.ID, "участник чужой антологии — не в списке")
+		if it.ID == owner {
+			ownerItem = &res.Items[i]
+		}
+	}
+	require.NotNil(t, ownerItem, "автор собственного сборника — в списке")
+	require.Equal(t, 0, ownerItem.BookCount)
+	require.Equal(t, 1, ownerItem.CompilationCount)
+
 	// fav_books НЕ трогается loose coupling (личное избранное пользователя):
 	// книга Кинга в избранном относится к работе-сборнику, но fav_books её считает.
 	require.Equal(t, 1, king.FavoritedBooksCount, "избранное пользователя не зависит от типа работы")
