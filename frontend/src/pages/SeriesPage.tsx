@@ -1,5 +1,7 @@
+import { useMemo, useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
 import { BarChart3, ListOrdered } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
@@ -10,7 +12,7 @@ import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useSeries, type Series } from '@/lib/catalog';
-import { bySeriesOrder } from '@/lib/books';
+import { bySeriesOrder, type BookListItem as Book } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { pluralBooks } from '@/lib/format';
 
@@ -18,6 +20,36 @@ import { pluralBooks } from '@/lib/format';
 // В шапке — самые плодовитые авторы серии (бэкенд сортирует по числу книг);
 // у издательской серии их сотни.
 const MAX_HEADER_AUTHORS = 5;
+
+// Большие серии (издательские — до 2,7 тыс. книг, #311) рисуем порциями: весь
+// список сразу тяжёл для телефона и неудобен для просмотра.
+const PAGE = 100;
+
+type SeriesSort = 'order' | 'year' | 'title';
+
+// В межавторской/издательской серии номер — порядок выпуска у издательства, не
+// чтения; там полезнее год или название.
+const SORT_OPTIONS: { value: SeriesSort; label: string }[] = [
+  { value: 'order', label: 'По номеру' },
+  { value: 'year', label: 'По году' },
+  { value: 'title', label: 'По названию' },
+];
+
+function byYear(a: Book, b: Book): number {
+  const ay = a.year ?? Number.POSITIVE_INFINITY;
+  const by = b.year ?? Number.POSITIVE_INFINITY;
+  return ay !== by ? ay - by : a.title.localeCompare(b.title, 'ru');
+}
+
+function byTitle(a: Book, b: Book): number {
+  return a.title.localeCompare(b.title, 'ru');
+}
+
+const SORTERS: Record<SeriesSort, (a: Book, b: Book) => number> = {
+  order: bySeriesOrder,
+  year: byYear,
+  title: byTitle,
+};
 
 export function SeriesPage() {
   const { id } = useParams({ strict: false }) as { id: string };
@@ -103,16 +135,62 @@ export function SeriesPage() {
           <div className="flex justify-end empty:hidden">
             <MergeWorksDialog books={s.books} />
           </div>
-          <ul className="space-y-1">
-            {[...s.books].sort(bySeriesOrder).map((b) => (
-              <li key={b.id}>
-                <BookListItem book={b} showSeries={false} showSerNo={true} />
-              </li>
-            ))}
-          </ul>
+          <SeriesBookList books={s.books} multi={s.kind === 'multi'} />
         </div>
       )}
     </article>
+  );
+}
+
+// SeriesBookList — книги серии порциями по PAGE; у межавторской серии — выбор
+// сортировки (номер, год, название).
+function SeriesBookList({ books, multi }: { books: Book[]; multi: boolean }) {
+  const [sort, setSort] = useState<SeriesSort>('order');
+  const [shown, setShown] = useState(PAGE);
+  const sorted = useMemo(() => [...books].sort(SORTERS[sort]), [books, sort]);
+  const rest = sorted.length - shown;
+  return (
+    <>
+      {multi && books.length > 1 ? (
+        <div className="flex items-center justify-end gap-2 text-sm">
+          <label htmlFor="series-sort" className="text-muted-foreground">
+            Сортировка
+          </label>
+          <select
+            id="series-sort"
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value as SeriesSort);
+              setShown(PAGE);
+            }}
+            className="h-8 rounded-md border border-input bg-background px-2 text-sm shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
+      <ul className="space-y-1">
+        {sorted.slice(0, shown).map((b) => (
+          <li key={b.id}>
+            <BookListItem book={b} showSeries={false} showSerNo={true} />
+          </li>
+        ))}
+      </ul>
+      {rest > 0 ? (
+        <div className="flex flex-col items-center gap-1 pt-2">
+          <Button variant="outline" size="sm" onClick={() => setShown((n) => n + PAGE)}>
+            Показать ещё {Math.min(PAGE, rest)}
+          </Button>
+          <span className="text-xs text-muted-foreground tabular-nums">
+            Показано {shown} из {sorted.length}
+          </span>
+        </div>
+      ) : null}
+    </>
   );
 }
 
