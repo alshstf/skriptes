@@ -88,3 +88,8 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 	}
 	return tag.RowsAffected(), nil
 }
+
+// RecomputeAuthorStats — то же для сервиса каталога (после слияния авторов).
+func (s *Service) RecomputeAuthorStats(ctx context.Context) (int64, error) {
+	return RecomputeAuthorStats(ctx, s.pool)
+}

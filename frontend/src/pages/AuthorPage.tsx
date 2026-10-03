@@ -15,6 +15,7 @@ import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { useSetAuthorService } from '@/lib/admin';
 import { useMe } from '@/lib/auth';
+import { AuthorDuplicates } from '@/components/AuthorDuplicates';
 import { Switch } from '@/components/ui/switch';
 import { useLanguageMap } from '@/lib/content';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
@@ -131,6 +132,8 @@ export function AuthorPage() {
               <ServiceAuthorToggle author={a} />
             </div>
           </div>
+
+          <AuthorDuplicates author={a} />
 
           <AuthorBio bio={a.bio} enrichmentExhausted={enrichmentExhausted} />
         </CardContent>

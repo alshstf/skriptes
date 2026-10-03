@@ -234,6 +234,10 @@ func NewRouter(d Deps) http.Handler {
 				// Ручная метка «служебный автор» (агрегат-псевдоавтор вне списка /authors).
 				if d.Catalog.Service != nil {
 					r.Put("/admin/authors/{id}/service", handleSetAuthorService(d.Catalog))
+					// Дубли авторов (#308): кандидаты, пары, слияние.
+					r.Get("/admin/authors/duplicates", handleDuplicatePairs(d.Catalog))
+					r.Get("/admin/authors/{id}/duplicates", handleAuthorDuplicates(d.Catalog))
+					r.Post("/admin/authors/{id}/merge", handleMergeAuthors(d.Settings, d.Catalog))
 				}
 				r.Get("/admin/users", handleListUsers(d.Auth))
 				r.Post("/admin/users", handleCreateUser(d.Auth))

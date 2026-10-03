@@ -24,6 +24,7 @@ import { ReaderPage } from '@/pages/ReaderPage';
 import { AdminGeneralPage } from '@/pages/AdminGeneralPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { AdminContentPage } from '@/pages/AdminContentPage';
+import { AdminAuthorDuplicatesPage } from '@/pages/AdminAuthorDuplicatesPage';
 import { AdminBackgroundPage } from '@/pages/AdminBackgroundPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
@@ -306,6 +307,13 @@ const adminContentRoute = createRoute({
   component: AdminContentPage,
 });
 
+const adminAuthorsRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/admin/authors',
+  beforeLoad: ({ context }) => requireAdmin(context),
+  component: AdminAuthorDuplicatesPage,
+});
+
 const adminBackgroundRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/admin/background',
@@ -339,6 +347,7 @@ const routeTree = rootRoute.addChildren([
     adminGeneralRoute,
     adminUsersRoute,
     adminContentRoute,
+    adminAuthorsRoute,
     adminBackgroundRoute,
   ]),
   protectedFullscreenRoute.addChildren([readerRoute]),
