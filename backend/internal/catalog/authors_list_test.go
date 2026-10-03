@@ -628,6 +628,31 @@ func TestRecomputeAuthorStats(t *testing.T) {
 	require.NoError(t, err)
 	require.Zero(t, again, "без изменений каталога строки не переписываются")
 
+	// Латинское имя: фамилия — по большинству переводов, имя — самая частая запись
+	// с ней; одна книга с другим src-автором большинство не ломает.
+	_, err = pool.Exec(ctx, `UPDATE books SET src_author_normalized = CASE lib_id
+		WHEN 'k-ru' THEN 'king stephen' WHEN 'k-en' THEN 'king stephen edwin' WHEN 'k2' THEN 'king stephen' END
+		WHERE lib_id IN ('k-ru', 'k-en', 'k2')`)
+	require.NoError(t, err)
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	var latin *string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT latin_name FROM authors WHERE id = $1`, f.kingID).Scan(&latin))
+	require.NotNil(t, latin)
+	require.Equal(t, "king stephen", *latin)
+	require.NoError(t, pool.QueryRow(ctx, `SELECT latin_name FROM authors WHERE id = $1`, f.asimovID).Scan(&latin))
+	require.Nil(t, latin, "без переводов с латинским автором — пусто")
+
+	// Латиницей находят и подсказки, и поиск /authors.
+	sugg, err := svc.SuggestAuthors(ctx, "king", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, sugg)
+	require.Equal(t, f.kingID, sugg[0].ID)
+	list, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Query: "king"})
+	require.NoError(t, err)
+	require.Equal(t, 1, list.Total)
+	require.Equal(t, f.kingID, list.Items[0].ID)
+
 	// Работа-сборник выпадает из счёта и рейтинга.
 	_, err = pool.Exec(ctx, `UPDATE works SET kind='collection', kind_source='heuristic'
 		WHERE id = (SELECT work_id FROM books WHERE lib_id = 'k-ru')`)

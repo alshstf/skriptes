@@ -168,12 +168,19 @@ func TestSearch_AuthorQuery(t *testing.T) {
 		{LibID: "850005", Title: "Песни", Authors: []string{"Кармен,Анна"}, Lang: "ru"},
 		// Малоизвестный тёзка: в первую часть не попадает (меньше трети известности Льва).
 		{LibID: "850006", Title: "Записки", Authors: []string{"Толстой,Никита"}, Lang: "ru"},
+		// «doyle»: Конан Дойль узнаётся по латинскому имени из fb2 переводов, хотя
+		// у Роба Дойла латиница прямо в имени автора.
+		{LibID: "850007", Title: "Этюд в багровых тонах", Authors: []string{"Дойль,Артур,Конан"}, Lang: "ru"},
+		{LibID: "850008", Title: "Here Are the Young Men", Authors: []string{"Doyle,Rob"}, Lang: "en"},
 	})
 	require.NoError(t, err)
 	_, err = imp.Run(ctx, path)
 	require.NoError(t, err)
 	// «Кармен» Мериме — известная книга; автор Кармен известен меньше её.
 	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 20000 WHERE title = 'Кармен'`)
+	require.NoError(t, err)
+	// Латинский автор оригинала приходит из fb2 перевода — до сборки индекса.
+	_, err = pool.Exec(ctx, `UPDATE books SET src_author_normalized = 'doyle arthur conan' WHERE lib_id = '850007'`)
 	require.NoError(t, err)
 	_, err = imp.RebuildWorksIndex(ctx)
 	require.NoError(t, err)
@@ -185,6 +192,7 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	_, err = pool.Exec(ctx, `UPDATE authors SET renown = CASE
 		WHEN last_name = 'Толстой' AND first_name = 'Лев' THEN 2000
 		WHEN last_name = 'Толстой' THEN 300
+		WHEN last_name = 'Дойль' THEN 1300
 		WHEN last_name = 'Кармен' THEN 200 ELSE 0 END`)
 	require.NoError(t, err)
 
@@ -230,6 +238,13 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	res, err = svc.ListWorks(ctx, books.ListParams{Query: "толстой война", Limit: 10})
 	require.NoError(t, err)
 	require.Empty(t, res.MatchedAuthors)
+
+	// «doyle» — Конан Дойль по латинскому имени, его книга первой.
+	res, err = svc.ListWorks(ctx, books.ListParams{Query: "doyle", Limit: 10})
+	require.NoError(t, err)
+	require.Len(t, res.MatchedAuthors, 1)
+	require.Equal(t, "Дойль Артур Конан", res.MatchedAuthors[0].FullName)
+	require.Equal(t, "Этюд в багровых тонах", res.Items[0].Title)
 
 	// «кармен»: книга Мериме известнее автора Кармен — обычный поиск, книга первой.
 	res, err = svc.ListWorks(ctx, books.ListParams{Query: "кармен", Limit: 10})
