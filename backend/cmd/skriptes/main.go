@@ -133,7 +133,7 @@ func run() error {
 		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
 		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
 		// стоять, иначе первая выдача уйдёт без типов до следующего ресинка.
-		runOnceWorkKindClassify(c, pool, logger)
+		runOnceWorkKindClassify(c, pool, imp, logger)
 		// Служебные авторы works-индекс не трогают (авторская, не works-сущность) —
 		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
 		runOnceServiceAuthorClassify(c, pool, logger)
@@ -767,13 +767,16 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		logger.Info("work titles synced after import", "works", len(changed))
 	}
 	// Классифицировать НОВЫЕ работы импорта (сборники/антологии). Идемпотентно и
-	// дёшево; правит только kind_source IS NULL/'heuristic', полный ресинк индекса
-	// в конце imp.Run уже забрал kind для ранее классифицированных — свежие метки
-	// подтянутся следующим ресинком (некритично: новинки редко сборники).
-	if n, err := metadata.ClassifyWorkKinds(ctx, pool); err != nil {
+	// дёшево; правит только kind_source IS NULL/'heuristic'. Изменённые — в
+	// works-индекс: раньше свежие метки ждали следующего полного ресинка, и kind в
+	// PG и Meili расходился (на проде — у 1 092 работ, #284).
+	if changed, err := metadata.ClassifyWorkKinds(ctx, pool); err != nil {
 		logger.Warn("classify work kinds after import failed", "err", err)
-	} else if n > 0 {
-		logger.Info("classified work kinds after import", "count", n)
+	} else if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after kind classification failed", "err", err)
+		}
+		logger.Info("classified work kinds after import", "count", len(changed))
 	}
 	// Разметить НОВЫХ служебных авторов импорта («Коллектив авторов» и т.п.) —
 	// агрегаты-псевдоавторы вне списка /authors. Идемпотентно; ручные метки
@@ -864,11 +867,14 @@ func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Im
 
 // runOnceWorkKindClassify — разовый эвристический бэкфилл типов работ
 // (works.kind: сборник/антология/том собрания — миграция 0034). Гейтится флагом
-// app_settings.work_kind_classified_v1. Зовётся ДО runOnceWorksIndexSync в той же
+// app_settings.work_kind_classified_v<N>. Зовётся ДО runOnceWorksIndexSync в той же
 // горутине: бамп схемы индекса (v6, поле kind) ресинкает все доки — kind должен
 // уже стоять. Дальше типы поддерживает вызов после импорта (runStartupImport).
-func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "work_kind_classified_v1"
+func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	// v2 — правила #284 (серия — только если в ней все издания работы, без «Миры X»
+	// и «Собрание сочинений», ≥4 авторов не для нон-фикшна, известные романы не
+	// красятся): все эвристические типы пересчитываются заново.
+	const flag = "work_kind_classified_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work kind classify: check flag failed — skip", "err", err)
@@ -877,17 +883,30 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *sl
 	if done {
 		return
 	}
-	n, err := metadata.ClassifyWorkKinds(ctx, pool)
+	changed, err := metadata.ReclassifyAllHeuristic(ctx, pool)
 	if err != nil {
 		logger.Warn("work kind classify failed — will retry next start", "err", err)
 		return
+	}
+	// Тип — в works-индексе (фильтр «Скрывать сборники»), в известности автора и
+	// в числе его книг (сборники вне агрегатов).
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after kind reclassification failed", "err", err)
+		}
+		if _, err := imp.RecomputeAuthorRenownFor(ctx, changed); err != nil {
+			logger.Warn("author renown after kind reclassification failed", "err", err)
+		}
+		if _, err := catalog.RecomputeAuthorStats(ctx, pool); err != nil {
+			logger.Warn("author stats after kind reclassification failed", "err", err)
+		}
 	}
 	if _, err := pool.Exec(ctx,
 		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
 		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
 		logger.Warn("work kind classify: set flag failed (will rerun next start, idempotent)", "err", err)
 	}
-	logger.Info("one-time work kind classification done", "count", n)
+	logger.Info("one-time work kind classification done", "changed", len(changed))
 }
 
 // runOnceServiceAuthorClassify — разовый эвристический бэкфилл «служебных

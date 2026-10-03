@@ -98,9 +98,9 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 		workIDOf(t, ctx, pool, flBook))
 	require.NoError(t, err)
 
-	n, err := ClassifyWorkKinds(ctx, pool)
+	changed, err := ClassifyWorkKinds(ctx, pool)
 	require.NoError(t, err)
-	require.Positive(t, n)
+	require.NotEmpty(t, changed)
 
 	k, src := kindOf(t, ctx, pool, workIDOf(t, ctx, pool, novel))
 	require.Empty(t, k, "обычный роман не помечается")
@@ -140,9 +140,9 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 
 	// Идемпотентность: повторный прогон не падает, не меняет классификацию и
 	// ничего не переписывает — даже у работ с несколькими сигналами (#300).
-	n, err = ClassifyWorkKinds(ctx, pool)
+	changed, err = ClassifyWorkKinds(ctx, pool)
 	require.NoError(t, err)
-	require.Zero(t, n)
+	require.Empty(t, changed)
 	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, coll))
 	require.Equal(t, "collection", k)
 }
@@ -187,4 +187,85 @@ func TestClassifyWorkKinds_ConcurrentNoDeadlock(t *testing.T) {
 	for w := 0; w < workers; w++ {
 		require.NoError(t, <-errs, "конкурентная классификация не должна ловить deadlock")
 	}
+}
+
+// TestClassifyWorkKinds_Rules284 — правила #284: серия-«сборники» красит работу,
+// только если в ней все издания; «Миры X» и «Собрание сочинений» как серии — не
+// сигнал; ≥4 авторов не для нон-фикшна; известный роман по серии и авторам не
+// красится; переклассификация снимает тип, который правила больше не дают.
+func TestClassifyWorkKinds_Rules284(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	bulg := seedGroupAuthor(t, ctx, pool, "Булгаков", "булгаков михаил")
+
+	// Роман: одно издание в серии сборников, другое — нет.
+	mm1 := seedGroupBook(t, ctx, pool, collID, archID, bulg, "MM1", "Мастер и Маргарита", "мастер и маргарита", "ru", "", "", "")
+	mm2 := seedGroupBook(t, ctx, pool, collID, archID, bulg, "MM2", "Мастер и Маргарита", "мастер и маргарита", "ru", "", "", "")
+	_, err := pool.Exec(ctx, `UPDATE books SET work_id = $1 WHERE id = $2`, workIDOf(t, ctx, pool, mm1), mm2)
+	require.NoError(t, err)
+	putInSeries(t, ctx, pool, mm1, "булгаков, михаил. сборники")
+	mm := workIDOf(t, ctx, pool, mm1)
+
+	// «Миры X» и «Собрание сочинений» — серии романов.
+	worlds := seedGroupBook(t, ctx, pool, collID, archID, bulg, "W1", "Двенадцать стульев", "двенадцать стульев", "ru", "", "", "")
+	putInSeries(t, ctx, pool, worlds, "миры ильфа и петрова")
+	sobr := seedGroupBook(t, ctx, pool, collID, archID, bulg, "D1", "Три мушкетёра", "три мушкетёра", "ru", "", "", "")
+	putInSeries(t, ctx, pool, sobr, "собрание сочинений")
+
+	// Известный роман в серии сборников.
+	famous := seedGroupBook(t, ctx, pool, collID, archID, bulg, "T1", "Трудно быть богом", "трудно быть богом", "ru", "", "", "")
+	putInSeries(t, ctx, pool, famous, "стругацкие. сборники")
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 9000 WHERE id = $1`, workIDOf(t, ctx, pool, famous))
+	require.NoError(t, err)
+
+	// Нон-фикшн с четырьмя соавторами — не антология.
+	var sciGenre int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO genres (fb2_code, name_ru) VALUES ('sci_history', 'История') ON CONFLICT (fb2_code) DO UPDATE SET name_ru = EXCLUDED.name_ru RETURNING id`).Scan(&sciGenre))
+	sci := seedGroupBook(t, ctx, pool, collID, archID, bulg, "H1", "История Москвы", "история москвы", "ru", "", "", "")
+	_, err = pool.Exec(ctx, `INSERT INTO book_genres (book_id, genre_id) VALUES ($1, $2)`, sci, sciGenre)
+	require.NoError(t, err)
+	for i, nm := range []string{"иванов", "петров", "сидоров"} {
+		aid := seedGroupAuthor(t, ctx, pool, nm, nm)
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,$3)`, sci, aid, i+1)
+		require.NoError(t, err)
+	}
+
+	// Помечены прежними правилами (как на проде до #284).
+	for _, w := range []int64{mm, workIDOf(t, ctx, pool, worlds), workIDOf(t, ctx, pool, sobr), workIDOf(t, ctx, pool, famous), workIDOf(t, ctx, pool, sci)} {
+		_, err := pool.Exec(ctx, `UPDATE works SET kind = 'omnibus', kind_source = 'heuristic' WHERE id = $1`, w)
+		require.NoError(t, err)
+	}
+	// Настоящий сборник: единственное издание в серии сборников — остаётся.
+	real := seedGroupBook(t, ctx, pool, collID, archID, bulg, "R1", "Дьяволиада", "дьяволиада", "ru", "", "", "")
+	putInSeries(t, ctx, pool, real, "булгаков, михаил. сборники")
+
+	changed, err := ReclassifyAllHeuristic(ctx, pool)
+	require.NoError(t, err)
+	for _, tc := range []struct {
+		book int64
+		why  string
+	}{
+		{mm1, "одно издание в серии сборников не красит роман"},
+		{worlds, "«Миры X» — не сигнал"},
+		{sobr, "«Собрание сочинений» как серия — не сигнал"},
+		{famous, "известный роман по серии не красится"},
+		{sci, "нон-фикшн с соавторами — не антология"},
+	} {
+		k, src := kindOf(t, ctx, pool, workIDOf(t, ctx, pool, tc.book))
+		require.Empty(t, k, tc.why)
+		require.Empty(t, src, tc.why)
+		require.Contains(t, changed, workIDOf(t, ctx, pool, tc.book), "снятый тип — в изменённых: "+tc.why)
+	}
+	k, _ := kindOf(t, ctx, pool, workIDOf(t, ctx, pool, real))
+	require.Equal(t, "omnibus", k, "все издания в серии сборников — сборник")
+	require.Contains(t, changed, workIDOf(t, ctx, pool, real))
+
+	again, err := ReclassifyAllHeuristic(ctx, pool)
+	require.NoError(t, err)
+	require.Empty(t, again, "повторная переклассификация ничего не меняет")
 }
