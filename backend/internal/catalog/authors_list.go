@@ -111,6 +111,7 @@ type AuthorListParams struct {
 }
 
 // AuthorListResult — страница списка авторов + общее число (для пагинации).
+// Total считается только для первой страницы (offset 0), на следующих — -1.
 type AuthorListResult struct {
 	Items []AuthorListItem `json:"items"`
 	Total int              `json:"total"`
@@ -290,12 +291,17 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// total — число авторов, прошедших фильтры (для пагинации). Использует ровно
 	// те аргументы, что упомянуты в whereSQL: на этом этапе args содержит только
 	// фильтр-аргументы (limit/offset/user/агрегатные исключения добавятся ниже).
+	// Считается только для первой страницы (offset 0): дальше клиент держит число
+	// с первой страницы, а count по 140 тыс. авторов стоит ~0,4 с на каждый запрос
+	// (#302). На следующих страницах Total = -1.
 	nFilterArgs := len(args)
-	var total int
-	if err := s.pool.QueryRow(ctx,
-		`SELECT count(*) FROM authors a`+whereSQL, args[:nFilterArgs]...,
-	).Scan(&total); err != nil {
-		return AuthorListResult{}, fmt.Errorf("count authors: %w", err)
+	total := -1
+	if p.Offset == 0 {
+		if err := s.pool.QueryRow(ctx,
+			`SELECT count(*) FROM authors a`+whereSQL, args[:nFilterArgs]...,
+		).Scan(&total); err != nil {
+			return AuthorListResult{}, fmt.Errorf("count authors: %w", err)
+		}
 	}
 
 	// ── Главный запрос: ДВЕ ФАЗЫ (иначе таймаут на большой библиотеке) ─────
@@ -311,21 +317,17 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// «query failed». sort=name работал (сортировка по индексируемым колонкам →
 	// LIMIT применяется сразу), а sort=rating/book_count/reader_rating — нет.
 
-	// Сортировка фазы 1: базовые колонки (renown/name) либо ОДИН коррелированный
-	// агрегат (свои exclusion-плейсхолдеры — видимость учитывается и в ключе).
+	// Сортировка фазы 1 — только по колонкам authors: известность, алфавит или
+	// хранимые агрегаты book_count/max_rating (#302, catalog.RecomputeAuthorStats;
+	// коррелированный подзапрос по всем авторам шёл ~10 с). Личные скрытия в ключ
+	// не входят — порядок по общему каталогу. Оценки читателей (book_ratings —
+	// маленькая таблица) по-прежнему считаются на лету.
 	var phase1Order string
 	switch p.Sort {
 	case "book_count":
-		ex := renderAggExclusion()
-		phase1Order = fmt.Sprintf("ORDER BY (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))"+
-			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
-			" WHERE ba.author_id = a.id AND b.deleted = false%s) DESC, %s", ex, authorAlphaOrder)
+		phase1Order = "ORDER BY a.book_count DESC, " + authorAlphaOrder
 	case "rating":
-		ex := renderAggExclusion()
-		phase1Order = fmt.Sprintf("ORDER BY (SELECT max(COALESCE(b.rating, b.external_rating))::float8"+
-			" FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
-			" WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%s)"+
-			" DESC NULLS LAST, %s", ex, authorAlphaOrder)
+		phase1Order = "ORDER BY a.max_rating DESC NULLS LAST, a.book_count DESC, " + authorAlphaOrder
 	case "reader_rating":
 		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT avg(br.rating)::float8 FROM book_ratings br"+
@@ -343,14 +345,15 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		phase1Order = "ORDER BY a.renown DESC, " + authorAlphaOrder
 	}
 
-	// Финальная сортировка фазы 2 — по тем же критериям, но по готовым алиасам
-	// страницы (≤Limit строк, дёшево; secondary-ключи доступны как алиасы).
+	// Финальная сортировка фазы 2 — тем же ключом, что фаза 1 (страница несёт
+	// хранимые агрегаты как stat_*): порядок внутри страницы совпадает с порядком
+	// между страницами, ничего не теряется и не повторяется при подгрузке.
 	var orderSQL string
 	switch p.Sort {
 	case "book_count":
-		orderSQL = "ORDER BY book_count DESC, " + authorAlphaOrder
+		orderSQL = "ORDER BY a.stat_books DESC, " + authorAlphaOrder
 	case "rating":
-		orderSQL = "ORDER BY external_rating DESC NULLS LAST, book_count DESC, a.id"
+		orderSQL = "ORDER BY a.stat_rating DESC NULLS LAST, a.stat_books DESC, " + authorAlphaOrder
 	case "reader_rating":
 		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
 	case "name":
@@ -379,7 +382,8 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	query := fmt.Sprintf(`
 		WITH page AS (
 		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
-		           a.normalized_name, a.renown, a.name_note
+		           a.normalized_name, a.renown, a.name_note,
+		           a.book_count AS stat_books, a.max_rating AS stat_rating
 		    FROM authors a%[1]s
 		    %[2]s
 		    LIMIT $%[3]d OFFSET $%[4]d

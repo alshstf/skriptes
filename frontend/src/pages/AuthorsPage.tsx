@@ -28,10 +28,6 @@ import { useAuthorsList, type AuthorListItem, type AuthorsListParams } from '@/l
 import { cn } from '@/lib/utils';
 
 const PAGE_SIZE = 50;
-// MAX_LIMIT — потолок limit'а на бэке (catalog.sanitizePaging, ≤500). Пагинация
-// тут — рост limit'а (а не offset), поэтому за этим потолком сервер молча
-// перестаёт отдавать больше; клампим, чтобы «Показать ещё» не висел вечно.
-const MAX_LIMIT = 500;
 
 // Code-based routing не разносит validateSearch-тип через navigate — как в
 // BooksPage заворачиваем в helper-тип (рантайм-форму гарантирует validateSearch).
@@ -65,7 +61,6 @@ export function AuthorsPage() {
   // Поисковый ввод — локальный стейт с debounce; URL.q обновляем после паузы.
   const [queryInput, setQueryInput] = useState(search.q ?? '');
   const debouncedQuery = useDebouncedValue(queryInput, 200);
-  const [limit, setLimit] = useState(PAGE_SIZE);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Синхронизируем URL.q ← debouncedQuery когда они разъезжаются.
@@ -91,7 +86,7 @@ export function AuthorsPage() {
   };
 
   // Применение фильтров пишет URL (нулевые/дефолтные значения вырезаем) и
-  // сбрасывает пагинацию «Показать ещё» к первой странице.
+  // сбрасывает пагинацию «Показать ещё» к первой странице (новый ключ запроса).
   const applyFilters = (next: AuthorsFilters) => {
     void navigate({
       search: (prev) => ({
@@ -109,10 +104,9 @@ export function AuthorsPage() {
       }),
       replace: true,
     });
-    setLimit(PAGE_SIZE);
   };
 
-  const { data, isLoading, isFetching, error } = useAuthorsList({
+  const { data, isLoading, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useAuthorsList({
     query: debouncedQuery,
     genres: filters.genres,
     langs: filters.langs,
@@ -124,14 +118,16 @@ export function AuthorsPage() {
     minReaderRating: filters.minReaderRating,
     favoritesOnly: filters.favoritesOnly,
     sort: filters.sort,
-    limit,
-  });
+  }, PAGE_SIZE);
 
-  const items = data?.items ?? [];
-  const total = data?.total ?? 0;
-  // Ещё есть что грузить, если показано меньше общего числа И мы не упёрлись в
-  // потолок limit'а (за ним сервер обрежет, а total остался бы больше).
-  const hasMore = items.length < total && limit < MAX_LIMIT;
+  // Страницы по offset (#302): подгрузка тянет только следующие PAGE_SIZE
+  // авторов, а не весь список заново; общее число — с первой страницы.
+  const items = data?.pages.flatMap((p) => p.items) ?? [];
+  const total = Math.max(data?.pages[0]?.total ?? 0, 0);
+  const hasMore = Boolean(hasNextPage);
+  // Перезапрос после смены фильтров (keepPreviousData) — приглушаем список;
+  // подгрузка следующей страницы видна только на кнопке.
+  const refetching = isFetching && !isFetchingNextPage;
 
   const totalActive =
     filters.genres.length +
@@ -147,7 +143,6 @@ export function AuthorsPage() {
   const resetAll = () => {
     setQueryInput('');
     void navigate({ search: {}, replace: true });
-    setLimit(PAGE_SIZE);
   };
 
   return (
@@ -172,10 +167,7 @@ export function AuthorsPage() {
                 placeholder="Поиск по имени автора"
                 className="pl-9"
                 value={queryInput}
-                onChange={(e) => {
-                  setQueryInput(e.target.value);
-                  setLimit(PAGE_SIZE);
-                }}
+                onChange={(e) => setQueryInput(e.target.value)}
               />
             </div>
 
@@ -239,7 +231,7 @@ export function AuthorsPage() {
           <Callout>Авторов по заданным фильтрам не нашлось.</Callout>
         ) : data ? (
           <>
-            <ul className={cn('space-y-1', isFetching ? 'opacity-70' : '')}>
+            <ul className={cn('space-y-1', refetching ? 'opacity-70' : '')}>
               {items.map((a) => (
                 <li key={a.id}>
                   <AuthorRow author={a} />
@@ -251,10 +243,10 @@ export function AuthorsPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => setLimit((n) => Math.min(n + PAGE_SIZE, MAX_LIMIT))}
+                  onClick={() => void fetchNextPage()}
                   disabled={isFetching}
                 >
-                  {isFetching ? 'Загрузка…' : 'Показать ещё'}
+                  {isFetchingNextPage ? 'Загрузка…' : 'Показать ещё'}
                 </Button>
               </div>
             ) : items.length > 0 ? (
