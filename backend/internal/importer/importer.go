@@ -486,8 +486,10 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 //
 // v9 — title_s/authors_s/series_s: поисковые копии со свёрткой «ё»→«е» (#278);
 // v10 — та же схема, но пересборка через временный индекс (RebuildWorksIndex):
-// после v9 у работ с «ё» в названии в Meili осталась битой близость слов.
-const WorksIndexSchemaVersion = 10
+// после v9 у работ с «ё» в названии в Meili осталась битой близость слов;
+// v11 — alt_titles_s (названия изданий и оригинала) и authors_latin (латинские
+// имена авторов оригинала) в поиске (#291).
+const WorksIndexSchemaVersion = 11
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -600,7 +602,26 @@ const workDocSelect = `
 		COALESCE(w.ol_ratings_count, 0),
 		COALESCE(w.ol_want_count, 0),
 		COALESCE(w.wd_sitelinks, 0),
-		COALESCE(w.kind, '')
+		COALESCE(w.kind, ''),
+		COALESCE((
+			-- Альтернативные названия (#291): названия изданий, отличные от
+			-- названия работы, и названия оригинала. Дедуп и предел — в Go.
+			SELECT array_agg(DISTINCT x.t ORDER BY x.t)
+			FROM (
+				SELECT btrim(b.title) AS t FROM books b
+				WHERE b.work_id = w.id AND b.deleted = false
+				UNION
+				SELECT btrim(b.src_title) FROM books b
+				WHERE b.work_id = w.id AND b.deleted = false AND b.src_title IS NOT NULL
+			) x
+			WHERE x.t <> '' AND lower(x.t) <> lower(btrim(w.title))
+		), '{}'),
+		COALESCE((
+			SELECT array_agg(DISTINCT btrim(b.src_author_normalized::text))
+			FROM books b
+			WHERE b.work_id = w.id AND b.deleted = false
+			  AND btrim(COALESCE(b.src_author_normalized::text, '')) <> ''
+		), '{}')
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
 
@@ -616,11 +637,12 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 	var out []workDoc
 	for rows.Next() {
 		var (
-			d        workDoc
-			seriesID *int64
-			series   string
-			year     *int16
-			sig      workPopSignals
+			d         workDoc
+			seriesID  *int64
+			series    string
+			year      *int16
+			sig       workPopSignals
+			altTitles []string
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
 			&seriesID, &series, &d.EditionCount, &year,
@@ -628,7 +650,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
 			&sig.FantlabMarks, &sig.OLRatings, &sig.OLWant, &sig.WDSitelinks,
-			&d.Kind); err != nil {
+			&d.Kind, &altTitles, &d.AuthorsLatin); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
 		// Popularity работы = интегральная «известность»: workDocSelect отдаёт сырые
@@ -667,6 +689,10 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		d.TitleSearch = textnorm.FoldYo(d.Title)
 		d.AuthorsSearch = textnorm.FoldYoAll(d.Authors)
 		d.SeriesSearch = textnorm.FoldYo(d.Series)
+		d.AltTitlesSearch = altTitlesForSearch(d.TitleSearch, altTitles)
+		if d.AuthorsLatin == nil {
+			d.AuthorsLatin = []string{}
+		}
 		if d.AuthorIDs == nil {
 			d.AuthorIDs = []int64{}
 		}
@@ -964,4 +990,29 @@ func (im *Importer) processRecord(
 		}
 	}
 	return nil
+}
+
+// maxAltTitles — предел альтернативных названий в документе работы: у
+// мега-работ (собрания, ошибочные склейки) их сотни, а в поиске хватит первых.
+const maxAltTitles = 20
+
+// altTitlesForSearch — альтернативные названия для поиска (#291): со свёрткой
+// «ё»→«е», без повторов (без учёта регистра) и без совпадающих с названием
+// работы, не больше maxAltTitles.
+func altTitlesForSearch(titleSearch string, titles []string) []string {
+	out := make([]string, 0, min(len(titles), maxAltTitles))
+	seen := map[string]bool{strings.ToLower(titleSearch): true}
+	for _, t := range titles {
+		f := textnorm.FoldYo(strings.TrimSpace(t))
+		k := strings.ToLower(f)
+		if f == "" || seen[k] {
+			continue
+		}
+		seen[k] = true
+		out = append(out, f)
+		if len(out) == maxAltTitles {
+			break
+		}
+	}
+	return out
 }

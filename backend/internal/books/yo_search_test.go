@@ -92,3 +92,58 @@ func TestSearch_YoFolding(t *testing.T) {
 	require.Len(t, list.Items, 1)
 	require.Equal(t, "Семёнов Юлиан", list.Items[0].FullName)
 }
+
+// TestSearch_AltTitlesAndLatinAuthors — #291: работа находится по названию
+// другого издания и названию оригинала, автор — по латинскому имени из fb2
+// перевода; совпадение в названии работы выше совпадения в альтернативном.
+func TestSearch_AltTitlesAndLatinAuthors(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	mgr, addr, key := startMeilisearchAddr(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr, MeiliURL: addr, MeiliAPIKey: key})
+	path, err := inpxtest.WriteINPX(t.TempDir(), "lib.inpx", []inpxtest.Book{
+		{LibID: "840001", Title: "Хоббит, или Туда и обратно", Authors: []string{"Толкин,Джон"}, Lang: "ru"},
+		{LibID: "840002", Title: "Дюна", Authors: []string{"Герберт,Фрэнк"}, Lang: "ru"},
+		{LibID: "840003", Title: "Собака Баскервилей", Authors: []string{"Дойл,Артур"}, Lang: "ru"},
+		{LibID: "840004", Title: "Hobbit Hole", Authors: []string{"Иванов,Иван"}, Lang: "ru"},
+	})
+	require.NoError(t, err)
+	_, err = imp.Run(ctx, path)
+	require.NoError(t, err)
+	// Название оригинала и латинский автор приходят из fb2 (<src-title-info>).
+	for lib, src := range map[string][2]string{
+		"840001": {"The Hobbit", "tolkien john ronald reuel"},
+		"840002": {"Dune", "herbert frank"},
+		"840003": {"The Hound of the Baskervilles", "doyle arthur conan"},
+	} {
+		_, err := pool.Exec(ctx, `UPDATE books SET src_title = $2, src_author_normalized = $3 WHERE lib_id = $1`, lib, src[0], src[1])
+		require.NoError(t, err)
+	}
+
+	_, err = imp.RebuildWorksIndex(ctx)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO app_settings (key, value) VALUES ($1, 'true'::jsonb)`, importer.WorksIndexSyncedFlagKey())
+	require.NoError(t, err)
+	require.NoError(t, imp.ConfigureWorksIndex(ctx))
+
+	svc := books.New(pool, mgr, nil)
+	titles := func(q string) []string {
+		res, err := svc.ListWorks(ctx, books.ListParams{Query: q, Limit: 10})
+		require.NoError(t, err)
+		out := make([]string, 0, len(res.Items))
+		for _, it := range res.Items {
+			out = append(out, it.Title)
+		}
+		return out
+	}
+	require.Eventually(t, func() bool { return len(titles("dune herbert")) == 1 }, 30*time.Second, 200*time.Millisecond)
+	require.Equal(t, []string{"Дюна"}, titles("dune herbert"), "оригинал + латинский автор")
+	require.Equal(t, []string{"Собака Баскервилей"}, titles("doyle"), "латинское имя автора")
+	require.Equal(t, []string{"Hobbit Hole", "Хоббит, или Туда и обратно"}, titles("hobbit"),
+		"совпадение в названии работы выше совпадения в названии оригинала")
+	require.Contains(t, titles("the hobbit"), "Хоббит, или Туда и обратно")
+}

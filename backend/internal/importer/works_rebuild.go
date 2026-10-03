@@ -38,7 +38,7 @@ func (im *Importer) RebuildWorksIndex(ctx context.Context) (int, error) {
 	if err := im.deleteIndex(ctx, worksRebuildIndex); err != nil {
 		return 0, fmt.Errorf("drop stale rebuild index: %w", err)
 	}
-	if err := configureWorksIndex(ctx, m, worksRebuildIndex, true); err != nil {
+	if err := configureWorksIndex(ctx, m, worksRebuildIndex, WorksIndexSchemaVersion); err != nil {
 		return 0, fmt.Errorf("configure rebuild index: %w", err)
 	}
 	n, err := im.resyncWorksInto(ctx, worksRebuildIndex)
