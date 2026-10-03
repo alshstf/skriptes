@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/compone
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { cn } from '@/lib/utils';
+import { pluralBooks } from '@/lib/format';
 
 /**
  * CommandPalette — глобальная палитра поиска (⌘K / Ctrl+K).
@@ -228,13 +229,3 @@ function PaletteTrigger({ onClick }: { onClick: () => void }) {
   );
 }
 
-function pluralBooks(n: number): string {
-  // Простой плюрал для русского. 1 книга / 2-4 книги / 5+ книг.
-  // Учитываем 11-14 как исключение.
-  const last2 = n % 100;
-  const last1 = n % 10;
-  if (last2 >= 11 && last2 <= 14) return 'книг';
-  if (last1 === 1) return 'книга';
-  if (last1 >= 2 && last1 <= 4) return 'книги';
-  return 'книг';
-}

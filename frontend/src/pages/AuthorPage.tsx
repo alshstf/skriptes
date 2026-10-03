@@ -22,6 +22,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { bySeriesOrder, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { pluralBooks } from '@/lib/format';
 
 export function AuthorPage() {
   const { id } = useParams({ strict: false }) as { id: string };
@@ -595,11 +596,3 @@ function AuthorSkeleton() {
   );
 }
 
-function pluralBooks(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'книг';
-  if (mod10 === 1) return 'книга';
-  if (mod10 >= 2 && mod10 <= 4) return 'книги';
-  return 'книг';
-}

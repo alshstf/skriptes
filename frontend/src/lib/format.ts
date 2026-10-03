@@ -68,3 +68,21 @@ export function translationLine(
   if (person) return `Перевод — ${person}`;
   return null;
 }
+
+/**
+ * pluralRu — русское склонение числительного: forms = [одна, две–четыре, пять]
+ * («книга», «книги», «книг»); 11–14 — как «пять».
+ */
+export function pluralRu(n: number, forms: readonly [string, string, string]): string {
+  const mod10 = Math.abs(n) % 10;
+  const mod100 = Math.abs(n) % 100;
+  if (mod100 >= 11 && mod100 <= 14) return forms[2];
+  if (mod10 === 1) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4) return forms[1];
+  return forms[2];
+}
+
+/** pluralBooks — «книга / книги / книг». */
+export function pluralBooks(n: number): string {
+  return pluralRu(n, ['книга', 'книги', 'книг']);
+}

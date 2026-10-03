@@ -26,6 +26,7 @@ import { useEffectiveContent, useLanguageMap, useLanguages, useSrcLanguages } fr
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
 import { useAuthorsList, type AuthorListItem, type AuthorsListParams } from '@/lib/authors';
 import { cn } from '@/lib/utils';
+import { pluralBooks, pluralRu } from '@/lib/format';
 
 const PAGE_SIZE = 50;
 
@@ -205,7 +206,7 @@ export function AuthorsPage() {
                 </div>
                 <SheetFooter className="border-t">
                   <Button onClick={() => setFiltersOpen(false)}>
-                    {data ? `Показать ${total} ${pluralAuthors(total)}` : 'Показать'}
+                    {data ? `Показать ${total} ${pluralRu(total, ['автор', 'автора', 'авторов'])}` : 'Показать'}
                   </Button>
                 </SheetFooter>
               </SheetContent>
@@ -215,7 +216,7 @@ export function AuthorsPage() {
 
         {data ? (
           <p className="text-sm text-muted-foreground tabular-nums">
-            {total} {pluralAuthors(total)}
+            {total} {pluralRu(total, ['автор', 'автора', 'авторов'])}
           </p>
         ) : null}
 
@@ -652,20 +653,4 @@ function parseYear(raw: string): number {
   return Math.floor(n);
 }
 
-function pluralBooks(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'книг';
-  if (mod10 === 1) return 'книга';
-  if (mod10 >= 2 && mod10 <= 4) return 'книги';
-  return 'книг';
-}
 
-function pluralAuthors(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'авторов';
-  if (mod10 === 1) return 'автор';
-  if (mod10 >= 2 && mod10 <= 4) return 'автора';
-  return 'авторов';
-}

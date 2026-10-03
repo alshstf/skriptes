@@ -30,6 +30,7 @@ import { useRatePrompt } from '@/lib/ratings';
 import { RatingControl } from '@/components/RatingControl';
 import { RatingPromptMenu } from '@/components/RatingPromptMenu';
 import { cn } from '@/lib/utils';
+import { pluralBooks } from '@/lib/format';
 
 /**
  * HomePage — новая Главная (`/`).
@@ -641,12 +642,3 @@ function ShelfSkeleton({ title }: { title: string }) {
   );
 }
 
-function pluralBooks(n: number): string {
-  // Простой русский плюрал: 1 книга / 2-4 книги / 5+ книг (11-14 — исключение).
-  const last2 = n % 100;
-  const last1 = n % 10;
-  if (last2 >= 11 && last2 <= 14) return 'книг';
-  if (last1 === 1) return 'книга';
-  if (last1 >= 2 && last1 <= 4) return 'книги';
-  return 'книг';
-}

@@ -34,10 +34,38 @@ func Start(t testing.TB, ctx context.Context) (*pgxpool.Pool, string) {
 	return pool, dsn
 }
 
+// startAttempts — сколько раз пробовать поднять контейнер (#330): под полным
+// параллельным go test (десятки контейнеров, OrbStack) сокет Docker иногда
+// отвечает дольше тайм-аута ожидания порта — «mapped port … context deadline
+// exceeded», хотя сам контейнер исправен.
+const startAttempts = 3
+
 // DSN — только контейнер, без миграций (тесты самих миграций).
 func DSN(t testing.TB, ctx context.Context) string {
 	t.Helper()
-	pgC, err := postgres.Run(ctx,
+	var (
+		pgC *postgres.PostgresContainer
+		err error
+	)
+	for attempt := 1; attempt <= startAttempts; attempt++ {
+		pgC, err = run(ctx)
+		// До проверки ошибки: контейнер мог создаться, даже если ожидание упало.
+		testcontainers.CleanupContainer(t, pgC)
+		if err == nil || ctx.Err() != nil {
+			break
+		}
+		t.Logf("testpg: postgres start attempt %d/%d failed: %v", attempt, startAttempts, err)
+		time.Sleep(time.Duration(attempt) * 2 * time.Second)
+	}
+	require.NoError(t, err)
+
+	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
+	require.NoError(t, err)
+	return dsn
+}
+
+func run(ctx context.Context) (*postgres.PostgresContainer, error) {
+	return postgres.Run(ctx,
 		"postgres:17-alpine",
 		postgres.WithDatabase("skriptes_test"),
 		postgres.WithUsername("skriptes"),
@@ -53,11 +81,4 @@ func DSN(t testing.TB, ctx context.Context) string {
 			).WithStartupTimeoutDefault(60*time.Second),
 		),
 	)
-	// До проверки ошибки: контейнер мог создаться, даже если ожидание упало.
-	testcontainers.CleanupContainer(t, pgC)
-	require.NoError(t, err)
-
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	return dsn
 }

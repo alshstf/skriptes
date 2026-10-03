@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import type { GenreItem } from '@/lib/genres';
 import type { LanguageItem } from '@/lib/content';
+import { pluralRu } from '@/lib/format';
 
 /**
  * Редакторы видимости контента (общие для админки и профиля). Семантика
@@ -210,7 +211,7 @@ export function LanguageVisibilityList({
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs text-muted-foreground">
-          {languages.length} {pluralLang(languages.length)}
+          {languages.length} {pluralRu(languages.length, ['язык', 'языка', 'языков'])}
         </span>
         <div className="flex gap-1">
           <Button
@@ -269,14 +270,6 @@ export function LanguageVisibilityList({
 }
 
 // pluralLang — «1 язык / 2 языка / 5 языков».
-function pluralLang(n: number): string {
-  const m10 = n % 10;
-  const m100 = n % 100;
-  if (m100 >= 11 && m100 <= 14) return 'языков';
-  if (m10 === 1) return 'язык';
-  if (m10 >= 2 && m10 <= 4) return 'языка';
-  return 'языков';
-}
 
 // ── Жанры (сгруппированы по категориям, с поиском) ──────────────────
 

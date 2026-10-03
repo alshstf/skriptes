@@ -1022,7 +1022,7 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		logger.Warn("works index sync: gc old flag keys failed", "err", err)
 	}
 	// Документы пересобраны — поиск можно переключать на поля новой схемы
-	// (свёртка «ё», см. importer.foldedSearchReady).
+	// (свёртка «ё», альтернативные названия — см. importer.worksSearchable).
 	if err := imp.ConfigureWorksIndex(ctx); err != nil {
 		logger.Warn("meili configure works index after resync failed", "err", err)
 	}

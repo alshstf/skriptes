@@ -1,4 +1,5 @@
 import { CheckCircle2 } from 'lucide-react';
+import { pluralRu } from '@/lib/format';
 
 /**
  * ReadingProgress — "Прочитано N из M книг" + горизонтальный прогресс-бар.
@@ -25,7 +26,7 @@ export function ReadingProgress({
       <div className="flex items-baseline justify-between text-sm">
         <span className="flex items-center gap-1.5 text-muted-foreground">
           <CheckCircle2 className="size-3.5" aria-hidden />
-          Прочитано {read} из {total} {pluralBooks(total)}
+          Прочитано {read} из {total} {pluralRu(total, ['книги', 'книг', 'книг'])}
         </span>
         <span className="tabular-nums text-xs text-muted-foreground">{pct}%</span>
       </div>
@@ -45,11 +46,3 @@ export function ReadingProgress({
   );
 }
 
-function pluralBooks(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'книг';
-  if (mod10 === 1) return 'книги';
-  if (mod10 >= 2 && mod10 <= 4) return 'книг';
-  return 'книг';
-}

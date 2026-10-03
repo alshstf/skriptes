@@ -161,13 +161,8 @@ type workDoc struct {
 // поисковые поля (worksSearchable, builtWorksSchema).
 func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid string, schema int) error {
 	idx := m.Index(uid)
-	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
-		Uid:        uid,
-		PrimaryKey: "id",
-	}); err != nil {
-		if !isMeiliAlreadyExists(err) {
-			return fmt.Errorf("create works index: %w", err)
-		}
+	if err := ensureIndex(ctx, m, uid); err != nil {
+		return fmt.Errorf("create works index: %w", err)
 	}
 	searchable := worksSearchable(schema)
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &searchable); err != nil {
@@ -200,15 +195,9 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid 
 func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	idx := m.Index(booksIndex)
 
-	// Создание индекса с указанием primary key. Если уже есть — это no-op.
-	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
-		Uid:        booksIndex,
-		PrimaryKey: "id",
-	}); err != nil {
-		// 'index_already_exists' — это нормально для повторных запусков.
-		if !isMeiliAlreadyExists(err) {
-			return fmt.Errorf("create index: %w", err)
-		}
+	// Создание индекса с указанием primary key — только если его нет.
+	if err := ensureIndex(ctx, m, booksIndex); err != nil {
+		return fmt.Errorf("create index: %w", err)
 	}
 
 	// Настройки настраиваем по отдельности, а не через UpdateSettings одной
@@ -291,6 +280,32 @@ func (i *indexer) flush(ctx context.Context) error {
 		return fmt.Errorf("meili task %d ended with status %s: %v", final.UID, final.Status, final.Error)
 	}
 	i.batch = i.batch[:0]
+	return nil
+}
+
+// ensureIndex создаёт индекс (primary key id), только если его нет (#342).
+// Создание в Meili — асинхронная задача: для существующего индекса она падала с
+// ERROR «Index already exists» в журнале Meili на каждом старте backend.
+func ensureIndex(ctx context.Context, m meilisearch.ServiceManager, uid string) error {
+	if _, err := m.GetIndexWithContext(ctx, uid); err == nil {
+		return nil
+	} else if !isMeiliIndexNotFound(err) {
+		return err
+	}
+	task, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{Uid: uid, PrimaryKey: "id"})
+	if err != nil {
+		if isMeiliAlreadyExists(err) {
+			return nil
+		}
+		return err
+	}
+	final, err := m.WaitForTaskWithContext(ctx, task.TaskUID, 0)
+	if err != nil {
+		return err
+	}
+	if final.Status != meilisearch.TaskStatusSucceeded && final.Error.Code != "index_already_exists" {
+		return fmt.Errorf("task %d %s: %v", final.UID, final.Status, final.Error)
+	}
 	return nil
 }
 
