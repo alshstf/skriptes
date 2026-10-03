@@ -183,7 +183,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
 		           FILTER (WHERE a.id IS NOT NULL),
 		           '{}'
-		       ) AS authors
+		       ) AS authors%s
 		FROM books b
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a       ON a.id = ba.author_id
@@ -195,7 +195,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond(), phaseCond, dueCond("book_src_lang_lookups", "book_id", "b.id", 3))
+	`, wdHintColumns, b.candidateCond(), phaseCond, dueCond("book_src_lang_lookups", "book_id", "b.id", 3))
 	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
@@ -205,7 +205,8 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 	out := make([]yearCandidate, 0, limit)
 	for rows.Next() {
 		var c yearCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors); err != nil {
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors,
+			&c.wdQID, &c.wdNotFoundAt); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -249,12 +250,17 @@ func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 		return
 	}
 	name := b.wd.Name()
-	if !b.isDue(lookups[name], time.Now()) {
+	now := time.Now()
+	if !b.isDue(lookups[name], now) {
 		return
 	}
 	// Кандидат без src_lang, но src_title может быть (fb2 иногда даёт название
 	// оригинала без языка) — buildExternalQuery тогда ищет по оригиналу.
-	q := buildExternalQuery(externalQueryFields(bk))
+	q := buildExternalQuery(bk.queryFields())
+	if bk.wikidataShortcut(&q, b.ttl().notFound, now) {
+		b.recordReusedNotFound(ctx, bk.id, name)
+		return
+	}
 
 	taskCtx, cancel := context.WithTimeout(ctx, srcLangBackfillTaskTimeout)
 	if werr := b.wdGate.wait(taskCtx); werr != nil {
@@ -269,10 +275,11 @@ func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 	case ferr == nil && code != "":
 		// Гейт записи: оригинал ≠ язык издания. Совпали → натив/переиздание на
 		// языке оригинала — src_lang по продуктовой семантике остаётся пустым
-		// (см. doc типа); помечаем not_found (дозаполнять нечего, TTL пере-
-		// спросит нескоро).
+		// (см. doc типа). Исход native окончательный: это ответ, а не промах,
+		// перепрашивать нечего (раньше писался not_found и переспрашивался по
+		// TTL вечно, #294).
 		if code == normalizeLangCode(bk.lang) {
-			b.upsertLookup(ctx, bk.id, name, "not_found", "")
+			b.upsertLookup(ctx, bk.id, name, outcomeNative, code)
 			return
 		}
 		if err := b.writeFound(ctx, bk.id, name, code); err != nil {
@@ -337,6 +344,17 @@ func (b *SrcLangBackfiller) writeFound(ctx context.Context, bookID int64, source
 
 func (b *SrcLangBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome, code string) {
 	metrics.EnrichmentLookups.WithLabelValues("src_lang", source, outcome).Inc()
+	b.storeLookup(ctx, bookID, source, outcome, code)
+}
+
+// recordReusedNotFound — «не найдено» без запроса: Tier-2 группировки недавно не
+// нашёл книгу в Wikidata тем же запросом (#294). В метриках — исход reused.
+func (b *SrcLangBackfiller) recordReusedNotFound(ctx context.Context, bookID int64, source string) {
+	metrics.EnrichmentLookups.WithLabelValues("src_lang", source, "reused").Inc()
+	b.storeLookup(ctx, bookID, source, "not_found", "")
+}
+
+func (b *SrcLangBackfiller) storeLookup(ctx context.Context, bookID int64, source, outcome, code string) {
 	var cptr *string
 	if code != "" {
 		cptr = &code

@@ -49,6 +49,11 @@ type BookQuery struct {
 
 	ArchivePath string // абсолютный путь к zip с книгой
 	FB2Name     string // имя файла внутри zip (например "12345.fb2")
+
+	// WikidataQID — уже известный QID работы (works.ext_ids->>'wd_qid': его
+	// находят Tier-2 группировки и «Известность»). Источник wikidata берёт его
+	// вместо поиска книги по названию (#294). Пустой — ищем сами.
+	WikidataQID string
 }
 
 // CoverImage — сырая обложка для записи в /cache/covers.

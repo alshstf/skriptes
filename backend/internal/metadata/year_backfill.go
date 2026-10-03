@@ -105,6 +105,41 @@ type yearCandidate struct {
 	srcTitle      string
 	srcAuthorNorm string
 	srcLang       string
+
+	// Что о книге уже знают Wikidata-пути других воркеров (#294), см. wdHintColumns.
+	wdQID        string     // QID работы из works.ext_ids
+	wdNotFoundAt *time.Time // свежее «не найдено» Tier-2 группировки по этой книге
+}
+
+// queryFields — поля внешнего поискового запроса (buildExternalQuery).
+func (c yearCandidate) queryFields() externalQueryFields {
+	return externalQueryFields{
+		id: c.id, title: c.title, lang: c.lang, authors: c.authors,
+		srcTitle: c.srcTitle, srcAuthorNorm: c.srcAuthorNorm, srcLang: c.srcLang,
+	}
+}
+
+// wdHintColumns — колонки к выборке кандидатов (алиас books = b): QID работы,
+// который уже нашли Tier-2 группировки или «Известность», и время «не найдено»
+// Tier-2 группировки по этой же книге (#294). Ставятся после authors в SELECT.
+const wdHintColumns = `,
+		       COALESCE((SELECT w.ext_ids->>'wd_qid' FROM works w WHERE w.id = b.work_id), ''),
+		       (SELECT l.checked_at FROM book_work_lookups l
+		         WHERE l.book_id = b.id AND l.source = 'wikidata' AND l.outcome = 'not_found')`
+
+// wikidataShortcut — как спросить Wikidata о книге с учётом того, что уже
+// известно (#294). Есть QID работы — он уходит в запрос, поиск книги по
+// названию не нужен. Нет QID, а Tier-2 группировки недавно (моложе notFoundTTL)
+// не нашёл книгу тем же запросом — reuseNotFound: ответ «не найдено» без
+// запроса. Запрос совпадает, только когда у книги нет названия оригинала:
+// иначе группировка ищет по src_title с авторами издания, а год и язык
+// оригинала — по src_title с латинским автором.
+func (c yearCandidate) wikidataShortcut(q *BookQuery, notFoundTTL time.Duration, now time.Time) (reuseNotFound bool) {
+	if isQID(c.wdQID) {
+		q.WikidataQID = c.wdQID
+		return false
+	}
+	return c.srcTitle == "" && c.wdNotFoundAt != nil && now.Sub(*c.wdNotFoundAt) < notFoundTTL
 }
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
@@ -206,7 +241,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
 		           FILTER (WHERE a.id IS NOT NULL),
 		           '{}'
-		       ) AS authors
+		       ) AS authors%s
 		FROM books b
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a       ON a.id = ba.author_id
@@ -218,7 +253,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond(), phaseCond, dueCond("book_year_lookups", "book_id", "b.id", 3))
+	`, wdHintColumns, b.candidateCond(), phaseCond, dueCond("book_year_lookups", "book_id", "b.id", 3))
 	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
@@ -228,7 +263,8 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 	out := make([]yearCandidate, 0, limit)
 	for rows.Next() {
 		var c yearCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors); err != nil {
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors,
+			&c.wdQID, &c.wdNotFoundAt); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -288,12 +324,15 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 		return
 	}
 	now := time.Now()
-	// yearCandidate по полям идентичен externalQueryFields → прямая конверсия.
-	q := buildExternalQuery(externalQueryFields(bk))
+	q := buildExternalQuery(bk.queryFields())
 
 	for _, src := range b.sources() {
 		name := src.provider.Name()
 		if !b.isDue(lookups[name], now) {
+			continue
+		}
+		if name == wikidataSource && bk.wikidataShortcut(&q, b.ttl().notFound, now) {
+			b.recordReusedNotFound(ctx, bk.id, name)
 			continue
 		}
 		taskCtx, cancel := context.WithTimeout(ctx, yearBackfillTaskTimeout)
@@ -386,6 +425,17 @@ func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source st
 
 func (b *YearBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string, year int) {
 	metrics.EnrichmentLookups.WithLabelValues("year", source, outcome).Inc()
+	b.storeLookup(ctx, bookID, source, outcome, year)
+}
+
+// recordReusedNotFound — «не найдено» без запроса: Tier-2 группировки недавно не
+// нашёл книгу в Wikidata тем же запросом (#294). В метриках — исход reused.
+func (b *YearBackfiller) recordReusedNotFound(ctx context.Context, bookID int64, source string) {
+	metrics.EnrichmentLookups.WithLabelValues("year", source, "reused").Inc()
+	b.storeLookup(ctx, bookID, source, "not_found", 0)
+}
+
+func (b *YearBackfiller) storeLookup(ctx context.Context, bookID int64, source, outcome string, year int) {
 	var yptr *int
 	if year > 0 {
 		yptr = &year
