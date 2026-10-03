@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/sheet';
 import { useInfiniteBooks, type BookListItem } from '@/lib/books';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
+import { pluralBooks } from '@/lib/format';
 
 const PAGE_SIZE = 20;
 // orig_lang — эффективный язык оригинала (src_lang ?? язык издания): опции/counts
@@ -458,11 +459,3 @@ function BookListSkeleton() {
   );
 }
 
-function pluralBooks(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return 'книг';
-  if (mod10 === 1) return 'книга';
-  if (mod10 >= 2 && mod10 <= 4) return 'книги';
-  return 'книг';
-}

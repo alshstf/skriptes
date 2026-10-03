@@ -125,8 +125,15 @@ func (im *Importer) worksUpdatedSince(ctx context.Context, since time.Time) ([]i
 	return ids, rows.Err()
 }
 
-// deleteIndex удаляет индекс и ждёт задачу; отсутствующий индекс — не ошибка.
+// deleteIndex удаляет индекс и ждёт задачу; отсутствующий индекс — не ошибка
+// и не задача (иначе Meili писал ERROR «Index not found», #342).
 func (im *Importer) deleteIndex(ctx context.Context, uid string) error {
+	if _, err := im.deps.Meili.GetIndexWithContext(ctx, uid); err != nil {
+		if isMeiliIndexNotFound(err) {
+			return nil
+		}
+		return err
+	}
 	task, err := im.deps.Meili.DeleteIndexWithContext(ctx, uid)
 	if err != nil {
 		if isMeiliIndexNotFound(err) {

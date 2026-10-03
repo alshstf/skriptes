@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shortPersonName, langGenitive, translationLine } from './format';
+import { shortPersonName, langGenitive, translationLine, pluralBooks, pluralRu } from './format';
 
 describe('shortPersonName', () => {
   it('сокращает ФИО до фамилии с инициалами', () => {
@@ -50,5 +50,19 @@ describe('translationLine', () => {
   it('ничего не известно → null', () => {
     expect(translationLine(null, null)).toBeNull();
     expect(translationLine('', '')).toBeNull();
+  });
+});
+
+describe('pluralRu / pluralBooks', () => {
+  it('склоняет по последним цифрам, 11–14 — как «пять»', () => {
+    const cases: Array<[number, string]> = [
+      [0, 'книг'], [1, 'книга'], [2, 'книги'], [4, 'книги'], [5, 'книг'], [11, 'книг'], [12, 'книг'],
+      [14, 'книг'], [21, 'книга'], [22, 'книги'], [25, 'книг'], [101, 'книга'], [111, 'книг'], [112, 'книг'],
+    ];
+    for (const [n, want] of cases) expect(pluralBooks(n)).toBe(want);
+  });
+  it('родительный падеж через свои формы', () => {
+    expect(pluralRu(1, ['книги', 'книг', 'книг'])).toBe('книги');
+    expect(pluralRu(3, ['книги', 'книг', 'книг'])).toBe('книг');
   });
 });

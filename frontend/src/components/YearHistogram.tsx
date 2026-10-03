@@ -10,6 +10,7 @@ import {
   LabelList,
 } from 'recharts';
 import type { YearCount } from '@/lib/catalog';
+import { pluralBooks } from '@/lib/format';
 
 /**
  * YearHistogram — bar chart распределения книг по годам написания.
@@ -81,13 +82,6 @@ function useChartColors(): ChartColors {
 }
 
 // pluralBooks — русское склонение «книга / книги / книг».
-function pluralBooks(n: number): string {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return 'книга';
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'книги';
-  return 'книг';
-}
 
 const TOOLTIP_BOOKS_LIMIT = 8;
 
