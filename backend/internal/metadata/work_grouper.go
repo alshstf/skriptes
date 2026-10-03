@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/skriptes/skriptes/backend/internal/metrics"
@@ -925,16 +924,11 @@ func pickCanonicalWork(books []groupBook, idxs []int) int64 {
 	return best
 }
 
-// pgExecer — общий Exec для *pgxpool.Pool и pgx.Tx.
-type pgExecer interface {
-	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
-}
-
 // recomputeWorkAggregates пересчитывает производные поля работ из их изданий:
 // edition_count, written_year (самый ранний + источник), series (из
 // представительного издания, если у работы серии ещё нет). Используется и
 // фоновой группировкой, и ручными split/merge.
-func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) error {
+func recomputeWorkAggregates(ctx context.Context, ex pgxExec, ids []int64) error {
 	if len(ids) == 0 {
 		return nil
 	}
@@ -955,26 +949,10 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 	`, ids); err != nil {
 		return fmt.Errorf("recount editions: %w", err)
 	}
-	if _, err := ex.Exec(ctx, `
-		UPDATE works w SET written_year = c.y, written_year_source = c.src
-		FROM (
-			SELECT w2.id AS work_id, sub.y, sub.src
-			FROM works w2
-			LEFT JOIN LATERAL (
-				SELECT b.written_year::int AS y, b.written_year_source AS src
-				FROM books b
-				WHERE b.work_id = w2.id AND b.deleted = false AND b.written_year IS NOT NULL
-				ORDER BY b.written_year ASC
-				LIMIT 1
-			) sub ON true
-			WHERE w2.id = ANY($1)
-		) c
-		WHERE w.id = c.work_id
-		  -- Не перетираем ручной оверрайд года (грабля №19, metadata/overrides.go).
-		  AND NOT EXISTS (SELECT 1 FROM metadata_overrides o
-		                  WHERE o.target_kind='work' AND o.target_id=w.id AND o.field='written_year')
-	`, ids); err != nil {
-		return fmt.Errorf("recompute written_year: %w", err)
+	// Год работы — общее правило #288 (work_years.go): самый ранний правдоподобный
+	// fb2-год изданий и внешний год, потолок — самое раннее издание, без правки.
+	if _, err := recomputeWorkYears(ctx, ex, ids, false); err != nil {
+		return err
 	}
 	if _, err := ex.Exec(ctx, `
 		UPDATE works w SET series_id = c.series_id, ser_no = c.ser_no

@@ -158,6 +158,7 @@ func run() error {
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
+		runOnceWorkYears(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
 		// импорта: и разбор, и импорт массово пишут в works/books.
 		runOnceRegroupTitleConflicts(c, pool, <-workGroupReady, logger)
@@ -1406,6 +1407,49 @@ func runOnceAdaptationsScreenOnly(ctx context.Context, pool *pgxpool.Pool, imp *
 		logger.Warn("adaptations cleanup: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time adaptations cleanup done", "works", len(works), "books_to_refetch", refetch)
+}
+
+// runOnceWorkYears — год работы по правилам #288 (metadata/work_years.go):
+// неправдоподобные fb2-годы изданий вычищены или ограничены годом издания, год
+// работ пересчитан (самый ранний правдоподобный + внешний, потолок — самое
+// раннее издание), изменённые — в works-индекс, годы изданий — в books-индекс.
+// Найденные Фантлабом работы перепрашиваются (сброс found-строк): год первой
+// публикации приходит в том же ответе, что счётчик оценок, и до этой версии не
+// сохранялся. Гейт work_years_v1.
+func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_years_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work years: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, err := metadata.CleanImplausibleBookYears(ctx, pool)
+	if err != nil {
+		logger.Warn("work years failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after work years failed", "err", err)
+		}
+	}
+	if _, err := imp.ResyncYears(ctx); err != nil {
+		logger.Warn("books index year resync after work years failed", "err", err)
+	}
+	tag, err := pool.Exec(ctx, `DELETE FROM work_renown_lookups WHERE source = 'fantlab' AND outcome = 'found'`)
+	if err != nil {
+		logger.Warn("work years: reset fantlab lookups failed", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work years: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time work years done", "works", len(changed), "fantlab_refetch", tag.RowsAffected())
 }
 
 // syncSplitWorks — поиск после выноса изданий: works-индекс (старые и новые

@@ -122,7 +122,7 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	// «Голова»: 2 издания → кандидат; оба источника находят → обе группы колонок
 	// заполнены, работа таргетно ушла в ресинк индекса.
 	headWork := mkWork("Метро 2033", 2, nil)
-	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 6724}}
+	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 6724, Year: 2005}}
 	ol := &fakeRenownProvider{name: "openlibrary", res: RenownResult{Ratings: 36, Want: 302}}
 	syncer := &fakeWorksSyncer{}
 	bf := NewRenownBackfiller(pool, fl, ol, nil, syncer,
@@ -136,6 +136,12 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	require.NotNil(t, gotOlw)
 	require.Equal(t, 302, *gotOlw)
 	require.Contains(t, syncer.upserted, headWork, "найденное — таргетный ресинк works-индекса")
+	var extYear, workYear *int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT external_year::int, written_year::int FROM works WHERE id=$1`, headWork).Scan(&extYear, &workYear))
+	require.NotNil(t, extYear)
+	require.Equal(t, 2005, *extYear, "год Фантлаба — внешний год работы (#288)")
+	require.NotNil(t, workYear)
+	require.Equal(t, 2005, *workYear, "и год работы, раз у изданий года нет")
 
 	// found не перепрашивается на следующем проходе (TTL 180д).
 	callsBefore := fl.callCount()

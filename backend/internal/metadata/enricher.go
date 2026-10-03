@@ -404,16 +404,25 @@ func (e *Enricher) EnsureYearLocal(ctx context.Context, q BookQuery) bool {
 		}
 		written, edition = w, ed
 	}
+	// Правдоподобие (#288): вне [1000, текущий] — нет года; позже года издания —
+	// год издания (верхняя граница, источник edition_year).
+	src := "fb2_title"
+	if pw := plausibleFb2Year(written, edition); pw != written {
+		if pw > 0 {
+			src = "edition_year"
+		}
+		written = pw
+	}
 	if _, err := e.pool.Exec(ctx, `
 		UPDATE books SET
 			written_year = COALESCE(written_year, NULLIF($2, 0)::smallint),
 			written_year_source = CASE
-				WHEN written_year IS NULL AND $2 > 0 THEN 'fb2_title'
+				WHEN written_year IS NULL AND $2 > 0 THEN $4
 				ELSE written_year_source END,
 			edition_year = COALESCE(edition_year, NULLIF($3, 0)::smallint),
 			year_local_scanned_at = now()
 		WHERE id = $1
-	`, q.ID, written, edition); err != nil {
+	`, q.ID, written, edition, src); err != nil {
 		e.logger.Warn("metadata: year local write failed", "book_id", q.ID, "err", err)
 		return false
 	}

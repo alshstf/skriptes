@@ -56,6 +56,7 @@ type fantlabMatch struct {
 	AllAutorRusName string `json:"all_autor_rusname"`
 	MarkCount       int    `json:"markcount"`
 	WorkTypeID      int    `json:"work_type_id"` // тип произведения (справочник fantlabKind)
+	Year            int    `json:"year"`         // год первой публикации (0 — неизвестен)
 }
 
 // fantlabKind — маппинг fantlab work_type_id → works.kind. Справочник снят с
@@ -122,7 +123,7 @@ func (p *FantlabProvider) FetchRenown(ctx context.Context, q WorkQuery) (RenownR
 		if !anyAuthorMatches(gate, fantlabAuthorCandidates(m)) {
 			continue
 		}
-		return RenownResult{Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID)}, nil
+		return RenownResult{Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID), Year: plausibleYear(m.Year)}, nil
 	}
 	return RenownResult{}, ErrNotFound
 }
