@@ -477,6 +477,18 @@ func run() error {
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
 	// hard-block по id книги) и живо обновляется при сохранении из админки.
 	contentResolver := settings.NewContentResolver(settingsStore)
+	// Режим «только выбранные языки» (#310): скрытые = языки коллекции минус показываемые.
+	contentResolver.SetLanguageUniverse(func(c context.Context) ([]string, error) {
+		entries, err := catalogSvc.ListLanguages(c)
+		if err != nil {
+			return nil, err
+		}
+		codes := make([]string, 0, len(entries))
+		for _, e := range entries {
+			codes = append(codes, e.Code)
+		}
+		return codes, nil
+	})
 	if err := contentResolver.Load(ctx()); err != nil {
 		logger.Warn("read content settings — using defaults", "err", err)
 	}

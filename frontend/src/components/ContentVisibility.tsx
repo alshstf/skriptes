@@ -98,6 +98,7 @@ export function ContentEditor({
   lockedLanguages = [],
   onChangeGenres,
   onChangeLanguages,
+  languageModeControl,
   footer,
 }: {
   languages: LanguageItem[];
@@ -108,6 +109,8 @@ export function ContentEditor({
   lockedLanguages?: string[];
   onChangeGenres: (next: string[]) => void;
   onChangeLanguages: (next: string[]) => void;
+  /** Переключатель режима языков (только админка, #310) — над списком. */
+  languageModeControl?: ReactNode;
   footer?: ReactNode;
 }) {
   return (
@@ -118,6 +121,7 @@ export function ContentEditor({
             <Languages className="size-4" aria-hidden />
             Языки
           </h2>
+          {languageModeControl}
           <LanguageVisibilityList
             languages={languages}
             hidden={hiddenLanguages}

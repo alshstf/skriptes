@@ -8,7 +8,9 @@ import (
 	"slices"
 	"sort"
 	"strings"
+	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -33,7 +35,16 @@ type ContentConfig struct {
 	HiddenGenres     []string `json:"hidden_genres"`
 	HiddenLanguages  []string `json:"hidden_languages"`
 	HideCompilations bool     `json:"hide_compilations,omitempty"`
+	// LanguageMode — режим языков (только admin, #310): "" — скрыты
+	// HiddenLanguages, остальные видны; LanguageModeOnly — видны только
+	// ShownLanguages, остальные скрыты, в том числе новые языки следующих INPX
+	// (чёрным списком на проде скрывали 52 кода, чтобы видны были ru и en).
+	LanguageMode   string   `json:"language_mode,omitempty"`
+	ShownLanguages []string `json:"shown_languages,omitempty"`
 }
+
+// LanguageModeOnly — «показывать только выбранные языки».
+const LanguageModeOnly = "only"
 
 // DefaultContentConfig — ничего не скрыто. Срезы не-nil, чтобы JSON-ответ
 // был `[]`, а не `null` (фронту удобнее не проверять на null).
@@ -50,6 +61,12 @@ func DefaultContentConfig() ContentConfig {
 func (c *ContentConfig) normalize() {
 	c.HiddenGenres = cleanCodes(c.HiddenGenres)
 	c.HiddenLanguages = cleanCodes(normalizedLangCodes(c.HiddenLanguages))
+	if c.LanguageMode != LanguageModeOnly {
+		c.LanguageMode = ""
+		c.ShownLanguages = nil
+	} else {
+		c.ShownLanguages = cleanCodes(normalizedLangCodes(c.ShownLanguages))
+	}
 }
 
 func normalizedLangCodes(in []string) []string {
@@ -67,7 +84,11 @@ func normalizedLangCodes(in []string) []string {
 // скрыт (мульти-жанровая книга прячется, если хоть один жанр запрещён —
 // этого и ждёшь от «не показывать эротику»).
 func (c ContentConfig) Hides(genres []string, lang string) bool {
-	if lang != "" && slices.Contains(c.HiddenLanguages, lang) {
+	if c.LanguageMode == LanguageModeOnly {
+		if lang != "" && !slices.Contains(c.ShownLanguages, lang) {
+			return true
+		}
+	} else if lang != "" && slices.Contains(c.HiddenLanguages, lang) {
 		return true
 	}
 	for _, g := range genres {
@@ -176,6 +197,57 @@ func scanContent(ctx context.Context, pool *pgxpool.Pool, query string, args ...
 type ContentResolver struct {
 	store *Store
 	admin atomic.Pointer[ContentConfig]
+
+	// Множество языков коллекции — для режима «только выбранные языки»: скрытые =
+	// все языки коллекции минус показываемые. Кэш на langUniverseTTL.
+	universe   func(context.Context) ([]string, error)
+	uniMu      sync.Mutex
+	uniCache   []string
+	uniFetched time.Time
+}
+
+// langUniverseTTL — как долго держать множество языков коллекции (меняется
+// только импортом).
+const langUniverseTTL = 5 * time.Minute
+
+// SetLanguageUniverse задаёт источник множества языков коллекции (обычно
+// catalog.ListLanguages). Без него режим «только выбранные» скрывает в выдаче
+// лишь то, что проверяется поштучно (AdminHides).
+func (r *ContentResolver) SetLanguageUniverse(f func(context.Context) ([]string, error)) {
+	r.universe = f
+}
+
+func (r *ContentResolver) languageUniverse(ctx context.Context) []string {
+	if r.universe == nil {
+		return nil
+	}
+	r.uniMu.Lock()
+	defer r.uniMu.Unlock()
+	if r.uniCache != nil && time.Since(r.uniFetched) < langUniverseTTL {
+		return r.uniCache
+	}
+	langs, err := r.universe(ctx)
+	if err != nil {
+		return r.uniCache // прежнее значение лучше пустого
+	}
+	r.uniCache, r.uniFetched = langs, time.Now()
+	return langs
+}
+
+// AdminHiddenLanguages — языки, скрытые глобально: список скрытых или, в режиме
+// «только выбранные», все языки коллекции, кроме показываемых.
+func (r *ContentResolver) AdminHiddenLanguages(ctx context.Context) []string {
+	admin := r.Admin()
+	if admin.LanguageMode != LanguageModeOnly {
+		return admin.HiddenLanguages
+	}
+	var hidden []string
+	for _, l := range r.languageUniverse(ctx) {
+		if !slices.Contains(admin.ShownLanguages, l) {
+			hidden = append(hidden, l)
+		}
+	}
+	return cleanCodes(hidden)
 }
 
 func NewContentResolver(store *Store) *ContentResolver {
@@ -232,7 +304,7 @@ func (r *ContentResolver) SetUser(ctx context.Context, userID int64, cfg Content
 func (r *ContentResolver) Exclusions(ctx context.Context, userID int64) (genres, langs []string, hideCompilations bool) {
 	admin := r.Admin()
 	genres = admin.HiddenGenres
-	langs = admin.HiddenLanguages
+	langs = r.AdminHiddenLanguages(ctx)
 	hideCompilations = admin.HideCompilations
 	if userID > 0 {
 		if u, err := r.store.UserContent(ctx, userID); err == nil {
