@@ -677,6 +677,10 @@ export type BioAdaptationSettings = {
   adaptations: boolean;
   bios_rpm: number;
   adaptations_rpm: number;
+  // Per-source тумблер TMDB-постеров экранизаций (без env-ключа — no-op).
+  tmdb_posters: boolean;
+  // Задан ли SKRIPTES_TMDB_API_KEY (read-only): без ключа тумблер неактивен.
+  tmdb_configured?: boolean;
   // статусы воркеров (read-only)
   bios_running: boolean;
   bios_mode: 'off' | 'continuous' | 'once';
@@ -693,6 +697,7 @@ export type BioAdaptationInput = {
   adaptations: boolean;
   bios_rpm: number;
   adaptations_rpm: number;
+  tmdb_posters: boolean;
 };
 
 const BIO_ADAPT_KEY = ['admin', 'bio-adaptation'] as const;

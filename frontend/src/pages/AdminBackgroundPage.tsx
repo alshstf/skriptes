@@ -198,6 +198,8 @@ function buildBaInput(d: BioAdaptationSettings, patch: Partial<BioAdaptationInpu
     adaptations: d.adaptations,
     bios_rpm: d.bios_rpm,
     adaptations_rpm: d.adaptations_rpm,
+    // ?? true — back-compat со старым ответом бэка без поля (дефолт вкл).
+    tmdb_posters: d.tmdb_posters ?? true,
     ...patch,
   };
 }
@@ -1673,6 +1675,31 @@ export function AdminBackgroundPage() {
                   {adaptRunning ? <RunningDot continuous={adaptOnceMode === 'continuous'} /> : null}
                 </div>
               ) : null}
+              <div className="space-y-2 border-t border-border pt-3">
+                <FieldLabel>Источники постеров</FieldLabel>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-sm">TMDB (The Movie Database)</div>
+                    <p className="text-xs text-muted-foreground text-pretty">
+                      {bq.data?.tmdb_configured === false
+                        ? 'Ключ SKRIPTES_TMDB_API_KEY не задан — постеры берутся только из Wikimedia Commons.'
+                        : 'Основной источник постеров; если у TMDB постера нет — Wikimedia Commons.'}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={bq.data?.tmdb_configured !== false && (bq.data?.tmdb_posters ?? true)}
+                    disabled={updateBa.isPending || !bq.data || bq.data.tmdb_configured === false}
+                    onCheckedChange={(checked) => {
+                      if (!bq.data) return;
+                      void updateBa
+                        .mutateAsync(buildBaInput(bq.data, { tmdb_posters: checked }))
+                        .then(() => toast.success(checked ? 'TMDB включён' : 'TMDB выключен — постеры только из Commons'))
+                        .catch((e) => toast.error(e instanceof ApiError ? e.message : 'Не удалось применить'));
+                    }}
+                    aria-label="TMDB как источник постеров"
+                  />
+                </div>
+              </div>
               <div className="space-y-2 border-t border-border pt-3">
                 <FieldLabel>Кэш постеров</FieldLabel>
                 <div className="flex flex-wrap items-end gap-3">

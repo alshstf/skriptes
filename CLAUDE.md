@@ -730,7 +730,11 @@ Wikidata-P18 у фильмов почти пуст (постеры копира�
 `SKRIPTES_TMDB_API_KEY` — принимается И v3 «API Key», И v4 «Read Access
 Token» eyJ… (автодетект по префиксу: Bearer vs query); без ключа TMDB 401,
 работает только P18; ключ пробрасывают ОБА compose, атрибуция TMDB — в
-README). **Собственный rate-кламп `tmdbRPM=600` (10 req/s) в провайдере**
+README). Тумблер источника в админке («Экранизации» → «Источники постеров»,
+`BioAdaptationConfig.TMDBPosters`, дефолт вкл) → `Enricher.SetTMDBPostersEnabled`
+без рестарта: выключен — как без ключа (только P18, `RecheckPosterHoles` no-op);
+ответ настроек несёт `tmdb_configured` (без ключа UI тумблер выключает). PUT
+настроек ложится поверх сохранённого конфига — клиент без поля его не сбрасывает. **Собственный rate-кламп `tmdbRPM=600` (10 req/s) в провайдере**
 (зеркало clampOLRPM, из админки не задирается): гейт проходят ВСЕ пути —
 воркер, lazy, перепроверка — RPM воркера «Экранизации» его не обходит. Провязка:
 `enricher.resolvePosterURL` (TMDB → P18) в `saveAdaptations`. Три защиты от
