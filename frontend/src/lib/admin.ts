@@ -8,7 +8,7 @@
  * ошибку, а не молча провалится.
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch } from './api';
@@ -1042,3 +1042,64 @@ export function useUpdateEnrichmentGates() {
   });
 }
 
+// ── Дубли авторов (#308) ────────────────────────────────────────────────
+
+/** DuplicateAuthor — возможный дубль автора: «ФИ» ↔ «ФИО» или то же латинское имя. */
+export type DuplicateAuthor = {
+  id: number;
+  full_name: string;
+  book_count: number;
+  renown: number;
+  years_active?: { from: number; to: number };
+  reason: 'middle_name' | 'latin_name';
+};
+
+export type DuplicatePair = { a: DuplicateAuthor; b: DuplicateAuthor };
+
+/** useAuthorDuplicates — возможные дубли автора (подсказка на карточке, только админу). */
+export function useAuthorDuplicates(authorId: number, enabled: boolean) {
+  return useQuery({
+    queryKey: ['admin', 'author-duplicates', authorId],
+    queryFn: () => apiFetch<{ items: DuplicateAuthor[] }>(`/api/admin/authors/${authorId}/duplicates`),
+    select: (d) => d.items,
+    enabled,
+    staleTime: 60_000,
+  });
+}
+
+const DUP_PAGE = 30;
+
+/** useDuplicatePairs — пары возможных дублей от самых известных, постранично. */
+export function useDuplicatePairs() {
+  return useInfiniteQuery({
+    queryKey: ['admin', 'author-duplicate-pairs'],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) =>
+      apiFetch<{ items: DuplicatePair[]; total: number }>(
+        `/api/admin/authors/duplicates?limit=${DUP_PAGE}&offset=${pageParam}`,
+      ),
+    getNextPageParam: (last, pages) => {
+      const loaded = pages.reduce((n, p) => n + p.items.length, 0);
+      return last.items.length === DUP_PAGE && loaded < (pages[0]?.total ?? 0) ? loaded : undefined;
+    },
+  });
+}
+
+/** useMergeAuthors — слить автора sourceId в targetId (книги, подписки, био). */
+export function useMergeAuthors() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { sourceId: number; targetId: number }) =>
+      apiFetch<{ target_id: number; works: number }>(`/api/admin/authors/${vars.sourceId}/merge`, {
+        method: 'POST',
+        body: { target_id: vars.targetId },
+      }),
+    onSuccess: () => {
+      invalidateCatalog(qc);
+      void qc.invalidateQueries({ queryKey: ['admin', 'author-duplicates'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'author-duplicate-pairs'] });
+      toast.success('Авторы объединены');
+    },
+    onError: (e) => toast.error(`Не удалось объединить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}

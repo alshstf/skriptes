@@ -745,6 +745,13 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if n > 0 {
 		logger.Info("reapplied metadata overrides after import", "count", n)
 	}
+	// Новые книги слитых авторов (#308) импорт заводит на прежнюю запись —
+	// переносим к цели слияния.
+	if n, err := overrideCtl.ReapplyAuthorMerges(ctx); err != nil {
+		logger.Warn("reapply author merges after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("reapplied author merges after import", "works", n)
+	}
 	// Издания, чьи авторы после импорта ни в чём не совпадают с якорем работы, —
 	// в свои работы (#285); затронутые — в оба индекса поиска.
 	if touched, err := metadata.SplitAlienEditions(ctx, pool); err != nil {

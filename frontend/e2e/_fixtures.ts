@@ -197,6 +197,10 @@ export async function mockApi(page: Page): Promise<void> {
       ),
     }),
   );
+  // Возможные дубли автора (#308, только админу) — по умолчанию нет.
+  await page.route(/\/api\/admin\/authors\/\d+\/duplicates$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }),
+  );
   await page.route(/\/api\/authors\/17$/, (route) =>
     route.fulfill({
       status: 200,
