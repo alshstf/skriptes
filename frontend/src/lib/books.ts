@@ -95,6 +95,15 @@ export function computeMergeSuggestions(books: BookListItem[]): MergeSuggestion[
 
 export type FacetDistribution = Record<string, Record<string, number>>;
 
+/** MatchedAuthor — известный автор, которого называет запрос (#290). */
+export type MatchedAuthor = {
+  id: number;
+  full_name: string;
+  note?: string;
+  /** Работ автора (без сборников). */
+  book_count: number;
+};
+
 export type BookListResponse = {
   items: BookListItem[];
   total: number;
@@ -103,6 +112,8 @@ export type BookListResponse = {
   query?: string;
   processing_ms: number;
   facets?: FacetDistribution;
+  /** Запрос — имя известного автора: его работы идут первыми, над выдачей плашка. */
+  matched_authors?: MatchedAuthor[];
 };
 
 export type BookFilters = {

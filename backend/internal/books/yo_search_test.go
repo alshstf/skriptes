@@ -147,3 +147,94 @@ func TestSearch_AltTitlesAndLatinAuthors(t *testing.T) {
 		"совпадение в названии работы выше совпадения в названии оригинала")
 	require.Contains(t, titles("the hobbit"), "Хоббит, или Туда и обратно")
 }
+
+// TestSearch_AuthorQuery — #290: запрос — имя известного автора → сначала его
+// работы, потом книги о нём; страницы стыкуются без потерь и повторов, плашка —
+// только на первой. Книга с таким названием, известнее автора, остаётся книгой.
+func TestSearch_AuthorQuery(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	mgr, addr, key := startMeilisearchAddr(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr, MeiliURL: addr, MeiliAPIKey: key})
+	path, err := inpxtest.WriteINPX(t.TempDir(), "lib.inpx", []inpxtest.Book{
+		{LibID: "850001", Title: "Лев Толстой: Бегство из рая", Authors: []string{"Басинский,Павел"}, Lang: "ru"},
+		{LibID: "850002", Title: "Война и мир", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru", Rating: 5},
+		{LibID: "850003", Title: "Анна Каренина", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru"},
+		{LibID: "850004", Title: "Кармен", Authors: []string{"Мериме,Проспер"}, Lang: "ru", Rating: 5},
+		{LibID: "850005", Title: "Песни", Authors: []string{"Кармен,Анна"}, Lang: "ru"},
+		// Малоизвестный тёзка: в первую часть не попадает (меньше трети известности Льва).
+		{LibID: "850006", Title: "Записки", Authors: []string{"Толстой,Никита"}, Lang: "ru"},
+	})
+	require.NoError(t, err)
+	_, err = imp.Run(ctx, path)
+	require.NoError(t, err)
+	// «Кармен» Мериме — известная книга; автор Кармен известен меньше её.
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 20000 WHERE title = 'Кармен'`)
+	require.NoError(t, err)
+	_, err = imp.RebuildWorksIndex(ctx)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO app_settings (key, value) VALUES ($1, 'true'::jsonb)`, importer.WorksIndexSyncedFlagKey())
+	require.NoError(t, err)
+	require.NoError(t, imp.ConfigureWorksIndex(ctx))
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE authors SET renown = CASE
+		WHEN last_name = 'Толстой' AND first_name = 'Лев' THEN 2000
+		WHEN last_name = 'Толстой' THEN 300
+		WHEN last_name = 'Кармен' THEN 200 ELSE 0 END`)
+	require.NoError(t, err)
+
+	svc := books.New(pool, mgr, nil)
+	require.Eventually(t, func() bool {
+		res, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 10})
+		return err == nil && res.Total == 4
+	}, 30*time.Second, 200*time.Millisecond)
+
+	res, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 10})
+	require.NoError(t, err)
+	got := make([]string, 0, len(res.Items))
+	for _, it := range res.Items {
+		got = append(got, it.Title)
+	}
+	require.Equal(t, "Война и мир", got[0], "сначала работы автора, известная — первой")
+	require.Equal(t, "Анна Каренина", got[1])
+	require.ElementsMatch(t, []string{"Лев Толстой: Бегство из рая", "Записки"}, got[2:],
+		"потом остальное: книга о нём и малоизвестный тёзка")
+	require.Len(t, res.MatchedAuthors, 1)
+	require.Equal(t, "Толстой Лев Николаевич", res.MatchedAuthors[0].FullName)
+	require.Equal(t, 2, res.MatchedAuthors[0].BookCount)
+
+	// По одной работе на страницу — тот же порядок, без потерь и повторов.
+	var paged []string
+	for offset := 0; offset < 5; offset++ {
+		page, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 1, Offset: offset})
+		require.NoError(t, err)
+		require.EqualValues(t, 4, page.Total)
+		if offset > 0 {
+			require.Empty(t, page.MatchedAuthors, "плашка — только на первой странице")
+		}
+		for _, it := range page.Items {
+			paged = append(paged, it.Title)
+		}
+	}
+	require.Equal(t, got, paged)
+
+	// «Лев Толстой» — тот же автор; «толстой война» — не имя, обычный поиск.
+	res, err = svc.ListWorks(ctx, books.ListParams{Query: "лев толстой", Limit: 10})
+	require.NoError(t, err)
+	require.Len(t, res.MatchedAuthors, 1)
+	res, err = svc.ListWorks(ctx, books.ListParams{Query: "толстой война", Limit: 10})
+	require.NoError(t, err)
+	require.Empty(t, res.MatchedAuthors)
+
+	// «кармен»: книга Мериме известнее автора Кармен — обычный поиск, книга первой.
+	res, err = svc.ListWorks(ctx, books.ListParams{Query: "кармен", Limit: 10})
+	require.NoError(t, err)
+	require.Empty(t, res.MatchedAuthors)
+	require.NotEmpty(t, res.Items)
+	require.Equal(t, "Кармен", res.Items[0].Title)
+}

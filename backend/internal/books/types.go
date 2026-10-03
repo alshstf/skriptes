@@ -111,6 +111,10 @@ type ListResponse struct {
 	// внутренней — значение и сколько книг ему соответствует.
 	// Пустая мапа если facets не запросили — экономит трафик.
 	Facets map[string]map[string]int64 `json:"facets,omitempty"`
+	// MatchedAuthors — известные авторы, которых называет запрос (#290): их
+	// работы идут в выдаче первыми, над выдачей — плашка со ссылкой на автора.
+	// Только на первой странице.
+	MatchedAuthors []MatchedAuthor `json:"matched_authors,omitempty"`
 }
 
 // Book — детальная карточка из PG (GET /api/books/:id).
