@@ -30,6 +30,10 @@ export type ContentSettings = {
   // opt-in персональная настройка (дефолт false). Только в профиле,
   // admin-эндпоинт поле игнорирует.
   hide_compilations?: boolean;
+  // Режим языков (только admin, #310): '' — скрывать hidden_languages;
+  // 'only' — показывать только shown_languages (новые языки скрыты сами).
+  language_mode?: '' | 'only';
+  shown_languages?: string[];
 };
 
 export type MyContentSettings = ContentSettings & {

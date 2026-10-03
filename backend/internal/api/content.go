@@ -26,6 +26,10 @@ type contentSettings struct {
 	// HideCompilations — «Скрывать сборники» (opt-in, только персональные
 	// настройки профиля; admin-UI переключатель не показывает).
 	HideCompilations bool `json:"hide_compilations,omitempty"`
+	// Режим языков (только admin, #310): "" — скрывать hidden_languages;
+	// "only" — показывать только shown_languages.
+	LanguageMode   string   `json:"language_mode,omitempty"`
+	ShownLanguages []string `json:"shown_languages,omitempty"`
 }
 
 // meContentResponse — персональные скрытые + глобально скрытые (admin),
@@ -76,11 +80,7 @@ func requireBookVisible(content ContentDeps, bd BooksDeps) func(http.Handler) ht
 // жанры/языки.
 func handleGetAdminContent(d ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		cfg := d.Resolver.Admin()
-		writeJSON(w, http.StatusOK, contentSettings{
-			HiddenGenres:    orEmpty(cfg.HiddenGenres),
-			HiddenLanguages: orEmpty(cfg.HiddenLanguages),
-		})
+		writeJSON(w, http.StatusOK, adminContentSettings(d.Resolver.Admin()))
 	}
 }
 
@@ -94,16 +94,15 @@ func handleUpdateAdminContent(d ContentDeps) http.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		cfg := settings.ContentConfig{HiddenGenres: body.HiddenGenres, HiddenLanguages: body.HiddenLanguages}
+		cfg := settings.ContentConfig{
+			HiddenGenres: body.HiddenGenres, HiddenLanguages: body.HiddenLanguages,
+			LanguageMode: body.LanguageMode, ShownLanguages: body.ShownLanguages,
+		}
 		if err := d.Resolver.SetAdmin(ctx, cfg); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save content settings failed"})
 			return
 		}
-		out := d.Resolver.Admin()
-		writeJSON(w, http.StatusOK, contentSettings{
-			HiddenGenres:    orEmpty(out.HiddenGenres),
-			HiddenLanguages: orEmpty(out.HiddenLanguages),
-		})
+		writeJSON(w, http.StatusOK, adminContentSettings(d.Resolver.Admin()))
 	}
 }
 
@@ -129,7 +128,7 @@ func handleGetMeContent(d ContentDeps) http.HandlerFunc {
 			HiddenLanguages:      orEmpty(user.HiddenLanguages),
 			HideCompilations:     user.HideCompilations,
 			AdminHiddenGenres:    orEmpty(admin.HiddenGenres),
-			AdminHiddenLanguages: orEmpty(admin.HiddenLanguages),
+			AdminHiddenLanguages: orEmpty(d.Resolver.AdminHiddenLanguages(ctx)),
 		})
 	}
 }
@@ -200,6 +199,16 @@ func decodeContentBody(w http.ResponseWriter, r *http.Request) (contentSettings,
 		return contentSettings{}, false
 	}
 	return body, true
+}
+
+// adminContentSettings — глобальный конфиг в ответ админке.
+func adminContentSettings(cfg settings.ContentConfig) contentSettings {
+	return contentSettings{
+		HiddenGenres:    orEmpty(cfg.HiddenGenres),
+		HiddenLanguages: orEmpty(cfg.HiddenLanguages),
+		LanguageMode:    cfg.LanguageMode,
+		ShownLanguages:  orEmpty(cfg.ShownLanguages),
+	}
 }
 
 func orEmpty(s []string) []string {
