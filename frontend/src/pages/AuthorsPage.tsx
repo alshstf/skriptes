@@ -297,7 +297,9 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
 
         <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground tabular-nums">
           <span>
-            {author.book_count} {pluralBooks(author.book_count)} в каталоге
+            {author.book_count === 0 && (author.compilation_count ?? 0) > 0
+              ? `${author.compilation_count} ${pluralRu(author.compilation_count ?? 0, ['сборник', 'сборника', 'сборников'])} в каталоге`
+              : `${author.book_count} ${pluralBooks(author.book_count)} в каталоге`}
           </span>
           {years ? <span>· {years}</span> : null}
           {author.external_rating != null ? (

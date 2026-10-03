@@ -184,6 +184,16 @@ describe('AuthorsPage', () => {
     expect(screen.getByText('Это все авторы')).toBeInTheDocument();
   });
 
+  it('у автора только собственных сборников — «N сборников», а не «0 книг»', async () => {
+    stubFetch({
+      items: [{ id: 5, full_name: 'Шекли Роберт', book_count: 0, compilation_count: 2, is_favorite: false, favorited_books_count: 0, has_adaptations: false }],
+      total: 1,
+    } as unknown as typeof authorsFixture);
+    render(wrap(<AuthorsPage />));
+    expect(await screen.findByText(/2 сборника в каталоге/)).toBeInTheDocument();
+    expect(screen.queryByText(/0 книг/)).not.toBeInTheDocument();
+  });
+
   it('показывает пустой стейт callout-ом, если авторов нет', async () => {
     stubFetch({ items: [], total: 0 });
     render(wrap(<AuthorsPage />));

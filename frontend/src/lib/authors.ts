@@ -30,6 +30,8 @@ export type AuthorListItem = {
   note?: string;
   photo_path?: string;
   book_count: number;
+  /** Собственные сборники автора (в book_count не входят) — «N сборников» вместо «0 книг». */
+  compilation_count?: number;
   is_favorite: boolean;
   favorited_books_count: number;
   top_genres?: GenreCount[];

@@ -43,6 +43,10 @@ type AuthorListItem struct {
 	// BookCount — число ЛОГИЧЕСКИХ книг (работ) автора (видимых; скрытый
 	// контент исключён). DISTINCT по work_id, чтобы издания не двоили счёт.
 	BookCount int `json:"book_count"`
+	// CompilationCount — собственные сборники автора (работы с kind, где он
+	// основной автор). В book_count они не входят; у автора только сборников
+	// список пишет «N сборников», а не «0 книг» (#265).
+	CompilationCount int `json:"compilation_count,omitempty"`
 	// IsFavorite — текущий юзер подписан на автора (favorite_authors).
 	IsFavorite bool `json:"is_favorite"`
 	// FavoritedBooksCount — сколько книг этого автора у юзера в избранном
@@ -179,8 +183,13 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// всплывали «пустые» авторы (0 книг в каталоге) — это и шум, и клик по
 	// такому автору ронял карточку (author.books == null). Исключения
 	// видимости учитываются renderExclusion().
+	// Участник только чужих антологий и выпусков журналов (все его работы —
+	// сборники, и ни в одной он не основной автор) в список не попадает: на проде
+	// таких 28,9 тыс. из 29,2 тыс. авторов «только со сборниками», и все они
+	// показывались с «0 книг» (#265). Карточка по прямой ссылке и поиск остаются.
 	where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-		" WHERE ba.author_id = a.id"+renderExclusion()+")")
+		" LEFT JOIN works wv ON wv.id = b.work_id"+
+		" WHERE ba.author_id = a.id AND (COALESCE(wv.kind, '') = '' OR wv.primary_author_id = a.id)"+renderExclusion()+")")
 	// Служебные авторы (агрегаты-псевдоавторы: «Коллектив авторов», «Народные
 	// сказки», «Газета Завтра»…) — вон из СПИСКА и всех его сортировок (они
 	// замусоривали топ «плодовитых», находка аудита). Карточка по прямой ссылке
@@ -378,6 +387,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	exRatingSrc := renderAggExclusion()
 	exReaderAvg := renderAggExclusion()
 	exReaderCnt := renderAggExclusion()
+	exOwnComp := renderExclusion()
 
 	// CTE page (фаза 1, FROM authors a) + богатый SELECT (фаза 2, FROM page a —
 	// тот же алиас `a`, поэтому подзапросы по a.id не меняются).
@@ -424,10 +434,15 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[14]s
-		          )) AS reader_rating_count
+		          )) AS reader_rating_count,
+		       (SELECT count(DISTINCT b.work_id)::int FROM book_authors ba
+		          JOIN books b ON b.id = ba.book_id
+		          JOIN works wc ON wc.id = b.work_id
+		          WHERE ba.author_id = a.id AND b.deleted = false
+		            AND COALESCE(wc.kind, '') <> '' AND wc.primary_author_id = a.id%[16]s) AS own_compilations
 		FROM page a
 		%[15]s
-	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, exRatingSrc, exReaderAvg, exReaderCnt, orderSQL)
+	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, exRatingSrc, exReaderAvg, exReaderCnt, orderSQL, exOwnComp)
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
@@ -451,7 +466,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo, &note,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
 			&yrFrom, &yrTo, &it.HasAdaptations, &extRating, &extSource,
-			&readerAvg, &it.ReaderRatingCount); err != nil {
+			&readerAvg, &it.ReaderRatingCount, &it.CompilationCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
 		it.FullName = fullName(last, first, middle)
