@@ -159,6 +159,7 @@ func run() error {
 		runOnceSplitAlienEditions(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
+		runOnceCatalogInvariants(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
 		// импорта: и разбор, и импорт массово пишут в works/books.
 		runOnceRegroupTitleConflicts(c, pool, <-workGroupReady, logger)
@@ -1462,6 +1463,38 @@ func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Imp
 		logger.Warn("work years: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work years done", "works", len(changed), "fantlab_refetch", tag.RowsAffected())
+}
+
+// runOnceCatalogInvariants — разовая чистка накопленного (#307): основной автор,
+// счётчик живых изданий, работы без книг, серии у работ без живых изданий и
+// пустые серии. Дальше то же делает каждый импорт (importer.FixCatalogInvariants).
+func runOnceCatalogInvariants(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "catalog_invariants_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("catalog invariants: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	fix, err := importer.FixCatalogInvariants(ctx, pool)
+	if err != nil {
+		logger.Warn("catalog invariants failed — will retry next start", "err", err)
+		return
+	}
+	for start := 0; start < len(fix.Changed); start += 5000 {
+		if err := imp.UpsertWorksToIndex(ctx, fix.Changed[start:min(start+5000, len(fix.Changed))]); err != nil {
+			logger.Warn("works index sync after catalog invariants failed", "err", err)
+			break
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("catalog invariants: set flag failed (idempotent rerun)", "err", err)
+	}
+	importer.LogCatalogFix(logger, "one-time catalog invariants done", fix)
 }
 
 // syncSplitWorks — поиск после выноса изданий: works-индекс (старые и новые
