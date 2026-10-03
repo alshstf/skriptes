@@ -18,10 +18,27 @@
 # Лимиты памяти postgres/meilisearch — из env (PG_MEM_LIMIT / MEILI_MEM_LIMIT). Дефолт
 # 2g — с запасом для коллекции ~550 тыс. книг: после полного импорта librusec оба
 # держатся около 0,9 ГБ, а пики (индексация Meili, тяжёлые запросы PG) выше.
+# Параметры Postgres подогнаны под этот лимит (#304): по умолчанию PG берёт
+# shared_buffers 128 МБ и work_mem 4 МБ (кэш попадал на 85 %, сортировки уходили
+# на диск), JIT добавлял ~60 мс к тяжёлым запросам, random_page_cost=4 — для HDD.
+# Поднимаете PG_MEM_LIMIT — поднимите PG_SHARED_BUFFERS (≈¼) и
+# PG_EFFECTIVE_CACHE_SIZE (≈¾); на HDD верните PG_RANDOM_PAGE_COST=4.
 services:
   postgres:
     security_opt:
       - no-new-privileges:true
+    command:
+      - postgres
+      - -c
+      - shared_buffers=${PG_SHARED_BUFFERS:-512MB}
+      - -c
+      - work_mem=${PG_WORK_MEM:-16MB}
+      - -c
+      - effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE:-1536MB}
+      - -c
+      - random_page_cost=${PG_RANDOM_PAGE_COST:-1.1}
+      - -c
+      - jit=off
     deploy:
       resources:
         limits:
