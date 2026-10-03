@@ -5,6 +5,8 @@ import type { BookListItem } from './books';
 export type AuthorSuggest = {
   id: number;
   full_name: string;
+  /** Уточнение, отличающее тёзок («Блум», «фантаст»); номера librusec бэкенд не отдаёт. */
+  note?: string;
   book_count: number;
   is_favorite?: boolean;
 };

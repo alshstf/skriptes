@@ -9,15 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/opds"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestOPDS_BasicAuth — проверяет, что:
@@ -39,7 +35,7 @@ func TestOPDS_BasicAuth(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startOPDSAuthPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	authSvc := auth.New(pool, 0)
 
 	const (
@@ -115,26 +111,50 @@ func TestOPDS_BasicAuth(t *testing.T) {
 	require.Contains(t, string(body), "/opds/search?q={searchTerms}")
 }
 
-func startOPDSAuthPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
+// TestOPDS_BasicAuthRateLimited — неудачи OPDS Basic-auth тратят тот же бюджет, что и
+// форма логина: исчерпав лимит по IP через /opds, нельзя ни продолжать там, ни уйти
+// перебирать на /api/auth/login (раньше OPDS был обходом лимита без ограничений).
+func TestOPDS_BasicAuthRateLimited(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := testpg.Pool(t, ctx)
+	authSvc := auth.New(pool, 0)
+	const (
+		email    = "opds-limit@example.com"
+		password = "test-password-1234"
 	)
+	_, err := authSvc.CreateUser(ctx, email, "OPDS Limit", password, auth.RoleUser)
 	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
+
+	router := api.NewRouter(api.Deps{
+		Auth: api.AuthDeps{Service: authSvc, LoginRateLimitIP: 2, LoginRateLimitEmail: 100},
+		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{}, opds.Deps{})},
+	})
+	srv := httptest.NewServer(router)
+	defer srv.Close()
+
+	opdsGet := func(pass string) int {
+		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/opds/", nil)
+		req.SetBasicAuth(email, pass)
+		resp, err := http.DefaultClient.Do(req)
+		require.NoError(t, err)
+		_ = resp.Body.Close()
+		return resp.StatusCode
+	}
+
+	require.Equal(t, http.StatusUnauthorized, opdsGet("wrong-1"))
+	require.Equal(t, http.StatusUnauthorized, opdsGet("wrong-2"))
+	// Лимит по IP исчерпан — даже верный пароль не проверяется.
+	require.Equal(t, http.StatusTooManyRequests, opdsGet(password))
+
+	// Бюджет общий с формой логина.
+	resp, err := http.Post(srv.URL+"/api/auth/login", "application/json",
+		strings.NewReader(`{"email":"`+email+`","password":"`+password+`"}`))
 	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
+	_ = resp.Body.Close()
+	require.Equal(t, http.StatusTooManyRequests, resp.StatusCode)
 }

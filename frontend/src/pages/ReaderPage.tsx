@@ -17,9 +17,12 @@ import { useReadingPosition, useSavePosition, useToggleRead, type Book } from '@
  *  - {type:'completed'} от iframe → toggle.mutate({isRead:true})
  *
  * Зачем iframe (а не прямой импорт foliate-js модулей в React):
- *  - изоляция: epub-контент часто содержит inline-JS / CSS, не хотим
- *    давать ему доступ к нашему React-стейту и cookies (iframe = другой
- *    origin контекст для CSP);
+ *  - отдельный документ: foliate и epub-контент не видят React-стейт.
+ *    Это НЕ изоляция по origin — iframe на нашем origin (allow-same-origin),
+ *    и страницы книги (blob:-iframe'ы foliate) тоже. От скриптов в книге
+ *    (inline, onerror=, <script src>) защищает только CSP сайта
+ *    (nginx-security-headers.conf, script-src 'self'): blob:-iframe'ы её
+ *    наследуют. Проверяет e2e/reader-csp.spec.ts;
  *  - простота интеграции: foliate-view — vanilla custom element, в
  *    React его обернуть несложно, но iframe рендерится атомарно и
  *    стабильнее по жизненному циклу;
@@ -260,7 +263,9 @@ export function ReaderPage() {
         frontend/public/. Sandbox: разрешаем same-origin (нужен для
         fetch'а /api/books/{id}/epub с кукой сессии), allow-scripts
         (foliate-js — это и есть скрипты), allow-popups (для ext-ссылок
-        из epub). НЕ даём allow-top-navigation и allow-forms.
+        из epub). НЕ даём allow-top-navigation и allow-forms. С
+        allow-same-origin + allow-scripts sandbox сам по себе не изолирует —
+        скрипты книги режет CSP (см. комментарий в начале файла).
       */}
       <iframe
         title="Foliate reader"

@@ -11,14 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
-	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestAdminEndpoints — end-to-end через HTTP:
@@ -33,7 +29,7 @@ func TestAdminEndpoints(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startAPIAdminPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	authSvc := auth.New(pool, 4)
 
 	admin, err := authSvc.CreateUser(ctx, "root@example.com", "Root", "rootpass1234", auth.RoleAdmin)
@@ -76,7 +72,7 @@ func TestAdminEndpoints(t *testing.T) {
 		map[string]any{
 			"email":        "new@example.com",
 			"display_name": "New",
-			"password":     "newpass1234",
+			"password":     "newpass123456",
 			"role":         "user",
 		}, "https://test.local")
 	require.Equal(t, http.StatusCreated, resp.StatusCode)
@@ -118,16 +114,16 @@ func TestAdminEndpoints(t *testing.T) {
 
 	// ── ResetPassword: успех + новые сессии работают ─────────────
 	resp = do(t, srv.URL+"/api/admin/users/"+itoa(created.ID)+"/password", http.MethodPatch, adminCookie,
-		map[string]any{"new_password": "newpass2025"}, "https://test.local")
+		map[string]any{"new_password": "newpass202512"}, "https://test.local")
 	require.Equal(t, http.StatusNoContent, resp.StatusCode)
 	// Старый пароль больше не залогинит
 	resp = doRaw(t, srv.URL+"/api/auth/login", http.MethodPost, "",
-		map[string]any{"email": "new@example.com", "password": "newpass1234"},
+		map[string]any{"email": "new@example.com", "password": "newpass123456"},
 		"https://test.local")
 	require.Equal(t, http.StatusUnauthorized, resp.StatusCode)
 	// Новый — да
 	resp = doRaw(t, srv.URL+"/api/auth/login", http.MethodPost, "",
-		map[string]any{"email": "new@example.com", "password": "newpass2025"},
+		map[string]any{"email": "new@example.com", "password": "newpass202512"},
 		"https://test.local")
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 
@@ -251,28 +247,4 @@ func fmtInt(n int64) string {
 		out = append([]byte{'-'}, out...)
 	}
 	return string(out)
-}
-
-func startAPIAdminPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }

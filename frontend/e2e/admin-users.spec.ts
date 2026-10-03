@@ -137,7 +137,7 @@ test('admin: список пользователей рендерится, со�
   // и form'ами на той же странице.
   const createCard = page.locator('section, article').filter({ has: page.getByText('Добавить пользователя') }).last();
   await createCard.getByLabel('Email').fill('new@example.com');
-  await createCard.getByLabel('Пароль (мин. 8)').fill('newpass1234');
+  await createCard.getByLabel('Пароль (мин. 12)').fill('newpass12345');
   // Дождёмся пока submit перестанет быть disabled (state-update React'а).
   const submit = createCard.getByRole('button', { name: 'Добавить' });
   await expect(submit).toBeEnabled();
@@ -192,7 +192,7 @@ test('admin: reset password — toast после сброса', async ({ mockedP
   await bobRow.getByRole('button', { name: 'Сбросить пароль' }).click();
 
   await expect(page.getByText('Сбросить пароль для bob@example.com')).toBeVisible();
-  await page.getByLabel('Новый пароль (мин. 8)').fill('bobnewpass11');
+  await page.getByLabel('Новый пароль (мин. 12)').fill('bobnewpass11');
   await page.getByLabel('Повторите').fill('bobnewpass11');
   await page.getByRole('button', { name: 'Сбросить', exact: true }).click();
 

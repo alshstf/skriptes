@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -205,20 +206,32 @@ func triggerAuthorEnrichmentAsync(d MetadataDeps, a catalog.Author) {
 		// запросом; пока оставим пустой — WikipediaProvider попробует
 		// ru-first, потом en, что покрывает наш каталог.
 	}
-	if a.PhotoPath == "" {
-		go func() {
-			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
-			defer cancel()
-			d.Service.EnsureAuthorPhoto(ctx, q)
-		}()
-	}
-	if a.Bio == "" {
-		go func() {
-			ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
-			defer cancel()
-			d.Service.EnsureAuthorBio(ctx, q)
-		}()
-	}
+	metadata.Go(func(base context.Context) {
+		ctx, cancel := context.WithTimeout(base, metadata.EnrichDeadline)
+		defer cancel()
+		// Фото и био параллельно; после обоих — если источник ответил сбоем,
+		// снимаем общий маркер, чтобы следующий заход повторил недостающее (#293).
+		var wg sync.WaitGroup
+		var photoTransient, bioTransient bool
+		if a.PhotoPath == "" {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				photoTransient = d.Service.EnsureAuthorPhoto(ctx, q)
+			}()
+		}
+		if a.Bio == "" {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				bioTransient = d.Service.EnsureAuthorBio(ctx, q)
+			}()
+		}
+		wg.Wait()
+		if photoTransient || bioTransient {
+			d.Service.ReopenAuthorIfIncomplete(ctx, a.ID)
+		}
+	})
 }
 
 func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta MetadataDeps) http.HandlerFunc {

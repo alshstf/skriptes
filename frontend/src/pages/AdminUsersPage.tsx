@@ -24,7 +24,7 @@ import {
   useDeleteAdminUser,
   type AdminUser,
 } from '@/lib/admin';
-import { useMe, type Role } from '@/lib/auth';
+import { useMe, MIN_PASSWORD_LEN, type Role } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -247,8 +247,8 @@ function ResetPasswordForm({
   const reset = useResetAdminUserPassword();
 
   const mismatch = confirm !== '' && next !== confirm;
-  const tooShort = next.length > 0 && next.length < 8;
-  const canSubmit = !reset.isPending && next.length >= 8 && next === confirm;
+  const tooShort = next.length > 0 && next.length < MIN_PASSWORD_LEN;
+  const canSubmit = !reset.isPending && next.length >= MIN_PASSWORD_LEN && next === confirm;
 
   return (
     <form
@@ -270,7 +270,7 @@ function ResetPasswordForm({
       </p>
       <div className="space-y-1">
         <Label htmlFor={`reset-new-${userId}`} className="text-xs">
-          Новый пароль (мин. 8)
+          Новый пароль (мин. {MIN_PASSWORD_LEN})
         </Label>
         <Input
           id={`reset-new-${userId}`}
@@ -281,7 +281,7 @@ function ResetPasswordForm({
           autoComplete="new-password"
           required
         />
-        {tooShort ? <p className="text-xs text-destructive">Минимум 8 символов.</p> : null}
+        {tooShort ? <p className="text-xs text-destructive">Минимум {MIN_PASSWORD_LEN} символов.</p> : null}
       </div>
       <div className="space-y-1">
         <Label htmlFor={`reset-confirm-${userId}`} className="text-xs">
@@ -320,9 +320,9 @@ function CreateUserForm() {
   const [role, setRole] = useState<Role>('user');
   const create = useCreateAdminUser();
 
-  const tooShort = password.length > 0 && password.length < 8;
+  const tooShort = password.length > 0 && password.length < MIN_PASSWORD_LEN;
   const canSubmit =
-    !create.isPending && email.includes('@') && password.length >= 8;
+    !create.isPending && email.includes('@') && password.length >= MIN_PASSWORD_LEN;
 
   return (
     <form
@@ -372,7 +372,7 @@ function CreateUserForm() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="new-password" className="text-xs">
-            Пароль (мин. 8)
+            Пароль (мин. {MIN_PASSWORD_LEN})
           </Label>
           <Input
             id="new-password"
@@ -384,7 +384,7 @@ function CreateUserForm() {
             required
           />
           {tooShort ? (
-            <p className="text-xs text-destructive">Минимум 8 символов.</p>
+            <p className="text-xs text-destructive">Минимум {MIN_PASSWORD_LEN} символов.</p>
           ) : null}
         </div>
         <div className="space-y-1">
@@ -445,7 +445,7 @@ function adminMessageOf(err: unknown): string {
       }
       return err.message;
     }
-    if (err.status === 400) return 'Проверьте поля: возможно, email неправильный или пароль короче 8 символов.';
+    if (err.status === 400) return `Проверьте поля: возможно, email неправильный или пароль короче ${MIN_PASSWORD_LEN} символов.`;
     if (err.status === 404) return 'Пользователь не найден (возможно, удалён в другом окне).';
     return err.message;
   }

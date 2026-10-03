@@ -7,10 +7,14 @@ import (
 )
 
 type Config struct {
-	HTTPAddr  string `env:"SKRIPTES_HTTP_ADDR" envDefault:":8080"`
-	LogLevel  string `env:"SKRIPTES_LOG_LEVEL" envDefault:"info"`
-	LogFormat string `env:"SKRIPTES_LOG_FORMAT" envDefault:"json"`
-	Version   string `env:"SKRIPTES_VERSION" envDefault:"dev"`
+	HTTPAddr string `env:"SKRIPTES_HTTP_ADDR" envDefault:":8080"`
+	// MetricsAddr — адрес отдельного HTTP-сервера с метриками Prometheus (/metrics),
+	// например ":9091". Пусто — выключено. Наружу не публикуется: в публичном деплое
+	// его забирает сборщик из доверенной сети через внутренний сайт Caddy :9180.
+	MetricsAddr string `env:"SKRIPTES_METRICS_ADDR"`
+	LogLevel    string `env:"SKRIPTES_LOG_LEVEL" envDefault:"info"`
+	LogFormat   string `env:"SKRIPTES_LOG_FORMAT" envDefault:"json"`
+	Version     string `env:"SKRIPTES_VERSION" envDefault:"dev"`
 
 	DatabaseURL     string        `env:"SKRIPTES_DATABASE_URL" envDefault:"postgres://skriptes:skriptes@localhost:5432/skriptes?sslmode=disable"`
 	DatabaseTimeout time.Duration `env:"SKRIPTES_DATABASE_TIMEOUT" envDefault:"60s"`
@@ -21,6 +25,14 @@ type Config struct {
 	BooksRoot string `env:"SKRIPTES_BOOKS_ROOT" envDefault:"/data/books"`
 	InpxRoot  string `env:"SKRIPTES_INPX_ROOT"  envDefault:"/data/inpx"`
 	CacheRoot string `env:"SKRIPTES_CACHE_ROOT" envDefault:"/cache"`
+
+	// InpxFiles — какие *.inpx из InpxRoot импортировать (имена через запятую).
+	// Пусто — все. Нужен, когда в каталоге лежит несколько INPX одной
+	// библиотеки (например, папка торрент-раздачи).
+	InpxFiles []string `env:"SKRIPTES_INPX_FILES" envSeparator:","`
+	// InpxWatchInterval — как часто проверять INPX на изменения и импортировать
+	// новый без рестарта. 0 — только при старте.
+	InpxWatchInterval time.Duration `env:"SKRIPTES_INPX_WATCH_INTERVAL" envDefault:"10m"`
 
 	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
 	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
@@ -67,6 +79,11 @@ type Config struct {
 	// инстансов за своим WAF или в доверенной LAN). Secure-by-default: включён.
 	LoginRateLimitIP    int `env:"SKRIPTES_LOGIN_RATELIMIT_IP"    envDefault:"10"`
 	LoginRateLimitEmail int `env:"SKRIPTES_LOGIN_RATELIMIT_EMAIL" envDefault:"20"`
+	// IP клиента для лимита — из CF-Connecting-IP. Включать ТОЛЬКО если к бэкенду
+	// ходят исключительно через Cloudflare (proxy/tunnel): без Cloudflare заголовок
+	// ставит сам клиент и обходит лимит по IP. Дефолт — false (IP из X-Forwarded-For
+	// вашего reverse-proxy).
+	TrustCFConnectingIP bool `env:"SKRIPTES_TRUST_CF_CONNECTING_IP" envDefault:"false"`
 
 	// SMTP для send-to-Kindle. Если SMTPHost пустой — функция
 	// отключена (handler вернёт 503), и фронт скроет кнопку.

@@ -69,12 +69,12 @@ func triggerSeriesYearEnrichmentAsync(meta MetadataDeps, refs []catalog.BookYear
 	if len(cands) == 0 {
 		return false
 	}
-	go runLazyYearEnrich(meta, cands, byID, localOn, externalOn)
+	metadata.Go(func(base context.Context) { runLazyYearEnrich(base, meta, cands, byID, localOn, externalOn) })
 	return true
 }
 
-func runLazyYearEnrich(meta MetadataDeps, cands []catalog.BookYearRef, byID map[int64]books.ListItem, localOn, externalOn bool) {
-	ctx, cancel := context.WithTimeout(context.Background(), metadata.EnrichDeadline)
+func runLazyYearEnrich(base context.Context, meta MetadataDeps, cands []catalog.BookYearRef, byID map[int64]books.ListItem, localOn, externalOn bool) {
+	ctx, cancel := context.WithTimeout(base, metadata.EnrichDeadline)
 	defer cancel()
 
 	stillMissing := cands

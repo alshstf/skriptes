@@ -6,16 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	meili "github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/books"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
 	tcmeili "github.com/testcontainers/testcontainers-go/modules/meilisearch"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // fixtureINPX — наш постоянный 20-записный фикстура (включая Анну
@@ -35,7 +31,7 @@ func TestService_ListAndGet(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	// Импортируем фикстуру в БД и Meili — теми же путями что прод.
@@ -213,7 +209,7 @@ func TestService_WorksIndex(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -352,7 +348,7 @@ func TestService_GetReturnsEditions(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var collID, archID, authorID, workID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -396,33 +392,14 @@ func TestService_GetReturnsEditions(t *testing.T) {
 
 // ── helpers ────────────────────────────────────────────────────
 
-func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
+func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
+	mgr, _, _ := startMeilisearchAddr(t, ctx)
+	return mgr
 }
 
-func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
+// startMeilisearchAddr — то же плюс адрес и ключ (для запросов мимо клиента).
+func startMeilisearchAddr(t *testing.T, ctx context.Context) (meili.ServiceManager, string, string) {
 	t.Helper()
 	const masterKey = "test-master-key-1234567890"
 	mC, err := tcmeili.Run(ctx, "getmeili/meilisearch:v1.13", tcmeili.WithMasterKey(masterKey))
@@ -430,5 +407,5 @@ func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Cleanup(func() { _ = mC.Terminate(context.Background()) })
 	addr, err := mC.Address(ctx)
 	require.NoError(t, err)
-	return meili.New(addr, meili.WithAPIKey(masterKey))
+	return meili.New(addr, meili.WithAPIKey(masterKey)), addr, masterKey
 }

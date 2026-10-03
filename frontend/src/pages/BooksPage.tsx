@@ -40,7 +40,8 @@ const PAGE_SIZE = 20;
 // orig_lang — эффективный язык оригинала (src_lang ?? язык издания): опции/counts
 // фильтра «Язык оригинала». URL-параметр значения остаётся src_lang (back-compat),
 // бэкенд фильтрует по works-индексному orig_lang.
-const FACETS = ['genres', 'lang', 'orig_lang', 'year'];
+// year не запрашиваем: фасет по годам нигде не показывается (#276), а значений — сотни.
+const FACETS = ['genres', 'lang', 'orig_lang'];
 
 export function BooksPage() {
   // Все фильтры живут в URL-search → удобно делиться ссылками и refresh

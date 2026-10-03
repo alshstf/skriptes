@@ -5,13 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
-	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestEnumerate — проверяет ListAuthors/ListSeries/ListGenres:
@@ -29,7 +25,7 @@ func TestEnumerate(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startEnumeratePostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	// Seed: коллекция + архив + 2 автора + 2 серии + 3 жанра + 3 книги.
 	var collID, archID, aliceID, bobID, sBlueID, sRedID int64
@@ -167,7 +163,7 @@ func TestListGenres_WithCategory(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startEnumeratePostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	svc := catalog.New(pool)
 
 	// Pseudo-родитель + leaf c parent_id
@@ -199,7 +195,7 @@ func TestListGenres_IsFavorite(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startEnumeratePostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	svc := catalog.New(pool)
 
 	var userID, gFavID, gOtherID int64
@@ -240,7 +236,7 @@ func TestListLanguages(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startEnumeratePostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var collID, archID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -299,28 +295,4 @@ func firstWord(s string) string {
 		}
 	}
 	return s
-}
-
-func startEnumeratePostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := tcpostgres.Run(ctx,
-		"postgres:17-alpine",
-		tcpostgres.WithDatabase("skriptes_test"),
-		tcpostgres.WithUsername("skriptes"),
-		tcpostgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }

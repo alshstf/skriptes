@@ -25,6 +25,12 @@ const worksIndex = "works"
 // глубины offset — тест-синхронизатор в books/service_guard_test.go.
 const MeiliMaxTotalHits = 1_000_000
 
+// MeiliMaxValuesPerFacet — сколько значений фасета отдаёт Meili. По умолчанию 100
+// по алфавиту: в коллекции ~350 жанров и ~170 языков оригинала, и «русский»,
+// «фантастика» и всё после буквы «f» в фасет не попадали (#276). Порядок в
+// фильтрах наводит фронт.
+const MeiliMaxValuesPerFacet = 1000
+
 // bookDoc — документ для индекса "books" в Meilisearch.
 // id используется как primary key (совпадает с books.id в Postgres).
 type bookDoc struct {
@@ -59,7 +65,28 @@ func (im *Importer) ConfigureIndex(ctx context.Context) error {
 // ConfigureIndex — вызывать на каждом старте, чтобы индекс существовал и имел
 // нужные filterable/sortable атрибуты даже на стабильном деплое без импорта.
 func (im *Importer) ConfigureWorksIndex(ctx context.Context) error {
-	return configureWorksIndex(ctx, im.deps.Meili)
+	return configureWorksIndex(ctx, im.deps.Meili, worksIndex, im.foldedSearchReady(ctx))
+}
+
+// foldedSearchSchemaVersion — версия схемы works-индекса, с которой у документов
+// есть поля title_s/authors_s/series_s (свёртка «ё»→«е», #278).
+const foldedSearchSchemaVersion = 9
+
+// foldedSearchReady — индекс уже пересобран схемой со свёрнутыми полями
+// (RebuildWorksIndex собирает его сразу с ними), и искать можно по ним. До этого
+// живой индекс остаётся на прежних полях: переключи его ConfigureWorksIndex на
+// старте, старые документы без свёрнутых полей не находились бы, а переиндексация
+// Meili 1.13 при смене searchableAttributes ещё и оставляет битой близость слов
+// у документов, где свёрнутое слово отличается от прежнего (см. RebuildWorksIndex).
+func (im *Importer) foldedSearchReady(ctx context.Context) bool {
+	if im.deps.Pool == nil {
+		return false
+	}
+	var v int
+	err := im.deps.Pool.QueryRow(ctx, `
+		SELECT COALESCE(max(substring(key FROM 'works_index_synced_v([0-9]+)')::int), 0)
+		FROM app_settings WHERE key LIKE 'works_index_synced_v%'`).Scan(&v)
+	return err == nil && v >= foldedSearchSchemaVersion
 }
 
 // workDoc — документ индекса "works". id = works.id (primary key). Поля авторов/
@@ -72,11 +99,16 @@ type workDoc struct {
 	Authors         []string `json:"authors"`
 	AuthorIDs       []int64  `json:"author_ids"`
 	Series          string   `json:"series,omitempty"`
-	SeriesID        *int64   `json:"series_id,omitempty"`
-	Genres          []string `json:"genres"`
-	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
-	Langs           []string `json:"lang"`           // массив языков всех изданий работы
-	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
+	// Поисковые копии title/authors/series со свёрткой «ё»→«е» (textnorm.FoldYo):
+	// Meili не приравнивает их, а показывать надо исходное написание (#278).
+	TitleSearch   string   `json:"title_s"`
+	AuthorsSearch []string `json:"authors_s"`
+	SeriesSearch  string   `json:"series_s,omitempty"`
+	SeriesID      *int64   `json:"series_id,omitempty"`
+	Genres        []string `json:"genres"`
+	Year          *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
+	Langs         []string `json:"lang"`           // массив языков всех изданий работы
+	SrcLangs      []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
 	// OrigLangs — ЭФФЕКТИВНЫЙ язык оригинала: src_lang, а если пусто — язык
 	// издания (натив = сам себе оригинал). На нём стоит фильтр «Язык оригинала»
 	// (/books, авторы): «оригинал: французский» ловит и переводы с французского
@@ -97,19 +129,25 @@ type workDoc struct {
 	renownPop int64
 }
 
-// configureWorksIndex создаёт и настраивает индекс works идемпотентно.
-// Без distinctAttribute: каждый документ уже = одна работа.
-func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) error {
-	idx := m.Index(worksIndex)
+// configureWorksIndex создаёт и настраивает индекс works (uid — живой или
+// временный для пересборки) идемпотентно. Без distinctAttribute: каждый
+// документ уже = одна работа. foldedSearch — искать по свёрнутым копиям полей
+// (см. foldedSearchReady).
+func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid string, foldedSearch bool) error {
+	idx := m.Index(uid)
 	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
-		Uid:        worksIndex,
+		Uid:        uid,
 		PrimaryKey: "id",
 	}); err != nil {
 		if !isMeiliAlreadyExists(err) {
 			return fmt.Errorf("create works index: %w", err)
 		}
 	}
-	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
+	searchable := []string{"title", "authors", "series"}
+	if foldedSearch {
+		searchable = []string{"title_s", "authors_s", "series_s"}
+	}
+	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &searchable); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
 	filterable := []any{"genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}
@@ -126,6 +164,10 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager) erro
 	if _, err := idx.UpdatePaginationWithContext(ctx,
 		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
 		return fmt.Errorf("works update pagination: %w", err)
+	}
+	if _, err := idx.UpdateFacetingWithContext(ctx,
+		&meilisearch.Faceting{MaxValuesPerFacet: MeiliMaxValuesPerFacet}); err != nil {
+		return fmt.Errorf("works update faceting: %w", err)
 	}
 	return nil
 }
@@ -173,6 +215,10 @@ func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	if _, err := idx.UpdatePaginationWithContext(ctx,
 		&meilisearch.Pagination{MaxTotalHits: MeiliMaxTotalHits}); err != nil {
 		return fmt.Errorf("update pagination: %w", err)
+	}
+	if _, err := idx.UpdateFacetingWithContext(ctx,
+		&meilisearch.Faceting{MaxValuesPerFacet: MeiliMaxValuesPerFacet}); err != nil {
+		return fmt.Errorf("update faceting: %w", err)
 	}
 	return nil
 }
@@ -236,6 +282,20 @@ func isMeiliAlreadyExists(err error) bool {
 	}
 	// fallback по строке (на случай иной упаковки ошибки)
 	return contains(err.Error(), "index_already_exists")
+}
+
+// isMeiliIndexNotFound возвращает true если ошибка Meili — "index_not_found"
+// (индекса ещё нет — например, чистая установка или пустой Meili после
+// восстановления базы).
+func isMeiliIndexNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	mErr := &meilisearch.Error{}
+	if as := errorsAs(err, mErr); as && mErr.MeilisearchApiError.Code == "index_not_found" {
+		return true
+	}
+	return contains(err.Error(), "index_not_found")
 }
 
 // маленькие inline-обёртки чтобы не тащить fmt/strings в caller.

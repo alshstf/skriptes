@@ -14,6 +14,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/langcode"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // Enricher — оркестратор обогащения карточек книг (обложки + аннотации).
@@ -444,7 +446,12 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) bool {
 		em = m
 	}
 	srcAuthorNorm := normalizePersonKey(em.SrcAuthor)
-	srcLang := normalizeLangCode(em.SrcLang) // fb2 шлёт и 'EN', и 'ru-RU' — канонизируем
+	if isStubSrcTitle(em.SrcTitle) {
+		em.SrcTitle = "" // «(no data for original title)» — заглушка, не оригинал (#279)
+	}
+	// fb2 шлёт и 'EN', и 'ru-RU', и 'spa'/'jp'/«английски» — к ISO 639-1,
+	// нераспознанное не пишем (#287).
+	srcLang := langcode.Canonical(em.SrcLang)
 	if _, err := e.pool.Exec(ctx, `
 		UPDATE books SET
 			translator              = COALESCE(translator, NULLIF($2, '')),
@@ -650,7 +657,9 @@ func (e *Enricher) ResolveCachedFile(name string) (string, bool) {
 			continue
 		}
 		full := c.Path(name)
-		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(c.Root())) {
+		// Строго ВНУТРИ корня: префикс с разделителем, иначе проходил бы соседний
+		// каталог с тем же началом имени (covers → covers-x) и сам корень.
+		if !strings.HasPrefix(filepath.Clean(full), filepath.Clean(c.Root())+string(filepath.Separator)) {
 			continue // path traversal
 		}
 		if fileExists(full) {
@@ -790,34 +799,39 @@ const EnrichDeadline = 30 * time.Second
 // EnsureAuthorPhoto — гарантирует наличие authors.photo_path. Файл
 // сохраняется в тот же /cache/covers — у него content-addressable
 // имя, коллизий с обложками книг быть не может.
-func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
+// Возвращает true, если источник ответил сбоем (429/сеть/битый ключ): попытка
+// не помечена, вызывающий снимает общий маркер (ReopenAuthorIfIncomplete).
+func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) bool {
 	if len(e.authorPhotoProviders) == 0 {
-		return
+		return false
 	}
+	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorPhoto, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightAuthorPhoto, q.ID)
 
 	var existing *string
 	if err := e.pool.QueryRow(ctx, `SELECT photo_path FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
 		e.logger.Warn("metadata: query author photo failed", "author_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if existing != nil && *existing != "" {
-		return
+		return false
 	}
 
-	transient := false
 	for _, p := range e.authorPhotoProviders {
 		img, err := p.FetchAuthorPhoto(ctx, q)
+		observeLookup("author_photo", p.Name(), err, img != nil && img.Reader != nil)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
 		if err != nil {
-			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
+			// 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: попытку не помечаем,
+			// и следующий источник не спрашиваем — его ответ при сбое более надёжного
+			// источника занял бы место верного (#347). Ретрай состоится позже.
 			e.logger.Info("metadata: author photo provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
-			continue
+			return true
 		}
 		if img == nil || img.Reader == nil {
 			continue
@@ -836,15 +850,12 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 			continue
 		}
 		e.logger.Info("metadata: author photo saved", "provider", p.Name(), "author_id", q.ID, "file", filename)
-		return
+		return false
 	}
 
-	// Транзиентная ошибка (429/битый ключ/сеть) — НЕ помечаем: иначе один сбой
-	// навсегда пометил бы автора «без фото» (single-shot по metadata_fetched_at),
-	// и ленивый путь больше не перепробовал бы. Пусть ретрай состоится.
-	if transient {
-		return
-	}
+	// Транзиентная ошибка (429/битый ключ/сеть) вернула true выше и попытку НЕ
+	// пометила: иначе один сбой навсегда пометил бы автора «без фото» (single-shot
+	// по metadata_fetched_at), и ленивый путь больше не перепробовал бы.
 	// Все провайдеры честно мимо — отмечаем попытку, чтобы фронт мог решить
 	// "polling сдался" и показать fallback. Совместимо с EnsureAuthorBio:
 	// они оба пишут metadata_fetched_at независимо, последний раз обновлённый
@@ -854,37 +865,135 @@ func (e *Enricher) EnsureAuthorPhoto(ctx context.Context, q AuthorQuery) {
 	); err != nil {
 		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
 	}
+	return false
+}
+
+// withNamesakeContext дополняет запрос автора тем, что нужно для различения
+// тёзок: уточнением, признаком «есть тёзки» и названиями его книг (самые
+// издаваемые работы; оригинальные названия переводов — тоже, для OL/enwiki).
+// Ошибка чтения — запрос как был (строгий режим не включится, как до тёзок).
+func (e *Enricher) withNamesakeContext(ctx context.Context, q AuthorQuery) AuthorQuery {
+	if q.ID == 0 || e.pool == nil {
+		return q
+	}
+	var titles []string
+	if err := e.pool.QueryRow(ctx, `
+		SELECT COALESCE(a.name_note, ''),
+		       EXISTS (SELECT 1 FROM authors x WHERE x.normalized_name = a.normalized_name AND x.id <> a.id),
+		       COALESCE((
+		           SELECT array_agg(s.title) FROM (
+		               SELECT v.title FROM (
+		                   SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
+		                          COALESCE(w.title, b.title) AS local_title, NULLIF(btrim(b.src_title), '') AS src_title,
+		                          COALESCE(w.edition_count, 1) AS n
+		                   FROM book_authors ba
+		                   JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		                   LEFT JOIN works w ON w.id = b.work_id
+		                   WHERE ba.author_id = a.id
+		                   ORDER BY COALESCE(b.work_id, -b.id), b.id
+		               ) bw, LATERAL (VALUES (bw.local_title), (bw.src_title)) v(title)
+		               WHERE v.title IS NOT NULL
+		               ORDER BY bw.n DESC
+		               LIMIT 6
+		           ) s
+		       ), '{}'),
+		       -- Латинское имя из fb2 переводов: за которое голосует больше половины
+		       -- книг с латинским src-автором, кроме сборников (там в оригинале
+		       -- часто составитель).
+		       COALESCE((
+		           SELECT v.name FROM (
+		               SELECT lower(b.src_author_normalized::text) AS name, count(*) AS n,
+		                      sum(count(*)) OVER () AS total
+		               FROM book_authors ba
+		               JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		               LEFT JOIN works w ON w.id = b.work_id
+		               WHERE ba.author_id = a.id AND COALESCE(w.kind, '') = ''
+		                 AND b.src_author_normalized::text ~ '^[a-z]'
+		                 AND b.src_author_normalized::text !~ '[а-яё]'
+		               GROUP BY 1
+		               ORDER BY n DESC, name
+		               LIMIT 1
+		           ) v WHERE v.n * 2 > v.total
+		       ), ''),
+		       COALESCE(prof.min_year, 0)::int, COALESCE(prof.net_share, 0), COALESCE(prof.genres, '{}')
+		FROM authors a
+		-- Профиль книг для политики приёма кандидата (candidate_policy.go).
+		LEFT JOIN LATERAL (
+		    -- Типичный год книг — медиана, не минимум: самый ранний год ненадёжен
+		    -- (переложения древних текстов, ошибки дат: «книги с 1532» у Заболоцкого).
+		    SELECT percentile_disc(0.5) WITHIN GROUP (ORDER BY y.v) FILTER (WHERE y.v BETWEEN 1000 AND 2100) AS min_year,
+		           count(DISTINCT y.work) FILTER (WHERE y.net)::float8 / NULLIF(count(DISTINCT y.work), 0) AS net_share,
+		           (SELECT array_agg(DISTINCT g.fb2_code)
+		              FROM book_authors ba2
+		              JOIN books b2       ON b2.id = ba2.book_id AND b2.deleted = false
+		              JOIN book_genres bg ON bg.book_id = b2.id
+		              JOIN genres g       ON g.id = bg.genre_id
+		             WHERE ba2.author_id = a.id) AS genres
+		    FROM (
+		        SELECT COALESCE(b.work_id, -b.id) AS work,
+		               LEAST(COALESCE(w.written_year, b.written_year), b.edition_year) AS v,
+		               EXISTS (SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
+		                        WHERE bg.book_id = b.id
+		                          AND g.fb2_code IN ('network_literature', 'sf_litrpg', 'popadanec')) AS net
+		        FROM book_authors ba
+		        JOIN books b      ON b.id = ba.book_id AND b.deleted = false
+		        LEFT JOIN works w ON w.id = b.work_id
+		        WHERE ba.author_id = a.id
+		    ) y
+		) prof ON true
+		WHERE a.id = $1`, q.ID).Scan(&q.Note, &q.Namesakes, &titles, &q.LatinName, &q.BooksYear, &q.NetShare, &q.Genres); err != nil {
+		e.logger.Warn("metadata: load namesake context failed", "author_id", q.ID, "err", err)
+		return q
+	}
+	q.BookTitles = dedupeStrings(titles)
+	return q
+}
+
+func dedupeStrings(in []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(in))
+	for _, s := range in {
+		k := strings.ToLower(strings.TrimSpace(s))
+		if k == "" || seen[k] {
+			continue
+		}
+		seen[k] = true
+		out = append(out, strings.TrimSpace(s))
+	}
+	return out
 }
 
 // EnsureAuthorBio — параллельно EnsureAuthorPhoto, но пишет authors.bio.
-func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
+// Возвращает true при сбое источника — как EnsureAuthorPhoto.
+func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) bool {
 	if len(e.authorBioProviders) == 0 {
-		return
+		return false
 	}
+	q = e.withNamesakeContext(ctx, q)
 	if !e.tryLock(e.inflightAuthorBio, q.ID) {
-		return
+		return false
 	}
 	defer e.unlock(e.inflightAuthorBio, q.ID)
 
 	var existing *string
 	if err := e.pool.QueryRow(ctx, `SELECT bio FROM authors WHERE id = $1`, q.ID).Scan(&existing); err != nil {
 		e.logger.Warn("metadata: query author bio failed", "author_id", q.ID, "err", err)
-		return
+		return false
 	}
 	if existing != nil && *existing != "" {
-		return
+		return false
 	}
 
-	transient := false
 	for _, p := range e.authorBioProviders {
 		text, err := p.FetchAuthorBio(ctx, q)
+		observeLookup("author_bio", p.Name(), err, text != "")
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
 		if err != nil {
-			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
+			// Сбой источника — как у фото: попытку не помечаем, нижний источник не берём (#347).
 			e.logger.Info("metadata: author bio provider failed", "provider", p.Name(), "author_id", q.ID, "err", err)
-			continue
+			return true
 		}
 		if text == "" {
 			continue
@@ -897,15 +1006,11 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 			continue
 		}
 		e.logger.Info("metadata: author bio saved", "provider", p.Name(), "author_id", q.ID, "len", len(text))
-		return
+		return false
 	}
 
-	// Транзиентная ошибка — не помечаем (см. EnsureAuthorPhoto): 429/битый ключ
-	// не должен навсегда пометить автора «без биографии».
-	if transient {
-		return
-	}
-	// Все провайдеры честно мимо — помечаем попытку (как EnsureAuthorPhoto), чтобы
+	// Все провайдеры честно мимо (сбой источника вернул true выше и попытку не
+	// пометил — см. EnsureAuthorPhoto) — помечаем попытку (как EnsureAuthorPhoto), чтобы
 	// ленивый путь не дёргал bio заново на каждый заход на карточку. Маркер
 	// metadata_fetched_at у автора общий для bio+photo; respect его и
 	// triggerAuthorEnrichmentAsync, и фронтовый polling (single-shot, как у
@@ -914,6 +1019,21 @@ func (e *Enricher) EnsureAuthorBio(ctx context.Context, q AuthorQuery) {
 		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1 AND metadata_fetched_at IS NULL`, q.ID,
 	); err != nil {
 		e.logger.Warn("metadata: mark author fetched_at failed", "author_id", q.ID, "err", err)
+	}
+	return false
+}
+
+// ReopenAuthorIfIncomplete снимает у автора маркер metadata_fetched_at, пока у
+// него нет биографии или фото, — после сбоя источника (EnsureAuthorBio/Photo
+// вернули transient). Маркер общий для био и фото: без этого сбой биографии при
+// найденном (или честно не найденном) фото навсегда оставлял автора без
+// биографии — воркер и ленивый путь выбирают только авторов без маркера (#293).
+// Следующий проход повторит только недостающее: найденное Ensure* пропускает.
+func (e *Enricher) ReopenAuthorIfIncomplete(ctx context.Context, authorID int64) {
+	if _, err := e.pool.Exec(ctx, `
+		UPDATE authors SET metadata_fetched_at = NULL
+		WHERE id = $1 AND (COALESCE(bio, '') = '' OR COALESCE(photo_path, '') = '')`, authorID); err != nil {
+		e.logger.Warn("metadata: reopen author after transient failure", "author_id", authorID, "err", err)
 	}
 }
 
@@ -956,6 +1076,7 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 	transient := false
 	for _, p := range e.adaptationProviders {
 		items, err := p.FetchAdaptations(ctx, q)
+		observeLookup("adaptations", p.Name(), err, len(items) > 0)
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
@@ -1168,6 +1289,7 @@ func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int,
 func (e *Enricher) resolvePosterURL(ctx context.Context, bookID int64, it Adaptation) (string, bool) {
 	if e.tmdbPostersActive() && (it.TMDBMovieID != "" || it.TMDBTVID != "") {
 		u, err := e.tmdbPosters.PosterURL(ctx, it.TMDBMovieID, it.TMDBTVID)
+		observeLookup("poster", "tmdb", err, u != "")
 		switch {
 		case err == nil && u != "":
 			return u, false
@@ -1223,4 +1345,21 @@ func nullIfEmpty(s string) *string {
 		return nil
 	}
 	return &s
+}
+
+// observeLookup — исход запроса к внешнему источнику в метрику
+// skriptes_enrichment_lookups_total (как у воркеров с учётом попыток): био, фото,
+// экранизации и постеры TMDB идут и из воркеров, и лениво с карточек, а
+// недоступность TMDB иначе видна только в логах (#310).
+func observeLookup(worker, source string, err error, found bool) {
+	outcome := "found"
+	switch {
+	case errors.Is(err, ErrNotFound):
+		outcome = "not_found"
+	case err != nil:
+		outcome = "error"
+	case !found:
+		outcome = "not_found"
+	}
+	metrics.EnrichmentLookups.WithLabelValues(worker, source, outcome).Inc()
 }

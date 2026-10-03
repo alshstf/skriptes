@@ -107,7 +107,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("gb search: %w", err)
+		return nil, fmt.Errorf("gb search: %w", redactURLError(err))
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
@@ -137,7 +137,7 @@ func (p *GoogleBooksProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 	}
 	coverResp, err := p.httpClient.Do(coverReq)
 	if err != nil {
-		return nil, fmt.Errorf("gb cover: %w", err)
+		return nil, fmt.Errorf("gb cover: %w", redactURLError(err))
 	}
 	if coverResp.StatusCode != http.StatusOK {
 		_ = coverResp.Body.Close()
@@ -186,7 +186,7 @@ func (p *GoogleBooksProvider) FetchRating(ctx context.Context, q WorkQuery) (Rat
 	req.Header.Set("Accept", "application/json")
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		return RatingResult{}, fmt.Errorf("gb rating search: %w", err)
+		return RatingResult{}, fmt.Errorf("gb rating search: %w", redactURLError(err))
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
@@ -256,7 +256,7 @@ func (p *GoogleBooksProvider) FetchAnnotation(ctx context.Context, q BookQuery) 
 	req.Header.Set("Accept", "application/json")
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("gb search: %w", err)
+		return "", fmt.Errorf("gb search: %w", redactURLError(err))
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {

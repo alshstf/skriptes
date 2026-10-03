@@ -155,12 +155,17 @@ func (b *AuthorBackfiller) processOne(ctx context.Context, a authorCandidate) {
 		MiddleName: a.middleName,
 		FullName:   a.fullName,
 	}
-	b.enricher.EnsureAuthorBio(taskCtx, q)
-	b.enricher.EnsureAuthorPhoto(taskCtx, q)
-	// Гарантированно помечаем «попытка была», даже если провайдеры пусты или
-	// ничего не нашли — чтобы кандидат не выбирался повторно каждый проход.
-	if _, err := b.pool.Exec(ctx,
+	bioTransient := b.enricher.EnsureAuthorBio(taskCtx, q)
+	photoTransient := b.enricher.EnsureAuthorPhoto(taskCtx, q)
+	if bioTransient || photoTransient {
+		// Сбой источника — не «не найдено»: маркер снимаем, пока нет био или
+		// фото, — следующий проход повторит недостающее (#293). Раньше маркер
+		// ставился здесь безусловно, и сбой навсегда оставлял автора без био.
+		b.enricher.ReopenAuthorIfIncomplete(ctx, a.id)
+	} else if _, err := b.pool.Exec(ctx,
 		`UPDATE authors SET metadata_fetched_at = now() WHERE id = $1 AND metadata_fetched_at IS NULL`, a.id); err != nil {
+		// Провайдеры пусты или честно ничего не нашли — помечаем попытку, чтобы
+		// кандидат не выбирался повторно каждый проход.
 		b.logger.Warn("author backfill: mark fetched_at failed", "author_id", a.id, "err", err)
 	}
 	b.done.Add(1)
@@ -220,10 +225,10 @@ func (c *AuthorBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewAuthorBackfiller(c.pool, c.enricher, c.rpm, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("author backfill: continuous job started")
 }
 
@@ -266,11 +271,11 @@ func (c *AuthorBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	rpm := c.rpm
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewAuthorBackfiller(c.pool, c.enricher, rpm, c.logger)
 		n := b.drain(ctx)
 		cancel()
@@ -278,7 +283,7 @@ func (c *AuthorBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("author backfill: one-shot pass done", "processed", n)
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

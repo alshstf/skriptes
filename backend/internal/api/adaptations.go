@@ -81,8 +81,8 @@ func triggerAdaptationsEnrichmentAsync(d MetadataDeps, svc *books.Service, bookI
 	if !adaptationEnrichWanted(d.Gates.Gates()) {
 		return
 	}
-	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	metadata.Go(func(base context.Context) {
+		ctx, cancel := context.WithTimeout(base, 60*time.Second)
 		defer cancel()
 		b, err := svc.Get(ctx, bookID)
 		if err != nil {
@@ -101,5 +101,5 @@ func triggerAdaptationsEnrichmentAsync(d MetadataDeps, svc *books.Service, bookI
 			FB2Name:     b.FileName + "." + b.Ext,
 		}
 		d.Service.EnsureAdaptations(ctx, q)
-	}()
+	})
 }

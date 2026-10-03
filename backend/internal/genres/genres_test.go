@@ -5,13 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/genres"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // TestDictionary_Parses — unit-only, без БД. Подтверждает что
@@ -32,11 +28,24 @@ func TestDictionary_Parses(t *testing.T) {
 	require.Equal(t, "Фантастика", byCode["sf_action"].Category)
 	require.Equal(t, "Классический детектив", byCode["det_classic"].NameRu)
 	require.Equal(t, "Попаданцы", byCode["popadanec"].NameRu)
-	// Каждая запись должна иметь непустые поля.
+	// Коды librusec 2026 из FLibrary (#286): самые частые — с именем и разделом.
+	require.Equal(t, "Сетевая литература", byCode["network_literature"].NameRu)
+	require.Equal(t, "ЛитРПГ", byCode["sf_litrpg"].NameRu)
+	require.Equal(t, "Фантастика", byCode["sf_litrpg"].Category)
+	// Каждая запись должна иметь непустые поля, а в одной категории нет двух
+	// разных кодов с одной подписью (иначе в фильтре два неотличимых пункта,
+	// каждый со своей частью книг). Один код в двух разделах — из glst, так
+	// задумано.
+	seenName := map[string]string{}
 	for _, e := range entries {
 		require.NotEmptyf(t, e.Code, "entry %+v: empty code", e)
 		require.NotEmptyf(t, e.NameRu, "entry %+v: empty name_ru", e)
 		require.NotEmptyf(t, e.Category, "entry %+v: empty category", e)
+		key := e.Category + "/" + e.NameRu
+		if prev := seenName[key]; prev != "" && prev != e.Code {
+			t.Errorf("%q и %q — одна подпись %q", prev, e.Code, key)
+		}
+		seenName[key] = e.Code
 	}
 }
 
@@ -65,7 +74,7 @@ func TestSeed_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startGenresPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	// --- 1) Imitate legacy state: importer-old записал name_ru = fb2_code
 	_, err := pool.Exec(ctx, `INSERT INTO genres (fb2_code, name_ru) VALUES ('sf_action', 'sf_action')`)
@@ -133,28 +142,4 @@ func TestSeed_Integration(t *testing.T) {
 	var cntAfter int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT COUNT(*) FROM genres`).Scan(&cntAfter))
 	require.Equal(t, cntBefore, cntAfter, "Seed must be idempotent (no duplicates)")
-}
-
-func startGenresPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
 }

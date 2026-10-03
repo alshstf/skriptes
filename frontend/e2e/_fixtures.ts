@@ -1,4 +1,4 @@
-import { test as base, type Page } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 
 /**
  * Стабы /api/* — нужны чтобы e2e-тесты не зависели от поднятого
@@ -277,8 +277,18 @@ export const seriesDetailFixture = {
 
 export const test = base.extend<{ mockedPage: Page }>({
   mockedPage: async ({ page }, use) => {
+    // Любое нарушение CSP — провал теста. vite preview отдаёт ту же CSP, что nginx
+    // прод-образа (nginx-security-headers.conf), так что фича, которой CSP мешает
+    // (inline-скрипт, внешний ресурс), падает здесь, а не у пользователей.
+    const cspViolations: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error' && msg.text().includes('Content Security Policy')) {
+        cspViolations.push(msg.text());
+      }
+    });
     await mockApi(page);
     await use(page);
+    expect(cspViolations, 'нарушения CSP').toEqual([]);
   },
 });
 

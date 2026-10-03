@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // CoverBackfiller — фоновое дозаполнение cover_path из ВНЕШНИХ источников
@@ -39,6 +41,7 @@ type CoverBackfiller struct {
 	gbGate   *rateGate
 
 	coversFound atomic.Int64 // сколько обложек добавлено за проход (для логов)
+	lookedUp    atomic.Int64 // сколько запросов к источникам сделано за проход (для логов)
 }
 
 // CoverBackfillConfig — рантайм-параметры воркера (зеркало
@@ -99,8 +102,8 @@ func (b *CoverBackfiller) Run(ctx context.Context) {
 		if ctx.Err() != nil {
 			return
 		}
-		if n > 0 {
-			b.logger.Info("cover backfill: pass complete", "processed", n, "covers_found", b.coversFound.Load())
+		if lookups := b.lookedUp.Load(); n > 0 && lookups > 0 {
+			b.logger.Info("cover backfill: pass complete", "candidates", n, "lookups", lookups, "covers_found", b.coversFound.Load())
 		}
 		select {
 		case <-ctx.Done():
@@ -130,6 +133,7 @@ func (b *CoverBackfiller) candidateCond() string {
 
 func (b *CoverBackfiller) drain(ctx context.Context) int {
 	b.coversFound.Store(0)
+	b.lookedUp.Store(0)
 	total := 0
 	var cursor int64
 	for ctx.Err() == nil {
@@ -148,6 +152,8 @@ func (b *CoverBackfiller) drain(ctx context.Context) int {
 	return total
 }
 
+// fetchBatch — страница кандидатов keyset'ом по id: только те, кого пора
+// спросить хотя бы у одного включённого источника (dueCond).
 func (b *CoverBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]coverCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
@@ -162,12 +168,14 @@ func (b *CoverBackfiller) fetchBatch(ctx context.Context, afterID int64, limit i
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
 		  AND %s
+		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond())
-	rows, err := b.pool.Query(ctx, q, afterID, limit)
+	`, b.candidateCond(), dueCond("book_cover_lookups", "book_id", "b.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -219,6 +227,15 @@ func (b *CoverBackfiller) sources() []coverSource {
 	return out
 }
 
+// sourceNames — имена включённых источников (как они записаны в учёте попыток).
+func (b *CoverBackfiller) sourceNames() []string {
+	var out []string
+	for _, src := range b.sources() {
+		out = append(out, src.provider.Name())
+	}
+	return out
+}
+
 func (b *CoverBackfiller) processOne(ctx context.Context, bk coverCandidate) {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
@@ -239,6 +256,7 @@ func (b *CoverBackfiller) processOne(ctx context.Context, bk coverCandidate) {
 			cancel()
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		b.lookedUp.Add(1)
 		found, ferr := b.enricher.FetchCoverFrom(taskCtx, src.provider, q)
 		cancel()
 
@@ -279,24 +297,19 @@ func (b *CoverBackfiller) loadLookups(ctx context.Context, bookID int64) (map[st
 	return out, rows.Err()
 }
 
+// ttl — сроки перепроверки: found окончательный, not_found / error — по конфигу.
+func (b *CoverBackfiller) ttl() lookupTTL {
+	return retryTTL(b.cfg.NotFoundRetryDays, b.cfg.ErrorRetryHours)
+}
+
 // isDue — пора ли (пере)спрашивать источник: нет строки → да; found → нет;
 // not_found / error → да, если старше соответствующего TTL.
 func (b *CoverBackfiller) isDue(l lookupRow, now time.Time) bool {
-	switch l.outcome {
-	case "":
-		return true // строки не было
-	case "found":
-		return false
-	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.NotFoundRetryDays)*24*time.Hour
-	case "error":
-		return now.Sub(l.checkedAt) >= time.Duration(b.cfg.ErrorRetryHours)*time.Hour
-	default:
-		return true
-	}
+	return b.ttl().isDue(l, now)
 }
 
 func (b *CoverBackfiller) upsertLookup(ctx context.Context, bookID int64, source, outcome string) {
+	metrics.EnrichmentLookups.WithLabelValues("cover", source, outcome).Inc()
 	if _, err := b.pool.Exec(ctx, `
 		INSERT INTO book_cover_lookups (book_id, source, outcome, checked_at)
 		VALUES ($1, $2, $3, now())
@@ -382,10 +395,10 @@ func (c *CoverBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewCoverBackfiller(c.pool, c.enricher, c.ol, c.gb, c.cfg, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("cover backfill: continuous job started")
 }
 
@@ -429,19 +442,19 @@ func (c *CoverBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewCoverBackfiller(c.pool, c.enricher, c.ol, c.gb, cfg, c.logger)
 		n := b.drain(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil
 		c.mu.Unlock()
-		c.logger.Info("cover backfill: one-shot pass done", "processed", n)
-	}()
+		c.logger.Info("cover backfill: one-shot pass done", "candidates", n, "lookups", b.lookedUp.Load())
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

@@ -26,6 +26,8 @@ export type YearsRange = {
 export type AuthorListItem = {
   id: number;
   full_name: string;
+  /** Уточнение, отличающее тёзок («Блум», «фантаст»); номера librusec бэкенд не отдаёт. */
+  note?: string;
   photo_path?: string;
   book_count: number;
   is_favorite: boolean;

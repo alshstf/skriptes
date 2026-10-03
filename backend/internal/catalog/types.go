@@ -12,6 +12,8 @@ type Author struct {
 	FirstName  string `json:"first_name,omitempty"`
 	MiddleName string `json:"middle_name,omitempty"`
 	FullName   string `json:"full_name"`
+	// Note — уточнение, отличающее тёзок («Блум», «фантаст»), см. books.DisplayNote.
+	Note string `json:"note,omitempty"`
 
 	// Био и фото из metadata-enrichment (Wikipedia/OL). Заполняются
 	// лениво при первом GET /api/authors/{id}, как и поля у Book.
@@ -108,6 +110,9 @@ type SeriesWithCount struct {
 	Title           string `json:"title"`
 	Count           int    `json:"count"`
 	AllCompilations bool   `json:"all_compilations,omitempty"`
+	// Multi — межавторская/издательская серия (series.kind='multi'): на карточке
+	// автора — не среди его циклов, а внизу свёрнутым блоком.
+	Multi bool `json:"multi,omitempty"`
 }
 
 // AuthorSuggest — строка в typeahead-выдаче авторов.
@@ -116,6 +121,7 @@ type SeriesWithCount struct {
 type AuthorSuggest struct {
 	ID         int64  `json:"id"`
 	FullName   string `json:"full_name"`
+	Note       string `json:"note,omitempty"`
 	BookCount  int    `json:"book_count"`
 	IsFavorite bool   `json:"is_favorite,omitempty"`
 }
@@ -142,6 +148,7 @@ type SeriesAuthorRef struct {
 type Series struct {
 	ID         int64             `json:"id"`
 	Title      string            `json:"title"`
+	Kind       string            `json:"kind,omitempty"` // "multi" — межавторская/издательская
 	AuthorID   *int64            `json:"author_id,omitempty"`
 	AuthorName string            `json:"author_name,omitempty"`
 	Authors    []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)

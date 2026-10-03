@@ -1,0 +1,105 @@
+# Caddyfile для ПУБЛИЧНОГО деплоя: вход прямо из интернета (на роутере проброшены
+# 443 и 80 на хост), TLS — Let's Encrypt, Caddy получает и продлевает сертификат сам.
+# Подключается overlay'ем docker-compose.harden.yml вместо infra/Caddyfile.
+#
+# SKRIPTES_HOST — публичное имя (A-запись на внешний IP). Порт 80 нужен для
+# редиректа на https и как запасной путь проверки ACME; основной — TLS-ALPN на 443.
+{
+	# Метрики HTTP-серверов Caddy (запросы, коды, задержки) — отдаются только
+	# внутренним сайтом :9180 ниже, на основной сайт не выходят.
+	metrics
+
+	# Только HTTP/1.1 и HTTP/2. По умолчанию Caddy включает и HTTP/3 (QUIC по UDP 443)
+	# и объявляет его заголовком alt-svc, но compose публикует только TCP 443 и роутер
+	# пробрасывает только TCP: браузер пробовал бы QUIC впустую и откатывался на h2.
+	servers {
+		protocols h1 h2
+	}
+}
+
+{$SKRIPTES_HOST} {
+	encode zstd gzip
+
+	# Журнал запросов — JSON в stdout (дальше docker/journald). Caddy сам вырезает из
+	# него Cookie и Authorization; остаются IP посетителей и пути запросов (в том числе
+	# поисковые запросы из URL) — учитывайте при хранении журналов.
+	log {
+		output stdout
+		format json
+	}
+
+	# Заголовки «настоящего IP клиента» из запроса не доверяем: без Cloudflare/CDN их
+	# ставит сам клиент. Backend берёт IP из самого правого значения X-Forwarded-For,
+	# которое Caddy выставляет сам (входящий XFF от недоверенного клиента он не
+	# принимает); True-Client-IP/X-Real-IP backend не читает, а CF-Connecting-IP —
+	# только при SKRIPTES_TRUST_CF_CONNECTING_IP=true. Вырезаем их всё равно — на
+	# случай, если флаг включат по ошибке или что-то в цепочке начнёт им верить.
+	request_header -Cf-Connecting-Ip
+	request_header -True-Client-Ip
+	request_header -X-Real-Ip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		# SAMEORIGIN, а не DENY: ридер открывает /foliate-reader.html во фрейме.
+		X-Frame-Options SAMEORIGIN
+		-Server
+	}
+
+	# Админ-API и OPDS — только из доверенных сетей (дом): SKRIPTES_LAN_CIDRS, CIDR
+	# через пробел. Не задана → 127.0.0.1/32, то есть ни для кого: закрыто по
+	# умолчанию. Открыть всем — «0.0.0.0/0 ::/0».
+	# Админка: снаружи 403 — у админа нет 2FA, и пароль не должен быть единственным
+	# барьером. SPA-страницы /admin/* сами данных не отдают, достаточно закрыть API.
+	# OPDS: снаружи 404 — HTTP Basic, e-reader'ы ходят только из дома.
+	# Путь в матчере Caddy сравнивает без учёта регистра, после декодирования %XX и
+	# склейки «//» — обходы вроде /API/admin или /api//admin сюда тоже попадают.
+	@admin_outside {
+		path /api/admin /api/admin/*
+		not remote_ip {$SKRIPTES_LAN_CIDRS:127.0.0.1/32}
+	}
+	handle @admin_outside {
+		header Content-Type application/json
+		respond `{"error":"администрирование доступно только из домашней сети"}` 403
+	}
+
+	@opds_outside {
+		path /opds /opds/*
+		not remote_ip {$SKRIPTES_LAN_CIDRS:127.0.0.1/32}
+	}
+	handle @opds_outside {
+		respond 404
+	}
+
+	@api path /api/* /opds /opds/* /healthz /readyz
+	handle @api {
+		reverse_proxy backend:8080
+	}
+
+	# Всё остальное → frontend (nginx-unprivileged слушает 8080, SPA-фолбэк)
+	handle {
+		reverse_proxy frontend:8080
+	}
+}
+
+# Метрики для сборщика из доверенной сети (Prometheus / Grafana Alloy):
+#   /metrics/skriptes — приложение (backend, SKRIPTES_METRICS_ADDR), /metrics/caddy — Caddy.
+# Обычный HTTP без TLS на отдельном порту: compose публикует его на SKRIPTES_METRICS_BIND
+# (по умолчанию 127.0.0.1 — только сам хост), пускает только SKRIPTES_METRICS_CIDRS
+# (адрес соединения, заголовками не подделать; не задана → 127.0.0.1/32, то есть никого).
+# Порты, опубликованные Docker, обходят ufw — ограничивайте доступ ещё и на роутере.
+:9180 {
+	@collector remote_ip {$SKRIPTES_METRICS_CIDRS:127.0.0.1/32}
+	handle @collector {
+		handle /metrics/caddy {
+			metrics
+		}
+		handle /metrics/skriptes {
+			rewrite * /metrics
+			reverse_proxy backend:9091
+		}
+		respond 404
+	}
+	respond 403
+}

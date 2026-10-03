@@ -13,11 +13,26 @@ import (
 // Кэши обнуляются с каждым новым Run — в норме одного запуска не хватает,
 // чтобы съесть RAM (на 500K книг ожидается ~50K уникальных авторов и
 // ~10K серий, что укладывается в десятки МБ).
+//
+// Двухуровневый: id, полученный внутри транзакции записи, сначала лежит в staged и
+// попадает в общий кэш только после Commit (commitStaged). Каждая запись — своя
+// транзакция; при откате вставленные в ней строки исчезают, и id из отката в общем
+// кэше — ссылка на несуществующую строку: все следующие книги того же автора/серии
+// падали бы на FK (прод-кейс 2026-09-26: 3 откаченные записи дали ещё 19 FK-ошибок,
+// 22 книги не попали в каталог).
 type cacheSet struct {
-	author  map[string]int64     // normalized name → id
-	series  map[seriesKey]int64  // (norm title, author id) → id
-	genre   map[string]int64     // fb2 code → id
-	archive map[archiveKey]int64 // (collection_id, filename) → id
+	cacheMaps
+	staged cacheMaps
+	// multiSeries — названия (normalize) межавторских/издательских серий этого
+	// импорта (planMultiSeries): одна серия на название, без автора.
+	multiSeries map[string]bool
+}
+
+type cacheMaps struct {
+	author  map[string]int64    // authorKey (имя + уточнение) → id
+	series  map[seriesKey]int64 // (norm title, author id) → id
+	genre   map[string]int64    // fb2 code → id
+	archive map[string]int64    // имя файла архива → id
 }
 
 type seriesKey struct {
@@ -25,43 +40,80 @@ type seriesKey struct {
 	authorID int64 // 0 если без автора
 }
 
-type archiveKey struct {
-	collectionID int64
-	filename     string
+func newCacheMaps(author, series, genre, archive int) cacheMaps {
+	return cacheMaps{
+		author:  make(map[string]int64, author),
+		series:  make(map[seriesKey]int64, series),
+		genre:   make(map[string]int64, genre),
+		archive: make(map[string]int64, archive),
+	}
 }
 
 func newCaches() *cacheSet {
 	return &cacheSet{
-		author:  make(map[string]int64, 1024),
-		series:  make(map[seriesKey]int64, 256),
-		genre:   make(map[string]int64, 256),
-		archive: make(map[archiveKey]int64, 64),
+		cacheMaps: newCacheMaps(1024, 256, 256, 64),
+		staged:    newCacheMaps(8, 2, 8, 1),
 	}
 }
 
+// commitStaged переносит id из закоммиченной транзакции записи в общий кэш.
+func (c *cacheSet) commitStaged() {
+	for k, v := range c.staged.author {
+		c.author[k] = v
+	}
+	for k, v := range c.staged.series {
+		c.series[k] = v
+	}
+	for k, v := range c.staged.genre {
+		c.genre[k] = v
+	}
+	for k, v := range c.staged.archive {
+		c.archive[k] = v
+	}
+	c.dropStaged()
+}
+
+// dropStaged забывает id из откаченной транзакции записи.
+func (c *cacheSet) dropStaged() {
+	clear(c.staged.author)
+	clear(c.staged.series)
+	clear(c.staged.genre)
+	clear(c.staged.archive)
+}
+
 func (c *cacheSet) ensureAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) {
-	key := normalizedAuthorName(a)
+	key := authorKey(a)
 	if id, ok := c.author[key]; ok {
+		return id, nil
+	}
+	if id, ok := c.staged.author[key]; ok {
 		return id, nil
 	}
 	id, err := upsertAuthor(ctx, q, a)
 	if err != nil {
 		return 0, err
 	}
-	c.author[key] = id
+	c.staged.author[key] = id
 	return id, nil
 }
 
 func (c *cacheSet) ensureSeries(ctx context.Context, q querier, title string, authorID int64) (int64, error) {
+	multi := c.multiSeries[normalize(title)]
+	if multi {
+		authorID = 0 // межавторская/издательская — одна серия на название, без автора
+	}
 	key := seriesKey{norm: normalize(title), authorID: authorID}
 	if id, ok := c.series[key]; ok {
 		return id, nil
 	}
-	id, err := upsertSeries(ctx, q, title, authorID)
+	if id, ok := c.staged.series[key]; ok {
+		return id, nil
+	}
+	id, err := upsertSeries(ctx, q, title, authorID, multi)
 	if err != nil {
 		return 0, err
 	}
-	c.series[key] = id
+	c.staged.series[key] = id
 	return id, nil
 }
 
@@ -69,23 +121,28 @@ func (c *cacheSet) ensureGenre(ctx context.Context, q querier, code string) (int
 	if id, ok := c.genre[code]; ok {
 		return id, nil
 	}
+	if id, ok := c.staged.genre[code]; ok {
+		return id, nil
+	}
 	id, err := upsertGenre(ctx, q, code)
 	if err != nil {
 		return 0, err
 	}
-	c.genre[code] = id
+	c.staged.genre[code] = id
 	return id, nil
 }
 
 func (c *cacheSet) ensureArchive(ctx context.Context, q querier, collectionID int64, filename string) (int64, error) {
-	key := archiveKey{collectionID: collectionID, filename: filename}
-	if id, ok := c.archive[key]; ok {
+	if id, ok := c.archive[filename]; ok {
+		return id, nil
+	}
+	if id, ok := c.staged.archive[filename]; ok {
 		return id, nil
 	}
 	id, err := upsertArchive(ctx, q, collectionID, filename)
 	if err != nil {
 		return 0, err
 	}
-	c.archive[key] = id
+	c.staged.archive[filename] = id
 	return id, nil
 }

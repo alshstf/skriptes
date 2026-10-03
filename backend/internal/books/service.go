@@ -17,6 +17,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // worksIndexName — индекс логических книг (works) в Meili. Зеркало
@@ -95,15 +96,10 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
 
-	// Расширяем окно meili-запроса при rerank: получаем ~3*limit (capped 50)
-	// чтобы было что переупорядочивать; вернём всё равно limit.
+	// Пересортировка — только ВНУТРИ страницы, которую отдал Meili (окно = limit):
+	// с расширенным окном (3×limit) первая страница забирала элементы, которые
+	// Meili отдаст и второй странице, а свои «лишние» теряла (#277).
 	meiliLimit := int64(limit)
-	if rerank {
-		meiliLimit = int64(limit * 3)
-		if meiliLimit > 50 {
-			meiliLimit = 50
-		}
-	}
 
 	req := &meilisearch.SearchRequest{
 		Limit:            meiliLimit,
@@ -145,9 +141,6 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		if err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
 			sortByFinalScore(scored)
-			if len(scored) > limit {
-				scored = scored[:limit]
-			}
 		}
 	}
 
@@ -287,13 +280,10 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 
 	rerank := s.persona != nil && params.UserID > 0 && params.Query != "" &&
 		offset == 0 && params.Sort == "" && params.AuthorID == 0 && params.SeriesID == 0
+	// Пересортировка — только ВНУТРИ страницы Meili (окно = limit), как в List:
+	// с окном 3×limit первая страница теряла и дублировала работы при прокрутке
+	// (прод: 95 потерянных работ на 32 запросах, #277).
 	meiliLimit := int64(limit)
-	if rerank {
-		meiliLimit = int64(limit * 3)
-		if meiliLimit > 50 {
-			meiliLimit = 50
-		}
-	}
 
 	var visibleLangs []string
 	if len(params.ExcludeLangs) > 0 {
@@ -329,7 +319,8 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		req.Facets = params.Facets
 	}
 
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, params.Query, req)
+	// Поля works-индекса свёрнуты «ё»→«е» (#278) — запрос тоже.
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(params.Query), req)
 	if err != nil {
 		return ListResponse{}, fmt.Errorf("meili works search: %w", err)
 	}
@@ -363,17 +354,14 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	if rerank {
 		// Тот же финальный score, что у SuggestWorks (persona + известность) —
 		// иначе hero-подсказки и /books по одному запросу дают разный порядок.
-		// Буст known-книг только в rerank-окне (offset 0, есть запрос): browse
-		// и глубокие страницы остаются чистым Meili-порядком (pop проставлен,
-		// но без sortByFinalScore не влияет) — пере-сортировка первой страницы
-		// при пагинации дублировала/теряла бы элементы.
+		// Буст known-книг только на первой странице с запросом: browse и
+		// следующие страницы — чистый Meili-порядок. Пересортировка не меняет
+		// СОСТАВ страницы (окно = limit), только порядок внутри — страницы
+		// стыкуются без потерь и повторов.
 		if profile, err := s.persona.PersonaProfile(ctx, params.UserID); err == nil && !profile.IsEmpty() {
 			applyPersonaBoost(scored, profile)
 		}
 		sortByFinalScore(scored)
-		if len(scored) > limit {
-			scored = scored[:limit]
-		}
 	}
 
 	items := make([]ListItem, 0, len(scored))
@@ -429,7 +417,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs, hideCompilations); f != "" {
 		req.Filter = f
 	}
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, query, req)
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(query), req)
 	if err != nil {
 		return nil, fmt.Errorf("meili works search: %w", err)
 	}
@@ -1478,12 +1466,12 @@ func (s *Service) GenresAndLang(ctx context.Context, id int64) ([]string, string
 // (workID), либо по одному изданию (bookID), если работа не определена.
 func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([]AuthorRef, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT a.id, a.last_name, a.first_name, a.middle_name
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '')
 		FROM authors a
 		JOIN book_authors ba ON ba.author_id = a.id
 		JOIN books b         ON b.id = ba.book_id
 		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
-		GROUP BY a.id, a.last_name, a.first_name, a.middle_name
+		GROUP BY a.id, a.last_name, a.first_name, a.middle_name, a.name_note
 		ORDER BY min(ba.position), a.last_name
 	`, workID, bookID)
 	if err != nil {
@@ -1493,10 +1481,11 @@ func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([
 	var out []AuthorRef
 	for rows.Next() {
 		var a AuthorRef
-		if err := rows.Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName); err != nil {
+		if err := rows.Scan(&a.ID, &a.LastName, &a.FirstName, &a.MiddleName, &a.Note); err != nil {
 			return nil, err
 		}
 		a.FullName = fullName(a)
+		a.Note = DisplayNote(a.Note)
 		out = append(out, a)
 	}
 	return out, rows.Err()
@@ -1608,6 +1597,16 @@ func (s *Service) anchorEditionID(ctx context.Context, workID, bookID int64) int
 }
 
 // fullName собирает "Lastname Firstname Middlename" пропуская пустые куски.
+// DisplayNote — уточнение автора для показа: номера вида «#17465» (что они
+// значат в librusec, не подтверждено) не показываем нигде — решение владельца.
+func DisplayNote(note string) string {
+	note = strings.TrimSpace(note)
+	if len(note) > 1 && note[0] == '#' && strings.Trim(note[1:], "0123456789") == "" {
+		return ""
+	}
+	return note
+}
+
 func fullName(a AuthorRef) string {
 	parts := make([]string, 0, 3)
 	if a.LastName != "" {

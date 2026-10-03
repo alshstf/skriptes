@@ -8,13 +8,14 @@
 //   - In-memory кэши (authorCache, seriesCache, genreCache, archiveCache)
 //     избавляют от повторных round-trip-ов в БД для часто встречающихся
 //     значений в пределах одного импорта.
-//   - Идемпотентность: UNIQUE (collection_id, archive_id, lib_id) на books
-//     гарантирует, что повторный импорт того же INPX даёт ту же таблицу.
+//   - Идемпотентность: UNIQUE (archive_id, lib_id) на books — одна строка на
+//     файл книги, из какого бы INPX она ни пришла; повторный импорт того же
+//     INPX (или переименованного) даёт ту же таблицу.
 //
 // Что не сделано (намеренно, для PR 5):
 //   - Нет background queue (river) — импорт запускается синхронно из main.
-//   - Нет API/UI триггеров — только startup-time scan.
-//   - Нет fsnotify-watcher.
+//   - Нет API/UI триггеров — импорт при старте и по изменению INPX в каталоге
+//     (InpxWatch: опрос размера/mtime раз в SKRIPTES_INPX_WATCH_INTERVAL, не fsnotify).
 //   - Нет SSE-прогресса.
 package importer
 
@@ -23,6 +24,7 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -30,7 +32,9 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // normalizeLang приводит код языка к канонике: нижний регистр + trim + срез
@@ -51,6 +55,14 @@ type Deps struct {
 	Pool   *pgxpool.Pool
 	Meili  meilisearch.ServiceManager
 	Logger *slog.Logger
+	// InpxFiles — SKRIPTES_INPX_FILES: какие INPX выбраны для импорта (пусто —
+	// все в каталоге). Нужен, чтобы отличить второй INPX той же библиотеки
+	// рядом (пропуск) от переименованного (продолжение), см. OverlapError.
+	InpxFiles []string
+	// MeiliURL / MeiliAPIKey — для запросов мимо клиента: swap индексов в
+	// meilisearch-go шлёт поле rename, которого Meili 1.13 не знает (400).
+	MeiliURL    string
+	MeiliAPIKey string
 }
 
 // Importer — оркестратор импорта одного INPX.
@@ -88,15 +100,11 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	}
 	defer func() { _ = ix.Close() }()
 
-	collectionName := ix.Collection.Name
-	if collectionName == "" {
-		collectionName = filepath.Base(inpxPath)
-	}
-	collectionID, prevHash, err := upsertCollection(ctx, im.deps.Pool, filepath.Base(inpxPath), collectionName)
+	file := filepath.Base(inpxPath)
+	prevHash, err := collectionHash(ctx, im.deps.Pool, file)
 	if err != nil {
 		return stats, err
 	}
-
 	if prevHash == hash {
 		stats.Skipped = true
 		stats.Duration = time.Since(start)
@@ -104,14 +112,55 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		return stats, nil
 	}
 
+	// Книги этого INPX уже числятся за другим INPX? Тот ещё в каталоге — второй
+	// INPX той же библиотеки, пропускаем; ушёл — раздача переименовала файл,
+	// продолжаем те же книги (см. OverlapError).
+	owner, err := overlapOwner(ctx, im.deps.Pool, ix, file)
+	if err != nil {
+		return stats, err
+	}
+	if owner != nil {
+		if inpxInUse(filepath.Dir(inpxPath), owner.CollectionFile, im.deps.InpxFiles) {
+			return stats, owner
+		}
+		logger.Info("INPX continues books of another INPX that is no longer in use (renamed by the distribution?)",
+			"previous_file", owner.CollectionFile, "collection", owner.Collection,
+			"matched", owner.Matched, "sampled", owner.Sampled)
+	}
+
+	collectionName := ix.Collection.Name
+	if collectionName == "" {
+		collectionName = file
+	}
+	collectionID, err := upsertCollection(ctx, im.deps.Pool, file, collectionName)
+	if err != nil {
+		return stats, err
+	}
+
 	if err := configureIndex(ctx, im.deps.Meili); err != nil {
 		return stats, fmt.Errorf("configure meili: %w", err)
 	}
-	if err := configureWorksIndex(ctx, im.deps.Meili); err != nil {
+	if err := im.ConfigureWorksIndex(ctx); err != nil {
 		return stats, fmt.Errorf("configure works meili: %w", err)
 	}
 
+	// Тёзки, которых файл различает уточнением в скобках, а у нас они одна
+	// запись: наследник прежней записи выбирается ДО импорта (см. author_splits.go).
+	if n, err := im.planAuthorSplits(ctx, ix, file); err != nil {
+		return stats, fmt.Errorf("plan author splits: %w", err)
+	} else if n > 0 {
+		logger.Info("import: authors split into namesakes", "authors", n)
+	}
+
+	// Межавторские/издательские серии (≥3 разных первых авторов) — одна серия на
+	// название, а не «цикл» у каждого автора (см. multi_series.go).
+	multi, err := im.planMultiSeries(ctx, ix)
+	if err != nil {
+		return stats, fmt.Errorf("plan multi-author series: %w", err)
+	}
+
 	caches := newCaches()
+	caches.multiSeries = multi
 	idx := newIndexer(im.deps.Meili, 1000)
 
 	// Прогрев archives внутри одной транзакции? Не нужно: это редкие upsert-ы,
@@ -135,6 +184,30 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	if err := idx.flush(ctx); err != nil {
 		return stats, fmt.Errorf("flush meili: %w", err)
 	}
+	// Книги могли уйти к другим авторам (разделение тёзок, правки в выпуске) —
+	// основной автор работы и серии за ними не следят сами.
+	if n, err := fixWorkPrimaryAuthors(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: fix work primary authors failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: work primary authors fixed", "works", n)
+	}
+	// Работы подхватывают серию изданий (в том числе впервые проставленную
+	// выпуском); индекс works обновит полный ресинк ниже.
+	if ids, err := syncWorkSeries(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: sync work series failed", "err", err)
+	} else if len(ids) > 0 {
+		logger.Info("import: work series synced", "works", len(ids))
+	}
+	if n, err := moveSeriesSubscriptions(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: move series subscriptions failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: series subscriptions moved to multi-author series", "subscriptions", n)
+	}
+	if n, err := deleteEmptySeries(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: delete empty series failed", "err", err)
+	} else if n > 0 {
+		logger.Info("import: empty series deleted", "series", n)
+	}
 	if err := markCollectionImported(ctx, im.deps.Pool, collectionID, hash, ix.Version); err != nil {
 		return stats, fmt.Errorf("mark collection imported: %w", err)
 	}
@@ -150,12 +223,18 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	}
 
 	// Индекс works (фасеты по работам) перестраиваем после импорта: новые
-	// singleton-работы + актуальный год/агрегаты. Upsert-only — осиротевшие
-	// доки чистят таргетные удаления в точках GC (группировка/split/merge).
+	// singleton-работы + актуальный год/агрегаты. Ресинк только добавляет и
+	// обновляет — документы удалённых книг и опустевших работ убирает сверка.
 	if n, rerr := im.ResyncWorksIndex(ctx); rerr != nil {
 		logger.Warn("import: resync works index failed", "err", rerr)
 	} else if n > 0 {
 		logger.Info("import: works index resynced", "count", n)
+	}
+	if r, rerr := im.ReconcileIndexes(ctx); rerr != nil {
+		logger.Warn("import: reconcile search indexes failed", "err", rerr)
+	} else if r.WorksRemoved+r.WorksAdded+r.BooksRemoved > 0 {
+		logger.Info("import: search indexes reconciled", "works_removed", r.WorksRemoved,
+			"works_added", r.WorksAdded, "books_removed", r.BooksRemoved)
 	}
 
 	stats.Authors = len(caches.author)
@@ -312,7 +391,29 @@ func (im *Importer) ResyncLangs(ctx context.Context) (int, error) {
 // доки его не имели) и после прохода группировки (merge меняет work_id у
 // изданий). Зеркало ResyncLangs. Возвращает число обновлённых документов.
 func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
-	rows, err := im.deps.Pool.Query(ctx, `SELECT id, COALESCE(work_id, 0) FROM books WHERE deleted = false`)
+	return im.resyncWorkIDs(ctx, `SELECT id, COALESCE(work_id, 0) FROM books WHERE deleted = false`)
+}
+
+// ResyncWorkIDsFor — то же для изданий работ workIDs: после группировки и ручных
+// split/merge меняется work_id только у изданий затронутых работ (перенесённые
+// издания лежат в канонической или новой работе — она тоже в списке). Полный
+// проход переписывал work_id всем 465 тыс. документам много раз в сутки (#300).
+func (im *Importer) ResyncWorkIDsFor(ctx context.Context, workIDs []int64) (int, error) {
+	total := 0
+	const chunk = 5000
+	for i := 0; i < len(workIDs); i += chunk {
+		n, err := im.resyncWorkIDs(ctx,
+			`SELECT id, work_id FROM books WHERE deleted = false AND work_id = ANY($1)`, workIDs[i:min(i+chunk, len(workIDs))])
+		total += n
+		if err != nil {
+			return total, err
+		}
+	}
+	return total, nil
+}
+
+func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any) (int, error) {
+	rows, err := im.deps.Pool.Query(ctx, query, args...)
 	if err != nil {
 		return 0, fmt.Errorf("query work_id: %w", err)
 	}
@@ -381,8 +482,12 @@ func (im *Importer) ResyncWorkIDs(ctx context.Context) (int, error) {
 // v7 — orig_lang (эффективный язык оригинала = src_lang ?? lang; фасет фильтра);
 // v8 — orig_lang стал WORK-LEVEL: union непустых src_lang изданий, фолбэк —
 //
-//	union языков изданий (перевод-сирота без src_lang больше не «натив»).
-const WorksIndexSchemaVersion = 8
+//	union языков изданий (перевод-сирота без src_lang больше не «натив»);
+//
+// v9 — title_s/authors_s/series_s: поисковые копии со свёрткой «ё»→«е» (#278);
+// v10 — та же схема, но пересборка через временный индекс (RebuildWorksIndex):
+// после v9 у работ с «ё» в названии в Meili осталась битой близость слов.
+const WorksIndexSchemaVersion = 10
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -559,6 +664,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		if d.Authors == nil {
 			d.Authors = []string{}
 		}
+		d.TitleSearch = textnorm.FoldYo(d.Title)
+		d.AuthorsSearch = textnorm.FoldYoAll(d.Authors)
+		d.SeriesSearch = textnorm.FoldYo(d.Series)
 		if d.AuthorIDs == nil {
 			d.AuthorIDs = []int64{}
 		}
@@ -569,10 +677,14 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 
 // addWorkDocs upsert-ит документы в индекс works и дожидается задачи.
 func (im *Importer) addWorkDocs(ctx context.Context, docs []workDoc) error {
+	return im.addWorkDocsTo(ctx, worksIndex, docs)
+}
+
+func (im *Importer) addWorkDocsTo(ctx context.Context, uid string, docs []workDoc) error {
 	if len(docs) == 0 {
 		return nil
 	}
-	idx := im.deps.Meili.Index(worksIndex)
+	idx := im.deps.Meili.Index(uid)
 	pk := "id"
 	task, err := idx.AddDocumentsWithContext(ctx, docs, &meilisearch.DocumentOptions{PrimaryKey: &pk})
 	if err != nil {
@@ -593,6 +705,10 @@ func (im *Importer) addWorkDocs(ctx context.Context, docs []workDoc) error {
 // осиротевшие доки — это делают таргетные DeleteWorksFromIndex в точках GC).
 // Зовётся на старте (one-shot) и в конце импорта. Возвращает число доков.
 func (im *Importer) ResyncWorksIndex(ctx context.Context) (int, error) {
+	return im.resyncWorksInto(ctx, worksIndex)
+}
+
+func (im *Importer) resyncWorksInto(ctx context.Context, uid string) (int, error) {
 	const batchSize = 500
 	var cursor int64
 	total := 0
@@ -606,7 +722,7 @@ func (im *Importer) ResyncWorksIndex(ctx context.Context) (int, error) {
 		if len(docs) == 0 {
 			break
 		}
-		if err := im.addWorkDocs(ctx, docs); err != nil {
+		if err := im.addWorkDocsTo(ctx, uid, docs); err != nil {
 			return total, err
 		}
 		total += len(docs)
@@ -647,6 +763,11 @@ func (im *Importer) UpsertWorksToIndex(ctx context.Context, ids []int64) error {
 // DeleteWorksFromIndex удаляет документы работ из индекса works (после GC работ
 // при группировке / split / merge). Дожидается задачи.
 func (im *Importer) DeleteWorksFromIndex(ctx context.Context, ids []int64) error {
+	return im.deleteDocs(ctx, worksIndex, ids)
+}
+
+// deleteDocs удаляет документы из индекса по id и дожидается задачи.
+func (im *Importer) deleteDocs(ctx context.Context, index string, ids []int64) error {
 	if len(ids) == 0 {
 		return nil
 	}
@@ -654,17 +775,16 @@ func (im *Importer) DeleteWorksFromIndex(ctx context.Context, ids []int64) error
 	for i, id := range ids {
 		strIDs[i] = strconv.FormatInt(id, 10)
 	}
-	idx := im.deps.Meili.Index(worksIndex)
-	task, err := idx.DeleteDocumentsWithContext(ctx, strIDs, nil)
+	task, err := im.deps.Meili.Index(index).DeleteDocumentsWithContext(ctx, strIDs, nil)
 	if err != nil {
-		return fmt.Errorf("meili delete work docs: %w", err)
+		return fmt.Errorf("meili delete %s docs: %w", index, err)
 	}
 	final, err := im.deps.Meili.WaitForTaskWithContext(ctx, task.TaskUID, 0)
 	if err != nil {
-		return fmt.Errorf("wait works delete task %d: %w", task.TaskUID, err)
+		return fmt.Errorf("wait %s delete task %d: %w", index, task.TaskUID, err)
 	}
 	if final.Status != meilisearch.TaskStatusSucceeded {
-		return fmt.Errorf("works delete task %d status %s: %v", final.UID, final.Status, final.Error)
+		return fmt.Errorf("%s delete task %d status %s: %v", index, final.UID, final.Status, final.Error)
 	}
 	return nil
 }
@@ -679,7 +799,13 @@ func (im *Importer) processRecord(
 	if err != nil {
 		return err
 	}
-	defer func() { _ = tx.Rollback(ctx) }()
+	committed := false
+	defer func() {
+		_ = tx.Rollback(ctx)
+		if !committed {
+			caches.dropStaged() // id из отката в общий кэш не пускаем (см. cacheSet)
+		}
+	}()
 
 	q := txQuerier{tx}
 
@@ -697,6 +823,11 @@ func (im *Importer) processRecord(
 		if err != nil {
 			return err
 		}
+		// Один автор дважды в записи (реальный INPX: «Неканонический классик», lib_id
+		// 518072) — второй INSERT в book_authors упал бы на PK и откатил всю книгу.
+		if slices.Contains(authorIDs, aid) {
+			continue
+		}
 		authorIDs = append(authorIDs, aid)
 	}
 
@@ -713,6 +844,9 @@ func (im *Importer) processRecord(
 		seriesPtr = &sid
 	}
 
+	// Алиасы жанров — к кодам нашего словаря (adv_all → adventure, #286); тот же
+	// набор уходит и в документ поиска ниже.
+	rec.Genres = genres.CanonicalCodes(rec.Genres)
 	genreIDs := make([]int64, 0, len(rec.Genres))
 	for _, g := range rec.Genres {
 		gid, err := caches.ensureGenre(ctx, q, g)
@@ -787,6 +921,8 @@ func (im *Importer) processRecord(
 	if err := tx.Commit(ctx); err != nil {
 		return err
 	}
+	committed = true
+	caches.commitStaged()
 
 	stats.Books++
 	if res.Created {

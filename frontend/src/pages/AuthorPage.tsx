@@ -1,5 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { BarChart3, BookHeart, BookOpen, Film, Globe, User as UserIcon } from 'lucide-react';
+import { useState } from 'react';
+import { BarChart3, BookHeart, BookOpen, ChevronDown, ChevronRight, Film, Globe, User as UserIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -78,6 +79,7 @@ export function AuthorPage() {
                 </div>
                 <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
               </div>
+              {a.note ? <p className="-mt-1 text-sm text-muted-foreground">{a.note}</p> : null}
               {/* Сводка-зеркало строки списка: книги · годы · внешний рейтинг
                   (Globe, источник в тултипе) · оценка читателей (BookHeart). */}
               <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground tabular-nums">
@@ -182,6 +184,8 @@ function ServiceAuthorToggle({ author }: { author: Author }) {
  * серии-целиком-из-сборников (all_compilations: «Шекли. Сборники», «ПСС в
  * N томах») — чтобы они не тонули среди романов и не выглядели авторскими
  * циклами (паттерн Fantlab/MusicBrainz: разделять, не скрывать).
+ * Ещё ниже, свёрнуто — межавторские и издательские серии (multi: ≥3 разных
+ * авторов, «Мини-Шарм»): это не циклы автора, его книги из них идут «Вне серий».
  */
 function AuthorBooks({ author }: { author: Author }) {
   if (author.books.length === 0) {
@@ -193,8 +197,10 @@ function AuthorBooks({ author }: { author: Author }) {
   }
 
   const allSeries = author.series ?? [];
-  const mainSeries = allSeries.filter((s) => !s.all_compilations);
+  const mainSeries = allSeries.filter((s) => !s.all_compilations && !s.multi);
   const compSeries = allSeries.filter((s) => s.all_compilations);
+  const multiSeries = allSeries.filter((s) => s.multi && !s.all_compilations);
+  const multiIds = new Set(multiSeries.map((s) => s.id));
   const hasSeries = mainSeries.length > 0;
 
   // Группировка по series_id (нужна и для плоского режима — серии-сборники
@@ -203,7 +209,7 @@ function AuthorBooks({ author }: { author: Author }) {
   const standalone: BookListItemType[] = [];
   const compStandalone: BookListItemType[] = [];
   for (const b of author.books) {
-    if (b.series_id != null) {
+    if (b.series_id != null && !multiIds.has(b.series_id)) {
       const arr = bySeries.get(b.series_id) ?? [];
       arr.push(b);
       bySeries.set(b.series_id, arr);
@@ -220,7 +226,10 @@ function AuthorBooks({ author }: { author: Author }) {
   }
 
   const compilations = (
-    <CompilationsSection series={compSeries} bySeries={bySeries} standalone={compStandalone} />
+    <>
+      <CompilationsSection series={compSeries} bySeries={bySeries} standalone={compStandalone} />
+      <MultiSeriesSection series={multiSeries} />
+    </>
   );
 
   // Без обычных серий — плоский список как раньше (сборники всё равно внизу).
@@ -266,6 +275,46 @@ function AuthorBooks({ author }: { author: Author }) {
       {standalone.length > 0 ? <StandaloneSection books={standalone} /> : null}
       {compilations}
     </div>
+  );
+}
+
+/**
+ * MultiSeriesSection — межавторские и издательские серии, где есть книги
+ * автора: в самом низу и свёрнуто по умолчанию (решение владельца —
+ * максимально деприоритизировать). Только ссылки на серии; сами книги уже в
+ * списке автора («Вне серий»).
+ */
+function MultiSeriesSection({ series }: { series: SeriesWithCount[] }) {
+  const [open, setOpen] = useState(false);
+  if (series.length === 0) return null;
+  const Chevron = open ? ChevronDown : ChevronRight;
+  return (
+    <section className="space-y-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <Chevron className="size-4" aria-hidden />
+        Межавторские и издательские серии
+        <span className="tabular-nums">· {series.length}</span>
+      </button>
+      {open ? (
+        <ul className="space-y-1 pl-6 text-sm">
+          {series.map((s) => (
+            <li key={s.id}>
+              <Link to="/series/$id" params={{ id: String(s.id) }} className="hover:underline">
+                {s.title}
+              </Link>{' '}
+              <span className="text-muted-foreground tabular-nums">
+                {s.count} {pluralBooks(s.count)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
   );
 }
 

@@ -12,13 +12,15 @@ import { ProfileTabs } from '@/components/ProfileTabs';
 import { useRatingPromptSettings, useUpdateRatingPromptSettings } from '@/lib/ratings';
 import {
   useKindleTargets,
+  useKindleSender,
   useAddKindleTarget,
   useUpdateKindleTarget,
   useDeleteKindleTarget,
   type KindleTarget,
 } from '@/lib/kindle';
-import { useMe, useUpdateMe, useChangeMyPassword, type User } from '@/lib/auth';
+import { useMe, useUpdateMe, useChangeMyPassword, MIN_PASSWORD_LEN, type User } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
+import { KindleSenderHint } from '@/components/KindleSenderHint';
 
 /**
  * ProfilePage — настройки пользователя. Сейчас только Kindle-адресаты
@@ -31,6 +33,7 @@ import { ApiError } from '@/lib/api';
 export function ProfilePage() {
   const me = useMe();
   const targetsQ = useKindleTargets();
+  const senderQ = useKindleSender();
   const navigate = useNavigate();
   // returnTo — приход с карточки книги («Настроить Kindle»). replace: не копим
   // историю (паттерн «К карточке» ридера), возврат ведёт ровно назад на книгу.
@@ -69,9 +72,10 @@ export function ProfilePage() {
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             Адреса для функции «Отправить на Kindle». Можно указать несколько
-            (свой, жены, второй планшет). Не забудьте добавить отправителя в
-            «Утверждённые отправители» в настройках Amazon.
+            (свой, жены, второй планшет). Адрес отправителя ниже нужно один раз
+            разрешить в настройках Amazon.
           </p>
+          {senderQ.isSuccess ? <KindleSenderHint sender={senderQ.data} /> : null}
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
           {targetsQ.isLoading ? (
@@ -528,9 +532,9 @@ function PasswordChangeBlock() {
   }
 
   const mismatch = confirm !== '' && confirm !== next;
-  const tooShort = next.length > 0 && next.length < 8;
+  const tooShort = next.length > 0 && next.length < MIN_PASSWORD_LEN;
   const canSubmit =
-    !change.isPending && current.length > 0 && next.length >= 8 && next === confirm;
+    !change.isPending && current.length > 0 && next.length >= MIN_PASSWORD_LEN && next === confirm;
 
   return (
     <form
@@ -570,7 +574,7 @@ function PasswordChangeBlock() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="pw-new" className="text-xs">
-            Новый пароль (мин. 8 символов)
+            Новый пароль (мин. {MIN_PASSWORD_LEN} символов)
           </Label>
           <Input
             id="pw-new"
@@ -579,11 +583,11 @@ function PasswordChangeBlock() {
             value={next}
             onChange={(e) => setNext(e.target.value)}
             className="h-9"
-            minLength={8}
+            minLength={MIN_PASSWORD_LEN}
             required
           />
           {tooShort ? (
-            <p className="text-xs text-destructive">Минимум 8 символов.</p>
+            <p className="text-xs text-destructive">Минимум {MIN_PASSWORD_LEN} символов.</p>
           ) : null}
         </div>
         <div className="space-y-1">
@@ -632,7 +636,7 @@ function PasswordChangeBlock() {
 function passwordChangeMessage(err: unknown): string {
   if (err instanceof ApiError) {
     if (err.status === 403) return 'Текущий пароль введён неверно.';
-    if (err.status === 400) return 'Новый пароль слишком короткий (минимум 8 символов).';
+    if (err.status === 400) return `Новый пароль слишком короткий (минимум ${MIN_PASSWORD_LEN} символов).`;
     return err.message;
   }
   return 'Не удалось сменить пароль.';

@@ -107,3 +107,62 @@ test('send-to-kindle: multiple targets → dropdown with both', async ({ mockedP
   await expect(page.getByText('Мой Kindle')).toBeVisible();
   await expect(page.getByText('Жены Kindle')).toBeVisible();
 });
+
+test('profile: адрес отправителя и подсказка «Как разрешить его в Amazon»', async ({
+  mockedPage: page,
+}) => {
+  await page.route(/\/api\/me\/kindle-targets$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [], sender: 'books@example.com' }),
+    }),
+  );
+  await page.goto('/me');
+  await expect(page.getByText('books@example.com')).toBeVisible({ timeout: 10_000 });
+  await page.getByRole('button', { name: /Как разрешить его в Amazon/ }).click();
+  const pop = page.getByRole('dialog');
+  await expect(pop).toContainText('Approved Personal Document E-mail List');
+  await expect(pop.getByRole('link', { name: 'amazon.com/mycd' })).toHaveAttribute(
+    'href',
+    'https://www.amazon.com/mycd',
+  );
+  if (process.env.KINDLE_HINT_SHOT) await page.screenshot({ path: process.env.KINDLE_HINT_SHOT });
+});
+
+test('profile: подсказка Amazon на телефоне помещается в экран', async ({ mockedPage: page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.route(/\/api\/me\/kindle-targets$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [], sender: 'very.long.sender.address@example.com' }),
+    }),
+  );
+  await page.goto('/me');
+  await page.getByRole('button', { name: /Как разрешить его в Amazon/ }).click();
+  const box = await page.getByRole('dialog').boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(375);
+  if (process.env.KINDLE_HINT_SHOT_MOBILE) {
+    await page.screenshot({ path: process.env.KINDLE_HINT_SHOT_MOBILE });
+  }
+});
+
+test('profile: без почты на сервере — «отправка не настроена», без подсказки', async ({
+  mockedPage: page,
+}) => {
+  await page.route(/\/api\/me\/kindle-targets$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [], sender: '' }),
+    }),
+  );
+  await page.goto('/me');
+  await expect(page.getByText(/Отправка на Kindle на сервере пока не настроена/)).toBeVisible({
+    timeout: 10_000,
+  });
+  await expect(page.getByRole('button', { name: /Как разрешить его в Amazon/ })).toHaveCount(0);
+});

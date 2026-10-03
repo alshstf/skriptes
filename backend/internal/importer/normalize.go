@@ -51,6 +51,12 @@ func normalizedAuthorName(a inpx.Author) string {
 	return normalize(strings.Join(parts, " "))
 }
 
+// authorKey — ключ автора в кэше импорта: нормализованное имя + уточнение
+// (тёзки с разными уточнениями — разные авторы, см. миграцию 0040).
+func authorKey(a inpx.Author) string {
+	return normalizedAuthorName(a) + "\x00" + strings.ToLower(strings.TrimSpace(a.Note))
+}
+
 // fullAuthorName — display-форма для UI и Meili (без нормализации).
 func fullAuthorName(a inpx.Author) string {
 	parts := make([]string, 0, 3)

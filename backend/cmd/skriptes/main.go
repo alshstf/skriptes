@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -9,11 +10,11 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"sort"
 	"strings"
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
@@ -30,7 +31,9 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
+	"github.com/skriptes/skriptes/backend/internal/logredact"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
@@ -101,49 +104,102 @@ func run() error {
 	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
 	logger.Info("meilisearch client configured", "url", cfg.MeiliURL)
 
-	// Стартовый scan: импортируем все *.inpx из каталога SKRIPTES_INPX_ROOT.
-	// Идемпотентно: повторные старты на тех же файлах — no-op за счёт хэш-проверки.
-	// Не блокируем HTTP — крутим в горутине; если /readyz нужно учитывать импорт,
-	// добавим отдельный флаг в PR 5 вместе с queue/jobs API.
-	// Один импортёр на процесс: его использует и стартовый скан, и ручная
+	// Один импортёр на процесс: его использует и импорт INPX (стартовый скан +
+	// слежение, запускается в конце горутины разовых шагов ниже), и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
-	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger})
+	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles,
+		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
-	go runStartupImport(ctx(), pool, imp, overrideCtl, cfg.InpxRoot, logger)
 	// Разовая пересинхронизация кодов языка в Meili после нормализации (миграция
 	// 0015 чистит PG, но индекс Meili сам не трогает). Гейтится флагом в
 	// app_settings — выполняется один раз на апгрейде, дальше no-op.
-	go runOnceLangResync(ctx(), pool, imp, logger)
+	metadata.Go(func(c context.Context) { runOnceLangResync(c, pool, imp, logger) })
 	// Разовый синк work_id в Meili: distinctAttribute=work_id появился в Phase 3,
 	// существующие доки его не имели. Гейтится флагом, дальше no-op (после
 	// группировки work_id синкается её воркером).
-	go runOnceWorkIDResync(ctx(), pool, imp, logger)
+	metadata.Go(func(c context.Context) { runOnceWorkIDResync(c, pool, imp, logger) })
 	// Конфиг индекса works (на каждом старте) + разовый полный ресинк (на
 	// апгрейде). Дальше индекс поддерживают импорт (полный) и таргетные синки
 	// группировки/года. Гейтится флагом, в горутине — старт не блокирует.
 	// Локализацию works.title запускаем В ТОЙ ЖЕ горутине ПОСЛЕ синка индекса:
 	// ей нужен сконфигурированный works-индекс для таргетного ресинка
 	// изменённых работ (порядок между отдельными горутинами не гарантирован).
-	go func() {
+	// Контроллер группировки создаётся ниже — разовому разбору склеек в цепочке
+	// он нужен; цепочка подождёт его здесь (инициализация main быстрая).
+	workGroupReady := make(chan *metadata.WorkGroupController, 1)
+	metadata.Go(func(c context.Context) {
 		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
 		// works-индекса (v6, поле kind) ресинкает все доки, и kind должен уже
 		// стоять, иначе первая выдача уйдёт без типов до следующего ресинка.
-		runOnceWorkKindClassify(ctx(), pool, logger)
+		runOnceWorkKindClassify(c, pool, logger)
 		// Служебные авторы works-индекс не трогают (авторская, не works-сущность) —
 		// порядок относительно ресинка не важен, живёт в той же горутине для простоты.
-		runOnceServiceAuthorClassify(ctx(), pool, logger)
-		runOnceWorksIndexSync(ctx(), pool, imp, logger)
-		runOnceWorkTitleLocalize(ctx(), pool, imp, logger)
-		runOnceSrcLangSync(ctx(), pool, imp, logger)
+		runOnceServiceAuthorClassify(c, pool, logger)
+		runOnceGenreAliases(c, pool, imp, logger)
+		runOnceWorksIndexSync(c, pool, imp, logger)
+		// Миграция 0039 могла схлопнуть дубли книг — убрать их из поиска (индексы
+		// к этому моменту сконфигурированы). Без дублей — no-op.
+		if n, err := imp.PurgeDedupedDocs(c); err != nil {
+			logger.Warn("search cleanup after book dedup failed — will retry next start", "err", err)
+		} else if n > 0 {
+			logger.Info("search cleanup after book dedup done", "books_removed", n)
+		}
+		runOnceWorkTitleLocalize(c, pool, imp, logger)
+		runOnceSrcLangSync(c, pool, imp, logger)
+		runOnceSrcLangCanonical(c, pool, imp, logger)
+		// Серии работ, которые выпуск INPX проставил уже импортированным книгам (#275):
+		// индекс сконфигурирован и наполнен — досинкиваем только изменённые работы.
+		runOnceWorkSeriesSync(c, pool, imp, logger)
 		// Известность авторов — ПОСЛЕ ресинка works-индекса: оба гоняют один и
 		// тот же тяжёлый скан workDocSelect, параллелить их незачем (и kind к
 		// этому моменту classифицирован — сборники вне вклада).
-		runOnceAuthorRenown(ctx(), pool, imp, logger)
-	}()
+		runOnceAuthorRenown(c, pool, imp, logger)
+		runOnceSplitAlienEditions(c, pool, imp, logger)
+		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
+		// импорта: и разбор, и импорт массово пишут в works/books.
+		runOnceRegroupTitleConflicts(c, pool, <-workGroupReady, logger)
+		// Правила, которые применяет только импорт (межавторские серии), сменились —
+		// следующий импорт (ниже, в этой же горутине) пройдёт полностью.
+		runOnceForceReimport(c, pool, logger)
+		// Сверка индексов с PG на каждом старте (#283): убирает фантомы, которые
+		// оставили прошлые импорты или оборванный остановкой синк группировки
+		// (#270), и заполняет works-индекс, если Meili пуст после восстановления.
+		if r, err := imp.ReconcileIndexes(c); err != nil {
+			logger.Warn("search index reconcile failed", "err", err)
+		} else {
+			logger.Info("search index reconcile done", "works_removed", r.WorksRemoved,
+				"works_added", r.WorksAdded, "books_removed", r.BooksRemoved, "books_missing", r.BooksMissing)
+			// Индекс книг почти пуст (база восстановлена из дампа на пустой Meili, #305) —
+			// его пишет только импорт: сбросить хэш, стартовый импорт ниже пройдёт полностью.
+			if r.BooksNeedReimport() {
+				if _, err := pool.Exec(c, `UPDATE collections SET last_inpx_hash = NULL`); err != nil {
+					logger.Warn("books index is missing documents; forcing full reimport failed", "err", err)
+				} else {
+					logger.Warn("books index is missing documents — full INPX reimport scheduled",
+						"missing", r.BooksMissing, "live", r.BooksLive)
+				}
+			}
+		}
+		// Импорт INPX — после разовых шагов, а не параллельно с ними: и те, и шаги
+		// после импорта массово пишут в works, вперемешку ловили deadlock (#300).
+		// Стартовый скан всех *.inpx из SKRIPTES_INPX_ROOT (или только
+		// SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL — новый
+		// или изменённый INPX без рестарта. Повторный старт на тех же файлах —
+		// no-op за счёт хэш-проверки. HTTP не ждёт ни того, ни другого.
+		runImportLoop(c, pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
+	})
 
 	authSvc := auth.New(pool, 0)
+	// Сессии до 1.12.0 хранили сырой токен — переводим в SHA-256 (идемпотентно, на
+	// каждом старте; см. HashLegacySessionTokens). Ошибка не фатальна: такие сессии
+	// просто не пройдут проверку, пользователь войдёт заново.
+	if n, err := authSvc.HashLegacySessionTokens(ctx()); err != nil {
+		logger.Error("hash legacy session tokens", "err", err)
+	} else if n > 0 {
+		logger.Info("legacy session tokens hashed", "count", n)
+	}
 	catalogSvc := catalog.New(pool)
 	historySvc := history.New(pool)
 	// Популярность works-индекса = вовлечённость инстанса (Σ изданий: views + 3×reads,
@@ -152,7 +208,7 @@ func run() error {
 	// ресинками без upsert'а на каждое событие. sort=popularity на /books.
 	popTracker := importer.NewPopularityTracker(imp, logger)
 	historySvc.SetEngagementHook(popTracker.MarkBook)
-	go popTracker.Run(ctx(), 30*time.Second)
+	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 
@@ -181,14 +237,15 @@ func run() error {
 	// проекта. Логируем факт наличия (не сам ключ), чтобы сразу видеть мисконфиг.
 	logger.Info("google books provider configured", "api_key_set", cfg.GoogleBooksAPIKey != "")
 	wdAdaptations := metadata.NewWikidataAdaptationsProvider(sparqlClient)
-	// Слой 2 точности обогащения авторов: после имя-гейта резолв автора
-	// проверяет профессию кандидата (Wikidata P106) и отсекает однофамильцев-
-	// не-писателей. Реализацию (OccupationVerdict) держит wdAdaptations — у него
-	// уже есть SPARQL-клиент. Гейт на ОБОИХ авторских путях: Wikipedia (QID через
+	// Политика приёма кандидата-автора (metadata/candidate_policy.go): после
+	// гейта имени статья проходит проверку по фактам Wikidata (профессия, годы,
+	// книги — CandidateFacts держит wdAdaptations, у него уже есть SPARQL-клиент) и
+	// профилю книг автора. Проверка на ОБОИХ авторских путях: Wikipedia (QID через
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
-	// wiki-отказ по профессии протёк бы в OL-fallback (цепочка bio/photo).
-	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
-	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithOccupationGate(wdAdaptations.OccupationVerdict)
+	// отказ Википедии протёк бы в OL-fallback (цепочка bio/photo).
+	candidateCheck := metadata.NewCandidateCheck(wdAdaptations.CandidateFacts)
+	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck)
+	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(
 		pool,
 		filepath.Join(cfg.CacheRoot, "covers"),
@@ -226,7 +283,7 @@ func run() error {
 	// Самолечение висячих указателей постеров/фото (после старых очисток кэша,
 	// когда они лежали вместе с обложками): зануляем битые ссылки + даём
 	// дозаполнению их перекачать. В фоне, не блокируем старт HTTP.
-	go enricher.HealDanglingAssets(ctx())
+	metadata.Go(enricher.HealDanglingAssets)
 	// fb2 как локальный источник года (written_year/edition_year) для
 	// фонового прогрева — без сети, в том же проходе что обложки/аннотации.
 	enricher.WithLocalYear(fb2Provider)
@@ -411,6 +468,7 @@ func run() error {
 	if wgCfg.Enabled {
 		workGroupCtl.Start()
 	}
+	workGroupReady <- workGroupCtl
 
 	// Видимость контента: глобально (admin) и персонально (профиль) скрытые
 	// жанры/языки. Глобальный конфиг кэшируется в памяти (горячий путь
@@ -427,6 +485,11 @@ func run() error {
 	if err := gatesResolver.Load(ctx()); err != nil {
 		logger.Warn("read enrichment gates — using defaults", "err", err)
 	}
+	// Перепроверка био и фото авторов текущими гейтами (#280) — фоном, около
+	// суток на 42 тыс. авторов; после рестарта продолжается с того же места.
+	metadata.Go(func(c context.Context) {
+		runAuthorMetaRecheck(c, pool, enricher, baCfg.BiosRPM, gatesResolver, logger)
+	})
 
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
@@ -456,6 +519,7 @@ func run() error {
 			AllowedOrigins:      cfg.AllowedOrigins,
 			LoginRateLimitIP:    cfg.LoginRateLimitIP,
 			LoginRateLimitEmail: cfg.LoginRateLimitEmail,
+			TrustCFConnectingIP: cfg.TrustCFConnectingIP,
 		},
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
@@ -513,6 +577,29 @@ func run() error {
 	sigCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	// Метрики Prometheus — отдельный внутренний сервер, не основной сайт: наружу его не
+	// публикуем (в публичном деплое — внутренний сайт Caddy :9180 только для сборщика).
+	// Если не поднялся — пишем ошибку, приложение работает дальше.
+	var metricsSrv *http.Server
+	if cfg.MetricsAddr != "" {
+		metrics.SetBuildInfo(effectiveVersion(cfg.Version))
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", metrics.Handler())
+		metricsSrv = &http.Server{
+			Addr:              cfg.MetricsAddr,
+			Handler:           mux,
+			ReadHeaderTimeout: 10 * time.Second,
+			ReadTimeout:       30 * time.Second,
+			WriteTimeout:      30 * time.Second,
+		}
+		go func() {
+			logger.Info("metrics server starting", "addr", cfg.MetricsAddr)
+			if err := metricsSrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				logger.Error("metrics server failed", "err", err)
+			}
+		}()
+	}
+
 	go func() {
 		logger.Info("http server starting", "addr", cfg.HTTPAddr, "version", effectiveVersion(cfg.Version))
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -524,47 +611,158 @@ func run() error {
 	<-sigCtx.Done()
 	logger.Info("shutting down")
 
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	// Порядок: сначала HTTP (новые запросы и ленивое обогащение не приходят),
+	// потом фоновые работы (воркеры, разовые шаги, импорт), и только потом —
+	// отложенный pool.Close. Иначе воркеры писали в закрытый пул и сыпали WARN
+	// «closed pool» на каждом деплое (#270). Docker ждёт 10 с до SIGKILL.
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := srv.Shutdown(shutdownCtx); err != nil {
-		return fmt.Errorf("graceful shutdown: %w", err)
+	if metricsSrv != nil {
+		_ = metricsSrv.Shutdown(shutdownCtx)
+	}
+	httpErr := srv.Shutdown(shutdownCtx)
+	if !metadata.Shutdown(4 * time.Second) {
+		logger.Warn("background work did not stop in time — closing anyway")
+	}
+	if httpErr != nil {
+		return fmt.Errorf("graceful shutdown: %w", httpErr)
 	}
 	logger.Info("bye")
 	return nil
 }
 
-// ctx — фоновый контекст для startup-сканера.
-// Отдельная функция чтобы было видно, что у скана нет shutdown-контекста
-// (импорт всё равно отрабатывает до конца, даже если процесс ловит SIGTERM —
-// безопасно благодаря пер-записной транзакции).
+// ctx — контекст синхронных шагов инициализации (загрузка настроек и т.п.).
+// Фоновые работы получают свой контекст от metadata.Go — его отменяет остановка.
 func ctx() context.Context { return context.Background() }
 
-func runStartupImport(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, inpxRoot string, logger *slog.Logger) {
-	files, err := findInpxFiles(inpxRoot)
+// runImportLoop — импорт INPX на старте и затем без рестарта: раз в interval
+// проверяет каталог (размер/mtime) и импортирует новые или изменённые файлы,
+// когда их запись закончилась (#247); файл, импорт которого упал, повторяется
+// на следующей проверке. Один цикл на процесс, поэтому два импорта
+// одновременно не идут. interval <= 0 — только стартовый импорт.
+func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
+	inpxRoot string, only []string, interval time.Duration, logger *slog.Logger) {
+	watch := importer.NewInpxWatch(inpxRoot, only)
+	files, missing, err := watch.Baseline()
 	if err != nil {
 		logger.Warn("startup import skipped — failed to scan inpx root", "root", inpxRoot, "err", err)
+	} else {
+		if len(missing) > 0 {
+			logger.Warn("SKRIPTES_INPX_FILES lists files that are not in inpx root", "root", inpxRoot, "missing", missing)
+		}
+		if len(files) == 0 {
+			logger.Info("startup import — no INPX files found", "root", inpxRoot)
+		} else {
+			logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
+			runImportPass(ctx, pool, imp, overrideCtl, watch, files, logger)
+			logger.Info("startup import finished")
+		}
+	}
+	if interval <= 0 {
+		logger.Info("inpx watch disabled — new INPX is imported on restart only")
 		return
 	}
-	if len(files) == 0 {
-		logger.Info("startup import — no INPX files found", "root", inpxRoot)
-		return
-	}
-	logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
-	for _, f := range files {
-		stats, err := imp.Run(ctx, f)
+	logger.Info("inpx watch started", "root", inpxRoot, "interval", interval)
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+		}
+		ready, err := watch.Poll()
 		if err != nil {
-			logger.Error("startup import failed for file", "file", f, "err", err)
+			logger.Warn("inpx watch: scan failed", "root", inpxRoot, "err", err)
 			continue
 		}
-		_ = stats // важная статистика уже залогирована изнутри Run
+		if len(ready) == 0 {
+			continue
+		}
+		// Новые, изменённые или не импортировавшиеся из-за ошибки файлы.
+		logger.Info("inpx watch: importing without restart", "files", ready)
+		runImportPass(ctx, pool, imp, overrideCtl, watch, ready, logger)
+		logger.Info("inpx import finished")
 	}
-	logger.Info("startup import finished")
+}
+
+// runImportPass импортирует файлы по очереди и делает общие шаги после импорта —
+// только если хоть один файл реально импортировался (или упал на полпути: записи
+// коммитятся по одной). На старте без нового INPX шаги не нужны: оверрайды,
+// классификация и известность уже посчитаны по тем же данным (#300).
+// Удачный импорт и осознанный пропуск отмечаются в watch; упавший — нет, его
+// watch вернёт на следующей проверке.
+func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
+	watch *importer.InpxWatch, files []string, logger *slog.Logger) {
+	imported := false
+	for _, f := range files {
+		metrics.ImportStarted()
+		stats, err := imp.Run(ctx, f) // статистика логируется изнутри Run
+		var overlap *importer.OverlapError
+		switch {
+		case err == nil:
+			watch.MarkDone(f)
+			if stats.Records == 0 { // файл не менялся — Run вышел, не читая записи
+				metrics.ImportFinished("unchanged", metrics.ImportResult{})
+			} else {
+				imported = true
+				metrics.ImportFinished("ok", metrics.ImportResult{
+					Records: stats.Records, BooksInserted: stats.BooksInserted,
+					RecordErrors: stats.Errors, Duration: stats.Duration,
+				})
+			}
+		case errors.As(err, &overlap):
+			metrics.ImportFinished("skipped", metrics.ImportResult{})
+			// Рядом лежит второй INPX той же библиотеки (#250): каждый выпуск
+			// импортировался бы дважды, метаданные перезаписывали бы друг друга.
+			// Не повторяем, пока файл не изменится.
+			logger.Warn("INPX skipped — another INPX in use describes the same books; "+
+				"keep one INPX of a library or list the one to use in SKRIPTES_INPX_FILES",
+				"file", overlap.File, "collection", overlap.Collection, "collection_file", overlap.CollectionFile,
+				"matched", overlap.Matched, "sampled", overlap.Sampled)
+			watch.MarkDone(f)
+		case ctx.Err() != nil:
+			// Остановка процесса посреди импорта: записи коммитятся по одной,
+			// файл не отмечен — импорт продолжится на следующем старте.
+			logger.Info("import interrupted by shutdown", "file", f)
+			return
+		default:
+			imported = true
+			metrics.ImportFinished("failed", metrics.ImportResult{})
+			logger.Error("import failed for file", "file", f, "err", err)
+		}
+	}
+	if !imported {
+		return
+	}
 	// Ре-применить ручные оверрайды полей, которые импорт ПЕРЕЗАПИСЫВАЕТ (lang) —
 	// иначе ре-импорт коллекции сбросил бы правки (грабля №19).
 	if n, err := overrideCtl.ReapplyAfterImport(ctx); err != nil {
 		logger.Warn("reapply metadata overrides after import failed", "err", err)
 	} else if n > 0 {
 		logger.Info("reapplied metadata overrides after import", "count", n)
+	}
+	// Издания, чьи авторы после импорта ни в чём не совпадают с якорем работы, —
+	// в свои работы (#285); затронутые — в оба индекса поиска.
+	if touched, err := metadata.SplitAlienEditions(ctx, pool); err != nil {
+		logger.Warn("split alien editions after import failed", "err", err)
+	} else if len(touched) > 0 {
+		syncSplitWorks(ctx, imp, touched, logger)
+		logger.Info("alien editions split after import", "works", len(touched))
+	}
+	// Название работы — за изданиями: импорт переписывает название издания, но не
+	// работы (#285). Изменённые — пересчёт типа (мог держаться на названии) и
+	// таргетный ресинк works-индекса (полный ресинк импорта был раньше).
+	if changed, _, err := metadata.LocalizeWorkTitles(ctx, pool); err != nil {
+		logger.Warn("sync work titles after import failed", "err", err)
+	} else if len(changed) > 0 {
+		if _, err := metadata.ReclassifyWorkKinds(ctx, pool, changed); err != nil {
+			logger.Warn("reclassify kinds after title sync failed", "err", err)
+		}
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after title sync failed", "err", err)
+		}
+		logger.Info("work titles synced after import", "works", len(changed))
 	}
 	// Классифицировать НОВЫЕ работы импорта (сборники/антологии). Идемпотентно и
 	// дёшево; правит только kind_source IS NULL/'heuristic', полный ресинк индекса
@@ -653,10 +851,12 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, logger *sl
 
 // runOnceServiceAuthorClassify — разовый эвристический бэкфилл «служебных
 // авторов» (агрегатов-псевдоавторов) на существующей коллекции. Гейт
-// service_authors_classified_v1: один раз на апгрейде; дальше новых метит
-// after-import вызов. Зеркало runOnceWorkKindClassify.
+// service_authors_classified_vN: один раз на апгрейде; дальше новых метит
+// after-import вызов. Зеркало runOnceWorkKindClassify. Расширил правило
+// (authorkind.ServiceNamePatterns) — бампни версию, иначе старые записи
+// разметятся только при следующем импорте (v2: «Категория | Автор неизвестен», #297).
 func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "service_authors_classified_v1"
+	const flag = "service_authors_classified_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("service author classify: check flag failed — skip", "err", err)
@@ -762,9 +962,12 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 	if done {
 		return
 	}
-	n, err := imp.ResyncWorksIndex(ctx)
+	// Пересборка во временном индексе + swap, а не ресинк на месте: поиск
+	// работает всё время, и индекс сразу с настройками новой схемы (см.
+	// importer.RebuildWorksIndex — баг близости слов Meili при смене полей).
+	n, err := imp.RebuildWorksIndex(ctx)
 	if err != nil {
-		logger.Warn("works index resync failed — will retry next start", "err", err)
+		logger.Warn("works index rebuild failed — will retry next start", "err", err)
 		return
 	}
 	if _, err := pool.Exec(ctx,
@@ -777,7 +980,54 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 		`DELETE FROM app_settings WHERE key LIKE 'works_index_synced_v%' AND key <> $1`, flag); err != nil {
 		logger.Warn("works index sync: gc old flag keys failed", "err", err)
 	}
+	// Документы пересобраны — поиск можно переключать на поля новой схемы
+	// (свёртка «ё», см. importer.foldedSearchReady).
+	if err := imp.ConfigureWorksIndex(ctx); err != nil {
+		logger.Warn("meili configure works index after resync failed", "err", err)
+	}
 	logger.Info("one-time works index resync done", "count", n, "flag", flag)
+}
+
+// runOnceWorkSeriesSync — разовый бэкфилл #275: до 1.15.2 импорт не переносил в
+// работу серию, которую выпуск INPX впервые проставил её изданиям (librusec
+// 2026-09 — серии у 113 тыс. книг), — у ~98 тыс. работ не было серии: /books её
+// не показывал, фильтр и поиск по серии не находили. Дальше то же делает каждый
+// импорт (importer.syncWorkSeries). Изменённые работы досинкиваются в индекс
+// порциями — UpsertWorksToIndex грузит документы одним запросом.
+func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_series_synced_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work series sync: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	ids, err := imp.SyncWorkSeries(ctx)
+	if err != nil {
+		logger.Warn("work series sync failed — will retry next start", "err", err)
+		return
+	}
+	const batch = 5000
+	for start := 0; start < len(ids); start += batch {
+		end := min(start+batch, len(ids))
+		if err := imp.UpsertWorksToIndex(ctx, ids[start:end]); err != nil {
+			// Флаг не ставим: следующий старт пересчитает (PG уже согласован —
+			// SyncWorkSeries вернёт пусто) — поэтому досинкиваем весь индекс.
+			logger.Warn("work series sync: works index upsert failed — full resync next start", "err", err)
+			if _, derr := pool.Exec(ctx, `DELETE FROM app_settings WHERE key = $1`, importer.WorksIndexSyncedFlagKey()); derr != nil {
+				logger.Warn("work series sync: reset works index flag failed", "err", derr)
+			}
+			return
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work series sync: set flag failed (will rerun next start, idempotent)", "err", err)
+	}
+	logger.Info("one-time work series sync done", "works", len(ids))
 }
 
 // runOnceWorkTitleLocalize — разовый backfill: локализует works.title на
@@ -786,11 +1036,13 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 // стало иноязычное издание» — карточка и works-поиск показывали английский
 // заголовок при русских изданиях. Изменённые работы таргетно ресинкаются в
 // works-индекс (поиск по локализованному названию начинает находить).
-// Гейт app_settings.work_title_localized_v1: один раз на апгрейде, дальше no-op
+// Гейт app_settings.work_title_localized_vN: один раз на апгрейде, дальше no-op
 // (новые такие работы локализует группировка в apply). Зовётся ПОСЛЕ
-// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен.
+// runOnceWorksIndexSync — индекс уже сконфигурирован/наполнен. Сменил правило
+// выбора названия — бампни версию (v2: самое частое название изданий, #306;
+// v3: работа из одного издания на любом языке — его название, #285).
 func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_title_localized_v1"
+	const flag = "work_title_localized_v3"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work title localize: check flag failed — skip", "err", err)
@@ -803,6 +1055,12 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 	if err != nil {
 		logger.Warn("work title localize failed — will retry next start", "err", err)
 		return
+	}
+	// Эвристический тип (сборник/антология) мог держаться на прежнем названии.
+	if len(changed) > 0 {
+		if _, err := metadata.ReclassifyWorkKinds(ctx, pool, changed); err != nil {
+			logger.Warn("work title localize: reclassify kinds failed", "err", err)
+		}
 	}
 	// Ресинк индекса для изменённых работ ДО установки флага: если он упадёт, не
 	// фиксируем гейт — на следующем старте title уже локализованы (changed=∅),
@@ -822,6 +1080,279 @@ func runOnceWorkTitleLocalize(ctx context.Context, pool *pgxpool.Pool, imp *impo
 		logger.Warn("work title localize: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work title localization done", "lang", dom, "changed", len(changed))
+}
+
+// runOnceGenreAliases — разовое слияние жанров-алиасов с кодами нашего словаря
+// (genres.MergeAliases: книги, избранное, скрытые жанры, ручные правки; adv_all →
+// adventure, #286) + ресинк works-индекса затронутых работ. Новые записи импорт
+// сводит сам (genres.CanonicalCodes). Гейт genre_aliases_merged_vN — бампать при
+// пополнении aliases.json.
+func runOnceGenreAliases(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "genre_aliases_merged_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("genre aliases: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, merged, err := genres.MergeAliases(ctx, pool)
+	if err != nil {
+		logger.Warn("genre aliases merge failed — will retry next start", "err", err)
+		return
+	}
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("genre aliases: works index resync failed — retry next start", "err", err)
+			return
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("genre aliases: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time genre aliases merge done", "codes", merged, "works", len(works))
+}
+
+// runOnceForceReimport — сменились правила, которые применяет только импорт
+// INPX (межавторские серии: порог доминирования 0,8 и служебные авторы, #298) —
+// сбросить хэш коллекций, чтобы ближайший импорт прошёл полностью, а не
+// пропустил неизменный файл. Импорт идемпотентен (~1 ч на 470 тыс. книг).
+// Гейт reimport_series_rules_vN — бампать при следующей такой смене правил.
+func runOnceForceReimport(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "reimport_series_rules_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("force reimport: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	tag, err := pool.Exec(ctx, `UPDATE collections SET last_inpx_hash = NULL WHERE last_inpx_hash IS NOT NULL`)
+	if err != nil {
+		logger.Warn("force reimport: reset inpx hash failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("force reimport: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time full reimport scheduled (series rules changed)", "collections", tag.RowsAffected())
+}
+
+// runOnceRegroupTitleConflicts — разовый разбор работ, склеенных до гейтов
+// Tier-2 #279 (разные названия одного языка без src-свидетельства, разные тома,
+// заглушка «(no data for original title)»): сначала заглушки src_title в базе
+// обнуляются, затем такие работы идут в RegroupWorks — неякорные издания в
+// синглтоны, found-lookups сброшены, Tier-1 собирает законные склейки обратно.
+// Гейт tier2_title_conflicts_regrouped_v1.
+func runOnceRegroupTitleConflicts(ctx context.Context, pool *pgxpool.Pool, wg *metadata.WorkGroupController, logger *slog.Logger) {
+	const flag = "tier2_title_conflicts_regrouped_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("regroup title conflicts: check flag failed — skip", "err", err)
+		return
+	}
+	if done || wg == nil {
+		return
+	}
+	stubs, err := metadata.CleanStubSrcTitles(ctx, pool)
+	if err != nil {
+		logger.Warn("regroup title conflicts: clean stub src titles failed — will retry next start", "err", err)
+		return
+	}
+	works, err := metadata.TitleConflictWorks(ctx, pool)
+	if err != nil {
+		logger.Warn("regroup title conflicts: find works failed — will retry next start", "err", err)
+		return
+	}
+	const batch = 500
+	split := 0
+	for i := 0; i < len(works); i += batch {
+		res, err := wg.RegroupWorks(ctx, works[i:min(i+batch, len(works))], false)
+		if err != nil {
+			logger.Warn("regroup title conflicts failed — will retry next start", "done", i, "total", len(works), "err", err)
+			return
+		}
+		split += res.EditionsSplit
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("regroup title conflicts: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time regroup of title-conflict works done",
+		"stub_src_titles", stubs, "works", len(works), "editions_split", split)
+}
+
+// authorMetaRecheckKey — состояние перепроверки био и фото авторов в
+// app_settings: {"since": начало, "done": завершена}. Бампнуть версию —
+// запустить перепроверку заново (например, после новых гейтов матчинга).
+// v2 (1.16.1): v1 очистила био у Дюма (страница неоднозначности), Херберта и
+// Зузака (другая передача фамилии в Википедии). v3: после разбора ошибок
+// (case study #280) — новый поиск статьи, латинское имя, политика приёма; идёт по
+// ВСЕМ авторам с книгами (решение владельца 2026-10-02), ~140 тыс., ~3,5 суток.
+// v4 (1.19.1): v3 на первых 300 авторах очистила Достоевского и заменила
+// Тургеневу русскую био на английскую — рядом с основной статьёй стояли
+// одноимённые с уточнением, и поиск уходил на строгий путь; заново и с начала.
+const authorMetaRecheckKey = "author_meta_recheck_v4"
+
+// runAuthorMetaRecheck — перепроверка биографий и фото авторов текущими гейтами
+// матчинга (metadata.AuthorRechecker, #280): подтверждённое остаётся, чужое
+// заменяется или очищается, изменения — в author_meta_recheck. Проходы
+// повторяются, пока у кого-то сбоит источник (раз в 30 минут). Не идёт, если
+// обогащение авторов выключено в админке.
+func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *metadata.Enricher, rpm int,
+	gates *settings.EnrichmentGateResolver, logger *slog.Logger) {
+	var state struct {
+		Since time.Time `json:"since"`
+		Done  bool      `json:"done"`
+	}
+	var raw []byte
+	err := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, authorMetaRecheckKey).Scan(&raw)
+	switch {
+	case errors.Is(err, pgx.ErrNoRows):
+		state.Since = time.Now().UTC()
+	case err != nil:
+		logger.Warn("author recheck: read state failed — skip", "err", err)
+		return
+	default:
+		if err := json.Unmarshal(raw, &state); err != nil {
+			logger.Warn("author recheck: bad state — skip", "err", err)
+			return
+		}
+	}
+	if state.Done {
+		return
+	}
+	save := func() {
+		b, _ := json.Marshal(state)
+		if _, err := pool.Exec(ctx, `
+			INSERT INTO app_settings (key, value, updated_at) VALUES ($1, $2, now())
+			ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`,
+			authorMetaRecheckKey, b); err != nil {
+			logger.Warn("author recheck: save state failed", "err", err)
+		}
+	}
+	save()
+	if rpm <= 0 {
+		rpm = settings.DefaultBioAdaptationConfig().BiosRPM
+	}
+	// Два автора одновременно: один автор — несколько последовательных запросов к
+	// Википедии и Wikidata (~7 с), в один поток 140 тыс. авторов шли бы недели;
+	// темп держит RPM. Больше двух потоков Википедия отвечает 429 (сухой прогон).
+	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors().WithWorkers(2)
+	logger.Info("author recheck: started", "since", state.Since, "rpm", rpm)
+	for pass := 1; ; pass++ {
+		if gates != nil && gates.Gates().AuthorDisabled {
+			logger.Info("author recheck: author enrichment is disabled — paused")
+		} else {
+			st, err := r.Pass(ctx, state.Since)
+			if ctx.Err() != nil {
+				return
+			}
+			if err != nil {
+				logger.Warn("author recheck: pass failed", "pass", pass, "err", err)
+			}
+			logger.Info("author recheck: pass done", "pass", pass, "checked", st.Checked, "deferred", st.Deferred,
+				"bio_kept", st.BioKept, "bio_new", st.BioNew, "bio_cleared", st.BioClear,
+				"photo_kept", st.PhotoKept, "photo_new", st.PhotoNew, "photo_cleared", st.PhotoClr)
+			if err == nil && st.Deferred == 0 {
+				state.Done = true
+				save()
+				logger.Info("author recheck: done")
+				return
+			}
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(30 * time.Minute):
+		}
+	}
+}
+
+// runOnceSplitAlienEditions — разовый вынос изданий, у которых нет общих авторов
+// с якорем своей работы (metadata.SplitAlienEditions, #285; прод — 174 издания).
+// Дальше то же делают шаги после импорта. Гейт alien_editions_split_v1.
+func runOnceSplitAlienEditions(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "alien_editions_split_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("split alien editions: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	touched, err := metadata.SplitAlienEditions(ctx, pool)
+	if len(touched) > 0 {
+		syncSplitWorks(ctx, imp, touched, logger)
+	}
+	if err != nil {
+		logger.Warn("split alien editions failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("split alien editions: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time alien editions split done", "works", len(touched))
+}
+
+// syncSplitWorks — поиск после выноса изданий: works-индекс (старые и новые
+// работы) и work_id изданий в books-индексе (OPDS схлопывает по нему).
+func syncSplitWorks(ctx context.Context, imp *importer.Importer, works []int64, logger *slog.Logger) {
+	if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+		logger.Warn("works index sync after edition split failed", "err", err)
+	}
+	if _, err := imp.ResyncWorkIDsFor(ctx, works); err != nil {
+		logger.Warn("work_id resync after edition split failed", "err", err)
+	}
+}
+
+// runOnceSrcLangCanonical — разовая канонизация books.src_lang к ISO 639-1
+// (metadata.CanonicalizeSrcLangs: spa→es, jp→ja, «английски»→en, мусор → NULL,
+// #287) + таргетный ресинк works-индекса изменённых работ (фасет «Язык
+// оригинала»). Гейт src_lang_canonical_v1; новые значения канонизирует запись
+// (EnsureEditionMeta). Поменял таблицу langcode — бампни версию.
+func runOnceSrcLangCanonical(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "src_lang_canonical_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("src_lang canonicalize: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, err := metadata.CanonicalizeSrcLangs(ctx, pool)
+	if err != nil {
+		logger.Warn("src_lang canonicalize failed — will retry next start", "err", err)
+		return
+	}
+	// Ресинк ДО флага: упадёт — на следующем старте значения уже канонические
+	// (works пуст), и индекс досинкнётся полным ресинком как фолбэк.
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("src_lang canonicalize: works index resync failed — full resync fallback", "err", err)
+			if _, rerr := imp.ResyncWorksIndex(ctx); rerr != nil {
+				logger.Warn("src_lang canonicalize: full works index resync failed — retry next start", "err", rerr)
+				return
+			}
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("src_lang canonicalize: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time src_lang canonicalization done", "works", len(works))
 }
 
 // runOnceSrcLangSync — разовый полный ресинк works-индекса после появления поля
@@ -857,43 +1388,60 @@ func runOnceSrcLangSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.I
 	logger.Info("one-time src_lang works resync done", "count", n)
 }
 
-// findInpxFiles возвращает все *.inpx из каталога (нерекурсивно), отсортированные.
-func findInpxFiles(root string) ([]string, error) {
-	if root == "" {
-		return nil, nil
-	}
-	entries, err := os.ReadDir(root)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	var out []string
-	for _, e := range entries {
-		if e.IsDir() {
-			continue
-		}
-		name := e.Name()
-		if strings.HasSuffix(strings.ToLower(name), ".inpx") {
-			out = append(out, filepath.Join(root, name))
-		}
-	}
-	sort.Strings(out)
-	return out, nil
-}
-
 func newLogger(level, format string) *slog.Logger {
 	var lvl slog.Level
 	if err := lvl.UnmarshalText([]byte(level)); err != nil {
 		lvl = slog.LevelInfo
 	}
-	opts := &slog.HandlerOptions{Level: lvl}
+	// ReplaceAttr: ключи API из URL в ошибках net/http не должны попадать в журнал.
+	opts := &slog.HandlerOptions{Level: lvl, ReplaceAttr: logredact.ReplaceAttr}
 	var h slog.Handler
 	if format == "text" {
 		h = slog.NewTextHandler(os.Stdout, opts)
 	} else {
 		h = slog.NewJSONHandler(os.Stdout, opts)
 	}
-	return slog.New(h)
+	return slog.New(shutdownQuietHandler{Handler: h, stopping: metadata.Stopping})
+}
+
+// shutdownQuietHandler — ожидаемые обрывы пишутся как INFO, а не WARN/ERROR,
+// чтобы алерт на поток предупреждений не будил от штатной работы:
+//   - «context canceled» — всегда: отмену делает сам процесс (остановка, пауза
+//     воркера группировки под разбор — прод 1.15.5, клиент закрыл запрос);
+//   - «closed pool» — только во время остановки (#270): в другое время это сбой.
+type shutdownQuietHandler struct {
+	slog.Handler
+	stopping func() bool
+}
+
+func (h shutdownQuietHandler) Handle(ctx context.Context, r slog.Record) error {
+	if r.Level > slog.LevelInfo && recordHasExpectedErr(r, h.stopping()) {
+		r = r.Clone()
+		r.Level = slog.LevelInfo
+	}
+	return h.Handler.Handle(ctx, r)
+}
+
+func (h shutdownQuietHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return shutdownQuietHandler{Handler: h.Handler.WithAttrs(attrs), stopping: h.stopping}
+}
+
+func (h shutdownQuietHandler) WithGroup(name string) slog.Handler {
+	return shutdownQuietHandler{Handler: h.Handler.WithGroup(name), stopping: h.stopping}
+}
+
+func recordHasExpectedErr(r slog.Record, stopping bool) bool {
+	found := false
+	r.Attrs(func(a slog.Attr) bool {
+		err, ok := a.Value.Any().(error)
+		if !ok {
+			return true
+		}
+		if errors.Is(err, context.Canceled) || (stopping && strings.Contains(err.Error(), "closed pool")) {
+			found = true
+			return false
+		}
+		return true
+	})
+	return found
 }

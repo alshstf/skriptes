@@ -25,11 +25,19 @@ type OpenLibraryProvider struct {
 	searchURL  string // override для тестов; по умолчанию https://openlibrary.org/search.json
 	coverURL   string // override для тестов; по умолчанию https://covers.openlibrary.org
 
-	// occupationGate — слой 2 точности матчинга автора (P106), зеркало
-	// WikipediaProvider.occupationGate. nil = выключен. Отсекает однофамильца-
-	// не-писателя ПОСЛЕ имя-гейта. QID берём бесплатно из remote_ids.wikidata
-	// детальной записи автора (в отличие от wiki, где нужен отдельный pageprops).
-	occupationGate func(ctx context.Context, qid string) (OccupationVerdict, error)
+	// candidateCheck — политика приёма кандидата (candidate_policy.go), зеркало
+	// WikipediaProvider.candidateCheck. nil = выключена. QID берём бесплатно из
+	// remote_ids.wikidata детальной записи автора (у wiki нужен отдельный pageprops).
+	candidateCheck CandidateCheck
+
+	// authors — найденный автор (или «не найдено») по запросу: путь фото идёт
+	// следом за путём био и повторил бы поиск, детали и проверку кандидата.
+	authors *ttlCache[olAuthorResult]
+}
+
+type olAuthorResult struct {
+	author   *olAuthor
+	notFound bool
 }
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
@@ -37,6 +45,7 @@ func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
 		httpClient = &http.Client{Timeout: 10 * time.Second}
 	}
 	return &OpenLibraryProvider{
+		authors:    newTTLCache[olAuthorResult](lookupCacheTTL, lookupCacheSize),
 		httpClient: httpClient,
 		searchURL:  "https://openlibrary.org/search.json",
 		coverURL:   "https://covers.openlibrary.org",
@@ -50,12 +59,10 @@ func (p *OpenLibraryProvider) WithEndpoints(searchURL, coverURL string) *OpenLib
 	return p
 }
 
-// WithOccupationGate включает слой 2 точности для авторского матчинга OL:
-// после имя-гейта проверяет профессию кандидата (Wikidata P106) по
-// remote_ids.wikidata и отвергает явных не-писателей. nil = выкл. Реализация —
-// та же WikidataAdaptationsProvider.OccupationVerdict, что и у wiki-пути.
-func (p *OpenLibraryProvider) WithOccupationGate(fn func(ctx context.Context, qid string) (OccupationVerdict, error)) *OpenLibraryProvider {
-	p.occupationGate = fn
+// WithCandidateCheck включает политику приёма кандидата для авторского матчинга
+// OL — та же, что у wiki-пути. nil = выкл.
+func (p *OpenLibraryProvider) WithCandidateCheck(fn CandidateCheck) *OpenLibraryProvider {
+	p.candidateCheck = fn
 	return p
 }
 
@@ -129,6 +136,7 @@ func (p *OpenLibraryProvider) FetchCover(ctx context.Context, q BookQuery) (*Cov
 type olSearchDoc struct {
 	CoverI           int64    `json:"cover_i"`
 	Key              string   `json:"key"` // "/works/OL12345W"
+	Title            string   `json:"title"`
 	FirstPublishYear int      `json:"first_publish_year"`
 	AuthorName       []string `json:"author_name"`
 	// Счётчики известности (FetchRenown). ⚠️ Solr-schema search-полей OL
@@ -148,7 +156,7 @@ type olSearchDoc struct {
 // Возвращает чистый OL Work ID ("OL12345W") либо ErrNotFound.
 func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (string, error) {
 	if isbn := normalizeISBN(q.ISBN); isbn != "" {
-		if key, err := p.resolveWorkByISBN(ctx, isbn); err == nil {
+		if key, err := p.resolveWorkByISBN(ctx, isbn, q); err == nil {
 			return key, nil
 		} else if !errors.Is(err, ErrNotFound) {
 			return "", err
@@ -167,7 +175,7 @@ func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (
 		v.Set("author", q.Authors[0])
 	}
 	v.Set("limit", "1")
-	v.Set("fields", "key,author_name")
+	v.Set("fields", "key,author_name,title")
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, p.searchURL+"?"+v.Encode(), nil)
 	if err != nil {
 		return "", fmt.Errorf("build work search: %w", err)
@@ -193,11 +201,18 @@ func (p *OpenLibraryProvider) ResolveWorkKey(ctx context.Context, q WorkQuery) (
 	if !anyAuthorMatches(gate, sr.Docs[0].AuthorName) {
 		return "", ErrNotFound
 	}
+	// И по названию: у автора поиск по названию одного рассказа возвращал его
+	// самый известный сборник — рассказы склеивались в одну «работу» (#279).
+	if !workTitleFits(sr.Docs[0].Title, q) {
+		return "", ErrNotFound
+	}
 	return strings.TrimPrefix(sr.Docs[0].Key, "/works/"), nil
 }
 
 // resolveWorkByISBN: GET /isbn/{isbn}.json → works[0].key.
-func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string) (string, error) {
+// Название издания сверяется с книгой: fb2 отдельного рассказа несёт ISBN
+// бумажного сборника, откуда он взят, и по ISBN находилась работа сборника (#279).
+func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string, q WorkQuery) (string, error) {
 	u := strings.TrimRight(p.workBaseURL(), "/") + "/isbn/" + url.PathEscape(isbn) + ".json"
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
@@ -213,6 +228,7 @@ func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string
 		return "", statusErr(resp.StatusCode)
 	}
 	var ed struct {
+		Title string `json:"title"`
 		Works []struct {
 			Key string `json:"key"`
 		} `json:"works"`
@@ -223,7 +239,20 @@ func (p *OpenLibraryProvider) resolveWorkByISBN(ctx context.Context, isbn string
 	if len(ed.Works) == 0 || ed.Works[0].Key == "" {
 		return "", ErrNotFound
 	}
+	if ed.Title != "" && !workTitleFits(ed.Title, q) {
+		return "", ErrNotFound
+	}
 	return strings.TrimPrefix(ed.Works[0].Key, "/works/"), nil
+}
+
+// workTitleFits — название найденной работы совпадает с книгой (с оригиналом
+// для переводов или с самим названием). Пустое название в ответе — не повод
+// отказывать: OL его не всегда отдаёт.
+func workTitleFits(found string, q WorkQuery) bool {
+	if strings.TrimSpace(found) == "" {
+		return true
+	}
+	return titlesMatch(found, q.SrcTitle) || titlesMatch(found, q.Title)
 }
 
 // anyAuthorMatches — проходит ли хоть один из кандидатов-имён гейт по автору.
@@ -489,44 +518,49 @@ func extractOLDescription(v any) string {
 // authorSearch — общий шаг для bio и photo: ищем автора, возвращаем
 // его OLID + parsed details.
 func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
+	// Имена в OpenLibrary латиницей: иностранца ищем по латинскому имени из fb2.
+	q = latinFor(ctx, "openlibrary", "", q)
+	key := q.cacheKey()
+	if r, ok := p.authors.get(key); ok {
+		if r.notFound {
+			traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceReject, Value: "not found a moment ago"})
+			return nil, ErrNotFound
+		}
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "cached", Outcome: TraceInfo, Value: r.author.OLID})
+		return r.author, nil
+	}
+	a, err := p.authorSearchUncached(ctx, q)
+	switch {
+	case err == nil:
+		p.authors.put(key, olAuthorResult{author: a})
+	case errors.Is(err, ErrNotFound):
+		p.authors.put(key, olAuthorResult{notFound: true})
+	}
+	return a, err
+}
+
+// authorSearchUncached — поиск автора без кэша (см. authorSearch).
+func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q AuthorQuery) (*olAuthor, error) {
 	if q.FullName == "" {
 		return nil, ErrNotFound
 	}
 
 	base := p.workBaseURL()
-	v := url.Values{}
-	v.Set("q", q.FullName)
-	v.Set("limit", "1")
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/search/authors.json?"+v.Encode(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("build author search: %w", err)
+	var olid string
+	if q.Strict() {
+		// Тёзки: первый по имени — просто самый известный из них; ищем по книгам.
+		key, err := p.strictAuthorKey(ctx, q)
+		if err != nil {
+			return nil, err
+		}
+		olid = key
+	} else {
+		key, err := p.authorKeyByName(ctx, base, q)
+		if err != nil {
+			return nil, err
+		}
+		olid = key
 	}
-	req.Header.Set("Accept", "application/json")
-	resp, err := p.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("ol author search: %w", err)
-	}
-	defer func() { _ = resp.Body.Close() }()
-	if resp.StatusCode != http.StatusOK {
-		return nil, statusErr(resp.StatusCode)
-	}
-
-	var sr olAuthorSearchResponse
-	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
-		return nil, fmt.Errorf("decode author search: %w", err)
-	}
-	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
-		return nil, ErrNotFound
-	}
-	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
-	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
-	if !authorNameMatches(q, sr.Docs[0].Name) {
-		return nil, ErrNotFound
-	}
-
-	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
-	olid := strings.TrimPrefix(sr.Docs[0].Key, "/authors/")
 
 	detailReq, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/authors/"+olid+".json", nil)
 	if err != nil {
@@ -548,54 +582,122 @@ func (p *OpenLibraryProvider) authorSearch(ctx context.Context, q AuthorQuery) (
 	}
 	detail.OLID = olid
 
-	// Слой 2 (опционально): профессия P106. Имя-гейт пропускает однофамильца с
-	// тем же ФИО, но другой профессией; QID берём бесплатно из remote_ids.wikidata
-	// (доп. запрос не нужен). Отвергаем ТОЛЬКО явного не-писателя; нет QID /
-	// unknown / ошибка сети — оставляем (precision-preserving, как на wiki-пути).
-	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если wiki-гейт
-	// отверг однофамильца (ErrNotFound), enricher идёт к OL — без этого гейта OL
-	// отдал бы того же не-писателя, и wiki-отказ «протёк» бы сюда.
-	if p.occupationGate != nil && detail.RemoteIDs.Wikidata != "" {
-		if v, err := p.occupationGate(ctx, detail.RemoteIDs.Wikidata); err == nil && v == OccupationNonWriter {
+	// Политика приёма (candidate_policy.go), QID — бесплатно из remote_ids.wikidata.
+	// Ошибка сети — временный сбой, автор перепроверится.
+	// ⚠️ Важно для цепочки провайдеров [wikipedia, openlibrary]: если Википедия
+	// отвергла однофамильца (ErrNotFound), enricher идёт к OL — без этой проверки
+	// OL отдал бы того же человека, и отказ «протёк» бы сюда.
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "qid", Outcome: TraceInfo, Input: olid, Value: detail.RemoteIDs.Wikidata})
+	if p.candidateCheck != nil {
+		match := MatchName
+		if q.Strict() {
+			match = MatchConfirmed // строгий путь OL — автор книги с нашим названием
+		}
+		ok, err := p.candidateCheck(ctx, q, "openlibrary", "", detail.Name, detail.RemoteIDs.Wikidata, match)
+		if err != nil {
+			return nil, fmt.Errorf("%w: candidate check: %w", ErrUpstream, err)
+		}
+		if !ok {
 			return nil, ErrNotFound
 		}
 	}
 	return &detail, nil
 }
 
+// authorKeyByName — OLID первого автора поиска по имени, прошедшего имя-гейт.
+func (p *OpenLibraryProvider) authorKeyByName(ctx context.Context, base string, q AuthorQuery) (string, error) {
+	v := url.Values{}
+	v.Set("q", q.FullName)
+	v.Set("limit", "1")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/search/authors.json?"+v.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("build author search: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("ol author search: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return "", statusErr(resp.StatusCode)
+	}
+
+	var sr olAuthorSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+		return "", fmt.Errorf("decode author search: %w", err)
+	}
+	if len(sr.Docs) == 0 || sr.Docs[0].Key == "" {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "search", Outcome: TraceReject, Input: q.FullName})
+		return "", ErrNotFound
+	}
+	// Гейт по имени: OL-поиск тоже может вернуть однофамильца. Принимаем только
+	// если совпадает и имя (см. authorNameMatches) — иначе лучше пусто.
+	if !authorNameMatches(q, sr.Docs[0].Name) {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "name_gate", Outcome: TraceReject, Input: q.FullName, Value: sr.Docs[0].Name})
+		return "", ErrNotFound
+	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "name_gate", Outcome: TracePass, Input: q.FullName, Value: sr.Docs[0].Name})
+	// Key может быть и просто "OL12345A", и "/authors/OL12345A". Нормализуем.
+	return strings.TrimPrefix(sr.Docs[0].Key, "/authors/"), nil
+}
+
 // FetchAuthorBio — bio из /authors/{OLID}.json.
 func (p *OpenLibraryProvider) FetchAuthorBio(ctx context.Context, q AuthorQuery) (string, error) {
 	a, err := p.authorSearch(ctx, q)
 	if err != nil {
+		traceRequestError(ctx, "openlibrary", "", err)
 		return "", err
 	}
 	bio := extractOLDescription(a.Bio)
 	if bio == "" {
+		traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "bio", Outcome: TraceReject, Input: a.OLID, Value: "no bio"})
 		return "", ErrNotFound
 	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "accept", Outcome: TracePass, Value: a.OLID})
 	return bio, nil
+}
+
+// AuthorPhotoSource — адрес фото автора без скачивания (сухой прогон, #280).
+func (p *OpenLibraryProvider) AuthorPhotoSource(ctx context.Context, q AuthorQuery) (string, error) {
+	id, err := p.authorPhotoID(ctx, q)
+	if err != nil {
+		return "", err
+	}
+	return p.authorPhotoURL(id), nil
+}
+
+func (p *OpenLibraryProvider) authorPhotoURL(photoID int64) string {
+	return fmt.Sprintf("%s/a/id/%d-L.jpg", p.coverURL, photoID)
+}
+
+// authorPhotoID — первое фото из photos[] автора.
+func (p *OpenLibraryProvider) authorPhotoID(ctx context.Context, q AuthorQuery) (int64, error) {
+	a, err := p.authorSearch(ctx, q)
+	if err != nil {
+		traceRequestError(ctx, "openlibrary", "", err)
+		return 0, err
+	}
+	// photos[i] = -1 у OL означает "удалено/нет", фильтруем.
+	for _, id := range a.Photos {
+		if id > 0 {
+			traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "accept", Outcome: TracePass, Input: a.OLID, Value: p.authorPhotoURL(id)})
+			return id, nil
+		}
+	}
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "photo", Outcome: TraceReject, Input: a.OLID, Value: "no photo"})
+	return 0, ErrNotFound
 }
 
 // FetchAuthorPhoto — первое фото из photos[] автора.
 func (p *OpenLibraryProvider) FetchAuthorPhoto(ctx context.Context, q AuthorQuery) (*CoverImage, error) {
-	a, err := p.authorSearch(ctx, q)
+	photoID, err := p.authorPhotoID(ctx, q)
 	if err != nil {
 		return nil, err
 	}
-	// photos[i] = -1 у OL означает "удалено/нет", фильтруем.
-	var photoID int64
-	for _, id := range a.Photos {
-		if id > 0 {
-			photoID = id
-			break
-		}
-	}
-	if photoID == 0 {
-		return nil, ErrNotFound
-	}
 
-	imgReq, err := http.NewRequestWithContext(ctx, http.MethodGet,
-		fmt.Sprintf("%s/a/id/%d-L.jpg", p.coverURL, photoID), nil)
+	imgReq, err := http.NewRequestWithContext(ctx, http.MethodGet, p.authorPhotoURL(photoID), nil)
 	if err != nil {
 		return nil, fmt.Errorf("build photo request: %w", err)
 	}
@@ -627,12 +729,13 @@ type olAuthorSearchResponse struct {
 
 type olAuthor struct {
 	OLID      string  `json:"-"` // заполняем сами после search
+	Name      string  `json:"name"`
 	Bio       any     `json:"bio"`
 	Photos    []int64 `json:"photos"`
 	RemoteIDs struct {
-		// Wikidata QID автора ("Q7243") — зацепка для слоя 2 (P106). У OL это
-		// одно из многих remote_ids; пустая строка = OL не слинковал автора с
-		// Wikidata (тогда гейт не зовём).
+		// Wikidata QID автора ("Q7243") — для политики приёма. У OL это одно из
+		// многих remote_ids; пустая строка = OL не слинковал автора с Wikidata
+		// (тогда фактов нет — политика решает по профилю книг).
 		Wikidata string `json:"wikidata"`
 	} `json:"remote_ids"`
 }

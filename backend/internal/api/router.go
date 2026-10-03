@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
@@ -46,7 +47,14 @@ func NewRouter(d Deps) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
+	// IP клиента — самое правое значение X-Forwarded-For, т.е. выставленное
+	// ближайшим прокси (Caddy перезаписывает XFF сам, клиентский не доверяется).
+	// middleware.RealIP больше не используем: он верил True-Client-IP/X-Real-IP/
+	// левому XFF от клиента (GO-2026-5774/5775/5777). Контракт: backend доступен
+	// ТОЛЬКО через один reverse-proxy, выставляющий XFF; без XFF — RemoteAddr.
+	r.Use(middleware.ClientIPFromXFF())
+	// Метрики запросов — до Recoverer: 500 после паники тоже попадает в счётчик.
+	r.Use(metrics.HTTPMiddleware)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 
@@ -64,9 +72,16 @@ func NewRouter(d Deps) http.Handler {
 	// вместо session cookie + CSRF), отдельный media-type — другие
 	// клиенты, другая лента эндпоинтов. Монтируется только если
 	// сконфигурен Handler И есть Auth.Service (нужен ValidateCredentials).
+	// Лимитер неудачных входов — один на роутер: форма логина и OPDS Basic-auth
+	// тратят общий бюджет (см. authThrottles).
+	var th *authThrottles
+	if d.Auth.Service != nil {
+		th = newAuthThrottles(d.Auth)
+	}
+
 	if d.OPDS.Handler != nil && d.Auth.Service != nil {
 		r.Route("/opds", func(r chi.Router) {
-			r.Use(requireBasicAuth(d.Auth))
+			r.Use(requireBasicAuth(d.Auth, th))
 			h := d.OPDS.Handler
 			r.Get("/", h.Root)
 			r.Get("/opensearch.xml", h.OpenSearchDescription)
@@ -87,7 +102,7 @@ func NewRouter(d Deps) http.Handler {
 		r.Get("/version", version(d.Version, d.DB))
 		if d.Auth.Service != nil {
 			// Публичные auth-эндпоинты.
-			r.Post("/auth/login", handleLogin(d.Auth))
+			r.Post("/auth/login", handleLogin(d.Auth, th))
 			r.Post("/auth/logout", handleLogout(d.Auth))
 			// Защищённые: требуют валидной session-cookie.
 			r.Group(func(r chi.Router) {

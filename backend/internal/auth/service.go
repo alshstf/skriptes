@@ -2,7 +2,8 @@
 //
 // Стек:
 //   - Пароли хранятся как bcrypt-хэши в users.password_hash (cost=12).
-//   - Сессии — в таблице sessions (token PK, user_id FK, expires_at).
+//   - Сессии — в таблице sessions (token PK = SHA-256 токена из cookie, user_id FK, expires_at);
+//     сам токен в БД не хранится (см. hashSessionToken).
 //   - HTTP-уровень (handlers + middleware) живёт в internal/api;
 //     этот пакет не знает про http.
 package auth
@@ -14,6 +15,7 @@ import (
 	"net/netip"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -61,9 +63,15 @@ var ErrEmailTaken = errors.New("email already taken")
 // не строжим, чтобы не мешать семье; но не пустые / 1-символьные.
 var ErrPasswordTooShort = errors.New("password too short")
 
-// MinPasswordLen — минимальная длина пароля.
-// 8 — общепринятый baseline; bcrypt cap = 72 байта.
-const MinPasswordLen = 8
+// MinPasswordLen — минимальная длина пароля (для новых и сменяемых; старые
+// пароли продолжают работать). 12: инстанс открыт в интернет, а лимит неудачных
+// входов на email (20/15 мин) оставляет до ~1900 попыток в сутки на аккаунт.
+// Считаем символы, а не байты: фронт (lib/auth.ts MIN_PASSWORD_LEN) меряет длину
+// в символах, и кириллический пароль из 6 букв (12 байт) не должен проходить.
+// bcrypt cap = 72 байта.
+const MinPasswordLen = 12
+
+func passwordTooShort(p string) bool { return utf8.RuneCountInString(p) < MinPasswordLen }
 
 // SessionTTL — стандартный срок жизни сессии. Семейный сервер,
 // можно держать долго; пользователь всегда может разлогиниться вручную.
@@ -93,7 +101,7 @@ func (s *Service) CreateUser(ctx context.Context, email, displayName, password s
 	if email == "" {
 		return User{}, errors.New("email must not be empty")
 	}
-	if len(password) < MinPasswordLen {
+	if passwordTooShort(password) {
 		return User{}, ErrPasswordTooShort
 	}
 	hash, err := HashPassword(password, s.bcryptCost)
@@ -187,7 +195,7 @@ func (s *Service) createSession(ctx context.Context, userID int64, meta SessionM
 	_, err = s.pool.Exec(ctx, `
 		INSERT INTO sessions (token, user_id, expires_at, ip, user_agent)
 		VALUES ($1, $2, $3, $4, $5)
-	`, token, userID, time.Now().Add(SessionTTL), ipStr, meta.UserAgent)
+	`, hashSessionToken(token), userID, time.Now().Add(SessionTTL), ipStr, meta.UserAgent)
 	if err != nil {
 		return "", fmt.Errorf("insert session: %w", err)
 	}
@@ -207,7 +215,7 @@ func (s *Service) UserByToken(ctx context.Context, token string) (User, bool) {
 		FROM sessions s
 		JOIN users u ON u.id = s.user_id
 		WHERE s.token = $1 AND s.expires_at > now()
-	`, token).Scan(&u.ID, &u.Email, &u.DisplayName, &u.Role, &u.KindleEmail, &u.CreatedAt)
+	`, hashSessionToken(token)).Scan(&u.ID, &u.Email, &u.DisplayName, &u.Role, &u.KindleEmail, &u.CreatedAt)
 	if err != nil {
 		return User{}, false
 	}
@@ -217,8 +225,26 @@ func (s *Service) UserByToken(ctx context.Context, token string) (User, bool) {
 // Logout удаляет конкретную сессию (только её, не все сессии пользователя).
 // Не возвращает ошибку если сессии нет — logout идемпотентен.
 func (s *Service) Logout(ctx context.Context, token string) error {
-	_, err := s.pool.Exec(ctx, `DELETE FROM sessions WHERE token = $1`, token)
+	_, err := s.pool.Exec(ctx, `DELETE FROM sessions WHERE token = $1`, hashSessionToken(token))
 	return err
+}
+
+// HashLegacySessionTokens переводит сессии, записанные до хэширования (сырой токен
+// в sessions.token), в SHA-256 — тем же выражением, что hashSessionToken, поэтому
+// пользователи не разлогиниваются. Зовётся на каждом старте и идемпотентен: хэш —
+// 64 hex-символа, сырой токен — 43 символа base64url, второй раз строка не попадёт.
+//
+// Не миграция нарочно: схема не меняется, а номер миграции делили бы параллельные
+// ветки — у той, что смержится второй, golang-migrate на проде пропустил бы
+// миграцию с меньшим номером.
+func (s *Service) HashLegacySessionTokens(ctx context.Context) (int64, error) {
+	tag, err := s.pool.Exec(ctx, `
+		UPDATE sessions SET token = encode(sha256(convert_to(token, 'UTF8')), 'hex')
+		WHERE token !~ '^[0-9a-f]{64}$'`)
+	if err != nil {
+		return 0, fmt.Errorf("hash legacy session tokens: %w", err)
+	}
+	return tag.RowsAffected(), nil
 }
 
 // CleanupExpiredSessions удаляет все сессии где expires_at <= now().
@@ -385,7 +411,7 @@ func (s *Service) ChangePassword(ctx context.Context, id int64, currentPassword,
 // users.password_hash, удаляет все сессии юзера КРОМЕ keepSessionToken
 // (если непустой). Транзакционно.
 func (s *Service) setPassword(ctx context.Context, id int64, newPassword, keepSessionToken string) error {
-	if len(newPassword) < MinPasswordLen {
+	if passwordTooShort(newPassword) {
 		return ErrPasswordTooShort
 	}
 	newHash, err := HashPassword(newPassword, s.bcryptCost)
@@ -414,7 +440,7 @@ func (s *Service) setPassword(ctx context.Context, id int64, newPassword, keepSe
 	if keepSessionToken != "" {
 		_, err = tx.Exec(ctx,
 			`DELETE FROM sessions WHERE user_id = $1 AND token <> $2`,
-			id, keepSessionToken,
+			id, hashSessionToken(keepSessionToken),
 		)
 	} else {
 		_, err = tx.Exec(ctx, `DELETE FROM sessions WHERE user_id = $1`, id)

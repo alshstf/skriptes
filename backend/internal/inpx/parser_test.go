@@ -95,7 +95,9 @@ func TestParseRecord_BadDateIsNil(t *testing.T) {
 	require.Nil(t, r.Date, "невалидная дата должна стать nil, а не ошибкой")
 }
 
-func TestParseRecord_BadIntIsError(t *testing.T) {
+// Нечисловое значение числового поля — не ошибка записи: поле пустое, исходник в
+// Extra (одна кривая запись не должна обрывать разбор всего .inp).
+func TestParseRecord_BadIntIsLenient(t *testing.T) {
 	parts := make([]string, len(inpx.DefaultSchema))
 	for i, name := range inpx.DefaultSchema {
 		switch name {
@@ -107,9 +109,10 @@ func TestParseRecord_BadIntIsError(t *testing.T) {
 			parts[i] = "not-a-number"
 		}
 	}
-	_, err := inpx.ParseRecord([]byte(strings.Join(parts, "\x04")), inpx.DefaultSchema)
-	require.Error(t, err)
-	require.Contains(t, err.Error(), "SIZE")
+	rec, err := inpx.ParseRecord([]byte(strings.Join(parts, "\x04")), inpx.DefaultSchema)
+	require.NoError(t, err)
+	require.Zero(t, rec.Size)
+	require.Equal(t, "not-a-number", rec.Extra[inpx.FieldSize])
 }
 
 func TestParseRecord_ExtraFieldsGoToExtra(t *testing.T) {

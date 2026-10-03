@@ -8,6 +8,7 @@ import (
 
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +22,7 @@ func TestContinueReading_DedupesByWork(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
 	abs, _ := filepath.Abs(fixtureINPX)

@@ -26,6 +26,8 @@ services:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-}
       MEILI_ENV: ${MEILI_ENV:-development}
       MEILI_NO_ANALYTICS: "true"
+      # INFO пишет каждый /health (healthcheck раз в 10 с) — десятки тысяч строк в сутки.
+      MEILI_LOG_LEVEL: ${MEILI_LOG_LEVEL:-WARN}
     volumes:
       - meili_data:/meili_data
     ports:
@@ -60,6 +62,10 @@ services:
       SKRIPTES_TMDB_API_KEY: ${SKRIPTES_TMDB_API_KEY:-}
       SKRIPTES_BOOKS_ROOT: /data/books
       SKRIPTES_INPX_ROOT: /data/inpx
+      # Какие *.inpx импортировать (имена через запятую); пусто — все из INPX_HOST_PATH.
+      SKRIPTES_INPX_FILES: ${SKRIPTES_INPX_FILES:-}
+      # Как часто проверять INPX и импортировать новый без рестарта; 0 — только при старте.
+      SKRIPTES_INPX_WATCH_INTERVAL: ${SKRIPTES_INPX_WATCH_INTERVAL:-10m}
       SKRIPTES_CACHE_ROOT: /cache
       SKRIPTES_COOKIE_SECURE: ${SKRIPTES_COOKIE_SECURE:-true}
       SKRIPTES_COOKIE_DOMAIN: ${SKRIPTES_COOKIE_DOMAIN:-}
@@ -67,6 +73,8 @@ services:
       # Анти-брутфорс логина (неудачи на окно): IP 5мин / email 15мин. 0 = выключить.
       SKRIPTES_LOGIN_RATELIMIT_IP: ${SKRIPTES_LOGIN_RATELIMIT_IP:-10}
       SKRIPTES_LOGIN_RATELIMIT_EMAIL: ${SKRIPTES_LOGIN_RATELIMIT_EMAIL:-20}
+      # IP для лимита из CF-Connecting-IP — ТОЛЬКО если весь трафик идёт через Cloudflare.
+      SKRIPTES_TRUST_CF_CONNECTING_IP: ${SKRIPTES_TRUST_CF_CONNECTING_IP:-false}
       SKRIPTES_SMTP_HOST: ${SKRIPTES_SMTP_HOST:-}
       SKRIPTES_SMTP_PORT: ${SKRIPTES_SMTP_PORT:-587}
       SKRIPTES_SMTP_USER: ${SKRIPTES_SMTP_USER:-}

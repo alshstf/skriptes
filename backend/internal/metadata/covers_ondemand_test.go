@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -55,7 +56,7 @@ func TestServeCoverByID_OnDemand(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	booksRoot := t.TempDir()
 	writeFB2Zip(t, booksRoot, "withcover.zip", fb2WithCover())

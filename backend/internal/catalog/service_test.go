@@ -6,16 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	meili "github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
-	"github.com/skriptes/skriptes/backend/internal/db"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
 	tcmeili "github.com/testcontainers/testcontainers-go/modules/meilisearch"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 const fixtureINPX = "../inpx/testdata/test.inpx"
@@ -29,7 +25,7 @@ func TestService_CollapsesEditionsByWork(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 
 	var collID, archID, authorID, seriesID, workID int64
 	require.NoError(t, pool.QueryRow(ctx,
@@ -83,7 +79,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -211,7 +207,7 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 
 	// Suggest: префиксное совпадение по нормализованному имени.
 	// "алек" → должны попасть Алексеев и Алексеева Адель Ивановна.
-	authorSugg, err := svc.SuggestAuthors(ctx, "алек", 5)
+	authorSugg, err := svc.SuggestAuthors(ctx, "алек", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, authorSugg)
 	var foundAlekseev bool
@@ -223,18 +219,45 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	}
 	require.True(t, foundAlekseev, "ожидаем Алексеева в suggest по 'алек'")
 
+	// Имя перед фамилией (#309): «евгений алексеев» находит «Алексеев Евгений».
+	reversed, err := svc.SuggestAuthors(ctx, "евгений алексеев", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, reversed)
+	require.Equal(t, "Алексеев Евгений Артёмович", reversed[0].FullName)
+	// Спецсимволы LIKE — текст, а не шаблон.
+	none, err := svc.SuggestAuthors(ctx, "%", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, none)
+
 	// Пустой запрос → пустой срез без ошибки.
-	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5)
+	authorEmpty, err := svc.SuggestAuthors(ctx, "  ", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.Empty(t, authorEmpty)
 
 	// Suggest series: префикс "пет" по нормализованному заголовку.
-	seriesSugg, err := svc.SuggestSeries(ctx, "пет", 5)
+	seriesSugg, err := svc.SuggestSeries(ctx, "пет", 5, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, seriesSugg)
 	require.Equal(t, "Петля [Алексеев]", seriesSugg[0].Title)
 	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
 	require.Equal(t, 1, seriesSugg[0].BookCount)
+
+	// Видимость (#289): у Алексеева все книги на языке, который скрыт, — ни он,
+	// ни его серия в подсказки не попадают (карточка открылась бы с 0 книг).
+	var alekLangs []string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT array_agg(DISTINCT b.lang) FROM books b JOIN book_authors ba ON ba.book_id = b.id
+		JOIN authors a ON a.id = ba.author_id WHERE a.normalized_name = 'алексеев евгений артёмович'`).Scan(&alekLangs))
+	hidden, err := svc.SuggestAuthors(ctx, "алексеев евг", 5, nil, alekLangs, false)
+	require.NoError(t, err)
+	require.Empty(t, hidden, "автор только со скрытыми книгами не подсказывается")
+	hiddenSeries, err := svc.SuggestSeries(ctx, "пет", 5, nil, alekLangs, false)
+	require.NoError(t, err)
+	require.Empty(t, hiddenSeries, "серия только со скрытыми книгами не подсказывается")
+
+	// % и _ в запросе — текст, а не шаблон LIKE (#309): «%» не находит всех.
+	pct, err := svc.SuggestAuthors(ctx, "%", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, pct)
 
 	// ── YearStats: у Алексеева ровно 1 книга с проставленным written_year →
 	// одна точка в гистограмме по году написания.
@@ -282,30 +305,6 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 }
 
 // ── helpers (повтор из internal/books) ─────────────────────────
-
-func startPostgres(t *testing.T, ctx context.Context) *pgxpool.Pool {
-	t.Helper()
-	pgC, err := postgres.Run(ctx,
-		"postgres:17-alpine",
-		postgres.WithDatabase("skriptes_test"),
-		postgres.WithUsername("skriptes"),
-		postgres.WithPassword("skriptes"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).
-				WithStartupTimeout(60*time.Second),
-		),
-	)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = pgC.Terminate(context.Background()) })
-	dsn, err := pgC.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
-	require.NoError(t, db.Migrate(dsn))
-	pool, err := db.NewPool(ctx, dsn)
-	require.NoError(t, err)
-	t.Cleanup(pool.Close)
-	return pool
-}
 
 func startMeilisearch(t *testing.T, ctx context.Context) meili.ServiceManager {
 	t.Helper()

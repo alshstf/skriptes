@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 // ErrNotFound — провайдер не нашёл данных для книги; не считается
@@ -90,6 +92,130 @@ type AuthorQuery struct {
 	MiddleName string
 	FullName   string // готовая склейка "Фамилия Имя Отчество"
 	Lang       string // ISO-код страны/языка автора, может быть пустой
+
+	// Тёзки (грабля №22). Enricher заполняет сам по ID (withNamesakeContext):
+	// Note — уточнение из INPX («Блум», «фантаст»), Namesakes — в базе есть
+	// другой автор с тем же именем, BookTitles — названия книг автора (свои и
+	// оригинальные) для якоря по книгам.
+	Note       string
+	Namesakes  bool
+	BookTitles []string
+	// LatinName — имя автора латиницей из fb2 его переводов (src_author_normalized:
+	// «фамилия имя отчество» в нижнем регистре), за которое голосует большинство
+	// книг, кроме сборников. Английская Википедия и OpenLibrary ищут по нему
+	// (latinQuery): по кириллице иностранца они не находят (case study #280).
+	LatinName string
+	// Профиль книг автора для политики приёма кандидата (candidate_policy.go):
+	// типичный год книг — медиана годов написания или издания (0 — неизвестен;
+	// не минимум: переложения древних текстов и ошибки дат давали «книги с 1532»),
+	// доля сетевой литературы среди работ и коды жанров.
+	BooksYear int
+	NetShare  float64
+	Genres    []string
+}
+
+// cacheKey — всё, от чего зависит найденная статья: автор, имя, тёзки и книги
+// (строгий путь подтверждает по ним).
+func (q AuthorQuery) cacheKey() string {
+	return strings.Join([]string{strconv.FormatInt(q.ID, 10), q.FullName, q.MiddleName, q.Note,
+		strconv.FormatBool(q.Strict()), strings.Join(q.BookTitles, "\x1f")}, "|")
+}
+
+// latinQuery — тот же автор латиницей для источников на латинице. Фамилия —
+// столько первых слов LatinName, сколько частей у нашей фамилии («Ле Гуин» →
+// «le guin»), имя — следующее слово, остальное — второе имя. ok=false — латинского
+// имени нет или оно не похоже на наше (первая буква фамилии не соответствует:
+// голос мог дать составитель антологии).
+func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
+	toks := strings.Fields(q.LatinName)
+	lastParts := strings.Fields(q.LastName)
+	n := len(lastParts)
+	if n == 0 || len(toks) < n || (strings.TrimSpace(q.FirstName) != "" && len(toks) < n+1) {
+		return q, false
+	}
+	if !sameInitialSound(translitName(lastParts[0]), translitName(toks[0])) {
+		return q, false
+	}
+	l := AuthorQuery{
+		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
+		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
+		BooksYear: q.BooksYear, NetShare: q.NetShare, Genres: q.Genres,
+	}
+	if len(toks) > n {
+		l.FirstName = toks[n]
+	}
+	if len(toks) > n+1 {
+		l.MiddleName = strings.Join(toks[n+1:], " ")
+	}
+	return l, true
+}
+
+// queryForLang — запрос для раздела Википедии: латиницей для латинских разделов,
+// если латинское имя есть; иначе как есть.
+func queryForLang(q AuthorQuery, lang string) AuthorQuery {
+	switch lang {
+	case "ru", "uk", "be", "bg", "sr", "kk":
+		return q
+	}
+	if l, ok := q.latinQuery(); ok {
+		return l
+	}
+	return q
+}
+
+// sameInitialSound — первые буквы транслита кириллической фамилии и латинской
+// соответствуют друг другу: Г ~ H (Гюго — Hugo), Ф ~ Ph, Ц ~ C/Ts, К ~ C/Q, Х ~ H/Kh,
+// Й/И/Э ~ I/Y/J/E/A, В ~ V/W, Дж ~ J/G, З ~ Z/S.
+func sameInitialSound(cyrLat, lat string) bool {
+	if cyrLat == "" || lat == "" {
+		return false
+	}
+	class := func(s string) string {
+		switch {
+		case strings.HasPrefix(s, "dzh"):
+			return "j"
+		case strings.HasPrefix(s, "ph"):
+			return "f"
+		case strings.HasPrefix(s, "kh"):
+			return "h"
+		case strings.HasPrefix(s, "zh"):
+			return "zh"
+		case strings.HasPrefix(s, "ch"):
+			return "ch"
+		case strings.HasPrefix(s, "sh"), strings.HasPrefix(s, "sch"):
+			return "sh"
+		}
+		switch s[0] {
+		case 'g', 'h':
+			return "h"
+		case 'c', 'k', 'q':
+			return "k"
+		case 'i', 'y', 'j', 'e', 'a':
+			return "v0"
+		case 'v', 'w':
+			return "v"
+		case 'z', 's':
+			return "s"
+		}
+		return s[:1]
+	}
+	a, b := class(cyrLat), class(lat)
+	if a == b {
+		return true
+	}
+	// Ц передают и как C, и как Ts; Ч — Ch и Tch; Дж — J и G.
+	pairs := map[[2]string]bool{{"k", "t"}: true, {"ch", "t"}: true, {"j", "h"}: true, {"j", "v0"}: true}
+	return pairs[[2]string{a, b}] || pairs[[2]string{b, a}] || (a == "s" && b == "k") || (b == "s" && a == "k")
+}
+
+// Strict — автора нельзя искать просто по имени: у него есть тёзки или
+// уточнение, или имя из одного слова («София», «2B», «ScrLock» — по одной
+// фамилии находились столица Болгарии, поп-дуэт и клавиша, #280). Кандидата
+// принимаем, только если его подтвердило уточнение (статья «ФИО (уточнение)» в
+// Википедии) или одна из книг автора.
+func (q AuthorQuery) Strict() bool {
+	oneWord := strings.TrimSpace(q.LastName) != "" && strings.TrimSpace(q.FirstName) == ""
+	return q.Note != "" || q.Namesakes || oneWord
 }
 
 // AuthorPhotoProvider — поставщик портрета автора. Reuse CoverImage —

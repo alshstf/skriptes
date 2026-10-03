@@ -10,6 +10,17 @@
 //	https://github.com/ksandr/Books.NET/blob/master/App_Data/genres_fb2.glst
 //
 // Парсено в dictionary.json формата [{code, name_ru, category}].
+//
+// Дополнено 2026-09-28 (#286) 54 кодами, которые librusec использует с выпусков
+// 2026 года, а glst не знает (network_literature — 50 тыс. книг, sf_litrpg —
+// 5 тыс.): имена и разделы — из genres.json клиента FLibrary 2.7.0, который
+// раздаётся вместе с INPX lib.rus.ec (MIT License, Copyright (c) 2021-2026
+// Alexander Chiryatiev). Короткие имена
+// FLibrary, понятные только внутри раздела («РПГ», «Школа»), развёрнуты
+// («ЛитРПГ», «Образование: школа»); разделы — наши категории. Не добавлены
+// коды, которые у FLibrary — алиасы или «…: прочее» наших жанров (adv_all,
+// humor_all, painting = visual_arts…): их нужно сливать с существующими, а не
+// заводить вторыми строками фильтра.
 // Жанры fb2 меняются редко (raster fb2-спека стабильна с 2010-х); если
 // упустится десяток новых кодов из реальных коллекций — importer
 // положит их с NULL name_ru, и UI покажет голый код как fallback.

@@ -32,5 +32,11 @@ func TestConfigureIndexes_SetMaxTotalHits(t *testing.T) {
 			p, err := mgr.Index(idx).GetPaginationWithContext(ctx)
 			return err == nil && p != nil && p.MaxTotalHits == importer.MeiliMaxTotalHits
 		}, 30*time.Second, 200*time.Millisecond, "index %s: maxTotalHits не применился", idx)
+		// Фасеты: Meili-дефолт — 100 значений по алфавиту, в коллекции ~350 жанров
+		// и ~170 языков оригинала — «русский» и «фантастика» выпадали (#276).
+		require.Eventually(t, func() bool {
+			f, err := mgr.Index(idx).GetFacetingWithContext(ctx)
+			return err == nil && f != nil && f.MaxValuesPerFacet == importer.MeiliMaxValuesPerFacet
+		}, 30*time.Second, 200*time.Millisecond, "index %s: maxValuesPerFacet не применился", idx)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -27,7 +28,7 @@ func TestService_RerankOnlyOnQuery(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -107,7 +108,7 @@ func TestService_SuggestRerank(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -170,7 +171,7 @@ func TestService_BookLevelRerank(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
@@ -222,4 +223,77 @@ func containsID(s []int64, x int64) bool {
 		}
 	}
 	return false
+}
+
+// TestService_RerankKeepsPageComposition — пересортировка первой страницы не
+// меняет её СОСТАВ: страницы 1 и 2 вместе дают ровно те же работы, что Meili без
+// пересортировки, без потерь и повторов (#277). С прежним окном 3×limit работа
+// любимого автора с 3–4-й позиции уходила на первую страницу, а вытесненная с
+// первой не попадала никуда.
+func TestService_RerankKeepsPageComposition(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := testpg.Pool(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, _ := filepath.Abs(fixtureINPX)
+	_, err := imp.Run(ctx, abs)
+	require.NoError(t, err)
+	historySvc := history.New(pool)
+	svc := books.New(pool, mgr, historySvc)
+
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('pages@example.com', 'Pages User', 'x', 'user') RETURNING id`).Scan(&userID))
+
+	// Запрос с ≥4 работами в фикстуре (префиксный поиск по одной букве).
+	var query string
+	var plain books.ListResponse
+	for _, q := range []string{"Алек", "а", "о", "с", "и", "м"} {
+		res, err := svc.ListWorks(ctx, books.ListParams{Query: q, Limit: 20})
+		require.NoError(t, err)
+		if len(res.Items) >= 4 {
+			query, plain = q, res
+			break
+		}
+	}
+	require.NotEmpty(t, query, "для теста нужен запрос с ≥4 работами")
+
+	// Любимый автор — у работы с 3–4-й позиции, которого нет в первых двух.
+	first := map[int64]bool{}
+	for _, it := range plain.Items[:2] {
+		for _, a := range it.AuthorIDs {
+			first[a] = true
+		}
+	}
+	var fav int64
+	for _, it := range plain.Items[2:4] {
+		for _, a := range it.AuthorIDs {
+			if !first[a] {
+				fav = a
+			}
+		}
+	}
+	require.NotZero(t, fav)
+	require.NoError(t, historySvc.AddFavoriteAuthor(ctx, userID, fav))
+
+	p1, err := svc.ListWorks(ctx, books.ListParams{Query: query, Limit: 2, UserID: userID})
+	require.NoError(t, err)
+	p2, err := svc.ListWorks(ctx, books.ListParams{Query: query, Limit: 2, Offset: 2, UserID: userID})
+	require.NoError(t, err)
+
+	ids := func(items []books.ListItem) []int64 {
+		out := make([]int64, 0, len(items))
+		for _, it := range items {
+			out = append(out, it.ID)
+		}
+		return out
+	}
+	require.ElementsMatch(t, ids(plain.Items[:2]), ids(p1.Items), "состав первой страницы = Meili")
+	require.ElementsMatch(t, ids(plain.Items[2:4]), ids(p2.Items), "вторая страница продолжает первую")
 }

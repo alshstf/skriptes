@@ -1,0 +1,307 @@
+package metadata
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"log/slog"
+	"sync"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+// Перепроверка биографий и фото авторов (#280). v1/v2 — авторы с био/фото; v3
+// (WithAllAuthors) — все авторы с книгами, после разбора ошибок, нового поиска
+// статьи и политики приёма. История: 42 тыс. био скачаны в июне,
+// до гейтов профессии, тёзок, неоднозначности и точного совпадения фамилий; по
+// выборке аудита чужие — около 28%. Сбрасывать всё нельзя: карточки и список
+// авторов опустели бы на сутки. Вместо этого каждый автор с био или фото
+// заново проходит поиск с текущими гейтами:
+//   - нашлось то же — не трогаем;
+//   - нашлось другое — заменяем;
+//   - гейты больше не пропускают — очищаем;
+//   - сбой источника — не трогаем, повтор в следующем проходе.
+// Изменения пишутся в author_meta_recheck (что было, что стало). Идём от самых
+// известных авторов: первыми исправляются видимые карточки. Прежние файлы фото
+// не удаляются — нужны для отката. Авторы, у которых прошлая перепроверка
+// что-то очистила, проходят заново: гейты с тех пор могли исправить.
+
+// AuthorRecheckStats — итог перепроверки.
+type AuthorRecheckStats struct {
+	Checked   int // авторов пройдено (без сбоев)
+	Deferred  int // авторов со сбоем источника — повторятся
+	BioKept   int
+	BioNew    int // заменено или добавлено
+	BioClear  int
+	PhotoKept int
+	PhotoNew  int
+	PhotoClr  int
+}
+
+// AuthorRechecker — проход перепроверки. since — начало перепроверки: авторы с
+// metadata_fetched_at раньше него ещё не перепроверены (после перепроверки
+// маркер ставится в now()).
+type AuthorRechecker struct {
+	pool     *pgxpool.Pool
+	enricher *Enricher
+	logger   *slog.Logger
+	gate     *rateGate
+	all      bool // все авторы с книгами, а не только с био/фото (WithAllAuthors)
+	workers  int  // авторов одновременно (WithWorkers), по умолчанию 1
+}
+
+// WithWorkers — сколько авторов проверять одновременно. Темп всё равно держит
+// общий rateGate (RPM воркера биографий): параллельность лишь прячет задержки
+// источников — один автор это несколько последовательных запросов, и в один поток
+// перепроверка 140 тыс. авторов шла бы недели.
+func (r *AuthorRechecker) WithWorkers(n int) *AuthorRechecker {
+	if n > 0 {
+		r.workers = n
+	}
+	return r
+}
+
+// WithAllAuthors — перепроверять всех авторов с книгами (кроме служебных), в том
+// числе тех, у кого био и фото никогда не находились: поиск статьи и политика
+// приёма с тех пор изменились (v3, case study #280 — у 59 % известных авторов не
+// было био, в том числе у Ле Гуин и Гарсиа Маркеса).
+func (r *AuthorRechecker) WithAllAuthors() *AuthorRechecker {
+	r.all = true
+	return r
+}
+
+func NewAuthorRechecker(pool *pgxpool.Pool, enricher *Enricher, rpm int, logger *slog.Logger) *AuthorRechecker {
+	if logger == nil {
+		logger = slog.Default()
+	}
+	r := &AuthorRechecker{pool: pool, enricher: enricher, logger: logger, gate: &rateGate{}, workers: 1}
+	r.gate.setRPM(rpm)
+	return r
+}
+
+// Pass — один проход по всем ещё не перепроверенным авторам. Возвращает итог;
+// Deferred > 0 — есть авторы со сбоем источника, нужен следующий проход.
+func (r *AuthorRechecker) Pass(ctx context.Context, since time.Time) (AuthorRecheckStats, error) {
+	var st AuthorRecheckStats
+	var mu sync.Mutex
+	var lastRenown int64 = 1 << 62
+	var lastID int64
+	for ctx.Err() == nil {
+		batch, err := r.batch(ctx, since, lastRenown, lastID)
+		if err != nil {
+			return st, err
+		}
+		if len(batch) == 0 {
+			break
+		}
+		jobs := make(chan authorCandidate)
+		var wg sync.WaitGroup
+		for w := 0; w < r.workers; w++ {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				for a := range jobs {
+					var one AuthorRecheckStats
+					r.checkOne(ctx, a, &one)
+					mu.Lock()
+					st.add(one)
+					mu.Unlock()
+				}
+			}()
+		}
+		for _, a := range batch {
+			if r.gate.wait(ctx) != nil {
+				break
+			}
+			jobs <- a.cand
+		}
+		close(jobs)
+		wg.Wait()
+		last := batch[len(batch)-1]
+		lastRenown, lastID = last.renown, last.cand.id
+	}
+	return st, ctx.Err()
+}
+
+func (s *AuthorRecheckStats) add(o AuthorRecheckStats) {
+	s.Checked += o.Checked
+	s.Deferred += o.Deferred
+	s.BioKept += o.BioKept
+	s.BioNew += o.BioNew
+	s.BioClear += o.BioClear
+	s.PhotoKept += o.PhotoKept
+	s.PhotoNew += o.PhotoNew
+	s.PhotoClr += o.PhotoClr
+}
+
+type recheckCandidate struct {
+	cand   authorCandidate
+	renown int64
+}
+
+func (r *AuthorRechecker) batch(ctx context.Context, since time.Time, lastRenown, lastID int64) ([]recheckCandidate, error) {
+	rows, err := r.pool.Query(ctx, `
+		SELECT id, last_name, first_name, middle_name,
+		       TRIM(CONCAT_WS(' ', last_name, first_name, middle_name)), renown
+		FROM authors
+		WHERE CASE WHEN $4 THEN NOT is_service AND EXISTS (
+		              SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND NOT b.deleted
+		              WHERE ba.author_id = authors.id)
+		      ELSE COALESCE(bio, '') <> '' OR COALESCE(photo_path, '') <> ''
+		           OR EXISTS (SELECT 1 FROM author_meta_recheck r
+		                      WHERE r.author_id = authors.id AND r.action = 'cleared') END
+		  AND (metadata_fetched_at IS NULL OR metadata_fetched_at < $1)
+		  AND (renown, id) < ($2, $3)
+		ORDER BY renown DESC, id DESC
+		LIMIT 200`, since, lastRenown, lastID, r.all)
+	if err != nil {
+		return nil, fmt.Errorf("recheck candidates: %w", err)
+	}
+	defer rows.Close()
+	var out []recheckCandidate
+	for rows.Next() {
+		var c recheckCandidate
+		if err := rows.Scan(&c.cand.id, &c.cand.lastName, &c.cand.firstName, &c.cand.middleName,
+			&c.cand.fullName, &c.renown); err != nil {
+			return nil, err
+		}
+		out = append(out, c)
+	}
+	return out, rows.Err()
+}
+
+func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *AuthorRecheckStats) {
+	taskCtx, cancel := context.WithTimeout(ctx, authorBackfillTaskTimeout)
+	defer cancel()
+	q := r.enricher.withNamesakeContext(taskCtx, AuthorQuery{
+		ID: a.id, LastName: a.lastName, FirstName: a.firstName, MiddleName: a.middleName, FullName: a.fullName,
+	})
+	var oldBio, oldPhoto string
+	if err := r.pool.QueryRow(taskCtx, `SELECT COALESCE(bio, ''), COALESCE(photo_path, '') FROM authors WHERE id = $1`,
+		a.id).Scan(&oldBio, &oldPhoto); err != nil {
+		r.logger.Warn("author recheck: read author failed", "author_id", a.id, "err", err)
+		st.Deferred++
+		return
+	}
+	// Без источников судить не о чем — поле не трогаем (иначе пустые провайдеры
+	// «очистили» бы всё). Причину решения по каждому полю пишем в журнал.
+	var bioTrace, photoTrace AuthorTrace
+	bio, bioTransient := oldBio, false
+	if len(r.enricher.authorBioProviders) > 0 {
+		bio, bioTransient = r.enricher.fetchAuthorBio(WithAuthorTrace(taskCtx, &bioTrace), q)
+	}
+	photo, photoTransient := oldPhoto, false
+	if len(r.enricher.authorPhotoProviders) > 0 && r.enricher.photoCache != nil {
+		photo, photoTransient = r.enricher.fetchAuthorPhoto(WithAuthorTrace(taskCtx, &photoTrace), q)
+	}
+	if bioTransient || photoTransient {
+		st.Deferred++ // маркер не трогаем — автор повторится в следующем проходе
+		return
+	}
+	switch bio {
+	case oldBio:
+		st.BioKept++
+	case "":
+		st.BioClear++
+	default:
+		st.BioNew++
+	}
+	switch photo {
+	case oldPhoto:
+		st.PhotoKept++
+	case "":
+		st.PhotoClr++
+	default:
+		st.PhotoNew++
+	}
+	if err := r.apply(ctx, a.id, oldBio, bio, bioTrace.Reason(), oldPhoto, photo, photoTrace.Reason()); err != nil {
+		r.logger.Warn("author recheck: write failed", "author_id", a.id, "err", err)
+		st.Deferred++
+		return
+	}
+	st.Checked++
+}
+
+// apply пишет результат и журнал (с причиной решения) одной транзакцией и ставит маркер.
+func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, bioReason, oldPhoto, photo, photoReason string) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	for _, f := range []struct{ field, col, old, new, reason string }{
+		{"bio", "bio", oldBio, bio, bioReason},
+		{"photo", "photo_path", oldPhoto, photo, photoReason},
+	} {
+		if f.old == f.new {
+			continue
+		}
+		action := "replaced"
+		switch {
+		case f.new == "":
+			action = "cleared"
+		case f.old == "":
+			action = "added"
+		}
+		if _, err := tx.Exec(ctx, `UPDATE authors SET `+f.col+` = NULLIF($2, '') WHERE id = $1`, id, f.new); err != nil {
+			return err
+		}
+		if _, err := tx.Exec(ctx, `
+			INSERT INTO author_meta_recheck (author_id, field, action, old_value, new_value, reason)
+			VALUES ($1, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($6, ''))`, id, f.field, action, f.old, f.new, f.reason); err != nil {
+			return err
+		}
+	}
+	if _, err := tx.Exec(ctx, `UPDATE authors SET metadata_fetched_at = now() WHERE id = $1`, id); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
+}
+
+// fetchAuthorBio — био по провайдерам без учёта уже сохранённого и без записи.
+// transient — источник сбоил раньше, чем кто-то нашёл: решение откладывается, и
+// следующий по приоритету источник не спрашиваем — иначе 429 Википедии отдавал
+// решение OpenLibrary, и перепроверка меняла верную био на чужую (#347).
+func (e *Enricher) fetchAuthorBio(ctx context.Context, q AuthorQuery) (string, bool) {
+	for _, p := range e.authorBioProviders {
+		text, err := p.FetchAuthorBio(ctx, q)
+		observeLookup("author_bio", p.Name(), err, text != "")
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			return "", true
+		}
+		if text != "" {
+			return text, false
+		}
+	}
+	return "", false
+}
+
+// fetchAuthorPhoto — фото по провайдерам, сохранённое в кэш (имя файла), без
+// записи в автора. transient — как у fetchAuthorBio (нижний источник при сбое
+// верхнего не спрашиваем); сбой сохранения в кэш — тоже временный.
+func (e *Enricher) fetchAuthorPhoto(ctx context.Context, q AuthorQuery) (string, bool) {
+	for _, p := range e.authorPhotoProviders {
+		img, err := p.FetchAuthorPhoto(ctx, q)
+		observeLookup("author_photo", p.Name(), err, img != nil && img.Reader != nil)
+		if errors.Is(err, ErrNotFound) {
+			continue
+		}
+		if err != nil {
+			return "", true
+		}
+		if img == nil || img.Reader == nil {
+			continue
+		}
+		name, err := e.photoCache.Save(img.Reader, img.Mime)
+		_ = img.Reader.Close()
+		if err != nil {
+			return "", true
+		}
+		return name, false
+	}
+	return "", false
+}

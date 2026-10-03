@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/skriptes/skriptes/backend/internal/books"
+	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // authorAlphaOrder — алфавитный ключ сортировки авторов (фрагмент ORDER BY,
@@ -15,10 +17,11 @@ import (
 // сортируются по первой букве, а не всплывают над всем алфавитом; имя из одних
 // символов уходит в конец (NULLIF → NULLS LAST).
 //
-// ⚠️ C-locale: прод-Postgres — postgres:17-alpine (musl), где lower() и
-// POSIX-классы [[:alpha:]] НЕ работают для кириллицы. Поэтому ключ строится на
-// normalized_name (lower уже сделан В GO при импорте, Unicode-честно) и с
-// ЯВНЫМ классом символов вместо [[:alpha:]]. Класс расширяем при нужде.
+// Ключ строится на normalized_name (lower уже сделан В GO при импорте,
+// Unicode-честно) и с ЯВНЫМ классом символов вместо [[:alpha:]]: так он не
+// зависит от локали базы — с C-локалью lower() и [[:alpha:]] кириллицу не
+// понимают. Прод создан с en_US.utf8, где они работают (аудит 2026-09, #310),
+// но установка с другой локалью возможна. Класс расширяем при нужде.
 const authorAlphaOrder = `NULLIF(regexp_replace(a.normalized_name::text, '^[^0-9a-zа-яёіїєґў]+', ''), '') NULLS LAST, a.normalized_name, a.id`
 
 // authors_list.go — раздел «Авторы» (GET /api/authors): постраничный список
@@ -35,6 +38,7 @@ const authorAlphaOrder = `NULLIF(regexp_replace(a.normalized_name::text, '^[^0-9
 type AuthorListItem struct {
 	ID        int64  `json:"id"`
 	FullName  string `json:"full_name"`
+	Note      string `json:"note,omitempty"` // уточнение тёзки, см. books.DisplayNote
 	PhotoPath string `json:"photo_path,omitempty"`
 	// BookCount — число ЛОГИЧЕСКИХ книг (работ) автора (видимых; скрытый
 	// контент исключён). DISTINCT по work_id, чтобы издания не двоили счёт.
@@ -185,10 +189,11 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	where = append(where, "NOT a.is_service")
 
 	if q := strings.TrimSpace(p.Query); q != "" {
-		// Префиксный ILIKE по normalized_name (как в SuggestAuthors): GIN
-		// trigram index ускоряет на длинных запросах.
-		n := addArg(q)
-		where = append(where, fmt.Sprintf("a.normalized_name::text ILIKE $%d || '%%'", n))
+		// Префиксный ILIKE по normalized_name без различия «ё»/«е» (как в
+		// SuggestAuthors, #278): GIN trigram index по тому же выражению
+		// (authors_name_yo_trgm) ускоряет на длинных запросах.
+		n := addArg(textnorm.FoldYo(escapeLike(q)))
+		where = append(where, fmt.Sprintf(`replace(a.normalized_name::text, 'ё', 'е') ILIKE $%d || '%%' ESCAPE '\'`, n))
 	}
 
 	if p.FavoritesOnly && p.UserID > 0 {
@@ -374,12 +379,12 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	query := fmt.Sprintf(`
 		WITH page AS (
 		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
-		           a.normalized_name, a.renown
+		           a.normalized_name, a.renown, a.name_note
 		    FROM authors a%[1]s
 		    %[2]s
 		    LIMIT $%[3]d OFFSET $%[4]d
 		)
-		SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path, COALESCE(a.name_note, ''),
 		       (SELECT count(DISTINCT COALESCE(b.work_id, -b.id))
 		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false%[6]s)::int AS book_count,
@@ -430,19 +435,21 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		var (
 			it                  AuthorListItem
 			last, first, middle string
+			note                string
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
 			extRating           pgtype.Float8
 			extSource           pgtype.Text
 			readerAvg           pgtype.Float8
 		)
-		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo,
+		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo, &note,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
 			&yrFrom, &yrTo, &it.HasAdaptations, &extRating, &extSource,
 			&readerAvg, &it.ReaderRatingCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
 		it.FullName = fullName(last, first, middle)
+		it.Note = books.DisplayNote(note)
 		if photo.Valid {
 			it.PhotoPath = photo.String
 		}

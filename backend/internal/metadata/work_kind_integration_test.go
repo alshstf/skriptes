@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -41,7 +42,7 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	asprin := seedGroupAuthor(t, ctx, pool, "Асприн", "асприн роберт")
 
@@ -69,6 +70,11 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	serAnth := seedGroupBook(t, ctx, pool, collID, archID, asprin, "S2",
 		"Мастера фэнтези 2005", "мастера фэнтези 2005", "ru", "", "", "")
 	putInSeries(t, ctx, pool, serAnth, "антология фантастики")
+	// Два сигнала: название «сборник» (collection) и серия «…Сборники»
+	// (omnibus) — побеждает серия; раньше тип переписывался на каждом прогоне.
+	both := seedGroupBook(t, ctx, pool, collID, archID, asprin, "S4",
+		"Сборник фантастики", "сборник фантастики", "ru", "", "", "")
+	putInSeries(t, ctx, pool, both, "шекли, роберт. сборники")
 	// Анти-кейс: серия «…(сборник)» (ед.ч.) — librusec-разворот одного сборника
 	// на отдельные РАССКАЗЫ; членов метить нельзя.
 	story := seedGroupBook(t, ctx, pool, collID, archID, asprin, "S3",
@@ -119,6 +125,9 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, serAnth))
 	require.Equal(t, "anthology", k, "серия «Антология…» → anthology")
 
+	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, both))
+	require.Equal(t, "omnibus", k, "серия сильнее названия")
+
 	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, story))
 	require.Empty(t, k, "член серии-разворота «…(сборник)» (ед.ч.) — рассказ, не метится")
 
@@ -129,9 +138,11 @@ func TestClassifyWorkKinds_Integration(t *testing.T) {
 	require.Empty(t, k, "метку fantlab эвристика не перетирает")
 	require.Equal(t, "fantlab", src)
 
-	// Идемпотентность: повторный прогон не падает и не меняет классификацию.
-	_, err = ClassifyWorkKinds(ctx, pool)
+	// Идемпотентность: повторный прогон не падает, не меняет классификацию и
+	// ничего не переписывает — даже у работ с несколькими сигналами (#300).
+	n, err = ClassifyWorkKinds(ctx, pool)
 	require.NoError(t, err)
+	require.Zero(t, n)
 	k, _ = kindOf(t, ctx, pool, workIDOf(t, ctx, pool, coll))
 	require.Equal(t, "collection", k)
 }
@@ -147,7 +158,7 @@ func TestClassifyWorkKinds_ConcurrentNoDeadlock(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	collID, archID := seedTitleFixture(t, ctx, pool)
 	auth := seedGroupAuthor(t, ctx, pool, "Шекли", "шекли роберт")
 	// Достаточно строк, чтобы UPDATE'ы реально трогали работы (иначе лок не под

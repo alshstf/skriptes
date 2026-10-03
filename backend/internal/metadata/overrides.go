@@ -923,12 +923,12 @@ func (c *OverrideController) syncWorkIndex(workID int64) {
 	if c.resyncer == nil {
 		return
 	}
-	go func() {
-		ctx := context.Background()
+	spawn(func() {
+		ctx := workersCtx
 		if err := c.resyncer.UpsertWorksToIndex(ctx, []int64{workID}); err != nil {
 			c.logger.Warn("override: works index resync failed", "work", workID, "err", err)
 		}
-	}()
+	})
 }
 
 // ── Общее: леджер, откат-всё, индикаторы ──────────────────────────────────

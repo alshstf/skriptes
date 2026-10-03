@@ -209,7 +209,7 @@ function HeroSearch() {
                       key={`a-${a.id}`}
                       icon={<UserIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />}
                       title={a.full_name}
-                      subtitle={`${a.book_count} ${pluralBooks(a.book_count)}`}
+                      subtitle={`${a.note ? `${a.note} · ` : ''}${a.book_count} ${pluralBooks(a.book_count)}`}
                       favorite={!!a.is_favorite}
                       favoriteKind="sub"
                       onClick={() => go(`/authors/${a.id}`)}

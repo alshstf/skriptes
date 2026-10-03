@@ -10,6 +10,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/inpx/inpxtest"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,7 +24,7 @@ func TestService_CoverageFixture(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Minute)
 	defer cancel()
 
-	pool := startPostgres(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	mgr := startMeilisearch(t, ctx)
 
 	books := []inpxtest.Book{
@@ -100,11 +101,12 @@ func TestService_CoverageFixture(t *testing.T) {
 		require.Nil(t, b.SerNo, "у книг безномерной серии ser_no пуст")
 	}
 
-	// (4) Плодовитый автор: счётчик = реальное число, список книг урезан до 500.
+	// (4) Плодовитый автор: счётчик = реальное число, и в списке — все работы
+	// (#274: прежний потолок 500 резал книги у 19 авторов прода).
 	var prolificID int64
 	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM authors WHERE last_name = 'Плодовит'`).Scan(&prolificID))
 	pa, err := svc.GetAuthor(ctx, prolificID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, prolific, pa.BookCount, "счётчик книг — полный")
-	require.Len(t, pa.Books, 500, "список книг автора упирается в потолок 500")
+	require.Len(t, pa.Books, prolific, "в списке все работы автора, без потолка 500")
 }

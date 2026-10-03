@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"slices"
 	"sort"
+	"strings"
 	"sync/atomic"
 
 	"github.com/jackc/pgx/v5"
@@ -41,10 +42,24 @@ func DefaultContentConfig() ContentConfig {
 }
 
 // normalize приводит срезы к каноничному виду: убирает пустые строки и
-// дубли, сортирует (стабильный JSON в БД), гарантирует не-nil.
+// дубли, сортирует (стабильный JSON в БД), гарантирует не-nil. Коды языков не в
+// нормализованном виде («ru-RU», «en-GB», «RU») отбрасываются: языки книг
+// нормализованы (грабля №14), такие коды ни с чем не совпадают и только
+// путают список (прод: «en-GB», «ru-RU» в скрытых, #310). Не приводим их к
+// канону — «ru-RU»→«ru» внезапно скрыл бы русский.
 func (c *ContentConfig) normalize() {
 	c.HiddenGenres = cleanCodes(c.HiddenGenres)
-	c.HiddenLanguages = cleanCodes(c.HiddenLanguages)
+	c.HiddenLanguages = cleanCodes(normalizedLangCodes(c.HiddenLanguages))
+}
+
+func normalizedLangCodes(in []string) []string {
+	out := make([]string, 0, len(in))
+	for _, s := range in {
+		if s == strings.ToLower(strings.TrimSpace(s)) && !strings.ContainsAny(s, "-_") {
+			out = append(out, s)
+		}
+	}
+	return out
 }
 
 // Hides сообщает, скрывает ли этот конфиг книгу с данными жанрами/языком.

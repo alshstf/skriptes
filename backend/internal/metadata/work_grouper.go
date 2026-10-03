@@ -13,6 +13,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
 // WorkGrouper — фоновая группировка ИЗДАНИЙ (строк books) в логические КНИГИ
@@ -33,12 +35,12 @@ import (
 // edition_meta_scanned_at IS NOT NULL, чтобы были src-ключи). После обработки
 // книга помечается work_scanned_at, чтобы не гонять повторно (TTL для Tier-2 —
 // в book_work_lookups).
-// WorkIDResyncer пере-синкивает Meili-поле work_id из books.work_id
-// (реализуется *importer.Importer). Группировка дёргает после прохода, в
-// котором work_id у изданий менялся — чтобы distinctAttribute=work_id в поиске
-// схлопывал по актуальной работе.
+// WorkIDResyncer пере-синкивает Meili-поле work_id из books.work_id для
+// изданий заданных работ (реализуется *importer.Importer). Группировка дёргает
+// после прохода, в котором work_id у изданий менялся — чтобы
+// distinctAttribute=work_id в поиске схлопывал по актуальной работе.
 type WorkIDResyncer interface {
-	ResyncWorkIDs(ctx context.Context) (int, error)
+	ResyncWorkIDsFor(ctx context.Context, workIDs []int64) (int, error)
 }
 
 // WorksIndexSyncer — таргетный синк индекса works в Meili (реализуется
@@ -266,7 +268,8 @@ func (g *WorkGrouper) resetPassState() {
 // work_id (distinct/OPDS) + таргетный works-индекс (upsert изменённых, delete GC).
 func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
 	if g.resyncer != nil && g.merged.Load() > 0 && ctx.Err() == nil {
-		if n, err := g.resyncer.ResyncWorkIDs(ctx); err != nil {
+		// Перенесённые издания — в канонических работах, те в touchedWorks.
+		if n, err := g.resyncer.ResyncWorkIDsFor(ctx, keysOf(g.touchedWorks)); err != nil {
 			g.logger.Warn("work grouping: resync work_id to meili failed", "err", err)
 		} else {
 			g.logger.Info("work grouping: work_id resynced to meili", "merged", g.merged.Load(), "synced", n)
@@ -286,6 +289,16 @@ func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
 	}
 }
 
+// firstAuthorCond — «ba — первый автор книги b»: нет автора с меньшей позицией
+// (при равной — с меньшим id). Фильтр идёт ОТ book_authors по индексу
+// author_id; прежний JOIN LATERAL по всем книгам с фильтром поверх него не давал
+// использовать индекс — полный скан books на каждого автора, 2,6–3,4 с вместо
+// ~10 мс, PG на 1,5–2,5 ядрах часами после импорта (#282).
+func firstAuthorCond(ba string) string {
+	return fmt.Sprintf(`NOT EXISTS (SELECT 1 FROM book_authors x WHERE x.book_id = %[1]s.book_id
+		AND (x.position < %[1]s.position OR (x.position = %[1]s.position AND x.author_id < %[1]s.author_id)))`, ba)
+}
+
 func (g *WorkGrouper) candidateCond() string {
 	if g.cfg.WholeCollection {
 		return "b.work_scanned_at IS NULL"
@@ -295,15 +308,13 @@ func (g *WorkGrouper) candidateCond() string {
 
 func (g *WorkGrouper) fetchCandidateAuthors(ctx context.Context, after int64, limit int) ([]int64, error) {
 	q := fmt.Sprintf(`
-		SELECT DISTINCT pa.author_id
+		SELECT DISTINCT ba.author_id
 		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
-		WHERE b.deleted = false AND %s AND pa.author_id > $1
-		ORDER BY pa.author_id
+		JOIN book_authors ba ON ba.book_id = b.id
+		WHERE b.deleted = false AND %s AND ba.author_id > $1 AND %s
+		ORDER BY ba.author_id
 		LIMIT $2
-	`, g.candidateCond())
+	`, g.candidateCond(), firstAuthorCond("ba"))
 	rows, err := g.pool.Query(ctx, q, after, limit)
 	if err != nil {
 		return nil, err
@@ -331,18 +342,16 @@ func (g *WorkGrouper) fetchTier2Authors(ctx context.Context, after int64, limit 
 		ttlDays = 1
 	}
 	rows, err := g.pool.Query(ctx, `
-		SELECT DISTINCT pa.author_id
+		SELECT DISTINCT ba.author_id
 		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
+		JOIN book_authors ba ON ba.book_id = b.id AND `+firstAuthorCond("ba")+`
 		JOIN works w ON w.id = b.work_id
 		WHERE b.deleted = false
 		  AND w.edition_count = 1
 		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.outcome = 'found')
 		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.checked_at > now() - make_interval(days => $3))
-		  AND pa.author_id > $1
-		ORDER BY pa.author_id
+		  AND ba.author_id > $1
+		ORDER BY ba.author_id
 		LIMIT $2
 	`, after, limit, ttlDays)
 	if err != nil {
@@ -426,15 +435,15 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		SELECT b.id, b.work_id, b.title, b.normalized_title::text, COALESCE(b.lang,''),
 		       COALESCE(b.src_title,''), COALESCE(b.src_author_normalized::text,''), COALESCE(b.src_lang,''),
 		       COALESCE(b.fb2_doc_id,''), COALESCE(b.isbn,''),
-		       COALESCE(b.series_id, 0), COALESCE(b.ser_no, 0),
+		       -- Tier-1.5 — только авторские циклы: номер в межавторской/издательской
+		       -- серии (series.kind='multi') не говорит, что это тот же том.
+		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
 		       a.last_name, COALESCE(a.first_name,'')
-		FROM books b
-		JOIN LATERAL (
-			SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = b.id ORDER BY ba.position LIMIT 1
-		) pa ON true
-		JOIN authors a ON a.id = pa.author_id
-		WHERE b.deleted = false AND pa.author_id = $1
+		FROM book_authors ba
+		JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		JOIN authors a ON a.id = ba.author_id
+		WHERE ba.author_id = $1 AND `+firstAuthorCond("ba")+`
 		ORDER BY b.id
 	`, authorID)
 	if err != nil {
@@ -449,6 +458,9 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 			&b.seriesID, &b.serNo,
 			&b.scanned, &b.lastName, &b.firstName); err != nil {
 			return nil, err
+		}
+		if isStubSrcTitle(b.srcTitle) {
+			b.srcTitle = "" // заглушка chitanka — не оригинал (#279)
 		}
 		b.srcTitleNorm = normalizePersonKey(b.srcTitle)
 		out = append(out, b)
@@ -609,6 +621,19 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 			}
 		}
 	}
+	// ISBN, который у автора стоит на книгах с разными названиями, — ISBN
+	// бумажного сборника в fb2 отдельных рассказов: по нему резолвер нашёл бы
+	// работу сборника для каждого из них (#279). Такой ISBN не передаём.
+	isbnTitles := map[string]map[string]struct{}{}
+	for _, b := range books {
+		if b.isbn == "" {
+			continue
+		}
+		if isbnTitles[b.isbn] == nil {
+			isbnTitles[b.isbn] = map[string]struct{}{}
+		}
+		isbnTitles[b.isbn][workTitleKey(b.normTitle)] = struct{}{}
+	}
 	now := time.Now()
 	for i, b := range books {
 		if ctx.Err() != nil {
@@ -626,8 +651,12 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		// «популярный» work на любой том/язык → мега-слияния разных романов в
 		// одну работу (прод-кейс Гарри Поттера: 38 изданий / 18 названий / 8
 		// языков). Для оригиналов SrcTitle пуст — резолверы берут Title.
+		isbn := b.isbn
+		if len(isbnTitles[isbn]) > 1 {
+			isbn = ""
+		}
 		q := WorkQuery{
-			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: b.isbn, Lang: b.lang,
+			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: isbn, Lang: b.lang,
 			Authors: []string{fullName(b.lastName, b.firstName)}, LastName: b.lastName, FirstName: b.firstName,
 		}
 		for _, r := range g.resolvers {
@@ -666,8 +695,8 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 	// «отравленных» lookups, записанных до фикса SrcTitle). Precision > recall.
 	for bk, idxs := range keyBuckets {
 		src, workKey := splitKey(bk)
-		if len(idxs) > 1 && tier2BucketConflicts(books, idxs) {
-			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting src_title/ser_no)",
+		if len(idxs) > 1 && (tier2BucketConflicts(books, idxs) || sameLangTitleConflict(books, idxs)) {
+			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting titles/src_title/ser_no/volume)",
 				"source", src, "work_key", workKey, "editions", len(idxs))
 			continue
 		}
@@ -685,11 +714,13 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 
 // tier2BucketConflicts — правда, если бакет одного внешнего work_key содержит
 // ≥2 разных непустых srcTitleNorm (конфликт оригиналов — зеркало гейта
-// Tier-1.5) ИЛИ ≥2 разных ненулевых ser_no (разные тома серии). Пустые
-// значения конфликтом не считаются. Чистая функция (тестируемо).
+// Tier-1.5), ≥2 разных ненулевых ser_no (разные тома серии) или ≥2 разных
+// номера тома/книги/части в названиях («Свечка. Том 1» + «Том 2», #279).
+// Пустые значения конфликтом не считаются. Чистая функция (тестируемо).
 func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 	srcs := map[string]struct{}{}
 	sers := map[int]struct{}{}
+	vols := map[string]struct{}{}
 	for _, i := range idxs {
 		if s := books[i].srcTitleNorm; s != "" {
 			srcs[s] = struct{}{}
@@ -697,8 +728,44 @@ func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 		if n := books[i].serNo; n > 0 {
 			sers[n] = struct{}{}
 		}
+		if v := volumeNumber(books[i].title); v != "" {
+			vols[v] = struct{}{}
+		}
 	}
-	return len(srcs) > 1 || len(sers) > 1
+	return len(srcs) > 1 || len(sers) > 1 || len(vols) > 1
+}
+
+// sameLangTitleConflict — в бакете есть издания одного языка с разными
+// названиями, и ни у одного из них нет src-свидетельства. Такой бакет Tier-2
+// не склеивает: внешний ключ (ISBN сборника, поиск по названию одного
+// рассказа) собирал в одну «работу» десятки разных текстов автора — «Танька»
+// Бунина с 37 рассказами (#279). Межъязыковые склейки (перевод + оригинал под
+// одним QID) этим не затрагиваются. Зеркало гейта Tier-1 «разные названия без
+// src-свидетельства».
+func sameLangTitleConflict(books []groupBook, idxs []int) bool {
+	type agg struct {
+		titles map[string]struct{}
+		src    bool
+	}
+	byLang := map[string]*agg{}
+	for _, i := range idxs {
+		b := books[i]
+		a := byLang[b.lang]
+		if a == nil {
+			a = &agg{titles: map[string]struct{}{}}
+			byLang[b.lang] = a
+		}
+		a.titles[workTitleKey(b.normTitle)] = struct{}{}
+		if b.srcTitleNorm != "" {
+			a.src = true
+		}
+	}
+	for _, a := range byLang {
+		if len(a.titles) > 1 && !a.src {
+			return true
+		}
+	}
+	return false
 }
 
 // reassignWorkUserData переносит WORK-LEVEL пользовательские данные (оценки,
@@ -918,10 +985,13 @@ func recomputeWorkAggregates(ctx context.Context, ex pgExecer, ids []int64) erro
 			SELECT w2.id AS work_id, sub.series_id, sub.ser_no
 			FROM works w2
 			LEFT JOIN LATERAL (
+				-- Авторский цикл важнее межавторской серии (тот же порядок, что у
+				-- importer.syncWorkSeries — иначе импорт и группировка спорили бы).
 				SELECT b.series_id, b.ser_no
 				FROM books b
+				LEFT JOIN series s ON s.id = b.series_id
 				WHERE b.work_id = w2.id AND b.deleted = false AND b.series_id IS NOT NULL
-				ORDER BY b.ser_no NULLS LAST, b.id
+				ORDER BY (s.kind IS NULL) DESC, b.ser_no NULLS LAST, b.id
 				LIMIT 1
 			) sub ON true
 			WHERE w2.id = ANY($1)
@@ -1309,12 +1379,12 @@ func (c *WorkGroupController) RegroupAll() error {
 	if err != nil {
 		return err
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.mu.Lock()
 	c.regroupCancel = cancel
 	c.mu.Unlock()
 
-	go func() {
+	spawn(func() {
 		defer func() {
 			c.mu.Lock()
 			c.regroupCancel = nil
@@ -1410,7 +1480,7 @@ func (c *WorkGroupController) RegroupAll() error {
 		}
 		c.logger.Info("regroup all: done",
 			"works", total, "editions_split", split, "lookups_purged", purged, "canceled", canceled)
-	}()
+	})
 	return nil
 }
 
@@ -1587,14 +1657,15 @@ func survivors(all, removed []int64) []int64 {
 
 // syncSearchAfterManual — детачнутый синк поиска после РУЧНЫХ split/merge:
 // books-индекс (work_id для distinct/OPDS) + таргетный works-индекс. В фоне,
-// чтобы не держать админ-запрос на полном ResyncWorkIDs.
+// чтобы не держать админ-запрос на синке. touched — все работы, куда попали
+// перенесённые издания (новые работы split'а, выжившая работа merge'а).
 func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
 	if c.resyncer == nil {
 		return
 	}
-	go func() {
-		ctx := context.Background()
-		if _, err := c.resyncer.ResyncWorkIDs(ctx); err != nil {
+	spawn(func() {
+		ctx := workersCtx
+		if _, err := c.resyncer.ResyncWorkIDsFor(ctx, touched); err != nil {
 			c.logger.Warn("manual work edit: resync work_id failed", "err", err)
 		}
 		syncer, ok := c.resyncer.(WorksIndexSyncer)
@@ -1611,7 +1682,7 @@ func (c *WorkGroupController) syncSearchAfterManual(touched, deleted []int64) {
 				c.logger.Warn("manual work edit: upsert works to index failed", "err", err)
 			}
 		}
-	}()
+	})
 }
 
 func scanInt64s(ctx context.Context, ex interface {
@@ -1680,6 +1751,7 @@ func (g *WorkGrouper) isDue(l workLookupRow, now time.Time) bool {
 }
 
 func (g *WorkGrouper) upsertWorkLookup(ctx context.Context, bookID int64, source, outcome, workKey string) {
+	metrics.EnrichmentLookups.WithLabelValues("work_grouping", source, outcome).Inc()
 	var kptr *string
 	if workKey != "" {
 		kptr = &workKey
@@ -1859,10 +1931,10 @@ func (c *WorkGroupController) Start() {
 		c.logger.Info("work grouping: start deferred — regroup in progress")
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	g := NewWorkGrouper(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
-	go g.Run(ctx)
+	spawn(func() { g.Run(ctx) })
 	c.logger.Info("work grouping: continuous job started")
 }
 
@@ -1912,11 +1984,11 @@ func (c *WorkGroupController) RunOnce() {
 		c.logger.Info("work grouping: one-shot pass deferred — regroup in progress")
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	cfg := c.cfg
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		g := NewWorkGrouper(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
 		n := g.drainAll(ctx)
 		cancel()
@@ -1924,7 +1996,7 @@ func (c *WorkGroupController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("work grouping: one-shot pass done", "authors", n, "editions_merged", g.merged.Load())
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

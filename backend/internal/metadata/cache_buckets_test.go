@@ -4,11 +4,13 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -48,6 +50,25 @@ func TestEnricher_SeparateBuckets(t *testing.T) {
 	require.True(t, ok, "фото НЕ тронуто очисткой обложек")
 }
 
+// TestEnricher_ResolveCachedFile_NoSiblingTraversal — имя с «../» не выводит из
+// бакета даже в соседний каталог с тем же началом имени (covers → covers-evil):
+// раньше проверка HasPrefix была без разделителя и такой путь пропускала.
+func TestEnricher_ResolveCachedFile_NoSiblingTraversal(t *testing.T) {
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+	dir := t.TempDir()
+	e, err := New(nil, filepath.Join(dir, "covers"), nil, nil, nil, nil, nil, quiet)
+	require.NoError(t, err)
+
+	evil := filepath.Join(dir, "covers-evil")
+	require.NoError(t, os.MkdirAll(evil, 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(evil, "secret.txt"), []byte("x"), 0o600))
+
+	_, ok := e.ResolveCachedFile("../covers-evil/secret.txt")
+	require.False(t, ok, "соседний каталог с похожим именем не должен отдаваться")
+	_, ok = e.ResolveCachedFile(".")
+	require.False(t, ok, "сам корень бакета — не файл обложки")
+}
+
 // TestEnricher_HealDanglingAssets — висячие указатели (файла нет) зануляются +
 // сбрасывается маркер попытки, чтобы дозаполнение их перекачало.
 func TestEnricher_HealDanglingAssets(t *testing.T) {
@@ -57,7 +78,7 @@ func TestEnricher_HealDanglingAssets(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 
-	pool := startPGForPrewarm(t, ctx)
+	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
 	e, err := New(pool, filepath.Join(t.TempDir(), "covers"), nil, nil, nil, nil, nil, quiet)
 	require.NoError(t, err)

@@ -61,6 +61,11 @@ var DefaultSchema = Schema{
 // Author — автор книги; части ФИО приходят в AUTHOR через ','.
 type Author struct {
 	LastName, FirstName, MiddleName string
+	// Note — уточнение из квадратных скобок в фамилии, как есть: librusec с
+	// выпуска 2026-09 так различает тёзок («Антоний [Блум]», «Гибсон
+	// [фантаст]», «Афанасьев [#17465]»). LastName при этом — без скобок.
+	// Смысл содержимого (номер, профессия, настоящее имя) не толкуем.
+	Note string
 }
 
 // Record — одна нормализованная запись из .inp.
@@ -132,9 +137,7 @@ func ParseRecord(line []byte, schema Schema) (Record, error) {
 		default:
 			name = fmt.Sprintf("_extra%d", i-len(schema))
 		}
-		if err := assignField(&rec, name, string(f)); err != nil {
-			return Record{}, fmt.Errorf("field %s: %w", name, err)
-		}
+		assignField(&rec, name, string(f))
 	}
 	return rec, nil
 }
@@ -171,7 +174,7 @@ func ParseInp(r io.Reader, schema Schema, fn func(Record) error) error {
 
 // ── вспомогательные ────────────────────────────────────────────
 
-func assignField(rec *Record, name, raw string) error {
+func assignField(rec *Record, name, raw string) {
 	switch name {
 	case FieldAuthor:
 		rec.Authors = parseAuthors(raw)
@@ -180,19 +183,19 @@ func assignField(rec *Record, name, raw string) error {
 	case FieldTitle:
 		rec.Title = raw
 	case FieldSeries:
-		rec.Series = raw
+		// Без пробелов по краям: в librusec 2026-09 встречается серия из одних
+		// пробелов (импорт падал на «empty normalized series title») и с
+		// хвостовым пробелом (переписывал бы название существующей серии).
+		rec.Series = strings.TrimSpace(raw)
 	case FieldSerNo:
-		n, err := parseIntOrZero(raw)
-		if err != nil {
-			return err
-		}
-		rec.SerNo = n
+		rec.SerNo = lenientInt(rec, name, raw)
 	case FieldFile:
 		rec.File = raw
 	case FieldSize:
 		n, err := parseInt64OrZero(raw)
 		if err != nil {
-			return err
+			keepRaw(rec, name, raw)
+			n = 0
 		}
 		rec.Size = n
 	case FieldLibID:
@@ -207,11 +210,7 @@ func assignField(rec *Record, name, raw string) error {
 	case FieldLang:
 		rec.Lang = raw
 	case FieldLibRate:
-		n, err := parseIntOrZero(raw)
-		if err != nil {
-			return err
-		}
-		rec.Rating = n
+		rec.Rating = lenientInt(rec, name, raw)
 	case FieldKeywords:
 		rec.Keywords = raw
 	default:
@@ -220,7 +219,6 @@ func assignField(rec *Record, name, raw string) error {
 		}
 		rec.Extra[name] = raw
 	}
-	return nil
 }
 
 // parseAuthors режет AUTHOR-поле по ':' (трейлинговый ':' игнорируется).
@@ -235,7 +233,7 @@ func parseAuthors(s string) []Author {
 		a := Author{}
 		segs := strings.SplitN(p, string(personSep), 3)
 		if len(segs) > 0 {
-			a.LastName = strings.TrimSpace(segs[0])
+			a.LastName, a.Note = splitNameNote(segs[0])
 		}
 		if len(segs) > 1 {
 			a.FirstName = strings.TrimSpace(segs[1])
@@ -250,6 +248,24 @@ func parseAuthors(s string) []Author {
 		out = append(out, a)
 	}
 	return out
+}
+
+// splitNameNote отделяет уточнение в квадратных скобках от фамилии:
+// «Гибсон [фантаст]» → («Гибсон», «фантаст»). Берётся первая пара скобок;
+// без скобок — фамилия как есть и пустое уточнение.
+func splitNameNote(s string) (name, note string) {
+	s = strings.TrimSpace(s)
+	open := strings.IndexByte(s, '[')
+	if open < 0 {
+		return s, ""
+	}
+	closeRel := strings.IndexByte(s[open:], ']')
+	if closeRel < 0 {
+		return s, ""
+	}
+	note = strings.TrimSpace(s[open+1 : open+closeRel])
+	name = strings.Join(strings.Fields(s[:open]+" "+s[open+closeRel+1:]), " ")
+	return name, note
 }
 
 // splitMulti режет multi-value поле по ':' и отбрасывает пустые элементы
@@ -267,6 +283,27 @@ func splitMulti(s string) []string {
 		}
 	}
 	return out
+}
+
+// lenientInt — числовое поле записи: нечисловое значение считается пустым (0),
+// а исходный текст остаётся в Extra. Одна кривая запись не должна обрывать
+// разбор всего .inp: в librusec 2026-09 у 130 книг SERNO вида «1995 01»
+// (похоже на год и номер выпуска периодики — смысл не толкуем, грабля №8).
+func lenientInt(rec *Record, name, raw string) int {
+	n, err := parseIntOrZero(raw)
+	if err != nil {
+		keepRaw(rec, name, raw)
+		return 0
+	}
+	return n
+}
+
+// keepRaw сохраняет нераспознанное значение поля в Extra.
+func keepRaw(rec *Record, name, raw string) {
+	if rec.Extra == nil {
+		rec.Extra = map[string]string{}
+	}
+	rec.Extra[name] = raw
 }
 
 func parseIntOrZero(s string) (int, error) {

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,7 +20,7 @@ func TestRecomputeAuthorRenown(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	pool, _ := startPostgres(t, ctx)
+	pool, _ := testpg.Start(t, ctx)
 	imp := importer.New(importer.Deps{Pool: pool})
 
 	var collID, archID int64
@@ -95,6 +96,27 @@ func TestRecomputeAuthorRenown(t *testing.T) {
 	n, err = imp.RecomputeAuthorRenown(ctx)
 	require.NoError(t, err)
 	require.Zero(t, n)
+
+	// Инкрементальный пересчёт (#300): только авторы переданных работ — по всему
+	// их корпусу; остальные не трогаются.
+	exec := func(sql string, args ...any) {
+		t.Helper()
+		_, err := pool.Exec(ctx, sql, args...)
+		require.NoError(t, err)
+	}
+	exec(`UPDATE authors SET renown = 999 WHERE id = $1`, coauthor)
+	exec(`UPDATE books SET rating = 2 WHERE lib_id = 'w2'`) // W2 перестала быть значимой
+	n, err = imp.RecomputeAuthorRenownFor(ctx, []int64{w2})
+	require.NoError(t, err)
+	require.EqualValues(t, 1, n)
+	require.EqualValues(t, 280, renown(classic), "максимум — по всему корпусу (W1), значимых теперь 1")
+	require.EqualValues(t, 999, renown(coauthor), "не автор W2 — не тронут")
+	exec(`UPDATE books SET rating = 4 WHERE lib_id = 'w2'`)
+	n, err = imp.RecomputeAuthorRenownFor(ctx, []int64{w1})
+	require.NoError(t, err)
+	require.EqualValues(t, 2, n)
+	require.EqualValues(t, 350, renown(classic))
+	require.EqualValues(t, 280, renown(coauthor))
 
 	// Внутриинстансная вовлечённость (views/reads/оценки владельца) известность
 	// НЕ надувает: renown считается по computeWorkPopularityExternal.

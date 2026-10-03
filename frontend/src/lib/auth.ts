@@ -98,12 +98,18 @@ export function useUpdateMe() {
 }
 
 /**
+ * MIN_PASSWORD_LEN — минимальная длина нового пароля. Держать равной
+ * backend auth.MinPasswordLen (иначе форма пропустит то, что бэк отклонит 400).
+ */
+export const MIN_PASSWORD_LEN = 12;
+
+/**
  * useChangeMyPassword — меняет свой пароль с верификацией текущего.
  * Backend сохраняет текущую сессию (cookie совпадает с keepSessionToken)
  * и революует остальные. Кэш useMe трогать не нужно — user-объект
  * не меняется. Ошибки:
  *   - 403 → текущий пароль неверный (показать сообщение в форме)
- *   - 400 → новый пароль короче 8 символов
+ *   - 400 → новый пароль короче MIN_PASSWORD_LEN символов
  */
 export function useChangeMyPassword() {
   return useMutation({

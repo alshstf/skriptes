@@ -232,10 +232,10 @@ func (c *AdaptationBackfillController) Start() {
 	if c.contCancel != nil || !c.ready() {
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
 	b := NewAdaptationBackfiller(c.pool, c.enricher, c.rpm, c.logger)
-	go b.Run(ctx)
+	spawn(func() { b.Run(ctx) })
 	c.logger.Info("adaptation backfill: continuous job started")
 }
 
@@ -278,11 +278,11 @@ func (c *AdaptationBackfillController) RunOnce() {
 		c.mu.Unlock()
 		return
 	}
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(workersCtx)
 	c.onceCancel = cancel
 	rpm := c.rpm
 	c.mu.Unlock()
-	go func() {
+	spawn(func() {
 		b := NewAdaptationBackfiller(c.pool, c.enricher, rpm, c.logger)
 		n := b.drain(ctx)
 		b.recheckPosters(ctx)
@@ -291,7 +291,7 @@ func (c *AdaptationBackfillController) RunOnce() {
 		c.onceCancel = nil
 		c.mu.Unlock()
 		c.logger.Info("adaptation backfill: one-shot pass done", "processed", n)
-	}()
+	})
 }
 
 // StopOnce — отменить идущий разовый проход.

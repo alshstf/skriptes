@@ -10,7 +10,7 @@ cd skriptes
 cp infra/.env.example infra/.env
 $EDITOR infra/.env       # минимум — BOOKS_HOST_PATH / INPX_HOST_PATH
 make up                  # build + up (использует infra/docker-compose.yml)
-make seed-admin EMAIL=me@example.com PASSWORD=secret123 DISPLAY_NAME="Me"
+make seed-admin EMAIL=me@example.com PASSWORD=change-me-long-pass DISPLAY_NAME="Me"
 open https://skriptes.localhost
 ```
 
@@ -23,6 +23,7 @@ backend/                 # Go API + INPX-импортер + enrichment'ы
   cmd/
     skriptes/            # main HTTP-сервер
     skriptes-seed/       # CLI для создания admin-пользователей
+    skriptes-explain/    # сухой прогон обогащения авторов: решение и трасса по id
   internal/
     adaptations/         # сервис экранизаций (read из book_adaptations)
     api/                 # chi-роутер, handler'ы, middleware
@@ -95,7 +96,7 @@ make test              # backend-test + frontend-test
 make lint              # backend-lint + frontend-lint
 
 # admin
-make seed-admin EMAIL=me@example.com PASSWORD=secret123 [DISPLAY_NAME="Me"]
+make seed-admin EMAIL=me@example.com PASSWORD=change-me-long-pass [DISPLAY_NAME="Me"]
 ```
 
 ## Тестовая фикстура

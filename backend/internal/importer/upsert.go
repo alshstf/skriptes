@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -28,19 +29,19 @@ func hashFile(path string) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-// upsertCollection возвращает id коллекции и предыдущий хэш INPX (если был).
-// inpxFilename — basename файла, name — имя из collection.info.
-func upsertCollection(ctx context.Context, pool *pgxpool.Pool, inpxFilename, name string) (id int64, prevHash string, err error) {
-	row := pool.QueryRow(ctx, `
+// upsertCollection возвращает id коллекции INPX-файла (создаёт при первом
+// импорте). inpxFilename — basename файла, name — имя из collection.info.
+func upsertCollection(ctx context.Context, pool *pgxpool.Pool, inpxFilename, name string) (int64, error) {
+	var id int64
+	if err := pool.QueryRow(ctx, `
 		INSERT INTO collections (name, inpx_filename)
 		VALUES ($1, $2)
 		ON CONFLICT (inpx_filename) DO UPDATE SET name = EXCLUDED.name
-		RETURNING id, COALESCE(last_inpx_hash, '')
-	`, name, inpxFilename)
-	if err := row.Scan(&id, &prevHash); err != nil {
-		return 0, "", fmt.Errorf("upsert collection: %w", err)
+		RETURNING id
+	`, name, inpxFilename).Scan(&id); err != nil {
+		return 0, fmt.Errorf("upsert collection: %w", err)
 	}
-	return id, prevHash, nil
+	return id, nil
 }
 
 // markCollectionImported проставляет хэш, время и версию INPX (version.info)
@@ -53,13 +54,15 @@ func markCollectionImported(ctx context.Context, pool *pgxpool.Pool, collectionI
 	return err
 }
 
-// upsertArchive возвращает id записи archives для (collection_id, filename).
+// upsertArchive возвращает id записи archives по имени файла: архив один на все
+// коллекции (все лежат в BOOKS_ROOT). collection_id — коллекция, которая
+// описала архив последней.
 func upsertArchive(ctx context.Context, q querier, collectionID int64, filename string) (int64, error) {
 	var id int64
 	err := q.QueryRow(ctx, `
 		INSERT INTO archives (collection_id, filename)
 		VALUES ($1, $2)
-		ON CONFLICT (collection_id, filename) DO UPDATE SET filename = EXCLUDED.filename
+		ON CONFLICT (filename) DO UPDATE SET collection_id = EXCLUDED.collection_id
 		RETURNING id
 	`, collectionID, filename).Scan(&id)
 	if err != nil {
@@ -74,25 +77,72 @@ func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) 
 	if norm == "" {
 		return 0, fmt.Errorf("empty normalized author name")
 	}
+	note := strings.TrimSpace(a.Note)
+	if note == "" {
+		// Запись без уточнения, а тёзки с этим именем уже разделены (файл более
+		// старого выпуска): ложимся на наследника прежней записи, а если
+		// разделения не было, но автор с этим именем один — на него. Иначе
+		// появился бы лишний «автор без уточнения».
+		id, ok, err := existingPlainAuthor(ctx, q, norm)
+		if err != nil {
+			return 0, err
+		}
+		if ok {
+			return id, nil
+		}
+	}
+	var noteArg any
+	if note != "" {
+		noteArg = note
+	}
 	var id int64
 	err := q.QueryRow(ctx, `
-		INSERT INTO authors (last_name, first_name, middle_name, normalized_name)
-		VALUES ($1, $2, $3, $4)
-		ON CONFLICT (normalized_name) DO UPDATE SET
+		INSERT INTO authors (last_name, first_name, middle_name, normalized_name, name_note)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (normalized_name, (lower(COALESCE(name_note, '')))) DO UPDATE SET
 			last_name   = COALESCE(NULLIF(EXCLUDED.last_name,   ''), authors.last_name),
 			first_name  = COALESCE(NULLIF(EXCLUDED.first_name,  ''), authors.first_name),
 			middle_name = COALESCE(NULLIF(EXCLUDED.middle_name, ''), authors.middle_name)
 		RETURNING id
-	`, a.LastName, a.FirstName, a.MiddleName, norm).Scan(&id)
+	`, a.LastName, a.FirstName, a.MiddleName, norm, noteArg).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("upsert author %q: %w", norm, err)
 	}
 	return id, nil
 }
 
+// existingPlainAuthor — куда положить автора без уточнения: запись без
+// уточнения → наследник разделённой записи (author_splits) → единственный
+// автор с этим именем. ok=false — нужна новая запись.
+func existingPlainAuthor(ctx context.Context, q querier, norm string) (int64, bool, error) {
+	var id int64
+	err := q.QueryRow(ctx, `
+		SELECT id FROM (
+			SELECT id, 0 AS prio FROM authors WHERE normalized_name = $1 AND name_note IS NULL
+			UNION ALL
+			SELECT s.old_author_id, 1 FROM author_splits s
+			WHERE s.base_name = $1 AND s.is_heir AND s.old_author_id IS NOT NULL
+			  -- вариант без уточнения, не ставший наследником, — отдельный тёзка
+			  AND NOT EXISTS (SELECT 1 FROM author_splits p
+			                  WHERE p.base_name = $1 AND p.note = '' AND NOT p.is_heir)
+			UNION ALL
+			SELECT min(id), 2 FROM authors WHERE normalized_name = $1 HAVING count(*) = 1
+		) c
+		ORDER BY prio
+		LIMIT 1
+	`, norm).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return 0, false, nil
+	}
+	if err != nil {
+		return 0, false, fmt.Errorf("find author %q: %w", norm, err)
+	}
+	return id, true, nil
+}
+
 // upsertSeries возвращает id серии для (normalized_title, author_id).
 // Если author_id = 0 — серия без привязки к автору.
-func upsertSeries(ctx context.Context, q querier, title string, authorID int64) (int64, error) {
+func upsertSeries(ctx context.Context, q querier, title string, authorID int64, multi bool) (int64, error) {
 	norm := normalize(title)
 	if norm == "" {
 		return 0, fmt.Errorf("empty normalized series title")
@@ -112,14 +162,23 @@ func upsertSeries(ctx context.Context, q querier, title string, authorID int64) 
 			`SELECT id FROM series WHERE normalized_title = $1 AND author_id IS NULL`,
 			norm).Scan(&id)
 		if err == nil {
+			if multi {
+				if _, err := q.Exec(ctx, `UPDATE series SET kind = 'multi' WHERE id = $1 AND kind IS NULL`, id); err != nil {
+					return 0, fmt.Errorf("mark series %q multi: %w", norm, err)
+				}
+			}
 			return id, nil
 		}
 		if err != pgx.ErrNoRows {
 			return 0, fmt.Errorf("lookup series %q: %w", norm, err)
 		}
+		var kind any
+		if multi {
+			kind = "multi"
+		}
 		err = q.QueryRow(ctx,
-			`INSERT INTO series (title, normalized_title, author_id) VALUES ($1, $2, NULL) RETURNING id`,
-			title, norm).Scan(&id)
+			`INSERT INTO series (title, normalized_title, author_id, kind) VALUES ($1, $2, NULL, $3) RETURNING id`,
+			title, norm, kind).Scan(&id)
 		if err != nil {
 			return 0, fmt.Errorf("insert series %q: %w", norm, err)
 		}
@@ -173,7 +232,8 @@ type upsertBookResult struct {
 }
 
 // upsertBook делает INSERT ON CONFLICT DO UPDATE; идемпотентно по
-// (collection_id, archive_id, lib_id).
+// (archive_id, lib_id) — одна строка на файл книги, из какого бы INPX она ни
+// пришла (миграция 0039). collection_id — INPX, который описал книгу последним.
 func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, error) {
 	var id int64
 	var inserted bool
@@ -185,7 +245,8 @@ func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, e
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
 		)
-		ON CONFLICT (collection_id, archive_id, lib_id) DO UPDATE SET
+		ON CONFLICT (archive_id, lib_id) DO UPDATE SET
+			collection_id    = EXCLUDED.collection_id,
 			file_name        = EXCLUDED.file_name,
 			ext              = EXCLUDED.ext,
 			size_bytes       = EXCLUDED.size_bytes,
