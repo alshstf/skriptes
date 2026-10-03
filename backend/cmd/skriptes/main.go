@@ -157,6 +157,7 @@ func run() error {
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
+		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
 		// импорта: и разбор, и импорт массово пишут в works/books.
 		runOnceRegroupTitleConflicts(c, pool, <-workGroupReady, logger)
@@ -1344,6 +1345,41 @@ func runOnceSplitAlienEditions(ctx context.Context, pool *pgxpool.Pool, imp *imp
 		logger.Warn("split alien editions: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time alien editions split done", "works", len(touched))
+}
+
+// runOnceAdaptationsScreenOnly — разовая чистка экранизаций до правил #295
+// (metadata.CleanupNonScreenAdaptations): без опер, игр и песен и без записей
+// с голым QID; у затронутых работ пересчитываются известность (экранизация —
+// её сигнал) и документ works-индекса. Гейт adaptations_screen_only_v1.
+func runOnceAdaptationsScreenOnly(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "adaptations_screen_only_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("adaptations cleanup: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, refetch, err := metadata.CleanupNonScreenAdaptations(ctx, pool)
+	if err != nil {
+		logger.Warn("adaptations cleanup failed — will retry next start", "err", err)
+		return
+	}
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after adaptations cleanup failed", "err", err)
+		}
+		if _, err := imp.RecomputeAuthorRenownFor(ctx, works); err != nil {
+			logger.Warn("author renown after adaptations cleanup failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("adaptations cleanup: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time adaptations cleanup done", "works", len(works), "books_to_refetch", refetch)
 }
 
 // syncSplitWorks — поиск после выноса изданий: works-индекс (старые и новые
