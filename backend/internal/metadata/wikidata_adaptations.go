@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -261,7 +262,7 @@ SELECT ?film ?filmLabel ?year ?directorLabel ?imdbId ?kinopoiskId ?image ?kindLa
   OPTIONAL { ?film wdt:P4983 ?tmdbTv . }
   OPTIONAL { ?film wdt:P31 ?kind . }
   OPTIONAL { ?film wikibase:sitelinks ?sitelinks . }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en".
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en,mul,uk,de,fr,es,it,ja".
     ?film rdfs:label ?filmLabel .
     ?director rdfs:label ?directorLabel .
     ?kind rdfs:label ?kindLabel .
@@ -388,7 +389,7 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 	type agg struct {
 		title       string
 		year        string
-		kind        string
+		kinds       []string // все метки P31: у фильма их бывает несколько
 		imdbID      string
 		kinopoiskID string
 		image       string
@@ -413,8 +414,8 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 		if a.year == "" {
 			a.year = r.Year
 		}
-		if a.kind == "" {
-			a.kind = r.Kind
+		if r.Kind != "" && !slices.Contains(a.kinds, r.Kind) {
+			a.kinds = append(a.kinds, r.Kind)
 		}
 		if a.imdbID == "" {
 			a.imdbID = r.IMDBID
@@ -451,7 +452,7 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 			ExtID:       qid,
 			Title:       strings.TrimSpace(a.title),
 			Director:    strings.Join(a.directors, ", "),
-			Kind:        mapWikidataKind(a.kind),
+			Kind:        screenKind(a.kinds),
 			PosterURL:   p.posterURL(a.image),
 			ExtURL:      pickExtURL(a.kinopoiskID, a.imdbID, qid),
 			TMDBMovieID: a.tmdbMovieID,
@@ -468,8 +469,14 @@ func (p *WikidataAdaptationsProvider) aggregateAdaptations(rows []sparqlAdaptati
 				ad.Popularity = n
 			}
 		}
-		if ad.Title == "" {
-			// без названия запись бесполезна — фронт нечего показать.
+		if ad.Title == "" || isQID(ad.Title) {
+			// Без названия запись бесполезна — фронт нечего показать (у сервиса
+			// подписей нет метки ни на одном языке — он отдаёт голый QID).
+			continue
+		}
+		if ad.Kind == kindOther {
+			// Не экранизация: «основано на» (P144) у опер, игр, песен, настольных
+			// игр и трактатов — на проде 37 % записей (#295).
 			continue
 		}
 		out = append(out, ad)
@@ -563,25 +570,54 @@ func extractQID(uri string) string {
 	return uri[i+len(prefix):]
 }
 
-// mapWikidataKind — нормализация P31 label'а в фиксированное множество.
-// Сравниваем по en-low-case подстроке (label приходит в ru/en, тут мы
-// проверяем оба варианта). Неизвестные значения → "other".
+// kindOther — не экранизация: такие записи не сохраняются (#295).
+const kindOther = "other"
+
+// screenKind — вид экранизации по всем меткам P31 сущности: экранный вид, если
+// он есть хоть у одной метки (у фильма их бывает несколько, и первая может быть
+// «произведение искусства»), с приоритетом мини-сериал > аниме > сериал > фильм.
+// Нет меток вовсе — фильм (как раньше); метки есть, экранных нет — kindOther.
+func screenKind(labels []string) string {
+	if len(labels) == 0 {
+		return "film"
+	}
+	best := kindOther
+	rank := map[string]int{kindOther: 0, "film": 1, "tv_series": 2, "anime": 3, "miniseries": 4}
+	for _, l := range labels {
+		if k := mapWikidataKind(l); rank[k] > rank[best] {
+			best = k
+		}
+	}
+	return best
+}
+
+// mapWikidataKind — вид экранизации по одной метке P31 (ru/en, подстрокой).
+// Белый список: всё, чего в нём нет (видеоигра, опера, песня, роман), — kindOther.
 func mapWikidataKind(label string) string {
 	if label == "" {
 		return "film"
 	}
 	low := strings.ToLower(label)
+	has := func(subs ...string) bool {
+		for _, s := range subs {
+			if strings.Contains(low, s) {
+				return true
+			}
+		}
+		return false
+	}
 	switch {
-	case strings.Contains(low, "miniseries") || strings.Contains(low, "мини-сериал"):
+	case has("miniseries", "мини-сериал"):
 		return "miniseries"
-	case strings.Contains(low, "television series") || strings.Contains(low, "телесериал") || strings.Contains(low, "телевизионный сериал"):
-		return "tv_series"
-	case strings.Contains(low, "anime") || strings.Contains(low, "аниме"):
+	case has("anime", "аниме"):
 		return "anime"
-	case strings.Contains(low, "film") || strings.Contains(low, "фильм") || strings.Contains(low, "кино"):
+	case has("television series", "телесериал", "телевизионный сериал", "web series", "веб-сериал",
+		"animated series", "мультсериал", "анимационный сериал"):
+		return "tv_series"
+	case has("film", "фильм", "кино", "television play", "teleplay", "телеспектакль"):
 		return "film"
 	default:
-		return "other"
+		return kindOther
 	}
 }
 

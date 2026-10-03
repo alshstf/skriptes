@@ -294,6 +294,19 @@ func TestMapWikidataKind(t *testing.T) {
 		"anime":       "anime",
 		"аниме":       "anime",
 		"video game":  "other",
+		// #295: сериалы и телеспектакли под другими метками — экранизации,
+		// оперы, песни, настольные игры — нет.
+		"animated series":         "tv_series",
+		"мультсериал":             "tv_series",
+		"web series":              "tv_series",
+		"television film":         "film",
+		"телеспектакль":           "film",
+		"мультфильм":              "film",
+		"opera":                   "other",
+		"song":                    "other",
+		"board game":              "other",
+		"literary work":           "other",
+		"anime television series": "anime",
 	}
 	for input, want := range cases {
 		got := mapWikidataKind(input)
@@ -338,4 +351,38 @@ func TestWikidataAdaptations_ThrottledValidationIsUpstream(t *testing.T) {
 	})
 	require.ErrorIs(t, err, ErrUpstream)
 	require.NotErrorIs(t, err, ErrNotFound)
+}
+
+func TestScreenKind(t *testing.T) {
+	require.Equal(t, "film", screenKind(nil), "без меток — как раньше, фильм")
+	require.Equal(t, "tv_series", screenKind([]string{"work of art", "television series"}), "экранная метка не первой")
+	require.Equal(t, "anime", screenKind([]string{"television series", "anime television series"}))
+	require.Equal(t, "miniseries", screenKind([]string{"television series", "miniseries"}))
+	require.Equal(t, kindOther, screenKind([]string{"video game", "opera"}))
+}
+
+func TestWikidataAdaptations_DropsNonScreenAndUntitled(t *testing.T) {
+	srv := wdMockServer(t, wdMockArgs{
+		searchHits:   []string{"Q100"},
+		authorLabels: map[string][]string{"Q100": {"Толкин Джон"}},
+		adaptations: map[string][]map[string]string{
+			"Q100": {
+				{"film": "http://www.wikidata.org/entity/Q1", "filmLabel": "Хоббит", "kindLabel": "film"},
+				{"film": "http://www.wikidata.org/entity/Q2", "filmLabel": "Средиземье: Тень Мордора", "kindLabel": "video game"},
+				{"film": "http://www.wikidata.org/entity/Q3", "filmLabel": "Q3", "kindLabel": "film"},
+				{"film": "http://www.wikidata.org/entity/Q4", "filmLabel": "Кольца власти", "kindLabel": "work of art"},
+				{"film": "http://www.wikidata.org/entity/Q4", "filmLabel": "Кольца власти", "kindLabel": "television series"},
+			},
+		},
+	})
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+	got, err := p.FetchAdaptations(context.Background(), BookQuery{Title: "Хоббит", Authors: []string{"Толкин Джон"}})
+	require.NoError(t, err)
+	titles := map[string]string{}
+	for _, a := range got {
+		titles[a.Title] = a.Kind
+	}
+	require.Equal(t, map[string]string{"Хоббит": "film", "Кольца власти": "tv_series"}, titles,
+		"игра и запись без названия не сохраняются; сериал с меткой «произведение» не первой — сериал")
 }
