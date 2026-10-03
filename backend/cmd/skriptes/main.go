@@ -209,6 +209,8 @@ func run() error {
 	popTracker := importer.NewPopularityTracker(imp, logger)
 	historySvc.SetEngagementHook(popTracker.MarkBook)
 	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
+	// Хранимые число работ и рейтинг авторов — ключи сортировок /authors (#302).
+	metadata.Go(func(c context.Context) { runAuthorStatsLoop(c, pool, logger) })
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 
@@ -788,6 +790,45 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		logger.Warn("author renown recompute after import failed", "err", err)
 	} else if n > 0 {
 		logger.Info("author renown recomputed after import", "authors_updated", n)
+	}
+	// Число работ и рейтинг авторов (сортировки /authors, #302) — сразу, не
+	// дожидаясь планового пересчёта.
+	if n, err := catalog.RecomputeAuthorStats(ctx, pool); err != nil {
+		logger.Warn("author stats recompute after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("author stats recomputed after import", "authors_updated", n)
+	}
+}
+
+// authorStatsInterval — как часто пересчитывать authors.book_count/max_rating.
+// Их меняют импорт (пересчёт сразу после него), группировка изданий, внешний
+// рейтинг, классификация сборников и ручные правки; полный пересчёт ~1 с.
+const authorStatsInterval = 30 * time.Minute
+
+// runAuthorStatsLoop — пересчёт хранимых агрегатов авторов (#302) на старте и
+// раз в authorStatsInterval: сортировки «по числу книг» и «по рейтингу» идут по
+// ним, отставание — не больше интервала.
+func runAuthorStatsLoop(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	recompute := func() {
+		start := time.Now()
+		n, err := catalog.RecomputeAuthorStats(ctx, pool)
+		switch {
+		case err != nil && ctx.Err() == nil:
+			logger.Warn("author stats recompute failed", "err", err)
+		case err == nil && n > 0:
+			logger.Info("author stats recomputed", "authors_updated", n, "took", time.Since(start).Round(time.Millisecond))
+		}
+	}
+	recompute()
+	t := time.NewTicker(authorStatsInterval)
+	defer t.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			recompute()
+		}
 	}
 }
 

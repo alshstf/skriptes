@@ -407,12 +407,24 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	pool := testpg.Pool(t, ctx)
 	f := seedAuthorsList(t, ctx, pool)
 	svc := catalog.New(pool)
+	// Сортировки по числу книг и рейтингу идут по хранимым агрегатам (#302).
+	_, err := catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
 
 	// sort=book_count — Кинг (2 работы) впереди одиночек.
 	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "book_count"})
 	require.NoError(t, err)
 	require.Len(t, res.Items, 3)
 	require.Equal(t, f.kingID, res.Items[0].ID, "автор с большим числом книг — первым")
+	require.Equal(t, 3, res.Total)
+
+	// Вторая страница: общее число не считается (-1), порядок продолжает первую.
+	page2, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "book_count", Limit: 2, Offset: 1})
+	require.NoError(t, err)
+	require.Equal(t, -1, page2.Total)
+	require.Len(t, page2.Items, 2)
+	require.Equal(t, res.Items[1].ID, page2.Items[0].ID)
+	require.Equal(t, res.Items[2].ID, page2.Items[1].ID)
 
 	// sort=reader_rating — Кинг (единственный с оценками) впереди.
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "reader_rating"})
@@ -573,4 +585,56 @@ func TestListAuthorsFiltered_RenownSortAndAlpha(t *testing.T) {
 	require.Equal(t,
 		[]int64{f.asimovID, f.kingID, junkKing, f.tolstoy, symbols},
 		order("name"), "алфавит по чистому ключу")
+}
+
+// TestRecomputeAuthorStats — хранимые число работ и рейтинг автора (#302): те же
+// определения, что в строке списка без скрытий (сборники вне счёта), пересчёт
+// пишет только изменившиеся строки.
+func TestRecomputeAuthorStats(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	f := seedAuthorsList(t, ctx, pool)
+	svc := catalog.New(pool)
+
+	stats := func(id int64) (int, *float64) {
+		var n int
+		var r *float64
+		require.NoError(t, pool.QueryRow(ctx, `SELECT book_count, max_rating::float8 FROM authors WHERE id = $1`, id).Scan(&n, &r))
+		return n, r
+	}
+	n, err := catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	require.Positive(t, n)
+
+	// Совпадает с тем, что показывает строка списка без скрытий.
+	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	for _, it := range res.Items {
+		bc, r := stats(it.ID)
+		require.Equal(t, it.BookCount, bc, "book_count автора %d", it.ID)
+		if it.ExternalRating == nil {
+			require.Nil(t, r, "max_rating автора %d", it.ID)
+		} else {
+			require.NotNil(t, r)
+			require.InDelta(t, *it.ExternalRating, *r, 0.001, "max_rating автора %d", it.ID)
+		}
+	}
+
+	again, err := catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	require.Zero(t, again, "без изменений каталога строки не переписываются")
+
+	// Работа-сборник выпадает из счёта и рейтинга.
+	_, err = pool.Exec(ctx, `UPDATE works SET kind='collection', kind_source='heuristic'
+		WHERE id = (SELECT work_id FROM books WHERE lib_id = 'k-ru')`)
+	require.NoError(t, err)
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	bc, r := stats(f.kingID)
+	require.Equal(t, 1, bc)
+	require.Nil(t, r, "рейтинг был только у сборника")
 }

@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 /**
@@ -91,16 +91,39 @@ function buildQuery(p: AuthorsListParams): string {
 }
 
 /**
- * useAuthorsList — список авторов с фильтрами. keepPreviousData убирает
- * мерцание между сменой фильтров (как у useSuggest). Пагинация — через
- * limit/offset (PG-backed, без Meili).
+ * useAuthorsList — список авторов с фильтрами, постранично (offset, по
+ * pageSize). keepPreviousData убирает мерцание между сменой фильтров (как у
+ * useSuggest). Общее число бэк считает только для первой страницы (на
+ * следующих total = -1, #302) — его держим из первой страницы.
  */
-export function useAuthorsList(params: AuthorsListParams) {
-  const qs = buildQuery(params);
-  return useQuery<AuthorListResponse>({
+export function useAuthorsList(params: Omit<AuthorsListParams, 'limit' | 'offset'>, pageSize = 50) {
+  const qs = buildQuery({ ...params, limit: pageSize });
+  return useInfiniteQuery({
     queryKey: ['authors', 'list', qs],
-    queryFn: ({ signal }) => apiFetch<AuthorListResponse>(`/api/authors?${qs}`, { signal }),
+    initialPageParam: 0,
+    queryFn: ({ pageParam, signal }) =>
+      apiFetch<AuthorListResponse>(`/api/authors?${buildQuery({ ...params, limit: pageSize, offset: pageParam })}`, {
+        signal,
+      }),
+    getNextPageParam: (last, pages) => nextAuthorsPageParam(last, pages, pageSize),
     placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
+}
+
+/**
+ * nextAuthorsPageParam — offset следующей страницы или undefined (конец):
+ * короткая страница — конец; иначе конец, когда загружено общее число из
+ * первой страницы. Вынесен ради unit-тестов.
+ */
+export function nextAuthorsPageParam(
+  last: AuthorListResponse,
+  pages: AuthorListResponse[],
+  pageSize: number,
+): number | undefined {
+  if (last.items.length < pageSize) return undefined;
+  const loaded = pages.reduce((n, p) => n + p.items.length, 0);
+  const total = pages[0]?.total ?? -1;
+  if (total >= 0 && loaded >= total) return undefined;
+  return loaded;
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthorsPage } from './AuthorsPage';
 
@@ -140,6 +140,48 @@ describe('AuthorsPage', () => {
 
     // Дефолтная сортировка НЕ считается активным фильтром (нет кнопки «Сбросить»).
     expect(screen.queryByRole('button', { name: 'Сбросить' })).not.toBeInTheDocument();
+  });
+
+  it('«Показать ещё» догружает следующую страницу по offset и держит общее число первой', async () => {
+    const row = (id: number) => ({
+      id,
+      full_name: `Автор ${id}`,
+      book_count: 1,
+      is_favorite: false,
+      favorited_books_count: 0,
+      has_adaptations: false,
+    });
+    const urls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string | Request) => {
+        const u = typeof url === 'string' ? url : url.url;
+        const json = (body: unknown) =>
+          new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+        if (u.startsWith('/api/authors')) {
+          urls.push(u);
+          const offset = Number(new URL(u, 'http://x').searchParams.get('offset') ?? 0);
+          // Первая страница — 50 авторов и total, вторая — 3 и total=-1 (бэк не считает).
+          return offset === 0
+            ? json({ items: Array.from({ length: 50 }, (_, i) => row(i + 1)), total: 53 })
+            : json({ items: [row(51), row(52), row(53)], total: -1 });
+        }
+        if (u.startsWith('/api/content/effective')) return json({ hidden_genres: [], hidden_languages: [] });
+        return json({ items: [] });
+      }),
+    );
+    render(wrap(<AuthorsPage />));
+    await screen.findByRole('heading', { level: 3, name: 'Автор 50' });
+    expect(screen.getByText(/^53 автора$/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Показать ещё' }));
+    expect(await screen.findByRole('heading', { level: 3, name: 'Автор 53' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: 'Автор 1' })).toBeInTheDocument();
+    expect(urls.at(-1)).toContain('offset=50');
+    expect(urls.at(-1)).toContain('limit=50');
+    // Общее число — с первой страницы, а не -1 со второй; дальше грузить нечего.
+    expect(screen.getByText(/^53 автора$/)).toBeInTheDocument();
+    expect(screen.getByText('Это все авторы')).toBeInTheDocument();
   });
 
   it('показывает пустой стейт callout-ом, если авторов нет', async () => {
