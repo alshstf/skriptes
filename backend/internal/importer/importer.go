@@ -195,14 +195,6 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	if err := idx.flush(ctx); err != nil {
 		return stats, fmt.Errorf("flush meili: %w", err)
 	}
-	// Книги могли уйти к другим авторам (разделение тёзок, правки в выпуске) —
-	// основной автор работы и серии за ними не следят сами.
-	if ids, err := fixWorkPrimaryAuthors(ctx, im.deps.Pool); err != nil {
-		logger.Warn("import: fix work primary authors failed", "err", err)
-	} else if len(ids) > 0 {
-		addIDs(touched, ids)
-		logger.Info("import: work primary authors fixed", "works", len(ids))
-	}
 	// Работы подхватывают серию изданий (в том числе впервые проставленную
 	// выпуском); индекс works обновит синк ниже.
 	if ids, err := syncWorkSeries(ctx, im.deps.Pool); err != nil {
@@ -216,10 +208,14 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	} else if n > 0 {
 		logger.Info("import: series subscriptions moved to multi-author series", "subscriptions", n)
 	}
-	if n, err := deleteEmptySeries(ctx, im.deps.Pool); err != nil {
-		logger.Warn("import: delete empty series failed", "err", err)
-	} else if n > 0 {
-		logger.Info("import: empty series deleted", "series", n)
+	// Книги могли уйти к другим авторам (разделение тёзок, правки в выпуске) или
+	// стать удалёнными — основной автор работы, счётчик изданий и серии за ними
+	// не следят сами (#307).
+	if fix, err := FixCatalogInvariants(ctx, im.deps.Pool); err != nil {
+		logger.Warn("import: fix catalog invariants failed", "err", err)
+	} else {
+		addIDs(touched, fix.Changed)
+		LogCatalogFix(logger, "import: catalog invariants fixed", fix)
 	}
 	if err := markCollectionImported(ctx, im.deps.Pool, collectionID, hash, ix.Version); err != nil {
 		return stats, fmt.Errorf("mark collection imported: %w", err)
@@ -859,6 +855,16 @@ func (im *Importer) syncTouchedWorks(ctx context.Context, touched map[int64]stru
 		}
 	}
 	return len(ids), nil
+}
+
+// LogCatalogFix пишет итог FixCatalogInvariants, если что-то поправлено.
+func LogCatalogFix(logger *slog.Logger, msg string, f CatalogFix) {
+	if f.PrimaryAuthors+f.EditionCounts+f.BooklessDeleted+f.SeriesDetached == 0 && f.SeriesDeleted == 0 {
+		return
+	}
+	logger.Info(msg, "primary_authors", f.PrimaryAuthors, "edition_counts", f.EditionCounts,
+		"bookless_works_deleted", f.BooklessDeleted, "dead_works_series_detached", f.SeriesDetached,
+		"empty_series_deleted", f.SeriesDeleted)
 }
 
 func addIDs(set map[int64]struct{}, ids []int64) {

@@ -309,19 +309,19 @@ func (im *Importer) applySplit(ctx context.Context, base string, oldID int64, vs
 }
 
 // fixWorkPrimaryAuthors — работам, чей основной автор больше не среди авторов
-// их живых изданий (книги ушли к тёзке или автор исправлен в выпуске), ставит
-// первого автора представительного издания (якорь → min id). Работы с ручной
-// правкой авторов (metadata_overrides) не трогает. Возвращает id изменённых работ.
-func fixWorkPrimaryAuthors(ctx context.Context, pool *pgxpool.Pool) ([]int64, error) {
-	rows, err := pool.Query(ctx, `
+// их живых изданий (книги ушли к тёзке или автор исправлен в выпуске) или не
+// задан вовсе (#307), ставит первого автора представительного издания (якорь →
+// min id). Работы с ручной правкой авторов (metadata_overrides) не трогает.
+// Возвращает id изменённых работ.
+func fixWorkPrimaryAuthors(ctx context.Context, db dbConn) ([]int64, error) {
+	rows, err := db.Query(ctx, `
 		UPDATE works w SET primary_author_id = p.author_id, updated_at = now()
 		FROM (
 			SELECT DISTINCT ON (w2.id) w2.id AS work_id, ba.author_id
 			FROM works w2
 			JOIN books b         ON b.work_id = w2.id AND b.deleted = false
 			JOIN book_authors ba ON ba.book_id = b.id
-			WHERE w2.primary_author_id IS NOT NULL
-			  AND NOT EXISTS (
+			WHERE NOT EXISTS (
 			      SELECT 1 FROM books b2 JOIN book_authors ba2 ON ba2.book_id = b2.id
 			      WHERE b2.work_id = w2.id AND b2.deleted = false AND ba2.author_id = w2.primary_author_id)
 			  AND NOT EXISTS (
@@ -389,8 +389,8 @@ func (im *Importer) SyncWorkSeries(ctx context.Context) ([]int64, error) {
 // deleteEmptySeries — удаляет серии без книг и работ, на которые никто не
 // подписан и у которых нет ручных правок: после переноса книг (разделение
 // тёзок, правки выпуска) такие серии висели бы в подсказках и поиске.
-func deleteEmptySeries(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
-	tag, err := pool.Exec(ctx, `
+func deleteEmptySeries(ctx context.Context, db dbConn) (int64, error) {
+	tag, err := db.Exec(ctx, `
 		DELETE FROM series s
 		WHERE NOT EXISTS (SELECT 1 FROM books b WHERE b.series_id = s.id)
 		  AND NOT EXISTS (SELECT 1 FROM works w WHERE w.series_id = s.id)
