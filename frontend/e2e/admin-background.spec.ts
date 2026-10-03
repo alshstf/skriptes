@@ -102,6 +102,8 @@ test('admin: панель фоновых операций — аккордеон
         adaptations_mode: 'off',
         bio_coverage: { total: 8, with_bio: 5, with_photo: 3 },
         adaptation_coverage: { total: 10, with_adaptations: 4 },
+        tmdb_posters: true,
+        tmdb_configured: false,
       }),
     }),
   );
@@ -139,6 +141,11 @@ test('admin: панель фоновых операций — аккордеон
   // Покрытия в свёрнутых заголовках.
   await expect(page.getByText('обложка у 70%')).toBeVisible();
   await expect(page.getByText('год у 41%')).toBeVisible();
+
+  // Экранизации: без ключа TMDB переключатель источника неактивен и это сказано.
+  await page.getByText('Экранизации', { exact: true }).click();
+  await expect(page.getByRole('switch', { name: 'TMDB как источник постеров' })).toBeDisabled();
+  await expect(page.getByText(/Ключ SKRIPTES_TMDB_API_KEY не задан/)).toBeVisible();
 
   // Таб-навигация админки.
   await expect(page.getByRole('link', { name: 'Пользователи' })).toBeVisible();

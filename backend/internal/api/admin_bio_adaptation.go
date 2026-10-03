@@ -21,10 +21,16 @@ type bioAdaptationResponse struct {
 	AdaptationsMode    string                      `json:"adaptations_mode"`
 	BioCoverage        metadata.AuthorCoverage     `json:"bio_coverage"`
 	AdaptationCoverage metadata.AdaptationCoverage `json:"adaptation_coverage"`
+	// TMDBConfigured — задан ключ SKRIPTES_TMDB_API_KEY: без него тумблер TMDB
+	// ни на что не влияет, и UI его выключает.
+	TMDBConfigured bool `json:"tmdb_configured"`
 }
 
 func bioAdaptationState(ctx context.Context, d SettingsDeps, cfg settings.BioAdaptationConfig) bioAdaptationResponse {
 	resp := bioAdaptationResponse{BioAdaptationConfig: cfg}
+	if d.Metadata != nil {
+		resp.TMDBConfigured = d.Metadata.TMDBConfigured()
+	}
 	if d.AuthorBackfill != nil {
 		st := d.AuthorBackfill.Status()
 		resp.BiosRunning, resp.BiosMode = st.Running, st.Mode
@@ -60,7 +66,15 @@ func handleGetBioAdaptation(d SettingsDeps) http.HandlerFunc {
 // Сохраняет конфиг и применяет в рантайме оба воркера (rpm + вкл/выкл).
 func handleUpdateBioAdaptation(d SettingsDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var cfg settings.BioAdaptationConfig
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		// Тело ложится поверх сохранённого конфига: клиент, не знающий о поле
+		// (tmdb_posters появился позже), не сбрасывает его в false.
+		cfg, err := d.Store.BioAdaptation(ctx)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
+			return
+		}
 		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&cfg); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
 			return
@@ -69,8 +83,6 @@ func handleUpdateBioAdaptation(d SettingsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "values must be non-negative"})
 			return
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
-		defer cancel()
 		if err := d.Store.SetBioAdaptation(ctx, cfg); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save settings failed"})
 			return

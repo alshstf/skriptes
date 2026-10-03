@@ -142,6 +142,11 @@ func (e *Enricher) SetTMDBPostersEnabled(on bool) {
 	e.tmdbEnabled.Store(on)
 }
 
+// TMDBConfigured — провайдер TMDB подключён (задан ключ SKRIPTES_TMDB_API_KEY).
+func (e *Enricher) TMDBConfigured() bool {
+	return e.tmdbPosters != nil
+}
+
 // tmdbPostersActive — TMDB сконфигурирован И включён тумблером.
 func (e *Enricher) tmdbPostersActive() bool {
 	return e.tmdbPosters != nil && e.tmdbEnabled.Load()

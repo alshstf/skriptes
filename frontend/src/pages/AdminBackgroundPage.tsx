@@ -1681,13 +1681,14 @@ export function AdminBackgroundPage() {
                   <div>
                     <div className="text-sm">TMDB (The Movie Database)</div>
                     <p className="text-xs text-muted-foreground text-pretty">
-                      Приоритетный источник постеров; фолбэк — Wikimedia Commons. Требует env-ключ
-                      SKRIPTES_TMDB_API_KEY — без него переключатель ни на что не влияет.
+                      {bq.data?.tmdb_configured === false
+                        ? 'Ключ SKRIPTES_TMDB_API_KEY не задан — постеры берутся только из Wikimedia Commons.'
+                        : 'Основной источник постеров; если у TMDB постера нет — Wikimedia Commons.'}
                     </p>
                   </div>
                   <Switch
-                    checked={bq.data?.tmdb_posters ?? true}
-                    disabled={updateBa.isPending || !bq.data}
+                    checked={bq.data?.tmdb_configured !== false && (bq.data?.tmdb_posters ?? true)}
+                    disabled={updateBa.isPending || !bq.data || bq.data.tmdb_configured === false}
                     onCheckedChange={(checked) => {
                       if (!bq.data) return;
                       void updateBa
