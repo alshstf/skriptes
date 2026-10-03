@@ -4,6 +4,10 @@ services:
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
+    # /dev/shm контейнера по умолчанию 64 МБ: параллельные запросы по всей
+    # коллекции (хэш-агрегаты, сортировки) на ней падают «could not resize
+    # shared memory segment … No space left on device» (#304).
+    shm_size: ${PG_SHM_SIZE:-256m}
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

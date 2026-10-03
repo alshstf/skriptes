@@ -241,7 +241,7 @@ docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
 - **Вход напрямую**: на роутере пробросьте 443 (и 80 — редирект на https и запасная проверка ACME) на хост, A-запись `SKRIPTES_HOST` — на внешний IP. Caddy сам получит и продлит сертификат Let's Encrypt. Хост лучше изолировать (отдельная VM/VLAN, без доступа в домашнюю сеть).
 - **`Caddyfile.public`** (overlay монтирует его вместо базового): HSTS и базовые security-заголовки; вырезает присланные клиентом `CF-Connecting-IP` / `True-Client-IP` / `X-Real-IP` (иначе ими подделывается IP и обходится лимит попыток входа). **Админ-API (`/api/admin/*`) и OPDS — только из доверенных сетей** `SKRIPTES_LAN_CIDRS` (CIDR через пробел, например `192.168.0.0/24 10.50.0.1/32` — домашняя подсеть и адрес роутера в DMZ при NAT reflection): снаружи админка отвечает 403, OPDS — 404. Не задана — закрыто для всех; `0.0.0.0/0 ::/0` — открыть всем (не рекомендуется: у админа нет 2FA). Адреса проверяются по реальному адресу соединения, заголовками их не подделать.
 - **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
-- **Память**: на коллекции ~550 тыс. книг postgres и meilisearch держат около 0,9 ГБ каждый. Лимиты overlay — `PG_MEM_LIMIT` / `MEILI_MEM_LIMIT` (дефолт `2g`), индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM.
+- **Память**: на коллекции ~550 тыс. книг postgres и meilisearch держат около 0,9 ГБ каждый. Лимиты overlay — `PG_MEM_LIMIT` / `MEILI_MEM_LIMIT` (дефолт `2g`), индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM. Параметры Postgres overlay подогнаны под лимит 2 ГБ (`shared_buffers` 512 МБ, `work_mem` 16 МБ, JIT выкл., `random_page_cost` 1.1 для SSD) — поднимаете лимит, поднимите и их (`PG_SHARED_BUFFERS`, `PG_EFFECTIVE_CACHE_SIZE`, см. таблицу env).
 - **Метрики и журнал запросов**: `Caddyfile.public` пишет журнал запросов в JSON в stdout (Cookie и Authorization Caddy вырезает сам; IP посетителей и пути, включая поисковые запросы, остаются — учитывайте при хранении). Метрики приложения и Caddy отдаёт отдельный сайт `:9180` (`/metrics/skriptes`, `/metrics/caddy`) — только адресам из `SKRIPTES_METRICS_CIDRS`, порт публикуется на `SKRIPTES_METRICS_BIND` (по умолчанию 127.0.0.1). Порты, опубликованные Docker, обходят ufw — ограничивайте доступ к 9180 и на роутере.
 - **Только TCP 443**: HTTP/3 (QUIC по UDP 443) в Caddyfile выключен — пробрасывать UDP не нужно.
 - **Лимит попыток входа** общий для формы логина и OPDS (раньше перебор через OPDS Basic-auth не ограничивался). `SKRIPTES_TRUST_CF_CONNECTING_IP=true` — только если весь трафик идёт через Cloudflare.
@@ -355,7 +355,12 @@ Skriptes, а потом добавьте в Skriptes свой адрес Kindle.
 | `POSTGRES_PASSWORD` | `skriptes` | Пароль БД (поменяйте в проде!) |
 | `POSTGRES_DB` | `skriptes` | Имя БД |
 | `POSTGRES_PORT` | `5432` | Порт на хосте (биндится только на 127.0.0.1) |
+| `PG_SHM_SIZE` | `256m` | `/dev/shm` контейнера postgres: с дефолтными 64 МБ Docker тяжёлые параллельные запросы падают «No space left on device» |
 | `PG_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера postgres |
+| `PG_SHARED_BUFFERS` | `512MB` | Только hardening-overlay: `shared_buffers` (≈¼ `PG_MEM_LIMIT`) |
+| `PG_WORK_MEM` | `16MB` | Только hardening-overlay: `work_mem` — память на сортировку/хэш в запросе |
+| `PG_EFFECTIVE_CACHE_SIZE` | `1536MB` | Только hardening-overlay: `effective_cache_size` (≈¾ `PG_MEM_LIMIT`) |
+| `PG_RANDOM_PAGE_COST` | `1.1` | Только hardening-overlay: `random_page_cost` для SSD; на HDD — `4`. JIT в overlay выключен |
 
 ### Meilisearch
 
