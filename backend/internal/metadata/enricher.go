@@ -1068,14 +1068,20 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 	defer e.unlock(e.inflightAdaptations, q.ID)
 
 	var fetchedAt *time.Time
-	if err := e.pool.QueryRow(ctx,
-		`SELECT adaptations_fetched_at FROM books WHERE id = $1`, q.ID,
-	).Scan(&fetchedAt); err != nil {
+	var workQID string
+	if err := e.pool.QueryRow(ctx, `
+		SELECT b.adaptations_fetched_at, COALESCE(w.ext_ids->>'wd_qid', '')
+		FROM books b LEFT JOIN works w ON w.id = b.work_id
+		WHERE b.id = $1`, q.ID,
+	).Scan(&fetchedAt, &workQID); err != nil {
 		e.logger.Warn("metadata: query book adaptations_fetched_at failed", "book_id", q.ID, "err", err)
 		return
 	}
 	if fetchedAt != nil {
 		return // уже пробовали; ретрай — отдельный механизм (вне scope этой версии)
+	}
+	if q.WikidataQID == "" {
+		q.WikidataQID = workQID // QID работы уже нашли группировка или «Известность» (#294)
 	}
 
 	transient := false

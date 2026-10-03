@@ -72,7 +72,10 @@ func (p *WikidataAdaptationsProvider) WithEndpoints(searchURL, sparqlURL, common
 	return p
 }
 
-func (p *WikidataAdaptationsProvider) Name() string { return "wikidata" }
+func (p *WikidataAdaptationsProvider) Name() string { return wikidataSource }
+
+// wikidataSource — имя источника Wikidata в учёте попыток (book_*_lookups).
+const wikidataSource = "wikidata"
 
 // FetchAdaptations — основной entrypoint. Может вернуть пустой срез без
 // ошибки, если книга найдена но экранизаций нет (это нормально, не
@@ -102,6 +105,9 @@ func (p *WikidataAdaptationsProvider) FetchAdaptations(ctx context.Context, q Bo
 // кандидатов из wbsearchentities (он не различает "роман" от "альбома"
 // от "телешоу" — фильтрация по P31 и автору делается SPARQL'ом).
 func (p *WikidataAdaptationsProvider) resolveBookQID(ctx context.Context, q BookQuery) (string, error) {
+	if isQID(q.WikidataQID) {
+		return q.WikidataQID, nil // QID работы уже известен (#294) — поиск не нужен
+	}
 	// failure — сбой поиска или проверки кандидата (429 под троттлингом, сеть):
 	// если ни один кандидат не подтвердился, это не «не найдено» — нужный мог
 	// быть среди непроверенных. Раньше сбой превращался в ErrNotFound: lookups
@@ -529,6 +535,20 @@ type sparqlAdaptationRow struct {
 	Sitelinks   string // целое число как строка (xsd:integer из SPARQL)
 	TMDBMovieID string // P4947 — TMDb film ID (приоритетный источник постера)
 	TMDBTVID    string // P4983 — TMDb TV series ID
+}
+
+// isQID — строка вида «Q12345» (QID подставляется в SPARQL как wd:QID, поэтому
+// чужое значение из ext_ids не пропускаем).
+func isQID(s string) bool {
+	if len(s) < 2 || s[0] != 'Q' {
+		return false
+	}
+	for _, r := range s[1:] {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 // extractQID — выдёргивает Q-id из URI типа

@@ -66,6 +66,7 @@ func TestDueCond_MatchesIsDue(t *testing.T) {
 		{"found", day}, {"found", 200 * day},
 		{"not_found", 10 * day}, {"not_found", 100 * day},
 		{"error", time.Hour}, {"error", 48 * time.Hour},
+		{"native", 400 * day},
 		{"weird", time.Hour},
 	}
 
