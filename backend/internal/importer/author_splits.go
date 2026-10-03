@@ -311,9 +311,9 @@ func (im *Importer) applySplit(ctx context.Context, base string, oldID int64, vs
 // fixWorkPrimaryAuthors — работам, чей основной автор больше не среди авторов
 // их живых изданий (книги ушли к тёзке или автор исправлен в выпуске), ставит
 // первого автора представительного издания (якорь → min id). Работы с ручной
-// правкой авторов (metadata_overrides) не трогает.
-func fixWorkPrimaryAuthors(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
-	tag, err := pool.Exec(ctx, `
+// правкой авторов (metadata_overrides) не трогает. Возвращает id изменённых работ.
+func fixWorkPrimaryAuthors(ctx context.Context, pool *pgxpool.Pool) ([]int64, error) {
+	rows, err := pool.Query(ctx, `
 		UPDATE works w SET primary_author_id = p.author_id, updated_at = now()
 		FROM (
 			SELECT DISTINCT ON (w2.id) w2.id AS work_id, ba.author_id
@@ -329,11 +329,12 @@ func fixWorkPrimaryAuthors(ctx context.Context, pool *pgxpool.Pool) (int64, erro
 			      WHERE o.target_kind = 'work' AND o.target_id = w2.id AND o.field = 'authors')
 			ORDER BY w2.id, (b.normalized_title = w2.normalized_title) DESC, b.id, ba.position
 		) p
-		WHERE w.id = p.work_id`)
+		WHERE w.id = p.work_id
+		RETURNING w.id`)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return tag.RowsAffected(), nil
+	return pgx.CollectRows(rows, pgx.RowTo[int64])
 }
 
 // syncWorkSeries выставляет работам серию и номер представительного издания

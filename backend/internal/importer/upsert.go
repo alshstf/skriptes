@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -63,19 +64,25 @@ func upsertArchive(ctx context.Context, q querier, collectionID int64, filename 
 		INSERT INTO archives (collection_id, filename)
 		VALUES ($1, $2)
 		ON CONFLICT (filename) DO UPDATE SET collection_id = EXCLUDED.collection_id
+		WHERE archives.collection_id IS DISTINCT FROM EXCLUDED.collection_id
 		RETURNING id
 	`, collectionID, filename).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) { // архив уже числится за этим INPX
+		err = q.QueryRow(ctx, `SELECT id FROM archives WHERE filename = $1`, filename).Scan(&id)
+	}
 	if err != nil {
 		return 0, fmt.Errorf("upsert archive %q: %w", filename, err)
 	}
 	return id, nil
 }
 
-// upsertAuthor возвращает id для автора (создаёт если не было).
-func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) {
+// upsertAuthor возвращает id для автора (создаёт если не было) и признак, что
+// строка записана (вставлена или имя дополнено) — тогда документы поиска его
+// работ надо обновить.
+func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, bool, error) {
 	norm := normalizedAuthorName(a)
 	if norm == "" {
-		return 0, fmt.Errorf("empty normalized author name")
+		return 0, false, fmt.Errorf("empty normalized author name")
 	}
 	note := strings.TrimSpace(a.Note)
 	if note == "" {
@@ -85,10 +92,10 @@ func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) 
 		// появился бы лишний «автор без уточнения».
 		id, ok, err := existingPlainAuthor(ctx, q, norm)
 		if err != nil {
-			return 0, err
+			return 0, false, err
 		}
 		if ok {
-			return id, nil
+			return id, false, nil
 		}
 	}
 	var noteArg any
@@ -96,19 +103,33 @@ func upsertAuthor(ctx context.Context, q querier, a inpx.Author) (int64, error) 
 		noteArg = note
 	}
 	var id int64
+	var written bool
+	// Неизменного автора не переписываем (#301): иначе каждый импорт обновлял
+	// все ~200 тыс. строк authors.
 	err := q.QueryRow(ctx, `
-		INSERT INTO authors (last_name, first_name, middle_name, normalized_name, name_note)
-		VALUES ($1, $2, $3, $4, $5)
-		ON CONFLICT (normalized_name, (lower(COALESCE(name_note, '')))) DO UPDATE SET
-			last_name   = COALESCE(NULLIF(EXCLUDED.last_name,   ''), authors.last_name),
-			first_name  = COALESCE(NULLIF(EXCLUDED.first_name,  ''), authors.first_name),
-			middle_name = COALESCE(NULLIF(EXCLUDED.middle_name, ''), authors.middle_name)
-		RETURNING id
-	`, a.LastName, a.FirstName, a.MiddleName, norm, noteArg).Scan(&id)
+		WITH up AS (
+			INSERT INTO authors (last_name, first_name, middle_name, normalized_name, name_note)
+			VALUES ($1, $2, $3, $4, $5)
+			ON CONFLICT (normalized_name, (lower(COALESCE(name_note, '')))) DO UPDATE SET
+				last_name   = COALESCE(NULLIF(EXCLUDED.last_name,   ''), authors.last_name),
+				first_name  = COALESCE(NULLIF(EXCLUDED.first_name,  ''), authors.first_name),
+				middle_name = COALESCE(NULLIF(EXCLUDED.middle_name, ''), authors.middle_name)
+			WHERE (authors.last_name, authors.first_name, authors.middle_name) IS DISTINCT FROM
+			      (COALESCE(NULLIF(EXCLUDED.last_name,   ''), authors.last_name),
+			       COALESCE(NULLIF(EXCLUDED.first_name,  ''), authors.first_name),
+			       COALESCE(NULLIF(EXCLUDED.middle_name, ''), authors.middle_name))
+			RETURNING id
+		)
+		SELECT id, true FROM up
+		UNION ALL
+		SELECT id, false FROM authors
+		WHERE normalized_name = $4 AND lower(COALESCE(name_note, '')) = lower(COALESCE($5::text, ''))
+		  AND NOT EXISTS (SELECT 1 FROM up)
+	`, a.LastName, a.FirstName, a.MiddleName, norm, noteArg).Scan(&id, &written)
 	if err != nil {
-		return 0, fmt.Errorf("upsert author %q: %w", norm, err)
+		return 0, false, fmt.Errorf("upsert author %q: %w", norm, err)
 	}
-	return id, nil
+	return id, written, nil
 }
 
 // existingPlainAuthor — куда положить автора без уточнения: запись без
@@ -185,10 +206,16 @@ func upsertSeries(ctx context.Context, q querier, title string, authorID int64, 
 		return id, nil
 	}
 	err := q.QueryRow(ctx, `
-		INSERT INTO series (title, normalized_title, author_id)
-		VALUES ($1, $2, $3)
-		ON CONFLICT (normalized_title, author_id) DO UPDATE SET title = EXCLUDED.title
-		RETURNING id
+		WITH up AS (
+			INSERT INTO series (title, normalized_title, author_id)
+			VALUES ($1, $2, $3)
+			ON CONFLICT (normalized_title, author_id) DO UPDATE SET title = EXCLUDED.title
+			WHERE series.title IS DISTINCT FROM EXCLUDED.title
+			RETURNING id
+		)
+		SELECT id FROM up
+		UNION ALL
+		SELECT id FROM series WHERE normalized_title = $2 AND author_id = $3 AND NOT EXISTS (SELECT 1 FROM up)
 	`, title, norm, aid).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("upsert series %q: %w", norm, err)
@@ -225,51 +252,81 @@ func upsertGenre(ctx context.Context, q querier, code string) (int64, error) {
 	return id, nil
 }
 
-// upsertBookResult — что вернул upsertBook: id и факт создания (insert vs update).
+// upsertBookResult — что вернул upsertBook.
 type upsertBookResult struct {
 	ID      int64
-	Created bool
+	WorkID  int64  // 0 у только что вставленной (работу заводит ensureSingletonWork)
+	Year    *int16 // written_year — уходит в документ поиска (year), см. bookDoc
+	Created bool   // вставлена впервые
+	Written bool   // строка переписана (вставлена или изменилось хоть одно поле)
+	// Текущие связи книги до этого импорта — сравнить с записью INPX и не
+	// переписывать совпадающие (#301). У новой книги пустые.
+	AuthorIDs []int64 // в порядке position
+	GenreIDs  []int64 // по возрастанию
 }
 
 // upsertBook делает INSERT ON CONFLICT DO UPDATE; идемпотентно по
 // (archive_id, lib_id) — одна строка на файл книги, из какого бы INPX она ни
 // пришла (миграция 0039). collection_id — INPX, который описал книгу последним.
+//
+// Строка переписывается, только если хоть одно поле отличается (#301): прежде
+// каждый импорт переписывал все 552 тыс. книг (1,7 млн UPDATE, 0 HOT) — 53 минуты
+// на выпуске, где изменился 1 % записей. Неизменная книга — один запрос на чтение:
+// id, работа и текущие авторы/жанры для сравнения в processRecord.
 func upsertBook(ctx context.Context, q querier, in bookRow) (upsertBookResult, error) {
-	var id int64
-	var inserted bool
+	var r upsertBookResult
 	err := q.QueryRow(ctx, `
-		INSERT INTO books (
-			collection_id, archive_id, lib_id, file_name, ext, size_bytes,
-			title, normalized_title, series_id, ser_no, lang, date_added,
-			rating, keywords, deleted
-		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+		WITH up AS (
+			INSERT INTO books (
+				collection_id, archive_id, lib_id, file_name, ext, size_bytes,
+				title, normalized_title, series_id, ser_no, lang, date_added,
+				rating, keywords, deleted
+			) VALUES (
+				$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+			)
+			ON CONFLICT (archive_id, lib_id) DO UPDATE SET
+				collection_id    = EXCLUDED.collection_id,
+				file_name        = EXCLUDED.file_name,
+				ext              = EXCLUDED.ext,
+				size_bytes       = EXCLUDED.size_bytes,
+				title            = EXCLUDED.title,
+				normalized_title = EXCLUDED.normalized_title,
+				series_id        = EXCLUDED.series_id,
+				ser_no           = EXCLUDED.ser_no,
+				lang             = EXCLUDED.lang,
+				date_added       = EXCLUDED.date_added,
+				rating           = EXCLUDED.rating,
+				keywords         = EXCLUDED.keywords,
+				deleted          = EXCLUDED.deleted,
+				updated_at       = now()
+			WHERE (books.collection_id, books.file_name, books.ext, books.size_bytes,
+			       books.title, books.normalized_title, books.series_id, books.ser_no,
+			       books.lang, books.date_added, books.rating, books.keywords, books.deleted)
+			      IS DISTINCT FROM
+			      (EXCLUDED.collection_id, EXCLUDED.file_name, EXCLUDED.ext, EXCLUDED.size_bytes,
+			       EXCLUDED.title, EXCLUDED.normalized_title, EXCLUDED.series_id, EXCLUDED.ser_no,
+			       EXCLUDED.lang, EXCLUDED.date_added, EXCLUDED.rating, EXCLUDED.keywords, EXCLUDED.deleted)
+			RETURNING id, COALESCE(work_id, 0) AS work_id, written_year, (xmax = 0) AS inserted
+		), row AS (
+			SELECT id, work_id, written_year, inserted, true AS written FROM up
+			UNION ALL
+			SELECT id, COALESCE(work_id, 0), written_year, false, false FROM books
+			WHERE archive_id = $2 AND lib_id = $3 AND NOT EXISTS (SELECT 1 FROM up)
 		)
-		ON CONFLICT (archive_id, lib_id) DO UPDATE SET
-			collection_id    = EXCLUDED.collection_id,
-			file_name        = EXCLUDED.file_name,
-			ext              = EXCLUDED.ext,
-			size_bytes       = EXCLUDED.size_bytes,
-			title            = EXCLUDED.title,
-			normalized_title = EXCLUDED.normalized_title,
-			series_id        = EXCLUDED.series_id,
-			ser_no           = EXCLUDED.ser_no,
-			lang             = EXCLUDED.lang,
-			date_added       = EXCLUDED.date_added,
-			rating           = EXCLUDED.rating,
-			keywords         = EXCLUDED.keywords,
-			deleted          = EXCLUDED.deleted,
-			updated_at       = now()
-		RETURNING id, (xmax = 0) AS inserted
+		-- Связи читаются из снимка ДО вставки: у новой книги их нет.
+		SELECT r.id, r.work_id, r.written_year, r.inserted, r.written,
+		       ARRAY(SELECT ba.author_id FROM book_authors ba WHERE ba.book_id = r.id ORDER BY ba.position),
+		       ARRAY(SELECT bg.genre_id FROM book_genres bg WHERE bg.book_id = r.id ORDER BY bg.genre_id)
+		FROM row r
 	`,
 		in.collectionID, in.archiveID, in.libID, in.fileName, in.ext, in.size,
 		in.title, in.normalizedTitle, in.seriesID, in.serNo, in.lang, in.dateAdded,
 		in.rating, in.keywords, in.deleted,
-	).Scan(&id, &inserted)
+	).Scan(&r.ID, &r.WorkID, &r.Year, &r.Created, &r.Written, &r.AuthorIDs, &r.GenreIDs)
 	if err != nil {
 		return upsertBookResult{}, fmt.Errorf("upsert book lib_id=%s: %w", in.libID, err)
 	}
-	return upsertBookResult{ID: id, Created: inserted}, nil
+	return r, nil
 }
 
 // ensureSingletonWork создаёт отдельную логическую работу (works) для
@@ -294,6 +351,19 @@ func ensureSingletonWork(ctx context.Context, q querier, bookID int64, in bookRo
 		return 0, fmt.Errorf("set book %d work_id: %w", bookID, err)
 	}
 	return workID, nil
+}
+
+// sameAuthors — авторы книги те же и в том же порядке.
+func sameAuthors(current, next []int64) bool {
+	return slices.Equal(current, next)
+}
+
+// sameGenres — набор жанров тот же (current отсортирован, next — как в записи,
+// с возможными повторами).
+func sameGenres(current, next []int64) bool {
+	n := slices.Clone(next)
+	slices.Sort(n)
+	return slices.Equal(current, slices.Compact(n))
 }
 
 // replaceBookAuthors переписывает m:n book↔author для одной книги.

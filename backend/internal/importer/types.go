@@ -26,16 +26,17 @@ type bookRow struct {
 
 // Stats — агрегированные результаты одного запуска импортёра.
 type Stats struct {
-	Records       int           // всего записей в INPX
-	Books         int           // строк books затронуто
-	BooksInserted int           // из них вставлено впервые
-	BooksUpdated  int           // обновлено существующих
-	BooksDeleted  int           // записей с DEL=1 (хранятся в PG, не индексируются в Meili)
-	BooksIndexed  int           // отправлено в Meilisearch
-	Authors       int           // уникальных авторов в этом импорте
-	Series        int           // уникальных серий
-	Genres        int           // уникальных жанров
-	Errors        int           // записей с ошибкой (пропущены)
-	Skipped       bool          // импорт пропущен (хэш не изменился)
-	Duration      time.Duration // полное время Run
+	Records        int           // всего записей в INPX
+	Books          int           // строк books затронуто
+	BooksInserted  int           // из них вставлено впервые
+	BooksUpdated   int           // обновлено существующих (что-то изменилось)
+	BooksUnchanged int           // существующих без изменений — не переписывались (#301)
+	BooksDeleted   int           // записей с DEL=1 (хранятся в PG, не индексируются в Meili)
+	BooksIndexed   int           // отправлено в Meilisearch
+	Authors        int           // уникальных авторов в этом импорте
+	Series         int           // уникальных серий
+	Genres         int           // уникальных жанров
+	Errors         int           // записей с ошибкой (пропущены)
+	Skipped        bool          // импорт пропущен (хэш не изменился)
+	Duration       time.Duration // полное время Run
 }

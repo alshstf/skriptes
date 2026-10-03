@@ -100,8 +100,8 @@ func guardRemoval(index string, extra, indexed, live int) error {
 }
 
 // pgIDs — множество id из запроса PG.
-func (im *Importer) pgIDs(ctx context.Context, query string) (map[int64]struct{}, error) {
-	rows, err := im.deps.Pool.Query(ctx, query)
+func (im *Importer) pgIDs(ctx context.Context, query string, args ...any) (map[int64]struct{}, error) {
+	rows, err := im.deps.Pool.Query(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}

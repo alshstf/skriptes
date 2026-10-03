@@ -162,6 +162,17 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	caches := newCaches()
 	caches.multiSeries = multi
 	idx := newIndexer(im.deps.Meili, 1000)
+	// Работы, чьи издания этот импорт вставил или изменил: их документы в
+	// индексе works обновляются после импорта (#301; прежде — все 442 тыс.).
+	touched := map[int64]struct{}{}
+	// Какие книги уже в индексе (OPDS): неизменные, но без документа (Meili
+	// пуст после восстановления базы, #305), импорт всё равно отправит. Индекс
+	// недоступен — шлём всё, как раньше.
+	if ids, err := im.indexIDs(ctx, booksIndex); err != nil {
+		logger.Warn("import: books index ids unavailable, all books will be reindexed", "err", err)
+	} else {
+		idx.indexed = ids
+	}
 
 	// Прогрев archives внутри одной транзакции? Не нужно: это редкие upsert-ы,
 	// делаем отдельно по мере встречи новых имён архивов.
@@ -171,7 +182,7 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		// всё равно создаём/обновляем (с deleted=true) чтобы хранить факт
 		// существования и не потерять метаданные. В Meili такие документы
 		// не индексируются (см. processRecord).
-		if rerr := im.processRecord(ctx, collectionID, file, rec, caches, idx, &stats); rerr != nil {
+		if rerr := im.processRecord(ctx, collectionID, file, rec, caches, idx, touched, &stats); rerr != nil {
 			stats.Errors++
 			logger.Warn("record import failed", "lib_id", rec.LibID, "err", rerr)
 		}
@@ -186,16 +197,18 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 	}
 	// Книги могли уйти к другим авторам (разделение тёзок, правки в выпуске) —
 	// основной автор работы и серии за ними не следят сами.
-	if n, err := fixWorkPrimaryAuthors(ctx, im.deps.Pool); err != nil {
+	if ids, err := fixWorkPrimaryAuthors(ctx, im.deps.Pool); err != nil {
 		logger.Warn("import: fix work primary authors failed", "err", err)
-	} else if n > 0 {
-		logger.Info("import: work primary authors fixed", "works", n)
+	} else if len(ids) > 0 {
+		addIDs(touched, ids)
+		logger.Info("import: work primary authors fixed", "works", len(ids))
 	}
 	// Работы подхватывают серию изданий (в том числе впервые проставленную
-	// выпуском); индекс works обновит полный ресинк ниже.
+	// выпуском); индекс works обновит синк ниже.
 	if ids, err := syncWorkSeries(ctx, im.deps.Pool); err != nil {
 		logger.Warn("import: sync work series failed", "err", err)
 	} else if len(ids) > 0 {
+		addIDs(touched, ids)
 		logger.Info("import: work series synced", "works", len(ids))
 	}
 	if n, err := moveSeriesSubscriptions(ctx, im.deps.Pool); err != nil {
@@ -212,23 +225,18 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		return stats, fmt.Errorf("mark collection imported: %w", err)
 	}
 
-	// Год в поиске (Meili year) = written_year (год написания), а он
-	// наполняется обогащением ПОСЛЕ импорта. Синкаем из PG: для свежего
-	// импорта это no-op (written_year NULL), для повторного — подтягивает уже
-	// извлечённые годы. Между импортами синк запускается из админки.
-	if n, rerr := im.ResyncYears(ctx); rerr != nil {
-		logger.Warn("import: resync years to meili failed", "err", rerr)
-	} else if n > 0 {
-		logger.Info("import: years resynced to meili", "count", n)
-	}
+	// Год в индексе книг (year = written_year) импорт не синкает отдельно:
+	// отправленные документы несут текущий год сами, а у неизменных он уже в
+	// индексе (год меняет обогащение и само зовёт ResyncYears).
 
-	// Индекс works (фасеты по работам) перестраиваем после импорта: новые
-	// singleton-работы + актуальный год/агрегаты. Ресинк только добавляет и
-	// обновляет — документы удалённых книг и опустевших работ убирает сверка.
-	if n, rerr := im.ResyncWorksIndex(ctx); rerr != nil {
-		logger.Warn("import: resync works index failed", "err", rerr)
+	// Индекс works: документы работ, которых коснулся импорт (новые и
+	// изменённые издания, исправленные автор/серия работы, работы авторов с
+	// дополненным именем). Ресинк только добавляет и обновляет — документы
+	// удалённых книг и опустевших работ убирает сверка ниже.
+	if n, rerr := im.syncTouchedWorks(ctx, touched, caches.writtenAuthors); rerr != nil {
+		logger.Warn("import: sync works index failed", "err", rerr)
 	} else if n > 0 {
-		logger.Info("import: works index resynced", "count", n)
+		logger.Info("import: works index synced", "works", n)
 	}
 	if r, rerr := im.ReconcileIndexes(ctx); rerr != nil {
 		logger.Warn("import: reconcile search indexes failed", "err", rerr)
@@ -245,6 +253,7 @@ func (im *Importer) Run(ctx context.Context, inpxPath string) (Stats, error) {
 		"records", stats.Records,
 		"books_inserted", stats.BooksInserted,
 		"books_updated", stats.BooksUpdated,
+		"books_unchanged", stats.BooksUnchanged,
 		"books_deleted", stats.BooksDeleted,
 		"books_indexed", stats.BooksIndexed,
 		"authors", stats.Authors,
@@ -815,11 +824,54 @@ func (im *Importer) deleteDocs(ctx context.Context, index string, ids []int64) e
 	return nil
 }
 
+// fullWorksResyncAt — сколько затронутых работ проще отправить полным ресинком,
+// чем выборкой по id (первый импорт, выпуск с массовыми правками).
+const fullWorksResyncAt = 50_000
+
+// syncTouchedWorks обновляет в индексе works документы работ, которых коснулся
+// импорт, и работ авторов, чья строка записана (имя автора — в документе).
+// Возвращает число отправленных работ.
+func (im *Importer) syncTouchedWorks(ctx context.Context, touched map[int64]struct{}, authors []int64) (int, error) {
+	if len(authors) > 0 {
+		ids, err := im.pgIDs(ctx, `SELECT DISTINCT b.work_id FROM book_authors ba
+			JOIN books b ON b.id = ba.book_id
+			WHERE ba.author_id = ANY($1) AND b.work_id IS NOT NULL`, authors)
+		if err != nil {
+			return 0, fmt.Errorf("works of written authors: %w", err)
+		}
+		for id := range ids {
+			touched[id] = struct{}{}
+		}
+	}
+	delete(touched, 0)
+	if len(touched) >= fullWorksResyncAt {
+		return im.ResyncWorksIndex(ctx)
+	}
+	ids := make([]int64, 0, len(touched))
+	for id := range touched {
+		ids = append(ids, id)
+	}
+	slices.Sort(ids)
+	for start := 0; start < len(ids); start += 5000 {
+		end := min(start+5000, len(ids))
+		if err := im.UpsertWorksToIndex(ctx, ids[start:end]); err != nil {
+			return start, err
+		}
+	}
+	return len(ids), nil
+}
+
+func addIDs(set map[int64]struct{}, ids []int64) {
+	for _, id := range ids {
+		set[id] = struct{}{}
+	}
+}
+
 // processRecord обрабатывает одну запись внутри транзакции.
 // Откат транзакции при любой ошибке — состояние БД не пачкается полу-импортом одной книги.
 func (im *Importer) processRecord(
 	ctx context.Context, collectionID int64, file inpx.InpFile, rec inpx.Record,
-	caches *cacheSet, idx *indexer, stats *Stats,
+	caches *cacheSet, idx *indexer, touched map[int64]struct{}, stats *Stats,
 ) error {
 	tx, err := im.deps.Pool.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
@@ -918,17 +970,25 @@ func (im *Importer) processRecord(
 	if err != nil {
 		return err
 	}
-	if err := replaceBookAuthors(ctx, q, res.ID, authorIDs); err != nil {
-		return err
+	// Связи переписываем, только если они изменились (#301).
+	changed := res.Written
+	if !sameAuthors(res.AuthorIDs, authorIDs) {
+		if err := replaceBookAuthors(ctx, q, res.ID, authorIDs); err != nil {
+			return err
+		}
+		changed = true
 	}
-	if err := replaceBookGenres(ctx, q, res.ID, genreIDs); err != nil {
-		return err
+	if !sameGenres(res.GenreIDs, genreIDs) {
+		if err := replaceBookGenres(ctx, q, res.ID, genreIDs); err != nil {
+			return err
+		}
+		changed = true
 	}
 
 	// Новая книга → своя singleton-работа (инвариант work_id != NULL). Существующая
 	// (re-import/update) уже привязана к работе — её work_id мог быть назначен
 	// джобой группировки в общую работу, поэтому только читаем.
-	var workID int64
+	workID := res.WorkID
 	if res.Created {
 		var primaryAuthor int64
 		if len(authorIDs) > 0 {
@@ -937,10 +997,6 @@ func (im *Importer) processRecord(
 		workID, err = ensureSingletonWork(ctx, q, res.ID, br, primaryAuthor)
 		if err != nil {
 			return err
-		}
-	} else {
-		if err := q.QueryRow(ctx, `SELECT COALESCE(work_id, 0) FROM books WHERE id = $1`, res.ID).Scan(&workID); err != nil {
-			return fmt.Errorf("read work_id: %w", err)
 		}
 	}
 
@@ -951,17 +1007,24 @@ func (im *Importer) processRecord(
 	caches.commitStaged()
 
 	stats.Books++
-	if res.Created {
+	if res.Created || changed {
+		touched[workID] = struct{}{}
+	}
+	switch {
+	case res.Created:
 		stats.BooksInserted++
-	} else {
+	case changed:
 		stats.BooksUpdated++
+	default:
+		stats.BooksUnchanged++
 	}
 	if rec.Deleted {
 		stats.BooksDeleted++
 	}
 
 	// Удалённые в Meili не индексируем — они не должны всплывать в поиске.
-	if !rec.Deleted {
+	// Неизменную книгу, документ которой уже в индексе, не шлём повторно (#301).
+	if !rec.Deleted && (changed || !idx.has(res.ID)) {
 		stats.BooksIndexed++
 		authorNames := make([]string, 0, len(rec.Authors))
 		for _, a := range rec.Authors {
@@ -969,9 +1032,15 @@ func (im *Importer) processRecord(
 		}
 		// Year НЕ берём из date_added (это дата добавления в коллекцию, не год
 		// книги — см. граблю про date_added). Поле year в поиске = written_year
-		// (год написания); оно наполняется обогащением ПОСЛЕ импорта и синкается
-		// в Meili через ResyncYears (в конце Run и по кнопке в админке).
+		// (год написания): его наполняет обогащение ПОСЛЕ импорта и синкает в
+		// Meili ResyncYears; документ, отправленный здесь, несёт текущий год сам.
+		var year *int
+		if res.Year != nil {
+			y := int(*res.Year)
+			year = &y
+		}
 		doc := bookDoc{
+			Year:            year,
 			ID:              res.ID,
 			Title:           rec.Title,
 			NormalizedTitle: normalize(rec.Title),
