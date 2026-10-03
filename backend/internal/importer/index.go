@@ -241,6 +241,15 @@ type indexer struct {
 	mgr   meilisearch.ServiceManager
 	batch []bookDoc
 	limit int
+	// indexed — id книг, чьи документы уже в индексе на старте импорта; nil —
+	// неизвестно (тогда has всегда false и импорт шлёт все документы).
+	indexed map[int64]struct{}
+}
+
+// has — документ книги уже был в индексе на старте импорта.
+func (i *indexer) has(id int64) bool {
+	_, ok := i.indexed[id]
+	return ok
 }
 
 func newIndexer(m meilisearch.ServiceManager, batchSize int) *indexer {

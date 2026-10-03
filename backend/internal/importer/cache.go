@@ -26,6 +26,9 @@ type cacheSet struct {
 	// multiSeries — названия (normalize) межавторских/издательских серий этого
 	// импорта (planMultiSeries): одна серия на название, без автора.
 	multiSeries map[string]bool
+	// writtenAuthors — авторы, чья строка записана этим импортом (новые или с
+	// дополненным именем): документы поиска их работ обновляются после импорта.
+	writtenAuthors []int64
 }
 
 type cacheMaps struct {
@@ -89,9 +92,13 @@ func (c *cacheSet) ensureAuthor(ctx context.Context, q querier, a inpx.Author) (
 	if id, ok := c.staged.author[key]; ok {
 		return id, nil
 	}
-	id, err := upsertAuthor(ctx, q, a)
+	id, written, err := upsertAuthor(ctx, q, a)
 	if err != nil {
 		return 0, err
+	}
+	if written {
+		// Лишний id из откаченной записи безвреден — только лишний ресинк.
+		c.writtenAuthors = append(c.writtenAuthors, id)
 	}
 	c.staged.author[key] = id
 	return id, nil
