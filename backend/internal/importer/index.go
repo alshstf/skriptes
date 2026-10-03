@@ -65,28 +65,49 @@ func (im *Importer) ConfigureIndex(ctx context.Context) error {
 // ConfigureIndex — вызывать на каждом старте, чтобы индекс существовал и имел
 // нужные filterable/sortable атрибуты даже на стабильном деплое без импорта.
 func (im *Importer) ConfigureWorksIndex(ctx context.Context) error {
-	return configureWorksIndex(ctx, im.deps.Meili, worksIndex, im.foldedSearchReady(ctx))
+	return configureWorksIndex(ctx, im.deps.Meili, worksIndex, im.builtWorksSchema(ctx))
 }
 
-// foldedSearchSchemaVersion — версия схемы works-индекса, с которой у документов
-// есть поля title_s/authors_s/series_s (свёртка «ё»→«е», #278).
-const foldedSearchSchemaVersion = 9
+// Версии схемы works-индекса, с которых у документов есть поисковые поля:
+//   - foldedSearchSchemaVersion — title_s/authors_s/series_s (свёртка «ё»→«е», #278);
+//   - altTitlesSchemaVersion — alt_titles_s (названия изданий и оригинала) и
+//     authors_latin (латинское имя автора из fb2 переводов, #291).
+const (
+	foldedSearchSchemaVersion = 9
+	altTitlesSchemaVersion    = 11
+)
 
-// foldedSearchReady — индекс уже пересобран схемой со свёрнутыми полями
-// (RebuildWorksIndex собирает его сразу с ними), и искать можно по ним. До этого
-// живой индекс остаётся на прежних полях: переключи его ConfigureWorksIndex на
-// старте, старые документы без свёрнутых полей не находились бы, а переиндексация
-// Meili 1.13 при смене searchableAttributes ещё и оставляет битой близость слов
-// у документов, где свёрнутое слово отличается от прежнего (см. RebuildWorksIndex).
-func (im *Importer) foldedSearchReady(ctx context.Context) bool {
+// builtWorksSchema — схема, которой собран живой works-индекс (последний флаг
+// works_index_synced_v<N>). Поиск переключается на новые поля только после
+// пересборки ими (RebuildWorksIndex собирает временный индекс сразу с ними): иначе
+// старые документы без полей не находились бы, а переиндексация Meili 1.13 при
+// смене searchableAttributes ещё и оставляет битой близость слов (см.
+// RebuildWorksIndex).
+func (im *Importer) builtWorksSchema(ctx context.Context) int {
 	if im.deps.Pool == nil {
-		return false
+		return 0
 	}
 	var v int
-	err := im.deps.Pool.QueryRow(ctx, `
+	if err := im.deps.Pool.QueryRow(ctx, `
 		SELECT COALESCE(max(substring(key FROM 'works_index_synced_v([0-9]+)')::int), 0)
-		FROM app_settings WHERE key LIKE 'works_index_synced_v%'`).Scan(&v)
-	return err == nil && v >= foldedSearchSchemaVersion
+		FROM app_settings WHERE key LIKE 'works_index_synced_v%'`).Scan(&v); err != nil {
+		return 0
+	}
+	return v
+}
+
+// worksSearchable — поисковые поля works-индекса для схемы schema. Порядок важен:
+// правило ранжирования attribute ставит совпадение в названии выше совпадения в
+// авторе, а альтернативные названия и латинские имена — ниже всех.
+func worksSearchable(schema int) []string {
+	switch {
+	case schema >= altTitlesSchemaVersion:
+		return []string{"title_s", "authors_s", "series_s", "alt_titles_s", "authors_latin"}
+	case schema >= foldedSearchSchemaVersion:
+		return []string{"title_s", "authors_s", "series_s"}
+	default:
+		return []string{"title", "authors", "series"}
+	}
 }
 
 // workDoc — документ индекса "works". id = works.id (primary key). Поля авторов/
@@ -104,11 +125,16 @@ type workDoc struct {
 	TitleSearch   string   `json:"title_s"`
 	AuthorsSearch []string `json:"authors_s"`
 	SeriesSearch  string   `json:"series_s,omitempty"`
-	SeriesID      *int64   `json:"series_id,omitempty"`
-	Genres        []string `json:"genres"`
-	Year          *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
-	Langs         []string `json:"lang"`           // массив языков всех изданий работы
-	SrcLangs      []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
+	// Только для поиска (#291): названия изданий, отличные от названия работы, и
+	// названия оригинала (src_title) — «The Hobbit» находит «Хоббита»; латинские
+	// имена авторов оригинала (src_author_normalized) — «doyle» находит Конан Дойля.
+	AltTitlesSearch []string `json:"alt_titles_s"`
+	AuthorsLatin    []string `json:"authors_latin"`
+	SeriesID        *int64   `json:"series_id,omitempty"`
+	Genres          []string `json:"genres"`
+	Year            *int     `json:"year,omitempty"` // = written_year (COALESCE work → min издания)
+	Langs           []string `json:"lang"`           // массив языков всех изданий работы
+	SrcLangs        []string `json:"src_lang"`       // массив языков ОРИГИНАЛА изданий (fb2 src-lang; пусто = неизвестен/не перевод)
 	// OrigLangs — ЭФФЕКТИВНЫЙ язык оригинала: src_lang, а если пусто — язык
 	// издания (натив = сам себе оригинал). На нём стоит фильтр «Язык оригинала»
 	// (/books, авторы): «оригинал: французский» ловит и переводы с французского
@@ -131,9 +157,9 @@ type workDoc struct {
 
 // configureWorksIndex создаёт и настраивает индекс works (uid — живой или
 // временный для пересборки) идемпотентно. Без distinctAttribute: каждый
-// документ уже = одна работа. foldedSearch — искать по свёрнутым копиям полей
-// (см. foldedSearchReady).
-func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid string, foldedSearch bool) error {
+// документ уже = одна работа. schema — схема документов индекса: от неё зависят
+// поисковые поля (worksSearchable, builtWorksSchema).
+func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid string, schema int) error {
 	idx := m.Index(uid)
 	if _, err := m.CreateIndexWithContext(ctx, &meilisearch.IndexConfig{
 		Uid:        uid,
@@ -143,10 +169,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid 
 			return fmt.Errorf("create works index: %w", err)
 		}
 	}
-	searchable := []string{"title", "authors", "series"}
-	if foldedSearch {
-		searchable = []string{"title_s", "authors_s", "series_s"}
-	}
+	searchable := worksSearchable(schema)
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &searchable); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
