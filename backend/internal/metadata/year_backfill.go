@@ -153,10 +153,11 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 	// знаменитым/переиздаваемым книгам на дни раньше, полнота прохода не меняется.
 	// Кандидат, обработанный в фазе ядра, во второй фазе не всплывает (условия
 	// взаимоисключающие); TTL lookups страхует от повторов между пересканами.
-	for _, phaseCond := range []string{"AND " + bookCoreCond, "AND NOT " + bookCoreCond} {
+	for _, phase := range corePhases {
+		ttl := b.ttl().forPhase(phase)
 		var cursor int64
 		for ctx.Err() == nil {
-			batch, err := b.fetchBatch(ctx, cursor, yearBackfillBatchSize, phaseCond)
+			batch, err := b.fetchBatch(ctx, cursor, yearBackfillBatchSize, phase.cond, ttl)
 			if err != nil {
 				b.logger.Warn("year backfill: fetch batch failed", "err", err)
 				break
@@ -164,7 +165,7 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 			if len(batch) == 0 {
 				break
 			}
-			b.processBatch(ctx, batch)
+			b.processBatch(ctx, batch, ttl)
 			total += len(batch)
 			cursor = batch[len(batch)-1].id
 		}
@@ -233,7 +234,7 @@ func (b *YearBackfiller) candidateCond() string {
 // фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
 // Только кандидаты, которых пора спросить хотя бы у одного включённого
 // источника (dueCond), — остальных проход не перечитывает.
-func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
+func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string, ttl lookupTTL) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
@@ -254,7 +255,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 		ORDER BY b.id
 		LIMIT $2
 	`, wdHintColumns, b.candidateCond(), phaseCond, dueCond("book_year_lookups", "book_id", "b.id", 3))
-	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), ttl)...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
@@ -272,7 +273,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 	return out, rows.Err()
 }
 
-func (b *YearBackfiller) processBatch(ctx context.Context, batch []yearCandidate) {
+func (b *YearBackfiller) processBatch(ctx context.Context, batch []yearCandidate, ttl lookupTTL) {
 	sem := make(chan struct{}, yearBackfillWorkers)
 	var wg sync.WaitGroup
 	for _, c := range batch {
@@ -284,7 +285,7 @@ func (b *YearBackfiller) processBatch(ctx context.Context, batch []yearCandidate
 		go func(c yearCandidate) {
 			defer wg.Done()
 			defer func() { <-sem }()
-			b.processOne(ctx, c)
+			b.processOne(ctx, c, ttl)
 		}(c)
 	}
 	wg.Wait()
@@ -317,7 +318,9 @@ func (b *YearBackfiller) sourceNames() []string {
 	return out
 }
 
-func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
+// processOne — спросить включённые источники, которым пора (сроки ttl — фазы
+// обхода, см. enrichPhase).
+func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl lookupTTL) {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
 		b.logger.Warn("year backfill: load lookups failed", "book_id", bk.id, "err", err)
@@ -328,10 +331,10 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 
 	for _, src := range b.sources() {
 		name := src.provider.Name()
-		if !b.isDue(lookups[name], now) {
+		if !ttl.isDue(lookups[name], now) {
 			continue
 		}
-		if name == wikidataSource && bk.wikidataShortcut(&q, b.ttl().notFound, now) {
+		if name == wikidataSource && bk.wikidataShortcut(&q, ttl.notFound, now) {
 			b.recordReusedNotFound(ctx, bk.id, name)
 			continue
 		}
@@ -368,7 +371,7 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 // проход: per-source TTL (book_year_lookups), rate-gate, порядок источников из
 // cfg. Никаких новых правил/обхода лимитов.
 func (b *YearBackfiller) EnrichOne(ctx context.Context, id int64, title, lang string, authors []string) {
-	b.processOne(ctx, yearCandidate{id: id, title: title, lang: lang, authors: authors})
+	b.processOne(ctx, yearCandidate{id: id, title: title, lang: lang, authors: authors}, b.ttl())
 }
 
 type lookupRow struct {

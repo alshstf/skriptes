@@ -198,38 +198,59 @@ type extRatingCandidate struct {
 	srcLang       string
 }
 
+// findableAbroadCond — книгу могут найти Google Books и OpenLibrary: есть ISBN,
+// название оригинала или издание не на русском, украинском, белорусском (алиас
+// books = b). Решение по #294: на проде 89 % находок OL и почти все полезные
+// находки GB — у таких книг, а русские книги без ISBN и названия оригинала дали
+// 87 находок на 202 тыс. запросов к OL и 76 (в основном с одним голосом) на
+// 35 тыс. к GB.
+var findableAbroadCond = findableAbroad("b")
+
+// findableAbroad — то же условие для издания под алиасом alias.
+func findableAbroad(alias string) string {
+	return fmt.Sprintf(`(NULLIF(btrim(%[1]s.isbn), '') IS NOT NULL
+	OR NULLIF(btrim(%[1]s.src_title), '') IS NOT NULL
+	OR lower(btrim(COALESCE(%[1]s.lang, ''))) NOT IN ('ru', 'uk', 'be'))`, alias)
+}
+
 // candidateCond — SQL-условие выбора кандидатов по режиму охвата.
 func (b *ExternalRatingBackfiller) candidateCond() string {
 	if b.cfg.WholeCollection {
-		return "b.external_rating IS NULL"
+		return "b.external_rating IS NULL AND " + findableAbroadCond
 	}
-	return "b.rating IS NULL AND b.external_rating IS NULL"
+	return "b.rating IS NULL AND b.external_rating IS NULL AND " + findableAbroadCond
 }
 
 func (b *ExternalRatingBackfiller) drain(ctx context.Context) int {
 	b.found.Store(0)
 	b.lookedUp.Store(0)
 	total := 0
-	var cursor int64
-	for ctx.Err() == nil {
-		batch, err := b.fetchBatch(ctx, cursor, extRatingBatchSize)
-		if err != nil {
-			b.logger.Warn("external rating backfill: fetch batch failed", "err", err)
-			break
+	// «Сначала ядро, потом хвост» (bookCoreCond), в хвосте «не найдено» — не
+	// чаще раза в год (enrichPhase, #294).
+	for _, phase := range corePhases {
+		ttl := b.ttl().forPhase(phase)
+		var cursor int64
+		for ctx.Err() == nil {
+			batch, err := b.fetchBatch(ctx, cursor, extRatingBatchSize, phase.cond, ttl)
+			if err != nil {
+				b.logger.Warn("external rating backfill: fetch batch failed", "err", err)
+				break
+			}
+			if len(batch) == 0 {
+				break
+			}
+			b.processBatch(ctx, batch, ttl)
+			total += len(batch)
+			cursor = batch[len(batch)-1].id
 		}
-		if len(batch) == 0 {
-			break
-		}
-		b.processBatch(ctx, batch)
-		total += len(batch)
-		cursor = batch[len(batch)-1].id
 	}
 	return total
 }
 
 // fetchBatch — страница кандидатов keyset'ом по id: только те, кого пора
-// спросить хотя бы у одного включённого источника (dueCond).
-func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int) ([]extRatingCandidate, error) {
+// спросить хотя бы у одного включённого источника (dueCond). phaseCond — доп.
+// условие фазы обхода, ttl — её сроки.
+func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string, ttl lookupTTL) ([]extRatingCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''), COALESCE(b.isbn, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
@@ -247,13 +268,14 @@ func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64
 		LEFT JOIN authors a       ON a.id = ba.author_id
 		WHERE b.deleted = false
 		  AND %s
+		  %s
 		  AND %s
 		  AND b.id > $1
 		GROUP BY b.id
 		ORDER BY b.id
 		LIMIT $2
-	`, b.candidateCond(), dueCond("book_external_rating_lookups", "book_id", "b.id", 3))
-	args := append([]any{afterID, limit}, dueArgs(b.dueSourceNames(ctx), b.ttl())...)
+	`, b.candidateCond(), phaseCond, dueCond("book_external_rating_lookups", "book_id", "b.id", 3))
+	args := append([]any{afterID, limit}, dueArgs(b.dueSourceNames(ctx), ttl)...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
@@ -272,7 +294,7 @@ func (b *ExternalRatingBackfiller) fetchBatch(ctx context.Context, afterID int64
 	return out, rows.Err()
 }
 
-func (b *ExternalRatingBackfiller) processBatch(ctx context.Context, batch []extRatingCandidate) {
+func (b *ExternalRatingBackfiller) processBatch(ctx context.Context, batch []extRatingCandidate, ttl lookupTTL) {
 	sem := make(chan struct{}, extRatingWorkers)
 	var wg sync.WaitGroup
 	for _, c := range batch {
@@ -284,7 +306,7 @@ func (b *ExternalRatingBackfiller) processBatch(ctx context.Context, batch []ext
 		go func(c extRatingCandidate) {
 			defer wg.Done()
 			defer func() { <-sem }()
-			b.processOne(ctx, c)
+			b.processOne(ctx, c, ttl)
 		}(c)
 	}
 	wg.Wait()
@@ -322,7 +344,7 @@ func (b *ExternalRatingBackfiller) dueSourceNames(ctx context.Context) []string 
 	return out
 }
 
-func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingCandidate) {
+func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingCandidate, ttl lookupTTL) {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
 		b.logger.Warn("external rating backfill: load lookups failed", "book_id", bk.id, "err", err)
@@ -350,7 +372,7 @@ func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingC
 	var bestSource string
 	for _, src := range b.sources() {
 		name := src.provider.Name()
-		if !b.isDue(lookups[name], now) {
+		if !ttl.isDue(lookups[name], now) {
 			continue
 		}
 		// Дневной кап GB: квота исчерпана → пропускаем БЕЗ вызова и без записи

@@ -106,10 +106,11 @@ func (b *SrcLangBackfiller) drain(ctx context.Context) int {
 	// на реальном проде — современный самиздат-натив, весь not_found (замер
 	// 2026-07-19: 528/528); переводы известных книг живут в ядре (переиздания/
 	// экранизации/LIBRATE) — идём к ним первыми.
-	for _, phaseCond := range []string{"AND " + bookCoreCond, "AND NOT " + bookCoreCond} {
+	for _, phase := range corePhases {
+		ttl := b.ttl().forPhase(phase)
 		var cursor int64
 		for ctx.Err() == nil {
-			batch, err := b.fetchBatch(ctx, cursor, srcLangBackfillBatchSize, phaseCond)
+			batch, err := b.fetchBatch(ctx, cursor, srcLangBackfillBatchSize, phase.cond, ttl)
 			if err != nil {
 				b.logger.Warn("src_lang backfill: fetch batch failed", "err", err)
 				break
@@ -117,7 +118,7 @@ func (b *SrcLangBackfiller) drain(ctx context.Context) int {
 			if len(batch) == 0 {
 				break
 			}
-			b.processBatch(ctx, batch)
+			b.processBatch(ctx, batch, ttl)
 			total += len(batch)
 			cursor = batch[len(batch)-1].id
 		}
@@ -175,7 +176,7 @@ func (b *SrcLangBackfiller) candidateCond() string {
 // фазы приоритизации ("AND <core>" / "AND NOT <core>"), см. bookCoreCond.
 // Только кандидаты, которых пора спросить (dueCond), — остальных проход не
 // перечитывает.
-func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string) ([]yearCandidate, error) {
+func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit int, phaseCond string, ttl lookupTTL) ([]yearCandidate, error) {
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
@@ -196,7 +197,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 		ORDER BY b.id
 		LIMIT $2
 	`, wdHintColumns, b.candidateCond(), phaseCond, dueCond("book_src_lang_lookups", "book_id", "b.id", 3))
-	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
+	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), ttl)...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
 		return nil, err
@@ -214,7 +215,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 	return out, rows.Err()
 }
 
-func (b *SrcLangBackfiller) processBatch(ctx context.Context, batch []yearCandidate) {
+func (b *SrcLangBackfiller) processBatch(ctx context.Context, batch []yearCandidate, ttl lookupTTL) {
 	sem := make(chan struct{}, srcLangBackfillWorkers)
 	var wg sync.WaitGroup
 	for _, c := range batch {
@@ -226,7 +227,7 @@ func (b *SrcLangBackfiller) processBatch(ctx context.Context, batch []yearCandid
 		go func(c yearCandidate) {
 			defer wg.Done()
 			defer func() { <-sem }()
-			b.processOne(ctx, c)
+			b.processOne(ctx, c, ttl)
 		}(c)
 	}
 	wg.Wait()
@@ -240,7 +241,8 @@ func (b *SrcLangBackfiller) sourceNames() []string {
 	return []string{b.wd.Name()}
 }
 
-func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
+// processOne — спросить Wikidata, если пора (сроки ttl — фазы обхода, см. enrichPhase).
+func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl lookupTTL) {
 	if !b.cfg.Wikidata || b.wd == nil {
 		return
 	}
@@ -251,13 +253,13 @@ func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate) {
 	}
 	name := b.wd.Name()
 	now := time.Now()
-	if !b.isDue(lookups[name], now) {
+	if !ttl.isDue(lookups[name], now) {
 		return
 	}
 	// Кандидат без src_lang, но src_title может быть (fb2 иногда даёт название
 	// оригинала без языка) — buildExternalQuery тогда ищет по оригиналу.
 	q := buildExternalQuery(bk.queryFields())
-	if bk.wikidataShortcut(&q, b.ttl().notFound, now) {
+	if bk.wikidataShortcut(&q, ttl.notFound, now) {
 		b.recordReusedNotFound(ctx, bk.id, name)
 		return
 	}

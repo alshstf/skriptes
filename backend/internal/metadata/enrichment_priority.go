@@ -1,5 +1,7 @@
 package metadata
 
+import "time"
+
 // bookCoreCond — SQL-условие «книга из ЯДРА коллекции» для приоритизации
 // внешнего обогащения (год, язык оригинала): работа книги имеет переиздания
 // (≥2 живых изданий) ∪ экранизацию ∪ рейтинг LIBRATE. Book-level зеркало
@@ -24,3 +26,31 @@ const bookCoreCond = `(
 	)
 	OR EXISTS (SELECT 1 FROM books bb WHERE bb.work_id = b.work_id AND bb.deleted = false AND bb.rating > 0)
 )`
+
+// tailNotFoundTTL — «не найдено» у книги вне ядра перепроверяется не чаще раза в
+// год, какой бы срок ни стоял в настройках воркера (решение по #294): на проде
+// перепроверки хвоста находили 0,06–0,6 % полезного, а язык оригинала с августа
+// не нашёл ничего. Срок из настроек действует для ядра. После доработки поиска
+// перепроверить раньше — кнопка «Сбросить неудачные попытки».
+const tailNotFoundTTL = 365 * 24 * time.Hour
+
+// enrichPhase — фаза обхода «сначала ядро, потом хвост».
+type enrichPhase struct {
+	cond string // "AND <core>" / "AND NOT <core>" — доп. условие выборки (алиас books = b)
+	tail bool   // хвост: «не найдено» не чаще tailNotFoundTTL
+}
+
+// corePhases — фазы drain-циклов воркеров год / язык оригинала / рейтинг.
+var corePhases = []enrichPhase{
+	{cond: "AND " + bookCoreCond},
+	{cond: "AND NOT " + bookCoreCond, tail: true},
+}
+
+// forPhase — сроки перепроверки для фазы: в хвосте not_found — не чаще
+// tailNotFoundTTL.
+func (t lookupTTL) forPhase(p enrichPhase) lookupTTL {
+	if p.tail && t.notFound < tailNotFoundTTL {
+		t.notFound = tailNotFoundTTL
+	}
+	return t
+}
