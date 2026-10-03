@@ -315,6 +315,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/overrides", handleSetOverride(d.Settings))
 					r.Delete("/admin/overrides", handleRevertOverride(d.Settings))
 					r.Post("/admin/overrides/revert-all", handleRevertAllOverrides(d.Settings))
+					r.Post("/admin/authors/{id}/split", handleSplitAuthor(d.Settings))
 				}
 				// Раздел «Контент»: глобально скрытые жанры/языки (для всех
 				// пользователей сервера).

@@ -19,6 +19,9 @@ export type YearBook = { id: number; title: string };
  *  (для тултипа — что именно написано в этот год). */
 export type YearCount = { year: number; count: number; books?: YearBook[] };
 
+/** Работы одной эпохи автора (годы написания). */
+export type EraGroup = { from: number; to: number; work_ids: number[] };
+
 export type Author = {
   id: number;
   last_name: string;
@@ -57,6 +60,9 @@ export type Author = {
   /** «Служебный автор» (агрегат-псевдоавтор): скрыт из списка /authors;
    *  правится admin-переключателем на карточке. */
   is_service?: boolean;
+  /** Подсказка администратору (#356): работы распадаются на две эпохи с большим
+   *  разрывом — похоже, под этим именем два автора. Разделение — SplitAuthorDialog. */
+  era_split?: { older: EraGroup; newer: EraGroup };
   /** Запрос инициировал ленивое дозаполнение года (порядок книг в серии мог
    *  «упасть» на фолбэк) — фронт поллит и переставляет порядок по series_order. */
   year_enrichment_pending?: boolean;

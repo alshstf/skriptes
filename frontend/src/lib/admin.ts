@@ -922,6 +922,25 @@ export function useMergeWorks() {
   });
 }
 
+/** useSplitAuthor — разделить автора (#356): работы уходят к автору с тем же
+ *  именем и уточнением (новому или уже существующему). Ответ — его id. */
+export function useSplitAuthor() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { authorId: number; note: string; work_ids: number[] }) =>
+      apiFetch<{ author_id: number }>(`/api/admin/authors/${vars.authorId}/split`, {
+        method: 'POST',
+        body: { note: vars.note, work_ids: vars.work_ids },
+      }),
+    onSuccess: () => {
+      invalidateCatalog(qc);
+      void qc.invalidateQueries({ queryKey: ['author'] });
+      toast.success('Работы перенесены к новому автору');
+    },
+    onError: (e) => toast.error(`Не удалось разделить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
 /** useSplitEditions — вынести издания (book_ids) в новую отдельную работу. */
 export function useSplitEditions() {
   const qc = useQueryClient();

@@ -47,6 +47,10 @@ type Author struct {
 	Languages            []string    `json:"languages,omitempty"`
 	YearsActive          *YearsRange `json:"years_active,omitempty"`
 
+	// EraSplit — подсказка администратору: работы распадаются на две эпохи, похоже,
+	// под этим именем два автора (#356, см. era_split.go).
+	EraSplit *EraSplit `json:"era_split,omitempty"`
+
 	// YearStats — распределение книг автора по году НАПИСАНИЯ (written_year).
 	// Используется для гистограммы на странице автора (recharts).
 	// Сортировка по году по возрастанию; книги без written_year не попадают.

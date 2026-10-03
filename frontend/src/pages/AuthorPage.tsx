@@ -8,6 +8,7 @@ import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
+import { SplitAuthorDialog } from '@/components/SplitAuthorDialog';
 import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
@@ -128,6 +129,7 @@ export function AuthorPage() {
                 <p className="text-xs text-muted-foreground">{langNames.join(', ')}</p>
               ) : null}
               <ServiceAuthorToggle author={a} />
+              <SplitAuthorDialog author={a} />
             </div>
           </div>
 

@@ -198,6 +198,12 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	}
 	a.Languages = langs
 
+	split, err := s.queryEraSplit(ctx, id)
+	if err != nil {
+		return Author{}, err
+	}
+	a.EraSplit = split
+
 	if userID > 0 {
 		read, err := s.queryAuthorReadCount(ctx, id, userID)
 		if err != nil {

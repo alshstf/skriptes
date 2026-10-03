@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 )
 
@@ -133,5 +135,49 @@ func writeOverrideErr(w http.ResponseWriter, err error) {
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "target not found"})
 	default:
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "override failed"})
+	}
+}
+
+// handleSplitAuthor — POST /api/admin/authors/{id}/split (#356): работы
+// уходят к автору с тем же именем и уточнением. Body:
+// {"note":"поэт","work_ids":[1,2]} → {"author_id": N}.
+func handleSplitAuthor(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Overrides == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "overrides disabled"})
+			return
+		}
+		authorID, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || authorID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid author id"})
+			return
+		}
+		var body struct {
+			Note    string  `json:"note"`
+			WorkIDs []int64 `json:"work_ids"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256*1024)).Decode(&body); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "note, work_ids required"})
+			return
+		}
+		var setBy int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			setBy = u.ID
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Minute)
+		defer cancel()
+		newID, err := d.Overrides.SplitAuthor(ctx, authorID, body.Note, body.WorkIDs, setBy)
+		switch {
+		case errors.Is(err, metadata.ErrSplitAuthorNote):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Нужно уточнение для нового автора — не длиннее 100 символов и не такое, как у этого."})
+		case errors.Is(err, metadata.ErrSplitAuthorWorks):
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Выберите работы этого автора."})
+		case errors.Is(err, metadata.ErrOverrideTargetNotFound):
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "author not found"})
+		case err != nil:
+			writeOverrideErr(w, err)
+		default:
+			writeJSON(w, http.StatusOK, map[string]int64{"author_id": newID})
+		}
 	}
 }
