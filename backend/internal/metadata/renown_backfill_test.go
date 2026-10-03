@@ -272,3 +272,52 @@ func TestRenownBackfiller_WritesKind(t *testing.T) {
 	require.Equal(t, "omnibus", k, "пустой Kind не трогает существующую метку")
 	require.Equal(t, "heuristic", src)
 }
+
+// OpenLibrary у «Известности» не спрашивается о работе, чьё издание он не найдёт
+// (русское, без ISBN и названия оригинала): исход skipped окончательный, сброс
+// неудачных попыток его снимает (#294). Фантлаб спрашивается как обычно.
+func TestRenownBackfiller_SkipsOpenLibraryForUnfindable(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO works (title, normalized_title, edition_count) VALUES ('Тихий Дон', 'тихий дон', 2) RETURNING id`).Scan(&workID))
+	for _, lib := range []string{"td1", "td2"} {
+		_, err := pool.Exec(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, work_id)
+			VALUES ($1,$2,$3,'f','fb2','Тихий Дон','тихий дон','ru',$4)`, collID, archID, lib, workID)
+		require.NoError(t, err)
+	}
+
+	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 1000}}
+	ol := &fakeRenownProvider{name: "openlibrary", res: RenownResult{Ratings: 5}}
+	cfg := RenownBackfillConfig{Fantlab: true, OpenLibrary: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+	bf := NewRenownBackfiller(pool, fl, ol, nil, nil, cfg, quiet)
+	bf.drain(ctx)
+	require.Equal(t, 1, fl.callCount(), "Фантлаб спрошен")
+	require.Zero(t, ol.callCount(), "OpenLibrary не спрошен")
+	var outcome string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT outcome FROM work_renown_lookups WHERE work_id = $1 AND source = 'openlibrary'`, workID).Scan(&outcome))
+	require.Equal(t, outcomeSkipped, outcome)
+
+	require.Zero(t, bf.drain(ctx), "skipped и found — работа больше не кандидат")
+
+	ctl := NewRenownBackfillController(pool, fl, ol, nil, nil, cfg, quiet)
+	_, err := ctl.ResetFailedLookups(ctx)
+	require.NoError(t, err)
+	var n int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM work_renown_lookups WHERE work_id = $1 AND source = 'openlibrary'`, workID).Scan(&n))
+	require.Zero(t, n, "сброс неудачных попыток снимает skipped")
+}

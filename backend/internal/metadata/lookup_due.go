@@ -7,7 +7,7 @@ import (
 
 // lookupTTL — сроки перепроверки источника по исходу прошлой попытки (строка
 // book_*_lookups / work_renown_lookups): нет строки → спрашиваем; found → через
-// found (0 — никогда); native — никогда; not_found / error — через свои сроки;
+// found (0 — никогда); native и skipped — никогда; not_found / error — через свои сроки;
 // незнакомый исход → спрашиваем. Одни правила для Go (isDue) и для SQL (dueCond).
 type lookupTTL struct {
 	found    time.Duration // 0 = found не перепроверяем
@@ -15,9 +15,16 @@ type lookupTTL struct {
 	error    time.Duration
 }
 
-// outcomeNative — окончательный ответ «у книги нечего дозаполнять»: язык
-// оригинала совпал с языком издания (#294). Не перепроверяется.
-const outcomeNative = "native"
+// Окончательные исходы без перепроверки (#294):
+//   - outcomeNative — ответ «у книги нечего дозаполнять»: язык оригинала совпал
+//     с языком издания;
+//   - outcomeSkipped — источник не спрашивали: по признакам издания он работу не
+//     найдёт (OpenLibrary у «Известности» без ISBN, названия оригинала и не на
+//     иностранном языке). Снимается кнопкой «Сбросить неудачные попытки».
+const (
+	outcomeNative  = "native"
+	outcomeSkipped = "skipped"
+)
 
 // retryTTL — сроки воркеров, у которых found окончательный (год, обложка,
 // рейтинг, язык оригинала): not_found — в днях, error — в часах.
@@ -38,7 +45,7 @@ func (t lookupTTL) isDue(l lookupRow, now time.Time) bool {
 			return false
 		}
 		return now.Sub(l.checkedAt) >= t.found
-	case outcomeNative:
+	case outcomeNative, outcomeSkipped:
 		return false
 	case "not_found":
 		return now.Sub(l.checkedAt) >= t.notFound
@@ -68,6 +75,7 @@ func dueCond(table, keyCol, keyExpr string, n int) string {
 			  AND CASE l.outcome
 			          WHEN 'found'     THEN $%[5]d::interval IS NULL OR l.checked_at > now() - $%[5]d::interval
 			          WHEN 'native'    THEN true
+			          WHEN 'skipped'   THEN true
 			          WHEN 'not_found' THEN l.checked_at > now() - $%[6]d::interval
 			          WHEN 'error'     THEN l.checked_at > now() - $%[7]d::interval
 			          ELSE false

@@ -165,6 +165,7 @@ type renownCandidate struct {
 	lastName      string
 	firstName     string
 	wdQID         string // works.ext_ids->>'wd_qid' — хинт для источника wikidata
+	olFindable    bool   // OpenLibrary может найти работу (findableAbroad у издания e)
 }
 
 // candidateCond — SQL-условие выбора кандидатов по режиму охвата.
@@ -228,7 +229,8 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		           WHERE bb.work_id = w.id AND bb.deleted = false
 		       ), '{}'),
 		       COALESCE(pa.last_name, ''), COALESCE(pa.first_name, ''),
-		       COALESCE(w.ext_ids->>'wd_qid', '')
+		       COALESCE(w.ext_ids->>'wd_qid', ''),
+		       %s
 		FROM works w
 		LEFT JOIN authors pa ON pa.id = w.primary_author_id
 		JOIN LATERAL (
@@ -243,7 +245,7 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		  AND %s
 		ORDER BY w.id
 		LIMIT $2
-	`, b.candidateCond(), dueCond("work_renown_lookups", "work_id", "w.id", 3))
+	`, findableAbroad("e"), b.candidateCond(), dueCond("work_renown_lookups", "work_id", "w.id", 3))
 	args := append([]any{afterID, limit}, dueArgs(b.sourceNames(), b.ttl())...)
 	rows, err := b.pool.Query(ctx, q, args...)
 	if err != nil {
@@ -255,7 +257,7 @@ func (b *RenownBackfiller) fetchBatch(ctx context.Context, afterID int64, limit 
 		var c renownCandidate
 		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.isbn,
 			&c.srcTitle, &c.srcAuthorNorm, &c.srcLang,
-			&c.authors, &c.lastName, &c.firstName, &c.wdQID); err != nil {
+			&c.authors, &c.lastName, &c.firstName, &c.wdQID, &c.olFindable); err != nil {
 			return nil, err
 		}
 		out = append(out, c)
@@ -355,6 +357,14 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 	for _, src := range b.sources(c) {
 		name := src.provider.Name()
 		if !b.isDue(lookups[name], now) {
+			continue
+		}
+		// OpenLibrary ищет работу по изданию e: без ISBN, названия оригинала и на
+		// русском (украинском, белорусском) он почти ничего не находит — на проде
+		// 92 % его находок у работ с ISBN или названием оригинала (#294). Такие
+		// работы не спрашиваем; skipped окончательный до сброса неудачных попыток.
+		if src.provider == b.ol && !c.olFindable {
+			b.upsertLookup(ctx, c.id, name, outcomeSkipped)
 			continue
 		}
 		taskCtx, cancel := context.WithTimeout(ctx, renownTaskTimeout)
@@ -531,13 +541,14 @@ func (c *RenownBackfillController) ready() bool {
 	return c.pool != nil && (c.fl != nil || c.ol != nil || c.wd != nil)
 }
 
-// ResetFailedLookups удаляет неудачные попытки (not_found/error) из
-// work_renown_lookups — работы перепроверятся на следующем проходе. found не трогаем.
+// ResetFailedLookups удаляет неудачные попытки (not_found/error) и пропуски
+// (skipped) из work_renown_lookups — работы перепроверятся на следующем проходе.
+// found не трогаем.
 func (c *RenownBackfillController) ResetFailedLookups(ctx context.Context) (int64, error) {
 	if c.pool == nil {
 		return 0, nil
 	}
-	tag, err := c.pool.Exec(ctx, `DELETE FROM work_renown_lookups WHERE outcome IN ('not_found', 'error')`)
+	tag, err := c.pool.Exec(ctx, `DELETE FROM work_renown_lookups WHERE outcome IN ('not_found', 'error', 'skipped')`)
 	if err != nil {
 		return 0, err
 	}

@@ -189,7 +189,8 @@ func TestSrcLangBackfiller_ReusesWikidataKnowledge(t *testing.T) {
 	reused := mkBook("reused", "", `{}`)
 	groupingNotFound(reused, "10 days")
 	groupingNotFound(mkBook("with-src", "Original", `{}`), "10 days")
-	groupingNotFound(mkBook("stale", "", `{}`), "200 days")
+	// Работа из одного издания — хвост: «не найдено» живёт год (tailNotFoundTTL).
+	groupingNotFound(mkBook("stale", "", `{}`), "400 days")
 
 	prov := &fakeSrcLangProvider{name: "wikidata", err: ErrNotFound}
 	cfg := SrcLangBackfillConfig{Wikidata: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}
@@ -236,4 +237,13 @@ func TestYearCandidate_WikidataShortcut(t *testing.T) {
 	require.False(t, yearCandidate{srcTitle: "Orig", wdNotFoundAt: &fresh}.wikidataShortcut(&q, ttl, now), "другой запрос")
 	require.False(t, yearCandidate{wdQID: "bogus"}.wikidataShortcut(&q, ttl, now))
 	require.Empty(t, q.WikidataQID, "чужое значение ext_ids в запрос не идёт")
+}
+
+func TestLookupTTL_ForPhase(t *testing.T) {
+	ttl := retryTTL(90, 24)
+	require.Equal(t, 90*24*time.Hour, ttl.forPhase(corePhases[0]).notFound, "ядро — срок из настроек")
+	require.Equal(t, tailNotFoundTTL, ttl.forPhase(corePhases[1]).notFound, "хвост — не чаще раза в год")
+	require.Equal(t, 24*time.Hour, ttl.forPhase(corePhases[1]).error, "срок ошибок не меняется")
+	long := retryTTL(500, 24)
+	require.Equal(t, 500*24*time.Hour, long.forPhase(corePhases[1]).notFound, "срок длиннее года не укорачиваем")
 }

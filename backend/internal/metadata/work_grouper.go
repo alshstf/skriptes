@@ -337,10 +337,7 @@ func (g *WorkGrouper) fetchCandidateAuthors(ctx context.Context, after int64, li
 // (избегает churn на полностью проверенных книгах); точный per-source isDue —
 // внутри applyTier2. Курсор по author_id.
 func (g *WorkGrouper) fetchTier2Authors(ctx context.Context, after int64, limit int) ([]int64, error) {
-	ttlDays := g.cfg.NotFoundRetryDays
-	if ttlDays <= 0 {
-		ttlDays = 1
-	}
+	ttlDays := int(g.notFoundTTL() / (24 * time.Hour))
 	rows, err := g.pool.Query(ctx, `
 		SELECT DISTINCT ba.author_id
 		FROM books b
@@ -1735,6 +1732,14 @@ func (g *WorkGrouper) loadWorkLookups(ctx context.Context, ids []int64) (map[int
 	return out, rows.Err()
 }
 
+// notFoundTTL — срок перепроверки «не найдено» Tier-2: не чаще раза в год, какой
+// бы срок ни стоял в настройках. Кандидаты Tier-2 — работы из одного издания,
+// то есть хвост коллекции; на проде перепроверки июньских «не найдено» дали
+// 0,06 % (OL) и 0,6 % (Wikidata) полезных слияний (#294, tailNotFoundTTL).
+func (g *WorkGrouper) notFoundTTL() time.Duration {
+	return max(time.Duration(g.cfg.NotFoundRetryDays)*24*time.Hour, tailNotFoundTTL)
+}
+
 func (g *WorkGrouper) isDue(l workLookupRow, now time.Time) bool {
 	switch l.outcome {
 	case "":
@@ -1742,7 +1747,7 @@ func (g *WorkGrouper) isDue(l workLookupRow, now time.Time) bool {
 	case "found":
 		return false
 	case "not_found":
-		return now.Sub(l.checkedAt) >= time.Duration(g.cfg.NotFoundRetryDays)*24*time.Hour
+		return now.Sub(l.checkedAt) >= g.notFoundTTL()
 	case "error":
 		return now.Sub(l.checkedAt) >= time.Duration(g.cfg.ErrorRetryHours)*time.Hour
 	default:

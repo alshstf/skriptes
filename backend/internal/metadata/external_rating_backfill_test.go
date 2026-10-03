@@ -31,11 +31,11 @@ func TestExternalRatingBackfiller_isDue(t *testing.T) {
 
 func TestExternalRatingBackfiller_candidateCond(t *testing.T) {
 	fallback := &ExternalRatingBackfiller{cfg: ExternalRatingBackfillConfig{WholeCollection: false}}
-	require.Equal(t, "b.rating IS NULL AND b.external_rating IS NULL", fallback.candidateCond(),
-		"фолбэк: только книги без любого рейтинга")
+	require.Equal(t, "b.rating IS NULL AND b.external_rating IS NULL AND "+findableAbroadCond, fallback.candidateCond(),
+		"фолбэк: только книги без любого рейтинга, которые источники могут найти")
 
 	whole := &ExternalRatingBackfiller{cfg: ExternalRatingBackfillConfig{WholeCollection: true}}
-	require.Equal(t, "b.external_rating IS NULL", whole.candidateCond(),
+	require.Equal(t, "b.external_rating IS NULL AND "+findableAbroadCond, whole.candidateCond(),
 		"вся коллекция: любые книги без web-рейтинга (даже с LIBRATE)")
 }
 
@@ -253,4 +253,77 @@ func TestGBDailyCap_SeedFromDB(t *testing.T) {
 	require.True(t, ok.gbDailyCapAllows(ctx))
 	require.True(t, ok.gbDailyCapAllows(ctx))
 	require.False(t, ok.gbDailyCapAllows(ctx), "3 (сид) + 2 = 5 → блок")
+}
+
+// Сужение и сроки по #294: русская книга без ISBN и названия оригинала — не
+// кандидат; «не найдено» вне ядра перепроверяется не чаще раза в год, в ядре —
+// по сроку из настроек.
+func TestExternalRatingBackfiller_FindableAndTailTTL(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	mkWork := func(title string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title) VALUES ($1, $2) RETURNING id`, title, title).Scan(&id))
+		return id
+	}
+	mkBook := func(lib, lang, isbn string, workID int64) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, isbn, work_id)
+			VALUES ($1,$2,$3,'f','fb2',$4,$5,$6,NULLIF($7,''),$8) RETURNING id`,
+			collID, archID, lib, lib, lib, lang, isbn, workID).Scan(&id))
+		return id
+	}
+	notFoundAgo := func(bookID int64, days int) {
+		_, err := pool.Exec(ctx, `INSERT INTO book_external_rating_lookups (book_id, source, outcome, checked_at)
+			VALUES ($1, 'openlibrary', 'not_found', now() - make_interval(days => $2))`, bookID, days)
+		require.NoError(t, err)
+	}
+
+	mkBook("ru-bare", "ru", "", mkWork("ru-bare"))
+	ruISBN := mkBook("ru-isbn", "ru", "9785170000000", mkWork("ru-isbn"))
+	tail := mkBook("en-tail", "en", "", mkWork("en-tail"))
+	notFoundAgo(tail, 100)
+	coreWork := mkWork("en-core")
+	core := mkBook("en-core", "en", "", coreWork)
+	mkBook("en-core-2", "en", "", coreWork) // второе издание — работа в ядре
+	notFoundAgo(core, 100)
+
+	asked := map[int64]bool{}
+	ol := &askedRatingProvider{name: "openlibrary", asked: asked}
+	bf := NewExternalRatingBackfiller(pool, nil, ol,
+		ExternalRatingBackfillConfig{OpenLibrary: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}, quiet)
+	bf.drain(ctx)
+
+	require.True(t, asked[ruISBN], "русская книга с ISBN — спрашиваем")
+	require.True(t, asked[core], "ядро: «не найдено» 100 дней назад при сроке 90 — перепроверяем")
+	require.False(t, asked[tail], "хвост: «не найдено» перепроверяется не чаще раза в год")
+	var n int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_external_rating_lookups l JOIN books b ON b.id = l.book_id WHERE b.lib_id = 'ru-bare'`).Scan(&n))
+	require.Zero(t, n, "русская книга без ISBN и названия оригинала — не кандидат")
+}
+
+// askedRatingProvider — отмечает, о каких книгах спросили; всегда «не найдено».
+type askedRatingProvider struct {
+	name  string
+	asked map[int64]bool
+}
+
+func (p *askedRatingProvider) Name() string { return p.name }
+func (p *askedRatingProvider) FetchRating(_ context.Context, q WorkQuery) (RatingResult, error) {
+	p.asked[q.BookID] = true
+	return RatingResult{}, ErrNotFound
 }
