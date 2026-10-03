@@ -41,6 +41,7 @@ func TestFantlabFetchRenown_HappyPath(t *testing.T) {
 	require.Equal(t, 6724, res.Ratings)
 	require.Zero(t, res.Want)
 	require.Equal(t, "novel", res.Kind, "work_type_id=1 (роман) → уверенно обычное произведение")
+	require.Equal(t, 2005, res.Year, "год первой публикации из того же ответа (#288)")
 }
 
 func TestFantlabFetchRenown_CollectionKind(t *testing.T) {

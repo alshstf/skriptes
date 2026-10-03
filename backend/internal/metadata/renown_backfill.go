@@ -421,6 +421,15 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 				UPDATE works SET kind = $2, kind_source = 'fantlab', updated_at = now()
 				WHERE id = $1 AND kind_source IS DISTINCT FROM 'override'`, workID, kind)
 		}
+		// Год первой публикации от Фантлаба (#288) — внешний год работы; год работы
+		// пересчитывается (самый ранний правдоподобный, ручная правка — нет).
+		if err == nil && res.Year > 0 {
+			if _, err = b.pool.Exec(ctx, `
+				UPDATE works SET external_year = $2, external_year_source = 'fantlab', updated_at = now()
+				WHERE id = $1 AND (external_year IS NULL OR external_year > $2)`, workID, res.Year); err == nil {
+				_, err = RecomputeWorkYears(ctx, b.pool, []int64{workID})
+			}
+		}
 	case "openlibrary":
 		_, err = b.pool.Exec(ctx,
 			`UPDATE works SET ol_ratings_count = $2, ol_want_count = $3, updated_at = now() WHERE id = $1`,
