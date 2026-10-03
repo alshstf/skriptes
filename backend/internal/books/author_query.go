@@ -103,9 +103,26 @@ func nameCoversQuery(last, first, middle string, words []string) bool {
 	return hasLast
 }
 
+// latinCoversQuery — запрос называет автора латиницей (authors.latin_name из fb2
+// переводов, «doyle arthur conan»): каждое слово запроса — слово латинского
+// имени, и фамилия (первое слово) среди них. «doyle», «arthur conan doyle» — да.
+func latinCoversQuery(latin string, words []string) bool {
+	lw := strings.Fields(latin)
+	if len(lw) == 0 || len(words) == 0 || len(words) > authorQueryMaxWords || !slices.Contains(words, lw[0]) {
+		return false
+	}
+	for _, w := range words {
+		if !slices.Contains(lw, w) {
+			return false
+		}
+	}
+	return true
+}
+
 // matchQueryAuthors — известные авторы, которых называет запрос, по убыванию
-// известности. Кандидатов отбирает trigram-индекс по свёрнутому имени (миграция
-// 0042) — по самому длинному слову запроса; точное правило — nameCoversQuery.
+// известности. Кандидатов отбирают trigram-индексы по свёрнутому имени
+// (миграция 0042) и по латинскому имени (0046) — по самому длинному слову
+// запроса; точное правило — nameCoversQuery или latinCoversQuery.
 func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]MatchedAuthor, error) {
 	words := queryWords(query)
 	if s.pool == nil || len(words) == 0 || len(words) > authorQueryMaxWords {
@@ -122,10 +139,11 @@ func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]Matche
 	}
 	rows, err := s.pool.Query(ctx, `
 		SELECT a.id, a.last_name, COALESCE(a.first_name, ''), COALESCE(a.middle_name, ''),
-		       COALESCE(a.name_note, ''), a.book_count, a.renown
+		       COALESCE(a.name_note, ''), a.book_count, a.renown, COALESCE(a.latin_name, '')
 		FROM authors a
 		WHERE NOT a.is_service AND a.renown >= $2 AND a.book_count > 0
-		  AND replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
+		  AND (replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
+		       OR a.latin_name ILIKE '%' || $1 || '%' ESCAPE '\')
 		ORDER BY a.renown DESC, a.id
 		LIMIT 20`, escapeLikePattern(longest), authorQueryMinRenown)
 	if err != nil {
@@ -135,13 +153,13 @@ func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]Matche
 	var out []MatchedAuthor
 	for rows.Next() {
 		var (
-			m                   MatchedAuthor
-			last, first, middle string
+			m                          MatchedAuthor
+			last, first, middle, latin string
 		)
-		if err := rows.Scan(&m.ID, &last, &first, &middle, &m.Note, &m.BookCount, &m.renown); err != nil {
+		if err := rows.Scan(&m.ID, &last, &first, &middle, &m.Note, &m.BookCount, &m.renown, &latin); err != nil {
 			return nil, err
 		}
-		if !nameCoversQuery(last, first, middle, words) {
+		if !nameCoversQuery(last, first, middle, words) && !latinCoversQuery(latin, words) {
 			continue
 		}
 		if len(out) > 0 && m.renown*matchedRenownShare < out[0].renown {

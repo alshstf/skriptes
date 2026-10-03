@@ -194,7 +194,9 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		// SuggestAuthors, #278): GIN trigram index по тому же выражению
 		// (authors_name_yo_trgm) ускоряет на длинных запросах.
 		n := addArg(textnorm.FoldYo(escapeLike(q)))
-		where = append(where, fmt.Sprintf(`replace(a.normalized_name::text, 'ё', 'е') ILIKE $%d || '%%' ESCAPE '\'`, n))
+		// Латиницей — по латинскому имени из fb2 переводов (миграция 0046).
+		where = append(where, fmt.Sprintf(`(replace(a.normalized_name::text, 'ё', 'е') ILIKE $%[1]d || '%%' ESCAPE '\'`+
+			` OR a.latin_name ILIKE $%[1]d || '%%' ESCAPE '\')`, n))
 	}
 
 	if p.FavoritesOnly && p.UserID > 0 {

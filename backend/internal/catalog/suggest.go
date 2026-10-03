@@ -36,7 +36,11 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 	}
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
-	where, args := wordConditions("replace(a.normalized_name::text, 'ё', 'е')", q, args)
+	// Кириллица — по свёрнутому имени, латиница — по латинскому имени из fb2
+	// переводов (миграция 0046): «doyle» находит «Дойль Артур Конан».
+	whereCyr, args := wordConditions("replace(a.normalized_name::text, 'ё', 'е')", q, args)
+	whereLat, args := wordConditions("COALESCE(a.latin_name, '')", q, args)
+	where := "((" + whereCyr + ") OR (" + whereLat + "))"
 
 	// Кандидаты — дёшево (без видимости, по известности authors.renown), видимые
 	// книги считаются только для них: раньше COUNT шёл по каждому совпадению (на

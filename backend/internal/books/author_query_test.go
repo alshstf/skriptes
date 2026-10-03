@@ -43,3 +43,11 @@ func TestAndFilter(t *testing.T) {
 	require.Equal(t, "(author_ids IN [1, 2])", andFilter("", authorIDsFilter([]MatchedAuthor{{ID: 1}, {ID: 2}})))
 	require.Equal(t, `(lang = "ru") AND (NOT author_ids IN [3])`, andFilter(`lang = "ru"`, "NOT "+authorIDsFilter([]MatchedAuthor{{ID: 3}})))
 }
+
+func TestLatinCoversQuery(t *testing.T) {
+	require.True(t, latinCoversQuery("doyle arthur conan", queryWords("Doyle")))
+	require.True(t, latinCoversQuery("doyle arthur conan", queryWords("arthur conan doyle")))
+	require.False(t, latinCoversQuery("doyle arthur conan", queryWords("arthur")), "без фамилии")
+	require.False(t, latinCoversQuery("doyle arthur conan", queryWords("doyle sherlock")))
+	require.False(t, latinCoversQuery("", queryWords("doyle")))
+}
