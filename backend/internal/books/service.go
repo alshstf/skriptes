@@ -290,6 +290,17 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		visibleLangs = s.allLangs(ctx)
 	}
 
+	// Запрос — имя известного автора: сначала его работы, потом остальное (#290).
+	if authorQueryEligible(params, offset, limit) {
+		res, ok, err := s.listWorksByAuthor(ctx, params, offset, limit, rerank, visibleLangs)
+		if err != nil {
+			return ListResponse{}, err
+		}
+		if ok {
+			return res, nil
+		}
+	}
+
 	// «all»: документ обязан матчить ВСЕ слова запроса. Meili-дефолт «last»
 	// прогрессивно роняет хвостовые слова — «гарри <мусор>» матчил то же, что
 	// «гарри» (прод-аудит P1 #5): лишние/опечатанные слова не сужали выдачу.
@@ -334,34 +345,9 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		return s.List(ctx, params)
 	}
 
-	scored := make([]scoredItem, 0, len(res.Hits))
-	for _, h := range res.Hits {
-		var wh workHit
-		if err := h.DecodeInto(&wh); err != nil {
-			continue
-		}
-		score := 0.0
-		if rerank {
-			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
-				_ = json.Unmarshal(raw, &score)
-			}
-		}
-		scored = append(scored, scoredItem{
-			item: wh.toListItem(), base: score, pop: popularityBoost(wh.Popularity),
-		})
-	}
-
+	scored := scoreWorkHits(res.Hits, rerank)
 	if rerank {
-		// Тот же финальный score, что у SuggestWorks (persona + известность) —
-		// иначе hero-подсказки и /books по одному запросу дают разный порядок.
-		// Буст known-книг только на первой странице с запросом: browse и
-		// следующие страницы — чистый Meili-порядок. Пересортировка не меняет
-		// СОСТАВ страницы (окно = limit), только порядок внутри — страницы
-		// стыкуются без потерь и повторов.
-		if profile, err := s.persona.PersonaProfile(ctx, params.UserID); err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile)
-		}
-		sortByFinalScore(scored)
+		s.rerankScored(ctx, params.UserID, scored)
 	}
 
 	items := make([]ListItem, 0, len(scored))
@@ -391,6 +377,19 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		ProcessTime: res.ProcessingTimeMs,
 		Facets:      decodeFacets(res.FacetDistribution),
 	}, nil
+}
+
+// rerankScored — пересортировка страницы поиска: тот же финальный score, что у
+// SuggestWorks (persona + известность), — иначе hero-подсказки и /books по одному
+// запросу дают разный порядок. Буст known-книг только на первой странице с
+// запросом: browse и следующие страницы — чистый Meili-порядок. Пересортировка не
+// меняет СОСТАВ страницы (окно = limit), только порядок внутри — страницы
+// стыкуются без потерь и повторов.
+func (s *Service) rerankScored(ctx context.Context, userID int64, scored []scoredItem) {
+	if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
+		applyPersonaBoost(scored, profile)
+	}
+	sortByFinalScore(scored)
 }
 
 // SuggestWorks — typeahead по индексу works (Cmd+K + hero-поиск Главной).

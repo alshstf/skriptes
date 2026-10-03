@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { BookCover } from '@/components/BookCover';
 import { GenreChips } from '@/components/GenreChips';
 import { BookMeta } from '@/components/BookMeta';
+import { MatchedAuthors } from '@/components/MatchedAuthors';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import {
@@ -297,6 +298,8 @@ export function BooksPage() {
             {firstPage.processing_ms}мс
           </p>
         ) : null}
+
+        {firstPage?.matched_authors?.length ? <MatchedAuthors authors={firstPage.matched_authors} /> : null}
 
         {/* Чипсы выбранных фильтров — только на десктопе. На мобильном
             при выборе целой категории жанров их набегает столько, что
