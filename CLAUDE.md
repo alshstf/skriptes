@@ -371,7 +371,7 @@ ClassifyServiceAuthors` (advisory-lock от гонки runOnce/after-import — 
 консервативные якорные фразы + префиксы «газета/журнал/альманах/редакция/издательство » С
 продолжением + «автор неизвестен»/«коллектив авторов» отдельными словами где угодно — librusec:
 «Эротика и секс | Автор неизвестен | --»; правило одно на SQL и Go — `internal/authorkind`),
-runOnce-гейт `service_authors_classified_v2` (бампать при расширении правила) + after-import; скрыты ТОЛЬКО из
+runOnce-гейт `service_authors_classified_v3` (бампать при расширении правила; v3 — «газета/журнал/альманах» отдельным словом после другого: «Литературная газета», #383) + after-import; скрыты ТОЛЬКО из
 СПИСКА `/authors` и его сортировок (`NOT a.is_service` в базовом WHERE `ListAuthorsFiltered`) —
 карточка по прямой ссылке и suggest/Cmd+K сознательно работают; admin-переключатель «Служебный
 автор» на карточке (`PUT /admin/authors/{id}/service`, source='manual' — эвристика не перетирает).

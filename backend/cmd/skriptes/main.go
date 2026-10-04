@@ -938,9 +938,10 @@ func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, imp *impor
 // service_authors_classified_vN: один раз на апгрейде; дальше новых метит
 // after-import вызов. Зеркало runOnceWorkKindClassify. Расширил правило
 // (authorkind.ServiceNamePatterns) — бампни версию, иначе старые записи
-// разметятся только при следующем импорте (v2: «Категория | Автор неизвестен», #297).
+// разметятся только при следующем импорте (v2: «Категория | Автор неизвестен», #297;
+// v3: «Литературная газета», «Авиация Журнал», #383).
 func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "service_authors_classified_v2"
+	const flag = "service_authors_classified_v3"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("service author classify: check flag failed — skip", "err", err)
