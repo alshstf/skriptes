@@ -9,6 +9,7 @@ import { BackButton } from '@/components/BackButton';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
+import { InlineEditableField } from '@/components/InlineEditableField';
 import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useSeries, type Series } from '@/lib/catalog';
@@ -84,10 +85,23 @@ export function SeriesPage() {
       <BackButton />
       <header className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <ListOrdered className="size-5 text-muted-foreground" aria-hidden />
-            {s.title}
-          </h1>
+          {/* Название правит админ (#379): меняется показ, ключ серии для импорта
+              — прежний; переживает импорт, откатывается. */}
+          <InlineEditableField
+            targetKind="series"
+            targetID={s.id}
+            field="title"
+            value={s.title}
+            kind="text"
+            label="Название серии"
+            overridden={s.title_overridden ?? false}
+            layout="heading"
+          >
+            <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+              <ListOrdered className="size-5 text-muted-foreground" aria-hidden />
+              {s.title}
+            </h1>
+          </InlineEditableField>
           <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
         </div>
         {s.kind === 'multi' ? (

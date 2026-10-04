@@ -95,6 +95,11 @@ func (c *OverrideController) SetOverride(ctx context.Context, kind string, targe
 	switch kind {
 	case "book":
 		return c.setBookScalar(ctx, targetID, field, value, setBy)
+	case "series":
+		if field == "title" {
+			return c.setSeriesTitle(ctx, targetID, value, setBy)
+		}
+		return fmt.Errorf("%w: series.%s", ErrUnknownOverrideField, field)
 	case "work":
 		if field == "genres" {
 			return c.setWorkGenres(ctx, targetID, value, setBy)
@@ -116,6 +121,11 @@ func (c *OverrideController) RevertOverride(ctx context.Context, kind string, ta
 	switch kind {
 	case "book":
 		return c.revertBookScalar(ctx, targetID, field)
+	case "series":
+		if field == "title" {
+			return c.revertSeriesTitle(ctx, targetID)
+		}
+		return fmt.Errorf("%w: series.%s", ErrUnknownOverrideField, field)
 	case "work":
 		if field == "genres" {
 			return c.revertWorkGenres(ctx, targetID)
@@ -269,6 +279,109 @@ func (c *OverrideController) revertWorkField(ctx context.Context, workID int64, 
 	c.syncWorkIndex(workID)
 	c.logger.Info("metadata override reverted", "kind", "work", "target", workID, "field", field)
 	return nil
+}
+
+// ── kind='series', field='title': название серии (#379) ─────────────────────
+//
+// Меняется только series.title (показ: карточка серии, книги, поиск works-индекса).
+// normalized_title — ключ, по которому импорт узнаёт серию (upsertSeries), —
+// остаётся прежним: иначе следующий импорт завёл бы серию со старым названием и
+// увёл бы в неё книги. Импорт переписывает title авторской серии из INPX —
+// ReapplyAfterImport ставит правку обратно. Подсказка серий ищет переименованные
+// и по новому названию (catalog.SuggestSeries).
+
+func (c *OverrideController) setSeriesTitle(ctx context.Context, seriesID int64, value json.RawMessage, setBy int64) error {
+	v, err := decodeScalar(value, "text")
+	if err != nil {
+		return err
+	}
+	title, _ := v.(string)
+	title = strings.TrimSpace(title)
+	if title == "" {
+		return fmt.Errorf("override: title must not be empty")
+	}
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	if err := upsertLedger(ctx, tx, "series", seriesID, "title", value, setBy, func() (json.RawMessage, error) {
+		var raw json.RawMessage
+		err := tx.QueryRow(ctx, `SELECT jsonb_build_object('v', title) FROM series WHERE id = $1`, seriesID).Scan(&raw)
+		return raw, err
+	}); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `UPDATE series SET title = $2 WHERE id = $1`, seriesID, title); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncSeriesWorks(seriesID)
+	c.logger.Info("metadata override set", "kind", "series", "target", seriesID, "field", "title")
+	return nil
+}
+
+func (c *OverrideController) revertSeriesTitle(ctx context.Context, seriesID int64) error {
+	tx, err := c.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	orig, err := loadOriginal(ctx, tx, "series", seriesID, "title")
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	var o struct {
+		V string `json:"v"`
+	}
+	if err := json.Unmarshal(orig, &o); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `UPDATE series SET title = $2 WHERE id = $1`, seriesID, o.V); err != nil {
+		return err
+	}
+	if err := deleteLedger(ctx, tx, "series", seriesID, "title"); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	c.syncSeriesWorks(seriesID)
+	c.logger.Info("metadata override reverted", "kind", "series", "target", seriesID, "field", "title")
+	return nil
+}
+
+// syncSeriesWorks — works-индекс несёт название серии (поиск) — обновить работы серии.
+func (c *OverrideController) syncSeriesWorks(seriesID int64) {
+	if c.resyncer == nil {
+		return
+	}
+	spawn(func() {
+		ctx := workersCtx
+		ids, err := seriesWorkIDs(ctx, c.pool, seriesID)
+		if err == nil && len(ids) > 0 {
+			err = c.resyncer.UpsertWorksToIndex(ctx, ids)
+		}
+		if err != nil {
+			c.logger.Warn("override: works index resync for series failed", "series", seriesID, "err", err)
+		}
+	})
+}
+
+func seriesWorkIDs(ctx context.Context, db pgxExec, seriesID int64) ([]int64, error) {
+	rows, err := db.Query(ctx, `
+		SELECT id FROM works WHERE series_id = $1
+		UNION
+		SELECT DISTINCT work_id FROM books WHERE series_id = $1 AND work_id IS NOT NULL`, seriesID)
+	if err != nil {
+		return nil, err
+	}
+	return pgx.CollectRows(rows, pgx.RowTo[int64])
 }
 
 // ── kind='work', field='genres': M:N (PR5) ────────────────────────────────
@@ -1229,6 +1342,31 @@ func (c *OverrideController) ReapplyAfterImport(ctx context.Context) (int, error
 			continue
 		}
 		works[it.workID] = struct{}{}
+		total++
+	}
+
+	// Названия серий (#379): импорт переписывает title авторской серии из INPX.
+	trows, err := c.pool.Query(ctx, `
+		UPDATE series s SET title = o.override_value->>'v'
+		FROM metadata_overrides o
+		WHERE o.target_kind = 'series' AND o.field = 'title' AND o.target_id = s.id
+		  AND s.title IS DISTINCT FROM o.override_value->>'v'
+		RETURNING s.id`)
+	if err != nil {
+		return total, err
+	}
+	renamed, err := pgx.CollectRows(trows, pgx.RowTo[int64])
+	if err != nil {
+		return total, err
+	}
+	for _, sid := range renamed {
+		ids, err := seriesWorkIDs(ctx, c.pool, sid)
+		if err != nil {
+			return total, err
+		}
+		for _, w := range ids {
+			works[w] = struct{}{}
+		}
 		total++
 	}
 

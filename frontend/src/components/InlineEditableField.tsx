@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils';
  *         'heading' — крупный текст (заголовок карточки), правка тоже на месте.
  */
 type Props = {
-  targetKind: 'book' | 'work';
+  targetKind: 'book' | 'work' | 'series';
   targetID: number;
   field: string;
   value: string | number | null | undefined;

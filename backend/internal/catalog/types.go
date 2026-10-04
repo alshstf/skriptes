@@ -146,14 +146,17 @@ type SeriesAuthorRef struct {
 }
 
 type Series struct {
-	ID         int64             `json:"id"`
-	Title      string            `json:"title"`
-	Kind       string            `json:"kind,omitempty"` // "multi" — межавторская/издательская
-	AuthorID   *int64            `json:"author_id,omitempty"`
-	AuthorName string            `json:"author_name,omitempty"`
-	Authors    []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)
-	BookCount  int               `json:"book_count"`
-	Books      []books.ListItem  `json:"books"` // отсортированы по ser_no, deleted скрыты
+	ID    int64  `json:"id"`
+	Title string `json:"title"`
+	Kind  string `json:"kind,omitempty"` // "multi" — межавторская/издательская
+	// TitleOverridden — название изменено правкой админа (metadata_overrides,
+	// target_kind='series'), для индикатора и «Отменить правку».
+	TitleOverridden bool              `json:"title_overridden,omitempty"`
+	AuthorID        *int64            `json:"author_id,omitempty"`
+	AuthorName      string            `json:"author_name,omitempty"`
+	Authors         []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)
+	BookCount       int               `json:"book_count"`
+	Books           []books.ListItem  `json:"books"` // отсортированы по ser_no, deleted скрыты
 
 	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`

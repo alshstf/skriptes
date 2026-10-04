@@ -112,6 +112,10 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{textnorm.FoldYo(escapeLike(q)), limit}, exArgs...)
 	where, args := wordConditions("replace(s.normalized_title::text, 'ё', 'е')", q, args)
+	// Переименованную правкой серию (#379) ищем и по новому названию: ключ
+	// normalized_title остаётся прежним (по нему серию узнаёт импорт).
+	renamed, args := wordConditions("replace(lower(s.title), 'ё', 'е')", q, args)
+	where = "(" + where + ") OR (s.id IN (SELECT target_id FROM metadata_overrides WHERE target_kind = 'series' AND field = 'title') AND " + renamed + ")"
 
 	// Как у авторов: дешёвые кандидаты, видимые книги — только для них (#309).
 	rows, err := s.pool.Query(ctx, `
