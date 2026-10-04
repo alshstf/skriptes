@@ -51,7 +51,7 @@ func NewTMDBPosterProvider(apiKey string) *TMDBPosterProvider {
 		apiKey:     apiKey,
 		baseURL:    "https://api.themoviedb.org",
 		imageBase:  "https://image.tmdb.org",
-		httpClient: &http.Client{Timeout: 15 * time.Second},
+		httpClient: SourceHTTPClient(15 * time.Second),
 		gate:       &rateGate{},
 	}
 	p.gate.setRPM(tmdbRPM)

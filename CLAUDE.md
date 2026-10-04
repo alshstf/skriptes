@@ -1367,6 +1367,16 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 уронить его, если DNS хоста не резолвит адрес тома (латентно до рестарта) — не пересоздавать прод-контейнеры
 без нужды.
 
+**Прерыватель по хосту (#299).** Все HTTP-клиенты обогащения — `metadata.SourceHTTPClient` /
+`NewEnricherHTTPClient` (транспорт `breakerTransport`, `metadata/source_breaker.go`; общее состояние на процесс,
+ключ — `URL.Host`). 5 сбоев подряд (сеть, таймаут, 429, 5xx; 404 — не сбой, отмена `context.Canceled` — не в счёт) →
+пауза 5 мин, после паузы один пробный запрос, провал — пауза вдвое (до 6 ч), успех — закрыт. Пока пауза, запрос не
+уходит в сеть и возвращает `ErrSourcePaused` (`*SourcePausedError`, через `url.Error` ловится `errors.Is`): воркеры
+пропускают книгу молча — без записи `error` в учёт и без строки в логе (`case errors.Is(ferr, ErrSourcePaused)` в каждом
+воркере), `RecheckPosterHoles` останавливает проход, метрика исхода — `paused`. Лог — одна WARN на паузу и INFO на
+восстановление; метрики `skriptes_external_source_up{host}` / `skriptes_external_source_pauses_total{host}`, алерт
+`SkriptesSourcePaused` в Grafana хоумлаба. ⚠️ Новый провайдер — только через `SourceHTTPClient`, не голый `http.Client`.
+
 ### 21. Воркеры с lookups-учётом выбирают кандидатов уже с учётом срока — в SQL
 
 Год / обложки / внешний рейтинг / язык оригинала / известность: `fetchBatch` отбирает

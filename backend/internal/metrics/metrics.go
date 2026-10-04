@@ -89,9 +89,23 @@ var (
 		Help: "Записей INPX с ошибкой (пропущены) в последнем удачном импорте.",
 	})
 
+	// ExternalSourceUp — 0, пока внешний источник (хост) на паузе прерывателя
+	// после серии сбоев (#299); 1 — доступен.
+	ExternalSourceUp = factory.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "skriptes_external_source_up",
+		Help: "Доступность внешнего источника обогащения по хосту: 0 — на паузе после серии сбоев (сеть, 429, 5xx).",
+	}, []string{"host"})
+
+	// ExternalSourcePauses — сколько раз источник ставили на паузу.
+	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
+		Name: "skriptes_external_source_pauses_total",
+		Help: "Сколько раз внешний источник обогащения ставили на паузу после серии сбоев.",
+	}, []string{"host"})
+
 	// EnrichmentLookups — запросы фоновых воркеров обогащения к внешним
 	// источникам: worker — воркер, source — источник, outcome — found |
-	// not_found | error (как в таблицах учёта *_lookups).
+	// not_found | error (как в таблицах учёта *_lookups) | paused (источник на
+	// паузе прерывателя, запрос не ушёл).
 	EnrichmentLookups = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_enrichment_lookups_total",
 		Help: "Запросы обогащения к внешним источникам (фоновые воркеры и ленивое обогащение с карточек) по воркеру, источнику и исходу.",

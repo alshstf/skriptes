@@ -229,8 +229,10 @@ func run() error {
 	// Wikipedia (top hit rate для русских классиков) → Open Library (fallback).
 	// Экранизации — Wikidata (SPARQL P144); TMDB enrichment отдельной
 	// фичей по запросу, требует API key.
-	httpClient := &http.Client{Timeout: 10 * time.Second}
-	sparqlClient := &http.Client{Timeout: 15 * time.Second} // SPARQL медленнее, отдельный timeout
+	// Все клиенты обогащения — с прерывателем по хосту (#299): недоступный
+	// источник ставится на паузу, а не опрашивается вхолостую каждый цикл.
+	httpClient := metadata.SourceHTTPClient(10 * time.Second)
+	sparqlClient := metadata.SourceHTTPClient(15 * time.Second) // SPARQL медленнее, отдельный timeout
 	// OL/GB — отдельные клиенты с осмысленным User-Agent: анонимный Go-UA
 	// троттлится (особенно OpenLibrary → наблюдались context deadline). OL даём
 	// 20с — его search.json медленный. Wiki ставит свой UA сам, остаётся на httpClient.

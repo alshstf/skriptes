@@ -42,7 +42,7 @@ type olAuthorResult struct {
 
 func NewOpenLibraryProvider(httpClient *http.Client) *OpenLibraryProvider {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 10 * time.Second}
+		httpClient = SourceHTTPClient(10 * time.Second)
 	}
 	return &OpenLibraryProvider{
 		authors:    newTTLCache[olAuthorResult](lookupCacheTTL, lookupCacheSize),

@@ -51,7 +51,7 @@ const wikiUserAgent = "skriptes/0.1 (https://github.com/alshstf/skriptes; metada
 
 func NewWikipediaProvider(httpClient *http.Client) *WikipediaProvider {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 10 * time.Second}
+		httpClient = SourceHTTPClient(10 * time.Second)
 	}
 	return &WikipediaProvider{httpClient: httpClient, titles: newTTLCache[titleResult](lookupCacheTTL, lookupCacheSize)}
 }

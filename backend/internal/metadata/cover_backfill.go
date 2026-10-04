@@ -269,6 +269,8 @@ func (b *CoverBackfiller) processOne(ctx context.Context, bk coverCandidate) {
 			return // обложка появилась/занято (race) — выходим тихо
 		case errors.Is(ferr, ErrNotFound):
 			b.upsertLookup(ctx, bk.id, name, "not_found")
+		case errors.Is(ferr, ErrSourcePaused):
+			continue // источник на паузе (#299): запрос не ушёл, книгу возьмём позже
 		case ctx.Err() != nil:
 			return // отмена воркера, не записываем как ошибку источника
 		default:

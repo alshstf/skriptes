@@ -677,6 +677,9 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 				g.upsertWorkLookup(ctx, b.id, name, "not_found", "")
 				continue
 			}
+			if errors.Is(ferr, ErrSourcePaused) {
+				continue // источник на паузе (#299): запрос не ушёл, книгу возьмём позже
+			}
 			if ctx.Err() != nil {
 				return extByRoot
 			}
