@@ -241,7 +241,7 @@ docker compose -f docker-compose.release.yml -f docker-compose.harden.yml \
 - **Вход напрямую**: на роутере пробросьте 443 (и 80 — редирект на https и запасная проверка ACME) на хост, A-запись `SKRIPTES_HOST` — на внешний IP. Caddy сам получит и продлит сертификат Let's Encrypt. Хост лучше изолировать (отдельная VM/VLAN, без доступа в домашнюю сеть).
 - **`Caddyfile.public`** (overlay монтирует его вместо базового): HSTS и базовые security-заголовки; вырезает присланные клиентом `CF-Connecting-IP` / `True-Client-IP` / `X-Real-IP` (иначе ими подделывается IP и обходится лимит попыток входа). **Админ-API (`/api/admin/*`) и OPDS — только из доверенных сетей** `SKRIPTES_LAN_CIDRS` (CIDR через пробел, например `192.168.0.0/24 10.50.0.1/32` — домашняя подсеть и адрес роутера в DMZ при NAT reflection): снаружи админка отвечает 403, OPDS — 404. Не задана — закрыто для всех; `0.0.0.0/0 ::/0` — открыть всем (не рекомендуется: у админа нет 2FA). Адреса проверяются по реальному адресу соединения, заголовками их не подделать.
 - **Хардненинг контейнеров**: `cap_drop: ALL`, read-only FS + tmpfs, `no-new-privileges`, лимиты памяти; backend и frontend — non-root.
-- **Память**: на коллекции ~550 тыс. книг postgres и meilisearch держат около 0,9 ГБ каждый. Лимиты overlay — `PG_MEM_LIMIT` / `MEILI_MEM_LIMIT` (дефолт `2g`), индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM. Параметры Postgres overlay подогнаны под лимит 2 ГБ (`shared_buffers` 512 МБ, `work_mem` 16 МБ, JIT выкл., `random_page_cost` 1.1 для SSD) — поднимаете лимит, поднимите и их (`PG_SHARED_BUFFERS`, `PG_EFFECTIVE_CACHE_SIZE`, см. таблицу env).
+- **Память**: процессы postgres и meilisearch сами по себе занимают немного (Meili ~0,5 ГБ, postgres — `shared_buffers` и соединения), остальное — кэш файлов: индекс Meili читается через mmap, и любой лимит заполняется кэшем — это нормально, ядро вытесняет его по мере нужды. Поэтому лимиты overlay (`PG_MEM_LIMIT` / `MEILI_MEM_LIMIT`, дефолт `2g`) — потолок на случай утечки, а резерв (`PG_MEM_RESERVATION` / `MEILI_MEM_RESERVATION`, cgroup `memory.low`) — минимум, который ядро не отберёт под чужой кэш при нехватке памяти на хосте. Параметры postgres считаются при старте из его лимита. Реальную нехватку показывает время ожидания памяти (PSI): `container_pressure_memory_waiting_seconds_total` у cAdvisor и `node_pressure_memory_waiting_seconds_total` у node-exporter — по ним и стоит алертить, а не по «потреблению у лимита». Индексация Meili ограничена `MEILI_MAX_INDEXING_MEMORY` (дефолт `1Gb`; без него Meili берёт до ⅔ памяти хоста, а не контейнера). Индекс на диске больше `MEILI_MEM_LIMIT` (коллекция ~550 тыс. книг — ~2,1 ГБ) — поднимите лимит (на DMZ-инстансе — `4g` при резерве `2560m`). Весь стек с дефолтными лимитами — до ~5,5 ГБ; хосту нужно 6–8 ГБ RAM.
 - **Метрики и журнал запросов**: `Caddyfile.public` пишет журнал запросов в JSON в stdout (Cookie и Authorization Caddy вырезает сам; IP посетителей и пути, включая поисковые запросы, остаются — учитывайте при хранении). Метрики приложения и Caddy отдаёт отдельный сайт `:9180` (`/metrics/skriptes`, `/metrics/caddy`) — только адресам из `SKRIPTES_METRICS_CIDRS`, порт публикуется на `SKRIPTES_METRICS_BIND` (по умолчанию 127.0.0.1). Порты, опубликованные Docker, обходят ufw — ограничивайте доступ к 9180 и на роутере.
 - **Только TCP 443**: HTTP/3 (QUIC по UDP 443) в Caddyfile выключен — пробрасывать UDP не нужно.
 - **Лимит попыток входа** общий для формы логина и OPDS (раньше перебор через OPDS Basic-auth не ограничивался). `SKRIPTES_TRUST_CF_CONNECTING_IP=true` — только если весь трафик идёт через Cloudflare.
@@ -356,10 +356,12 @@ Skriptes, а потом добавьте в Skriptes свой адрес Kindle.
 | `POSTGRES_DB` | `skriptes` | Имя БД |
 | `POSTGRES_PORT` | `5432` | Порт на хосте (биндится только на 127.0.0.1) |
 | `PG_SHM_SIZE` | `256m` | `/dev/shm` контейнера postgres: с дефолтными 64 МБ Docker тяжёлые параллельные запросы падают «No space left on device» |
-| `PG_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера postgres |
-| `PG_SHARED_BUFFERS` | `512MB` | Только hardening-overlay: `shared_buffers` (≈¼ `PG_MEM_LIMIT`) |
-| `PG_WORK_MEM` | `16MB` | Только hardening-overlay: `work_mem` — память на сортировку/хэш в запросе |
-| `PG_EFFECTIVE_CACHE_SIZE` | `1536MB` | Только hardening-overlay: `effective_cache_size` (≈¾ `PG_MEM_LIMIT`) |
+| `PG_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера postgres — потолок на случай утечки; от него считаются параметры ниже |
+| `PG_MEM_RESERVATION` | `512m` | Только hardening-overlay: защищённый минимум памяти (cgroup `memory.low`) — при нехватке на хосте кэш postgres вытесняется последним |
+| `PG_SHARED_BUFFERS` | ¼ лимита | Только hardening-overlay: `shared_buffers`; по умолчанию считается при старте из `PG_MEM_LIMIT` |
+| `PG_EFFECTIVE_CACHE_SIZE` | ¾ лимита | Только hardening-overlay: `effective_cache_size` |
+| `PG_WORK_MEM` | лимит/128, 4–64 МБ | Только hardening-overlay: `work_mem` — память на сортировку/хэш в запросе |
+| `PG_MAINTENANCE_WORK_MEM` | лимит/16, 64 МБ–1 ГБ | Только hardening-overlay: `maintenance_work_mem` (индексы, VACUUM) |
 | `PG_RANDOM_PAGE_COST` | `1.1` | Только hardening-overlay: `random_page_cost` для SSD; на HDD — `4`. JIT в overlay выключен |
 
 ### Meilisearch
@@ -371,7 +373,8 @@ Skriptes, а потом добавьте в Skriptes свой адрес Kindle.
 | `MEILI_ENV` | `development` | Поставьте `production` для prod-режима (требует master key) |
 | `MEILI_LOG_LEVEL` | `WARN` | Уровень лога Meilisearch. На `INFO` он пишет каждую проверку `/health` — десятки тысяч строк в сутки |
 | `MEILI_MAX_INDEXING_MEMORY` | `1Gb` | Только hardening-overlay: память под индексацию (держите ниже `MEILI_MEM_LIMIT`) |
-| `MEILI_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера meilisearch |
+| `MEILI_MEM_LIMIT` | `2g` | Только hardening-overlay: лимит памяти контейнера meilisearch — потолок; индекс читается через mmap и занимает кэш до лимита. Индекс на диске (`/meili_data/data.ms`) больше лимита — поднимите |
+| `MEILI_MEM_RESERVATION` | `1g` | Только hardening-overlay: защищённый минимум памяти (cgroup `memory.low`) под горячую часть индекса |
 
 ### Backend
 

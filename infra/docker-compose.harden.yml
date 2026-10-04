@@ -15,34 +15,56 @@
 # полный хардненинг. Книги — локальный путь на хосте (BOOKS_HOST_PATH), не
 # сетевой mount из LAN.
 #
-# Лимиты памяти postgres/meilisearch — из env (PG_MEM_LIMIT / MEILI_MEM_LIMIT). Дефолт
-# 2g — с запасом для коллекции ~550 тыс. книг: после полного импорта librusec оба
-# держатся около 0,9 ГБ, а пики (индексация Meili, тяжёлые запросы PG) выше.
-# Параметры Postgres подогнаны под этот лимит (#304): по умолчанию PG берёт
-# shared_buffers 128 МБ и work_mem 4 МБ (кэш попадал на 85 %, сортировки уходили
-# на диск), JIT добавлял ~60 мс к тяжёлым запросам, random_page_cost=4 — для HDD.
-# Поднимаете PG_MEM_LIMIT — поднимите PG_SHARED_BUFFERS (≈¼) и
-# PG_EFFECTIVE_CACHE_SIZE (≈¾); на HDD верните PG_RANDOM_PAGE_COST=4.
+# Память postgres/meilisearch (#378). Почти всё, что они «едят», — кэш файлов (индекс
+# Meili через mmap, страницы таблиц PG); он заполняет любой лимит и вытесняется
+# ядром, поэтому «потребление у лимита» — нормальное состояние, а не нехватка.
+# Распределяет память ядро:
+#   - limits (PG_MEM_LIMIT / MEILI_MEM_LIMIT, дефолт 2g) — потолок на случай утечки;
+#   - reservations (PG_MEM_RESERVATION / MEILI_MEM_RESERVATION) — cgroup memory.low,
+#     защищённый минимум под горячие данные: при нехватке памяти на хосте ядро
+#     сначала отбирает кэш у тех, кто вышел за свой минимум.
+# Реальную нехватку видно по PSI (время ожидания памяти) — метрики cAdvisor
+# container_pressure_memory_* и node_pressure_memory_*, по ним — алерты.
+# Параметры Postgres считаются при старте из его лимита (#304): shared_buffers ¼,
+# effective_cache_size ¾, work_mem 1/128 (4–64 МБ), maintenance_work_mem 1/16
+# (64 МБ–1 ГБ), JIT выкл.; random_page_cost 1.1 — для SSD, на HDD задайте
+# PG_RANDOM_PAGE_COST=4. Любой параметр можно задать явно в env.
 services:
   postgres:
     security_opt:
       - no-new-privileges:true
-    command:
-      - postgres
+    environment:
+      PG_SHARED_BUFFERS: ${PG_SHARED_BUFFERS:-}
+      PG_EFFECTIVE_CACHE_SIZE: ${PG_EFFECTIVE_CACHE_SIZE:-}
+      PG_WORK_MEM: ${PG_WORK_MEM:-}
+      PG_MAINTENANCE_WORK_MEM: ${PG_MAINTENANCE_WORK_MEM:-}
+      PG_RANDOM_PAGE_COST: ${PG_RANDOM_PAGE_COST:-}
+    entrypoint:
+      - /bin/sh
       - -c
-      - shared_buffers=${PG_SHARED_BUFFERS:-512MB}
-      - -c
-      - work_mem=${PG_WORK_MEM:-16MB}
-      - -c
-      - effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE:-1536MB}
-      - -c
-      - random_page_cost=${PG_RANDOM_PAGE_COST:-1.1}
-      - -c
-      - jit=off
+      - |
+        # Параметры памяти — от лимита контейнера (memory.max), пересчёт на каждом
+        # старте; явное значение в env побеждает.
+        host_mb=$$(( $$(awk '/^MemTotal:/ {print $$2}' /proc/meminfo) / 1024 ))
+        lim=$$(cat /sys/fs/cgroup/memory.max 2>/dev/null || echo max)
+        if [ -z "$$lim" ] || [ "$$lim" = max ]; then mb=$$host_mb; else mb=$$(( lim / 1048576 )); fi
+        if [ "$$mb" -gt "$$host_mb" ]; then mb=$$host_mb; fi
+        clamp() { v=$$1; if [ "$$v" -lt "$$2" ]; then v=$$2; fi; if [ "$$v" -gt "$$3" ]; then v=$$3; fi; echo "$$v"; }
+        sb=$${PG_SHARED_BUFFERS:-$$(( mb / 4 ))MB}
+        ecs=$${PG_EFFECTIVE_CACHE_SIZE:-$$(( mb * 3 / 4 ))MB}
+        wm=$${PG_WORK_MEM:-$$(clamp $$(( mb / 128 )) 4 64)MB}
+        mwm=$${PG_MAINTENANCE_WORK_MEM:-$$(clamp $$(( mb / 16 )) 64 1024)MB}
+        rpc=$${PG_RANDOM_PAGE_COST:-1.1}
+        echo "pg-autotune: limit $${mb}MB: shared_buffers=$$sb effective_cache_size=$$ecs work_mem=$$wm maintenance_work_mem=$$mwm random_page_cost=$$rpc jit=off" >&2
+        exec docker-entrypoint.sh "$$@" -c shared_buffers="$$sb" -c effective_cache_size="$$ecs" -c work_mem="$$wm" -c maintenance_work_mem="$$mwm" -c random_page_cost="$$rpc" -c jit=off
+      - pg-autotune
+    command: [postgres]
     deploy:
       resources:
         limits:
           memory: ${PG_MEM_LIMIT:-2g}
+        reservations:
+          memory: ${PG_MEM_RESERVATION:-512m}
 
   meilisearch:
     security_opt:
@@ -56,6 +78,8 @@ services:
       resources:
         limits:
           memory: ${MEILI_MEM_LIMIT:-2g}
+        reservations:
+          memory: ${MEILI_MEM_RESERVATION:-1g}
 
   backend:
     security_opt:
