@@ -486,3 +486,48 @@ func ovLedgerExists(t *testing.T, ctx context.Context, pool *pgxpool.Pool, kind 
 		kind, id, field).Scan(&ex))
 	return ex
 }
+
+// TestOverrides_SeriesTitle_Integration — переименование серии правкой (#379):
+// меняется только title (ключ normalized_title — прежний), импорт, вернувший
+// название из INPX, правку не снимает, откат возвращает исходное.
+func TestOverrides_SeriesTitle_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	author := seedGroupAuthor(t, ctx, pool, "Переим", "переим тест")
+	sid := seedSeries(t, ctx, pool, "Петля [Алексеев]", author)
+	var norm string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT normalized_title::text FROM series WHERE id=$1`, sid).Scan(&norm))
+	title := func() string {
+		var s string
+		require.NoError(t, pool.QueryRow(ctx, `SELECT title FROM series WHERE id=$1`, sid).Scan(&s))
+		return s
+	}
+	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	require.Error(t, ctl.SetOverride(ctx, "series", sid, "title", json.RawMessage(`{"v":"  "}`), 0), "пустое название")
+	require.ErrorIs(t, ctl.SetOverride(ctx, "series", sid, "author", json.RawMessage(`{"v":"x"}`), 0), ErrUnknownOverrideField)
+
+	require.NoError(t, ctl.SetOverride(ctx, "series", sid, "title", json.RawMessage(`{"v":"Петля"}`), 0))
+	require.Equal(t, "Петля", title())
+	var normAfter string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT normalized_title::text FROM series WHERE id=$1`, sid).Scan(&normAfter))
+	require.Equal(t, norm, normAfter, "ключ импорта не меняется")
+
+	// Импорт вернул название из INPX — ReapplyAfterImport ставит правку обратно.
+	_, err := pool.Exec(ctx, `UPDATE series SET title='Петля [Алексеев]' WHERE id=$1`, sid)
+	require.NoError(t, err)
+	n, err := ctl.ReapplyAfterImport(ctx)
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, n, 1)
+	require.Equal(t, "Петля", title())
+
+	// Повторная правка не перезахватывает оригинал; откат — к исходному.
+	require.NoError(t, ctl.SetOverride(ctx, "series", sid, "title", json.RawMessage(`{"v":"Петля (цикл)"}`), 0))
+	require.NoError(t, ctl.RevertOverride(ctx, "series", sid, "title"))
+	require.Equal(t, "Петля [Алексеев]", title())
+	require.False(t, ovLedgerExists(t, ctx, pool, "series", sid, "title"))
+}

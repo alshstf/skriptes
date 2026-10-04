@@ -966,7 +966,7 @@ function invalidateOverrides(qc: QueryClient) {
   void qc.invalidateQueries({ queryKey: ['overrides'] });
 }
 
-type OverrideTarget = { target_kind: 'book' | 'work'; target_id: number; field: string };
+type OverrideTarget = { target_kind: 'book' | 'work' | 'series'; target_id: number; field: string };
 
 /** useSetOverride — выставить правку поля (value = {v: …} или составной объект). */
 export function useSetOverride() {

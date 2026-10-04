@@ -242,6 +242,33 @@ func TestService_AuthorAndSeries_OnFixture(t *testing.T) {
 	require.Equal(t, "Алексеев Евгений Артёмович", seriesSugg[0].AuthorName)
 	require.Equal(t, 1, seriesSugg[0].BookCount)
 
+	// Серия, переименованная правкой (#379): ищется и по новому названию, хотя
+	// ключ normalized_title прежний; без правки новое слово не находится.
+	none2, err := svc.SuggestSeries(ctx, "мёбиус", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, none2)
+	var petlyaID int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT id FROM series WHERE title = 'Петля [Алексеев]'`).Scan(&petlyaID))
+	_, err = pool.Exec(ctx, `UPDATE series SET title = 'Петля Мёбиуса' WHERE id = $1`, petlyaID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO metadata_overrides (target_kind, target_id, field, override_value, original_value)
+		VALUES ('series', $1, 'title', '{"v":"Петля Мёбиуса"}', '{"v":"Петля [Алексеев]"}')`, petlyaID)
+	require.NoError(t, err)
+	renamed, err := svc.SuggestSeries(ctx, "мебиус", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.Len(t, renamed, 1)
+	require.Equal(t, "Петля Мёбиуса", renamed[0].Title)
+	byOld, err := svc.SuggestSeries(ctx, "пет", 5, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, byOld, "по старому ключу тоже находится")
+	ser, err := svc.GetSeries(ctx, petlyaID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.True(t, ser.TitleOverridden)
+	_, err = pool.Exec(ctx, `DELETE FROM metadata_overrides WHERE target_kind = 'series' AND target_id = $1`, petlyaID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE series SET title = 'Петля [Алексеев]' WHERE id = $1`, petlyaID)
+	require.NoError(t, err)
+
 	// Видимость (#289): у Алексеева все книги на языке, который скрыт, — ни он,
 	// ни его серия в подсказки не попадают (карточка открылась бы с 0 книг).
 	var alekLangs []string

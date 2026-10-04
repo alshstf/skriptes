@@ -83,6 +83,8 @@ export type Series = {
   title: string;
   /** "multi" — межавторская/издательская серия. */
   kind?: string;
+  /** Название изменено правкой админа (#379). */
+  title_overridden?: boolean;
   author_id?: number;
   author_name?: string;
   /** Все авторы книг серии (серия может содержать книги нескольких авторов). */

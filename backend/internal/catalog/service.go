@@ -221,11 +221,13 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	)
 	err := s.pool.QueryRow(ctx, `
 		SELECT s.id, s.title, COALESCE(s.kind, ''), s.author_id,
-		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), '')
+		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), ''),
+		       EXISTS (SELECT 1 FROM metadata_overrides o
+		               WHERE o.target_kind = 'series' AND o.target_id = s.id AND o.field = 'title')
 		FROM series s
 		LEFT JOIN authors a ON a.id = s.author_id
 		WHERE s.id = $1
-	`, id).Scan(&out.ID, &out.Title, &out.Kind, &authorID, &out.AuthorName)
+	`, id).Scan(&out.ID, &out.Title, &out.Kind, &authorID, &out.AuthorName, &out.TitleOverridden)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return Series{}, ErrNotFound
