@@ -28,6 +28,7 @@ import { AdminAuthorDuplicatesPage } from '@/pages/AdminAuthorDuplicatesPage';
 import { AdminBackgroundPage } from '@/pages/AdminBackgroundPage';
 import { apiFetch, ApiError } from '@/lib/api';
 import type { MeResponse } from '@/lib/auth';
+import { BOOK_KINDS, type BookKind } from '@/lib/books';
 
 // RouterContext предоставляет beforeLoad-у доступ к QueryClient — чтобы
 // proactively проверить /me и сделать redirect ДО рендера, без вспышки
@@ -108,6 +109,7 @@ export type BooksSearch = {
   genres?: string[];
   lang?: string;
   src_lang?: string; // язык ОРИГИНАЛА (fb2 src-lang), независим от языка издания
+  kind?: BookKind; // тип работы: книги или вид сборника (#379)
   year_from?: number;
   year_to?: number;
   series_id?: number;
@@ -158,6 +160,10 @@ function asBool(v: unknown): boolean | undefined {
   return v === true || v === 'true' ? true : undefined;
 }
 
+function asBookKind(v: unknown): BookKind | undefined {
+  return typeof v === 'string' && (BOOK_KINDS as readonly string[]).includes(v) ? (v as BookKind) : undefined;
+}
+
 export const booksRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/books',
@@ -169,6 +175,7 @@ export const booksRoute = createRoute({
       genres: asStringArray(search.genres),
       lang: asString(search.lang),
       src_lang: asString(search.src_lang),
+      kind: asBookKind(search.kind),
       year_from: asNumber(search.year_from),
       year_to: asNumber(search.year_to),
       series_id: asNumber(search.series_id),

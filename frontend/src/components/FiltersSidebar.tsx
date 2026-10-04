@@ -7,7 +7,7 @@ import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { collapseGenreChips, useGenreMap, useGenres } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { cn } from '@/lib/utils';
-import type { FacetDistribution } from '@/lib/books';
+import { BOOK_KINDS, BOOK_KIND_LABELS, type BookKind, type FacetDistribution } from '@/lib/books';
 
 /**
  * FiltersSidebar — панель фильтров для /books.
@@ -27,6 +27,8 @@ export type FiltersValue = {
   lang: string;
   /** Язык ОРИГИНАЛА (fb2 src-lang) — независимый от языка издания фильтр. */
   srcLang: string;
+  /** Тип работы: обычные книги или вид сборника; '' — любой. */
+  kind: BookKind | '';
   yearFrom: number;
   yearTo: number;
   sort: '' | 'year_desc' | 'year_asc';
@@ -116,6 +118,16 @@ export function FiltersSidebar({
         onChange={(srcLang) => onChange({ ...value, srcLang })}
         labelFor={(code) => srcLangMap.get(code) ?? langMap.get(code) ?? code}
       />
+
+      {/* Тип работы (#379). У кого в профиле «Скрывать сборники», блок не нужен:
+          сборников в выдаче нет. */}
+      {effective.data?.hide_compilations ? null : (
+        <KindFilter
+          selected={value.kind}
+          counts={facets?.kind}
+          onChange={(kind) => onChange({ ...value, kind })}
+        />
+      )}
     </aside>
   );
 }
@@ -193,6 +205,48 @@ function YearBlock({
 }
 
 /** Радио-кнопки по facet'у (для single-value language). */
+// KindFilter — «Тип»: обычные книги или вид сборника. Счётчики — из фасета kind
+// (есть только у сборников; у «Книг» число не показываем: в фасете его нет).
+function KindFilter({
+  selected,
+  counts,
+  onChange,
+}: {
+  selected: BookKind | '';
+  counts?: Record<string, number>;
+  onChange: (next: BookKind | '') => void;
+}) {
+  const options: (BookKind | '')[] = ['', ...BOOK_KINDS];
+  return (
+    <div className="space-y-2">
+      <div className="text-xs font-medium text-muted-foreground uppercase">Тип</div>
+      <ul className="space-y-1" aria-label="Тип">
+        {options.map((k) => {
+          const count = k && k !== 'book' ? (counts?.[k] ?? 0) : null;
+          return (
+            <li key={k || 'any'}>
+              <button
+                type="button"
+                aria-pressed={selected === k}
+                onClick={() => onChange(k)}
+                className={cn(
+                  'flex w-full items-center gap-2 rounded px-1 py-0.5 text-left text-sm hover:bg-accent/40',
+                  selected === k ? 'font-semibold' : '',
+                )}
+              >
+                <span className="flex-1">{k ? BOOK_KIND_LABELS[k] : 'Любой'}</span>
+                {count != null ? (
+                  <span className="text-xs tabular-nums text-muted-foreground">{count}</span>
+                ) : null}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function FacetRadios({
   title,
   selected,
@@ -334,6 +388,12 @@ export function ActiveFilterChips({
     chips.push({
       label: `Оригинал: ${srcLangMap.get(value.srcLang) ?? langMap.get(value.srcLang) ?? value.srcLang}`,
       onRemove: () => onChange({ ...value, srcLang: '' }),
+    });
+  }
+  if (value.kind) {
+    chips.push({
+      label: `Тип: ${BOOK_KIND_LABELS[value.kind]}`,
+      onRemove: () => onChange({ ...value, kind: '' }),
     });
   }
   if (value.yearFrom || value.yearTo) {

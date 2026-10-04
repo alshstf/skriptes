@@ -124,6 +124,8 @@ export type BookFilters = {
   lang?: string;
   /** Язык ОРИГИНАЛА (fb2 src-lang) — независимый от языка издания фильтр. */
   srcLang?: string;
+  /** Тип работы: обычные книги или вид сборника (works.kind, #379). */
+  kind?: BookKind | '';
   yearFrom?: number;
   yearTo?: number;
   seriesId?: number;
@@ -238,6 +240,17 @@ export type Book = {
   reading_fraction?: number;
 };
 
+// BookKind — значение фильтра «Тип» на /books: обычные книги или вид сборника
+// (works.kind). Подписи — BOOK_KIND_LABELS.
+export const BOOK_KINDS = ['book', 'collection', 'anthology', 'omnibus'] as const;
+export type BookKind = (typeof BOOK_KINDS)[number];
+export const BOOK_KIND_LABELS: Record<BookKind, string> = {
+  book: 'Книги',
+  collection: 'Авторские сборники',
+  anthology: 'Антологии',
+  omnibus: 'Тома собраний',
+};
+
 function buildBooksParams(opts: BookFilters, limit: number, offset: number): string {
   const params = new URLSearchParams();
   if (opts.query) params.set('q', opts.query);
@@ -246,6 +259,7 @@ function buildBooksParams(opts: BookFilters, limit: number, offset: number): str
   if (opts.genres && opts.genres.length > 0) params.set('genres', opts.genres.join(','));
   if (opts.lang) params.set('lang', opts.lang);
   if (opts.srcLang) params.set('src_lang', opts.srcLang);
+  if (opts.kind) params.set('kind', opts.kind);
   if (opts.yearFrom) params.set('year_from', String(opts.yearFrom));
   if (opts.yearTo) params.set('year_to', String(opts.yearTo));
   if (opts.seriesId) params.set('series_id', String(opts.seriesId));

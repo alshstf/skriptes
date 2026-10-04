@@ -71,3 +71,18 @@ func TestExclusionFilter(t *testing.T) {
 		t.Fatalf("lang-only mismatch: %q", got)
 	}
 }
+
+func TestBuildWorksFilter_Kind(t *testing.T) {
+	for kind, want := range map[string]string{
+		"book":       `kind NOT IN ["collection", "anthology", "omnibus"]`,
+		"collection": `kind = "collection"`,
+		"anthology":  `kind = "anthology"`,
+		"omnibus":    `kind = "omnibus"`,
+		"novel":      ``, // неизвестное значение — без фильтра
+		"":           ``,
+	} {
+		if got := buildWorksFilter(ListParams{Kind: kind}, nil); got != want {
+			t.Errorf("kind=%q: got %q, want %q", kind, got, want)
+		}
+	}
+}

@@ -205,12 +205,16 @@ type EditionRef struct {
 //   - "title"                    — по нормализованному названию
 //   - "" (пустое)                — ранжирование по правилам Meili (с typo/relevance).
 type ListParams struct {
-	Query    string
-	Limit    int
-	Offset   int
-	Genres   []string // OR-семантика: книга подходит, если у неё есть ХОТЯ БЫ один из жанров
-	Lang     string
-	SrcLang  string // язык ОРИГИНАЛА (fb2 src-lang); фасет ТОЛЬКО works-индекса — веб-список (books/OPDS его не индексирует)
+	Query   string
+	Limit   int
+	Offset  int
+	Genres  []string // OR-семантика: книга подходит, если у неё есть ХОТЯ БЫ один из жанров
+	Lang    string
+	SrcLang string // язык ОРИГИНАЛА (fb2 src-lang); фасет ТОЛЬКО works-индекса — веб-список (books/OPDS его не индексирует)
+	// Kind — тип работы (works.kind, только works-индекс): "book" — обычные
+	// книги (не сборники), "collection" | "anthology" | "omnibus" — этот тип.
+	// Пусто или неизвестное значение — без фильтра.
+	Kind     string
 	YearFrom int
 	YearTo   int
 	SeriesID int64
