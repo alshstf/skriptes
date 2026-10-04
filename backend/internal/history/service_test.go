@@ -287,6 +287,13 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	fav, err = svc.IsWorkFavorite(ctx, userID, workID)
 	require.NoError(t, err)
 	require.True(t, fav, "избранное любого издания ⇒ книга избрана")
+
+	// ★ снимают по другому (представительному) изданию — снимается со всей работы.
+	require.NoError(t, svc.RemoveFavorite(ctx, userID, e0))
+	fav, err = svc.IsWorkFavorite(ctx, userID, workID)
+	require.NoError(t, err)
+	require.False(t, fav, "снятие ★ по любому изданию снимает её с работы")
+	require.NoError(t, svc.AddFavorite(ctx, userID, e2))
 	rd, ca, err := svc.WorkReadStatus(ctx, userID, workID)
 	require.NoError(t, err)
 	require.True(t, rd, "прочитано любое издание ⇒ книга прочитана")
