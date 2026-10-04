@@ -173,7 +173,7 @@ override > fantlab > heuristic — **fantlab-типизация реализов
 том же ответе search-works renown-воркера (`fantlab.go::fantlabKind`: 3→collection,
 17/56→anthology, роман/повесть/рассказ→"novel" = снять ошибочную эвристику kind→NULL;
 пишет `renown_backfill.go::writeRenown`, override неприкосновенен); kind в works-индексе
-(schema v6, filterable) → секция «Сборники и антологии» внизу карточки автора;
+(schema v6, filterable) → секция «Сборники и антологии» внизу карточки автора; фильтр «Тип» на /books (`kind=book|collection|anthology|omnibus`, `books.kindClause`, фасет `kind`; «Книги» = `kind NOT IN [...]`; у кого «Скрывать сборники» — блок скрыт, #379);
 **профильная настройка «Скрывать сборники»** (opt-in, дефолт выкл):
 `ContentConfig.HideCompilations` → `ContentResolver.Exclusions` (3-й результат) → Meili
 `kind NOT IN [...]` в ListWorks/SuggestWorks + kind-клауза `bookExclusionClause` (карточки

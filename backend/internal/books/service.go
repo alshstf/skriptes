@@ -899,6 +899,9 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	if p.AuthorID > 0 {
 		parts = append(parts, fmt.Sprintf("author_ids = %d", p.AuthorID))
 	}
+	if clause := kindClause(p.Kind); clause != "" {
+		parts = append(parts, clause)
+	}
 	if clause := notInClause("genres", p.ExcludeGenres); clause != "" {
 		parts = append(parts, clause)
 	}
@@ -915,6 +918,19 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 // NOT IN (а не kind = ”): работает и для доков без поля kind (до-v6 хвосты) —
 // отсутствующее поле проходит NOT-фильтр, т.е. считается обычной работой.
 const compilationsExclusion = `kind NOT IN ["collection", "anthology", "omnibus"]`
+
+// kindClause — фильтр «Тип» на /books (#379): обычные книги или один тип
+// сборника. Неизвестное значение — без фильтра (не ошибка: ссылка из старой
+// версии не должна давать пустую выдачу).
+func kindClause(kind string) string {
+	switch kind {
+	case "book":
+		return compilationsExclusion
+	case "collection", "anthology", "omnibus":
+		return fmt.Sprintf("kind = %s", strconv.Quote(kind))
+	}
+	return ""
+}
 
 // worksExclusionFilter — только исключения (для SuggestWorks).
 func worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs []string, hideCompilations bool) string {

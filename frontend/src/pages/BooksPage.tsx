@@ -43,7 +43,7 @@ const PAGE_SIZE = 20;
 // фильтра «Язык оригинала». URL-параметр значения остаётся src_lang (back-compat),
 // бэкенд фильтрует по works-индексному orig_lang.
 // year не запрашиваем: фасет по годам нигде не показывается (#276), а значений — сотни.
-const FACETS = ['genres', 'lang', 'orig_lang'];
+const FACETS = ['genres', 'lang', 'orig_lang', 'kind'];
 
 export function BooksPage() {
   // Все фильтры живут в URL-search → удобно делиться ссылками и refresh
@@ -81,6 +81,7 @@ export function BooksPage() {
     genres: search.genres ?? [],
     lang: search.lang ?? '',
     srcLang: search.src_lang ?? '',
+    kind: search.kind ?? '',
     yearFrom: search.year_from ?? 0,
     yearTo: search.year_to ?? 0,
     sort: search.sort ?? '',
@@ -94,6 +95,7 @@ export function BooksPage() {
           genres: next.genres.length > 0 ? next.genres : undefined,
           lang: next.lang || undefined,
           src_lang: next.srcLang || undefined,
+          kind: next.kind || undefined,
           year_from: next.yearFrom || undefined,
           year_to: next.yearTo || undefined,
           sort: next.sort || undefined,
@@ -119,6 +121,7 @@ export function BooksPage() {
     genres: filters.genres,
     lang: filters.lang,
     srcLang: filters.srcLang,
+    kind: filters.kind,
     yearFrom: filters.yearFrom,
     yearTo: filters.yearTo,
     seriesId: search.series_id,
@@ -172,6 +175,7 @@ export function BooksPage() {
     filters.genres.length +
     (filters.lang ? 1 : 0) +
     (filters.srcLang ? 1 : 0) +
+    (filters.kind ? 1 : 0) +
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.sort ? 1 : 0) +
     (search.series_id ? 1 : 0) +

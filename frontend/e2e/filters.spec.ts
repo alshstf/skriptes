@@ -82,3 +82,38 @@ test('filters: sort dropdown changes URL', async ({ mockedPage: page }) => {
   await page.getByLabel('Сортировка').selectOption('year_desc');
   await expect(page).toHaveURL(/sort=year_desc/);
 });
+
+test('filters: «Тип» — сборники по фасету kind, параметр в URL и чип (#379)', async ({
+  mockedPage: page,
+}) => {
+  const calls: string[] = [];
+  await page.route(/\/api\/books\?/, (route) => {
+    calls.push(route.request().url());
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [],
+        total: 0,
+        limit: 20,
+        offset: 0,
+        processing_ms: 1,
+        facets: { kind: { collection: 12, anthology: 3 } },
+      }),
+    });
+  });
+  await page.goto('/books');
+  const kind = page.getByRole('list', { name: 'Тип' });
+  await expect(kind).toBeVisible({ timeout: 10_000 });
+  await expect(kind.getByRole('button', { name: /Авторские сборники\s*12/ })).toBeVisible();
+
+  await kind.getByRole('button', { name: /Авторские сборники/ }).click();
+  await expect(page).toHaveURL(/kind=collection/);
+  await expect.poll(() => calls.some((c) => c.includes('kind=collection'))).toBe(true);
+  await expect(page.getByText('Тип: Авторские сборники')).toBeVisible();
+
+  await kind.getByRole('button', { name: 'Книги' }).click();
+  await expect(page).toHaveURL(/kind=book/);
+  await kind.getByRole('button', { name: 'Любой' }).click();
+  await expect(page).not.toHaveURL(/kind=/);
+});
