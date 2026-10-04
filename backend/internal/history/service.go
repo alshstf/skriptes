@@ -385,11 +385,18 @@ func (s *Service) AddFavorite(ctx context.Context, userID, bookID int64) error {
 
 // RemoveFavorite — убрать из избранного (членство в favorites-полке). Идемпотентна.
 func (s *Service) RemoveFavorite(ctx context.Context, userID, bookID int64) error {
+	// ★ на карточке и в списках — уровня работы (IsWorkFavorite: избрано любое
+	// издание), а снимают её по представительному изданию. Если в избранном
+	// другое издание той же работы (избрали до склейки изданий), удаление одного
+	// book_id ничего не снимало — звезда горела и не гасла (#379). Снимаем все
+	// издания работы.
 	_, err := s.pool.Exec(ctx, `
 		DELETE FROM user_collection_books cb
 		USING user_collections c
 		WHERE cb.collection_id = c.id AND c.user_id = $1 AND c.kind = 'favorites'
-		  AND cb.book_id = $2
+		  AND (cb.book_id = $2 OR cb.book_id IN (
+		      SELECT b.id FROM books b
+		      WHERE b.work_id = (SELECT work_id FROM books WHERE id = $2)))
 	`, userID, bookID)
 	if err != nil {
 		return fmt.Errorf("delete favorite: %w", err)
