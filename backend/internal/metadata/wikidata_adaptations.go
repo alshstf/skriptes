@@ -48,7 +48,7 @@ const wdUserAgent = "skriptes/0.1 (https://github.com/alshstf/skriptes; adaptati
 
 func NewWikidataAdaptationsProvider(httpClient *http.Client) *WikidataAdaptationsProvider {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 15 * time.Second}
+		httpClient = SourceHTTPClient(15 * time.Second)
 	}
 	return &WikidataAdaptationsProvider{
 		httpClient: httpClient,

@@ -29,7 +29,7 @@ const fantlabSearchURL = "https://api.fantlab.ru/search-works"
 // NewFantlabProvider — провайдер с общим UA-транспортом (metadata/httpclient.go).
 func NewFantlabProvider(httpClient *http.Client) *FantlabProvider {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 15 * time.Second}
+		httpClient = SourceHTTPClient(15 * time.Second)
 	}
 	return &FantlabProvider{httpClient: httpClient, searchURL: fantlabSearchURL}
 }

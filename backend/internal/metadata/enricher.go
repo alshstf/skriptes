@@ -105,7 +105,7 @@ func New(
 		photoCache:           photoCache,
 		logger:               logger,
 		extractSem:           make(chan struct{}, defaultExtractConcurrency),
-		posterHTTPClient:     &http.Client{Timeout: 15 * time.Second},
+		posterHTTPClient:     SourceHTTPClient(15 * time.Second),
 		inflightCover:        map[int64]struct{}{},
 		inflightAnnotate:     map[int64]struct{}{},
 		inflightAuthorPhoto:  map[int64]struct{}{},
@@ -1101,8 +1101,10 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 			continue
 		}
 		if err != nil {
-			transient = true // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
-			e.logger.Info("metadata: adaptations provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			transient = true                      // 429/битый ключ/сеть (ErrUpstream) — не «не найдено»: не помечаем попытку, чтобы ретрай состоялся
+			if !errors.Is(err, ErrSourcePaused) { // пауза (#299) — без строки на каждую книгу
+				e.logger.Info("metadata: adaptations provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			}
 			continue
 		}
 		// Успех: пишем records (даже если len==0 — это валидное
@@ -1155,8 +1157,10 @@ func (e *Enricher) saveAdaptations(ctx context.Context, bookID int64, items []Ad
 		attempted++
 		path, err := e.downloadPoster(ctx, src)
 		if err != nil {
-			// Постер опционален — лог и идём дальше.
-			e.logger.Info("metadata: download poster failed", "book_id", bookID, "url", src, "err", err)
+			// Постер опционален — лог и идём дальше (пауза хоста, #299, — без строки).
+			if !errors.Is(err, ErrSourcePaused) {
+				e.logger.Info("metadata: download poster failed", "book_id", bookID, "url", src, "err", err)
+			}
 			continue
 		}
 		posters[i] = path
@@ -1273,6 +1277,9 @@ func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int,
 		switch {
 		case err == nil && u != "":
 			path, derr := e.downloadPoster(ctx, u)
+			if errors.Is(derr, ErrSourcePaused) {
+				return checked, filled, nil // хост картинок на паузе (#299) — до следующего цикла
+			}
 			if derr != nil {
 				// Транзиент скачивания — checked_at не трогаем, ретрай в следующем цикле.
 				e.logger.Info("metadata: recheck poster download failed", "book_id", h.bookID, "err", derr)
@@ -1294,6 +1301,8 @@ func (e *Enricher) RecheckPosterHoles(ctx context.Context, limit int) (int, int,
 				continue
 			}
 			checked++
+		case errors.Is(err, ErrSourcePaused):
+			return checked, filled, nil // TMDB на паузе (#299): остальные дыры — в следующем цикле
 		default:
 			// ErrUpstream/сеть — попытку не засчитываем (checked_at не трогаем).
 			e.logger.Info("metadata: recheck poster lookup failed", "book_id", h.bookID, "err", err)
@@ -1376,6 +1385,8 @@ func observeLookup(worker, source string, err error, found bool) {
 	switch {
 	case errors.Is(err, ErrNotFound):
 		outcome = "not_found"
+	case errors.Is(err, ErrSourcePaused):
+		outcome = "paused"
 	case err != nil:
 		outcome = "error"
 	case !found:

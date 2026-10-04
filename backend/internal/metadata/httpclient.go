@@ -33,7 +33,7 @@ func (t *uaRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 // User-Agent (enricherUserAgent) для внешних источников. Используется в main
 // wiring для OpenLibrary/Google Books.
 func NewEnricherHTTPClient(timeout time.Duration) *http.Client {
-	base := http.DefaultTransport
+	base := sourceTransport // прерыватель по хосту (#299)
 	return &http.Client{
 		Timeout:   timeout,
 		Transport: &uaRoundTripper{ua: enricherUserAgent, base: base},

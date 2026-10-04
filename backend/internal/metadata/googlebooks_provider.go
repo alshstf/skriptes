@@ -34,7 +34,7 @@ const defaultGBCountry = "US"
 
 func NewGoogleBooksProvider(httpClient *http.Client) *GoogleBooksProvider {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 10 * time.Second}
+		httpClient = SourceHTTPClient(10 * time.Second)
 	}
 	return &GoogleBooksProvider{
 		httpClient: httpClient,

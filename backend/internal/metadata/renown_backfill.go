@@ -384,6 +384,8 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 			gotAny = true
 		case errors.Is(ferr, ErrNotFound):
 			b.upsertLookup(ctx, c.id, name, "not_found")
+		case errors.Is(ferr, ErrSourcePaused):
+			continue // источник на паузе (#299): запрос не ушёл, работу возьмём позже
 		case ctx.Err() != nil:
 			return // отмена воркера, не записываем как ошибку источника
 		default:
