@@ -1084,7 +1084,7 @@ article_is_author, extract, thumbnail, accept). Без трассы в конт�
   известности `works.fantlab_marks`/`ol_ratings_count`/`ol_want_count` — их наполняет
   воркер «Известность» `metadata/renown_backfill.go`, миграция 0031), формула —
   `importer/popularity.go::computeWorkPopularity` (веса-константы popW*, log2-сжатие
-  счётчиков; юнит-тест фиксирует поведение). Меняешь формулу/веса → бамп
+  счётчиков; юнит-тест фиксирует поведение; LIBRATE 1–2 бонуса не даёт — `popLibrateMin`, #292). Меняешь формулу/веса → бамп
   `WorksIndexSchemaVersion` (полный ресинк). Свежесть между
   полными ресинками держит `importer.PopularityTracker`: `history.Service` хук
   (`SetEngagementHook`) метит книгу при `RecordView`/`RecordRead`/`RecordAcquisition` →
