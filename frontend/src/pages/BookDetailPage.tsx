@@ -24,7 +24,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
-import { formatBytes, translationLine } from '@/lib/format';
+import { formatBytes, pluralRu, translationLine } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
@@ -438,7 +438,8 @@ function CardSignalRow({ book }: { book: Book }) {
   const translator = opened?.translator;
   const translation = translationLine(srcLangName, translator);
 
-  if (!book.written_year && !ext && !hasReader && !langName && !translation) return null;
+  const fantlab = book.fantlab_rating;
+  if (!book.written_year && !ext && fantlab == null && !hasReader && !langName && !translation) return null;
 
   return (
     <div className="space-y-1">
@@ -466,6 +467,21 @@ function CardSignalRow({ book }: { book: Book }) {
             </span>
           </TooltipTrigger>
           <TooltipContent>Внешний рейтинг · {ext.source}</TooltipContent>
+        </Tooltip>
+      ) : null}
+      {fantlab != null ? (
+        // Оценка Фантлаба — своя шкала (1–10) и тысячи голосов у известных книг,
+        // поэтому отдельно от «внешнего рейтинга» (1–5), а не вместо него (#296).
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-flex items-center gap-1">
+              <span>Фантлаб</span>
+              <span className="tabular-nums text-foreground">{fantlab.toFixed(1)}</span>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            Средняя оценка на fantlab.ru (из 10) · {book.fantlab_marks ?? 0} {pluralRu(book.fantlab_marks ?? 0, ['оценка', 'оценки', 'оценок'])}
+          </TooltipContent>
         </Tooltip>
       ) : null}
       {hasReader ? (

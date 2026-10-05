@@ -407,7 +407,8 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 	switch source {
 	case "fantlab":
 		_, err = b.pool.Exec(ctx,
-			`UPDATE works SET fantlab_marks = $2, updated_at = now() WHERE id = $1`, workID, res.Ratings)
+			`UPDATE works SET fantlab_marks = $2, fantlab_midmark = NULLIF($3::real, 0), fantlab_rating = NULLIF($4::real, 0),
+			        updated_at = now() WHERE id = $1`, workID, res.Ratings, res.MidMark, res.WeightedRating)
 		// Типизация от Фантлаба (курируемая — надёжнее эвристики): collection/
 		// anthology → пишем kind; "novel" — уверенно обычное произведение →
 		// СНИМАЕМ ошибочную эвристику (kind → NULL). kind_source='fantlab' в

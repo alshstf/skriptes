@@ -57,6 +57,18 @@ type fantlabMatch struct {
 	MarkCount       int    `json:"markcount"`
 	WorkTypeID      int    `json:"work_type_id"` // тип произведения (справочник fantlabKind)
 	Year            int    `json:"year"`         // год первой публикации (0 — неизвестен)
+	// MidMark — средняя оценка (1–10), Rating — рейтинг Фантлаба (сглажен по
+	// числу оценок: у работы с одной оценкой ~0,5). В ответе — массивы из одного числа.
+	MidMark []float64 `json:"midmark"`
+	Rating  []float64 `json:"rating"`
+}
+
+// first — первое число массива-обёртки Фантлаба (0, если пусто).
+func first(v []float64) float64 {
+	if len(v) == 0 {
+		return 0
+	}
+	return v[0]
 }
 
 // fantlabKind — маппинг fantlab work_type_id → works.kind. Справочник снят с
@@ -123,7 +135,10 @@ func (p *FantlabProvider) FetchRenown(ctx context.Context, q WorkQuery) (RenownR
 		if !anyAuthorMatches(gate, fantlabAuthorCandidates(m)) {
 			continue
 		}
-		return RenownResult{Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID), Year: plausibleYear(m.Year)}, nil
+		return RenownResult{
+			Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID), Year: plausibleYear(m.Year),
+			MidMark: first(m.MidMark), WeightedRating: first(m.Rating),
+		}, nil
 	}
 	return RenownResult{}, ErrNotFound
 }
