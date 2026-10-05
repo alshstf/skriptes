@@ -44,19 +44,30 @@ func TestApplyPersonaBoost_GenresCountOnce(t *testing.T) {
 	require.EqualValues(t, 126725, scored[0].item.ID, "точное совпадение известной книги не перебивается жанрами")
 }
 
-// Жанр — тай-брейкер: среди близких матчей поднимает книгу любимого жанра, но
-// слабее известности классики.
+// Жанр — тай-брейкер: при равной релевантности и близкой известности поднимает
+// книгу любимого жанра, но не перебивает заметную разницу известности
+// (прод 2026-10-06, «шерлок»: оценка Meili у всех 0.9975, Конан Дойл 650 против
+// пастиша 272 любимого жанра).
 func TestApplyPersonaBoost_GenreIsTieBreaker(t *testing.T) {
 	p := emptyPersona()
-	p.GenreActivity["sf"] = 50
-	scored := []scoredItem{
-		{item: ListItem{ID: 1, Genres: []string{"detective"}}, base: 0.95},
-		{item: ListItem{ID: 2, Genres: []string{"sf"}}, base: 0.94},
+	p.GenreActivity["detective"] = 30
+	p.GenreActivity["det_classic"] = 1
+
+	close := []scoredItem{
+		{item: ListItem{ID: 1, Genres: []string{"det_classic"}}, base: 0.9975, pop: popularityBoost(300)},
+		{item: ListItem{ID: 2, Genres: []string{"detective"}}, base: 0.9975, pop: popularityBoost(272)},
 	}
-	applyPersonaBoost(scored, p, true)
-	sortByFinalScore(scored)
-	require.EqualValues(t, 2, scored[0].item.ID, "близкий матч любимого жанра выше")
-	require.Less(t, genreActivityCap, popularityBoost(1000), "жанр слабее известности классики")
+	applyPersonaBoost(close, p, true)
+	sortByFinalScore(close)
+	require.EqualValues(t, 2, close[0].item.ID, "известность близка — решает любимый жанр")
+
+	doyle := []scoredItem{
+		{item: ListItem{ID: 3, Genres: []string{"detective"}}, base: 0.9975, pop: popularityBoost(272)},
+		{item: ListItem{ID: 4, Genres: []string{"det_classic"}}, base: 0.9975, pop: popularityBoost(650)},
+	}
+	applyPersonaBoost(doyle, p, true)
+	sortByFinalScore(doyle)
+	require.EqualValues(t, 4, doyle[0].item.ID, "известность выше вдвое — жанр её не перебивает")
 }
 
 // Соавторы не складываются: антология с двумя подписанными авторами получает один
