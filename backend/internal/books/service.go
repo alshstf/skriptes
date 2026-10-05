@@ -139,7 +139,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	if rerank {
 		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
 		if err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile)
+			applyPersonaBoost(scored, profile, false)
 			sortByFinalScore(scored)
 		}
 	}
@@ -387,7 +387,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 // стыкуются без потерь и повторов.
 func (s *Service) rerankScored(ctx context.Context, userID int64, scored []scoredItem) {
 	if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
-		applyPersonaBoost(scored, profile)
+		applyPersonaBoost(scored, profile, true)
 	}
 	sortByFinalScore(scored)
 }
@@ -443,7 +443,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 		}
 		if s.persona != nil && userID > 0 {
 			if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
-				applyPersonaBoost(scored, profile)
+				applyPersonaBoost(scored, profile, true)
 			}
 		}
 		sortByFinalScore(scored)
@@ -1009,7 +1009,13 @@ type scoredItem struct {
 //	favorite_series (0.4)   — аналогично для серии
 //	per-book activity       — view = 0.1, read = 0.3, cap 0.5 (просмотрел → ещё раз нужна)
 //	author/series activity  — сильно ниже: лишь намёк, что "похоже на интересы"
-//	genre activity          — самый слабый: жанры пересекаются у многого
+//	genre activity          — самый слабый (≤ 0.05): тай-брейкер среди близких
+//	                          матчей, слабее известности классики (~0.1)
+//
+// Каждый сигнал входит в сумму ОДИН раз: у работы с несколькими авторами или
+// жанрами берётся самый сильный, а не сумма по ним (#399: у «Кто такая Кармен
+// Сандиего?» семь жанров — сумма пределов давала +0.74 и перебивала точное
+// совпадение «Кармен» Мериме).
 const (
 	bonusFavoriteBook   = 0.6
 	bonusFavoriteAuthor = 0.5
@@ -1029,30 +1035,44 @@ const (
 	seriesActivityScale = 0.05
 	seriesActivityCap   = 0.4
 	genreActivityScale  = 0.02
-	genreActivityCap    = 0.2
+	genreActivityCap    = 0.05
 )
 
-func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
+// applyPersonaBoost — персональный бонус каждого хита. works — хиты из индекса
+// works (id = works.id): книжные сигналы берутся по работе (FavoriteWorks /
+// WorkActivity), иначе — по изданию (индекс books, OPDS).
+func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool) {
+	favBooks, bookActivity := p.FavoriteBooks, p.BookActivity
+	if works {
+		favBooks, bookActivity = p.FavoriteWorks, p.WorkActivity
+	}
 	for i := range scored {
-		it := scored[i].item
+		sc := &scored[i]
+		it := sc.item
 		bonus := 0.0
 
 		// Прямой book-level сигнал — самый сильный.
-		if _, ok := p.FavoriteBooks[it.ID]; ok {
+		if _, ok := favBooks[it.ID]; ok {
 			bonus += bonusFavoriteBook
 		}
-		if w, ok := p.BookActivity[it.ID]; ok {
+		if w, ok := bookActivity[it.ID]; ok {
 			bonus += capFloat(w*bookActivityScale, bookActivityCap)
 		}
 
+		favAuthor, authorAct := false, 0.0
 		for _, aid := range it.AuthorIDs {
 			if _, ok := p.FavoriteAuthors[aid]; ok {
-				bonus += bonusFavoriteAuthor
+				favAuthor = true
 			}
 			if w, ok := p.AuthorActivity[aid]; ok {
-				bonus += capFloat(w*authorActivityScale, authorActivityCap)
+				authorAct = math.Max(authorAct, capFloat(w*authorActivityScale, authorActivityCap))
 			}
 		}
+		if favAuthor {
+			bonus += bonusFavoriteAuthor
+		}
+		bonus += authorAct
+
 		if it.SeriesID != nil {
 			sid := *it.SeriesID
 			if _, ok := p.FavoriteSeries[sid]; ok {
@@ -1062,12 +1082,15 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile) {
 				bonus += capFloat(w*seriesActivityScale, seriesActivityCap)
 			}
 		}
+
+		genreAct := 0.0
 		for _, g := range it.Genres {
 			if w, ok := p.GenreActivity[g]; ok {
-				bonus += capFloat(w*genreActivityScale, genreActivityCap)
+				genreAct = math.Max(genreAct, capFloat(w*genreActivityScale, genreActivityCap))
 			}
 		}
-		scored[i].personal = bonus
+		bonus += genreAct
+		sc.personal = bonus
 	}
 }
 
@@ -1276,7 +1299,7 @@ func (s *Service) Suggest(ctx context.Context, query string, limit int, userID i
 	if rerank {
 		profile, err := s.persona.PersonaProfile(ctx, userID)
 		if err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile)
+			applyPersonaBoost(scored, profile, false)
 			sortByFinalScore(scored)
 			if len(scored) > limit {
 				scored = scored[:limit]

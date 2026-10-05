@@ -29,6 +29,15 @@ type PersonaProfile struct {
 	// книги. Сильный персональный сигнал: "пользователь уже открывал /
 	// скачивал эту книгу — наверняка хочет её снова увидеть в поиске".
 	BookActivity map[int64]float64
+
+	// FavoriteWorks / WorkActivity — те же сигналы, сведённые к работе
+	// (books.work_id): выдача по индексу works несёт id РАБОТЫ, а id работ и
+	// изданий — разные последовательности с пересечением. Сравнивать id работы с
+	// BookActivity нельзя: бонус «уже открывал» доставался чужой работе с тем же
+	// номером (#399).
+	FavoriteWorks map[int64]struct{}
+	WorkActivity  map[int64]float64
+
 	// AuthorActivity[authorID] = сумма весов событий с книгами этого автора.
 	AuthorActivity map[int64]float64
 	// SeriesActivity[seriesID] = аналогично для серий.
@@ -45,12 +54,14 @@ func (p PersonaProfile) IsEmpty() bool {
 		len(p.FavoriteSeries) == 0 &&
 		len(p.FavoriteBooks) == 0 &&
 		len(p.BookActivity) == 0 &&
+		len(p.FavoriteWorks) == 0 &&
+		len(p.WorkActivity) == 0 &&
 		len(p.AuthorActivity) == 0 &&
 		len(p.SeriesActivity) == 0 &&
 		len(p.GenreActivity) == 0
 }
 
-// PersonaProfile собирает все нужные сигналы из БД 4-мя запросами.
+// PersonaProfile собирает все нужные сигналы из БД несколькими короткими запросами.
 // Запросы не паралеллим — все идут на тот же pool, обычно <5 мс каждый
 // для нашей шкалы (тысячи views на пользователя). Параллелизм не даст
 // выигрыша, а добавит сложность.
@@ -60,6 +71,8 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		FavoriteSeries:  map[int64]struct{}{},
 		FavoriteBooks:   map[int64]struct{}{},
 		BookActivity:    map[int64]float64{},
+		FavoriteWorks:   map[int64]struct{}{},
+		WorkActivity:    map[int64]float64{},
 		AuthorActivity:  map[int64]float64{},
 		SeriesActivity:  map[int64]float64{},
 		GenreActivity:   map[string]float64{},
@@ -75,6 +88,7 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		{`SELECT series_id FROM favorite_series  WHERE user_id = $1`, p.FavoriteSeries},
 		// Книжное избранное теперь = членство в служебной полке kind='favorites' (миграция 0023).
 		{`SELECT cb.book_id FROM user_collection_books cb JOIN user_collections c ON c.id = cb.collection_id WHERE c.user_id = $1 AND c.kind = 'favorites'`, p.FavoriteBooks},
+		{`SELECT DISTINCT b.work_id FROM user_collection_books cb JOIN user_collections c ON c.id = cb.collection_id JOIN books b ON b.id = cb.book_id WHERE c.user_id = $1 AND c.kind = 'favorites' AND b.work_id IS NOT NULL`, p.FavoriteWorks},
 	} {
 		rs, err := s.pool.Query(ctx, q.sql, userID)
 		if err != nil {
@@ -120,6 +134,38 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 	}
 	rowsBA.Close()
 	if err := rowsBA.Err(); err != nil {
+		return PersonaProfile{}, err
+	}
+
+	// 2a. Та же активность по работам — для выдачи по индексу works.
+	rowsWA, err := s.pool.Query(ctx, `
+		WITH events AS (
+			SELECT book_id, 1.0::float AS w FROM views WHERE user_id = $1
+			UNION ALL
+			SELECT book_id, 3.0::float AS w FROM reads WHERE user_id = $1
+		)
+		SELECT b.work_id, sum(e.w)
+		FROM events e
+		JOIN books b ON b.id = e.book_id
+		WHERE b.work_id IS NOT NULL
+		GROUP BY b.work_id
+	`, userID)
+	if err != nil {
+		return PersonaProfile{}, fmt.Errorf("work activity: %w", err)
+	}
+	for rowsWA.Next() {
+		var (
+			id int64
+			w  float64
+		)
+		if err := rowsWA.Scan(&id, &w); err != nil {
+			rowsWA.Close()
+			return PersonaProfile{}, err
+		}
+		p.WorkActivity[id] = w
+	}
+	rowsWA.Close()
+	if err := rowsWA.Err(); err != nil {
 		return PersonaProfile{}, err
 	}
 

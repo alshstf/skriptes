@@ -327,6 +327,55 @@ func TestService_WorkLevelFavoriteRead(t *testing.T) {
 	require.Equal(t, 1, readsRows)
 }
 
+// TestService_PersonaWorkLevel — профиль для поиска по works сводит избранное и
+// активность изданий к их работе (#399): id работ и изданий — разные
+// последовательности, сравнивать id работы с BookActivity нельзя.
+func TestService_PersonaWorkLevel(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+
+	var userID, collID, archID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('p@e.com','P','x','user') RETURNING id`).Scan(&userID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	// Сдвигаем последовательность работ, чтобы id работы заведомо не совпал с id изданий.
+	_, err := pool.Exec(ctx, `SELECT setval(pg_get_serial_sequence('works','id'), 1000)`)
+	require.NoError(t, err)
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title) VALUES ('Оно','оно') RETURNING id`).Scan(&workID))
+	mk := func(lib string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+			VALUES ($1,$2,$3,$3,'fb2','Оно','оно',$4) RETURNING id`, collID, archID, lib, workID).Scan(&id))
+		return id
+	}
+	e1, e2 := mk("L1"), mk("L2")
+
+	svc := history.New(pool)
+	require.NoError(t, svc.AddFavorite(ctx, userID, e2))
+	_, err = pool.Exec(ctx, `INSERT INTO views (user_id, book_id) VALUES ($1,$2)`, userID, e1)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO reads (user_id, book_id) VALUES ($1,$2)`, userID, e2)
+	require.NoError(t, err)
+
+	p, err := svc.PersonaProfile(ctx, userID)
+	require.NoError(t, err)
+	require.Contains(t, p.FavoriteBooks, e2)
+	require.Contains(t, p.FavoriteWorks, workID, "избранное издание ⇒ избранная работа")
+	require.NotContains(t, p.FavoriteWorks, e2)
+	require.InDelta(t, 4.0, p.WorkActivity[workID], 1e-9, "просмотр одного издания + чтение другого = активность работы")
+	require.InDelta(t, 1.0, p.BookActivity[e1], 1e-9)
+	require.NotContains(t, p.WorkActivity, e1)
+}
+
 // TestService_Ratings — пользовательские оценки (work-level): set/update/remove,
 // валидация 1–5, агрегат (средняя + число голосов по инстансу).
 func TestService_Ratings(t *testing.T) {
