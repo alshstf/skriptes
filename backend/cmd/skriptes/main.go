@@ -159,6 +159,7 @@ func run() error {
 		runOnceSplitAlienEditions(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
+		runOnceFantlabRatings(c, pool, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
 		// импорта: и разбор, и импорт массово пишут в works/books.
@@ -1423,6 +1424,33 @@ func runOnceAdaptationsScreenOnly(ctx context.Context, pool *pgxpool.Pool, imp *
 		logger.Warn("adaptations cleanup: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time adaptations cleanup done", "works", len(works), "books_to_refetch", refetch)
+}
+
+// runOnceFantlabRatings — оценка Фантлаба (средняя и рейтинг, миграция 0050)
+// приходит в том же ответе, что и число оценок, но раньше не сохранялась: сброс
+// «найдено» у Фантлаба — воркер «Известность» перезапросит найденные работы
+// (~28 тыс., около 16 ч при его RPM), заодно освежив число оценок.
+func runOnceFantlabRatings(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "fantlab_ratings_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("fantlab ratings: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	tag, err := pool.Exec(ctx, `DELETE FROM work_renown_lookups WHERE source = 'fantlab' AND outcome = 'found'`)
+	if err != nil {
+		logger.Warn("fantlab ratings: reset lookups failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("fantlab ratings: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time fantlab ratings refetch scheduled", "works", tag.RowsAffected())
 }
 
 // runOnceWorkYears — год работы по правилам #288 (metadata/work_years.go):

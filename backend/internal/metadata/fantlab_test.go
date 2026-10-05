@@ -14,7 +14,7 @@ import (
 // автора. Лишние поля выброшены (парсим defensively только нужные).
 const fantlabFixture = `{"matches":[
   {"all_autor_rusname":"Дмитрий Глуховский","altname":"М-Е-Т-Р-О","autor_rusname":"Дмитрий Глуховский",
-   "markcount":6724,"name":"","rusname":"Метро 2033","work_id":4351,"year":2005,"work_type_id":1},
+   "markcount":6724,"midmark":[8.04],"rating":[7.97],"name":"","rusname":"Метро 2033","work_id":4351,"year":2005,"work_type_id":1},
   {"all_autor_rusname":"Шимун Врочек","altname":"Метро 2033: Питер-2. Убер и компания","autor_rusname":"Шимун Врочек",
    "markcount":72,"name":"","rusname":"Метро 2035: Питер. Война","work_id":648001,"year":2018,"work_type_id":1},
   {"all_autor_rusname":"Роберт Шекли","altname":"","autor_rusname":"Роберт Шекли",
@@ -42,6 +42,8 @@ func TestFantlabFetchRenown_HappyPath(t *testing.T) {
 	require.Zero(t, res.Want)
 	require.Equal(t, "novel", res.Kind, "work_type_id=1 (роман) → уверенно обычное произведение")
 	require.Equal(t, 2005, res.Year, "год первой публикации из того же ответа (#288)")
+	require.InDelta(t, 8.04, res.MidMark, 1e-9, "средняя оценка (#296)")
+	require.InDelta(t, 7.97, res.WeightedRating, 1e-9, "рейтинг Фантлаба")
 }
 
 func TestFantlabFetchRenown_CollectionKind(t *testing.T) {

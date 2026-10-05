@@ -210,6 +210,9 @@ export type Book = {
   external_rating?: number;
   /** Источник external_rating: 'google_books' | 'openlibrary'. */
   external_rating_source?: string;
+  /** Средняя оценка работы на fantlab.ru (1–10), от 10 оценок (#296), и их число. */
+  fantlab_rating?: number;
+  fantlab_marks?: number;
   /** Число голосов у внешнего источника. */
   external_rating_count?: number;
   /** Оценка текущего пользователя (1–5). Undefined — не оценивал/гость. */

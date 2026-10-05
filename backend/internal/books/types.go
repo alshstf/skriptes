@@ -151,13 +151,17 @@ type Book struct {
 	ExternalRating       *float64 `json:"external_rating,omitempty"`
 	ExternalRatingSource *string  `json:"external_rating_source,omitempty"`
 	ExternalRatingCount  *int     `json:"external_rating_count,omitempty"`
-	Annotation           string   `json:"annotation,omitempty"`
-	CoverPath            string   `json:"cover_path,omitempty"`
-	Archive              string   `json:"archive"`
-	FileName             string   `json:"file_name"`
-	Ext                  string   `json:"ext"`
-	SizeBytes            int64    `json:"size_bytes"`
-	Deleted              bool     `json:"deleted,omitempty"`
+	// FantlabRating — средняя оценка работы на fantlab.ru (1–10) и число оценок;
+	// только от 10 оценок (#296; заполняет воркер «Известность»).
+	FantlabRating *float64 `json:"fantlab_rating,omitempty"`
+	FantlabMarks  int      `json:"fantlab_marks,omitempty"`
+	Annotation    string   `json:"annotation,omitempty"`
+	CoverPath     string   `json:"cover_path,omitempty"`
+	Archive       string   `json:"archive"`
+	FileName      string   `json:"file_name"`
+	Ext           string   `json:"ext"`
+	SizeBytes     int64    `json:"size_bytes"`
+	Deleted       bool     `json:"deleted,omitempty"`
 	// WorkID — логическая книга. Editions — ВСЕ издания этой работы (включая
 	// открытое). Title/WrittenYear/Series/SerNo/Authors/Genres — уровня работы
 	// (union по изданиям); остальные поля выше — открытого издания (id в URL),
@@ -254,3 +258,7 @@ const MinExternalRatingVotes = 5
 func ExternalRatingSQL(alias string) string {
 	return fmt.Sprintf("(CASE WHEN %[1]s.external_rating_count >= %[2]d THEN %[1]s.external_rating END)", alias, MinExternalRatingVotes)
 }
+
+// MinFantlabMarks — средняя оценка Фантлаба показывается от стольких оценок
+// (#296): у работ с парой оценок средняя случайна.
+const MinFantlabMarks = 10

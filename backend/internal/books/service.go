@@ -1298,6 +1298,8 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		extRating   pgtype.Float4
 		extSource   pgtype.Text
 		extCount    pgtype.Int4
+		flMidmark   pgtype.Float4
+		flMarks     pgtype.Int4
 		annotation  pgtype.Text
 		coverPath   pgtype.Text
 		serNo       pgtype.Int4
@@ -1321,6 +1323,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
 			a.filename,
+			CASE WHEN w.fantlab_marks >= `+fmt.Sprint(MinFantlabMarks)+` THEN w.fantlab_midmark END, w.fantlab_marks,
 			COALESCE(b.src_lang, (
 				SELECT bb.src_lang FROM books bb
 				WHERE bb.work_id = b.work_id AND bb.deleted = false
@@ -1340,6 +1343,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		&serNo, &seriesID, &seriesTitle,
 		&b.FileName, &b.Ext, &b.SizeBytes, &b.Deleted,
 		&archive,
+		&flMidmark, &flMarks,
 		&srcLang,
 	)
 	if err != nil {
@@ -1370,6 +1374,11 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	if extSource.Valid && extSource.String != "" {
 		s := extSource.String
 		b.ExternalRatingSource = &s
+	}
+	if flMidmark.Valid && flMidmark.Float32 > 0 {
+		v := math.Round(float64(flMidmark.Float32)*100) / 100
+		b.FantlabRating = &v
+		b.FantlabMarks = int(flMarks.Int32)
 	}
 	if extCount.Valid {
 		v := int(extCount.Int32)

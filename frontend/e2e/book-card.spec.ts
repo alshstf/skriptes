@@ -45,6 +45,24 @@ test('строка сигналов: внешний рейтинг + источ�
   await expect(page.getByText('Внешний рейтинг · библиотека')).toBeVisible({ timeout: 5_000 });
 });
 
+test('строка сигналов: оценка Фантлаба со счётом оценок в тултипе (#296)', async ({
+  mockedPage: page,
+}) => {
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...bookDetailFixture, fantlab_rating: 8.97, fantlab_marks: 11889 }),
+    }),
+  );
+  await page.goto('/books/19');
+  const chip = page.getByText('Фантлаб', { exact: true });
+  await expect(chip).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('9.0', { exact: true })).toBeVisible();
+  await chip.hover();
+  await expect(page.getByText(/Средняя оценка на fantlab\.ru \(из 10\) · 11889 оценок/)).toBeVisible({ timeout: 5_000 });
+});
+
 test('аннотация: длинная сворачивается, «Развернуть» раскрывает', async ({
   mockedPage: page,
 }) => {
