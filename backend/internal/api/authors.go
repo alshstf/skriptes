@@ -34,7 +34,7 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 			YearFrom:        parseIntOr(q.Get("year_from"), 0),
 			YearTo:          parseIntOr(q.Get("year_to"), 0),
 			HasAdaptations:  parseBool(q.Get("has_adaptations")),
-			MinRating:       parseIntOr(q.Get("min_rating"), 0),
+			MinRating:       parseFloatOr(q.Get("min_rating"), 0),
 			MinReaderRating: parseFloatOr(q.Get("min_reader_rating"), 0),
 			FavoritesOnly:   parseBool(q.Get("favorites_only")),
 			Sort:            q.Get("sort"),

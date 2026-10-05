@@ -666,12 +666,9 @@ func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excl
 	)
 	err := s.pool.QueryRow(ctx, `
 		SELECT
-		  (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+notCompilationClause+`),
-		  (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
-		     FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)`+exClause+notCompilationClause+`
-		     ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id LIMIT 1),
+		  -- Рейтинг автора — хранимый rating_score (среднее лучших работ, #296).
+		  (SELECT rating_score::float8 FROM authors WHERE id = $1),
+		  (SELECT 'top_works' FROM authors WHERE id = $1 AND rating_score IS NOT NULL),
 		  (SELECT avg(br.rating)::float8 FROM book_ratings br WHERE br.work_id IN (
 		     SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
 		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+notCompilationClause+`)),

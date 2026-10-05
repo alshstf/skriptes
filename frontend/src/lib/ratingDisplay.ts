@@ -16,6 +16,9 @@ export function externalRatingSourceLabel(source?: string): string {
   switch (source) {
     case 'library':
       return 'библиотека';
+    case 'top_works':
+      // Рейтинг автора (#296): среднее пяти лучших работ с подтяжкой к средней.
+      return 'среднее лучших книг';
     case 'googlebooks':
     case 'google_books':
       return 'Google Books';

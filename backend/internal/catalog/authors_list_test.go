@@ -2,6 +2,7 @@ package catalog_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -65,6 +66,7 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		rating    *int     // LIBRATE (books.rating)
 		extRating *float64 // web-рейтинг (books.external_rating)
 		extSource string   // источник web-рейтинга (books.external_rating_source)
+		extCount  int      // голосов за web-рейтинг (books.external_rating_count; учитывается от 5)
 		workID    int64
 		authorID  int64
 		genreID   int64
@@ -90,10 +92,12 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		var id int64
 		require.NoError(t, pool.QueryRow(ctx, `
 			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
-			                   lang, src_lang, written_year, rating, work_id, external_rating, external_rating_source)
-			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8,$10,$11) RETURNING id`,
+			                   lang, src_lang, written_year, rating, work_id, external_rating, external_rating_source,
+			                   external_rating_count)
+			VALUES ($1,$2,$3,'f','fb2',$3,$9,$4,$5,$6,$7,$8,$10,$11,$12) RETURNING id`,
 			collID, archID, o.lib, nullStr(o.lang), nullStr(o.srcLang),
-			nullInt(o.year), nullInt(o.rating), workID, o.lib, nullFloat(o.extRating), nullStr(o.extSource)).Scan(&id))
+			nullInt(o.year), nullInt(o.rating), workID, o.lib, nullFloat(o.extRating), nullStr(o.extSource),
+			nullInt(nonZero(o.extCount))).Scan(&id))
 		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, o.authorID)
 		require.NoError(t, err)
 		_, err = pool.Exec(ctx, `INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2)`, id, o.genreID)
@@ -123,7 +127,7 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 	// Толстой: одна prose-книга, без года/рейтинга/экранизации.
 	// Толстой — без LIBRATE, но с web-рейтингом 4.2 от Google Books (проверка
 	// фолбэка COALESCE(LIBRATE, web) в агрегате/фильтре + атрибуции источника).
-	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse, extRating: fp(4.2), extSource: "googlebooks"})
+	mkBook(bookOpt{lib: "tl", lang: "ru", authorID: f.tolstoy, genreID: gProse, extRating: fp(4.2), extSource: "googlebooks", extCount: 12})
 
 	// Избранное юзера: подписка на Кинга + одна книга Кинга в избранном.
 	// Книжное избранное — членство в служебной полке kind='favorites' (миграция 0023).
@@ -156,7 +160,18 @@ func seedAuthorsList(t *testing.T, ctx context.Context, pool *pgxpool.Pool) auth
 		`UPDATE authors SET is_service = true, is_service_source = 'heuristic' WHERE id = $1`, f.serviceID)
 	require.NoError(t, err)
 
+	// Рейтинг автора хранимый (rating_score, #296) — как после старта/импорта.
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
 	return f
+}
+
+// nonZero — nil для 0 (NULL в базе).
+func nonZero(v int) *int {
+	if v == 0 {
+		return nil
+	}
+	return &v
 }
 
 func nullStr(s string) any {
@@ -174,7 +189,8 @@ func nullInt(p *int) any {
 
 // TestListAuthorsFiltered_Aggregates — базовые агрегаты на строке автора:
 // book_count схлопывает издания по работе; languages = lang ∪ src_lang;
-// years_active = min/max written_year; external_rating = max(COALESCE(rating, web));
+// years_active = min/max written_year; external_rating — рейтинг автора (среднее
+// лучших работ с подтяжкой к 3,35, #296);
 // has_adaptations; is_favorite + favorited_books_count для текущего юзера.
 func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	if testing.Short() {
@@ -202,9 +218,9 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.Equal(t, 1, king.FavoritedBooksCount, "одна книга Кинга в избранном")
 	require.True(t, king.HasAdaptations)
 	require.NotNil(t, king.ExternalRating)
-	require.InDelta(t, 5.0, *king.ExternalRating, 0.001)
+	require.InDelta(t, (5+2*3.35)/3, *king.ExternalRating, 0.001, "одна оценённая работа (LIBRATE 5) с подтяжкой к средней")
 	require.NotNil(t, king.ExternalRatingSource)
-	require.Equal(t, "library", *king.ExternalRatingSource, "у Кинга максимум — LIBRATE")
+	require.Equal(t, "top_works", *king.ExternalRatingSource)
 	require.NotNil(t, king.ReaderRating, "у Кинга есть оценки читателей")
 	require.InDelta(t, 3.5, *king.ReaderRating, 0.001, "avg(5,2) по инстансу")
 	require.Equal(t, 2, king.ReaderRatingCount)
@@ -219,10 +235,10 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.False(t, tolstoy.IsFavorite)
 	require.Equal(t, 0, tolstoy.FavoritedBooksCount)
 	require.False(t, tolstoy.HasAdaptations)
-	require.NotNil(t, tolstoy.ExternalRating, "web-рейтинг подхватывается через COALESCE")
-	require.InDelta(t, 4.2, *tolstoy.ExternalRating, 0.001, "fallback на web, когда нет LIBRATE")
+	require.NotNil(t, tolstoy.ExternalRating, "web-рейтинг от 12 голосов учитывается, когда нет LIBRATE")
+	require.InDelta(t, (4.2+2*3.35)/3, *tolstoy.ExternalRating, 0.001)
 	require.NotNil(t, tolstoy.ExternalRatingSource)
-	require.Equal(t, "googlebooks", *tolstoy.ExternalRatingSource, "источник web-рейтинга в тултип")
+	require.Equal(t, "top_works", *tolstoy.ExternalRatingSource)
 	require.Nil(t, tolstoy.ReaderRating, "нет оценок читателей → nil")
 	require.Equal(t, 0, tolstoy.ReaderRatingCount)
 	require.Nil(t, tolstoy.YearsActive, "нет written_year → nil")
@@ -366,16 +382,16 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
 
-	// min_rating — единый внешний рейтинг = COALESCE(LIBRATE, web): Кинг=5 (LIBRATE),
-	// Толстой=4.2 (web). Порог 5 → только Кинг; порог 3 → оба (web Толстого считается).
-	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 5})
+	// min_rating — рейтинг автора (#296): Кинг 3,9 (LIBRATE 5), Толстой ≈3,63 (web 4,2).
+	// Порог 3,8 → только Кинг; порог 3 → оба (web Толстого считается).
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 3.8})
 	require.NoError(t, err)
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
 
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 3})
 	require.NoError(t, err)
-	require.Equal(t, 2, res.Total, "web-рейтинг Толстого (4.2) проходит порог 3")
+	require.Equal(t, 2, res.Total, "рейтинг Толстого (web 4.2) проходит порог 3")
 	require.True(t, ids(res)[f.kingID])
 	require.True(t, ids(res)[f.tolstoy])
 
@@ -437,8 +453,8 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{Sort: "rating"})
 	require.NoError(t, err)
 	require.Len(t, res.Items, 3)
-	require.Equal(t, f.kingID, res.Items[0].ID, "LIBRATE 5 — первым")
-	require.Equal(t, f.tolstoy, res.Items[1].ID, "web 4.2 — вторым")
+	require.Equal(t, f.kingID, res.Items[0].ID, "3,9 — первым")
+	require.Equal(t, f.tolstoy, res.Items[1].ID, "≈3,63 — вторым")
 
 	// Исключение жанра sf_horror: у Кинга остаётся только sf-работа (k2),
 	// book_count падает до 1 и hsorror-экранизация/рейтинг с horror-издания уходят.
@@ -455,7 +471,7 @@ func TestListAuthorsFiltered_SortAndExclusions(t *testing.T) {
 	}
 	require.Equal(t, 1, king.BookCount, "horror-работа исключена из счётчика")
 	require.False(t, king.HasAdaptations, "экранизация была на horror-издании")
-	require.Nil(t, king.ExternalRating, "рейтинг 5 был на horror-издании")
+	require.NotNil(t, king.ExternalRating, "рейтинг автора — по общему каталогу, личные скрытия в него не входят (#296)")
 	for _, g := range king.TopGenres {
 		require.NotEqual(t, "sf_horror", g.Code, "скрытый жанр не светится в топе")
 	}
@@ -492,6 +508,9 @@ func TestListAuthorsFiltered_LooseCompilations(t *testing.T) {
 
 	_, err := pool.Exec(ctx, `UPDATE works SET kind='collection', kind_source='heuristic'
 		WHERE id = (SELECT work_id FROM books WHERE lib_id = 'k-ru')`)
+	require.NoError(t, err)
+
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
 	require.NoError(t, err)
 
 	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{UserID: f.userID})
@@ -633,12 +652,13 @@ func TestRecomputeAuthorStats(t *testing.T) {
 	stats := func(id int64) (int, *float64) {
 		var n int
 		var r *float64
-		require.NoError(t, pool.QueryRow(ctx, `SELECT book_count, max_rating::float8 FROM authors WHERE id = $1`, id).Scan(&n, &r))
+		require.NoError(t, pool.QueryRow(ctx, `SELECT book_count, rating_score::float8 FROM authors WHERE id = $1`, id).Scan(&n, &r))
 		return n, r
 	}
+	// Сид уже пересчитал агрегаты (как старт); повтор ничего не меняет.
 	n, err := catalog.RecomputeAuthorStats(ctx, pool)
 	require.NoError(t, err)
-	require.Positive(t, n)
+	require.Zero(t, n)
 
 	// Совпадает с тем, что показывает строка списка без скрытий.
 	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
@@ -647,10 +667,10 @@ func TestRecomputeAuthorStats(t *testing.T) {
 		bc, r := stats(it.ID)
 		require.Equal(t, it.BookCount, bc, "book_count автора %d", it.ID)
 		if it.ExternalRating == nil {
-			require.Nil(t, r, "max_rating автора %d", it.ID)
+			require.Nil(t, r, "rating_score автора %d", it.ID)
 		} else {
 			require.NotNil(t, r)
-			require.InDelta(t, *it.ExternalRating, *r, 0.001, "max_rating автора %d", it.ID)
+			require.InDelta(t, *it.ExternalRating, *r, 0.001, "rating_score автора %d", it.ID)
 		}
 	}
 
@@ -692,4 +712,67 @@ func TestRecomputeAuthorStats(t *testing.T) {
 	bc, r := stats(f.kingID)
 	require.Equal(t, 1, bc)
 	require.Nil(t, r, "рейтинг был только у сборника")
+}
+
+// TestRecomputeAuthorStats_RatingScore — рейтинг автора (#296): среднее пяти
+// лучших работ (LIBRATE, иначе веб-оценка от 5 голосов) с подтяжкой к 3,35.
+func TestRecomputeAuthorStats_RatingScore(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('r','r.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'r.zip') RETURNING id`, collID).Scan(&archID))
+	author := func(norm string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO authors (last_name, normalized_name) VALUES ($1,$2) RETURNING id`, norm, norm).Scan(&id))
+		return id
+	}
+	n := 0
+	book := func(aid int64, lib *int, web *float64, votes *int) {
+		n++
+		lid := fmt.Sprintf("r%d", n)
+		var wid, bid int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title, primary_author_id) VALUES ($1,$2,$3) RETURNING id`, lid, lid, aid).Scan(&wid))
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id,
+			                   rating, external_rating, external_rating_count)
+			VALUES ($1,$2,$3,'f','fb2',$4,$5,$6,$7,$8,$9) RETURNING id`,
+			collID, archID, lid, lid, lid, wid, lib, web, votes).Scan(&bid))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bid, aid)
+		require.NoError(t, err)
+	}
+	ip := func(v int) *int { return &v }
+	fp := func(v float64) *float64 { return &v }
+
+	prolific := author("плодовитый")
+	for _, r := range []int{5, 5, 5, 5, 5, 1, 2} {
+		book(prolific, ip(r), nil, nil)
+	}
+	fewVotes := author("одноголосый")
+	book(fewVotes, nil, fp(5), ip(1)) // 1 голос — не в счёт
+	book(fewVotes, ip(3), nil, nil)
+	onlyWeak := author("слабоголосый")
+	book(onlyWeak, nil, fp(5), ip(2))
+	web := author("веб")
+	book(web, nil, fp(4), ip(10))
+
+	_, err := catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	score := func(id int64) *float64 {
+		var r *float64
+		require.NoError(t, pool.QueryRow(ctx, `SELECT rating_score::float8 FROM authors WHERE id = $1`, id).Scan(&r))
+		return r
+	}
+	require.InDelta(t, (25+2*3.35)/7, *score(prolific), 0.001, "пять лучших, единица и двойка не тянут вниз")
+	require.InDelta(t, (3+2*3.35)/3, *score(fewVotes), 0.001, "веб-оценка из одного голоса не учитывается")
+	require.Nil(t, score(onlyWeak), "веб-оценка из двух голосов — рейтинга нет")
+	require.InDelta(t, (4+2*3.35)/3, *score(web), 0.001, "веб-оценка от 10 голосов учитывается")
 }
