@@ -62,14 +62,13 @@ type AuthorListItem struct {
 	YearsActive *YearsRange `json:"years_active,omitempty"`
 	// HasAdaptations — есть ли экранизация хоть у одной книги автора.
 	HasAdaptations bool `json:"has_adaptations"`
-	// ExternalRating — единый ВНЕШНИЙ рейтинг (НЕ пользовательский): максимум по
-	// книгам автора от COALESCE(LIBRATE из INPX, web-рейтинг Google Books/OL),
-	// с приоритетом LIBRATE на уровне книги. nil, если внешнего рейтинга нет ни
-	// у одной книги.
+	// ExternalRating — рейтинг автора по ВНЕШНИМ оценкам (НЕ пользовательский,
+	// #296): среднее пяти лучших работ (оценка работы — LIBRATE, иначе веб-оценка
+	// от 5 голосов), у кого их меньше — с подтяжкой к средней по коллекции.
+	// Хранимый authors.rating_score (catalog.RecomputeAuthorStats). nil — ни одна
+	// работа не оценена.
 	ExternalRating *float64 `json:"external_rating,omitempty"`
-	// ExternalRatingSource — источник того издания, что дало максимум
-	// ExternalRating: 'library' (LIBRATE) | 'googlebooks' | 'openlibrary'. Для
-	// тултипа в списке (откуда оценка). nil, если рейтинга нет.
+	// ExternalRatingSource — 'top_works' (среднее лучших работ) для тултипа.
 	ExternalRatingSource *string `json:"external_rating_source,omitempty"`
 	// ReaderRating — средняя ПОЛЬЗОВАТЕЛЬСКАЯ оценка (book_ratings) по работам
 	// автора, по инстансу (все юзеры). Без порога голосов (см. решение). nil,
@@ -97,7 +96,7 @@ type AuthorListParams struct {
 	YearFrom        int      // пересечение [year_from, year_to] с диапазоном лет активности
 	YearTo          int
 	HasAdaptations  bool    // только авторы, у книг которых есть экранизации
-	MinRating       int     // минимальный библиотечный рейтинг (max по книгам автора ≥ этого)
+	MinRating       float64 // минимальный рейтинг автора (rating_score — среднее лучших работ, #296)
 	MinReaderRating float64 // минимальная средняя оценка читателей по работам автора (≥ этого)
 	FavoritesOnly   bool    // только авторы из favorite_authors текущего юзера
 
@@ -280,10 +279,10 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	}
 
 	if p.MinRating > 0 {
+		// Рейтинг автора — хранимый rating_score (среднее лучших работ, #296), как
+		// и сортировка; личные скрытия в него не входят.
 		n := addArg(p.MinRating)
-		where = append(where, fmt.Sprintf(
-			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" WHERE ba.author_id = a.id AND COALESCE(b.rating, b.external_rating) >= $%d"+renderAggExclusion()+")", n))
+		where = append(where, fmt.Sprintf("a.rating_score >= $%d", n))
 	}
 
 	if p.MinReaderRating > 0 {
@@ -329,7 +328,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// LIMIT применяется сразу), а sort=rating/book_count/reader_rating — нет.
 
 	// Сортировка фазы 1 — только по колонкам authors: известность, алфавит или
-	// хранимые агрегаты book_count/max_rating (#302, catalog.RecomputeAuthorStats;
+	// хранимые агрегаты book_count/rating_score (#302, #296, catalog.RecomputeAuthorStats;
 	// коррелированный подзапрос по всем авторам шёл ~10 с). Личные скрытия в ключ
 	// не входят — порядок по общему каталогу. Оценки читателей (book_ratings —
 	// маленькая таблица) по-прежнему считаются на лету.
@@ -338,7 +337,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	case "book_count":
 		phase1Order = "ORDER BY a.book_count DESC, " + authorAlphaOrder
 	case "rating":
-		phase1Order = "ORDER BY a.max_rating DESC NULLS LAST, a.book_count DESC, " + authorAlphaOrder
+		phase1Order = "ORDER BY a.rating_score DESC NULLS LAST, a.renown DESC, a.book_count DESC, " + authorAlphaOrder
 	case "reader_rating":
 		ex := renderAggExclusion()
 		phase1Order = fmt.Sprintf("ORDER BY (SELECT avg(br.rating)::float8 FROM book_ratings br"+
@@ -364,7 +363,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	case "book_count":
 		orderSQL = "ORDER BY a.stat_books DESC, " + authorAlphaOrder
 	case "rating":
-		orderSQL = "ORDER BY a.stat_rating DESC NULLS LAST, a.stat_books DESC, " + authorAlphaOrder
+		orderSQL = "ORDER BY a.stat_rating DESC NULLS LAST, a.renown DESC, a.stat_books DESC, " + authorAlphaOrder
 	case "reader_rating":
 		orderSQL = "ORDER BY reader_rating DESC NULLS LAST, reader_rating_count DESC, a.id"
 	case "name":
@@ -383,8 +382,6 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	exYrFrom := renderAggExclusion()
 	exYrTo := renderAggExclusion()
 	exAdapt := renderAggExclusion()
-	exRating := renderAggExclusion()
-	exRatingSrc := renderAggExclusion()
 	exReaderAvg := renderAggExclusion()
 	exReaderCnt := renderAggExclusion()
 	exOwnComp := renderExclusion()
@@ -395,7 +392,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		WITH page AS (
 		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
 		           a.normalized_name, a.renown, a.name_note,
-		           a.book_count AS stat_books, a.max_rating AS stat_rating
+		           a.book_count AS stat_books, a.rating_score AS stat_rating
 		    FROM authors a%[1]s
 		    %[2]s
 		    LIMIT $%[3]d OFFSET $%[4]d
@@ -418,31 +415,26 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[9]s) AS yr_to,
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[10]s) AS has_adapt,
-		       (SELECT max(COALESCE(b.rating, b.external_rating))::float8 FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[11]s) AS external_rating,
-		       (SELECT CASE WHEN b.rating IS NOT NULL THEN 'library' ELSE b.external_rating_source END
-		          FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND (b.rating IS NOT NULL OR b.external_rating IS NOT NULL)%[12]s
-		          ORDER BY COALESCE(b.rating, b.external_rating) DESC NULLS LAST, b.id
-		          LIMIT 1) AS external_rating_source,
+		       a.stat_rating::float8 AS external_rating,
+		       CASE WHEN a.stat_rating IS NOT NULL THEN 'top_works' END AS external_rating_source,
 		       (SELECT avg(br.rating)::float8 FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[13]s
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[11]s
 		          )) AS reader_rating,
 		       (SELECT count(*)::int FROM book_ratings br
 		          WHERE br.work_id IN (
 		              SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[14]s
+		              WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL%[12]s
 		          )) AS reader_rating_count,
 		       (SELECT count(DISTINCT b.work_id)::int FROM book_authors ba
 		          JOIN books b ON b.id = ba.book_id
 		          JOIN works wc ON wc.id = b.work_id
 		          WHERE ba.author_id = a.id AND b.deleted = false
-		            AND COALESCE(wc.kind, '') <> '' AND wc.primary_author_id = a.id%[16]s) AS own_compilations
+		            AND COALESCE(wc.kind, '') <> '' AND wc.primary_author_id = a.id%[14]s) AS own_compilations
 		FROM page a
-		%[15]s
-	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exRating, exRatingSrc, exReaderAvg, exReaderCnt, orderSQL, exOwnComp)
+		%[13]s
+	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exReaderAvg, exReaderCnt, orderSQL, exOwnComp)
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {

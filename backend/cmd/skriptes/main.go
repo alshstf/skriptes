@@ -827,7 +827,7 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	}
 }
 
-// authorStatsInterval — как часто пересчитывать authors.book_count/max_rating.
+// authorStatsInterval — как часто пересчитывать authors.book_count/rating_score.
 // Их меняют импорт (пересчёт сразу после него), группировка изданий, внешний
 // рейтинг, классификация сборников и ручные правки; полный пересчёт ~1 с.
 const authorStatsInterval = 30 * time.Minute

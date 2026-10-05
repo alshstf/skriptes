@@ -500,7 +500,8 @@ function AuthorsFiltersSidebar({
         </div>
       </div>
 
-      {/* Минимальный внешний рейтинг (единый LIBRATE ∪ web, 1..5) */}
+      {/* Минимальный рейтинг автора по внешним оценкам (среднее лучших работ с
+          подтяжкой к средней, #296): шкала ~3,3–4,5, отсюда дробные пороги. */}
       <div className="space-y-2">
         <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
           <Globe className="size-3.5 shrink-0" aria-hidden />
@@ -513,11 +514,10 @@ function AuthorsFiltersSidebar({
           className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
         >
           <option value={0}>Любой</option>
-          <option value={1}>1+</option>
-          <option value={2}>2+</option>
-          <option value={3}>3+</option>
+          <option value={3.5}>3,5+</option>
           <option value={4}>4+</option>
-          <option value={5}>5</option>
+          <option value={4.3}>4,3+</option>
+          <option value={4.5}>4,5+</option>
         </select>
       </div>
 

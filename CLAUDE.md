@@ -151,7 +151,7 @@ auto-memory как `feedback_visual_layout_testing`.
 
 ### 6. Каждая миграция — новый номер, прошедшие не править in-place
 
-Текущая верхняя — `0048_work_external_year` (`works.external_year`/`_source` — год первой публикации от Фантлаба, #288); до неё `0047_author_merges` (журнал ручных слияний авторов, #308); до неё `0046_author_latin_name` (`authors.latin_name` — латинское имя автора из fb2 переводов для поиска латиницей, #290/#291); до неё `0045_author_stats` (`authors.book_count`/`max_rating` — хранимые ключи сортировок /authors, #302); до неё `0044_author_meta_recheck_reason` (`author_meta_recheck.reason` — причина решения перепроверки, #280); до неё `0043_author_meta_recheck` (журнал перепроверки био/фото авторов, #280); до неё `0042_yo_fold_trgm` (trigram-индексы по `replace(…,'ё','е')` имён авторов и
+Текущая верхняя — `0049_author_rating_score` (`authors.max_rating` → `rating_score`: рейтинг автора — среднее пяти лучших работ, #296); до неё `0048_work_external_year` (`works.external_year`/`_source` — год первой публикации от Фантлаба, #288); до неё `0047_author_merges` (журнал ручных слияний авторов, #308); до неё `0046_author_latin_name` (`authors.latin_name` — латинское имя автора из fb2 переводов для поиска латиницей, #290/#291); до неё `0045_author_stats` (`authors.book_count`/`max_rating` — хранимые ключи сортировок /authors, #302); до неё `0044_author_meta_recheck_reason` (`author_meta_recheck.reason` — причина решения перепроверки, #280); до неё `0043_author_meta_recheck` (журнал перепроверки био/фото авторов, #280); до неё `0042_yo_fold_trgm` (trigram-индексы по `replace(…,'ё','е')` имён авторов и
 названий серий — подсказки/поиск без различия «ё»/«е», #278); до неё `0041_series_kind` (`series.kind='multi'` — межавторская/издательская серия, грабля №22); до неё `0040_author_name_note` (уточнение тёзки `authors.name_note`, автор уникален по (имя, уточнение), журнал `author_splits` — грабля №22); до неё `0039_book_identity_archive_libid` (книга = (архив, lib_id), схлопывание дублей из двух INPX одной библиотеки, см. карту «INPX → upsert»); до неё `0038_author_renown`; до неё `0037_adaptation_tmdb` (`book_adaptations.tmdb_movie_id`/
 `tmdb_tv_id`/`poster_checked_at` — TMDB-id из Wikidata P4947/P4983 персистятся
 при записи адаптации + поштучный TTL перепроверки постер-дыр; частичный индекс
@@ -1190,10 +1190,16 @@ suggest `FavoriteMark`, hero-дропдаун (`HomePage`), строка авт�
     админки «Фоновые операции», per-source выбор + охват; учёт попыток `book_external_rating_lookups`,
     миграция **0027**; из включённых источников берётся оценка с бОльшим числом голосов).
   Карточка: `BookDetailPage::externalRatingDisplay` (LIBRATE→«N · библиотека», иначе
-  web→«N · Google Books»). Авторы: единый агрегат `external_rating` =
-  `max(COALESCE(rating, external_rating))`, фильтр `MinRating`/sort=`rating`/бейдж с `Globe`
-  (`catalog/authors_list.go`). ⚠️ `library_rating` в DTO Авторов БОЛЬШЕ НЕТ — теперь
-  `external_rating` (float).
+  web→«N · Google Books»). **Веб-оценка учитывается только от 5 голосов** (#296,
+  `books.MinExternalRatingVotes`/`ExternalRatingSQL` — карточка, списки, `WorkMeta`, рейтинг автора; 53 %
+  веб-оценок были одноголосыми); LIBRATE — как есть (голосов у неё нет). **Рейтинг автора** (#296, миграция
+  **0049** — `authors.max_rating` → `rating_score`): среднее пяти лучших работ (оценка работы — LIBRATE, иначе
+  веб от 5 голосов; без сборников) с подтяжкой к 3,35 (средняя LIBRATE) у кого работ меньше
+  (`catalog.RecomputeAuthorStats`, константы `ratingTopWorks`/`ratingPriorWeight`/`ratingPriorMean`): пять
+  «пятёрок» → 4,53, одна → 3,9. Было `max(…)` — у 4,4 тыс. авторов «5.0», сортировка «по рейтингу» = «по числу
+  книг». Список/фильтр `MinRating` (float, пороги 3,5–4,5)/sort=`rating` (ничьи — по известности)/карточка
+  автора читают хранимое значение — личные скрытия в него не входят; `external_rating_source='top_works'`.
+  Исследование — `~/projects/plans/skriptes/ratings-renown-research.md`.
 - **Читательский (этого инстанса)** — пользовательские оценки 1–5, work-level:
   - `book_ratings(user_id, work_id, rating)` (миграция **0024**); сервис —
     `history/ratings.go` (`SetRating` — авто-проставляет «Прочитана» в tx;

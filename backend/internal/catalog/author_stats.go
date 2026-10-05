@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/books"
 )
 
 // Хранимые агрегаты автора для сортировок /authors (#302, миграция 0045) и
 // латинское имя для поиска (#290/#291, миграция 0046):
-// authors.book_count — число работ, authors.max_rating — максимум внешнего
+// authors.book_count — число работ, authors.rating_score — рейтинг автора (среднее лучших работ, #296; было — максимум внешнего
 // рейтинга COALESCE(LIBRATE, web); оба по живым изданиям без сборников — те же
 // определения, что у book_count/external_rating в строке списка
 // (ListAuthorsFiltered без скрытий). Коррелированный подзапрос по всем 140 тыс.
@@ -23,7 +24,16 @@ import (
 // произвольном порядке и вперемешку ловили бы deadlock.
 const authorsBulkLockID = 0x617574687265
 
-// RecomputeAuthorStats пересчитывает authors.book_count/max_rating/latin_name целиком и
+// Рейтинг автора (#296) = (сумма оценок до ratingTopWorks лучших работ +
+// ratingPriorWeight·ratingPriorMean) / (их число + ratingPriorWeight). Среднее
+// LIBRATE по коллекции — 3,35 (прод 2026-10). Пять пятёрок → 4,53; одна — 3,82.
+const (
+	ratingTopWorks    = 5
+	ratingPriorWeight = 2
+	ratingPriorMean   = 3.35
+)
+
+// RecomputeAuthorStats пересчитывает authors.book_count/rating_score/latin_name целиком и
 // возвращает число изменённых строк (пишутся только изменившиеся).
 func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
 	conn, err := pool.Acquire(ctx)
@@ -40,13 +50,37 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 	tag, err := conn.Exec(ctx, `
 		WITH s AS (
 		    SELECT ba.author_id,
-		           count(DISTINCT COALESCE(b.work_id, -b.id))::int AS n,
-		           max(COALESCE(b.rating, b.external_rating))::real AS r
+		           count(DISTINCT COALESCE(b.work_id, -b.id))::int AS n
 		    FROM book_authors ba
 		    JOIN books b      ON b.id = ba.book_id AND b.deleted = false
 		    LEFT JOIN works w ON w.id = b.work_id
 		    WHERE COALESCE(w.kind, '') = ''
 		    GROUP BY ba.author_id
+		),
+		-- Рейтинг автора (#296): оценка работы — LIBRATE её изданий, иначе веб-оценка
+		-- от `+fmt.Sprint(books.MinExternalRatingVotes)+` голосов; рейтинг — среднее пяти лучших работ
+		-- (без сборников), у кого их меньше — с подтяжкой к средней по коллекции.
+		wr AS (
+		    SELECT b.work_id, COALESCE(max(b.rating), max(`+books.ExternalRatingSQL("b")+`)) AS r
+		    FROM books b
+		    WHERE b.deleted = false AND b.work_id IS NOT NULL
+		    GROUP BY b.work_id
+		),
+		ranked AS (
+		    SELECT aw.author_id, wr.r,
+		           row_number() OVER (PARTITION BY aw.author_id ORDER BY wr.r DESC) AS rn
+		    FROM (SELECT DISTINCT ba.author_id, b.work_id
+		          FROM book_authors ba
+		          JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		          JOIN works w ON w.id = b.work_id AND COALESCE(w.kind, '') = '') aw
+		    JOIN wr ON wr.work_id = aw.work_id
+		    WHERE wr.r IS NOT NULL
+		),
+		score AS (
+		    SELECT author_id,
+		           ((sum(r) + `+fmt.Sprint(ratingPriorWeight)+` * `+fmt.Sprint(ratingPriorMean)+`) / (count(*) + `+fmt.Sprint(ratingPriorWeight)+`))::real AS r
+		    FROM ranked WHERE rn <= `+fmt.Sprint(ratingTopWorks)+`
+		    GROUP BY author_id
 		),
 		-- Латинское имя (миграция 0046): фамилия — та, за которую голосует больше
 		-- половины книг автора с латинским src-автором, кроме сборников (там в
@@ -78,10 +112,11 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 		    GROUP BY v.author_id, v.name
 		    ORDER BY v.author_id, count(*) DESC, v.name
 		)
-		UPDATE authors a SET book_count = COALESCE(s.n, 0), max_rating = s.r, latin_name = lat.name
+		UPDATE authors a SET book_count = COALESCE(s.n, 0), rating_score = sc.r, latin_name = lat.name
 		FROM authors a2 LEFT JOIN s ON s.author_id = a2.id LEFT JOIN lat ON lat.author_id = a2.id
+		     LEFT JOIN score sc ON sc.author_id = a2.id
 		WHERE a.id = a2.id
-		  AND (a.book_count IS DISTINCT FROM COALESCE(s.n, 0) OR a.max_rating IS DISTINCT FROM s.r
+		  AND (a.book_count IS DISTINCT FROM COALESCE(s.n, 0) OR a.rating_score IS DISTINCT FROM sc.r
 		       OR a.latin_name IS DISTINCT FROM lat.name)`)
 	if err != nil {
 		return 0, fmt.Errorf("author stats: update: %w", err)

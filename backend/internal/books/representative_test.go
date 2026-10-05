@@ -49,9 +49,9 @@ func TestListWorks_RepresentativeEdition(t *testing.T) {
 	var enID int64
 	require.NoError(t, pool.QueryRow(ctx, `
 		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title,
-		                   lang, work_id, cover_path, external_rating, external_rating_source)
+		                   lang, work_id, cover_path, external_rating, external_rating_source, external_rating_count)
 		VALUES ($1, $2, 'EN1', 'en1.fb2', 'fb2', 'The English Edition', 'the english edition',
-		        'en', $3, 'en-cover.jpg', 5.0, 'google_books')
+		        'en', $3, 'en-cover.jpg', 5.0, 'google_books', 12)
 		RETURNING id`, collID, archID, workID).Scan(&enID))
 	// Колонка works.edition_count НАРОЧНО кривая (99): бейдж обязан считать
 	// живые издания сам, а не читать потенциально устаревшую колонку (она не
@@ -112,4 +112,17 @@ func TestListWorks_RepresentativeEdition(t *testing.T) {
 	require.Equal(t, enID, cardEn.ID, "карточка при скрытии ru — английское издание")
 	require.Equal(t, itEn.Lang, cardEn.Lang)
 	require.Len(t, cardEn.Editions, 1, "карточка показывает столько же изданий, сколько обещал бейдж")
+	require.NotNil(t, cardEn.ExternalRating)
+
+	// Веб-оценка из одного голоса не показывается ни в списке, ни на карточке (#296).
+	_, err = pool.Exec(ctx, `UPDATE books SET external_rating_count = 1 WHERE id = $1`, enID)
+	require.NoError(t, err)
+	resWeak, err := svc.ListWorks(ctx, books.ListParams{Limit: 50, ExcludeLangs: []string{"ru"}})
+	require.NoError(t, err)
+	itWeak := findItem(resWeak)
+	require.NotNil(t, itWeak)
+	require.Nil(t, itWeak.ExternalRating, "один голос — оценки нет")
+	cardWeak, err := svc.GetWork(ctx, workID, nil, []string{"ru"})
+	require.NoError(t, err)
+	require.Nil(t, cardWeak.ExternalRating)
 }

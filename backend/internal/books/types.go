@@ -4,7 +4,10 @@
 // серией и жанрами).
 package books
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // AuthorRef — компактная ссылка на автора в карточке книги или в списке.
 type AuthorRef struct {
@@ -239,4 +242,15 @@ type ListParams struct {
 	// Пагинация: re-rank применяется ТОЛЬКО к первой странице (offset==0),
 	// чтобы не путать пользователя при листании.
 	UserID int64
+}
+
+// MinExternalRatingVotes — веб-оценка (Google Books / OpenLibrary) учитывается,
+// только если за ней столько голосов (#296): 53 % веб-оценок — один голос, и у
+// 540 авторов «5.0» держалось на одном-двух голосах. LIBRATE (оценка донорской
+// библиотеки) — как есть: числа голосов у неё нет.
+const MinExternalRatingVotes = 5
+
+// ExternalRatingSQL — <alias>.external_rating с порогом голосов: ниже порога NULL.
+func ExternalRatingSQL(alias string) string {
+	return fmt.Sprintf("(CASE WHEN %[1]s.external_rating_count >= %[2]d THEN %[1]s.external_rating END)", alias, MinExternalRatingVotes)
 }

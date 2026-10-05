@@ -38,7 +38,7 @@ const (
 // authorRenownLockID — фиксированный ключ pg_advisory_lock: сериализует
 // одновременные пересчёты (runOnce-гейт старта × after-import × хук воркера
 // «Известность») — зеркало serviceAuthorClassifyLockID. Тот же ключ берёт
-// catalog.RecomputeAuthorStats (book_count/max_rating тех же строк authors).
+// catalog.RecomputeAuthorStats (book_count/rating_score тех же строк authors).
 const authorRenownLockID = 0x617574687265 // "authre" в hex
 
 func computeAuthorRenown(maxPop int64, significant int) int64 {

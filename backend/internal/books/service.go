@@ -592,7 +592,7 @@ func WorkMeta(ctx context.Context, pool *pgxpool.Pool, workIDs []int64) map[int6
 		          WHERE b.work_id = w.id AND b.deleted = false)
 		FROM works w
 		LEFT JOIN LATERAL (
-		    SELECT b.rating, b.external_rating, b.external_rating_source
+		    SELECT b.rating, `+ExternalRatingSQL("b")+` AS external_rating, b.external_rating_source
 		    FROM books b
 		    WHERE b.work_id = w.id AND b.deleted = false
 		    ORDER BY COALESCE(b.normalized_title = w.normalized_title, false) DESC,
@@ -796,7 +796,7 @@ func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, e
 		       COALESCE(fb.id, 0), COALESCE(fb.cover_path, '')
 		FROM works w
 		LEFT JOIN LATERAL (
-		    SELECT b.id, b.lang, b.cover_path, b.rating, b.external_rating, b.external_rating_source
+		    SELECT b.id, b.lang, b.cover_path, b.rating, `+ExternalRatingSQL("b")+` AS external_rating, b.external_rating_source
 		    FROM books b
 		    WHERE b.work_id = w.id AND b.deleted = false
 		      AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
@@ -1316,7 +1316,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 		SELECT
 			b.id, b.lib_id, COALESCE(w.title, b.title), b.work_id,
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
-			b.external_rating, b.external_rating_source, b.external_rating_count,
+			`+ExternalRatingSQL("b")+`, b.external_rating_source, b.external_rating_count,
 			COALESCE(w.written_year, b.written_year), b.edition_year,
 			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
