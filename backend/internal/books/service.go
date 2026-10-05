@@ -1015,7 +1015,8 @@ type scoredItem struct {
 // Каждый сигнал входит в сумму ОДИН раз: у работы с несколькими авторами или
 // жанрами берётся самый сильный, а не сумма по ним (#399: у «Кто такая Кармен
 // Сандиего?» семь жанров — сумма пределов давала +0.74 и перебивала точное
-// совпадение «Кармен» Мериме).
+// совпадение «Кармен» Мериме). У работы больше чем с history.MaxPersonaAuthors
+// авторами авторских сигналов нет вовсе (антологии).
 const (
 	bonusFavoriteBook   = 0.6
 	bonusFavoriteAuthor = 0.5
@@ -1060,7 +1061,11 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool
 		}
 
 		favAuthor, authorAct := false, 0.0
-		for _, aid := range it.AuthorIDs {
+		authors := it.AuthorIDs
+		if len(authors) > history.MaxPersonaAuthors {
+			authors = nil // антология: подписка на одного из сотен авторов — не сигнал
+		}
+		for _, aid := range authors {
 			if _, ok := p.FavoriteAuthors[aid]; ok {
 				favAuthor = true
 			}

@@ -2,6 +2,7 @@ package history_test
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
@@ -374,6 +375,34 @@ func TestService_PersonaWorkLevel(t *testing.T) {
 	require.InDelta(t, 4.0, p.WorkActivity[workID], 1e-9, "просмотр одного издания + чтение другого = активность работы")
 	require.InDelta(t, 1.0, p.BookActivity[e1], 1e-9)
 	require.NotContains(t, p.WorkActivity, e1)
+
+	// Авторы: у книги e1 один автор — активность ему засчитана; открытая
+	// антология (авторов больше MaxPersonaAuthors) авторам активность не даёт.
+	author := func(name string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO authors (last_name, first_name, normalized_name) VALUES ($1,'А',lower($1)||' а') RETURNING id`, name).Scan(&id))
+		return id
+	}
+	solo := author("Соло")
+	_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, e1, solo)
+	require.NoError(t, err)
+	anth := mk("L3")
+	var anthAuthors []int64
+	for i := 0; i <= history.MaxPersonaAuthors; i++ {
+		a := author(fmt.Sprintf("Антолог%d", i))
+		anthAuthors = append(anthAuthors, a)
+		_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,$3)`, anth, a, i)
+		require.NoError(t, err)
+	}
+	_, err = pool.Exec(ctx, `INSERT INTO views (user_id, book_id) VALUES ($1,$2)`, userID, anth)
+	require.NoError(t, err)
+	p, err = svc.PersonaProfile(ctx, userID)
+	require.NoError(t, err)
+	require.InDelta(t, 1.0, p.AuthorActivity[solo], 1e-9)
+	for _, a := range anthAuthors {
+		require.NotContains(t, p.AuthorActivity, a, "антология не делает интересными всех её авторов")
+	}
 }
 
 // TestService_Ratings — пользовательские оценки (work-level): set/update/remove,
