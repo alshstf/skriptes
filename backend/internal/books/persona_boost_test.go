@@ -92,3 +92,29 @@ func TestApplyPersonaBoost_WorkVsEditionIDs(t *testing.T) {
 	require.InDelta(t, bonusFavoriteBook+3*bookActivityScale, editions[0].personal, 1e-9)
 	require.Zero(t, editions[1].personal)
 }
+
+// Антология: подписка на одного из сотен авторов не поднимает её над точным
+// совпадением (#399, прод: «Тень над рекою», 334 автора, на «собачье сердце»).
+func TestApplyPersonaBoost_AnthologyAuthorsIgnored(t *testing.T) {
+	p := emptyPersona()
+	p.FavoriteAuthors[7] = struct{}{}
+	p.AuthorActivity[7] = 100
+	authors := make([]int64, 334)
+	for i := range authors {
+		authors[i] = int64(1000 + i)
+	}
+	authors[42] = 7
+	scored := []scoredItem{
+		{item: ListItem{ID: 395406, AuthorIDs: authors}, base: 0.5158, pop: popularityBoost(112)},
+		{item: ListItem{ID: 29643, AuthorIDs: []int64{3}}, base: 1.0, pop: popularityBoost(1189)},
+	}
+	applyPersonaBoost(scored, p, true)
+	require.Zero(t, scored[0].personal)
+	sortByFinalScore(scored)
+	require.EqualValues(t, 29643, scored[0].item.ID)
+
+	// Книга трёх соавторов — обычная книга: подписка работает.
+	co := []scoredItem{{item: ListItem{ID: 1, AuthorIDs: []int64{1, 2, 7}}}}
+	applyPersonaBoost(co, p, true)
+	require.InDelta(t, bonusFavoriteAuthor+authorActivityCap, co[0].personal, 1e-9)
+}

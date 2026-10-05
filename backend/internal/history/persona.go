@@ -46,6 +46,13 @@ type PersonaProfile struct {
 	GenreActivity map[string]float64
 }
 
+// MaxPersonaAuthors — у книги с бо́льшим числом авторов (антологии, сборники
+// журналов) авторские сигналы не работают ни при сборке профиля, ни при
+// пересортировке: открытая антология не делает «интересными» сотни её авторов, а
+// подписка на одного из 334 авторов «Тени над рекою» не ставит её первой на
+// «собачье сердце» (#399).
+const MaxPersonaAuthors = 3
+
 // IsEmpty — true если у пользователя нет ни одного сигнала.
 // Тогда re-ranking бессмыслен — экономим CPU и возвращаем результат
 // Meili как есть.
@@ -173,7 +180,8 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 	//
 	// UNION ALL с весами 1.0 (view) и 3.0 (read), плюс агрегация по
 	// автору. Если у книги два соавтора, эвент засчитывается обоим —
-	// это ОК: интерес одинаково распределяется.
+	// это ОК: интерес одинаково распределяется. Книги, где авторов больше
+	// MaxPersonaAuthors (антологии), не в счёт.
 	rows, err := s.pool.Query(ctx, `
 		WITH events AS (
 			SELECT book_id, 1.0::float AS w FROM views WHERE user_id = $1
@@ -183,8 +191,9 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		SELECT ba.author_id, sum(e.w)
 		FROM events e
 		JOIN book_authors ba ON ba.book_id = e.book_id
+		WHERE (SELECT count(*) FROM book_authors x WHERE x.book_id = e.book_id) <= $2
 		GROUP BY ba.author_id
-	`, userID)
+	`, userID, MaxPersonaAuthors)
 	if err != nil {
 		return PersonaProfile{}, fmt.Errorf("author activity: %w", err)
 	}
