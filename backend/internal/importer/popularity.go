@@ -22,7 +22,12 @@ import (
 const (
 	popWEditions    = 100.0 // ·log2(edition_count), от 2 изданий: 2→100, 10→~332
 	popWLibrateBase = 40.0  // наличие LIBRATE-оценки — само по себе сигнал спроса
-	popWLibrate     = 24.0  // + 24·rating (1..5) → суммарно 64..160
+	popWLibrate     = 24.0  // + 24·rating (3..5) → суммарно 112..160
+	// popLibrateMin — с какой оценки LIBRATE даёт бонус (#292): 1–2 из 5 —
+	// «плохо», и «Анти-Акунин» с оценкой 1 получал +64 и обгонял в подсказке книги
+	// самого Акунина. Проверено на 35 запросах прода: меняет 3 топ-5, все к лучшему
+	// (~/projects/plans/skriptes/ratings-renown-research.md).
+	popLibrateMin   = 3
 	popWExtVotes    = 30.0  // ·log2(1+голоса GB/OL): 2→~48, 1000→~300
 	popWAdaptation  = 150.0 // факт экранизации
 	popWView        = 20.0  // просмотр карточки на инстансе
@@ -63,7 +68,7 @@ func computeWorkPopularity(s workPopSignals) int64 {
 		}
 		p += popWEditions * math.Log2(float64(ec))
 	}
-	if s.LibrateMax > 0 {
+	if s.LibrateMax >= popLibrateMin {
 		p += popWLibrateBase + popWLibrate*float64(s.LibrateMax)
 	}
 	if s.ExtVotes > 0 {

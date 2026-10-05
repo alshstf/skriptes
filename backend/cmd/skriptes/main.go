@@ -970,7 +970,7 @@ func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logge
 // (грабля «мёртвого popularity» 1.5.x). Дальше свежесть держат after-import и
 // хук воркера «Известность».
 func runOnceAuthorRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "author_renown_computed_v1"
+	const flag = "author_renown_computed_v2" // v2: LIBRATE 1–2 без бонуса (#292)
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("author renown: check flag failed — skip", "err", err)

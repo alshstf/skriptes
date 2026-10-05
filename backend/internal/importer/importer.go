@@ -493,8 +493,9 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v10 — та же схема, но пересборка через временный индекс (RebuildWorksIndex):
 // после v9 у работ с «ё» в названии в Meili осталась битой близость слов;
 // v11 — alt_titles_s (названия изданий и оригинала) и authors_latin (латинские
-// имена авторов оригинала) в поиске (#291).
-const WorksIndexSchemaVersion = 11
+// имена авторов оригинала) в поиске (#291);
+// v12 — popularity: LIBRATE 1–2 без бонуса (#292).
+const WorksIndexSchemaVersion = 12
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.

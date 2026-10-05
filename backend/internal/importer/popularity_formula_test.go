@@ -18,8 +18,11 @@ func TestComputeWorkPopularity(t *testing.T) {
 	t.Run("вклад отдельных сигналов", func(t *testing.T) {
 		// 2 издания → 100·log2(2) = 100.
 		require.EqualValues(t, 100, computeWorkPopularity(workPopSignals{EditionCount: 2}))
-		// LIBRATE 5 → 40 + 24·5 = 160.
+		// LIBRATE 5 → 40 + 24·5 = 160; 3 → 112; 1–2 — «плохо», бонуса нет (#292).
 		require.EqualValues(t, 160, computeWorkPopularity(workPopSignals{EditionCount: 1, LibrateMax: 5}))
+		require.EqualValues(t, 112, computeWorkPopularity(workPopSignals{EditionCount: 1, LibrateMax: 3}))
+		require.EqualValues(t, 0, computeWorkPopularity(workPopSignals{EditionCount: 1, LibrateMax: 2}))
+		require.EqualValues(t, 0, computeWorkPopularity(workPopSignals{EditionCount: 1, LibrateMax: 1}))
 		// Экранизация → 150.
 		require.EqualValues(t, 150, computeWorkPopularity(workPopSignals{EditionCount: 1, HasAdaptation: true}))
 		// Вовлечённость: просмотр 20, чтение 60, оценка 100.
