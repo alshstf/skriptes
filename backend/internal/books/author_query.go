@@ -263,17 +263,22 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 	}
 
 	byAuthor := authorIDsFilter(authors)
-	// Работы автора: страница в режиме Page — точное число работ автора.
+	// Работы автора: страница в режиме Page — точное число работ автора. Порядок —
+	// по известности: по релевантности первыми шли его тексты со словом-фамилией
+	// в названии («Лев Толстой: Исповедь») и общие сборники, а не «Война и мир».
+	// Запрос пустой: имя и так совпадает у всех его работ (поле автора), а правило
+	// sort в Meili стоит после attribute — с текстом запроса совпадение в названии
+	// перебивало бы известность.
 	reqA := &meilisearch.SearchRequest{
-		MatchingStrategy: meilisearch.All, ShowRankingScore: rerank,
-		HitsPerPage: int64(limit), Page: int64(offset/limit) + 1,
-		Filter: andFilter(base, byAuthor),
+		MatchingStrategy: meilisearch.All,
+		HitsPerPage:      int64(limit), Page: int64(offset/limit) + 1,
+		Filter: andFilter(base, byAuthor), Sort: authorWorksSort,
 	}
-	resA, err := index.SearchWithContext(ctx, q, reqA)
+	resA, err := index.SearchWithContext(ctx, "", reqA)
 	if err != nil {
 		return ListResponse{}, false, fmt.Errorf("meili works search (author): %w", err)
 	}
-	segA := scoreWorkHits(resA.Hits, rerank)
+	segA := scoreWorkHits(resA.Hits, false)
 	var segB []scoredItem
 	if len(segA) < limit {
 		// Остальное: продолжаем с того места, где кончились работы автора.
@@ -289,8 +294,7 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 		segB = scoreWorkHits(resB.Hits, rerank)
 	}
 	if rerank {
-		// Пересортировка — внутри каждой части: работы автора остаются первыми.
-		s.rerankScored(ctx, params.UserID, segA)
+		// Пересортировка — только «остального»: работы автора уже по известности.
 		s.rerankScored(ctx, params.UserID, segB)
 	}
 	items := make([]ListItem, 0, len(segA)+len(segB))
@@ -313,6 +317,44 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 		resp.MatchedAuthors = authors[:min(len(authors), maxMatchedAuthors)]
 	}
 	return resp, true, nil
+}
+
+// authorWorksSort — работы автора, названного запросом, — по известности.
+var authorWorksSort = []string{"popularity:desc"}
+
+// suggestAuthorWorks — подсказки на запрос-имя известного автора: сначала его
+// самые известные работы, потом остальное из общей выдачи (без его работ). nil —
+// запрос не про автора или известнее книга с таким названием («Кармен»).
+func (s *Service) suggestAuthorWorks(ctx context.Context, query string, filter string, general meilisearch.Hits, limit int) []scoredItem {
+	authors, err := s.matchQueryAuthors(ctx, query)
+	if err != nil || len(authors) == 0 || titleOutranksAuthors(general, query, authors) {
+		return nil
+	}
+	req := &meilisearch.SearchRequest{
+		Limit: int64(limit), Filter: andFilter(filter, authorIDsFilter(authors)), Sort: authorWorksSort,
+	}
+	// Пустой запрос — порядок только по известности (см. listWorksByAuthor).
+	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, "", req)
+	if err != nil || len(res.Hits) == 0 {
+		return nil
+	}
+	ids := make([]int64, 0, len(authors))
+	for _, a := range authors {
+		ids = append(ids, a.ID)
+	}
+	out := scoreWorkHits(res.Hits, false)
+	rest := scoreWorkHits(general, true)
+	sortByFinalScore(rest)
+	for _, sc := range rest {
+		if len(out) >= limit {
+			break
+		}
+		if slices.ContainsFunc(sc.item.AuthorIDs, func(id int64) bool { return slices.Contains(ids, id) }) {
+			continue // уже среди работ автора
+		}
+		out = append(out, sc)
+	}
+	return out
 }
 
 // scoreWorkHits — хиты works-индекса в scoredItem (базовый score Meili — при rerank).

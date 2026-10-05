@@ -163,7 +163,11 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	path, err := inpxtest.WriteINPX(t.TempDir(), "lib.inpx", []inpxtest.Book{
 		{LibID: "850001", Title: "Лев Толстой: Бегство из рая", Authors: []string{"Басинский,Павел"}, Lang: "ru"},
 		{LibID: "850002", Title: "Война и мир", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru", Rating: 5},
-		{LibID: "850003", Title: "Анна Каренина", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru"},
+		{LibID: "850003", Title: "Анна Каренина", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru", Rating: 4},
+		// Его же тексты со словом-фамилией в названии: по релевантности шли бы
+		// первыми, по известности — после «Войны и мира» (скриншот прода 2026-10-05).
+		{LibID: "850009", Title: "Лев Толстой: Исповедь", Authors: []string{"Толстой,Лев,Николаевич"}, Lang: "ru"},
+		{LibID: "850010", Title: "Толстой и Достоевский", Authors: []string{"Достоевский,Федор", "Толстой,Лев,Николаевич"}, Lang: "ru"},
 		{LibID: "850004", Title: "Кармен", Authors: []string{"Мериме,Проспер"}, Lang: "ru", Rating: 5},
 		{LibID: "850005", Title: "Песни", Authors: []string{"Кармен,Анна"}, Lang: "ru"},
 		// Малоизвестный тёзка: в первую часть не попадает (меньше трети известности Льва).
@@ -199,7 +203,7 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	svc := books.New(pool, mgr, nil)
 	require.Eventually(t, func() bool {
 		res, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 10})
-		return err == nil && res.Total == 4
+		return err == nil && res.Total == 6
 	}, 30*time.Second, 200*time.Millisecond)
 
 	res, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 10})
@@ -208,20 +212,32 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	for _, it := range res.Items {
 		got = append(got, it.Title)
 	}
-	require.Equal(t, "Война и мир", got[0], "сначала работы автора, известная — первой")
+	require.Equal(t, "Война и мир", got[0], "сначала работы автора по известности")
 	require.Equal(t, "Анна Каренина", got[1])
-	require.ElementsMatch(t, []string{"Лев Толстой: Бегство из рая", "Записки"}, got[2:],
+	require.ElementsMatch(t, []string{"Лев Толстой: Исповедь", "Толстой и Достоевский"}, got[2:4],
+		"его тексты со словом-фамилией в названии — после известных")
+	require.ElementsMatch(t, []string{"Лев Толстой: Бегство из рая", "Записки"}, got[4:],
 		"потом остальное: книга о нём и малоизвестный тёзка")
 	require.Len(t, res.MatchedAuthors, 1)
 	require.Equal(t, "Толстой Лев Николаевич", res.MatchedAuthors[0].FullName)
-	require.Equal(t, 2, res.MatchedAuthors[0].BookCount)
+	require.Equal(t, 4, res.MatchedAuthors[0].BookCount)
+
+	// Подсказки (hero, Cmd+K) — так же: известные работы автора первыми.
+	sugg, err := svc.SuggestWorks(ctx, "толстой", 5, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Len(t, sugg, 5)
+	require.Equal(t, "Война и мир", sugg[0].Title)
+	require.Equal(t, "Анна Каренина", sugg[1].Title)
+	for _, it := range sugg[:4] {
+		require.NotEqual(t, "Лев Толстой: Бегство из рая", it.Title, "книга о нём — после его работ")
+	}
 
 	// По одной работе на страницу — тот же порядок, без потерь и повторов.
 	var paged []string
-	for offset := 0; offset < 5; offset++ {
+	for offset := 0; offset < 7; offset++ {
 		page, err := svc.ListWorks(ctx, books.ListParams{Query: "толстой", Limit: 1, Offset: offset})
 		require.NoError(t, err)
-		require.EqualValues(t, 4, page.Total)
+		require.EqualValues(t, 6, page.Total)
 		if offset > 0 {
 			require.Empty(t, page.MatchedAuthors, "плашка — только на первой странице")
 		}
@@ -252,4 +268,8 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	require.Empty(t, res.MatchedAuthors)
 	require.NotEmpty(t, res.Items)
 	require.Equal(t, "Кармен", res.Items[0].Title)
+	sugg, err = svc.SuggestWorks(ctx, "кармен", 5, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, sugg)
+	require.Equal(t, "Кармен", sugg[0].Title, "подсказка: книга известнее автора — обычный поиск")
 }
