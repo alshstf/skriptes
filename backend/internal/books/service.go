@@ -413,35 +413,41 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 		visibleLangs = s.allLangs(ctx)
 	}
 	req := &meilisearch.SearchRequest{Limit: meiliLimit, ShowRankingScore: true}
-	if f := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs, hideCompilations); f != "" {
-		req.Filter = f
+	exclusion := worksExclusionFilter(excludeGenres, excludeLangs, visibleLangs, hideCompilations)
+	if exclusion != "" {
+		req.Filter = exclusion
 	}
 	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(query), req)
 	if err != nil {
 		return nil, fmt.Errorf("meili works search: %w", err)
 	}
 
-	scored := make([]scoredItem, 0, len(res.Hits))
-	for _, h := range res.Hits {
-		var wh workHit
-		if err := h.DecodeInto(&wh); err != nil {
-			continue
+	// Запрос — имя известного автора (#290): сначала его самые известные работы.
+	// Иначе совпадение в названии («Толстой и Достоевский», «Век Толкина») ставило
+	// книги о нём выше «Войны и мира», и буст известности разрыв не перекрывал.
+	scored := s.suggestAuthorWorks(ctx, query, exclusion, res.Hits, limit)
+	if scored == nil {
+		scored = make([]scoredItem, 0, len(res.Hits))
+		for _, h := range res.Hits {
+			var wh workHit
+			if err := h.DecodeInto(&wh); err != nil {
+				continue
+			}
+			score := 0.0
+			if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
+				_ = json.Unmarshal(raw, &score)
+			}
+			scored = append(scored, scoredItem{
+				item: wh.toListItem(), base: score, pop: popularityBoost(wh.Popularity),
+			})
 		}
-		score := 0.0
-		if raw, ok := h["_rankingScore"]; ok && len(raw) > 0 {
-			_ = json.Unmarshal(raw, &score)
+		if s.persona != nil && userID > 0 {
+			if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
+				applyPersonaBoost(scored, profile)
+			}
 		}
-		scored = append(scored, scoredItem{
-			item: wh.toListItem(), base: score, pop: popularityBoost(wh.Popularity),
-		})
+		sortByFinalScore(scored)
 	}
-
-	if s.persona != nil && userID > 0 {
-		if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile)
-		}
-	}
-	sortByFinalScore(scored)
 	if len(scored) > limit {
 		scored = scored[:limit]
 	}
