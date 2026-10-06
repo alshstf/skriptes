@@ -93,7 +93,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     отдельным TTL-механизмом.
 13. **Матчинг автора во внешних — precision > recall.** Гейт имени (`authormatch.go`), поиск по формам имени,
     политика приёма кандидата по фактам Wikidata (`candidate_policy.go`), тёзки — строгий путь с подтверждением
-    книгой (`namesake.go`), трасса решений и сухой прогон `skriptes-explain`. Любая правка поиска — приёмка сухим
+    книгой (`namesake.go`; ещё и по работам Wikidata — `strictByWorks`), латинское имя без переводов
+    угадывается по словарю имён (`name_equivalents.go`) — тогда OpenLibrary только по книге; трасса решений
+    и сухой прогон `skriptes-explain`. Любая правка поиска — приёмка сухим
     прогоном по 1000 самым известным авторам (урок 1.19.0: очистили био Достоевского).
 14. **Коды языка** нормализуются (lower+trim+срез субтега; `src_lang` — только через `langcode.Canonical`).
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый

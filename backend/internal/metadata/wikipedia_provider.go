@@ -33,6 +33,10 @@ type WikipediaProvider struct {
 	// WikidataAdaptationsProvider.CandidateFacts). Функция, а не прямая зависимость
 	// на Wikidata-провайдер: разрыв связности + тестируемость.
 	candidateCheck CandidateCheck
+	// candidateFacts — факты Wikidata о кандидате (кэширующий источник, общий с
+	// политикой): строгий путь тёзок подтверждает статью книгой среди работ
+	// кандидата (P50, #410).
+	candidateFacts CandidateFactsFunc
 
 	// titles — найденная статья (или «не найдено») по автору и разделу: путь фото
 	// идёт следом за путём био и повторил бы поиск, QID и проверку кандидата.
@@ -72,6 +76,13 @@ func (p *WikipediaProvider) WithAPIRoot(root string) *WikipediaProvider {
 // книг автора. nil (по умолчанию) = выключена. Провязка в main.
 func (p *WikipediaProvider) WithCandidateCheck(fn CandidateCheck) *WikipediaProvider {
 	p.candidateCheck = fn
+	return p
+}
+
+// WithCandidateFacts включает подтверждение тёзки книгой среди его работ в
+// Wikidata (P50) на строгом пути (#410).
+func (p *WikipediaProvider) WithCandidateFacts(fn CandidateFactsFunc) *WikipediaProvider {
+	p.candidateFacts = fn
 	return p
 }
 

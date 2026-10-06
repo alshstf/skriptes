@@ -547,8 +547,11 @@ func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q Author
 
 	base := p.workBaseURL()
 	var olid string
-	if q.Strict() {
-		// Тёзки: первый по имени — просто самый известный из них; ищем по книгам.
+	// Тёзки — первый по имени просто самый известный из них; угаданное латинское
+	// имя (LatinGuessed) — может совпасть с чужим человеком. В обоих случаях ищем
+	// автора по книгам.
+	confirmed := q.Strict() || q.LatinGuessed
+	if confirmed {
 		key, err := p.strictAuthorKey(ctx, q)
 		if err != nil {
 			return nil, err
@@ -590,7 +593,7 @@ func (p *OpenLibraryProvider) authorSearchUncached(ctx context.Context, q Author
 	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "qid", Outcome: TraceInfo, Input: olid, Value: detail.RemoteIDs.Wikidata})
 	if p.candidateCheck != nil {
 		match := MatchName
-		if q.Strict() {
+		if confirmed {
 			match = MatchConfirmed // строгий путь OL — автор книги с нашим названием
 		}
 		ok, err := p.candidateCheck(ctx, q, "openlibrary", "", detail.Name, detail.RemoteIDs.Wikidata, match)

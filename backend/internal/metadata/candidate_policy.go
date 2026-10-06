@@ -73,21 +73,34 @@ const (
 // CandidateCheck — решение о кандидате. Ошибка — сбой источника (временный).
 type CandidateCheck func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, match MatchKind) (bool, error)
 
-// NewCandidateCheck — политика приёма поверх источника фактов. Факты кэшируются
-// по QID на lookupCacheTTL: цепочки био и фото ищут статью независимо, и без
-// кэша каждый автор спрашивал бы Wikidata дважды.
-func NewCandidateCheck(facts CandidateFactsFunc) CandidateCheck {
+// CachedCandidateFacts — источник фактов с кэшем по QID на lookupCacheTTL:
+// цепочки био и фото ищут статью независимо, а строгий путь тёзок (#410)
+// спрашивает о тех же кандидатах, — без кэша каждый автор шёл бы в Wikidata
+// несколько раз. Один кэш на политику и строгий путь.
+func CachedCandidateFacts(facts CandidateFactsFunc) CandidateFactsFunc {
 	cache := newTTLCache[CandidateFacts](lookupCacheTTL, lookupCacheSize)
+	return func(ctx context.Context, qid string) (CandidateFacts, error) {
+		if f, ok := cache.get(qid); ok {
+			return f, nil
+		}
+		f, err := facts(ctx, qid)
+		if err != nil {
+			return f, err
+		}
+		cache.put(qid, f)
+		return f, nil
+	}
+}
+
+// NewCandidateCheck — политика приёма поверх источника фактов (передавать
+// кэширующий — CachedCandidateFacts).
+func NewCandidateCheck(facts CandidateFactsFunc) CandidateCheck {
 	return func(ctx context.Context, q AuthorQuery, source, lang, title, qid string, match MatchKind) (bool, error) {
 		f := CandidateFacts{QID: qid}
 		if qid != "" {
-			var ok bool
-			if f, ok = cache.get(qid); !ok {
-				var err error
-				if f, err = facts(ctx, qid); err != nil {
-					return false, err
-				}
-				cache.put(qid, f)
+			var err error
+			if f, err = facts(ctx, qid); err != nil {
+				return false, err
 			}
 		}
 		traceOccupationFacts(ctx, source, lang, f)

@@ -258,8 +258,9 @@ func run() error {
 	// профилю книг автора. Проверка на ОБОИХ авторских путях: Wikipedia (QID через
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
 	// отказ Википедии протёк бы в OL-fallback (цепочка bio/photo).
-	candidateCheck := metadata.NewCandidateCheck(wdAdaptations.CandidateFacts)
-	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck)
+	candidateFacts := metadata.CachedCandidateFacts(wdAdaptations.CandidateFacts)
+	candidateCheck := metadata.NewCandidateCheck(candidateFacts)
+	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck).WithCandidateFacts(candidateFacts)
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(
 		pool,
