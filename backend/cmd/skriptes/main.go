@@ -26,6 +26,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/config"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/db"
+	"github.com/skriptes/skriptes/backend/internal/dlimit"
 	"github.com/skriptes/skriptes/backend/internal/email"
 	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/history"
@@ -534,6 +535,8 @@ func run() error {
 		logger.Info("smtp ready", "host", cfg.SMTPHost, "port", cfg.SMTPPort)
 	}
 
+	// Лимит скачиваний на пользователя — общий для веба и OPDS (#389, B1).
+	downloadLimiter := dlimit.NewDefault()
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
@@ -549,7 +552,7 @@ func run() error {
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
-		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv},
+		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
 		History:     api.HistoryDeps{Service: historySvc},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
@@ -587,6 +590,11 @@ func run() error {
 			History:   historySvc,
 			BooksRoot: cfg.BooksRoot,
 			Logger:    logger,
+			Exclusions: func(c context.Context, userID int64) ([]string, []string) {
+				g, l, _ := contentResolver.Exclusions(c, userID)
+				return g, l
+			},
+			Limiter: downloadLimiter,
 		})},
 	})
 
