@@ -41,6 +41,10 @@ func authorNameMatches(q AuthorQuery, candidate string) bool {
 	if len(first) == 0 {
 		return true // имени нет — гейтим только по фамилии
 	}
+	// Устойчивая русская передача западного имени (Уильям ↔ William, #259).
+	if firstNameEquivalentMatches(cand, firstWord) {
+		return true
+	}
 	for _, p := range requiredParts(first) {
 		if !anyTokenMatches(cand, p.lat, p.cyr) && !initialMatches(cand, p.lat) && !anyTokenOneGap(cand, p.lat) {
 			return false

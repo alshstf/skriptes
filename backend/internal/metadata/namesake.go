@@ -76,6 +76,11 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 		}
 		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.book", Outcome: TraceInfo, Input: book, Value: strings.Join(hits, " | ")})
 	}
+	if title, ok, err := p.strictByWorks(ctx, lang, q); err != nil {
+		return "", MatchName, err
+	} else if ok {
+		return title, MatchConfirmed, nil
+	}
 	if note == "" && !q.Namesakes && strings.TrimSpace(q.FirstName) == "" && strings.TrimSpace(q.LastName) != "" {
 		title, ok, err := p.articleTitle(ctx, lang, strings.TrimSpace(q.LastName))
 		if err != nil {
@@ -89,6 +94,63 @@ func (p *WikipediaProvider) resolveStrictTitle(ctx context.Context, lang string,
 	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict", Outcome: TraceReject, Input: strictWhy(q),
 		Value: fmt.Sprintf("note=%q books=%d", note, len(q.BookTitles))})
 	return "", MatchName, ErrNotFound
+}
+
+// strictWorksCandidates — сколько статей-тёзок проверять по работам в Wikidata.
+const strictWorksCandidates = 5
+
+// strictByWorks — подтверждение тёзки книгой среди его работ в Wikidata (P50,
+// #410): полнотекстовый поиск «фамилия + название» находит статью о книге
+// («Книга Мормона»), а не о человеке, а переведённое название в статье может не
+// встречаться вовсе («Бабочкин язычок» у Риваса). Статьи с тем же именем → QID →
+// работы кандидата (метки и оригинальные названия P1476) → ровно у одного
+// кандидата есть наша книга — он.
+func (p *WikipediaProvider) strictByWorks(ctx context.Context, lang string, q AuthorQuery) (string, bool, error) {
+	if p.candidateFacts == nil || len(q.BookTitles) == 0 {
+		return "", false, nil
+	}
+	titles, err := p.opensearch(ctx, lang, q.FullName, 10)
+	if err != nil {
+		return "", false, err
+	}
+	var matched []string
+	checked := 0
+	for _, t := range titles {
+		if checked >= strictWorksCandidates {
+			break
+		}
+		if base, _ := splitQualifier(t); isLinkingTitle(base) || !authorNameMatches(q, base) {
+			continue
+		}
+		checked++
+		qid, err := p.resolvePageQID(ctx, lang, t)
+		if err != nil {
+			return "", false, err
+		}
+		if qid == "" {
+			continue
+		}
+		f, err := p.candidateFacts(ctx, qid)
+		if err != nil {
+			return "", false, err
+		}
+		if f.Human && worksAnchor(f.Works, q.BookTitles) {
+			matched = append(matched, t)
+		}
+	}
+	switch len(matched) {
+	case 1:
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.works", Outcome: TracePass,
+			Input: q.FullName, Value: matched[0]})
+		return matched[0], true, nil
+	case 0:
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.works", Outcome: TraceInfo,
+			Input: q.FullName, Value: fmt.Sprintf("%d candidates, no book among their works", checked)})
+	default:
+		traceStep(ctx, TraceStep{Source: "wikipedia", Lang: lang, Stage: "strict.works", Outcome: TraceInfo,
+			Input: q.FullName, Value: "several candidates have the book: " + strings.Join(matched, " | ")})
+	}
+	return "", false, nil
 }
 
 // isLinkingTitle — название статьи о связи или произведении, а не о человеке:

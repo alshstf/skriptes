@@ -165,10 +165,10 @@ func TestWorksAnchor(t *testing.T) {
 // Факты по одному QID в пределах TTL запрашиваются один раз (био и фото).
 func TestCandidateCheck_FactsCached(t *testing.T) {
 	calls := 0
-	check := NewCandidateCheck(func(_ context.Context, qid string) (CandidateFacts, error) {
+	check := NewCandidateCheck(CachedCandidateFacts(func(_ context.Context, qid string) (CandidateFacts, error) {
 		calls++
 		return CandidateFacts{QID: qid, Human: true, Occupations: []string{"писатель"}, Writer: true}, nil
-	})
+	}))
 	q := AuthorQuery{LastName: "Пелевин", FirstName: "Виктор"}
 	for i := 0; i < 3; i++ {
 		ok, err := check(context.Background(), q, "wikipedia", "ru", "Пелевин, Виктор Олегович", "Q1", MatchName)

@@ -80,16 +80,24 @@ func (p *WikidataAdaptationsProvider) CandidateFacts(ctx context.Context, qid st
 			}
 		}
 	}
-	works, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT DISTINCT ?wLabel WHERE {
+	// Метка (ru, иначе en) и оригинальное название P1476: переведённая книга
+	// совпадает с работой кандидата часто только по оригиналу («Todo es silencio»
+	// у Риваса, #410).
+	works, err := p.sparqlBindings(ctx, fmt.Sprintf(`SELECT DISTINCT ?wLabel ?title WHERE {
   ?w wdt:P50 wd:%s .
+  OPTIONAL { ?w wdt:P1476 ?title . }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
 } LIMIT %d`, qid, candidateWorksLimit))
 	if err != nil {
 		return f, fmt.Errorf("works: %w", err)
 	}
+	seenWork := map[string]bool{}
 	for _, r := range works {
-		if l := r["wLabel"]; l != "" {
-			f.Works = append(f.Works, l)
+		for _, l := range []string{r["wLabel"], r["title"]} {
+			if l != "" && !seenWork[l] {
+				seenWork[l] = true
+				f.Works = append(f.Works, l)
+			}
 		}
 	}
 	return f, nil

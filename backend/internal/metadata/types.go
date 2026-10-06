@@ -110,6 +110,11 @@ type AuthorQuery struct {
 	// книг, кроме сборников. Английская Википедия и OpenLibrary ищут по нему
 	// (latinQuery): по кириллице иностранца они не находят (case study #280).
 	LatinName string
+	// LatinGuessed — латинское имя не из переводов, а угадано по словарю имён и
+	// транслиту (#259, latinQuery). OpenLibrary принимает такого кандидата только
+	// с подтверждением книгой: по угаданному «John Holm» нашёлся драматург John
+	// Cecil Holm вместо псевдонима соавтора Гаррисона (приёмка 2026-10-07).
+	LatinGuessed bool
 	// Профиль книг автора для политики приёма кандидата (candidate_policy.go):
 	// типичный год книг — медиана годов написания или издания (0 — неизвестен;
 	// не минимум: переложения древних текстов и ошибки дат давали «книги с 1532»),
@@ -123,7 +128,7 @@ type AuthorQuery struct {
 // (строгий путь подтверждает по ним).
 func (q AuthorQuery) cacheKey() string {
 	return strings.Join([]string{strconv.FormatInt(q.ID, 10), q.FullName, q.MiddleName, q.Note,
-		strconv.FormatBool(q.Strict()), strings.Join(q.BookTitles, "\x1f")}, "|")
+		strconv.FormatBool(q.Strict()), strconv.FormatBool(q.LatinGuessed), strings.Join(q.BookTitles, "\x1f")}, "|")
 }
 
 // latinQuery — тот же автор латиницей для источников на латинице. Фамилия —
@@ -132,7 +137,30 @@ func (q AuthorQuery) cacheKey() string {
 // имени нет или оно не похоже на наше (первая буква фамилии не соответствует:
 // голос мог дать составитель антологии).
 func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
-	toks := strings.Fields(q.LatinName)
+	latin := q.LatinName
+	guessed := false
+	if strings.TrimSpace(latin) == "" {
+		// Латинского имени из переводов нет (#259): если имя — устойчивая передача
+		// («Уильям» → William), фамилия транслитом («Гибсон» → gibson). Не совпадёт
+		// с источником («Хемингуэй») — просто не найдётся; гейт имени и политика
+		// приёма — те же.
+		vars := firstNameVariants(q.FirstName)
+		parts := strings.Fields(q.LastName)
+		if len(vars) == 0 || len(parts) == 0 {
+			return q, false
+		}
+		lat := make([]string, 0, len(parts)+1)
+		for _, p := range parts {
+			t := translitName(p)
+			if t == "" {
+				return q, false
+			}
+			lat = append(lat, t)
+		}
+		latin = strings.Join(append(lat, vars[0]), " ")
+		guessed = true
+	}
+	toks := strings.Fields(latin)
 	lastParts := strings.Fields(q.LastName)
 	n := len(lastParts)
 	if n == 0 || len(toks) < n || (strings.TrimSpace(q.FirstName) != "" && len(toks) < n+1) {
@@ -144,7 +172,7 @@ func (q AuthorQuery) latinQuery() (AuthorQuery, bool) {
 	l := AuthorQuery{
 		ID: q.ID, LastName: strings.Join(toks[:n], " "), FullName: strings.Join(toks, " "),
 		Note: q.Note, Namesakes: q.Namesakes, BookTitles: q.BookTitles,
-		BooksYear: q.BooksYear, NetShare: q.NetShare, Genres: q.Genres,
+		BooksYear: q.BooksYear, NetShare: q.NetShare, Genres: q.Genres, LatinGuessed: guessed,
 	}
 	if len(toks) > n {
 		l.FirstName = toks[n]
