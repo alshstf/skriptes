@@ -299,6 +299,15 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		if ok {
 			return res, nil
 		}
+		// Известные совпадения — сверху первой страницы (#401): «мастер» —
+		// «Мастер и Маргарита», а не десятки книг «Мастер».
+		res, ok, err = s.listWorksWithPinned(ctx, params, offset, limit, rerank, visibleLangs)
+		if err != nil {
+			return ListResponse{}, err
+		}
+		if ok {
+			return res, nil
+		}
 	}
 
 	// «all»: документ обязан матчить ВСЕ слова запроса. Meili-дефолт «last»
@@ -417,18 +426,28 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 	if exclusion != "" {
 		req.Filter = exclusion
 	}
+	// Известные совпадения (#401) — тем же запросом по известности, параллельно:
+	// на «мастер» окно занимают десятки книг «Мастер», а «Мастер и Маргарита» в
+	// него не попадает и пересортировке поднимать нечего.
+	popCh := make(chan meilisearch.Hits, 1)
+	go func() {
+		h, _ := s.popularHits(ctx, textnorm.FoldYo(query), exclusion, popularSuggestHits, true)
+		popCh <- h
+	}()
 	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(query), req)
+	popular := <-popCh
 	if err != nil {
 		return nil, fmt.Errorf("meili works search: %w", err)
 	}
+	hits := mergeHits(res.Hits, wholeWordHits(popular, query))
 
 	// Запрос — имя известного автора (#290): сначала его самые известные работы.
 	// Иначе совпадение в названии («Толстой и Достоевский», «Век Толкина») ставило
 	// книги о нём выше «Войны и мира», и буст известности разрыв не перекрывал.
-	scored := s.suggestAuthorWorks(ctx, query, exclusion, res.Hits, limit)
+	scored := s.suggestAuthorWorks(ctx, query, exclusion, hits, limit)
 	if scored == nil {
-		scored = make([]scoredItem, 0, len(res.Hits))
-		for _, h := range res.Hits {
+		scored = make([]scoredItem, 0, len(hits))
+		for _, h := range hits {
 			var wh workHit
 			if err := h.DecodeInto(&wh); err != nil {
 				continue
