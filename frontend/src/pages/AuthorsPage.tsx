@@ -24,7 +24,7 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useGenreMap } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useLanguages, useSrcLanguages } from '@/lib/content';
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
-import { useAuthorsList, type AuthorListItem, type AuthorsListParams } from '@/lib/authors';
+import { useAuthorFacets, useAuthorsList, type AuthorFacets, type AuthorListItem, type AuthorsListParams } from '@/lib/authors';
 import { cn } from '@/lib/utils';
 import { pluralBooks, pluralRu } from '@/lib/format';
 
@@ -107,7 +107,7 @@ export function AuthorsPage() {
     });
   };
 
-  const { data, isLoading, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useAuthorsList({
+  const filterParams = {
     query: debouncedQuery,
     genres: filters.genres,
     langs: filters.langs,
@@ -118,8 +118,13 @@ export function AuthorsPage() {
     minRating: filters.minRating,
     minReaderRating: filters.minReaderRating,
     favoritesOnly: filters.favoritesOnly,
-    sort: filters.sort,
-  }, PAGE_SIZE);
+  };
+  const { data, isLoading, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useAuthorsList(
+    { ...filterParams, sort: filters.sort },
+    PAGE_SIZE,
+  );
+  // Число авторов на значение фильтра (#389).
+  const facets = useAuthorFacets(filterParams).data;
 
   // Страницы по offset (#302): подгрузка тянет только следующие PAGE_SIZE
   // авторов, а не весь список заново; общее число — с первой страницы.
@@ -149,7 +154,13 @@ export function AuthorsPage() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-[260px_minmax(0,1fr)]">
       <div className="hidden md:block">
-        <AuthorsFiltersSidebar value={filters} onChange={applyFilters} totalActive={totalActive} onReset={resetAll} />
+        <AuthorsFiltersSidebar
+          value={filters}
+          facets={facets}
+          onChange={applyFilters}
+          totalActive={totalActive}
+          onReset={resetAll}
+        />
       </div>
 
       <div className="space-y-4">
@@ -199,6 +210,7 @@ export function AuthorsPage() {
                 <div className="flex-1 overflow-y-auto p-4 pt-12">
                   <AuthorsFiltersSidebar
                     value={filters}
+                    facets={facets}
                     onChange={applyFilters}
                     totalActive={totalActive}
                     onReset={resetAll}
@@ -403,11 +415,13 @@ const SORT_OPTIONS: { value: AuthorsFilters['sort']; label: string }[] = [
 
 function AuthorsFiltersSidebar({
   value,
+  facets,
   onChange,
   totalActive,
   onReset,
 }: {
   value: AuthorsFilters;
+  facets?: AuthorFacets;
   onChange: (next: AuthorsFilters) => void;
   totalActive: number;
   onReset: () => void;
@@ -461,6 +475,7 @@ function AuthorsFiltersSidebar({
           <span className="flex items-center gap-1.5">
             <Film className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
             С экранизациями
+            {facets ? <FacetCount n={facets.adaptations} /> : null}
           </span>
           <Switch
             checked={value.hasAdaptations}
@@ -540,19 +555,21 @@ function AuthorsFiltersSidebar({
         </select>
       </div>
 
-      {/* Жанры — переиспользуем grouped-фильтр. showCounts=false: числа там
-          книжные (book_count), а список — об авторах; author-scoped счётчиков
-          пока нет, поэтому не показываем (не вводим в заблуждение). */}
+      {/* Жанры — grouped-фильтр с числом АВТОРОВ (#389); пока счётчики не
+          пришли — без чисел (книжные book_count про книги, а не авторов). */}
       <GroupedGenresFilter
         selected={value.genres}
         onChange={(genres) => onChange({ ...value, genres })}
         hiddenCodes={hiddenGenres}
-        showCounts={false}
+        facets={facets?.genres}
+        categoryCounts={facets?.genre_categories}
+        showCounts={facets != null}
       />
 
       {/* Языки изданий (books.lang). */}
       <LanguagesFilter
         selected={value.langs}
+        counts={facets?.langs}
         hiddenCodes={effective.data?.hidden_languages}
         onChange={(langs) => onChange({ ...value, langs })}
       />
@@ -564,6 +581,7 @@ function AuthorsFiltersSidebar({
         title="Язык оригинала"
         src
         selected={value.srcLangs}
+        counts={facets?.src_langs}
         onChange={(srcLangs) => onChange({ ...value, srcLangs })}
       />
     </aside>
@@ -577,12 +595,14 @@ function AuthorsFiltersSidebar({
  */
 function LanguagesFilter({
   selected,
+  counts,
   hiddenCodes,
   onChange,
   title = 'Язык',
   src = false,
 }: {
   selected: string[];
+  counts?: Record<string, number>;
   hiddenCodes?: string[];
   onChange: (next: string[]) => void;
   title?: string;
@@ -618,9 +638,10 @@ function LanguagesFilter({
                 checked={selected.includes(l.code)}
                 onChange={(e) => toggle(l.code, e.target.checked)}
               />
-              {/* Без числа: book_count — счётчик КНИГ, а список об авторах —
-                  число вводило в заблуждение (4 английских книги ↔ 6 авторов). */}
+              {/* Число — авторов (#389), не книг: book_count вводил в
+                  заблуждение (4 английских книги ↔ 6 авторов). */}
               <span className="flex-1 truncate text-sm">{l.display}</span>
+              {counts ? <FacetCount n={counts[l.code]} /> : null}
             </label>
           </li>
         ))}
@@ -630,6 +651,12 @@ function LanguagesFilter({
 }
 
 // ── helpers ─────────────────────────────────────────────────────────
+
+/** FacetCount — число авторов у значения фильтра; 0 не показываем. */
+function FacetCount({ n }: { n?: number }) {
+  if (typeof n !== 'number' || n <= 0) return null;
+  return <span className="ml-auto pl-1 text-xs tabular-nums text-muted-foreground">{n.toLocaleString('ru-RU')}</span>;
+}
 
 function AuthorsSkeleton() {
   return (

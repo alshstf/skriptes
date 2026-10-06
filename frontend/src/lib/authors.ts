@@ -1,4 +1,4 @@
-import { useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, keepPreviousData } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 /**
@@ -110,6 +110,32 @@ export function useAuthorsList(params: Omit<AuthorsListParams, 'limit' | 'offset
     getNextPageParam: (last, pages) => nextAuthorsPageParam(last, pages, pageSize),
     placeholderData: keepPreviousData,
     staleTime: 30_000,
+  });
+}
+
+/** AuthorFacets — число авторов на значение фильтра при остальных фильтрах (#389). */
+export type AuthorFacets = {
+  genres: Record<string, number>;
+  genre_categories: Record<string, number>; // по коду категории (cat:sf)
+  langs: Record<string, number>;
+  src_langs: Record<string, number>;
+  adaptations: number;
+};
+
+/**
+ * useAuthorFacets — счётчики фильтров /authors. Выбранный фильтр не сужает
+ * собственные значения (выбор жанра не обнуляет соседние жанры). Сортировка и
+ * страница на числа не влияют — в запрос не идут.
+ */
+export function useAuthorFacets(params: Omit<AuthorsListParams, 'limit' | 'offset' | 'sort'>) {
+  const sp = new URLSearchParams(buildQuery(params));
+  sp.delete('limit');
+  const qs = sp.toString();
+  return useQuery({
+    queryKey: ['authors', 'facets', qs],
+    queryFn: ({ signal }) => apiFetch<AuthorFacets>(`/api/authors/facets?${qs}`, { signal }),
+    placeholderData: keepPreviousData,
+    staleTime: 60_000,
   });
 }
 

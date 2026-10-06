@@ -838,6 +838,12 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if n > 0 {
 		logger.Info("author stats recomputed after import", "authors_updated", n)
 	}
+	// Счётчики фильтров /authors (#389) — по новым книгам.
+	if n, err := catalog.RecomputeAuthorFacets(ctx, pool); err != nil {
+		logger.Warn("author facets recompute after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("author facets recomputed after import", "rows_changed", n)
+	}
 }
 
 // authorStatsInterval — как часто пересчитывать authors.book_count/rating_score.
@@ -845,10 +851,16 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 // рейтинг, классификация сборников и ручные правки; полный пересчёт ~1 с.
 const authorStatsInterval = 30 * time.Minute
 
+// authorFacetsInterval — как часто пересобирать author_facets (счётчики фильтров
+// /authors, #389): их меняет в основном импорт (после него — сразу), остальное
+// (группировка, ручные правки жанров) терпит несколько часов.
+const authorFacetsInterval = 6 * time.Hour
+
 // runAuthorStatsLoop — пересчёт хранимых агрегатов авторов (#302) на старте и
 // раз в authorStatsInterval: сортировки «по числу книг» и «по рейтингу» идут по
 // ним, отставание — не больше интервала.
 func runAuthorStatsLoop(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	var facetsAt time.Time
 	recompute := func() {
 		start := time.Now()
 		n, err := catalog.RecomputeAuthorStats(ctx, pool)
@@ -857,6 +869,21 @@ func runAuthorStatsLoop(ctx context.Context, pool *pgxpool.Pool, logger *slog.Lo
 			logger.Warn("author stats recompute failed", "err", err)
 		case err == nil && n > 0:
 			logger.Info("author stats recomputed", "authors_updated", n, "took", time.Since(start).Round(time.Millisecond))
+		}
+		// Счётчики фильтров /authors (#389): ~7 с на проде — реже агрегатов.
+		if time.Since(facetsAt) < authorFacetsInterval {
+			return
+		}
+		start = time.Now()
+		n, err = catalog.RecomputeAuthorFacets(ctx, pool)
+		switch {
+		case err != nil && ctx.Err() == nil:
+			logger.Warn("author facets recompute failed", "err", err)
+		case err == nil:
+			facetsAt = time.Now()
+			if n > 0 {
+				logger.Info("author facets recomputed", "rows_changed", n, "took", time.Since(start).Round(time.Millisecond))
+			}
 		}
 	}
 	recompute()
