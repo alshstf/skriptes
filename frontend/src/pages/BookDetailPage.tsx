@@ -8,6 +8,7 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
+import { ContentsSection, InCompilationsSection } from '@/components/CompilationContents';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
@@ -217,6 +218,10 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             annotation={book.annotation}
             enrichmentExhausted={enrichmentExhausted}
           />
+
+          {/* Состав сборника (оглавление fb2) и «Входит в сборники» (#388). */}
+          <ContentsSection entries={book.contents ?? []} />
+          <InCompilationsSection items={book.in_compilations ?? []} />
 
           {/*
             Экранизации — отдельная секция под аннотацией. Не рендерится
@@ -556,15 +561,31 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
           </button>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => toggle.mutate({ bookId: book.id, isRead: true })}
-          disabled={toggle.isPending}
-          className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-sm transition-colors hover:bg-accent disabled:opacity-50"
-        >
-          <Check className="size-4" aria-hidden />
-          Отметить прочитанной
-        </button>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <button
+            type="button"
+            onClick={() => toggle.mutate({ bookId: book.id, isRead: true })}
+            disabled={toggle.isPending}
+            className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-sm transition-colors hover:bg-accent disabled:opacity-50"
+          >
+            <Check className="size-4" aria-hidden />
+            Отметить прочитанной
+          </button>
+          {/* «Прочитано в сборнике» (#388): прочитан сборник с этим произведением.
+              Не то же, что «прочитано»: отметку не ставим, только показываем. */}
+          {book.read_in_compilation ? (
+            <span className="text-sm text-muted-foreground">
+              Прочитано в сборнике{' '}
+              <Link
+                to="/works/$id"
+                params={{ id: String(book.read_in_compilation.work_id) }}
+                className="underline-offset-2 hover:text-foreground hover:underline"
+              >
+                «{book.read_in_compilation.title}»
+              </Link>
+            </span>
+          ) : null}
+        </div>
       )}
     </div>
   );

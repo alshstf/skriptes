@@ -938,3 +938,32 @@ func (s *Service) FavoritesCount(ctx context.Context, userID int64) (int, error)
 	}
 	return n, nil
 }
+
+// CompilationRead — прочитанный сборник, в который входит произведение (#388).
+type CompilationRead struct {
+	WorkID int64  `json:"work_id"`
+	Title  string `json:"title"`
+}
+
+// ReadInCompilation — «прочитано в сборнике»: пользователь отметил прочитанным
+// сборник, в состав которого (work_contents) входит работа. Отдельно от явного
+// «прочитано» и не хранится: связь убрали — отметка пропала. nil — нет такого.
+func (s *Service) ReadInCompilation(ctx context.Context, userID, workID int64) (*CompilationRead, error) {
+	var c CompilationRead
+	err := s.pool.QueryRow(ctx, `
+		SELECT w.id, COALESCE(w.title, '')
+		FROM work_contents c
+		JOIN works w ON w.id = c.compilation_work_id AND w.kind IN ('collection', 'anthology', 'omnibus')
+		WHERE c.work_id = $2 AND EXISTS (
+		    SELECT 1 FROM reads r JOIN books b ON b.id = r.book_id
+		    WHERE r.user_id = $1 AND b.work_id = w.id AND r.completed_at IS NOT NULL)
+		ORDER BY w.id
+		LIMIT 1`, userID, workID).Scan(&c.WorkID, &c.Title)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("read in compilation: %w", err)
+	}
+	return &c, nil
+}
