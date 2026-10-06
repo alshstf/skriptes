@@ -141,7 +141,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
 | Авторы (список, фильтры, известность, рейтинг) | `pages/AuthorsPage.tsx`, `lib/authors.ts`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
-| Жанры, полки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/` |
+| Жанры, полки, готовые подборки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/`, `books/presets.go` |
 | Видимость контента (скрытые жанры/языки) | `settings/content.go`, `api/content.go`, `components/ContentVisibility.tsx` |
 | Языки, язык оригинала | `catalog/languages.go`, `metadata/src_lang_backfill.go`, `internal/langcode` |
 | Настройки (app/user) | `backend/internal/settings/` |

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, FolderPlus, GripVertical, Library, Pencil, Star, Trash2 } from 'lucide-react';
+import { ChevronRight, FolderPlus, GripVertical, Library, Pencil, Sparkles, Star, Trash2 } from 'lucide-react';
 import {
   DndContext,
   DragOverlay,
@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { BookMeta } from '@/components/BookMeta';
+import { BookListItem } from '@/components/BookListItem';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,6 +37,7 @@ import {
   type Collection,
   type CollectionBook,
 } from '@/lib/collections';
+import { usePresetBooks, usePresets, type Preset } from '@/lib/presets';
 import { cn } from '@/lib/utils';
 
 // dragData/dropData — типизированные payload'ы DnD. Draggable книги несёт исходную
@@ -88,6 +90,12 @@ export function ShelvesPage() {
         <CreateShelfDialog />
       </div>
 
+      <PresetsSection />
+
+      <h2 className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+        <Library className="size-4" aria-hidden />
+        Ваши полки
+      </h2>
       {collectionsQ.isLoading ? (
         <p className="text-sm italic text-muted-foreground">Загрузка…</p>
       ) : collections.length === 0 ? (
@@ -117,6 +125,81 @@ export function ShelvesPage() {
         </DndContext>
       )}
     </div>
+  );
+}
+
+/**
+ * PresetsSection — готовые подборки (#389): системные полки, состав считает
+ * сервер (недочитанные серии, непрочитанное у любимых авторов, прочитанное в
+ * этом году, ближайшие экранизации). Не редактируются, книги не перетаскиваются.
+ */
+function PresetsSection() {
+  const presetsQ = usePresets();
+  const presets = presetsQ.data ?? [];
+  if (presets.length === 0) return null;
+  return (
+    <section aria-labelledby="presets-title" className="space-y-2">
+      <h2 id="presets-title" className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+        <Sparkles className="size-4" aria-hidden />
+        Подборки
+      </h2>
+      <ul className="space-y-2">
+        {presets.map((p) => (
+          <PresetRow key={p.key} preset={p} />
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function PresetRow({ preset }: { preset: Preset }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="rounded-md border border-border">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        disabled={preset.count === 0}
+        className="flex w-full min-w-0 items-center gap-2 rounded-md px-3 py-3 text-left transition hover:bg-accent/30 disabled:cursor-default disabled:hover:bg-transparent"
+      >
+        <ChevronRight
+          className={cn('size-4 shrink-0 transition-transform', open ? 'rotate-90' : '', preset.count === 0 && 'opacity-30')}
+          aria-hidden
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium">{preset.title}</span>
+          <span className="block text-xs text-pretty text-muted-foreground">{preset.hint}</span>
+        </span>
+        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{preset.count} кн.</span>
+      </button>
+      {open ? <PresetBooksList presetKey={preset.key} /> : null}
+    </li>
+  );
+}
+
+function PresetBooksList({ presetKey }: { presetKey: string }) {
+  const q = usePresetBooks(presetKey);
+  if (q.isLoading) {
+    return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Загрузка…</p>;
+  }
+  const items = q.data?.items ?? [];
+  if (items.length === 0) {
+    return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Пока пусто.</p>;
+  }
+  const notes = q.data?.notes ?? {};
+  return (
+    <ul className="divide-y divide-border/60 border-t border-border/60">
+      {items.map((b) => {
+        const note = notes[String(b.work_id ?? b.id)];
+        return (
+          <li key={b.id}>
+            <BookListItem book={b} />
+            {note ? <p className="-mt-2 px-3 pb-3 text-xs text-muted-foreground">{note}</p> : null}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
