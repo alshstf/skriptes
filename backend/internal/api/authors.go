@@ -25,28 +25,7 @@ import (
 // «протекал» в счётчики/жанры/языки (граблю №14).
 func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		q := r.URL.Query()
-		params := catalog.AuthorListParams{
-			Query:           q.Get("q"),
-			Genres:          splitCSV(q.Get("genres")),
-			Langs:           splitCSV(q.Get("langs")),
-			SrcLangs:        splitCSV(q.Get("src_langs")),
-			YearFrom:        parseIntOr(q.Get("year_from"), 0),
-			YearTo:          parseIntOr(q.Get("year_to"), 0),
-			HasAdaptations:  parseBool(q.Get("has_adaptations")),
-			MinRating:       parseFloatOr(q.Get("min_rating"), 0),
-			MinReaderRating: parseFloatOr(q.Get("min_reader_rating"), 0),
-			FavoritesOnly:   parseBool(q.Get("favorites_only")),
-			Sort:            q.Get("sort"),
-			Limit:           parseIntOr(q.Get("limit"), 50),
-			Offset:          parseIntOr(q.Get("offset"), 0),
-		}
-		if u, ok := UserFromContext(r.Context()); ok {
-			params.UserID = u.ID
-		}
-		if content.Resolver != nil {
-			params.ExcludeGenres, params.ExcludeLangs, _ = content.Resolver.Exclusions(r.Context(), params.UserID)
-		}
+		params := authorListParams(r, content)
 		// 15с (не 5): список авторов считает агрегаты подзапросами, а на больших
 		// библиотеках под нагрузкой фоновых воркеров запас нужен. Основной фикс —
 		// двухфазный запрос в ListAuthorsFiltered (LIMIT до богатых подзапросов).
@@ -62,6 +41,50 @@ func handleListAuthors(d CatalogDeps, content ContentDeps) http.HandlerFunc {
 		}
 		writeJSON(w, http.StatusOK, res)
 	}
+}
+
+// handleAuthorFacets — GET /api/authors/facets: счётчики фильтров списка
+// авторов (#389) при тех же параметрах, что у /api/authors.
+func handleAuthorFacets(d CatalogDeps, content ContentDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := authorListParams(r, content)
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		res, err := d.Service.AuthorFacets(ctx, params)
+		if err != nil {
+			slog.Error("author facets failed", "err", err)
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, res)
+	}
+}
+
+// authorListParams — фильтры списка авторов из query и скрытое пользователя.
+func authorListParams(r *http.Request, content ContentDeps) catalog.AuthorListParams {
+	q := r.URL.Query()
+	params := catalog.AuthorListParams{
+		Query:           q.Get("q"),
+		Genres:          splitCSV(q.Get("genres")),
+		Langs:           splitCSV(q.Get("langs")),
+		SrcLangs:        splitCSV(q.Get("src_langs")),
+		YearFrom:        parseIntOr(q.Get("year_from"), 0),
+		YearTo:          parseIntOr(q.Get("year_to"), 0),
+		HasAdaptations:  parseBool(q.Get("has_adaptations")),
+		MinRating:       parseFloatOr(q.Get("min_rating"), 0),
+		MinReaderRating: parseFloatOr(q.Get("min_reader_rating"), 0),
+		FavoritesOnly:   parseBool(q.Get("favorites_only")),
+		Sort:            q.Get("sort"),
+		Limit:           parseIntOr(q.Get("limit"), 50),
+		Offset:          parseIntOr(q.Get("offset"), 0),
+	}
+	if u, ok := UserFromContext(r.Context()); ok {
+		params.UserID = u.ID
+	}
+	if content.Resolver != nil {
+		params.ExcludeGenres, params.ExcludeLangs, _ = content.Resolver.Exclusions(r.Context(), params.UserID)
+	}
+	return params
 }
 
 // parseBool — query-параметр-флаг: "1"/"true"/"yes"/"on" → true, иначе false.

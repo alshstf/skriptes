@@ -7,7 +7,6 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/skriptes/skriptes/backend/internal/books"
-	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
 // authorAlphaOrder — алфавитный ключ сортировки авторов (фрагмент ORDER BY,
@@ -129,169 +128,12 @@ type AuthorListResult struct {
 func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (AuthorListResult, error) {
 	p.Limit, p.Offset = sanitizePaging(p.Limit, p.Offset)
 
-	// Аргументы накапливаем по мере построения запроса; каждый addArg отдаёт
-	// номер плейсхолдера и кладёт значение в args. КАЖДЫЙ переданный аргумент
-	// обязан быть упомянут в тексте запроса (PG не выводит тип неупомянутого
-	// $N) — поэтому исключения видимости рендерим фрагментом со СВЕЖИМИ
-	// плейсхолдерами на каждом месте использования (renderExclusion), а не
-	// общим $1 (иначе в COUNT-запросе без контент-фильтров $1 повис бы
-	// неупомянутым). Дублирование slice-аргумента исключений по местам
-	// дёшево (массив кодов мал).
-	args := make([]any, 0, 24)
-	nextArg := 1
-	addArg := func(v any) int {
-		args = append(args, v)
-		n := nextArg
-		nextArg++
-		return n
-	}
-	// renderExclusion — фрагмент " AND (lang…) AND NOT EXISTS(genre…)" по алиасу
-	// `b`, с собственными плейсхолдерами (аргументы доклеиваются в args). Пусто,
-	// если ни язык, ни жанр не скрыты (no-op, безопасно звать всегда).
-	renderExclusion := func() string {
-		var sb strings.Builder
-		if len(p.ExcludeLangs) > 0 {
-			n := addArg(p.ExcludeLangs)
-			fmt.Fprintf(&sb, " AND (b.lang IS NULL OR NOT (b.lang = ANY($%d::text[])))", n)
-		}
-		if len(p.ExcludeGenres) > 0 {
-			n := addArg(p.ExcludeGenres)
-			fmt.Fprintf(&sb, " AND NOT EXISTS (SELECT 1 FROM book_genres bgx JOIN genres gx ON gx.id = bgx.genre_id"+
-				" WHERE bgx.book_id = b.id AND gx.fb2_code = ANY($%d::text[]))", n)
-		}
-		return sb.String()
-	}
-	// renderAggExclusion — renderExclusion + ВСЕГДА исключение сборников (loose
-	// coupling): сборники/антологии/тома собраний (works.kind) не входят в
-	// АГРЕГАТЫ и СТАТИСТИКУ автора (book_count, годы, жанры, языки, рейтинг,
-	// экранизации, сортировки/фильтры) — они свойство сборника, не «что написал
-	// автор». В отличие от opt-in hideCompilations (скрывает книги из выдачи),
-	// это безусловно и не зависит от настроек. НЕ применяется к базовой
-	// видимости автора (появляется по любой книге) и к fav_books (личное
-	// избранное пользователя).
-	renderAggExclusion := func() string {
-		return renderExclusion() + notCompilationClause
-	}
-
-	// where — условия-фильтры для авторов (склеиваются через AND). Каждый
-	// предикат — EXISTS по видимым книгам автора (либо строка автора). Эти
-	// предикаты ОБЩИЕ для COUNT и главного запроса (одни плейсхолдеры).
-	var where []string
-
-	// База (всегда): только авторы с ≥1 ВИДИМОЙ книгой. Без неё в списке
-	// всплывали «пустые» авторы (0 книг в каталоге) — это и шум, и клик по
-	// такому автору ронял карточку (author.books == null). Исключения
-	// видимости учитываются renderExclusion().
-	// Участник только чужих антологий и выпусков журналов (все его работы —
-	// сборники, и ни в одной он не основной автор) в список не попадает: на проде
-	// таких 28,9 тыс. из 29,2 тыс. авторов «только со сборниками», и все они
-	// показывались с «0 книг» (#265). Карточка по прямой ссылке и поиск остаются.
-	where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-		" LEFT JOIN works wv ON wv.id = b.work_id"+
-		" WHERE ba.author_id = a.id AND (COALESCE(wv.kind, '') = '' OR wv.primary_author_id = a.id)"+renderExclusion()+")")
-	// Служебные авторы (агрегаты-псевдоавторы: «Коллектив авторов», «Народные
-	// сказки», «Газета Завтра»…) — вон из СПИСКА и всех его сортировок (они
-	// замусоривали топ «плодовитых», находка аудита). Карточка по прямой ссылке
-	// (с карточки книги) и suggest/Cmd+K сознательно НЕ фильтруются — найти
-	// агрегат намеренно можно. Метки: эвристика ClassifyServiceAuthors +
-	// admin-переключатель на карточке автора.
-	where = append(where, "NOT a.is_service")
-
-	if q := strings.TrimSpace(p.Query); q != "" {
-		// Префиксный ILIKE по normalized_name без различия «ё»/«е» (как в
-		// SuggestAuthors, #278): GIN trigram index по тому же выражению
-		// (authors_name_yo_trgm) ускоряет на длинных запросах.
-		n := addArg(textnorm.FoldYo(escapeLike(q)))
-		// Латиницей — по латинскому имени из fb2 переводов (миграция 0046).
-		where = append(where, fmt.Sprintf(`(replace(a.normalized_name::text, 'ё', 'е') ILIKE $%[1]d || '%%' ESCAPE '\'`+
-			` OR a.latin_name ILIKE $%[1]d || '%%' ESCAPE '\')`, n))
-	}
-
-	if p.FavoritesOnly && p.UserID > 0 {
-		n := addArg(p.UserID)
-		where = append(where, fmt.Sprintf(
-			"EXISTS (SELECT 1 FROM favorite_authors fa WHERE fa.author_id = a.id AND fa.user_id = $%d)", n))
-	}
-
-	if len(p.Genres) > 0 {
-		n := addArg(p.Genres)
-		where = append(where, fmt.Sprintf(
-			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" JOIN book_genres bg ON bg.book_id = b.id JOIN genres g ON g.id = bg.genre_id"+
-				" WHERE ba.author_id = a.id AND g.fb2_code = ANY($%d::text[])"+renderAggExclusion()+")", n))
-	}
-
-	if len(p.Langs) > 0 {
-		n := addArg(p.Langs)
-		// Язык ИЗДАНИЯ (books.lang). Раньше этот фильтр матчил lang∪src_lang
-		// одним условием — расщеплён на два независимых («Язык» и «Язык
-		// оригинала», как на /books). Нормализуем на лету (lower+btrim) —
-		// defensive, хотя импорт уже нормализует lang.
-		where = append(where, fmt.Sprintf(
-			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" WHERE ba.author_id = a.id"+
-				" AND lower(btrim(b.lang)) = ANY($%d::text[])"+
-				renderAggExclusion()+")", n))
-	}
-
-	if len(p.SrcLangs) > 0 {
-		n := addArg(p.SrcLangs)
-		// Язык ОРИГИНАЛА, WORK-LEVEL (зеркало orig_lang works-индекса v8):
-		// оригинал(ы) работы = непустые src_lang её изданий, и только когда
-		// src_lang нет ни у одного издания — работа нативна (язык издания).
-		// Книга автора матчит, если src_lang кого-то из со-изданий её работы ∈
-		// набора, ИЛИ её lang ∈ набора при полном отсутствии src_lang у работы
-		// (перевод-сирота на испанский при русском соседе с src_lang=en больше
-		// не делает автора «оригинал: испанский»). Со-издания ищутся по индексу
-		// books(work_id); `s.id = b.id` — defensive на случай книги без work_id.
-		sibling := " FROM books s WHERE (s.work_id = b.work_id OR s.id = b.id) AND s.deleted = false" +
-			" AND s.src_lang IS NOT NULL AND btrim(s.src_lang) <> ''"
-		where = append(where, fmt.Sprintf(
-			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" WHERE ba.author_id = a.id"+
-				" AND (EXISTS (SELECT 1"+sibling+" AND lower(btrim(s.src_lang)) = ANY($%d::text[]))"+
-				" OR (lower(btrim(b.lang)) = ANY($%d::text[])"+
-				" AND NOT EXISTS (SELECT 1"+sibling+")))"+
-				renderAggExclusion()+")", n, n))
-	}
-
-	if p.YearFrom > 0 || p.YearTo > 0 {
-		// Пересечение диапазона активности автора [min,max] с [from,to]:
-		// существует видимая книга автора с written_year в [from,to].
-		lo, hi := p.YearFrom, p.YearTo
-		yearCond := "b.written_year IS NOT NULL"
-		if lo > 0 {
-			n := addArg(lo)
-			yearCond += fmt.Sprintf(" AND b.written_year >= $%d", n)
-		}
-		if hi > 0 {
-			n := addArg(hi)
-			yearCond += fmt.Sprintf(" AND b.written_year <= $%d", n)
-		}
-		where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-			" WHERE ba.author_id = a.id AND "+yearCond+renderAggExclusion()+")")
-	}
-
-	if p.HasAdaptations {
-		where = append(where,
-			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-				" JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id"+renderAggExclusion()+")")
-	}
-
-	if p.MinRating > 0 {
-		// Рейтинг автора — хранимый rating_score (среднее лучших работ, #296), как
-		// и сортировка; личные скрытия в него не входят.
-		n := addArg(p.MinRating)
-		where = append(where, fmt.Sprintf("a.rating_score >= $%d", n))
-	}
-
-	if p.MinReaderRating > 0 {
-		n := addArg(p.MinReaderRating)
-		where = append(where, fmt.Sprintf(
-			"(SELECT avg(br.rating) FROM book_ratings br WHERE br.work_id IN ("+
-				"SELECT b.work_id FROM book_authors ba JOIN books b ON b.id = ba.book_id"+
-				" WHERE ba.author_id = a.id AND b.deleted = false AND b.work_id IS NOT NULL"+renderAggExclusion()+")) >= $%d", n))
-	}
+	// Условия фильтров — общие для списка и счётчиков фильтров (authorWhere).
+	wb := newAuthorWhere(p)
+	where := wb.filters("")
+	addArg := wb.add
+	renderExclusion := wb.exclusion
+	renderAggExclusion := wb.aggExclusion
 
 	whereSQL := ""
 	if len(where) > 0 {
@@ -304,11 +146,11 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	// Считается только для первой страницы (offset 0): дальше клиент держит число
 	// с первой страницы, а count по 140 тыс. авторов стоит ~0,4 с на каждый запрос
 	// (#302). На следующих страницах Total = -1.
-	nFilterArgs := len(args)
+	nFilterArgs := len(wb.args)
 	total := -1
 	if p.Offset == 0 {
 		if err := s.pool.QueryRow(ctx,
-			`SELECT count(*) FROM authors a`+whereSQL, args[:nFilterArgs]...,
+			`SELECT count(*) FROM authors a`+whereSQL, wb.args[:nFilterArgs]...,
 		).Scan(&total); err != nil {
 			return AuthorListResult{}, fmt.Errorf("count authors: %w", err)
 		}
@@ -436,7 +278,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		%[13]s
 	`, whereSQL, phase1Order, limitN, offsetN, userN, exBookCount, exFavBooks, exYrFrom, exYrTo, exAdapt, exReaderAvg, exReaderCnt, orderSQL, exOwnComp)
 
-	rows, err := s.pool.Query(ctx, query, args...)
+	rows, err := s.pool.Query(ctx, query, wb.args...)
 	if err != nil {
 		return AuthorListResult{}, fmt.Errorf("list authors: %w", err)
 	}

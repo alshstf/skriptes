@@ -147,6 +147,7 @@ func NewRouter(d Deps) http.Handler {
 					// /authors/{id} — карточка одного автора. Разные chi-маршруты,
 					// сосуществуют (статический путь vs. path-параметр).
 					r.Get("/authors", handleListAuthors(d.Catalog, d.Content))
+					r.Get("/authors/facets", handleAuthorFacets(d.Catalog, d.Content)) // счётчики фильтров (#389)
 					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
 					r.Get("/authors/{id}/series", handleAuthorSeries(d.Catalog)) // серии автора (пикер переноса)
 					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))

@@ -32,12 +32,19 @@ import { cn } from '@/lib/utils';
 export function GroupedGenresFilter({
   selected,
   facets,
+  categoryCounts,
   onChange,
   hiddenCodes,
   showCounts = true,
 }: {
   selected: string[];
   facets?: Record<string, number>;
+  /**
+   * categoryCounts — готовые счётчики категорий по коду (`cat:sf`). Нужны, когда
+   * сумма жанров неверна: на /authors автор с двумя жанрами категории считается
+   * в ней один раз. Без них — сумма жанров категории.
+   */
+  categoryCounts?: Record<string, number>;
   onChange: (next: string[]) => void;
   /**
    * hiddenCodes — жанры, скрытые из выдачи (admin ∪ персональные). Они не
@@ -47,9 +54,8 @@ export function GroupedGenresFilter({
   hiddenCodes?: string[];
   /**
    * showCounts — показывать ли числа рядом с жанрами/категориями. На /books
-   * это книжные facets (дефолт true). На /authors список — об АВТОРАХ, а не
-   * книгах, и author-scoped счётчиков пока нет → передаём false, чтобы не
-   * светить книжные числа (вводят в заблуждение).
+   * это книжные facets (дефолт true). На /authors — число авторов (#389), пока
+   * оно не загрузилось — false, чтобы не светить книжные числа.
    */
   showCounts?: boolean;
 }) {
@@ -88,8 +94,8 @@ export function GroupedGenresFilter({
             (it.category_name ?? '').toLowerCase().includes(q),
         )
       : all;
-    return groupByCategory(items, selected, facets);
-  }, [genresQ.data, selected, facets, q, hiddenCodes]);
+    return groupByCategory(items, selected, facets, categoryCounts);
+  }, [genresQ.data, selected, facets, categoryCounts, q, hiddenCodes]);
 
   // Какие категории раскрыты. По дефолту — те, в которых хоть один
   // selected leaf. При изменении selection (через ActiveFilterChips
@@ -357,6 +363,7 @@ function groupByCategory(
   items: GenreItem[],
   selected: string[],
   facets?: Record<string, number>,
+  categoryCounts?: Record<string, number>,
 ): GroupedCategory[] {
   const map = new Map<string, GenreItem[]>();
   for (const it of items) {
@@ -401,7 +408,11 @@ function groupByCategory(
     let state: GroupedCategory['state'] = 'none';
     if (selectedCount === leafs.length && leafs.length > 0) state = 'all';
     else if (selectedCount > 0) state = 'partial';
-    const totalCount = leafs.reduce((acc, l) => acc + effective(l), 0);
+    const catCode = leafs[0]?.category_code;
+    const totalCount =
+      categoryCounts && catCode
+        ? (categoryCounts[catCode] ?? 0)
+        : leafs.reduce((acc, l) => acc + effective(l), 0);
     out.push({ name, leafs, selectedCount, state, totalCount });
   }
   // Категории: «Прочее» всегда последняя (fallback-bucket для legacy

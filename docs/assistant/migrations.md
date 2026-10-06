@@ -2,6 +2,7 @@
 
 Справка для ассистента; сами миграции — `backend/migrations/`. Новые — сверху.
 
+- `0052_author_facets` (`author_facets` — жанры, категории, языки изданий и оригинала, экранизации автора для счётчиков фильтров /authors, #389)
 - `0051_work_contents` (`work_contents` — состав сборников из оглавления fb2, `works.contents_scanned_at`, #388)
 - `0050_work_fantlab_rating` (`works.fantlab_midmark`/`fantlab_rating` — средняя оценка и рейтинг Фантлаба из ответа воркера «Известность», #296)
 - `0049_author_rating_score` (`authors.max_rating` → `rating_score`: рейтинг автора — среднее пяти лучших работ, #296)
