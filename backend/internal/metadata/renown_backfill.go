@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -184,6 +185,11 @@ func (b *RenownBackfiller) candidateCond() string {
 			SELECT 1 FROM books bb
 			WHERE bb.work_id = w.id AND bb.deleted = false AND bb.rating > 0
 		)
+		-- Уже записанные счётчики освежаются и у работ вне ядра (#408): иначе
+		-- они стояли вечно (на проде 1,5 тыс. работ с числом оценок Фантлаба без
+		-- средней — перезапрос fantlab_ratings_v1 до них не дошёл).
+		OR w.fantlab_marks IS NOT NULL OR w.ol_ratings_count IS NOT NULL
+		OR w.ol_want_count IS NOT NULL OR w.wd_sitelinks IS NOT NULL
 	)`
 }
 
@@ -384,6 +390,11 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 			gotAny = true
 		case errors.Is(ferr, ErrNotFound):
 			b.upsertLookup(ctx, c.id, name, "not_found")
+			// Источник больше не находит работу — его прежние счётчики не верны
+			// (#408): сбрасываем, известность пересчитается.
+			if b.clearRenown(ctx, c.id, name) {
+				gotAny = true
+			}
 		case errors.Is(ferr, ErrSourcePaused):
 			continue // источник на паузе (#299): запрос не ушёл, работу возьмём позже
 		case ctx.Err() != nil:
@@ -446,6 +457,73 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 	if err != nil {
 		b.logger.Warn("renown backfill: write failed", "work_id", workID, "source", source, "err", err)
 	}
+}
+
+// renownColumns — колонки works, которые пишет источник «Известности».
+var renownColumns = map[string][]string{
+	"fantlab":     {"fantlab_marks", "fantlab_midmark", "fantlab_rating"},
+	"openlibrary": {"ol_ratings_count", "ol_want_count"},
+	"wikidata":    {"wd_sitelinks"},
+}
+
+// renownClearSQL — «сбросить счётчики источника, если они есть».
+func renownClearSQL(source string) string {
+	cols := renownColumns[source]
+	set := make([]string, 0, len(cols))
+	notNull := make([]string, 0, len(cols))
+	for _, c := range cols {
+		set = append(set, c+" = NULL")
+		notNull = append(notNull, c+" IS NOT NULL")
+	}
+	return "SET " + strings.Join(set, ", ") + ", updated_at = now() WHERE (" + strings.Join(notNull, " OR ") + ")"
+}
+
+// clearRenown — сбросить счётчики источника у работы (источник её больше не
+// находит). true — что-то было и сброшено.
+func (b *RenownBackfiller) clearRenown(ctx context.Context, workID int64, source string) bool {
+	if _, ok := renownColumns[source]; !ok {
+		return false
+	}
+	tag, err := b.pool.Exec(ctx, `UPDATE works `+renownClearSQL(source)+` AND id = $1`, workID)
+	if err != nil {
+		b.logger.Warn("renown backfill: clear failed", "work_id", workID, "source", source, "err", err)
+		return false
+	}
+	return tag.RowsAffected() > 0
+}
+
+// ClearStaleRenown — разово сбросить счётчики, по которым источник уже ответил
+// «не найдено» (#408: на проде 241 работа с числом оценок Фантлаба, которую
+// Фантлаб при перезапросе не нашёл). Возвращает изменённые работы — для ресинка
+// индекса и пересчёта известности авторов.
+func ClearStaleRenown(ctx context.Context, pool *pgxpool.Pool) ([]int64, error) {
+	seen := map[int64]bool{}
+	var out []int64
+	for source := range renownColumns {
+		rows, err := pool.Query(ctx, `UPDATE works w `+renownClearSQL(source)+`
+			AND EXISTS (SELECT 1 FROM work_renown_lookups l
+			            WHERE l.work_id = w.id AND l.source = $1 AND l.outcome = 'not_found')
+			RETURNING w.id`, source)
+		if err != nil {
+			return out, fmt.Errorf("clear stale renown (%s): %w", source, err)
+		}
+		for rows.Next() {
+			var id int64
+			if err := rows.Scan(&id); err != nil {
+				rows.Close()
+				return out, err
+			}
+			if !seen[id] {
+				seen[id] = true
+				out = append(out, id)
+			}
+		}
+		rows.Close()
+		if err := rows.Err(); err != nil {
+			return out, err
+		}
+	}
+	return out, nil
 }
 
 // syncTouched — таргетный ресинк работ с новыми счётчиками (пересчёт

@@ -160,6 +160,7 @@ func run() error {
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
+		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
 		// импорта: и разбор, и импорт массово пишут в works/books.
@@ -1462,6 +1463,41 @@ func runOnceFantlabRatings(ctx context.Context, pool *pgxpool.Pool, logger *slog
 		logger.Warn("fantlab ratings: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time fantlab ratings refetch scheduled", "works", tag.RowsAffected())
+}
+
+// runOnceStaleRenown — разово сбросить счётчики «Известности», по которым
+// источник уже ответил «не найдено» (#408): дальше это делает сам воркер. Работы
+// с изменённой известностью — в works-индекс, их авторам — пересчёт известности.
+// Гейт renown_stale_cleared_v1.
+func runOnceStaleRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "renown_stale_cleared_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("stale renown: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, err := metadata.ClearStaleRenown(ctx, pool)
+	if err != nil {
+		logger.Warn("stale renown: clear failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("stale renown: works index sync failed", "err", err)
+		}
+		if _, err := imp.RecomputeAuthorRenownFor(ctx, changed); err != nil {
+			logger.Warn("stale renown: author renown recompute failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("stale renown: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time stale renown counters cleared", "works", len(changed))
 }
 
 // runOnceWorkYears — год работы по правилам #288 (metadata/work_years.go):

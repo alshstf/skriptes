@@ -331,3 +331,96 @@ func TestRenownBackfiller_SkipsOpenLibraryForUnfindable(t *testing.T) {
 		`SELECT count(*) FROM work_renown_lookups WHERE work_id = $1 AND source = 'openlibrary'`, workID).Scan(&n))
 	require.Zero(t, n, "сброс неудачных попыток снимает skipped")
 }
+
+// TestRenownBackfiller_StaleCounters — #408: работа вне ядра с уже записанными
+// счётчиками освежается; «не найдено» сбрасывает счётчики источника (а сбой —
+// нет); разовая чистка сбрасывает счётчики, по которым источник уже ответил
+// «не найдено».
+func TestRenownBackfiller_StaleCounters(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	mkWork := func(title string, editions int) int64 {
+		var workID int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO works (title, normalized_title, edition_count) VALUES ($1, lower($1), $2) RETURNING id`,
+			title, editions).Scan(&workID))
+		for i := 0; i < editions; i++ {
+			_, err := pool.Exec(ctx, `
+				INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, work_id)
+				VALUES ($1,$2,$3||$4,'f','fb2',$3,lower($3),$5)`, collID, archID, title, strconv.Itoa(i), workID)
+			require.NoError(t, err)
+		}
+		return workID
+	}
+	marks := func(id int64) (fl *int, mid *float64) {
+		require.NoError(t, pool.QueryRow(ctx,
+			`SELECT fantlab_marks, fantlab_midmark::float8 FROM works WHERE id=$1`, id).Scan(&fl, &mid))
+		return fl, mid
+	}
+	cfg := RenownBackfillConfig{Fantlab: true, FoundRefreshDays: 180, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+
+	// Синглтон вне ядра, но со старым числом оценок без средней (как 1,5 тыс. на
+	// проде) — кандидат, средняя приходит.
+	outside := mkWork("Вне ядра", 1)
+	_, err := pool.Exec(ctx, `UPDATE works SET fantlab_marks = 40 WHERE id = $1`, outside)
+	require.NoError(t, err)
+	syncer := &fakeWorksSyncer{}
+	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 42, MidMark: 7.5}}
+	NewRenownBackfiller(pool, fl, nil, nil, syncer, cfg, quiet).drain(ctx)
+	got, mid := marks(outside)
+	require.NotNil(t, got)
+	require.Equal(t, 42, *got)
+	require.NotNil(t, mid)
+	require.InDelta(t, 7.5, *mid, 1e-4, "работа с записанными счётчиками освежается и вне ядра")
+
+	// Сбой источника счётчики не трогает.
+	core := mkWork("Ядро", 2)
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 100, fantlab_midmark = 8 WHERE id = $1`, core)
+	require.NoError(t, err)
+	failing := &fakeRenownProvider{name: "fantlab", err: ErrUpstream}
+	NewRenownBackfiller(pool, failing, nil, nil, syncer, cfg, quiet).drain(ctx)
+	got, _ = marks(core)
+	require.NotNil(t, got, "сбой — не повод сбрасывать")
+
+	// «Не найдено» — сбрасывает и отправляет работу в ресинк индекса.
+	_, err = pool.Exec(ctx, `DELETE FROM work_renown_lookups WHERE work_id = $1`, core)
+	require.NoError(t, err)
+	syncer2 := &fakeWorksSyncer{}
+	nf := &fakeRenownProvider{name: "fantlab"}
+	NewRenownBackfiller(pool, nf, nil, nil, syncer2, cfg, quiet).drain(ctx)
+	got, mid = marks(core)
+	require.Nil(t, got, "источник не нашёл работу — его счётчики сброшены")
+	require.Nil(t, mid)
+	require.Contains(t, syncer2.upserted, core, "известность изменилась — в ресинк")
+
+	// Разовая чистка: OpenLibrary раньше ответил «не найдено», а счётчики остались.
+	stale := mkWork("Устаревшая", 2)
+	_, err = pool.Exec(ctx, `UPDATE works SET ol_ratings_count = 5, ol_want_count = 9, fantlab_marks = 30 WHERE id = $1`, stale)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO work_renown_lookups (work_id, source, outcome, checked_at)
+		VALUES ($1, 'openlibrary', 'not_found', now()), ($1, 'fantlab', 'found', now())`, stale)
+	require.NoError(t, err)
+	changed, err := ClearStaleRenown(ctx, pool)
+	require.NoError(t, err)
+	require.Contains(t, changed, stale)
+	var olr, olw, flm *int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT ol_ratings_count, ol_want_count, fantlab_marks FROM works WHERE id=$1`, stale).Scan(&olr, &olw, &flm))
+	require.Nil(t, olr)
+	require.Nil(t, olw)
+	require.NotNil(t, flm, "Фантлаб нашёл — его счётчики на месте")
+	again, err := ClearStaleRenown(ctx, pool)
+	require.NoError(t, err)
+	require.Empty(t, again, "повтор ничего не меняет")
+}
