@@ -124,6 +124,9 @@ func NewRouter(d Deps) http.Handler {
 					// контента обрабатывает GetWork (404, если все издания скрыты) —
 					// отдельный bookGate не нужен (он по book_id).
 					r.Get("/works/{id}", handleGetWork(d.Books, d.History, d.Metadata, d.Content))
+					// Готовые подборки на /shelves (#389): вычисляются на лету.
+					r.Get("/me/presets", handleListPresets(d.Books, d.Content))
+					r.Get("/me/presets/{key}", handlePresetBooks(d.Books, d.History, d.Content))
 				}
 				if d.Adaptations.Service != nil {
 					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))

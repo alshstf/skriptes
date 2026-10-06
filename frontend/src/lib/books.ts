@@ -448,6 +448,8 @@ export function useToggleRead() {
       // Вкладка автора/серии — для read_count в статистике.
       qc.invalidateQueries({ queryKey: ['author'] });
       qc.invalidateQueries({ queryKey: ['series'] });
+      // Готовые подборки на /shelves считаются из прочитанного.
+      qc.invalidateQueries({ queryKey: ['me', 'presets'] });
     },
   });
 }
