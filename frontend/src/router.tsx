@@ -334,6 +334,9 @@ const readerRoute = createRoute({
   getParentRoute: () => protectedFullscreenRoute,
   path: '/books/$id/read',
   component: ReaderPage,
+  // cfi — открыть на месте заметки («Мои заметки» на карточке, #389).
+  validateSearch: (search: Record<string, unknown>): { cfi?: string } =>
+    typeof search.cfi === 'string' && search.cfi ? { cfi: search.cfi } : {},
 });
 
 const routeTree = rootRoute.addChildren([

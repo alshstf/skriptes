@@ -14,8 +14,13 @@
 //     отправляем {type:'completed'} — родитель вызывает MarkRead.
 //  5. Кнопки prev/next из топбара дёргают view.next() / view.prev().
 //     На мобиле работает swipe (foliate-paginator делает сам).
+//  6. Выделения и закладки (#389): выделенный текст → {type:'selection', cfi,
+//     text} родителю; родитель хранит заметки и присылает {type:'set-highlights',
+//     cfis} — подсвечиваем через overlayer foliate; клик по подсветке →
+//     {type:'annotation-click', cfi}; {type:'goto', cfi} — перейти к месту.
 
 import './foliate/view.js'
+import { Overlayer } from './foliate/overlayer.js'
 
 const params = new URLSearchParams(location.search)
 const src = params.get('src')
@@ -38,6 +43,41 @@ const progressEl = document.getElementById('progress')
 let view = null
 let lastCfi = ''
 let completedReported = false
+// Подсвеченные места (CFI выделений) и документ с текущим выделением.
+let highlights = new Set()
+let selectionDoc = null
+let opened = false
+
+const applyHighlights = (next) => {
+  if (!view || !opened) return
+  for (const cfi of highlights) if (!next.has(cfi)) view.deleteAnnotation({ value: cfi }).catch(() => {})
+  for (const cfi of next) if (!highlights.has(cfi)) view.addAnnotation({ value: cfi }).catch(() => {})
+  highlights = next
+}
+
+// Сообщения от родителя (ReaderPage) — только с нашего origin.
+window.addEventListener('message', (e) => {
+  if (e.origin !== location.origin || e.source !== parent) return
+  const msg = e.data || {}
+  switch (msg.type) {
+    case 'set-highlights': {
+      const next = new Set(Array.isArray(msg.cfis) ? msg.cfis : [])
+      if (!opened) {
+        highlights = next
+        return
+      }
+      applyHighlights(next)
+      break
+    }
+    case 'goto':
+      if (view && msg.cfi) view.goTo(msg.cfi).catch(() => {})
+      break
+    case 'clear-selection':
+      selectionDoc?.getSelection()?.removeAllRanges()
+      selectionDoc = null
+      break
+  }
+})
 
 ;(async () => {
   let blob
@@ -64,13 +104,48 @@ let completedReported = false
     post({ type: 'ready' })
   })
 
+  // Выделение текста в странице книги → родителю (кнопки «Выделить» / «Заметка»).
+  view.addEventListener('load', (e) => {
+    const { doc, index } = e.detail || {}
+    if (!doc) return
+    const report = () => setTimeout(() => {
+      const sel = doc.getSelection()
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
+        if (selectionDoc === doc) {
+          selectionDoc = null
+          post({ type: 'selection-clear' })
+        }
+        return
+      }
+      const text = sel.toString().trim()
+      if (!text) return
+      selectionDoc = doc
+      post({ type: 'selection', cfi: view.getCFI(index, sel.getRangeAt(0)), text: text.slice(0, 2000) })
+    }, 0)
+    doc.addEventListener('pointerup', report)
+    doc.addEventListener('keyup', report)
+    doc.addEventListener('touchend', report)
+  })
+  // Подсветка выделений и клик по ней.
+  view.addEventListener('draw-annotation', (e) => {
+    const { draw } = e.detail
+    draw(Overlayer.highlight, { color: '#f5c518' })
+  })
+  view.addEventListener('create-overlay', () => {
+    for (const cfi of highlights) view.addAnnotation({ value: cfi }).catch(() => {})
+  })
+  view.addEventListener('show-annotation', (e) => {
+    const { value } = e.detail || {}
+    if (value) post({ type: 'annotation-click', cfi: value })
+  })
+
   view.addEventListener('relocate', (e) => {
     const detail = e.detail || {}
     const cfi = detail.cfi || ''
     const fraction = typeof detail.fraction === 'number' ? detail.fraction : null
     if (cfi && cfi !== lastCfi) {
       lastCfi = cfi
-      post({ type: 'position', cfi, fraction })
+      post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '' })
     }
     if (fraction !== null) {
       progressEl.textContent = `${Math.round(fraction * 100)}%`
@@ -99,6 +174,10 @@ let completedReported = false
     } else {
       await view.renderer.next()
     }
+    opened = true
+    const pending = highlights
+    highlights = new Set()
+    applyHighlights(pending)
   } catch (e) {
     console.error('foliate-reader: open failed', e)
     status.textContent = `Не удалось открыть epub: ${e.message}`

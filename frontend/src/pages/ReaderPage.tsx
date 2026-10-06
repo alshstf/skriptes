@@ -1,11 +1,19 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { useParams, useNavigate } from '@tanstack/react-router';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Check, NotebookPen } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api';
 import { useReadingPosition, useSavePosition, useToggleRead, type Book } from '@/lib/books';
+import {
+  useBookAnnotations,
+  useDeleteAnnotation,
+  useSaveAnnotation,
+  useUpdateAnnotationNote,
+  type Annotation,
+} from '@/lib/annotations';
+import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderAnnotations';
 
 /**
  * ReaderPage — full-screen ридер на foliate-js через iframe.
@@ -38,8 +46,11 @@ import { useReadingPosition, useSavePosition, useToggleRead, type Book } from '@
 
 type ReaderMessage =
   | { type: 'ready' }
-  | { type: 'position'; cfi: string; fraction: number | null }
+  | { type: 'position'; cfi: string; fraction: number | null; label?: string }
   | { type: 'completed'; cfi: string }
+  | { type: 'selection'; cfi: string; text: string }
+  | { type: 'selection-clear' }
+  | { type: 'annotation-click'; cfi: string }
   | { type: 'error'; reason: string; detail?: string };
 
 const DEBOUNCE_MS = 3000;
@@ -56,6 +67,39 @@ export function ReaderPage() {
   const { data: position, isLoading: posLoading } = useReadingPosition(bookId);
   const save = useSavePosition();
   const toggleRead = useToggleRead();
+  // ?cfi= — открыть сразу на месте заметки («Мои заметки» на карточке).
+  const { cfi: cfiParam } = useSearch({ strict: false }) as { cfi?: string };
+
+  // Закладки и выделения (#389): iframe сообщает выделение и клик по подсветке,
+  // родитель хранит заметки и присылает iframe список подсветок.
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const annotationsQ = useBookAnnotations(bookId);
+  const annotations = useMemo(() => annotationsQ.data ?? [], [annotationsQ.data]);
+  const saveAnnotation = useSaveAnnotation(bookId);
+  const updateNote = useUpdateAnnotationNote();
+  const deleteAnnotation = useDeleteAnnotation();
+  const [place, setPlace] = useState<{ cfi: string; fraction: number | null; label: string }>({
+    cfi: '',
+    fraction: null,
+    label: '',
+  });
+  const [selection, setSelection] = useState<{ cfi: string; text: string } | null>(null);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const [noteFor, setNoteFor] = useState<{ cfi: string; excerpt: string; existing?: Annotation } | null>(null);
+  const toReader = useCallback((msg: Record<string, unknown>) => {
+    iframeRef.current?.contentWindow?.postMessage(msg, window.location.origin);
+  }, []);
+  const bookmarkHere = annotations.find((a) => a.kind === 'bookmark' && a.cfi === place.cfi);
+  const annotationsRef = useRef<Annotation[]>([]);
+  annotationsRef.current = annotations;
+  // Подсветки — в iframe, как только ридер готов и при каждом изменении.
+  const highlightCfis = useMemo(
+    () => annotations.filter((a) => a.kind === 'highlight').map((a) => a.cfi),
+    [annotations],
+  );
+  useEffect(() => {
+    if (ready) toReader({ type: 'set-highlights', cfis: highlightCfis });
+  }, [ready, highlightCfis, toReader]);
 
   // Debounce-таймер для PUT /position. Каждый relocate сдвигает старт.
   // pendingPos хранит последнюю позицию пришедшую из foliate — на
@@ -148,8 +192,22 @@ export function ReaderPage() {
           setReady(true);
           break;
         case 'position':
-          if (msg.cfi) scheduleSave(msg.cfi, msg.fraction);
+          if (msg.cfi) {
+            scheduleSave(msg.cfi, msg.fraction);
+            setPlace({ cfi: msg.cfi, fraction: msg.fraction, label: msg.label ?? '' });
+          }
           break;
+        case 'selection':
+          setSelection({ cfi: msg.cfi, text: msg.text });
+          break;
+        case 'selection-clear':
+          setSelection(null);
+          break;
+        case 'annotation-click': {
+          const existing = annotationsRef.current.find((a) => a.kind === 'highlight' && a.cfi === msg.cfi);
+          if (existing) setNoteFor({ cfi: existing.cfi, excerpt: existing.excerpt ?? '', existing });
+          break;
+        }
         case 'completed':
           // Юзер дочитал книгу до конца. Поднимаем флаг — на unmount
           // cleanup сбросит сохранённую позицию, чтобы следующее
@@ -200,7 +258,7 @@ export function ReaderPage() {
     );
   }
 
-  const initialCfi = position?.pos ?? '';
+  const initialCfi = cfiParam || position?.pos || '';
   const src = `/foliate-reader.html?src=${encodeURIComponent(`/api/books/${bookId}/epub`)}${
     initialCfi ? `&cfi=${encodeURIComponent(initialCfi)}` : ''
   }`;
@@ -257,6 +315,38 @@ export function ReaderPage() {
             Прочитано
           </span>
         ) : null}
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          disabled={!ready || !place.cfi || saveAnnotation.isPending || deleteAnnotation.isPending}
+          aria-label={bookmarkHere ? 'Убрать закладку' : 'Закладка на этой странице'}
+          aria-pressed={Boolean(bookmarkHere)}
+          onClick={() => {
+            if (bookmarkHere) {
+              deleteAnnotation.mutate(bookmarkHere.id);
+              return;
+            }
+            saveAnnotation.mutate(
+              { kind: 'bookmark', cfi: place.cfi, label: place.label, fraction: place.fraction ?? undefined },
+              { onSuccess: () => toast.success('Закладка поставлена') },
+            );
+          }}
+        >
+          {bookmarkHere ? <BookmarkCheck className="size-4" aria-hidden /> : <Bookmark className="size-4" aria-hidden />}
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1"
+          onClick={() => setNotesOpen(true)}
+          aria-label="Заметки и закладки"
+        >
+          <NotebookPen className="size-4" aria-hidden />
+          <span className="hidden sm:inline">Заметки</span>
+          {annotations.length > 0 ? (
+            <span className="text-xs tabular-nums text-muted-foreground">{annotations.length}</span>
+          ) : null}
+        </Button>
       </header>
       {/*
         iframe рендерит /foliate-reader.html, отдаваемый nginx из
@@ -267,11 +357,81 @@ export function ReaderPage() {
         allow-same-origin + allow-scripts sandbox сам по себе не изолирует —
         скрипты книги режет CSP (см. комментарий в начале файла).
       */}
-      <iframe
-        title="Foliate reader"
-        src={src}
-        sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
-        className="flex-1 w-full border-0"
+      <div className="relative flex min-h-0 flex-1">
+        <iframe
+          ref={iframeRef}
+          title="Foliate reader"
+          src={src}
+          sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
+          className="flex-1 w-full border-0"
+        />
+        {selection ? (
+          <SelectionBar
+            text={selection.text}
+            busy={saveAnnotation.isPending}
+            onCancel={() => {
+              setSelection(null);
+              toReader({ type: 'clear-selection' });
+            }}
+            onHighlight={() =>
+              saveAnnotation.mutate(
+                { kind: 'highlight', cfi: selection.cfi, excerpt: selection.text, label: place.label,
+                  fraction: place.fraction ?? undefined },
+                {
+                  onSuccess: () => {
+                    setSelection(null);
+                    toReader({ type: 'clear-selection' });
+                  },
+                },
+              )
+            }
+            onNote={() => setNoteFor({ cfi: selection.cfi, excerpt: selection.text })}
+          />
+        ) : null}
+      </div>
+      <AnnotationsSheet
+        open={notesOpen}
+        onOpenChange={setNotesOpen}
+        items={annotations}
+        onGo={(a) => {
+          toReader({ type: 'goto', cfi: a.cfi });
+          setNotesOpen(false);
+        }}
+        onDelete={(a) => deleteAnnotation.mutate(a.id)}
+        onEdit={(a) => setNoteFor({ cfi: a.cfi, excerpt: a.excerpt ?? '', existing: a })}
+      />
+      <NoteDialog
+        open={noteFor != null}
+        excerpt={noteFor?.excerpt ?? ''}
+        initial={noteFor?.existing?.note ?? ''}
+        busy={saveAnnotation.isPending || updateNote.isPending || deleteAnnotation.isPending}
+        onClose={() => setNoteFor(null)}
+        onDelete={
+          noteFor?.existing
+            ? () => {
+                const id = noteFor.existing!.id;
+                deleteAnnotation.mutate(id, { onSuccess: () => setNoteFor(null) });
+              }
+            : undefined
+        }
+        onSave={(note) => {
+          if (!noteFor) return;
+          if (noteFor.existing) {
+            updateNote.mutate({ id: noteFor.existing.id, note }, { onSuccess: () => setNoteFor(null) });
+            return;
+          }
+          saveAnnotation.mutate(
+            { kind: 'highlight', cfi: noteFor.cfi, excerpt: noteFor.excerpt, note, label: place.label,
+              fraction: place.fraction ?? undefined },
+            {
+              onSuccess: () => {
+                setNoteFor(null);
+                setSelection(null);
+                toReader({ type: 'clear-selection' });
+              },
+            },
+          );
+        }}
       />
     </div>
   );
