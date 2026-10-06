@@ -119,6 +119,8 @@ func (h *Handler) Root(w http.ResponseWriter, r *http.Request) {
 			{Rel: RelSelf, Href: joinURL(base, "/opds/"), Type: MIMEFeedNavigation},
 			{Rel: RelStart, Href: joinURL(base, "/opds/"), Type: MIMEFeedNavigation},
 			{Rel: RelSearch, Href: joinURL(base, "/opds/opensearch.xml"), Type: MIMEOpenSearch},
+			// Тот же каталог в OPDS 2.0 (JSON, #389).
+			{Rel: "alternate", Href: joinURL(base, "/opds/v2/"), Type: MIMEOPDS2},
 		},
 		Entries: []Entry{
 			navEntry("recent", "Новинки", "Недавно добавленные книги", joinURL(base, "/opds/recent"), MIMEFeedAcquisition),
