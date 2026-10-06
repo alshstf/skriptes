@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
 import { ContentsSection, InCompilationsSection } from '@/components/CompilationContents';
+import { MyNotes } from '@/components/MyNotes';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
 import { BackButton } from '@/components/BackButton';
 import { BookCover } from '@/components/BookCover';
@@ -222,6 +223,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
           {/* Состав сборника (оглавление fb2) и «Входит в сборники» (#388). */}
           <ContentsSection entries={book.contents ?? []} />
           <InCompilationsSection items={book.in_compilations ?? []} />
+          <MyNotes workId={book.work_id ?? undefined} />
 
           {/*
             Экранизации — отдельная секция под аннотацией. Не рендерится

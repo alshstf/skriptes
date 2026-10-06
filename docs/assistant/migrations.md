@@ -2,6 +2,7 @@
 
 Справка для ассистента; сами миграции — `backend/migrations/`. Новые — сверху.
 
+- `0054_annotations` (`annotations` — закладки и выделения с заметками веб-ридера по изданию, CFI, #389)
 - `0053_device_passwords` (`device_passwords` — пароли устройств для OPDS и синхронизации читалок, хранится hex(SHA-256(hex(MD5))), #389)
 - `0052_author_facets` (`author_facets` — жанры, категории, языки изданий и оригинала, экранизации автора для счётчиков фильтров /authors, #389)
 - `0051_work_contents` (`work_contents` — состав сборников из оглавления fb2, `works.contents_scanned_at`, #388)

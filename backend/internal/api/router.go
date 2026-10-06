@@ -215,6 +215,12 @@ func NewRouter(d Deps) http.Handler {
 					// Позиция чтения для in-browser ридера (epub-cfi).
 					r.Get("/books/{id}/position", handleGetPosition(d.History))
 					r.Put("/books/{id}/position", handleSavePosition(d.History))
+					// Закладки и выделения с заметками веб-ридера (#389).
+					r.Get("/books/{id}/annotations", handleBookAnnotations(d.History))
+					r.Post("/books/{id}/annotations", handleSaveAnnotation(d.History))
+					r.Get("/works/{id}/annotations", handleWorkAnnotations(d.History))
+					r.Patch("/annotations/{id}", handleUpdateAnnotation(d.History))
+					r.Delete("/annotations/{id}", handleDeleteAnnotation(d.History))
 				}
 				// Личные полки (коллекции) — раздел «Жанры». CRUD полки +
 				// членство книг. Все ручки гейтят владение по userID.

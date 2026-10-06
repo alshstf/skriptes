@@ -4,7 +4,7 @@
 [![release](https://img.shields.io/github/v/release/alshstf/skriptes?include_prereleases&sort=semver)](https://github.com/alshstf/skriptes/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Каталогизатор домашней библиотеки fb2-книг. Импортирует метаданные из INPX (формат MyHomeLib / Flibusta / Lib.rus.ec), хранит их в PostgreSQL, индексирует в Meilisearch, отдаёт книги на лету с конвертацией в epub / kepub / azw8 / kfx (через [fb2cng](https://github.com/rupor-github/fb2cng)). Сами архивы книг не копирует — читает из read-only volume. Читать можно во встроенном веб-ридере, скачать, отправить на Kindle или подключить e-reader по OPDS.
+Каталогизатор домашней библиотеки fb2-книг. Импортирует метаданные из INPX (формат MyHomeLib / Flibusta / Lib.rus.ec), хранит их в PostgreSQL, индексирует в Meilisearch, отдаёт книги на лету с конвертацией в epub / kepub / azw8 / kfx (через [fb2cng](https://github.com/rupor-github/fb2cng)). Сами архивы книг не копирует — читает из read-only volume. Читать можно во встроенном веб-ридере (с закладками и выделениями с заметками), скачать, отправить на Kindle или подключить e-reader по OPDS.
 
 Карточки обогащаются из fb2 и открытых источников: обложки, аннотации, года написания (fb2 с проверкой правдоподобия и год первой публикации с Фантлаба — самый ранний из них), внешние рейтинги (Open Library / Google Books), биографии и портреты авторов (Wikipedia), экранизации книг (Wikidata). Издания одной книги (переводы, переиздания) группируются в логические «работы» — дубли схлопываются в поиске и списках.
 
