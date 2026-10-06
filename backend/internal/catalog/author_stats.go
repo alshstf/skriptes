@@ -24,6 +24,11 @@ import (
 // произвольном порядке и вперемешку ловили бы deadlock.
 const authorsBulkLockID = 0x617574687265
 
+// Оценка работы: Фантлаб от books.MinFantlabMarks оценок в шкале LIBRATE
+// (books.FantlabOnLibrateScale, #394), иначе LIBRATE, иначе веб от 5 голосов.
+// Фантлаб первым: на 300 самых известных авторах медианное место в рейтинге —
+// 434 вместо 1014, рейтинг есть у 15,3 тыс. авторов вместо 14,1 тыс.; цена —
+// мейнстрим с небольшим числом оценок на Фантлабе проседает (Диккер 4,39 → 3,87).
 // Рейтинг автора (#296) = (сумма оценок до ratingTopWorks лучших работ +
 // ratingPriorWeight·ratingPriorMean) / (их число + ratingPriorWeight). Среднее
 // LIBRATE по коллекции — 3,35 (прод 2026-10). Пять пятёрок → 4,53; одна — 3,82.
@@ -57,13 +62,16 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 		    WHERE COALESCE(w.kind, '') = ''
 		    GROUP BY ba.author_id
 		),
-		-- Рейтинг автора (#296): оценка работы — LIBRATE её изданий, иначе веб-оценка
-		-- от `+fmt.Sprint(books.MinExternalRatingVotes)+` голосов; рейтинг — среднее пяти лучших работ
-		-- (без сборников), у кого их меньше — с подтяжкой к средней по коллекции.
+		-- Рейтинг автора (#296): оценка работы — Фантлаб от `+fmt.Sprint(books.MinFantlabMarks)+` оценок в шкале
+		-- LIBRATE (#394), иначе LIBRATE её изданий, иначе веб-оценка от `+fmt.Sprint(books.MinExternalRatingVotes)+` голосов;
+		-- рейтинг — среднее пяти лучших работ (без сборников), у кого их меньше — с
+		-- подтяжкой к средней по коллекции.
 		wr AS (
-		    SELECT b.work_id, COALESCE(max(b.rating), max(`+books.ExternalRatingSQL("b")+`)) AS r
+		    SELECT b.work_id, COALESCE(max(`+books.FantlabOnLibrateScaleSQL("w")+`), max(b.rating),
+		                               max(`+books.ExternalRatingSQL("b")+`)) AS r
 		    FROM books b
-		    WHERE b.deleted = false AND b.work_id IS NOT NULL
+		    JOIN works w ON w.id = b.work_id
+		    WHERE b.deleted = false
 		    GROUP BY b.work_id
 		),
 		ranked AS (

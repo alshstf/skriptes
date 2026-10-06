@@ -6,6 +6,7 @@ package books
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -260,5 +261,49 @@ func ExternalRatingSQL(alias string) string {
 }
 
 // MinFantlabMarks — средняя оценка Фантлаба показывается от стольких оценок
-// (#296): у работ с парой оценок средняя случайна.
+// (#296): у работ с парой оценок средняя случайна. От того же числа оценок
+// Фантлаб входит в рейтинг автора (#394).
 const MinFantlabMarks = 10
+
+// fantlabScale — рейтинг Фантлаба (works.fantlab_rating, сглаженный самим
+// Фантлабом, 0–10) в шкале LIBRATE (1–5) для рейтинга автора (#394).
+// Квантильное соответствие на 12 004 работах с обеими оценками (прод
+// 2026-10-06): доля работ с рейтингом Фантлаба ниже точки = доля LIBRATE ниже
+// значения (у LIBRATE 1 — 3,9 %, 2 — 5,9 %, 3 — 26,1 %, 4 — 35,2 %, 5 — 28,9 %;
+// класс k занимает отрезок [k−0,5; k+0,5]). Между точками — линейно, вне — края.
+// Простое деление на 2 занижало бы Фантлаб: «Мастер и Маргарита» 8,97 → 4,5
+// против любой «пятёрки» LIBRATE. Связь шкал слабая (корреляция 0,35), но
+// монотонная: средняя LIBRATE растёт с рейтингом Фантлаба от 3,5 до 4,4.
+var fantlabScale = []struct{ fantlab, librate float64 }{
+	{3.10, 1.0}, {3.43, 1.5}, {3.96, 2.5}, {5.61, 3.5}, {7.16, 4.5}, {7.68, 5.0},
+}
+
+// FantlabOnLibrateScale переводит рейтинг Фантлаба в шкалу LIBRATE (см. fantlabScale).
+func FantlabOnLibrateScale(r float64) float64 {
+	if r <= fantlabScale[0].fantlab {
+		return fantlabScale[0].librate
+	}
+	for i := 1; i < len(fantlabScale); i++ {
+		a, b := fantlabScale[i-1], fantlabScale[i]
+		if r <= b.fantlab {
+			return a.librate + (r-a.fantlab)*(b.librate-a.librate)/(b.fantlab-a.fantlab)
+		}
+	}
+	return fantlabScale[len(fantlabScale)-1].librate
+}
+
+// FantlabOnLibrateScaleSQL — то же в SQL для работы <alias> (works): NULL, если
+// оценок Фантлаба меньше MinFantlabMarks.
+func FantlabOnLibrateScaleSQL(alias string) string {
+	r := alias + ".fantlab_rating"
+	var b strings.Builder
+	fmt.Fprintf(&b, "(CASE WHEN %s.fantlab_marks >= %d AND %s IS NOT NULL THEN CASE", alias, MinFantlabMarks, r)
+	fmt.Fprintf(&b, " WHEN %s <= %g THEN %g", r, fantlabScale[0].fantlab, fantlabScale[0].librate)
+	for i := 1; i < len(fantlabScale); i++ {
+		a, c := fantlabScale[i-1], fantlabScale[i]
+		fmt.Fprintf(&b, " WHEN %s <= %g THEN %g + (%s - %g) * %g", r, c.fantlab, a.librate, r, a.fantlab,
+			(c.librate-a.librate)/(c.fantlab-a.fantlab))
+	}
+	fmt.Fprintf(&b, " ELSE %g END END)", fantlabScale[len(fantlabScale)-1].librate)
+	return b.String()
+}
