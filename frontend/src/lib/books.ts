@@ -182,6 +182,18 @@ export type GenreRef = {
   display: string;
 };
 
+/** Строка «Состава» сборника; work_id — отдельная работа каталога, если строка с
+ *  ней совпала (иначе рассказа нет в каталоге отдельно). */
+export type ContentEntry = { title: string; work_id?: number };
+
+/** Сборник, в который входит произведение. kind — works.kind. */
+export type CompilationRef = {
+  work_id: number;
+  title: string;
+  kind: 'collection' | 'anthology' | 'omnibus';
+  author?: string;
+};
+
 export type Book = {
   id: number;
   lib_id: string;
@@ -238,6 +250,13 @@ export type Book = {
   editions?: EditionRef[];
   /** Когда пользователь явно отметил прочитанной (или ридер auto-mark'нул). */
   read_at?: string;
+  /** Состав сборника из оглавления fb2 (#388), по порядку. Только у сборников. */
+  contents?: ContentEntry[];
+  /** Сборники, в которые входит это произведение (видимые пользователю). */
+  in_compilations?: CompilationRef[];
+  /** «Прочитано в сборнике»: прочитан сборник с этим произведением. Отдельно от
+   *  явного is_read; приходит, только когда is_read = false. */
+  read_in_compilation?: { work_id: number; title: string };
   /** Прогресс чтения [0, 1] из in-browser ридера. Undefined если ридер
    *  ни разу не открывали — UI тогда показывает «Читать» без процента. */
   reading_fraction?: number;

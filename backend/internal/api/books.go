@@ -123,6 +123,20 @@ type bookResponse struct {
 	UserRating  *int     `json:"user_rating,omitempty"`
 	RatingAvg   *float64 `json:"rating_avg,omitempty"`
 	RatingCount int      `json:"rating_count"`
+	// Состав сборников (#388): contents — «Состав» у сборника (оглавление fb2),
+	// in_compilations — «Входит в сборники» у произведения, read_in_compilation —
+	// «прочитано в сборнике» (прочитан сборник с этой работой; явное is_read
+	// не трогает).
+	Contents          []books.ContentEntry     `json:"contents,omitempty"`
+	InCompilations    []books.CompilationRef   `json:"in_compilations,omitempty"`
+	ReadInCompilation *history.CompilationRead `json:"read_in_compilation,omitempty"`
+}
+
+// cardVisibility — скрытый контент для блоков карточки со ссылками на другие
+// работы («Состав», «Входит в сборники»): не ссылаться на то, что откроется 404.
+type cardVisibility struct {
+	genres, langs    []string
+	hideCompilations bool
 }
 
 func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.HandlerFunc {
@@ -144,7 +158,7 @@ func handleGetBook(d BooksDeps, hist HistoryDeps, meta MetadataDeps) http.Handle
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeBookCard(w, r, ctx, b, hist, meta)
+		writeBookCard(w, r, ctx, b, d, hist, meta, cardVisibility{})
 	}
 }
 
@@ -163,6 +177,7 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		var exGenres, exLangs []string
+		var hideComp bool
 		if content.Resolver != nil {
 			var userID int64
 			if u, ok := UserFromContext(r.Context()); ok {
@@ -171,7 +186,7 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 			// hideCompilations сознательно игнорируем: персональное скрытие
 			// убирает сборники из выдачи, но не блокирует прямую ссылку
 			// (зеркало политики скрытых жанров/языков).
-			exGenres, exLangs, _ = content.Resolver.Exclusions(r.Context(), userID)
+			exGenres, exLangs, hideComp = content.Resolver.Exclusions(r.Context(), userID)
 		}
 		b, err := d.Service.GetWork(ctx, workID, exGenres, exLangs)
 		if err != nil {
@@ -182,7 +197,7 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		writeBookCard(w, r, ctx, b, hist, meta)
+		writeBookCard(w, r, ctx, b, d, hist, meta, cardVisibility{genres: exGenres, langs: exLangs, hideCompilations: hideComp})
 	}
 }
 
@@ -190,7 +205,8 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 // /api/books/{id} и /api/works/{id}) и отдаёт JSON. b.ID — открытое/
 // представительное издание (для fraction/view/скачивания), b.WorkID — работа
 // (для work-level is_favorite/is_read и прогресса по изданиям).
-func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, b books.Book, hist HistoryDeps, meta MetadataDeps) {
+func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, b books.Book, d BooksDeps, hist HistoryDeps,
+	meta MetadataDeps, vis cardVisibility) {
 	var isFav, isRead bool
 	var readAt *time.Time
 	var fraction *float64
@@ -247,6 +263,28 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		}
 	}
 
+	// Состав сборника / «входит в сборники» / «прочитано в сборнике» (#388).
+	// Ошибка — блоков просто нет: карточка важнее.
+	var contents []books.ContentEntry
+	var inComps []books.CompilationRef
+	var readInComp *history.CompilationRead
+	if d.Service != nil && b.WorkID > 0 {
+		if c, err := d.Service.WorkContents(ctx, b.WorkID, vis.genres, vis.langs); err == nil {
+			contents = c
+		}
+		// «Скрывать сборники» — блока со ссылками на сборники нет.
+		if !vis.hideCompilations {
+			if c, err := d.Service.WorkCompilations(ctx, b.WorkID, vis.genres, vis.langs); err == nil {
+				inComps = c
+			}
+		}
+		if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil && !isRead {
+			if c, err := hist.Service.ReadInCompilation(ctx, u.ID, b.WorkID); err == nil {
+				readInComp = c
+			}
+		}
+	}
+
 	// Lazy enrichment: если у книги нет обложки, в фоне сходим в провайдеры.
 	triggerBookEnrichmentAsync(meta, b)
 
@@ -259,6 +297,10 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		UserRating:      userRating,
 		RatingAvg:       ratingAvg,
 		RatingCount:     ratingCount,
+
+		Contents:          contents,
+		InCompilations:    inComps,
+		ReadInCompilation: readInComp,
 	})
 }
 

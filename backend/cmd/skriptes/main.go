@@ -215,6 +215,10 @@ func run() error {
 	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
 	// Хранимые число работ и рейтинг авторов — ключи сортировок /authors (#302).
 	metadata.Go(func(c context.Context) { runAuthorStatsLoop(c, pool, logger) })
+	// Состав сборников из оглавления fb2 (#388): новые сборники — раз в 30 минут.
+	metadata.Go(func(c context.Context) {
+		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)
+	})
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 
@@ -818,6 +822,13 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		logger.Warn("author renown recompute after import failed", "err", err)
 	} else if n > 0 {
 		logger.Info("author renown recomputed after import", "authors_updated", n)
+	}
+	// Строки «Состава» сборников без работы — связать с работами, которые привёз
+	// импорт (#388).
+	if n, err := metadata.NewContentsScanner(pool, "", logger).RelinkContents(ctx); err != nil {
+		logger.Warn("compilation contents relink after import failed", "err", err)
+	} else if n > 0 {
+		logger.Info("compilation contents relinked after import", "links", n)
 	}
 	// Число работ и рейтинг авторов (сортировки /authors, #302) — сразу, не
 	// дожидаясь планового пересчёта.
