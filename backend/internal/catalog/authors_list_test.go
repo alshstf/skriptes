@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
@@ -764,7 +765,25 @@ func TestRecomputeAuthorStats_RatingScore(t *testing.T) {
 	web := author("веб")
 	book(web, nil, fp(4), ip(10))
 
-	_, err := catalog.RecomputeAuthorStats(ctx, pool)
+	// Фантлаб (#394): от 10 оценок — первым, в шкале LIBRATE; меньше — не в счёт.
+	fantlab := author("фантлаб")
+	book(fantlab, ip(3), nil, nil)
+	book(fantlab, ip(4), nil, nil)
+	_, err := pool.Exec(ctx, `UPDATE works SET fantlab_rating = 8.5, fantlab_marks = 120
+		WHERE id = (SELECT b.work_id FROM books b JOIN book_authors ba ON ba.book_id = b.id
+		            WHERE ba.author_id = $1 AND b.rating = 3)`, fantlab)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_rating = 9.0, fantlab_marks = 4
+		WHERE id = (SELECT b.work_id FROM books b JOIN book_authors ba ON ba.book_id = b.id
+		            WHERE ba.author_id = $1 AND b.rating = 4)`, fantlab)
+	require.NoError(t, err)
+	fantlabOnly := author("только фантлаб")
+	book(fantlabOnly, nil, nil, nil)
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_rating = 6.0, fantlab_marks = 30
+		WHERE primary_author_id = $1`, fantlabOnly)
+	require.NoError(t, err)
+
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
 	require.NoError(t, err)
 	score := func(id int64) *float64 {
 		var r *float64
@@ -775,4 +794,8 @@ func TestRecomputeAuthorStats_RatingScore(t *testing.T) {
 	require.InDelta(t, (3+2*3.35)/3, *score(fewVotes), 0.001, "веб-оценка из одного голоса не учитывается")
 	require.Nil(t, score(onlyWeak), "веб-оценка из двух голосов — рейтинга нет")
 	require.InDelta(t, (4+2*3.35)/3, *score(web), 0.001, "веб-оценка от 10 голосов учитывается")
+	require.InDelta(t, (5+4+2*3.35)/4, *score(fantlab), 0.001,
+		"Фантлаб 8,5 при 120 оценках — 5 вместо LIBRATE 3; при 4 оценках — LIBRATE 4")
+	require.InDelta(t, (books.FantlabOnLibrateScale(6.0)+2*3.35)/3, *score(fantlabOnly), 0.001,
+		"работа без LIBRATE и веба получает оценку Фантлаба")
 }
