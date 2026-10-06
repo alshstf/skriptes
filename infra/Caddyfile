@@ -23,7 +23,8 @@
 	# OPDS-каталог для e-reader клиентов (KOReader/Moon+Reader/…) → backend.
 	# Своя HTTP Basic авторизация внутри backend; без этого матчера /opds/*
 	# падал в SPA-фолбэк (frontend отдавал index.html вместо каталога).
-	@opds path /opds/*
+	# /kosync/* — синхронизация позиции чтения KOReader/Readest (#389).
+	@opds path /opds/* /kosync/*
 	handle @opds {
 		reverse_proxy backend:8080
 	}

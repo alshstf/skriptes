@@ -26,6 +26,7 @@ export function DevicePasswordsCard() {
   const devicesQ = useDevices();
   const [created, setCreated] = useState<CreatedDevice | null>(null);
   const opdsURL = `${window.location.origin}/opds`;
+  const syncURL = `${window.location.origin}/kosync`;
 
   return (
     <Card>
@@ -37,6 +38,10 @@ export function DevicePasswordsCard() {
         <p className="text-sm text-pretty text-muted-foreground">
           Для читалок (KOReader, Moon+ Reader, Readest): каталог <code className="text-foreground">{opdsURL}</code>,
           логин — ваш email, пароль — пароль устройства. Основной пароль вне домашней сети читалке не подойдёт.
+        </p>
+        <p className="text-sm text-pretty text-muted-foreground">
+          Синхронизация позиции (KOReader, Readest): свой сервер <code className="text-foreground">{syncURL}</code>,
+          вход с тем же email и паролем устройства. Позиция книги, скачанной отсюда, появится и на её карточке.
         </p>
       </CardHeader>
       <CardContent className="space-y-4 pt-2">

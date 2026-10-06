@@ -34,6 +34,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
+	"github.com/skriptes/skriptes/backend/internal/kosync"
 	"github.com/skriptes/skriptes/backend/internal/logredact"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
@@ -546,6 +547,8 @@ func run() error {
 
 	// Лимит скачиваний на пользователя — общий для веба и OPDS (#389, B1).
 	downloadLimiter := dlimit.NewDefault()
+	// Синхронизация KOReader: документы отданных файлов и позиции (#389, B4).
+	kosyncStore := kosync.NewStore(pool)
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
@@ -562,7 +565,7 @@ func run() error {
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
-		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
+		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter, Documents: kosyncStore},
 		History:     api.HistoryDeps{Service: historySvc},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
@@ -605,8 +608,10 @@ func run() error {
 				g, l, _ := contentResolver.Exclusions(c, userID)
 				return g, l
 			},
-			Limiter: downloadLimiter,
+			Limiter:   downloadLimiter,
+			Documents: kosyncStore,
 		})},
+		Kosync: api.KosyncDeps{Handler: &kosync.Handler{Store: kosyncStore, Logger: logger}},
 	})
 
 	srv := &http.Server{

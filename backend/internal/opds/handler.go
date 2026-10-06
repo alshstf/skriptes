@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -21,6 +22,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/dlimit"
 	"github.com/skriptes/skriptes/backend/internal/history"
+	"github.com/skriptes/skriptes/backend/internal/kosync"
 )
 
 // Config — настройки OPDS-handler'ов.
@@ -53,6 +55,8 @@ type Deps struct {
 	Exclusions func(ctx context.Context, userID int64) (genres, langs []string)
 	// Limiter — лимит скачиваний на пользователя (общий с веб-скачиванием); nil — без лимита.
 	Limiter *dlimit.Limiter
+	// Documents — запоминает документ KOReader отданного файла (синхронизация); nil — нет.
+	Documents *kosync.Store
 }
 
 // Handler — компактный объект, держащий config+deps. Методы возвращают
@@ -611,8 +615,18 @@ func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 		if size > 0 {
 			w.Header().Set("Content-Length", strconv.FormatInt(size, 10))
 		}
-		_, _ = io.Copy(w, rc)
+		// Документ KOReader — по отдаваемым байтам; оборванное скачивание не запоминаем.
+		doc := kosync.NewTracker()
+		if _, err := io.Copy(io.MultiWriter(w, doc), rc); err == nil {
+			h.deps.Documents.RememberAsync(doc.Sum(), book.ID, string(format), h.deps.Logger)
+		}
 		return
+	}
+	if f, err := os.Open(res.Path); err == nil { // #nosec G304 -- путь строит converter
+		if st, err := f.Stat(); err == nil {
+			h.deps.Documents.RememberAsync(kosync.PartialMD5(f, st.Size()), book.ID, string(format), h.deps.Logger)
+		}
+		_ = f.Close()
 	}
 	http.ServeFile(w, r, res.Path) //nolint:gosec // path computed by converter, не из URL
 }
