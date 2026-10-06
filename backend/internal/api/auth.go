@@ -31,6 +31,24 @@ type AuthDeps struct {
 	// TrustCFConnectingIP — брать IP клиента для лимита из CF-Connecting-IP. Только
 	// если к бэкенду ходят исключительно через Cloudflare (SKRIPTES_TRUST_CF_CONNECTING_IP).
 	TrustCFConnectingIP bool
+	// MainPasswordNets — откуда OPDS и синхронизация принимают ОСНОВНОЙ пароль
+	// (SKRIPTES_LAN_CIDRS, #389): снаружи — только пароли устройств. Пусто —
+	// отовсюду (как до паролей устройств; ломающего изменения нет).
+	MainPasswordNets []netip.Prefix
+}
+
+// mainPasswordAllowed — можно ли входить основным паролем с адреса запроса.
+func (d AuthDeps) mainPasswordAllowed(r *http.Request) bool {
+	if len(d.MainPasswordNets) == 0 {
+		return true
+	}
+	ip := clientIP(r).Unmap()
+	for _, n := range d.MainPasswordNets {
+		if n.Contains(ip) {
+			return true
+		}
+	}
+	return false
 }
 
 // userCtxKey — ключ для хранения текущего пользователя в request context.

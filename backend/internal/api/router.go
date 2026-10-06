@@ -117,6 +117,10 @@ func NewRouter(d Deps) http.Handler {
 				// пароля с верификацией текущего.
 				r.Patch("/me", handleUpdateMe(d.Auth))
 				r.Patch("/me/password", handleChangeMyPassword(d.Auth))
+				// Пароли устройств для OPDS и синхронизации читалок (#389).
+				r.Get("/me/devices", handleListDevices(d.Auth))
+				r.Post("/me/devices", handleCreateDevice(d.Auth))
+				r.Delete("/me/devices/{id}", handleDeleteDevice(d.Auth))
 				if d.Books.Service != nil {
 					r.Get("/books", handleListBooks(d.Books, d.History, d.Content))
 					r.With(bookGate).Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))

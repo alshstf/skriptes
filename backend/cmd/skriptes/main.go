@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/netip"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -548,6 +549,7 @@ func run() error {
 			LoginRateLimitIP:    cfg.LoginRateLimitIP,
 			LoginRateLimitEmail: cfg.LoginRateLimitEmail,
 			TrustCFConnectingIP: cfg.TrustCFConnectingIP,
+			MainPasswordNets:    parseNets(cfg.LANCIDRs, logger),
 		},
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
@@ -1749,4 +1751,22 @@ func recordHasExpectedErr(r slog.Record, stopping bool) bool {
 		return true
 	})
 	return found
+}
+
+// parseNets — сети из SKRIPTES_LAN_CIDRS (CIDR или адрес через пробел);
+// нераспознанное пропускается с предупреждением.
+func parseNets(s string, logger *slog.Logger) []netip.Prefix {
+	var out []netip.Prefix
+	for _, f := range strings.Fields(s) {
+		if p, err := netip.ParsePrefix(f); err == nil {
+			out = append(out, p.Masked())
+			continue
+		}
+		if a, err := netip.ParseAddr(f); err == nil {
+			out = append(out, netip.PrefixFrom(a, a.BitLen()))
+			continue
+		}
+		logger.Warn("SKRIPTES_LAN_CIDRS: skip unparsable entry", "entry", f)
+	}
+	return out
 }

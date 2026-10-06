@@ -21,6 +21,7 @@ import {
 import { useMe, useUpdateMe, useChangeMyPassword, MIN_PASSWORD_LEN, type User } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
 import { KindleSenderHint } from '@/components/KindleSenderHint';
+import { DevicePasswordsCard } from '@/components/DevicePasswordsCard';
 
 /**
  * ProfilePage — настройки пользователя. Сейчас только Kindle-адресаты
@@ -88,6 +89,8 @@ export function ProfilePage() {
           <AddTargetForm existingCount={targetsQ.data?.length ?? 0} />
         </CardContent>
       </Card>
+
+      <DevicePasswordsCard />
 
       <RatingPromptsCard />
     </article>

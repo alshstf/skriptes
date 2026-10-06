@@ -84,6 +84,10 @@ type Config struct {
 	// ставит сам клиент и обходит лимит по IP. Дефолт — false (IP из X-Forwarded-For
 	// вашего reverse-proxy).
 	TrustCFConnectingIP bool `env:"SKRIPTES_TRUST_CF_CONNECTING_IP" envDefault:"false"`
+	// Доверенные сети (CIDR или адрес через пробел, та же переменная, что у
+	// Caddyfile.public): только из них OPDS и синхронизация принимают ОСНОВНОЙ
+	// пароль, снаружи — пароли устройств (#389). Пусто — основной пароль отовсюду.
+	LANCIDRs string `env:"SKRIPTES_LAN_CIDRS"`
 
 	// SMTP для send-to-Kindle. Если SMTPHost пустой — функция
 	// отключена (handler вернёт 503), и фронт скроет кнопку.
