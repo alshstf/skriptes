@@ -168,7 +168,9 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid 
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &searchable); err != nil {
 		return fmt.Errorf("works update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}
+	// id — для «известных совпадений» /books (#401): закреплённые наверху работы
+	// исключаются из остальной выдачи фильтром `id NOT IN [...]`.
+	filterable := []any{"id", "genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}
