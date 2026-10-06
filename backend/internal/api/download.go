@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
@@ -14,12 +15,15 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/converter"
+	"github.com/skriptes/skriptes/backend/internal/dlimit"
 )
 
 // DownloadDeps — зависимости /api/books/{id}/download.
 type DownloadDeps struct {
 	Books     *books.Service
 	Converter *converter.Converter
+	// Limiter — лимит скачиваний на пользователя (общий с OPDS, #389); nil — без лимита.
+	Limiter *dlimit.Limiter
 }
 
 func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
@@ -52,6 +56,16 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		// не залогинен — middleware уже бы вернул 401, так что user в ctx
 		// гарантированно есть.
 		if u, ok := UserFromContext(r.Context()); ok {
+			if d.Limiter != nil {
+				release, wait, ok := d.Limiter.Acquire(u.ID)
+				if !ok {
+					slog.Warn("download throttled", "via", "web", "user_id", u.ID, "retry_after", wait.Round(time.Second))
+					w.Header().Set("Retry-After", strconv.Itoa(int(wait.Seconds())+1))
+					writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "слишком много скачиваний, повторите позже"})
+					return
+				}
+				defer release()
+			}
 			recordAcquisitionAsync(hist.Service, u.ID, id)
 		}
 

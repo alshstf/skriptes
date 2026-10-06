@@ -8,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -18,6 +19,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/converter"
+	"github.com/skriptes/skriptes/backend/internal/dlimit"
 	"github.com/skriptes/skriptes/backend/internal/history"
 )
 
@@ -46,6 +48,11 @@ type Deps struct {
 	History   *history.Service     // учёт приобретения при скачивании (для запросов оценки); может быть nil
 	BooksRoot string               // корень read-only volume (передаётся в converter.SourceBook)
 	Logger    *slog.Logger
+	// Exclusions — скрытые жанры и языки пользователя (admin ∪ личные), как в
+	// вебе: OPDS их не показывает и не отдаёт (#389, B1). nil — ничего не скрыто.
+	Exclusions func(ctx context.Context, userID int64) (genres, langs []string)
+	// Limiter — лимит скачиваний на пользователя (общий с веб-скачиванием); nil — без лимита.
+	Limiter *dlimit.Limiter
 }
 
 // Handler — компактный объект, держащий config+deps. Методы возвращают
@@ -63,6 +70,36 @@ func NewHandler(cfg Config, deps Deps) *Handler {
 		deps.Logger = slog.Default()
 	}
 	return &Handler{cfg: cfg, deps: deps}
+}
+
+// exclusions — скрытое для пользователя из Basic-auth контекста.
+func (h *Handler) exclusions(r *http.Request) (genres, langs []string) {
+	if h.deps.Exclusions == nil {
+		return nil, nil
+	}
+	u, ok := auth.UserFromContext(r.Context())
+	if !ok {
+		return nil, nil
+	}
+	return h.deps.Exclusions(r.Context(), u.ID)
+}
+
+// hidden — книга с такими жанрами и языком скрыта.
+func hidden(codes []string, lang string, exGenres, exLangs []string) bool {
+	for _, c := range codes {
+		for _, g := range exGenres {
+			if c == g {
+				return true
+			}
+		}
+	}
+	l := strings.ToLower(strings.TrimSpace(lang))
+	for _, x := range exLangs {
+		if l != "" && l == strings.ToLower(strings.TrimSpace(x)) {
+			return true
+		}
+	}
+	return false
 }
 
 // ----- Root navigation -----
@@ -103,10 +140,13 @@ func (h *Handler) Recent(w http.ResponseWriter, r *http.Request) {
 	limit := h.cfg.PageSize
 	offset := (page - 1) * limit
 
+	exG, exL := h.exclusions(r)
 	resp, err := h.deps.Books.List(r.Context(), books.ListParams{
-		Limit:  limit,
-		Offset: offset,
-		Sort:   "year_desc",
+		Limit:         limit,
+		Offset:        offset,
+		Sort:          "year_desc",
+		ExcludeGenres: exG,
+		ExcludeLangs:  exL,
 	})
 	if err != nil {
 		h.error(w, "search failed", err, http.StatusBadGateway)
@@ -180,11 +220,14 @@ func (h *Handler) AuthorBooks(w http.ResponseWriter, r *http.Request) {
 	limit := h.cfg.PageSize
 	offset := (page - 1) * limit
 
+	exG, exL := h.exclusions(r)
 	resp, err := h.deps.Books.List(r.Context(), books.ListParams{
-		AuthorID: id,
-		Limit:    limit,
-		Offset:   offset,
-		Sort:     "year_desc",
+		AuthorID:      id,
+		Limit:         limit,
+		Offset:        offset,
+		Sort:          "year_desc",
+		ExcludeGenres: exG,
+		ExcludeLangs:  exL,
 	})
 	if err != nil {
 		h.error(w, "search failed", err, http.StatusBadGateway)
@@ -246,10 +289,13 @@ func (h *Handler) SeriesBooks(w http.ResponseWriter, r *http.Request) {
 	limit := h.cfg.PageSize
 	offset := (page - 1) * limit
 
+	exG, exL := h.exclusions(r)
 	resp, err := h.deps.Books.List(r.Context(), books.ListParams{
-		SeriesID: id,
-		Limit:    limit,
-		Offset:   offset,
+		SeriesID:      id,
+		Limit:         limit,
+		Offset:        offset,
+		ExcludeGenres: exG,
+		ExcludeLangs:  exL,
 	})
 	if err != nil {
 		h.error(w, "search failed", err, http.StatusBadGateway)
@@ -291,7 +337,11 @@ func (h *Handler) GenresList(w http.ResponseWriter, r *http.Request) {
 			{Rel: RelUp, Href: joinURL(base, "/opds/"), Type: MIMEFeedNavigation},
 		},
 	}
+	exG, _ := h.exclusions(r)
 	for _, g := range items {
+		if hidden([]string{g.Code}, "", exG, nil) {
+			continue
+		}
 		feed.Entries = append(feed.Entries, GenreEntryToEntry(g, base))
 	}
 	h.writeFeed(w, MIMEFeedNavigation, feed)
@@ -326,11 +376,18 @@ func (h *Handler) GenreBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	exG, exL := h.exclusions(r)
+	if hidden([]string{code}, "", exG, nil) {
+		h.error(w, "genre not found", nil, http.StatusNotFound)
+		return
+	}
 	resp, err := h.deps.Books.List(r.Context(), books.ListParams{
-		Genres: []string{code},
-		Limit:  limit,
-		Offset: offset,
-		Sort:   "year_desc",
+		Genres:        []string{code},
+		Limit:         limit,
+		Offset:        offset,
+		Sort:          "year_desc",
+		ExcludeGenres: exG,
+		ExcludeLangs:  exL,
 	})
 	if err != nil {
 		h.error(w, "search failed", err, http.StatusBadGateway)
@@ -413,10 +470,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	limit := h.cfg.PageSize
 	offset := (page - 1) * limit
 
+	exG, exL := h.exclusions(r)
 	resp, err := h.deps.Books.List(r.Context(), books.ListParams{
-		Query:  query,
-		Limit:  limit,
-		Offset: offset,
+		Query:         query,
+		Limit:         limit,
+		Offset:        offset,
+		ExcludeGenres: exG,
+		ExcludeLangs:  exL,
 	})
 	if err != nil {
 		h.error(w, "search failed", err, http.StatusBadGateway)
@@ -427,7 +487,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		Title:        "Поиск: " + query,
 		Updated:      time.Now().UTC().Format(time.RFC3339),
 		Author:       &Person{Name: "skriptes"},
-		Links:        pagingLinks(base, "/opds/search?q="+query, page, int(resp.Total), limit, MIMEFeedAcquisition),
+		Links:        pagingLinks(base, "/opds/search?q="+url.QueryEscape(query), page, int(resp.Total), limit, MIMEFeedAcquisition),
 		TotalResults: int(resp.Total),
 		ItemsPerPage: limit,
 		StartIndex:   offset,
@@ -492,6 +552,30 @@ func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 		h.error(w, "book deleted", nil, http.StatusGone)
 		return
 	}
+	// Скрытое пользователю не отдаём, как и не показываем (#389, B1).
+	if exG, exL := h.exclusions(r); len(exG) > 0 || len(exL) > 0 {
+		codes, lang, err := h.deps.Books.GenresAndLang(ctx, id)
+		if err != nil {
+			h.error(w, "query failed", err, http.StatusInternalServerError)
+			return
+		}
+		if hidden(codes, lang, exG, exL) {
+			h.error(w, "book not found", nil, http.StatusNotFound)
+			return
+		}
+	}
+	// Лимит скачиваний на пользователя: конвертация держит процессор, а OPDS
+	// открыт снаружи — без лимита библиотеку можно выкачать целиком.
+	if u, ok := auth.UserFromContext(r.Context()); ok && h.deps.Limiter != nil {
+		release, wait, ok := h.deps.Limiter.Acquire(u.ID)
+		if !ok {
+			h.deps.Logger.Warn("download throttled", "via", "opds", "user_id", u.ID, "retry_after", wait.Round(time.Second))
+			w.Header().Set("Retry-After", strconv.Itoa(int(wait.Seconds())+1))
+			h.error(w, "too many downloads", nil, http.StatusTooManyRequests)
+			return
+		}
+		defer release()
+	}
 
 	// Учёт приобретения (для блока «Оцените прочитанное»): OPDS-скачивание —
 	// такой же канал, как web-скачивание / Send-to-Kindle. Fire-and-forget;
@@ -512,6 +596,22 @@ func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", res.ContentType)
 	w.Header().Set("Content-Disposition", `attachment; filename="`+res.Filename+`"`)
+	// fb2 без конвертации: res.Path — весь zip-архив раздачи (тысячи книг),
+	// книгу из него распаковываем, как веб-скачивание. Раньше OPDS отдавал архив
+	// целиком под именем .fb2.
+	if format == converter.FormatFB2 {
+		rc, size, err := converter.ExtractFB2(res.Path, book.FileName+"."+book.Ext)
+		if err != nil {
+			h.error(w, "extract failed", err, http.StatusInternalServerError)
+			return
+		}
+		defer func() { _ = rc.Close() }()
+		if size > 0 {
+			w.Header().Set("Content-Length", strconv.FormatInt(size, 10))
+		}
+		_, _ = io.Copy(w, rc)
+		return
+	}
 	http.ServeFile(w, r, res.Path) //nolint:gosec // path computed by converter, не из URL
 }
 
