@@ -99,7 +99,7 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			}
 			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 			defer cancel()
-			user, err := d.Service.ValidateCredentials(ctx, email, password)
+			user, err := basicAuthUser(ctx, d, r, email, password)
 			if err != nil {
 				if errors.Is(err, auth.ErrInvalidPassword) {
 					slog.Warn("login failed", "via", "opds", "ip", ipKey, "email", emailKey)
@@ -117,6 +117,23 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 			next.ServeHTTP(w, r.WithContext(auth.ContextWithUser(r.Context(), user)))
 		})
 	}
+}
+
+// basicAuthUser — пользователь по Basic-паре: сначала пароль устройства (#389,
+// B2), затем основной пароль — только если он разрешён с этого адреса
+// (MainPasswordNets). Не подошло — auth.ErrInvalidPassword.
+func basicAuthUser(ctx context.Context, d AuthDeps, r *http.Request, email, password string) (auth.User, error) {
+	user, err := d.Service.ValidateDevicePassword(ctx, email, password)
+	if err == nil {
+		return user, nil
+	}
+	if !errors.Is(err, auth.ErrInvalidPassword) {
+		return auth.User{}, err
+	}
+	if !d.mainPasswordAllowed(r) {
+		return auth.User{}, auth.ErrInvalidPassword
+	}
+	return d.Service.ValidateCredentials(ctx, email, password)
 }
 
 // originCheck — простая CSRF-защита через сверку Origin / Referer на

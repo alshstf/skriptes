@@ -95,6 +95,9 @@ services:
     # внутренний сайт Caddy :9180 (см. Caddyfile.public). Пусто — выключено.
     environment:
       SKRIPTES_METRICS_ADDR: ${SKRIPTES_METRICS_ADDR-:9091}
+      # Откуда OPDS принимает основной пароль (снаружи — только пароли устройств,
+      # #389). Та же переменная, что у caddy; не задана — только 127.0.0.1.
+      SKRIPTES_LAN_CIDRS: ${SKRIPTES_LAN_CIDRS:-127.0.0.1/32}
     deploy:
       resources:
         limits:
@@ -126,7 +129,7 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-    # Доверенные сети для админ-API и OPDS (см. Caddyfile.public). Пусто/не задано →
+    # Доверенные сети для админ-API (см. Caddyfile.public). Пусто/не задано →
     # закрыто для всех; дом — напр. «192.168.0.0/24 10.50.0.1/32».
     environment:
       SKRIPTES_LAN_CIDRS: ${SKRIPTES_LAN_CIDRS:-127.0.0.1/32}
@@ -138,7 +141,7 @@ services:
     ports:
       - "${SKRIPTES_METRICS_BIND:-127.0.0.1}:9180:9180"
     # Публичный Caddyfile (TLS Let's Encrypt, вырезание поддельных IP-заголовков,
-    # админ-API и OPDS только из SKRIPTES_LAN_CIDRS) вместо базового: тот же путь
+    # админ-API только из SKRIPTES_LAN_CIDRS) вместо базового: тот же путь
     # в контейнере — compose заменяет монтирование базы. /data (сертификаты), /config — named volumes (writable).
     volumes:
       - ./Caddyfile.public:/etc/caddy/Caddyfile:ro
