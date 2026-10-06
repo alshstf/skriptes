@@ -185,11 +185,21 @@ func authorQueryEligible(p ListParams, offset, limit int) bool {
 		limit > 0 && offset%limit == 0
 }
 
-// titleOutranksAuthors — среди первых результатов всего запроса есть книга не
-// этих авторов с точно таким названием и известнее любого из них: запрос — это
-// книга («Кармен», «Дар»), а не автор.
+// titleOutrankShare — книга со словами запроса в названии перебивает автора, если
+// её известность больше этой доли известности автора (#415, решение владельца
+// 2026-10-06). По 8 230 однословным фамилиям прода: книга известнее автора — у 123
+// (почти все — обычные слова: «король» — «Король Лир», «тихий» — «Тихий Дон»,
+// «перси» — «Перси Джексон»); доля 0,8 добирает пограничные «снежная», «зимняя»,
+// «сон» (163 фамилии). Классики не задеты: «толстой» 0 / 2223, «кинг» 290 / 2411,
+// «пушкин» 220 / 1768.
+const titleOutrankShare = 0.8
+
+// titleOutranksAuthors — среди хитов (первые результаты и известные совпадения)
+// есть книга не этих авторов, в названии которой все слова запроса — целые
+// слова, и она известнее titleOutrankShare самого известного из авторов: запрос
+// — это книга («Кармен», «Король Лир»), а не автор.
 func titleOutranksAuthors(hits meilisearch.Hits, query string, authors []MatchedAuthor) bool {
-	q := strings.Join(queryWords(query), " ")
+	words := letterWords(query)
 	var maxRenown int64
 	ids := make([]int64, 0, len(authors))
 	for _, a := range authors {
@@ -201,13 +211,13 @@ func titleOutranksAuthors(hits meilisearch.Hits, query string, authors []Matched
 		if err := h.DecodeInto(&wh); err != nil {
 			continue
 		}
-		if strings.Join(queryWords(wh.Title), " ") != q {
+		if !titleHasWords(wh.Title, words) {
 			continue
 		}
 		if slices.ContainsFunc(wh.AuthorIDs, func(id int64) bool { return slices.Contains(ids, id) }) {
 			continue
 		}
-		if wh.Popularity > maxRenown {
+		if float64(wh.Popularity) > titleOutrankShare*float64(maxRenown) {
 			return true
 		}
 	}
@@ -254,12 +264,22 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 	if len(params.Facets) > 0 {
 		all.Facets = params.Facets
 	}
+	// Известные совпадения — параллельно: книга со словами запроса в названии
+	// может быть известнее автора, хотя в первые результаты не попала (#415).
+	popCh := make(chan meilisearch.Hits, 1)
+	go func() {
+		h, _ := s.popularHits(ctx, q, base, pinCandidates, false)
+		popCh <- h
+	}()
 	resAll, err := index.SearchWithContext(ctx, q, all)
+	popular := <-popCh
 	if err != nil {
 		return ListResponse{}, false, fmt.Errorf("meili works search: %w", err)
 	}
-	if titleOutranksAuthors(resAll.Hits, params.Query, authors) {
-		return ListResponse{}, false, nil
+	if titleOutranksAuthors(mergeHits(resAll.Hits, popular), params.Query, authors) {
+		// Обычный поиск, но плашка автора над выдачей остаётся (#415): запрос
+		// назвал и его — до карточки один клик.
+		return ListResponse{MatchedAuthors: authors[:min(len(authors), maxMatchedAuthors)]}, false, nil
 	}
 
 	byAuthor := authorIDsFilter(authors)

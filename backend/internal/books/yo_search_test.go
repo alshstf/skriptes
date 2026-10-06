@@ -170,6 +170,10 @@ func TestSearch_AuthorQuery(t *testing.T) {
 		{LibID: "850010", Title: "Толстой и Достоевский", Authors: []string{"Достоевский,Федор", "Толстой,Лев,Николаевич"}, Lang: "ru"},
 		{LibID: "850004", Title: "Кармен", Authors: []string{"Мериме,Проспер"}, Lang: "ru", Rating: 5},
 		{LibID: "850005", Title: "Песни", Authors: []string{"Кармен,Анна"}, Lang: "ru"},
+		// «король» (#415): автор Король известен меньше книги со словом в названии —
+		// «Король Лир» не равен запросу целиком, но перебивает автора.
+		{LibID: "850011", Title: "Король Лир", Authors: []string{"Шекспир,Уильям"}, Lang: "ru"},
+		{LibID: "850012", Title: "Марина", Authors: []string{"Король,Анастасия"}, Lang: "ru"},
 		// Малоизвестный тёзка: в первую часть не попадает (меньше трети известности Льва).
 		{LibID: "850006", Title: "Записки", Authors: []string{"Толстой,Никита"}, Lang: "ru"},
 		// «doyle»: Конан Дойль узнаётся по латинскому имени из fb2 переводов, хотя
@@ -181,7 +185,7 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	_, err = imp.Run(ctx, path)
 	require.NoError(t, err)
 	// «Кармен» Мериме — известная книга; автор Кармен известен меньше её.
-	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 20000 WHERE title = 'Кармен'`)
+	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 20000 WHERE title IN ('Кармен', 'Король Лир')`)
 	require.NoError(t, err)
 	// Латинский автор оригинала приходит из fb2 перевода — до сборки индекса.
 	_, err = pool.Exec(ctx, `UPDATE books SET src_author_normalized = 'doyle arthur conan' WHERE lib_id = '850007'`)
@@ -197,7 +201,8 @@ func TestSearch_AuthorQuery(t *testing.T) {
 		WHEN last_name = 'Толстой' AND first_name = 'Лев' THEN 2000
 		WHEN last_name = 'Толстой' THEN 300
 		WHEN last_name = 'Дойль' THEN 1300
-		WHEN last_name = 'Кармен' THEN 200 ELSE 0 END`)
+		WHEN last_name = 'Кармен' THEN 200
+		WHEN last_name = 'Король' THEN 280 ELSE 0 END`)
 	require.NoError(t, err)
 
 	svc := books.New(pool, mgr, nil)
@@ -262,14 +267,32 @@ func TestSearch_AuthorQuery(t *testing.T) {
 	require.Equal(t, "Дойль Артур Конан", res.MatchedAuthors[0].FullName)
 	require.Equal(t, "Этюд в багровых тонах", res.Items[0].Title)
 
-	// «кармен»: книга Мериме известнее автора Кармен — обычный поиск, книга первой.
+	// «кармен»: книга Мериме известнее автора Кармен — обычный поиск, книга первой;
+	// плашка автора над выдачей остаётся (#415): запрос назвал и его.
 	res, err = svc.ListWorks(ctx, books.ListParams{Query: "кармен", Limit: 10})
 	require.NoError(t, err)
-	require.Empty(t, res.MatchedAuthors)
+	require.Len(t, res.MatchedAuthors, 1)
+	require.Equal(t, "Кармен Анна", res.MatchedAuthors[0].FullName)
 	require.NotEmpty(t, res.Items)
 	require.Equal(t, "Кармен", res.Items[0].Title)
 	sugg, err = svc.SuggestWorks(ctx, "кармен", 5, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.NotEmpty(t, sugg)
 	require.Equal(t, "Кармен", sugg[0].Title, "подсказка: книга известнее автора — обычный поиск")
+
+	// «король» (#415): название не равно запросу целиком, но «Король Лир» со словом
+	// «король» известнее автора Король — обычный поиск, плашка автора остаётся.
+	res, err = svc.ListWorks(ctx, books.ListParams{Query: "король", Limit: 10})
+	require.NoError(t, err)
+	require.NotEmpty(t, res.Items)
+	require.Equal(t, "Король Лир", res.Items[0].Title)
+	require.Len(t, res.MatchedAuthors, 1)
+	require.Equal(t, "Король Анастасия", res.MatchedAuthors[0].FullName)
+	next, err := svc.ListWorks(ctx, books.ListParams{Query: "король", Limit: 10, Offset: 10})
+	require.NoError(t, err)
+	require.Empty(t, next.MatchedAuthors, "плашка — только на первой странице")
+	sugg, err = svc.SuggestWorks(ctx, "король", 5, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.NotEmpty(t, sugg)
+	require.Equal(t, "Король Лир", sugg[0].Title)
 }

@@ -291,6 +291,9 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	}
 
 	// Запрос — имя известного автора: сначала его работы, потом остальное (#290).
+	// Если запрос назвал автора, но книга со словами запроса известнее (#415), —
+	// обычный поиск с плашкой автора на первой странице.
+	var plaque []MatchedAuthor
 	if authorQueryEligible(params, offset, limit) {
 		res, ok, err := s.listWorksByAuthor(ctx, params, offset, limit, rerank, visibleLangs)
 		if err != nil {
@@ -299,6 +302,9 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		if ok {
 			return res, nil
 		}
+		if offset == 0 {
+			plaque = res.MatchedAuthors
+		}
 		// Известные совпадения — сверху первой страницы (#401): «мастер» —
 		// «Мастер и Маргарита», а не десятки книг «Мастер».
 		res, ok, err = s.listWorksWithPinned(ctx, params, offset, limit, rerank, visibleLangs)
@@ -306,6 +312,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 			return ListResponse{}, err
 		}
 		if ok {
+			res.MatchedAuthors = plaque
 			return res, nil
 		}
 	}
@@ -378,13 +385,14 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 		total = res.EstimatedTotalHits
 	}
 	return ListResponse{
-		Items:       items,
-		Total:       total,
-		Limit:       limit,
-		Offset:      offset,
-		Query:       params.Query,
-		ProcessTime: res.ProcessingTimeMs,
-		Facets:      decodeFacets(res.FacetDistribution),
+		Items:          items,
+		Total:          total,
+		Limit:          limit,
+		Offset:         offset,
+		Query:          params.Query,
+		ProcessTime:    res.ProcessingTimeMs,
+		Facets:         decodeFacets(res.FacetDistribution),
+		MatchedAuthors: plaque,
 	}, nil
 }
 
