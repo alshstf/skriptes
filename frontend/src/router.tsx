@@ -16,6 +16,7 @@ import { AuthorsPage } from '@/pages/AuthorsPage';
 import { AuthorPage } from '@/pages/AuthorPage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { GenresPage } from '@/pages/GenresPage';
+import { AwardPage, AwardsPage } from '@/pages/AwardsPage';
 import { ShelvesPage } from '@/pages/ShelvesPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ProfileContentPage } from '@/pages/ProfileContentPage';
@@ -249,6 +250,19 @@ const genresRoute = createRoute({
   component: GenresPage,
 });
 
+// /awards — раздел «Премии» (#389): премии белого списка; /awards/$key — лауреаты по годам.
+const awardsRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/awards',
+  component: AwardsPage,
+});
+
+const awardRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/awards/$key',
+  component: AwardPage,
+});
+
 // /shelves — личные полки (коллекции). Личная библиотека, не каталог-браузинг,
 // поэтому не в топ-навигации, а доступом из меню пользователя.
 const shelvesRoute = createRoute({
@@ -350,6 +364,8 @@ const routeTree = rootRoute.addChildren([
     authorRoute,
     seriesRoute,
     genresRoute,
+    awardsRoute,
+    awardRoute,
     shelvesRoute,
     profileRoute,
     profileContentRoute,

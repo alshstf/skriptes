@@ -112,6 +112,26 @@ func (s *Service) PresetWorks(ctx context.Context, key string, p PresetParams) (
 	return PresetResult{Items: items, Notes: notes}, nil
 }
 
+// VisibleWorks — карточки работ (как в подборках) в порядке ids, без скрытых
+// от пользователя; повторы id схлопываются. Премии (#389, A2).
+func (s *Service) VisibleWorks(ctx context.Context, ids []int64, p PresetParams) ([]ListItem, error) {
+	seen := make(map[int64]bool, len(ids))
+	entries := make([]presetEntry, 0, len(ids))
+	for _, id := range ids {
+		if !seen[id] {
+			seen[id] = true
+			entries = append(entries, presetEntry{workID: id})
+		}
+	}
+	items, err := s.visibleWorks(ctx, entries, p, false)
+	if err != nil {
+		return nil, err
+	}
+	HydrateListMeta(ctx, s.pool, items)
+	s.hydrateWorkRepresentative(ctx, items, p.ExcludeGenres, p.ExcludeLangs)
+	return items, nil
+}
+
 // presetExclusions — собственное чтение («Прочитано в году») показываем как
 // есть, как книги на своей полке; остальные подборки предлагают книги и
 // уважают скрытое.

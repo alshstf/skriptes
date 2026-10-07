@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0054_annotations`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0055_award_wins`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -122,6 +122,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     авторов — ручное слияние с памятью (`author_merges`).
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
+24. **Премии — только белый список владельца** (`awards/catalog.go`: премии, номинации, «по 2021»). Новую премию
+    или номинацию — только после его проверки (досье — `~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
@@ -143,6 +145,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
 | Авторы (список, фильтры, известность, рейтинг) | `pages/AuthorsPage.tsx`, `lib/authors.ts`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
+| Премии (лауреаты, сопоставление с каталогом, раздел, плашки) | `internal/awards/` (`catalog.go`, `sync.go`, `match.go`, `service.go`), `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, готовые подборки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/`, `books/presets.go` |
 | Видимость контента (скрытые жанры/языки) | `settings/content.go`, `api/content.go`, `components/ContentVisibility.tsx` |
 | Языки, язык оригинала | `catalog/languages.go`, `metadata/src_lang_backfill.go`, `internal/langcode` |
