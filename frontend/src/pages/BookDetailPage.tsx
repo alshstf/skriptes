@@ -8,6 +8,7 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
+import { WorkAwards } from '@/components/AwardBadges';
 import { ContentsSection, InCompilationsSection } from '@/components/CompilationContents';
 import { MyNotes } from '@/components/MyNotes';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
@@ -172,6 +173,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                 genres={book.genres}
                 overridden={workOverridden.includes('genres')}
               />
+              <WorkAwards workId={book.work_id ?? undefined} />
 
               {/* Полка + «Детали файла» — в шапке у обложки (над панелью оценок):
                   заполняют место рядом с обложкой, это метаданные/организация книги.

@@ -1,0 +1,218 @@
+package awards
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"sort"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+// ErrUnknownAward — премии нет в белом списке.
+var ErrUnknownAward = errors.New("unknown award")
+
+// Service — чтение лауреатов для API.
+type Service struct {
+	pool *pgxpool.Pool
+}
+
+// NewService — сервис премий.
+func NewService(pool *pgxpool.Pool) *Service { return &Service{pool: pool} }
+
+// Summary — премия в списке раздела: сколько лауреатов и сколько из них в каталоге.
+type Summary struct {
+	Award
+	Wins      int `json:"wins"`
+	InCatalog int `json:"in_catalog"`
+	FirstYear int `json:"first_year,omitempty"`
+	LastYear  int `json:"last_year,omitempty"`
+}
+
+// List — премии белого списка в порядке раздела; ещё не загруженные — с нулями.
+func (s *Service) List(ctx context.Context) ([]Summary, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT award, count(*), count(*) FILTER (WHERE work_id IS NOT NULL OR author_id IS NOT NULL), min(year), max(year)
+		FROM award_wins GROUP BY award`)
+	if err != nil {
+		return nil, fmt.Errorf("list awards: %w", err)
+	}
+	defer rows.Close()
+	type agg struct{ wins, in, first, last int }
+	by := map[string]agg{}
+	for rows.Next() {
+		var key string
+		var a agg
+		if err := rows.Scan(&key, &a.wins, &a.in, &a.first, &a.last); err != nil {
+			return nil, err
+		}
+		by[key] = a
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	out := make([]Summary, 0, len(Catalog))
+	for _, a := range Catalog {
+		g := by[a.Key]
+		out = append(out, Summary{Award: a, Wins: g.wins, InCatalog: g.in, FirstYear: g.first, LastYear: g.last})
+	}
+	return out, nil
+}
+
+// Win — лауреат премии.
+type Win struct {
+	ID         int64  `json:"id"`
+	Year       int    `json:"year"`
+	Nomination string `json:"nomination,omitempty"`
+	Kind       string `json:"kind"` // work | author
+	Title      string `json:"title,omitempty"`
+	OrigTitle  string `json:"orig_title,omitempty"`
+	Author     string `json:"author"`
+	WorkID     *int64 `json:"work_id,omitempty"`
+	AuthorID   *int64 `json:"author_id,omitempty"`
+	SourceURL  string `json:"source_url,omitempty"`
+}
+
+// Wins — все лауреаты премии: свежие годы сверху, внутри года — порядок номинаций у источника.
+func (s *Service) Wins(ctx context.Context, key string) (Award, []Win, error) {
+	a, ok := ByKey(key)
+	if !ok {
+		return Award{}, nil, ErrUnknownAward
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, year, nomination, kind, title, orig_title, author, work_id, author_id, source_link
+		FROM award_wins WHERE award = $1
+		ORDER BY year DESC, nomination_order, id`, key)
+	if err != nil {
+		return Award{}, nil, fmt.Errorf("award wins: %w", err)
+	}
+	defer rows.Close()
+	out := []Win{}
+	for rows.Next() {
+		var w Win
+		var link string
+		if err := rows.Scan(&w.ID, &w.Year, &w.Nomination, &w.Kind, &w.Title, &w.OrigTitle, &w.Author, &w.WorkID,
+			&w.AuthorID, &link); err != nil {
+			return Award{}, nil, err
+		}
+		w.SourceURL = sourceURL(link)
+		out = append(out, w)
+	}
+	return a, out, rows.Err()
+}
+
+// sourceURL — страница у источника (Фантлаб: work123, autor45).
+func sourceURL(link string) string {
+	if link == "" {
+		return ""
+	}
+	return "https://fantlab.ru/" + link
+}
+
+// Badge — премия на карточке книги или автора.
+type Badge struct {
+	Key        string `json:"key"`
+	Name       string `json:"name"`
+	Year       int    `json:"year"`
+	Nomination string `json:"nomination,omitempty"`
+}
+
+// WorkAwards — премии работы (в порядке белого списка, затем по годам).
+func (s *Service) WorkAwards(ctx context.Context, workID int64) ([]Badge, error) {
+	return s.badges(ctx, `work_id = $1`, workID)
+}
+
+// AuthorAwards — премии, врученные автору (не произведению).
+func (s *Service) AuthorAwards(ctx context.Context, authorID int64) ([]Badge, error) {
+	return s.badges(ctx, `author_id = $1 AND kind = 'author'`, authorID)
+}
+
+func (s *Service) badges(ctx context.Context, where string, id int64) ([]Badge, error) {
+	rows, err := s.pool.Query(ctx, `SELECT award, year, nomination FROM award_wins WHERE `+where+` ORDER BY year, id`, id)
+	if err != nil {
+		return nil, fmt.Errorf("award badges: %w", err)
+	}
+	defer rows.Close()
+	order := make(map[string]int, len(Catalog))
+	for i, a := range Catalog {
+		order[a.Key] = i
+	}
+	out := []Badge{}
+	for rows.Next() {
+		var b Badge
+		if err := rows.Scan(&b.Key, &b.Year, &b.Nomination); err != nil {
+			return nil, err
+		}
+		a, ok := ByKey(b.Key)
+		if !ok {
+			continue // премию убрали из белого списка — до ближайшей синхронизации не показываем
+		}
+		b.Name = a.Name
+		out = append(out, b)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	sort.SliceStable(out, func(i, j int) bool { return order[out[i].Key] < order[out[j].Key] })
+	return out, nil
+}
+
+// ── Фоновая синхронизация ────────────────────────────────────────
+
+// syncedKey — когда лауреаты последний раз загружались с источника (app_settings.updated_at).
+const syncedKey = "awards_synced_at"
+
+// SyncInterval — как часто перезагружать лауреатов (премии вручаются раз в год).
+const SyncInterval = 7 * 24 * time.Hour
+
+// Run — фоновый цикл: через startDelay и дальше каждые tick — загрузка с
+// источника, если с прошлой прошло SyncInterval, иначе только пересопоставление
+// с каталогом (каталог меняется с импортом).
+func (s *Syncer) Run(ctx context.Context, startDelay, tick time.Duration) {
+	select {
+	case <-ctx.Done():
+		return
+	case <-time.After(startDelay):
+	}
+	s.step(ctx)
+	t := time.NewTicker(tick)
+	defer t.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			s.step(ctx)
+		}
+	}
+}
+
+func (s *Syncer) step(ctx context.Context) {
+	start := time.Now()
+	var last time.Time
+	err := s.pool.QueryRow(ctx, `SELECT COALESCE(max(updated_at), 'epoch') FROM app_settings WHERE key = $1`, syncedKey).Scan(&last)
+	if err != nil {
+		s.logger.Warn("awards: read sync time failed", "err", err)
+		return
+	}
+	if time.Since(last) < SyncInterval {
+		if err := s.Match(ctx); err != nil && ctx.Err() == nil {
+			s.logger.Warn("awards: match failed", "err", err)
+		}
+		return
+	}
+	total, matched, err := s.SyncAll(ctx)
+	if err != nil {
+		if ctx.Err() == nil {
+			s.logger.Warn("awards: sync failed", "err", err)
+		}
+		return
+	}
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		ON CONFLICT (key) DO UPDATE SET updated_at = now()`, syncedKey); err != nil {
+		s.logger.Warn("awards: store sync time failed", "err", err)
+	}
+	s.logger.Info("awards synced", "wins", total, "in_catalog", matched, "took", time.Since(start).Round(time.Second))
+}

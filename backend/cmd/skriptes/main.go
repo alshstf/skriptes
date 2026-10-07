@@ -21,6 +21,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/adaptations"
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
+	"github.com/skriptes/skriptes/backend/internal/awards"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/collections"
@@ -224,6 +225,11 @@ func run() error {
 	})
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
+	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление
+	// с каталогом — раз в сутки (каталог меняется с импортом).
+	metadata.Go(func(c context.Context) {
+		awards.NewSyncer(pool, logger).Run(c, 3*time.Minute, 24*time.Hour)
+	})
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
 	if err != nil {
@@ -580,6 +586,7 @@ func run() error {
 			Overrides: overrideCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
+		Awards:  api.AwardsDeps{Service: awards.NewService(pool)},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy

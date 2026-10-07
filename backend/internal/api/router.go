@@ -32,6 +32,7 @@ type Deps struct {
 	Adaptations AdaptationsDeps
 	Settings    SettingsDeps
 	Content     ContentDeps
+	Awards      AwardsDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -141,6 +142,15 @@ func NewRouter(d Deps) http.Handler {
 					// Готовые подборки на /shelves (#389): вычисляются на лету.
 					r.Get("/me/presets", handleListPresets(d.Books, d.Content))
 					r.Get("/me/presets/{key}", handlePresetBooks(d.Books, d.History, d.Content))
+				}
+				if d.Awards.Service != nil {
+					// Премии (#389): раздел «Премии» и плашки на карточках книги и автора.
+					r.Get("/awards", handleListAwards(d.Awards))
+					if d.Books.Service != nil {
+						r.Get("/awards/{key}", handleAwardWins(d.Awards, d.Books, d.History, d.Content))
+					}
+					r.Get("/works/{id}/awards", handleWorkAwards(d.Awards))
+					r.Get("/authors/{id}/awards", handleAuthorAwards(d.Awards))
 				}
 				if d.Adaptations.Service != nil {
 					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))

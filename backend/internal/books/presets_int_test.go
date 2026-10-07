@@ -145,4 +145,13 @@ func TestPresets(t *testing.T) {
 
 	_, err = svc.PresetWorks(ctx, "nope", p)
 	require.ErrorIs(t, err, books.ErrUnknownPreset)
+
+	// Карточки лауреатов премий: порядок запроса, повторы схлопнуты, скрытое — нет.
+	ids := []int64{work("The Gods Themselves"), work("Дюна"), work("The Gods Themselves")}
+	items, err := svc.VisibleWorks(ctx, ids, p)
+	require.NoError(t, err)
+	require.Equal(t, []string{"The Gods Themselves", "Дюна"}, titlesOf(items))
+	items, err = svc.VisibleWorks(ctx, ids, hidden)
+	require.NoError(t, err)
+	require.Equal(t, []string{"Дюна"}, titlesOf(items))
 }

@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { BarChart3, BookHeart, BookOpen, ChevronDown, ChevronRight, Film, Globe, User as UserIcon } from 'lucide-react';
+import { AuthorAwards } from '@/components/AwardBadges';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -129,6 +130,7 @@ export function AuthorPage() {
               {langNames.length > 0 ? (
                 <p className="text-xs text-muted-foreground">{langNames.join(', ')}</p>
               ) : null}
+              <AuthorAwards authorId={a.id} />
               <ServiceAuthorToggle author={a} />
             </div>
           </div>
