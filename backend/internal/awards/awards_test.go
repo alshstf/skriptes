@@ -438,3 +438,33 @@ func TestWikidataWins(t *testing.T) {
 	require.Equal(t, []win{{year: 1999, nomination: "Книга", kind: "work", title: "Фильм", link: "Q51", ref: "f/Q1/1999/Q51"}}, ws,
 		"кинопремия: фильм «за работу», люди без фильма не нужны")
 }
+
+func TestStepSyncsOnCatalogChange(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	var calls atomic.Int32
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls.Add(1)
+		if r.URL.Path == "/sparql" {
+			_, _ = w.Write([]byte(sparqlRows()))
+			return
+		}
+		_, _ = w.Write([]byte(`{"contests":[]}`))
+	}))
+	defer srv.Close()
+	s := NewSyncer(pool, nil).WithEndpoint(srv.URL, srv.Client())
+
+	s.step(ctx)
+	require.Positive(t, calls.Load(), "первый запуск — загрузка")
+	calls.Store(0)
+	s.step(ctx)
+	require.Zero(t, calls.Load(), "неделя не прошла, список тот же — только сопоставление")
+	_, err := pool.Exec(ctx, `UPDATE app_settings SET value = '{"v":"old"}' WHERE key = $1`, syncedKey)
+	require.NoError(t, err)
+	s.step(ctx)
+	require.Positive(t, calls.Load(), "белый список изменился — загрузка сразу")
+}

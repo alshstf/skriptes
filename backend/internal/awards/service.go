@@ -2,6 +2,8 @@ package awards
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"sort"
@@ -188,8 +190,9 @@ const syncedKey = "awards_synced_at"
 const SyncInterval = 7 * 24 * time.Hour
 
 // Run — фоновый цикл: через startDelay и дальше каждые tick — загрузка с
-// источника, если с прошлой прошло SyncInterval, иначе только пересопоставление
-// с каталогом (каталог меняется с импортом).
+// источника, если с прошлой прошло SyncInterval или изменился белый список
+// (catalogVersion), иначе только пересопоставление с каталогом (каталог меняется
+// с импортом).
 func (s *Syncer) Run(ctx context.Context, startDelay, tick time.Duration) {
 	select {
 	case <-ctx.Done():
@@ -209,15 +212,26 @@ func (s *Syncer) Run(ctx context.Context, startDelay, tick time.Duration) {
 	}
 }
 
+// catalogVersion — отпечаток белого списка и ручного списка: изменились — загрузить
+// лауреатов сразу, не дожидаясь недели (новые премии после обновления).
+func catalogVersion() string {
+	h := sha256.New()
+	_, _ = fmt.Fprintf(h, "%+v", Catalog)
+	_, _ = h.Write(manualJSON)
+	return hex.EncodeToString(h.Sum(nil))[:16]
+}
+
 func (s *Syncer) step(ctx context.Context) {
 	start := time.Now()
 	var last time.Time
-	err := s.pool.QueryRow(ctx, `SELECT COALESCE(max(updated_at), 'epoch') FROM app_settings WHERE key = $1`, syncedKey).Scan(&last)
+	var version string
+	err := s.pool.QueryRow(ctx, `SELECT COALESCE(max(updated_at), 'epoch'), COALESCE(max(value->>'v'), '')
+		FROM app_settings WHERE key = $1`, syncedKey).Scan(&last, &version)
 	if err != nil {
 		s.logger.Warn("awards: read sync time failed", "err", err)
 		return
 	}
-	if time.Since(last) < SyncInterval {
+	if time.Since(last) < SyncInterval && version == catalogVersion() {
 		if err := s.Match(ctx); err != nil && ctx.Err() == nil {
 			s.logger.Warn("awards: match failed", "err", err)
 		}
@@ -231,8 +245,8 @@ func (s *Syncer) step(ctx context.Context) {
 		return
 	}
 	if _, err := s.pool.Exec(ctx, `
-		INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
-		ON CONFLICT (key) DO UPDATE SET updated_at = now()`, syncedKey); err != nil {
+		INSERT INTO app_settings (key, value, updated_at) VALUES ($1, jsonb_build_object('v', $2::text), now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`, syncedKey, catalogVersion()); err != nil {
 		s.logger.Warn("awards: store sync time failed", "err", err)
 	}
 	s.logger.Info("awards synced", "wins", total, "in_catalog", matched, "took", time.Since(start).Round(time.Second))
