@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { Check, Lock, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,7 +10,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useSplitEditions } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { useLanguageMap } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import type { EditionRef } from '@/lib/books';
@@ -33,13 +33,13 @@ export function SplitEditionsDialog({
   editions: EditionRef[];
   workTitle: string;
 }) {
-  const { data: me } = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const langMap = useLanguageMap();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const split = useSplitEditions();
 
-  if (me?.role !== 'admin' || editions.length < 2) return null;
+  if (!canEdit || editions.length < 2) return null;
 
   const anchor = editions.find((e) => e.is_anchor) ?? null;
   const nonAnchors = editions.filter((e) => !e.is_anchor);

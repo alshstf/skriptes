@@ -33,6 +33,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 import { SeriesPage } from './SeriesPage';
+import { setEditMode } from '@/lib/editMode';
 
 function wrap(ui: React.ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -69,7 +70,10 @@ function stubFetch(payload: object) {
 
 describe('SeriesPage', () => {
   beforeEach(() => vi.unstubAllGlobals());
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    setEditMode(false);
+  });
 
   it('обычная серия: админ видит подсказку объединить совпавший том', async () => {
     stubFetch(series);
@@ -79,6 +83,7 @@ describe('SeriesPage', () => {
 
   it('межавторская серия: подсказки нет — один номер у разных романов', async () => {
     stubFetch({ ...series, kind: 'multi' });
+    setEditMode(true); // ручное объединение — в режиме правки (#444)
     render(wrap(<SeriesPage />));
     expect(await screen.findByText('Межавторская или издательская серия')).toBeInTheDocument();
     // Ручное объединение админу по-прежнему доступно — значит, useMe уже

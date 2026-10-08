@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { useLongPress } from '@/lib/useLongPress';
 import { Pencil, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useMe } from '@/lib/auth';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLanguageOptions } from '@/lib/content';
 import { cn } from '@/lib/utils';
@@ -42,8 +42,7 @@ type Props = {
 
 export function InlineEditableField(props: Props) {
   const { value, label, mono = false, layout = 'inline', children } = props;
-  const me = useMe();
-  const isAdmin = me.data?.role === 'admin';
+  const isAdmin = useCanEdit(); // админ в режиме правки (#444)
   const display = value === null || value === undefined || value === '' ? null : String(value);
 
   if (!isAdmin) {

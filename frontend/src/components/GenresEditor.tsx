@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { Check, Pencil, RotateCcw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,6 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { useMe } from '@/lib/auth';
 import { useGenres, type GenreItem } from '@/lib/genres';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLongPress } from '@/lib/useLongPress';
@@ -33,8 +33,8 @@ export function GenresEditor({
   genres: GenreRef[];
   overridden?: boolean;
 }) {
-  const me = useMe();
-  if (me.data?.role !== 'admin') {
+  const canEdit = useCanEdit(); // режим правки (#444)
+  if (!canEdit) {
     if (genres.length === 0) return null;
     return (
       <div className="flex flex-wrap gap-1">

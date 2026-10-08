@@ -113,6 +113,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     новый fixed/sticky у края экрана — добавить инсет. Хэдер отделён тенью.
 19. **Ручные правки метаданных материализуются в колонки** (`metadata_overrides` + `OverrideController`): поля,
     которые перетирает импорт, ре-применяет `ReapplyAfterImport`; recompute-пути гейтятся по наличию правки.
+    Контролы правки на карточках — через `useCanEdit()` (админ + режим «Править», `lib/editMode.ts`, #444), не по роли.
 20. **Транзиент ≠ «не найдено»:** 404 → `ErrNotFound`, 429/400/403/5xx → `ErrUpstream` (`statusErr`). Все HTTP-клиенты
     обогащения — через `SourceHTTPClient` (прерыватель по хосту, `ErrSourcePaused` пропускается молча).
 21. **Воркеры с lookups-таблицей** выбирают только кандидатов, которых пора спросить, — в SQL (`dueCond`/`dueArgs`),

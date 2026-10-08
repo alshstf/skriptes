@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { CardToolbar } from '@/components/EditModeToggle';
+import { useCanEdit } from '@/lib/editMode';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
@@ -15,7 +17,6 @@ import { YearHistogram } from '@/components/YearHistogram';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { useSetAuthorService } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { AuthorDuplicates } from '@/components/AuthorDuplicates';
 import { Switch } from '@/components/ui/switch';
 import { useLanguageMap } from '@/lib/content';
@@ -57,7 +58,7 @@ export function AuthorPage() {
 
   return (
     <article className="space-y-6">
-      <BackButton />
+      <CardToolbar />
 
       {/* Шапка с двухуровневой структурой как у BookDetailPage:
             1. flex-row с фото слева + meta (имя/счётчик/жанры/кнопка) справа.
@@ -158,9 +159,9 @@ export function AuthorPage() {
  * видит ничего.
  */
 function ServiceAuthorToggle({ author }: { author: Author }) {
-  const { data: me } = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const setService = useSetAuthorService();
-  if (me?.role !== 'admin') return null;
+  if (!canEdit) return null;
   return (
     <label className="flex w-fit items-center gap-2 pt-1 text-xs text-muted-foreground">
       <Switch

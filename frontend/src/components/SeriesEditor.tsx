@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { Link } from '@tanstack/react-router';
 import { Pencil, RotateCcw, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { useMe } from '@/lib/auth';
 import { useAuthorSeries } from '@/lib/catalog';
 import { useSuggest } from '@/lib/suggest';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
@@ -32,7 +32,7 @@ export function SeriesEditor({
   serNo: number | null;
   overridden?: boolean;
 }) {
-  const me = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const label = (
     <>
       <span className="text-muted-foreground">Серия:</span>{' '}
@@ -45,7 +45,7 @@ export function SeriesEditor({
       )}
     </>
   );
-  if (me.data?.role !== 'admin') return series ? <span>{label}</span> : null;
+  if (!canEdit) return series ? <span>{label}</span> : null;
   return (
     <AdminSeries
       workId={workId}

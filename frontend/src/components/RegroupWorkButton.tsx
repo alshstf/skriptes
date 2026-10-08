@@ -1,8 +1,8 @@
 import { RotateCcw } from 'lucide-react';
+import { useCanEdit } from '@/lib/editMode';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useRegroupWork } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 
 /**
  * RegroupWorkButton — точечный пересбор работы (admin, рядом с «Разделить» в
@@ -12,9 +12,9 @@ import { useMe } from '@/lib/auth';
  * dry-run-прогнозом («пересоберётся в N книг»). Сам скрыт у не-админа.
  */
 export function RegroupWorkButton({ workId }: { workId?: number | null }) {
-  const { data: me } = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const regroup = useRegroupWork();
-  if (me?.role !== 'admin' || !workId) return null;
+  if (!canEdit || !workId) return null;
 
   const onClick = async () => {
     try {
