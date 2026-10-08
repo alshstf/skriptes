@@ -17,16 +17,18 @@ import (
 
 // Лауреаты с Фантлаба: GET /award/{id}?include_contests=1 — все конкурсы премии с
 // лауреатами по номинациям (contest_works, cw_winner). Один запрос на премию.
+// Другие источники — wikidata.go и manual.go.
 
 const fantlabAPI = "https://api.fantlab.ru"
 
 // Syncer загружает лауреатов премий белого списка и сопоставляет их с каталогом.
 type Syncer struct {
-	pool    *pgxpool.Pool
-	client  *http.Client
-	baseURL string
-	logger  *slog.Logger
-	pause   time.Duration
+	pool      *pgxpool.Pool
+	client    *http.Client
+	baseURL   string // API Фантлаба
+	sparqlURL string // Wikidata Query Service
+	logger    *slog.Logger
+	pause     time.Duration
 }
 
 // NewSyncer — загрузчик: HTTP-клиент с прерывателем по хосту (грабля №20).
@@ -35,12 +37,13 @@ func NewSyncer(pool *pgxpool.Pool, logger *slog.Logger) *Syncer {
 		logger = slog.Default()
 	}
 	return &Syncer{pool: pool, client: metadata.SourceHTTPClient(60 * time.Second), baseURL: fantlabAPI,
-		logger: logger, pause: time.Second}
+		sparqlURL: sparqlEndpoint, logger: logger, pause: time.Second}
 }
 
-// WithEndpoint — другой адрес API (тесты).
+// WithEndpoint — другой адрес API Фантлаба и SPARQL (тесты): base и base+"/sparql".
 func (s *Syncer) WithEndpoint(base string, client *http.Client) *Syncer {
 	s.baseURL = strings.TrimRight(base, "/")
+	s.sparqlURL = s.baseURL + "/sparql"
 	if client != nil {
 		s.client = client
 	}
@@ -78,10 +81,22 @@ type win struct {
 	origTitle  string
 	author     string
 	ref        string
-	link       string // путь страницы у источника: work123 / autor45
+	link       string // страница у источника: work123 / autor45 (Фантлаб), QID (Wikidata), адрес (manual)
 }
 
+// fetch — лауреаты премии из её источника.
 func (s *Syncer) fetch(ctx context.Context, a Award) ([]win, error) {
+	switch a.source() {
+	case sourceManual:
+		return manualWins(a)
+	case sourceWikidata:
+		return s.fetchWikidata(ctx, a)
+	default:
+		return s.fetchFantlab(ctx, a)
+	}
+}
+
+func (s *Syncer) fetchFantlab(ctx context.Context, a Award) ([]win, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet,
 		fmt.Sprintf("%s/award/%d?include_contests=1&sort=contest", s.baseURL, a.FantlabID), nil)
 	if err != nil {
@@ -164,7 +179,7 @@ func firstNonEmpty(xs ...string) string {
 func (s *Syncer) SyncAll(ctx context.Context) (total, matched int, err error) {
 	failed := 0
 	for i, a := range Catalog {
-		if i > 0 && s.pause > 0 {
+		if i > 0 && s.pause > 0 && a.source() != sourceManual {
 			select {
 			case <-ctx.Done():
 				return 0, 0, ctx.Err()
@@ -210,7 +225,7 @@ func (s *Syncer) store(ctx context.Context, a Award, wins []win) error {
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO award_wins (award, year, nomination, nomination_order, kind, title, orig_title, author,
 			                        source, source_ref, source_link)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'fantlab', $9, $10)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $11, $9, $10)
 			ON CONFLICT (source, source_ref) DO UPDATE SET
 				award = EXCLUDED.award, year = EXCLUDED.year, nomination = EXCLUDED.nomination,
 				nomination_order = EXCLUDED.nomination_order, kind = EXCLUDED.kind, title = EXCLUDED.title,
@@ -219,12 +234,12 @@ func (s *Syncer) store(ctx context.Context, a Award, wins []win) error {
 			       award_wins.title, award_wins.orig_title, award_wins.author, award_wins.source_link)
 			      IS DISTINCT FROM (EXCLUDED.award, EXCLUDED.year, EXCLUDED.nomination, EXCLUDED.nomination_order, EXCLUDED.kind,
 			       EXCLUDED.title, EXCLUDED.orig_title, EXCLUDED.author, EXCLUDED.source_link)`,
-			a.Key, w.year, w.nomination, w.nomOrder, w.kind, w.title, w.origTitle, w.author, w.ref, w.link); err != nil {
+			a.Key, w.year, w.nomination, w.nomOrder, w.kind, w.title, w.origTitle, w.author, w.ref, w.link, a.source()); err != nil {
 			return fmt.Errorf("store award win: %w", err)
 		}
 	}
-	if _, err := tx.Exec(ctx, `DELETE FROM award_wins WHERE source = 'fantlab' AND award = $1 AND NOT (source_ref = ANY($2))`,
-		a.Key, refs); err != nil {
+	if _, err := tx.Exec(ctx, `DELETE FROM award_wins WHERE award = $1 AND NOT (source = $3 AND source_ref = ANY($2))`,
+		a.Key, refs, a.source()); err != nil {
 		return fmt.Errorf("prune award wins: %w", err)
 	}
 	return tx.Commit(ctx)

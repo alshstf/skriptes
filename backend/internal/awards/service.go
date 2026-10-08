@@ -31,10 +31,13 @@ type Summary struct {
 }
 
 // List — премии белого списка в порядке раздела; ещё не загруженные — с нулями.
+// У кинопремий в счёт идут только экранизации книг каталога — других не показываем.
 func (s *Service) List(ctx context.Context) ([]Summary, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT award, count(*), count(*) FILTER (WHERE work_id IS NOT NULL OR author_id IS NOT NULL), min(year), max(year)
-		FROM award_wins GROUP BY award`)
+		SELECT award, count(*), count(*) FILTER (WHERE work_id IS NOT NULL OR author_id IS NOT NULL),
+		       COALESCE(min(year) FILTER (WHERE award <> ALL($1) OR work_id IS NOT NULL), 0),
+		       COALESCE(max(year) FILTER (WHERE award <> ALL($1) OR work_id IS NOT NULL), 0)
+		FROM award_wins GROUP BY award`, filmAwardKeys())
 	if err != nil {
 		return nil, fmt.Errorf("list awards: %w", err)
 	}
@@ -55,6 +58,9 @@ func (s *Service) List(ctx context.Context) ([]Summary, error) {
 	out := make([]Summary, 0, len(Catalog))
 	for _, a := range Catalog {
 		g := by[a.Key]
+		if a.Film {
+			g.wins = g.in
+		}
 		out = append(out, Summary{Award: a, Wins: g.wins, InCatalog: g.in, FirstYear: g.first, LastYear: g.last})
 	}
 	return out, nil
@@ -71,19 +77,21 @@ type Win struct {
 	Author     string `json:"author"`
 	WorkID     *int64 `json:"work_id,omitempty"`
 	AuthorID   *int64 `json:"author_id,omitempty"`
+	Source     string `json:"source"` // fantlab | wikidata | manual
 	SourceURL  string `json:"source_url,omitempty"`
 }
 
-// Wins — все лауреаты премии: свежие годы сверху, внутри года — порядок номинаций у источника.
+// Wins — все лауреаты премии: свежие годы сверху, внутри года — порядок номинаций у
+// источника. У кинопремии — только экранизации книг каталога.
 func (s *Service) Wins(ctx context.Context, key string) (Award, []Win, error) {
 	a, ok := ByKey(key)
 	if !ok {
 		return Award{}, nil, ErrUnknownAward
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, year, nomination, kind, title, orig_title, author, work_id, author_id, source_link
-		FROM award_wins WHERE award = $1
-		ORDER BY year DESC, nomination_order, id`, key)
+		SELECT id, year, nomination, kind, title, orig_title, author, work_id, author_id, source, source_link
+		FROM award_wins WHERE award = $1 AND (NOT $2 OR work_id IS NOT NULL)
+		ORDER BY year DESC, nomination_order, id`, key, a.Film)
 	if err != nil {
 		return Award{}, nil, fmt.Errorf("award wins: %w", err)
 	}
@@ -93,21 +101,28 @@ func (s *Service) Wins(ctx context.Context, key string) (Award, []Win, error) {
 		var w Win
 		var link string
 		if err := rows.Scan(&w.ID, &w.Year, &w.Nomination, &w.Kind, &w.Title, &w.OrigTitle, &w.Author, &w.WorkID,
-			&w.AuthorID, &link); err != nil {
+			&w.AuthorID, &w.Source, &link); err != nil {
 			return Award{}, nil, err
 		}
-		w.SourceURL = sourceURL(link)
+		w.SourceURL = sourceURL(w.Source, link)
 		out = append(out, w)
 	}
 	return a, out, rows.Err()
 }
 
-// sourceURL — страница у источника (Фантлаб: work123, autor45).
-func sourceURL(link string) string {
-	if link == "" {
+// sourceURL — страница у источника: Фантлаб (work123, autor45), Wikidata (QID),
+// ручной список (адрес страницы премии).
+func sourceURL(source, link string) string {
+	switch {
+	case link == "":
 		return ""
+	case source == sourceWikidata:
+		return "https://www.wikidata.org/wiki/" + link
+	case source == sourceManual:
+		return link
+	default:
+		return "https://fantlab.ru/" + link
 	}
-	return "https://fantlab.ru/" + link
 }
 
 // Badge — премия на карточке книги или автора.
@@ -116,6 +131,8 @@ type Badge struct {
 	Name       string `json:"name"`
 	Year       int    `json:"year"`
 	Nomination string `json:"nomination,omitempty"`
+	// Film — название фильма или сериала, если премия — кинопремия экранизации.
+	Film string `json:"film,omitempty"`
 }
 
 // WorkAwards — премии работы (в порядке белого списка, затем по годам).
@@ -129,7 +146,7 @@ func (s *Service) AuthorAwards(ctx context.Context, authorID int64) ([]Badge, er
 }
 
 func (s *Service) badges(ctx context.Context, where string, id int64) ([]Badge, error) {
-	rows, err := s.pool.Query(ctx, `SELECT award, year, nomination FROM award_wins WHERE `+where+` ORDER BY year, id`, id)
+	rows, err := s.pool.Query(ctx, `SELECT award, year, nomination, title FROM award_wins WHERE `+where+` ORDER BY year, id`, id)
 	if err != nil {
 		return nil, fmt.Errorf("award badges: %w", err)
 	}
@@ -141,7 +158,8 @@ func (s *Service) badges(ctx context.Context, where string, id int64) ([]Badge, 
 	out := []Badge{}
 	for rows.Next() {
 		var b Badge
-		if err := rows.Scan(&b.Key, &b.Year, &b.Nomination); err != nil {
+		var title string
+		if err := rows.Scan(&b.Key, &b.Year, &b.Nomination, &title); err != nil {
 			return nil, err
 		}
 		a, ok := ByKey(b.Key)
@@ -149,6 +167,9 @@ func (s *Service) badges(ctx context.Context, where string, id int64) ([]Badge, 
 			continue // премию убрали из белого списка — до ближайшей синхронизации не показываем
 		}
 		b.Name = a.Name
+		if a.Film {
+			b.Film = title
+		}
 		out = append(out, b)
 	}
 	if err := rows.Err(); err != nil {

@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
-import { Award, ChevronLeft, ExternalLink } from 'lucide-react';
+import { Award, ChevronLeft, ExternalLink, Film } from 'lucide-react';
 import { BookListItem } from '@/components/BookListItem';
 import { Callout } from '@/components/ui/callout';
 import { Switch } from '@/components/ui/switch';
-import { groupByYear, useAwards, useAwardWins, yearAnchor, type AwardSummary, type AwardWin } from '@/lib/awards';
+import {
+  groupByYear,
+  sourceLabel,
+  useAwards,
+  useAwardWins,
+  yearAnchor,
+  type AwardSummary,
+  type AwardWin,
+} from '@/lib/awards';
 
 /**
  * AwardsPage — /awards: премии из белого списка по разделам (русская
@@ -35,7 +43,8 @@ export function AwardsPage() {
           Премии
         </h1>
         <p className="text-sm text-pretty text-muted-foreground">
-          Лауреаты литературных премий по годам, по данным Фантлаба. Книги и авторы из библиотеки — ссылками.
+          Лауреаты литературных премий по годам (Фантлаб, Wikidata, Википедия) и награды экранизаций книг из
+          библиотеки. Книги и авторы из библиотеки — ссылками.
         </p>
       </div>
       {q.isLoading ? <p className="text-sm italic text-muted-foreground">Загрузка…</p> : null}
@@ -55,7 +64,15 @@ export function AwardsPage() {
                 >
                   <span className="text-sm font-medium">{a.name}</span>
                   <span className="text-xs tabular-nums text-muted-foreground">
-                    {a.wins > 0 ? (
+                    {a.film ? (
+                      a.wins > 0 ? (
+                        <>
+                          {yearsRange(a.first_year, a.last_year)} · экранизаций книг из библиотеки: {a.wins}
+                        </>
+                      ) : (
+                        'экранизаций книг из библиотеки нет'
+                      )
+                    ) : a.wins > 0 ? (
                       <>
                         {yearsRange(a.first_year, a.last_year)} · в библиотеке {a.in_catalog} из {a.wins}
                       </>
@@ -124,16 +141,24 @@ export function AwardPage() {
         </h1>
         <p className="text-sm tabular-nums text-muted-foreground">
           {award.group}
-          {all.length > 0 ? ` · в библиотеке ${inLib} из ${all.length}` : ''}
+          {award.film
+            ? ` · экранизации книг из библиотеки: ${all.length}`
+            : all.length > 0
+              ? ` · в библиотеке ${inLib} из ${all.length}`
+              : ''}
           {award.max_year ? ` · лауреаты по ${award.max_year} год` : ''}
         </p>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <label className="flex items-center gap-2 text-sm">
-          <Switch checked={onlyLibrary} onCheckedChange={setOnlyLibrary} aria-label="Только книги из библиотеки" />
-          Только из библиотеки
-        </label>
+        {award.film ? (
+          <span />
+        ) : (
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={onlyLibrary} onCheckedChange={setOnlyLibrary} aria-label="Только книги из библиотеки" />
+            Только из библиотеки
+          </label>
+        )}
         {decades.length > 1 ? (
           <nav className="flex flex-wrap gap-1" aria-label="Годы">
             {decades.map((d) => (
@@ -164,7 +189,7 @@ export function AwardPage() {
                 <ul className="divide-y divide-border/60 rounded-md border border-border">
                   {n.wins.map((w) => (
                     <li key={w.id}>
-                      <WinRow win={w} />
+                      <WinRow win={w} film={award.film ?? false} />
                     </li>
                   ))}
                 </ul>
@@ -191,8 +216,20 @@ function decadeLinks(years: number[]): { label: string; year: number }[] {
   return out;
 }
 
-function WinRow({ win }: { win: AwardWin }) {
-  if (win.item) return <BookListItem book={win.item} />;
+function WinRow({ win, film }: { win: AwardWin; film: boolean }) {
+  if (win.item) {
+    return (
+      <>
+        <BookListItem book={win.item} showSeries={false} showCover />
+        {film && win.title ? (
+          <p className="-mt-1.5 flex items-center gap-1.5 px-3 pb-3 text-xs text-muted-foreground">
+            <Film className="size-3.5 shrink-0" aria-hidden />
+            <span className="min-w-0 text-pretty">Экранизация: «{win.title}»</span>
+          </p>
+        ) : null}
+      </>
+    );
+  }
   if (win.kind === 'author') {
     return (
       <div className="flex items-center justify-between gap-2 px-3 py-2.5 text-sm">
@@ -218,18 +255,19 @@ function WinRow({ win }: { win: AwardWin }) {
   );
 }
 
-// SourceLink — книги нет в библиотеке: страница произведения на Фантлабе.
+// SourceLink — книги или автора нет в библиотеке: страница у источника.
 function SourceLink({ win }: { win: AwardWin }) {
   if (!win.source_url) return null;
+  const label = sourceLabel(win.source);
   return (
     <a
       href={win.source_url}
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground transition hover:text-foreground"
-      title="Нет в библиотеке — открыть на Фантлабе"
+      title={`Нет в библиотеке — открыть: ${label}`}
     >
-      Фантлаб
+      {label}
       <ExternalLink className="size-3" aria-hidden />
     </a>
   );

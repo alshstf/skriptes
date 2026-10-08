@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
+import { BookCover } from '@/components/BookCover';
 import { BookMeta } from '@/components/BookMeta';
 import { useGenreMap } from '@/lib/genres';
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
@@ -12,15 +13,20 @@ import type { BookListItem as Item } from '@/lib/books';
  * showSerNo: если true и у книги есть `ser_no`, слева от заголовка
  * рендерим колонку с номером тома (`1.`, `2.` …). Используется внутри
  * карточки серии на странице автора и на странице самой серии.
+ *
+ * showCover: миниатюра обложки слева (как в списке /books) — для списков, где
+ * книга не на фоне серии/автора (лауреаты премий).
  */
 export function BookListItem({
   book,
   showSeries = true,
   showSerNo = false,
+  showCover = false,
 }: {
   book: Item;
   showSeries?: boolean;
   showSerNo?: boolean;
+  showCover?: boolean;
 }) {
   const serNo = showSerNo && typeof book.ser_no === 'number' ? book.ser_no : null;
   // book.genres приходит из Meili-индекса как массив fb2_code'ов
@@ -46,6 +52,14 @@ export function BookListItem({
         >
           {serNo}.
         </span>
+      ) : null}
+      {showCover ? (
+        <BookCover
+          src={`/api/covers/book/${book.cover_edition_id ?? book.id}`}
+          title={book.title}
+          placeholder="monogram"
+          className="w-12 sm:w-14"
+        />
       ) : null}
       <div className="space-y-1 min-w-0 flex-1">
         <h3 className="text-base font-medium leading-tight">
