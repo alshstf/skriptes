@@ -122,7 +122,7 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	// «Голова»: 2 издания → кандидат; оба источника находят → обе группы колонок
 	// заполнены, работа таргетно ушла в ресинк индекса.
 	headWork := mkWork("Метро 2033", 2, nil)
-	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 6724, Year: 2005, MidMark: 8.04, WeightedRating: 7.97}}
+	fl := &fakeRenownProvider{name: "fantlab", res: RenownResult{Ratings: 6724, Year: 2005, MidMark: 8.04, WeightedRating: 7.97, ExternalID: 4351}}
 	ol := &fakeRenownProvider{name: "openlibrary", res: RenownResult{Ratings: 36, Want: 302}}
 	syncer := &fakeWorksSyncer{}
 	bf := NewRenownBackfiller(pool, fl, ol, nil, syncer,
@@ -146,6 +146,9 @@ func TestRenownBackfiller_Integration(t *testing.T) {
 	require.Equal(t, 2005, *extYear, "год Фантлаба — внешний год работы (#288)")
 	require.NotNil(t, workYear)
 	require.Equal(t, 2005, *workYear, "и год работы, раз у изданий года нет")
+	var flID string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT ext_ids->>'fl_id' FROM works WHERE id=$1`, headWork).Scan(&flID))
+	require.Equal(t, "4351", flID, "id работы Фантлаба в ext_ids (#412)")
 
 	// found не перепрашивается на следующем проходе (TTL 180д).
 	callsBefore := fl.callCount()
@@ -406,7 +409,8 @@ func TestRenownBackfiller_StaleCounters(t *testing.T) {
 
 	// Разовая чистка: OpenLibrary раньше ответил «не найдено», а счётчики остались.
 	stale := mkWork("Устаревшая", 2)
-	_, err = pool.Exec(ctx, `UPDATE works SET ol_ratings_count = 5, ol_want_count = 9, fantlab_marks = 30 WHERE id = $1`, stale)
+	_, err = pool.Exec(ctx, `UPDATE works SET ol_ratings_count = 5, ol_want_count = 9, fantlab_marks = 30,
+		ext_ids = ext_ids || '{"fl_id": 77}' WHERE id = $1`, stale)
 	require.NoError(t, err)
 	_, err = pool.Exec(ctx, `INSERT INTO work_renown_lookups (work_id, source, outcome, checked_at)
 		VALUES ($1, 'openlibrary', 'not_found', now()), ($1, 'fantlab', 'found', now())`, stale)
@@ -420,6 +424,9 @@ func TestRenownBackfiller_StaleCounters(t *testing.T) {
 	require.Nil(t, olr)
 	require.Nil(t, olw)
 	require.NotNil(t, flm, "Фантлаб нашёл — его счётчики на месте")
+	var flKept bool
+	require.NoError(t, pool.QueryRow(ctx, `SELECT ext_ids ? 'fl_id' FROM works WHERE id=$1`, stale).Scan(&flKept))
+	require.True(t, flKept, "и id Фантлаба тоже")
 	again, err := ClearStaleRenown(ctx, pool)
 	require.NoError(t, err)
 	require.Empty(t, again, "повтор ничего не меняет")

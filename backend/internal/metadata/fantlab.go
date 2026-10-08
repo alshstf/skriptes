@@ -137,7 +137,7 @@ func (p *FantlabProvider) FetchRenown(ctx context.Context, q WorkQuery) (RenownR
 		}
 		return RenownResult{
 			Ratings: m.MarkCount, Kind: fantlabKind(m.WorkTypeID), Year: plausibleYear(m.Year),
-			MidMark: first(m.MidMark), WeightedRating: first(m.Rating),
+			MidMark: first(m.MidMark), WeightedRating: first(m.Rating), ExternalID: m.WorkID,
 		}, nil
 	}
 	return RenownResult{}, ErrNotFound

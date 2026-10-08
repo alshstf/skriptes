@@ -44,6 +44,7 @@ func TestFantlabFetchRenown_HappyPath(t *testing.T) {
 	require.Equal(t, 2005, res.Year, "год первой публикации из того же ответа (#288)")
 	require.InDelta(t, 8.04, res.MidMark, 1e-9, "средняя оценка (#296)")
 	require.InDelta(t, 7.97, res.WeightedRating, 1e-9, "рейтинг Фантлаба")
+	require.Equal(t, int64(4351), res.ExternalID, "id работы Фантлаба — для точной связи лауреатов (#412)")
 }
 
 func TestFantlabFetchRenown_CollectionKind(t *testing.T) {
