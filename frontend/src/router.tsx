@@ -117,6 +117,8 @@ export type BooksSearch = {
   author_id?: number;
   sort?: 'year_desc' | 'year_asc';
   unread?: boolean; // только непрочитанные (умные полки)
+  awards?: string[]; // лауреаты этих премий (#447)
+  has_award?: boolean; // лауреаты любой премии
 };
 
 // AuthorsSearch — URL-стейт списка авторов (раздел «Авторы»). Как BooksSearch:
@@ -132,6 +134,7 @@ export type AuthorsSearch = {
   year_from?: number;
   year_to?: number;
   has_adaptations?: boolean;
+  has_awards?: boolean;
   min_rating?: number;
   min_reader_rating?: number;
   favorites_only?: boolean;
@@ -186,6 +189,8 @@ export const booksRoute = createRoute({
       // популярность-ordered (старые URL молча падают в дефолт — порядок тот же).
       sort: sort === 'year_desc' || sort === 'year_asc' ? sort : undefined,
       unread: asBool(search.unread),
+      awards: asStringArray(search.awards),
+      has_award: asBool(search.has_award),
     };
   },
   component: BooksPage,
@@ -221,6 +226,7 @@ const authorsListRoute = createRoute({
       year_from: asNumber(search.year_from),
       year_to: asNumber(search.year_to),
       has_adaptations: asBool(search.has_adaptations),
+      has_awards: asBool(search.has_awards),
       min_rating: asNumber(search.min_rating),
       min_reader_rating: asNumber(search.min_reader_rating),
       favorites_only: asBool(search.favorites_only),

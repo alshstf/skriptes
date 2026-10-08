@@ -383,6 +383,32 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.Equal(t, 1, res.Total)
 	require.True(t, ids(res)[f.kingID])
 
+	// has_awards (#447): премия книге Азимова и премия автору Толстому; кинопремия
+	// экранизации Кинга автора лауреатом не делает.
+	_, err = pool.Exec(ctx, `
+		INSERT INTO award_wins (award, year, kind, title, source, source_ref, work_id)
+		SELECT 'hugo', 1953, 'work', 'Основание', 'fantlab', 'a1', b.work_id FROM books b
+		JOIN book_authors ba ON ba.book_id = b.id WHERE ba.author_id = $1 LIMIT 1`, f.asimovID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `
+		INSERT INTO award_wins (award, year, kind, title, source, source_ref, work_id)
+		SELECT 'oscar', 1980, 'work', 'Фильм', 'wikidata', 'k1', b.work_id FROM books b
+		JOIN book_authors ba ON ba.book_id = b.id WHERE ba.author_id = $1 LIMIT 1`, f.kingID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO award_wins (award, year, kind, author, source, source_ref, author_id)
+		VALUES ('nobel', 1901, 'author', 'Лев Толстой', 'fantlab', 't1', $1)`, f.tolstoy)
+	require.NoError(t, err)
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{HasAwards: true})
+	require.NoError(t, err)
+	require.Equal(t, 2, res.Total)
+	require.True(t, ids(res)[f.asimovID])
+	require.True(t, ids(res)[f.tolstoy])
+	_, err = catalog.RecomputeAuthorFacets(ctx, pool)
+	require.NoError(t, err)
+	fc, err := svc.AuthorFacets(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	require.Equal(t, 2, fc.Awards)
+
 	// min_rating — рейтинг автора (#296): Кинг 3,9 (LIBRATE 5), Толстой ≈3,63 (web 4,2).
 	// Порог 3,8 → только Кинг; порог 3 → оба (web Толстого считается).
 	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{MinRating: 3.8})

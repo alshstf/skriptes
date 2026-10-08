@@ -494,8 +494,9 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // после v9 у работ с «ё» в названии в Meili осталась битой близость слов;
 // v11 — alt_titles_s (названия изданий и оригинала) и authors_latin (латинские
 // имена авторов оригинала) в поиске (#291);
-// v12 — popularity: LIBRATE 1–2 без бонуса (#292).
-const WorksIndexSchemaVersion = 12
+// v12 — popularity: LIBRATE 1–2 без бонуса (#292);
+// v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447).
+const WorksIndexSchemaVersion = 13
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -627,6 +628,9 @@ const workDocSelect = `
 			FROM books b
 			WHERE b.work_id = w.id AND b.deleted = false
 			  AND btrim(COALESCE(b.src_author_normalized::text, '')) <> ''
+		), '{}'),
+		COALESCE((
+			SELECT array_agg(DISTINCT aw.award ORDER BY aw.award) FROM award_wins aw WHERE aw.work_id = w.id
 		), '{}')
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
@@ -656,7 +660,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
 			&sig.FantlabMarks, &sig.OLRatings, &sig.OLWant, &sig.WDSitelinks,
-			&d.Kind, &altTitles, &d.AuthorsLatin); err != nil {
+			&d.Kind, &altTitles, &d.AuthorsLatin, &d.Awards); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
 		// Popularity работы = интегральная «известность»: workDocSelect отдаёт сырые
@@ -701,6 +705,9 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		}
 		if d.AuthorIDs == nil {
 			d.AuthorIDs = []int64{}
+		}
+		if d.Awards == nil {
+			d.Awards = []string{}
 		}
 		out = append(out, d)
 	}

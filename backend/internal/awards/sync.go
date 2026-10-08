@@ -29,6 +29,44 @@ type Syncer struct {
 	sparqlURL string // Wikidata Query Service
 	logger    *slog.Logger
 	pause     time.Duration
+	// onWorks — работы, у которых изменился набор премий (новые связи, снятые,
+	// удалённые лауреаты): их документы в works-индексе переписываются (#447).
+	onWorks func(context.Context, []int64) error
+	changed map[int64]bool
+}
+
+// WithWorksChanged — колбэк для работ с изменившимся набором премий (переиндексация).
+func (s *Syncer) WithWorksChanged(fn func(context.Context, []int64) error) *Syncer {
+	s.onWorks = fn
+	return s
+}
+
+// noteWork — запомнить работу для переиндексации.
+func (s *Syncer) noteWork(id *int64) {
+	if id == nil {
+		return
+	}
+	if s.changed == nil {
+		s.changed = map[int64]bool{}
+	}
+	s.changed[*id] = true
+}
+
+// flushWorks — отдать накопленные работы колбэку (сбой — в лог, повторит следующий шаг).
+func (s *Syncer) flushWorks(ctx context.Context) {
+	if s.onWorks == nil || len(s.changed) == 0 {
+		s.changed = nil
+		return
+	}
+	ids := make([]int64, 0, len(s.changed))
+	for id := range s.changed {
+		ids = append(ids, id)
+	}
+	if err := s.onWorks(ctx, ids); err != nil {
+		s.logger.Warn("awards: reindex works failed", "works", len(ids), "err", err)
+		return
+	}
+	s.changed = nil
 }
 
 // NewSyncer — загрузчик: HTTP-клиент с прерывателем по хосту (грабля №20).
@@ -238,9 +276,29 @@ func (s *Syncer) store(ctx context.Context, a Award, wins []win) error {
 			return fmt.Errorf("store award win: %w", err)
 		}
 	}
-	if _, err := tx.Exec(ctx, `DELETE FROM award_wins WHERE award = $1 AND NOT (source = $3 AND source_ref = ANY($2))`,
-		a.Key, refs, a.source()); err != nil {
+	rows, err := tx.Query(ctx, `DELETE FROM award_wins WHERE award = $1 AND NOT (source = $3 AND source_ref = ANY($2))
+		RETURNING work_id`, a.Key, refs, a.source())
+	if err != nil {
 		return fmt.Errorf("prune award wins: %w", err)
 	}
-	return tx.Commit(ctx)
+	var gone []*int64
+	for rows.Next() {
+		var id *int64
+		if err := rows.Scan(&id); err != nil {
+			rows.Close()
+			return err
+		}
+		gone = append(gone, id)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("prune award wins: %w", err)
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	for _, id := range gone {
+		s.noteWork(id)
+	}
+	return nil
 }

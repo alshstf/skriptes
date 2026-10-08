@@ -95,6 +95,7 @@ type AuthorListParams struct {
 	YearFrom        int      // пересечение [year_from, year_to] с диапазоном лет активности
 	YearTo          int
 	HasAdaptations  bool    // только авторы, у книг которых есть экранизации
+	HasAwards       bool    // только лауреаты премий (автору или его книге; без кинопремий, #447)
 	MinRating       float64 // минимальный рейтинг автора (rating_score — среднее лучших работ, #296)
 	MinReaderRating float64 // минимальная средняя оценка читателей по работам автора (≥ этого)
 	FavoritesOnly   bool    // только авторы из favorite_authors текущего юзера

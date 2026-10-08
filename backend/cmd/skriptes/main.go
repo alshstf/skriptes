@@ -228,7 +228,8 @@ func run() error {
 	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление
 	// с каталогом — раз в сутки (каталог меняется с импортом).
 	metadata.Go(func(c context.Context) {
-		awards.NewSyncer(pool, logger).Run(c, 3*time.Minute, 24*time.Hour)
+		// Набор премий работы — поле works-индекса (фильтр «Премии», #447): изменилось — переиндексация.
+		awards.NewSyncer(pool, logger).WithWorksChanged(imp.UpsertWorksToIndex).Run(c, 3*time.Minute, 24*time.Hour)
 	})
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)

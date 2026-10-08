@@ -898,6 +898,7 @@ func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, exclud
 // Только для него ListWorks делает fallback на books-индекс при пустом works.
 func isUnfilteredBrowse(p ListParams) bool {
 	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" && p.SrcLang == "" && len(p.ExcludeWorkIDs) == 0 &&
+		len(p.Awards) == 0 && !p.HasAward &&
 		p.YearFrom == 0 && p.YearTo == 0 && p.SeriesID == 0 && p.AuthorID == 0 &&
 		p.Offset <= 0
 }
@@ -934,6 +935,11 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	}
 	if clause := kindClause(p.Kind); clause != "" {
 		parts = append(parts, clause)
+	}
+	if clause := inClause("awards", p.Awards); clause != "" {
+		parts = append(parts, clause)
+	} else if p.HasAward {
+		parts = append(parts, "awards IS NOT EMPTY")
 	}
 	if clause := notInClause("genres", p.ExcludeGenres); clause != "" {
 		parts = append(parts, clause)

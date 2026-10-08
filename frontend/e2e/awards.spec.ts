@@ -67,3 +67,29 @@ test('якорь года: страница прокручивается к го
   await expect(year).toBeInViewport({ timeout: 10_000 });
   await expect(page.getByRole('heading', { name: '2025', exact: true })).not.toBeInViewport();
 });
+
+test('фильтр «Премии» на /books (#447): премии со счётчиками, выбор → awards в запросе и чип', async ({ mockedPage: page }) => {
+  await mockAwards(page);
+  const urls: string[] = [];
+  await page.route(/\/api\/books\?/, async (route) => {
+    urls.push(route.request().url());
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [{ id: 1, title: 'Дюна', authors: ['Герберт Фрэнк'], lib_id: '' }],
+        total: 1, limit: 30, offset: 0, processing_ms: 1,
+        facets: { awards: { hugo: 3, nos: 1 } },
+      }),
+    });
+  });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/books');
+  const sidebar = page.getByRole('complementary', { name: 'Фильтры' });
+  await expect(sidebar.getByText('Премии', { exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(sidebar.getByText('Хьюго')).toBeVisible();
+  await sidebar.getByRole('checkbox', { name: /Хьюго/ }).check();
+  await expect(page).toHaveURL(/awards=.*hugo/);
+  await expect.poll(() => urls.some((u) => u.includes('awards=hugo'))).toBe(true);
+  await expect(page.getByText('Премия: Хьюго')).toBeVisible();
+});
