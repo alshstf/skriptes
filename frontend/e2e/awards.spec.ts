@@ -3,7 +3,7 @@ import { test, expect } from './_fixtures';
 // Премии (#389): раздел в шапке, страница премии по годам, переход к году по
 // якорю с плашки карточки; без горизонтальной прокрутки на мобиле.
 
-const award = { key: 'hugo', name: 'Хьюго', group: 'Международные' };
+const award = { key: 'hugo', name: 'Хьюго', group: 'Международные', description: 'Главная премия научной фантастики и фэнтези.', site: 'https://www.thehugoawards.org/' };
 const wins = Array.from({ length: 40 }, (_, i) => {
   const year = 2025 - i;
   return [
@@ -57,6 +57,8 @@ test('премии на мобиле: список и страница прем�
 
   await page.getByRole('link', { name: /Хьюго/ }).click();
   await expect(page.getByRole('heading', { name: '2025', exact: true })).toBeVisible();
+  await expect(page.getByText('Главная премия научной фантастики и фэнтези.')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Сайт премии' })).toHaveAttribute('href', 'https://www.thehugoawards.org/');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 

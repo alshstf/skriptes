@@ -216,7 +216,10 @@ func (s *Syncer) Run(ctx context.Context, startDelay, tick time.Duration) {
 // лауреатов сразу, не дожидаясь недели (новые премии после обновления).
 func catalogVersion() string {
 	h := sha256.New()
-	_, _ = fmt.Fprintf(h, "%+v", Catalog)
+	for _, a := range Catalog {
+		a.Description, a.Site = "", "" // тексты о премии на лауреатов не влияют
+		_, _ = fmt.Fprintf(h, "%+v\n", a)
+	}
 	_, _ = h.Write(manualJSON)
 	return hex.EncodeToString(h.Sum(nil))[:16]
 }

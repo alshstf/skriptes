@@ -468,3 +468,17 @@ func TestStepSyncsOnCatalogChange(t *testing.T) {
 	s.step(ctx)
 	require.Positive(t, calls.Load(), "белый список изменился — загрузка сразу")
 }
+
+func TestAbouts(t *testing.T) {
+	for _, a := range Catalog {
+		require.NotEmpty(t, a.Description, "описание премии: %s", a.Key)
+		require.LessOrEqual(t, len([]rune(a.Description)), 260, "коротко: %s", a.Key)
+		if a.Site != "" {
+			require.Regexp(t, `^https?://`, a.Site, a.Key)
+		}
+	}
+	for key := range abouts {
+		_, ok := ByKey(key)
+		require.True(t, ok, "описание премии вне белого списка: %s", key)
+	}
+}

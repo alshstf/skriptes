@@ -148,6 +148,25 @@ export function AwardPage() {
               : ''}
           {award.max_year ? ` · лауреаты по ${award.max_year} год` : ''}
         </p>
+        {award.description ? (
+          <p className="max-w-prose pt-1 text-sm text-pretty">
+            {award.description}
+            {award.site ? (
+              <>
+                {' '}
+                <a
+                  href={award.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 whitespace-nowrap text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
+                >
+                  Сайт премии
+                  <ExternalLink className="size-3" aria-hidden />
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
