@@ -88,3 +88,25 @@ test('аннотация: длинная сворачивается, «Разв�
   await expand.click();
   await expect(page.getByRole('button', { name: 'Свернуть' })).toBeVisible();
 });
+
+// #443: на мобиле служебные поля (серия, жанры) — во всю ширину под обложкой,
+// а не узкой колонкой вдвое выше обложки с пустотой слева.
+test('карточка на мобиле: жанры под обложкой во всю ширину', async ({ mockedPage: page }) => {
+  const genres = [
+    ...bookDetailFixture.genres,
+    ...['sf_social', 'sf_space', 'prose_classic', 'sf_horror', 'sf_cyberpunk'].map((code, i) => ({ id: 10 + i, code, display: code })),
+  ];
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...bookDetailFixture, genres }) }),
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/books/19');
+  const cover = page.locator('[class*="aspect-[2/3]"]').first();
+  const chip = page.getByText('sf_cyberpunk', { exact: true });
+  await expect(chip).toBeVisible({ timeout: 10_000 });
+  const c = await cover.boundingBox();
+  const g = await chip.locator('xpath=..').boundingBox();
+  expect(c && g).toBeTruthy();
+  expect(g!.y).toBeGreaterThanOrEqual(c!.y + c!.height - 1); // жанры начинаются под обложкой
+  expect(g!.x).toBeLessThanOrEqual(c!.x + 1); // и от её левого края
+});

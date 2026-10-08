@@ -100,18 +100,18 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
           плавает только в правой половине под высотой meta-блока.
         */}
         <CardContent className="space-y-5">
-          <div className="flex gap-4 md:gap-6 md:items-start">
+          {/* Сетка шапки (#443): рядом с обложкой — название, авторы, строка сигналов;
+              служебные поля (серия, жанры, премии) на мобиле — во всю ширину ПОД
+              обложкой, а не узкой колонкой вдвое выше неё с пустотой слева. На
+              десктопе обложка занимает обе строки, поля — колонкой справа. */}
+          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4 gap-y-3 sm:grid-cols-[8rem_minmax(0,1fr)] md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-6">
             <BookCover
               src={`/api/covers/book/${coverEditionId}`}
               title={book.title}
-              className="w-24 shrink-0 sm:w-32 md:w-44"
+              className="w-24 shrink-0 sm:w-32 md:row-span-2 md:w-44"
             />
 
-            {/* Идентичность работы рядом с обложкой: заголовок, авторы, строка
-                сигналов, серия, жанры. На мобиле обложка слева (не по центру),
-                справа от неё — заголовок и сигналы, без пустых полей по бокам. */}
-            <div className="min-w-0 flex-1 space-y-2.5">
-              <div className="flex flex-wrap items-start justify-between gap-2">
+            <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0 space-y-1">
                   <InlineEditableField
                     targetKind="work"
@@ -130,15 +130,19 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
                     authors={book.authors}
                     overridden={workOverridden.includes('authors')}
                   />
+                  {/* Сигналы — у названия: короткая строка заполняет место рядом с обложкой. */}
+                  <div className="pt-1.5">
+                    <CardSignalRow book={book} />
+                  </div>
                 </div>
                 {/* Действия — кластер справа от заголовка на десктопе; на мобиле
                     отдельным рядом ниже (рядом с обложкой колонка узкая). */}
                 <div className="hidden flex-wrap items-center gap-2 md:flex">
                   <ActionButtons book={book} multi={multi} />
                 </div>
-              </div>
+            </div>
 
-              <CardSignalRow book={book} />
+            <div className="col-span-2 min-w-0 space-y-2.5 md:col-span-1 md:col-start-2">
 
               {/* Строку показываем и без серии — у админа SeriesEditor даёт контрол
                   «добавить в серию». #N (PR3) виден при наличии серии: значение есть
