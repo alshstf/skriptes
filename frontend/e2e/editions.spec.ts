@@ -51,7 +51,7 @@ test('book detail: секция «Издания» показывает все �
   await expect(page.locator('a[href="/books/20/read"]')).toHaveCount(1);
 });
 
-test('book list: бейдж «N изданий» при нескольких изданиях', async ({ page }) => {
+test('book list: бейдж «N издания» при нескольких изданиях (склонение)', async ({ page }) => {
   await mockApi(page);
   await page.route(/\/api\/books(\?|$)/, (route) =>
     route.fulfill({
@@ -65,5 +65,5 @@ test('book list: бейдж «N изданий» при нескольких и�
   );
 
   await page.goto('/books');
-  await expect(page.getByText('3 изданий')).toBeVisible();
+  await expect(page.getByText('3 издания', { exact: true })).toBeVisible();
 });
