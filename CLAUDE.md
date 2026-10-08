@@ -48,9 +48,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 
 - **Флоу:** `gh pr create` → вотчер (Monitor) → дождаться MERGED. CI зелёный ≠ смержено. Сразу после create/push
   `gh pr checks` может сказать `no checks reported` — CI ещё не зарегистрировался, это НЕ «зелёный».
-- **Вотчер:** событие на КАЖДОЕ терминальное состояние (all-pass один раз, fail, merged, closed); статусы — только
-  `gh pr view N --json state,statusCheckRollup` (не `awk '{print $2}'`: в именах чеков пробелы); переменную не
-  называть `status` (zsh read-only). Шаблон — `docs/assistant/gotchas.md` §7.
+- **Вотчер:** событие на КАЖДОЕ терминальное состояние; статусы — `gh pr view N --json state,statusCheckRollup`;
+  переменную не называть `status` (zsh read-only). Шаблон — `docs/assistant/gotchas.md` §7; скрипты мержа и
+  релиза — `~/projects/plans/skriptes/tools/`.
 - **Кто мержит:** на зелёном CI ассистент сам мержит и выпускает минорные (1.x.0) и фикс-релизы (1.x.y). Ждать
   владельца — где он попросил, и для мажора.
 - **Документация в каждом PR:** проверить README.md (для пользователя: фичи, env, деплой/compose, внешние API,
@@ -70,10 +70,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 
 1. **Бандл фронта не обновился** после `docker compose build` — собран другой чекаут. Собирай из worktree с
    правками; не помогло — `--no-cache frontend`.
-2. **Жанры:** Meili отдаёт `fb2_code`, имена — `GET /api/genres` / `useGenreMap()`. Чипы рендерят `GenreChips`,
-   `BookListItem`, `BookDetailPage`; стиль — `genreChipClass(useGenreChipStyle())`. Алиасы кодов —
-   `backend/internal/genres/aliases.json` (гейт `genre_aliases_merged_vN` — бампать при пополнении). Плашка сигналов
-   книги — общий `BookMeta` (не-user сигналы — `books.WorkMeta`, user — `hydrateUser*Meta` в api).
+2. **Жанры:** Meili отдаёт `fb2_code`, имена — `useGenreMap()`; стиль чипов — `genreChipClass(useGenreChipStyle())`.
+   Алиасы кодов — `genres/aliases.json` (гейт `genre_aliases_merged_vN` — бампать). Плашка сигналов — общий `BookMeta`.
 3. **`date_added` ≠ год написания.** `books.written_year` (fb2 → OL → Wikidata, правила правдоподобия
    `metadata/work_years.go`) vs `books.edition_year` (год издания, только справочно). Meili `year` = written_year,
    синкается автоматически.
@@ -86,17 +84,13 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
    `text-destructive`, жёлтая ★ избранного).
 10. **Контролы:** мгновенное вкл/выкл — `ui/switch`; checkbox = «отметь и Сохрани»; бар несохранённого — `SaveBar`;
     висячее слово — `text-pretty`.
-11. **Три кэша картинок** — `/cache/covers` (регенерируются из fb2, LRU), `/cache/posters` и `/cache/author-photos`
-    (внешние, не регенерируются, свои кнопки очистки). Экранизации — только кино/сериалы/мульты/аниме (белый список
-    P31); постеры — TMDB (id из Wikidata P4947/P4983) → Commons P18; три защиты от потери постеров.
+11. **Три кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters` и `/cache/author-photos`
+    (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
 12. **Lazy-обогащение автора** — single-shot по `metadata_fetched_at` (и `adaptations_fetched_at`); ретрай — только
     отдельным TTL-механизмом.
-13. **Матчинг автора во внешних — precision > recall.** Гейт имени (`authormatch.go`), поиск по формам имени,
-    политика приёма кандидата по фактам Wikidata (`candidate_policy.go`), тёзки — строгий путь с подтверждением
-    книгой (`namesake.go`; ещё и по работам Wikidata — `strictByWorks`), латинское имя без переводов
-    угадывается по словарю имён (`name_equivalents.go`) — тогда OpenLibrary только по книге; трасса решений
-    и сухой прогон `skriptes-explain`. Любая правка поиска — приёмка сухим
-    прогоном по 1000 самым известным авторам (урок 1.19.0: очистили био Достоевского).
+13. **Матчинг автора во внешних — precision > recall** (`authormatch.go`, `candidate_policy.go`, `namesake.go`,
+    `name_equivalents.go`; трасса — `skriptes-explain`). Любая правка поиска — приёмка сухим прогоном по 1000 самым
+    известным авторам (урок 1.19.0: очистили био Достоевского).
 14. **Коды языка** нормализуются (lower+trim+срез субтега; `src_lang` — только через `langcode.Canonical`).
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый
     список книг прогоняй через те же исключения.
@@ -123,18 +117,17 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     авторов — ручное слияние с памятью (`author_merges`).
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
-24. **Премии — только белый список владельца** (`awards/catalog.go`: премии, номинации, «по 2021»; источники — Фантлаб,
-    Wikidata, `awards/manual.json` — его обновлять руками раз в год). Новую премию
-    или номинацию — только после его проверки (досье — `~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
+24. **Премии — только белый список владельца** (`awards/catalog.go`, `manual.json` — руками раз в год). Новую премию или
+    номинацию — только после его проверки (`~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
 | Я ищу… | Файл |
 |---|---|
-| Парсер INPX / импорт в PG + Meili | `backend/internal/inpx/parser.go` · `backend/internal/importer/` (`runImportLoop` + `InpxWatch` в `cmd/skriptes/main.go`) |
+| Парсер INPX / импорт в PG + Meili | `internal/inpx/parser.go` · `internal/importer/` (`runImportLoop`, `InpxWatch` в `main.go`) |
 | Список книг, фильтры, фасеты, сортировка | `backend/internal/books/` + `api/books.go` |
-| Поиск и пересортировка (личная подстройка, известность, запрос-автор, известные совпадения) | `books/service.go`, `books/author_query.go`, `books/popular_matches.go` |
-| Обогащение (обложки, аннотации, год, био/фото, экранизации, известность, рейтинг) | `backend/internal/metadata/` (воркеры `*_backfill.go`, провайдеры `*_provider.go`, `fantlab.go`, `wikidata_*.go`) |
+| Поиск и пересортировка | `books/service.go`, `books/author_query.go`, `books/popular_matches.go` |
+| Обогащение (обложки, год, био, экранизации, известность) | `internal/metadata/` (`*_backfill.go`, `*_provider.go`, `fantlab.go`, `wikidata_*.go`) |
 | Фоновые операции в админке | `frontend/src/pages/AdminBackgroundPage.tsx` + `api/admin_*.go` |
 | Год книги, гистограмма | `metadata/fb2_provider.go`, `metadata/enricher.go::EnsureYearLocal`, `catalog/service.go`, `YearHistogram.tsx` |
 | Порядок книг в серии | `catalog/seriesorder.go::assignSeriesOrder` |
@@ -146,9 +139,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
-| Авторы (список, фильтры, известность, рейтинг) | `pages/AuthorsPage.tsx`, `lib/authors.ts`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
-| Премии (лауреаты, сопоставление с каталогом, раздел, плашки) | `internal/awards/` (`catalog.go`, `sync.go`, `match.go`, `service.go`), `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
-| Жанры, полки, готовые подборки, умные полки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/` (умные — `smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
+| Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
+| Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
+| Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
 | Видимость контента (скрытые жанры/языки) | `settings/content.go`, `api/content.go`, `components/ContentVisibility.tsx` |
 | Языки, язык оригинала | `catalog/languages.go`, `metadata/src_lang_backfill.go`, `internal/langcode` |
 | Настройки (app/user) | `backend/internal/settings/` |
