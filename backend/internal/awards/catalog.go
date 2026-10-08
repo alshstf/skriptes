@@ -28,6 +28,9 @@ type Award struct {
 	MaxYear int `json:"max_year,omitempty"`
 	// Nominations — учитываемые номинации Фантлаба (nil — все; 0 — без номинации).
 	Nominations []int `json:"-"`
+	// Description и Site — о премии и её сайт (about.go, #446).
+	Description string `json:"description,omitempty"`
+	Site        string `json:"site,omitempty"`
 }
 
 // WikidataItem — элемент премии в Wikidata и номинация, которую он означает.

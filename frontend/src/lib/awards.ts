@@ -14,6 +14,10 @@ export type Award = {
   author_level?: boolean;
   max_year?: number;
   film?: boolean;
+  /** О премии: кто вручает, с какого года, за что (#446). */
+  description?: string;
+  /** Сайт премии. */
+  site?: string;
 };
 
 export type AwardSummary = Award & {
