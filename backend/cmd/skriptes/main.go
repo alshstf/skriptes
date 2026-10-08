@@ -1260,12 +1260,13 @@ func runOnceGenreAliases(ctx context.Context, pool *pgxpool.Pool, imp *importer.
 }
 
 // runOnceForceReimport — сменились правила, которые применяет только импорт
-// INPX (межавторские серии: порог доминирования 0,8 и служебные авторы, #298) —
+// INPX (межавторские серии: порог доминирования 0,8 и служебные авторы, #298;
+// v2 — серии сборников с десятками авторов, #448) —
 // сбросить хэш коллекций, чтобы ближайший импорт прошёл полностью, а не
 // пропустил неизменный файл. Импорт идемпотентен (~1 ч на 470 тыс. книг).
 // Гейт reimport_series_rules_vN — бампать при следующей такой смене правил.
 func runOnceForceReimport(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
-	const flag = "reimport_series_rules_v1"
+	const flag = "reimport_series_rules_v2"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("force reimport: check flag failed — skip", "err", err)

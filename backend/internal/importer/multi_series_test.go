@@ -89,6 +89,14 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 		{LibID: "810070", Title: "Юность, 1970 №8", Authors: []string{"Журнал «Юность»"}, Series: "Юность (журнал)"},
 		{LibID: "810064", Title: "Звёздный билет", Authors: []string{"Аксёнов,Василий"}, Series: "Юность (журнал)"},
 		{LibID: "810065", Title: "Хроника времён", Authors: []string{"Гладилин,Анатолий"}, Series: "Юность (журнал)"},
+		// Серия сборников (#448): первый автор один, но в каждой книге по четыре
+		// автора и всего их семь — межавторская, а не «цикл» Иванова.
+		{LibID: "810081", Title: "Урал улыбается. Выпуск 1", Authors: []string{"Иванов,Иван", "Петров,Пётр", "Сидоров,Сидор", "Кузнецов,Кузьма"}, Series: "Урал улыбается"},
+		{LibID: "810082", Title: "Урал улыбается. Выпуск 2", Authors: []string{"Иванов,Иван", "Смирнов,Семён", "Попов,Павел", "Васильев,Василий"}, Series: "Урал улыбается"},
+		// Соавторский цикл (двое на книгу) — по-прежнему цикл.
+		{LibID: "810091", Title: "Страж", Authors: []string{"Пехов,Алексей", "Бычкова,Елена"}, Series: "Страж", SerNo: 1},
+		{LibID: "810092", Title: "Аутодафе", Authors: []string{"Пехов,Алексей", "Бычкова,Елена"}, Series: "Страж", SerNo: 2},
+		{LibID: "810093", Title: "Время созидания", Authors: []string{"Пехов,Алексей", "Бычкова,Елена"}, Series: "Страж", SerNo: 3},
 	}
 	two := append([]inpxtest.Book{
 		{LibID: "810011", Title: "Любовь в Париже", Authors: []string{"Иванова,Анна"}, Series: "Мини-Шарм", SerNo: 1},
@@ -107,6 +115,14 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	user := q(`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u@x','U','h','user') RETURNING id`)
 	_, err = pool.Exec(ctx, `INSERT INTO favorite_series (user_id, series_id) VALUES ($1, $2)`, user, ivanovaFrag)
 	require.NoError(t, err)
+	anth := seriesOf("810081")
+	require.Equal(t, anth, seriesOf("810082"))
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NULL AND kind = 'multi'`, anth),
+		"серия сборников — межавторская")
+	guard := seriesOf("810091")
+	require.Equal(t, guard, seriesOf("810093"))
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NOT NULL AND kind IS NULL`, guard),
+		"соавторский цикл — цикл")
 	journal := seriesOf("810051")
 	for _, lib := range []string{"810052", "810053", "810054", "810055"} {
 		require.Equal(t, journal, seriesOf(lib))
