@@ -229,6 +229,10 @@ const matchFilmsQuery = `
 	WHERE aw.award = ANY($1) AND aw.source = 'wikidata'
 	ORDER BY aw.id, wk.edition_count DESC, b.work_id`
 
+// FilmAwardKeys — ключи кинопремий (награды экранизаций, а не автора и книги):
+// фильтр «С премиями» у авторов их не учитывает.
+func FilmAwardKeys() []string { return filmAwardKeys() }
+
 // filmAwardKeys — ключи кинопремий белого списка.
 func filmAwardKeys() []string {
 	var out []string
@@ -287,13 +291,36 @@ func (s *Syncer) Match(ctx context.Context) error {
 		ON CONFLICT (win_id) DO NOTHING`, filmAwardKeys()); err != nil {
 		return fmt.Errorf("match award films: %w", err)
 	}
-	if _, err := tx.Exec(ctx, `
+	// RETURNING: x — строка до обновления, aw — после; обе работы переиндексировать.
+	rows, err := tx.Query(ctx, `
 		UPDATE award_wins aw SET work_id = m.work_id, author_id = m.author_id
 		FROM award_wins x LEFT JOIN aw_match m ON m.win_id = x.id
-		WHERE x.id = aw.id AND (aw.work_id, aw.author_id) IS DISTINCT FROM (m.work_id, m.author_id)`); err != nil {
+		WHERE x.id = aw.id AND (aw.work_id, aw.author_id) IS DISTINCT FROM (m.work_id, m.author_id)
+		RETURNING x.work_id, aw.work_id`)
+	if err != nil {
 		return fmt.Errorf("store award matches: %w", err)
 	}
-	return tx.Commit(ctx)
+	var touched []*int64
+	for rows.Next() {
+		var before, after *int64
+		if err := rows.Scan(&before, &after); err != nil {
+			rows.Close()
+			return err
+		}
+		touched = append(touched, before, after)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("store award matches: %w", err)
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	for _, id := range touched {
+		s.noteWork(id)
+	}
+	s.flushWorks(ctx)
+	return nil
 }
 
 func loadWants(ctx context.Context, tx pgx.Tx) ([]workWant, []authorWant, error) {

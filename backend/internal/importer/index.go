@@ -148,6 +148,10 @@ type workDoc struct {
 	// обычных), чтобы NOT-фильтр «скрыть сборники» не зависел от поведения
 	// Meili на отсутствующем поле.
 	Kind string `json:"kind"`
+	// Awards — ключи премий белого списка, лауреат которых — эта работа
+	// (award_wins.work_id, в т.ч. кинопремии экранизаций): фильтр и фасет
+	// «Премии» на /books (#447).
+	Awards []string `json:"awards"`
 
 	// renownPop — популярность работы БЕЗ внутриинстансной вовлечённости
 	// (computeWorkPopularityExternal) — сырьё для authors.renown. Неэкспортируемое:
@@ -170,7 +174,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid 
 	}
 	// id — для «известных совпадений» /books (#401): закреплённые наверху работы
 	// исключаются из остальной выдачи фильтром `id NOT IN [...]`.
-	filterable := []any{"id", "genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind"}
+	filterable := []any{"id", "genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind", "awards"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}

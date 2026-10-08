@@ -2,6 +2,7 @@ package books_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -59,6 +60,12 @@ func TestPresets(t *testing.T) {
 	require.NoError(t, err)
 	_, err = pool.Exec(ctx, `UPDATE works SET fantlab_marks = 300 WHERE title = 'Я, робот'`)
 	require.NoError(t, err)
+	// Премии (#447): поле awards works-индекса — фильтр и фасет.
+	for i, a := range []struct{ award, title string }{{"hugo", "Дюна"}, {"nebula", "Дюна"}, {"hugo", "Основание"}} {
+		_, err = pool.Exec(ctx, `INSERT INTO award_wins (award, year, kind, title, source, source_ref, work_id)
+			VALUES ($1, 1966, 'work', $2, 'fantlab', $3, $4)`, a.award, a.title, fmt.Sprint(i), work(a.title))
+		require.NoError(t, err)
+	}
 	_, err = imp.RebuildWorksIndex(ctx)
 	require.NoError(t, err)
 	_, err = pool.Exec(ctx, `INSERT INTO app_settings (key, value) VALUES ($1, 'true'::jsonb)`, importer.WorksIndexSyncedFlagKey())
@@ -164,4 +171,13 @@ func TestPresets(t *testing.T) {
 	require.NotContains(t, titlesOf(unread.Items), "Дюна")
 	require.NotContains(t, titlesOf(unread.Items), "Мессия Дюны")
 	require.Contains(t, titlesOf(unread.Items), "Дети Дюны")
+
+	// Фильтр «Премии» (#447): конкретная премия, любая премия, фасет по премиям.
+	nebula, err := svc.ListWorks(ctx, books.ListParams{Limit: 100, Awards: []string{"nebula"}})
+	require.NoError(t, err)
+	require.Equal(t, []string{"Дюна"}, titlesOf(nebula.Items))
+	any, err := svc.ListWorks(ctx, books.ListParams{Limit: 100, HasAward: true, Facets: []string{"awards"}})
+	require.NoError(t, err)
+	require.ElementsMatch(t, []string{"Дюна", "Основание"}, titlesOf(any.Items))
+	require.Equal(t, map[string]int64{"hugo": 2, "nebula": 1}, any.Facets["awards"])
 }

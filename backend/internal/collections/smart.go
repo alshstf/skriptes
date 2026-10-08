@@ -37,12 +37,20 @@ type SmartFilters struct {
 	AuthorID int64    `json:"author_id,omitempty"`
 	Sort     string   `json:"sort,omitempty"`
 	Unread   bool     `json:"unread,omitempty"`
+	Awards   []string `json:"awards,omitempty"`
+	HasAward bool     `json:"has_award,omitempty"`
 }
 
 // validate — пустые фильтры (весь каталог) и мусор не сохраняем.
 func (f SmartFilters) validate() error {
-	if len(f.Q) > 200 || len(f.Genres) > 50 || len(f.Lang) > 16 || len(f.SrcLang) > 16 || len(f.Kind) > 16 {
+	if len(f.Q) > 200 || len(f.Genres) > 50 || len(f.Lang) > 16 || len(f.SrcLang) > 16 || len(f.Kind) > 16 ||
+		len(f.Awards) > 50 {
 		return ErrBadFilters
+	}
+	for _, a := range f.Awards {
+		if a == "" || len(a) > 64 {
+			return ErrBadFilters
+		}
 	}
 	for _, g := range f.Genres {
 		if g == "" || len(g) > 64 {
@@ -58,7 +66,7 @@ func (f SmartFilters) validate() error {
 		return ErrBadFilters
 	}
 	if f.Q == "" && len(f.Genres) == 0 && f.Lang == "" && f.SrcLang == "" && f.Kind == "" && f.YearFrom == 0 &&
-		f.YearTo == 0 && f.SeriesID == 0 && f.AuthorID == 0 && !f.Unread {
+		f.YearTo == 0 && f.SeriesID == 0 && f.AuthorID == 0 && !f.Unread && len(f.Awards) == 0 && !f.HasAward {
 		return ErrBadFilters
 	}
 	return nil

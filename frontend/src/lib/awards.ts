@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from './api';
 import type { BookListItem } from './books';
@@ -61,6 +62,12 @@ export function useAwards() {
     queryFn: async () => (await apiFetch<{ items: AwardSummary[] }>('/api/awards')).items,
     staleTime: STALE,
   });
+}
+
+/** useAwardNames — ключ премии → название (фильтры и чипы /books). */
+export function useAwardNames(): Map<string, string> {
+  const q = useAwards();
+  return useMemo(() => new Map((q.data ?? []).map((a) => [a.key, a.name])), [q.data]);
 }
 
 /** useAwardWins — лауреаты премии (свежие годы сверху). */

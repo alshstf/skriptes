@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { collapseGenreChips, useGenreMap, useGenres } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useSrcLanguageMap } from '@/lib/content';
+import { useAwardNames } from '@/lib/awards';
 import { cn } from '@/lib/utils';
 import { BOOK_KINDS, BOOK_KIND_LABELS, type BookKind, type FacetDistribution } from '@/lib/books';
 
@@ -35,6 +36,10 @@ export type FiltersValue = {
   sort: '' | 'year_desc' | 'year_asc';
   /** Только непрочитанные (без работ, отмеченных прочитанными). */
   unread: boolean;
+  /** Лауреаты этих премий (ключи, OR) — #447. */
+  awards: string[];
+  /** Лауреаты любой премии. */
+  hasAward: boolean;
 };
 
 // Отдельного пункта «По популярности» нет намеренно: popularity:desc — последний
@@ -129,6 +134,13 @@ export function FiltersSidebar({
         facets={facets}
         onChange={(srcLang) => onChange({ ...value, srcLang })}
         labelFor={(code) => srcLangMap.get(code) ?? langMap.get(code) ?? code}
+      />
+
+      <AwardsFilter
+        selected={value.awards}
+        hasAward={value.hasAward}
+        counts={facets?.awards}
+        onChange={(awards, hasAward) => onChange({ ...value, awards, hasAward })}
       />
 
       {/* Тип работы (#379). У кого в профиле «Скрывать сборники», блок не нужен:
@@ -369,6 +381,7 @@ export function ActiveFilterChips({
   const allGenres = useGenres().data ?? [];
   const langMap = useLanguageMap();
   const srcLangMap = useSrcLanguageMap();
+  const awardNames = useAwardNames();
   const chips: { label: string; onRemove: () => void }[] = [];
   // Полностью выбранная категория — ОДИН чип «вся категория», а не чип на
   // каждый поджанр: клик по категории в сайдбаре выбирает все её leaf'ы, и
@@ -420,6 +433,15 @@ export function ActiveFilterChips({
       onRemove: () => onChange({ ...value, yearFrom: 0, yearTo: 0 }),
     });
   }
+  for (const a of value.awards) {
+    chips.push({
+      label: `Премия: ${awardNames.get(a) ?? a}`,
+      onRemove: () => onChange({ ...value, awards: value.awards.filter((x) => x !== a) }),
+    });
+  }
+  if (value.hasAward && value.awards.length === 0) {
+    chips.push({ label: 'Лауреаты премий', onRemove: () => onChange({ ...value, hasAward: false }) });
+  }
   if (value.unread) {
     chips.push({
       label: 'Непрочитанные',
@@ -458,6 +480,71 @@ export function ActiveFilterChips({
           </button>
         </Badge>
       ))}
+    </div>
+  );
+}
+
+// AWARDS_SHOWN — сколько премий в списке до «ещё N» (в выдаче их бывает 30+).
+const AWARDS_SHOWN = 8;
+
+/**
+ * AwardsFilter — «Премии» (#447): «Любая премия» и премии со счётчиками работ
+ * из фасета awards (только те, что есть в текущей выдаче, и выбранные).
+ */
+function AwardsFilter({
+  selected,
+  hasAward,
+  counts,
+  onChange,
+}: {
+  selected: string[];
+  hasAward: boolean;
+  counts?: Record<string, number>;
+  onChange: (awards: string[], hasAward: boolean) => void;
+}) {
+  const names = useAwardNames();
+  const [all, setAll] = useState(false);
+  const items = mergeFacetItems(counts, selected).filter((i) => i.count !== 0 || selected.includes(i.value));
+  if (items.length === 0 && !hasAward) return null;
+  const shown = all ? items : items.slice(0, AWARDS_SHOWN);
+  const toggle = (key: string) =>
+    onChange(selected.includes(key) ? selected.filter((x) => x !== key) : [...selected, key], hasAward);
+  return (
+    <div className="space-y-2">
+      <div className="text-xs font-medium text-muted-foreground uppercase">Премии</div>
+      <label className="flex items-center gap-2">
+        <Switch
+          checked={hasAward}
+          onCheckedChange={(v) => onChange(selected, v)}
+          aria-label="Лауреаты любой премии"
+        />
+        Любая премия
+      </label>
+      <ul className="space-y-1">
+        {shown.map(({ value, count }) => (
+          <li key={value}>
+            <label className="flex w-full cursor-pointer items-center gap-2 rounded px-1 py-0.5 text-sm hover:bg-accent/40">
+              <input
+                type="checkbox"
+                className="size-3.5 accent-foreground"
+                checked={selected.includes(value)}
+                onChange={() => toggle(value)}
+              />
+              <span className="min-w-0 flex-1 truncate">{names.get(value) ?? value}</span>
+              {count != null ? <span className="text-xs tabular-nums text-muted-foreground">{count}</span> : null}
+            </label>
+          </li>
+        ))}
+      </ul>
+      {items.length > AWARDS_SHOWN ? (
+        <button
+          type="button"
+          onClick={() => setAll((v) => !v)}
+          className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
+        >
+          {all ? 'Свернуть' : `Ещё ${items.length - AWARDS_SHOWN}`}
+        </button>
+      ) : null}
     </div>
   );
 }

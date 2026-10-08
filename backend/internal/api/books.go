@@ -74,6 +74,8 @@ func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.Ha
 			AuthorID: parseInt64Or(q.Get("author_id"), 0),
 			Sort:     q.Get("sort"),
 			Facets:   splitCSV(q.Get("facets")),
+			Awards:   splitCSV(q.Get("awards")),
+			HasAward: q.Get("has_award") == "1",
 		}
 		// Передаём UserID — books.List сам решает, применять ли re-ranking
 		// (см. условия там: offset==0, нет явного Sort и нет фильтра по

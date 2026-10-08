@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/awards"
 )
 
 // Счётчики фильтров /authors (#389, A3): сколько авторов даст каждое значение
@@ -27,6 +28,7 @@ type AuthorFacetCounts struct {
 	Langs       map[string]int `json:"langs"`
 	SrcLangs    map[string]int `json:"src_langs"`
 	Adaptations int            `json:"adaptations"`
+	Awards      int            `json:"awards"`
 }
 
 // facetKinds — какие строки author_facets относятся к фасету фильтра.
@@ -35,6 +37,7 @@ var facetKinds = map[string][]string{
 	FacetLang:        {"lang"},
 	FacetSrcLang:     {"src"},
 	FacetAdaptations: {"adapt"},
+	FacetAwards:      {"award"},
 }
 
 // facetActive — выбран ли фильтр фасета.
@@ -48,6 +51,8 @@ func facetActive(p AuthorListParams, facet string) bool {
 		return len(p.SrcLangs) > 0
 	case FacetAdaptations:
 		return p.HasAdaptations
+	case FacetAwards:
+		return p.HasAwards
 	}
 	return false
 }
@@ -64,7 +69,7 @@ func (s *Service) AuthorFacets(ctx context.Context, p AuthorListParams) (AuthorF
 		Genres: map[string]int{}, Categories: map[string]int{}, Langs: map[string]int{}, SrcLangs: map[string]int{},
 	}
 	var shared []string
-	for _, f := range []string{FacetGenre, FacetLang, FacetSrcLang, FacetAdaptations} {
+	for _, f := range []string{FacetGenre, FacetLang, FacetSrcLang, FacetAdaptations, FacetAwards} {
 		if facetActive(p, f) {
 			if err := s.countFacets(ctx, p, f, facetKinds[f], &out); err != nil {
 				return AuthorFacetCounts{}, err
@@ -116,6 +121,8 @@ func (s *Service) countFacets(ctx context.Context, p AuthorListParams, skip stri
 			out.SrcLangs[value] = n
 		case "adapt":
 			out.Adaptations = n
+		case "award":
+			out.Awards = n
 		}
 	}
 	return rows.Err()
@@ -177,7 +184,13 @@ func RecomputeAuthorFacets(ctx context.Context, pool *pgxpool.Pool) (int64, erro
 		    WHERE l.lang IS NOT NULL AND l.lang <> '' AND NOT EXISTS (SELECT 1 FROM wsrc ws WHERE ws.work_id = l.work_id)
 		UNION
 		SELECT l.author_id, 'adapt', '' FROM live l
-		    WHERE EXISTS (SELECT 1 FROM book_adaptations ad WHERE ad.book_id = l.book_id)`); err != nil {
+		    WHERE EXISTS (SELECT 1 FROM book_adaptations ad WHERE ad.book_id = l.book_id)
+		UNION
+		SELECT aw.author_id, 'award', '' FROM award_wins aw
+		    JOIN authors a ON a.id = aw.author_id AND NOT a.is_service WHERE aw.kind = 'author'
+		UNION
+		SELECT l.author_id, 'award', '' FROM live l
+		    JOIN award_wins aw ON aw.work_id = l.work_id WHERE aw.award <> ALL($1::text[])`, awards.FilmAwardKeys()); err != nil {
 		return 0, fmt.Errorf("author facets: collect: %w", err)
 	}
 	del, err := tx.Exec(ctx, `

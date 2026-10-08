@@ -16,9 +16,13 @@ const emptyFilters: FiltersValue = {
   genres: [],
   lang: '',
   srcLang: '',
+  kind: '',
   yearFrom: 0,
   yearTo: 0,
   sort: '',
+  unread: false,
+  awards: [],
+  hasAward: false,
 };
 
 const genresFixture = {

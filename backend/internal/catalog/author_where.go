@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/skriptes/skriptes/backend/internal/awards"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
 )
 
@@ -15,6 +16,7 @@ const (
 	FacetLang        = "lang"
 	FacetSrcLang     = "src"
 	FacetAdaptations = "adapt"
+	FacetAwards      = "award"
 )
 
 // authorWhere — условия фильтров списка авторов и их аргументы. Аргументы
@@ -170,6 +172,14 @@ func (w *authorWhere) filters(skip string) []string {
 		where = append(where,
 			"EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
 				" JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id"+w.aggExclusion()+")")
+	}
+
+	if p.HasAwards && skip != FacetAwards {
+		n := w.add(awards.FilmAwardKeys())
+		where = append(where, fmt.Sprintf("(EXISTS (SELECT 1 FROM award_wins aw WHERE aw.author_id = a.id AND aw.kind = 'author')"+
+			" OR EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
+			" JOIN award_wins aw ON aw.work_id = b.work_id WHERE ba.author_id = a.id AND aw.award <> ALL($%d::text[])"+
+			w.aggExclusion()+"))", n))
 	}
 
 	if p.MinRating > 0 {

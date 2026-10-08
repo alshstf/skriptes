@@ -71,6 +71,7 @@ func authorListParams(r *http.Request, content ContentDeps) catalog.AuthorListPa
 		YearFrom:        parseIntOr(q.Get("year_from"), 0),
 		YearTo:          parseIntOr(q.Get("year_to"), 0),
 		HasAdaptations:  parseBool(q.Get("has_adaptations")),
+		HasAwards:       parseBool(q.Get("has_awards")),
 		MinRating:       parseFloatOr(q.Get("min_rating"), 0),
 		MinReaderRating: parseFloatOr(q.Get("min_reader_rating"), 0),
 		FavoritesOnly:   parseBool(q.Get("favorites_only")),

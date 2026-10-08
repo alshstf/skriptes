@@ -4,7 +4,7 @@ import type { AuthorsSearch } from '@/router';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Link } from '@tanstack/react-router';
-import { Bell, BookHeart, Film, Globe, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
+import { Award, Bell, BookHeart, Film, Globe, Search, SlidersHorizontal, User as UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,7 @@ type AuthorsFilters = {
   yearFrom: number;
   yearTo: number;
   hasAdaptations: boolean;
+  hasAwards: boolean;
   minRating: number;
   minReaderRating: number;
   favoritesOnly: boolean;
@@ -80,6 +81,7 @@ export function AuthorsPage() {
     yearFrom: search.year_from ?? 0,
     yearTo: search.year_to ?? 0,
     hasAdaptations: search.has_adaptations ?? false,
+    hasAwards: search.has_awards ?? false,
     minRating: search.min_rating ?? 0,
     minReaderRating: search.min_reader_rating ?? 0,
     favoritesOnly: search.favorites_only ?? false,
@@ -98,6 +100,7 @@ export function AuthorsPage() {
         year_from: next.yearFrom || undefined,
         year_to: next.yearTo || undefined,
         has_adaptations: next.hasAdaptations || undefined,
+        has_awards: next.hasAwards || undefined,
         min_rating: next.minRating || undefined,
         min_reader_rating: next.minReaderRating || undefined,
         favorites_only: next.favoritesOnly || undefined,
@@ -115,6 +118,7 @@ export function AuthorsPage() {
     yearFrom: filters.yearFrom,
     yearTo: filters.yearTo,
     hasAdaptations: filters.hasAdaptations,
+    hasAwards: filters.hasAwards,
     minRating: filters.minRating,
     minReaderRating: filters.minReaderRating,
     favoritesOnly: filters.favoritesOnly,
@@ -141,6 +145,7 @@ export function AuthorsPage() {
     filters.srcLangs.length +
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.hasAdaptations ? 1 : 0) +
+    (filters.hasAwards ? 1 : 0) +
     (filters.minRating ? 1 : 0) +
     (filters.minReaderRating ? 1 : 0) +
     (filters.favoritesOnly ? 1 : 0) +
@@ -481,6 +486,18 @@ function AuthorsFiltersSidebar({
             checked={value.hasAdaptations}
             onCheckedChange={(v) => onChange({ ...value, hasAdaptations: v })}
             aria-label="Только авторы с экранизациями"
+          />
+        </label>
+        <label className="flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5">
+            <Award className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+            С премиями
+            {facets ? <FacetCount n={facets.awards} /> : null}
+          </span>
+          <Switch
+            checked={value.hasAwards}
+            onCheckedChange={(v) => onChange({ ...value, hasAwards: v })}
+            aria-label="Только лауреаты премий"
           />
         </label>
       </div>

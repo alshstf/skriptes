@@ -241,13 +241,22 @@ func TestSyncAndMatch(t *testing.T) {
 		}
 	}))
 	defer srv.Close()
-	s := NewSyncer(pool, nil).WithEndpoint(srv.URL, srv.Client())
+	reindexed := map[int64]bool{}
+	s := NewSyncer(pool, nil).WithEndpoint(srv.URL, srv.Client()).WithWorksChanged(func(_ context.Context, ids []int64) error {
+		for _, id := range ids {
+			reindexed[id] = true
+		}
+		return nil
+	})
 
 	manual := manualCounts(t)
 	total, matched, err := s.SyncAll(ctx)
 	require.NoError(t, err)
 	require.Equal(t, 7+manual[""]+2+2, total, "Фантлаб, ручной список, Пулитцер (книга и автор), «Оскар» (два фильма)")
 	require.Equal(t, 5+1+1+1, matched, "Фантлаб, «Просветитель», Пулитцер, «Оскар»")
+	for _, id := range []int64{dune, solaris, disgraceRu, kazantseva, gone} {
+		require.True(t, reindexed[id], "работа с новыми премиями уходит на переиндексацию: %d", id)
+	}
 
 	workOf := func(ref string) *int64 {
 		var id *int64
@@ -341,6 +350,7 @@ func TestSyncAndMatch(t *testing.T) {
 	require.Equal(t, 6+manual[""]+4, total, "Бунин удалён, Букер и Wikidata остались при сбое источника")
 	require.Equal(t, 3+3, matched)
 	require.Nil(t, workOf("101"), "издания «Соляриса» Лема удалены — связи нет")
+	require.True(t, reindexed[solaris], "снятая связь — тоже переиндексация")
 }
 
 // manualCounts — лауреатов в manual.json по премиям ("" — всего).

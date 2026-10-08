@@ -229,6 +229,10 @@ type ListParams struct {
 	AuthorID int64
 	Sort     string
 	Facets   []string // запрашиваемые распределения; например ["genres","lang","year"]
+	// Awards — лауреаты этих премий (ключи белого списка, OR); HasAward — любой
+	// премии (works-индекс, поле awards, #447).
+	Awards   []string
+	HasAward bool
 	// ExcludeWorkIDs — работы, которых не должно быть в выдаче (works-индекс):
 	// «Только непрочитанные» — прочитанные пользователем (умные полки, #389).
 	ExcludeWorkIDs []int64

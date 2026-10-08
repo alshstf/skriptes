@@ -5,6 +5,7 @@ import { apiFetch } from './api';
 import { BOOK_KIND_LABELS, buildBooksParams, type BookFilters, type BookListResponse } from './books';
 import { collapseGenreChips, useGenreMap, useGenres } from './genres';
 import { useLanguageMap, useSrcLanguageMap } from './content';
+import { useAwardNames } from './awards';
 import type { BooksSearch } from '@/router';
 
 // Умные полки (#389): сохранённые фильтры каталога /books. Книг не хранят —
@@ -37,6 +38,8 @@ export function toSmartFilters(search: BooksSearch): SmartFilters {
   if (search.author_id) out.author_id = search.author_id;
   if (search.sort) out.sort = search.sort;
   if (search.unread) out.unread = true;
+  if (search.awards?.length) out.awards = search.awards;
+  if (search.has_award) out.has_award = true;
   return out;
 }
 
@@ -59,6 +62,8 @@ export function toBookFilters(f: SmartFilters): BookFilters {
     authorId: f.author_id,
     sort: f.sort,
     unread: f.unread,
+    awards: f.awards,
+    hasAward: f.has_award,
   };
 }
 
@@ -129,6 +134,7 @@ export function useDescribeFilters(): (f: SmartFilters) => string {
   const allGenres = useGenres().data;
   const langMap = useLanguageMap();
   const srcLangMap = useSrcLanguageMap();
+  const awardNames = useAwardNames();
   return useCallback(
     (f: SmartFilters) => {
       const parts: string[] = [];
@@ -146,11 +152,13 @@ export function useDescribeFilters(): (f: SmartFilters) => string {
       else if (f.year_to) parts.push(`до ${f.year_to}`);
       if (f.series_id) parts.push('одна серия');
       if (f.author_id) parts.push('один автор');
+      for (const a of f.awards ?? []) parts.push(awardNames.get(a) ?? a);
+      if (f.has_award && !f.awards?.length) parts.push('лауреаты премий');
       if (f.unread) parts.push('непрочитанные');
       if (f.sort === 'year_desc') parts.push('сначала новые');
       if (f.sort === 'year_asc') parts.push('сначала старые');
       return parts.join(' · ');
     },
-    [genreMap, allGenres, langMap, srcLangMap],
+    [genreMap, allGenres, langMap, srcLangMap, awardNames],
   );
 }

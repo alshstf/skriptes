@@ -64,6 +64,7 @@ export type AuthorsListParams = {
   yearFrom?: number;
   yearTo?: number;
   hasAdaptations?: boolean;
+  hasAwards?: boolean; // лауреаты премий — автору или его книге (#447)
   minRating?: number;
   minReaderRating?: number;
   favoritesOnly?: boolean;
@@ -83,6 +84,7 @@ function buildQuery(p: AuthorsListParams): string {
   if (p.yearFrom) sp.set('year_from', String(p.yearFrom));
   if (p.yearTo) sp.set('year_to', String(p.yearTo));
   if (p.hasAdaptations) sp.set('has_adaptations', '1');
+  if (p.hasAwards) sp.set('has_awards', '1');
   if (p.minRating) sp.set('min_rating', String(p.minRating));
   if (p.minReaderRating) sp.set('min_reader_rating', String(p.minReaderRating));
   if (p.favoritesOnly) sp.set('favorites_only', '1');
@@ -120,6 +122,7 @@ export type AuthorFacets = {
   langs: Record<string, number>;
   src_langs: Record<string, number>;
   adaptations: number;
+  awards: number;
 };
 
 /**

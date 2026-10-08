@@ -134,6 +134,9 @@ export type BookFilters = {
   sort?: '' | 'year_desc' | 'year_asc';
   /** Только непрочитанные пользователем работы. */
   unread?: boolean;
+  /** Лауреаты этих премий (#447); hasAward — любой. */
+  awards?: string[];
+  hasAward?: boolean;
   facets?: string[];
 };
 
@@ -291,6 +294,8 @@ export function buildBooksParams(opts: BookFilters, limit: number, offset: numbe
   if (opts.authorId) params.set('author_id', String(opts.authorId));
   if (opts.sort) params.set('sort', opts.sort);
   if (opts.unread) params.set('unread', '1');
+  if (opts.awards && opts.awards.length > 0) params.set('awards', opts.awards.join(','));
+  if (opts.hasAward) params.set('has_award', '1');
   if (opts.facets && opts.facets.length > 0) params.set('facets', opts.facets.join(','));
   return params.toString();
 }
