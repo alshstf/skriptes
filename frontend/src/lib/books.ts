@@ -132,6 +132,8 @@ export type BookFilters = {
   seriesId?: number;
   authorId?: number;
   sort?: '' | 'year_desc' | 'year_asc';
+  /** Только непрочитанные пользователем работы. */
+  unread?: boolean;
   facets?: string[];
 };
 
@@ -274,7 +276,7 @@ export const BOOK_KIND_LABELS: Record<BookKind, string> = {
   omnibus: 'Тома собраний',
 };
 
-function buildBooksParams(opts: BookFilters, limit: number, offset: number): string {
+export function buildBooksParams(opts: BookFilters, limit: number, offset: number): string {
   const params = new URLSearchParams();
   if (opts.query) params.set('q', opts.query);
   params.set('limit', String(limit));
@@ -288,6 +290,7 @@ function buildBooksParams(opts: BookFilters, limit: number, offset: number): str
   if (opts.seriesId) params.set('series_id', String(opts.seriesId));
   if (opts.authorId) params.set('author_id', String(opts.authorId));
   if (opts.sort) params.set('sort', opts.sort);
+  if (opts.unread) params.set('unread', '1');
   if (opts.facets && opts.facets.length > 0) params.set('facets', opts.facets.join(','));
   return params.toString();
 }

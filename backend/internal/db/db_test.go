@@ -40,7 +40,7 @@ func TestMigrateAndPool(t *testing.T) {
 		"collections", "device_passwords", "favorite_authors", "favorite_series",
 		"feed_dismissals", "genres", "import_jobs", "kindle_targets", "metadata_cache",
 		"metadata_overrides",
-		"reads", "series", "sessions",
+		"reads", "series", "sessions", "smart_shelves",
 		"user_collection_books", "user_collections", "user_favorite_genres",
 		"user_settings", "users", "views", "work_contents", "work_renown_lookups", "works",
 	}

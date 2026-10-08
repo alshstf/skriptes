@@ -116,6 +116,7 @@ export type BooksSearch = {
   series_id?: number;
   author_id?: number;
   sort?: 'year_desc' | 'year_asc';
+  unread?: boolean; // только непрочитанные (умные полки)
 };
 
 // AuthorsSearch — URL-стейт списка авторов (раздел «Авторы»). Как BooksSearch:
@@ -184,6 +185,7 @@ export const booksRoute = createRoute({
       // 'popularity' больше не значение UI: дефолтный порядок и так
       // популярность-ordered (старые URL молча падают в дефолт — порядок тот же).
       sort: sort === 'year_desc' || sort === 'year_asc' ? sort : undefined,
+      unread: asBool(search.unread),
     };
   },
   component: BooksPage,

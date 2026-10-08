@@ -235,6 +235,11 @@ func NewRouter(d Deps) http.Handler {
 				// Личные полки (коллекции) — раздел «Жанры». CRUD полки +
 				// членство книг. Все ручки гейтят владение по userID.
 				if d.Collections.Service != nil {
+					// Умные полки (#389): сохранённые фильтры /books.
+					r.Get("/me/smart-shelves", handleListSmartShelves(d.Collections))
+					r.Post("/me/smart-shelves", handleCreateSmartShelf(d.Collections))
+					r.Patch("/me/smart-shelves/{id}", handleUpdateSmartShelf(d.Collections))
+					r.Delete("/me/smart-shelves/{id}", handleDeleteSmartShelf(d.Collections))
 					r.Get("/me/collections", handleListCollections(d.Collections))
 					r.Post("/me/collections", handleCreateCollection(d.Collections))
 					r.Patch("/me/collections/{id}", handleRenameCollection(d.Collections))

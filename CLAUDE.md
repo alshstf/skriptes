@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0055_award_wins`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0056_smart_shelves`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -147,7 +147,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
 | Авторы (список, фильтры, известность, рейтинг) | `pages/AuthorsPage.tsx`, `lib/authors.ts`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии (лауреаты, сопоставление с каталогом, раздел, плашки) | `internal/awards/` (`catalog.go`, `sync.go`, `match.go`, `service.go`), `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
-| Жанры, полки, готовые подборки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/`, `books/presets.go` |
+| Жанры, полки, готовые подборки, умные полки | `pages/GenresPage.tsx`, `pages/ShelvesPage.tsx`, `lib/collections.ts`, `internal/collections/` (умные — `smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
 | Видимость контента (скрытые жанры/языки) | `settings/content.go`, `api/content.go`, `components/ContentVisibility.tsx` |
 | Языки, язык оригинала | `catalog/languages.go`, `metadata/src_lang_backfill.go`, `internal/langcode` |
 | Настройки (app/user) | `backend/internal/settings/` |

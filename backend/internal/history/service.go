@@ -121,6 +121,27 @@ func (s *Service) UnmarkRead(ctx context.Context, userID, bookID int64) error {
 	return nil
 }
 
+// ReadWorkIDs — работы, хоть одно издание которых пользователь отметил прочитанным
+// (фильтр «Только непрочитанные» на /books и в умных полках).
+func (s *Service) ReadWorkIDs(ctx context.Context, userID int64) ([]int64, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT b.work_id FROM reads r JOIN books b ON b.id = r.book_id
+		WHERE r.user_id = $1 AND r.completed_at IS NOT NULL AND b.work_id IS NOT NULL`, userID)
+	if err != nil {
+		return nil, fmt.Errorf("read works: %w", err)
+	}
+	defer rows.Close()
+	var out []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		out = append(out, id)
+	}
+	return out, rows.Err()
+}
+
 // IsRead — true если есть запись в reads с completed_at IS NOT NULL.
 // Совместимость с существующими callers; новый код должен использовать
 // ReadStatus который возвращает ещё и timestamp + fraction одним запросом.
