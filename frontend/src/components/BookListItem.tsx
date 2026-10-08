@@ -1,10 +1,11 @@
+import { useContext } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
 import { BookCover } from '@/components/BookCover';
 import { BookMeta } from '@/components/BookMeta';
 import { useGenreMap } from '@/lib/genres';
 import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
-import type { BookListItem as Item } from '@/lib/books';
+import { ContextAuthorName, pluralAuthors, summarizeAuthors, type BookListItem as Item } from '@/lib/books';
 
 /**
  * BookListItem — компактная строка книги в любом списке
@@ -22,11 +23,14 @@ export function BookListItem({
   showSeries = true,
   showSerNo = false,
   showCover = false,
+  hash,
 }: {
   book: Item;
   showSeries?: boolean;
   showSerNo?: boolean;
   showCover?: boolean;
+  /** Якорь на карточке книги (подборка «Экранизации» → #adaptations). */
+  hash?: string;
 }) {
   const serNo = showSerNo && typeof book.ser_no === 'number' ? book.ser_no : null;
   // book.genres приходит из Meili-индекса как массив fb2_code'ов
@@ -35,10 +39,14 @@ export function BookListItem({
   // или код не в словаре — показываем сам код как fallback.
   const genreMap = useGenreMap();
   const chipCls = genreChipClass(useGenreChipStyle());
+  // Сборник десятков авторов — не «портянка» на экран: 3 имени и «и ещё N» (#449);
+  // полный список — в подсказке и на карточке книги.
+  const authorsLine = summarizeAuthors(book.authors ?? [], useContext(ContextAuthorName));
   return (
     <Link
       to="/works/$id"
       params={{ id: String(book.work_id ?? book.id) }}
+      hash={hash}
       className="flex gap-3 rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
     >
       {serNo != null ? (
@@ -70,8 +78,14 @@ export function BookListItem({
             </span>
           ) : null}
         </h3>
-        {book.authors && book.authors.length > 0 ? (
-          <p className="text-sm text-muted-foreground">{book.authors.join(', ')}</p>
+        {authorsLine.shown.length > 0 ? (
+          <p
+            className="text-sm text-muted-foreground"
+            title={authorsLine.more > 0 ? book.authors.join(', ') : undefined}
+          >
+            {authorsLine.shown.join(', ')}
+            {authorsLine.more > 0 ? ` и ещё ${authorsLine.more} ${pluralAuthors(authorsLine.more)}` : ''}
+          </p>
         ) : null}
         {showSeries && book.series ? (
           <p className="text-xs text-muted-foreground">Серия: {book.series}</p>

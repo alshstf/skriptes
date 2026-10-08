@@ -8,7 +8,7 @@ import { useMe } from '@/lib/auth';
 import { useSuggest } from '@/lib/suggest';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLongPress } from '@/lib/useLongPress';
-import { type AuthorRef } from '@/lib/books';
+import { maxListedAuthors, pluralAuthors, type AuthorRef } from '@/lib/books';
 
 type Picked = { id: number; full_name: string };
 
@@ -30,10 +30,14 @@ export function AuthorsEditor({
   overridden?: boolean;
 }) {
   const me = useMe();
+  // Сборник десятков авторов: на карточке — 3 и кнопка «и ещё N авторов» (#449).
+  const [expanded, setExpanded] = useState(false);
+  const hidden = expanded || authors.length <= maxListedAuthors + 1 ? 0 : authors.length - maxListedAuthors;
+  const visible = hidden > 0 ? authors.slice(0, maxListedAuthors) : authors;
   const links =
     authors.length > 0 ? (
       <p className="text-base text-muted-foreground">
-        {authors.map((a, i) => (
+        {visible.map((a, i) => (
           <span key={a.id}>
             {i > 0 ? ', ' : ''}
             <Link
@@ -46,6 +50,18 @@ export function AuthorsEditor({
             </Link>
           </span>
         ))}
+        {hidden > 0 ? (
+          <>
+            {' '}
+            <button
+              type="button"
+              onClick={() => setExpanded(true)}
+              className="underline decoration-dotted underline-offset-2 hover:text-foreground"
+            >
+              и ещё {hidden} {pluralAuthors(hidden)}
+            </button>
+          </>
+        ) : null}
       </p>
     ) : null;
   if (me.data?.role !== 'admin') return links;

@@ -21,7 +21,7 @@ import { Switch } from '@/components/ui/switch';
 import { useLanguageMap } from '@/lib/content';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { bySeriesOrder, type BookListItem as BookListItemType } from '@/lib/books';
+import { bySeriesOrder, ContextAuthorName, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { pluralBooks } from '@/lib/format';
@@ -143,7 +143,9 @@ export function AuthorPage() {
 
       <AuthorStats author={a} />
 
-      <AuthorBooks author={a} />
+      <ContextAuthorName.Provider value={[a.last_name, a.first_name].filter(Boolean).join(' ')}>
+        <AuthorBooks author={a} />
+      </ContextAuthorName.Provider>
     </article>
   );
 }

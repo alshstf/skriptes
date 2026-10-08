@@ -42,6 +42,7 @@ test('шапка: «Премии» в навигации, ряд не переп
   await page.goto('/books');
   const nav = page.getByRole('navigation', { name: 'Основная навигация' });
   await expect(nav.getByRole('link', { name: 'Премии' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Полки' })).toBeVisible();
   const header = page.locator('header').first();
   const overflow = await header.evaluate((el) => el.scrollWidth - el.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
