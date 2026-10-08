@@ -97,9 +97,11 @@
 
 /* Toaster (sonner) — позиция top-right: на iOS standalone уводим из-под статус-бара.
    Сам sonner ставит контейнер на фикс. top; добавляем safe-area-инсет. На десктопе
-   инсет = 0. (Часть граблі №18 — safe-area для всех край-оверлеев.) */
+   инсет = 0. (Часть граблі №18 — safe-area для всех край-оверлеев.) Отступ 4rem —
+   ниже шапки (h-14): иначе тост ложился на кнопки шапки (ридер: «Закладка
+   поставлена» поверх «Заметок», а под курсором тост не исчезает). */
 [data-sonner-toaster][data-y-position="top"] {
-  top: calc(env(safe-area-inset-top) + 1rem) !important;
+  top: calc(env(safe-area-inset-top) + 4rem) !important;
 }
 [data-sonner-toaster][data-y-position="bottom"] {
   bottom: calc(env(safe-area-inset-bottom) + 1rem) !important;
