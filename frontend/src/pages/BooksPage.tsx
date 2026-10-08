@@ -35,6 +35,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { pluralAuthors, summarizeAuthors, useInfiniteBooks, type BookListItem } from '@/lib/books';
+import { hasSmartFilters, toSmartFilters } from '@/lib/smartShelves';
+import { SaveSmartShelfButton } from '@/components/SmartShelves';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { pluralBooks } from '@/lib/format';
 
@@ -85,6 +87,7 @@ export function BooksPage() {
     yearFrom: search.year_from ?? 0,
     yearTo: search.year_to ?? 0,
     sort: search.sort ?? '',
+    unread: search.unread ?? false,
   };
 
   const setFilters = useCallback(
@@ -99,6 +102,7 @@ export function BooksPage() {
           year_from: next.yearFrom || undefined,
           year_to: next.yearTo || undefined,
           sort: next.sort || undefined,
+          unread: next.unread || undefined,
           page: undefined,
         }),
         replace: true,
@@ -127,6 +131,7 @@ export function BooksPage() {
     seriesId: search.series_id,
     authorId: search.author_id,
     sort: filters.sort,
+    unread: filters.unread,
     facets: FACETS,
   });
 
@@ -178,8 +183,12 @@ export function BooksPage() {
     (filters.kind ? 1 : 0) +
     (filters.yearFrom || filters.yearTo ? 1 : 0) +
     (filters.sort ? 1 : 0) +
+    (filters.unread ? 1 : 0) +
     (search.series_id ? 1 : 0) +
     (search.author_id ? 1 : 0);
+
+  // Текущие фильтры для «Сохранить как полку» (#389): запрос — уже применённый (debounced).
+  const smartFilters = toSmartFilters({ ...search, q: debouncedQuery || undefined });
 
   const resetAll = () => {
     setQueryInput('');
@@ -298,10 +307,13 @@ export function BooksPage() {
         </div>
 
         {firstPage ? (
-          <p className="text-sm text-muted-foreground tabular-nums">
-            {firstPage.total.toLocaleString('ru-RU')} {pluralBooks(firstPage.total)} ·{' '}
-            {firstPage.processing_ms}мс
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-x-2">
+            <p className="text-sm text-muted-foreground tabular-nums">
+              {firstPage.total.toLocaleString('ru-RU')} {pluralBooks(firstPage.total)} ·{' '}
+              {firstPage.processing_ms}мс
+            </p>
+            {hasSmartFilters(smartFilters) ? <SaveSmartShelfButton filters={smartFilters} /> : null}
+          </div>
         ) : null}
 
         {firstPage?.matched_authors?.length ? <MatchedAuthors authors={firstPage.matched_authors} /> : null}

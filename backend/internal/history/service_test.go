@@ -80,12 +80,25 @@ func TestService_HistoryFlow(t *testing.T) {
 	isRead, err = svc.IsRead(ctx, userID, bookID)
 	require.NoError(t, err)
 	require.True(t, isRead)
+	// ReadWorkIDs — работа прочитанной книги («Только непрочитанные»).
+	var workID *int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id = $1`, bookID).Scan(&workID))
+	readWorks, err := svc.ReadWorkIDs(ctx, userID)
+	require.NoError(t, err)
+	if workID != nil {
+		require.Equal(t, []int64{*workID}, readWorks)
+	} else {
+		require.Empty(t, readWorks, "издание без работы не учитывается")
+	}
 
 	// UnmarkRead — снимает флаг, но строку оставляет (для re-ranking-сигналов).
 	require.NoError(t, svc.UnmarkRead(ctx, userID, bookID))
 	isRead, err = svc.IsRead(ctx, userID, bookID)
 	require.NoError(t, err)
 	require.False(t, isRead)
+	readWorks, err = svc.ReadWorkIDs(ctx, userID)
+	require.NoError(t, err)
+	require.Empty(t, readWorks, "снятая отметка — работа снова непрочитанная")
 	require.NoError(t, pool.QueryRow(ctx,
 		`SELECT count(*) FROM reads WHERE user_id = $1 AND book_id = $2`,
 		userID, bookID,

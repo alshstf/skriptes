@@ -154,4 +154,14 @@ func TestPresets(t *testing.T) {
 	items, err = svc.VisibleWorks(ctx, ids, hidden)
 	require.NoError(t, err)
 	require.Equal(t, []string{"Дюна"}, titlesOf(items))
+
+	// «Только непрочитанные» (умные полки): прочитанные работы — исключением в фильтре works.
+	all, err := svc.ListWorks(ctx, books.ListParams{Limit: 100})
+	require.NoError(t, err)
+	unread, err := svc.ListWorks(ctx, books.ListParams{Limit: 100, ExcludeWorkIDs: []int64{work("Дюна"), work("Мессия Дюны")}})
+	require.NoError(t, err)
+	require.Equal(t, all.Total-2, unread.Total)
+	require.NotContains(t, titlesOf(unread.Items), "Дюна")
+	require.NotContains(t, titlesOf(unread.Items), "Мессия Дюны")
+	require.Contains(t, titlesOf(unread.Items), "Дети Дюны")
 }

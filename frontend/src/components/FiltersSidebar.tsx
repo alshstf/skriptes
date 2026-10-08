@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { collapseGenreChips, useGenreMap, useGenres } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useSrcLanguageMap } from '@/lib/content';
@@ -32,6 +33,8 @@ export type FiltersValue = {
   yearFrom: number;
   yearTo: number;
   sort: '' | 'year_desc' | 'year_asc';
+  /** Только непрочитанные (без работ, отмеченных прочитанными). */
+  unread: boolean;
 };
 
 // Отдельного пункта «По популярности» нет намеренно: popularity:desc — последний
@@ -87,6 +90,15 @@ export function FiltersSidebar({
         onChange={(sort) => onChange({ ...value, sort })}
         hasQuery={hasQuery}
       />
+
+      <label className="flex items-center gap-2">
+        <Switch
+          checked={value.unread}
+          onCheckedChange={(unread) => onChange({ ...value, unread })}
+          aria-label="Только непрочитанные"
+        />
+        Только непрочитанные
+      </label>
 
       <YearBlock
         from={value.yearFrom}
@@ -406,6 +418,12 @@ export function ActiveFilterChips({
     chips.push({
       label,
       onRemove: () => onChange({ ...value, yearFrom: 0, yearTo: 0 }),
+    });
+  }
+  if (value.unread) {
+    chips.push({
+      label: 'Непрочитанные',
+      onRemove: () => onChange({ ...value, unread: false }),
     });
   }
   if (value.seriesId) {

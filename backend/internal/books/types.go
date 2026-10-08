@@ -229,6 +229,9 @@ type ListParams struct {
 	AuthorID int64
 	Sort     string
 	Facets   []string // запрашиваемые распределения; например ["genres","lang","year"]
+	// ExcludeWorkIDs — работы, которых не должно быть в выдаче (works-индекс):
+	// «Только непрочитанные» — прочитанные пользователем (умные полки, #389).
+	ExcludeWorkIDs []int64
 
 	// ExcludeGenres / ExcludeLangs — скрытые из выдачи жанры/языки
 	// (объединение глобальных admin-настроек и персональных настроек

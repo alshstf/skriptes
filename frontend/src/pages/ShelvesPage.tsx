@@ -17,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { BookMeta } from '@/components/BookMeta';
 import { BookListItem } from '@/components/BookListItem';
+import { SmartShelvesSection } from '@/components/SmartShelves';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import {
@@ -91,6 +92,8 @@ export function ShelvesPage() {
       </div>
 
       <PresetsSection />
+
+      <SmartShelvesSection />
 
       <h2 className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
         <Library className="size-4" aria-hidden />

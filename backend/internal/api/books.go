@@ -89,6 +89,15 @@ func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.Ha
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
+		// «Только непрочитанные» (умные полки, #389): прочитанные работы — исключением в фильтре.
+		if q.Get("unread") == "1" && userID > 0 && hist.Service != nil {
+			ids, err := hist.Service.ReadWorkIDs(ctx, userID)
+			if err != nil {
+				writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+				return
+			}
+			params.ExcludeWorkIDs = ids
+		}
 		// Веб-список ищет по индексу works (фасеты считают РАБОТЫ, id = works.id,
 		// ссылки фронта ведут на /works/{id}). OPDS остаётся на List (издания).
 		res, err := d.Service.ListWorks(ctx, params)

@@ -897,7 +897,7 @@ func (s *Service) visibleWorkEditionID(ctx context.Context, workID int64, exclud
 // isUnfilteredBrowse — «голый» browse первой страницы (без запроса/фильтров).
 // Только для него ListWorks делает fallback на books-индекс при пустом works.
 func isUnfilteredBrowse(p ListParams) bool {
-	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" && p.SrcLang == "" &&
+	return p.Query == "" && len(p.Genres) == 0 && p.Lang == "" && p.SrcLang == "" && len(p.ExcludeWorkIDs) == 0 &&
 		p.YearFrom == 0 && p.YearTo == 0 && p.SeriesID == 0 && p.AuthorID == 0 &&
 		p.Offset <= 0
 }
@@ -943,6 +943,13 @@ func buildWorksFilter(p ListParams, visibleLangs []string) string {
 	}
 	if p.ExcludeCompilations {
 		parts = append(parts, compilationsExclusion)
+	}
+	if len(p.ExcludeWorkIDs) > 0 {
+		ids := make([]string, 0, len(p.ExcludeWorkIDs))
+		for _, id := range p.ExcludeWorkIDs {
+			ids = append(ids, strconv.FormatInt(id, 10))
+		}
+		parts = append(parts, "id NOT IN ["+strings.Join(ids, ", ")+"]")
 	}
 	return strings.Join(parts, " AND ")
 }
