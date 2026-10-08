@@ -1,7 +1,10 @@
 // Package awards — премии (#389, A2): лауреаты премий из белого списка владельца
-// (`~/projects/plans/skriptes/awards-dossier.md`, принят 2026-10-07), источник —
-// Фантлаб (лауреаты по годам и номинациям), сопоставление с каталогом по названию
-// и фамилии. Премии вне списка не показываются и не учитываются.
+// (`~/projects/plans/skriptes/awards-dossier.md`, принят 2026-10-07). Источники —
+// Фантлаб (лауреаты по годам и номинациям), Wikidata (американские книжные премии,
+// кинопремии экранизаций) и список в репозитории (manual.json — русские премии,
+// которых нет на Фантлабе); сопоставление с каталогом — по названию и фамилии,
+// кинопремии — через экранизации книг (book_adaptations). Премии вне списка не
+// показываются и не учитываются.
 package awards
 
 // Award — премия белого списка.
@@ -10,8 +13,15 @@ type Award struct {
 	Name string `json:"name"`
 	// Group — раздел списка: «Русские», «Фантастика (русская)», «Международные».
 	Group string `json:"group"`
-	// FantlabID — id премии на Фантлабе (fantlab.ru/awardN).
+	// FantlabID — id премии на Фантлабе (fantlab.ru/awardN); источник — Фантлаб.
 	FantlabID int `json:"-"`
+	// Wikidata — элементы премии в Wikidata по номинациям; источник — Wikidata.
+	Wikidata []WikidataItem `json:"-"`
+	// Manual — лауреаты из списка в репозитории (manual.json).
+	Manual bool `json:"-"`
+	// Film — кинопремия: лауреат — фильм или сериал, показываем экранизации книг
+	// из каталога (сопоставление по QID фильма в book_adaptations).
+	Film bool `json:"film,omitempty"`
 	// AuthorLevel — премия вручается автору (Нобелевская, «Аэлита»), а не произведению.
 	AuthorLevel bool `json:"author_level,omitempty"`
 	// MaxYear — последний учитываемый год (0 — все): «довоенные сезоны» (решение владельца).
@@ -20,10 +30,36 @@ type Award struct {
 	Nominations []int `json:"-"`
 }
 
+// WikidataItem — элемент премии в Wikidata и номинация, которую он означает.
+type WikidataItem struct {
+	QID        string
+	Nomination string
+}
+
+// Источники лауреатов (award_wins.source).
+const (
+	sourceFantlab  = "fantlab"
+	sourceWikidata = "wikidata"
+	sourceManual   = "manual"
+)
+
+// source — откуда берутся лауреаты премии.
+func (a Award) source() string {
+	switch {
+	case a.Manual:
+		return sourceManual
+	case len(a.Wikidata) > 0:
+		return sourceWikidata
+	default:
+		return sourceFantlab
+	}
+}
+
 const (
 	groupRussian = "Русская литература"
 	groupGenreRu = "Русская фантастика"
 	groupIntl    = "Международные"
+	groupScreen  = "Кино и сериалы по книгам"
 )
 
 // Catalog — белый список (порядок — порядок в разделе «Премии»). Номинации —
@@ -38,6 +74,9 @@ var Catalog = []Award{
 		Nominations: []int{0, 696, 697}},
 	{Key: "nos", Name: "НОС", Group: groupRussian, FantlabID: 226,
 		Nominations: []int{0, 1488, 2648, 3195}},
+	{Key: "dar", Name: "Дар", Group: groupRussian, Manual: true},
+	{Key: "prosvetitel", Name: "Просветитель", Group: groupRussian, Manual: true},
+	{Key: "bely", Name: "Премия Андрея Белого", Group: groupRussian, Manual: true, AuthorLevel: true},
 	// Русская фантастика.
 	{Key: "new-horizons", Name: "Новые горизонты", Group: groupGenreRu, FantlabID: 251,
 		Nominations: []int{0, 4291, 4342}},
@@ -70,6 +109,10 @@ var Catalog = []Award{
 	{Key: "booker", Name: "Букеровская премия", Group: groupIntl, FantlabID: 73,
 		Nominations: []int{0, 663, 641, 2699, 748, 749}},
 	{Key: "goncourt", Name: "Гонкуровская премия", Group: groupIntl, FantlabID: 90, Nominations: []int{0}},
+	{Key: "pulitzer", Name: "Пулитцеровская премия", Group: groupIntl,
+		Wikidata: []WikidataItem{{QID: "Q833633", Nomination: "Художественная книга"}}},
+	{Key: "nba", Name: "Национальная книжная премия США", Group: groupIntl,
+		Wikidata: []WikidataItem{{QID: "Q3873144", Nomination: "Художественная книга"}}},
 	{Key: "hugo", Name: "Хьюго", Group: groupIntl, FantlabID: 2,
 		Nominations: []int{1, 2, 10, 3, 2490, 11, 2684, 774, 15, 112}},
 	{Key: "nebula", Name: "Небьюла", Group: groupIntl, FantlabID: 3, Nominations: []int{16, 17, 18, 19, 113}},
@@ -78,6 +121,18 @@ var Catalog = []Award{
 	{Key: "locus", Name: "Локус", Group: groupIntl, FantlabID: 5,
 		Nominations: []int{36, 41, 42, 43, 126, 127, 128, 4584, 38, 39, 37, 40, 44, 45, 977, 133}},
 	{Key: "clarke", Name: "Премия Артура Кларка", Group: groupIntl, FantlabID: 6},
+	// Кино и сериалы: экранизации книг из каталога — только главные награды.
+	{Key: "oscar", Name: "Оскар", Group: groupScreen, Film: true, Wikidata: []WikidataItem{
+		{QID: "Q102427", Nomination: "Лучший фильм"}, {QID: "Q107258", Nomination: "Лучший адаптированный сценарий"}}},
+	{Key: "cannes", Name: "Каннский кинофестиваль", Group: groupScreen, Film: true, Wikidata: []WikidataItem{
+		{QID: "Q179808", Nomination: "Золотая пальмовая ветвь"}}},
+	{Key: "golden-globe", Name: "Золотой глобус", Group: groupScreen, Film: true, Wikidata: []WikidataItem{
+		{QID: "Q1011509", Nomination: "Лучший фильм (драма)"}, {QID: "Q670282", Nomination: "Лучший фильм (комедия или мюзикл)"}}},
+	{Key: "bafta", Name: "BAFTA", Group: groupScreen, Film: true, Wikidata: []WikidataItem{
+		{QID: "Q139184", Nomination: "Лучший фильм"}}},
+	{Key: "emmy", Name: "Эмми", Group: groupScreen, Film: true, Wikidata: []WikidataItem{
+		{QID: "Q989438", Nomination: "Лучший драматический сериал"}, {QID: "Q20714679", Nomination: "Лучший мини-сериал"},
+		{QID: "Q2110156", Nomination: "Лучший комедийный сериал"}}},
 }
 
 // ByKey — премия белого списка по ключу.

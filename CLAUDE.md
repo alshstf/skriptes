@@ -122,7 +122,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     авторов — ручное слияние с памятью (`author_merges`).
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
-24. **Премии — только белый список владельца** (`awards/catalog.go`: премии, номинации, «по 2021»). Новую премию
+24. **Премии — только белый список владельца** (`awards/catalog.go`: премии, номинации, «по 2021»; источники — Фантлаб,
+    Wikidata, `awards/manual.json` — его обновлять руками раз в год). Новую премию
     или номинацию — только после его проверки (досье — `~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)

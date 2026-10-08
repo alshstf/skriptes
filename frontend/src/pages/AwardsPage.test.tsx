@@ -29,7 +29,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 import { AwardPage, AwardsPage } from './AwardsPage';
-import { groupByYear, type AwardWin } from '@/lib/awards';
+import { groupByYear, mergeBadges, type AwardWin } from '@/lib/awards';
 
 function wrap(ui: React.ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -52,11 +52,11 @@ function stubFetch(byPath: Record<string, object>) {
 afterEach(() => vi.unstubAllGlobals());
 
 const wins: AwardWin[] = [
-  { id: 1, year: 1966, nomination: 'Роман', kind: 'work', title: 'Дюна', author: 'Фрэнк Герберт', work_id: 10,
+  { id: 1, year: 1966, nomination: 'Роман', kind: 'work', title: 'Дюна', author: 'Фрэнк Герберт', work_id: 10, source: 'fantlab',
     item: { id: 10, title: 'Дюна', authors: ['Херберт Фрэнк'], lib_id: '1' } },
-  { id: 2, year: 1966, nomination: 'Рассказ', kind: 'work', title: 'Нет в библиотеке', author: 'Кто-то',
+  { id: 2, year: 1966, nomination: 'Рассказ', kind: 'work', title: 'Нет в библиотеке', author: 'Кто-то', source: 'fantlab',
     source_url: 'https://fantlab.ru/work5' },
-  { id: 3, year: 1959, nomination: 'Роман', kind: 'work', title: 'Тоже нет', author: 'Другой' },
+  { id: 3, year: 1959, nomination: 'Роман', kind: 'work', title: 'Тоже нет', author: 'Другой', source: 'fantlab' },
 ];
 
 describe('groupByYear', () => {
@@ -100,5 +100,34 @@ describe('AwardPage', () => {
     expect(screen.queryByText('Нет в библиотеке')).toBeNull();
     expect(screen.queryByRole('heading', { name: '1959' })).toBeNull();
     expect(screen.getByRole('heading', { name: '1966' })).toBeTruthy();
+  });
+});
+
+describe('кинопремии и плашки', () => {
+  it('страница кинопремии: книга-экранизация с названием фильма, без переключателя', async () => {
+    stubFetch({
+      '/api/awards/hugo': {
+        award: { key: 'oscar', name: 'Оскар', group: 'Кино и сериалы по книгам', film: true },
+        wins: [
+          { id: 7, year: 1940, nomination: 'Лучший фильм', kind: 'work', title: 'Унесённые ветром', author: '',
+            work_id: 5, source: 'wikidata', item: { id: 5, title: 'Унесённые ветром', authors: ['Митчелл Маргарет'], lib_id: '' } },
+        ],
+      },
+    });
+    render(wrap(<AwardPage />));
+    expect(await screen.findByText('Экранизация: «Унесённые ветром»')).toBeTruthy();
+    expect(screen.getByText(/экранизации книг из библиотеки: 1/)).toBeTruthy();
+    expect(screen.queryByRole('switch')).toBeNull();
+  });
+
+  it('несколько номинаций одной премии в год — одна плашка', () => {
+    const m = mergeBadges([
+      { key: 'oscar', name: 'Оскар', year: 1940, nomination: 'Лучший фильм', film: 'Унесённые ветром' },
+      { key: 'oscar', name: 'Оскар', year: 1940, nomination: 'Лучший адаптированный сценарий', film: 'Унесённые ветром' },
+      { key: 'hugo', name: 'Хьюго', year: 1966, nomination: 'Роман' },
+    ]);
+    expect(m).toHaveLength(2);
+    expect(m[0].nomination).toBe('Лучший фильм, Лучший адаптированный сценарий');
+    expect(m[0].film).toBe('Унесённые ветром');
   });
 });
