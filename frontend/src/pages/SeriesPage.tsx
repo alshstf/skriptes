@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
+import { CardToolbar } from '@/components/EditModeToggle';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
@@ -82,7 +83,7 @@ export function SeriesPage() {
 
   return (
     <article className="space-y-4">
-      <BackButton />
+      <CardToolbar />
       <header className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Название правит админ (#379): меняется показ, ключ серии для импорта

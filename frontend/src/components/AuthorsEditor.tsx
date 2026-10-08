@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { Link } from '@tanstack/react-router';
 import { Pencil, Plus, RotateCcw, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { useMe } from '@/lib/auth';
 import { useSuggest } from '@/lib/suggest';
 import { useSetOverride, useRevertOverride } from '@/lib/admin';
 import { useLongPress } from '@/lib/useLongPress';
@@ -29,7 +29,7 @@ export function AuthorsEditor({
   authors: AuthorRef[];
   overridden?: boolean;
 }) {
-  const me = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   // Сборник десятков авторов: на карточке — 3 и кнопка «и ещё N авторов» (#449).
   const [expanded, setExpanded] = useState(false);
   const hidden = expanded || authors.length <= maxListedAuthors + 1 ? 0 : authors.length - maxListedAuthors;
@@ -64,7 +64,7 @@ export function AuthorsEditor({
         ) : null}
       </p>
     ) : null;
-  if (me.data?.role !== 'admin') return links;
+  if (!canEdit) return links;
   return <AdminAuthors workId={workId} authors={authors} overridden={overridden} links={links} />;
 }
 

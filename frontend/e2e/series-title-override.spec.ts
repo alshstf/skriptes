@@ -25,6 +25,7 @@ test('series: админ переименовывает серию правко�
 
   await page.goto('/series/77');
   await expect(page.getByRole('heading', { name: 'Петля [Алексеев]' })).toBeVisible();
+  await page.getByRole('button', { name: 'Править', exact: true }).click(); // режим правки (#444)
   await page.getByRole('button', { name: 'Изменить: Название серии' }).click();
   const input = page.getByRole('textbox', { name: 'Название серии' });
   await input.fill('Петля');

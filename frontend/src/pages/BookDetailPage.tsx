@@ -13,13 +13,14 @@ import { ContentsSection, InCompilationsSection } from '@/components/Compilation
 import { MyNotes } from '@/components/MyNotes';
 import { AddToShelfDialog } from '@/components/AddToShelfDialog';
 import { BackButton } from '@/components/BackButton';
+import { CardToolbar } from '@/components/EditModeToggle';
+import { useCanEdit } from '@/lib/editMode';
 import { BookCover } from '@/components/BookCover';
 import { DownloadMenu } from '@/components/DownloadMenu';
 import { EditionRow } from '@/components/EditionRow';
 import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
 import { useOverrides } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { RegroupWorkButton } from '@/components/RegroupWorkButton';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
@@ -47,7 +48,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
   // Список оверрайдов работы (для админ-индикаторов; null/disabled у не-админа).
   const overrides = useOverrides(book?.work_id ?? undefined);
   const workOverridden = overrides.data?.work ?? [];
-  const isAdmin = useMe().data?.role === 'admin';
+  const isAdmin = useCanEdit(); // пустая строка серии — только в режиме правки (#444)
 
   if (isLoading) {
     return (
@@ -88,7 +89,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
     // Кап ширины: на широком десктопе карточка — центрированная читаемая
     // колонка, без огромной пустоты справа от обложки (была до редизайна).
     <article className="mx-auto max-w-4xl space-y-4">
-      <BackButton />
+      <CardToolbar />
       <Card>
         {/*
           Двухуровневая структура:

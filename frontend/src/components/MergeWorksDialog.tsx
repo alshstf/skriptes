@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { Check, GitMerge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,7 +10,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useMergeWorks } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import type { BookListItem } from '@/lib/books';
 
@@ -21,12 +21,12 @@ import type { BookListItem } from '@/lib/books';
  * строке (aria-pressed + check-иконка). Не-админам не рендерится.
  */
 export function MergeWorksDialog({ books }: { books: BookListItem[] }) {
-  const { data: me } = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const merge = useMergeWorks();
 
-  if (me?.role !== 'admin' || books.length < 2) return null;
+  if (!canEdit || books.length < 2) return null;
 
   const reset = () => setSelected(new Set());
   const toggle = (wid: number) =>

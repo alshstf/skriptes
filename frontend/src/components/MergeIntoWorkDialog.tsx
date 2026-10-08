@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCanEdit } from '@/lib/editMode';
 import { GitMerge, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useMergeWorks } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
  * когда дубль вне общей серии/автора и подсказка его не нашла.
  */
 export function MergeIntoWorkDialog({ workId, workTitle }: { workId: number; workTitle: string }) {
-  const { data: me } = useMe();
+  const canEdit = useCanEdit(); // режим правки (#444)
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const debounced = useDebouncedValue(query, 200);
@@ -33,7 +33,7 @@ export function MergeIntoWorkDialog({ workId, workTitle }: { workId: number; wor
   const { data, isFetching } = useSuggest(open ? debounced : '', 8);
   const merge = useMergeWorks();
 
-  if (me?.role !== 'admin' || !workId) return null;
+  if (!canEdit || !workId) return null;
 
   // Исключаем саму текущую работу из результатов.
   const results = (data?.books ?? []).filter((b) => (b.work_id ?? b.id) !== workId);

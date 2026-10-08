@@ -1,8 +1,8 @@
 import { Layers } from 'lucide-react';
+import { useIsAdmin } from '@/lib/editMode';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { useMergeWorks } from '@/lib/admin';
-import { useMe } from '@/lib/auth';
 import { computeMergeSuggestions, type BookListItem } from '@/lib/books';
 
 /**
@@ -19,10 +19,11 @@ import { computeMergeSuggestions, type BookListItem } from '@/lib/books';
  * принимает админ глазами). Не-админам не рендерится.
  */
 export function MergeSuggestions({ books }: { books: BookListItem[] }) {
-  const { data: me } = useMe();
+  // Подсказка о проблеме (как дубли авторов) — админу и без режима правки (#444).
+  const canEdit = useIsAdmin();
   const merge = useMergeWorks();
 
-  if (me?.role !== 'admin') return null;
+  if (!canEdit) return null;
 
   const groups = computeMergeSuggestions(books);
   if (groups.length === 0) return null;

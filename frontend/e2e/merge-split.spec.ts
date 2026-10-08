@@ -114,6 +114,7 @@ test('split: admin выносит издание в отдельную книг�
   });
 
   await page.goto('/books/19');
+  await page.getByRole('button', { name: 'Править', exact: true }).click(); // режим правки (#444)
   await page.getByRole('button', { name: 'Разделить', exact: true }).click();
   // 2 издания: якорь залочен, второй — единственный не-якорь → выбора нет,
   // только подтверждение «Вынести». Скоупим на диалог (название «чужой» книги
@@ -170,6 +171,7 @@ test('merge с поиском: admin присоединяет найденную
   });
 
   await page.goto('/books/19');
+  await page.getByRole('button', { name: 'Править', exact: true }).click(); // режим правки (#444)
   await page.getByRole('button', { name: /Объединить с другой книгой/ }).click();
   await page.getByRole('textbox', { name: /Поиск книги для объединения/ }).fill('мог');
   await page.getByRole('button', { name: /Та же книга, другое издание/ }).click();
@@ -177,4 +179,25 @@ test('merge с поиском: admin присоединяет найденную
   await expect.poll(() => calls.length).toBe(1);
   expect([...calls[0].work_ids].sort((a, b) => a - b)).toEqual([500, 777]);
   expect(calls[0].target).toBe(500); // текущая работа выживает — URL карточки не ломается
+});
+
+test('режим правки (#444): без «Править» админ видит карточку как читатель', async ({ page }) => {
+  await mockApi(page);
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...bookDetailFixture, work_id: 500 }),
+    }),
+  );
+  await page.goto('/books/19');
+  await expect(page.getByRole('button', { name: 'Править', exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Править', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toBeVisible();
+  // Режим живёт на вкладку: на другой карточке он включён.
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Готово', exact: true })).toBeVisible({ timeout: 10_000 });
+  await page.getByRole('button', { name: 'Готово', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toHaveCount(0);
 });
