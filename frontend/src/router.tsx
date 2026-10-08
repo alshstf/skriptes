@@ -263,8 +263,8 @@ const awardRoute = createRoute({
   component: AwardPage,
 });
 
-// /shelves — личные полки (коллекции). Личная библиотека, не каталог-браузинг,
-// поэтому не в топ-навигации, а доступом из меню пользователя.
+// /shelves — личные полки (коллекции), готовые подборки и умные полки; пункт
+// «Полки» в основной навигации (#441).
 const shelvesRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/shelves',

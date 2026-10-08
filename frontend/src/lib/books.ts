@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import {
   useMutation,
   useQuery,
@@ -489,4 +490,41 @@ export function useSavePosition() {
         body: fraction !== undefined ? { pos, fraction } : { pos },
       }),
   });
+}
+
+/**
+ * ContextAuthorName — «Фамилия Имя» автора страницы: в списках его книг он
+ * идёт в строке авторов первым (сборник 53 авторов — с фамилией того, у кого
+ * мы на странице, #449). Вне страницы автора — null.
+ */
+export const ContextAuthorName = createContext<string | null>(null);
+
+/** maxListedAuthors — сколько авторов в строке списка; дальше — «и ещё N авторов». */
+export const maxListedAuthors = 3;
+
+/**
+ * summarizeAuthors — строка авторов для списка: автор страницы — первым, не
+ * больше max имён и сколько ещё (одного лишнего не прячем — «и ещё 1» длиннее имени).
+ */
+export function summarizeAuthors(
+  authors: string[],
+  first?: string | null,
+  max = maxListedAuthors,
+): { shown: string[]; more: number } {
+  let list = authors;
+  if (first) {
+    const i = authors.findIndex((a) => a === first || a.startsWith(`${first} `));
+    if (i > 0) list = [authors[i], ...authors.slice(0, i), ...authors.slice(i + 1)];
+  }
+  if (list.length <= max + 1) return { shown: list, more: 0 };
+  return { shown: list.slice(0, max), more: list.length - max };
+}
+
+/** pluralAuthors — «автор» / «автора» / «авторов». */
+export function pluralAuthors(n: number): string {
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return 'автор';
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'автора';
+  return 'авторов';
 }

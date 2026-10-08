@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Film, Tv, ExternalLink } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -23,12 +24,20 @@ import type { Adaptation } from '@/lib/adaptations';
 export function AdaptationsSection({ bookId }: { bookId: number }) {
   const { data, isLoading } = useAdaptations(bookId);
 
-  const items = data?.items ?? [];
+  const items = upcomingFirst(data?.items ?? []);
+  // Переход из подборки «Экранизации» (#adaptations): секция внизу карточки, а
+  // данные приходят после навигации — прокручиваем, когда фильмы отрисованы (#442).
+  const loaded = items.length > 0;
+  useEffect(() => {
+    if (loaded && window.location.hash === '#adaptations') {
+      document.getElementById('adaptations')?.scrollIntoView({ block: 'start' });
+    }
+  }, [loaded]);
   const exhausted = data?.enrichment_status === 'done';
   const showSkeleton = (isLoading || !data || !exhausted) && items.length === 0;
 
   return (
-    <section className="space-y-3" aria-label="Экранизации">
+    <section id="adaptations" className="scroll-mt-20 space-y-3" aria-label="Экранизации">
       <h3 className="flex items-center gap-2 text-sm font-medium">
         <Film className="size-4" aria-hidden />
         По этой книге снято
@@ -126,6 +135,11 @@ function AdaptationCard({ a }: { a: Adaptation }) {
           </p>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
             {a.year ? <span>{a.year}</span> : null}
+            {isUpcoming(a) ? (
+              <Badge variant="outline" className="font-normal text-[10px] px-1.5 py-0">
+                скоро
+              </Badge>
+            ) : null}
             {a.kind && a.kind !== 'film' ? (
               <Badge variant="secondary" className="font-normal text-[10px] px-1.5 py-0">
                 {kindLabel(a.kind)}
@@ -156,4 +170,16 @@ function kindLabel(kind: string): string {
     default:
       return kind;
   }
+}
+
+// isUpcoming — экранизация этого или следующих лет (то, ради чего открывают
+// подборку «Экранизации»).
+function isUpcoming(a: Adaptation): boolean {
+  return a.year != null && a.year >= new Date().getFullYear();
+}
+
+// upcomingFirst — свежие и будущие экранизации — в начало ленты (по году), остальные — как пришли.
+function upcomingFirst(items: Adaptation[]): Adaptation[] {
+  const soon = items.filter(isUpcoming).sort((x, y) => (x.year ?? 0) - (y.year ?? 0));
+  return soon.length === 0 ? items : [...soon, ...items.filter((a) => !isUpcoming(a))];
 }

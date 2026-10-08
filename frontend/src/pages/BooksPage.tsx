@@ -34,7 +34,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { useInfiniteBooks, type BookListItem } from '@/lib/books';
+import { pluralAuthors, summarizeAuthors, useInfiniteBooks, type BookListItem } from '@/lib/books';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { pluralBooks } from '@/lib/format';
 
@@ -429,7 +429,9 @@ function BookCard({
           <p className="text-xs text-muted-foreground tabular-nums">{book.edition_count} изданий</p>
         ) : null}
         {book.authors && book.authors.length > 0 ? (
-          <p className="text-sm text-muted-foreground line-clamp-1">{book.authors.join(', ')}</p>
+          <p className="text-sm text-muted-foreground line-clamp-1" title={book.authors.join(', ')}>
+            {authorsLine(book.authors)}
+          </p>
         ) : null}
         {book.series ? (
           <p className="text-xs text-muted-foreground line-clamp-1">Серия: {book.series}</p>
@@ -463,3 +465,8 @@ function BookListSkeleton() {
   );
 }
 
+// authorsLine — 3 автора и «и ещё N» вместо обрезанной строки (#449).
+function authorsLine(authors: string[]): string {
+  const { shown, more } = summarizeAuthors(authors);
+  return more > 0 ? `${shown.join(', ')} и ещё ${more} ${pluralAuthors(more)}` : shown.join(', ');
+}

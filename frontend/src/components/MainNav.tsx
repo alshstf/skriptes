@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Award, BookOpen, Menu, Tags, Users } from 'lucide-react';
+import { Award, BookOpen, Library, Menu, Tags, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,7 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 
 /**
- * Primary-навигация по разделам приложения: Авторы / Книги / Жанры / Премии. Роль
+ * Primary-навигация по разделам приложения: Авторы / Книги / Жанры / Премии / Полки. Роль
  * «Главной» (`/`) выполняет клик по логотипу skriptes в хэдере — отдельного
  * пункта нет. Два экспорта под две точки хедера (разный порядок на десктопе
  * и мобиле):
@@ -36,6 +36,7 @@ const navItems: NavItem[] = [
   { to: '/books', label: 'Книги', icon: BookOpen },
   { to: '/genres', label: 'Жанры', icon: Tags },
   { to: '/awards', label: 'Премии', icon: Award },
+  { to: '/shelves', label: 'Полки', icon: Library },
 ];
 
 // Базовый стиль ссылки (десктоп) — приглушённый текст, подсветка на hover.

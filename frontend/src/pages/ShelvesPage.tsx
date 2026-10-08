@@ -194,7 +194,8 @@ function PresetBooksList({ presetKey }: { presetKey: string }) {
         const note = notes[String(b.work_id ?? b.id)];
         return (
           <li key={b.id}>
-            <BookListItem book={b} />
+            {/* Подборка экранизаций ведёт сразу к фильмам на карточке (#442). */}
+            <BookListItem book={b} hash={presetKey === 'adaptations' ? 'adaptations' : undefined} />
             {note ? <p className="-mt-2 px-3 pb-3 text-xs text-muted-foreground">{note}</p> : null}
           </li>
         );
