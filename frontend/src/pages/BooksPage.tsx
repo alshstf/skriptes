@@ -38,7 +38,7 @@ import { pluralAuthors, summarizeAuthors, useInfiniteBooks, type BookListItem } 
 import { hasSmartFilters, toSmartFilters } from '@/lib/smartShelves';
 import { SaveSmartShelfButton } from '@/components/SmartShelves';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
-import { pluralBooks } from '@/lib/format';
+import { pluralBooks, pluralRu } from '@/lib/format';
 
 const PAGE_SIZE = 20;
 // orig_lang — эффективный язык оригинала (src_lang ?? язык издания): опции/counts
@@ -446,7 +446,9 @@ function BookCard({
           </Link>
         </h3>
         {book.edition_count && book.edition_count > 1 ? (
-          <p className="text-xs text-muted-foreground tabular-nums">{book.edition_count} изданий</p>
+          <p className="text-xs text-muted-foreground tabular-nums">
+            {book.edition_count} {pluralRu(book.edition_count, ['издание', 'издания', 'изданий'])}
+          </p>
         ) : null}
         {book.authors && book.authors.length > 0 ? (
           <p className="text-sm text-muted-foreground line-clamp-1" title={book.authors.join(', ')}>
