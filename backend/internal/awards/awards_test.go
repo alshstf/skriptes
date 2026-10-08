@@ -184,6 +184,10 @@ func TestSyncAndMatch(t *testing.T) {
 	kazantseva := f.work("Казанцева|Ася", [3]string{"Кто бы мог подумать", "", "ru"})
 	// Премия Андрея Белого 1985 — «Василий И. Аксёнов», не автор «Острова Крым».
 	f.author("Аксёнов|Василий|Павлович", 100)
+	// Работа, известная по id Фантлаба (#412): название у лауреата другое.
+	fsk := f.work("Стругацкий|Аркадий", [3]string{"Пикник на обочине", "", "ru"})
+	_, err0 := pool.Exec(ctx, `UPDATE works SET ext_ids = ext_ids || '{"fl_id": 4242}' WHERE id = $1`, fsk)
+	require.NoError(t, err0)
 	// Пулитцеровская премия и «Оскар» экранизации (Wikidata): книга и фильм по ней.
 	gone := f.work("Митчелл|Маргарет", [3]string{"Унесённые ветром", "Gone with the Wind", "ru"})
 	_, err := pool.Exec(ctx, `INSERT INTO book_adaptations (book_id, provider, ext_id, title, year)
@@ -228,7 +232,9 @@ func TestSyncAndMatch(t *testing.T) {
 				{"contest_work_id":103,"cw_winner":1,"cw_link_type":"work","cw_link_id":4,"nomination_id":261,
 				 "nomination_number":1,"nomination_rusname":"Русский Букер","autor_rusname":"Иван Петров","work_rusname":"Солярис"},
 				{"contest_work_id":104,"cw_winner":1,"cw_link_type":"work","cw_link_id":5,"nomination_id":261,
-				 "nomination_number":1,"nomination_rusname":"Русский Букер","autor_rusname":"Нет Такого","work_rusname":"Нет в каталоге"}
+				 "nomination_number":1,"nomination_rusname":"Русский Букер","autor_rusname":"Нет Такого","work_rusname":"Нет в каталоге"},
+				{"contest_work_id":105,"cw_winner":1,"cw_link_type":"work","cw_link_id":4242,"nomination_id":261,
+				 "nomination_number":1,"nomination_rusname":"Русский Букер","autor_rusname":"Аркадий и Борис Стругацкие","work_rusname":"Пикник на обочине (другая редакция)"}
 			]}]}`))
 		case r.URL.Path == "/award/74":
 			_, _ = w.Write([]byte(`{"contests":[
@@ -252,8 +258,8 @@ func TestSyncAndMatch(t *testing.T) {
 	manual := manualCounts(t)
 	total, matched, err := s.SyncAll(ctx)
 	require.NoError(t, err)
-	require.Equal(t, 7+manual[""]+2+2, total, "Фантлаб, ручной список, Пулитцер (книга и автор), «Оскар» (два фильма)")
-	require.Equal(t, 5+1+1+1, matched, "Фантлаб, «Просветитель», Пулитцер, «Оскар»")
+	require.Equal(t, 8+manual[""]+2+2, total, "Фантлаб, ручной список, Пулитцер (книга и автор), «Оскар» (два фильма)")
+	require.Equal(t, 6+1+1+1, matched, "Фантлаб, «Просветитель», Пулитцер, «Оскар»")
 	for _, id := range []int64{dune, solaris, disgraceRu, kazantseva, gone} {
 		require.True(t, reindexed[id], "работа с новыми премиями уходит на переиндексацию: %d", id)
 	}
@@ -263,6 +269,7 @@ func TestSyncAndMatch(t *testing.T) {
 		require.NoError(t, pool.QueryRow(ctx, `SELECT work_id FROM award_wins WHERE source_ref = $1`, ref).Scan(&id))
 		return id
 	}
+	require.Equal(t, fsk, *workOf("105"), "по id Фантлаба — несмотря на другое название")
 	require.Equal(t, dune, *workOf("100"), "Герберт = Херберт; «Дюна: Дом Атрейдесов» Брайана — другое название")
 	require.Equal(t, solaris, *workOf("101"), "из дублей — с большим числом изданий, фильм Тарковского — другой автор")
 	require.Equal(t, disgraceRu, *workOf("102"), "русское издание важнее найденного по оригинальному названию")
@@ -285,8 +292,8 @@ func TestSyncAndMatch(t *testing.T) {
 	for _, a := range list {
 		switch a.Key {
 		case "russian-booker":
-			require.Equal(t, 5, a.Wins)
-			require.Equal(t, 3, a.InCatalog)
+			require.Equal(t, 6, a.Wins)
+			require.Equal(t, 4, a.InCatalog)
 			require.Equal(t, 2000, a.FirstYear)
 		case "nobel":
 			require.Equal(t, 2, a.InCatalog)
@@ -347,8 +354,8 @@ func TestSyncAndMatch(t *testing.T) {
 	second.Store(true)
 	total, matched, err = s.SyncAll(ctx)
 	require.NoError(t, err)
-	require.Equal(t, 6+manual[""]+4, total, "Бунин удалён, Букер и Wikidata остались при сбое источника")
-	require.Equal(t, 3+3, matched)
+	require.Equal(t, 7+manual[""]+4, total, "Бунин удалён, Букер и Wikidata остались при сбое источника")
+	require.Equal(t, 4+3, matched)
 	require.Nil(t, workOf("101"), "издания «Соляриса» Лема удалены — связи нет")
 	require.True(t, reindexed[solaris], "снятая связь — тоже переиндексация")
 }

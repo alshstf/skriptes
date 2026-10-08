@@ -419,7 +419,8 @@ func (b *RenownBackfiller) writeRenown(ctx context.Context, workID int64, source
 	case "fantlab":
 		_, err = b.pool.Exec(ctx,
 			`UPDATE works SET fantlab_marks = $2, fantlab_midmark = NULLIF($3::real, 0), fantlab_rating = NULLIF($4::real, 0),
-			        updated_at = now() WHERE id = $1`, workID, res.Ratings, res.MidMark, res.WeightedRating)
+			        ext_ids = CASE WHEN $5::bigint > 0 THEN ext_ids || jsonb_build_object('fl_id', $5::bigint) ELSE ext_ids END,
+			        updated_at = now() WHERE id = $1`, workID, res.Ratings, res.MidMark, res.WeightedRating, res.ExternalID)
 		// Типизация от Фантлаба (курируемая — надёжнее эвристики): collection/
 		// anthology → пишем kind; "novel" — уверенно обычное произведение →
 		// СНИМАЕМ ошибочную эвристику (kind → NULL). kind_source='fantlab' в
@@ -474,6 +475,11 @@ func renownClearSQL(source string) string {
 	for _, c := range cols {
 		set = append(set, c+" = NULL")
 		notNull = append(notNull, c+" IS NOT NULL")
+	}
+	// Фантлаб работу больше не находит — и его id (fl_id) не её.
+	if source == "fantlab" {
+		set = append(set, "ext_ids = ext_ids - 'fl_id'")
+		notNull = append(notNull, "ext_ids ? 'fl_id'")
 	}
 	return "SET " + strings.Join(set, ", ") + ", updated_at = now() WHERE (" + strings.Join(notNull, " OR ") + ")"
 }

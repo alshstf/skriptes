@@ -9,7 +9,9 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// Сопоставление лауреатов с каталогом. Фантлаб даёт русское название
+// Сопоставление лауреатов с каталогом. Лауреат Фантлаба, чья работа известна
+// каталогу по id Фантлаба (works.ext_ids->>'fl_id'), связывается по нему точно.
+// Иначе: Фантлаб даёт русское название
 // произведения, название в оригинале и автора «Имя Фамилия»; каталог — в
 // основном русские издания. Произведение: нормализованное название работы или
 // её живого издания (регистр, ё/е, пунктуация) либо оригинальное название
@@ -218,6 +220,20 @@ var matchAuthorsQuery = `
 	)
 	SELECT DISTINCT ON (win_id) win_id, author_id FROM c ORDER BY win_id, renown DESC, author_id`
 
+// matchByFantlabIDQuery — лауреаты Фантлаба (source_link «work123»), чья работа
+// известна каталогу по id Фантлаба (works.ext_ids->>'fl_id' — воркер «Известность»,
+// #412): связь точная, до сравнения названий; из дублей — с русскими изданиями и
+// большим числом изданий.
+const matchByFantlabIDQuery = `
+	SELECT DISTINCT ON (aw.id) aw.id AS win_id, wk.id AS work_id
+	FROM award_wins aw
+	JOIN works wk ON wk.ext_ids->>'fl_id' = substr(aw.source_link, 5)
+	WHERE aw.source = 'fantlab' AND aw.kind = 'work' AND aw.source_link LIKE 'work%'
+	  AND EXISTS (SELECT 1 FROM books b WHERE b.work_id = wk.id AND NOT b.deleted)
+	ORDER BY aw.id,
+	         EXISTS (SELECT 1 FROM books b WHERE b.work_id = wk.id AND NOT b.deleted AND b.lang = 'ru') DESC,
+	         wk.edition_count DESC, wk.id`
+
 // matchFilmsQuery — кинопремии ($1 — их ключи): фильм лауреата (QID в source_link)
 // среди экранизаций книг каталога → работа книги (из нескольких — с большим числом изданий).
 const matchFilmsQuery = `
@@ -281,10 +297,15 @@ func (s *Syncer) Match(ctx context.Context) error {
 		})); err != nil {
 		return fmt.Errorf("award author wants: %w", err)
 	}
-	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, work_id) SELECT win_id, work_id FROM (`+matchWorksQuery+`) m`); err != nil {
+	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, work_id) SELECT win_id, work_id FROM (`+matchByFantlabIDQuery+`) m`); err != nil {
+		return fmt.Errorf("match award works by fantlab id: %w", err)
+	}
+	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, work_id) SELECT win_id, work_id FROM (`+matchWorksQuery+`) m
+		ON CONFLICT (win_id) DO NOTHING`); err != nil {
 		return fmt.Errorf("match award works: %w", err)
 	}
-	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, author_id) SELECT win_id, author_id FROM (`+matchAuthorsQuery+`) m`); err != nil {
+	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, author_id) SELECT win_id, author_id FROM (`+matchAuthorsQuery+`) m
+		ON CONFLICT (win_id) DO NOTHING`); err != nil {
 		return fmt.Errorf("match award authors: %w", err)
 	}
 	if _, err := tx.Exec(ctx, `INSERT INTO aw_match (win_id, work_id) SELECT win_id, work_id FROM (`+matchFilmsQuery+`) m
