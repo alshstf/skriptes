@@ -94,6 +94,23 @@ func TestImport_WorkPicksUpNewSeries(t *testing.T) {
 	require.NoError(t, err)
 	require.Empty(t, ids)
 
+	// #480: из двух циклов — цикл издания на языке названия работы, даже с
+	// большим номером: английское издание в «Dark Tower» с №1 не побеждает
+	// русское «Тёмная башня» с №2.
+	en := q(`INSERT INTO series (title, normalized_title) VALUES ('Dark Tower', 'dark tower') RETURNING id`)
+	_, err = pool.Exec(ctx, `UPDATE books SET series_id = $1, ser_no = 1, lang = 'en', title = 'The Gunslinger',
+		normalized_title = 'the gunslinger' WHERE lib_id = '820001'`, en)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE books SET lang = 'ru' WHERE lib_id = '820002'`)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE works SET title = 'Извлечение троих', normalized_title = 'извлечение троих' WHERE id = $1`, w1)
+	require.NoError(t, err)
+	_, err = imp.SyncWorkSeries(ctx)
+	require.NoError(t, err)
+	s, n = workSeries("820001")
+	require.Equal(t, cycle, s, "цикл на языке названия работы важнее меньшего номера")
+	require.Equal(t, int64(2), n)
+
 	// Ручная правка серии работы (оверрайд) не перетирается.
 	_, err = pool.Exec(ctx, `INSERT INTO metadata_overrides (target_kind, target_id, field, override_value, original_value)
 		VALUES ('work', $1, 'series', '{}'::jsonb, '{}'::jsonb)`, w1)

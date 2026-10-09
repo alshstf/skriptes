@@ -1054,13 +1054,19 @@ func recomputeWorkAggregates(ctx context.Context, ex pgxExec, ids []int64) error
 			SELECT w2.id AS work_id, sub.series_id, sub.ser_no
 			FROM works w2
 			LEFT JOIN LATERAL (
-				-- Авторский цикл важнее межавторской серии (тот же порядок, что у
-				-- importer.syncWorkSeries — иначе импорт и группировка спорили бы).
+				-- Авторский цикл важнее межавторской серии, потом серия издания на
+				-- языке названия работы (#480); тот же порядок, что у
+				-- importer.syncWorkSeries — иначе импорт и группировка спорили бы.
 				SELECT b.series_id, b.ser_no
 				FROM books b
 				LEFT JOIN series s ON s.id = b.series_id
 				WHERE b.work_id = w2.id AND b.deleted = false AND b.series_id IS NOT NULL
-				ORDER BY (s.kind IS NULL) DESC, b.ser_no NULLS LAST, b.id
+				ORDER BY (s.kind IS NULL) DESC,
+				         (lower(btrim(b.lang)) IS NOT DISTINCT FROM (
+				             SELECT lower(btrim(bb.lang)) FROM books bb
+				             WHERE bb.work_id = w2.id AND bb.deleted = false
+				             ORDER BY (bb.normalized_title = w2.normalized_title) DESC, bb.id LIMIT 1)) DESC,
+				         b.ser_no NULLS LAST, b.id
 				LIMIT 1
 			) sub ON true
 			WHERE w2.id = ANY($1)
