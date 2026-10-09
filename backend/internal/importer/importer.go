@@ -64,6 +64,10 @@ type Deps struct {
 	// meilisearch-go шлёт поле rename, которого Meili 1.13 не знает (400).
 	MeiliURL    string
 	MeiliAPIKey string
+	// AwardTier — ранг премии для известности (awards.PopularityTier, #420);
+	// nil — премии в известность не входят. Функцией, чтобы importer не зависел
+	// от пакета премий.
+	AwardTier func(key string) int
 }
 
 // Importer — оркестратор импорта одного INPX.
@@ -498,8 +502,9 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v12 — popularity: LIBRATE 1–2 без бонуса (#292);
 // v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447);
 // v14 — authors/author_ids: авторы работы по правилу workauthors.Core, без
-// чужих авторов антологии с тем же названием (#464).
-const WorksIndexSchemaVersion = 14
+// чужих авторов антологии с тем же названием (#464);
+// v15 — popularity: бонус за премии работы (#420).
+const WorksIndexSchemaVersion = 15
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -659,6 +664,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		// полными ресинками держит PopularityTracker (таргетный upsert работы при
 		// просмотре/чтении — flush идёт через этот же скан).
 		sig.EditionCount = int64(d.EditionCount)
+		sig.Awards, sig.AwardMajor = awardSignals(d.Awards, im.deps.AwardTier)
 		d.Popularity = computeWorkPopularity(sig)
 		// Для известности АВТОРА — только внешние сигналы (без views/reads/
 		// оценок): поле неэкспортируемое, в Meili-док не сериализуется.

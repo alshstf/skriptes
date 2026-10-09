@@ -111,7 +111,7 @@ func run() error {
 	// слежение, запускается в конце горутины разовых шагов ниже), и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
 	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles,
-		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey})
+		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey, AwardTier: awards.PopularityTier})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
@@ -229,8 +229,17 @@ func run() error {
 	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление
 	// с каталогом — раз в сутки (каталог меняется с импортом).
 	metadata.Go(func(c context.Context) {
-		// Набор премий работы — поле works-индекса (фильтр «Премии», #447): изменилось — переиндексация.
-		awards.NewSyncer(pool, logger).WithWorksChanged(imp.UpsertWorksToIndex).Run(c, 3*time.Minute, 24*time.Hour)
+		// Набор премий работы — поле works-индекса (фильтр «Премии», #447) и сигнал
+		// известности (#420): изменилось — переиндексация и известность авторов.
+		awards.NewSyncer(pool, logger).WithWorksChanged(func(ctx context.Context, ids []int64) error {
+			if err := imp.UpsertWorksToIndex(ctx, ids); err != nil {
+				return err
+			}
+			if _, err := imp.RecomputeAuthorRenownFor(ctx, ids); err != nil {
+				logger.Warn("author renown after awards sync failed", "err", err)
+			}
+			return nil
+		}).Run(c, 3*time.Minute, 24*time.Hour)
 	})
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
@@ -1038,7 +1047,7 @@ func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logge
 // (грабля «мёртвого popularity» 1.5.x). Дальше свежесть держат after-import и
 // хук воркера «Известность».
 func runOnceAuthorRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "author_renown_computed_v2" // v2: LIBRATE 1–2 без бонуса (#292)
+	const flag = "author_renown_computed_v3" // v2: LIBRATE 1–2 без бонуса (#292); v3: премии (#420)
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("author renown: check flag failed — skip", "err", err)
