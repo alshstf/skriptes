@@ -1095,8 +1095,19 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 
 	transient := false
 	for _, p := range e.adaptationProviders {
-		items, err := p.FetchAdaptations(ctx, q)
+		var items []Adaptation
+		var qid string
+		var err error
+		if qp, ok := p.(adaptationQIDProvider); ok {
+			items, qid, err = qp.FetchAdaptationsWithQID(ctx, q)
+		} else {
+			items, err = p.FetchAdaptations(ctx, q)
+		}
 		observeLookup("adaptations", p.Name(), err, len(items) > 0)
+		if err == nil && qid != "" && qid != workQID {
+			// QID книги найден и проверен по автору — ключ группировки изданий (#467).
+			RecordBookWorkKey(ctx, e.pool, e.logger, q.ID, p.Name(), qid)
+		}
 		if errors.Is(err, ErrNotFound) {
 			continue
 		}
