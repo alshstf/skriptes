@@ -103,7 +103,6 @@ func (b *sourceBreaker) record(host string, probe bool, res outcome) {
 			slog.Info("external source available again", "host", host)
 		}
 		st.failures, st.open, st.backoff = 0, false, 0
-		metrics.ExternalSourceUp.WithLabelValues(host).Set(1)
 		return
 	}
 	if st.open {
@@ -121,7 +120,6 @@ func (b *sourceBreaker) record(host string, probe bool, res outcome) {
 	}
 	st.open, st.backoff = true, breakerBaseBackoff
 	st.until = b.now().Add(st.backoff)
-	metrics.ExternalSourceUp.WithLabelValues(host).Set(0)
 	metrics.ExternalSourcePauses.WithLabelValues(host).Inc()
 	slog.Warn("external source unavailable, pausing requests", "host", host, "failures", st.failures, "pause", st.backoff)
 }
@@ -131,9 +129,21 @@ func (b *sourceBreaker) state(host string) *hostState {
 	if !ok {
 		st = &hostState{}
 		b.hosts[host] = st
-		metrics.ExternalSourceUp.WithLabelValues(host).Set(1)
 	}
 	return st
+}
+
+// upByHost — для skriptes_external_source_up: хост → «не на паузе сейчас». Пауза,
+// срок которой вышел, уже не пауза, даже если пробный запрос ещё не уходил (#471).
+func (b *sourceBreaker) upByHost() map[string]bool {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	now := b.now()
+	up := make(map[string]bool, len(b.hosts))
+	for host, st := range b.hosts {
+		up[host] = !st.open || !now.Before(st.until)
+	}
+	return up
 }
 
 // breakerTransport — http.RoundTripper с прерывателем по хосту запроса.
@@ -174,6 +184,8 @@ var (
 	sources         = newSourceBreaker()
 	sourceTransport = &breakerTransport{b: sources, base: http.DefaultTransport}
 )
+
+func init() { metrics.SetExternalSources(sources.upByHost) }
 
 // SourceHTTPClient — http.Client для внешних источников обогащения: с таймаутом
 // и прерывателем по хосту (#299).
