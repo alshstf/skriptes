@@ -1188,9 +1188,10 @@ func runOnceWorksIndexSync(ctx context.Context, pool *pgxpool.Pool, imp *importe
 // 2026-09 — серии у 113 тыс. книг), — у ~98 тыс. работ не было серии: /books её
 // не показывал, фильтр и поиск по серии не находили. Дальше то же делает каждый
 // импорт (importer.syncWorkSeries). Изменённые работы досинкиваются в индекс
-// порциями — UpsertWorksToIndex грузит документы одним запросом.
+// порциями — UpsertWorksToIndex грузит документы одним запросом. v2 (#480):
+// из нескольких циклов — цикл на языке названия работы.
 func runOnceWorkSeriesSync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_series_synced_v1"
+	const flag = "work_series_synced_v2" // v2: цикл на языке названия работы (#480)
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work series sync: check flag failed — skip", "err", err)

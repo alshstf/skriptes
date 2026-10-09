@@ -344,18 +344,27 @@ func fixWorkPrimaryAuthors(ctx context.Context, db dbConn) ([]int64, error) {
 // номер. Импорт обновляет серию книги, но не работы, — без этого шага работа
 // оставалась без серии: /books её не показывал, фильтр и поиск по серии не
 // находили. Представитель — издание с серией, авторский цикл важнее
-// межавторской серии, потом меньший номер, потом id (тот же порядок, что у
-// recomputeWorkAggregates в группировке). Ручные правки серии/номера не трогает.
+// межавторской серии, потом серия издания на языке названия работы («Эркюль
+// Пуаро», а не «Hercule Poirot», #480: язык издания, чьё название совпадает с
+// названием работы, — его локализует recomputeWorkTitles), потом меньший номер,
+// потом id (тот же порядок, что у recomputeWorkAggregates в группировке).
+// Ручные правки серии/номера не трогает.
 // Возвращает id изменённых работ.
 func syncWorkSeries(ctx context.Context, pool *pgxpool.Pool) ([]int64, error) {
 	rows, err := pool.Query(ctx, `
-		WITH rep AS (
+		WITH al AS (
+			SELECT DISTINCT ON (b.work_id) b.work_id, lower(btrim(b.lang)) AS lang
+			FROM books b JOIN works w ON w.id = b.work_id
+			WHERE b.deleted = false
+			ORDER BY b.work_id, (b.normalized_title = w.normalized_title) DESC, b.id
+		), rep AS (
 			SELECT DISTINCT ON (b.work_id) b.work_id, b.series_id, b.ser_no
 			FROM books b
 			LEFT JOIN series s ON s.id = b.series_id
+			LEFT JOIN al ON al.work_id = b.work_id
 			WHERE b.deleted = false AND b.work_id IS NOT NULL
 			ORDER BY b.work_id, (b.series_id IS NOT NULL) DESC, (s.kind IS NULL) DESC,
-			         b.ser_no NULLS LAST, b.id
+			         (lower(btrim(b.lang)) IS NOT DISTINCT FROM al.lang) DESC, b.ser_no NULLS LAST, b.id
 		)
 		UPDATE works w SET series_id = rep.series_id, ser_no = rep.ser_no, updated_at = now()
 		FROM rep
