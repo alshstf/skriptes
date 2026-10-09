@@ -95,8 +95,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый
     список книг прогоняй через те же исключения.
 15. **Работа (`works`) над изданиями (`books`).** Группировка `metadata/work_grouper.go` (Tier-1 локально, Tier-2
-    внешний, гейты против склеек), ручные merge/split на карточках (якорное издание не выносится; merge обязан звать
-    `reassignWorkUserData` до GC). Два индекса Meili: `books` (OPDS, distinct по work_id) и `works` (веб, фасеты по
+    внешний, гейты против склеек; одноимённая антология к роману не клеится), ручные merge/split на карточках (якорное
+    издание не выносится; merge обязан звать `reassignWorkUserData` до GC). Авторы работы — `internal/workauthors`
+    (не объединение авторов изданий, #464). Два индекса Meili: `books` (OPDS, distinct по work_id) и `works` (веб, фасеты по
     работам). Меняешь `workDoc`/`workDocSelect` — бамп `WorksIndexSchemaVersion` (пересборка во временном индексе +
     swap). id работ и изданий пересекаются: `/works/{id}` ≠ `/books/{id}`.
 16. **★-избранное книг = служебная полка** `user_collections.kind='favorites'`; таблицы `favorites` нет. Авторы и

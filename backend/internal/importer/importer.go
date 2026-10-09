@@ -35,6 +35,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
+	"github.com/skriptes/skriptes/backend/internal/workauthors"
 )
 
 // normalizeLang приводит код языка к канонике: нижний регистр + trim + срез
@@ -495,8 +496,10 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v11 — alt_titles_s (названия изданий и оригинала) и authors_latin (латинские
 // имена авторов оригинала) в поиске (#291);
 // v12 — popularity: LIBRATE 1–2 без бонуса (#292);
-// v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447).
-const WorksIndexSchemaVersion = 13
+// v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447);
+// v14 — authors/author_ids: авторы работы по правилу workauthors.Core, без
+// чужих авторов антологии с тем же названием (#464).
+const WorksIndexSchemaVersion = 14
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -510,7 +513,7 @@ func WorksIndexSyncedFlagKey() string {
 // year = COALESCE(works.written_year, минимальный written_year изданий): даже
 // если work-агрегат года ещё не пересчитан группировкой, индекс берёт год из
 // изданий (паритет с карточкой books.Get).
-const workDocSelect = `
+var workDocSelect = `
 	SELECT
 		w.id, w.title, w.normalized_title::text,
 		w.series_id, COALESCE(s.title, ''),
@@ -555,29 +558,17 @@ const workDocSelect = `
 			JOIN genres g       ON g.id = bg.genre_id
 			WHERE b.work_id = w.id AND b.deleted = false AND g.fb2_code IS NOT NULL
 		), '{}'),
+		-- Авторы работы — не объединение авторов изданий, а правило #464
+		-- (workauthors.Core): антология с тем же названием не приносит своих.
 		COALESCE((
-			SELECT array_agg(x.full_name ORDER BY x.minpos, x.last_name)
-			FROM (
-				SELECT a.id, a.last_name,
-				       TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) AS full_name,
-				       min(ba.position) AS minpos
-				FROM book_authors ba
-				JOIN authors a ON a.id = ba.author_id
-				JOIN books b   ON b.id = ba.book_id
-				WHERE b.work_id = w.id AND b.deleted = false
-				GROUP BY a.id, a.last_name, a.first_name, a.middle_name
-			) x
+			SELECT array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) ORDER BY c.minpos, a.last_name)
+			FROM (` + workauthors.Core("w.id") + `) c
+			JOIN authors a ON a.id = c.author_id
 		), '{}'),
 		COALESCE((
-			SELECT array_agg(x.id ORDER BY x.minpos, x.last_name)
-			FROM (
-				SELECT a.id, a.last_name, min(ba.position) AS minpos
-				FROM book_authors ba
-				JOIN authors a ON a.id = ba.author_id
-				JOIN books b   ON b.id = ba.book_id
-				WHERE b.work_id = w.id AND b.deleted = false
-				GROUP BY a.id, a.last_name
-			) x
+			SELECT array_agg(a.id ORDER BY c.minpos, a.last_name)
+			FROM (` + workauthors.Core("w.id") + `) c
+			JOIN authors a ON a.id = c.author_id
 		), '{}'),
 		COALESCE((
 			SELECT count(*) FROM views v
