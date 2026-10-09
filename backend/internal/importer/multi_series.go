@@ -19,6 +19,19 @@ import (
 // дробилась на тысячи «циклов», по одному в карточке каждого автора.
 const multiSeriesMinAuthors = 3
 
+// Серия сборников (#448): в каждой книге десятки авторов — альманах, антология,
+// номера журнала («Урал улыбается» — 2 книги по 53–59 авторов). Первых авторов у
+// неё меньше трёх, и по правилу выше она оставалась «циклом» каждого из авторов.
+// Второй признак: в половине книг серии хотя бы anthologyMinBookAuthors авторов
+// и всего разных авторов не меньше anthologyMinSeriesAuthors. Сухой прогон на
+// проде 2026-10-08: 365 серий («Юность (из журнала)», «Знание — сила:
+// Фантастика», «Книги Сергея Лукьяненко»); соавторские циклы (2 автора на
+// книгу — «Хроники Дюны» Брайана Херберта и Андерсона) правило не задевает.
+const (
+	anthologyMinBookAuthors   = 3
+	anthologyMinSeriesAuthors = 6
+)
+
 // planMultiSeries — проход по INPX до импорта: названия серий, под которыми
 // книги ≥ multiSeriesMinAuthors разных первых авторов и ни у одного из них нет
 // 80% книг (hasDominantAuthor), плюс уже помеченные такими в базе (признак липкий — иначе
@@ -33,6 +46,7 @@ const multiSeriesMinAuthors = 3
 // становятся межавторскими ни из INPX, ни из базы — см. isGenericSeriesTitle.
 func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[string]bool, error) {
 	booksBySeries := map[string]map[string]int{} // название → первый автор → книг
+	anth := map[string]*seriesAuthors{}          // название → авторов в книгах (признак сборников)
 	err := ix.Each(func(_ inpx.InpFile, rec inpx.Record) error {
 		if rec.Series == "" || len(rec.Authors) == 0 {
 			return nil
@@ -47,6 +61,15 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 			booksBySeries[title] = byAuthor
 		}
 		byAuthor[authorKey(rec.Authors[0])]++
+		sa := anth[title]
+		if sa == nil {
+			sa = &seriesAuthors{all: map[string]bool{}}
+			anth[title] = sa
+		}
+		sa.perBook = append(sa.perBook, len(rec.Authors))
+		for _, a := range rec.Authors {
+			sa.all[authorKey(a)] = true
+		}
 		return nil
 	})
 	if err != nil {
@@ -65,7 +88,10 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 	}
 	multi := map[string]bool{}
 	for title, byAuthor := range booksBySeries {
-		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor, isService) && !isGenericSeriesTitle(title) {
+		if isGenericSeriesTitle(title) {
+			continue
+		}
+		if len(byAuthor) >= multiSeriesMinAuthors && !hasDominantAuthor(byAuthor, isService) || anth[title].isAnthologies() {
 			multi[title] = true
 		}
 	}
@@ -84,6 +110,27 @@ func (im *Importer) planMultiSeries(ctx context.Context, ix *inpx.Inpx) (map[str
 		}
 	}
 	return multi, rows.Err()
+}
+
+// seriesAuthors — авторы книг серии: сколько в каждой книге и все разные.
+type seriesAuthors struct {
+	perBook []int
+	all     map[string]bool
+}
+
+// isAnthologies — серия сборников: в половине книг ≥ anthologyMinBookAuthors авторов
+// (медиана) и всего ≥ anthologyMinSeriesAuthors разных.
+func (s *seriesAuthors) isAnthologies() bool {
+	if s == nil || len(s.all) < anthologyMinSeriesAuthors || len(s.perBook) == 0 {
+		return false
+	}
+	many := 0
+	for _, n := range s.perBook {
+		if n >= anthologyMinBookAuthors {
+			many++
+		}
+	}
+	return many*2 >= len(s.perBook)
 }
 
 // genericSeriesWords — жанровые слова, из которых состоит «серия» вида
