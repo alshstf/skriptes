@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { Award, ChevronLeft, ExternalLink, Film } from 'lucide-react';
+import { AwardLogo } from '@/components/AwardLogo';
 import { BookListItem } from '@/components/BookListItem';
 import { Callout } from '@/components/ui/callout';
 import { Switch } from '@/components/ui/switch';
@@ -60,25 +61,28 @@ export function AwardsPage() {
                 <Link
                   to="/awards/$key"
                   params={{ key: a.key }}
-                  className="flex h-full flex-col gap-0.5 rounded-md border border-border px-3 py-2.5 transition hover:bg-accent/30"
+                  className="flex h-full items-center gap-3 rounded-md border border-border px-3 py-2.5 transition hover:bg-accent/30"
                 >
-                  <span className="text-sm font-medium">{a.name}</span>
-                  <span className="text-xs tabular-nums text-muted-foreground">
-                    {a.film ? (
-                      a.wins > 0 ? (
+                  <AwardLogo award={a} className="size-11 shrink-0" />
+                  <span className="flex min-w-0 flex-col gap-0.5">
+                    <span className="text-sm font-medium">{a.name}</span>
+                    <span className="text-xs tabular-nums text-muted-foreground">
+                      {a.film ? (
+                        a.wins > 0 ? (
+                          <>
+                            {yearsRange(a.first_year, a.last_year)} · экранизаций книг из библиотеки: {a.wins}
+                          </>
+                        ) : (
+                          'экранизаций книг из библиотеки нет'
+                        )
+                      ) : a.wins > 0 ? (
                         <>
-                          {yearsRange(a.first_year, a.last_year)} · экранизаций книг из библиотеки: {a.wins}
+                          {yearsRange(a.first_year, a.last_year)} · в библиотеке {a.in_catalog} из {a.wins}
                         </>
                       ) : (
-                        'экранизаций книг из библиотеки нет'
-                      )
-                    ) : a.wins > 0 ? (
-                      <>
-                        {yearsRange(a.first_year, a.last_year)} · в библиотеке {a.in_catalog} из {a.wins}
-                      </>
-                    ) : (
-                      'нет данных'
-                    )}
+                        'нет данных'
+                      )}
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -144,8 +148,8 @@ export function AwardPage() {
           <ChevronLeft className="size-4" aria-hidden />
           Премии
         </Link>
-        <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-          <Award className="size-6" aria-hidden />
+        <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight">
+          <AwardLogo award={award} className="size-16 shrink-0" />
           {award.name}
         </h1>
         <p className="text-sm tabular-nums text-muted-foreground">

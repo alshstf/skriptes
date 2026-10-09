@@ -56,5 +56,6 @@ func init() {
 		if a, ok := abouts[Catalog[i].Key]; ok {
 			Catalog[i].Description, Catalog[i].Site = a.text, a.site
 		}
+		Catalog[i].Logo = LogoURL(Catalog[i]) != ""
 	}
 }

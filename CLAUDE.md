@@ -84,8 +84,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
    `text-destructive`, жёлтая ★ избранного).
 10. **Контролы:** мгновенное вкл/выкл — `ui/switch`; checkbox = «отметь и Сохрани»; бар несохранённого — `SaveBar`;
     висячее слово — `text-pretty`.
-11. **Три кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters` и `/cache/author-photos`
-    (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
+11. **Четыре кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters`, `/cache/author-photos` и
+    `/cache/award-logos` (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
 12. **Lazy-обогащение автора** — single-shot по `metadata_fetched_at` (и `adaptations_fetched_at`); ретрай — только
     отдельным TTL-механизмом.
 13. **Матчинг автора во внешних — precision > recall** (`authormatch.go`, `candidate_policy.go`, `namesake.go`,
