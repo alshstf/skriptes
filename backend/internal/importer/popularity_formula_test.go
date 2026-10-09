@@ -110,3 +110,27 @@ func TestComputeWorkPopularity(t *testing.T) {
 		require.Greater(t, classic, readObscure, "даже прочитанная безвестная книга ниже классики")
 	})
 }
+
+// TestAwardBonus — #420, вариант A: лауреат +100, главная премия +200, каждая
+// следующая +25, считаются не больше трёх; кинопремии и чужие ключи — мимо.
+func TestAwardBonus(t *testing.T) {
+	require.Zero(t, awardBonus(0, false))
+	require.EqualValues(t, 100, awardBonus(1, false))
+	require.EqualValues(t, 200, awardBonus(1, true))
+	require.EqualValues(t, 250, awardBonus(3, true))
+	require.EqualValues(t, 250, awardBonus(7, true), "не больше трёх премий")
+	require.EqualValues(t, 125, awardBonus(2, false))
+
+	tier := func(k string) int {
+		return map[string]int{"hugo": awardTierMajor, "locus": awardTierAward}[k]
+	}
+	n, major := awardSignals([]string{"hugo", "locus", "oscar"}, tier)
+	require.Equal(t, 2, n)
+	require.True(t, major)
+	n, _ = awardSignals([]string{"hugo"}, nil)
+	require.Zero(t, n, "без функции ранга премии не учитываются")
+
+	require.EqualValues(t, 250, computeWorkPopularity(workPopSignals{EditionCount: 1, Awards: 3, AwardMajor: true}))
+	require.EqualValues(t, 260, computeWorkPopularity(workPopSignals{EditionCount: 1, LibrateMax: 5, Awards: 1}),
+		"LIBRATE 5 (160) + лауреат (100)")
+}
