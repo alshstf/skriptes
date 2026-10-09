@@ -490,6 +490,28 @@ func run() error {
 		logger.Warn("read work grouping settings — using defaults", "err", err)
 		wgCfg = settings.DefaultWorkGroupingConfig()
 	}
+	// Ключи группировки изданий из поиска экранизаций (#467): разовый догон для
+	// работ, у которых экранизации уже найдены, а QID книги не сохранялся. Не чаще
+	// 30 запросов в минуту; сбой источника — продолжим на следующем старте.
+	metadata.Go(func(c context.Context) {
+		const flag = "adaptation_work_keys_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		found, finished, err := metadata.BackfillAdaptationWorkKeys(c, pool, wdAdaptations, 30, logger)
+		if err != nil && c.Err() == nil {
+			logger.Warn("adaptation work keys backfill stopped — will continue next start", "found", found, "err", err)
+		}
+		if !finished {
+			return
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("adaptation work keys: set flag failed", "err", err)
+		}
+		logger.Info("adaptation work keys backfill done", "found", found)
+	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
 		Wikidata:          wgCfg.Wikidata,
