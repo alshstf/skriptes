@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.36.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.37.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0056_smart_shelves`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0057_author_lifetime`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -73,8 +73,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 2. **Жанры:** Meili отдаёт `fb2_code`, имена — `useGenreMap()`; стиль чипов — `genreChipClass(useGenreChipStyle())`.
    Алиасы кодов — `genres/aliases.json` (гейт `genre_aliases_merged_vN` — бампать). Плашка сигналов — общий `BookMeta`.
 3. **`date_added` ≠ год написания.** `books.written_year` (fb2 → OL → Wikidata, правила правдоподобия
-   `metadata/work_years.go`) vs `books.edition_year` (год издания, только справочно). Meili `year` = written_year,
-   синкается автоматически.
+   `metadata/work_years.go`: опечатки — не раньше рождения автора, год Фантлаба, заглушки < 1450, #465) vs
+   `books.edition_year` (год издания, только справочно). Meili `year` = written_year, синкается автоматически.
 4. **jsdom не считает layout** — позиции/overflow/sticky проверять только Playwright (`frontend/e2e/`).
 5. **Миграции и seed жанров** применяются сами на старте backend.
 6. **Миграция — новый номер** (см. «PR, релиз» выше).
@@ -84,8 +84,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
    `text-destructive`, жёлтая ★ избранного).
 10. **Контролы:** мгновенное вкл/выкл — `ui/switch`; checkbox = «отметь и Сохрани»; бар несохранённого — `SaveBar`;
     висячее слово — `text-pretty`.
-11. **Три кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters` и `/cache/author-photos`
-    (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
+11. **Четыре кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters`, `/cache/author-photos` и
+    `/cache/award-logos` (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
 12. **Lazy-обогащение автора** — single-shot по `metadata_fetched_at` (и `adaptations_fetched_at`); ретрай — только
     отдельным TTL-механизмом.
 13. **Матчинг автора во внешних — precision > recall** (`authormatch.go`, `candidate_policy.go`, `namesake.go`,
@@ -95,11 +95,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый
     список книг прогоняй через те же исключения.
 15. **Работа (`works`) над изданиями (`books`).** Группировка `metadata/work_grouper.go` (Tier-1 локально, Tier-2
-    внешний, гейты против склеек; одноимённая антология к роману не клеится), ручные merge/split на карточках (якорное
-    издание не выносится; merge обязан звать `reassignWorkUserData` до GC). Авторы работы — `internal/workauthors`
-    (не объединение авторов изданий, #464). Два индекса Meili: `books` (OPDS, distinct по work_id) и `works` (веб, фасеты по
-    работам). Меняешь `workDoc`/`workDocSelect` — бамп `WorksIndexSchemaVersion` (пересборка во временном индексе +
-    swap). id работ и изданий пересекаются: `/works/{id}` ≠ `/books/{id}`.
+    внешний, гейты против склеек — §15 в gotchas), ручные merge/split (якорь не выносится; merge зовёт
+    `reassignWorkUserData` до GC), авторы работы — `internal/workauthors`. Индексы Meili: `books` (OPDS) и `works`
+    (веб); меняешь `workDoc`/`workDocSelect` — бамп `WorksIndexSchemaVersion`. `/works/{id}` ≠ `/books/{id}`.
 16. **★-избранное книг = служебная полка** `user_collections.kind='favorites'`; таблицы `favorites` нет. Авторы и
     серии — подписка (колокольчик), не избранное.
 17. **Два рейтинга:** внешний (LIBRATE → веб от 5 голосов; иконка `Globe`; рейтинг автора — среднее пяти лучших
@@ -114,10 +112,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 21. **Воркеры с lookups-таблицей** выбирают только кандидатов, которых пора спросить, — в SQL (`dueCond`/`dueArgs`),
     не фильтром в Go. Ядро сначала, хвост реже; уже известное (QID, native, skipped) не переспрашиваем.
 22. **Тёзки:** автор = (имя, уточнение `[…]` из INPX); прежняя запись — наследнику; `#NNN` наружу не показываем.
-    Межавторские/издательские серии — `series.kind='multi'` (≥3 первых авторов без доминирующего ≥80 % или серия
-    сборников: в половине книг ≥3 авторов и всего ≥6, #448); издательские одного автора — `'publisher'`
-    (`metadata/series_kind.go`, #468). На карточках книги — только цикл (`kind IS NULL`). Дубли авторов — ручное
-    слияние с памятью (`author_merges`).
+    Дубли авторов — ручное слияние с памятью (`author_merges`). `series.kind`: NULL — цикл, `'multi'` —
+    межавторская (#448), `'publisher'` — издательская одного автора (#468); на карточках книги — только цикл.
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
 24. **Премии — только белый список владельца** (`awards/catalog.go`, `manual.json` — руками раз в год). Новую премию или

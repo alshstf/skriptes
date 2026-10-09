@@ -164,6 +164,7 @@ func run() error {
 		runOncePublisherSeries(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
+		runOnceWorkYearRules(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
@@ -277,7 +278,8 @@ func run() error {
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
 	// отказ Википедии протёк бы в OL-fallback (цепочка bio/photo).
 	candidateFacts := metadata.CachedCandidateFacts(wdAdaptations.CandidateFacts)
-	candidateCheck := metadata.NewCandidateCheck(candidateFacts)
+	// Принятая статья автора с QID — его QID и годы жизни (#465: правило года работы).
+	candidateCheck := metadata.RecordingCandidateCheck(metadata.NewCandidateCheck(candidateFacts), candidateFacts, pool, logger)
 	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck).WithCandidateFacts(candidateFacts)
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(
@@ -490,6 +492,40 @@ func run() error {
 		logger.Warn("read work grouping settings — using defaults", "err", err)
 		wgCfg = settings.DefaultWorkGroupingConfig()
 	}
+	// Годы жизни авторов работ с годом раньше 1500 (#465): тот же поиск статьи, что
+	// у био, без записи био; затем год их работ — по правилу «не раньше рождения».
+	metadata.Go(func(c context.Context) {
+		const flag = "author_lifetimes_suspect_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		authors, err := metadata.SuspectYearAuthors(c, pool)
+		if err != nil {
+			logger.Warn("author lifetimes: suspects failed", "err", err)
+			return
+		}
+		got, err := enricher.ResolveAuthorLifetimes(c, authors)
+		if err != nil {
+			logger.Warn("author lifetimes stopped — will continue next start", "err", err)
+			return
+		}
+		works, err := metadata.RecomputeYearsBeforeBirth(c, pool)
+		if err != nil {
+			logger.Warn("author lifetimes: recompute years failed", "err", err)
+			return
+		}
+		if len(works) > 0 {
+			if err := imp.UpsertWorksToIndex(c, works); err != nil {
+				logger.Warn("works index sync after lifetimes failed", "err", err)
+			}
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("author lifetimes: set flag failed", "err", err)
+		}
+		logger.Info("author lifetimes for suspect years done", "authors", len(authors), "with_years", len(got), "works", len(works))
+	})
 	// Ключи группировки изданий из поиска экранизаций (#467): разовый догон для
 	// работ, у которых экранизации уже найдены, а QID книги не сохранялся. Не чаще
 	// 30 запросов в минуту; сбой источника — продолжим на следующем старте.
@@ -620,7 +656,7 @@ func run() error {
 			Overrides: overrideCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
-		Awards:  api.AwardsDeps{Service: awards.NewService(pool)},
+		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
@@ -833,6 +869,15 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if len(touched) > 0 {
 		syncSplitWorks(ctx, imp, touched, logger)
 		logger.Info("alien editions split after import", "works", len(touched))
+	}
+	// Годы работ раньше рождения автора (#465): годы жизни приходят с поиском био.
+	if works, err := metadata.RecomputeYearsBeforeBirth(ctx, pool); err != nil {
+		logger.Warn("work years before birth after import failed", "err", err)
+	} else if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after year fix failed", "err", err)
+		}
+		logger.Info("work years before author birth fixed", "works", len(works))
 	}
 	// Издательские серии (#468): импорт мог добавить книги в серии — классифицируем
 	// заново, у затронутых работ — серия-цикл и переиндексация.
@@ -1678,6 +1723,38 @@ func runOnceStaleRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.I
 // Найденные Фантлабом работы перепрашиваются (сброс found-строк): год первой
 // публикации приходит в том же ответе, что счётчик оценок, и до этой версии не
 // сохранялся. Гейт work_years_v1.
+// runOnceWorkYearRules — год всех работ по правилам #465 (заглушки года издания
+// раньше 1450, год Фантлаба против опечатки fb2, не раньше рождения автора) и
+// ресинк изменённых. Гейт work_year_rules_v1; годы жизни, найденные позже, чинит
+// шаг после импорта (RecomputeYearsBeforeBirth).
+func runOnceWorkYearRules(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_year_rules_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work year rules: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, err := metadata.RecomputeAllWorkYears(ctx, pool)
+	if err != nil {
+		logger.Warn("work year rules failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after work year rules failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work year rules: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time work year rules done", "works", len(changed))
+}
+
 func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
 	const flag = "work_years_v1"
 	var done bool

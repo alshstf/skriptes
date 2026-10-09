@@ -18,6 +18,8 @@ export type Award = {
   description?: string;
   /** Сайт премии. */
   site?: string;
+  /** Есть картинка премии: GET /api/awards/{key}/logo (#446). */
+  logo?: boolean;
 };
 
 export type AwardSummary = Award & {
@@ -148,4 +150,17 @@ export function mergeBadges(badges: AwardBadge[]): AwardBadge[] {
     }
   }
   return out;
+}
+
+// monogram — первые буквы значимых слов названия: «Меч без имени» → «МБИ».
+export function monogram(name: string): string {
+  const skip = new Set(['премия', 'премии', 'итоги', 'года', 'по']);
+  const words = name
+    .replace(/[«»"()]/g, ' ')
+    .split(/\s+/)
+    .filter((w) => w.length >= 2 && !skip.has(w.toLowerCase()));
+  return (words.length > 0 ? words : [name])
+    .slice(0, 3)
+    .map((w) => w[0].toUpperCase())
+    .join('');
 }
