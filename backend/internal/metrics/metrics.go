@@ -9,6 +9,7 @@ package metrics
 import (
 	"net/http"
 	"strconv"
+	"sync/atomic"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -88,13 +89,6 @@ var (
 		Name: "skriptes_import_last_record_errors",
 		Help: "Записей INPX с ошибкой (пропущены) в последнем удачном импорте.",
 	})
-
-	// ExternalSourceUp — 0, пока внешний источник (хост) на паузе прерывателя
-	// после серии сбоев (#299); 1 — доступен.
-	ExternalSourceUp = factory.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "skriptes_external_source_up",
-		Help: "Доступность внешнего источника обогащения по хосту: 0 — на паузе после серии сбоев (сеть, 429, 5xx).",
-	}, []string{"host"})
 
 	// ExternalSourcePauses — сколько раз источник ставили на паузу.
 	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
@@ -190,4 +184,39 @@ func normMethod(m string) string {
 		return m
 	}
 	return "OTHER"
+}
+
+// skriptes_external_source_up — 0, пока внешний источник (хост) на паузе
+// прерывателя после серии сбоев (#299); 1 — доступен. Считается при сборе по
+// состоянию прерывателя (#471): раньше 0 ставился при открытии паузы и
+// снимался только итогом пробного запроса, и если после паузы к источнику не шло
+// запросов (проход воркера кончился), метрика держала 0 сутками — алерт
+// SkriptesSourcePaused горел ложно. Теперь 0 — только пока пауза идёт.
+var sourceState atomic.Value // func() map[string]bool: хост → доступен
+
+// SetExternalSourceState — откуда брать состояние источников (metadata, прерыватель).
+func SetExternalSourceState(fn func() map[string]bool) { sourceState.Store(fn) }
+
+type sourceUpCollector struct{ desc *prometheus.Desc }
+
+func (c sourceUpCollector) Describe(ch chan<- *prometheus.Desc) { ch <- c.desc }
+
+func (c sourceUpCollector) Collect(ch chan<- prometheus.Metric) {
+	fn, _ := sourceState.Load().(func() map[string]bool)
+	if fn == nil {
+		return
+	}
+	for host, up := range fn() {
+		v := 0.0
+		if up {
+			v = 1
+		}
+		ch <- prometheus.MustNewConstMetric(c.desc, prometheus.GaugeValue, v, host)
+	}
+}
+
+func init() {
+	Registry.MustRegister(sourceUpCollector{desc: prometheus.NewDesc("skriptes_external_source_up",
+		"Доступность внешнего источника обогащения по хосту: 0 — на паузе после серии сбоев (сеть, 429, 5xx).",
+		[]string{"host"}, nil)})
 }

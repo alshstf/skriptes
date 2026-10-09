@@ -173,3 +173,32 @@ func TestSourceBreaker_TimeoutsCount(t *testing.T) {
 	_, err := client.Get(hang.URL)
 	require.ErrorIs(t, err, ErrSourcePaused, "зависший хост (таймауты клиента) ставится на паузу")
 }
+
+// TestSourceBreaker_UpSnapshot — #471: метрика доступности — «на паузе сейчас»,
+// а не итог последней пробы. Пауза кончилась без запросов — хост доступен;
+// проба провалилась — снова на паузе.
+func TestSourceBreaker_UpSnapshot(t *testing.T) {
+	f := newBreakerFixture(t)
+	host := mustHost(t, f.srv.URL)
+	require.NoError(t, f.get(t))
+	require.Equal(t, map[string]bool{host: true}, f.b.upSnapshot())
+
+	f.status.Store(http.StatusServiceUnavailable)
+	for range breakerThreshold {
+		require.NoError(t, f.get(t))
+	}
+	require.False(t, f.b.upSnapshot()[host], "пауза идёт — недоступен")
+
+	f.now = f.now.Add(breakerBaseBackoff)
+	require.True(t, f.b.upSnapshot()[host], "пауза кончилась, запросов не было — доступен (раньше 0 держался сутками)")
+
+	require.NoError(t, f.get(t)) // проба, источник всё ещё лежит
+	require.False(t, f.b.upSnapshot()[host], "провал пробы — снова пауза")
+}
+
+func mustHost(t *testing.T, raw string) string {
+	t.Helper()
+	u, err := url.Parse(raw)
+	require.NoError(t, err)
+	return u.Host
+}

@@ -103,7 +103,6 @@ func (b *sourceBreaker) record(host string, probe bool, res outcome) {
 			slog.Info("external source available again", "host", host)
 		}
 		st.failures, st.open, st.backoff = 0, false, 0
-		metrics.ExternalSourceUp.WithLabelValues(host).Set(1)
 		return
 	}
 	if st.open {
@@ -121,7 +120,6 @@ func (b *sourceBreaker) record(host string, probe bool, res outcome) {
 	}
 	st.open, st.backoff = true, breakerBaseBackoff
 	st.until = b.now().Add(st.backoff)
-	metrics.ExternalSourceUp.WithLabelValues(host).Set(0)
 	metrics.ExternalSourcePauses.WithLabelValues(host).Inc()
 	slog.Warn("external source unavailable, pausing requests", "host", host, "failures", st.failures, "pause", st.backoff)
 }
@@ -131,9 +129,23 @@ func (b *sourceBreaker) state(host string) *hostState {
 	if !ok {
 		st = &hostState{}
 		b.hosts[host] = st
-		metrics.ExternalSourceUp.WithLabelValues(host).Set(1)
 	}
 	return st
+}
+
+// upSnapshot — доступность хостов для метрики skriptes_external_source_up (#471):
+// недоступен только тот, чья пауза идёт сейчас. Пауза кончилась, а запросов нет —
+// доступен: пробный запрос уйдёт с первым вызовом, и если источник всё ещё лежит,
+// пауза откроется снова.
+func (b *sourceBreaker) upSnapshot() map[string]bool {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	now := b.now()
+	out := make(map[string]bool, len(b.hosts))
+	for host, st := range b.hosts {
+		out[host] = !st.open || !now.Before(st.until)
+	}
+	return out
 }
 
 // breakerTransport — http.RoundTripper с прерывателем по хосту запроса.
@@ -174,6 +186,8 @@ var (
 	sources         = newSourceBreaker()
 	sourceTransport = &breakerTransport{b: sources, base: http.DefaultTransport}
 )
+
+func init() { metrics.SetExternalSourceState(sources.upSnapshot) }
 
 // SourceHTTPClient — http.Client для внешних источников обогащения: с таймаутом
 // и прерывателем по хосту (#299).

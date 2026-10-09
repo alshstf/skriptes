@@ -962,7 +962,8 @@ GB `not_found`, 0 вызовов под ключом в консоли Google, �
 пропускают книгу молча — без записи `error` в учёт и без строки в логе (`case errors.Is(ferr, ErrSourcePaused)` в каждом
 воркере), `RecheckPosterHoles` останавливает проход, метрика исхода — `paused`. Лог — одна WARN на паузу и INFO на
 восстановление; метрики `skriptes_external_source_up{host}` / `skriptes_external_source_pauses_total{host}`, алерт
-`SkriptesSourcePaused` в Grafana хоумлаба. ⚠️ Новый провайдер — только через `SourceHTTPClient`, не голый `http.Client`.
+`SkriptesSourcePaused` в Grafana хоумлаба. `…_up` считается при сборе по состоянию прерывателя (`upSnapshot`, #471):
+0 — только пока пауза идёт; раньше 0 держался до итога пробы, а без запросов после паузы — сутками (ложный алерт). ⚠️ Новый провайдер — только через `SourceHTTPClient`, не голый `http.Client`.
 
 ### 21. Воркеры с lookups-учётом выбирают кандидатов уже с учётом срока — в SQL
 
