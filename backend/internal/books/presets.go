@@ -249,7 +249,7 @@ func (s *Service) unfinishedSeries(ctx context.Context, userID int64) ([]presetE
 			SELECT w.series_id, max(w.ser_no) AS max_no, max(rw.read_at) AS last_read, count(*) AS read_n
 			FROM works w
 			JOIN rw ON rw.work_id = w.id
-			JOIN series se ON se.id = w.series_id AND se.kind IS DISTINCT FROM 'multi'
+			JOIN series se ON se.id = w.series_id AND se.kind IS NULL -- только циклы (#468)
 			WHERE COALESCE(w.kind, '') = ''
 			GROUP BY w.series_id
 		),

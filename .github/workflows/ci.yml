@@ -34,6 +34,11 @@ jobs:
         run: go vet ./...
       - name: Test
         run: go test -race ./...
+        env:
+          # Образы testcontainers (postgres, meilisearch, ryuk) — через зеркало Docker
+          # Hub от Google: анонимный лимит Docker Hub на общих IP раннеров ронял CI
+          # («toomanyrequests», 2026-10-09). Локально переменной нет — тянется с Hub.
+          TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: mirror.gcr.io/
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:

@@ -95,8 +95,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый
     список книг прогоняй через те же исключения.
 15. **Работа (`works`) над изданиями (`books`).** Группировка `metadata/work_grouper.go` (Tier-1 локально, Tier-2
-    внешний, гейты против склеек), ручные merge/split на карточках (якорное издание не выносится; merge обязан звать
-    `reassignWorkUserData` до GC). Два индекса Meili: `books` (OPDS, distinct по work_id) и `works` (веб, фасеты по
+    внешний, гейты против склеек; одноимённая антология к роману не клеится), ручные merge/split на карточках (якорное
+    издание не выносится; merge обязан звать `reassignWorkUserData` до GC). Авторы работы — `internal/workauthors`
+    (не объединение авторов изданий, #464). Два индекса Meili: `books` (OPDS, distinct по work_id) и `works` (веб, фасеты по
     работам). Меняешь `workDoc`/`workDocSelect` — бамп `WorksIndexSchemaVersion` (пересборка во временном индексе +
     swap). id работ и изданий пересекаются: `/works/{id}` ≠ `/books/{id}`.
 16. **★-избранное книг = служебная полка** `user_collections.kind='favorites'`; таблицы `favorites` нет. Авторы и
@@ -114,8 +115,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     не фильтром в Go. Ядро сначала, хвост реже; уже известное (QID, native, skipped) не переспрашиваем.
 22. **Тёзки:** автор = (имя, уточнение `[…]` из INPX); прежняя запись — наследнику; `#NNN` наружу не показываем.
     Межавторские/издательские серии — `series.kind='multi'` (≥3 первых авторов без доминирующего ≥80 % или серия
-    сборников: в половине книг ≥3 авторов и всего ≥6, #448). Дубли
-    авторов — ручное слияние с памятью (`author_merges`).
+    сборников: в половине книг ≥3 авторов и всего ≥6, #448); издательские одного автора — `'publisher'`
+    (`metadata/series_kind.go`, #468). На карточках книги — только цикл (`kind IS NULL`). Дубли авторов — ручное
+    слияние с памятью (`author_merges`).
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
 24. **Премии — только белый список владельца** (`awards/catalog.go`, `manual.json` — руками раз в год). Новую премию или

@@ -394,7 +394,9 @@ type groupBook struct {
 	serNo         int
 	lastName      string
 	firstName     string
-	scanned       bool // work_scanned_at NOT NULL (контекст, не кандидат)
+	scanned       bool   // work_scanned_at NOT NULL (контекст, не кандидат)
+	nAuthors      int    // число авторов издания — гейт антологий (#464)
+	authorSet     string // id авторов издания по возрастанию через запятую
 }
 
 // groupAuthorTier1 — структурная группировка одного автора БЕЗ сети
@@ -408,7 +410,43 @@ func (g *WorkGrouper) groupAuthorTier1(ctx context.Context, authorID int64) erro
 		return nil
 	}
 	uf := clusterTier1(books)
-	return g.apply(ctx, authorID, books, uf, nil)
+	// Уже найденные внешние ключи (Tier-2, поиск экранизаций — #467) — без сети:
+	// работы из нескольких изданий Tier-2 не спрашивает, ключ им даёт только
+	// поиск экранизаций.
+	keyBuckets, err := g.foundKeyBuckets(ctx, books)
+	if err != nil {
+		g.logger.Warn("work grouping: load work lookups failed", "err", err)
+		return g.apply(ctx, authorID, books, uf, nil)
+	}
+	return g.apply(ctx, authorID, books, uf, g.unionKeyBuckets(books, uf, keyBuckets))
+}
+
+// foundKeyBuckets — (источник\x00work_key) → индексы изданий с уже найденным ключом.
+func (g *WorkGrouper) foundKeyBuckets(ctx context.Context, books []groupBook) (map[string][]int, error) {
+	ids := make([]int64, len(books))
+	idxByID := make(map[int64]int, len(books))
+	for i, b := range books {
+		ids[i] = b.id
+		idxByID[b.id] = i
+	}
+	lookups, err := g.loadWorkLookups(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+	keyBuckets := map[string][]int{}
+	for id, bySrc := range lookups {
+		idx, ok := idxByID[id]
+		if !ok {
+			continue
+		}
+		for src, lr := range bySrc {
+			if lr.outcome == "found" && lr.workKey != "" {
+				bk := src + "\x00" + lr.workKey
+				keyBuckets[bk] = append(keyBuckets[bk], idx)
+			}
+		}
+	}
+	return keyBuckets, nil
 }
 
 // groupAuthorTier2 — Tier-1 (восстановить uf) + внешний резолв Work ID
@@ -435,7 +473,9 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		       -- серии (series.kind='multi') не говорит, что это тот же том.
 		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
-		       a.last_name, COALESCE(a.first_name,'')
+		       a.last_name, COALESCE(a.first_name,''),
+		       (SELECT count(*) FROM book_authors x WHERE x.book_id = b.id),
+		       (SELECT string_agg(x.author_id::text, ',' ORDER BY x.author_id) FROM book_authors x WHERE x.book_id = b.id)
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN authors a ON a.id = ba.author_id
@@ -452,7 +492,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		if err := rows.Scan(&b.id, &b.workID, &b.title, &b.normTitle, &b.lang,
 			&b.srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
 			&b.seriesID, &b.serNo,
-			&b.scanned, &b.lastName, &b.firstName); err != nil {
+			&b.scanned, &b.lastName, &b.firstName, &b.nAuthors, &b.authorSet); err != nil {
 			return nil, err
 		}
 		if isStubSrcTitle(b.srcTitle) {
@@ -495,9 +535,7 @@ func clusterTier1(books []groupBook) *unionFind {
 	}
 	unionBucket := func(m map[string][]int) {
 		for _, idxs := range m {
-			for j := 1; j < len(idxs); j++ {
-				uf.union(idxs[0], idxs[j])
-			}
+			unionGated(uf, books, idxs)
 		}
 	}
 	unionBucket(byTitleLang)
@@ -519,9 +557,7 @@ func clusterTier1(books []groupBook) *unionFind {
 		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
 			continue
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
-		}
+		unionGated(uf, books, idxs)
 	}
 	unionBucket(byTrans)
 	// Перевод ↔ оригинал: src(название,язык) перевода == (normTitle,lang) оригинала.
@@ -530,7 +566,9 @@ func clusterTier1(books []groupBook) *unionFind {
 			continue
 		}
 		for _, j := range byTitleLang[key(b.srcTitleNorm, b.srcLang)] {
-			uf.union(i, j)
+			if !anthologyPair(b, books[j]) {
+				uf.union(i, j)
+			}
 		}
 	}
 	// Tier-1.5: один том серии (series_id, ser_no) у одного автора ⇒ одна работа —
@@ -558,11 +596,54 @@ func clusterTier1(books []groupBook) *unionFind {
 		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
 			continue // разно-названные без src-свидетельства — не рискуем
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
-		}
+		unionGated(uf, books, idxs)
 	}
 	return uf
+}
+
+// Гейт антологий (#464): антология или сборник с тем же названием, что у
+// романа, — не издание этого романа («Патруль времени» Андерсона и одноимённая
+// антология 17 авторов, «Кривой дом» Кристи и том Кристи + Гарднер + Чандлер).
+// Признак — у издания авторов на anthologyExtraAuthors больше, чем у самого
+// «малоавторского» издания группы, а у того их не больше maxCoreAuthors (роман
+// или соавторы). Работы, которые сами многоавторские (альманах, антология в
+// двух изданиях с разным составом), гейт не трогает. Те же числа — в
+// SplitAnthologyEditions (разовый разбор накопленного).
+const (
+	maxCoreAuthors        = 2
+	anthologyExtraAuthors = 2
+)
+
+// anthologyPair — a и b по гейту не могут быть одной работой.
+func anthologyPair(a, b groupBook) bool {
+	lo, hi := min(a.nAuthors, b.nAuthors), max(a.nAuthors, b.nAuthors)
+	return lo <= maxCoreAuthors && hi-lo >= anthologyExtraAuthors
+}
+
+// unionGated — союз бакета с гейтом антологий: «ядро» (издания, у которых
+// авторов меньше чем min+anthologyExtraAuthors) союзится как раньше, антологии —
+// только между собой и только с тем же составом авторов (копии одной антологии).
+func unionGated(uf *unionFind, books []groupBook, idxs []int) {
+	if len(idxs) < 2 {
+		return
+	}
+	minN := books[idxs[0]].nAuthors
+	for _, i := range idxs[1:] {
+		minN = min(minN, books[i].nAuthors)
+	}
+	groups := map[string][]int{} // "" — ядро, иначе состав авторов антологии
+	for _, i := range idxs {
+		k := ""
+		if minN <= maxCoreAuthors && books[i].nAuthors-minN >= anthologyExtraAuthors {
+			k = "a:" + books[i].authorSet
+		}
+		groups[k] = append(groups[k], i)
+	}
+	for _, g := range groups {
+		for j := 1; j < len(g); j++ {
+			uf.union(g[0], g[j])
+		}
+	}
 }
 
 // distinctNormTitles — число разных normalized_title в бакете.
@@ -687,11 +768,16 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 			g.upsertWorkLookup(ctx, b.id, name, "error", "")
 		}
 	}
-	// Союз по совпавшим внешним work_key + сбор ext_ids на корень кластера.
-	// Defensive-гейт (зеркало Tier-1.5): конфликтный бакет НЕ союзим и ext_ids
-	// не пишем — внешний ключ, объединяющий издания с разными оригиналами или
-	// разными номерами тома, почти наверняка ошибочный резолв (и защищает от
-	// «отравленных» lookups, записанных до фикса SrcTitle). Precision > recall.
+	return g.unionKeyBuckets(books, uf, keyBuckets)
+}
+
+// unionKeyBuckets — союз по совпавшим внешним work_key + сбор ext_ids на корень
+// кластера. Defensive-гейт (зеркало Tier-1.5): конфликтный бакет НЕ союзим и
+// ext_ids не пишем — внешний ключ, объединяющий издания с разными оригиналами
+// или разными номерами тома, почти наверняка ошибочный резолв (и защищает от
+// «отравленных» lookups, записанных до фикса SrcTitle). Precision > recall.
+func (g *WorkGrouper) unionKeyBuckets(books []groupBook, uf *unionFind, keyBuckets map[string][]int) map[int]map[string]string {
+	extByRoot := map[int]map[string]string{}
 	for bk, idxs := range keyBuckets {
 		src, workKey := splitKey(bk)
 		if len(idxs) > 1 && (tier2BucketConflicts(books, idxs) || sameLangTitleConflict(books, idxs)) {
@@ -699,10 +785,15 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 				"source", src, "work_key", workKey, "editions", len(idxs))
 			continue
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
+		unionGated(uf, books, idxs)
+		// Ключ — работе «ядра»: изданию бакета с наименьшим числом авторов.
+		first := idxs[0]
+		for _, i := range idxs[1:] {
+			if books[i].nAuthors < books[first].nAuthors {
+				first = i
+			}
 		}
-		root := uf.find(idxs[0])
+		root := uf.find(first)
 		if extByRoot[root] == nil {
 			extByRoot[root] = map[string]string{}
 		}
