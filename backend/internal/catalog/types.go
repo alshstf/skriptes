@@ -110,8 +110,8 @@ type SeriesWithCount struct {
 	Title           string `json:"title"`
 	Count           int    `json:"count"`
 	AllCompilations bool   `json:"all_compilations,omitempty"`
-	// Multi — межавторская/издательская серия (series.kind='multi'): на карточке
-	// автора — не среди его циклов, а внизу свёрнутым блоком.
+	// Multi — не авторский цикл: межавторская ('multi') или издательская
+	// ('publisher', #468) серия; на карточке автора — внизу свёрнутым блоком.
 	Multi bool `json:"multi,omitempty"`
 }
 

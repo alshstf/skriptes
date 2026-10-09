@@ -1399,7 +1399,8 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
 			`+ExternalRatingSQL("b")+`, b.external_rating_source, b.external_rating_count,
 			COALESCE(w.written_year, b.written_year), b.edition_year,
-			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
+			-- Серия — только авторский цикл (#468): межавторская и издательская не показываются.
+			CASE WHEN s.id IS NOT NULL THEN COALESCE(w.ser_no, b.ser_no) END, s.id, s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
 			a.filename,
 			CASE WHEN w.fantlab_marks >= `+fmt.Sprint(MinFantlabMarks)+` THEN w.fantlab_midmark END, w.fantlab_marks,
@@ -1411,7 +1412,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			))
 		FROM books b
 		LEFT JOIN works w    ON w.id = b.work_id
-		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id)
+		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id) AND s.kind IS NULL
 		JOIN archives a      ON a.id = b.archive_id
 		WHERE b.id = $1
 	`, id).Scan(

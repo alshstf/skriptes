@@ -81,7 +81,7 @@ export function useAuthorSeries(authorId: number | undefined, enabled: boolean) 
 export type Series = {
   id: number;
   title: string;
-  /** "multi" — межавторская/издательская серия. */
+  /** "multi" — межавторская серия, "publisher" — издательская серия одного автора (#468); нет — авторский цикл. */
   kind?: string;
   /** Название изменено правкой админа (#379). */
   title_overridden?: boolean;

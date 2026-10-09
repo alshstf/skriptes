@@ -7,8 +7,8 @@ import "testing"
 // ResyncWorksIndex на ближайшем старте (см. main.go::runOnceWorksIndexSync).
 // Меняешь схему — инкрементируй константу и обнови ожидание здесь.
 func TestWorksIndexSyncedFlagKey(t *testing.T) {
-	// v15 — бонус известности за премии (#420).
-	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v15"; got != want {
+	// v16 — серия работы только у авторского цикла (#468).
+	if got, want := WorksIndexSyncedFlagKey(), "works_index_synced_v16"; got != want {
 		t.Fatalf("WorksIndexSyncedFlagKey() = %q, want %q", got, want)
 	}
 }

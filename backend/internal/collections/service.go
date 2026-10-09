@@ -335,7 +335,7 @@ func (s *Service) ListCollectionBooks(ctx context.Context, userID, collID int64)
 		LEFT JOIN works w ON w.id = b.work_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
-		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 		WHERE cb.collection_id = $1
 		GROUP BY b.id, b.title, b.lang, COALESCE(w.written_year, b.written_year), b.work_id, cb.added_at, ser.title
 		ORDER BY cb.added_at DESC, b.id DESC
