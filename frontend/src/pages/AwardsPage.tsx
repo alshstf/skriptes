@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from '@tanstack/react-router';
+import { useEffect, useMemo } from 'react';
+import { Link, useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { Award, ChevronLeft, ExternalLink, Film } from 'lucide-react';
 import { BookListItem } from '@/components/BookListItem';
 import { Callout } from '@/components/ui/callout';
@@ -103,7 +103,16 @@ function yearsRange(first?: number, last?: number): string {
 export function AwardPage() {
   const { key } = useParams({ strict: false }) as { key: string };
   const q = useAwardWins(key);
-  const [onlyLibrary, setOnlyLibrary] = useState(false);
+  // «Только из библиотеки» — в адресе (#469): «Назад» с карточки книги его не сбрасывает.
+  const onlyLibrary = (useSearch({ strict: false }) as { library?: boolean }).library ?? false;
+  const navigate = useNavigate();
+  const setOnlyLibrary = (v: boolean) =>
+    void navigate({
+      to: '.',
+      search: (prev: { library?: boolean }) => ({ ...prev, library: v || undefined }),
+      replace: true,
+      resetScroll: false,
+    });
   const wins = useMemo(() => {
     const all = q.data?.wins ?? [];
     return onlyLibrary ? all.filter(inLibrary) : all;

@@ -15,6 +15,7 @@ import {
   type SmartFilters,
   type SmartShelf,
 } from '@/lib/smartShelves';
+import { useOpenToggle } from '@/lib/openState';
 import { cn } from '@/lib/utils';
 
 // Умные полки (#389): кнопка «Сохранить как полку» на /books и блок полок на
@@ -104,7 +105,7 @@ const PREVIEW = 20;
 
 function SmartShelfRow({ shelf }: { shelf: SmartShelf }) {
   const describe = useDescribeFilters();
-  const [open, setOpen] = useState(false);
+  const [open, toggle] = useOpenToggle(`s:${shelf.id}`);
   // Счётчик — запрос на одну книгу; раскрытая полка — на PREVIEW (общий total).
   const count = useSmartShelfBooks(shelf.filters, 1);
   const total = count.data?.total;
@@ -113,7 +114,7 @@ function SmartShelfRow({ shelf }: { shelf: SmartShelf }) {
       <div className="flex items-center gap-1 pr-1">
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggle}
           aria-expanded={open}
           className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-3 py-3 text-left transition hover:bg-accent/30"
         >
