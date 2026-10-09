@@ -394,7 +394,9 @@ type groupBook struct {
 	serNo         int
 	lastName      string
 	firstName     string
-	scanned       bool // work_scanned_at NOT NULL (контекст, не кандидат)
+	scanned       bool   // work_scanned_at NOT NULL (контекст, не кандидат)
+	nAuthors      int    // число авторов издания — гейт антологий (#464)
+	authorSet     string // id авторов издания по возрастанию через запятую
 }
 
 // groupAuthorTier1 — структурная группировка одного автора БЕЗ сети
@@ -435,7 +437,9 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		       -- серии (series.kind='multi') не говорит, что это тот же том.
 		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
-		       a.last_name, COALESCE(a.first_name,'')
+		       a.last_name, COALESCE(a.first_name,''),
+		       (SELECT count(*) FROM book_authors x WHERE x.book_id = b.id),
+		       (SELECT string_agg(x.author_id::text, ',' ORDER BY x.author_id) FROM book_authors x WHERE x.book_id = b.id)
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN authors a ON a.id = ba.author_id
@@ -452,7 +456,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		if err := rows.Scan(&b.id, &b.workID, &b.title, &b.normTitle, &b.lang,
 			&b.srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
 			&b.seriesID, &b.serNo,
-			&b.scanned, &b.lastName, &b.firstName); err != nil {
+			&b.scanned, &b.lastName, &b.firstName, &b.nAuthors, &b.authorSet); err != nil {
 			return nil, err
 		}
 		if isStubSrcTitle(b.srcTitle) {
@@ -495,9 +499,7 @@ func clusterTier1(books []groupBook) *unionFind {
 	}
 	unionBucket := func(m map[string][]int) {
 		for _, idxs := range m {
-			for j := 1; j < len(idxs); j++ {
-				uf.union(idxs[0], idxs[j])
-			}
+			unionGated(uf, books, idxs)
 		}
 	}
 	unionBucket(byTitleLang)
@@ -519,9 +521,7 @@ func clusterTier1(books []groupBook) *unionFind {
 		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
 			continue
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
-		}
+		unionGated(uf, books, idxs)
 	}
 	unionBucket(byTrans)
 	// Перевод ↔ оригинал: src(название,язык) перевода == (normTitle,lang) оригинала.
@@ -530,7 +530,9 @@ func clusterTier1(books []groupBook) *unionFind {
 			continue
 		}
 		for _, j := range byTitleLang[key(b.srcTitleNorm, b.srcLang)] {
-			uf.union(i, j)
+			if !anthologyPair(b, books[j]) {
+				uf.union(i, j)
+			}
 		}
 	}
 	// Tier-1.5: один том серии (series_id, ser_no) у одного автора ⇒ одна работа —
@@ -558,11 +560,54 @@ func clusterTier1(books []groupBook) *unionFind {
 		if distinctNormTitles(books, idxs) > 1 && !hasSrcEvidence(books, idxs) {
 			continue // разно-названные без src-свидетельства — не рискуем
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
-		}
+		unionGated(uf, books, idxs)
 	}
 	return uf
+}
+
+// Гейт антологий (#464): антология или сборник с тем же названием, что у
+// романа, — не издание этого романа («Патруль времени» Андерсона и одноимённая
+// антология 17 авторов, «Кривой дом» Кристи и том Кристи + Гарднер + Чандлер).
+// Признак — у издания авторов на anthologyExtraAuthors больше, чем у самого
+// «малоавторского» издания группы, а у того их не больше maxCoreAuthors (роман
+// или соавторы). Работы, которые сами многоавторские (альманах, антология в
+// двух изданиях с разным составом), гейт не трогает. Те же числа — в
+// SplitAnthologyEditions (разовый разбор накопленного).
+const (
+	maxCoreAuthors        = 2
+	anthologyExtraAuthors = 2
+)
+
+// anthologyPair — a и b по гейту не могут быть одной работой.
+func anthologyPair(a, b groupBook) bool {
+	lo, hi := min(a.nAuthors, b.nAuthors), max(a.nAuthors, b.nAuthors)
+	return lo <= maxCoreAuthors && hi-lo >= anthologyExtraAuthors
+}
+
+// unionGated — союз бакета с гейтом антологий: «ядро» (издания, у которых
+// авторов меньше чем min+anthologyExtraAuthors) союзится как раньше, антологии —
+// только между собой и только с тем же составом авторов (копии одной антологии).
+func unionGated(uf *unionFind, books []groupBook, idxs []int) {
+	if len(idxs) < 2 {
+		return
+	}
+	minN := books[idxs[0]].nAuthors
+	for _, i := range idxs[1:] {
+		minN = min(minN, books[i].nAuthors)
+	}
+	groups := map[string][]int{} // "" — ядро, иначе состав авторов антологии
+	for _, i := range idxs {
+		k := ""
+		if minN <= maxCoreAuthors && books[i].nAuthors-minN >= anthologyExtraAuthors {
+			k = "a:" + books[i].authorSet
+		}
+		groups[k] = append(groups[k], i)
+	}
+	for _, g := range groups {
+		for j := 1; j < len(g); j++ {
+			uf.union(g[0], g[j])
+		}
+	}
 }
 
 // distinctNormTitles — число разных normalized_title в бакете.
@@ -699,10 +744,15 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 				"source", src, "work_key", workKey, "editions", len(idxs))
 			continue
 		}
-		for j := 1; j < len(idxs); j++ {
-			uf.union(idxs[0], idxs[j])
+		unionGated(uf, books, idxs)
+		// Ключ — работе «ядра»: изданию бакета с наименьшим числом авторов.
+		first := idxs[0]
+		for _, i := range idxs[1:] {
+			if books[i].nAuthors < books[first].nAuthors {
+				first = i
+			}
 		}
-		root := uf.find(idxs[0])
+		root := uf.find(first)
 		if extByRoot[root] == nil {
 			extByRoot[root] = map[string]string{}
 		}

@@ -160,6 +160,7 @@ func run() error {
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
+		runOnceSplitAnthologyEditions(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
@@ -800,6 +801,14 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if len(touched) > 0 {
 		syncSplitWorks(ctx, imp, touched, logger)
 		logger.Info("alien editions split after import", "works", len(touched))
+	}
+	// Антологии с тем же названием, что у романа, — в свои работы (#464).
+	if touched, err := metadata.SplitAnthologyEditions(ctx, pool); err != nil {
+		logger.Warn("split anthology editions after import failed", "err", err)
+	} else if len(touched) > 0 {
+		reclassifySplitWorks(ctx, pool, touched, logger)
+		syncSplitWorks(ctx, imp, touched, logger)
+		logger.Info("anthology editions split after import", "works", len(touched))
 	}
 	// Название работы — за изданиями: импорт переписывает название издания, но не
 	// работы (#285). Изменённые — пересчёт типа (мог держаться на названии) и
@@ -1448,6 +1457,46 @@ func runOnceSplitAlienEditions(ctx context.Context, pool *pgxpool.Pool, imp *imp
 		logger.Warn("split alien editions: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time alien editions split done", "works", len(touched))
+}
+
+// runOnceSplitAnthologyEditions — разовый вынос из работ изданий-антологий с тем
+// же названием (metadata.SplitAnthologyEditions, #464; прод — 143 издания в 137
+// работах). Тип работ пересчитывается: роман мог стать «антологией» из-за
+// приклеенного тома, а вынесенный том — стать ею. Дальше то же делают шаги после
+// импорта. Гейт anthology_editions_split_v1.
+func runOnceSplitAnthologyEditions(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "anthology_editions_split_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("split anthology editions: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	touched, err := metadata.SplitAnthologyEditions(ctx, pool)
+	if len(touched) > 0 {
+		reclassifySplitWorks(ctx, pool, touched, logger)
+		syncSplitWorks(ctx, imp, touched, logger)
+	}
+	if err != nil {
+		logger.Warn("split anthology editions failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("split anthology editions: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time anthology editions split done", "works", len(touched))
+}
+
+// reclassifySplitWorks — эвристический тип работ после выноса изданий: он мог
+// держаться на вынесенных (≥4 авторов, серия-сборник).
+func reclassifySplitWorks(ctx context.Context, pool *pgxpool.Pool, works []int64, logger *slog.Logger) {
+	if _, err := metadata.ReclassifyWorkKinds(ctx, pool, works); err != nil {
+		logger.Warn("reclassify kinds after edition split failed", "err", err)
+	}
 }
 
 // runOnceAdaptationsScreenOnly — разовая чистка экранизаций до правил #295
