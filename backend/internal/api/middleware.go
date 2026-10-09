@@ -119,6 +119,47 @@ func requireBasicAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Han
 	}
 }
 
+// requireKosyncAuth — вход синхронизации KOReader: x-auth-user — email,
+// x-auth-key — MD5 пароля устройства (основной пароль так не проверить — в базе
+// bcrypt). Неудачи — в общий лимит неудачных входов.
+func requireKosyncAuth(d AuthDeps, th *authThrottles) func(http.Handler) http.Handler {
+	unauthorized := func(w http.ResponseWriter) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		_, _ = w.Write([]byte(`{"code":2001,"message":"Unauthorized"}`))
+	}
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			email, key := r.Header.Get("x-auth-user"), r.Header.Get("x-auth-key")
+			if email == "" || key == "" {
+				unauthorized(w)
+				return
+			}
+			ipKey, emailKey := th.keys(r, email)
+			if th.over(ipKey, emailKey) {
+				slog.Warn("login throttled", "via", "kosync", "ip", ipKey, "email", emailKey)
+				metrics.LoginThrottled.WithLabelValues("kosync").Inc()
+				w.Header().Set("Retry-After", "300")
+				http.Error(w, "too many attempts, try again later", http.StatusTooManyRequests)
+				return
+			}
+			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+			defer cancel()
+			user, err := d.Service.ValidateDeviceKey(ctx, email, key)
+			if err != nil {
+				if errors.Is(err, auth.ErrInvalidPassword) {
+					slog.Warn("login failed", "via", "kosync", "ip", ipKey, "email", emailKey)
+					metrics.LoginFailures.WithLabelValues("kosync").Inc()
+					th.fail(ipKey, emailKey)
+				}
+				unauthorized(w)
+				return
+			}
+			next.ServeHTTP(w, r.WithContext(auth.ContextWithUser(r.Context(), user)))
+		})
+	}
+}
+
 // basicAuthUser — пользователь по Basic-паре: сначала пароль устройства (#389,
 // B2), затем основной пароль — только если он разрешён с этого адреса
 // (MainPasswordNets). Не подошло — auth.ErrInvalidPassword.

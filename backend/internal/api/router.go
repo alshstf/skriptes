@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/kosync"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
@@ -36,12 +37,19 @@ type Deps struct {
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
+	// Kosync — синхронизация позиции чтения KOReader/Readest (#389).
+	Kosync KosyncDeps
 }
 
 // OPDSDeps — handler уже сконфигурен в main.go (там удобнее всех
 // зависимостей собрать); сюда передаётся готовый объект для wiring'а.
 type OPDSDeps struct {
 	Handler *opds.Handler
+}
+
+// KosyncDeps — сервер синхронизации KOReader (#389); Handler nil — не монтируется.
+type KosyncDeps struct {
+	Handler *kosync.Handler
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -106,6 +114,21 @@ func NewRouter(d Deps) http.Handler {
 			r.Get("/v2/genres/{id}", h.V2GenreBooks)
 			r.Get("/books/{id}/download", h.Download)
 			r.Get("/covers/{name}", h.Cover)
+		})
+	}
+
+	// Синхронизация KOReader (протокол koreader-sync-server): вход — email и
+	// MD5 пароля устройства в заголовках x-auth-user/x-auth-key (#389, B4).
+	if d.Kosync.Handler != nil && d.Auth.Service != nil {
+		r.Route("/kosync", func(r chi.Router) {
+			h := d.Kosync.Handler
+			r.Post("/users/create", h.Register)
+			r.Group(func(r chi.Router) {
+				r.Use(requireKosyncAuth(d.Auth, th))
+				r.Get("/users/auth", h.Authorize)
+				r.Put("/syncs/progress", h.UpdateProgress)
+				r.Get("/syncs/progress/{document}", h.GetProgress)
+			})
 		})
 	}
 

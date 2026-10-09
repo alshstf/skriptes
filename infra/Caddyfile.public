@@ -66,7 +66,7 @@
 		respond `{"error":"администрирование доступно только из домашней сети"}` 403
 	}
 
-	@api path /api/* /opds /opds/* /healthz /readyz
+	@api path /api/* /opds /opds/* /kosync/* /healthz /readyz
 	handle @api {
 		reverse_proxy backend:8080
 	}

@@ -16,6 +16,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/dlimit"
+	"github.com/skriptes/skriptes/backend/internal/kosync"
 )
 
 // DownloadDeps — зависимости /api/books/{id}/download.
@@ -24,6 +25,8 @@ type DownloadDeps struct {
 	Converter *converter.Converter
 	// Limiter — лимит скачиваний на пользователя (общий с OPDS, #389); nil — без лимита.
 	Limiter *dlimit.Limiter
+	// Documents — запоминает документ KOReader отданного файла (синхронизация, #389); nil — нет.
+	Documents *kosync.Store
 }
 
 func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
@@ -101,7 +104,12 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 			if size > 0 {
 				w.Header().Set("Content-Length", strconv.FormatInt(size, 10))
 			}
-			_, _ = io.Copy(w, rc)
+			// Документ KOReader считаем по отдаваемым байтам; оборванное
+			// скачивание не запоминаем.
+			doc := kosync.NewTracker()
+			if _, err := io.Copy(io.MultiWriter(w, doc), rc); err == nil {
+				d.Documents.RememberAsync(doc.Sum(), book.ID, string(format), nil)
+			}
 			return
 		}
 
@@ -114,6 +122,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		st, err := f.Stat()
 		if err == nil {
 			w.Header().Set("Content-Length", strconv.FormatInt(st.Size(), 10))
+			d.Documents.RememberAsync(kosync.PartialMD5(f, st.Size()), book.ID, string(format), nil)
 		}
 		_, _ = io.Copy(w, f)
 	}

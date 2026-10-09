@@ -2,6 +2,7 @@ package opds_test
 
 import (
 	"archive/zip"
+	"bytes"
 	"context"
 	"io"
 	"net/http"
@@ -17,6 +18,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/converter"
 	"github.com/skriptes/skriptes/backend/internal/dlimit"
+	"github.com/skriptes/skriptes/backend/internal/kosync"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
@@ -66,7 +68,8 @@ func TestDownload(t *testing.T) {
 		Exclusions: func(context.Context, int64) ([]string, []string) {
 			return nil, []string{"EN"}
 		},
-		Limiter: dlimit.New(5, 2, 10*time.Minute),
+		Limiter:   dlimit.New(5, 2, 10*time.Minute),
+		Documents: kosync.NewStore(pool),
 	})
 	r := chi.NewRouter()
 	r.Use(func(next http.Handler) http.Handler {
@@ -84,6 +87,14 @@ func TestDownload(t *testing.T) {
 	rec := get(ru)
 	require.Equal(t, http.StatusOK, rec.Code)
 	require.Equal(t, "<FictionBook>один</FictionBook>", rec.Body.String(), "одна книга, а не zip-архив")
+	// Документ KOReader отданного файла запомнен (синхронизация, #389 B4).
+	body := []byte("<FictionBook>один</FictionBook>")
+	want := kosync.PartialMD5(bytes.NewReader(body), int64(len(body)))
+	require.Eventually(t, func() bool {
+		var got int64
+		err := pool.QueryRow(ctx, `SELECT book_id FROM book_documents WHERE document = $1 AND format = 'fb2'`, want).Scan(&got)
+		return err == nil && got == ru
+	}, 5*time.Second, 50*time.Millisecond)
 
 	require.Equal(t, http.StatusNotFound, get(en).Code, "английский скрыт пользователю")
 
