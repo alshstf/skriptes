@@ -161,6 +161,7 @@ func run() error {
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
 		runOnceSplitAnthologyEditions(c, pool, imp, logger)
+		runOncePublisherSeries(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
@@ -810,6 +811,16 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if len(touched) > 0 {
 		syncSplitWorks(ctx, imp, touched, logger)
 		logger.Info("alien editions split after import", "works", len(touched))
+	}
+	// Издательские серии (#468): импорт мог добавить книги в серии — классифицируем
+	// заново, у затронутых работ — серия-цикл и переиндексация.
+	if works, err := metadata.ClassifyPublisherSeries(ctx, pool); err != nil {
+		logger.Warn("classify publisher series after import failed", "err", err)
+	} else if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after publisher series failed", "err", err)
+		}
+		logger.Info("publisher series reclassified after import", "works", len(works))
 	}
 	// Антологии с тем же названием, что у романа, — в свои работы (#464).
 	if touched, err := metadata.SplitAnthologyEditions(ctx, pool); err != nil {
@@ -1498,6 +1509,38 @@ func runOnceSplitAnthologyEditions(ctx context.Context, pool *pgxpool.Pool, imp 
 		logger.Warn("split anthology editions: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time anthology editions split done", "works", len(touched))
+}
+
+// runOncePublisherSeries — разовая классификация издательских серий одного
+// автора (metadata.ClassifyPublisherSeries, #468; прод — 1262 серии, 6182 работы):
+// на карточках показывается только авторский цикл. Дальше — шаг после импорта.
+// Гейт publisher_series_v1.
+func runOncePublisherSeries(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "publisher_series_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("publisher series: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, err := metadata.ClassifyPublisherSeries(ctx, pool)
+	if err != nil {
+		logger.Warn("publisher series failed — will retry next start", "err", err)
+		return
+	}
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after publisher series failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("publisher series: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time publisher series classification done", "works", len(works))
 }
 
 // reclassifySplitWorks — эвристический тип работ после выноса изданий: он мог

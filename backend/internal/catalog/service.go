@@ -447,7 +447,7 @@ func (s *Service) queryAuthorSeries(ctx context.Context, authorID int64, exclude
 	rows, err := s.pool.Query(ctx, `
 		SELECT s.id, s.title, count(DISTINCT COALESCE(b.work_id, -b.id)) as cnt,
 		       bool_and((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id) IS NOT NULL) as all_comp,
-		       COALESCE(s.kind, '') = 'multi' AS multi
+		       s.kind IS NOT NULL AS multi -- межавторская или издательская (#468)
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN series s ON s.id = b.series_id

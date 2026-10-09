@@ -503,8 +503,9 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447);
 // v14 — authors/author_ids: авторы работы по правилу workauthors.Core, без
 // чужих авторов антологии с тем же названием (#464);
-// v15 — popularity: бонус за премии работы (#420).
-const WorksIndexSchemaVersion = 15
+// v15 — popularity: бонус за премии работы (#420);
+// v16 — series/series_id только у авторского цикла (series.kind IS NULL, #468).
+const WorksIndexSchemaVersion = 16
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -521,7 +522,7 @@ func WorksIndexSyncedFlagKey() string {
 var workDocSelect = `
 	SELECT
 		w.id, w.title, w.normalized_title::text,
-		w.series_id, COALESCE(s.title, ''),
+		w.series_id, COALESCE(s.title, ''), COALESCE(s.kind, ''),
 		COALESCE(w.edition_count, 1),
 		COALESCE(w.written_year, (
 			SELECT min(b.written_year) FROM books b WHERE b.work_id = w.id AND b.deleted = false
@@ -646,12 +647,13 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			d         workDoc
 			seriesID  *int64
 			series    string
+			seriesKnd string
 			year      *int16
 			sig       workPopSignals
 			altTitles []string
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
-			&seriesID, &series, &d.EditionCount, &year,
+			&seriesID, &series, &seriesKnd, &d.EditionCount, &year,
 			&d.Langs, &d.SrcLangs, &d.OrigLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
@@ -669,7 +671,10 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		// Для известности АВТОРА — только внешние сигналы (без views/reads/
 		// оценок): поле неэкспортируемое, в Meili-док не сериализуется.
 		d.renownPop = computeWorkPopularityExternal(sig)
-		if seriesID != nil && series != "" {
+		// Серия на карточках — только авторский цикл (#468): межавторская и
+		// издательская (series.kind) не показываются и не фильтруются, но по их
+		// названию работа по-прежнему ищется (series_s).
+		if seriesID != nil && series != "" && seriesKnd == "" {
 			d.Series = series
 			d.SeriesID = seriesID
 		}
@@ -695,7 +700,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		}
 		d.TitleSearch = textnorm.FoldYo(d.Title)
 		d.AuthorsSearch = textnorm.FoldYoAll(d.Authors)
-		d.SeriesSearch = textnorm.FoldYo(d.Series)
+		d.SeriesSearch = textnorm.FoldYo(series)
 		d.AltTitlesSearch = altTitlesForSearch(d.TitleSearch, altTitles)
 		if d.AuthorsLatin == nil {
 			d.AuthorsLatin = []string{}
