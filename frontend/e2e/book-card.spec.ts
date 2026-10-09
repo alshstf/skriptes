@@ -110,3 +110,40 @@ test('карточка на мобиле: жанры под обложкой в�
   expect(g!.y).toBeGreaterThanOrEqual(c!.y + c!.height - 1); // жанры начинаются под обложкой
   expect(g!.x).toBeLessThanOrEqual(c!.x + 1); // и от её левого края
 });
+
+// #470: на мобиле «На полку» — в одном ряду со ★, ряд не вылезает за экран.
+test('карточка на мобиле: «На полку» в ряду со звёздочкой', async ({ mockedPage: page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/books/19');
+  const star = page.getByRole('button', { name: /избранное/i }).last();
+  const shelf = page.getByRole('button', { name: 'Добавить на полку' });
+  await expect(shelf).toBeVisible({ timeout: 10_000 });
+  const s = await star.boundingBox();
+  const b = await shelf.boundingBox();
+  expect(s && b).toBeTruthy();
+  expect(Math.abs(s!.y - b!.y)).toBeLessThan(4); // одна строка
+  expect(b!.x + b!.width).toBeLessThanOrEqual(375); // не за краем экрана
+});
+
+test('карточка на мобиле: книга на полках — «На полках: N» у звёздочки, чипы ниже', async ({ mockedPage: page }) => {
+  await page.route(/\/api\/books\/19\/collections$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [
+          { id: 1, name: 'Отпуск', kind: 'manual' },
+          { id: 2, name: 'Подарить', kind: 'manual' },
+          { id: 3, name: 'Избранное', kind: 'favorites' },
+        ],
+      }),
+    }),
+  );
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/books/19');
+  const shelf = page.getByRole('button', { name: /На полках: 2/ });
+  await expect(shelf).toBeVisible({ timeout: 10_000 });
+  // Чип есть и в скрытом десктопном блоке — берём видимый.
+  await expect(page.locator('text="Подарить" >> visible=true')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Добавить на полку' })).toHaveCount(0);
+});
