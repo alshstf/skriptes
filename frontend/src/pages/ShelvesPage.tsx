@@ -39,6 +39,7 @@ import {
   type CollectionBook,
 } from '@/lib/collections';
 import { usePresetBooks, usePresets, type Preset } from '@/lib/presets';
+import { useOpenToggle } from '@/lib/openState';
 import { cn } from '@/lib/utils';
 
 // dragData/dropData — типизированные payload'ы DnD. Draggable книги несёт исходную
@@ -156,12 +157,12 @@ function PresetsSection() {
 }
 
 function PresetRow({ preset }: { preset: Preset }) {
-  const [open, setOpen] = useState(false);
+  const [open, toggle] = useOpenToggle(`p:${preset.key}`);
   return (
     <li className="rounded-md border border-border">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         aria-expanded={open}
         disabled={preset.count === 0}
         className="flex w-full min-w-0 items-center gap-2 rounded-md px-3 py-3 text-left transition hover:bg-accent/30 disabled:cursor-default disabled:hover:bg-transparent"
@@ -213,7 +214,7 @@ function PresetBooksList({ presetKey }: { presetKey: string }) {
  * drop-зона: подсвечивается, когда над ней тащат книгу с ДРУГОЙ полки.
  */
 function ShelfRow({ collection }: { collection: Collection }) {
-  const [open, setOpen] = useState(false);
+  const [open, toggle] = useOpenToggle(`c:${collection.id}`);
   const del = useDeleteCollection();
   // Служебная «Избранное» (★ книги): закреплена сверху, переименовать/удалить нельзя.
   const isFav = collection.kind === 'favorites';
@@ -236,7 +237,7 @@ function ShelfRow({ collection }: { collection: Collection }) {
       <div className="flex items-center gap-1.5 p-2">
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggle}
           aria-expanded={open}
           aria-label={open ? 'Свернуть полку' : 'Раскрыть полку'}
           className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-left transition hover:bg-accent/30"
