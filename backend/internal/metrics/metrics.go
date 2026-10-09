@@ -9,6 +9,7 @@ package metrics
 import (
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -89,13 +90,6 @@ var (
 		Help: "Записей INPX с ошибкой (пропущены) в последнем удачном импорте.",
 	})
 
-	// ExternalSourceUp — 0, пока внешний источник (хост) на паузе прерывателя
-	// после серии сбоев (#299); 1 — доступен.
-	ExternalSourceUp = factory.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "skriptes_external_source_up",
-		Help: "Доступность внешнего источника обогащения по хосту: 0 — на паузе после серии сбоев (сеть, 429, 5xx).",
-	}, []string{"host"})
-
 	// ExternalSourcePauses — сколько раз источник ставили на паузу.
 	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_external_source_pauses_total",
@@ -116,7 +110,53 @@ func init() {
 	Registry.MustRegister(
 		collectors.NewGoCollector(),
 		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+		externalSources,
 	)
+}
+
+// skriptes_external_source_up{host} — 0, пока внешний источник на паузе прерывателя
+// после серии сбоев (#299), 1 — запросы к нему идут. Значение считается при каждой
+// выдаче /metrics из состояния прерывателя, а не выставляется по событию: пауза
+// кончилась — метрика сразу 1, даже если к источнику больше никто не обращался и
+// пробного запроса не было (иначе 0 висел сутками и SkriptesSourcePaused горел
+// ложно, #471). Провалится проба — прерыватель продлит паузу, и метрика снова 0.
+var externalSourceUpDesc = prometheus.NewDesc(
+	"skriptes_external_source_up",
+	"Внешний источник обогащения по хосту: 0 — сейчас на паузе после серии сбоев (сеть, 429, 5xx), 1 — запросы идут.",
+	[]string{"host"}, nil,
+)
+
+type externalSourcesCollector struct {
+	mu    sync.RWMutex
+	state func() map[string]bool
+}
+
+var externalSources = &externalSourcesCollector{}
+
+func (c *externalSourcesCollector) Describe(ch chan<- *prometheus.Desc) { ch <- externalSourceUpDesc }
+
+func (c *externalSourcesCollector) Collect(ch chan<- prometheus.Metric) {
+	c.mu.RLock()
+	state := c.state
+	c.mu.RUnlock()
+	if state == nil {
+		return
+	}
+	for host, up := range state() {
+		v := 0.0
+		if up {
+			v = 1
+		}
+		ch <- prometheus.MustNewConstMetric(externalSourceUpDesc, prometheus.GaugeValue, v, host)
+	}
+}
+
+// SetExternalSources задаёт источник состояния для skriptes_external_source_up:
+// хост → «не на паузе». Его выставляет прерыватель внешних источников (metadata).
+func SetExternalSources(state func() map[string]bool) {
+	externalSources.mu.Lock()
+	externalSources.state = state
+	externalSources.mu.Unlock()
 }
 
 // SetBuildInfo выставляет skriptes_build_info{version}.

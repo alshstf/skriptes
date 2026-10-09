@@ -108,3 +108,24 @@ func TestHandler_ExposesAppAndRuntimeMetrics(t *testing.T) {
 		}
 	}
 }
+
+func TestExternalSources_ValueFromStateAtScrape(t *testing.T) {
+	t.Cleanup(func() { SetExternalSources(nil) })
+	paused := true
+	SetExternalSources(func() map[string]bool {
+		return map[string]bool{"www.googleapis.com": !paused, "openlibrary.org": true}
+	})
+	want := func(gb string) string {
+		return `# HELP skriptes_external_source_up Внешний источник обогащения по хосту: 0 — сейчас на паузе после серии сбоев (сеть, 429, 5xx), 1 — запросы идут.
+# TYPE skriptes_external_source_up gauge
+skriptes_external_source_up{host="openlibrary.org"} 1
+skriptes_external_source_up{host="www.googleapis.com"} ` + gb + "\n"
+	}
+	if err := testutil.CollectAndCompare(externalSources, strings.NewReader(want("0"))); err != nil {
+		t.Error(err)
+	}
+	paused = false // пауза кончилась — без событий, просто при следующем сборе
+	if err := testutil.CollectAndCompare(externalSources, strings.NewReader(want("1"))); err != nil {
+		t.Error(err)
+	}
+}

@@ -80,6 +80,36 @@ func TestSourceBreaker_OpensAfterThresholdAndProbes(t *testing.T) {
 	require.EqualValues(t, breakerThreshold+3, f.hits.Load())
 }
 
+// skriptes_external_source_up — «на паузе сейчас»: после конца паузы метрика 1 без
+// единого запроса, иначе 0 висел, пока к источнику кто-нибудь не обратится (#471).
+func TestSourceBreaker_UpByHostFollowsPauseDeadline(t *testing.T) {
+	f := newBreakerFixture(t)
+	u, err := url.Parse(f.srv.URL)
+	require.NoError(t, err)
+	host := u.Host
+	require.Empty(t, f.b.upByHost(), "до первого запроса хоста нет")
+
+	require.NoError(t, f.get(t))
+	require.Equal(t, map[string]bool{host: true}, f.b.upByHost())
+
+	f.status.Store(http.StatusServiceUnavailable)
+	for range breakerThreshold {
+		require.NoError(t, f.get(t))
+	}
+	require.False(t, f.b.upByHost()[host], "пауза открыта")
+
+	f.now = f.now.Add(breakerBaseBackoff)
+	require.True(t, f.b.upByHost()[host], "пауза кончилась — 1 без пробного запроса")
+
+	require.NoError(t, f.get(t), "проба уходит и проваливается")
+	require.False(t, f.b.upByHost()[host], "пауза продлена — снова 0")
+
+	f.now = f.now.Add(2 * breakerBaseBackoff)
+	f.status.Store(http.StatusOK)
+	require.NoError(t, f.get(t))
+	require.True(t, f.b.upByHost()[host])
+}
+
 func TestSourceBreaker_BackoffCapped(t *testing.T) {
 	f := newBreakerFixture(t)
 	f.status.Store(http.StatusTooManyRequests)
