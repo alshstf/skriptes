@@ -35,6 +35,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/genres"
 	"github.com/skriptes/skriptes/backend/internal/inpx"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
+	"github.com/skriptes/skriptes/backend/internal/workauthors"
 )
 
 // normalizeLang приводит код языка к канонике: нижний регистр + trim + срез
@@ -63,6 +64,10 @@ type Deps struct {
 	// meilisearch-go шлёт поле rename, которого Meili 1.13 не знает (400).
 	MeiliURL    string
 	MeiliAPIKey string
+	// AwardTier — ранг премии для известности (awards.PopularityTier, #420);
+	// nil — премии в известность не входят. Функцией, чтобы importer не зависел
+	// от пакета премий.
+	AwardTier func(key string) int
 }
 
 // Importer — оркестратор импорта одного INPX.
@@ -495,8 +500,12 @@ func (im *Importer) resyncWorkIDs(ctx context.Context, query string, args ...any
 // v11 — alt_titles_s (названия изданий и оригинала) и authors_latin (латинские
 // имена авторов оригинала) в поиске (#291);
 // v12 — popularity: LIBRATE 1–2 без бонуса (#292);
-// v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447).
-const WorksIndexSchemaVersion = 13
+// v13 — awards (ключи премий работы, фильтр и фасет «Премии», #447);
+// v14 — authors/author_ids: авторы работы по правилу workauthors.Core, без
+// чужих авторов антологии с тем же названием (#464);
+// v15 — popularity: бонус за премии работы (#420);
+// v16 — series/series_id только у авторского цикла (series.kind IS NULL, #468).
+const WorksIndexSchemaVersion = 16
 
 // WorksIndexSyncedFlagKey — ключ one-shot гейта полного ресинка works-индекса
 // в app_settings, версионированный схемой дока.
@@ -510,10 +519,10 @@ func WorksIndexSyncedFlagKey() string {
 // year = COALESCE(works.written_year, минимальный written_year изданий): даже
 // если work-агрегат года ещё не пересчитан группировкой, индекс берёт год из
 // изданий (паритет с карточкой books.Get).
-const workDocSelect = `
+var workDocSelect = `
 	SELECT
 		w.id, w.title, w.normalized_title::text,
-		w.series_id, COALESCE(s.title, ''),
+		w.series_id, COALESCE(s.title, ''), COALESCE(s.kind, ''),
 		COALESCE(w.edition_count, 1),
 		COALESCE(w.written_year, (
 			SELECT min(b.written_year) FROM books b WHERE b.work_id = w.id AND b.deleted = false
@@ -555,29 +564,17 @@ const workDocSelect = `
 			JOIN genres g       ON g.id = bg.genre_id
 			WHERE b.work_id = w.id AND b.deleted = false AND g.fb2_code IS NOT NULL
 		), '{}'),
+		-- Авторы работы — не объединение авторов изданий, а правило #464
+		-- (workauthors.Core): антология с тем же названием не приносит своих.
 		COALESCE((
-			SELECT array_agg(x.full_name ORDER BY x.minpos, x.last_name)
-			FROM (
-				SELECT a.id, a.last_name,
-				       TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) AS full_name,
-				       min(ba.position) AS minpos
-				FROM book_authors ba
-				JOIN authors a ON a.id = ba.author_id
-				JOIN books b   ON b.id = ba.book_id
-				WHERE b.work_id = w.id AND b.deleted = false
-				GROUP BY a.id, a.last_name, a.first_name, a.middle_name
-			) x
+			SELECT array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) ORDER BY c.minpos, a.last_name)
+			FROM (` + workauthors.Core("w.id") + `) c
+			JOIN authors a ON a.id = c.author_id
 		), '{}'),
 		COALESCE((
-			SELECT array_agg(x.id ORDER BY x.minpos, x.last_name)
-			FROM (
-				SELECT a.id, a.last_name, min(ba.position) AS minpos
-				FROM book_authors ba
-				JOIN authors a ON a.id = ba.author_id
-				JOIN books b   ON b.id = ba.book_id
-				WHERE b.work_id = w.id AND b.deleted = false
-				GROUP BY a.id, a.last_name
-			) x
+			SELECT array_agg(a.id ORDER BY c.minpos, a.last_name)
+			FROM (` + workauthors.Core("w.id") + `) c
+			JOIN authors a ON a.id = c.author_id
 		), '{}'),
 		COALESCE((
 			SELECT count(*) FROM views v
@@ -650,12 +647,13 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			d         workDoc
 			seriesID  *int64
 			series    string
+			seriesKnd string
 			year      *int16
 			sig       workPopSignals
 			altTitles []string
 		)
 		if err := rows.Scan(&d.ID, &d.Title, &d.NormalizedTitle,
-			&seriesID, &series, &d.EditionCount, &year,
+			&seriesID, &series, &seriesKnd, &d.EditionCount, &year,
 			&d.Langs, &d.SrcLangs, &d.OrigLangs, &d.Genres, &d.Authors, &d.AuthorIDs,
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
@@ -668,11 +666,15 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		// полными ресинками держит PopularityTracker (таргетный upsert работы при
 		// просмотре/чтении — flush идёт через этот же скан).
 		sig.EditionCount = int64(d.EditionCount)
+		sig.Awards, sig.AwardMajor = awardSignals(d.Awards, im.deps.AwardTier)
 		d.Popularity = computeWorkPopularity(sig)
 		// Для известности АВТОРА — только внешние сигналы (без views/reads/
 		// оценок): поле неэкспортируемое, в Meili-док не сериализуется.
 		d.renownPop = computeWorkPopularityExternal(sig)
-		if seriesID != nil && series != "" {
+		// Серия на карточках — только авторский цикл (#468): межавторская и
+		// издательская (series.kind) не показываются и не фильтруются, но по их
+		// названию работа по-прежнему ищется (series_s).
+		if seriesID != nil && series != "" && seriesKnd == "" {
 			d.Series = series
 			d.SeriesID = seriesID
 		}
@@ -698,7 +700,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 		}
 		d.TitleSearch = textnorm.FoldYo(d.Title)
 		d.AuthorsSearch = textnorm.FoldYoAll(d.Authors)
-		d.SeriesSearch = textnorm.FoldYo(d.Series)
+		d.SeriesSearch = textnorm.FoldYo(series)
 		d.AltTitlesSearch = altTitlesForSearch(d.TitleSearch, altTitles)
 		if d.AuthorsLatin == nil {
 			d.AuthorsLatin = []string{}

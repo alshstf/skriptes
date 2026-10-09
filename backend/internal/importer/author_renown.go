@@ -27,6 +27,12 @@ import (
 // автора). Авторы без значимых сигналов держат renown=0 и уходят в алфавитный
 // хвост списка.
 //
+// Плюс премии, врученные лично автору (Нобелевская, «Аэлита», Премия Андрея
+// Белого — award_wins.kind = 'author', #420): тот же awardBonus, что у работ.
+// Премии его книг приходят через известность работ. Лауреат без других
+// сигналов получает известность только от премии — и выходит из алфавитного
+// хвоста (Тагор, Неруда, Йейтс на проде 2026-10).
+//
 // Меняешь формулу/веса — бампни ключ runOnce-гейта в main.go
 // (author_renown_computed_v<N>), иначе на стабильном деплое пересчёт по новой
 // формуле не запустится (грабля «мёртвого popularity» 1.5.x).
@@ -86,7 +92,11 @@ func (im *Importer) RecomputeAuthorRenown(ctx context.Context) (int64, error) {
 		cursor = docs[len(docs)-1].ID
 	}
 
-	ids, vals := byAuthor.values()
+	bonus, err := im.authorAwardBonus(ctx, conn, nil)
+	if err != nil {
+		return 0, err
+	}
+	ids, vals := byAuthor.values(bonus)
 
 	var updated int64
 	const updBatch = 5000
@@ -147,15 +157,53 @@ func (ra renownAggs) add(d workDoc, only map[int64]bool) {
 	}
 }
 
-// values — авторы с ненулевой известностью и её значения.
-func (ra renownAggs) values() (ids, vals []int64) {
+// values — авторы с ненулевой известностью и её значения; bonus — премии,
+// врученные лично автору (authorAwardBonus).
+func (ra renownAggs) values(bonus map[int64]int64) (ids, vals []int64) {
 	for id, a := range ra {
-		if r := computeAuthorRenown(a.maxPop, a.n); r > 0 {
+		if r := computeAuthorRenown(a.maxPop, a.n) + bonus[id]; r > 0 {
 			ids = append(ids, id)
 			vals = append(vals, r)
 		}
 	}
+	for id, b := range bonus {
+		if _, ok := ra[id]; !ok && b > 0 {
+			ids = append(ids, id)
+			vals = append(vals, b)
+		}
+	}
 	return ids, vals
+}
+
+// authorAwardBonus — бонус известности за премии, врученные лично автору
+// (award_wins.kind = 'author'); only — только эти авторы (nil — все).
+func (im *Importer) authorAwardBonus(ctx context.Context, q interface {
+	Query(context.Context, string, ...any) (pgx.Rows, error)
+}, only []int64) (map[int64]int64, error) {
+	out := map[int64]int64{}
+	if im.deps.AwardTier == nil {
+		return out, nil
+	}
+	rows, err := q.Query(ctx, `
+		SELECT author_id, array_agg(DISTINCT award)
+		FROM award_wins
+		WHERE kind = 'author' AND author_id IS NOT NULL AND ($1::bigint[] IS NULL OR author_id = ANY($1))
+		GROUP BY author_id`, only)
+	if err != nil {
+		return nil, fmt.Errorf("author renown: author awards: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int64
+		var keys []string
+		if err := rows.Scan(&id, &keys); err != nil {
+			return nil, fmt.Errorf("author renown: author awards: %w", err)
+		}
+		if n, major := awardSignals(keys, im.deps.AwardTier); n > 0 {
+			out[id] = int64(math.Round(awardBonus(n, major)))
+		}
+	}
+	return out, rows.Err()
 }
 
 // RecomputeAuthorRenownFor пересчитывает authors.renown только у авторов работ
@@ -216,7 +264,11 @@ func (im *Importer) RecomputeAuthorRenownFor(ctx context.Context, workIDs []int6
 			byAuthor.add(d, only)
 		}
 	}
-	rIDs, rVals := byAuthor.values()
+	bonus, err := im.authorAwardBonus(ctx, conn, authors)
+	if err != nil {
+		return 0, err
+	}
+	rIDs, rVals := byAuthor.values(bonus)
 	// Авторы набора без известности — 0, остальные — посчитанное.
 	tag, err := conn.Exec(ctx, `
 		UPDATE authors a SET renown = COALESCE(v.renown, 0)

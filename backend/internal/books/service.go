@@ -18,6 +18,7 @@ import (
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
+	"github.com/skriptes/skriptes/backend/internal/workauthors"
 )
 
 // worksIndexName — индекс логических книг (works) в Meili. Зеркало
@@ -1398,7 +1399,8 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			b.lang, b.date_added, b.rating, b.annotation, b.cover_path,
 			`+ExternalRatingSQL("b")+`, b.external_rating_source, b.external_rating_count,
 			COALESCE(w.written_year, b.written_year), b.edition_year,
-			COALESCE(w.ser_no, b.ser_no), COALESCE(w.series_id, b.series_id), s.title,
+			-- Серия — только авторский цикл (#468): межавторская и издательская не показываются.
+			CASE WHEN s.id IS NOT NULL THEN COALESCE(w.ser_no, b.ser_no) END, s.id, s.title,
 			b.file_name, b.ext, b.size_bytes, b.deleted,
 			a.filename,
 			CASE WHEN w.fantlab_marks >= `+fmt.Sprint(MinFantlabMarks)+` THEN w.fantlab_midmark END, w.fantlab_marks,
@@ -1410,7 +1412,7 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 			))
 		FROM books b
 		LEFT JOIN works w    ON w.id = b.work_id
-		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id)
+		LEFT JOIN series s   ON s.id = COALESCE(w.series_id, b.series_id) AND s.kind IS NULL
 		JOIN archives a      ON a.id = b.archive_id
 		WHERE b.id = $1
 	`, id).Scan(
@@ -1485,8 +1487,9 @@ func (s *Service) Get(ctx context.Context, id int64) (Book, error) {
 	}
 	b.Archive = archive
 
-	// Авторы/жанры — уровня РАБОTЫ (union по всем изданиям). Для singleton-работы
-	// совпадает с изданием. WorkID гарантирован инвариантом (миграция 0017).
+	// Авторы/жанры — уровня РАБОТЫ (жанры — union по всем изданиям, авторы — по
+	// правилу workauthors.Core, #464). Для singleton-работы совпадает с изданием.
+	// WorkID гарантирован инвариантом (миграция 0017).
 	workID := b.WorkID
 	if workID == 0 {
 		workID = -1 // не сматчит ничего → пустые union (defensive)
@@ -1564,18 +1567,24 @@ func (s *Service) GenresAndLang(ctx context.Context, id int64) ([]string, string
 	return codes, lang.String, nil
 }
 
-// queryWorkAuthors — авторы уровня РАБОТЫ: union по всем изданиям работы
-// (workID), либо по одному изданию (bookID), если работа не определена.
+// queryWorkAuthors — авторы уровня РАБОТЫ по правилу workauthors.Core (#464:
+// антология с тем же названием не приносит своих авторов), либо авторы одного
+// издания (bookID), если работа не определена.
 func (s *Service) queryWorkAuthors(ctx context.Context, workID, bookID int64) ([]AuthorRef, error) {
-	rows, err := s.pool.Query(ctx, `
+	q, arg := `
 		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '')
-		FROM authors a
-		JOIN book_authors ba ON ba.author_id = a.id
-		JOIN books b         ON b.id = ba.book_id
-		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
-		GROUP BY a.id, a.last_name, a.first_name, a.middle_name, a.name_note
-		ORDER BY min(ba.position), a.last_name
-	`, workID, bookID)
+		FROM (`+workauthors.Core("$1")+`) c
+		JOIN authors a ON a.id = c.author_id
+		ORDER BY c.minpos, a.last_name`, workID
+	if workID <= 0 {
+		q, arg = `
+		SELECT a.id, a.last_name, a.first_name, a.middle_name, COALESCE(a.name_note, '')
+		FROM book_authors ba
+		JOIN authors a ON a.id = ba.author_id
+		WHERE ba.book_id = $1
+		ORDER BY ba.position, a.last_name`, bookID
+	}
+	rows, err := s.pool.Query(ctx, q, arg)
 	if err != nil {
 		return nil, fmt.Errorf("query authors: %w", err)
 	}

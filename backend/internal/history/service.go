@@ -466,7 +466,7 @@ func (s *Service) ListFavorites(ctx context.Context, userID int64, limit, offset
 		JOIN books b ON b.id = cb.book_id AND b.deleted = false
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
-		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 		GROUP BY b.id, b.title, b.lang, b.lib_id, cb.added_at, ser.title
 		ORDER BY cb.added_at DESC
 		LIMIT $2 OFFSET $3
@@ -792,7 +792,7 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 			       ) AS authors
 			FROM reads r
 			JOIN books b ON b.id = r.book_id AND b.deleted = false
-			LEFT JOIN series ser ON ser.id = b.series_id
+			LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 			LEFT JOIN book_authors ba ON ba.book_id = b.id
 			LEFT JOIN authors a ON a.id = ba.author_id
 			WHERE r.user_id = $1
@@ -889,7 +889,7 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 		       )
 		FROM rep
 		JOIN books b ON b.id = rep.id
-		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		GROUP BY b.id, b.work_id, b.title, b.lib_id, b.date_added, ser.title, b.cover_path

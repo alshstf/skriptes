@@ -210,7 +210,8 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
           {/* Полка + «Детали файла» (мобайл) — ниже оценки, как второстепенное.
               На десктопе они в шапке у обложки (hidden md:block выше). */}
           <div className="space-y-3 md:hidden">
-            <ShelfSection bookId={book.id} deleted={book.deleted ?? false} />
+            {/* Кнопка «На полку» — в ряду действий у ★ (#470); здесь только список полок. */}
+            <ShelfSection bookId={book.id} deleted={book.deleted ?? false} withControl={false} />
             {!multi ? <FileDetails book={book} /> : null}
           </div>
 
@@ -397,8 +398,15 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
  * поэтому здесь только ★.
  */
 function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
+  // «На полку» — в один ряд со ★ (#470): обе — «организовать книгу для себя».
+  const shelves = useUserShelves(book.id).length;
   if (multi) {
-    return <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />;
+    return (
+      <div className="flex items-center gap-2">
+        <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} />
+      </div>
+    );
   }
   return (
     <>
@@ -416,6 +424,7 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
         <DownloadMenu bookId={book.id} showLabel />
         <SendToKindleButton bookId={book.id} showLabel />
         <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} />
       </div>
     </>
   );
@@ -609,13 +618,20 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
  * Удалённую книгу на полки не кладём (контрол скрыт), но уже имеющееся членство
  * показываем.
  */
-function ShelfSection({ bookId, deleted }: { bookId: number; deleted: boolean }) {
-  // Служебную «Избранное» исключаем — её передаёт ★ в шапке (без дубля);
-  // здесь только пользовательские полки.
-  const shelves = (useBookCollections(bookId).data ?? []).filter((s) => s.kind !== 'favorites');
+function ShelfSection({
+  bookId,
+  deleted,
+  withControl = true,
+}: {
+  bookId: number;
+  deleted: boolean;
+  /** false — только список полок: кнопка живёт в мобильном ряду действий (#470). */
+  withControl?: boolean;
+}) {
+  const shelves = useUserShelves(bookId);
   const onShelves = shelves.length > 0;
-  // Удалённая книга без полок — показывать нечего.
-  if (!onShelves && deleted) return null;
+  // Удалённая книга без полок — показывать нечего; без кнопки — тоже.
+  if (!onShelves && (deleted || !withControl)) return null;
   const shown = shelves.slice(0, 3);
   const extra = shelves.length - shown.length;
 
@@ -633,9 +649,17 @@ function ShelfSection({ bookId, deleted }: { bookId: number; deleted: boolean })
           {extra > 0 ? <span className="tabular-nums">+{extra}</span> : null}
         </>
       ) : null}
-      {!deleted ? <AddToShelfDialog bookId={bookId} compact={onShelves} /> : null}
+      {!deleted && withControl ? <AddToShelfDialog bookId={bookId} compact={onShelves} /> : null}
     </div>
   );
+}
+
+/**
+ * useUserShelves — пользовательские полки книги. Служебную «Избранное»
+ * исключаем — её передаёт ★ в шапке (без дубля).
+ */
+function useUserShelves(bookId: number) {
+  return (useBookCollections(bookId).data ?? []).filter((s) => s.kind !== 'favorites');
 }
 
 /**

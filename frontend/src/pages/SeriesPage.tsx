@@ -107,6 +107,8 @@ export function SeriesPage() {
         </div>
         {s.kind === 'multi' ? (
           <p className="text-sm text-muted-foreground">Межавторская или издательская серия</p>
+        ) : s.kind === 'publisher' ? (
+          <p className="text-sm text-muted-foreground">Издательская серия — не авторский цикл</p>
         ) : null}
         {s.authors && s.authors.length > 0 ? (
           <p className="text-sm">

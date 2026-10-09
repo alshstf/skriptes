@@ -37,6 +37,53 @@ const (
 	popWOLRenown    = 25.0  // ·log2(1+ol_ratings+ol_want): ГП №1 (~21k)→~359
 	popWWDSitelinks = 40.0  // ·log2(1+wd_sitelinks): ГП 104→~268, МиМ 78→~252
 	popEditionCap   = 64    // потолок edition_count в формуле (санитарный)
+
+	// Премии (#420, вариант A): лауреату +100, лауреату главной премии
+	// (awards.TierMajor: Букер, Пулитцер, «Хьюго»…) +200, за каждую следующую
+	// премию +25, считаются не больше трёх. Моделирование на проде 2026-10-08:
+	// лауреатов в топ-1000 известности 94 → 130, выпадают книги с самой границы.
+	// Тот же бонус — автору за премии, врученные лично ему (author_renown.go).
+	popWAward      = 100.0
+	popWAwardMajor = 200.0
+	popWAwardNext  = 25.0
+	popAwardCap    = 3
+)
+
+// awardBonus — бонус известности за n разных премий (major — среди них главная).
+func awardBonus(n int, major bool) float64 {
+	if n <= 0 {
+		return 0
+	}
+	b := popWAward
+	if major {
+		b = popWAwardMajor
+	}
+	return b + popWAwardNext*float64(min(n, popAwardCap)-1)
+}
+
+// awardSignals — число премий в известности и есть ли среди них главная;
+// tier — awards.PopularityTier (nil — премии не учитываются).
+func awardSignals(keys []string, tier func(string) int) (n int, major bool) {
+	if tier == nil {
+		return 0, false
+	}
+	for _, k := range keys {
+		switch tier(k) {
+		case awardTierMajor:
+			n++
+			major = true
+		case awardTierAward:
+			n++
+		}
+	}
+	return n, major
+}
+
+// Ранги awards.PopularityTier (зеркало: importer не зависит от пакета awards,
+// функцию ранга передаёт main через Deps.AwardTier).
+const (
+	awardTierAward = 1
+	awardTierMajor = 2
 )
 
 // workPopSignals — сырые сигналы известности одной работы; порядок и состав
@@ -55,6 +102,10 @@ type workPopSignals struct {
 	OLRatings    int64 // ol_ratings_count — число оценок на Open Library
 	OLWant       int64 // ol_want_count — полка want-to-read на Open Library
 	WDSitelinks  int64 // wd_sitelinks — языковые разделы Википедии со статьёй
+	// Премии работы (#420): число разных премий белого списка без кинопремий
+	// и есть ли среди них главная.
+	Awards     int
+	AwardMajor bool
 }
 
 // computeWorkPopularity собирает интегральную известность из сырых сигналов.
@@ -86,6 +137,7 @@ func computeWorkPopularity(s workPopSignals) int64 {
 	if s.WDSitelinks > 0 {
 		p += popWWDSitelinks * math.Log2(1+float64(s.WDSitelinks))
 	}
+	p += awardBonus(s.Awards, s.AwardMajor)
 	p += popWView*float64(s.Views) + popWRead*float64(s.Reads) + popWUserRating*float64(s.UserRatings)
 	return int64(math.Round(p))
 }
