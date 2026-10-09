@@ -25,8 +25,39 @@ import (
 //     ранний год издания работы ещё раньше, он и есть потолок («год написания /
 //     первого издания»);
 //   - ручная правка года (metadata_overrides) неприкосновенна.
+//
+// Опечатки и заглушки (#465: «Сами боги» Азимова — 1073 из одного французского
+// издания; ~30 работ с годом 1000–1449 на проде 2026-10):
+//
+//   - год раньше рождения основного автора + 10 — не год написания (годы жизни —
+//     authors.born_year, author_lifetime.go). Только для авторов, родившихся с
+//     1500 года: у средневековых дата рождения в Wikidata бывает с точностью до
+//     века, а их настоящие ранние годы правило задело бы;
+//   - год Фантлаба (первая публикация) сильнее fb2-года, который раньше него больше
+//     чем на fantlabYearLead лет;
+//   - год издания раньше minEditionYear — заглушка (книгопечатания не было), а
+//     fb2-год, равный такому году издания, — тоже, кроме старинной литературы и
+//     фольклора (ancientGenreSQL).
 
 const minPlausibleYear = 1000
+
+// ancientBooksSQL — издания старинной литературы и фольклора: их год издания
+// раньше minEditionYear — не заглушка, а год текста, продублированный издателем
+// («Филострато» Боккаччо — 1335). Набором, а не EXISTS на строку: план с
+// коррелированным подзапросом на проде упирался в минуты.
+// Только издания работ из lo — пересчёт пары работ (его зовёт группировка) не
+// сканирует все жанры.
+const ancientBooksSQL = `SELECT DISTINCT bg.book_id
+		FROM lo JOIN books ab ON ab.work_id = lo.work_id
+		JOIN book_genres bg ON bg.book_id = ab.id JOIN genres g ON g.id = bg.genre_id
+		WHERE g.fb2_code LIKE 'antique%' OR g.fb2_code LIKE 'folk%' OR g.fb2_code = 'epic'`
+
+const (
+	minEditionYear      = 1450 // раньше — заглушка, а не год издания
+	minLifetimeBornYear = 1500 // правило «не раньше рождения» — для авторов не раньше этого года рождения
+	bornWritingAge      = 10   // год работы не раньше рождения автора + столько лет
+	fantlabYearLead     = 100  // насколько fb2-год раньше года Фантлаба, чтобы считаться опечаткой
+)
 
 // plausibleYear — год в [1000, текущий], иначе 0.
 func plausibleYear(y int) int {
@@ -50,36 +81,51 @@ func plausibleFb2Year(written, edition int) int {
 // (allWorks — для всех). Возвращает работы, у которых год изменился.
 func recomputeWorkYears(ctx context.Context, ex pgxExec, ids []int64, allWorks bool) ([]int64, error) {
 	rows, err := ex.Query(ctx, `
-		WITH ed AS (
+		WITH lo AS (
+		    -- Нижняя граница года работы: рождение основного автора + bornWritingAge
+		    -- (только для родившихся с minLifetimeBornYear), иначе minPlausibleYear.
+		    SELECT w.id AS work_id,
+		           GREATEST($3, COALESCE(CASE WHEN a.born_year >= $6 THEN a.born_year + $7 END, $3)) AS y
+		    FROM works w LEFT JOIN authors a ON a.id = w.primary_author_id
+		    WHERE ($2 OR w.id = ANY($1))
+		), anc AS (`+ancientBooksSQL+`
+		), ed AS (
 		    SELECT b.work_id,
-		           min(b.written_year) FILTER (WHERE b.written_year BETWEEN $3 AND $4) AS wy,
+		           min(b.written_year) FILTER (WHERE b.written_year BETWEEN lo.y AND $4 AND CASE WHEN b.written_year = b.edition_year AND b.edition_year < $5 THEN anc.book_id IS NOT NULL ELSE true END) AS wy,
 		           (array_agg(b.written_year_source ORDER BY b.written_year)
-		              FILTER (WHERE b.written_year BETWEEN $3 AND $4))[1] AS wsrc,
-		           min(b.edition_year) FILTER (WHERE b.edition_year BETWEEN $3 AND $4) AS ey
-		    FROM books b
-		    WHERE b.deleted = false AND b.work_id IS NOT NULL AND ($2 OR b.work_id = ANY($1))
+		              FILTER (WHERE b.written_year BETWEEN lo.y AND $4 AND CASE WHEN b.written_year = b.edition_year AND b.edition_year < $5 THEN anc.book_id IS NOT NULL ELSE true END))[1] AS wsrc,
+		           min(b.edition_year) FILTER (WHERE b.edition_year BETWEEN GREATEST(lo.y, $5) AND $4) AS ey
+		    FROM books b JOIN lo ON lo.work_id = b.work_id
+		    LEFT JOIN anc ON anc.book_id = b.id
+		    WHERE b.deleted = false AND b.work_id IS NOT NULL
 		    GROUP BY b.work_id
 		), calc AS (
 		    SELECT w.id,
 		           -- fb2-год с потолком по самому раннему изданию.
 		           CASE WHEN ed.wy IS NOT NULL AND ed.ey IS NOT NULL AND ed.ey < ed.wy THEN ed.ey ELSE ed.wy END AS by,
 		           CASE WHEN ed.wy IS NOT NULL AND ed.ey IS NOT NULL AND ed.ey < ed.wy THEN 'edition_year' ELSE ed.wsrc END AS bsrc,
-		           w.external_year AS xy, w.external_year_source AS xsrc
-		    FROM works w LEFT JOIN ed ON ed.work_id = w.id
-		    WHERE ($2 OR w.id = ANY($1))
-		      AND NOT EXISTS (SELECT 1 FROM metadata_overrides o
+		           CASE WHEN w.external_year >= lo.y THEN w.external_year END AS xy, w.external_year_source AS xsrc
+		    FROM works w JOIN lo ON lo.work_id = w.id LEFT JOIN ed ON ed.work_id = w.id
+		    WHERE NOT EXISTS (SELECT 1 FROM metadata_overrides o
 		                      WHERE o.target_kind = 'work' AND o.target_id = w.id AND o.field = 'written_year')
+		), pick AS (
+		    -- Внешний год, если раньше fb2-года; год Фантлаба — и если fb2-год раньше
+		    -- него больше чем на fantlabYearLead лет (опечатка fb2, #465).
+		    SELECT id, by, bsrc, xy, xsrc,
+		           xy IS NOT NULL AND (by IS NULL OR xy < by OR (xsrc = 'fantlab' AND by < xy - $8)) AS ext
+		    FROM calc
 		), fin AS (
 		    SELECT id,
-		           CASE WHEN xy IS NOT NULL AND (by IS NULL OR xy < by) THEN xy ELSE by END AS y,
-		           CASE WHEN xy IS NOT NULL AND (by IS NULL OR xy < by) THEN xsrc ELSE bsrc END AS src
-		    FROM calc
+		           CASE WHEN ext THEN xy ELSE by END AS y,
+		           CASE WHEN ext THEN xsrc ELSE bsrc END AS src
+		    FROM pick
 		)
 		UPDATE works w SET written_year = fin.y, written_year_source = fin.src
 		FROM fin
 		WHERE w.id = fin.id
 		  AND (w.written_year IS DISTINCT FROM fin.y OR w.written_year_source IS DISTINCT FROM fin.src)
-		RETURNING w.id`, ids, allWorks, minPlausibleYear, time.Now().Year())
+		RETURNING w.id`, ids, allWorks, minPlausibleYear, time.Now().Year(),
+		minEditionYear, minLifetimeBornYear, bornWritingAge, fantlabYearLead)
 	if err != nil {
 		return nil, fmt.Errorf("recompute work years: %w", err)
 	}
