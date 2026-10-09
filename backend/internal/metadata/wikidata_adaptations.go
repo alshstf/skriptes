@@ -83,21 +83,28 @@ const wikidataSource = "wikidata"
 // ErrNotFound). ErrNotFound — если книгу не удалось сопоставить с QID
 // вообще.
 func (p *WikidataAdaptationsProvider) FetchAdaptations(ctx context.Context, q BookQuery) ([]Adaptation, error) {
+	items, _, err := p.FetchAdaptationsWithQID(ctx, q)
+	return items, err
+}
+
+// FetchAdaptationsWithQID — FetchAdaptations плюс проверенный по автору QID
+// книги: EnsureAdaptations сохраняет его ключом группировки изданий (#467).
+func (p *WikidataAdaptationsProvider) FetchAdaptationsWithQID(ctx context.Context, q BookQuery) ([]Adaptation, string, error) {
 	if q.Title == "" {
-		return nil, ErrNotFound
+		return nil, "", ErrNotFound
 	}
 	qid, err := p.resolveBookQID(ctx, q)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if qid == "" {
-		return nil, ErrNotFound
+		return nil, "", ErrNotFound
 	}
 	adaptations, err := p.queryAdaptations(ctx, qid)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return adaptations, nil
+	return adaptations, qid, nil
 }
 
 // resolveBookQID — wbsearchentities по title, валидация по автору.

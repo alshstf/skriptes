@@ -80,6 +80,17 @@ func TestService_ListAndGet(t *testing.T) {
 	require.NotNil(t, book.SerNo)
 	require.Equal(t, 2, *book.SerNo)
 
+	// Серия на карточке — только авторский цикл (#468): межавторская или
+	// издательская не показывается (ни название, ни номер).
+	_, err = pool.Exec(ctx, `UPDATE series SET kind = 'publisher' WHERE title = 'Петля [Алексеев]'`)
+	require.NoError(t, err)
+	noCycle, err := svc.Get(ctx, bookID)
+	require.NoError(t, err)
+	require.Nil(t, noCycle.Series)
+	require.Nil(t, noCycle.SerNo)
+	_, err = pool.Exec(ctx, `UPDATE series SET kind = NULL WHERE title = 'Петля [Алексеев]'`)
+	require.NoError(t, err)
+
 	require.Len(t, book.Authors, 1)
 	require.Equal(t, "Алексеев", book.Authors[0].LastName)
 	require.Equal(t, "Алексеев Евгений Артёмович", book.Authors[0].FullName)

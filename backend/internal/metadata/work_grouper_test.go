@@ -249,3 +249,39 @@ func TestClusterTier1_Tier15_MislabeledSerNo(t *testing.T) {
 	// в бакет не затягивается.
 	require.Equal(t, [][]int64{{1, 2}, {3}}, clustersOf(books, clusterTier1(books)))
 }
+
+// TestClusterTier1_AnthologyGate — #464: антология с тем же названием, что у
+// романа (на ≥2 автора больше), не сливается с ним; копии одной антологии —
+// между собой; соавторы и многоавторские работы — как раньше.
+func TestClusterTier1_AnthologyGate(t *testing.T) {
+	novel := func(id int64) groupBook {
+		return groupBook{id: id, workID: id, normTitle: "патруль времени", lang: "ru", nAuthors: 1, authorSet: "1"}
+	}
+	anthology := func(id int64, n int, set string) groupBook {
+		return groupBook{id: id, workID: id, normTitle: "патруль времени", lang: "ru", nAuthors: n, authorSet: set}
+	}
+
+	t.Run("антология не сливается с романом, её копии — между собой", func(t *testing.T) {
+		books := []groupBook{novel(1), novel(2), anthology(3, 17, "1,2,3"), anthology(4, 17, "1,2,3"), anthology(5, 4, "1,7,8,9")}
+		require.Equal(t, [][]int64{{1, 2}, {3, 4}, {5}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("соавтор (+1) сливается как раньше", func(t *testing.T) {
+		books := []groupBook{novel(1), anthology(2, 2, "1,2")}
+		require.Equal(t, [][]int64{{1, 2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("многоавторская работа — гейт не трогает", func(t *testing.T) {
+		books := []groupBook{anthology(1, 22, "a"), anthology(2, 35, "b")}
+		require.Equal(t, [][]int64{{1, 2}}, clustersOf(books, clusterTier1(books)))
+	})
+
+	t.Run("перевод-антология не цепляется к оригиналу по src", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "time patrol", lang: "en", nAuthors: 1, authorSet: "1"},
+			{id: 2, workID: 2, normTitle: "патруль времени", lang: "ru", nAuthors: 5, authorSet: "1,2,3,4,5",
+				srcTitleNorm: "time patrol", srcLang: "en"},
+		}
+		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
+	})
+}

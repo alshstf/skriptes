@@ -2,8 +2,26 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// Параметры адреса (?library=…, #469) — в памяти: useSearch читает, useNavigate пишет.
+const searchStore = vi.hoisted(() => {
+  let search: Record<string, unknown> = {};
+  const listeners = new Set<() => void>();
+  return {
+    get: () => search,
+    set: (next: Record<string, unknown>) => {
+      search = next;
+      listeners.forEach((l) => l());
+    },
+    subscribe: (l: () => void) => {
+      listeners.add(l);
+      return () => listeners.delete(l);
+    },
+  };
+});
+
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-router')>('@tanstack/react-router');
+  const { useSyncExternalStore } = await vi.importActual<typeof import('react')>('react');
   type LinkProps = {
     to?: string;
     params?: Record<string, string>;
@@ -25,6 +43,14 @@ vi.mock('@tanstack/react-router', async () => {
       );
     },
     useParams: () => ({ key: 'hugo' }),
+    useSearch: () => useSyncExternalStore(searchStore.subscribe, searchStore.get),
+    useNavigate:
+      () =>
+      (opts: { search?: Record<string, unknown> | ((prev: Record<string, unknown>) => Record<string, unknown>) }) => {
+        const next = typeof opts.search === 'function' ? opts.search(searchStore.get()) : (opts.search ?? {});
+        searchStore.set(next);
+        return Promise.resolve();
+      },
   };
 });
 
@@ -49,7 +75,10 @@ function stubFetch(byPath: Record<string, object>) {
   );
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  searchStore.set({});
+});
 
 const wins: AwardWin[] = [
   { id: 1, year: 1966, nomination: 'Роман', kind: 'work', title: 'Дюна', author: 'Фрэнк Герберт', work_id: 10, source: 'fantlab',

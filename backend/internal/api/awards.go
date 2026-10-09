@@ -15,6 +15,29 @@ import (
 // AwardsDeps — премии (#389, A2).
 type AwardsDeps struct {
 	Service *awards.Service
+	Logos   *awards.LogoCache // nil — без картинок премий
+}
+
+// handleAwardLogo — GET /api/awards/{key}/logo: картинка премии из кэша инстанса
+// (первый запрос скачивает её у источника, #446). Нет картинки — 404, фронт
+// рисует монограмму.
+func handleAwardLogo(d AwardsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.Logos == nil {
+			http.NotFound(w, r)
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 25*time.Second)
+		defer cancel()
+		path, err := d.Logos.Path(ctx, chi.URLParam(r, "key"))
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Cache-Control", "private, max-age=604800")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		http.ServeFile(w, r, path)
+	}
 }
 
 // handleListAwards — GET /api/awards: премии белого списка с числом лауреатов.

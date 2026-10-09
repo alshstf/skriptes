@@ -269,6 +269,8 @@ const awardRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/awards/$key',
   component: AwardPage,
+  // library — «Только из библиотеки» (#469: переживает «Назад» с карточки книги).
+  validateSearch: (search: Record<string, unknown>): { library?: boolean } => ({ library: asBool(search.library) }),
 });
 
 // /shelves — личные полки (коллекции), готовые подборки и умные полки; пункт
@@ -277,6 +279,8 @@ const shelvesRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/shelves',
   component: ShelvesPage,
+  // open — раскрытые полки и подборки (lib/openState.ts, #469).
+  validateSearch: (search: Record<string, unknown>): { open?: string[] } => ({ open: asStringArray(search.open) }),
 });
 
 const profileRoute = createRoute({
@@ -392,6 +396,9 @@ export function createAppRouter(queryClient: QueryClient) {
     routeTree,
     context: { queryClient },
     defaultPreload: 'intent',
+    // «Назад» — на ту же позицию прокрутки (#469): списки рисуются из кэша
+    // react-query сразу, раскрытые полки и переключатели — в адресе.
+    scrollRestoration: true,
   });
 }
 

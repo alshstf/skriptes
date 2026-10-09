@@ -111,7 +111,7 @@ func run() error {
 	// слежение, запускается в конце горутины разовых шагов ниже), и ручная
 	// пересинхронизация года в поиске из админки (ResyncYears).
 	imp := importer.New(importer.Deps{Pool: pool, Meili: meili, Logger: logger, InpxFiles: cfg.InpxFiles,
-		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey})
+		MeiliURL: cfg.MeiliURL, MeiliAPIKey: cfg.MeiliAPIKey, AwardTier: awards.PopularityTier})
 	// Локальные оверрайды метаданных (ручная корректура каталога, только админ).
 	// imp ресинкает works-индекс после правки индексируемого поля (lang/title/…).
 	overrideCtl := metadata.NewOverrideController(pool, imp, logger)
@@ -160,8 +160,11 @@ func run() error {
 		// этому моменту classифицирован — сборники вне вклада).
 		runOnceAuthorRenown(c, pool, imp, logger)
 		runOnceSplitAlienEditions(c, pool, imp, logger)
+		runOnceSplitAnthologyEditions(c, pool, imp, logger)
+		runOncePublisherSeries(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
+		runOnceWorkYearRules(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
@@ -228,8 +231,17 @@ func run() error {
 	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление
 	// с каталогом — раз в сутки (каталог меняется с импортом).
 	metadata.Go(func(c context.Context) {
-		// Набор премий работы — поле works-индекса (фильтр «Премии», #447): изменилось — переиндексация.
-		awards.NewSyncer(pool, logger).WithWorksChanged(imp.UpsertWorksToIndex).Run(c, 3*time.Minute, 24*time.Hour)
+		// Набор премий работы — поле works-индекса (фильтр «Премии», #447) и сигнал
+		// известности (#420): изменилось — переиндексация и известность авторов.
+		awards.NewSyncer(pool, logger).WithWorksChanged(func(ctx context.Context, ids []int64) error {
+			if err := imp.UpsertWorksToIndex(ctx, ids); err != nil {
+				return err
+			}
+			if _, err := imp.RecomputeAuthorRenownFor(ctx, ids); err != nil {
+				logger.Warn("author renown after awards sync failed", "err", err)
+			}
+			return nil
+		}).Run(c, 3*time.Minute, 24*time.Hour)
 	})
 
 	conv, err := converter.New(cfg.BooksRoot, cfg.CacheRoot, cfg.FBCPath)
@@ -266,7 +278,8 @@ func run() error {
 	// pageprops) и OpenLibrary (QID бесплатно из remote_ids.wikidata) — иначе
 	// отказ Википедии протёк бы в OL-fallback (цепочка bio/photo).
 	candidateFacts := metadata.CachedCandidateFacts(wdAdaptations.CandidateFacts)
-	candidateCheck := metadata.NewCandidateCheck(candidateFacts)
+	// Принятая статья автора с QID — его QID и годы жизни (#465: правило года работы).
+	candidateCheck := metadata.RecordingCandidateCheck(metadata.NewCandidateCheck(candidateFacts), candidateFacts, pool, logger)
 	wikiProvider := metadata.NewWikipediaProvider(httpClient).WithCandidateCheck(candidateCheck).WithCandidateFacts(candidateFacts)
 	olProvider := metadata.NewOpenLibraryProvider(olHTTPClient).WithCandidateCheck(candidateCheck)
 	enricher, err := metadata.New(
@@ -479,6 +492,62 @@ func run() error {
 		logger.Warn("read work grouping settings — using defaults", "err", err)
 		wgCfg = settings.DefaultWorkGroupingConfig()
 	}
+	// Годы жизни авторов работ с годом раньше 1500 (#465): тот же поиск статьи, что
+	// у био, без записи био; затем год их работ — по правилу «не раньше рождения».
+	metadata.Go(func(c context.Context) {
+		const flag = "author_lifetimes_suspect_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		authors, err := metadata.SuspectYearAuthors(c, pool)
+		if err != nil {
+			logger.Warn("author lifetimes: suspects failed", "err", err)
+			return
+		}
+		got, err := enricher.ResolveAuthorLifetimes(c, authors)
+		if err != nil {
+			logger.Warn("author lifetimes stopped — will continue next start", "err", err)
+			return
+		}
+		works, err := metadata.RecomputeYearsBeforeBirth(c, pool)
+		if err != nil {
+			logger.Warn("author lifetimes: recompute years failed", "err", err)
+			return
+		}
+		if len(works) > 0 {
+			if err := imp.UpsertWorksToIndex(c, works); err != nil {
+				logger.Warn("works index sync after lifetimes failed", "err", err)
+			}
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("author lifetimes: set flag failed", "err", err)
+		}
+		logger.Info("author lifetimes for suspect years done", "authors", len(authors), "with_years", len(got), "works", len(works))
+	})
+	// Ключи группировки изданий из поиска экранизаций (#467): разовый догон для
+	// работ, у которых экранизации уже найдены, а QID книги не сохранялся. Не чаще
+	// 30 запросов в минуту; сбой источника — продолжим на следующем старте.
+	metadata.Go(func(c context.Context) {
+		const flag = "adaptation_work_keys_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		found, finished, err := metadata.BackfillAdaptationWorkKeys(c, pool, wdAdaptations, 30, logger)
+		if err != nil && c.Err() == nil {
+			logger.Warn("adaptation work keys backfill stopped — will continue next start", "found", found, "err", err)
+		}
+		if !finished {
+			return
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("adaptation work keys: set flag failed", "err", err)
+		}
+		logger.Info("adaptation work keys backfill done", "found", found)
+	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
 		Wikidata:          wgCfg.Wikidata,
@@ -587,7 +656,7 @@ func run() error {
 			Overrides: overrideCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
-		Awards:  api.AwardsDeps{Service: awards.NewService(pool)},
+		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
@@ -800,6 +869,33 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	} else if len(touched) > 0 {
 		syncSplitWorks(ctx, imp, touched, logger)
 		logger.Info("alien editions split after import", "works", len(touched))
+	}
+	// Годы работ раньше рождения автора (#465): годы жизни приходят с поиском био.
+	if works, err := metadata.RecomputeYearsBeforeBirth(ctx, pool); err != nil {
+		logger.Warn("work years before birth after import failed", "err", err)
+	} else if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after year fix failed", "err", err)
+		}
+		logger.Info("work years before author birth fixed", "works", len(works))
+	}
+	// Издательские серии (#468): импорт мог добавить книги в серии — классифицируем
+	// заново, у затронутых работ — серия-цикл и переиндексация.
+	if works, err := metadata.ClassifyPublisherSeries(ctx, pool); err != nil {
+		logger.Warn("classify publisher series after import failed", "err", err)
+	} else if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after publisher series failed", "err", err)
+		}
+		logger.Info("publisher series reclassified after import", "works", len(works))
+	}
+	// Антологии с тем же названием, что у романа, — в свои работы (#464).
+	if touched, err := metadata.SplitAnthologyEditions(ctx, pool); err != nil {
+		logger.Warn("split anthology editions after import failed", "err", err)
+	} else if len(touched) > 0 {
+		reclassifySplitWorks(ctx, pool, touched, logger)
+		syncSplitWorks(ctx, imp, touched, logger)
+		logger.Info("anthology editions split after import", "works", len(touched))
 	}
 	// Название работы — за изданиями: импорт переписывает название издания, но не
 	// работы (#285). Изменённые — пересчёт типа (мог держаться на названии) и
@@ -1029,7 +1125,7 @@ func runOnceServiceAuthorClassify(ctx context.Context, pool *pgxpool.Pool, logge
 // (грабля «мёртвого popularity» 1.5.x). Дальше свежесть держат after-import и
 // хук воркера «Известность».
 func runOnceAuthorRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "author_renown_computed_v2" // v2: LIBRATE 1–2 без бонуса (#292)
+	const flag = "author_renown_computed_v3" // v2: LIBRATE 1–2 без бонуса (#292); v3: премии (#420)
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("author renown: check flag failed — skip", "err", err)
@@ -1450,6 +1546,78 @@ func runOnceSplitAlienEditions(ctx context.Context, pool *pgxpool.Pool, imp *imp
 	logger.Info("one-time alien editions split done", "works", len(touched))
 }
 
+// runOnceSplitAnthologyEditions — разовый вынос из работ изданий-антологий с тем
+// же названием (metadata.SplitAnthologyEditions, #464; прод — 143 издания в 137
+// работах). Тип работ пересчитывается: роман мог стать «антологией» из-за
+// приклеенного тома, а вынесенный том — стать ею. Дальше то же делают шаги после
+// импорта. Гейт anthology_editions_split_v1.
+func runOnceSplitAnthologyEditions(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "anthology_editions_split_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("split anthology editions: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	touched, err := metadata.SplitAnthologyEditions(ctx, pool)
+	if len(touched) > 0 {
+		reclassifySplitWorks(ctx, pool, touched, logger)
+		syncSplitWorks(ctx, imp, touched, logger)
+	}
+	if err != nil {
+		logger.Warn("split anthology editions failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("split anthology editions: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time anthology editions split done", "works", len(touched))
+}
+
+// runOncePublisherSeries — разовая классификация издательских серий одного
+// автора (metadata.ClassifyPublisherSeries, #468; прод — 1262 серии, 6182 работы):
+// на карточках показывается только авторский цикл. Дальше — шаг после импорта.
+// Гейт publisher_series_v1.
+func runOncePublisherSeries(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "publisher_series_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("publisher series: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	works, err := metadata.ClassifyPublisherSeries(ctx, pool)
+	if err != nil {
+		logger.Warn("publisher series failed — will retry next start", "err", err)
+		return
+	}
+	if len(works) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, works); err != nil {
+			logger.Warn("works index sync after publisher series failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("publisher series: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time publisher series classification done", "works", len(works))
+}
+
+// reclassifySplitWorks — эвристический тип работ после выноса изданий: он мог
+// держаться на вынесенных (≥4 авторов, серия-сборник).
+func reclassifySplitWorks(ctx context.Context, pool *pgxpool.Pool, works []int64, logger *slog.Logger) {
+	if _, err := metadata.ReclassifyWorkKinds(ctx, pool, works); err != nil {
+		logger.Warn("reclassify kinds after edition split failed", "err", err)
+	}
+}
+
 // runOnceAdaptationsScreenOnly — разовая чистка экранизаций до правил #295
 // (metadata.CleanupNonScreenAdaptations): без опер, игр и песен и без записей
 // с голым QID; у затронутых работ пересчитываются известность (экранизация —
@@ -1554,6 +1722,38 @@ func runOnceStaleRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.I
 // Найденные Фантлабом работы перепрашиваются (сброс found-строк): год первой
 // публикации приходит в том же ответе, что счётчик оценок, и до этой версии не
 // сохранялся. Гейт work_years_v1.
+// runOnceWorkYearRules — год всех работ по правилам #465 (заглушки года издания
+// раньше 1450, год Фантлаба против опечатки fb2, не раньше рождения автора) и
+// ресинк изменённых. Гейт work_year_rules_v1; годы жизни, найденные позже, чинит
+// шаг после импорта (RecomputeYearsBeforeBirth).
+func runOnceWorkYearRules(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "work_year_rules_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("work year rules: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, err := metadata.RecomputeAllWorkYears(ctx, pool)
+	if err != nil {
+		logger.Warn("work year rules failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after work year rules failed", "err", err)
+		}
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("work year rules: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time work year rules done", "works", len(changed))
+}
+
 func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
 	const flag = "work_years_v1"
 	var done bool

@@ -31,17 +31,39 @@ import { cn } from '@/lib/utils';
  * fb2-файлу (как favorites/reads — по book_id, а не work_id).
  */
 /**
- * compact — триггер живёт в блоке «полки книги» под мета (см. BookDetailPage):
- *  - false (книга ни на одной полке): основная кнопка «На полку»;
- *  - true (рядом со списком полок): компактное «Изменить».
+ * Триггер:
+ *  - по умолчанию (книга ни на одной полке, блок полок под мета): кнопка «На полку»;
+ *  - compact (рядом со списком полок): компактное «Изменить»;
+ *  - toolbar (мобильный ряд действий рядом со ★, #470): ghost-кнопка в размер ★;
+ *    shelves — на скольких полках книга («На полках: 2»).
  */
-export function AddToShelfDialog({ bookId, compact = false }: { bookId: number; compact?: boolean }) {
+export function AddToShelfDialog({
+  bookId,
+  compact = false,
+  toolbar = false,
+  shelves = 0,
+}: {
+  bookId: number;
+  compact?: boolean;
+  toolbar?: boolean;
+  shelves?: number;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {compact ? (
+        {toolbar ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1"
+            aria-label={shelves > 0 ? `На полках: ${shelves}. Изменить полки книги` : 'Добавить на полку'}
+          >
+            <Library className={cn('size-4', shelves > 0 ? '' : 'text-muted-foreground')} aria-hidden />
+            {shelves > 0 ? `На полках: ${shelves}` : 'На полку'}
+          </Button>
+        ) : compact ? (
           <Button
             variant="ghost"
             size="sm"

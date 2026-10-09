@@ -31,6 +31,8 @@ type Award struct {
 	// Description и Site — о премии и её сайт (about.go, #446).
 	Description string `json:"description,omitempty"`
 	Site        string `json:"site,omitempty"`
+	// Logo — есть картинка премии (logo.go, #446): GET /api/awards/{key}/logo.
+	Logo bool `json:"logo,omitempty"`
 }
 
 // WikidataItem — элемент премии в Wikidata и номинация, которую он означает.

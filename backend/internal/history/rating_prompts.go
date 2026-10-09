@@ -113,7 +113,7 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 		       )
 		FROM rep
 		JOIN books b ON b.id = rep.rep_id
-		LEFT JOIN series ser ON ser.id = b.series_id
+		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		GROUP BY rep.work_id, rep.read_signal, rep.acquired_at, b.id, b.title, b.lib_id, ser.title, b.cover_path
