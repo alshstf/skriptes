@@ -656,7 +656,7 @@ func run() error {
 			Overrides: overrideCtl,
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
-		Awards:  api.AwardsDeps{Service: awards.NewService(pool)},
+		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy

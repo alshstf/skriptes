@@ -149,6 +149,7 @@ func NewRouter(d Deps) http.Handler {
 					if d.Books.Service != nil {
 						r.Get("/awards/{key}", handleAwardWins(d.Awards, d.Books, d.History, d.Content))
 					}
+					r.Get("/awards/{key}/logo", handleAwardLogo(d.Awards))
 					r.Get("/works/{id}/awards", handleWorkAwards(d.Awards))
 					r.Get("/authors/{id}/awards", handleAuthorAwards(d.Awards))
 				}

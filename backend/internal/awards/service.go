@@ -217,7 +217,7 @@ func (s *Syncer) Run(ctx context.Context, startDelay, tick time.Duration) {
 func catalogVersion() string {
 	h := sha256.New()
 	for _, a := range Catalog {
-		a.Description, a.Site = "", "" // тексты о премии на лауреатов не влияют
+		a.Description, a.Site, a.Logo = "", "", false // тексты и картинка премии на лауреатов не влияют
 		_, _ = fmt.Fprintf(h, "%+v\n", a)
 	}
 	_, _ = h.Write(manualJSON)
