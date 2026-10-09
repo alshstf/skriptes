@@ -1741,7 +1741,7 @@ func runOnceStaleRenown(ctx context.Context, pool *pgxpool.Pool, imp *importer.I
 // ресинк изменённых. Гейт work_year_rules_v1; годы жизни, найденные позже, чинит
 // шаг после импорта (RecomputeYearsBeforeBirth).
 func runOnceWorkYearRules(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
-	const flag = "work_year_rules_v1"
+	const flag = "work_year_rules_v2" // v2: год Фантлаба — только против fb2-года < 1450 (Пушкин, 1.38.1)
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work year rules: check flag failed — skip", "err", err)
