@@ -535,18 +535,31 @@ func run() error {
 		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
 			return
 		}
-		found, finished, err := metadata.BackfillAdaptationWorkKeys(c, pool, wdAdaptations, 30, logger)
-		if err != nil && c.Err() == nil {
-			logger.Warn("adaptation work keys backfill stopped — will continue next start", "found", found, "err", err)
-		}
-		if !finished {
-			return
+		// Сбой Wikidata (429, таймаут SPARQL, пауза прерывателя) — пауза и повтор в
+		// этом же процессе: на проде первый проход встал через 20 минут на 377-м ключе.
+		total := 0
+		for attempt := 1; ; attempt++ {
+			found, finished, err := metadata.BackfillAdaptationWorkKeys(c, pool, wdAdaptations, 30, logger)
+			total += found
+			if finished {
+				break
+			}
+			if c.Err() != nil || attempt >= 24 {
+				logger.Warn("adaptation work keys backfill stopped — will continue next start", "found", total, "err", err)
+				return
+			}
+			logger.Info("adaptation work keys backfill paused — retry in 15m", "found", total, "attempt", attempt, "err", err)
+			select {
+			case <-c.Done():
+				return
+			case <-time.After(15 * time.Minute):
+			}
 		}
 		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
 			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
 			logger.Warn("adaptation work keys: set flag failed", "err", err)
 		}
-		logger.Info("adaptation work keys backfill done", "found", found)
+		logger.Info("adaptation work keys backfill done", "found", total)
 	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
