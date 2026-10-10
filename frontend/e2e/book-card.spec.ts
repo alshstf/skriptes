@@ -111,21 +111,55 @@ test('карточка на мобиле: жанры под обложкой в�
   expect(g!.x).toBeLessThanOrEqual(c!.x + 1); // и от её левого края
 });
 
-// #470: на мобиле «На полку» — в одном ряду со ★, ряд не вылезает за экран.
-test('карточка на мобиле: «На полку» в ряду со звёздочкой', async ({ mockedPage: page }) => {
-  await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/books/19');
-  const star = page.getByRole('button', { name: /избранное/i }).last();
-  const shelf = page.getByRole('button', { name: 'Добавить на полку' });
-  await expect(shelf).toBeVisible({ timeout: 10_000 });
-  const s = await star.boundingBox();
-  const b = await shelf.boundingBox();
-  expect(s && b).toBeTruthy();
-  expect(Math.abs(s!.y - b!.y)).toBeLessThan(4); // одна строка
-  expect(b!.x + b!.width).toBeLessThanOrEqual(375); // не за краем экрана
-});
+// #470: действия на мобиле — две ровные строки во всю ширину: «Читать» + ★
+// квадратом той же высоты; ниже — равные «Скачать · Kindle · На полку». Края строк
+// совпадают, ничего не торчит за кнопку и за экран — на узких телефонах тоже.
+for (const width of [320, 360, 414]) {
+  test(`карточка на мобиле: ровные строки действий (${width}px)`, async ({ mockedPage: page }) => {
+    await page.route(/\/api\/me\/kindle-targets$/, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          items: [
+            { id: 1, label: 'Paperwhite', email: 'a@kindle.com' },
+            { id: 2, label: 'Oasis', email: 'b@kindle.com' },
+          ],
+        }),
+      }),
+    );
+    await page.route(/\/api\/books\/19\/collections$/, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ items: [{ id: 1, name: 'Отпуск', kind: 'user' }, { id: 2, name: 'Подарить', kind: 'user' }] }),
+      }),
+    );
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/books/19');
+    const read = page.getByRole('link', { name: 'Открыть книгу в браузерном ридере' }).last();
+    const star = page.getByRole('button', { name: /избранное/i }).last();
+    const download = page.getByRole('button', { name: 'Скачать' }).last();
+    const kindle = page.getByRole('button', { name: 'Отправить на Kindle' }).last();
+    const shelf = page.getByRole('button', { name: /На полках: 2/ });
+    await expect(shelf).toBeVisible({ timeout: 10_000 });
+    const [r, s, d, k, b] = await Promise.all([read, star, download, kindle, shelf].map((l) => l.boundingBox()));
+    expect(r && s && d && k && b).toBeTruthy();
+    expect(Math.abs(r!.y - s!.y)).toBeLessThan(2); // «Читать» и ★ — одна строка
+    expect(Math.abs(r!.height - s!.height)).toBeLessThan(1); // одной высоты
+    expect(Math.abs(d!.y - b!.y)).toBeLessThan(2); // три кнопки — одна строка
+    expect(Math.abs(d!.width - b!.width)).toBeLessThan(2); // равной ширины
+    expect(Math.abs(r!.x - d!.x)).toBeLessThan(1); // левые края строк совпадают
+    expect(Math.abs(s!.x + s!.width - (b!.x + b!.width))).toBeLessThan(1); // и правые
+    expect(b!.x + b!.width).toBeLessThanOrEqual(width);
+    // Содержимое не вылезает за кнопку (счётчик полок, стрелка Kindle).
+    for (const l of [download, kindle, shelf]) {
+      expect(await l.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+    }
+  });
+}
 
-test('карточка на мобиле: книга на полках — «На полках: N» у звёздочки, чипы ниже', async ({ mockedPage: page }) => {
+test('карточка на мобиле: книга на полках — «Полки N» в ряду действий, чипы ниже', async ({ mockedPage: page }) => {
   await page.route(/\/api\/books\/19\/collections$/, (route) =>
     route.fulfill({
       status: 200,

@@ -9,8 +9,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { downloadFormats } from '@/lib/formats';
+import { cn } from '@/lib/utils';
 
-export function DownloadMenu({ bookId, showLabel = false }: { bookId: number; showLabel?: boolean }) {
+export function DownloadMenu({
+  bookId,
+  showLabel = false,
+  variant = 'default',
+  className,
+}: {
+  bookId: number;
+  showLabel?: boolean;
+  /** outline — в ряду равных кнопок мобильной карточки (главная там — «Читать»). */
+  variant?: 'default' | 'outline';
+  className?: string;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -18,7 +30,7 @@ export function DownloadMenu({ bookId, showLabel = false }: { bookId: number; sh
             ряд действий в шапке карточки не переносился. showLabel=true заставляет
             показывать текст всегда (мобильный action-блок карточки книги).
             aria-label/title — для доступности и тултипа, когда текст скрыт. */}
-        <Button variant="default" size="sm" className="gap-2" aria-label="Скачать" title="Скачать">
+        <Button variant={variant} size="sm" className={cn('gap-2', className)} aria-label="Скачать" title="Скачать">
           <Download className="size-4" aria-hidden />
           <span className={showLabel ? '' : 'hidden sm:inline'}>Скачать</span>
         </Button>

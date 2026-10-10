@@ -42,11 +42,13 @@ export function AddToShelfDialog({
   compact = false,
   toolbar = false,
   shelves = 0,
+  className,
 }: {
   bookId: number;
   compact?: boolean;
   toolbar?: boolean;
   shelves?: number;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -55,13 +57,20 @@ export function AddToShelfDialog({
       <DialogTrigger asChild>
         {toolbar ? (
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="gap-1"
+            className={cn('gap-1.5', className)}
             aria-label={shelves > 0 ? `На полках: ${shelves}. Изменить полки книги` : 'Добавить на полку'}
           >
-            <Library className={cn('size-4', shelves > 0 ? '' : 'text-muted-foreground')} aria-hidden />
-            {shelves > 0 ? `На полках: ${shelves}` : 'На полку'}
+            <Library className="size-4" aria-hidden />
+            {shelves > 0 ? (
+              <>
+                Полки
+                <span className="rounded bg-muted px-1 text-xs tabular-nums">{shelves}</span>
+              </>
+            ) : (
+              'На полку'
+            )}
           </Button>
         ) : compact ? (
           <Button

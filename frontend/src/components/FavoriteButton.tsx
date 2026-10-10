@@ -20,12 +20,19 @@ export function FavoriteButton({
   id,
   isFavorite,
   labelHidden,
+  showLabel,
+  variant = 'ghost',
+  className,
 }: {
   target: FavoriteTarget;
   id: number;
   isFavorite: boolean;
   /** Если true — текст рядом со звёздочкой никогда не показывается. */
   labelHidden?: boolean;
+  /** Если true — текст и на мобиле (по умолчанию только с sm). */
+  showLabel?: boolean;
+  variant?: 'ghost' | 'outline';
+  className?: string;
 }) {
   const toggle = useToggleFavorite();
   const next = !isFavorite;
@@ -35,13 +42,13 @@ export function FavoriteButton({
   const Icon = target === 'book' ? Star : Bell;
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       size="sm"
       onClick={() => toggle.mutate({ target, id, next })}
       disabled={toggle.isPending}
       aria-pressed={isFavorite}
       aria-label={ariaLabel(target, isFavorite)}
-      className="gap-1"
+      className={cn('gap-1', className)}
     >
       <Icon
         className={cn(
@@ -54,7 +61,7 @@ export function FavoriteButton({
         )}
         aria-hidden
       />
-      {labelHidden ? null : <span className="hidden sm:inline">{text}</span>}
+      {labelHidden ? null : <span className={showLabel ? '' : 'hidden sm:inline'}>{text}</span>}
     </Button>
   );
 }
