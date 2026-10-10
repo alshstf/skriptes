@@ -405,9 +405,10 @@ export function ReaderPage() {
         скрипты книги режет CSP (см. комментарий в начале файла).
 
         Страница — на весь экран за вычетом safe-area (вырез, home-indicator:
-        грабля №18); фон вокруг — цвет темы книги.
+        грабля №18; сверху — pt-safe-ui: на iOS 26+ PWA система размывает
+        полосу под статус-баром); фон вокруг — цвет темы книги.
       */}
-      <div className="absolute inset-0 flex pt-safe pb-safe pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
+      <div className="absolute inset-0 flex pt-safe-ui pb-safe pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
         <iframe
           ref={iframeRef}
           title="Foliate reader"
@@ -419,18 +420,20 @@ export function ReaderPage() {
       {bookmarkHere && !uiVisible ? (
         <Bookmark
           aria-hidden
-          className="pointer-events-none absolute top-[env(safe-area-inset-top)] right-[max(1rem,env(safe-area-inset-right))] z-10 size-5 opacity-60"
+          className="pointer-events-none absolute top-[var(--safe-top-ui)] right-[max(1rem,env(safe-area-inset-right))] z-10 size-5 opacity-60"
           style={{ color: frame.fg }}
           fill="currentColor"
         />
       ) : null}
       {/* Панель — оверлей над страницей: видна при открытии, прячется при
           перелистывании, тап по центру страницы — показать/спрятать.
-          Только translate/opacity — анимация не трогает вёрстку книги. */}
+          Только translate/opacity — анимация не трогает вёрстку книги. Фон
+          сплошной с тенью, как у хэдера приложения (backdrop-blur на iOS
+          ненадёжен); сверху — --safe-top-ui, ниже системного размытия iOS 26+. */}
       <header
         inert={!uiVisible}
         className={cn(
-          'absolute inset-x-0 top-0 z-20 flex items-center gap-1 border-b border-border bg-background/95 pt-[calc(0.375rem+env(safe-area-inset-top))] pr-[max(0.5rem,env(safe-area-inset-right))] pb-1.5 pl-[max(0.5rem,env(safe-area-inset-left))] shadow-sm backdrop-blur transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none',
+          'absolute inset-x-0 top-0 z-20 flex items-center gap-1 border-b border-border bg-background pt-[max(0.375rem,var(--safe-top-ui))] pr-[max(0.5rem,env(safe-area-inset-right))] pb-1.5 pl-[max(0.5rem,env(safe-area-inset-left))] shadow-[0_10px_22px_-10px_rgba(0,0,0,0.9)] transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none',
           uiVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-full opacity-0',
         )}
       >
