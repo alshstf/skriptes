@@ -823,29 +823,38 @@ safe-area-инсет**, иначе контент лезет под бар. Ра
   → при скролле хэдер «сливался» с контентом (юзер читал как «прозрачный»; на деле
   `bg-background` сплошной). Тень даёт глубину — хэдер читается как слой над контентом
   (box-shadow на iOS Safari надёжен, в отличие от backdrop-blur). z-20 (выше саб-баров).
-- **Sheet-дроверы** (`ui/sheet.tsx`, ВСЕ usage — nav/мобильные фильтры): `pt-safe pb-safe`
-  на боковых (во всю высоту), `pt-safe`/`pb-safe` на верх/низ; close-кнопка
-  `top-[calc(env(safe-area-inset-top)+0.75rem)]` (absolute, иначе под баром).
+- ⚠️ **iOS 26+ (Liquid Glass) размывает полосу ~20pt ПОД статус-баром** в standalone PWA:
+  текст и кнопки у самого инсета — размыты (iOS 27, скриншот владельца 2026-10-10: заголовок
+  панели ридера на inset+6). Хэдер приложения не страдает — его элементы по центру h-14, на
+  inset+28. Оверлеи, у которых содержимое прижато к верху, берут `--safe-top-ui` /
+  `pt-safe-ui` (`index.css`: инсет + `min(инсет, 1.5rem)` — добавка только при ненулевом
+  инсете): ридер (страница, панель, ленточка закладки), Sheet, Cmd+K. e2e эмулирует инсеты
+  CDP `Emulation.setSafeAreaInsetsOverride` (`reader-mobile.spec.ts`).
+- **Sheet-дроверы** (`ui/sheet.tsx`, ВСЕ usage — nav/мобильные фильтры): `pt-safe-ui pb-safe`
+  на боковых (во всю высоту), `pt-safe-ui`/`pb-safe` на верх/низ; close-кнопка
+  `top-[calc(var(--safe-top-ui)+0.75rem)]` (absolute, иначе под баром).
 - **Sticky-саб-бары фильтров** (`AuthorsPage`/`BooksPage`): липнут ПОД хэдером →
   `top-[calc(env(safe-area-inset-top)+3.5rem)]` (инсет + высота хэдера h-14). На `top-14`
   уезжали бы ПОД хэдер (который на iOS выше на инсет) и пропадали.
 - **Нижний баннер установки** (`InstallPromptBanner`): `pb-safe`.
 - **CommandPalette** (`components/CommandPalette.tsx`): на мобиле прижат к верху →
-  `top-[calc(env(safe-area-inset-top)+1rem)]` (десктоп — по центру). БЫЛ `top-4` → лез под бар.
+  `top-[calc(var(--safe-top-ui)+1rem)]` (десктоп — по центру). БЫЛ `top-4` → лез под бар.
 - **Dialog** (`ui/dialog.tsx`): центрирован, но высокий мог переполнить под бары →
   `max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] overflow-y-auto`.
 - **SaveBar** (`sticky bottom-0`): `pb-[calc(0.75rem+env(safe-area-inset-bottom))]` (home-indicator).
 - **Ридер** (`ReaderPage`, `fixed inset-0`): iframe страницы — во весь экран внутри обёртки с
-  `pt-safe`/`pb-safe` и боковыми инсетами (фон обёртки — цвет темы книги); панель — оверлей
-  `absolute top-0` с `pt-[calc(0.375rem+env(safe-area-inset-top))]`.
+  `pt-safe-ui`/`pb-safe` и боковыми инсетами (фон обёртки — цвет темы книги); панель — оверлей
+  `absolute top-0`, сплошной фон + тень как у хэдера, `pt-[max(0.375rem,var(--safe-top-ui))]`.
 - **Toaster** (sonner `top-right`, `main.tsx`): CSS-override в index.css
   `[data-sonner-toaster][data-y-position=top]{top:calc(env(safe-area-inset-top)+1rem)}`.
 - **Radix-поперы** (`ui/dropdown-menu`/`popover`/`tooltip`): `collisionPadding={safeCollisionPadding()}`
   (`lib/safeArea.ts` — меряет инсеты проб-элементом, т.к. env() из JS недоступен; 0 на десктопе).
 ⚠️ Все оверлеи на shadcn-примитивах (Sheet/Dialog/Popover/Dropdown/Tooltip/CommandPalette+Toaster) —
 покрыты централизованно: новый оверлей на этих примитивах safe-area получает автоматически.
-⚠️ Playwright/Chromium даёт `env(safe-area-*)=0` (как десктоп) — реальные инсеты только на
-iOS-устройстве; визуально проверять симуляцией (инъекция `top/padding:47px`) или на айфоне.
+⚠️ Playwright/Chromium по умолчанию даёт `env(safe-area-*)=0` (как десктоп). Инсеты айфона
+эмулирует CDP: `newCDPSession(page).send('Emulation.setSafeAreaInsetsOverride', {insets:
+{top: 59, bottom: 34}})` — до `goto`, работает в Chromium Playwright (пример —
+`reader-mobile.spec.ts`). Системное размытие iOS 26+ так не увидеть — только на айфоне.
 
 ### 19. Локальные оверрайды метаданных — МАТЕРИАЛИЗАЦИЯ в колонку, не query-time
 

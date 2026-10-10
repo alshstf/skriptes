@@ -95,6 +95,19 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* iOS 26+ (Liquid Glass): в standalone PWA система размывает полосу ~20pt ПОД
+   статус-баром — что лежит у самого инсета, размыто (iOS 27, скриншот владельца
+   2026-10-10: заголовок ридера на inset+6 размыт, а элементы хэдера на inset+28 —
+   чёткие). Оверлеи, у которых текст и кнопки прижаты к верху (ридер, дроверы
+   Sheet, Cmd+K), опускают их ниже полосы: инсет + ещё до 1.5rem. Добавка только
+   там, где инсет есть: на десктопе, в Android и в Safari-вкладке инсет 0 → 0. */
+:root {
+  --safe-top-ui: calc(env(safe-area-inset-top) + min(env(safe-area-inset-top), 1.5rem));
+}
+@utility pt-safe-ui {
+  padding-top: var(--safe-top-ui);
+}
+
 /* Toaster (sonner) — позиция top-right: на iOS standalone уводим из-под статус-бара.
    Сам sonner ставит контейнер на фикс. top; добавляем safe-area-инсет. На десктопе
    инсет = 0. (Часть граблі №18 — safe-area для всех край-оверлеев.) Отступ 4rem —

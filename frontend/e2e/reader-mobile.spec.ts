@@ -208,6 +208,23 @@ test('свайп листает; выключенные в настройках 
   expect(stored).toMatchObject({ swipe: true, tapZones: false });
 });
 
+test('iOS PWA: страница и панель — ниже системного размытия под статус-баром', async ({ mockedPage: page }) => {
+  // iOS 26+ размывает полосу ~20pt под статус-баром (скриншот владельца, iOS 27):
+  // заголовок панели на inset+6 был размыт. Инсеты iPhone эмулируем через CDP.
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride' as never, { insets: { top: 59, bottom: 34 } } as never);
+  await openReader(page);
+  const top = (sel: string) => page.locator(sel).first().evaluate((el) => el.getBoundingClientRect().top);
+  const BAND = 59 + 20;
+  expect(await top('iframe[title="Foliate reader"]')).toBeGreaterThanOrEqual(BAND);
+  expect(await top('header .truncate')).toBeGreaterThanOrEqual(BAND);
+  // Шторки (ui/sheet) — то же: заголовок «Заметки» ниже полосы.
+  await page.getByRole('button', { name: 'Заметки и закладки' }).click();
+  const title = page.getByRole('dialog', { name: 'Заметки' }).getByRole('heading', { name: 'Заметки' });
+  await expect(title).toBeVisible();
+  expect(await title.evaluate((el) => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(BAND);
+});
+
 test('тема страницы: тёмная по умолчанию, светлая и шрифт — из настроек', async ({ mockedPage: page }) => {
   await openReader(page);
   const doc = await bookDoc(page);
