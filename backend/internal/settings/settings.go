@@ -156,45 +156,39 @@ func (s *Store) SetCover(ctx context.Context, cfg CoverConfig) error {
 const yearEnrichmentKey = "year_enrichment"
 
 // YearEnrichmentConfig — настройки фонового дозаполнения written_year из
-// внешних источников (OpenLibrary, Wikidata). Воркер opt-in (Enabled=false
-// по умолчанию): он ходит в публичные API, поэтому включается осознанно из
-// админки.
+// внешнего источника (Wikidata P577). Воркер opt-in (Enabled=false по
+// умолчанию): он ходит в публичный API, поэтому включается осознанно из
+// админки. OpenLibrary убран в 1.39.4 (год переизданий вместо года написания);
+// старые ключи openlibrary/openlibrary_rpm в сохранённом JSON игнорируются.
 //
-//	OpenLibrary / Wikidata — какие источники опрашивать (можно отключить
-//	                         шумящий). Порядок приоритета фиксирован в коде:
-//	                         OpenLibrary (first_publish_year) → Wikidata (P577).
+//	Wikidata                — опрашивать ли Wikidata.
 //	WholeCollection         — режим охвата. false (дефолт) = фолбэк: дозаполнять
 //	                         только книги, у которых локальная fb2-фаза уже
 //	                         прошла, но год не дала (year_local_scanned_at NOT
 //	                         NULL). true = вся коллекция: спрашивать внешние и для
 //	                         книг, которых fb2-проход не касался (очень долго,
 //	                         opt-in за дисклеймером).
-//	*RPM                    — лимит запросов в минуту на источник (вежливость
-//	                         к публичным API; OL ~мягко, Wikidata строже).
+//	WikidataRPM             — лимит запросов в минуту (вежливость к публичному API).
 //	NotFoundRetryDays       — через сколько перепроверять источник, ранее
 //	                         вернувший not_found (данные со временем дополняются).
 //	ErrorRetryHours         — через сколько ретраить источник после ошибки
 //	                         (транзиентные 429/таймауты — быстрее, чем not_found).
 type YearEnrichmentConfig struct {
 	Enabled           bool `json:"enabled"`
-	OpenLibrary       bool `json:"openlibrary"`
 	Wikidata          bool `json:"wikidata"`
 	WholeCollection   bool `json:"whole_collection"`
-	OpenLibraryRPM    int  `json:"openlibrary_rpm"`
 	WikidataRPM       int  `json:"wikidata_rpm"`
 	NotFoundRetryDays int  `json:"not_found_retry_days"`
 	ErrorRetryHours   int  `json:"error_retry_hours"`
 }
 
-// DefaultYearEnrichmentConfig — воркер выключен (opt-in), оба источника
-// включены, режим фолбэка (не вся коллекция), вежливые rate-limit'ы и TTL.
+// DefaultYearEnrichmentConfig — воркер выключен (opt-in), Wikidata включена,
+// режим фолбэка (не вся коллекция), вежливые rate-limit и TTL.
 func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
 	return YearEnrichmentConfig{
 		Enabled:           false,
-		OpenLibrary:       true,
 		Wikidata:          true,
 		WholeCollection:   false,
-		OpenLibraryRPM:    60, // политика OL 2026-05: 1 req/s анонимно, 3 req/s с UA
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,

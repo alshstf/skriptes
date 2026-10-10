@@ -246,13 +246,13 @@ export function useStopPrewarmCoverCache() {
 
 // ── Год издания: дозаполнение written_year из внешних источников ──────
 
+// Внешний источник года — только Wikidata: OpenLibrary убран в 1.39.4 (давал
+// годы переизданий вместо года написания).
 export type YearEnrichmentSettings = {
   enabled: boolean;
-  openlibrary: boolean;
   wikidata: boolean;
   // режим охвата: false = фолбэк (где fb2 не дал), true = вся коллекция (долго)
   whole_collection: boolean;
-  openlibrary_rpm: number;
   wikidata_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
@@ -270,10 +270,8 @@ export type YearEnrichmentSettings = {
 // YearEnrichmentInput — тело PUT (только конфиг, без read-only полей).
 export type YearEnrichmentInput = {
   enabled: boolean;
-  openlibrary: boolean;
   wikidata: boolean;
   whole_collection: boolean;
-  openlibrary_rpm: number;
   wikidata_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;

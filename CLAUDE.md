@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.39.3**.
+конвертируются на лету через fb2cng. Текущая версия — **1.39.4**.
 
 ## Рабочее окружение
 
@@ -72,10 +72,10 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
    правками; не помогло — `--no-cache frontend`.
 2. **Жанры:** Meili отдаёт `fb2_code`, имена — `useGenreMap()`; стиль чипов — `genreChipClass(useGenreChipStyle())`.
    Алиасы кодов — `genres/aliases.json` (гейт `genre_aliases_merged_vN` — бампать). Плашка сигналов — общий `BookMeta`.
-3. **`date_added` ≠ год написания.** `books.written_year` (fb2 → OL → Wikidata, правила правдоподобия
+3. **`date_added` ≠ год написания.** `books.written_year` (fb2 → Wikidata, правила правдоподобия
    `metadata/work_years.go`: опечатки — не раньше рождения автора, год Фантлаба, заглушки < 1450, #465) vs
    `books.edition_year` (год издания, только справочно). Meili `year` = written_year, синкается автоматически.
-   Внешний год: OpenLibrary — не по кириллическому названию, любой — не позже года издания (1.39.3).
+   OpenLibrary — НЕ источник года (годы переизданий, убран в 1.39.4); внешний год — не позже года издания.
 4. **jsdom не считает layout** — позиции/overflow/sticky проверять только Playwright (`frontend/e2e/`).
 5. **Миграции и seed жанров** применяются сами на старте backend.
 6. **Миграция — новый номер** (см. «PR, релиз» выше).

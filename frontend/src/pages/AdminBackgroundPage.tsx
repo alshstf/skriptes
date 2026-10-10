@@ -150,10 +150,8 @@ function buildCollectionInput(d: CoverCacheSettings, patch: Partial<CollectionIn
 function buildYearInput(d: YearEnrichmentSettings, patch: Partial<YearEnrichmentInput>): YearEnrichmentInput {
   return {
     enabled: d.enabled,
-    openlibrary: d.openlibrary,
     wikidata: d.wikidata,
     whole_collection: d.whole_collection,
-    openlibrary_rpm: d.openlibrary_rpm,
     wikidata_rpm: d.wikidata_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
@@ -531,12 +529,10 @@ export function AdminBackgroundPage() {
     }
   }, [cq.data]);
 
-  const [olRpmY, setOlRpmY] = useState('');
   const [wdRpmY, setWdRpmY] = useState('');
   const yearInit = useRef(false);
   useEffect(() => {
     if (yq.data && !yearInit.current) {
-      setOlRpmY(String(yq.data.openlibrary_rpm));
       setWdRpmY(String(yq.data.wikidata_rpm));
       yearInit.current = true;
     }
@@ -626,7 +622,6 @@ export function AdminBackgroundPage() {
   // от локального fb2-прохода, и включить воркер из UI было нечем (#497).
   const coverOl = (xq.data?.enabled ?? false) && (xq.data?.openlibrary ?? false);
   const coverGb = (xq.data?.enabled ?? false) && (xq.data?.googlebooks ?? false);
-  const yearOl = (yq.data?.enabled ?? false) && (yq.data?.openlibrary ?? false);
   const yearWd = (yq.data?.enabled ?? false) && (yq.data?.wikidata ?? false);
   const authorMode: Mode = gates.author_disabled ? 'off' : (bq.data?.bios ?? false) ? 'bg' : 'lazy';
   const adaptationMode: Mode = gates.adaptation_disabled
@@ -681,11 +676,10 @@ export function AdminBackgroundPage() {
         );
       }
       if (kind === 'year' && yq.data) {
-        const none = !yq.data.openlibrary && !yq.data.wikidata;
         await updateYear.mutateAsync(
           buildYearInput(
             yq.data,
-            mode === 'bg' && none ? { enabled: true, openlibrary: true, wikidata: true } : { enabled: mode === 'bg' },
+            mode === 'bg' && !yq.data.wikidata ? { enabled: true, wikidata: true } : { enabled: mode === 'bg' },
           ),
         );
       }
@@ -870,11 +864,9 @@ export function AdminBackgroundPage() {
     const gb = which === 'googlebooks' ? v : coverGb;
     void applyCover({ openlibrary: ol, googlebooks: gb, enabled: ol || gb }, 'Применено');
   };
-  const toggleYearProvider = (which: 'openlibrary' | 'wikidata', v: boolean) => {
+  const toggleYearWikidata = (v: boolean) => {
     if (!yq.data) return;
-    const ol = which === 'openlibrary' ? v : yearOl;
-    const wd = which === 'wikidata' ? v : yearWd;
-    void applyYear({ openlibrary: ol, wikidata: wd, enabled: ol || wd }, 'Применено');
+    void applyYear({ wikidata: v, enabled: v }, 'Применено');
   };
 
   // ── Действия (run/stop/clear) ──
@@ -986,8 +978,8 @@ export function AdminBackgroundPage() {
       posterMB !== String(cq.data.poster_cache_max_mb) ||
       photoMB !== String(cq.data.photo_cache_max_mb));
   const colInvalid = [minFreeMB, coverBudgetMB, posterMB, photoMB].some(badNum);
-  const yearDirty = !!yq.data && (olRpmY !== String(yq.data.openlibrary_rpm) || wdRpmY !== String(yq.data.wikidata_rpm));
-  const yearInvalid = [olRpmY, wdRpmY].some(badNum);
+  const yearDirty = !!yq.data && wdRpmY !== String(yq.data.wikidata_rpm);
+  const yearInvalid = badNum(wdRpmY);
   const srcLangDirty = !!sq.data && wdRpmS !== String(sq.data.wikidata_rpm);
   const srcLangInvalid = badNum(wdRpmS);
   const coverDirty = !!xq.data && (olRpmC !== String(xq.data.openlibrary_rpm) || gbRpmC !== String(xq.data.googlebooks_rpm));
@@ -1030,7 +1022,6 @@ export function AdminBackgroundPage() {
       setPhotoMB(String(cq.data.photo_cache_max_mb));
     }
     if (yq.data) {
-      setOlRpmY(String(yq.data.openlibrary_rpm));
       setWdRpmY(String(yq.data.wikidata_rpm));
     }
     if (sq.data) {
@@ -1074,9 +1065,8 @@ export function AdminBackgroundPage() {
       }
       if (yearDirty && !yearInvalid && yq.data) {
         const saved = await updateYear.mutateAsync(
-          buildYearInput(yq.data, { openlibrary_rpm: num(olRpmY), wikidata_rpm: num(wdRpmY) }),
+          buildYearInput(yq.data, { wikidata_rpm: num(wdRpmY) }),
         );
-        setOlRpmY(String(saved.openlibrary_rpm));
         setWdRpmY(String(saved.wikidata_rpm));
       }
       if (srcLangDirty && !srcLangInvalid && sq.data) {
@@ -1431,39 +1421,26 @@ export function AdminBackgroundPage() {
                       onChange={(v) => setLocalFb2('year', v)}
                     />
                     <SourceSwitch
-                      id="year-src-ol"
-                      label="OpenLibrary (first_publish_year)"
-                      checked={yearOl}
-                      disabled={updateYear.isPending}
-                      onChange={(v) => toggleYearProvider('openlibrary', v)}
-                    />
-                    <SourceSwitch
                       id="year-src-wd"
                       label="Wikidata (P577)"
                       checked={yearWd}
                       disabled={updateYear.isPending}
-                      onChange={(v) => toggleYearProvider('wikidata', v)}
+                      onChange={toggleYearWikidata}
                     />
                     <p className="text-xs text-muted-foreground text-pretty">
                       Хотя бы один источник; если выключить все — год наполняться не будет.
                     </p>
                   </div>
-                  {yearOl || yearWd ? (
+                  {yearWd ? (
                     <div className="space-y-3 border-t border-border pt-3">
-                      <FieldLabel>Внешние источники (OpenLibrary, Wikidata)</FieldLabel>
+                      <FieldLabel>Внешний источник (Wikidata)</FieldLabel>
                       <ScopeControl
                         whole={yq.data?.whole_collection ?? false}
                         disabled={updateYear.isPending}
                         onChange={(v) => void applyYear({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: фолбэк')}
-                        warning="Вся коллекция: год запрашивается у внешних источников и для книг, которых fb2-проход не касался. Десятки тысяч запросов, очень долго."
+                        warning="Вся коллекция: год запрашивается у Wikidata и для книг, которых fb2-проход не касался. Десятки тысяч запросов, очень долго."
                       />
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <label htmlFor="year-ol-rpm" className="text-sm">
-                            OpenLibrary, зап./мин
-                          </label>
-                          <Input id="year-ol-rpm" type="number" min={0} value={olRpmY} onChange={(e) => setOlRpmY(e.target.value)} />
-                        </div>
                         <div className="space-y-1.5">
                           <label htmlFor="year-wd-rpm" className="text-sm">
                             Wikidata, зап./мин
@@ -1496,7 +1473,7 @@ export function AdminBackgroundPage() {
                 <div className="space-y-2">
                   <FieldLabel>Источники</FieldLabel>
                   <p className="text-xs text-muted-foreground text-pretty">
-                    Год не заполняется. Источники (fb2, OpenLibrary, Wikidata) выбираются в режиме «Фоном».
+                    Год не заполняется. Источники (fb2, Wikidata) выбираются в режиме «Фоном».
                   </p>
                 </div>
               )}
