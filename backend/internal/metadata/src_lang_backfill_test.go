@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"sync"
 	"testing"
 	"time"
 
@@ -27,6 +28,7 @@ func TestSrcLangBackfiller_isDue(t *testing.T) {
 // ── Worker integration (testcontainers PG + фейковый провайдер) ──
 
 type fakeSrcLangProvider struct {
+	mu      sync.Mutex // воркер зовёт провайдер из нескольких горутин (race в CI)
 	name    string
 	code    string
 	err     error
@@ -36,6 +38,8 @@ type fakeSrcLangProvider struct {
 
 func (f *fakeSrcLangProvider) Name() string { return f.name }
 func (f *fakeSrcLangProvider) FetchSrcLang(_ context.Context, q BookQuery) (string, error) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.calls++
 	f.queries = append(f.queries, q)
 	return f.code, f.err

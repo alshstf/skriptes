@@ -156,6 +156,34 @@ func CleanImplausibleBookYears(ctx context.Context, pool *pgxpool.Pool) ([]int64
 	return recomputeWorkYears(ctx, pool, nil, true)
 }
 
+// CleanExternalBookYears — разовая чистка внешних годов изданий (1.39.3, прод
+// 2026-10-11): год OpenLibrary, найденный по кириллическому названию (год позднего
+// русского издания: «Айвенго» 2007), и любой внешний год позже года издания книги.
+// Год книги — пустой, найденная попытка стёрта: следующий проход пропустит
+// OpenLibrary (кириллица) или отклонит год, и книгу спросит Wikidata. Затем год
+// всех работ — по правилам файла (воркер года до 1.39.3 его не пересчитывал).
+// Возвращает работы с изменившимся годом и число очищенных изданий.
+func CleanExternalBookYears(ctx context.Context, pool *pgxpool.Pool) ([]int64, int64, error) {
+	tag, err := pool.Exec(ctx, `
+		WITH bad AS (
+		    SELECT id FROM books
+		    WHERE (written_year_source = 'openlibrary'
+		           AND (CASE WHEN COALESCE(src_title, '') <> '' THEN src_title ELSE title END) ~ '[Ѐ-ӿ]')
+		       OR (written_year_source IN ('openlibrary', 'wikidata')
+		           AND edition_year BETWEEN $1 AND $2 AND written_year > edition_year)
+		), del AS (
+		    DELETE FROM book_year_lookups l USING bad
+		    WHERE l.book_id = bad.id AND l.outcome = 'found'
+		)
+		UPDATE books b SET written_year = NULL, written_year_source = NULL
+		FROM bad WHERE b.id = bad.id`, minEditionYear, time.Now().Year())
+	if err != nil {
+		return nil, 0, fmt.Errorf("clean external book years: %w", err)
+	}
+	changed, err := recomputeWorkYears(ctx, pool, nil, true)
+	return changed, tag.RowsAffected(), err
+}
+
 // RecomputeWorkYears — пересчёт года работ ids (после записи внешнего года).
 func RecomputeWorkYears(ctx context.Context, pool *pgxpool.Pool, ids []int64) ([]int64, error) {
 	if len(ids) == 0 {

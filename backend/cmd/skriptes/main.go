@@ -165,6 +165,7 @@ func run() error {
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceWorkYearRules(c, pool, imp, logger)
+		runOnceExternalBookYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
@@ -1766,6 +1767,41 @@ func runOnceWorkYearRules(ctx context.Context, pool *pgxpool.Pool, imp *importer
 		logger.Warn("work year rules: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time work year rules done", "works", len(changed))
+}
+
+// runOnceExternalBookYears — чистка внешних годов изданий (metadata.
+// CleanExternalBookYears: год OpenLibrary по кириллическому названию и годы позже
+// года издания) и пересчёт года всех работ; изменённые — в works-индекс, годы
+// изданий — в books-индекс. Гейт year_external_clean_v1 (1.39.3).
+func runOnceExternalBookYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "year_external_clean_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("external book years: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, cleaned, err := metadata.CleanExternalBookYears(ctx, pool)
+	if err != nil {
+		logger.Warn("external book years failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after external book years failed", "err", err)
+		}
+	}
+	if _, err := imp.ResyncYears(ctx); err != nil {
+		logger.Warn("books index year resync after external book years failed", "err", err)
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("external book years: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time external book years cleaned", "books", cleaned, "works", len(changed))
 }
 
 func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
