@@ -620,6 +620,14 @@ export function AdminBackgroundPage() {
       : 'lazy';
   const yearMode: Mode =
     (master && (cq.data?.sync_years ?? false)) || (yq.data?.enabled ?? false) ? 'bg' : 'off';
+  // Внешний источник работает, только когда включён его воркер (enabled): флаги
+  // источников без него ничего не значат. По умолчанию enabled=false, а флаги —
+  // true, и тумблеры светились «вкл» при стоящем воркере; «Фоном» при этом горел
+  // от локального fb2-прохода, и включить воркер из UI было нечем (#497).
+  const coverOl = (xq.data?.enabled ?? false) && (xq.data?.openlibrary ?? false);
+  const coverGb = (xq.data?.enabled ?? false) && (xq.data?.googlebooks ?? false);
+  const yearOl = (yq.data?.enabled ?? false) && (yq.data?.openlibrary ?? false);
+  const yearWd = (yq.data?.enabled ?? false) && (yq.data?.wikidata ?? false);
   const authorMode: Mode = gates.author_disabled ? 'off' : (bq.data?.bios ?? false) ? 'bg' : 'lazy';
   const adaptationMode: Mode = gates.adaptation_disabled
     ? 'off'
@@ -661,11 +669,25 @@ export function AdminBackgroundPage() {
         );
       }
       // 3) Внешние воркеры.
+      // «Фоном» без единого отмеченного источника запустил бы пустой воркер —
+      // тогда включаем оба.
       if (kind === 'cover' && xq.data) {
-        await updateCover.mutateAsync(buildCoverInput(xq.data, { enabled: mode === 'bg' }));
+        const none = !xq.data.openlibrary && !xq.data.googlebooks;
+        await updateCover.mutateAsync(
+          buildCoverInput(
+            xq.data,
+            mode === 'bg' && none ? { enabled: true, openlibrary: true, googlebooks: true } : { enabled: mode === 'bg' },
+          ),
+        );
       }
       if (kind === 'year' && yq.data) {
-        await updateYear.mutateAsync(buildYearInput(yq.data, { enabled: mode === 'bg' }));
+        const none = !yq.data.openlibrary && !yq.data.wikidata;
+        await updateYear.mutateAsync(
+          buildYearInput(
+            yq.data,
+            mode === 'bg' && none ? { enabled: true, openlibrary: true, wikidata: true } : { enabled: mode === 'bg' },
+          ),
+        );
       }
       if (kind === 'author' && bq.data) {
         await updateBa.mutateAsync(buildBaInput(bq.data, { bios: mode === 'bg' }));
@@ -829,7 +851,9 @@ export function AdminBackgroundPage() {
 
   // ── Живое редактирование источников (режим «Фоном») ──
   // fb2 — локальный синк (общий мастер prewarm пересчитываем из объединения).
-  // Внешние провайдеры — флаг провайдера + производный enabled = (есть хоть один).
+  // Внешние провайдеры — флаги как на экране (enabled && флаг) + производный
+  // enabled = (есть хоть один): включение источника при стоящем воркере
+  // запускает только его, а не всё, что было отмечено по умолчанию.
   const setLocalFb2 = (kind: LocalKind, v: boolean) => {
     if (!cq.data) return;
     const covers = kind === 'cover' ? v : master && cq.data.sync_covers;
@@ -842,15 +866,15 @@ export function AdminBackgroundPage() {
   };
   const toggleCoverProvider = (which: 'openlibrary' | 'googlebooks', v: boolean) => {
     if (!xq.data) return;
-    const ol = which === 'openlibrary' ? v : xq.data.openlibrary;
-    const gb = which === 'googlebooks' ? v : xq.data.googlebooks;
-    void applyCover({ [which]: v, enabled: ol || gb }, 'Применено');
+    const ol = which === 'openlibrary' ? v : coverOl;
+    const gb = which === 'googlebooks' ? v : coverGb;
+    void applyCover({ openlibrary: ol, googlebooks: gb, enabled: ol || gb }, 'Применено');
   };
   const toggleYearProvider = (which: 'openlibrary' | 'wikidata', v: boolean) => {
     if (!yq.data) return;
-    const ol = which === 'openlibrary' ? v : yq.data.openlibrary;
-    const wd = which === 'wikidata' ? v : yq.data.wikidata;
-    void applyYear({ [which]: v, enabled: ol || wd }, 'Применено');
+    const ol = which === 'openlibrary' ? v : yearOl;
+    const wd = which === 'wikidata' ? v : yearWd;
+    void applyYear({ openlibrary: ol, wikidata: wd, enabled: ol || wd }, 'Применено');
   };
 
   // ── Действия (run/stop/clear) ──
@@ -1253,14 +1277,14 @@ export function AdminBackgroundPage() {
                   <SourceSwitch
                     id="cover-src-ol"
                     label="OpenLibrary"
-                    checked={xq.data?.openlibrary ?? false}
+                    checked={coverOl}
                     disabled={updateCover.isPending}
                     onChange={(v) => toggleCoverProvider('openlibrary', v)}
                   />
                   <SourceSwitch
                     id="cover-src-gb"
                     label="Google Books"
-                    checked={xq.data?.googlebooks ?? false}
+                    checked={coverGb}
                     disabled={updateCover.isPending}
                     onChange={(v) => toggleCoverProvider('googlebooks', v)}
                   />
@@ -1269,7 +1293,7 @@ export function AdminBackgroundPage() {
                   </p>
                 </div>
               ) : null}
-              {coverMode === 'bg' && (xq.data?.openlibrary || xq.data?.googlebooks) ? (
+              {coverMode === 'bg' && (coverOl || coverGb) ? (
                 <div className="space-y-3 border-t border-border pt-3">
                   <FieldLabel>Внешние источники (OpenLibrary, Google Books)</FieldLabel>
                   <ScopeControl
@@ -1409,14 +1433,14 @@ export function AdminBackgroundPage() {
                     <SourceSwitch
                       id="year-src-ol"
                       label="OpenLibrary (first_publish_year)"
-                      checked={yq.data?.openlibrary ?? false}
+                      checked={yearOl}
                       disabled={updateYear.isPending}
                       onChange={(v) => toggleYearProvider('openlibrary', v)}
                     />
                     <SourceSwitch
                       id="year-src-wd"
                       label="Wikidata (P577)"
-                      checked={yq.data?.wikidata ?? false}
+                      checked={yearWd}
                       disabled={updateYear.isPending}
                       onChange={(v) => toggleYearProvider('wikidata', v)}
                     />
@@ -1424,7 +1448,7 @@ export function AdminBackgroundPage() {
                       Хотя бы один источник; если выключить все — год наполняться не будет.
                     </p>
                   </div>
-                  {yq.data?.openlibrary || yq.data?.wikidata ? (
+                  {yearOl || yearWd ? (
                     <div className="space-y-3 border-t border-border pt-3">
                       <FieldLabel>Внешние источники (OpenLibrary, Wikidata)</FieldLabel>
                       <ScopeControl

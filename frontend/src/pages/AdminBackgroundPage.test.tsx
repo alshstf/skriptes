@@ -280,6 +280,48 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     expect((puts.cover as { enabled?: boolean })?.enabled).toBe(false);
   });
 
+  it('внешний воркер года выключен — тумблеры OpenLibrary/Wikidata «выкл», хотя флаги источников true (#497)', async () => {
+    // Прод 2026-10-10: локальный fb2-проход по годам включён, записи year_enrichment
+    // нет (умолчания: enabled=false, openlibrary/wikidata=true). Раньше UI показывал
+    // «Фоном» + оба источника «вкл», а внешний воркер стоял.
+    const user = userEvent.setup();
+    setup((s) => {
+      s.collection.prewarm = true; // sync_years=true в baseState
+    });
+    expect(await screen.findByTestId('year-mode-bg')).toHaveAttribute('aria-pressed', 'true');
+    const ol = screen.getByLabelText('OpenLibrary (first_publish_year)');
+    expect(ol).not.toBeChecked();
+    expect(screen.getByLabelText('Wikidata (P577)')).not.toBeChecked();
+    // Внешние настройки (охват, rpm) — только при работающем воркере.
+    expect(document.querySelector('#year-ol-rpm')).toBeNull();
+    // Включение одного источника запускает воркер только с ним.
+    await user.click(ol);
+    await vi.waitFor(() => {
+      expect(puts.year).toMatchObject({ enabled: true, openlibrary: true, wikidata: false });
+    });
+  });
+
+  it('внешний воркер обложек выключен — тумблеры источников «выкл» (#497)', async () => {
+    setup((s) => {
+      s.collection.prewarm = true; // sync_covers=true → обложки «Фоном» от локального прохода
+    });
+    expect(await screen.findByTestId('cover-mode-bg')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByLabelText('OpenLibrary')).not.toBeChecked();
+    expect(screen.getByLabelText('Google Books')).not.toBeChecked();
+  });
+
+  it('«Фоном» у года без отмеченных источников включает оба', async () => {
+    const user = userEvent.setup();
+    setup((s) => {
+      s.year.openlibrary = false;
+      s.year.wikidata = false;
+    });
+    await user.click(await screen.findByTestId('year-mode-bg'));
+    await vi.waitFor(() => {
+      expect(puts.year).toMatchObject({ enabled: true, openlibrary: true, wikidata: true });
+    });
+  });
+
   it('в режиме Фоном у обложек доступны внешние rpm и «Что заполнять»', async () => {
     const user = userEvent.setup();
     const { container } = setup((s) => {
