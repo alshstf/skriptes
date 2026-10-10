@@ -66,7 +66,10 @@ func (p *OpenLibraryProvider) WithCandidateCheck(fn CandidateCheck) *OpenLibrary
 	return p
 }
 
-func (p *OpenLibraryProvider) Name() string { return "openlibrary" }
+// openLibrarySource — имя источника OpenLibrary в учёте попыток (*_lookups).
+const openLibrarySource = "openlibrary"
+
+func (p *OpenLibraryProvider) Name() string { return openLibrarySource }
 
 // FetchCover делает:
 //  1. GET /search.json?title=...&author=...&limit=1

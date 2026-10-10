@@ -170,8 +170,18 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 			cursor = batch[len(batch)-1].id
 		}
 	}
+	if b.yearChanged.Load() == 0 || ctx.Err() != nil {
+		return total
+	}
+	// Год работы — по правилам work_years.go (потолок — самое раннее издание, не
+	// раньше рождения автора). До 1.39.3 воркер его не пересчитывал, и найденный
+	// год книги шёл на карточку как есть (COALESCE(w.written_year, b.written_year)).
+	workIDs := b.changedWorkIDs(ctx)
+	if _, err := RecomputeWorkYears(ctx, b.pool, workIDs); err != nil {
+		b.logger.Warn("year backfill: recompute work years failed", "err", err)
+	}
 	// Авто-синк Meili-поля year, если за проход год у книг появился.
-	if b.resyncer != nil && b.yearChanged.Load() > 0 && ctx.Err() == nil {
+	if b.resyncer != nil {
 		if n, err := b.resyncer.ResyncYears(ctx); err != nil {
 			b.logger.Warn("year backfill: resync years failed", "err", err)
 		} else {
@@ -183,7 +193,7 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 		// путь EnrichBooksNow works-индекс не трогает (наполнится на следующем
 		// полном ресинке импорта/группировки).
 		if syncer, ok := b.resyncer.(WorksIndexSyncer); ok {
-			if workIDs := b.changedWorkIDs(ctx); len(workIDs) > 0 {
+			if len(workIDs) > 0 {
 				if err := syncer.UpsertWorksToIndex(ctx, workIDs); err != nil {
 					b.logger.Warn("year backfill: upsert works to index failed", "err", err)
 				}
@@ -285,7 +295,7 @@ func (b *YearBackfiller) processBatch(ctx context.Context, batch []yearCandidate
 		go func(c yearCandidate) {
 			defer wg.Done()
 			defer func() { <-sem }()
-			b.processOne(ctx, c, ttl)
+			_ = b.processOne(ctx, c, ttl)
 		}(c)
 	}
 	wg.Wait()
@@ -319,12 +329,12 @@ func (b *YearBackfiller) sourceNames() []string {
 }
 
 // processOne — спросить включённые источники, которым пора (сроки ttl — фазы
-// обхода, см. enrichPhase).
-func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl lookupTTL) {
+// обхода, см. enrichPhase). true — год книге записан.
+func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl lookupTTL) bool {
 	lookups, err := b.loadLookups(ctx, bk.id)
 	if err != nil {
 		b.logger.Warn("year backfill: load lookups failed", "book_id", bk.id, "err", err)
-		return
+		return false
 	}
 	now := time.Now()
 	q := buildExternalQuery(bk.queryFields())
@@ -334,6 +344,15 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 		if !ttl.isDue(lookups[name], now) {
 			continue
 		}
+		// OpenLibrary по кириллическому названию (русский оригинал или перевод без
+		// названия оригинала в fb2) находит русские издания, и first_publish_year —
+		// год позднего переиздания, а не написания: прод 2026-10-11 — 36 из 51
+		// найденного («Айвенго» 2007, «Конёк-Горбунок» 2012, «Дао Дэ Цзин» 2024).
+		// Таким книгам год даёт Wikidata.
+		if name == openLibrarySource && hasCyrillic(q.Title) {
+			b.recordSkipped(ctx, bk.id, name)
+			continue
+		}
 		if name == wikidataSource && bk.wikidataShortcut(&q, ttl.notFound, now) {
 			b.recordReusedNotFound(ctx, bk.id, name)
 			continue
@@ -341,7 +360,7 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 		taskCtx, cancel := context.WithTimeout(ctx, yearBackfillTaskTimeout)
 		if werr := src.gate.wait(taskCtx); werr != nil {
 			cancel()
-			return // воркер останавливают — выходим, ничего не помечая
+			return false // воркер останавливают — выходим, ничего не помечая
 		}
 		b.lookedUp.Add(1)
 		year, ferr := src.provider.FetchYear(taskCtx, q)
@@ -349,23 +368,32 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 
 		switch {
 		case ferr == nil && year > 0:
-			if err := b.writeFound(ctx, bk.id, name, year); err != nil {
-				b.logger.Warn("year backfill: write found failed", "book_id", bk.id, "err", err)
-			} else {
-				b.logger.Info("year backfill: year found", "source", name, "book_id", bk.id, "year", year)
+			werr := b.writeFound(ctx, bk.id, name, year)
+			if errors.Is(werr, errYearAfterEdition) {
+				// Год написания не бывает позже года этого издания: источник нашёл
+				// не то (перевод, переиздание) — «не найдено», спросим следующий.
+				b.logger.Info("year backfill: year after edition — rejected", "source", name, "book_id", bk.id, "year", year)
+				b.upsertLookup(ctx, bk.id, name, "not_found", 0)
+				continue
 			}
-			return // год есть — остальные источники не нужны
+			if werr != nil {
+				b.logger.Warn("year backfill: write found failed", "book_id", bk.id, "err", werr)
+				return false
+			}
+			b.logger.Info("year backfill: year found", "source", name, "book_id", bk.id, "year", year)
+			return true // год есть — остальные источники не нужны
 		case errors.Is(ferr, ErrNotFound):
 			b.upsertLookup(ctx, bk.id, name, "not_found", 0)
 		case errors.Is(ferr, ErrSourcePaused):
 			continue // источник на паузе (#299): запрос не ушёл, книгу возьмём позже
 		case ctx.Err() != nil:
-			return // отмена воркера, не записываем как ошибку источника
+			return false // отмена воркера, не записываем как ошибку источника
 		default:
 			b.logger.Info("year backfill: provider error", "source", name, "book_id", bk.id, "err", ferr)
 			b.upsertLookup(ctx, bk.id, name, "error", 0)
 		}
 	}
+	return false
 }
 
 // EnrichOne — разовое внешнее дозаполнение года для ОДНОЙ книги (ленивый путь
@@ -373,7 +401,17 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 // проход: per-source TTL (book_year_lookups), rate-gate, порядок источников из
 // cfg. Никаких новых правил/обхода лимитов.
 func (b *YearBackfiller) EnrichOne(ctx context.Context, id int64, title, lang string, authors []string) {
-	b.processOne(ctx, yearCandidate{id: id, title: title, lang: lang, authors: authors}, b.ttl())
+	if !b.processOne(ctx, yearCandidate{id: id, title: title, lang: lang, authors: authors}, b.ttl()) {
+		return
+	}
+	// Год работы — по тем же правилам, что после фонового прохода.
+	var workID *int64
+	if err := b.pool.QueryRow(ctx, `SELECT work_id FROM books WHERE id = $1`, id).Scan(&workID); err != nil || workID == nil {
+		return
+	}
+	if _, err := RecomputeWorkYears(ctx, b.pool, []int64{*workID}); err != nil {
+		b.logger.Warn("year enrich: recompute work year failed", "book_id", id, "err", err)
+	}
 }
 
 type lookupRow struct {
@@ -411,14 +449,23 @@ func (b *YearBackfiller) isDue(l lookupRow, now time.Time) bool {
 	return b.ttl().isDue(l, now)
 }
 
+// errYearAfterEdition — внешний год позже года издания этой книги (известного,
+// не заглушки раньше minEditionYear): год написания таким быть не может.
+var errYearAfterEdition = errors.New("year after edition year")
+
 func (b *YearBackfiller) writeFound(ctx context.Context, bookID int64, source string, year int) error {
-	if _, err := b.pool.Exec(ctx, `
+	tag, err := b.pool.Exec(ctx, `
 		UPDATE books SET
 			written_year = COALESCE(written_year, $2::smallint),
 			written_year_source = CASE WHEN written_year IS NULL THEN $3 ELSE written_year_source END
 		WHERE id = $1
-	`, bookID, year, source); err != nil {
+		  AND NOT COALESCE(edition_year BETWEEN $4 AND $5 AND $2::smallint > edition_year, false)
+	`, bookID, year, source, minEditionYear, time.Now().Year())
+	if err != nil {
 		return err
+	}
+	if tag.RowsAffected() == 0 {
+		return errYearAfterEdition
 	}
 	b.upsertLookup(ctx, bookID, source, "found", year)
 	b.yearChanged.Add(1)
@@ -437,6 +484,14 @@ func (b *YearBackfiller) upsertLookup(ctx context.Context, bookID int64, source,
 // нашёл книгу в Wikidata тем же запросом (#294). В метриках — исход reused.
 func (b *YearBackfiller) recordReusedNotFound(ctx context.Context, bookID int64, source string) {
 	metrics.EnrichmentLookups.WithLabelValues("year", source, "reused").Inc()
+	b.storeLookup(ctx, bookID, source, "not_found", 0)
+}
+
+// recordSkipped — источник не спрашивали: запрос заведомо не тот (OpenLibrary по
+// кириллице). В учёте — «не найдено», чтобы кандидат не всплывал каждый проход
+// (перепроверка — по сроку not_found); в метриках — skipped.
+func (b *YearBackfiller) recordSkipped(ctx context.Context, bookID int64, source string) {
+	metrics.EnrichmentLookups.WithLabelValues("year", source, "skipped").Inc()
 	b.storeLookup(ctx, bookID, source, "not_found", 0)
 }
 
