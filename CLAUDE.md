@@ -131,6 +131,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Год книги, гистограмма | `metadata/fb2_provider.go`, `metadata/enricher.go::EnsureYearLocal`, `catalog/service.go`, `YearHistogram.tsx` |
 | Порядок книг в серии | `catalog/seriesorder.go::assignSeriesOrder` |
 | Состав сборников (#388) | `metadata/contents.go`, `books/contents.go`, `components/CompilationContents.tsx` |
+| Веб-ридер (оверлей, тема, перелистывание) | `pages/ReaderPage.tsx`, `public/foliate-reader.js`, `lib/readerSettings.ts`; foliate вендорен с патчем — `skriptes:` в `public/foliate/paginator.js` |
 | Конвертация формата | `backend/internal/converter/fb2cng.go` |
 | Send-to-Kindle | `api/kindle.go`, `email/sender.go`, `lib/kindle.ts` |
 | OPDS | `backend/internal/opds/` |

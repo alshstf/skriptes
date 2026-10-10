@@ -644,6 +644,12 @@ article_is_author, extract, thumbnail, accept). Без трассы в конт�
   back уводил в чужой ридер). `/foliate-reader.html` в PWA
   `navigateFallbackDenylist` (`vite.config.ts`) — иначе SW отдаёт в iframe
   index.html (всё SPA), ридер виснет на «Подготовка…».
+- ⚠️ foliate-js вендорен (`public/foliate/`, коммит — `VERSION`) и **пропатчен**: в
+  `paginator.js` правки помечены `skriptes:` — короткая анимация с `finish()` (тап во время
+  анимации не ждёт и не теряется: `#pending`), снап только после реального сдвига пальца
+  (иначе гонка с тап-зонами), атрибут `no-swipe`. Обновляя foliate — перенести патч. Файлы
+  `/foliate/*` без хэша в имени: SW кэширует их StaleWhileRevalidate в `skriptes-foliate-vN`
+  — при следующем патче бампнуть N (с CacheFirst патч не доезжал бы до PWA до 30 дней).
 **Phase 6 (сделано) — отдельный works-индекс Meili + маршрут `/works/{id}`:**
 - **Два индекса.** `books` (1 док/издание, `distinctAttribute=work_id`) остаётся
   ДЛЯ OPDS (скачивание по id издания). Новый `works` (1 док/работа, БЕЗ distinct)
@@ -829,8 +835,9 @@ safe-area-инсет**, иначе контент лезет под бар. Ра
 - **Dialog** (`ui/dialog.tsx`): центрирован, но высокий мог переполнить под бары →
   `max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] overflow-y-auto`.
 - **SaveBar** (`sticky bottom-0`): `pb-[calc(0.75rem+env(safe-area-inset-bottom))]` (home-indicator).
-- **Ридер** (`ReaderPage`, `fixed inset-0`): тулбар `pt-[calc(0.5rem+env(safe-area-inset-top))]`
-  (контент iframe ниже — immersive).
+- **Ридер** (`ReaderPage`, `fixed inset-0`): iframe страницы — во весь экран внутри обёртки с
+  `pt-safe`/`pb-safe` и боковыми инсетами (фон обёртки — цвет темы книги); панель — оверлей
+  `absolute top-0` с `pt-[calc(0.375rem+env(safe-area-inset-top))]`.
 - **Toaster** (sonner `top-right`, `main.tsx`): CSS-override в index.css
   `[data-sonner-toaster][data-y-position=top]{top:calc(env(safe-area-inset-top)+1rem)}`.
 - **Radix-поперы** (`ui/dropdown-menu`/`popover`/`tooltip`): `collisionPadding={safeCollisionPadding()}`

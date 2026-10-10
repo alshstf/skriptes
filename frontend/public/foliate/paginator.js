@@ -15,26 +15,39 @@ const debounce = (f, wait, immediate) => {
 }
 
 const lerp = (min, max, x) => x * (max - min) + min
-const easeOutQuad = x => 1 - (1 - x) * (1 - x)
-const animate = (a, b, duration, ease, render) => new Promise(resolve => {
-    let start
+// skriptes: easeOutCubic вместо easeOutQuad — быстрее стартует, мягче садится.
+const easeOutCubic = x => 1 - (1 - x) ** 3
+// skriptes: длительность полного перелистывания (мс); короткий остаток после
+// свайпа доезжает пропорционально быстрее, но не быстрее ANIMATION_MIN_MS.
+const ANIMATION_MS = 200
+const ANIMATION_MIN_MS = 80
+// skriptes: анимация с ручкой finish() — досрочно ставит конечную точку.
+// Новый тап или касание во время анимации не ждут её конца и не теряются
+// (апстрим блокировал навигацию на всё время анимации).
+const animate = (a, b, duration, ease, render) => {
+    let resolve, raf, start
+    let done = false
+    const promise = new Promise(r => resolve = r)
+    const finish = () => {
+        if (done) return
+        done = true
+        cancelAnimationFrame(raf)
+        render(b)
+        resolve()
+    }
     const step = now => {
-        if (document.hidden) {
-            render(lerp(a, b, 1))
-            return resolve()
-        }
+        if (done) return
+        if (document.hidden) return finish()
         start ??= now
         const fraction = Math.min(1, (now - start) / duration)
+        if (fraction >= 1) return finish()
         render(lerp(a, b, ease(fraction)))
-        if (fraction < 1) requestAnimationFrame(step)
-        else resolve()
+        raf = requestAnimationFrame(step)
     }
-    if (document.hidden) {
-        render(lerp(a, b, 1))
-        return resolve()
-    }
-    requestAnimationFrame(step)
-})
+    if (document.hidden) finish()
+    else raf = requestAnimationFrame(step)
+    return { promise, finish }
+}
 
 // collapsed range doesn't return client rects sometimes (or always?)
 // try make get a non-collapsed range or element
@@ -441,6 +454,8 @@ export class Paginator extends HTMLElement {
     #anchor = 0 // anchor view to a fraction (0-1), Range, or Element
     #justAnchored = false
     #locked = false // while true, prevent any further navigation
+    #animation = null // skriptes: текущая анимация ({ promise, finish })
+    #pending = 0 // skriptes: перелистывания, пришедшие во время #locked (±)
     #styles
     #styleMap = new WeakMap()
     #mediaQuery = matchMedia('(prefers-color-scheme: dark)')
@@ -821,16 +836,20 @@ export class Paginator extends HTMLElement {
         })
     }
     #onTouchStart(e) {
+        // skriptes: палец ловит страницу там, где она остановится, а не
+        // посреди анимации — досрочно завершаем текущую.
+        this.#animation?.finish()
         const touch = e.changedTouches[0]
         this.#touchState = {
             x: touch?.screenX, y: touch?.screenY,
             t: e.timeStamp,
             vx: 0, xy: 0,
+            moved: false, // skriptes: был ли сдвиг (иначе это тап — без снапа)
         }
     }
     #onTouchMove(e) {
         const state = this.#touchState
-        if (state.pinched) return
+        if (!state || state.pinched) return
         state.pinched = globalThis.visualViewport.scale > 1
         if (this.scrolled || state.pinched) return
         if (e.touches.length > 1) {
@@ -838,6 +857,10 @@ export class Paginator extends HTMLElement {
             return
         }
         e.preventDefault()
+        // skriptes: атрибут no-swipe — перелистывание свайпом выключено в
+        // настройках ридера: страница за пальцем не едет.
+        if (this.hasAttribute('no-swipe')) return
+        state.moved = true
         const touch = e.changedTouches[0]
         const x = touch.screenX, y = touch.screenY
         const dx = state.x - x, dy = state.y - y
@@ -853,6 +876,9 @@ export class Paginator extends HTMLElement {
     #onTouchEnd() {
         this.#touchScrolled = false
         if (this.scrolled) return
+        // skriptes: тап без сдвига не снапаем — снап к текущей странице иначе
+        // гонялся бы с перелистыванием по тапу (тап-зоны ридера).
+        if (!this.#touchState?.moved) return
 
         // XXX: Firefox seems to report scale as 1... sometimes...?
         // at this point I'm basically throwing `requestAnimationFrame` at
@@ -889,6 +915,8 @@ export class Paginator extends HTMLElement {
         return this.#scrollToPage(Math.floor(offset / this.size) + (this.#rtl ? -1 : 1), reason)
     }
     async #scrollTo(offset, reason, smooth) {
+        // skriptes: одна анимация за раз — предыдущую доводим до конца.
+        this.#animation?.finish()
         const element = this.#container
         const { scrollProp, size } = this
         if (element[scrollProp] === offset) {
@@ -898,13 +926,20 @@ export class Paginator extends HTMLElement {
         }
         // FIXME: vertical-rl only, not -lr
         if (this.scrolled && this.#vertical) offset = -offset
-        if ((reason === 'snap' || smooth) && this.hasAttribute('animated')) return animate(
-            element[scrollProp], offset, 300, easeOutQuad,
-            x => element[scrollProp] = x,
-        ).then(() => {
-            this.#scrollBounds = [offset, this.atStart ? 0 : size, this.atEnd ? 0 : size]
-            this.#afterScroll(reason)
-        })
+        if ((reason === 'snap' || smooth) && this.hasAttribute('animated')) {
+            const from = element[scrollProp]
+            const share = size ? Math.min(1, Math.abs(offset - from) / size) : 1
+            const animation = animate(
+                from, offset, Math.max(ANIMATION_MIN_MS, Math.round(ANIMATION_MS * share)),
+                easeOutCubic, x => element[scrollProp] = x,
+            )
+            this.#animation = animation
+            return animation.promise.then(() => {
+                if (this.#animation === animation) this.#animation = null
+                this.#scrollBounds = [offset, this.atStart ? 0 : size, this.atEnd ? 0 : size]
+                this.#afterScroll(reason)
+            })
+        }
         else {
             element[scrollProp] = offset
             this.#scrollBounds = [offset, this.atStart ? 0 : size, this.atEnd ? 0 : size]
@@ -1058,7 +1093,14 @@ export class Paginator extends HTMLElement {
             if (this.sections[index]?.linear !== 'no') return index
     }
     async #turnPage(dir, distance) {
-        if (this.#locked) return
+        if (this.#locked) {
+            // skriptes: перелистывание во время другого не теряем — копим
+            // (не больше трёх страниц в одну сторону) и досрочно завершаем
+            // текущую анимацию, чтобы следующая началась сразу.
+            this.#pending = Math.max(-3, Math.min(3, this.#pending + dir))
+            this.#animation?.finish()
+            return
+        }
         this.#locked = true
         const prev = dir === -1
         const shouldGo = await (prev ? this.#scrollPrev(distance) : this.#scrollNext(distance))
@@ -1066,8 +1108,17 @@ export class Paginator extends HTMLElement {
             index: this.#adjacentIndex(dir),
             anchor: prev ? () => 1 : () => 0,
         })
-        if (shouldGo || !this.hasAttribute('animated')) await wait(100)
+        // skriptes: пауза только после смены секции (новой вёрстке дать
+        // устояться); внутри секции тапы идут без задержки — их не теряем
+        // благодаря #pending, апстрим ждал 100 мс и на каждом тапе.
+        if (shouldGo) await wait(100)
         this.#locked = false
+        const pending = this.#pending
+        if (pending) {
+            const next = Math.sign(pending)
+            this.#pending = pending - next
+            return this.#turnPage(next, distance)
+        }
     }
     prev(distance) {
         return this.#turnPage(-1, distance)

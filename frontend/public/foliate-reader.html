@@ -4,56 +4,25 @@
 <meta name="color-scheme" content="light dark">
 <title>skriptes reader</title>
 <style>
+  /* Цвета страницы задаёт ридер (тема из настроек ReaderPage) через
+     --bg/--fg; до этого — нейтральные системные. Своих панелей у iframe
+     нет: вся «обвязка» (назад, закладка, заметки, настройки) — оверлей
+     ReaderPage, страница книги — во весь iframe. */
   html, body {
     margin: 0;
     height: 100%;
-    background: Canvas;
-    color: CanvasText;
+    background: var(--bg, Canvas);
+    color: var(--fg, CanvasText);
     font-family: system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
   body {
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
-  }
-  /* Простой top-bar с навигацией и индикатором прогресса. ReaderPage в
-     React имеет свой header, но iframe общается с ним через postMessage,
-     а в самом iframe нам нужен компактный, безусловно работающий
-     fallback. */
-  #toolbar {
-    flex: 0 0 auto;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    padding: 8px 12px;
-    border-bottom: 1px solid color-mix(in srgb, CanvasText 10%, transparent);
-    font-size: 13px;
-  }
-  #toolbar button {
-    appearance: none;
-    background: color-mix(in srgb, CanvasText 8%, transparent);
-    color: CanvasText;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font: inherit;
-  }
-  #toolbar button:hover:not(:disabled) {
-    background: color-mix(in srgb, CanvasText 14%, transparent);
-  }
-  #toolbar button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  #progress {
-    margin-left: auto;
-    font-variant-numeric: tabular-nums;
-    color: color-mix(in srgb, CanvasText 60%, transparent);
+    overscroll-behavior: none;
   }
   #view-host {
-    flex: 1 1 auto;
     position: relative;
+    height: 100%;
     overflow: hidden;
   }
   foliate-view {
@@ -61,22 +30,24 @@
     width: 100%;
     height: 100%;
   }
+  /* Колонтитулы foliate (глава сверху, процент снизу) — мелко и тихо. */
+  foliate-view::part(head),
+  foliate-view::part(foot) {
+    font-variant-numeric: tabular-nums;
+  }
   #status {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: color-mix(in srgb, CanvasText 60%, transparent);
+    padding: 0 24px;
+    text-align: center;
+    color: color-mix(in srgb, currentColor 60%, transparent);
     font-size: 14px;
   }
 </style>
 
-<div id="toolbar">
-  <button id="prev" disabled aria-label="Назад">‹</button>
-  <button id="next" disabled aria-label="Вперёд">›</button>
-  <span id="progress" aria-live="polite"></span>
-</div>
 <div id="view-host">
   <div id="status">Загружаем книгу…</div>
 </div>

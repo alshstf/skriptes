@@ -120,11 +120,15 @@ export default defineConfig({
           },
           // foliate ridder (тяжёлый JS, статика) — кэшируется при
           // первом открытии ридера и далее offline-ready.
+          // StaleWhileRevalidate, не CacheFirst: имена файлов без хэша, а мы
+          // патчим вендоренный foliate (paginator.js) — CacheFirst держал бы
+          // старую копию до 30 дней. Имя кэша с версией: смена (-v2 — патч
+          // перелистывания) заставляет сразу взять свежие файлы.
           {
             urlPattern: /\/foliate\/.*$/,
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'skriptes-foliate',
+              cacheName: 'skriptes-foliate-v2',
               expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [0, 200] },
             },
