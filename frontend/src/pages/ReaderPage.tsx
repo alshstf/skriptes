@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
-import { useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Bookmark, BookmarkCheck, Check, NotebookPen } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ALargeSmall, ArrowLeft, Bookmark, BookmarkCheck, Check, Maximize, Minimize, NotebookPen } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api';
 import { useReadingPosition, useSavePosition, useToggleRead, type Book } from '@/lib/books';
+import { frameSettings, useReaderSettings, useSystemDark } from '@/lib/readerSettings';
+import { cn } from '@/lib/utils';
 import {
   useBookAnnotations,
   useDeleteAnnotation,
@@ -14,6 +16,7 @@ import {
   type Annotation,
 } from '@/lib/annotations';
 import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderAnnotations';
+import { ReaderSettingsSheet } from '@/components/ReaderSettings';
 
 /**
  * ReaderPage — full-screen ридер на foliate-js через iframe.
@@ -42,6 +45,13 @@ import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderA
  * пользователь прокручивает в last-5%-zone. Это срабатывает один раз
  * за сессию (флаг в iframe). При повторном открытии книги отметка уже
  * стоит — не дублируем.
+ *
+ * Экран — только страница книги (на телефоне без лишних полей). Панель
+ * (назад, закладка, заметки, настройки, во весь экран) — оверлей поверх
+ * страницы: видна при открытии, прячется при перелистывании
+ * (`{type:'turned'}`), тап по центру страницы — `{type:'toggle-ui'}`.
+ * Настройки (тема, шрифт, поля, свайп/тап/анимация) — `lib/readerSettings`:
+ * стартовые уходят в URL iframe, изменения — `{type:'settings'}`.
  */
 
 type ReaderMessage =
@@ -51,9 +61,53 @@ type ReaderMessage =
   | { type: 'selection'; cfi: string; text: string }
   | { type: 'selection-clear' }
   | { type: 'annotation-click'; cfi: string }
+  | { type: 'toggle-ui' }
+  | { type: 'turned' }
   | { type: 'error'; reason: string; detail?: string };
 
 const DEBOUNCE_MS = 3000;
+// Подсказку «тап по центру — меню» показываем один раз на устройстве.
+const HINT_KEY = 'skriptes.reader.hint-shown';
+
+const PAGE_KEYS: Record<string, string> = {
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
+  ArrowUp: 'prev',
+  ArrowDown: 'next',
+  PageUp: 'prev',
+  PageDown: 'next',
+};
+
+function showHintOnce() {
+  try {
+    if (window.localStorage.getItem(HINT_KEY)) return;
+    window.localStorage.setItem(HINT_KEY, '1');
+  } catch {
+    return;
+  }
+  toast('Панель спрятана — тап по центру страницы вернёт её', { duration: 4000 });
+}
+
+/** useFullscreen — Fullscreen API (Android, десктоп; на iPhone его нет). */
+function useFullscreen() {
+  const supported = typeof document !== 'undefined' && Boolean(document.fullscreenEnabled);
+  const [active, setActive] = useState(() => typeof document !== 'undefined' && Boolean(document.fullscreenElement));
+  useEffect(() => {
+    if (!supported) return;
+    const onChange = () => setActive(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', onChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onChange);
+      // Ушли из ридера — из полноэкранного режима тоже.
+      if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    };
+  }, [supported]);
+  const toggle = useCallback(() => {
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    else void document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+  }, []);
+  return { supported, active, toggle };
+}
 
 export function ReaderPage() {
   const params = useParams({ strict: false }) as { id: string };
@@ -65,6 +119,13 @@ export function ReaderPage() {
   const [completed, setCompleted] = useState(false);
 
   const { data: position, isLoading: posLoading } = useReadingPosition(bookId);
+  // Название — в панель. Тот же ключ, что у карточки (без её поллинга
+  // обогащения): пришли с карточки — уже в кэше.
+  const { data: book } = useQuery<Book>({
+    queryKey: ['book', String(bookId)],
+    queryFn: ({ signal }) => apiFetch<Book>(`/api/books/${bookId}`, { signal }),
+    staleTime: 5 * 60_000,
+  });
   const save = useSavePosition();
   const toggleRead = useToggleRead();
   // ?cfi= — открыть сразу на месте заметки («Мои заметки» на карточке).
@@ -86,9 +147,43 @@ export function ReaderPage() {
   const [selection, setSelection] = useState<{ cfi: string; text: string } | null>(null);
   const [notesOpen, setNotesOpen] = useState(false);
   const [noteFor, setNoteFor] = useState<{ cfi: string; excerpt: string; existing?: Annotation } | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [uiVisible, setUiVisible] = useState(true);
+  const uiVisibleRef = useRef(uiVisible);
+  uiVisibleRef.current = uiVisible;
   const toReader = useCallback((msg: Record<string, unknown>) => {
     iframeRef.current?.contentWindow?.postMessage(msg, window.location.origin);
   }, []);
+
+  // Настройки страницы: стартовые — в URL iframe (первый кадр книги сразу в
+  // своей теме), дальше — сообщением на каждое изменение.
+  const [readerSettings, updateReaderSettings] = useReaderSettings();
+  const systemDark = useSystemDark();
+  const frame = useMemo(() => frameSettings(readerSettings, systemDark), [readerSettings, systemDark]);
+  const [initialFrame] = useState(frame);
+  useEffect(() => {
+    if (ready) toReader({ type: 'settings', settings: frame });
+  }, [ready, frame, toReader]);
+  const fullscreen = useFullscreen();
+  const overlayOpen = notesOpen || settingsOpen || noteFor !== null;
+
+  // Клавиши, пока фокус в самом приложении (а не в странице книги — там их
+  // ловит iframe): стрелки, PageUp/PageDown, пробел.
+  useEffect(() => {
+    if (!ready || overlayOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const onBody = !target || target === document.body;
+      const dir = e.key === ' ' && onBody ? (e.shiftKey ? 'prev' : 'next') : PAGE_KEYS[e.key];
+      if (!dir) return;
+      e.preventDefault();
+      toReader({ type: 'turn', dir });
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [ready, overlayOpen, toReader]);
   const bookmarkHere = annotations.find((a) => a.kind === 'bookmark' && a.cfi === place.cfi);
   const annotationsRef = useRef<Annotation[]>([]);
   annotationsRef.current = annotations;
@@ -130,6 +225,23 @@ export function ReaderPage() {
     },
     [bookId, save],
   );
+
+  // Ушли из браузера (телефон: другое приложение, блокировка) раньше, чем
+  // сработал debounce, — сохраняем сразу: фоновую вкладку iOS может
+  // выгрузить, и таймер не доживёт.
+  const savePosition = save.mutate;
+  useEffect(() => {
+    const flush = () => {
+      if (document.visibilityState !== 'hidden') return;
+      const p = pendingPos.current;
+      if (!p || !p.cfi || p.cfi === lastSavedCfi.current) return;
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      lastSavedCfi.current = p.cfi;
+      savePosition({ bookId, pos: p.cfi, fraction: p.fraction ?? undefined });
+    };
+    document.addEventListener('visibilitychange', flush);
+    return () => document.removeEventListener('visibilitychange', flush);
+  }, [bookId, savePosition]);
 
   // Cleanup при размонтировании ridera:
   //  1. Отменяем pending-debounce timer.
@@ -203,6 +315,13 @@ export function ReaderPage() {
         case 'selection-clear':
           setSelection(null);
           break;
+        case 'toggle-ui':
+          setUiVisible((v) => !v);
+          break;
+        case 'turned':
+          if (uiVisibleRef.current) showHintOnce();
+          setUiVisible(false);
+          break;
         case 'annotation-click': {
           const existing = annotationsRef.current.find((a) => a.kind === 'highlight' && a.cfi === msg.cfi);
           if (existing) setNoteFor({ cfi: existing.cfi, excerpt: existing.excerpt ?? '', existing });
@@ -247,31 +366,78 @@ export function ReaderPage() {
     return () => window.removeEventListener('message', handler);
   }, [bookId, completed, save, scheduleSave, toggleRead, qc]);
 
+  // Стартовое место книги фиксируем один раз: src iframe не должен меняться,
+  // когда position перезапросится (смена src перезагрузила бы книгу).
+  const [startCfi, setStartCfi] = useState<string | null>(null);
+  useEffect(() => {
+    if (startCfi === null && !posLoading) setStartCfi(cfiParam || position?.pos || '');
+  }, [startCfi, posLoading, cfiParam, position?.pos]);
+
   // URL ридера-iframe: src = /api/books/{id}/epub, cfi = последняя
-  // сохранённая позиция (если есть). Ждём position-запрос чтобы не
-  // открыть iframe дважды (без cfi → с cfi).
-  if (posLoading) {
+  // сохранённая позиция (если есть), settings — стартовые настройки
+  // страницы. Ждём position-запрос, чтобы не открыть iframe дважды.
+  if (startCfi === null) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-background text-muted-foreground">
+      <div
+        className="fixed inset-0 flex items-center justify-center text-sm opacity-70"
+        style={{ backgroundColor: frame.bg, color: frame.fg }}
+      >
         Загружаем позицию…
       </div>
     );
   }
 
-  const initialCfi = cfiParam || position?.pos || '';
   const src = `/foliate-reader.html?src=${encodeURIComponent(`/api/books/${bookId}/epub`)}${
-    initialCfi ? `&cfi=${encodeURIComponent(initialCfi)}` : ''
-  }`;
+    startCfi ? `&cfi=${encodeURIComponent(startCfi)}` : ''
+  }&settings=${encodeURIComponent(JSON.stringify(initialFrame))}`;
+  const percent = place.fraction !== null ? `${Math.round(place.fraction * 100)} %` : '';
+  const subtitle = [place.label, percent].filter(Boolean).join(' · ');
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-background">
-      {/* pt-safe: тулбар ридера — наверху fixed inset-0, иначе на iOS PWA «К
-          карточке»/заголовок лезут под статус-бар (грабля №18). Контент iframe
-          ниже остаётся immersive. */}
-      <header className="flex items-center gap-2 border-b border-border px-3 py-2 pt-[calc(0.5rem+env(safe-area-inset-top))] shrink-0">
+    <div className="fixed inset-0 overflow-hidden" style={{ backgroundColor: frame.bg }}>
+      {/*
+        iframe рендерит /foliate-reader.html, отдаваемый nginx из
+        frontend/public/. Sandbox: разрешаем same-origin (нужен для
+        fetch'а /api/books/{id}/epub с кукой сессии), allow-scripts
+        (foliate-js — это и есть скрипты), allow-popups (для ext-ссылок
+        из epub). НЕ даём allow-top-navigation и allow-forms. С
+        allow-same-origin + allow-scripts sandbox сам по себе не изолирует —
+        скрипты книги режет CSP (см. комментарий в начале файла).
+
+        Страница — на весь экран за вычетом safe-area (вырез, home-indicator:
+        грабля №18); фон вокруг — цвет темы книги.
+      */}
+      <div className="absolute inset-0 flex pt-safe pb-safe pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
+        <iframe
+          ref={iframeRef}
+          title="Foliate reader"
+          src={src}
+          sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
+          className="min-w-0 flex-1 border-0"
+        />
+      </div>
+      {bookmarkHere && !uiVisible ? (
+        <Bookmark
+          aria-hidden
+          className="pointer-events-none absolute top-[env(safe-area-inset-top)] right-[max(1rem,env(safe-area-inset-right))] z-10 size-5 opacity-60"
+          style={{ color: frame.fg }}
+          fill="currentColor"
+        />
+      ) : null}
+      {/* Панель — оверлей над страницей: видна при открытии, прячется при
+          перелистывании, тап по центру страницы — показать/спрятать.
+          Только translate/opacity — анимация не трогает вёрстку книги. */}
+      <header
+        inert={!uiVisible}
+        className={cn(
+          'absolute inset-x-0 top-0 z-20 flex items-center gap-1 border-b border-border bg-background/95 pt-[calc(0.375rem+env(safe-area-inset-top))] pr-[max(0.5rem,env(safe-area-inset-right))] pb-1.5 pl-[max(0.5rem,env(safe-area-inset-left))] shadow-sm backdrop-blur transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none',
+          uiVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-full opacity-0',
+        )}
+      >
         <Button
           variant="ghost"
           size="sm"
+          className="shrink-0 px-2"
           onClick={() => {
             // Навигация на карточку REPLACE'ом текущей reader-записи.
             // window.history.back() здесь ненадёжен: foliate в iframe плодит
@@ -303,21 +469,23 @@ export function ReaderPage() {
           }}
           aria-label="Вернуться к карточке книги"
         >
-          <ArrowLeft className="size-4 mr-1" aria-hidden />
-          К карточке
+          <ArrowLeft className="size-4" aria-hidden />
+          <span className="hidden sm:inline">К карточке</span>
         </Button>
-        <div className="text-sm text-muted-foreground flex-1 truncate">
-          {ready ? 'Чтение' : 'Подготовка…'}
+        <div className="min-w-0 flex-1 px-1">
+          <div className="truncate text-sm font-medium">{book?.title || (ready ? 'Чтение' : 'Подготовка…')}</div>
+          {subtitle ? <div className="truncate text-xs text-muted-foreground">{subtitle}</div> : null}
         </div>
         {completed ? (
-          <span className="inline-flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+          <span className="inline-flex shrink-0 items-center gap-1 text-sm text-green-600 dark:text-green-400">
             <Check className="size-4" aria-hidden />
-            Прочитано
+            <span className="hidden sm:inline">Прочитано</span>
           </span>
         ) : null}
         <Button
           variant="ghost"
           size="icon-sm"
+          className="shrink-0"
           disabled={!ready || !place.cfi || saveAnnotation.isPending || deleteAnnotation.isPending}
           aria-label={bookmarkHere ? 'Убрать закладку' : 'Закладка на этой странице'}
           aria-pressed={Boolean(bookmarkHere)}
@@ -337,7 +505,7 @@ export function ReaderPage() {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-1"
+          className="shrink-0 gap-1 px-2"
           onClick={() => setNotesOpen(true)}
           aria-label="Заметки и закладки"
         >
@@ -347,48 +515,50 @@ export function ReaderPage() {
             <span className="text-xs tabular-nums text-muted-foreground">{annotations.length}</span>
           ) : null}
         </Button>
-      </header>
-      {/*
-        iframe рендерит /foliate-reader.html, отдаваемый nginx из
-        frontend/public/. Sandbox: разрешаем same-origin (нужен для
-        fetch'а /api/books/{id}/epub с кукой сессии), allow-scripts
-        (foliate-js — это и есть скрипты), allow-popups (для ext-ссылок
-        из epub). НЕ даём allow-top-navigation и allow-forms. С
-        allow-same-origin + allow-scripts sandbox сам по себе не изолирует —
-        скрипты книги режет CSP (см. комментарий в начале файла).
-      */}
-      <div className="relative flex min-h-0 flex-1">
-        <iframe
-          ref={iframeRef}
-          title="Foliate reader"
-          src={src}
-          sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
-          className="flex-1 w-full border-0"
-        />
-        {selection ? (
-          <SelectionBar
-            text={selection.text}
-            busy={saveAnnotation.isPending}
-            onCancel={() => {
-              setSelection(null);
-              toReader({ type: 'clear-selection' });
-            }}
-            onHighlight={() =>
-              saveAnnotation.mutate(
-                { kind: 'highlight', cfi: selection.cfi, excerpt: selection.text, label: place.label,
-                  fraction: place.fraction ?? undefined },
-                {
-                  onSuccess: () => {
-                    setSelection(null);
-                    toReader({ type: 'clear-selection' });
-                  },
-                },
-              )
-            }
-            onNote={() => setNoteFor({ cfi: selection.cfi, excerpt: selection.text })}
-          />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="shrink-0"
+          onClick={() => setSettingsOpen(true)}
+          aria-label="Настройки чтения"
+        >
+          <ALargeSmall className="size-4" aria-hidden />
+        </Button>
+        {fullscreen.supported ? (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0"
+            onClick={fullscreen.toggle}
+            aria-label={fullscreen.active ? 'Выйти из полноэкранного режима' : 'Во весь экран'}
+          >
+            {fullscreen.active ? <Minimize className="size-4" aria-hidden /> : <Maximize className="size-4" aria-hidden />}
+          </Button>
         ) : null}
-      </div>
+      </header>
+      {selection ? (
+        <SelectionBar
+          text={selection.text}
+          busy={saveAnnotation.isPending}
+          onCancel={() => {
+            setSelection(null);
+            toReader({ type: 'clear-selection' });
+          }}
+          onHighlight={() =>
+            saveAnnotation.mutate(
+              { kind: 'highlight', cfi: selection.cfi, excerpt: selection.text, label: place.label,
+                fraction: place.fraction ?? undefined },
+              {
+                onSuccess: () => {
+                  setSelection(null);
+                  toReader({ type: 'clear-selection' });
+                },
+              },
+            )
+          }
+          onNote={() => setNoteFor({ cfi: selection.cfi, excerpt: selection.text })}
+        />
+      ) : null}
       <AnnotationsSheet
         open={notesOpen}
         onOpenChange={setNotesOpen}
@@ -432,6 +602,12 @@ export function ReaderPage() {
             },
           );
         }}
+      />
+      <ReaderSettingsSheet
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        settings={readerSettings}
+        onChange={updateReaderSettings}
       />
     </div>
   );
