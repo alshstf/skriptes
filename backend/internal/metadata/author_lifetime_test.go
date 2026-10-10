@@ -56,6 +56,12 @@ func TestWorkYearRules(t *testing.T) {
 	exec(`UPDATE works SET external_year = 1989, external_year_source = 'fantlab' WHERE id = $1`, workIDOf(t, ctx, pool, breach))
 
 	charushin := seedGroupAuthor(t, ctx, pool, "Чарушин", "чарушин евгений")
+	// Посмертная публикация: написано в 1835-м, Фантлаб даёт 1938 — год написания остаётся.
+	pushkin := seedGroupAuthor(t, ctx, pool, "Пушкин", "пушкин александр")
+	peter := seedGroupBook(t, ctx, pool, collID, archID, pushkin, "P1", "История Петра I", "история петра i", "ru", "", "", "")
+	years(peter, 1835, 1950)
+	exec(`UPDATE works SET external_year = 1938, external_year_source = 'fantlab' WHERE id = $1`, workIDOf(t, ctx, pool, peter))
+
 	boy := seedGroupBook(t, ctx, pool, collID, archID, charushin, "C1", "Глупый мальчишка", "глупый мальчишка", "ru", "", "", "")
 	years(boy, 1000, 1000)
 
@@ -80,6 +86,7 @@ func TestWorkYearRules(t *testing.T) {
 	require.Equal(t, 1719, year(workIDOf(t, ctx, pool, crusoe)), "без года издания fb2-год остаётся")
 	require.Equal(t, 1972, year(gods), "1073 раньше рождения Азимова — опечатка")
 	require.Equal(t, 1989, year(workIDOf(t, ctx, pool, breach)), "год Фантлаба сильнее fb2-года на 975 лет раньше")
+	require.Equal(t, 1835, year(workIDOf(t, ctx, pool, peter)), "посмертная публикация — год написания остаётся")
 	require.Zero(t, year(workIDOf(t, ctx, pool, boy)), "1000 = год издания 1000 — заглушка")
 	require.Equal(t, 1353, year(workIDOf(t, ctx, pool, dec)), "средневековый автор — ранний год остаётся")
 

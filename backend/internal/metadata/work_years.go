@@ -34,7 +34,9 @@ import (
 //     1500 года: у средневековых дата рождения в Wikidata бывает с точностью до
 //     века, а их настоящие ранние годы правило задело бы;
 //   - год Фантлаба (первая публикация) сильнее fb2-года, который раньше него больше
-//     чем на fantlabYearLead лет;
+//     чем на fantlabYearLead лет и сам раньше minEditionYear — заведомая опечатка
+//     (1014, 1073, 1282). Без второго условия правило ломало посмертные публикации:
+//     «История Петра I» Пушкина написана в 1835-м, а Фантлаб даёт 1938 (прод 1.38.0);
 //   - год издания раньше minEditionYear — заглушка (книгопечатания не было), а
 //     fb2-год, равный такому году издания, — тоже, кроме старинной литературы и
 //     фольклора (ancientGenreSQL).
@@ -110,9 +112,10 @@ func recomputeWorkYears(ctx context.Context, ex pgxExec, ids []int64, allWorks b
 		                      WHERE o.target_kind = 'work' AND o.target_id = w.id AND o.field = 'written_year')
 		), pick AS (
 		    -- Внешний год, если раньше fb2-года; год Фантлаба — и если fb2-год раньше
-		    -- него больше чем на fantlabYearLead лет (опечатка fb2, #465).
+		    -- него больше чем на fantlabYearLead лет и раньше minEditionYear (опечатка
+		    -- fb2, #465; посмертная публикация — не опечатка).
 		    SELECT id, by, bsrc, xy, xsrc,
-		           xy IS NOT NULL AND (by IS NULL OR xy < by OR (xsrc = 'fantlab' AND by < xy - $8)) AS ext
+		           xy IS NOT NULL AND (by IS NULL OR xy < by OR (xsrc = 'fantlab' AND by < xy - $8 AND by < $5)) AS ext
 		    FROM calc
 		), fin AS (
 		    SELECT id,
