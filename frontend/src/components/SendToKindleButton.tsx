@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useKindleTargets, useSendToKindle, type KindleTarget } from '@/lib/kindle';
+import { cn } from '@/lib/utils';
 import { ApiError } from '@/lib/api';
 
 /**
@@ -27,9 +28,15 @@ import { ApiError } from '@/lib/api';
 export function SendToKindleButton({
   bookId,
   showLabel = false,
+  shortLabel = false,
+  className,
 }: {
   bookId: number;
   showLabel?: boolean;
+  /** Подпись «Kindle» вместо «На Kindle»/«Настроить Kindle» — для узкой кнопки
+   *  в ряду равных кнопок мобильной карточки; полный текст — в aria-label. */
+  shortLabel?: boolean;
+  className?: string;
 }) {
   const targetsQ = useKindleTargets();
   const send = useSendToKindle();
@@ -62,12 +69,12 @@ export function SendToKindleButton({
         <Link
           to="/me"
           search={{ returnTo }}
-          className="gap-2"
+          className={cn('gap-2', className)}
           aria-label="Настроить Kindle"
           title="Настроить Kindle"
         >
           <Tablet className="size-4" aria-hidden />
-          <span className={labelCls}>Настроить Kindle</span>
+          <span className={labelCls}>{shortLabel ? 'Kindle' : 'Настроить Kindle'}</span>
         </Link>
       </Button>
     );
@@ -82,12 +89,12 @@ export function SendToKindleButton({
         size="sm"
         onClick={() => doSend(t)}
         disabled={disabled}
-        className="gap-2"
+        className={cn('gap-2', className)}
         aria-label="Отправить на Kindle"
         title="Отправить на Kindle"
       >
         <Tablet className="size-4" aria-hidden />
-        <span className={labelCls}>{sendingTo === t.id ? 'Отправляется…' : 'На Kindle'}</span>
+        <span className={labelCls}>{sendingTo === t.id ? 'Отправляется…' : shortLabel ? 'Kindle' : 'На Kindle'}</span>
       </Button>
     );
   }
@@ -100,12 +107,14 @@ export function SendToKindleButton({
           variant="outline"
           size="sm"
           disabled={disabled}
-          className="gap-2"
+          className={cn('gap-2', className)}
           aria-label="Отправить на Kindle"
           title="Отправить на Kindle"
         >
           <Tablet className="size-4" aria-hidden />
-          <span className="hidden sm:inline">{send.isPending ? 'Отправляется…' : 'На Kindle'}</span>
+          {/* Раньше здесь всегда было hidden sm:inline — на мобиле кнопка оставалась
+              голой иконкой даже с showLabel. */}
+          <span className={labelCls}>{send.isPending ? 'Отправляется…' : shortLabel ? 'Kindle' : 'На Kindle'}</span>
           <ChevronDown className="size-3.5 opacity-60" aria-hidden />
         </Button>
       </DropdownMenuTrigger>

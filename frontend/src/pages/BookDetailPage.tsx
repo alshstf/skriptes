@@ -34,6 +34,7 @@ import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
 import { useLanguageMap, useSrcLanguageMap } from '@/lib/content';
 import { ApiError } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 /**
  * BookDetailPage — карточка логической книги. Один компонент для двух маршрутов:
@@ -398,33 +399,54 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
  * поэтому здесь только ★.
  */
 function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
-  // «На полку» — в один ряд со ★ (#470): обе — «организовать книгу для себя».
+  // Две ровные строки во всю ширину (#470): «Читать» + ★ квадратом той же высоты,
+  // ниже — равные кнопки «Скачать · Kindle · На полку» одного стиля.
   const shelves = useUserShelves(book.id).length;
+  const cell = 'w-full min-w-0 gap-1.5 px-2';
+  // Три кнопки в ряд: уже 400px иконки не помещаются вместе с подписью и счётчиком
+  // полок — прячем иконку (первый svg), подпись остаётся.
+  const row3 = cn(cell, 'max-[400px]:[&_svg:first-child]:hidden');
   if (multi) {
     return (
-      <div className="flex items-center gap-2">
-        <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
-        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} />
+      <div className="grid grid-cols-2 gap-2">
+        <FavoriteButton
+          target="book"
+          id={book.id}
+          isFavorite={book.is_favorite ?? false}
+          variant="outline"
+          showLabel
+          className={cell}
+        />
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={cell} />
       </div>
     );
   }
   return (
     <>
-      <Button asChild className="w-full gap-1.5">
-        <Link
-          to="/books/$id/read"
-          params={{ id: String(book.id) }}
-          aria-label="Открыть книгу в браузерном ридере"
-        >
-          <BookOpen className="size-4" aria-hidden />
-          {readButtonLabel(book.reading_fraction)}
-        </Link>
-      </Button>
-      <div className="flex items-center gap-2">
-        <DownloadMenu bookId={book.id} showLabel />
-        <SendToKindleButton bookId={book.id} showLabel />
-        <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
-        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} />
+      <div className="flex gap-2">
+        <Button asChild className="min-w-0 flex-1 gap-1.5">
+          <Link
+            to="/books/$id/read"
+            params={{ id: String(book.id) }}
+            aria-label="Открыть книгу в браузерном ридере"
+          >
+            <BookOpen className="size-4" aria-hidden />
+            {readButtonLabel(book.reading_fraction)}
+          </Link>
+        </Button>
+        <FavoriteButton
+          target="book"
+          id={book.id}
+          isFavorite={book.is_favorite ?? false}
+          variant="outline"
+          labelHidden
+          className="h-9 w-9 shrink-0 px-0"
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        <DownloadMenu bookId={book.id} showLabel variant="outline" className={row3} />
+        <SendToKindleButton bookId={book.id} showLabel shortLabel className={row3} />
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={row3} />
       </div>
     </>
   );
