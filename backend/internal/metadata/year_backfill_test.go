@@ -2,7 +2,6 @@ package metadata
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"log/slog"
 	"net/http"
@@ -20,7 +19,7 @@ import (
 // TestEnrichBooksNow_NoopWhenNotReady — ленивый внешний путь без провайдеров
 // (и/или без пула) ничего не делает и не паникует.
 func TestEnrichBooksNow_NoopWhenNotReady(t *testing.T) {
-	c := NewYearBackfillController(nil, nil, nil, YearBackfillConfig{}, nil, slog.Default())
+	c := NewYearBackfillController(nil, nil, YearBackfillConfig{}, nil, slog.Default())
 	require.False(t, c.ready())
 	c.EnrichBooksNow(context.Background(), []LazyBook{{ID: 1, Title: "X"}})
 	// no panic, no work → тест проходит, если не паникнули.
@@ -57,33 +56,6 @@ func TestYearBackfiller_isDue(t *testing.T) {
 		"error свежий (1ч < 24ч) → не спрашиваем")
 	require.True(t, b.isDue(lookupRow{outcome: "error", checkedAt: now.Add(-48 * time.Hour)}, now),
 		"error старый (48ч > 24ч) → ретраим")
-}
-
-// ── OpenLibrary FetchYear (httptest) ────────────────────────────
-
-func TestOpenLibrary_FetchYear(t *testing.T) {
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		require.Equal(t, "Бесы", r.URL.Query().Get("title"))
-		_ = json.NewEncoder(w).Encode(olSearchResponse{
-			Docs: []olSearchDoc{{Key: "/works/OL1W", FirstPublishYear: 1872}},
-		})
-	}))
-	defer srv.Close()
-
-	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
-	year, err := p.FetchYear(context.Background(), BookQuery{Title: "Бесы", Authors: []string{"Достоевский"}})
-	require.NoError(t, err)
-	require.Equal(t, 1872, year)
-}
-
-func TestOpenLibrary_FetchYear_NoResult(t *testing.T) {
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		_ = json.NewEncoder(w).Encode(olSearchResponse{Docs: []olSearchDoc{}})
-	}))
-	defer srv.Close()
-	p := NewOpenLibraryProvider(nil).WithEndpoints(srv.URL+"/search.json", srv.URL)
-	_, err := p.FetchYear(context.Background(), BookQuery{Title: "X"})
-	require.ErrorIs(t, err, ErrNotFound)
 }
 
 // ── Wikidata FetchYear (httptest) ───────────────────────────────
@@ -142,7 +114,7 @@ type orderYearProvider struct {
 	ids []int64
 }
 
-func (f *orderYearProvider) Name() string { return "openlibrary" }
+func (f *orderYearProvider) Name() string { return "wikidata" }
 func (f *orderYearProvider) FetchYear(_ context.Context, q BookQuery) (int, error) {
 	f.mu.Lock()
 	f.ids = append(f.ids, q.ID)
@@ -189,8 +161,8 @@ func TestYearBackfiller_CoreFirst(t *testing.T) {
 	core2 := mkBook("L-core2", coreWork)
 
 	prov := &orderYearProvider{}
-	bf := NewYearBackfiller(pool, prov, nil,
-		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
+	bf := NewYearBackfiller(pool, prov,
+		YearBackfillConfig{Wikidata: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
 	require.Equal(t, 3, bf.drain(ctx))
 
 	require.Len(t, prov.ids, 3)
@@ -228,10 +200,10 @@ func TestYearBackfiller_Integration(t *testing.T) {
 	foundBook := mkBook("L-found")
 	missBook := mkBook("L-miss")
 
-	// found: OpenLibrary вернул год → written_year проставлен, lookup found.
-	okProv := &fakeYearProvider{name: "openlibrary", year: 1869}
-	bf := NewYearBackfiller(pool, okProv, nil,
-		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
+	// found: Wikidata вернула год → written_year проставлен, lookup found.
+	okProv := &fakeYearProvider{name: "wikidata", year: 1869}
+	bf := NewYearBackfiller(pool, okProv,
+		YearBackfillConfig{Wikidata: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
 	require.Equal(t, 2, bf.drain(ctx), "оба кандидата обработаны")
 
 	var wy *int
@@ -241,12 +213,12 @@ func TestYearBackfiller_Integration(t *testing.T) {
 	require.NotNil(t, wy)
 	require.Equal(t, 1869, *wy)
 	require.NotNil(t, src)
-	require.Equal(t, "openlibrary", *src)
+	require.Equal(t, "wikidata", *src)
 
 	var outcome string
 	var lyear *int
 	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT outcome, year FROM book_year_lookups WHERE book_id=$1 AND source='openlibrary'`, foundBook).
+		`SELECT outcome, year FROM book_year_lookups WHERE book_id=$1 AND source='wikidata'`, foundBook).
 		Scan(&outcome, &lyear))
 	require.Equal(t, "found", outcome)
 	require.NotNil(t, lyear)
@@ -261,9 +233,9 @@ func TestYearBackfiller_Integration(t *testing.T) {
 	// Отдельная книга + провайдер not_found: written_year остаётся NULL,
 	// в lookups — not_found.
 	nfBook := mkBook("L-nf")
-	nfProv := &fakeYearProvider{name: "openlibrary", year: 0, err: ErrNotFound}
-	bf2 := NewYearBackfiller(pool, nfProv, nil,
-		YearBackfillConfig{OpenLibrary: true, OpenLibraryRPM: 0, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
+	nfProv := &fakeYearProvider{name: "wikidata", year: 0, err: ErrNotFound}
+	bf2 := NewYearBackfiller(pool, nfProv,
+		YearBackfillConfig{Wikidata: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
 	bf2.drain(ctx)
 
 	var wyNF *int
@@ -271,7 +243,7 @@ func TestYearBackfiller_Integration(t *testing.T) {
 		`SELECT written_year FROM books WHERE id=$1`, nfBook).Scan(&wyNF))
 	require.Nil(t, wyNF, "not_found → written_year остаётся пустым")
 	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT outcome FROM book_year_lookups WHERE book_id=$1 AND source='openlibrary'`, nfBook).Scan(&outcome))
+		`SELECT outcome FROM book_year_lookups WHERE book_id=$1 AND source='wikidata'`, nfBook).Scan(&outcome))
 	require.Equal(t, "not_found", outcome)
 
 	// Повторный проход не должен переспрашивать свежий not_found.
@@ -302,52 +274,9 @@ func seedYearBook(t *testing.T, ctx context.Context, pool *pgxpool.Pool, lib, ti
 	return id
 }
 
-// TestYearBackfiller_OpenLibraryNotByCyrillic — по кириллическому названию
-// OpenLibrary находит русские издания (год переиздания, прод 2026-10-11:
-// «Айвенго» 2007) — его не спрашиваем, год даёт Wikidata. Перевод с названием
-// оригинала OpenLibrary по-прежнему спрашивается.
-func TestYearBackfiller_OpenLibraryNotByCyrillic(t *testing.T) {
-	if testing.Short() {
-		t.Skip("integration: requires docker")
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
-	defer cancel()
-	pool := testpg.Pool(t, ctx)
-	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
-
-	ru := seedYearBook(t, ctx, pool, "L-ru", "Айвенго", "", 1994, nil)
-	ol := &fakeYearProvider{name: "openlibrary", year: 2007}
-	wd := &fakeYearProvider{name: "wikidata", year: 1819}
-	bf := NewYearBackfiller(pool, ol, wd, YearBackfillConfig{OpenLibrary: true, Wikidata: true,
-		NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
-	bf.drain(ctx)
-
-	require.Equal(t, 0, ol.calls, "OpenLibrary по кириллице не спрашиваем")
-	var wy int
-	var src string
-	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT written_year, written_year_source FROM books WHERE id=$1`, ru).Scan(&wy, &src))
-	require.Equal(t, 1819, wy)
-	require.Equal(t, "wikidata", src)
-	var outcome string
-	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT outcome FROM book_year_lookups WHERE book_id=$1 AND source='openlibrary'`, ru).Scan(&outcome))
-	require.Equal(t, "not_found", outcome, "пропуск учтён — книга не всплывает каждый проход")
-
-	// Перевод с названием оригинала (латиница) — OpenLibrary спрашивается.
-	tr := seedYearBook(t, ctx, pool, "L-tr", "Там, где в дымке холмы", "A Pale View of Hills", 2007, nil)
-	ol2 := &fakeYearProvider{name: "openlibrary", year: 1982}
-	bf2 := NewYearBackfiller(pool, ol2, nil, YearBackfillConfig{OpenLibrary: true,
-		NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
-	bf2.drain(ctx)
-	require.Equal(t, 1, ol2.calls)
-	require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM books WHERE id=$1`, tr).Scan(&wy))
-	require.Equal(t, 1982, wy)
-}
-
 // TestYearBackfiller_RejectsYearAfterEdition — внешний год позже года издания
-// книги отклоняется («не найдено»), и спрашивается следующий источник; год работы
-// пересчитывается после прохода.
+// книги отклоняется («не найдено»); найденный год идёт и в год работы
+// (пересчёт после прохода).
 func TestYearBackfiller_RejectsYearAfterEdition(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")
@@ -356,35 +285,81 @@ func TestYearBackfiller_RejectsYearAfterEdition(t *testing.T) {
 	defer cancel()
 	pool := testpg.Pool(t, ctx)
 	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+	cfg := YearBackfillConfig{Wikidata: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+
+	late := seedYearBook(t, ctx, pool, "L-late", "Ivanhoe", "", 1998, nil)
+	wdLate := &fakeYearProvider{name: "wikidata", year: 2012}
+	NewYearBackfiller(pool, wdLate, cfg, nil, quiet).drain(ctx)
+	require.Equal(t, 1, wdLate.calls)
+	var wy *int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM books WHERE id=$1`, late).Scan(&wy))
+	require.Nil(t, wy, "год позже издания не записан")
+	var outcome string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT outcome FROM book_year_lookups WHERE book_id=$1 AND source='wikidata'`, late).Scan(&outcome))
+	require.Equal(t, "not_found", outcome)
 
 	var workID int64
 	require.NoError(t, pool.QueryRow(ctx,
-		`INSERT INTO works (title, normalized_title) VALUES ('Ivanhoe','ivanhoe') RETURNING id`).Scan(&workID))
-	book := seedYearBook(t, ctx, pool, "L-ed", "Ivanhoe", "", 1998, &workID)
-
-	ol := &fakeYearProvider{name: "openlibrary", year: 2012}
-	wd := &fakeYearProvider{name: "wikidata", year: 1819}
-	bf := NewYearBackfiller(pool, ol, wd, YearBackfillConfig{OpenLibrary: true, Wikidata: true,
-		NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
-	bf.drain(ctx)
-
-	require.Equal(t, 1, ol.calls)
-	require.Equal(t, 1, wd.calls, "отклонённый год — спрашиваем следующий источник")
-	var wy int
-	var src string
-	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT written_year, written_year_source FROM books WHERE id=$1`, book).Scan(&wy, &src))
-	require.Equal(t, 1819, wy)
-	require.Equal(t, "wikidata", src)
-	var outcome string
-	require.NoError(t, pool.QueryRow(ctx,
-		`SELECT outcome FROM book_year_lookups WHERE book_id=$1 AND source='openlibrary'`, book).Scan(&outcome))
-	require.Equal(t, "not_found", outcome)
-
+		`INSERT INTO works (title, normalized_title) VALUES ('Айвенго','айвенго') RETURNING id`).Scan(&workID))
+	ok := seedYearBook(t, ctx, pool, "L-ok", "Айвенго", "", 1998, &workID)
+	wdOK := &fakeYearProvider{name: "wikidata", year: 1819}
+	NewYearBackfiller(pool, wdOK, cfg, nil, quiet).drain(ctx)
+	require.Equal(t, 1, wdOK.calls, "свежий not_found первой книги не перепрашивается")
+	require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM books WHERE id=$1`, ok).Scan(&wy))
+	require.NotNil(t, wy)
+	require.Equal(t, 1819, *wy)
 	var workYear *int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM works WHERE id=$1`, workID).Scan(&workYear))
 	require.NotNil(t, workYear, "год работы пересчитан после прохода")
 	require.Equal(t, 1819, *workYear)
+}
+
+// TestCleanOpenLibraryYears — OpenLibrary убран из источников года: его годы
+// изданий и попытки стёрты, годы Wikidata и fb2 — на месте.
+func TestCleanOpenLibraryYears(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+
+	mk := func(lib string, year int, source string) int64 {
+		id := seedYearBook(t, ctx, pool, lib, "T "+lib, "", 0, nil)
+		_, err := pool.Exec(ctx, `UPDATE books SET written_year=$2, written_year_source=$3 WHERE id=$1`, id, year, source)
+		require.NoError(t, err)
+		if source != "fb2_title" {
+			_, err = pool.Exec(ctx, `INSERT INTO book_year_lookups (book_id, source, outcome, year, checked_at)
+				VALUES ($1, $2, 'found', $3, now())`, id, source, year)
+			require.NoError(t, err)
+		}
+		return id
+	}
+	ol := mk("o1", 1905, "openlibrary")
+	wd := mk("o2", 1992, "wikidata")
+	fb2 := mk("o3", 1965, "fb2_title")
+	nf := seedYearBook(t, ctx, pool, "o4", "T o4", "", 0, nil)
+	_, err := pool.Exec(ctx, `INSERT INTO book_year_lookups (book_id, source, outcome, checked_at)
+		VALUES ($1, 'openlibrary', 'not_found', now())`, nf)
+	require.NoError(t, err)
+
+	_, cleaned, err := CleanOpenLibraryYears(ctx, pool)
+	require.NoError(t, err)
+	require.Equal(t, int64(1), cleaned)
+
+	year := func(id int64) *int {
+		var y *int
+		require.NoError(t, pool.QueryRow(ctx, `SELECT written_year FROM books WHERE id=$1`, id).Scan(&y))
+		return y
+	}
+	require.Nil(t, year(ol))
+	require.NotNil(t, year(wd))
+	require.NotNil(t, year(fb2))
+	var n int
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT count(*) FROM book_year_lookups WHERE source = 'openlibrary'`).Scan(&n))
+	require.Zero(t, n, "попытки OpenLibrary стёрты")
 }
 
 // TestCleanExternalBookYears — разовая чистка: год OpenLibrary по кириллице и

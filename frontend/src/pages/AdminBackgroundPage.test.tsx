@@ -42,10 +42,8 @@ function baseState(): State {
     },
     year: {
       enabled: false,
-      openlibrary: true,
       wikidata: true,
       whole_collection: false,
-      openlibrary_rpm: 60,
       wikidata_rpm: 20,
       not_found_retry_days: 90,
       error_retry_hours: 24,
@@ -280,24 +278,23 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     expect((puts.cover as { enabled?: boolean })?.enabled).toBe(false);
   });
 
-  it('внешний воркер года выключен — тумблеры OpenLibrary/Wikidata «выкл», хотя флаги источников true (#497)', async () => {
+  it('внешний воркер года выключен — тумблер Wikidata «выкл», хотя флаг источника true (#497)', async () => {
     // Прод 2026-10-10: локальный fb2-проход по годам включён, записи year_enrichment
-    // нет (умолчания: enabled=false, openlibrary/wikidata=true). Раньше UI показывал
-    // «Фоном» + оба источника «вкл», а внешний воркер стоял.
+    // нет (умолчания: enabled=false, wikidata=true). Раньше UI показывал «Фоном» +
+    // источник «вкл», а внешний воркер стоял. OpenLibrary с 1.39.4 — не источник года.
     const user = userEvent.setup();
     setup((s) => {
       s.collection.prewarm = true; // sync_years=true в baseState
     });
     expect(await screen.findByTestId('year-mode-bg')).toHaveAttribute('aria-pressed', 'true');
-    const ol = screen.getByLabelText('OpenLibrary (first_publish_year)');
-    expect(ol).not.toBeChecked();
-    expect(screen.getByLabelText('Wikidata (P577)')).not.toBeChecked();
+    expect(screen.queryByLabelText('OpenLibrary (first_publish_year)')).not.toBeInTheDocument();
+    const wd = screen.getByLabelText('Wikidata (P577)');
+    expect(wd).not.toBeChecked();
     // Внешние настройки (охват, rpm) — только при работающем воркере.
-    expect(document.querySelector('#year-ol-rpm')).toBeNull();
-    // Включение одного источника запускает воркер только с ним.
-    await user.click(ol);
+    expect(document.querySelector('#year-wd-rpm')).toBeNull();
+    await user.click(wd);
     await vi.waitFor(() => {
-      expect(puts.year).toMatchObject({ enabled: true, openlibrary: true, wikidata: false });
+      expect(puts.year).toMatchObject({ enabled: true, wikidata: true });
     });
   });
 
@@ -310,15 +307,14 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     expect(screen.getByLabelText('Google Books')).not.toBeChecked();
   });
 
-  it('«Фоном» у года без отмеченных источников включает оба', async () => {
+  it('«Фоном» у года с выключенной Wikidata включает её', async () => {
     const user = userEvent.setup();
     setup((s) => {
-      s.year.openlibrary = false;
       s.year.wikidata = false;
     });
     await user.click(await screen.findByTestId('year-mode-bg'));
     await vi.waitFor(() => {
-      expect(puts.year).toMatchObject({ enabled: true, openlibrary: true, wikidata: true });
+      expect(puts.year).toMatchObject({ enabled: true, wikidata: true });
     });
   });
 

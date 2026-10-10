@@ -69,13 +69,23 @@ func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 
 	// Сохранили — читается обратно (upsert).
 	want := settings.YearEnrichmentConfig{
-		Enabled: true, OpenLibrary: true, Wikidata: false,
-		OpenLibraryRPM: 30, WikidataRPM: 10, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+		Enabled: true, Wikidata: false,
+		WikidataRPM: 10, NotFoundRetryDays: 30, ErrorRetryHours: 6,
 	}
 	require.NoError(t, store.SetYearEnrichment(ctx, want))
 	got, err = store.YearEnrichment(ctx)
 	require.NoError(t, err)
 	require.Equal(t, want, got)
+
+	// Сохранённое до 1.39.4 (с OpenLibrary) читается: старые ключи игнорируются.
+	_, err = pool.Exec(ctx, `UPDATE app_settings SET value = $1 WHERE key = 'year_enrichment'`,
+		`{"enabled": true, "openlibrary": true, "wikidata": true, "openlibrary_rpm": 60, "wikidata_rpm": 20,
+		  "whole_collection": false, "not_found_retry_days": 90, "error_retry_hours": 24}`)
+	require.NoError(t, err)
+	got, err = store.YearEnrichment(ctx)
+	require.NoError(t, err)
+	require.Equal(t, settings.YearEnrichmentConfig{Enabled: true, Wikidata: true, WikidataRPM: 20,
+		NotFoundRetryDays: 90, ErrorRetryHours: 24}, got)
 }
 
 func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {

@@ -166,6 +166,7 @@ func run() error {
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceWorkYearRules(c, pool, imp, logger)
 		runOnceExternalBookYears(c, pool, imp, logger)
+		runOnceOpenLibraryYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
@@ -351,8 +352,8 @@ func run() error {
 		prewarmCtl.Start()
 	}
 
-	// Дозаполнение года написания из внешних источников (OpenLibrary
-	// first_publish_year → Wikidata P577) для книг без written_year из fb2.
+	// Дозаполнение года написания из внешнего источника (Wikidata P577) для
+	// книг без written_year из fb2 (OpenLibrary убран в 1.39.4).
 	// Воркер opt-in (по умолчанию выключен — ходит в публичные API),
 	// включается тумблером в админке. Провайдеры те же, что для обложек.
 	yearCfg, err := settingsStore.YearEnrichment(ctx())
@@ -360,11 +361,9 @@ func run() error {
 		logger.Warn("read year enrichment settings — using defaults", "err", err)
 		yearCfg = settings.DefaultYearEnrichmentConfig()
 	}
-	yearBackfillCtl := metadata.NewYearBackfillController(pool, olProvider, wdAdaptations, metadata.YearBackfillConfig{
-		OpenLibrary:       yearCfg.OpenLibrary,
+	yearBackfillCtl := metadata.NewYearBackfillController(pool, wdAdaptations, metadata.YearBackfillConfig{
 		Wikidata:          yearCfg.Wikidata,
 		WholeCollection:   yearCfg.WholeCollection,
-		OpenLibraryRPM:    yearCfg.OpenLibraryRPM,
 		WikidataRPM:       yearCfg.WikidataRPM,
 		NotFoundRetryDays: yearCfg.NotFoundRetryDays,
 		ErrorRetryHours:   yearCfg.ErrorRetryHours,
@@ -1802,6 +1801,41 @@ func runOnceExternalBookYears(ctx context.Context, pool *pgxpool.Pool, imp *impo
 		logger.Warn("external book years: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time external book years cleaned", "books", cleaned, "works", len(changed))
+}
+
+// runOnceOpenLibraryYears — OpenLibrary убран из источников года (1.39.4):
+// его годы изданий стёрты вместе с попытками (metadata.CleanOpenLibraryYears),
+// год всех работ пересчитан; изменённые — в works-индекс, годы изданий — в
+// books-индекс. Гейт year_ol_removed_v1.
+func runOnceOpenLibraryYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
+	const flag = "year_ol_removed_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("openlibrary years: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	changed, cleaned, err := metadata.CleanOpenLibraryYears(ctx, pool)
+	if err != nil {
+		logger.Warn("openlibrary years failed — will retry next start", "err", err)
+		return
+	}
+	if len(changed) > 0 {
+		if err := imp.UpsertWorksToIndex(ctx, changed); err != nil {
+			logger.Warn("works index sync after openlibrary years failed", "err", err)
+		}
+	}
+	if _, err := imp.ResyncYears(ctx); err != nil {
+		logger.Warn("books index year resync after openlibrary years failed", "err", err)
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("openlibrary years: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time openlibrary years cleaned", "books", cleaned, "works", len(changed))
 }
 
 func runOnceWorkYears(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {

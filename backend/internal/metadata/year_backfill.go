@@ -14,9 +14,12 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
-// YearBackfiller — фоновое дозаполнение written_year из ВНЕШНИХ источников
-// (OpenLibrary first_publish_year → Wikidata P577) для книг, у которых год
-// не извлёкся локально из fb2. В отличие от прогрева обложек ходит в сеть,
+// YearBackfiller — фоновое дозаполнение written_year из ВНЕШНЕГО источника
+// (Wikidata P577) для книг, у которых год не извлёкся локально из fb2.
+// OpenLibrary убран в 1.39.4: его first_publish_year — самое раннее издание,
+// которое знает каталог, и для русских книг это год переиздания (прод
+// 2026-10-11: верно 59 % по латинским названиям, ~30 % по кириллическим, против
+// 94 % у Wikidata; ~/projects/plans/skriptes/archive/ol-year-translit-dryrun.md). В отличие от прогрева обложек ходит в сеть,
 // поэтому: opt-in (выключен по умолчанию), низкая конкуренция, per-source
 // rate-limit и per-source учёт попыток (book_year_lookups), чтобы не долбить
 // один источник повторно.
@@ -25,11 +28,9 @@ import (
 // локальная fb2-фаза уже отработала, года нет → пробуем внешние.
 type YearBackfiller struct {
 	pool     *pgxpool.Pool
-	ol       YearProvider // nil → источник недоступен
 	wd       YearProvider // nil → источник недоступен
 	logger   *slog.Logger
 	cfg      YearBackfillConfig
-	olGate   *rateGate
 	wdGate   *rateGate
 	resyncer YearResyncer // nil → без авто-ресинка Meili-года
 
@@ -44,10 +45,8 @@ type YearBackfiller struct {
 // settings.YearEnrichmentConfig; передаётся значениями, без зависимости
 // metadata→settings).
 type YearBackfillConfig struct {
-	OpenLibrary       bool
 	Wikidata          bool
 	WholeCollection   bool
-	OpenLibraryRPM    int
 	WikidataRPM       int
 	NotFoundRetryDays int
 	ErrorRetryHours   int
@@ -61,15 +60,14 @@ const (
 )
 
 // NewYearBackfiller строит воркер с per-source rate-gate'ами по cfg.
-func NewYearBackfiller(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfiller {
+func NewYearBackfiller(pool *pgxpool.Pool, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfiller {
 	if logger == nil {
 		logger = slog.Default()
 	}
 	b := &YearBackfiller{
-		pool: pool, ol: ol, wd: wd, cfg: cfg, resyncer: resyncer, logger: logger,
-		olGate: &rateGate{}, wdGate: &rateGate{},
+		pool: pool, wd: wd, cfg: cfg, resyncer: resyncer, logger: logger,
+		wdGate: &rateGate{},
 	}
-	b.olGate.setRPM(clampOLRPM(cfg.OpenLibraryRPM))
 	b.wdGate.setRPM(cfg.WikidataRPM)
 	return b
 }
@@ -77,7 +75,7 @@ func NewYearBackfiller(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfill
 // Run — долгоживущий цикл: дозаполнить все pending-книги, поспать, пересканить
 // (новые книги / истёкшие TTL). Блокирующий; вызывать в горутине.
 func (b *YearBackfiller) Run(ctx context.Context) {
-	if b.pool == nil || (b.ol == nil && b.wd == nil) {
+	if b.pool == nil || b.wd == nil {
 		return
 	}
 	b.logger.Info("year backfill: started", "workers", yearBackfillWorkers)
@@ -306,13 +304,9 @@ type yearSource struct {
 	gate     *rateGate
 }
 
-// sources — включённые внешние источники в порядке приоритета:
-// OpenLibrary (first_publish_year — год первого издания) → Wikidata (P577).
+// sources — включённые внешние источники: Wikidata (P577).
 func (b *YearBackfiller) sources() []yearSource {
 	var out []yearSource
-	if b.cfg.OpenLibrary && b.ol != nil {
-		out = append(out, yearSource{b.ol, b.olGate})
-	}
 	if b.cfg.Wikidata && b.wd != nil {
 		out = append(out, yearSource{b.wd, b.wdGate})
 	}
@@ -342,15 +336,6 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 	for _, src := range b.sources() {
 		name := src.provider.Name()
 		if !ttl.isDue(lookups[name], now) {
-			continue
-		}
-		// OpenLibrary по кириллическому названию (русский оригинал или перевод без
-		// названия оригинала в fb2) находит русские издания, и first_publish_year —
-		// год позднего переиздания, а не написания: прод 2026-10-11 — 36 из 51
-		// найденного («Айвенго» 2007, «Конёк-Горбунок» 2012, «Дао Дэ Цзин» 2024).
-		// Таким книгам год даёт Wikidata.
-		if name == openLibrarySource && hasCyrillic(q.Title) {
-			b.recordSkipped(ctx, bk.id, name)
 			continue
 		}
 		if name == wikidataSource && bk.wikidataShortcut(&q, ttl.notFound, now) {
@@ -487,14 +472,6 @@ func (b *YearBackfiller) recordReusedNotFound(ctx context.Context, bookID int64,
 	b.storeLookup(ctx, bookID, source, "not_found", 0)
 }
 
-// recordSkipped — источник не спрашивали: запрос заведомо не тот (OpenLibrary по
-// кириллице). В учёте — «не найдено», чтобы кандидат не всплывал каждый проход
-// (перепроверка — по сроку not_found); в метриках — skipped.
-func (b *YearBackfiller) recordSkipped(ctx context.Context, bookID int64, source string) {
-	metrics.EnrichmentLookups.WithLabelValues("year", source, "skipped").Inc()
-	b.storeLookup(ctx, bookID, source, "not_found", 0)
-}
-
 func (b *YearBackfiller) storeLookup(ctx context.Context, bookID int64, source, outcome string, year int) {
 	var yptr *int
 	if year > 0 {
@@ -573,7 +550,6 @@ type YearCoverage struct {
 
 type YearBackfillController struct {
 	pool     *pgxpool.Pool
-	ol       YearProvider
 	wd       YearProvider
 	resyncer YearResyncer
 	logger   *slog.Logger
@@ -584,15 +560,15 @@ type YearBackfillController struct {
 	onceCancel context.CancelFunc
 }
 
-func NewYearBackfillController(pool *pgxpool.Pool, ol, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfillController {
+func NewYearBackfillController(pool *pgxpool.Pool, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfillController {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &YearBackfillController{pool: pool, ol: ol, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
+	return &YearBackfillController{pool: pool, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
 }
 
 func (c *YearBackfillController) ready() bool {
-	return c.pool != nil && (c.ol != nil || c.wd != nil)
+	return c.pool != nil && c.wd != nil
 }
 
 // ResetFailedLookups удаляет неудачные попытки (not_found/error) из
@@ -630,7 +606,7 @@ func (c *YearBackfillController) Start() {
 	}
 	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
-	b := NewYearBackfiller(c.pool, c.ol, c.wd, c.cfg, c.resyncer, c.logger)
+	b := NewYearBackfiller(c.pool, c.wd, c.cfg, c.resyncer, c.logger)
 	spawn(func() { b.Run(ctx) })
 	c.logger.Info("year backfill: continuous job started")
 }
@@ -680,7 +656,7 @@ func (c *YearBackfillController) RunOnce() {
 	cfg := c.cfg
 	c.mu.Unlock()
 	spawn(func() {
-		b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
+		b := NewYearBackfiller(c.pool, c.wd, cfg, c.resyncer, c.logger)
 		n := b.drain(ctx)
 		cancel()
 		c.mu.Lock()
@@ -710,7 +686,7 @@ func (c *YearBackfillController) EnrichBooksNow(ctx context.Context, books []Laz
 	c.mu.Lock()
 	cfg := c.cfg
 	c.mu.Unlock()
-	b := NewYearBackfiller(c.pool, c.ol, c.wd, cfg, c.resyncer, c.logger)
+	b := NewYearBackfiller(c.pool, c.wd, cfg, c.resyncer, c.logger)
 	b.yearChanged.Store(0)
 	for _, bk := range books {
 		if ctx.Err() != nil {
