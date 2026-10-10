@@ -285,7 +285,7 @@ func seedYearBook(t *testing.T, ctx context.Context, pool *pgxpool.Pool, lib, ti
 	require.NoError(t, pool.QueryRow(ctx,
 		`INSERT INTO collections (name, inpx_filename) VALUES ($1, $1 || '.inpx') RETURNING id`, "c-"+lib).Scan(&collID))
 	require.NoError(t, pool.QueryRow(ctx,
-		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+		`INSERT INTO archives (collection_id, filename) VALUES ($1, $2 || '.zip') RETURNING id`, collID, lib).Scan(&archID))
 	var ed *int
 	if edition > 0 {
 		ed = &edition
