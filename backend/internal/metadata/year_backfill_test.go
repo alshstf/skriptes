@@ -121,6 +121,7 @@ func TestWikidata_FetchYear(t *testing.T) {
 // ── Worker integration (testcontainers PG + фейковый провайдер) ──
 
 type fakeYearProvider struct {
+	mu    sync.Mutex // воркер зовёт провайдер из нескольких горутин
 	name  string
 	year  int
 	err   error
@@ -129,6 +130,8 @@ type fakeYearProvider struct {
 
 func (f *fakeYearProvider) Name() string { return f.name }
 func (f *fakeYearProvider) FetchYear(context.Context, BookQuery) (int, error) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.calls++
 	return f.year, f.err
 }
