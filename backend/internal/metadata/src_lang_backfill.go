@@ -264,11 +264,12 @@ func (b *SrcLangBackfiller) processOne(ctx context.Context, bk yearCandidate, tt
 		return
 	}
 
-	taskCtx, cancel := context.WithTimeout(ctx, srcLangBackfillTaskTimeout)
-	if werr := b.wdGate.wait(taskCtx); werr != nil {
-		cancel()
+	// Очередь к источнику — вне таймаута запроса: при низком RPM ожидание
+	// съедало таймаут, и запрос падал «ошибкой источника» (1.40.1).
+	if werr := b.wdGate.wait(ctx); werr != nil {
 		return // воркер останавливают — выходим, ничего не помечая
 	}
+	taskCtx, cancel := context.WithTimeout(ctx, srcLangBackfillTaskTimeout)
 	b.lookedUp.Add(1)
 	code, ferr := b.wd.FetchSrcLang(taskCtx, q)
 	cancel()

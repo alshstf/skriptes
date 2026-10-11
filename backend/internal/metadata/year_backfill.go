@@ -56,8 +56,10 @@ const (
 	yearBackfillBatchSize      = 100
 	yearBackfillWorkers        = 2
 	yearBackfillRescanInterval = 30 * time.Minute
-	yearBackfillTaskTimeout    = 60 * time.Second
 )
+
+// yearBackfillTaskTimeout — таймаут одного запроса к источнику (переменная — для теста).
+var yearBackfillTaskTimeout = 60 * time.Second
 
 // NewYearBackfiller строит воркер с per-source rate-gate'ами по cfg.
 func NewYearBackfiller(pool *pgxpool.Pool, wd YearProvider, cfg YearBackfillConfig, resyncer YearResyncer, logger *slog.Logger) *YearBackfiller {
@@ -342,11 +344,12 @@ func (b *YearBackfiller) processOne(ctx context.Context, bk yearCandidate, ttl l
 			b.recordReusedNotFound(ctx, bk.id, name)
 			continue
 		}
-		taskCtx, cancel := context.WithTimeout(ctx, yearBackfillTaskTimeout)
-		if werr := src.gate.wait(taskCtx); werr != nil {
-			cancel()
+		// Очередь к источнику — вне таймаута запроса: при низком RPM ожидание
+		// съедало таймаут, и запрос падал «ошибкой источника» (1.40.1).
+		if werr := src.gate.wait(ctx); werr != nil {
 			return false // воркер останавливают — выходим, ничего не помечая
 		}
+		taskCtx, cancel := context.WithTimeout(ctx, yearBackfillTaskTimeout)
 		b.lookedUp.Add(1)
 		year, ferr := src.provider.FetchYear(taskCtx, q)
 		cancel()

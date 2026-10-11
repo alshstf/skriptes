@@ -408,3 +408,53 @@ func TestCleanExternalBookYears(t *testing.T) {
 		`SELECT count(*) FROM book_year_lookups WHERE book_id = ANY($1)`, []int64{olRu, wdAfterEdition}).Scan(&n))
 	require.Zero(t, n, "найденные попытки стёрты — книги снова кандидаты")
 }
+
+// slowGateProvider — фейк, проверяющий, что запрос пришёл с живым контекстом.
+type slowGateProvider struct {
+	mu      sync.Mutex
+	calls   int
+	expired int
+}
+
+func (f *slowGateProvider) Name() string { return "wikidata" }
+func (f *slowGateProvider) FetchYear(ctx context.Context, _ BookQuery) (int, error) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.calls++
+	if ctx.Err() != nil {
+		f.expired++
+	}
+	return 0, ErrNotFound
+}
+
+// TestYearBackfiller_GateWaitOutsideTaskTimeout — очередь к источнику (rate-gate)
+// не съедает таймаут запроса: при интервале очереди больше таймаута задачи все
+// книги спрашиваются и запросы приходят с живым контекстом (до 1.40.1 вторая
+// книга молча пропускалась или падала «ошибкой источника»).
+func TestYearBackfiller_GateWaitOutsideTaskTimeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	prev := yearBackfillTaskTimeout
+	yearBackfillTaskTimeout = 150 * time.Millisecond
+	t.Cleanup(func() { yearBackfillTaskTimeout = prev })
+
+	for _, lib := range []string{"g1", "g2", "g3"} {
+		seedYearBook(t, ctx, pool, lib, "T "+lib, "", 0, nil)
+	}
+	prov := &slowGateProvider{}
+	// 150 запросов/мин = интервал 400 мс — больше таймаута задачи (150 мс).
+	bf := NewYearBackfiller(pool, prov, YearBackfillConfig{Wikidata: true, WikidataRPM: 150,
+		NotFoundRetryDays: 90, ErrorRetryHours: 24}, nil, quiet)
+	require.Equal(t, 3, bf.drain(ctx))
+	require.Equal(t, 3, prov.calls, "все книги спрошены, несмотря на очередь")
+	require.Zero(t, prov.expired, "запрос не получает истёкший контекст")
+	var errs int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM book_year_lookups WHERE outcome = 'error'`).Scan(&errs))
+	require.Zero(t, errs)
+}
