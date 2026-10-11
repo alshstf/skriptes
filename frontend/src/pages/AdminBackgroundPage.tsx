@@ -1279,7 +1279,8 @@ export function AdminBackgroundPage() {
                     onChange={(v) => toggleCoverProvider('googlebooks', v)}
                   />
                   <p className="text-xs text-muted-foreground text-pretty">
-                    Хотя бы один источник; если выключить все — тип вернётся в «Лениво».
+                    Хотя бы один источник; если выключить все — тип вернётся в «Лениво». Google Books — в
+                    пределах общего дневного лимита (раздел «Внешний рейтинг»).
                   </p>
                 </div>
               ) : null}
@@ -1803,12 +1804,16 @@ export function AdminBackgroundPage() {
                         </div>
                         <div className="space-y-1.5">
                           <label htmlFor="rating-gb-cap" className="text-sm">
-                            Google Books, вызовов/сутки
+                            Google Books, запросов/сутки — общий лимит
                           </label>
                           <Input id="rating-gb-cap" type="number" min={0} value={gbCapR} onChange={(e) => setGbCapR(e.target.value)} />
                           <p className="text-xs text-muted-foreground text-pretty">
-                            Free-квота GB API — ~1000 запросов/сутки на проект. Сверх лимита воркер
-                            пропускает GB до завтра (OpenLibrary работает как обычно). 0 — без ограничения.
+                            Один на все запросы к Google Books — рейтинг, обложки, аннотации. Free-квота
+                            API — ~1000 в сутки на проект; сверх лимита Google Books до полуночи UTC не
+                            спрашивается, остальные источники работают. 0 — без ограничения.
+                            {rq.data?.googlebooks_used_today != null
+                              ? ` Сегодня: ${rq.data.googlebooks_used_today}.`
+                              : ''}
                           </p>
                         </div>
                       </div>

@@ -34,13 +34,18 @@ const (
 	breakerMaxBackoff  = 6 * time.Hour
 )
 
-// SourcePausedError несёт хост и время, до которого он на паузе.
+// SourcePausedError несёт хост и время, до которого он на паузе. Quota — пауза
+// не из-за сбоев, а из-за выбранной дневной квоты хоста (daily_quota.go).
 type SourcePausedError struct {
 	Host  string
 	Until time.Time
+	Quota bool
 }
 
 func (e *SourcePausedError) Error() string {
+	if e.Quota {
+		return fmt.Sprintf("%s daily quota exhausted until %s", e.Host, e.Until.UTC().Format(time.RFC3339))
+	}
 	return fmt.Sprintf("%s paused until %s after repeated failures", e.Host, e.Until.UTC().Format(time.RFC3339))
 }
 
@@ -157,6 +162,14 @@ func (t *breakerTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	ok, probe, until := t.b.allow(host)
 	if !ok {
 		return nil, &SourcePausedError{Host: host, Until: until}
+	}
+	// Дневная квота хоста (#501): общая для всех клиентов процесса. Выбрана —
+	// запрос не уходит; пробный запрос прерывателя не состоялся — снимаем флаг.
+	if q := HostDailyQuota(host); q != nil {
+		if allowed, qUntil := q.Take(r.Context()); !allowed {
+			t.b.record(host, probe, outcomeIgnored)
+			return nil, &SourcePausedError{Host: host, Until: qUntil, Quota: true}
+		}
 	}
 	resp, err := t.base.RoundTrip(r)
 	t.b.record(host, probe, classifyRoundTrip(r.Context(), resp, err))

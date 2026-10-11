@@ -40,76 +40,17 @@ type ExternalRatingBackfiller struct {
 
 	found    atomic.Int64 // сколько рейтингов добавлено за проход (для логов)
 	lookedUp atomic.Int64 // сколько запросов к источникам сделано за проход (для логов)
-
-	// Дневной кап вызовов Google Books: у free-tier GB API квота ~1000
-	// запросов/сутки на проект, сверх — 429 (наблюдали шторм 429 после
-	// исчерпания). gbUsed считает вызовы за UTC-сутки; на смене дня/после
-	// рестарта пересеивается из БД (каждый GB-вызов пишет lookup-строку —
-	// готовый счётчик, см. countGBCallsToday). Лимит 0/отриц = без капа.
-	gbMu   sync.Mutex
-	gbDay  string // текущие UTC-сутки "YYYY-MM-DD"
-	gbUsed int
 }
 
 // googleBooksSource — имя источника GB (RatingProvider.Name / source в lookups).
 const googleBooksSource = "googlebooks"
 
-// gbDailyCapAllows — можно ли сделать ещё один GB-вызов сегодня (учёт дневной
-// квоты). Инкрементит счётчик при разрешении; на смене UTC-суток/рестарте
-// пересеивает из БД. Лимит <= 0 — без ограничения.
-func (b *ExternalRatingBackfiller) gbDailyCapAllows(ctx context.Context) bool {
-	limit := b.cfg.GoogleBooksDailyCap
-	if limit <= 0 {
-		return true
-	}
-	b.gbMu.Lock()
-	defer b.gbMu.Unlock()
-	b.gbRollDayLocked(ctx)
-	if b.gbUsed >= limit {
-		return false
-	}
-	b.gbUsed++
-	return true
-}
-
-// gbDailyCapExhausted — дневная квота GB уже выбрана (счётчик не трогает).
-// Такой GB не считается «пора» при выборке кандидатов: иначе книги, которым
-// нужен только GB, перечитывались бы каждый проход впустую до смены суток.
-func (b *ExternalRatingBackfiller) gbDailyCapExhausted(ctx context.Context) bool {
-	limit := b.cfg.GoogleBooksDailyCap
-	if limit <= 0 {
-		return false
-	}
-	b.gbMu.Lock()
-	defer b.gbMu.Unlock()
-	b.gbRollDayLocked(ctx)
-	return b.gbUsed >= limit
-}
-
-// gbRollDayLocked — на смене UTC-суток (и при первом вызове после рестарта)
-// пересеять счётчик из БД. Под gbMu.
-func (b *ExternalRatingBackfiller) gbRollDayLocked(ctx context.Context) {
-	today := time.Now().UTC().Format("2006-01-02")
-	if today != b.gbDay {
-		b.gbDay = today
-		b.gbUsed = b.countGBCallsToday(ctx)
-	}
-}
-
-// countGBCallsToday — сколько GB-вызовов уже сделано за текущие UTC-сутки
-// (число lookup-строк GB с checked_at >= UTC-полночь). Пересеивает счётчик
-// при рестарте, чтобы кап не сбрасывался в пределах дня.
-func (b *ExternalRatingBackfiller) countGBCallsToday(ctx context.Context) int {
-	var n int
-	if err := b.pool.QueryRow(ctx, `
-		SELECT count(*) FROM book_external_rating_lookups
-		WHERE source = $1
-		  AND checked_at >= date_trunc('day', now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC'
-	`, googleBooksSource).Scan(&n); err != nil {
-		b.logger.Warn("gb daily cap: seed count failed — assume 0", "err", err)
-		return 0
-	}
-	return n
+// gbQuotaExhausted — общая дневная квота Google Books (#501, daily_quota.go) на
+// сегодня выбрана. Такой GB не считается «пора» при выборке кандидатов и не
+// вызывается — без записи в учёт: завтра книга снова станет кандидатом.
+func (b *ExternalRatingBackfiller) gbQuotaExhausted(ctx context.Context) bool {
+	q := HostDailyQuota(GoogleBooksHost)
+	return q != nil && q.Exhausted(ctx)
 }
 
 // ExternalRatingBackfillConfig — рантайм-параметры воркера (зеркало
@@ -119,7 +60,7 @@ type ExternalRatingBackfillConfig struct {
 	OpenLibrary         bool
 	WholeCollection     bool
 	GoogleBooksRPM      int
-	GoogleBooksDailyCap int // дневной кап вызовов GB (free-квота ~1000/сутки); 0 = без лимита
+	GoogleBooksDailyCap int // общая дневная квота Google Books на все запросы процесса (#501); 0 = без лимита
 	OpenLibraryRPM      int
 	NotFoundRetryDays   int
 	ErrorRetryHours     int
@@ -336,7 +277,7 @@ func (b *ExternalRatingBackfiller) dueSourceNames(ctx context.Context) []string 
 	var out []string
 	for _, src := range b.sources() {
 		name := src.provider.Name()
-		if name == googleBooksSource && b.gbDailyCapExhausted(ctx) {
+		if name == googleBooksSource && b.gbQuotaExhausted(ctx) {
 			continue
 		}
 		out = append(out, name)
@@ -375,10 +316,10 @@ func (b *ExternalRatingBackfiller) processOne(ctx context.Context, bk extRatingC
 		if !ttl.isDue(lookups[name], now) {
 			continue
 		}
-		// Дневной кап GB: квота исчерпана → пропускаем БЕЗ вызова и без записи
-		// (не пишем error, чтобы не плодить строки; завтра счётчик сбросится и
-		// книга снова станет due). OpenLibrary при этом обрабатывается как обычно.
-		if name == googleBooksSource && !b.gbDailyCapAllows(ctx) {
+		// Общая дневная квота GB выбрана → пропускаем БЕЗ вызова и без записи
+		// (завтра книга снова станет due). OpenLibrary обрабатывается как обычно.
+		// Сам запрос квоту берёт в транспорте источников (daily_quota.go).
+		if name == googleBooksSource && b.gbQuotaExhausted(ctx) {
 			continue
 		}
 		taskCtx, cancel := context.WithTimeout(ctx, extRatingTaskTimeout)
@@ -572,6 +513,10 @@ func (c *ExternalRatingBackfillController) SetEnabled(on bool) {
 // SetConfig применяет новые параметры. Если непрерывный воркер запущен —
 // перезапускает его, чтобы подхватить cfg.
 func (c *ExternalRatingBackfillController) SetConfig(cfg ExternalRatingBackfillConfig) {
+	// Лимит Google Books из настроек рейтинга — общая квота процесса (#501).
+	if q := HostDailyQuota(GoogleBooksHost); q != nil {
+		q.SetLimit(cfg.GoogleBooksDailyCap)
+	}
 	c.mu.Lock()
 	c.cfg = cfg
 	running := c.contCancel != nil

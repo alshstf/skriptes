@@ -498,11 +498,14 @@ export type ExternalRatingSettings = {
   // режим охвата: false = только пробелы (без любого рейтинга), true = вся коллекция
   whole_collection: boolean;
   googlebooks_rpm: number;
-  // дневной кап вызовов Google Books (free-квота ~1000/сутки); 0 = без лимита
+  // общий дневной лимит запросов к Google Books на весь процесс — рейтинг,
+  // обложки, аннотации (free-квота ~1000/сутки); 0 = без лимита
   googlebooks_daily_cap: number;
   openlibrary_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
+  // запросов к Google Books за текущие UTC-сутки, все пути (read-only)
+  googlebooks_used_today?: number;
   // статус воркера (read-only)
   external_rating_running: boolean;
   external_rating_mode: 'off' | 'continuous' | 'once';
