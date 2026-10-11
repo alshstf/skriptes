@@ -251,11 +251,12 @@ func (b *CoverBackfiller) processOne(ctx context.Context, bk coverCandidate) {
 		if !b.isDue(lookups[name], now) {
 			continue
 		}
-		taskCtx, cancel := context.WithTimeout(ctx, coverBackfillTaskTimeout)
-		if werr := src.gate.wait(taskCtx); werr != nil {
-			cancel()
+		// Очередь к источнику — вне таймаута запроса: при низком RPM ожидание
+		// съедало таймаут, и запрос падал «ошибкой источника» (1.40.1).
+		if werr := src.gate.wait(ctx); werr != nil {
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		taskCtx, cancel := context.WithTimeout(ctx, coverBackfillTaskTimeout)
 		b.lookedUp.Add(1)
 		found, ferr := b.enricher.FetchCoverFrom(taskCtx, src.provider, q)
 		cancel()

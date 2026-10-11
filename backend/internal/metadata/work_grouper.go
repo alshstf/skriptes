@@ -741,11 +741,12 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 			if !g.isDue(lookups[b.id][name], now) {
 				continue
 			}
-			taskCtx, cancel := context.WithTimeout(ctx, workGroupTaskTimeout)
-			if werr := g.gates[name].wait(taskCtx); werr != nil {
-				cancel()
+			// Очередь к источнику — вне таймаута запроса: при низком RPM ожидание
+			// съедало таймаут, и запрос падал «ошибкой источника» (1.40.1).
+			if werr := g.gates[name].wait(ctx); werr != nil {
 				return extByRoot // воркер останавливают
 			}
+			taskCtx, cancel := context.WithTimeout(ctx, workGroupTaskTimeout)
 			key, ferr := r.ResolveWorkKey(taskCtx, q)
 			cancel()
 			if ferr == nil && key != "" {

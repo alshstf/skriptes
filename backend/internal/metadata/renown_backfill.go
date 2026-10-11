@@ -373,11 +373,12 @@ func (b *RenownBackfiller) processOne(ctx context.Context, c renownCandidate) {
 			b.upsertLookup(ctx, c.id, name, outcomeSkipped)
 			continue
 		}
-		taskCtx, cancel := context.WithTimeout(ctx, renownTaskTimeout)
-		if werr := src.gate.wait(taskCtx); werr != nil {
-			cancel()
+		// Очередь к источнику — вне таймаута запроса: при низком RPM ожидание
+		// съедало таймаут, и запрос падал «ошибкой источника» (1.40.1).
+		if werr := src.gate.wait(ctx); werr != nil {
 			return // воркер останавливают — выходим, ничего не помечая
 		}
+		taskCtx, cancel := context.WithTimeout(ctx, renownTaskTimeout)
 		b.lookedUp.Add(1)
 		res, ferr := src.provider.FetchRenown(taskCtx, src.query)
 		cancel()
