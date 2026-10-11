@@ -176,21 +176,22 @@ func TestExternalRatingBackfiller_GBCapNotDue(t *testing.T) {
 		INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
 		VALUES ($1,$2,'L1','f','fb2','t','t') RETURNING id`, collID, archID).Scan(&bookID))
 
-	capped := func(b *ExternalRatingBackfiller) *ExternalRatingBackfiller {
-		b.gbDay = time.Now().UTC().Format("2006-01-02") // квота на сегодня уже выбрана
-		b.gbUsed = 1
-		return b
-	}
+	// Общая квота Google Books (#501) на сегодня выбрана: лимит 1, счётчик — 1.
+	q := NewDailyQuota(pool, GoogleBooksHost, 1, quiet)
+	SetHostDailyQuota(GoogleBooksHost, q)
+	t.Cleanup(func() { SetHostDailyQuota(GoogleBooksHost, nil) })
+	ok, _ := q.Take(ctx)
+	require.True(t, ok)
 	cfg := ExternalRatingBackfillConfig{GoogleBooks: true, GoogleBooksDailyCap: 1, NotFoundRetryDays: 90, ErrorRetryHours: 24}
 
 	gb := &fakeRatingProvider{name: googleBooksSource, res: RatingResult{Average: 4, Count: 10}}
-	onlyGB := capped(NewExternalRatingBackfiller(pool, gb, nil, cfg, quiet))
+	onlyGB := NewExternalRatingBackfiller(pool, gb, nil, cfg, quiet)
 	require.Equal(t, 0, onlyGB.drain(ctx), "спросить можно только GB, а квота выбрана → не кандидат")
 	require.Zero(t, gb.calls)
 
 	ol := &fakeRatingProvider{name: "openlibrary"} // not_found
 	cfg.OpenLibrary = true
-	withOL := capped(NewExternalRatingBackfiller(pool, gb, ol, cfg, quiet))
+	withOL := NewExternalRatingBackfiller(pool, gb, ol, cfg, quiet)
 	require.Equal(t, 1, withOL.drain(ctx), "OL спросить можно → кандидат")
 	require.Zero(t, gb.calls, "GB за квотой не вызывается")
 	require.Equal(t, 1, ol.calls)
@@ -198,61 +199,6 @@ func TestExternalRatingBackfiller_GBCapNotDue(t *testing.T) {
 
 	require.Equal(t, 0, withOL.drain(ctx), "OL свежий not_found, GB за квотой → больше не кандидат")
 	require.Equal(t, 1, ol.calls)
-}
-
-// TestGBDailyCap — чистая логика дневного капа (без БД, gbDay помечен сегодня,
-// чтобы не срабатывал DB-сид). limit<=0 — без ограничения; при limit=N
-// разрешает N вызовов, дальше блок.
-func TestGBDailyCap(t *testing.T) {
-	ctx := context.Background()
-	unlimited := &ExternalRatingBackfiller{cfg: ExternalRatingBackfillConfig{GoogleBooksDailyCap: 0}}
-	for i := 0; i < 5; i++ {
-		require.True(t, unlimited.gbDailyCapAllows(ctx), "limit=0 → без капа")
-	}
-	b := &ExternalRatingBackfiller{cfg: ExternalRatingBackfillConfig{GoogleBooksDailyCap: 3}}
-	b.gbDay = time.Now().UTC().Format("2006-01-02") // помечаем сегодня → сид пропускается
-	require.True(t, b.gbDailyCapAllows(ctx))
-	require.True(t, b.gbDailyCapAllows(ctx))
-	require.True(t, b.gbDailyCapAllows(ctx))
-	require.False(t, b.gbDailyCapAllows(ctx), "4-й вызов за дневным лимитом")
-	require.Equal(t, 3, b.gbUsed)
-}
-
-// TestGBDailyCap_SeedFromDB — кап переживает рестарт: счётчик пере-сеивается из
-// book_external_rating_lookups (GB-строки за сегодня). N строк + лимит N → блок.
-func TestGBDailyCap_SeedFromDB(t *testing.T) {
-	if testing.Short() {
-		t.Skip("integration: requires docker")
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
-	defer cancel()
-	pool := testpg.Pool(t, ctx)
-	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
-
-	var collID, archID int64
-	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
-	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
-	// 3 книги + GB-lookup «сегодня» на каждую.
-	for i := 0; i < 3; i++ {
-		var bid int64
-		require.NoError(t, pool.QueryRow(ctx, `
-			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title)
-			VALUES ($1,$2,$3,'f','fb2','t','t') RETURNING id`, collID, archID, "b"+string(rune('a'+i))).Scan(&bid))
-		_, err := pool.Exec(ctx, `INSERT INTO book_external_rating_lookups (book_id, source, outcome, checked_at)
-			VALUES ($1,'googlebooks','not_found', now())`, bid)
-		require.NoError(t, err)
-	}
-
-	// Лимит 3, счётчик пуст в памяти (gbDay="") → первый вызов сеет из БД (=3) →
-	// сразу за лимитом.
-	blocked := &ExternalRatingBackfiller{pool: pool, logger: quiet, cfg: ExternalRatingBackfillConfig{GoogleBooksDailyCap: 3}}
-	require.False(t, blocked.gbDailyCapAllows(ctx), "3 GB-вызова уже сегодня, лимит 3 → блок после сида")
-
-	// Лимит 5 → сид=3, ещё 2 можно.
-	ok := &ExternalRatingBackfiller{pool: pool, logger: quiet, cfg: ExternalRatingBackfillConfig{GoogleBooksDailyCap: 5}}
-	require.True(t, ok.gbDailyCapAllows(ctx))
-	require.True(t, ok.gbDailyCapAllows(ctx))
-	require.False(t, ok.gbDailyCapAllows(ctx), "3 (сид) + 2 = 5 → блок")
 }
 
 // Сужение и сроки по #294: русская книга без ISBN и названия оригинала — не

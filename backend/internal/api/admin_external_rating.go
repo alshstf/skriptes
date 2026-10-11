@@ -16,6 +16,9 @@ type externalRatingResponse struct {
 	settings.ExternalRatingConfig
 	metadata.ExternalRatingBackfillStatus
 	Coverage metadata.ExternalRatingCoverage `json:"coverage"`
+	// GoogleBooksUsedToday — запросов к Books API за текущие UTC-сутки по всему
+	// процессу (общая квота #501: рейтинг, обложки, аннотации, ленивые).
+	GoogleBooksUsedToday int `json:"googlebooks_used_today"`
 }
 
 func toExternalRatingBackfillConfig(c settings.ExternalRatingConfig) metadata.ExternalRatingBackfillConfig {
@@ -35,6 +38,9 @@ func externalRatingState(ctx context.Context, d SettingsDeps, cfg settings.Exter
 	// BySource — непустая карта: на ошибке Coverage() JSON не должен отдать
 	// by_source: null (фронт делает Object.keys и падал бы).
 	resp := externalRatingResponse{ExternalRatingConfig: cfg, Coverage: metadata.ExternalRatingCoverage{BySource: map[string]int{}}}
+	if q := metadata.HostDailyQuota(metadata.GoogleBooksHost); q != nil {
+		resp.GoogleBooksUsedToday = q.Used(ctx)
+	}
 	if d.ExternalRating != nil {
 		resp.ExternalRatingBackfillStatus = d.ExternalRating.Status()
 		if cov, err := d.ExternalRating.Coverage(ctx); err == nil {

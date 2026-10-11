@@ -307,6 +307,17 @@ func run() error {
 	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
 	// (бюджет LRU + пол свободного места) на старте.
 	settingsStore := settings.New(pool)
+	// Общая дневная квота Google Books (#501, metadata/daily_quota.go): лимит —
+	// поле «лимит в сутки» настроек внешнего рейтинга, действует на все запросы
+	// процесса к Books API (рейтинг, обложки, аннотации, ленивые с карточки).
+	// Ставится до старта воркеров и HTTP-сервера.
+	extRatingCfg, err := settingsStore.ExternalRating(ctx())
+	if err != nil {
+		logger.Warn("read external rating settings — using defaults", "err", err)
+		extRatingCfg = settings.DefaultExternalRatingConfig()
+	}
+	metadata.SetHostDailyQuota(metadata.GoogleBooksHost,
+		metadata.NewDailyQuota(pool, metadata.GoogleBooksHost, extRatingCfg.GoogleBooksDailyCap, logger))
 	coverCfg, err := settingsStore.Cover(ctx())
 	if err != nil {
 		logger.Warn("read cover settings — using defaults", "err", err)
@@ -418,11 +429,6 @@ func run() error {
 	// Books / OpenLibrary для книг без рейтинга. Зеркало cover-воркера: opt-in,
 	// per-source rate-limit + учёт (book_external_rating_lookups); пишет рейтинг
 	// прямо в books (кэша нет).
-	extRatingCfg, err := settingsStore.ExternalRating(ctx())
-	if err != nil {
-		logger.Warn("read external rating settings — using defaults", "err", err)
-		extRatingCfg = settings.DefaultExternalRatingConfig()
-	}
 	externalRatingCtl := metadata.NewExternalRatingBackfillController(pool, gbProvider, olProvider, metadata.ExternalRatingBackfillConfig{
 		GoogleBooks:         extRatingCfg.GoogleBooks,
 		OpenLibrary:         extRatingCfg.OpenLibrary,
