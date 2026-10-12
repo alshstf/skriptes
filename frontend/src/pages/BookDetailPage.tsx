@@ -8,6 +8,7 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AdaptationsSection } from '@/components/AdaptationsSection';
+import { AuthorLifeContext } from '@/components/AuthorLifeContext';
 import { WorkAwards } from '@/components/AwardBadges';
 import { ContentsSection, InCompilationsSection } from '@/components/CompilationContents';
 import { MyNotes } from '@/components/MyNotes';
@@ -176,7 +177,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
 
               <GenresEditor
                 workId={book.work_id ?? 0}
-                genres={book.genres}
+                genres={book.genres ?? []}
                 overridden={workOverridden.includes('genres')}
               />
               <WorkAwards workId={book.work_id ?? undefined} />
@@ -240,6 +241,14 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
             для большинства книг экранизаций просто нет, навязывать
             "Экранизаций не найдено" — лишний шум.
           */}
+          {/* «В жизни автора в это время» — окно вех вокруг периода написания
+              (план bio-timeline-v3); не рендерится, когда показать нечего. */}
+          {!book.deleted ? (
+            <div className="@container">
+              <AuthorLifeContext workId={book.work_id ?? undefined} />
+            </div>
+          ) : null}
+
           {!book.deleted ? <AdaptationsSection bookId={book.id} /> : null}
 
           {/* Админ: присоединить другую книгу (дубль вне общей серии/автора).

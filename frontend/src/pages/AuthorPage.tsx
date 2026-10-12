@@ -14,6 +14,7 @@ import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { YearHistogram } from '@/components/YearHistogram';
+import { BioTimelineTeaser } from '@/components/BioTimelineTeaser';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { useAuthor, type Author, type SeriesWithCount } from '@/lib/catalog';
 import { useSetAuthorService } from '@/lib/admin';
@@ -141,6 +142,9 @@ export function AuthorPage() {
           <AuthorBio bio={a.bio} enrichmentExhausted={enrichmentExhausted} />
         </CardContent>
       </Card>
+
+      {/* Био-таймлайн (тизер): только если у автора есть таймлайн в датасете. */}
+      <BioTimelineTeaser authorId={a.id} />
 
       <AuthorStats author={a} />
 

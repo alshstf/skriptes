@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdminTabs } from '@/components/AdminTabs';
+import { BioTimelineStats } from '@/components/BioTimelineStats';
 import { SaveBar } from '@/components/SaveBar';
 import { cn } from '@/lib/utils';
 import { formatBytes } from '@/lib/format';
@@ -2124,6 +2125,7 @@ export function AdminBackgroundPage() {
           </section>
 
           {dirty ? <SaveBar saving={saving} onSave={onSave} onReset={onReset} canSave={!saveInvalid} /> : null}
+          <BioTimelineStats />
         </>
       )}
     </article>

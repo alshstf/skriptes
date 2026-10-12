@@ -154,7 +154,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | CSP фронта | `frontend/nginx-security-headers.conf` (inline-скрипты запрещены; e2e под CSP) |
 | Docker compose, Caddy, публичный деплой | `infra/docker-compose*.yml`, `infra/Caddyfile`, `infra/Caddyfile.public`, `infra/.env.public.example` |
 | Метрики | `backend/internal/metrics` (отдельный сервер `SKRIPTES_METRICS_ADDR`) |
-| Био-таймлайн автора (датасет, генератор) | `internal/bio/` (данные `data/authors/<QID>.json`), `cmd/biogen` |
+| Био-таймлайн автора (датасет, генератор, runtime, UI) | `internal/bio/` (данные `data/authors/<QID>.json`, runtime `bio/timeline`), `cmd/biogen`, `api/bio.go`; фронт — `lib/bioTimeline.ts`, `components/BioTimeline*.tsx`, `AuthorLifeContext.tsx`, `pages/AuthorTimelinePage.tsx` |
 | Postgres в тестах | `backend/internal/testpg` (своих `postgres.Run` не заводить) |
 | Релиз (CI) | `.github/workflows/release.yml` |
 

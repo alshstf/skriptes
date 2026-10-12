@@ -14,6 +14,7 @@ import { BooksPage } from '@/pages/BooksPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
 import { AuthorsPage } from '@/pages/AuthorsPage';
 import { AuthorPage } from '@/pages/AuthorPage';
+import { AuthorTimelinePage } from '@/pages/AuthorTimelinePage';
 import { SeriesPage } from '@/pages/SeriesPage';
 import { GenresPage } from '@/pages/GenresPage';
 import { AwardPage, AwardsPage } from '@/pages/AwardsPage';
@@ -245,6 +246,13 @@ const authorRoute = createRoute({
   component: AuthorPage,
 });
 
+// Полный био-таймлайн автора «жизнь и книги» (план bio-timeline-v3); тизер — на карточке.
+const authorTimelineRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: '/authors/$id/timeline',
+  component: AuthorTimelinePage,
+});
+
 const seriesRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: '/series/$id',
@@ -374,6 +382,7 @@ const routeTree = rootRoute.addChildren([
     workDetailRoute,
     authorsListRoute,
     authorRoute,
+    authorTimelineRoute,
     seriesRoute,
     genresRoute,
     awardsRoute,
