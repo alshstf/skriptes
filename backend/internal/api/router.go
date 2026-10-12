@@ -33,6 +33,8 @@ type Deps struct {
 	Settings    SettingsDeps
 	Content     ContentDeps
 	Awards      AwardsDeps
+	// Bio — био-таймлайн автора; Service == nil → ручки не монтируются.
+	Bio BioDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -152,6 +154,10 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/awards/{key}/logo", handleAwardLogo(d.Awards))
 					r.Get("/works/{id}/awards", handleWorkAwards(d.Awards))
 					r.Get("/authors/{id}/awards", handleAuthorAwards(d.Awards))
+				}
+				if d.Bio.Service != nil {
+					r.Get("/authors/{id}/bio-timeline", handleAuthorBioTimeline(d.Bio))
+					r.Get("/works/{id}/life-context", handleWorkLifeContext(d.Bio))
 				}
 				if d.Adaptations.Service != nil {
 					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))
@@ -278,6 +284,10 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/admin/authors/duplicates", handleDuplicatePairs(d.Catalog))
 					r.Get("/admin/authors/{id}/duplicates", handleAuthorDuplicates(d.Catalog))
 					r.Post("/admin/authors/{id}/merge", handleMergeAuthors(d.Settings, d.Catalog))
+				}
+				if d.Bio.Service != nil {
+					r.Patch("/admin/bio-timeline/{qid}/events/{key}", handleSetBioEventHidden(d.Bio))
+					r.Get("/admin/bio-timeline/stats", handleBioTimelineStats(d.Bio))
 				}
 				r.Get("/admin/users", handleListUsers(d.Auth))
 				r.Post("/admin/users", handleCreateUser(d.Auth))

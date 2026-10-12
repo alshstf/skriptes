@@ -22,6 +22,8 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/awards"
+	"github.com/skriptes/skriptes/backend/internal/bio"
+	"github.com/skriptes/skriptes/backend/internal/bio/timeline"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/collections"
@@ -72,6 +74,14 @@ func run() error {
 	}
 
 	logger := newLogger(cfg.LogLevel, cfg.LogFormat)
+
+	// Встроенный датасет био-таймлайна: битый файл — не стартуем (до открытия
+	// пула, чтобы os.Exit не обходил defer pool.Close()).
+	bioDataset, err := bio.Load()
+	if err != nil {
+		logger.Error("bio: dataset invalid", "err", err)
+		os.Exit(1)
+	}
 	slog.SetDefault(logger)
 
 	dbCtx, dbCancel := context.WithTimeout(context.Background(), cfg.DatabaseTimeout)
@@ -634,6 +644,15 @@ func run() error {
 
 	// Лимит скачиваний на пользователя — общий для веба и OPDS (#389, B1).
 	downloadLimiter := dlimit.NewDefault()
+	// Био-таймлайн (план v3): датасет проверен выше (до пула), сев в фоне при
+	// смене версии; ручки читают то, что уже посеяно.
+	bioTimeline := timeline.New(pool, bioDataset, logger)
+	metadata.Go(func(ctx context.Context) {
+		if err := bioTimeline.Seed(ctx); err != nil {
+			logger.Warn("bio: seed failed", "err", err)
+		}
+	})
+
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
@@ -676,6 +695,7 @@ func run() error {
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
 		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
+		Bio:     api.BioDeps{Service: bioTimeline},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
