@@ -33,7 +33,8 @@ type CLIExtractor struct {
 	// Model, Effort — пробрасываются как --model/--effort; пусто — умолчания CLI.
 	Model  string
 	Effort string
-	// Timeout одного вызова; 0 — 15 минут.
+	// Timeout одного вызова; 0 — 40 минут (плодовитые авторы с длинной en-статьёй
+	// и десятками работ выходят за 15).
 	Timeout time.Duration
 	// Dir — куда класть файл системного промпта; пусто — временная папка.
 	Dir string
@@ -58,7 +59,7 @@ func (x *CLIExtractor) Extract(ctx context.Context, src *Sources, prev *bio.Auth
 	}
 	timeout := x.Timeout
 	if timeout == 0 {
-		timeout = 15 * time.Minute
+		timeout = 40 * time.Minute
 	}
 	user, err := userPrompt(src, prev)
 	if err != nil {
