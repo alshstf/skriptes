@@ -46,7 +46,9 @@ func run() int {
 		usage()
 		return 2
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	// Без общего таймаута: пачка из десятков авторов идёт часами; лимит — на
+	// один вызов модели (CLIExtractor.Timeout / таймаут SDK-клиента).
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	var err error
 	switch os.Args[1] {

@@ -31,3 +31,19 @@ func TestEval(t *testing.T) {
 		t.Fatalf("report:\n%s", rep)
 	}
 }
+
+// Две вехи одного типа в один год (смерть жены и брата, 1864) — две пары, не одна.
+func TestEvalConsumesCandidates(t *testing.T) {
+	golden := author(
+		ev("loss-1864", "1864-04-27", bio.EventLoss, "Смерть жены", ""),
+		ev("loss-1864-2", "1864-07-22", bio.EventLoss, "Смерть брата", ""),
+	)
+	generated := author(
+		ev("loss-1864", "1864-04", bio.EventLoss, "Смерть жены", ""),
+		ev("loss-1864-2", "1864-07", bio.EventLoss, "Смерть брата", ""),
+	)
+	r := Eval(golden, generated)
+	if r.HitMajor != 2 || len(r.ExtraMajor) != 0 {
+		t.Fatalf("%+v", r)
+	}
+}

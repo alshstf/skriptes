@@ -47,17 +47,17 @@ func Eval(golden, generated *bio.Author) EvalResult {
 		}
 		r.GoldenMajor++
 		y := bio.YearOf(g.Date.From)
-		if cands := gen[k{g.Type, y}]; len(cands) > 0 {
+		if c := take(gen, k{g.Type, y}); c != nil {
 			r.HitMajor++
-			matchedGen[cands[0].Key] = true
+			matchedGen[c.Key] = true
 			continue
 		}
 		near := ""
 		for d := 1; d <= 3 && near == ""; d++ {
 			for _, dy := range []int{y - d, y + d} {
-				if cands := gen[k{g.Type, dy}]; len(cands) > 0 {
-					near = fmt.Sprintf("%s: золото %d, генерация %d (%s)", g.Short, y, dy, cands[0].Short)
-					matchedGen[cands[0].Key] = true
+				if c := take(gen, k{g.Type, dy}); c != nil {
+					near = fmt.Sprintf("%s: золото %d, генерация %d (%s)", g.Short, y, dy, c.Short)
+					matchedGen[c.Key] = true
 					break
 				}
 			}
@@ -76,6 +76,18 @@ func Eval(golden, generated *bio.Author) EvalResult {
 	sort.Strings(r.MissedMajor)
 	sort.Strings(r.ExtraMajor)
 	return r
+}
+
+// take — первый ещё не использованный кандидат по ключу; каждая сгенерированная
+// веха закрывает не больше одной золотой (две утраты в один год — две пары).
+func take[K comparable](m map[K][]bio.Event, key K) *bio.Event {
+	cands := m[key]
+	if len(cands) == 0 {
+		return nil
+	}
+	c := cands[0]
+	m[key] = cands[1:]
+	return &c
 }
 
 // Report — текстовый отчёт по нескольким авторам.
