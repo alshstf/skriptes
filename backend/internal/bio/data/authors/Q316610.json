@@ -1,0 +1,415 @@
+{
+  "qid": "Q316610",
+  "name": "Ларри Нивен",
+  "born": "1938-04-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%B8%D0%B2%D0%B5%D0%BD%2C_%D0%9B%D0%B0%D1%80%D1%80%D0%B8",
+      "rev": 154855584
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Larry_Niven",
+      "rev": 1376218839
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Калифорния и Канзас",
+      "from": 1938,
+      "to": 1963
+    },
+    {
+      "key": "debut",
+      "title": "Дебют и первые «Хьюго»",
+      "from": 1964,
+      "to": 1969
+    },
+    {
+      "key": "ringworld",
+      "title": "Кольцо, Пурнель, премии",
+      "from": 1970,
+      "to": 1979
+    },
+    {
+      "key": "shared",
+      "title": "Общая вселенная",
+      "from": 1980,
+      "to": 1999
+    },
+    {
+      "key": "master",
+      "title": "Гроссмейстер",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1938",
+      "date": {
+        "from": "1938-04-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лос-Анджелесе",
+      "long": "Лоренс ван Котт Нивен родился 30 апреля 1938 года в Лос-Анджелесе, штат Калифорния; правнук нефтяного магната Эдварда Л. Дохени.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лоренс ван Котт (Ларри) Нивен (англ. Laurence van Cott Niven; родился 30 апреля 1938 года) — американский писатель-фантаст."
+      }
+    },
+    {
+      "key": "education-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом бакалавра математики в Университете Уошберна",
+      "long": "После недолгой учёбы в Калтехе окончил в 1962 году Университет Уошберна в Топеке (Канзас) со степенью бакалавра математики и дополнительной специализацией по психологии; позже год аспирантуры по математике в Калифорнийском университете в Лос-Анджелесе.",
+      "place": {
+        "label": "Топека"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1962 году окончил Университет Уошберн, Топека, в Канзасе, со степенью бакалавра математических наук (с изучением психологии)"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в фантастике рассказом о тёмной стороне Меркурия",
+      "long": "Первый опубликованный рассказ «Самое холодное место» (1964) описывал тёмную сторону Меркурия, считавшегося тогда обращённым к Солнцу одной стороной; ошибочность этого выяснилась после оплаты рассказа, но до его публикации.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Нивен — автор многих научно-фантастических романов и коротких рассказов, начиная с рассказа 1964 года «Самое холодное место»"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая премия «Хьюго» за короткий рассказ",
+      "long": "В 1967 году рассказ «Нейтронная звезда» принёс Нивену первую премию «Хьюго» в номинации «Лучший короткий рассказ».",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году Нивен получил премию «Хьюго» в номинации «Лучший короткий рассказ» — «Нейтронная звезда»."
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подпись под обращением в поддержку войны во Вьетнаме",
+      "long": "По свидетельству Майкла Муркока, в 1967 году Нивен, убеждённый консерватор, высказывался против войны во Вьетнаме; в 1968 году он подписал в журнале Galaxy Science Fiction обращение в поддержку продолжения участия США в войне.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1968 Niven signed an advertisement in Galaxy Science Fiction in support for continued US involvement in the Vietnam War"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание критикой ведущим автором вопреки «Новой волне»",
+      "long": "В 1968 году критик Алгис Будрис назвал выход Нивена в число ведущих писателей вопреки господству «Новой волны» доказательством того, что «тренды — для второсортных».",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Algis Budrys said in 1968 that Niven becoming a top writer despite the New Wave was evidence that \"trends are for second-raters\""
+      }
+    },
+    {
+      "key": "love-1969",
+      "date": {
+        "from": "1969-09-06",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мэрилин Висоуэти",
+      "long": "6 сентября 1969 года Нивен женился на Мэрилин Висоуэти, поклоннице научной фантастики и литературы эпохи Регентства.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 6, 1969, he married Marilyn Wisowaty, a science fiction and Regency literature fan."
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Триумф романа: «Хьюго», «Небьюла», «Локус» и «Дитмар»",
+      "long": "Роман «Мир-Кольцо» (1970) получил премию «Небьюла» за 1970 год, а в 1971 году — «Хьюго» и «Локус», а также австралийскую премию «Дитмар»; роман закрепил за Нивеном репутацию ведущего автора «твёрдой» фантастики.",
+      "works": [
+        {
+          "ref": "ringworld",
+          "note": "роман удостоен премий «Небьюла» (1970), «Хьюго» и «Локус» (1971)"
+        }
+      ],
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In addition to the Nebula Award in 1970 and the Hugo and Locus awards in 1971 for Ringworld"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия «Хьюго» за короткий рассказ",
+      "long": "В 1972 году премию «Хьюго» за лучший короткий рассказ получила «Непостоянная Луна»; позже Нивен адаптировал этот рассказ для эпизода телесериала «За гранью возможного».",
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ту же награду он получал в 1972 году («Непостоянная Луна») и 1975 году («Человек — чёрная дыра»)."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало соавторства с Джерри Пурнелем",
+      "long": "В 1974 году вышел первый совместный роман Нивена и Джерри Пурнеля «Мошка в зенице Господней»; вместе они написали девять романов, и с 1970-х значительная часть книг Нивена создавалась в соавторстве.",
+      "works": [
+        {
+          "ref": "mote",
+          "note": "первый совместный роман с Пурнелем"
+        }
+      ],
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With Jerry Pournelle he wrote The Mote in God's Eye (1974) and Lucifer's Hammer (1977)."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Третья премия «Хьюго» за короткий рассказ",
+      "long": "В 1975 году премию «Хьюго» за лучший короткий рассказ получил «Человек — чёрная дыра».",
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ту же награду он получал в 1972 году («Непостоянная Луна») и 1975 году («Человек — чёрная дыра»)."
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Хьюго» за лучшую повесть",
+      "long": "В 1976 году повесть «Приграничная полоса Солнца» принесла Нивену премию «Хьюго» за лучшую короткую повесть — пятую «Хьюго» в его карьере.",
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году он получил премию «Хьюго» за Лучшую Повесть — «Приграничная полоса Солнца»."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Японская премия «Сэйун» и премия «Инкпот»",
+      "long": "В 1979 году Нивен получил японскую премию «Сэйун» за лучший переводной роман и премию «Инкпот».",
+      "chapter": "ringworld",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Сэйун» за лучший роман на иностранном языке 1979-01-01"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший сборник",
+      "long": "В 1980 году Нивен получил премию журнала «Локус» за лучший авторский сборник.",
+      "chapter": "shared",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Локус» за лучший сборник 1980-01-01"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший научно-фантастический роман",
+      "long": "В 1985 году Нивен получил премию «Локус» за лучший научно-фантастический роман.",
+      "chapter": "shared",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Локус» за лучший научно-фантастический роман 1985-01-01"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Открытие своей вселенной для других авторов",
+      "long": "С антологии «Войны Людей и Кзинов» (1988, издательство Baen Books, редакторы Нивен, Джерри Пурнель и Дин Инг) Нивен открыл мир «Известного космоса» другим писателям; серия продолжилась многими томами по его авторским указаниям.",
+      "works": [
+        {
+          "ref": "mankzin",
+          "note": "антология открыла серию, составленную другими авторами по указаниям Нивена"
+        }
+      ],
+      "chapter": "shared",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Niven has shared the setting with other writers since a 1988 anthology, The Man-Kzin Wars (Baen Books, jointly edited with Jerry Pournelle and Dean Ing)"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший рассказ",
+      "long": "В 2001 году Нивен получил премию «Локус» за лучший рассказ.",
+      "chapter": "master",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Локус» за лучший рассказ 2001-01-01"
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Консультант Министерства внутренней безопасности США",
+      "long": "С 2007 года в составе группы писателей-фантастов SIGMA (основатель Арлан Эндрюс) Нивен консультировал Министерство внутренней безопасности США о будущих тенденциях, влияющих на антитеррористическую политику; среди его предложений — распространение слухов о незаконном изъятии органов в больницах для…",
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Niven, in conjunction with a think tank of science fiction writers known as SIGMA, founded and led by Arlan Andrews, began advising the U.S. Department of Homeland Security"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание «Гроссмейстер фантастики»",
+      "long": "В 2015 году Ассоциация писателей-фантастов Америки (SFWA) присудила Нивену Мемориальную премию имени Деймона Найта «Гроссмейстер фантастики» за вклад в жанр.",
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Science Fiction and Fantasy Writers of America gave him the 2015 Damon Knight Memorial Grand Master Award."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ringworld",
+      "title": "Мир-Кольцо",
+      "qid": "Q1505793",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "mote",
+      "title": "Мошка в зенице Господней",
+      "qid": "Q1190888",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "hammer",
+      "title": "Молот Люцифера",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "mankzin",
+      "title": "Войны Людей и Кзинов (антология)",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    }
+  ]
+}

@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.41.1**.
+конвертируются на лету через fb2cng. Текущая версия — **1.42.0**.
 
 ## Рабочее окружение
 
@@ -122,7 +122,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     номинацию — только после его проверки (`~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
 25. **Био-таймлайн — курируемый датасет по QID** (`internal/bio/data`), runtime без LLM и внешних вызовов. `short` ≤ 60
     без года и названий работ, ключ вехи `type-yyyy` (по нему живёт «скрыть»), даты ISO нового стиля, у вехи
-    `evidence`-цитата. Генератор — `cmd/biogen`: `extract` по умолчанию через `claude -p` (подписка), `-engine api` — опция. План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
+    `evidence`-цитата. Генератор — `cmd/biogen`: `extract` по умолчанию через `claude -p` (подписка), `-engine api` — опция;
+    `verify` правит механические огрехи модели с флагом, факты — только отбраковка. Покрытие — 53 автора (золотые 8 +
+    этап B 45). План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 

@@ -1,0 +1,1086 @@
+{
+  "qid": "Q181677",
+  "name": "Джордж Р. Р. Мартин",
+  "born": "1948-09-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D1%82%D0%B8%D0%BD%2C_%D0%94%D0%B6%D0%BE%D1%80%D0%B4%D0%B6_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154425172
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/George_R._R._Martin",
+      "rev": 1379044069
+    }
+  ],
+  "chapters": [
+    {
+      "key": "k1",
+      "title": "Бейонн, комиксы и фэнзины",
+      "from": 1948,
+      "to": 1969
+    },
+    {
+      "key": "k2",
+      "title": "Журналистика, служба, первые рассказы",
+      "from": 1970,
+      "to": 1975
+    },
+    {
+      "key": "k3",
+      "title": "Дубьюк и Санта-Фе: профессионал",
+      "from": 1976,
+      "to": 1982
+    },
+    {
+      "key": "k4",
+      "title": "Провал, «потерянный год», Голливуд",
+      "from": 1983,
+      "to": 1990
+    },
+    {
+      "key": "k5",
+      "title": "Возвращение к романам, Вестерос",
+      "from": 1991,
+      "to": 2006
+    },
+    {
+      "key": "k6",
+      "title": "HBO и мировая слава",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-09-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье портового грузчика",
+      "long": "Родился в Бейонне (Нью-Джерси) в семье грузчика Реймонда Коллинза Мартина и Маргарет Брэди Мартин; семья матери разорилась в Великую депрессию. Две младшие сестры — Дарлин и Джанет.",
+      "place": {
+        "label": "Бейонн"
+      },
+      "chapter": "k1",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джордж Мартин родился 20 сентября 1948 года в Бейонне (штат Нью-Джерси, США), в семье портового грузчика Реймонда Колинза Мартина и Маргарет Брэди Мартин."
+      }
+    },
+    {
+      "key": "relocation-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в муниципальный квартал у доков",
+      "long": "Семья переехала из дома прабабушки на Бродвее в федеральный жилой проект у доков Бейонна; мир детства ограничивался «от Первой до Пятой улицы», что породило страсть к чтению.",
+      "place": {
+        "label": "Бейонн"
+      },
+      "chapter": "k1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953, they moved to a federal housing project near the Bayonne docks."
+      }
+    },
+    {
+      "key": "other-1963",
+      "date": {
+        "from": "1963-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое письмо в редакцию Marvel, вход в фэндом",
+      "long": "Письмо Мартина в редакцию Fantastic Four напечатано в выпуске №20; через переписку с читателями он вошёл в зарождавшийся комикс-фэндом и начал писать прозу для фэнзинов.",
+      "chapter": "k1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A letter Martin wrote to the editor of Fantastic Four was printed in issue #20 (November 1963)"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Alley за лучшую фанатскую прозу",
+      "long": "За супергеройский рассказ «Powerman vs. The Blue Barrier» получил фэндомскую премию Alley Award за лучшую фан-прозу.",
+      "chapter": "k1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1965, Martin won comic fandom's Alley Award for Best Fan Fiction for his prose superhero story \"Powerman vs. The Blue Barrier\"."
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "to": "1971",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Бакалавр и магистр журналистики в Северо-Западном",
+      "long": "В школе журналистики Медилла Северо-Западного университета (Эванстон, Иллинойс) получил степень бакалавра с отличием summa cum laude (1970) и магистра (1971).",
+      "place": {
+        "label": "Эванстон"
+      },
+      "chapter": "k2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Северо-Западном университете в Эванстоне (Иллинойс) получил степени бакалавра (1970) и магистра (1971) по журналистике."
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая профессиональная продажа рассказа",
+      "long": "Рассказ «Герой» продан журналу Galaxy в 1970 году, в 21 год, и опубликован в февральском номере 1971-го; вскоре последовали новые продажи.",
+      "works": [
+        {
+          "ref": "sfl",
+          "note": "рассказ вошёл в первый авторский сборник"
+        }
+      ],
+      "chapter": "k2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first sale was \"The Hero\", sold to Galaxy magazine and published in its February 1971 issue"
+      }
+    },
+    {
+      "key": "war-1972",
+      "date": {
+        "from": "1972",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Альтернативная служба как отказник по убеждениям",
+      "long": "Подлежа призыву во время Вьетнамской войны, которую считал ошибкой, получил статус отказника по убеждениям и два года работал волонтёром VISTA при Фонде юридической помощи округа Кук.",
+      "chapter": "k2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972—1974 годах проходил по принципиальным соображениям альтернативную гражданскую службу в рамках программы AmeriCorps VISTA при Фонде юридической помощи округа Кук."
+      }
+    },
+    {
+      "key": "love-1973",
+      "date": {
+        "from": "1973",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с писательницей Лизой Татл",
+      "long": "Отношения с коллегой по жанру Лизой Татл; в соавторстве с ней написана повесть «Шторм в Гавани Ветров» (1975), позже переработанная в роман.",
+      "works": [
+        {
+          "ref": "wind",
+          "note": "повесть-основа романа написана в соавторстве с Татл"
+        }
+      ],
+      "chapter": "k2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973—1974 годах Мартин встречался с писательницей Лизой Татл, в соавторстве с которой написал повесть «Шторм в Гавани Ветров» (1975)"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "to": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Директор шахматных турниров ради заработка",
+      "long": "На волне шахматного бума после победы Фишера работал директором турниров Континентальной шахматной ассоциации по выходным, что оставляло пять дней в неделю на прозу.",
+      "chapter": "k2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973—1976 годах занимался проведением шахматных турниров для Континентальной шахматной ассоциации."
+      }
+    },
+    {
+      "key": "career-1973-2",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая номинация на «Хьюго» и «Небьюлу»",
+      "long": "Рассказ «С утра приходит туман», опубликованный в журнале Analog, стал первым произведением Мартина, номинированным на премии «Хьюго» и «Небьюла».",
+      "works": [
+        {
+          "ref": "sfl",
+          "note": "рассказ вошёл в сборник"
+        }
+      ],
+      "chapter": "k2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first story to be nominated for the Hugo Award and Nebula Awards was \"With Morning Comes Mistfall\", published in 1973 in Analog magazine."
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Гейл Берник",
+      "long": "С первой женой познакомился на конвенте фантастики на Восточном побережье; поженились в 1975 году (по русской версии статьи — в 1974-м) и жили в квартире в Чикаго.",
+      "chapter": "k2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While attending an East Coast science fiction convention he met his first wife, Gale Burnick; they were married in 1975"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия «Хьюго» за повесть",
+      "long": "Первая премия «Хьюго» — в категории «лучшая повесть».",
+      "chapter": "k2",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучшую повесть 1975-01-01"
+      }
+    },
+    {
+      "key": "love-1975-2",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Пэрис Макбрайд",
+      "long": "По воспоминаниям Мартина, познакомился с будущей второй женой, когда она явилась на вечеринку «в женской сауне» с участием Мартина и его друзей.",
+      "chapter": "k2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "со своей будущей второй женой Пэрис Макбрайд он познакомился в 1975 году"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "to": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание журналистики в колледже Кларка",
+      "long": "По протекции Джорджа Гатриджа устроился преподавателем английского и журналистики в колледж Кларка в Дубьюке (Айова): доходов от прозы и шахмат «не хватало, чтобы выжить». В 1978–1979 — писатель-резидент колледжа.",
+      "place": {
+        "label": "Дубьюк"
+      },
+      "works": [
+        {
+          "ref": "dol",
+          "note": "первый роман завершён перед самым переездом в Дубьюк"
+        }
+      ],
+      "chapter": "k3",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976—1978 годах преподавал журналистику в колледже Кларка (ныне университет Кларка) в городе Дубьюк (штат Айова)."
+      }
+    },
+    {
+      "key": "other-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая «вечеринка проигравших Хьюго» с Дозуа",
+      "long": "На Worldcon в Канзас-Сити вместе с Гарднером Дозуа придумал и провёл первую Hugo Losers' Party; сам в тот год проиграл в двух номинациях.",
+      "place": {
+        "label": "Канзас-Сити"
+      },
+      "works": [
+        {
+          "ref": "wind",
+          "note": "повесть «Шторм в Гавани Ветров» (с Татл) номинирована на «Хьюго»"
+        }
+      ],
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, for Kansas City's MidAmeriCon, the 34th World Science Fiction Convention (Worldcon), Martin and his friend and fellow writer-editor Gardner Dozois conceived of and organized the first Hugo Losers' Party"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа первого романа за три учительских зарплаты",
+      "long": "Успех «Звёздных войн» изменил издательский рынок: за первый роман Мартин получил сумму, равную его заработку за три года преподавания.",
+      "works": [
+        {
+          "ref": "dol",
+          "note": "роман продан на волне успеха «Звёздных войн»"
+        }
+      ],
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "published in 1977. That same year the enormous success of Star Wars had a huge impact on the publishing industry and science fiction, and he sold the novel for the same amount he would make in three years of teaching."
+      }
+    },
+    {
+      "key": "loss-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Внезапная смерть друга, писателя Тома Рими",
+      "long": "Смерть друга и коллеги Тома Рими в конце 1977 года заставила Мартина пересмотреть свою жизнь и решиться стать профессиональным писателем.",
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the sudden death of friend and fellow author Tom Reamy in late 1977 made Martin reevaluate his own life, and he eventually decided to try to become a full-time writer."
+      }
+    },
+    {
+      "key": "love-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Гейл Берник",
+      "long": "Жена купила дом в Санта-Фе, пока Мартин продавал дом в Дубьюке и заканчивал семестр; брак распался до воссоединения в Нью-Мексико.",
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The marriage ended in divorce in 1979, before they could be reunited in Santa Fe."
+      }
+    },
+    {
+      "key": "relocation-1979",
+      "date": {
+        "from": "1979-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Уход из колледжа и переезд в Санта-Фе",
+      "long": "Оставил преподавание и в конце 1979 года переехал в Санта-Фе, где почти три года жил один — период, который называл чрезвычайно продуктивным.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1979 he resigned from his job and moved from Dubuque to Santa Fe, New Mexico at the end of the year."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Две премии «Хьюго» и «Небьюла» за малую прозу",
+      "long": "В один год получил «Хьюго» за лучшую короткую повесть и за лучший рассказ, а также «Небьюлу» за короткую повесть.",
+      "chapter": "k3",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Хьюго за лучшую короткую повесть 1980-01-01; премия «Небьюла» за лучшую короткую повесть 1980-01-01; премия «Хьюго» за лучший рассказ 1980-01-01"
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981-09",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Начало совместной жизни с Пэрис Макбрайд",
+      "long": "Пэрис Макбрайд переехала к Мартину в Санта-Фе; они прожили в незарегистрированном браке более тридцати лет.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "k3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until September 1981, when Parris McBride"
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "«Потерянный год»: ролевая игра вместо прозы",
+      "long": "Увлёкшись кампанией настольной ролевой игры Superworld в Альбукерке, почти на весь 1983 год перестал писать; тающие счета подтолкнули превратить персонажей игры в коммерческий проект.",
+      "place": {
+        "label": "Альбукерке"
+      },
+      "works": [
+        {
+          "ref": "wild",
+          "note": "из кампании Superworld выросла межавторская серия"
+        }
+      ],
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he stopped writing literature for most of 1983, which he refers to as his \"lost year\""
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Коммерческий провал второго романа ужасов",
+      "long": "Неожиданный провал романа, по словам Мартина, «по сути уничтожил мою карьеру романиста того времени»; он подумывал уйти в торговлю недвижимостью.",
+      "works": [
+        {
+          "ref": "rag",
+          "note": "провал романа, по словам автора, разрушил его карьеру романиста"
+        }
+      ],
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Armageddon Rag (1983). The unexpected commercial failure of The Armageddon Rag \"essentially destroyed my career as a novelist at the time\""
+      }
+    },
+    {
+      "key": "poverty-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Отказы издателей и заказ Baen Books ради денег",
+      "long": "После провала все редакторы отвергли новый роман Black and White and Red All Over; остро нуждаясь в деньгах, принял предложение Бетси Митчелл из Baen Books написать новые истории о Хэвиленде Тафе.",
+      "works": [
+        {
+          "ref": "tuf",
+          "note": "повести о Тафе написаны по заказу Митчелл из-за нужды в деньгах"
+        }
+      ],
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1984, the new editor of Baen Books, Betsy Mitchell, called Martin to ask him if he had considered doing a collection of Haviland Tuf adventures … desperate for money, he accepted Mitchell's offer and wrote some more Tuf stories"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Малобюджетная экранизация, «спасшая карьеру»",
+      "long": "Фильм Nightflyers по сценарию с участием Мартина не стал хитом, но, по его словам, спас карьеру: всё написанное позже существует во многом благодаря ему. Права куплены Vista в 1984 году.",
+      "works": [
+        {
+          "ref": "night",
+          "note": "экранизация заглавной повести сборника"
+        }
+      ],
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "whose screen and television rights were purchased by in 1984 by Vista, which produced a 1987 film adaptation, Nightflyers … Martin believes that the film saved his career"
+      }
+    },
+    {
+      "key": "career-1987-2",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор межавторской серии о супергероях",
+      "long": "Запустил и возглавил как редактор серию антологий общего мира о людях, получивших суперспособности после инопланетного вируса; собственный вклад — Томас Тадбери, «Великая и могучая Черепаха».",
+      "works": [
+        {
+          "ref": "wild",
+          "note": "первый том серии под редакцией Мартина"
+        }
+      ],
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "overseeing the development of the multi-author Wild Cards book series … Wild Cards (1987; contents expanded in 2010 edition"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продюсер сериала «Красавица и чудовище»",
+      "long": "После закрытия «Сумеречной зоны» и Max Headroom стал со-супервайзинг-продюсером сериала «Красавица и чудовище» и написал 14 его эпизодов.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "k4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Martin was hired as a writer-producer on the new dramatic fantasy series Beauty and the Beast; in 1989, he became the show's co-supervising producer and wrote 14 of its episodes."
+      }
+    },
+    {
+      "key": "creation-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возврат к романам из-за разочарования в телевидении",
+      "long": "Пилоты и сценарии не запускались, а бюджеты и хронометраж заставляли резать персонажей и батальные сцены; Мартин вернулся к прозе, желая написать эпическое фэнтези в духе Толкина.",
+      "works": [
+        {
+          "ref": "got",
+          "note": "начало работы над эпическим фэнтези, задуманным как трилогия"
+        }
+      ],
+      "chapter": "k5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, Martin briefly returned to writing novels. He had grown frustrated that his TV pilots and screenplays were not getting made"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "to": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вице-президент Ассоциации писателей-фантастов SFWA",
+      "long": "Два года занимал пост вице-президента SFWA; ранее, в 1977–1979 годах, был её региональным директором по Юго-Западу.",
+      "chapter": "k5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "and as its vice-president from 1996 to 1998."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за повесть и «Локус» за фэнтези-роман",
+      "long": "Премия «Хьюго» за лучшую повесть и премия «Локус» за лучший роман в жанре фэнтези.",
+      "chapter": "k5",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучшую повесть 1997-01-01; премия «Локус» за лучший роман в жанре фэнтези 1997-01-01"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный гость Worldcon в Торонто",
+      "long": "Почётный гость 61-го Всемирного конвента научной фантастики.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "k5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was the Guest of Honor at the 61st World Science Fiction Convention in Toronto, held in 2003."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Американский Толкин» по версии Time",
+      "long": "Критик Лев Гроссман в журнале Time назвал Мартина «американским Толкином».",
+      "works": [
+        {
+          "ref": "asoiaf"
+        }
+      ],
+      "chapter": "k5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Lev Grossman of Time called Martin \"the American Tolkien\""
+      }
+    },
+    {
+      "key": "career-2005-2",
+      "date": {
+        "from": "2005-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке бестселлеров New York Times",
+      "long": "Четвёртый роман цикла занял первую строчку списка бестселлеров The New York Times.",
+      "works": [
+        {
+          "ref": "ffc",
+          "note": "роман возглавил список бестселлеров"
+        }
+      ],
+      "chapter": "k5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2005, A Feast for Crows, the fourth novel in this series, became The New York Times No. 1 Bestseller."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Продажа HBO прав на экранизацию цикла",
+      "long": "Компания HBO купила права на экранизацию цикла; Мартин участвовал в подборе команды и написании сценариев как со-исполнительный продюсер.",
+      "works": [
+        {
+          "ref": "asoiaf",
+          "note": "права на экранизацию цикла"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2007 года компания HBO купила права на экранизацию цикла «Песнь Льда и Огня»."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Критика поклонников за медленную работу",
+      "long": "На упрёки в шестилетнем перерыве между четвёртым и пятым томами ответил, что не готов писать только один цикл: работа над другой прозой и редактура всегда были частью его метода.",
+      "works": [
+        {
+          "ref": "dwd",
+          "note": "шестилетний перерыв между четвёртым и пятым томами"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Martin responded to fan criticisms by saying he was unwilling to write only his A Song of Ice and Fire series"
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "В списке Time 100 самых влиятельных людей",
+      "long": "Журнал Time включил Мартина в ежегодный список ста самых влиятельных людей мира.",
+      "chapter": "k6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2011 году журнал Time включил Джорджа Мартина в свой список самых влиятельных людей в мире."
+      }
+    },
+    {
+      "key": "love-2011",
+      "date": {
+        "from": "2011-02-15",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Свадьба с Пэрис Макбрайд после тридцати лет вместе",
+      "long": "Небольшая домашняя церемония в Санта-Фе; 19 августа 2011 года — большая церемония и приём на Worldcon Renovation в Рино. Детей нет.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On February 15, 2011, Martin married McBride during a small ceremony at their Santa Fe home."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011-04-17",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премьера сериала HBO по циклу",
+      "long": "Первый эпизод «Зима близко» вышел на HBO; премьеру посмотрели 2,2 млн зрителей, через два дня сериал продлили на второй сезон.",
+      "works": [
+        {
+          "ref": "got",
+          "note": "первый сезон — экранизация первого романа"
+        },
+        {
+          "ref": "asoiaf"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first episode (\"Winter Is Coming\") premiered on HBO in the United States and Canada on April 17, 2011."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Локус» за лучший фэнтези-роман",
+      "long": "Пятый роман цикла вошёл в финал «Хьюго», World Fantasy Award, Locus и British Fantasy Award и получил премию «Локус» за лучший фэнтези-роман.",
+      "works": [
+        {
+          "ref": "dwd",
+          "note": "премия «Локус» за лучший фэнтези-роман"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2012, A Dance with Dragons made the final ballot for science fiction and fantasy's Hugo Award, World Fantasy Award, Locus Poll Award, and the British Fantasy Award; the novel went on to win the Locus Poll Award for Best Fantasy Novel."
+      }
+    },
+    {
+      "key": "other-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покупка и реставрация кинотеатра Jean Cocteau",
+      "long": "Купил закрытый с 2006 года кинотеатр Jean Cocteau Cinema в Санта-Фе и отреставрировал его за свой счёт; кинотеатр открылся 9 августа 2013 года.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "k6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году Мартин приобрел в Санта-Фе кинотеатр Jean Cocteau Cinema, закрытый с 2006 года, и отреставрировал его за свой счёт"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пожертвование 2,7 млн долларов арт-группе Meow Wolf",
+      "long": "Пожертвовал 2,7 миллиона долларов арт-коллективу Meow Wolf на проект The House of Eternal Return.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "k6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "пожертвовав в январе 2015 года 2,7 миллиона долларов на архитектурный проект The House of Eternal Return"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Общий контракт с HBO",
+      "long": "Подписал с HBO общий (overall) контракт как исполнительный продюсер новых проектов.",
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2021, he signed an overall deal with HBO."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание отчуждения от сериала в поздних сезонах",
+      "long": "Сообщил, что начиная с пятого сезона был отстранён от производства сериала и отошёл от него, чтобы сосредоточиться на давно откладываемом шестом романе.",
+      "works": [
+        {
+          "ref": "wow",
+          "note": "отошёл от сериала ради работы над шестым романом"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2022, Martin said that he had been estranged from the show during the production process of the last 4 seasons (starting with season 5)."
+      }
+    },
+    {
+      "key": "career-2022-2",
+      "date": {
+        "from": "2022-08-21",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премьера приквела «Дом Дракона»",
+      "long": "На HBO вышел приквел о доме Таргариенов, действие которого происходит за 200 лет до основного цикла; через пять дней сериал продлили на второй сезон.",
+      "works": [
+        {
+          "ref": "fb",
+          "note": "сериал основан на частях этой книги"
+        }
+      ],
+      "chapter": "k6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a prequel series, House of the Dragon, premiered on HBO on August 21, 2022."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sfl",
+      "title": "Песнь о Лии (сборник)",
+      "qid": "Q2956167",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "dol",
+      "title": "Умирающий свет",
+      "qid": "Q135165",
+      "written": {
+        "from": 1976,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "wind",
+      "title": "Гавань Ветров",
+      "written": {
+        "from": 1975,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "sand",
+      "title": "Песчаные короли (сборник)",
+      "written": {
+        "from": 1979,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "fevre",
+      "title": "Грёзы Февра",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "rag",
+      "title": "Шум Армагеддона",
+      "qid": "Q7714277",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "night",
+      "title": "Летящие сквозь ночь (сборник)",
+      "written": {
+        "from": 1980,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "tuf",
+      "title": "Путешествия Тафа",
+      "written": {
+        "from": 1984,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "portraits",
+      "title": "Портреты его детей (сборник)",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "wild",
+      "title": "Дикие карты (межавторская серия, редактор)",
+      "written": {
+        "from": 1987,
+        "to": 2025
+      }
+    },
+    {
+      "ref": "asoiaf",
+      "title": "Песнь льда и огня (цикл)",
+      "qid": "Q45875",
+      "written": {
+        "from": 1991,
+        "to": 2026
+      }
+    },
+    {
+      "ref": "got",
+      "title": "Игра престолов",
+      "written": {
+        "from": 1991,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "cok",
+      "title": "Битва королей",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "sos",
+      "title": "Буря мечей",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "ffc",
+      "title": "Пир стервятников",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "dwd",
+      "title": "Танец с драконами",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "wow",
+      "title": "Ветра зимы",
+      "written": {
+        "from": 2011,
+        "to": 2026
+      }
+    },
+    {
+      "ref": "dunk",
+      "title": "Рыцарь Семи Королевств",
+      "written": {
+        "from": 1998,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "fb",
+      "title": "Пламя и кровь",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

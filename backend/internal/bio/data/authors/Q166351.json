@@ -1,0 +1,404 @@
+{
+  "qid": "Q166351",
+  "name": "Роберт Джордан",
+  "born": "1948-10-17",
+  "died": "2007-09-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82_%D0%94%D0%B6%D0%BE%D1%80%D0%B4%D0%B0%D0%BD",
+      "rev": 154893281
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Jordan",
+      "rev": 1375557254
+    }
+  ],
+  "chapters": [
+    {
+      "key": "charleston-vietnam",
+      "title": "Чарлстон и Вьетнам",
+      "from": 1948,
+      "to": 1970
+    },
+    {
+      "key": "citadel-navy",
+      "title": "Цитадель и ядерные реакторы",
+      "from": 1971,
+      "to": 1977
+    },
+    {
+      "key": "harriet-conan",
+      "title": "Харриет, Фэллоны, Конан",
+      "from": 1978,
+      "to": 1983
+    },
+    {
+      "key": "wheel",
+      "title": "Колесо Времени",
+      "from": 1984,
+      "to": 2005
+    },
+    {
+      "key": "illness",
+      "title": "Амилоидоз",
+      "from": 2006,
+      "to": 2007
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-10-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чарлстоне, Южная Каролина",
+      "long": "Джеймс Оливер Ригни-младший родился 17 октября 1948 года в Чарлстоне в семье Джеймса и Евы Ригни. Отец — ветеран Второй мировой войны, полицейский, затем работник Чарлстонской военно-морской верфи. Читать научился сам в четыре года.",
+      "place": {
+        "label": "Чарлстон"
+      },
+      "chapter": "charleston-vietnam",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роберт Джордан родился 17 октября 1948 года в Чарльстоне, Южная Каролина."
+      }
+    },
+    {
+      "key": "war-1968",
+      "date": {
+        "from": "1968",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Два срока во Вьетнаме вертолётным стрелком",
+      "long": "После года в университете Клемсона бросил учёбу и вступил в армию США. В 1968—1970 годах прослужил два срока на Вьетнамской войне стрелком вертолёта; награждён Крестом лётных заслуг с дубовым листом, Бронзовой звездой с литерой V и двумя южновьетнамскими крестами «За храбрость».",
+      "place": {
+        "label": "Сайгон"
+      },
+      "chapter": "charleston-vietnam",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1968—1970 прослужил два срока на Вьетнамской войне, в качестве вертолётного стрелка получил Крест лётных заслуг с дубовым листом, Бронзовую звезду с литерой V"
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Крушение вертолёта в девятнадцать лет",
+      "long": "В девятнадцать лет пережил крушение вертолёта; по его словам, это повлияло на его отношение к смерти. Армейское прозвище «Айсмен» не любил, предпочитая другое — «Ганеша», «устранитель препятствий».",
+      "chapter": "charleston-vietnam",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served two tours of duty during the Vietnam War as a helicopter gunner, from 1968 to 1970. … He survived a helicopter crash aged 19, which affected his views on mortality."
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом физика в военном колледже Цитадель",
+      "long": "Вернувшись из Вьетнама в 1970 году, изучал физику в военном колледже Цитадель (Южная Каролина); в 1974 году получил степень бакалавра наук.",
+      "chapter": "citadel-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After returning from Vietnam in 1970, Jordan studied physics at The Citadel Military College of South Carolina. He graduated in 1974 with a Bachelor of Science degree"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Инженер-ядерщик на флоте США",
+      "long": "После выпуска в 1974 году начал работать инженером-ядерщиком для ВМС США: разрабатывал испытания и занимался капитальным ремонтом реакторов военных кораблей.",
+      "chapter": "citadel-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated in 1974 with a Bachelor of Science degree and began working for the U.S. Navy as a nuclear engineer."
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Травма колена, тромб и решение писать",
+      "long": "В 1977 году упал на пути между сухим доком и конторой: тяжёлая травма колена, затем опасный для жизни тромб и долгая госпитализация. В больнице, заскучав над чужими книгами, решил писать сам; по словам Макдугал, швырнул книгу через палату со словами «я могу лучше».",
+      "works": [
+        {
+          "ref": "altaii",
+          "note": "первый роман написан от руки за три с половиной месяца сразу после больницы и перепечатан по возвращении на работу"
+        }
+      ],
+      "chapter": "citadel-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977 he fell during a walk between the dry dock and his office and faced a serious knee injury, followed by a life-threatening blood clot and an extended hospital stay."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с инженерной работы ради литературы",
+      "long": "Издательство DAW Books сразу предложило договор на первый роман, но после попытки Джордана оговорить мелкую деталь отозвало предложение, сославшись на «чрезмерные требования». Не имея контракта, он всё же подал в отставку с должности инженера-ядерщика, рассчитывая писать полный день.",
+      "works": [
+        {
+          "ref": "altaii",
+          "note": "именно эту рукопись отверг DAW Books после переговоров"
+        }
+      ],
+      "chapter": "citadel-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jordan began writing in 1977. … Despite the lack of a publishing deal, he tendered his resignation from his nuclear engineering job, confident that he could write full time."
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с редактором Харриет Макдугал",
+      "long": "Владелец местного книжного магазина свёл Джордана с редактором Харриет Макдугал. Прочитав «Воинов Алтаи», она попросила новую историю; результат вышел в 1980 году в её личном импринте Popham Press. Джордан начал встречаться с Макдугал.",
+      "works": [
+        {
+          "ref": "fallon",
+          "note": "роман написан по просьбе Макдугал вместо редактирования ранней рукописи"
+        },
+        {
+          "ref": "wot",
+          "note": "игра в Dungeons \u0026 Dragons с её сыном Уиллом в конце 1970-х стала источником вдохновения для цикла"
+        }
+      ],
+      "chapter": "harriet-conan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which led Jordan to write The Fallon Blood, published in 1980 by McDougal's personal imprint, Popham Press. Jordan began dating McDougal"
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Харриет Макдугал",
+      "long": "В 1981 году женился на своём редакторе Харриет Макдугал. Перестал печататься в принадлежавшем ей Popham Press, не желая зависеть от «единственного источника дохода»; книги шли в другие издательства, но редактировала их по-прежнему она — глава за главой, «редактура у обочины».",
+      "chapter": "harriet-conan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jordan later entered into a relationship with his editor Harriet McDougal, whom he married in 1981."
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало работы над главным циклом",
+      "long": "После успеха книг о Конане Доэрти спросил о других замыслах; Джордан предложил эпическую фэнтези-трилогию. Работа началась в 1984 году, замысел разросся далеко за пределы трёх книг и занял большую часть оставшейся жизни писателя.",
+      "works": [
+        {
+          "ref": "wot",
+          "note": "первоначальный замысел — не более трёх книг, предложенный Доэрти после книг о Конане"
+        }
+      ],
+      "chapter": "wheel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jordan's work on The Wheel of Time began in 1984 and ballooned in scope from the initial three book vision."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировая известность с первого тома цикла",
+      "long": "В 1990 году вышел первый роман цикла «Колесо Времени»; книги серии сделали Джордана знаменитым во всём мире. При жизни он завершил одиннадцать томов и приквел; цикл стал одним из самых продаваемых в истории.",
+      "works": [
+        {
+          "ref": "eye",
+          "note": "первый том цикла, с которого началась известность"
+        },
+        {
+          "ref": "wot"
+        }
+      ],
+      "chapter": "wheel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990-м году вышел роман «Око мира» («The Eye of the World»), ставший первым в масштабном фэнтезийном цикле «Колесо Времени» («Wheel of Time»). Именно книги этой серии и сделали Роберта Джордана знаменитым на весь мир."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "В 2005 году удостоен премии «Инкпот», вручаемой на конвенте Comic-Con.",
+      "chapter": "wheel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Инкпот» 2005-01-01"
+      }
+    },
+    {
+      "key": "illness-2006",
+      "date": {
+        "from": "2006-03-23",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: амилоидоз сердца",
+      "long": "23 марта 2006 года объявил, что у него диагностирован амилоидоз сердца с медианной ожидаемой продолжительностью жизни около четырёх лет при лечении. Опасаясь не закончить цикл, составил дополнительные заметки и незадолго до смерти рассказал семье все ключевые повороты сюжета финала.",
+      "works": [
+        {
+          "ref": "memory",
+          "note": "заметки и устный пересказ сюжета семье готовились, чтобы другой автор мог завершить финальный том; после смерти Джордана это сделал Брэндон Сандерсон"
+        }
+      ],
+      "chapter": "illness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On March 23, 2006, Jordan revealed that he had been diagnosed with cardiac amyloidosis and that, with treatment, his median life expectancy was four years."
+      }
+    },
+    {
+      "key": "illness-2006-2",
+      "date": {
+        "from": "2006-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Химиотерапия в клинике Мэйо",
+      "long": "В начале апреля 2006 года начал химиотерапию в клинике Мэйо и участвовал в исследовании препарата Ревлимид, одобренного для множественной миеломы, но ещё не испытанного при первичном амилоидозе.",
+      "place": {
+        "label": "Клиника Мэйо"
+      },
+      "chapter": "illness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He began chemotherapy at Mayo Clinic during early April 2006."
+      }
+    },
+    {
+      "key": "death-2007",
+      "date": {
+        "from": "2007-09-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от амилоидоза сердца в Чарлстоне",
+      "long": "Умер 16 сентября 2007 года около 14:45 от амилоидоза сердца. Кремирован, прах захоронен на кладбище церкви Святого Иакова в Гус-Крик близ Чарлстона.",
+      "place": {
+        "label": "Чарлстон"
+      },
+      "chapter": "illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 16 сентября 2007 года около 14:45 (EST) от амилоидоза сердца."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "wot",
+      "title": "Колесо Времени",
+      "qid": "Q4470",
+      "written": {
+        "from": 1984,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "eye",
+      "title": "Око мира",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "altaii",
+      "title": "Воины Алтаи (Warriors of the Altaii)",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "fallon",
+      "title": "Кровь Фэллона (The Fallon Blood)",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "cheyenne",
+      "title": "Cheyenne Raiders",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "conan",
+      "title": "Романы о Конане",
+      "written": {
+        "from": 1982,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "memory",
+      "title": "Память Света (завершена Брэндоном Сандерсоном)"
+    }
+  ]
+}

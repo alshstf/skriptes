@@ -242,3 +242,25 @@ func TestSlug(t *testing.T) {
 		}
 	}
 }
+
+func TestFixWritten(t *testing.T) {
+	a := author()
+	a.Works = []bio.Work{
+		{Ref: "posthumous", Title: "П", Written: &bio.Written{From: 1884, To: 1884}}, // после смерти 1881 — снять
+		{Ref: "late", Title: "Л", Written: &bio.Written{From: 1879, To: 1883}},       // конец после смерти — обрезать
+		{Ref: "ok", Title: "О", Written: &bio.Written{From: 1866, To: 1866}},
+	}
+	flags := fixWritten(a)
+	if a.Works[0].Written != nil {
+		t.Errorf("посмертный период должен быть снят: %+v", a.Works[0].Written)
+	}
+	if a.Works[1].Written == nil || a.Works[1].Written.To != 1881 {
+		t.Errorf("конец должен быть обрезан годом смерти: %+v", a.Works[1].Written)
+	}
+	if a.Works[2].Written == nil || *a.Works[2].Written != (bio.Written{From: 1866, To: 1866}) {
+		t.Errorf("корректный период тронут: %+v", a.Works[2].Written)
+	}
+	if len(flags) != 2 || len(bio.Validate(a).Errors()) != 0 {
+		t.Errorf("ожидалось 2 флага и валидный файл: %v / %v", flags, bio.Validate(a).Errors())
+	}
+}
