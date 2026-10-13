@@ -3,15 +3,18 @@
 // Подкоманды (каждая — свой набор флагов, `biogen <cmd> -h`):
 //
 //	fetch   -qid Q991 [-out work/]          → work/sources/Q991.json (Wikidata-скелет + текст Википедии)
-//	extract -qid Q991 [-out work/] [-model] → work/draft/Q991.json + raw ответ (нужен ANTHROPIC_API_KEY)
+//	extract -qid Q991 [-out work/] [-engine claude-cli|api] [-model] [-effort]
+//	                                         → work/draft/Q991.json + raw ответ. По умолчанию — headless Claude Code
+//	                                           (`claude -p`, токены по подписке, ключ не нужен); -engine api — Anthropic API
+//	                                           (нужен ANTHROPIC_API_KEY).
 //	verify  -qid Q991 [-out work/]          → work/verified/Q991.json + work/review/Q991.md
 //	run     -qid Q991[,Q7243] [-out work/]  → fetch + extract + verify подряд
 //	eval    -generated work/verified [-golden internal/bio/data/authors]
 //	check   [-dir internal/bio/data]        → валидация датасета (то же, что делает загрузчик)
 //
-// Ключ API — только здесь, в окружении владельца; приложение внешних вызовов
-// не делает. Принятый файл кладут в internal/bio/data/authors/<QID>.json
-// руками после ревью.
+// Приложение внешних вызовов не делает и ключей не требует: извлечение —
+// офлайн, через Claude Code по подписке или (опционально) через API. Принятый
+// файл кладут в internal/bio/data/authors/<QID>.json руками после ревью.
 package main
 
 import (
@@ -130,18 +133,40 @@ func cmdFetch(ctx context.Context, args []string) error {
 	return nil
 }
 
-func extractor(model, effort string) (*gen.Extractor, error) {
-	if os.Getenv("ANTHROPIC_API_KEY") == "" && os.Getenv("ANTHROPIC_AUTH_TOKEN") == "" {
-		return nil, errors.New("нужен ANTHROPIC_API_KEY (или профиль ant auth login)")
+// extractor — движок извлечения. claude-cli: `claude -p` (модель и effort —
+// умолчания CLI, если не заданы); api: Anthropic SDK, нужен ключ.
+func extractor(engine, binary, model, effort string) (gen.Engine, error) {
+	switch engine {
+	case "claude-cli", "":
+		return &gen.CLIExtractor{Binary: binary, Model: model, Effort: effort}, nil
+	case "api":
+		if os.Getenv("ANTHROPIC_API_KEY") == "" && os.Getenv("ANTHROPIC_AUTH_TOKEN") == "" {
+			return nil, errors.New("engine api: нужен ANTHROPIC_API_KEY (или профиль ant auth login)")
+		}
+		if model == "" {
+			model = gen.DefaultModel
+		}
+		if effort == "" {
+			effort = "high"
+		}
+		return &gen.Extractor{
+			Client: anthropic.NewClient(option.WithRequestTimeout(10 * time.Minute)),
+			Model:  model,
+			Effort: anthropic.OutputConfigEffort(effort),
+		}, nil
 	}
-	return &gen.Extractor{
-		Client: anthropic.NewClient(option.WithRequestTimeout(10 * time.Minute)),
-		Model:  model,
-		Effort: anthropic.OutputConfigEffort(effort),
-	}, nil
+	return nil, fmt.Errorf("неизвестный -engine %q (claude-cli|api)", engine)
 }
 
-func extractOne(ctx context.Context, x *gen.Extractor, out, q string) error {
+func engineFlags(fs *flag.FlagSet) (engine, binary, model, effort *string) {
+	engine = fs.String("engine", "claude-cli", "движок извлечения: claude-cli (headless Claude Code, по подписке) | api (Anthropic API, ключ)")
+	binary = fs.String("claude", "claude", "бинарь claude для -engine claude-cli")
+	model = fs.String("model", "", "модель (пусто — умолчание движка; api: "+gen.DefaultModel+")")
+	effort = fs.String("effort", "", "effort: low|medium|high|xhigh|max (пусто — умолчание движка; api: high)")
+	return
+}
+
+func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
 	var src gen.Sources
 	if err := readJSON(filepath.Join(out, "sources", q+".json"), &src); err != nil {
 		return fmt.Errorf("%s: сначала fetch: %w", q, err)
@@ -171,13 +196,12 @@ func cmdExtract(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("extract", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
-	model := fs.String("model", gen.DefaultModel, "модель")
-	effort := fs.String("effort", "high", "effort: low|medium|high|xhigh|max")
+	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
 		return errors.New("нужен -qid")
 	}
-	x, err := extractor(*model, *effort)
+	x, err := extractor(*engine, *binary, *model, *effort)
 	if err != nil {
 		return err
 	}
@@ -239,13 +263,12 @@ func cmdRun(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("run", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
-	model := fs.String("model", gen.DefaultModel, "модель")
-	effort := fs.String("effort", "high", "effort")
+	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
 		return errors.New("нужен -qid")
 	}
-	x, err := extractor(*model, *effort)
+	x, err := extractor(*engine, *binary, *model, *effort)
 	if err != nil {
 		return err
 	}

@@ -497,18 +497,20 @@ Backend дёргает следующие открытые API — лениво 
 `evidence` — цитата из источника, по которой её проверил генератор. Полная схема — `backend/internal/bio/schema.go`,
 правила — `validate.go`.
 
-Генерация — офлайн, `backend/cmd/biogen` (ключ `ANTHROPIC_API_KEY` нужен только ему, в compose его нет):
+Генерация — офлайн, `backend/cmd/biogen`; приложению ключи не нужны. Шаг извлечения по умолчанию идёт через
+headless Claude Code (`claude -p`, токены по подписке — `-engine claude-cli`), опционально — через Anthropic API
+(`-engine api`, тогда нужен `ANTHROPIC_API_KEY`); оба отдают JSON по одной строгой схеме:
 
 ```bash
 cd backend
 go run ./cmd/biogen fetch   -qid Q991 -out work      # Wikidata-скелет + текст Википедии → work/sources/
-go run ./cmd/biogen extract -qid Q991 -out work      # модель → work/draft/ (structured output по строгой схеме)
+go run ./cmd/biogen extract -qid Q991 -out work      # claude -p → work/draft/ (structured output по схеме); -engine api — через API
 go run ./cmd/biogen verify  -qid Q991 -out work      # автопроверка по цитатам/фактам → work/verified/ + work/review/*.md
 go run ./cmd/biogen eval    -generated work/verified # сравнение с золотым набором (data/authors)
 go run ./cmd/biogen check                            # валидация всего датасета
 ```
 
-Принятый после ревью файл кладут в `data/authors/` руками. Источники: Википедия (CC BY-SA 4.0; формулировки в датасете
+Золотой набор собран ассистентом руками по тем же источникам; принятый после ревью файл кладут в `data/authors/` руками. Источники: Википедия (CC BY-SA 4.0; формулировки в датасете
 свои, цитаты `evidence` в приложении не показываются) и Wikidata (CC0); атрибуция — в подвале секции таймлайна.
 
 ---

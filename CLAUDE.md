@@ -122,7 +122,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     номинацию — только после его проверки (`~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
 25. **Био-таймлайн — курируемый датасет по QID** (`internal/bio/data`), runtime без LLM и внешних вызовов. `short` ≤ 60
     без года и названий работ, ключ вехи `type-yyyy` (по нему живёт «скрыть»), даты ISO нового стиля, у вехи
-    `evidence`-цитата. Генератор — `cmd/biogen` (ключ API только у CLI). План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
+    `evidence`-цитата. Генератор — `cmd/biogen`: `extract` по умолчанию через `claude -p` (подписка), `-engine api` — опция. План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
