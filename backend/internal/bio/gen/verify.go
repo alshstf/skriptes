@@ -86,6 +86,14 @@ func Verify(a *bio.Author, src *Sources) (*bio.Author, []Flag) {
 		out.Events = append(out.Events, e)
 	}
 
+	// Механические огрехи модели правим, а не выбрасываем: snake_case в ключах,
+	// длинный long, лишние major (этап B: у 7 авторов из 29 файл не грузился из-за
+	// «time_machine», 21 major, long в 301 символ).
+	flags = append(flags, normalizeRefs(&out)...)
+	flags = append(flags, trimTexts(&out)...)
+	flags = append(flags, demoteExtraMajors(&out)...)
+	flags = append(flags, capEvents(&out)...)
+
 	// Правила датасета: ошибки по конкретной вехе — выбрасываем веху, ошибки
 	// файла — флаг (файл не принимается без ручной правки).
 	for {
@@ -260,4 +268,176 @@ func (fi *factIndex) has(prop string, y int) bool {
 		m = fi.died
 	}
 	return m[y] || m[y-1] || m[y+1]
+}
+
+var slugDropRe = regexp.MustCompile(`[^a-z0-9-]+`)
+
+// slug — ключ в формате датасета [a-z0-9-]: нижний регистр, подчёркивания и
+// пробелы → дефис, остальное выбрасывается, дефисы схлопываются.
+func slug(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	s = strings.NewReplacer("_", "-", " ", "-").Replace(s)
+	s = slugDropRe.ReplaceAllString(s, "")
+	for strings.Contains(s, "--") {
+		s = strings.ReplaceAll(s, "--", "-")
+	}
+	return strings.Trim(s, "-")
+}
+
+// normalizeRefs — ref работ и ключи глав приводятся к [a-z0-9-] вместе со
+// ссылками на них из вех. Пустой slug или слияние двух ключей в один — не
+// правим, останется ошибкой валидации.
+func normalizeRefs(a *bio.Author) []Flag {
+	fix := func(keys []string) (map[string]string, []string) {
+		m := map[string]string{}
+		seen := map[string]bool{}
+		for _, k := range keys {
+			seen[k] = true
+		}
+		var changed []string
+		for _, k := range keys {
+			n := slug(k)
+			if n == "" || n == k || seen[n] {
+				continue
+			}
+			seen[n] = true
+			m[k] = n
+			changed = append(changed, k+"→"+n)
+		}
+		return m, changed
+	}
+	var flags []Flag
+	refs := make([]string, 0, len(a.Works))
+	for _, w := range a.Works {
+		refs = append(refs, w.Ref)
+	}
+	refMap, changed := fix(refs)
+	if len(changed) > 0 {
+		for i := range a.Works {
+			if n, ok := refMap[a.Works[i].Ref]; ok {
+				a.Works[i].Ref = n
+			}
+		}
+		for i := range a.Events {
+			for j := range a.Events[i].Works {
+				if n, ok := refMap[a.Events[i].Works[j].Ref]; ok {
+					a.Events[i].Works[j].Ref = n
+				}
+			}
+		}
+		flags = append(flags, Flag{Key: "works", Msg: "ref приведены к [a-z0-9-]: " + strings.Join(changed, ", ")})
+	}
+	keys := make([]string, 0, len(a.Chapters))
+	for _, c := range a.Chapters {
+		keys = append(keys, c.Key)
+	}
+	keyMap, changed := fix(keys)
+	if len(changed) > 0 {
+		for i := range a.Chapters {
+			if n, ok := keyMap[a.Chapters[i].Key]; ok {
+				a.Chapters[i].Key = n
+			}
+		}
+		for i := range a.Events {
+			if n, ok := keyMap[a.Events[i].Chapter]; ok {
+				a.Events[i].Chapter = n
+			}
+		}
+		flags = append(flags, Flag{Key: "chapters", Msg: "ключи приведены к [a-z0-9-]: " + strings.Join(changed, ", ")})
+	}
+	return flags
+}
+
+// trimTexts — long длиннее лимита усекается по границе предложения (если
+// остаётся хотя бы половина лимита), иначе по слову с многоточием; note
+// длиннее лимита снимается (линк остаётся). short не правим — это формулировка.
+func trimTexts(a *bio.Author) []Flag {
+	var flags []Flag
+	for i := range a.Events {
+		e := &a.Events[i]
+		if n := len([]rune(e.Long)); n > bio.MaxLongRunes {
+			e.Long = cutRunes(e.Long, bio.MaxLongRunes)
+			flags = append(flags, Flag{Key: e.Key, Msg: fmt.Sprintf("long усечён: %d → %d символов", n, len([]rune(e.Long)))})
+		}
+		for j := range e.Works {
+			if n := len([]rune(e.Works[j].Note)); n > bio.MaxNoteRunes {
+				e.Works[j].Note = ""
+				flags = append(flags, Flag{Key: e.Key, Msg: fmt.Sprintf("note к %s снята: %d символов > %d", e.Works[j].Ref, n, bio.MaxNoteRunes)})
+			}
+		}
+	}
+	return flags
+}
+
+func cutRunes(s string, limit int) string {
+	r := []rune(s)
+	if len(r) <= limit {
+		return s
+	}
+	for i := limit - 1; i >= limit/2; i-- {
+		if strings.ContainsRune(".!?»", r[i]) && (i+1 == len(r) || r[i+1] == ' ') {
+			return strings.TrimSpace(string(r[:i+1]))
+		}
+	}
+	cut := limit - 1
+	for i := cut; i > limit/2; i-- {
+		if r[i] == ' ' {
+			cut = i
+			break
+		}
+	}
+	return strings.TrimRight(string(r[:cut]), " ,;:—-") + "…"
+}
+
+// demoteExtraMajors — major сверх лимита (рождение и смерть не в счёт)
+// понижаются до minor: сначала поздние вехи без линков на работы, потом поздние
+// с линками.
+func demoteExtraMajors(a *bio.Author) []Flag {
+	var majors []int
+	for i, e := range a.Events {
+		if e.Tier == bio.TierMajor && e.Type != bio.EventBirth && e.Type != bio.EventDeath {
+			majors = append(majors, i)
+		}
+	}
+	extra := len(majors) - bio.MaxMajorEvents
+	if extra <= 0 {
+		return nil
+	}
+	var flags []Flag
+	demote := func(linked bool) {
+		for k := len(majors) - 1; k >= 0 && extra > 0; k-- {
+			e := &a.Events[majors[k]]
+			if e.Tier != bio.TierMajor || (len(e.Works) > 0) != linked {
+				continue
+			}
+			e.Tier = bio.TierMinor
+			extra--
+			flags = append(flags, Flag{Key: e.Key, Msg: fmt.Sprintf("понижена до minor: major-вех больше %d", bio.MaxMajorEvents)})
+		}
+	}
+	demote(false)
+	demote(true)
+	return flags
+}
+
+// capEvents — вех сверх лимита: выбрасываются поздние minor без линков на работы;
+// если таких не хватает, остальное остаётся ошибкой файла.
+func capEvents(a *bio.Author) []Flag {
+	var flags []Flag
+	for len(a.Events) > bio.MaxEvents {
+		idx := -1
+		for i := len(a.Events) - 1; i >= 0; i-- {
+			e := a.Events[i]
+			if e.Tier == bio.TierMinor && len(e.Works) == 0 && e.Type != bio.EventBirth && e.Type != bio.EventDeath {
+				idx = i
+				break
+			}
+		}
+		if idx < 0 {
+			break
+		}
+		flags = append(flags, Flag{Key: a.Events[idx].Key, Msg: fmt.Sprintf("вех больше %d — поздняя minor без линков выброшена", bio.MaxEvents), Dropped: true})
+		a.Events = append(a.Events[:idx:idx], a.Events[idx+1:]...)
+	}
+	return flags
 }

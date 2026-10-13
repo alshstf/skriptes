@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 
@@ -155,5 +156,89 @@ func TestNormalizeAndQuoteFound(t *testing.T) {
 func TestNormalizeDropsCombiningMarks(t *testing.T) {
 	if normalize("Михаи́л Афана́сьевич") != "михаил афанасьевич" {
 		t.Fatalf("normalize: %q", normalize("Михаи́л Афана́сьевич"))
+	}
+}
+
+// Механические огрехи модели правятся, а не выбрасывают веху/файл: snake_case в
+// ref и ключах глав (вместе со ссылками из вех), длинный long, лишние major.
+func TestVerifyNormalizesRefsAndTrims(t *testing.T) {
+	long := strings.Repeat("Слово ", 40) + "Конец первого предложения. " + strings.Repeat("хвост ", 20) // 387 > 300, граница предложения на 267
+	e := ev("loss-1868", "1868-05-24", bio.EventLoss, "Смерть трёхмесячной дочери Сони", "24 мая 1868 года Соня умерла от воспаления лёгких")
+	e.Long = long
+	e.Chapter = "Europe_Years"
+	e.Works = []bio.WorkLink{{Ref: "the_idiot", Note: strings.Repeat("n", bio.MaxNoteRunes+1)}}
+	a := author(e)
+	a.Chapters = []bio.Chapter{{Key: "Europe_Years", Title: "Европа", From: 1821, To: 1881}}
+	a.Works = []bio.Work{{Ref: "the_idiot", Title: "Идиот"}, {Ref: "crime-and-punishment", Title: "Преступление и наказание"}}
+	out, flags := Verify(a, sources())
+	if len(out.Events) != 1 {
+		t.Fatalf("веха должна остаться: %+v / %v", out.Events, flags)
+	}
+	got := out.Events[0]
+	if out.Works[0].Ref != "the-idiot" || got.Works[0].Ref != "the-idiot" {
+		t.Errorf("ref не нормализован: %q / %q", out.Works[0].Ref, got.Works[0].Ref)
+	}
+	if out.Chapters[0].Key != "europe-years" || got.Chapter != "europe-years" {
+		t.Errorf("ключ главы не нормализован: %q / %q", out.Chapters[0].Key, got.Chapter)
+	}
+	if n := len([]rune(got.Long)); n > bio.MaxLongRunes || !strings.HasSuffix(got.Long, "предложения.") {
+		t.Errorf("long не усечён по предложению: %d %q", n, got.Long)
+	}
+	if got.Works[0].Note != "" {
+		t.Errorf("длинная note должна быть снята")
+	}
+	if ps := bio.Validate(out).Errors(); len(ps) > 0 {
+		t.Errorf("после правок файл должен быть валиден: %v", ps)
+	}
+	if len(flagsFor(flags, "works")) != 1 || len(flagsFor(flags, "chapters")) != 1 || len(flagsFor(flags, "loss-1868")) < 2 {
+		t.Errorf("ожидались флаги о правках: %v", flags)
+	}
+}
+
+func TestDemoteExtraMajors(t *testing.T) {
+	var events []bio.Event
+	for i := 0; i <= bio.MaxMajorEvents+1; i++ { // 22 major
+		y := 1850 + i
+		events = append(events, ev("other-"+strconv.Itoa(y), strconv.Itoa(y), bio.EventOther, "Веха", ""))
+	}
+	events[len(events)-1].Works = []bio.WorkLink{{Ref: "w"}} // поздняя, но с линком — понижается последней
+	a := author(events...)
+	flags := demoteExtraMajors(a)
+	major := 0
+	for _, e := range a.Events {
+		if e.Tier == bio.TierMajor {
+			major++
+		}
+	}
+	if major != bio.MaxMajorEvents {
+		t.Fatalf("major после понижения %d, ожидалось %d: %v", major, bio.MaxMajorEvents, flags)
+	}
+	if a.Events[len(a.Events)-1].Tier != bio.TierMajor {
+		t.Errorf("веха с линком должна остаться major")
+	}
+	for _, k := range []string{"other-1870", "other-1869"} {
+		if len(flagsFor(flags, k)) != 1 {
+			t.Errorf("ожидалось понижение %s: %v", k, flags)
+		}
+	}
+	// Сверх MaxEvents — поздние minor без линков выбрасываются.
+	extra := bio.MaxEvents - len(a.Events) + 3
+	for i := 0; i < extra; i++ {
+		e := ev("other-"+strconv.Itoa(1900+i), strconv.Itoa(1900+i), bio.EventOther, "Деталь", "")
+		e.Tier = bio.TierMinor
+		a.Events = append(a.Events, e)
+	}
+	flags = capEvents(a)
+	if len(a.Events) != bio.MaxEvents || len(flags) != 3 {
+		t.Errorf("вех %d, выброшено %d; ожидалось %d и 3", len(a.Events), len(flags), bio.MaxEvents)
+	}
+}
+
+func TestSlug(t *testing.T) {
+	for in, want := range map[string]string{"time_machine": "time-machine", "Discworld_birth": "discworld-birth",
+		"the--idiot": "the-idiot", "ok-ref": "ok-ref", "Война и мир": ""} {
+		if got := slug(in); got != want {
+			t.Errorf("slug(%q) = %q, want %q", in, got, want)
+		}
 	}
 }
