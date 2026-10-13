@@ -544,23 +544,36 @@ func run() error {
 	})
 	// QID и годы жизни для авторов с био (био-таймлайн, план v3): био скачаны до
 	// #465 без QID; датасет таймлайна ключуется QID. Та же политика приёма, био
-	// не трогается, темп — RPM воркера био; после рестарта продолжается.
+	// не трогается, темп — RPM воркера био; позиция хранится в app_settings —
+	// рестарт продолжает с неё. Проход, прерванный сбоями источника, повторяется
+	// через час, а не на следующем старте (1.41.0 на проде встал на 4-м авторе).
 	metadata.Go(func(c context.Context) {
 		const flag = "author_qid_backfill_v1"
-		var done bool
-		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
-			return
+		const retryWait = time.Hour
+		for {
+			var done bool
+			if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+				return
+			}
+			scanned, resolved, err := enricher.BackfillAuthorQIDs(c, baCfg.BiosRPM, logger)
+			if err == nil {
+				if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+					ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+					logger.Warn("author qid backfill: set flag failed", "err", err)
+				}
+				logger.Info("author qid backfill done", "scanned", scanned, "resolved", resolved)
+				return
+			}
+			if c.Err() != nil {
+				return
+			}
+			logger.Warn("author qid backfill paused after source failures — retry later", "scanned", scanned, "resolved", resolved, "retry_in", retryWait, "err", err)
+			select {
+			case <-c.Done():
+				return
+			case <-time.After(retryWait):
+			}
 		}
-		scanned, resolved, err := enricher.BackfillAuthorQIDs(c, baCfg.BiosRPM, logger)
-		if err != nil {
-			logger.Warn("author qid backfill stopped — will continue next start", "scanned", scanned, "resolved", resolved, "err", err)
-			return
-		}
-		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
-			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
-			logger.Warn("author qid backfill: set flag failed", "err", err)
-		}
-		logger.Info("author qid backfill done", "scanned", scanned, "resolved", resolved)
 	})
 	// Ключи группировки изданий из поиска экранизаций (#467): разовый догон для
 	// работ, у которых экранизации уже найдены, а QID книги не сохранялся. Не чаще
