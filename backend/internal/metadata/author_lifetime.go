@@ -2,8 +2,11 @@ package metadata
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -118,9 +121,20 @@ func RecomputeYearsBeforeBirth(ctx context.Context, pool *pgxpool.Pool) ([]int64
 // QID есть у 29). Датасет таймлайна ключуется QID, без него секции не
 // показываются. Догон — тот же поиск статьи, что у био (ResolveAuthorLifetimes:
 // политика приёма, годы и QID пишутся, био не трогается), от самых известных,
-// в темпе RPM воркера био; сбой источника — выход, следующий старт продолжит с
-// того же места (keyset-курсор по (renown, id) — уже обработанные, но не
-// нашедшиеся, второй раз в этом проходе не берутся).
+// в темпе RPM воркера био. Позиция (keyset-курсор по (renown, id)) сохраняется
+// в app_settings после каждой пачки: рестарт и повтор после сбоя продолжают с
+// того же места, уже просмотренные, но не нашедшиеся авторы второй раз не
+// берутся. Сбой источника (429, пауза прерывателя, сеть) — пауза и повтор того
+// же автора; после qidBackfillMaxRetries попыток автор откладывается (QID
+// довнесёт перепроверка био), qidBackfillMaxFailures сбоев подряд — источник
+// лежит, проход прерывается (ErrUpstream), вызывающий повторяет его позже.
+
+const (
+	qidBackfillCursorKey   = "author_qid_backfill_v1_cursor"
+	qidBackfillFailWait    = 2 * time.Minute // пауза после сбоя источника перед повтором автора
+	qidBackfillMaxRetries  = 3               // попыток на автора, дальше он отложен
+	qidBackfillMaxFailures = 10              // сбоев подряд — проход прерывается до повтора
+)
 
 // QIDBackfillCursor — позиция прохода: последняя обработанная пара (renown, id).
 type QIDBackfillCursor struct {
@@ -146,9 +160,86 @@ func NextQIDBackfillBatch(ctx context.Context, pool *pgxpool.Pool, cur QIDBackfi
 	})
 }
 
-// BackfillAuthorQIDs — полный проход; возвращает, сколько авторов просмотрено и
-// у скольких появились годы/QID. Первый сбой источника прерывает проход
-// (ErrUpstream) — вызывающий не ставит флаг, догон повторится.
+// qidBackfillTop — курсор перед самым известным автором (начало прохода).
+var qidBackfillTop = QIDBackfillCursor{Renown: 1 << 62, ID: 1 << 62}
+
+// loadQIDBackfillCursor — сохранённая позиция прохода или начало, если её нет.
+func loadQIDBackfillCursor(ctx context.Context, pool *pgxpool.Pool) (QIDBackfillCursor, error) {
+	var raw []byte
+	err := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, qidBackfillCursorKey).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return qidBackfillTop, nil
+	}
+	if err != nil {
+		return qidBackfillTop, fmt.Errorf("qid backfill: cursor: %w", err)
+	}
+	var cur struct {
+		Renown int64 `json:"renown"`
+		ID     int64 `json:"id"`
+	}
+	if err := json.Unmarshal(raw, &cur); err != nil || cur.ID == 0 {
+		return qidBackfillTop, nil // битое значение — проход с начала
+	}
+	return QIDBackfillCursor{Renown: cur.Renown, ID: cur.ID}, nil
+}
+
+func saveQIDBackfillCursor(ctx context.Context, pool *pgxpool.Pool, cur QIDBackfillCursor) error {
+	_, err := pool.Exec(ctx, `INSERT INTO app_settings (key, value, updated_at)
+		VALUES ($1, jsonb_build_object('renown', $2::bigint, 'id', $3::bigint), now())
+		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`,
+		qidBackfillCursorKey, cur.Renown, cur.ID)
+	return err
+}
+
+func clearQIDBackfillCursor(ctx context.Context, pool *pgxpool.Pool) error {
+	_, err := pool.Exec(ctx, `DELETE FROM app_settings WHERE key = $1`, qidBackfillCursorKey)
+	return err
+}
+
+// qidFailures — реакция прохода на сбои источника: сколько раз подряд сбоил
+// текущий автор и сколько сбоев подряд всего (по разным авторам).
+type qidFailures struct{ author, total int }
+
+type qidFailAction int
+
+const (
+	qidRetryAuthor qidFailAction = iota // пауза и тот же автор ещё раз
+	qidSkipAuthor                       // автор отложен, дальше по списку
+	qidAbortPass                        // источник лежит — проход прервать
+)
+
+func (f *qidFailures) fail() qidFailAction {
+	f.author++
+	f.total++
+	switch {
+	case f.total >= qidBackfillMaxFailures:
+		return qidAbortPass
+	case f.author >= qidBackfillMaxRetries:
+		f.author = 0
+		return qidSkipAuthor
+	default:
+		return qidRetryAuthor
+	}
+}
+
+func (f *qidFailures) ok() { f.author, f.total = 0, 0 }
+
+// sleepCtx — пауза, прерываемая остановкой.
+func sleepCtx(ctx context.Context, d time.Duration) error {
+	t := time.NewTimer(d)
+	defer t.Stop()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-t.C:
+		return nil
+	}
+}
+
+// BackfillAuthorQIDs — проход с сохранённой позиции до конца списка; возвращает,
+// сколько авторов просмотрено и у скольких появились годы/QID. Проход дошёл до
+// конца — курсор снимается, вызывающий ставит флаг; ErrUpstream — прерван из-за
+// сбоев источника, позиция сохранена, вызывающий повторяет позже.
 func (e *Enricher) BackfillAuthorQIDs(ctx context.Context, rpm int, logger *slog.Logger) (scanned, resolved int, err error) {
 	if logger == nil {
 		logger = slog.Default()
@@ -158,29 +249,69 @@ func (e *Enricher) BackfillAuthorQIDs(ctx context.Context, rpm int, logger *slog
 	}
 	gate := &rateGate{}
 	gate.setRPM(rpm)
-	cur := QIDBackfillCursor{Renown: 1 << 62, ID: 1 << 62}
+	cur, err := loadQIDBackfillCursor(ctx, e.pool)
+	if err != nil {
+		return 0, 0, err
+	}
+	if cur != qidBackfillTop {
+		logger.Info("author qid backfill: resuming", "renown", cur.Renown, "author_id", cur.ID)
+	}
+	var fails qidFailures
+	deferred := 0
 	for {
 		batch, err := NextQIDBackfillBatch(ctx, e.pool, cur, 200)
 		if err != nil {
 			return scanned, resolved, err
 		}
 		if len(batch) == 0 {
+			if err := clearQIDBackfillCursor(ctx, e.pool); err != nil {
+				logger.Warn("author qid backfill: clear cursor failed", "err", err)
+			}
+			if deferred > 0 {
+				logger.Info("author qid backfill: authors deferred to bio recheck", "deferred", deferred)
+			}
 			return scanned, resolved, nil
 		}
-		for _, a := range batch {
+		for i := 0; i < len(batch); {
+			a := batch[i]
 			if err := gate.wait(ctx); err != nil {
 				return scanned, resolved, err
 			}
 			got, err := e.ResolveAuthorLifetimes(ctx, []int64{a.ID})
 			if err != nil {
-				return scanned, resolved, err
+				if ctx.Err() != nil {
+					return scanned, resolved, ctx.Err()
+				}
+				switch fails.fail() {
+				case qidAbortPass:
+					if serr := saveQIDBackfillCursor(ctx, e.pool, cur); serr != nil {
+						logger.Warn("author qid backfill: save cursor failed", "err", serr)
+					}
+					return scanned, resolved, fmt.Errorf("%w: %d сбоев подряд, последний: %v", ErrUpstream, fails.total, err)
+				case qidSkipAuthor:
+					logger.Info("author qid backfill: author deferred after repeated source failures", "author_id", a.ID, "err", err)
+					deferred++
+					cur = a
+					i++
+				default:
+					logger.Info("author qid backfill: source failed, retrying author after pause", "author_id", a.ID, "err", err)
+				}
+				if err := sleepCtx(ctx, qidBackfillFailWait); err != nil {
+					return scanned, resolved, err
+				}
+				continue
 			}
+			fails.ok()
 			scanned++
 			resolved += len(got)
 			cur = a
+			i++
 			if scanned%500 == 0 {
 				logger.Info("author qid backfill: progress", "scanned", scanned, "resolved", resolved)
 			}
+		}
+		if err := saveQIDBackfillCursor(ctx, e.pool, cur); err != nil {
+			logger.Warn("author qid backfill: save cursor failed", "err", err)
 		}
 	}
 }
