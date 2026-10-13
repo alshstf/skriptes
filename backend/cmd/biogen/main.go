@@ -81,8 +81,25 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "usage: biogen <fetch|extract|verify|run|eval|check> [flags]")
 }
 
+// qids — список через запятую или @файл (QID в начале каждой строки, остальное
+// после табуляции/пробела — комментарий; пустые и # — пропуск).
 func qids(s string) []string {
 	var out []string
+	if strings.HasPrefix(s, "@") {
+		raw, err := os.ReadFile(filepath.Clean(s[1:])) //nolint:gosec // путь из флага CLI владельца
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "biogen:", err)
+			return nil
+		}
+		for _, line := range strings.Split(string(raw), "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+			out = append(out, strings.FieldsFunc(line, func(r rune) bool { return r == '\t' || r == ' ' || r == ',' })[0])
+		}
+		return out
+	}
 	for _, q := range strings.Split(s, ",") {
 		if q = strings.TrimSpace(q); q != "" {
 			out = append(out, q)
@@ -268,6 +285,8 @@ func cmdRun(ctx context.Context, args []string) error {
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
 	langs := fs.String("langs", "", "языки статей через запятую (ru,en); пусто — ru и en только при короткой ru")
+	retries := fs.Int("retries", 2, "повторов извлечения после сбоя (лимит подписки, сеть)")
+	retryWait := fs.Duration("retry-wait", 10*time.Minute, "пауза перед повтором")
 	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
@@ -279,22 +298,57 @@ func cmdRun(ctx context.Context, args []string) error {
 	}
 	f := gen.NewFetcher(httpClient())
 	f.Langs = qids(*langs)
+	// Пачка: ошибка одного автора не останавливает остальных (пишется в
+	// <out>/failed.txt), готовые (есть verified/<QID>.json) пропускаются —
+	// повторный запуск той же команды доделывает хвост. Сбой извлечения
+	// (лимит подписки, сеть) повторяется после паузы.
+	var failed []string
 	for _, q := range qids(*qid) {
-		src, err := f.Fetch(ctx, q)
+		if _, err := os.Stat(filepath.Join(*out, "verified", q+".json")); err == nil {
+			fmt.Printf("%s: уже есть verified, пропуск\n", q)
+			continue
+		}
+		err := runOne(ctx, f, x, *out, q, *retries, *retryWait)
 		if err != nil {
-			return fmt.Errorf("%s: %w", q, err)
+			fmt.Fprintf(os.Stderr, "biogen: %s: %v\n", q, err)
+			failed = append(failed, q+"\t"+err.Error())
+			_ = os.MkdirAll(*out, 0o750)
+			_ = os.WriteFile(filepath.Join(*out, "failed.txt"), []byte(strings.Join(failed, "\n")+"\n"), 0o600)
 		}
-		if err := writeJSON(filepath.Join(*out, "sources", q+".json"), src); err != nil {
-			return err
-		}
-		if err := extractOne(ctx, x, *out, q); err != nil {
-			return err
-		}
-		if err := verifyOne(*out, q); err != nil {
-			return err
+		if ctx.Err() != nil {
+			break
 		}
 	}
+	if len(failed) > 0 {
+		return fmt.Errorf("не удалось %d из %d, см. %s", len(failed), len(qids(*qid)), filepath.Join(*out, "failed.txt"))
+	}
 	return nil
+}
+
+func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, retries int, wait time.Duration) error {
+	src, err := f.Fetch(ctx, q)
+	if err != nil {
+		return fmt.Errorf("fetch: %w", err)
+	}
+	if err := writeJSON(filepath.Join(out, "sources", q+".json"), src); err != nil {
+		return err
+	}
+	for attempt := 0; ; attempt++ {
+		err = extractOne(ctx, x, out, q)
+		if err == nil || attempt >= retries || ctx.Err() != nil {
+			break
+		}
+		fmt.Fprintf(os.Stderr, "biogen: %s: extract: %v — повтор через %s (%d/%d)\n", q, err, wait, attempt+1, retries)
+		select {
+		case <-time.After(wait):
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
+	if err != nil {
+		return fmt.Errorf("extract: %w", err)
+	}
+	return verifyOne(out, q)
 }
 
 func cmdEval(args []string) error {
