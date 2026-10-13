@@ -116,11 +116,13 @@ func cmdFetch(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("fetch", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список через запятую)")
 	out := fs.String("out", "work", "рабочая папка")
+	langs := fs.String("langs", "", "языки статей через запятую (ru,en); пусто — ru и en только при короткой ru")
 	_ = fs.Parse(args)
 	if *qid == "" {
 		return errors.New("нужен -qid")
 	}
 	f := gen.NewFetcher(httpClient())
+	f.Langs = qids(*langs)
 	for _, q := range qids(*qid) {
 		src, err := f.Fetch(ctx, q)
 		if err != nil {
@@ -265,6 +267,7 @@ func cmdRun(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("run", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
+	langs := fs.String("langs", "", "языки статей через запятую (ru,en); пусто — ru и en только при короткой ru")
 	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
@@ -275,6 +278,7 @@ func cmdRun(ctx context.Context, args []string) error {
 		return err
 	}
 	f := gen.NewFetcher(httpClient())
+	f.Langs = qids(*langs)
 	for _, q := range qids(*qid) {
 		src, err := f.Fetch(ctx, q)
 		if err != nil {

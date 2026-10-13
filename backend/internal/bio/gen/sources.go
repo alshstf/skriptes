@@ -61,6 +61,9 @@ type Fetcher struct {
 	WikidataAPI func() string
 	// MaxTextRunes — кап текста одной статьи после обрезки (модель видит не больше).
 	MaxTextRunes int
+	// Langs — явный список языков статей (например, ["ru", "en"]); пусто —
+	// эвристика: ru, плюс en, если ru короче 10 тыс. символов.
+	Langs []string
 }
 
 // NewFetcher — продовые адреса.
@@ -78,6 +81,21 @@ func (f *Fetcher) Fetch(ctx context.Context, qid string) (*Sources, error) {
 	src := &Sources{QID: qid}
 	if err := f.fetchFacts(ctx, src); err != nil {
 		return nil, fmt.Errorf("wikidata: %w", err)
+	}
+	if len(f.Langs) > 0 {
+		for _, lang := range f.Langs {
+			a, err := f.fetchArticle(ctx, lang, qid)
+			if err != nil {
+				return nil, fmt.Errorf("%swiki: %w", lang, err)
+			}
+			if a != nil {
+				src.Articles = append(src.Articles, *a)
+			}
+		}
+		if len(src.Articles) == 0 {
+			return nil, fmt.Errorf("нет статьи в Википедии (%v)", f.Langs)
+		}
+		return src, nil
 	}
 	ru, err := f.fetchArticle(ctx, "ru", qid)
 	if err != nil {
