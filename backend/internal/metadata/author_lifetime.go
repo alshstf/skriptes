@@ -112,3 +112,75 @@ func RecomputeYearsBeforeBirth(ctx context.Context, pool *pgxpool.Pool) ([]int64
 	}
 	return recomputeWorkYears(ctx, pool, ids, false)
 }
+
+// QID-бэкфилл для авторов с био (био-таймлайн, план v3). Био у 8,5 тыс. авторов
+// на проде скачаны до #465 — QID и годы жизни у них не записаны (на 2026-10-13
+// QID есть у 29). Датасет таймлайна ключуется QID, без него секции не
+// показываются. Догон — тот же поиск статьи, что у био (ResolveAuthorLifetimes:
+// политика приёма, годы и QID пишутся, био не трогается), от самых известных,
+// в темпе RPM воркера био; сбой источника — выход, следующий старт продолжит с
+// того же места (keyset-курсор по (renown, id) — уже обработанные, но не
+// нашедшиеся, второй раз в этом проходе не берутся).
+
+// QIDBackfillCursor — позиция прохода: последняя обработанная пара (renown, id).
+type QIDBackfillCursor struct {
+	Renown int64
+	ID     int64
+}
+
+// NextQIDBackfillBatch — следующие limit авторов с био и без QID после курсора,
+// по убыванию известности.
+func NextQIDBackfillBatch(ctx context.Context, pool *pgxpool.Pool, cur QIDBackfillCursor, limit int) ([]QIDBackfillCursor, error) {
+	rows, err := pool.Query(ctx, `
+		SELECT id, renown FROM authors
+		WHERE bio IS NOT NULL AND NOT (ext_ids ? 'wd_qid') AND born_year IS NULL AND NOT is_service
+		  AND (renown, id) < ($1, $2)
+		ORDER BY renown DESC, id DESC LIMIT $3`, cur.Renown, cur.ID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("qid backfill: batch: %w", err)
+	}
+	return pgx.CollectRows(rows, func(r pgx.CollectableRow) (QIDBackfillCursor, error) {
+		var c QIDBackfillCursor
+		err := r.Scan(&c.ID, &c.Renown)
+		return c, err
+	})
+}
+
+// BackfillAuthorQIDs — полный проход; возвращает, сколько авторов просмотрено и
+// у скольких появились годы/QID. Первый сбой источника прерывает проход
+// (ErrUpstream) — вызывающий не ставит флаг, догон повторится.
+func (e *Enricher) BackfillAuthorQIDs(ctx context.Context, rpm int, logger *slog.Logger) (scanned, resolved int, err error) {
+	if logger == nil {
+		logger = slog.Default()
+	}
+	if rpm <= 0 {
+		rpm = 30 // без лимита Википедию не дёргаем
+	}
+	gate := &rateGate{}
+	gate.setRPM(rpm)
+	cur := QIDBackfillCursor{Renown: 1 << 62, ID: 1 << 62}
+	for {
+		batch, err := NextQIDBackfillBatch(ctx, e.pool, cur, 200)
+		if err != nil {
+			return scanned, resolved, err
+		}
+		if len(batch) == 0 {
+			return scanned, resolved, nil
+		}
+		for _, a := range batch {
+			if err := gate.wait(ctx); err != nil {
+				return scanned, resolved, err
+			}
+			got, err := e.ResolveAuthorLifetimes(ctx, []int64{a.ID})
+			if err != nil {
+				return scanned, resolved, err
+			}
+			scanned++
+			resolved += len(got)
+			cur = a
+			if scanned%500 == 0 {
+				logger.Info("author qid backfill: progress", "scanned", scanned, "resolved", resolved)
+			}
+		}
+	}
+}
