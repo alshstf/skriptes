@@ -120,6 +120,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
 24. **Премии — только белый список владельца** (`awards/catalog.go`, `manual.json` — руками раз в год). Новую премию или
     номинацию — только после его проверки (`~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
+25. **Био-таймлайн — курируемый датасет по QID** (`internal/bio/data`), runtime без LLM и внешних вызовов. `short` ≤ 60
+    без года и названий работ, ключ вехи `type-yyyy` (по нему живёт «скрыть»), даты ISO нового стиля, у вехи
+    `evidence`-цитата. Генератор — `cmd/biogen`: `extract` по умолчанию через `claude -p` (подписка), `-engine api` — опция. План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
@@ -151,6 +154,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | CSP фронта | `frontend/nginx-security-headers.conf` (inline-скрипты запрещены; e2e под CSP) |
 | Docker compose, Caddy, публичный деплой | `infra/docker-compose*.yml`, `infra/Caddyfile`, `infra/Caddyfile.public`, `infra/.env.public.example` |
 | Метрики | `backend/internal/metrics` (отдельный сервер `SKRIPTES_METRICS_ADDR`) |
+| Био-таймлайн автора (датасет, генератор) | `internal/bio/` (данные `data/authors/<QID>.json`), `cmd/biogen` |
 | Postgres в тестах | `backend/internal/testpg` (своих `postgres.Run` не заводить) |
 | Релиз (CI) | `.github/workflows/release.yml` |
 
