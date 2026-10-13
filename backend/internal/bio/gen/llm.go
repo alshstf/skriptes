@@ -221,7 +221,7 @@ func fromDraft(src *Sources, d *draft, prev *bio.Author) *bio.Author {
 			e.Works = append(e.Works, bio.WorkLink{Ref: l.Ref, Note: strings.TrimSpace(l.Note)})
 		}
 		if q := strings.TrimSpace(de.Evidence); q != "" {
-			e.Evidence = &bio.Evidence{Source: evidenceSource(src), Quote: q}
+			e.Evidence = &bio.Evidence{Source: evidenceSource(src, q), Quote: q}
 		}
 		base := string(e.Type) + "-" + strconv.Itoa(bio.YearOf(e.Date.From))
 		key := ""
@@ -244,7 +244,18 @@ func fromDraft(src *Sources, d *draft, prev *bio.Author) *bio.Author {
 	return a
 }
 
-func evidenceSource(src *Sources) string {
+// evidenceSource — чья цитата: "wikidata" для строк факта, иначе язык статьи,
+// в которой она нашлась (ru → en); не нашлась нигде — первая статья (verify
+// такую веху всё равно отбракует).
+func evidenceSource(src *Sources, quote string) string {
+	if strings.HasPrefix(strings.ToLower(quote), "wikidata") {
+		return "wikidata"
+	}
+	for _, art := range src.Articles {
+		if quoteFound(quote, []string{normalize(art.Text)}) {
+			return art.Lang + "wiki"
+		}
+	}
 	if len(src.Articles) > 0 {
 		return src.Articles[0].Lang + "wiki"
 	}

@@ -49,7 +49,9 @@ func TestFetchArticleAndFacts(t *testing.T) {
 		}}})
 	})
 	mux.HandleFunc("/wd", func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(map[string]any{"entities": map[string]any{"Q991": map[string]any{"sitelinks": map[string]any{"ruwiki": map[string]any{"title": "Достоевский, Фёдор"}}}}})
+		_ = json.NewEncoder(w).Encode(map[string]any{"entities": map[string]any{"Q991": map[string]any{"sitelinks": map[string]any{
+			"ruwiki": map[string]any{"title": "Достоевский, Фёдор"}, "enwiki": map[string]any{"title": "Dostoevsky"},
+		}}}})
 	})
 	mux.HandleFunc("/ru", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("titles") != "Достоевский, Фёдор" {
@@ -61,7 +63,10 @@ func TestFetchArticleAndFacts(t *testing.T) {
 		}}}})
 	})
 	mux.HandleFunc("/en", func(w http.ResponseWriter, r *http.Request) {
-		t.Errorf("en не должен запрашиваться при длинной ru")
+		// Короткая en при длинной ru — запрашивается, но в источники не попадает.
+		_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"pages": []map[string]any{{
+			"title": "Dostoevsky", "extract": "Short English article.", "revisions": []map[string]any{{"revid": 7}},
+		}}}})
 	})
 	srv := httptest.NewServer(mux)
 	defer srv.Close()
@@ -79,5 +84,14 @@ func TestFetchArticleAndFacts(t *testing.T) {
 	}
 	if len(src.Articles) != 1 || src.Articles[0].Rev != 123 || strings.Contains(src.Articles[0].Text, "Книги.") {
 		t.Fatalf("article: %+v", src.Articles)
+	}
+	// Явный список языков — обе статьи, в заданном порядке.
+	f.Langs = []string{"ru", "en"}
+	src, err = f.Fetch(context.Background(), "Q991")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(src.Articles) != 2 || src.Articles[1].Lang != "en" {
+		t.Fatalf("langs: %+v", src.Articles)
 	}
 }

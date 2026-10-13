@@ -100,3 +100,19 @@ func TestOutputSchemaStrict(t *testing.T) {
 		t.Fatal("не все свойства обязательны")
 	}
 }
+
+func TestEvidenceSourceByArticle(t *testing.T) {
+	src := &Sources{Articles: []Article{{Lang: "ru", Text: "Родился в Москве в 1821 году."}, {Lang: "en", Text: "He converted to Catholicism in 1947 with his wife."}}}
+	if got := evidenceSource(src, "converted to Catholicism in 1947"); got != "enwiki" {
+		t.Fatalf("en quote → %q", got)
+	}
+	if got := evidenceSource(src, "Родился в Москве в 1821 году"); got != "ruwiki" {
+		t.Fatalf("ru quote → %q", got)
+	}
+	if got := evidenceSource(src, "wikidata P40: Соня 1868"); got != "wikidata" {
+		t.Fatalf("wikidata → %q", got)
+	}
+	if got := evidenceSource(src, "нет такой цитаты нигде вообще"); got != "ruwiki" {
+		t.Fatalf("fallback → %q", got)
+	}
+}

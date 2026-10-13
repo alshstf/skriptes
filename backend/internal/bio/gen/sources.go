@@ -62,7 +62,8 @@ type Fetcher struct {
 	// MaxTextRunes — кап текста одной статьи после обрезки (модель видит не больше).
 	MaxTextRunes int
 	// Langs — явный список языков статей (например, ["ru", "en"]); пусто —
-	// эвристика: ru, плюс en, если ru короче 10 тыс. символов.
+	// эвристика: ru, плюс en, если ru короче 20 тыс. символов или en в полтора
+	// раза длиннее ru.
 	Langs []string
 }
 
@@ -104,13 +105,21 @@ func (f *Fetcher) Fetch(ctx context.Context, qid string) (*Sources, error) {
 	if ru != nil {
 		src.Articles = append(src.Articles, *ru)
 	}
-	// Короткая русская статья (< 10 тыс. символов) — добираем английскую.
-	if ru == nil || utf8.RuneCountInString(ru.Text) < 10_000 {
-		en, err := f.fetchArticle(ctx, "en", qid)
-		if err != nil {
-			return nil, fmt.Errorf("enwiki: %w", err)
+	// Английская статья — если русская короткая (< 20 тыс. символов) или en
+	// заметно полнее (в полтора раза длиннее): у иностранных авторов ru обычно
+	// пересказ en, и без en модель теряет половину вех (замер 2026-10-13 на
+	// пяти авторах: Перси 6 → 23, О’Коннор 8 → 15, Хайсмит 10 → 37). У русских
+	// классиков ru длиннее — en не берём, чтобы не удваивать вход.
+	en, err := f.fetchArticle(ctx, "en", qid)
+	if err != nil {
+		return nil, fmt.Errorf("enwiki: %w", err)
+	}
+	if en != nil {
+		ruLen := 0
+		if ru != nil {
+			ruLen = utf8.RuneCountInString(ru.Text)
 		}
-		if en != nil {
+		if ru == nil || ruLen < 20_000 || utf8.RuneCountInString(en.Text) > ruLen*3/2 {
 			src.Articles = append(src.Articles, *en)
 		}
 	}
