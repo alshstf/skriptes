@@ -22,6 +22,8 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/api"
 	"github.com/skriptes/skriptes/backend/internal/auth"
 	"github.com/skriptes/skriptes/backend/internal/awards"
+	"github.com/skriptes/skriptes/backend/internal/bio"
+	"github.com/skriptes/skriptes/backend/internal/bio/timeline"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/catalog"
 	"github.com/skriptes/skriptes/backend/internal/collections"
@@ -72,6 +74,14 @@ func run() error {
 	}
 
 	logger := newLogger(cfg.LogLevel, cfg.LogFormat)
+
+	// Встроенный датасет био-таймлайна: битый файл — не стартуем (до открытия
+	// пула, чтобы os.Exit не обходил defer pool.Close()).
+	bioDataset, err := bio.Load()
+	if err != nil {
+		logger.Error("bio: dataset invalid", "err", err)
+		os.Exit(1)
+	}
 	slog.SetDefault(logger)
 
 	dbCtx, dbCancel := context.WithTimeout(context.Background(), cfg.DatabaseTimeout)
@@ -532,6 +542,26 @@ func run() error {
 		}
 		logger.Info("author lifetimes for suspect years done", "authors", len(authors), "with_years", len(got), "works", len(works))
 	})
+	// QID и годы жизни для авторов с био (био-таймлайн, план v3): био скачаны до
+	// #465 без QID; датасет таймлайна ключуется QID. Та же политика приёма, био
+	// не трогается, темп — RPM воркера био; после рестарта продолжается.
+	metadata.Go(func(c context.Context) {
+		const flag = "author_qid_backfill_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		scanned, resolved, err := enricher.BackfillAuthorQIDs(c, baCfg.BiosRPM, logger)
+		if err != nil {
+			logger.Warn("author qid backfill stopped — will continue next start", "scanned", scanned, "resolved", resolved, "err", err)
+			return
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("author qid backfill: set flag failed", "err", err)
+		}
+		logger.Info("author qid backfill done", "scanned", scanned, "resolved", resolved)
+	})
 	// Ключи группировки изданий из поиска экранизаций (#467): разовый догон для
 	// работ, у которых экранизации уже найдены, а QID книги не сохранялся. Не чаще
 	// 30 запросов в минуту; сбой источника — продолжим на следующем старте.
@@ -634,6 +664,15 @@ func run() error {
 
 	// Лимит скачиваний на пользователя — общий для веба и OPDS (#389, B1).
 	downloadLimiter := dlimit.NewDefault()
+	// Био-таймлайн (план v3): датасет проверен выше (до пула), сев в фоне при
+	// смене версии; ручки читают то, что уже посеяно.
+	bioTimeline := timeline.New(pool, bioDataset, logger)
+	metadata.Go(func(ctx context.Context) {
+		if err := bioTimeline.Seed(ctx); err != nil {
+			logger.Warn("bio: seed failed", "err", err)
+		}
+	})
+
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
@@ -676,6 +715,7 @@ func run() error {
 		},
 		Content: api.ContentDeps{Resolver: contentResolver},
 		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
+		Bio:     api.BioDeps{Service: bioTimeline},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
