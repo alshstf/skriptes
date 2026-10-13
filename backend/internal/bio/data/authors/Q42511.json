@@ -1,0 +1,1088 @@
+{
+  "qid": "Q42511",
+  "name": "Герберт Уэллс",
+  "born": "1866-09-21",
+  "died": "1946-08-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D1%8D%D0%BB%D0%BB%D1%81%2C_%D0%93%D0%B5%D1%80%D0%B1%D0%B5%D1%80%D1%82_%D0%94%D0%B6%D0%BE%D1%80%D0%B4%D0%B6",
+      "rev": 155080583
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/H._G._Wells",
+      "rev": 1375299870
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ch1",
+      "title": "Бромли и ученичество",
+      "from": 1866,
+      "to": 1883
+    },
+    {
+      "key": "ch2",
+      "title": "Студент Хаксли, учитель, журналист",
+      "from": 1884,
+      "to": 1894
+    },
+    {
+      "key": "ch3",
+      "title": "Джейн, Уокинг, научные романы",
+      "from": 1895,
+      "to": 1909
+    },
+    {
+      "key": "ch4",
+      "title": "Война и Россия",
+      "from": 1910,
+      "to": 1923
+    },
+    {
+      "key": "ch5",
+      "title": "Ривьера, Одетта, смерть Джейн",
+      "from": 1924,
+      "to": 1932
+    },
+    {
+      "key": "ch6",
+      "title": "ПЕН-клуб, Сталин, Мура",
+      "from": 1933,
+      "to": 1946
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1866",
+      "date": {
+        "from": "1866-09-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бромли, четвёртый ребёнок в семье лавочника",
+      "long": "Родился 21 сентября 1866 года в Атлас-хаусе на Хай-стрит в Бромли, Кент. Четвёртый и младший ребёнок Джозефа Уэллса, бывшего садовника, лавочника и профессионального игрока в крикет, и Сары Нил, бывшей горничной. Лавка фарфора почти не приносила дохода.",
+      "place": {
+        "label": "Бромли"
+      },
+      "chapter": "ch1",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 сентября 1866, Бромли, Англия, Великобритания — 13 августа 1946, Лондон, Англия, Великобритания"
+      }
+    },
+    {
+      "key": "illness-1874",
+      "date": {
+        "from": "1874",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Перелом ноги и приобщение к чтению в восемь лет",
+      "long": "В 1874 году сломал ногу и был прикован к постели; отец носил ему книги из местной библиотеки, и чтение стало страстью. В том же году поступил в Коммерческую академию Томаса Морли, готовившую к профессии торговца.",
+      "place": {
+        "label": "Бромли"
+      },
+      "chapter": "ch1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A defining incident of young Wells's life was an accident in 1874 that left him bedridden with a broken leg."
+      }
+    },
+    {
+      "key": "poverty-1877",
+      "date": {
+        "from": "1877",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Перелом бедра у отца, конец семейного заработка",
+      "long": "В 1877 году отец Джозеф Уэллс сломал бедро; с профессиональным крикетом — основным источником дохода семьи — было покончено. Не сумев прокормиться, родители стали искать сыновьям места учеников в ремёслах.",
+      "place": {
+        "label": "Бромли"
+      },
+      "chapter": "ch1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1877, his father, Joseph Wells, fractured his femur. The accident effectively put an end to Joseph's career as a cricketer"
+      }
+    },
+    {
+      "key": "poverty-1880",
+      "date": {
+        "from": "1880",
+        "to": "1883",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Ученичество у торговца мануфактурой в Саутси",
+      "long": "С 1880 по 1883 год — тягостное ученичество в мануфактурном магазине Хайда в Саутси: тринадцатичасовой рабочий день и ночёвки в общей спальне учеников. Самые несчастные годы его жизни к тому времени.",
+      "place": {
+        "label": "Саутси"
+      },
+      "works": [
+        {
+          "ref": "kipps",
+          "note": "опыт ученичества в магазине Хайда лёг в основу романа о приказчике"
+        },
+        {
+          "ref": "mr-polly",
+          "note": "опыт ученичества в магазине Хайда лёг в основу романа"
+        },
+        {
+          "ref": "wheels-of-chance",
+          "note": "опыт ученичества в магазине Хайда лёг в основу романа"
+        }
+      ],
+      "chapter": "ch1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1880 to 1883, Wells had an unhappy apprenticeship as a draper at Hyde's Drapery Emporium in Southsea."
+      }
+    },
+    {
+      "key": "education-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из ученичества, помощник учителя в Мидхерсте",
+      "long": "В 1883 году уговорил родителей расторгнуть контракт ученичества и стал помощником учителя в Мидхерстской грамматической школе, где смог всерьёз продолжить самообразование.",
+      "place": {
+        "label": "Мидхерст"
+      },
+      "chapter": "ch1",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1883, Wells persuaded his parents to release him from the apprenticeship, taking an opportunity offered by Midhurst Grammar School again to become a pupil–teacher"
+      }
+    },
+    {
+      "key": "relocation-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Сток-он-Тренте среди печей Гончарного края",
+      "long": "В 1888 году жил в Басфорде, Сток-он-Трент. Писал другу, что «округ произвёл на меня огромное впечатление»; зарево литейных печей над городом отозвалось в его прозе.",
+      "place": {
+        "label": "Сток-он-Трент"
+      },
+      "works": [
+        {
+          "ref": "war-worlds",
+          "note": "картины горящих печей над городом, как полагают, легли в основу описаний в романе (письмо другу)"
+        }
+      ],
+      "chapter": "ch2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1888, Wells stayed in Stoke-on-Trent, living in Basford."
+      }
+    },
+    {
+      "key": "education-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра зоологии Лондонского университета",
+      "long": "В 1890 году получил степень бакалавра наук по зоологии в Лондонском университете экстерном. К 1891 году имел два учёных звания по биологии.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was not until 1890 that Wells earned a Bachelor of Science degree in zoology from the University of London External Programme."
+      }
+    },
+    {
+      "key": "love-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на кузине Изабелле",
+      "long": "В 1891 году женился на двоюродной сестре Изабелле Мэри Уэллс, дочери тётки Мэри, у которой жил без средств после ухода из Педагогической школы. Брак распался в 1894 году.",
+      "chapter": "ch2",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1891, Wells married his cousin Isabel Mary Wells (1865–1931; from 1902 Isabel Mary Smith)."
+      }
+    },
+    {
+      "key": "career-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в профессиональную журналистику",
+      "long": "В 1893 году профессионально занялся журналистикой: юмористические заметки для Pall Mall Gazette и других изданий. В том же году вышла первая книга — двухтомный учебник биологии.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch2",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1893 году профессионально занялся журналистикой."
+      }
+    },
+    {
+      "key": "relocation-1895",
+      "date": {
+        "from": "1895-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд с Джейн в Уокинг, самый плодотворный период",
+      "long": "В мае 1895 года поселился с Джейн в съёмном доме «Линтон» на Мейбери-роуд в Уокинге и прожил там неполные полтора года. Эти месяцы — возможно, самые продуктивные за всю его писательскую жизнь.",
+      "place": {
+        "label": "Уокинг"
+      },
+      "works": [
+        {
+          "ref": "war-worlds",
+          "note": "задуман и написан в Уокинге"
+        },
+        {
+          "ref": "time-machine",
+          "note": "написан в Уокинге"
+        },
+        {
+          "ref": "moreau",
+          "note": "закончен в Уокинге"
+        },
+        {
+          "ref": "wheels-of-chance",
+          "note": "написан и издан в Уокинге"
+        },
+        {
+          "ref": "sleeper",
+          "note": "начат в Уокинге"
+        }
+      ],
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "with whom he moved to Woking, Surrey, in May 1895. They lived in a rented house, 'Lynton'"
+      }
+    },
+    {
+      "key": "love-1895",
+      "date": {
+        "from": "1895-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с ученицей Эми Кэтрин Роббинс (Джейн)",
+      "long": "В 1894 году разошёлся с Изабеллой, полюбив свою ученицу Эми Кэтрин Роббинс (1872—1927), известную как Джейн. В октябре 1895 года они расписались в регистрационном бюро Сент-Панкрас. О ней он писал: «Ума не приложу, чем бы я был без неё».",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple agreed to separate in 1894, when he had fallen in love with one of his students, Amy Catherine Robbins … married at St Pancras register office in October 1895"
+      }
+    },
+    {
+      "key": "career-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание Конрада: «О, реалист фантастического!»",
+      "long": "В 1898 году Джозеф Конрад приветствовал его словами «О, реалист фантастического!» — за умение соединять единственное невероятное допущение с обыденными подробностями («закон Уэллса»).",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "leading Joseph Conrad to hail him in 1898 with \"O Realist of the Fantastic!\""
+      }
+    },
+    {
+      "key": "relocation-1901",
+      "date": {
+        "from": "1901",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Болезнь и собственный дом Спейд-хаус в Сэндгейте",
+      "long": "Из-за слабого здоровья переехал к морю в Сэндгейт близ Фолкстона, где в 1901 году построил большой семейный дом Спейд-хаус.",
+      "place": {
+        "label": "Сэндгейт"
+      },
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his poor health took them to Sandgate, near Folkestone, where he constructed a large family home, Spade House, in 1901."
+      }
+    },
+    {
+      "key": "child-1901",
+      "date": {
+        "from": "1901-07-17",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Джорджа Филипа («Джипа»)",
+      "long": "17 июля 1901 года у Уэллса и Джейн родился первый сын Джордж Филип, известный как Джип (1901—1985), впоследствии зоолог и соавтор отца по «Науке жизни».",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Джордж Филип Уэллс 1901-07-17"
+      }
+    },
+    {
+      "key": "child-1902",
+      "date": {
+        "from": "1902-10-31",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Фрэнка Ричарда",
+      "long": "Второй сын от Джейн, Фрэнк Ричард Уэллс (умер в 1982 году), дед кинорежиссёра Саймона Уэллса.",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Frank Wells 1902-10-31"
+      }
+    },
+    {
+      "key": "other-1903",
+      "date": {
+        "from": "1903",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Членство в Фабианском обществе, конфликты с Шоу",
+      "long": "С 1903 по 1909 год состоял в Фабианском обществе, выступавшем за постепенные социалистические реформы; часто конфликтовал с фабианцами, в том числе с Бернардом Шоу и супругами Вебб.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch3",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1903 по 1909 год Уэллс состоял в Фабианском обществе, выступавшем за постепенные социалистические реформы."
+      }
+    },
+    {
+      "key": "loss-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Сары",
+      "long": "В 1905 году умерла мать, Сара Уэллс (урождённая Нил), бывшая горничная, много лет служившая экономкой в имении Аппарк отдельно от мужа.",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Sarah Neal died 1905-01-01"
+      }
+    },
+    {
+      "key": "love-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с Дороти Ричардсон, беременность и выкидыш",
+      "long": "В 1907 году короткая связь с писательницей Дороти Ричардсон, школьной подругой Джейн, закончилась беременностью и выкидышем.",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dorothy Richardson was a friend with whom he had a brief affair which led to a pregnancy and miscarriage, in 1907."
+      }
+    },
+    {
+      "key": "love-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Связь с Эмбер Ривс и уход из Фабианского общества",
+      "long": "В 1909 году вынужденно покинул Фабианское общество из-за любовной связи и внебрачного ребёнка от молодой фабианки Эмбер Ривс. Беатриса Вебб осудила «грязную интригу»; в ответ Уэллс вывел супругов Вебб в романе 1911 года как недалёких буржуазных манипуляторов.",
+      "works": [
+        {
+          "ref": "new-machiavelli",
+          "note": "супруги Вебб высмеяны в романе как Алтиора и Оскар Бейли после осуждения связи с Эмбер Ривс"
+        }
+      ],
+      "chapter": "ch3",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1909 году он сам был вынужден оставить его из-за любовной связи и внебрачного ребёнка от молодой сторонницы Эмбер Ривс."
+      }
+    },
+    {
+      "key": "child-1909",
+      "date": {
+        "from": "1909-12",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны-Джейн от Эмбер Ривс",
+      "long": "В декабре 1909 года у Эмбер Ривс родилась дочь Анна-Джейн; в июле того же года Эмбер при участии Уэллса вышла замуж за адвоката Бланко Уайта.",
+      "chapter": "ch3",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1909, he had a daughter, Anna-Jane, with the writer Amber Reeves"
+      }
+    },
+    {
+      "key": "love-1910",
+      "date": {
+        "from": "1910",
+        "to": "1913",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с писательницей Элизабет фон Арним",
+      "long": "С 1910 по 1913 год одной из его любовниц была романистка Элизабет фон Арним.",
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1910 and 1913, novelist Elizabeth von Arnim was one of his mistresses."
+      }
+    },
+    {
+      "key": "loss-1910",
+      "date": {
+        "from": "1910-10-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Джозефа",
+      "long": "14 октября 1910 года умер отец, Джозеф Уэллс, бывший садовник, лавочник и игрок в крикет.",
+      "chapter": "ch4",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Joseph Wells died 1910-10-14"
+      }
+    },
+    {
+      "key": "other-1914",
+      "date": {
+        "from": "1914-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая поездка в Россию: Петербург и Москва",
+      "long": "В январе 1914 года провёл две недели в Санкт-Петербурге и Москве и вернулся «убеждённым русофилом»; предложил ввести русский язык третьим иностранным в английских школах.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After his visits to Petrograd and Moscow, in January 1914, he came back to England, \"a staunch Russophile\"."
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Поддержка вступления Британии в войну",
+      "long": "В августе 1914 года, сразу после начала Первой мировой, опубликовал в лондонских газетах серию статей: довоенный пацифист возложил вину на Центральные державы и назвал войну той, что «покончит с войнами». Позже писал о ней как о бойне националистов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "war-end-war",
+          "note": "сборник газетных статей августа 1914 года"
+        }
+      ],
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During August 1914, immediately after the outbreak of the First World War, Wells published a number of articles in London newspapers that subsequently appeared as a book entitled The War That Will End War."
+      }
+    },
+    {
+      "key": "child-1914",
+      "date": {
+        "from": "1914-08-04",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Энтони от Ребекки Уэст",
+      "long": "4 августа 1914 года писательница и феминистка Ребекка Уэст, моложе его на 26 лет, родила сына Энтони Уэста (1914—1987), будущего писателя.",
+      "chapter": "ch4",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Anthony West 1914-08-04"
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Работа в Бюро военной пропаганды",
+      "long": "В 1918 году работал в британском Бюро военной пропаганды (Веллингтон-хаус); в числе 53 ведущих авторов подписал «Декларацию писателей», назвавшую вторжение Германии в Бельгию преступлением.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1918, Wells worked for the British War Propaganda Bureau, also called Wellington House."
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер по всемирной истории и богатство",
+      "long": "Двухтомный «Очерк истории» (1920) открыл эпоху популярной всемирной истории: профессиональные историки приняли его неоднозначно, но книга разошлась огромным тиражом и сделала Уэллса богатым человеком.",
+      "works": [
+        {
+          "ref": "outline",
+          "note": "книга, принёсшая богатство и массовую известность"
+        }
+      ],
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His bestselling two-volume work, The Outline of History (1920), began a new era of popularised world history. … and made Wells a rich man."
+      }
+    },
+    {
+      "key": "love-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Мурой Будберг у Горького",
+      "long": "В 1920 году, живя в петроградской квартире Горького, познакомился с его спутницей Марией Закревской-Будберг (тогда графиней Бенкендорф), моложе его на 27 лет.",
+      "place": {
+        "label": "Петроград"
+      },
+      "chapter": "ch4",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году Уэллс познакомился с Марией Игнатьевной Закревской-Будберг."
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920-09",
+        "to": "1920-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Пятнадцать дней в Советской России, встреча с Лениным",
+      "long": "В конце сентября 1920 года приехал в Россию по приглашению Каменева, жил в квартире Горького на Кронверкском проспекте в Петрограде; 6 октября 1920 года встретился в Москве с Лениным и спорил с ним о революции и эволюции.",
+      "place": {
+        "label": "Петроград"
+      },
+      "works": [
+        {
+          "ref": "russia-shadows",
+          "note": "книга о первой поездке в большевистскую Россию с описанием встречи с Лениным"
+        }
+      ],
+      "chapter": "ch4",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце сентября 1920 года Уэллс прибыл в Россию по приглашению Л. Б. Каменева … 6 октября 1920 года Уэллс встретился в Москве с Лениным."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая номинация на Нобелевскую премию по литературе",
+      "long": "В 1921 году впервые выдвинут на Нобелевскую премию по литературе; номинировался также в 1932, 1935 и 1946 годах, но премии не получил.",
+      "chapter": "ch4",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was nominated for the Nobel Prize in Literature in 1921, 1932, 1935, and 1946."
+      }
+    },
+    {
+      "key": "other-1922",
+      "date": {
+        "from": "1922",
+        "to": "1923",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Кандидат от лейбористов на парламентских выборах",
+      "long": "На всеобщих выборах 1922 и 1923 годов выставлял свою кандидатуру от Лейбористской партии по округу Лондонского университета; избран не был.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch4",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Выставлял свою кандидатуру от Лейбористской партии по избирательному округу Лондонского университета на парламентских выборах 1922 и 1923 годов."
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924",
+        "to": "1933",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Жизнь с Одеттой Кён в Грассе, дом Лу-Пиду",
+      "long": "С 1924 по 1933 год жил с голландской писательницей и путешественницей Одеттой Кён, моложе его на 22 года, в доме Лу-Пиду, построенном ими вместе в Грассе на Ривьере.",
+      "place": {
+        "label": "Грасс"
+      },
+      "works": [
+        {
+          "ref": "clissold",
+          "note": "самый длинный роман Уэллса посвящён Одетте Кён"
+        }
+      ],
+      "chapter": "ch5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1924 and 1933, he partnered with the 22-year-younger Dutch adventurer and writer Odette Keun, with whom he lived in Lou Pidou, a house they built together in Grasse, France."
+      }
+    },
+    {
+      "key": "other-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск Флоренс Дикс о плагиате",
+      "long": "В 1927 году канадская учительница Флоренс Дикс безуспешно судилась с Уэллсом, утверждая, что «Очерк истории» списан с её неопубликованной рукописи; суд не нашёл доказательств, апелляцию отклонил Судебный комитет Тайного совета.",
+      "works": [
+        {
+          "ref": "outline",
+          "note": "книга — предмет иска об авторском праве"
+        }
+      ],
+      "chapter": "ch5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1927, a Canadian teacher and writer Florence Deeks unsuccessfully sued Wells for infringement of copyright and breach of trust"
+      }
+    },
+    {
+      "key": "loss-1927",
+      "date": {
+        "from": "1927-10-06",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Джейн от рака",
+      "long": "6 октября 1927 года в Данмоу в возрасте 55 лет умерла от рака Джейн Уэллс. Её смерть опустошила писателя; на кремации в Голдерс-Грин присутствовал Бернард Шоу.",
+      "place": {
+        "label": "Данмоу"
+      },
+      "chapter": "ch5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jane died on 6 October 1927, in Dunmow, at the age of 55, which left Wells devastated."
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент международного ПЕН-клуба",
+      "long": "В 1933 году избран президентом ПЕН-клуба. В 1934 году добился исключения германского ПЕН-центра, отказавшегося принимать неарийских писателей; на конференции в Рагузе не позволил нацистским симпатизантам лишить слова эмигранта Эрнста Толлера.",
+      "chapter": "ch6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1933 году был избран президентом ПЕН-клуба."
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Возобновление связи с Мурой Будберг в Лондоне",
+      "long": "В 1933 году Будберг, расставшись с Горьким, эмигрировала в Лондон; их близкие отношения продолжались до смерти писателя, она ухаживала за ним в последней болезни. Он не раз просил её выйти за него замуж, но она отказывала.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Связь возобновилась в 1933 году в Лондоне, куда она эмигрировала после расставания с Максимом Горьким."
+      }
+    },
+    {
+      "key": "persecution-1933",
+      "date": {
+        "from": "1933-05-10",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Сожжение книг нацистами на Опернплац в Берлине",
+      "long": "10 мая 1933 года книги Уэллса сожжены нацистской молодёжью на берлинской Опернплац и изъяты из библиотек и магазинов Германии — за критику политической ситуации в стране. Позднее его имя обнаружилось в «Чёрной книге» СС — списке подлежащих аресту при вторжении в Британию.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "ch6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 10 May 1933, Wells's books were burned by the Nazi youth in Berlin's Opernplatz, and his works were banned from libraries and book stores."
+      }
+    },
+    {
+      "key": "illness-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Диабет, соучредитель Диабетической ассоциации",
+      "long": "Страдал диабетом; в 1934 году стал одним из основателей Диабетической ассоциации (ныне Diabetes UK).",
+      "chapter": "ch6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wells had diabetes, and was a co-founder in 1934 of The Diabetic Association (now Diabetes UK"
+      }
+    },
+    {
+      "key": "other-1934",
+      "date": {
+        "from": "1934-07-23",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Трёхчасовая беседа со Сталиным в Москве",
+      "long": "23 июля 1934 года, после встречи с президентом Рузвельтом, приехал в СССР и три часа беседовал со Сталиным для New Statesman; надеялся силой убеждения склонить его к реформам, но уехал, поняв, что перемен не будет. Текст беседы опубликован в журнале «Большевик».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "ch6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 июля 1934 года Уэллс вновь посетил Россию (СССР) и был принят Сталиным, текст беседы был опубликован в журнале «Большевик»."
+      }
+    },
+    {
+      "key": "other-1940",
+      "date": {
+        "from": "1940-10-28",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Радиобеседа с Орсоном Уэллсом в Сан-Антонио",
+      "long": "28 октября 1940 года на техасской радиостанции KTSA беседовал с Орсоном Уэллсом, чья радиопостановка двумя годами ранее вызвала панику; признался, что удивлён сенсацией, и поблагодарил за рост продаж одной из своих «менее известных» книг.",
+      "place": {
+        "label": "Сан-Антонио"
+      },
+      "works": [
+        {
+          "ref": "war-worlds",
+          "note": "радиопостановка романа Орсоном Уэллсом — предмет беседы"
+        }
+      ],
+      "chapter": "ch6",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 28 October 1940, on the radio station KTSA in San Antonio, Texas, Wells took part in a radio interview with Orson Welles"
+      }
+    },
+    {
+      "key": "education-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень доктора биологии",
+      "long": "С 1942 года — доктор биологии.",
+      "chapter": "ch6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К 1891 году получил два учёных звания по биологии, с 1942 года доктор биологии."
+      }
+    },
+    {
+      "key": "death-1946",
+      "date": {
+        "from": "1946-08-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в доме на Ганновер-террас",
+      "long": "Умер 13 августа 1946 года в своём доме на Ганновер-террас у Риджентс-парка от осложнений на фоне тяжёлых проблем с обменом веществ, за месяц с небольшим до 80-летия. Кремирован в Голдерс-Грин 16 августа; прах по завещанию развеян сыновьями над Ла-Маншем.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ch6",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Герберт Уэллс умер 13 августа 1946 года, не дожив немногим более месяца до своего 80-летия, в своём доме на Ганновер-террас"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "time-machine",
+      "title": "Машина времени",
+      "qid": "Q627333",
+      "written": {
+        "from": 1895,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "moreau",
+      "title": "Остров доктора Моро",
+      "qid": "Q718268",
+      "written": {
+        "from": 1895,
+        "to": 1896
+      }
+    },
+    {
+      "ref": "invisible",
+      "title": "Человек-невидимка",
+      "qid": "Q1539509",
+      "written": {
+        "from": 1897,
+        "to": 1897
+      }
+    },
+    {
+      "ref": "war-worlds",
+      "title": "Война миров",
+      "qid": "Q213019",
+      "written": {
+        "from": 1895,
+        "to": 1898
+      }
+    },
+    {
+      "ref": "wheels-of-chance",
+      "title": "Колёса фортуны",
+      "written": {
+        "from": 1895,
+        "to": 1896
+      }
+    },
+    {
+      "ref": "sleeper",
+      "title": "Когда Спящий проснётся",
+      "written": {
+        "from": 1895,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "first-men",
+      "title": "Первые люди на Луне",
+      "qid": "Q1218232",
+      "written": {
+        "from": 1901,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "anticipations",
+      "title": "Предвидения",
+      "written": {
+        "from": 1901,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "kipps",
+      "title": "Киппс",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "modern-utopia",
+      "title": "Современная утопия",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "war-in-air",
+      "title": "Война в воздухе",
+      "written": {
+        "from": 1907,
+        "to": 1907
+      }
+    },
+    {
+      "ref": "tono-bungay",
+      "title": "Тоно-Бенге",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "mr-polly",
+      "title": "История мистера Полли",
+      "written": {
+        "from": 1910,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "new-machiavelli",
+      "title": "Новый Макиавелли",
+      "written": {
+        "from": 1911,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "world-set-free",
+      "title": "Освобождённый мир",
+      "written": {
+        "from": 1913,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "war-end-war",
+      "title": "Война, которая покончит с войнами",
+      "written": {
+        "from": 1914,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "outline",
+      "title": "Очерк истории",
+      "qid": "Q5840464",
+      "written": {
+        "from": 1920,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "russia-shadows",
+      "title": "Россия во мгле",
+      "written": {
+        "from": 1920,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "men-like-gods",
+      "title": "Люди как боги",
+      "written": {
+        "from": 1923,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "clissold",
+      "title": "Мир Уильяма Клиссолда",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "shape",
+      "title": "Облик грядущего",
+      "qid": "Q627383",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "autobiography",
+      "title": "Опыт автобиографии",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "mind-tether",
+      "title": "Разум на пределе возможностей",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    }
+  ]
+}

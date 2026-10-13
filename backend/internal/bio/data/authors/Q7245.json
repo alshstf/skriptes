@@ -1,0 +1,1139 @@
+{
+  "qid": "Q7245",
+  "name": "Марк Твен",
+  "born": "1835-11-30",
+  "died": "1910-04-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D0%B2%D0%B5%D0%BD%2C_%D0%9C%D0%B0%D1%80%D0%BA",
+      "rev": 155561670
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mark_Twain",
+      "rev": 1378720585
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство в Ханнибале",
+      "from": 1835,
+      "to": 1850
+    },
+    {
+      "key": "river",
+      "title": "Наборщик и лоцман",
+      "from": 1851,
+      "to": 1860
+    },
+    {
+      "key": "west",
+      "title": "Война, Невада, Калифорния",
+      "from": 1861,
+      "to": 1866
+    },
+    {
+      "key": "innocents",
+      "title": "Простаки, Оливия, Буффало",
+      "from": 1867,
+      "to": 1870
+    },
+    {
+      "key": "hartford",
+      "title": "Хартфорд: главные романы",
+      "from": 1871,
+      "to": 1890
+    },
+    {
+      "key": "debts",
+      "title": "Долги, Европа, кругосветное турне",
+      "from": 1891,
+      "to": 1900
+    },
+    {
+      "key": "late",
+      "title": "Утраты и поздние годы",
+      "from": 1901,
+      "to": 1910
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1835",
+      "date": {
+        "from": "1835-11-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Флориде, штат Миссури",
+      "long": "Сэмюэл Лэнгхорн Клеменс родился 30 ноября 1835 года в городке Флорида (Миссури), третьим из четырёх выживших детей юриста Джона Маршалла Клеменса и Джейн Лэмптон. Родился через две недели после прохождения кометы Галлея.",
+      "place": {
+        "label": "Флорида, Миссури"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сэмюэл Клеменс родился 30 ноября 1835 года в маленьком городке Флориде (штат Миссури, США)"
+      }
+    },
+    {
+      "key": "loss-1839",
+      "date": {
+        "from": "1839",
+        "to": "1842",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры Маргарет и брата Бенджамина",
+      "long": "Старшая сестра Маргарет умерла в 1839 году, когда Сэмюэлу было три года; спустя ещё три года, в 1842-м, умер старший брат Бенджамин. Из семи детей в семье выжили четверо.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его старшая сестра Маргарет (1833—1839) умерла, когда Сэмюэлу было 3 года, а спустя ещё 3 года умер его другой старший брат Бенджамин (1832—1842)."
+      }
+    },
+    {
+      "key": "relocation-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Ханнибал на Миссисипи",
+      "long": "Когда Сэмюэлу было четыре года, семья в поисках лучшей жизни переехала в Ханнибал — портовый город на Миссисипи в штате Миссури, где рабство было законным. Город и его жители стали прообразом Санкт-Петербурга в романах о Томе Сойере и Геке Финне.",
+      "place": {
+        "label": "Ханнибал"
+      },
+      "works": [
+        {
+          "ref": "tomsawyer",
+          "note": "Ханнибал — прообраз Санкт-Петербурга в романе; Том Сойер списан с самого автора в детстве"
+        },
+        {
+          "ref": "huck",
+          "note": "Ханнибал — прообраз Санкт-Петербурга; Гек Финн основан на друге детства Томе Бланкеншипе"
+        }
+      ],
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his sister Margaret (1830–1839) died when Twain was three, and his brother Benjamin (1832–1842) died three years later. … When he was four, Twain's family moved to Hannibal, Missouri, a port town on the Mississippi River that inspired the fictional town of St. Petersburg in The Adventures of Tom Sawyer and The Adventures of Huckleberry Finn"
+      }
+    },
+    {
+      "key": "loss-1847",
+      "date": {
+        "from": "1847-03-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, оставившего долги",
+      "long": "24 марта 1847 года от пневмонии умер отец, адвокат и судья Джон Маршалл Клеменс, оставив семье много долгов. Сэмюэлу было одиннадцать лет; на следующий год он оставил школу после пятого класса и пошёл в ученики к печатнику.",
+      "place": {
+        "label": "Ханнибал"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джона Маршалла Клеменса (11 августа 1798 — 24 марта 1847) … Он умер в 1847 году от пневмонии, оставив много долгов."
+      }
+    },
+    {
+      "key": "career-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Наборщик в газете брата Орайона",
+      "long": "В 1851 году начал работать наборщиком в газете Hannibal Journal, принадлежавшей старшему брату Орайону, и писать для неё заметки и юмористические скетчи — самые живые и спорные, обычно пока Орайон был в отъезде.",
+      "place": {
+        "label": "Ханнибал"
+      },
+      "chapter": "river",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1851, he began working as a typesetter, contributing articles and humorous sketches to the Hannibal Journal, a newspaper that Orion owned."
+      }
+    },
+    {
+      "key": "loss-1858",
+      "date": {
+        "from": "1858-06-21",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель брата Генри при взрыве парохода",
+      "long": "Сэмюэл, обучаясь на лоцмана, устроил младшего брата Генри клерком на пароход «Пенсильвания». 13 июня 1858 года котёл парохода взорвался; Генри умер от ран через восемь дней. Твен всю жизнь считал себя виновным в его смерти.",
+      "chapter": "river",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 13, 1858, the steamboat's boiler exploded; Henry succumbed to his wounds eight days later."
+      }
+    },
+    {
+      "key": "war-1861",
+      "date": {
+        "from": "1861",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Конец лоцманской службы с началом войны",
+      "long": "Работал лоцманом на Миссисипи между Новым Орлеаном и Сент-Луисом — профессия, которой, по его словам, занимался бы всю жизнь. Гражданская война в 1861 году прекратила судоходство по реке, и пришлось искать другую работу.",
+      "works": [
+        {
+          "ref": "life",
+          "note": "годы лоцманства на Миссисипи дали материал для книги"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain continued to work on the river and was a river pilot until the Civil War broke out in 1861, when traffic was curtailed along the Mississippi River."
+      }
+    },
+    {
+      "key": "war-1861-2",
+      "date": {
+        "from": "1861",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Две недели в ополчении конфедератов",
+      "long": "В начале войны ненадолго вступил вторым лейтенантом в местный отряд конфедератов «Рейнджеры Мариона»; через две недели отряд распался.",
+      "works": [
+        {
+          "ref": "private",
+          "note": "двухнедельная служба в ополчении описана в этом очерке 1885 года"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После недолгого знакомства с народным ополчением (этот опыт он красочно описал в 1885 году), Клеменс в июле 1861 года уехал от войны на запад."
+      }
+    },
+    {
+      "key": "relocation-1861",
+      "date": {
+        "from": "1861-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд с братом в Неваду, серебряные прииски",
+      "long": "В июле 1861 года, когда Орайона назначили секретарём губернатора Территории Невада, братья две недели ехали дилижансом через прерии и Скалистые горы в Вирджиния-Сити. Там Сэм безуспешно пытался разбогатеть на добыче серебра.",
+      "place": {
+        "label": "Вирджиния-Сити"
+      },
+      "works": [
+        {
+          "ref": "roughing",
+          "note": "поездка в Неваду и жизнь старателей описаны в книге"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Клеменс в июле 1861 года уехал от войны на запад. Тогда его брату Орайону предложили должность секретаря губернатора Территории Невада."
+      }
+    },
+    {
+      "key": "career-1863",
+      "date": {
+        "from": "1863-02-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая подпись «Марк Твен» в невадской газете",
+      "long": "После неудачи на приисках устроился в газету Territorial Enterprise в Вирджиния-Сити. 3 февраля 1863 года впервые подписал юмористический путевой очерк псевдонимом «Марк Твен» — лоцманским выкриком, означавшим безопасную глубину в две сажени.",
+      "place": {
+        "label": "Вирджиния-Сити"
+      },
+      "works": [
+        {
+          "ref": "roughing",
+          "note": "невадский период лёг в основу книги"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain first used his pen name here on February 3, 1863, when he wrote a humorous travel account"
+      }
+    },
+    {
+      "key": "career-1865",
+      "date": {
+        "from": "1865-11-18",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый общенациональный успех юмористического рассказа",
+      "long": "18 ноября 1865 года нью-йоркский еженедельник Saturday Press напечатал рассказ о скачущей лягушке, услышанный в лагере старателей Энджелс-Кэмп. Рассказ перепечатали по всей стране и назвали лучшим юмористическим произведением Америки.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "works": [
+        {
+          "ref": "frog",
+          "note": "основан на истории, услышанной в отеле Энджелс-Кэмп во время работы старателем"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain's first success as a writer came when his humorous tall tale \"The Celebrated Jumping Frog of Calaveras County\" was published on November 18, 1865, in the New York weekly The Saturday Press, bringing him national attention."
+      }
+    },
+    {
+      "key": "career-1866",
+      "date": {
+        "from": "1866",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командировка на Гавайи и первые лекции",
+      "long": "Весной 1866 года газета Sacramento Union отправила Твена на Гавайи писать путевые письма. По возвращении письма имели огромный успех, и Твен объехал Калифорнию с лекциями, собирая по доллару со слушателя.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "works": [
+        {
+          "ref": "roughing",
+          "note": "поездка на Гавайи описана в книге"
+        }
+      ],
+      "chapter": "west",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1866 года Твен был командирован газетой «Sacramento Union» на Гавайи. … Лекции сразу же стали бешено популярны, и Твен исколесил весь штат"
+      }
+    },
+    {
+      "key": "other-1867",
+      "date": {
+        "from": "1867-06-08",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Пять месяцев на «Квакер-Сити» в Европе и Палестине",
+      "long": "8 июня 1867 года корреспондентом Alta California и New-York Tribune отплыл на пароходе «Квакер-Сити» в Средиземноморье: Европа, Одесса, Ялта, Ливадия, Ближний Восток. На борту познакомился с Чарльзом Лэнгдоном, показавшим ему портрет сестры Оливии.",
+      "works": [
+        {
+          "ref": "innocents",
+          "note": "путевые письма с «Квакер-Сити» легли в основу книги"
+        }
+      ],
+      "chapter": "innocents",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 8, 1867, Twain set sail on the pleasure cruiser Quaker City for five months, and this trip resulted in The Innocents Abroad or The New Pilgrims' Progress."
+      }
+    },
+    {
+      "key": "love-1867",
+      "date": {
+        "from": "1867-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Оливией Лэнгдон",
+      "long": "В декабре 1867 года познакомился с Оливией Лэнгдон из Эльмиры через её брата Чарльза; на первом свидании они слушали лекцию Чарльза Диккенса в Нью-Йорке. Весь 1868 год ухаживал за ней письмами; первое предложение она отклонила.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "innocents",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С ней он познакомился в декабре 1867 года через её брата Чарльза. В своё первое свидание они посетили лекцию Чарльза Диккенса в городе Нью-Йорке."
+      }
+    },
+    {
+      "key": "relocation-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Трудный год в Буффало: смерть тестя, болезнь жены",
+      "long": "После свадьбы семья поселилась в Буффало, в доме, купленном тестем Джервисом Лэнгдоном; Твен стал совладельцем и редактором Buffalo Express. В августе Джервис умер от рака, затем Оливия заболела брюшным тифом.",
+      "place": {
+        "label": "Буффало"
+      },
+      "chapter": "innocents",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1870 года … переехали в город Буффало (штат Нью-Йорк), где они жили в доме, купленном для них Джервисом Лэнгдоном, отцом Оливии. Поначалу им было трудно. Джервис скончался от рака в августе."
+      }
+    },
+    {
+      "key": "love-1870",
+      "date": {
+        "from": "1870-02",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Венчание с Оливией Лэнгдон в Эльмире",
+      "long": "В феврале 1870 года, на пике успеха первой книги, женился на Оливии Лэнгдон из состоятельной либеральной семьи. Через неё познакомился с аболиционистами, Гарриет Бичер-Стоу и Уильямом Дином Хоуэллсом, ставшим другом на всю жизнь.",
+      "place": {
+        "label": "Эльмира"
+      },
+      "chapter": "innocents",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1870 года, на пике успеха от «Простаков за границей», Марк Твен женился на Оливии Лэнгдон"
+      }
+    },
+    {
+      "key": "child-1870",
+      "date": {
+        "from": "1870-11",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение недоношенного сына Лэнгдона",
+      "long": "В ноябре 1870 года родился первенец Лэнгдон, недоношенный. Из-за болезни Оливии семья перебралась в Эльмиру, чтобы родные могли ухаживать за матерью и ребёнком.",
+      "place": {
+        "label": "Буффало"
+      },
+      "chapter": "innocents",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1870 года … А Лэнгдон Клеменс — их первый ребёнок, родившийся в ноябре, был недоношенным."
+      }
+    },
+    {
+      "key": "relocation-1871",
+      "date": {
+        "from": "1871",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Хартфорд",
+      "long": "В 1871 году семья перебралась в Хартфорд (Коннектикут), арендовала большой дом в районе Нук-Фарм и быстро вошла в общественную и литературную жизнь города. Твен много читал лекции в США и Англии.",
+      "place": {
+        "label": "Хартфорд"
+      },
+      "chapter": "hartford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1871 году семья перебралась в город Хартфорд, в штате Коннектикут."
+      }
+    },
+    {
+      "key": "loss-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Лэнгдона от дифтерии",
+      "long": "В 1872 году умер от дифтерии сын Лэнгдон в возрасте 19 месяцев. Позже Твен называл время в Буффало «скорбным и жалким кратким пребыванием».",
+      "chapter": "hartford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "their son Langdon died of diphtheria in 1872 at the age of 19 months"
+      }
+    },
+    {
+      "key": "child-1872",
+      "date": {
+        "from": "1872-03-19",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сюзи",
+      "long": "19 марта 1872 года родилась старшая дочь Оливия Сьюзен (Сюзи).",
+      "chapter": "hartford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Сьюзи Клеменс 1872-03-19"
+      }
+    },
+    {
+      "key": "relocation-1874",
+      "date": {
+        "from": "1874",
+        "to": "1891",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Собственный дом в Хартфорде и кабинет в Куорри-Фарм",
+      "long": "В 1874 году семья въехала в построенный на своём участке дом рядом с Гарриет Бичер-Стоу и прожила там до 1891 года. Летом жили на ферме Куорри-Фарм у сестры Оливии в Эльмире, где для Твена построили восьмиугольный кабинет-беседку.",
+      "place": {
+        "label": "Хартфорд"
+      },
+      "works": [
+        {
+          "ref": "tomsawyer",
+          "note": "написан за 17 хартфордских лет и летами в Куорри-Фарм"
+        },
+        {
+          "ref": "prince",
+          "note": "написан за 17 хартфордских лет и летами в Куорри-Фарм"
+        },
+        {
+          "ref": "huck",
+          "note": "написан за 17 хартфордских лет и летами в Куорри-Фарм"
+        },
+        {
+          "ref": "yankee",
+          "note": "написан за 17 хартфордских лет и летами в Куорри-Фарм"
+        }
+      ],
+      "chapter": "hartford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1874 году Клеменсы переехали в дом, построенный на купленном ими участке земли, в котором прожили до 1891 года."
+      }
+    },
+    {
+      "key": "child-1874",
+      "date": {
+        "from": "1874-06-08",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Клары",
+      "long": "8 июня 1874 года родилась дочь Клара — единственная из детей, пережившая отца.",
+      "chapter": "hartford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Клара Клеменс 1874-06-08"
+      }
+    },
+    {
+      "key": "creation-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Четыреста страниц нового романа за одно лето",
+      "long": "Летом 1876 года, сразу после выхода романа о Томе Сойере, написал четыреста страниц рукописи его продолжения о Геке Финне — книги, которую затем с трудом заканчивал ещё восемь лет.",
+      "place": {
+        "label": "Эльмира"
+      },
+      "works": [
+        {
+          "ref": "huck",
+          "note": "400 страниц рукописи написаны в середине 1876 года; завершение постоянно откладывалось"
+        }
+      ],
+      "chapter": "hartford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Four hundred manuscript pages were written in mid-1876, right after the publication of Tom Sawyer."
+      }
+    },
+    {
+      "key": "poverty-1880",
+      "date": {
+        "from": "1880",
+        "to": "1894",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Триста тысяч долларов в наборную машину Пейджа",
+      "long": "С 1880 по 1894 год вложил 300 000 долларов в наборную машину Пейджа — механическое чудо, постоянно ломавшееся. Прежде чем её довели до ума, её вытеснил линотип. Пропала большая часть доходов от книг и значительная часть наследства жены.",
+      "place": {
+        "label": "Хартфорд"
+      },
+      "chapter": "hartford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain spent $300,000 (equivalent to $10,008,621 in 2025) on it between 1880 and 1894, but before it could be perfected, it was rendered obsolete by the Linotype."
+      }
+    },
+    {
+      "key": "child-1880",
+      "date": {
+        "from": "1880-07-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Джин",
+      "long": "26 июля 1880 года родилась младшая дочь Джин.",
+      "chapter": "hartford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Джин Клеменс 1880-07-26"
+      }
+    },
+    {
+      "key": "persecution-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Изъятие романа из библиотеки в Массачусетсе",
+      "long": "В 1885 году публичная библиотека в Массачусетсе изъяла из фонда роман о Геке Финне как «мусор, пригодный только для трущоб». Твен написал издателю, что благодаря этому они продадут ещё 25 тысяч экземпляров.",
+      "works": [
+        {
+          "ref": "huck",
+          "note": "изъят из библиотеки в Массачусетсе в 1885 году"
+        }
+      ],
+      "chapter": "hartford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда в 1885 году публичная библиотека в Массачусетсе решила изъять из фонда «Приключения Гекльберри Финна», Твен написал своему издателю"
+      }
+    },
+    {
+      "key": "creation-1885",
+      "date": {
+        "from": "1885",
+        "to": "1889",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Четыре года работы над романом с перерывами",
+      "long": "Роман о янки при дворе короля Артура начат в декабре 1885 года, через несколько месяцев отложен до лета 1887-го и закончен весной 1889 года. Технические подробности отражают дружбу с Николой Теслой и интерес к науке.",
+      "place": {
+        "label": "Хартфорд"
+      },
+      "works": [
+        {
+          "ref": "yankee",
+          "note": "начат в декабре 1885, отложен, возобновлён летом 1887, закончен весной 1889"
+        }
+      ],
+      "chapter": "hartford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book was started in December 1885, then shelved a few months later until the summer of 1887, and eventually finished in the spring of 1889."
+      }
+    },
+    {
+      "key": "loss-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "В 1890 году умерла мать, Джейн Лэмптон Клеменс, уроженка Кентукки.",
+      "chapter": "hartford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "юриста Джона Маршалла Клеменса (11 августа 1798 — 24 марта 1847) и Джейн Лэмптон (1803—1890)"
+      }
+    },
+    {
+      "key": "relocation-1891",
+      "date": {
+        "from": "1891-06",
+        "to": "1895-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Закрытие дома в Хартфорде, четыре года в Европе",
+      "long": "Из-за падения доходов семья в июне 1891 года закрыла дорогой хартфордский дом и уехала в Европу, где до мая 1895 года жила во Франции, Германии и Италии: зима в Берлине, Флоренция, Париж. Твен четырежды возвращался в Нью-Йорк по делам.",
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain and his family closed down their expensive Hartford home in response to the dwindling income and moved to Europe in June 1891. … The family stayed mainly in France, Germany, and Italy until May 1895"
+      }
+    },
+    {
+      "key": "other-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Дружба с нефтяным магнатом Генри Роджерсом",
+      "long": "В 1893 году Твена представили Генри Роджерсу, одному из директоров Standard Oil. Роджерс взялся за его финансовые дела; они стали близкими друзьями, вместе пили и играли в покер. В сентябре 1893 года Твен снимал дешёвую комнату в Players Club.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1893 году Твен был представлен нефтяному магнату Генри Роджерсу, одному из директоров компании «Standard Oil». Роджерс помог Твену выгодно реорганизовать финансовые дела, и они стали близкими друзьями."
+      }
+    },
+    {
+      "key": "creation-1893",
+      "date": {
+        "from": "1893-11-12",
+        "to": "1893-12-14",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Шестьдесят тысяч слов за месяц ради спасения от долгов",
+      "long": "С 12 ноября по 14 декабря 1893 года, отчаянно пытаясь избежать банкротства, написал 60 000 слов романа о Простофиле Вильсоне. Критики связывают спешку с рыхлой композицией книги.",
+      "works": [
+        {
+          "ref": "pudd",
+          "note": "60 000 слов написаны за месяц в спешке, чтобы отсрочить банкротство"
+        }
+      ],
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From November 12 to December 14, 1893, Twain wrote 60,000 words for the novel."
+      }
+    },
+    {
+      "key": "poverty-1894",
+      "date": {
+        "from": "1894-04",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Банкротство и передача авторских прав жене",
+      "long": "После краха издательской компании Webster \u0026 Co. и провала машины Пейджа в апреле 1894 года по совету Роджерса подал заявление о банкротстве и передал авторские права на свои книги жене, чтобы они не достались кредиторам.",
+      "works": [
+        {
+          "ref": "joan",
+          "note": "написана во время банкротства; Твен рассчитывал, что книга поправит его дела, и настоял на анонимной публикации"
+        }
+      ],
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rogers had Twain file for bankruptcy protection in April 1894, then had him transfer the copyrights on his written works to his wife to prevent creditors from gaining possession."
+      }
+    },
+    {
+      "key": "career-1895",
+      "date": {
+        "from": "1895-07",
+        "to": "1896-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Кругосветное лекционное турне ради кредиторов",
+      "long": "В июле 1895 года отправился в годичное лекционное турне вокруг света, чтобы полностью расплатиться с кредиторами, хотя закон его к этому не обязывал: Канада, Австралия, Новая Зеландия, Цейлон, Индия, Южная Африка. Много болел. Вернулся в Англию в июле 1896 года.",
+      "works": [
+        {
+          "ref": "equator",
+          "note": "три месяца в Индии стали центральной частью книги о кругосветном турне"
+        }
+      ],
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "embarked on a year-long around-the-world lecture tour in July 1895 to pay off his creditors in full … In the second half of July 1896, Twain sailed back to England, completing his circumnavigation of the world begun 14 months before."
+      }
+    },
+    {
+      "key": "loss-1896",
+      "date": {
+        "from": "1896-08-18",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Сюзи от менингита",
+      "long": "18 августа 1896 года, пока родители были в Англии после турне, от менингита умерла старшая дочь Сюзи. С этого началась глубокая депрессия, не отпускавшая Твена до конца жизни.",
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He passed through a period of deep depression which began in 1896 when his daughter Susy died of meningitis."
+      }
+    },
+    {
+      "key": "relocation-1897",
+      "date": {
+        "from": "1897-10",
+        "to": "1900-10",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Вена, Лондон, Санна: лечение дочери Джин",
+      "long": "С октября 1897 года семья ещё четыре года жила в Европе: Вена, где Клара училась у Лешетицкого, затем Лондон и шведский санаторий Кельгрена в Санне ради здоровья Джин. Возвращение в Америку — в октябре 1900 года.",
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain and his family spent four more years in Europe, mainly in England and Austria (October 1897 to May 1899), with longer spells in London and Vienna. … Twain then returned to America in October 1900"
+      }
+    },
+    {
+      "key": "loss-1897",
+      "date": {
+        "from": "1897-12-11",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата Орайона",
+      "long": "11 декабря 1897 года умер старший брат Орайон, в газете которого Сэм начинал наборщиком и с которым уехал в Неваду.",
+      "chapter": "debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "его братья Орайон (17 июля 1825 — 11 декабря 1897)"
+      }
+    },
+    {
+      "key": "relocation-1900",
+      "date": {
+        "from": "1900-10",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Америку с выплаченными долгами",
+      "long": "В октябре 1900 года вернулся в США, заработав достаточно, чтобы полностью расплатиться с долгами. Зимой 1900/01 года стал самым заметным противником империализма в стране.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain then returned to America in October 1900, having earned enough to pay off his debts."
+      }
+    },
+    {
+      "key": "other-1901",
+      "date": {
+        "from": "1901-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Вице-президент Антиимпериалистической лиги",
+      "long": "В январе 1901 года стал вице-президентом Антиимпериалистической лиги Нью-Йорка, выступавшей против аннексии Филиппин, и оставался им до смерти. Писал для неё памфлеты; до 1899 года сам поддерживал американскую экспансию.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "leopold",
+          "note": "сатира о колонии Леопольда II в Конго — в ряду антиимпериалистических памфлетов"
+        },
+        {
+          "ref": "warprayer",
+          "note": "пацифистский рассказ времён филиппино-американской войны; Harper's Bazaar отверг его в 1905 году"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1901, Twain began serving as vice-president of the Anti-Imperialist League of New York."
+      }
+    },
+    {
+      "key": "creation-1906",
+      "date": {
+        "from": "1906-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Диктовка воспоминаний вразброс, без хронологии",
+      "long": "В сентябре 1906 года начал печатать главы автобиографии в North American Review. Диктовал её, отступая от хронологии по прихоти; полное издание по его воле вышло лишь через сто лет после смерти.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "autobiography",
+          "note": "публикация глав в North American Review началась в сентябре 1906 года"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1906, Twain heard … In September, Twain started publishing chapters from his autobiography in the North American Review."
+      }
+    },
+    {
+      "key": "other-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Почётная степень Оксфорда",
+      "long": "В 1907 году Оксфордский университет присудил Твену почётную степень — после Йеля (1901) и Университета Миссури (1902).",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Twain was awarded an Honorary Causa Doctor of Letters (Litt.D.) by Yale University in 1901 and a Doctor of Law (Ll.D) by the University of Missouri in 1902 and Oxford University awarded him in 1907."
+      }
+    },
+    {
+      "key": "loss-1909",
+      "date": {
+        "from": "1909-05-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Внезапная смерть друга Генри Роджерса",
+      "long": "20 мая 1909 года внезапно умер близкий друг Генри Роджерс, спасший Твена от финансового краха. Твен был глубоко потрясён.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 20, 1909, his close friend Henry Rogers died suddenly."
+      }
+    },
+    {
+      "key": "loss-1909-2",
+      "date": {
+        "from": "1909-12-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Джин",
+      "long": "24 декабря 1909 года умерла младшая дочь Джин. Из четырёх детей Твен пережил троих.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Olivia's death in 1904 and Jean's on December 24, 1909, deepened Twain's gloom."
+      }
+    },
+    {
+      "key": "death-1910",
+      "date": {
+        "from": "1910-04-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от стенокардии в Реддинге",
+      "long": "Умер 21 апреля 1910 года в своём доме Стормфилд в Реддинге (Коннектикут) от сердечного приступа — через день после того, как комета Галлея прошла ближайшую к Солнцу точку, как и предсказывал годом раньше. Похоронен на кладбище Вудлон в Эльмире.",
+      "place": {
+        "label": "Реддинг"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сэмюэль Клеменс, известный всему миру как Марк Твен, умер 21 апреля 1910 года, на 75-м году жизни, от грудной жабы (стенокардии)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "frog",
+      "title": "Знаменитая скачущая лягушка из Калавераса",
+      "written": {
+        "from": 1865,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "innocents",
+      "title": "Простаки за границей",
+      "written": {
+        "from": 1867,
+        "to": 1869
+      }
+    },
+    {
+      "ref": "roughing",
+      "title": "Налегке",
+      "written": {
+        "from": 1870,
+        "to": 1871
+      }
+    },
+    {
+      "ref": "gilded",
+      "title": "Позолоченный век",
+      "written": {
+        "from": 1873,
+        "to": 1873
+      }
+    },
+    {
+      "ref": "oldtimes",
+      "title": "Старые времена на Миссисипи",
+      "written": {
+        "from": 1875,
+        "to": 1875
+      }
+    },
+    {
+      "ref": "tomsawyer",
+      "title": "Приключения Тома Сойера",
+      "qid": "Q326914",
+      "written": {
+        "from": 1876,
+        "to": 1876
+      }
+    },
+    {
+      "ref": "tramp",
+      "title": "Пешком по Европе",
+      "written": {
+        "from": 1880,
+        "to": 1880
+      }
+    },
+    {
+      "ref": "prince",
+      "title": "Принц и нищий",
+      "written": {
+        "from": 1881,
+        "to": 1881
+      }
+    },
+    {
+      "ref": "life",
+      "title": "Жизнь на Миссисипи",
+      "written": {
+        "from": 1883,
+        "to": 1883
+      }
+    },
+    {
+      "ref": "huck",
+      "title": "Приключения Гекльберри Финна",
+      "qid": "Q215410",
+      "written": {
+        "from": 1876,
+        "to": 1884
+      }
+    },
+    {
+      "ref": "private",
+      "title": "Частная история одной неудавшейся кампании",
+      "written": {
+        "from": 1885,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "yankee",
+      "title": "Янки из Коннектикута при дворе короля Артура",
+      "written": {
+        "from": 1885,
+        "to": 1889
+      }
+    },
+    {
+      "ref": "claimant",
+      "title": "Американский претендент",
+      "written": {
+        "from": 1892,
+        "to": 1892
+      }
+    },
+    {
+      "ref": "pudd",
+      "title": "Простофиля Вильсон",
+      "written": {
+        "from": 1893,
+        "to": 1894
+      }
+    },
+    {
+      "ref": "tomabroad",
+      "title": "Том Сойер за границей",
+      "written": {
+        "from": 1894,
+        "to": 1894
+      }
+    },
+    {
+      "ref": "joan",
+      "title": "Личные воспоминания о Жанне д’Арк",
+      "written": {
+        "from": 1894,
+        "to": 1896
+      }
+    },
+    {
+      "ref": "equator",
+      "title": "По экватору",
+      "written": {
+        "from": 1897,
+        "to": 1897
+      }
+    },
+    {
+      "ref": "hadleyburg",
+      "title": "Человек, который совратил Гедлиберг",
+      "written": {
+        "from": 1900,
+        "to": 1900
+      }
+    },
+    {
+      "ref": "leopold",
+      "title": "Монолог короля Леопольда",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "warprayer",
+      "title": "Молитва о войне",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "stranger",
+      "title": "Таинственный незнакомец",
+      "written": {
+        "from": 1897,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "letters",
+      "title": "Письма с Земли",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "autobiography",
+      "title": "Автобиография",
+      "written": {
+        "from": 1906,
+        "to": 1910
+      }
+    }
+  ]
+}

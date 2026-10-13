@@ -1,0 +1,936 @@
+{
+  "qid": "Q34981",
+  "name": "Айзек Азимов",
+  "born": "1920-01-02",
+  "died": "1992-04-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B7%D0%B8%D0%BC%D0%BE%D0%B2%2C_%D0%90%D0%B9%D0%B7%D0%B5%D0%BA",
+      "rev": 154974124
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Isaac_Asimov",
+      "rev": 1379374739
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Петровичи, Бруклин, кондитерская",
+      "from": 1920,
+      "to": 1937
+    },
+    {
+      "key": "campbell",
+      "title": "Кэмпбелл, Колумбия, судоверфь",
+      "from": 1938,
+      "to": 1944
+    },
+    {
+      "key": "boston",
+      "title": "Армия, докторат, Бостон",
+      "from": 1945,
+      "to": 1957
+    },
+    {
+      "key": "explainer",
+      "title": "Великий объяснитель",
+      "from": 1958,
+      "to": 1969
+    },
+    {
+      "key": "janet",
+      "title": "Джанет, Манхэттен, премии",
+      "from": 1970,
+      "to": 1981
+    },
+    {
+      "key": "return",
+      "title": "Возвращение к фантастике, болезнь",
+      "from": 1982,
+      "to": 1992
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1920",
+      "date": {
+        "from": "1920-01-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в еврейской семье мельников в Петровичах",
+      "long": "Родился (по документам) 2 января 1920 года в местечке Петровичи Смоленской губернии в семье Анны-Рахили Берман и Юды Азимова, мельников. Назван в честь покойного деда по матери Исаака Бермана.",
+      "place": {
+        "label": "Петровичи"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Айзек Азимов родился (по документам) 2 января 1920 года в местечке Петровичи Смоленской губернии"
+      }
+    },
+    {
+      "key": "illness-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Двусторонняя пневмония: единственный выживший из 17 детей",
+      "long": "В 1921 году Азимов и 16 других детей в Петровичах заболели двусторонней пневмонией; выжил только он.",
+      "place": {
+        "label": "Петровичи"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1921 году Азимов и 16 других детей в Петровичах заболели двусторонней пневмонией. Выжил только Азимов."
+      }
+    },
+    {
+      "key": "relocation-1923",
+      "date": {
+        "from": "1923-02-03",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция семьи в США, поселение в Бруклине",
+      "long": "Семья отправилась в США через Ливерпуль на лайнере «Балтик» и прибыла 3 февраля 1923 года. Поселились в Бруклине, через несколько лет открыли кондитерский магазин. Родители говорили с ним на идише и английском; русский он так и не выучил.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Asimov's family travelled to the United States via Liverpool on the RMS Baltic, arriving on February 3, 1923 when he was three years old."
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Гражданство США в восемь лет",
+      "long": "В 1928 году, в возрасте восьми лет, стал натурализованным гражданином США.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Азимов стал гражданином США в 1928 году в возрасте восьми лет."
+      }
+    },
+    {
+      "key": "other-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Увлечение фантастикой через журналы из лавки родителей",
+      "long": "В 1929 году начал читать pulp-журналы, продававшиеся в кондитерской родителей. Отец сначала запрещал их, пока сын не убедил его, что журналы со словом «Science» в названии должны быть образовательными.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Asimov became a science fiction fan in 1929, when he began reading the pulp magazines sold in his family's candy store."
+      }
+    },
+    {
+      "key": "creation-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая публикация в школьном литературном журнале",
+      "long": "Первой публикацией стала юмористическая заметка о рождении брата в литературном журнале Boys High School в 1934 году. Писать начал в 11 лет; в 16 отец купил ему подержанную пишущую машинку.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published work was a humorous item on the birth of his brother for Boys High School's literary journal in 1934."
+      }
+    },
+    {
+      "key": "education-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в 15 лет, Seth Low Junior College",
+      "long": "После десятого класса в 1935 году пятнадцатилетний Азимов поступил в Seth Low Junior College, филиал Колумбийского университета; через год колледж закрылся. После первого семестра сменил зоологию на химию, не желая «препарировать уличную кошку».",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания десятого класса в 1935 году пятнадцатилетний Айзек Азимов поступил в Seth Low Junior College, но через год этот колледж закрылся."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938-06-21",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Знакомство с редактором Кэмпбеллом, первый отказ",
+      "long": "21 июня 1938 года лично принёс свой первый рассказ редактору Astounding Джону Кэмпбеллу; через два дня получил подробный отказ. Начало почти еженедельных встреч с Кэмпбеллом, продолжавшихся до переезда в Бостон в 1949 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "campbell",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Inspired by the visit, he finished the story on June 19, 1938, and personally submitted it to Astounding editor John W. Campbell two days later."
+      }
+    },
+    {
+      "key": "career-1938-2",
+      "date": {
+        "from": "1938-10-21",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая проданная история: 64 доллара от Amazing Stories",
+      "long": "21 октября 1938 года продал третий законченный рассказ, «Marooned Off Vesta», журналу Amazing Stories за 64 доллара (цент за слово); он вышел в мартовском номере 1939 года.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "campbell",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 21, 1938, he sold the third story he finished, \"Marooned Off Vesta\", to Amazing Stories, edited by Raymond A. Palmer, and it appeared in the March 1939 issue."
+      }
+    },
+    {
+      "key": "education-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра по химии в Колумбийском университете",
+      "long": "В 1939 году получил степень бакалавра по химии в Колумбийском университете. После двух отказов медицинских школ подал в аспирантуру по химии; сначала отказ, затем принят условно.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "campbell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он поступил на химический факультет Колумбийского университета в Нью-Йорке, где получил в 1939 году степень бакалавра (B. S.)"
+      }
+    },
+    {
+      "key": "education-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра химии и аспирантура",
+      "long": "В 1941 году получил степень магистра по химии в Колумбийском университете и поступил в аспирантуру. В годы учёбы также выучил французский и немецкий.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "campbell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1941 году — магистра (M. Sc.) по химии и поступил в аспирантуру"
+      }
+    },
+    {
+      "key": "creation-1941",
+      "date": {
+        "from": "1941-03",
+        "to": "1941-04",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Рассказ по подсказке Кэмпбелла — «водораздел карьеры»",
+      "long": "В марте–апреле 1941 года по итогам разговора с Кэмпбеллом написал свой 32-й рассказ; Astounding напечатал его в сентябре. По словам Азимова, его «внезапно начали воспринимать всерьёз». В 1968 году SFWA признала рассказ лучшим в истории жанра.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "nightfall",
+          "note": "написан в марте–апреле 1941 по разговору с Кэмпбеллом; сам Азимов назвал его водоразделом своей карьеры (предисловие к сборнику)"
+        }
+      ],
+      "chapter": "campbell",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Based on a conversation with Campbell, Asimov wrote \"Nightfall\", his 32nd story, in March and April 1941, and Astounding published it in September 1941."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Химик на военной судоверфи в Филадельфии, рядом Хайнлайн",
+      "long": "С 1942 по 1945 год работал гражданским химиком на Филадельфийской военно-морской верфи, где его коллегами были Роберт Хайнлайн и Спрэг де Камп. Рассчитывал сделать карьеру химика, а не писателя.",
+      "place": {
+        "label": "Филадельфия"
+      },
+      "works": [
+        {
+          "ref": "foundation",
+          "note": "рассказы будущего цикла (1942–1944) написаны в филадельфийские годы; первый опубликован в 1942"
+        }
+      ],
+      "chapter": "campbell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Однако в 1942 году он уехал в Филадельфию и работал там химиком на армейской судоверфи. На той же верфи вместе с ним работал Роберт Хайнлайн, тоже писатель-фантаст."
+      }
+    },
+    {
+      "key": "love-1942",
+      "date": {
+        "from": "1942-07-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Гертруде Блюгерман после свидания вслепую",
+      "long": "Познакомился с Гертрудой Блюгерман на «свидании вслепую» 14 февраля 1942 года; 26 июля они поженились и поселились в Западной Филадельфии.",
+      "chapter": "campbell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1942 года, в Валентинов день, Айзек Азимов встретился на «свидании вслепую» с Гертрудой Блюгерман (Gerthrude Blugerman). 26 июля они поженились."
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945-09",
+        "to": "1946-07",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в послевоенной армии США",
+      "long": "Призван в армию в сентябре 1945 года. В 1946 году из-за бюрократической ошибки снят с отряда за несколько дней до его отплытия на ядерные испытания у атолла Бикини. Уволен с почётом 26 июля 1946 года в звании капрала.",
+      "chapter": "boston",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1945, he was conscripted into the post-war U.S. Army; if he had not had his birth date corrected while at school, he would have been officially 26 years old and ineligible. … before receiving an honorable discharge on July 26, 1946"
+      }
+    },
+    {
+      "key": "education-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень по биохимии в Колумбийском",
+      "long": "В 1948 году окончил аспирантуру и получил степень PhD по биохимии за диссертацию о кинетике инактивации тирозиназы. В том же году опубликовал пародийную статью о тиотимолине и боялся, что экзаменаторы сочтут его несерьёзным.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "boston",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948 году окончил аспирантуру, получил степень PhD (доктора) биохимии за диссертацию"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподаватель биохимии в Бостонском университете",
+      "long": "В 1949 году после постдокторантуры устроился преподавателем на медицинский факультет Бостонского университета с окладом 5000 долларов. Переезд в Бостон прервал еженедельные встречи с Кэмпбеллом.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "boston",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году, после окончания постдоктората, Азимов устроился преподавателем на медицинский факультет Бостонского университета"
+      }
+    },
+    {
+      "key": "child-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Дэвида",
+      "long": "В 1951 году в браке с Гертрудой родился сын Дэвид.",
+      "chapter": "boston",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В этом браке родились сын Дэвид (David) (1951) и дочь Робин Джоан (Robyn Joan) (1955)."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Писательские доходы выше университетской зарплаты",
+      "long": "К 1952 году зарабатывал писательством больше, чем в университете; постепенно оставил исследования, ограничившись лекциями.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "boston",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1952, however, he was making more money as a writer than from the university, and he eventually stopped doing research"
+      }
+    },
+    {
+      "key": "child-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Робин Джоан",
+      "long": "В 1955 году родилась дочь Робин Джоан.",
+      "chapter": "boston",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В этом браке родились сын Дэвид (David) (1951) и дочь Робин Джоан (Robyn Joan) (1955)."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Доцент с постоянным контрактом",
+      "long": "В июле 1955 года получил должность доцента (associate professor) с постоянным контрактом в Бостонском университете.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "boston",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в декабре 1951 года стал ассистентом и читал лекции по биохимии, а в июле 1955 года — доцентом (англ. associate professor)"
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отстранение от преподавания за отсутствие исследований",
+      "long": "В декабре 1957 года уволен с преподавательской должности с 30 июня 1958 года из-за отсутствия исследовательской работы. После двухлетнего конфликта договорился сохранить звание и читать вступительную лекцию курса биохимии; зарплату университет платить перестал.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "boston",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1957, Asimov was dismissed from his teaching post, with effect from June 30, 1958, due to his lack of research."
+      }
+    },
+    {
+      "key": "creation-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Поворот к научно-популярной прозе после спутника",
+      "long": "После запуска спутника в 1957 году и «паники» в США с лета 1958 года почти перестал писать фантастику: за следующие четверть века — четыре романа и 120 научно-популярных книг.",
+      "works": [
+        {
+          "ref": "guide-to-science",
+          "note": "первый большой научно-популярный справочник этого периода (1960), номинация на National Book Award"
+        }
+      ],
+      "chapter": "explainer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Asimov explained in The Rest of the Robots that he had been unable to write substantial fiction since the summer of 1958, and observers understood him as saying that his fiction career had ended"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало ежемесячной колонки в F\u0026SF: 399 выпусков",
+      "long": "В ноябре 1958 года вышла первая из 399 ежемесячных колонок в The Magazine of Fantasy \u0026 Science Fiction; они продолжались до предсмертной болезни и принесли репутацию «Великого объяснителя».",
+      "chapter": "explainer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first of 399 monthly F\u0026SF columns appeared in November 1958 and they continued until his terminal illness."
+      }
+    },
+    {
+      "key": "love-1959",
+      "date": {
+        "from": "1959-05-01",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с психиатром Джанет Джеппсон на банкете",
+      "long": "1 мая 1959 года познакомился на банкете с психиатром и писательницей Джанет Опал Джеппсон. Ранее, в 1956 году, он дал ей автограф, но не запомнил встречи, а она сочла его неприятным человеком.",
+      "chapter": "explainer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сошёлся с Джанет Опал Джеппсон, с которой познакомился на банкете 1 мая 1959 года"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия «Хьюго» — за научно-популярные статьи",
+      "long": "В 1963 году получил первую премию «Хьюго» — за эссе в F\u0026SF. Доходы от научно-популярных книг позволили отказаться от большинства академических обязанностей.",
+      "chapter": "explainer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1963 he won a Hugo Award—his first—for his essays for F\u0026SF"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Хьюго за лучшую серию всех времён",
+      "long": "В 1966 году трилогия о падении галактической империи получила единовременную премию «Хьюго» как лучшая серия научной фантастики и фэнтези всех времён.",
+      "works": [
+        {
+          "ref": "foundation",
+          "note": "премия присуждена трилогии, открывающейся этим романом"
+        }
+      ],
+      "chapter": "explainer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966 the Foundation trilogy won the Hugo Award for the all-time best series of science fiction and fantasy novels"
+      }
+    },
+    {
+      "key": "persecution-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Снятие подозрений ФБР о связях с коммунистами",
+      "long": "В 1960-е годы ФБР проверяло Азимова по доносу об уважительном отзыве об СССР как первой стране с атомной электростанцией; его даже рассматривали как кандидата на роль советского шпиона ROBPROF. Подозрения сняты в 1967 году.",
+      "chapter": "explainer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960-е годы его проверяло ФБР на предмет возможных связей с коммунистами. … Подозрения были окончательно сняты с писателя в 1967 году."
+      }
+    },
+    {
+      "key": "loss-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, Юды Азимова",
+      "long": "В 1969 году умер отец, Юда Азимов. После этого Азимов ежегодно жертвовал в стипендиальный фонд имени отца в Университете Брандейса.",
+      "chapter": "explainer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After his father died in 1969, Asimov annually contributed to a Judah Asimov Scholarship Fund at Brandeis University."
+      }
+    },
+    {
+      "key": "family-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв с Гертрудой и переезд в Манхэттен",
+      "long": "В 1970 году расстался с женой, вернулся в Нью-Йорк — в Верхний Вест-Сайд Манхэттена, где жил до конца жизни, — и почти сразу сошёлся с Джанет Джеппсон.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "janet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году Айзек Азимов расстался с женой и почти сразу сошёлся с Джанет Опал Джеппсон"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Три главные премии за роман об инопланетянах",
+      "long": "Роман, написанный в ответ на упрёки в отсутствии инопланетян и секса в его прозе, получил «Небьюлу» в 1972 году и «Хьюго» с «Локусом» в 1973-м. Средней частью книги Азимов гордился больше всего написанного.",
+      "works": [
+        {
+          "ref": "gods-themselves",
+          "note": "написан в ответ на критику за отсутствие инопланетян и секса в его фантастике; «Небьюла» 1972, «Хьюго» и «Локус» 1973"
+        }
+      ],
+      "chapter": "janet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book won the Nebula Award for Best Novel in 1972, and the Hugo Award for Best Novel in 1973."
+      }
+    },
+    {
+      "key": "loss-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, Анны-Рахили Берман",
+      "long": "В 1973 году умерла мать, Анна-Рахиль Исааковна Берман (род. 1895).",
+      "chapter": "janet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Анна-Рахиль Исааковна Берман (Anna Rachel Berman-Asimov, 1895—1973)"
+      }
+    },
+    {
+      "key": "love-1973",
+      "date": {
+        "from": "1973-11-30",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джанет Джеппсон через две недели после развода",
+      "long": "Развод с Гертрудой вступил в силу 16 ноября 1973 года; 30 ноября Азимов женился на Джанет Опал Джеппсон. Детей в этом браке не было.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "janet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Развод вступил в силу 16 ноября 1973 года, а 30 ноября Айзек Азимов и Джанет Опал Джеппсон поженились."
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Сердечный приступ",
+      "long": "В 1977 году перенёс сердечный приступ.",
+      "chapter": "janet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977, Asimov had a heart attack."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственный журнал фантастики с колонкой в каждом номере",
+      "long": "С 1977 года дал имя журналу Isaac Asimov's Science Fiction Magazine (ныне Asimov's Science Fiction) и писал редакционную колонку в каждый номер.",
+      "chapter": "janet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Beginning in 1977, Asimov lent his name to Isaac Asimov's Science Fiction Magazine (now Asimov's Science Fiction) and wrote an editorial for each issue."
+      }
+    },
+    {
+      "key": "career-1977-2",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Хьюго, Небьюла и Локус за повесть о роботе",
+      "long": "Повесть о роботе, добивающемся признания человеком, получила «Небьюлу» 1976 года и «Хьюго» с «Локусом» 1977 года.",
+      "works": [
+        {
+          "ref": "bicentennial-man",
+          "note": "«Небьюла» 1976, «Хьюго» и «Локус» 1977"
+        }
+      ],
+      "chapter": "janet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1977 за повесть «Двухсотлетний человек»"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979-10-18",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание полного профессора биохимии",
+      "long": "18 октября 1979 года Бостонский университет присвоил ему звание полного профессора биохимии — в знак признания писательских заслуг.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "janet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 18, 1979, the university honored his writing by promoting him to full professor of biochemistry."
+      }
+    },
+    {
+      "key": "creation-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение к фантастике под давлением читателей",
+      "long": "С 1982 года, по требованию поклонников, вернулся к большой фантастике: до самой смерти писал продолжения и приквелы, связывая прежние циклы в единую «историю будущего».",
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Starting in 1982, the second half of his science fiction career began with the publication of Foundation's Edge."
+      }
+    },
+    {
+      "key": "education-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Почётный докторат Колумбии с ногой в ведре воды",
+      "long": "В 1983 году декан Колумбийского колледжа Роберт Поллак присвоил ему почётную докторскую степень, потребовав для соблюдения требования по плаванию опустить ногу в ведро с водой.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, Dr. Robert Pollack, the dean of Columbia College, from 1982 to 1989, granted Asimov an honorary doctorate from Columbia College after requiring that Asimov place his foot in a bucket of water to pass the college's swimming requirement."
+      }
+    },
+    {
+      "key": "illness-1983",
+      "date": {
+        "from": "1983-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тройное шунтирование и заражение ВИЧ при переливании",
+      "long": "В декабре 1983 года перенёс тройное аортокоронарное шунтирование, при переливании крови заразился ВИЧ. Диагноз скрывали из опасений, что предубеждение против СПИДа коснётся семьи; обнародован лишь через десять лет после смерти.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1983, he had triple bypass surgery at NYU Lutheran Medical Center, during which he contracted HIV from a blood transfusion."
+      }
+    },
+    {
+      "key": "faith-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Звание «Гуманист года»",
+      "long": "В 1984 году Американская гуманистическая ассоциация назвала его Гуманистом года. Азимов называл себя атеистом и светским евреем, подписал «Гуманистический манифест».",
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1984, the American Humanist Association (AHA) named him the Humanist of the Year."
+      }
+    },
+    {
+      "key": "faith-1985",
+      "date": {
+        "from": "1985",
+        "to": "1992",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Почётный президент Американской гуманистической ассоциации",
+      "long": "С 1985 года до смерти в 1992 году — почётный президент Американской гуманистической ассоциации; преемником стал его друг Курт Воннегут.",
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1985 until his death in 1992, he served as honorary president of the AHA, and was succeeded by his friend and fellow writer Kurt Vonnegut."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Гроссмейстер фантастики»",
+      "long": "В 1987 году удостоен мемориальной премии имени Деймона Найта «Гроссмейстер фантастики» — высшего отличия Ассоциации писателей-фантастов Америки за вклад в жанр.",
+      "chapter": "return",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Мемориальная премия имени Деймона Найта «Гроссмейстер фантастики» 1987-01-01"
+      }
+    },
+    {
+      "key": "death-1992",
+      "date": {
+        "from": "1992-04-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечной и почечной недостаточности",
+      "long": "Скончался 6 апреля 1992 года в клинике Нью-Йоркского университета на Манхэттене от сердечной и почечной недостаточности на фоне ВИЧ-инфекции. По завещанию тело кремировано, прах развеян.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 6 апреля 1992 года в клинике Нью-Йоркского университета (Манхэттен, 550 1st Avenue, NY) от сердечной и почечной недостаточности на фоне ВИЧ-инфекции"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "nightfall",
+      "title": "Приход ночи",
+      "qid": "Q1138091",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "foundation",
+      "title": "Основание",
+      "qid": "Q1564644",
+      "written": {
+        "from": 1942,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "i-robot",
+      "title": "Я, робот",
+      "qid": "Q393018",
+      "written": {
+        "from": 1941,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "robot-series",
+      "title": "Серия о роботах",
+      "qid": "Q913482",
+      "written": {
+        "from": 1941,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "guide-to-science",
+      "title": "Путеводитель по науке",
+      "qid": "Q943878",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "gods-themselves",
+      "title": "Сами боги",
+      "qid": "Q389750",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "bicentennial-man",
+      "title": "Двухсотлетний человек",
+      "qid": "Q468132",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    }
+  ]
+}

@@ -91,6 +91,7 @@ func Verify(a *bio.Author, src *Sources) (*bio.Author, []Flag) {
 	// «time_machine», 21 major, long в 301 символ).
 	flags = append(flags, normalizeRefs(&out)...)
 	flags = append(flags, trimTexts(&out)...)
+	flags = append(flags, fixWritten(&out)...)
 	flags = append(flags, demoteExtraMajors(&out)...)
 	flags = append(flags, capEvents(&out)...)
 
@@ -438,6 +439,35 @@ func capEvents(a *bio.Author) []Flag {
 		}
 		flags = append(flags, Flag{Key: a.Events[idx].Key, Msg: fmt.Sprintf("вех больше %d — поздняя minor без линков выброшена", bio.MaxEvents), Dropped: true})
 		a.Events = append(a.Events[:idx:idx], a.Events[idx+1:]...)
+	}
+	return flags
+}
+
+// fixWritten — период написания за пределами жизни: модель берёт годы посмертных
+// изданий. Начало после смерти — период снимается (работа остаётся для линков),
+// конец после смерти — обрезается годом смерти; то же симметрично для рождения.
+func fixWritten(a *bio.Author) []Flag {
+	born, died := bio.YearOf(a.Born), bio.YearOf(a.Died)
+	var flags []Flag
+	for i := range a.Works {
+		w := &a.Works[i]
+		if w.Written == nil {
+			continue
+		}
+		was := *w.Written
+		switch {
+		case died > 0 && w.Written.From > died, born > 0 && w.Written.To < born:
+			w.Written = nil
+			flags = append(flags, Flag{Key: "works." + w.Ref, Msg: fmt.Sprintf("written %d–%d вне жизни (%d–%d) — снят, издание посмертное или ошибка", was.From, was.To, born, died)})
+			continue
+		case died > 0 && w.Written.To > died:
+			w.Written.To = died
+		case born > 0 && w.Written.From < born:
+			w.Written.From = born
+		}
+		if *w.Written != was {
+			flags = append(flags, Flag{Key: "works." + w.Ref, Msg: fmt.Sprintf("written %d–%d обрезан годами жизни: %d–%d", was.From, was.To, w.Written.From, w.Written.To)})
+		}
 	}
 	return flags
 }
