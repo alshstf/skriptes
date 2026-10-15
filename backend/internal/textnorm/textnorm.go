@@ -24,3 +24,24 @@ func FoldYoAll(ss []string) []string {
 	}
 	return out
 }
+
+var name = strings.NewReplacer("ё", "е", "Ё", "Е", "э", "е", "Э", "Е", "й", "и", "Й", "И")
+
+// FoldName — свёртка для сравнения ИМЁН и названий в Postgres (подсказки
+// авторов и серий, поиск на /authors, #516): кроме «ё»→«е» ещё «э»→«е» и
+// «й»→«и» — самые частые разночтения транслитерации («Брэдбери/Бредбери»,
+// «Хайнлайн/Хаинлаин»). Зеркало SQL-выражения NameFoldSQL; Meili-поля
+// сворачиваются только FoldYo (у Meili своя терпимость к опечаткам).
+func FoldName(s string) string {
+	if !strings.ContainsAny(s, "ёЁэЭйЙ") {
+		return s
+	}
+	return name.Replace(s)
+}
+
+// NameFoldSQL — SQL-выражение той же свёртки над колонкой expr; trigram-индексы
+// authors_name_fold_trgm / series_title_fold_trgm (миграция 0059) построены по
+// нему же — выражение в запросе обязано совпадать с индексным.
+func NameFoldSQL(expr string) string {
+	return "translate(" + expr + "::text, 'ёэй', 'ееи')"
+}

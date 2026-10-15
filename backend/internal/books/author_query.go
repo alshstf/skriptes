@@ -62,10 +62,11 @@ var nameParticles = map[string]bool{
 	"да": true, "ди": true, "дю": true, "ибн": true, "бен": true, "аль": true, "эль": true,
 }
 
-// queryWords — слова запроса для сравнения с именем: нижний регистр, «ё»→«е»,
-// знаки препинания по краям слов отброшены.
+// queryWords — слова запроса для сравнения с именем: нижний регистр, свёртка
+// имени «ё/э/й»→«е/е/и» (textnorm.FoldName, #516: «рэй бредбери» называет
+// Брэдбери), знаки препинания по краям слов отброшены.
 func queryWords(q string) []string {
-	fields := strings.Fields(strings.ToLower(textnorm.FoldYo(q)))
+	fields := strings.Fields(strings.ToLower(textnorm.FoldName(q)))
 	out := make([]string, 0, len(fields))
 	for _, f := range fields {
 		f = strings.Trim(f, `.,;:!?"'«»()`)
@@ -121,7 +122,7 @@ func latinCoversQuery(latin string, words []string) bool {
 
 // matchQueryAuthors — известные авторы, которых называет запрос, по убыванию
 // известности. Кандидатов отбирают trigram-индексы по свёрнутому имени
-// (миграция 0042) и по латинскому имени (0046) — по самому длинному слову
+// (миграция 0059) и по латинскому имени (0046) — по самому длинному слову
 // запроса; точное правило — nameCoversQuery или latinCoversQuery.
 func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]MatchedAuthor, error) {
 	words := queryWords(query)
@@ -142,7 +143,7 @@ func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]Matche
 		       COALESCE(a.name_note, ''), a.book_count, a.renown, COALESCE(a.latin_name, '')
 		FROM authors a
 		WHERE NOT a.is_service AND a.renown >= $2 AND a.book_count > 0
-		  AND (replace(a.normalized_name::text, 'ё', 'е') ILIKE '%' || $1 || '%' ESCAPE '\'
+		  AND (`+textnorm.NameFoldSQL("a.normalized_name")+` ILIKE '%' || $1 || '%' ESCAPE '\'
 		       OR a.latin_name ILIKE '%' || $1 || '%' ESCAPE '\')
 		ORDER BY a.renown DESC, a.id
 		LIMIT 20`, escapeLikePattern(longest), authorQueryMinRenown)

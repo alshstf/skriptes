@@ -53,6 +53,8 @@ export type AuthorListItem = {
 export type AuthorListResponse = {
   items: AuthorListItem[];
   total: number;
+  /** По имени из запроса точных совпадений нет — в списке похожие имена (опечатка, #516). */
+  fuzzy?: boolean;
 };
 
 /** AuthorsListParams — параметры фильтрации/сортировки/пагинации. */

@@ -68,6 +68,11 @@ func (s *Service) AuthorFacets(ctx context.Context, p AuthorListParams) (AuthorF
 	out := AuthorFacetCounts{
 		Genres: map[string]int{}, Categories: map[string]int{}, Langs: map[string]int{}, SrcLangs: map[string]int{},
 	}
+	// Тот же режим поиска по имени, что у списка (похожие имена при опечатке, #516).
+	p, _, err := s.resolveAuthorQuery(ctx, p)
+	if err != nil {
+		return AuthorFacetCounts{}, err
+	}
 	var shared []string
 	for _, f := range []string{FacetGenre, FacetLang, FacetSrcLang, FacetAdaptations, FacetAwards} {
 		if facetActive(p, f) {
