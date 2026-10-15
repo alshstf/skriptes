@@ -118,6 +118,53 @@ test('полная страница: главы, тумблеры, ось; 375 p
   expect(overflowAxis).toBeLessThanOrEqual(1);
 });
 
+test('ось: подписи вех слева — в одну строку и не налезают друг на друга (#519)', async ({ page }) => {
+  // Как у Дика в 1960-х: вехи год за годом, у двух — по три линка с длинными названиями.
+  const dense = {
+    ...timeline,
+    name: 'Филип Дик',
+    born: '1928-12-16',
+    died: '1982-03-02',
+    chapters: [{ key: 'sixties', title: 'Шестидесятые', from: 1960, to: 1969 }],
+    events: [
+      { key: 'career-1963', date: { from: '1963-09', precision: 'month' }, type: 'career', tier: 'major', short: 'Премия «Хьюго» за роман об альтернативной истории', chapter: 'sixties', works: [{ ref: 'castle' }] },
+      { key: 'creation-1964', date: { from: '1964', precision: 'year' }, type: 'creation', tier: 'major', short: 'Одиннадцать романов за два года на амфетаминах', chapter: 'sixties', works: [{ ref: 'palmer' }, { ref: 'martian' }, { ref: 'clans' }] },
+      { key: 'faith-1964', date: { from: '1964-06', precision: 'month' }, type: 'faith', tier: 'major', short: 'Крещение в Епископальной церкви', long: 'Вместе с женой Анной.', chapter: 'sixties' },
+      { key: 'family-1966', date: { from: '1966', precision: 'year' }, type: 'family', tier: 'major', short: 'Брак с Нэнси Хакетт', chapter: 'sixties', works: [{ ref: 'ubik' }, { ref: 'androids' }, { ref: 'tears' }] },
+    ],
+    works: [
+      { ref: 'castle', title: 'Человек в высоком замке', written: { from: 1961, to: 1962 } },
+      { ref: 'palmer', title: 'Три стигмата Палмера Элдрича', written: { from: 1964, to: 1964 } },
+      { ref: 'martian', title: 'Сдвиг времени по-марсиански', written: { from: 1962, to: 1963 } },
+      { ref: 'clans', title: 'Кланы Альфанской луны', written: { from: 1963, to: 1964 } },
+      { ref: 'ubik', title: 'Убик', written: { from: 1966, to: 1966 } },
+      { ref: 'androids', title: 'Мечтают ли андроиды об электроовцах?', written: { from: 1966, to: 1966 } },
+      { ref: 'tears', title: 'Пролейтесь, слёзы, сказал полицейский', written: { from: 1970, to: 1970 } },
+    ],
+    context: [],
+  };
+  await mockApi(page);
+  await page.route(/\/api\/authors\/17\/bio-timeline$/, (route) => route.fulfill(json(dense)));
+  await page.goto('/authors/17/timeline');
+  const root = page.getByTestId('author-timeline');
+  await root.getByRole('button', { name: 'Ось' }).click();
+  const labels = root.getByTestId('timeline-axis').getByTestId('axis-event');
+  await expect(labels).toHaveCount(4);
+  // Хвост линков — первое название и «+N», полный список — в title.
+  const tail = labels.filter({ hasText: 'Брак с Нэнси Хакетт' }).locator('[title]');
+  await expect(tail).toHaveText(/→ Убик\s\+2/);
+  await expect(tail).toHaveAttribute('title', '→ Убик, Мечтают ли андроиды об электроовцах?, Пролейтесь, слёзы, сказал полицейский');
+
+  const boxes = (await labels.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON() as DOMRect))).sort(
+    (a, b) => a.top - b.top,
+  );
+  for (const b of boxes) expect(b.height).toBeLessThanOrEqual(24); // одна строка
+  for (let i = 1; i < boxes.length; i++) expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom - 0.5);
+  // Подпись не уходит за свою половину (на ось и правую дорожку работ).
+  const axisBox = (await root.getByTestId('timeline-axis').boundingBox())!;
+  for (const b of boxes) expect(b.right).toBeLessThanOrEqual(axisBox.x + axisBox.width / 2);
+});
+
 test('админ в режиме правки скрывает веху и возвращает её', async ({ page }) => {
   await mockApi(page);
   let hidden = false;

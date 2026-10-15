@@ -271,16 +271,40 @@ function TimelineAxis({ tl, showMinor }: { tl: BioTimeline; showMinor: boolean }
   const byRef = new Map((tl.works ?? []).map((w) => [w.ref, w]));
   const events = (tl.events ?? []).filter((e) => !e.hidden && (showMinor || e.tier === 'major'));
 
-  const eventRow = (e: BioEvent, side: 'left' | 'right') => {
-    const minor = e.tier === 'minor';
+  const linkedTitles = (e: BioEvent) => (e.works ?? []).map((l) => byRef.get(l.ref)?.title ?? l.ref);
+  const eventIcon = (e: BioEvent) => (
+    <EventIcon
+      type={e.type}
+      className={cn('mt-0.5 size-4 shrink-0', e.tier === 'minor' ? 'text-muted-foreground/60' : 'text-muted-foreground')}
+    />
+  );
+  // Потоковый список (узкий контейнер): подпись переносится, высоту берёт сама.
+  const eventRow = (e: BioEvent) => {
+    const titles = linkedTitles(e);
     return (
-      <div className={cn('flex items-start gap-2', side === 'left' && 'flex-row-reverse text-right')}>
-        <EventIcon type={e.type} className={cn('mt-0.5 size-4 shrink-0', minor ? 'text-muted-foreground/60' : 'text-muted-foreground')} />
+      <div className="flex items-start gap-2">
+        {eventIcon(e)}
         <div className="min-w-0 leading-snug">
-          <EventText e={e} className={minor ? 'text-sm' : 'text-[15px]'} />
-          {e.works?.length ? (
-            <span className="ml-1 text-xs text-muted-foreground">
-              → {e.works.map((l) => byRef.get(l.ref)?.title ?? l.ref).join(', ')}
+          <EventText e={e} className={e.tier === 'minor' ? 'text-sm' : 'text-[15px]'} />
+          {titles.length ? <span className="ml-1 text-xs text-muted-foreground">→ {titles.join(', ')}</span> : null}
+        </div>
+      </div>
+    );
+  };
+  // Подпись вехи слева от оси — строго одна строка (#519): шаг раскладки
+  // фиксированный, перенос лёг бы на соседнюю подпись. Хвост линков — первое
+  // название и «+N», полный список — в title.
+  const axisEventLabel = (e: BioEvent) => {
+    const titles = linkedTitles(e);
+    return (
+      <div className="flex flex-row-reverse items-start gap-2 text-right" data-testid="axis-event">
+        {eventIcon(e)}
+        <div className="flex min-w-0 items-baseline justify-end gap-1 leading-snug">
+          <EventText e={e} oneLine className={e.tier === 'minor' ? 'text-sm' : 'text-[15px]'} />
+          {titles.length ? (
+            <span className="flex min-w-0 max-w-[45%] shrink-0 text-xs text-muted-foreground" title={`→ ${titles.join(', ')}`}>
+              <span className="truncate">→ {titles[0]}</span>
+              {titles.length > 1 ? <span className="shrink-0">&nbsp;+{titles.length - 1}</span> : null}
             </span>
           ) : null}
         </div>
@@ -309,7 +333,7 @@ function TimelineAxis({ tl, showMinor }: { tl: BioTimeline; showMinor: boolean }
   if (narrow) {
     type Item = { key: string; year: number; node: ReactNode; minor: boolean };
     const items: Item[] = [
-      ...events.map((e) => ({ key: e.key, year: yearOf(e.date.from), node: eventRow(e, 'right'), minor: e.tier === 'minor' })),
+      ...events.map((e) => ({ key: e.key, year: yearOf(e.date.from), node: eventRow(e), minor: e.tier === 'minor' })),
       ...works.map((w) => ({ key: `w-${w.ref}`, year: w.written!.from, node: workRow(w), minor: false })),
     ].sort((x, y) => x.year - y.year);
     let prevYear = born;
@@ -397,8 +421,8 @@ function TimelineAxis({ tl, showMinor }: { tl: BioTimeline; showMinor: boolean }
         />
       ))}
       {left.map(({ it: e, y: yy }) => (
-        <div key={e.key} className="absolute left-0" style={{ top: yy - 2, right: `calc(${axis} + 1.4rem)` }}>
-          {eventRow(e, 'left')}
+        <div key={e.key} className="absolute left-9" style={{ top: yy - 2, right: `calc(${axis} + 1.4rem)` }}>
+          {axisEventLabel(e)}
         </div>
       ))}
       {right.map(({ it: w, y: yy }) => {

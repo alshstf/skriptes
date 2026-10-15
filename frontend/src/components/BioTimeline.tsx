@@ -72,17 +72,22 @@ export function EventIcon({ type, className }: { type: EventType; className?: st
 /**
  * Короткая формулировка; long — тултип (десктоп) и раскрытие по клику/тапу
  * (мобайл). Major — обычный контраст, minor — приглушённо.
+ *
+ * oneLine — для раскладки с фиксированным шагом (ось, #519): строго одна
+ * строка с многоточием, без раскрытия по клику (оно легло бы на соседнюю
+ * подпись); полный short и long — в тултипе.
  */
-export function EventText({ e, className }: { e: BioEvent; className?: string }) {
+export function EventText({ e, className, oneLine = false }: { e: BioEvent; className?: string; oneLine?: boolean }) {
   const [open, setOpen] = useState(false);
   const minor = e.tier === 'minor';
   const detail = [e.long, e.place?.label].filter(Boolean).join(' · ');
   const text = (
     <button
       type="button"
-      onClick={() => detail && setOpen((v) => !v)}
+      onClick={() => !oneLine && detail && setOpen((v) => !v)}
       className={cn(
-        'text-left text-pretty',
+        'text-left',
+        oneLine ? 'block max-w-full truncate' : 'text-pretty',
         minor ? 'text-sm text-muted-foreground' : 'text-[15px] text-foreground',
         e.hidden && 'line-through opacity-60',
         className,
@@ -91,12 +96,20 @@ export function EventText({ e, className }: { e: BioEvent; className?: string })
       {e.short}
     </button>
   );
+  const tip = oneLine ? (
+    <>
+      <span className="block">{e.short}</span>
+      {detail ? <span className="mt-1 block opacity-80">{detail}</span> : null}
+    </>
+  ) : (
+    detail
+  );
   return (
     <span className="min-w-0">
-      {detail ? (
+      {tip ? (
         <Tooltip>
           <TooltipTrigger asChild>{text}</TooltipTrigger>
-          <TooltipContent className="max-w-xs text-pretty">{detail}</TooltipContent>
+          <TooltipContent className="max-w-xs text-pretty">{tip}</TooltipContent>
         </Tooltip>
       ) : (
         text
