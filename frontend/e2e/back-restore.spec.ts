@@ -30,7 +30,7 @@ test('подборка: «Назад» с карточки — подборка 
   await page.goto('/shelves');
   await page.getByRole('button', { name: /Экранизации/ }).click();
   await expect(page).toHaveURL(/open=/);
-  const target = page.getByRole('link', { name: /Книга подборки 30 / });
+  const target = page.getByRole('link', { name: 'Книга подборки 30', exact: true });
   await target.scrollIntoViewIfNeeded();
   const before = await page.evaluate(() => window.scrollY);
   expect(before).toBeGreaterThan(500);
@@ -38,7 +38,7 @@ test('подборка: «Назад» с карточки — подборка 
   await target.click();
   await expect(page).toHaveURL(/\/works\/429/);
   await page.goBack();
-  await expect(page.getByRole('link', { name: /Книга подборки 30 / })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Книга подборки 30', exact: true })).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before - 40);
   expect(await page.evaluate(() => window.scrollY)).toBeLessThan(before + 40);
 });

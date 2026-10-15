@@ -1,4 +1,4 @@
-import { test, expect } from './_fixtures';
+import { test, expect, authorDetailFixture } from './_fixtures';
 
 /**
  * GenreChips: жанры на карточке книги в списке умещаются в ОДНУ строку;
@@ -123,5 +123,51 @@ test.describe('genre chips overflow (375px)', () => {
     // поэтому видимость 'poetry' в строке = он попал в показанные.
     const row = page.getByTestId('genre-chips');
     await expect(row.getByText('poetry')).toBeVisible();
+  });
+});
+
+/**
+ * Карточка автора (#518): строки работ — с обложкой и жанрами, лишние жанры —
+ * за «+N» (тот же GenreChips, что на /books); строка — stretched-link, клик по
+ * «+N» не навигирует. 375 px — без горизонтального скролла.
+ */
+test.describe('карточка автора: обложки и жанры в строках работ (375px)', () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test('обложка слева, жанры в одну строку с +N; заголовок ведёт на работу', async ({ mockedPage: page }) => {
+    const manyGenres = ['sf_action', 'popadanec', 'network_literature', 'detective', 'thriller', 'romance', 'history', 'poetry'];
+    await page.route(/\/api\/authors\/17$/, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          ...authorDetailFixture,
+          books: authorDetailFixture.books.map((b) =>
+            b.id === 102 ? { ...b, genres: manyGenres, cover_edition_id: 555, work_id: 9102 } : { ...b, genres: ['sf_action'] },
+          ),
+        }),
+      }),
+    );
+    await page.goto('/authors/17');
+    const row = page.locator('li', { has: page.getByRole('link', { name: 'Отдельный роман' }) });
+    await expect(row).toBeVisible({ timeout: 10_000 });
+    // Обложка — из издания с обложкой (cover_edition_id), слева от текста.
+    const cover = row.locator('img[src="/api/covers/book/555"]');
+    await expect(cover).toHaveCount(1);
+    // Жанры — одна строка, хвост за «+N».
+    const chips = row.getByTestId('genre-chips');
+    expect((await chips.boundingBox())!.height).toBeLessThan(32);
+    const plus = row.getByRole('button', { name: /Ещё \d+ жанр/ });
+    await expect(plus).toBeVisible();
+    await plus.click();
+    await expect(page).toHaveURL(/\/authors\/17$/);
+    await expect(page.getByRole('dialog').getByText('poetry')).toBeVisible();
+    await page.keyboard.press('Escape');
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+
+    await row.getByRole('link', { name: 'Отдельный роман' }).click();
+    await expect(page).toHaveURL(/\/works\/9102/);
   });
 });

@@ -193,7 +193,7 @@ function SeriesBookList({ books, multi }: { books: Book[]; multi: boolean }) {
       <ul className="space-y-1">
         {sorted.slice(0, shown).map((b) => (
           <li key={b.id}>
-            <BookListItem book={b} showSeries={false} showSerNo={true} />
+            <BookListItem book={b} showSeries={false} showSerNo={true} showCover />
           </li>
         ))}
       </ul>

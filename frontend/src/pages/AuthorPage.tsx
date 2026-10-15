@@ -265,7 +265,7 @@ function AuthorBooks({ author }: { author: Author }) {
             <ul className="space-y-1">
               {flat.map((b) => (
                 <li key={b.id}>
-                  <BookListItem book={b} showSeries={false} />
+                  <BookListItem book={b} showSeries={false} showCover />
                 </li>
               ))}
             </ul>
@@ -384,7 +384,7 @@ function CompilationsSection({
               <ul className="space-y-1">
                 {books.map((b) => (
                   <li key={b.id}>
-                    <BookListItem book={b} showSeries={false} showSerNo={true} />
+                    <BookListItem book={b} showSeries={false} showSerNo={true} showCover />
                   </li>
                 ))}
               </ul>
@@ -395,7 +395,7 @@ function CompilationsSection({
           <ul className="space-y-1">
             {standalone.map((b) => (
               <li key={b.id}>
-                <BookListItem book={b} showSeries={false} />
+                <BookListItem book={b} showSeries={false} showCover />
               </li>
             ))}
           </ul>
@@ -449,7 +449,7 @@ function SeriesSection({
             <ul className="space-y-1">
               {books.map((b) => (
                 <li key={b.id}>
-                  <BookListItem book={b} showSeries={false} showSerNo={true} />
+                  <BookListItem book={b} showSeries={false} showSerNo={true} showCover />
                 </li>
               ))}
             </ul>
@@ -479,7 +479,7 @@ function StandaloneSection({ books }: { books: BookListItemType[] }) {
           <ul className="space-y-1">
             {books.map((b) => (
               <li key={b.id}>
-                <BookListItem book={b} showSeries={false} />
+                <BookListItem book={b} showSeries={false} showCover />
               </li>
             ))}
           </ul>
