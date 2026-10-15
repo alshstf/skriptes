@@ -66,10 +66,74 @@ test('merge suggestion: admin видит плашку и «Объединить�
 
   await page.goto('/series/7');
   await expect(page.getByText(/Похоже, том #7/)).toBeVisible({ timeout: 10_000 });
-  await page.getByRole('button', { name: 'Объединить', exact: true }).click();
+  await page.getByRole('button', { name: 'Посмотреть' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByText('«Неизбежная могила»')).toBeVisible();
+  await dialog.getByRole('button', { name: 'Объединить', exact: true }).click();
 
   await expect.poll(() => calls.length).toBe(1);
   expect([...calls[0].work_ids].sort((a, b) => a - b)).toEqual([269666, 277728]);
+  // Решённая группа уходит сразу, вместе с плашкой.
+  await expect(page.getByTestId('merge-suggestions')).toHaveCount(0);
+});
+
+// #517: у серии с многими нерасклеенными томами — ОДНА сводная плашка (не стена
+// подсказок), кнопка жёстко справа от текста; «Не объединять» запоминает отказ, а
+// с отказом от сервера (merge_rejections) подсказки нет.
+test('merge suggestions: одна сводная плашка, окно со всеми томами, «не объединять»', async ({ page }) => {
+  await mockApi(page);
+  const books = Array.from({ length: 6 }, (_, i) => [
+    { id: 1000 + i * 2, work_id: 2000 + i * 2, title: `Том ${i + 1}: очень длинное название первого издания`, ser_no: i + 1 },
+    { id: 1001 + i * 2, work_id: 2001 + i * 2, title: `Том ${i + 1}: другое название второго издания`, ser_no: i + 1 },
+  ])
+    .flat()
+    .map((b) => ({ ...b, authors: ['Гэлбрейт Роберт'], series: 'Механизмы радости', series_id: 8, lib_id: `L${b.id}` }));
+  let rejections: [number, number][] = [];
+  await page.route(/\/api\/series\/8$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...seriesWithDup, id: 8, title: 'Механизмы радости', book_count: 12, books, merge_rejections: rejections }),
+    }),
+  );
+  const rejected: Array<{ work_ids: number[] }> = [];
+  await page.route(/\/api\/admin\/works\/merge-rejections$/, (route) => {
+    const body = route.request().postDataJSON() as { work_ids: number[] };
+    rejected.push(body);
+    rejections = [...rejections, [body.work_ids[0], body.work_ids[1]]];
+    void route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ pairs: 1 }) });
+  });
+
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/series/8');
+  const plaque = page.getByTestId('merge-suggestions');
+  await expect(plaque).toHaveCount(1, { timeout: 10_000 });
+  await expect(plaque).toContainText('Похоже, 6 томов серии изданы в нескольких вариантах');
+  // Кнопка — справа от текста, в первой строке (не переносится под текст).
+  const text = (await plaque.locator('span').first().boundingBox())!;
+  const btn = (await plaque.getByRole('button', { name: 'Посмотреть' }).boundingBox())!;
+  expect(btn.x).toBeGreaterThan(text.x + text.width - 1);
+  expect(btn.y).toBeLessThan(text.y + 8);
+
+  await plaque.getByRole('button', { name: 'Посмотреть' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByTestId('merge-group')).toHaveCount(6);
+  await dialog.getByTestId('merge-group').first().getByRole('button', { name: 'Не объединять' }).click();
+  await expect.poll(() => rejected.length).toBe(1);
+  expect([...rejected[0].work_ids].sort((a, b) => a - b)).toEqual([2000, 2001]);
+  await expect(dialog.getByTestId('merge-group')).toHaveCount(5);
+  await page.keyboard.press('Escape');
+  await expect(plaque).toContainText('Похоже, 5 томов');
+
+  // После перезагрузки отказ приходит с сервера — том #1 не предлагается.
+  await page.reload();
+  await expect(page.getByTestId('merge-suggestions')).toContainText('Похоже, 5 томов', { timeout: 10_000 });
+
+  // На узком экране кнопка всё так же справа.
+  await page.setViewportSize({ width: 375, height: 812 });
+  const text2 = (await plaque.locator('span').first().boundingBox())!;
+  const btn2 = (await plaque.getByRole('button', { name: 'Посмотреть' }).boundingBox())!;
+  expect(btn2.x).toBeGreaterThan(text2.x + text2.width - 1);
 });
 
 test('merge suggestion: не-админ ничего не видит', async ({ page }) => {

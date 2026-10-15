@@ -70,6 +70,23 @@ describe('computeMergeSuggestions', () => {
     expect([...s[0].workIds].sort((a, b) => a - b)).toEqual([11, 22]);
   });
 
+  it('«не объединять» (#517): группа, у которой отклонены все пары, не предлагается', () => {
+    const books = [
+      mb({ id: 1, work_id: 100, ser_no: 7 }),
+      mb({ id: 2, work_id: 200, ser_no: 7 }),
+      mb({ id: 3, work_id: 300, ser_no: 8 }),
+      mb({ id: 4, work_id: 400, ser_no: 8 }),
+      mb({ id: 5, work_id: 500, ser_no: 8 }),
+    ];
+    // Порядок в паре не важен; у тома #8 отклонена только одна пара из трёх.
+    const s = computeMergeSuggestions(books, [
+      [200, 100],
+      [300, 400],
+    ]);
+    expect(s.map((g) => g.serNo)).toEqual([8]);
+    expect(computeMergeSuggestions(books, [[100, 200], [300, 400], [300, 500], [400, 500]])).toHaveLength(0);
+  });
+
   it('несколько подсказок отсортированы по ser_no', () => {
     const books = [
       mb({ id: 1, work_id: 1, ser_no: 5 }),

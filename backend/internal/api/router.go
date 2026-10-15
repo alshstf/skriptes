@@ -361,6 +361,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/admin/work-grouping/stop", handleWorkGroupingStop(d.Settings))
 					r.Post("/admin/works/split", handleWorkSplit(d.Settings))
 					r.Post("/admin/works/merge", handleWorkMerge(d.Settings))
+					r.Post("/admin/works/merge-rejections", handleWorkRejectMerge(d.Settings)) // «не объединять» (#517)
 					r.Post("/admin/works/regroup", handleWorksRegroup(d.Settings))
 					r.Post("/admin/works/regroup-all", handleWorksRegroupAll(d.Settings))
 					r.Post("/admin/works/regroup/stop", handleWorksRegroupStop(d.Settings))

@@ -181,6 +181,9 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 	// Обогащённая плашка: внешний рейтинг/источник, оценка читателей, экранизации
 	// по work_id (как в /books). User-поля (favorite/read) — в api-слое.
 	books.HydrateListMeta(ctx, s.pool, a.Books)
+	if a.MergeRejections, err = s.queryMergeRejections(ctx, a.Books); err != nil {
+		return Author{}, err
+	}
 
 	years, err := s.queryAuthorYearStats(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
@@ -383,6 +386,9 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 	out.BookCount = len(out.Books)
 	// Обогащённая плашка (как в /books): рейтинги/экранизации по work_id.
 	books.HydrateListMeta(ctx, s.pool, out.Books)
+	if out.MergeRejections, err = s.queryMergeRejections(ctx, out.Books); err != nil {
+		return Series{}, err
+	}
 
 	years, err := s.querySeriesYearStats(ctx, id, excludeGenres, excludeLangs, hideCompilations)
 	if err != nil {
@@ -634,6 +640,36 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		}
 	}
 	return out, refs, nil
+}
+
+// queryMergeRejections — отклонённые админом пары работ среди строк списка (#517).
+func (s *Service) queryMergeRejections(ctx context.Context, list []books.ListItem) ([][2]int64, error) {
+	ids := make([]int64, 0, len(list))
+	for _, b := range list {
+		if b.WorkID > 0 {
+			ids = append(ids, b.WorkID)
+		}
+	}
+	if len(ids) < 2 {
+		return nil, nil
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT work_a, work_b FROM work_merge_rejections
+		WHERE work_a = ANY($1) AND work_b = ANY($1)
+		ORDER BY work_a, work_b`, ids)
+	if err != nil {
+		return nil, fmt.Errorf("query merge rejections: %w", err)
+	}
+	defer rows.Close()
+	var out [][2]int64
+	for rows.Next() {
+		var p [2]int64
+		if err := rows.Scan(&p[0], &p[1]); err != nil {
+			return nil, err
+		}
+		out = append(out, p)
+	}
+	return out, rows.Err()
 }
 
 // mergeEditionListMeta — издание той же работы дополняет строку списка (#518):

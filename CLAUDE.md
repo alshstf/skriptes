@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0059_name_fold_trgm`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0060_work_merge_rejections`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -97,7 +97,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     список книг прогоняй через те же исключения.
 15. **Работа (`works`) над изданиями (`books`).** Группировка `metadata/work_grouper.go` (Tier-1 локально, Tier-2
     внешний, гейты против склеек — §15 в gotchas), ручные merge/split (якорь не выносится; merge зовёт
-    `reassignWorkUserData` до GC), авторы работы — `internal/workauthors`. Индексы Meili: `books` (OPDS) и `works`
+    `reassignWorkUserData` до GC), «не объединять» — `work_merge_rejections` (группировка соблюдает, #517),
+    авторы работы — `internal/workauthors`. Индексы Meili: `books` (OPDS) и `works`
     (веб); меняешь `workDoc`/`workDocSelect` — бамп `WorksIndexSchemaVersion`. `/works/{id}` ≠ `/books/{id}`.
 16. **★-избранное книг = служебная полка** `user_collections.kind='favorites'`; таблицы `favorites` нет. Авторы и
     серии — подписка (колокольчик), не избранное.

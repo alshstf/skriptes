@@ -76,8 +76,16 @@ export type MergeSuggestion = {
  * уже схлопывает издания по работе (строка = работа), поэтому если у одного
  * `ser_no` (>0) оказалось ≥2 РАЗНЫХ работ (`work_id ?? id`) — это вероятный
  * нерасклеенный том серии в нескольких изданиях. Возвращает группы по ser_no.
+ * rejections — пары work_id «не объединять» (#517): группа, у которой отклонены
+ * все пары, не предлагается; новая работа в группе вернёт подсказку.
  */
-export function computeMergeSuggestions(books: BookListItem[]): MergeSuggestion[] {
+export function computeMergeSuggestions(
+  books: BookListItem[],
+  rejections: [number, number][] = [],
+): MergeSuggestion[] {
+  const rejected = new Set(rejections.map(([a, b]) => (a < b ? `${a}:${b}` : `${b}:${a}`)));
+  const allRejected = (ids: number[]) =>
+    ids.every((a, i) => ids.slice(i + 1).every((b) => rejected.has(a < b ? `${a}:${b}` : `${b}:${a}`)));
   const bySer = new Map<number, BookListItem[]>();
   for (const b of books) {
     if (typeof b.ser_no === 'number' && b.ser_no > 0) {
@@ -89,7 +97,7 @@ export function computeMergeSuggestions(books: BookListItem[]): MergeSuggestion[
   const out: MergeSuggestion[] = [];
   for (const [serNo, arr] of bySer) {
     const workIds = [...new Set(arr.map((b) => b.work_id ?? b.id))];
-    if (workIds.length >= 2) out.push({ serNo, books: arr, workIds });
+    if (workIds.length >= 2 && !allRejected(workIds)) out.push({ serNo, books: arr, workIds });
   }
   return out.sort((a, b) => a.serNo - b.serNo);
 }

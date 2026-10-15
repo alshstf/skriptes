@@ -928,6 +928,23 @@ export function useMergeWorks() {
   });
 }
 
+/**
+ * useRejectMerge — «не объединять» (#517): пары work_ids запоминаются на сервере,
+ * подсказка слияния больше не появляется, фоновая группировка их не склеивает.
+ */
+export function useRejectMerge() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { work_ids: number[] }) =>
+      apiFetch<{ pairs: number }>('/api/admin/works/merge-rejections', { method: 'POST', body: vars }),
+    onSuccess: () => {
+      invalidateCatalog(qc);
+      toast.success('Запомнили: это разные книги');
+    },
+    onError: (e) => toast.error(`Не удалось сохранить: ${e instanceof Error ? e.message : 'ошибка'}`),
+  });
+}
+
 /** useSplitEditions — вынести издания (book_ids) в новую отдельную работу. */
 export function useSplitEditions() {
   const qc = useQueryClient();

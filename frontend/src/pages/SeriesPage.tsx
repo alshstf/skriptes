@@ -148,7 +148,7 @@ export function SeriesPage() {
           {/* Подсказки «один том — одна книга» опираются на номер тома; в
               межавторской/издательской серии номера у разных книг совпадают —
               подсказки предлагали бы склеить разные романы. */}
-          {s.kind !== 'multi' ? <MergeSuggestions books={s.books} /> : null}
+          {s.kind !== 'multi' ? <MergeSuggestions books={s.books} rejections={s.merge_rejections} /> : null}
           <div className="flex justify-end empty:hidden">
             <MergeWorksDialog books={s.books} />
           </div>
