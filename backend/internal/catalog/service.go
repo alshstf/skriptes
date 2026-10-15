@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
@@ -274,7 +275,9 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 		       ),
 		       b.written_year, b.edition_year, b.normalized_title,
 		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL),
-		       b.work_id
+		       b.work_id,
+		       ARRAY(SELECT g.fb2_code FROM book_genres bg JOIN genres g ON g.id = bg.genre_id WHERE bg.book_id = b.id ORDER BY g.fb2_code),
+		       COALESCE(b.cover_path, '')
 		FROM books b
 		JOIN archives ar ON ar.id = b.archive_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
@@ -303,17 +306,22 @@ func (s *Service) GetSeries(ctx context.Context, id, userID int64, excludeGenres
 			ext       string
 			localScan bool
 			workID    pgtype.Int8
+			genres    []string
+			cover     string
 		)
 		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &serNo, &auth,
-			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID); err != nil {
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID, &genres, &cover); err != nil {
 			return Series{}, err
 		}
 		if workID.Valid && workID.Int64 > 0 {
 			if idx, ok := seenWork[workID.Int64]; ok {
 				out.Books[idx].EditionCount++
+				mergeEditionListMeta(&out.Books[idx], b.ID, genres, cover)
 				continue
 			}
 		}
+		b.Genres = genres
+		b.CoverPath = cover
 		if lang.Valid {
 			b.Lang = lang.String
 		}
@@ -504,7 +512,9 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		       b.written_year, b.edition_year, b.normalized_title,
 		       ar.filename, b.file_name, b.ext, (b.year_local_scanned_at IS NOT NULL),
 		       b.work_id,
-		       COALESCE((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id), '')
+		       COALESCE((SELECT ww.kind FROM works ww WHERE ww.id = b.work_id), ''),
+		       ARRAY(SELECT g.fb2_code FROM book_genres bg JOIN genres g ON g.id = bg.genre_id WHERE bg.book_id = b.id ORDER BY g.fb2_code),
+		       COALESCE(b.cover_path, '')
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		JOIN archives ar ON ar.id = b.archive_id
@@ -543,18 +553,23 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 			ext         string
 			localScan   bool
 			workID      pgtype.Int8
+			genres      []string
+			cover       string
 		)
 		if err := rows.Scan(&b.ID, &b.Title, &b.LibID, &lang, &dt, &seriesID, &seriesTitle, &serNo, &auth,
-			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID, &b.Kind); err != nil {
+			&wy, &ey, &normTitle, &archiveFn, &fileName, &ext, &localScan, &workID, &b.Kind, &genres, &cover); err != nil {
 			return nil, nil, err
 		}
-		// Дубликат-издание уже виденной работы → только счётчик, в список не добавляем.
+		// Дубликат-издание уже виденной работы → счётчик, жанры и обложка, в список не добавляем.
 		if workID.Valid && workID.Int64 > 0 {
 			if idx, ok := seenWork[workID.Int64]; ok {
 				out[idx].EditionCount++
+				mergeEditionListMeta(&out[idx], b.ID, genres, cover)
 				continue
 			}
 		}
+		b.Genres = genres
+		b.CoverPath = cover
 		if lang.Valid {
 			b.Lang = lang.String
 		}
@@ -619,6 +634,24 @@ func (s *Service) queryAuthorBooks(ctx context.Context, authorID int64, limit in
 		}
 	}
 	return out, refs, nil
+}
+
+// mergeEditionListMeta — издание той же работы дополняет строку списка (#518):
+// жанры — объединение по видимым изданиям (как genres работы в Meili-индексе,
+// importer.go; издания со скрытым жанром до сюда не доходят — их режет
+// exClause), обложка — первого издания, у которого она уже извлечена (фронт
+// берёт /api/covers/book/{cover_edition_id ?? id}).
+func mergeEditionListMeta(b *books.ListItem, editionID int64, genres []string, cover string) {
+	for _, g := range genres {
+		if !slices.Contains(b.Genres, g) {
+			b.Genres = append(b.Genres, g)
+		}
+	}
+	slices.Sort(b.Genres)
+	if b.CoverPath == "" && cover != "" {
+		b.CoverPath = cover
+		b.CoverEditionID = editionID
+	}
 }
 
 // yearStatsBooksCap — потолок числа книг, прикладываемых к одному году
