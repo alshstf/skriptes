@@ -527,8 +527,15 @@ article_is_author, extract, thumbnail, accept). Без трассы в конт�
   инвалидируют каталожные кэши + тост). `components/MergeSuggestions.tsx` —
   read-only подсказки на карточке серии/автора: `computeMergeSuggestions`
   (`lib/books.ts`) группирует загруженные книги по `ser_no` (>0) → если ≥2 разных
-  `work_id` → плашка «Объединить?» (каталог несёт `ListItem.WorkID`/`ser_no`,
-  отдельный эндпоинт НЕ нужен). `components/MergeWorksDialog.tsx` — ручной выбор
+  `work_id` → ОДНА сводная плашка «Посмотреть» на все такие тома (#517; раньше
+  плашка на каждый том — у больших серий стена подсказок) и окно с группами:
+  «Объединить» / «Не объединять». Отказ — пары работ в `work_merge_rejections`
+  (миграция 0060, `POST /api/admin/works/merge-rejections`,
+  `WorkGroupController.RejectMerge`); каталог отдаёт их как `merge_rejections`
+  автора/серии, эвристика не предлагает группу с отклонёнными ВСЕМИ парами (новая
+  работа в группе вернёт подсказку). Фоновая группировка отказ соблюдает:
+  `clusterTier1With` — union-find не склеивает компоненты с отклонённой парой
+  (и для союзов Tier-2 поверх него). Слияние/GC работы снимает пары каскадом. `components/MergeWorksDialog.tsx` — ручной выбор
   ≥2 работ → merge (серия/автор). `components/SplitEditionsDialog.tsx` — split
   изданий из секции «Издания» карточки книги. **ЯКОРНОЕ издание выносить нельзя**
   (title-derived: его `normalized_title` == названию работы; тай/fallback → min id;

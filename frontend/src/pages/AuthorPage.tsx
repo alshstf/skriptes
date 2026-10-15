@@ -283,6 +283,7 @@ function AuthorBooks({ author }: { author: Author }) {
           key={s.id}
           series={s}
           books={bySeries.get(s.id) ?? []}
+          rejections={author.merge_rejections}
         />
       ))}
       {standalone.length > 0 ? <StandaloneSection books={standalone} /> : null}
@@ -408,9 +409,11 @@ function CompilationsSection({
 function SeriesSection({
   series,
   books,
+  rejections,
 }: {
   series: SeriesWithCount;
   books: BookListItemType[];
+  rejections?: [number, number][];
 }) {
   return (
     <Card>
@@ -442,7 +445,7 @@ function SeriesSection({
           <p className="text-sm text-muted-foreground">Книги не загрузились.</p>
         ) : (
           <div className="space-y-2">
-            <MergeSuggestions books={books} />
+            <MergeSuggestions books={books} rejections={rejections} />
             <div className="flex justify-end empty:hidden">
               <MergeWorksDialog books={books} />
             </div>

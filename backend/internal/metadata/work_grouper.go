@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"slices"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -409,7 +410,11 @@ func (g *WorkGrouper) groupAuthorTier1(ctx context.Context, authorID int64) erro
 	if len(books) == 0 {
 		return nil
 	}
-	uf := clusterTier1(books)
+	rejected, err := g.loadRejectedPairs(ctx, books)
+	if err != nil {
+		return err
+	}
+	uf := clusterTier1With(books, rejected)
 	// Уже найденные внешние ключи (Tier-2, поиск экранизаций — #467) — без сети:
 	// работы из нескольких изданий Tier-2 не спрашивает, ключ им даёт только
 	// поиск экранизаций.
@@ -459,7 +464,11 @@ func (g *WorkGrouper) groupAuthorTier2(ctx context.Context, authorID int64) erro
 	if len(books) == 0 {
 		return nil
 	}
-	uf := clusterTier1(books)
+	rejected, err := g.loadRejectedPairs(ctx, books)
+	if err != nil {
+		return err
+	}
+	uf := clusterTier1With(books, rejected)
 	resolvedExt := g.applyTier2(ctx, books, uf)
 	return g.apply(ctx, authorID, books, uf, resolvedExt)
 }
@@ -506,8 +515,14 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 
 // clusterTier1 — союз изданий по внутренним (без сети) ключам. Возвращает
 // union-find над индексами books. Чистая функция (тестируемо).
-func clusterTier1(books []groupBook) *unionFind {
+func clusterTier1(books []groupBook) *unionFind { return clusterTier1With(books, nil) }
+
+// clusterTier1With — clusterTier1 с запретом склеивать пары работ, которые
+// админ пометил «не объединять» (work_merge_rejections, #517): запрет живёт в
+// union-find и действует и на союзы Tier-2 поверх него.
+func clusterTier1With(books []groupBook, rejected workPairs) *unionFind {
 	uf := newUnionFind(len(books))
+	uf.forbid(books, rejected)
 	byTitleLang := map[string][]int{} // (normTitle, lang) — оригинал/дубль одного языка
 	byDoc := map[string][]int{}
 	byTrans := map[string][]int{}    // (srcAuthorNorm, srcTitleNorm, srcLang) — переводы между собой
@@ -1219,6 +1234,76 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	return target, nil
 }
 
+// workPairs — упорядоченные пары работ (меньший id первым).
+type workPairs map[[2]int64]struct{}
+
+func workPair(a, b int64) [2]int64 {
+	if a > b {
+		a, b = b, a
+	}
+	return [2]int64{a, b}
+}
+
+// loadRejectedPairs — пары «не объединять» среди работ изданий автора (#517).
+func (g *WorkGrouper) loadRejectedPairs(ctx context.Context, books []groupBook) (workPairs, error) {
+	seen := map[int64]struct{}{}
+	ids := make([]int64, 0, len(books))
+	for _, b := range books {
+		if _, ok := seen[b.workID]; !ok && b.workID > 0 {
+			seen[b.workID] = struct{}{}
+			ids = append(ids, b.workID)
+		}
+	}
+	if len(ids) < 2 {
+		return nil, nil
+	}
+	rows, err := g.pool.Query(ctx,
+		`SELECT work_a, work_b FROM work_merge_rejections WHERE work_a = ANY($1) AND work_b = ANY($1)`, ids)
+	if err != nil {
+		return nil, fmt.Errorf("load merge rejections: %w", err)
+	}
+	defer rows.Close()
+	out := workPairs{}
+	for rows.Next() {
+		var a, b int64
+		if err := rows.Scan(&a, &b); err != nil {
+			return nil, err
+		}
+		out[workPair(a, b)] = struct{}{}
+	}
+	return out, rows.Err()
+}
+
+// maxRejectWorks — предел работ в одном «не объединять» (пар — n·(n-1)/2).
+const maxRejectWorks = 50
+
+// RejectMerge — «не объединять» (#517): все пары из workIDs запоминаются в
+// work_merge_rejections; подсказки слияния на карточках серии/автора их больше
+// не предлагают, фоновая группировка не склеивает. Возвращает число новых пар.
+func (c *WorkGroupController) RejectMerge(ctx context.Context, workIDs []int64, by int64) (int64, error) {
+	ids := slices.Clone(workIDs)
+	slices.Sort(ids)
+	ids = slices.Compact(ids)
+	if len(ids) < 2 || len(ids) > maxRejectWorks || ids[0] <= 0 {
+		return 0, fmt.Errorf("need 2..%d distinct work ids", maxRejectWorks)
+	}
+	var as, bs []int64
+	for i := range ids {
+		for j := i + 1; j < len(ids); j++ {
+			as = append(as, ids[i])
+			bs = append(bs, ids[j])
+		}
+	}
+	tag, err := c.pool.Exec(ctx, `
+		INSERT INTO work_merge_rejections (work_a, work_b, rejected_by)
+		SELECT x.a, x.b, NULLIF($3::bigint, 0) FROM unnest($1::bigint[], $2::bigint[]) AS x(a, b)
+		ON CONFLICT DO NOTHING`, as, bs, by)
+	if err != nil {
+		return 0, fmt.Errorf("reject merge: %w", err)
+	}
+	return tag.RowsAffected(), nil
+}
+
 // RegroupResult — итог пере-группировки работ (ответ админ-ручки).
 type RegroupResult struct {
 	DryRun bool `json:"dry_run"`
@@ -1893,6 +1978,35 @@ type unionFind struct {
 	parent []int
 	rank   []int
 	sz     []int
+	// works — существующие работы компоненты (по корню), rejected — пары «не
+	// объединять» (#517): union не склеивает компоненты, в которых оказалась
+	// бы отклонённая пара. Пусто — без проверок.
+	works    []map[int64]struct{}
+	rejected workPairs
+}
+
+// forbid включает запрет отклонённых пар для books (индексы — как в union-find).
+func (u *unionFind) forbid(books []groupBook, rejected workPairs) {
+	if len(rejected) == 0 {
+		return
+	}
+	u.rejected = rejected
+	u.works = make([]map[int64]struct{}, len(books))
+	for i, b := range books {
+		u.works[i] = map[int64]struct{}{b.workID: {}}
+	}
+}
+
+// conflict — в компонентах ra и rb есть отклонённая пара работ.
+func (u *unionFind) conflict(ra, rb int) bool {
+	for wa := range u.works[ra] {
+		for wb := range u.works[rb] {
+			if _, ok := u.rejected[workPair(wa, wb)]; ok && wa != wb {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func newUnionFind(n int) *unionFind {
@@ -1917,11 +2031,20 @@ func (u *unionFind) union(a, b int) {
 	if ra == rb {
 		return
 	}
+	if u.rejected != nil && u.conflict(ra, rb) {
+		return
+	}
 	if u.rank[ra] < u.rank[rb] {
 		ra, rb = rb, ra
 	}
 	u.parent[rb] = ra
 	u.sz[ra] += u.sz[rb]
+	if u.works != nil {
+		for w := range u.works[rb] {
+			u.works[ra][w] = struct{}{}
+		}
+		u.works[rb] = nil
+	}
 	if u.rank[ra] == u.rank[rb] {
 		u.rank[ra]++
 	}

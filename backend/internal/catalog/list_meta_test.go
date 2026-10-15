@@ -89,3 +89,54 @@ func TestService_ListGenresAndCover(t *testing.T) {
 		require.Equal(t, withCover, s.Books[0].CoverEditionID)
 	}
 }
+
+// TestService_MergeRejections — #517: пары «не объединять» среди работ списка
+// приходят в ответах автора и серии (подсказки слияния их не предлагают).
+func TestService_MergeRejections(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+
+	var collID, archID, authorID, seriesID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Гэлбрейт','гэлбрейт роберт') RETURNING id`).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ('Страйк','страйк',$1) RETURNING id`, authorID).Scan(&seriesID))
+	work := func(lib, title string) int64 {
+		var workID, bookID int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title, primary_author_id, series_id, ser_no) VALUES ($1, lower($1), $2, $3, 7) RETURNING id`,
+			title, authorID, seriesID).Scan(&workID))
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, series_id, ser_no, work_id)
+			VALUES ($1,$2,$3,'f','fb2',$4,lower($4),'ru',$5,7,$6) RETURNING id`,
+			collID, archID, lib, title, seriesID, workID).Scan(&bookID))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, bookID, authorID)
+		require.NoError(t, err)
+		return workID
+	}
+	a := work("A", "Развороченная могила")
+	b := work("B", "Неизбежная могила")
+	work("C", "Чужая книга") // третья работа серии — без отказов
+
+	svc := catalog.New(pool)
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Empty(t, s.MergeRejections)
+
+	_, err = pool.Exec(ctx, `INSERT INTO work_merge_rejections (work_a, work_b) VALUES ($1, $2)`, min(a, b), max(a, b))
+	require.NoError(t, err)
+	s, err = svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Equal(t, [][2]int64{{min(a, b), max(a, b)}}, s.MergeRejections)
+	au, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Equal(t, [][2]int64{{min(a, b), max(a, b)}}, au.MergeRejections)
+}

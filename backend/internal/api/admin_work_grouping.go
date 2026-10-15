@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -225,6 +226,38 @@ func handleWorksRegroupStop(d SettingsDeps) http.HandlerFunc {
 			return
 		}
 		writeJSON(w, http.StatusAccepted, map[string]string{"status": "stopping"})
+	}
+}
+
+// handleWorkRejectMerge — POST /api/admin/works/merge-rejections. «Не
+// объединять» (#517): body {"work_ids":[...]} — все пары запоминаются, подсказки
+// слияния и фоновая группировка их больше не склеивают.
+func handleWorkRejectMerge(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if d.WorkGroup == nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "work grouping disabled"})
+			return
+		}
+		var body struct {
+			WorkIDs []int64 `json:"work_ids"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 64*1024)).Decode(&body); err != nil || len(body.WorkIDs) < 2 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "work_ids (>=2) required"})
+			return
+		}
+		var by int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			by = u.ID
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		n, err := d.WorkGroup.RejectMerge(ctx, body.WorkIDs, by)
+		if err != nil {
+			slog.Default().Warn("reject work merge failed", "work_ids", body.WorkIDs, "err", err)
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "reject failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]int64{"pairs": n})
 	}
 }
 

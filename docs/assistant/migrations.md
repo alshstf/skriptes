@@ -34,6 +34,13 @@
 - `0027_external_rating_lookups` (`book_external_rating_lookups`); `0026_external_rating` (`books.external_rating`/`_source`/`_count` — внешний рейтинг из сети, см. граблю №17)
 - `0025_rating_prompts` (`reads.acquired_at` + `book_rating_prompts` для отложенных запросов оценки); `0024_book_ratings` (пользовательские оценки книг), `0023_favorites_collection` (★-избранное → служебная полка, граблю №16), `0022_feed_dismissals`, `0021_collections`, `0020_genre_favorites`, `0019_book_work_lookups` (граблю №15).
 
+## 0060_work_merge_rejections
+
+«Не объединять» (#517): `work_merge_rejections(work_a < work_b, rejected_by, rejected_at)`, FK на `works` с
+`ON DELETE CASCADE` (слитая/удалённая работа снимает пару). Пишет `WorkGroupController.RejectMerge`
+(`POST /api/admin/works/merge-rejections`), читают подсказки слияния (`merge_rejections` в ответах автора/серии) и
+фоновая группировка (`loadRejectedPairs` → `clusterTier1With`).
+
 ## 0059_name_fold_trgm
 
 Свёртка имён «ё/э/й» → «е/е/и» для поиска в PG (#516): trigram-индексы `authors_name_fold_trgm` и

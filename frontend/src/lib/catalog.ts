@@ -32,6 +32,8 @@ export type Author = {
   top_genres?: GenreCount[];
   series?: SeriesWithCount[];
   books: BookListItem[];
+  /** Пары work_id, которые админ пометил «не объединять» (#517). */
+  merge_rejections?: [number, number][];
   is_favorite?: boolean;
   /** Агрегаты-зеркало строки списка авторов (чтобы карточка несла ту же сводку). */
   external_rating?: number;
@@ -91,6 +93,8 @@ export type Series = {
   authors?: SeriesAuthorRef[];
   book_count: number;
   books: BookListItem[];
+  /** См. Author.merge_rejections. */
+  merge_rejections?: [number, number][];
   is_favorite?: boolean;
   year_stats?: YearCount[];
   read_count?: number;

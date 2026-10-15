@@ -34,6 +34,9 @@ type Author struct {
 	Series     []SeriesWithCount `json:"series,omitempty"`
 	BooksTotal int               `json:"books_total"`
 	Books      []books.ListItem  `json:"books"`
+	// MergeRejections — пары работ из Books, которые админ пометил «не
+	// объединять» (#517): подсказки слияния их больше не предлагают.
+	MergeRejections [][2]int64 `json:"merge_rejections,omitempty"`
 
 	// Агрегаты автора (зеркало строки в списке /authors) — чтобы карточка
 	// показывала то же, что компактный список: единый ВНЕШНИЙ рейтинг +
@@ -157,6 +160,8 @@ type Series struct {
 	Authors         []SeriesAuthorRef `json:"authors,omitempty"` // все авторы книг серии (≥1)
 	BookCount       int               `json:"book_count"`
 	Books           []books.ListItem  `json:"books"` // отсортированы по ser_no, deleted скрыты
+	// MergeRejections — см. Author.MergeRejections.
+	MergeRejections [][2]int64 `json:"merge_rejections,omitempty"`
 
 	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`
