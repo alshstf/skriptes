@@ -236,6 +236,9 @@ export function AuthorsPage() {
             {total} {pluralRu(total, ['автор', 'автора', 'авторов'])}
           </p>
         ) : null}
+        {data?.pages[0]?.fuzzy && items.length > 0 ? (
+          <Callout>Авторов с таким именем нет — показаны похожие имена.</Callout>
+        ) : null}
 
         {error ? (
           <p role="alert" className="text-sm text-destructive">

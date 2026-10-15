@@ -17,7 +17,7 @@
 - `0045_author_stats` (`authors.book_count`/`max_rating` — хранимые ключи сортировок /authors, #302)
 - `0044_author_meta_recheck_reason` (`author_meta_recheck.reason` — причина решения перепроверки, #280)
 - `0043_author_meta_recheck` (журнал перепроверки био/фото авторов, #280)
-- `0042_yo_fold_trgm` (trigram-индексы по `replace(…,'ё','е')` имён авторов и названий серий — подсказки/поиск без различия «ё»/«е», #278)
+- `0042_yo_fold_trgm` (trigram-индексы по `replace(…,'ё','е')` имён авторов и названий серий — подсказки/поиск без различия «ё»/«е», #278; заменены в 0059)
 - `0041_series_kind` (`series.kind='multi'` — межавторская/издательская серия, грабля №22)
 - `0040_author_name_note` (уточнение тёзки `authors.name_note`, автор уникален по (имя, уточнение), журнал `author_splits` — грабля №22)
 - `0039_book_identity_archive_libid` (книга = (архив, lib_id), схлопывание дублей из двух INPX одной библиотеки, см. карту «INPX → upsert»)
@@ -33,6 +33,14 @@
 - `0029_engagement_book_idx` (индексы `views(book_id)`/`reads(book_id)` для популярности works); `0028_metadata_overrides` (`metadata_overrides` — локальные ручные правки метаданных каталога, только админ; см. граблю №19)
 - `0027_external_rating_lookups` (`book_external_rating_lookups`); `0026_external_rating` (`books.external_rating`/`_source`/`_count` — внешний рейтинг из сети, см. граблю №17)
 - `0025_rating_prompts` (`reads.acquired_at` + `book_rating_prompts` для отложенных запросов оценки); `0024_book_ratings` (пользовательские оценки книг), `0023_favorites_collection` (★-избранное → служебная полка, граблю №16), `0022_feed_dismissals`, `0021_collections`, `0020_genre_favorites`, `0019_book_work_lookups` (граблю №15).
+
+## 0059_name_fold_trgm
+
+Свёртка имён «ё/э/й» → «е/е/и» для поиска в PG (#516): trigram-индексы `authors_name_fold_trgm` и
+`series_title_fold_trgm` по `translate(normalized_name|normalized_title::text, 'ёэй', 'ееи')`
+(`textnorm.NameFoldSQL`, Go-зеркало — `textnorm.FoldName`) вместо `authors_name_yo_trgm` / `series_title_yo_trgm`
+из 0042 (удалены). Их используют подсказки авторов/серий, поиск `/authors`, плашка «автор по запросу» в `/books`
+и добор похожих имён (оператор `<%`, `catalog/fuzzy_names.go`). Выражение в запросе обязано совпадать с индексным.
 
 ## 0058_bio_timeline
 

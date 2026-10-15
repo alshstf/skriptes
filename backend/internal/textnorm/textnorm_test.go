@@ -15,3 +15,18 @@ func TestFoldYo(t *testing.T) {
 		}
 	}
 }
+
+func TestFoldName(t *testing.T) {
+	for in, want := range map[string]string{
+		"брэдбери рэй":    "бредбери реи",
+		"Хайнлайн Роберт": "Хаинлаин Роберт",
+		"Семёнов":         "Семенов",
+		"ЭЙ":              "ЕИ",
+		"без изменений":   "без изменении",
+		"doyle":           "doyle",
+	} {
+		if got := FoldName(in); got != want {
+			t.Errorf("FoldName(%q) = %q, want %q", in, got, want)
+		}
+	}
+}

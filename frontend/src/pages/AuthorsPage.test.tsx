@@ -126,6 +126,17 @@ describe('AuthorsPage', () => {
     expect(screen.getByText(/^2 автора$/)).toBeInTheDocument();
   });
 
+  it('похожие имена вместо точных (#516) — пометка над списком', async () => {
+    render(wrap(<AuthorsPage />));
+    await screen.findByRole('heading', { level: 3, name: 'Кинг Стивен' });
+    expect(screen.queryByText(/показаны похожие имена/)).not.toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+    stubFetch({ ...authorsFixture, fuzzy: true } as typeof authorsFixture);
+    render(wrap(<AuthorsPage />));
+    expect(await screen.findByText('Авторов с таким именем нет — показаны похожие имена.')).toBeInTheDocument();
+  });
+
   it('дефолтная сортировка — «Сначала известные», дефолт не активный фильтр', async () => {
     render(wrap(<AuthorsPage />));
     await screen.findByRole('heading', { level: 3, name: 'Кинг Стивен' });

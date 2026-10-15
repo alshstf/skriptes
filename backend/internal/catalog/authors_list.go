@@ -100,6 +100,10 @@ type AuthorListParams struct {
 	MinReaderRating float64 // минимальная средняя оценка читателей по работам автора (≥ этого)
 	FavoritesOnly   bool    // только авторы из favorite_authors текущего юзера
 
+	// fuzzyIDs — вместо Query: точных совпадений по имени нет, список — похожие
+	// имена (#516). Ставит только resolveAuthorQuery.
+	fuzzyIDs []int64
+
 	// Sort: "" | "renown" (дефолт — «Сначала известные», authors.renown DESC) |
 	// "name" (алфавит по чистому ключу) | "book_count" | "rating" | "reader_rating".
 	Sort   string
@@ -118,6 +122,44 @@ type AuthorListParams struct {
 type AuthorListResult struct {
 	Items []AuthorListItem `json:"items"`
 	Total int              `json:"total"`
+	// Fuzzy — по имени из запроса точных совпадений нет, в списке похожие
+	// имена (опечатка, #516); фронт показывает пометку над списком.
+	Fuzzy bool `json:"fuzzy,omitempty"`
+}
+
+// listFuzzyCandidates — сколько похожих имён (#516) отдаёт список /authors.
+const listFuzzyCandidates = 200
+
+// resolveAuthorQuery — режим поиска по имени для списка и его фасетов: если
+// видимых авторов, чьё имя начинается с запроса, нет вовсе (без учёта прочих
+// фильтров — иначе список и счётчики фильтров разошлись бы), условие по имени
+// заменяется списком похожих имён. Без запроса и при точных совпадениях — p как
+// есть.
+func (s *Service) resolveAuthorQuery(ctx context.Context, p AuthorListParams) (AuthorListParams, bool, error) {
+	q := strings.TrimSpace(p.Query)
+	if q == "" {
+		return p, false, nil
+	}
+	words := fuzzyWords(q)
+	if fuzzyProbe(words) == "" {
+		return p, false, nil
+	}
+	base := newAuthorWhere(AuthorListParams{Query: q, ExcludeGenres: p.ExcludeGenres, ExcludeLangs: p.ExcludeLangs})
+	var exact bool
+	if err := s.pool.QueryRow(ctx,
+		`SELECT EXISTS (SELECT 1 FROM authors a WHERE `+strings.Join(base.filters(""), " AND ")+`)`, base.args...,
+	).Scan(&exact); err != nil {
+		return p, false, fmt.Errorf("authors exact match: %w", err)
+	}
+	if exact {
+		return p, false, nil
+	}
+	hits, err := s.fuzzyAuthors(ctx, words, nil, listFuzzyCandidates)
+	if err != nil {
+		return p, false, err
+	}
+	p.fuzzyIDs = hitIDs(hits)
+	return p, true, nil
 }
 
 // ListAuthorsFiltered — постраничный список авторов с фильтрами и агрегатами.
@@ -128,6 +170,10 @@ type AuthorListResult struct {
 // EXISTS-подзапросы по видимым книгам.
 func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (AuthorListResult, error) {
 	p.Limit, p.Offset = sanitizePaging(p.Limit, p.Offset)
+	p, fuzzy, err := s.resolveAuthorQuery(ctx, p)
+	if err != nil {
+		return AuthorListResult{}, err
+	}
 
 	// Условия фильтров — общие для списка и счётчиков фильтров (authorWhere).
 	wb := newAuthorWhere(p)
@@ -345,7 +391,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		}
 	}
 
-	return AuthorListResult{Items: out, Total: total}, nil
+	return AuthorListResult{Items: out, Total: total, Fuzzy: fuzzy}, nil
 }
 
 // fillAuthorTopGenres — батч-добор топ-5 жанров на каждого автора из ids одним

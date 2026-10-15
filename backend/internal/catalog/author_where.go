@@ -93,14 +93,19 @@ func (w *authorWhere) filters(skip string) []string {
 	// admin-переключатель на карточке автора.
 	where = append(where, "NOT a.is_service")
 
-	if q := strings.TrimSpace(p.Query); q != "" {
-		// Префиксный ILIKE по normalized_name без различия «ё»/«е» (как в
-		// SuggestAuthors, #278): GIN trigram index по тому же выражению
-		// (authors_name_yo_trgm) ускоряет на длинных запросах.
-		n := w.add(textnorm.FoldYo(escapeLike(q)))
+	if p.fuzzyIDs != nil {
+		// Точных совпадений по имени нет — похожие имена (#516, resolveAuthorQuery).
+		n := w.add(p.fuzzyIDs)
+		where = append(where, fmt.Sprintf("a.id = ANY($%d::bigint[])", n))
+	} else if q := strings.TrimSpace(p.Query); q != "" {
+		// Префиксный ILIKE по normalized_name без различия «ё/э/й» и «е/е/и» (как
+		// в SuggestAuthors, #278, #516): GIN trigram index по тому же выражению
+		// (authors_name_fold_trgm) ускоряет на длинных запросах.
+		n := w.add(textnorm.FoldName(escapeLike(q)))
 		// Латиницей — по латинскому имени из fb2 переводов (миграция 0046).
-		where = append(where, fmt.Sprintf(`(replace(a.normalized_name::text, 'ё', 'е') ILIKE $%[1]d || '%%' ESCAPE '\'`+
-			` OR a.latin_name ILIKE $%[1]d || '%%' ESCAPE '\')`, n))
+		where = append(where, fmt.Sprintf(authorNameFold+` ILIKE $%[1]d || '%%' ESCAPE '\'`+
+			` OR a.latin_name ILIKE $%[1]d || '%%' ESCAPE '\'`, n))
+		where[len(where)-1] = "(" + where[len(where)-1] + ")"
 	}
 
 	if p.FavoritesOnly && p.UserID > 0 {
