@@ -229,7 +229,7 @@ function SeriesStats({ series }: { series: Series }) {
           <ReadingProgress read={series.read_count ?? 0} total={series.book_count} />
         ) : null}
         {showHistogram ? (
-          <YearHistogram data={years} title="Книги по годам написания" />
+          <YearHistogram data={years} title="Книги по годам написания" unknown={series.year_unknown} />
         ) : null}
       </CardContent>
     </Card>

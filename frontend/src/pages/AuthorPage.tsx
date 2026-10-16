@@ -513,7 +513,7 @@ function AuthorStats({ author }: { author: import('@/lib/catalog').Author }) {
           <ReadingProgress read={author.read_count ?? 0} total={author.book_count} />
         ) : null}
         {showHistogram ? (
-          <YearHistogram data={years} title="Книги по годам написания" />
+          <YearHistogram data={years} title="Книги по годам написания" unknown={author.year_unknown} />
         ) : null}
       </CardContent>
     </Card>

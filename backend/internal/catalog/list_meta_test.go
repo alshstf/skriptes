@@ -176,7 +176,7 @@ func TestService_YearStatsByWork(t *testing.T) {
 		var id int64
 		require.NoError(t, pool.QueryRow(ctx, `
 			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, series_id, work_id, written_year)
-			VALUES ($1,$2,$3,'f','fb2','Издание','издание','ru',$4,$5,$6) RETURNING id`,
+			VALUES ($1,$2,$3,'f','fb2','Издание','издание','ru',$4,$5,NULLIF($6, 0)) RETURNING id`,
 			collID, archID, fmt.Sprintf("L%d", n), seriesID, workID, year).Scan(&id))
 		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, authorID)
 		require.NoError(t, err)
@@ -186,6 +186,8 @@ func TestService_YearStatsByWork(t *testing.T) {
 	edition(hp1, 2012)
 	edition(hp2, 1999)
 	edition(hp2, 1998)
+	noYear := work("Сказки барда Бидля", nil, 3) // ни у работы, ни у изданий года нет
+	edition(noYear, 0)
 
 	want := []catalog.YearCount{
 		{Year: 1997, Count: 1, Books: []catalog.YearBook{{WorkID: hp1, Title: "Гарри Поттер и философский камень"}}},
@@ -204,7 +206,9 @@ func TestService_YearStatsByWork(t *testing.T) {
 	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, want, strip(a.YearStats), "работа один раз, в год работы; без года работы — самый ранний год изданий")
+	require.Equal(t, 1, a.YearUnknown, "работа без года — в подписи покрытия, не на гистограмме")
 	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, want, strip(s.YearStats))
+	require.Equal(t, 1, s.YearUnknown)
 }
