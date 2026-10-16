@@ -42,9 +42,12 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{textnorm.FoldName(escapeLike(q)), limit}, exArgs...)
 	// Кириллица — по свёрнутому имени, латиница — по латинскому имени из fb2
-	// переводов (миграция 0046): «doyle» находит «Дойль Артур Конан».
+	// переводов (миграция 0046): «doyle» находит «Дойль Артур Конан». Голый
+	// latin_name, без COALESCE: выражение обязано совпадать с индексным
+	// (authors_latin_name_trgm), иначе OR валит запрос в полный проход по
+	// всем авторам (165 мс на нажатие против 5 мс); NULL и так не совпадает.
 	whereCyr, args := wordConditions(authorNameFold, q, args)
-	whereLat, args := wordConditions("COALESCE(a.latin_name, '')", q, args)
+	whereLat, args := wordConditions("a.latin_name", q, args)
 	where := "((" + whereCyr + ") OR (" + whereLat + "))"
 
 	// Кандидаты — дёшево (без видимости, по известности authors.renown), видимые
@@ -159,18 +162,24 @@ func (s *Service) SuggestSeries(ctx context.Context, query string, limit int, ex
 	args := append([]any{textnorm.FoldName(escapeLike(q)), limit}, exArgs...)
 	where, args := wordConditions(seriesNameFold, q, args)
 	// Переименованную правкой серию (#379) ищем и по новому названию: ключ
-	// normalized_title остаётся прежним (по нему серию узнаёт импорт).
+	// normalized_title остаётся прежним (по нему серию узнаёт импорт). Отдельной
+	// веткой UNION, не через OR: OR с подзапросом валил запрос в полный проход
+	// по всем сериям (170 мс на нажатие); правок названий — единицы.
 	renamed, args := wordConditions(textnorm.NameFoldSQL("lower(s.title)"), q, args)
-	where = "(" + where + ") OR (s.id IN (SELECT target_id FROM metadata_overrides WHERE target_kind = 'series' AND field = 'title') AND " + renamed + ")"
 
 	// Как у авторов: дешёвые кандидаты, видимые книги — только для них (#309).
 	rows, err := s.pool.Query(ctx, `
-		WITH cand AS (
+		WITH m AS (
+			SELECT s.id FROM series s WHERE `+where+`
+			UNION
+			SELECT s.id FROM metadata_overrides o JOIN series s ON s.id = o.target_id
+			WHERE o.target_kind = 'series' AND o.field = 'title' AND `+renamed+`
+		), cand AS (
 			SELECT s.id, s.title, s.author_id, s.normalized_title::text AS nt,
 			       (`+seriesNameFold+` ILIKE $1 || '%' ESCAPE '\') AS prefix,
 			       (`+seriesNameFold+` ILIKE '%' || $1 || '%' ESCAPE '\') AS phrase
 			FROM series s
-			WHERE `+where+`
+			JOIN m ON m.id = s.id
 			ORDER BY prefix DESC, phrase DESC,
 			         (SELECT count(*) FROM books b WHERE b.series_id = s.id) DESC, s.id
 			LIMIT `+suggestCandidates+`
