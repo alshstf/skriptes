@@ -284,6 +284,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/admin/authors/duplicates", handleDuplicatePairs(d.Catalog))
 					r.Get("/admin/authors/{id}/duplicates", handleAuthorDuplicates(d.Catalog))
 					r.Post("/admin/authors/{id}/merge", handleMergeAuthors(d.Settings, d.Catalog))
+					r.Post("/admin/authors/{id}/not-duplicate", handleRejectAuthorDuplicate(d.Catalog)) // #527
 				}
 				if d.Bio.Service != nil {
 					r.Patch("/admin/bio-timeline/{qid}/events/{key}", handleSetBioEventHidden(d.Bio))

@@ -719,6 +719,20 @@ func TestRecomputeAuthorStats(t *testing.T) {
 	require.Equal(t, "king stephen", *latin)
 	require.NoError(t, pool.QueryRow(ctx, `SELECT latin_name FROM authors WHERE id = $1`, f.asimovID).Scan(&latin))
 	require.Nil(t, latin, "без переводов с латинским автором — пусто")
+	// Соавтор (#527): src-автор у книги один на всех — совместная книга не голосует,
+	// и соавтор не получает чужое латинское имя (прежде Страуб был «king stephen»).
+	var straub int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, first_name, normalized_name) VALUES ('Страуб', 'Питер', 'страуб питер') RETURNING id`).Scan(&straub))
+	_, err = pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) SELECT id, $1, 1 FROM books WHERE lib_id = 'k2'`, straub)
+	require.NoError(t, err)
+	_, err = catalog.RecomputeAuthorStats(ctx, pool)
+	require.NoError(t, err)
+	require.NoError(t, pool.QueryRow(ctx, `SELECT latin_name FROM authors WHERE id = $1`, straub).Scan(&latin))
+	require.Nil(t, latin, "только совместные книги — латинского имени нет")
+	require.NoError(t, pool.QueryRow(ctx, `SELECT latin_name FROM authors WHERE id = $1`, f.kingID).Scan(&latin))
+	require.NotNil(t, latin)
+	require.Equal(t, "king stephen", *latin, "у Кинга голосуют сольные k-ru и k-en")
 
 	// Латиницей находят и подсказки, и поиск /authors.
 	sugg, err := svc.SuggestAuthors(ctx, "king", 5, nil, nil, false)

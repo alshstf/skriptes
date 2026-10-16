@@ -1070,9 +1070,19 @@ export type DuplicateAuthor = {
   renown: number;
   years_active?: { from: number; to: number };
   reason: 'middle_name' | 'latin_name';
+  /** Что ещё указывает на одного человека (#527): издания одной работы или книги одного цикла. */
+  evidence?: 'work' | 'series';
 };
 
 export type DuplicatePair = { a: DuplicateAuthor; b: DuplicateAuthor };
+
+/** duplicateReasonText — почему пара предложена (подсказка на карточке и страница «Дубли авторов»). */
+export function duplicateReasonText(d: Pick<DuplicateAuthor, 'reason' | 'evidence'>): string {
+  const base = d.reason === 'latin_name' ? 'то же латинское имя в переводах' : 'та же фамилия и имя';
+  if (d.evidence === 'work') return `${base}, издания одной книги`;
+  if (d.evidence === 'series') return `${base}, книги одного цикла`;
+  return base;
+}
 
 /** useAuthorDuplicates — возможные дубли автора (подсказка на карточке, только админу). */
 export function useAuthorDuplicates(authorId: number, enabled: boolean) {
@@ -1100,6 +1110,27 @@ export function useDuplicatePairs() {
       const loaded = pages.reduce((n, p) => n + p.items.length, 0);
       return last.items.length === DUP_PAGE && loaded < (pages[0]?.total ?? 0) ? loaded : undefined;
     },
+  });
+}
+
+/**
+ * useRejectAuthorDuplicate — «не дубликат» (#527): пара больше не предлагается ни
+ * на карточке автора, ни на странице «Дубли авторов».
+ */
+export function useRejectAuthorDuplicate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: { authorId: number; otherId: number }) =>
+      apiFetch<{ rejected: boolean }>(`/api/admin/authors/${vars.authorId}/not-duplicate`, {
+        method: 'POST',
+        body: { other_id: vars.otherId },
+      }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['admin', 'author-duplicates'] });
+      void qc.invalidateQueries({ queryKey: ['admin', 'author-duplicate-pairs'] });
+      toast.success('Запомнили: это разные авторы');
+    },
+    onError: (e) => toast.error(`Не удалось сохранить: ${e instanceof Error ? e.message : 'ошибка'}`),
   });
 }
 

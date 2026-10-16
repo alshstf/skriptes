@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.43.1**.
+конвертируются на лету через fb2cng. Текущая версия — **1.44.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0060_work_merge_rejections`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0061_author_duplicate_rejections`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -115,7 +115,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 21. **Воркеры с lookups-таблицей** выбирают только кандидатов, которых пора спросить, — в SQL (`dueCond`/`dueArgs`),
     не фильтром в Go. Ядро сначала, хвост реже; уже известное (QID, native, skipped) не переспрашиваем.
 22. **Тёзки:** автор = (имя, уточнение `[…]` из INPX); прежняя запись — наследнику; `#NNN` наружу не показываем.
-    Дубли авторов — ручное слияние с памятью (`author_merges`). `series.kind`: NULL — цикл, `'multi'` —
+    Дубли авторов — ручное слияние с памятью (`author_merges`), «не дубликат» — `author_duplicate_rejections` (#527). `series.kind`: NULL — цикл, `'multi'` —
     межавторская (#448), `'publisher'` — издательская одного автора (#468); на карточках книги — только цикл.
 23. **Фоновые горутины** — только через `metadata.Go`/`spawn`, не голый `go` + `context.Background()` (иначе пишут в
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».

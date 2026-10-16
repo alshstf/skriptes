@@ -94,7 +94,10 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 		-- половины книг автора с латинским src-автором, кроме сборников (там в
 		-- оригинале часто составитель); имя — самая частая запись с этой фамилией.
 		-- По фамилии, а не по записи целиком: у Толкина голоса делятся между
-		-- «tolkien john ronald reuel» и «tolkien j. r. r.».
+		-- «tolkien john ronald reuel» и «tolkien j. r. r.». Голосуют только книги,
+		-- где автор единственный: src-автор у книги один на всех её авторов, и
+		-- соавтор получал чужое имя (Страуб — «king stephen» с «Талисмана», Пурнель
+		-- — «niven larry»; на проде 1,3 тыс. ложных «дублей авторов», #527).
 		votes AS (
 		    SELECT ba.author_id, lower(btrim(b.src_author_normalized::text)) AS name
 		    FROM book_authors ba
@@ -103,6 +106,7 @@ func RecomputeAuthorStats(ctx context.Context, pool *pgxpool.Pool) (int64, error
 		    WHERE COALESCE(w.kind, '') = ''
 		      AND b.src_author_normalized::text ~ '^[a-z]'
 		      AND b.src_author_normalized::text !~ '[а-яё]'
+		      AND NOT EXISTS (SELECT 1 FROM book_authors co WHERE co.book_id = b.id AND co.author_id <> ba.author_id)
 		),
 		surnames AS (
 		    SELECT author_id, split_part(name, ' ', 1) AS surname, count(*) AS n,

@@ -83,6 +83,41 @@ func handleDuplicatePairs(d CatalogDeps) http.HandlerFunc {
 	}
 }
 
+// handleRejectAuthorDuplicate — POST /api/admin/authors/{id}/not-duplicate
+// {other_id}: «не дубликат» (#527) — пара больше не предлагается ни на карточке
+// автора, ни на странице «Дубли авторов».
+func handleRejectAuthorDuplicate(d CatalogDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid author id"})
+			return
+		}
+		var body struct {
+			OtherID int64 `json:"other_id"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&body); err != nil || body.OtherID <= 0 || body.OtherID == id {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "other_id required"})
+			return
+		}
+		var by int64
+		if u, ok := UserFromContext(r.Context()); ok {
+			by = u.ID
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+		defer cancel()
+		switch err := d.Service.RejectDuplicate(ctx, id, body.OtherID, by); {
+		case errors.Is(err, catalog.ErrNotFound):
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "author not found"})
+		case err != nil:
+			slog.Default().Warn("reject author duplicate failed", "author_id", id, "other_id", body.OtherID, "err", err)
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "reject failed"})
+		default:
+			writeJSON(w, http.StatusOK, map[string]bool{"rejected": true})
+		}
+	}
+}
+
 // handleMergeAuthors — POST /api/admin/authors/{id}/merge {target_id}: автор id
 // сливается в target_id (#308, metadata.MergeAuthors): работы, подписки, био при
 // пустом у цели; слияние помнится для следующих импортов.
