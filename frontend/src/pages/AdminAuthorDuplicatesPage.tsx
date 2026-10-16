@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { AdminTabs } from '@/components/AdminTabs';
 import { MergeAuthorsDialog } from '@/components/MergeAuthorsDialog';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useDuplicatePairs, type DuplicateAuthor } from '@/lib/admin';
+import { duplicateReasonText, useDuplicatePairs, useRejectAuthorDuplicate, type DuplicateAuthor } from '@/lib/admin';
 import { pluralBooks, pluralRu } from '@/lib/format';
 
 /**
@@ -12,12 +13,15 @@ import { pluralBooks, pluralRu } from '@/lib/format';
  * (#308) от самых известных — «Фамилия Имя» и «Фамилия Имя Отчество», одно и то
  * же латинское имя в переводах. Бывают и разные люди с теми же ФИ (Матесон
  * Ричард и Ричард Кристиан) — поэтому годы и число книг рядом, а слияние —
- * вручную, по одной паре.
+ * вручную, по одной паре; «Не дубликат» запоминает, что это разные люди (#527).
  */
 export function AdminAuthorDuplicatesPage() {
   const { data, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } = useDuplicatePairs();
-  const pairs = data?.pages.flatMap((p) => p.items) ?? [];
-  const total = data?.pages[0]?.total ?? 0;
+  const reject = useRejectAuthorDuplicate();
+  // Отклонённые пары прячутся сразу, не дожидаясь перезапроса страниц.
+  const [rejected, setRejected] = useState<Set<string>>(new Set());
+  const pairs = (data?.pages.flatMap((p) => p.items) ?? []).filter((p) => !rejected.has(`${p.a.id}-${p.b.id}`));
+  const total = Math.max(0, (data?.pages[0]?.total ?? 0) - rejected.size);
 
   return (
     <article className="space-y-6">
@@ -26,8 +30,10 @@ export function AdminAuthorDuplicatesPage() {
         <h1 className="text-2xl font-semibold">Дубли авторов</h1>
         <p className="text-sm text-muted-foreground text-pretty">
           Возможно, один человек записан дважды: «Фамилия Имя» и «Фамилия Имя Отчество» или одно и то же латинское
-          имя в переводах. Сверху — самые известные. Бывают и разные люди с теми же именем и фамилией — сверьте годы
-          и книги.
+          имя в переводах. Сверху — самые известные. Бывают и разные люди с теми же именем и фамилией (особенно со
+          вторым именем: Руссо Ричард и Руссо Ричард Пол) — сверьте годы и книги; «Не дубликат» уберёт пару насовсем.
+          Если у записи без отчества несколько кандидатов с отчеством, пара показывается, только когда на одного из
+          них указывают общие книги или цикл.
         </p>
       </header>
 
@@ -53,11 +59,29 @@ export function AdminAuthorDuplicatesPage() {
           <ul className="divide-y divide-border rounded-md border border-border">
             {pairs.map((p) => (
               <li key={`${p.a.id}-${p.b.id}`} className="flex flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center">
-                <div className="grid min-w-0 flex-1 gap-1 sm:grid-cols-2 sm:gap-4">
-                  <Side d={p.a} />
-                  <Side d={p.b} />
+                <div className="min-w-0 flex-1 space-y-1">
+                  <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
+                    <Side d={p.a} />
+                    <Side d={p.b} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">{duplicateReasonText(p.a)}</p>
                 </div>
-                <MergeAuthorsDialog a={p.a} b={p.b} />
+                <div className="flex shrink-0 gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={reject.isPending}
+                    onClick={() =>
+                      reject.mutate(
+                        { authorId: p.a.id, otherId: p.b.id },
+                        { onSuccess: () => setRejected((s) => new Set(s).add(`${p.a.id}-${p.b.id}`)) },
+                      )
+                    }
+                  >
+                    Не дубликат
+                  </Button>
+                  <MergeAuthorsDialog a={p.a} b={p.b} />
+                </div>
               </li>
             ))}
           </ul>
