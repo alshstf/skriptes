@@ -12,9 +12,10 @@ import { ContextAuthorName, pluralAuthors, summarizeAuthors, type BookListItem a
  * (родитель relative). Так внутри живёт «+N» жанров (GenreChips) без
  * вложения <button> в <a> (#518).
  *
- * showSerNo: если true и у книги есть `ser_no`, слева от заголовка
- * рендерим колонку с номером тома (`1.`, `2.` …). Используется внутри
- * карточки серии на странице автора и на странице самой серии.
+ * showSerNo: если true и у книги есть `ser_no` — номер тома: с обложкой —
+ * бейджем на её углу (#530), без обложки — колонкой слева (`1.`, `2.` …).
+ * Используется внутри карточки серии на странице автора и на странице самой
+ * серии.
  *
  * showCover: миниатюра обложки слева (как в списке /books): карточки автора и
  * серии (#518), лауреаты премий.
@@ -39,7 +40,7 @@ export function BookListItem({
   const authorsLine = summarizeAuthors(book.authors ?? [], useContext(ContextAuthorName));
   return (
     <div className="relative flex gap-3 rounded-md p-3 transition hover:bg-accent/40">
-      {serNo != null ? (
+      {serNo != null && !showCover ? (
         // min-w (не фикс. w-6): у некоторых серий ser_no = ГОД (1996, 1998 —
         // «Антология фантастики»); 4 цифры в 24px упирались в название. min-width
         // держит выравнивание для 1–2 значных номеров и растёт для широких, не
@@ -52,12 +53,27 @@ export function BookListItem({
         </span>
       ) : null}
       {showCover ? (
-        <BookCover
-          src={`/api/covers/book/${book.cover_edition_id ?? book.id}`}
-          title={book.title}
-          placeholder="monogram"
-          className="w-12 sm:w-14"
-        />
+        // С обложкой номер тома — бейджем на её углу, а не колонкой слева: колонка
+        // сдвигала строку вправо, и тома без номера в той же серии стояли левее
+        // нумерованных (рваный край на телефоне). Инверсная подложка — контраст
+        // на любой обложке без цвета (грабля 9).
+        <div className="relative shrink-0 self-start">
+          <BookCover
+            src={`/api/covers/book/${book.cover_edition_id ?? book.id}`}
+            title={book.title}
+            placeholder="monogram"
+            className="w-12 sm:w-14"
+          />
+          {serNo != null ? (
+            <span
+              aria-label={`Том ${serNo}`}
+              data-testid="ser-no-badge"
+              className="absolute -left-1.5 -top-1.5 min-w-5 rounded-md bg-foreground px-1 text-center text-[11px] font-semibold leading-5 tabular-nums text-background shadow ring-2 ring-background"
+            >
+              {serNo}
+            </span>
+          ) : null}
+        </div>
       ) : null}
       <div className="space-y-1 min-w-0 flex-1">
         <h3 className="text-base font-medium leading-tight">

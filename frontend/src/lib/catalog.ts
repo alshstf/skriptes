@@ -14,7 +14,8 @@ export type SeriesWithCount = {
   /** Межавторская/издательская серия (≥3 разных авторов) — не цикл автора. */
   multi?: boolean;
 };
-export type YearBook = { id: number; title: string };
+/** Работа в тултипе гистограммы: id — одно из её видимых изданий, work_id — сама работа (#529). */
+export type YearBook = { id: number; work_id?: number; title: string };
 /** Точка гистограммы «по годам написания»: год, число книг и сами книги
  *  (для тултипа — что именно написано в этот год). */
 export type YearCount = { year: number; count: number; books?: YearBook[] };

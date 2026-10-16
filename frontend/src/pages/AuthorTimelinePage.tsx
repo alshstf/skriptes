@@ -76,7 +76,8 @@ export function AuthorTimelinePage() {
     );
   }
   const visibleTotal = tl.events.filter((e) => !e.hidden).length;
-  const bookCount = (a.year_stats ?? []).reduce((n, y) => n + y.count, 0);
+  // Работы автора в каталоге (как «N книг в каталоге» на его карточке), не издания (#529).
+  const bookCount = a.book_count;
   return (
     <article className="space-y-5 @container" data-testid="author-timeline">
       <CardToolbar />
@@ -171,7 +172,7 @@ function TimelineChapters({
         const rows: Row[] = [...evs.map((e): Row => ({ kind: 'event', e })), ...ctx.map((c): Row => ({ kind: 'ctx', c }))].sort(
           (x, y) => (x.kind === 'event' ? yearOf(x.e.date.from) : x.c.from) - (y.kind === 'event' ? yearOf(y.e.date.from) : y.c.from),
         );
-        const books = yearStats.filter((y) => inChapter(y.year)).flatMap((y) => (y.books ?? []).map((b) => ({ ...b, year: y.year })));
+        const books = chapterBooks(works, yearStats, inChapter);
         if (rows.length === 0 && books.length === 0) return null;
         return (
           <section key={ch.key} className="space-y-3" data-testid="timeline-chapter">
@@ -182,16 +183,27 @@ function TimelineChapters({
               </span>
             </header>
             {books.length > 0 ? (
-              <div className="flex flex-wrap gap-3">
-                {books.map((b) => (
-                  <Link key={b.id} to="/books/$id" params={{ id: String(b.id) }} className="flex items-center gap-2 hover:underline">
-                    <BookCover title={b.title} placeholder="mini" className="w-7" />
-                    <div className="leading-tight">
-                      <div className="text-sm">{b.title}</div>
-                      <div className="text-xs tabular-nums text-muted-foreground">{b.year}</div>
+              <div className="flex flex-wrap gap-3" data-testid="chapter-books">
+                {books.map((b) => {
+                  const inner = (
+                    <>
+                      <BookCover title={b.title} placeholder="mini" className="w-7" />
+                      <div className="leading-tight">
+                        <div className="text-sm">{b.title}</div>
+                        <div className="text-xs tabular-nums text-muted-foreground">{b.period}</div>
+                      </div>
+                    </>
+                  );
+                  return b.workId ? (
+                    <Link key={b.key} to="/works/$id" params={{ id: String(b.workId) }} className="flex items-center gap-2 hover:underline">
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div key={b.key} className="flex items-center gap-2">
+                      {inner}
                     </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             ) : null}
             <ol className="divide-y divide-border/40">
@@ -256,6 +268,32 @@ function TimelineChapters({
       })}
     </div>
   );
+}
+
+/**
+ * chapterBooks — книги периода у заголовка главы (#529): книги датасета (по
+ * одной на произведение, выверенный период написания, ссылка — на работу
+ * каталога, если сопоставилась); у таймлайна без книг в датасете — каталожная
+ * статистика по работам. Раньше главы брали каталожную статистику по ИЗДАНИЯМ:
+ * у Роулинг каждое издание «Гарри Поттера» висело отдельной строкой.
+ */
+function chapterBooks(
+  works: BioWork[],
+  yearStats: YearCount[],
+  inChapter: (y: number) => boolean,
+): Array<{ key: string; title: string; period: string; workId?: number }> {
+  const dated = works.filter((w) => w.written);
+  if (dated.length > 0) {
+    return dated
+      .filter((w) => inChapter(w.written!.from))
+      .sort((a, b) => a.written!.from - b.written!.from || a.title.localeCompare(b.title))
+      .map((w) => ({ key: `w-${w.ref}`, title: w.title, period: fmtPeriod(w.written!), workId: w.work_id }));
+  }
+  return yearStats
+    .filter((y) => inChapter(y.year))
+    .flatMap((y) =>
+      (y.books ?? []).map((b) => ({ key: `c-${b.work_id ?? b.id}`, title: b.title, period: String(y.year), workId: b.work_id })),
+    );
 }
 
 /* ───────────── Ось ───────────── */

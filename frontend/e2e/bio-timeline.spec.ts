@@ -102,6 +102,15 @@ test('полная страница: главы, тумблеры, ось; 375 p
   await expect(root.getByText('Покушение Каракозова на Александра II')).toBeVisible();
   // Чип книги у линкованной вехи ведёт на работу каталога.
   await expect(root.getByRole('link', { name: /Идиот 1867–1869/ }).first()).toHaveAttribute('href', '/works/89');
+  // Книги периода у заголовка главы — из датасета, по одной на произведение и
+  // ссылкой на работу (#529), а не издания каталожной статистики (year_stats).
+  const shelf = (title: string) =>
+    root.getByTestId('timeline-chapter').filter({ hasText: title }).getByTestId('chapter-books').getByRole('link');
+  await expect(shelf('Возвращение, журналы, долги')).toHaveCount(1);
+  await expect(shelf('Возвращение, журналы, долги')).toHaveAccessibleName(/Игрок 1866/);
+  await expect(shelf('Возвращение, журналы, долги')).toHaveAttribute('href', '/works/88');
+  await expect(shelf('Анна, Европа, рулетка')).toHaveCount(1);
+  await expect(shelf('Анна, Европа, рулетка')).toHaveAttribute('href', '/works/89');
   // Ось.
   await root.getByRole('button', { name: 'Ось' }).click();
   await expect(root.getByTestId('timeline-axis')).toBeVisible();

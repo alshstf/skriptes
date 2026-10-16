@@ -1,4 +1,4 @@
-import { test, expect } from './_fixtures';
+import { test, expect, authorDetailFixture } from './_fixtures';
 
 test('author page: books are grouped under their series + Вне серий section', async ({
   mockedPage: page,
@@ -25,4 +25,37 @@ test('author page: books are grouped under their series + Вне серий sect
   // Псевдосекция "Вне серий" + книга в ней.
   await expect(page.getByText('Вне серий')).toBeVisible();
   await expect(page.getByText('Отдельный роман')).toBeVisible();
+});
+
+// #530: с обложкой номер тома — бейджем на её углу, без отдельной колонки:
+// нумерованные и ненумерованные тома серии стоят ровно по одной вертикали.
+test('серия на карточке автора: номер тома — бейдж на обложке, тома выровнены (375px)', async ({ mockedPage: page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.route(/\/api\/authors\/17$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...authorDetailFixture,
+        series: [{ id: 7, title: 'Петля [Алексеев]', count: 3 }],
+        books: [
+          ...authorDetailFixture.books.filter((b) => b.series_id === 7),
+          { id: 103, title: 'Том без номера', authors: ['Алексеев Евгений Артёмович'], series: 'Петля [Алексеев]', series_id: 7, lib_id: '749090' },
+        ],
+      }),
+    }),
+  );
+  await page.goto('/authors/17');
+  const rowOf = (title: string) => page.locator('li', { has: page.getByRole('link', { name: title }) });
+  await expect(rowOf('Том без номера')).toBeVisible({ timeout: 10_000 });
+  const cover = async (title: string) => (await rowOf(title).getByRole('img').first().boundingBox())!;
+  const numbered = await cover('Кадетский корпус. Книга 1');
+  const plain = await cover('Том без номера');
+  expect(Math.abs(numbered.x - plain.x)).toBeLessThanOrEqual(1);
+  // Бейдж — на углу обложки, а не колонкой слева от неё.
+  const badge = (await rowOf('Кадетский корпус. Книга 1').getByTestId('ser-no-badge').boundingBox())!;
+  expect(badge.x).toBeGreaterThan(numbered.x - badge.width);
+  expect(badge.x).toBeLessThan(numbered.x + numbered.width / 2);
+  expect(badge.y).toBeLessThan(numbered.y + numbered.height / 2);
+  await expect(rowOf('Кадетский корпус. Книга 1').getByLabel('Том 1')).toHaveText('1');
 });
