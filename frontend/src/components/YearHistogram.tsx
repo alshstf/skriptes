@@ -148,7 +148,12 @@ const MARGIN_R = 8;
  * (#530, lib/yearHistogram.ts). Переключатель — только когда периоды что-то
  * меняют (по ширине нужны корзины); иначе — столбик на год.
  */
-export function YearHistogram({ data, title }: { data: YearCount[]; title: string }) {
+/** booksGenitive — «из 1 книги», «из 5 книг» (родительный после «из»). */
+function booksGenitive(n: number): string {
+  return n % 10 === 1 && n % 100 !== 11 ? 'книги' : 'книг';
+}
+
+export function YearHistogram({ data, title, unknown = 0 }: { data: YearCount[]; title: string; unknown?: number }) {
   const c = useChartColors();
   const [ref, width] = useContainerWidth<HTMLDivElement>();
   const [mode, setMode] = useHistogramMode();
@@ -188,8 +193,19 @@ export function YearHistogram({ data, title }: { data: YearCount[]; title: strin
           <YearChart data={data} plotWidth={plotWidth} colors={c} />
         )}
       </div>
+      {unknown > 0 ? (
+        // Работы без года на гистограмму не попадают (год издания — не год
+        // написания); без подписи она выглядела бы полной картиной (#533).
+        <p className="text-xs text-muted-foreground tabular-nums" data-testid="year-coverage">
+          Год написания известен для {known(data)} из {known(data) + unknown} {booksGenitive(known(data) + unknown)}
+        </p>
+      ) : null}
     </div>
   );
+}
+
+function known(data: YearCount[]): number {
+  return data.reduce((n, d) => n + d.count, 0);
 }
 
 function tooltipContent(c: ChartColors, title: (d: YearCount) => string | number | undefined) {

@@ -54,6 +54,9 @@ type Author struct {
 	// Используется для гистограммы на странице автора (recharts).
 	// Сортировка по году по возрастанию; книги без written_year не попадают.
 	YearStats []YearCount `json:"year_stats,omitempty"`
+	// YearUnknown — видимых работ без года написания (их нет в YearStats):
+	// подпись «год известен для N из M» у гистограммы (#533).
+	YearUnknown int `json:"year_unknown,omitempty"`
 
 	// ReadCount — сколько книг автора есть в reads текущего пользователя
 	// (read = "скачана хотя бы раз" до сборки in-browser reader'а).
@@ -167,7 +170,10 @@ type Series struct {
 
 	// Аналогично Author: гистограмма по годам написания и прогресс чтения.
 	YearStats []YearCount `json:"year_stats,omitempty"`
-	ReadCount int         `json:"read_count,omitempty"`
+	// YearUnknown — видимых работ без года написания (их нет в YearStats):
+	// подпись «год известен для N из M» у гистограммы (#533).
+	YearUnknown int `json:"year_unknown,omitempty"`
+	ReadCount   int `json:"read_count,omitempty"`
 
 	// YearEnrichmentPending — см. одноимённое поле у Author.
 	YearEnrichmentPending bool `json:"year_enrichment_pending,omitempty"`

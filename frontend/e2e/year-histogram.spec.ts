@@ -66,4 +66,14 @@ test('редкая гистограмма — без переключателя'
   await page.goto('/authors/17');
   await expect(page.getByTestId('year-histogram')).toBeVisible({ timeout: 10_000 });
   await expect(page.getByRole('button', { name: 'Периоды', exact: true })).toHaveCount(0);
+  await expect(page.getByTestId('year-coverage')).toHaveCount(0); // у всех работ год известен
+});
+
+// #533: работы без года на гистограмму не попадают — подпись говорит, сколько их.
+test('подпись покрытия: год написания известен не для всех книг', async ({ mockedPage: page }) => {
+  await page.route(/\/api\/authors\/17$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...authorDetailFixture, year_unknown: 96 }) }),
+  );
+  await page.goto('/authors/17');
+  await expect(page.getByTestId('year-coverage')).toHaveText('Год написания известен для 5 из 101 книги', { timeout: 10_000 });
 });

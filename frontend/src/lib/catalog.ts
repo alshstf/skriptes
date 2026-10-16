@@ -49,6 +49,8 @@ export type Author = {
   years_active?: { from: number; to: number };
   /** Распределение книг автора по году добавления в коллекцию. */
   year_stats?: YearCount[];
+  /** Видимых работ без года написания — их нет в year_stats (подпись покрытия, #533). */
+  year_unknown?: number;
   /** Сколько книг автора пользователь хотя бы раз скачивал. */
   read_count?: number;
   /** Био-текст из Wikipedia (lazy enrichment). */
@@ -98,6 +100,8 @@ export type Series = {
   merge_rejections?: [number, number][];
   is_favorite?: boolean;
   year_stats?: YearCount[];
+  /** Видимых работ без года написания — их нет в year_stats (подпись покрытия, #533). */
+  year_unknown?: number;
   read_count?: number;
   /** См. Author.year_enrichment_pending. */
   year_enrichment_pending?: boolean;
