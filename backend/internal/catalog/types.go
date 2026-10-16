@@ -91,10 +91,12 @@ type YearCount struct {
 	Books []YearBook `json:"books,omitempty"`
 }
 
-// YearBook — компактная ссылка на книгу для тултипа гистограммы.
+// YearBook — компактная ссылка на работу для тултипа гистограммы: ID — одно из
+// её видимых изданий, WorkID — сама работа (ссылки — /works/{work_id}).
 type YearBook struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
+	ID     int64  `json:"id"`
+	WorkID int64  `json:"work_id,omitempty"`
+	Title  string `json:"title"`
 }
 
 // GenreCount — пара (genre, books_in_this_genre_for_this_author).

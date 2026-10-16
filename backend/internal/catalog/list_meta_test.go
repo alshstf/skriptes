@@ -2,6 +2,7 @@ package catalog_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -139,4 +140,71 @@ func TestService_MergeRejections(t *testing.T) {
 	au, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
 	require.NoError(t, err)
 	require.Equal(t, [][2]int64{{min(a, b), max(a, b)}}, au.MergeRejections)
+}
+
+// TestService_YearStatsByWork — #529: гистограмма «по годам написания» считает
+// РАБОТЫ: издания одной работы с разными fb2-годами — одна книга в год работы.
+func TestService_YearStatsByWork(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+
+	var collID, archID, authorID, seriesID, hp1, hp2 int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('Роулинг','роулинг джоан') RETURNING id`).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO series (title, normalized_title, author_id) VALUES ('Гарри Поттер','гарри поттер',$1) RETURNING id`, authorID).Scan(&seriesID))
+	work := func(title string, year any, serNo int) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx,
+			`INSERT INTO works (title, normalized_title, primary_author_id, series_id, ser_no, written_year) VALUES ($1, lower($1), $2, $3, $4, $5) RETURNING id`,
+			title, authorID, seriesID, serNo, year).Scan(&id))
+		return id
+	}
+	hp1 = work("Гарри Поттер и философский камень", 1997, 1)
+	hp2 = work("Гарри Поттер и Тайная комната", nil, 2) // год работы не известен
+	n := 0
+	edition := func(workID int64, year int) {
+		n++
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO books (collection_id, archive_id, lib_id, file_name, ext, title, normalized_title, lang, series_id, work_id, written_year)
+			VALUES ($1,$2,$3,'f','fb2','Издание','издание','ru',$4,$5,$6) RETURNING id`,
+			collID, archID, fmt.Sprintf("L%d", n), seriesID, workID, year).Scan(&id))
+		_, err := pool.Exec(ctx, `INSERT INTO book_authors (book_id, author_id, position) VALUES ($1,$2,0)`, id, authorID)
+		require.NoError(t, err)
+	}
+	edition(hp1, 1997)
+	edition(hp1, 2002) // fb2 издателя вписал год издания
+	edition(hp1, 2012)
+	edition(hp2, 1999)
+	edition(hp2, 1998)
+
+	want := []catalog.YearCount{
+		{Year: 1997, Count: 1, Books: []catalog.YearBook{{WorkID: hp1, Title: "Гарри Поттер и философский камень"}}},
+		{Year: 1998, Count: 1, Books: []catalog.YearBook{{WorkID: hp2, Title: "Гарри Поттер и Тайная комната"}}},
+	}
+	strip := func(ys []catalog.YearCount) []catalog.YearCount {
+		for i := range ys {
+			for j := range ys[i].Books {
+				require.NotZero(t, ys[i].Books[j].ID, "id издания для совместимости")
+				ys[i].Books[j].ID = 0
+			}
+		}
+		return ys
+	}
+	svc := catalog.New(pool)
+	a, err := svc.GetAuthor(ctx, authorID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Equal(t, want, strip(a.YearStats), "работа один раз, в год работы; без года работы — самый ранний год изданий")
+	s, err := svc.GetSeries(ctx, seriesID, 0, nil, nil, false)
+	require.NoError(t, err)
+	require.Equal(t, want, strip(s.YearStats))
 }

@@ -695,32 +695,44 @@ func mergeEditionListMeta(b *books.ListItem, editionID int64, genres []string, c
 // payload у плодовитого автора. Реалистично книг в году единицы.
 const yearStatsBooksCap = 50
 
-// queryAuthorYearStats — гистограмма по году НАПИСАНИЯ книг автора
+// yearStatsSQL — гистограмма «по годам написания» по РАБОТАМ: editions — выборка
+// видимых изданий (id, work_id, written_year, title). Работа считается один раз,
+// год — год работы (works.written_year), у работы без года — самый ранний год её
+// изданий. По изданиям (как было) один роман попадал в каждый год, который
+// издатели вписали в fb2 своих изданий: у Роулинг «Философский камень» стоял в
+// 1997, 1998, 2002, 2007 и 2012, а в 1997-м набегал 21 «книга» (#529).
+func yearStatsSQL(editions string) string {
+	return `
+		WITH ed AS (` + editions + `)
+		SELECT COALESCE(w.written_year, min(ed.written_year))::int AS year, min(ed.id), COALESCE(w.title, min(ed.title)),
+		       COALESCE(ed.work_id, 0)
+		FROM ed LEFT JOIN works w ON w.id = ed.work_id
+		GROUP BY COALESCE(ed.work_id, -ed.id), ed.work_id, w.written_year, w.title
+		HAVING COALESCE(w.written_year, min(ed.written_year)) IS NOT NULL
+		ORDER BY 1, 3`
+}
+
+// queryAuthorYearStats — гистограмма по году НАПИСАНИЯ работ автора
 // (written_year: fb2 <title-info><date> → внешние источники). Это год
 // произведения, а не дата добавления в коллекцию (см. граблю про
-// date_added). Книги без written_year отбрасываются — пока год не
+// date_added). Работы без года отбрасываются — пока год не
 // извлечён/недоступен, столбик рисовать не из чего. К каждому году
-// прикладываем список книг (id+title) для тултипа на фронте.
+// прикладываем список работ (id издания, work_id, название) для тултипа на
+// фронте.
 func (s *Service) queryAuthorYearStats(ctx context.Context, authorID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]YearCount, error) {
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{authorID}, exArgs...)
-	rows, err := s.pool.Query(ctx, `
-		SELECT b.written_year::int AS year, b.id, b.title
+	rows, err := s.pool.Query(ctx, yearStatsSQL(`
+		SELECT b.id, b.work_id, b.written_year, b.title
 		FROM book_authors ba
 		JOIN books b ON b.id = ba.book_id AND b.deleted = false
-		WHERE ba.author_id = $1 AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`
-		ORDER BY b.written_year, b.title
-	`, args...)
+		WHERE ba.author_id = $1`+exClause+notCompilationClause), args...)
 	if err != nil {
 		return nil, fmt.Errorf("query author year stats: %w", err)
 	}
 	return groupYearStats(rows)
 }
 
-// queryAuthorMeta — агрегаты-зеркало строки списка для карточки автора:
-// внешний рейтинг + источник топ-издания, оценка читателей + число, наличие
-// экранизаций, годы активности (по written_year). Языки — отдельно
-// (queryAuthorLanguages). Все подзапросы — по видимым книгам (exClause).
 func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excludeGenres, excludeLangs []string, hideCompilations bool) error {
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{id}, exArgs...)
@@ -820,11 +832,12 @@ func groupYearStats(rows pgx.Rows) ([]YearCount, error) {
 	var out []YearCount
 	for rows.Next() {
 		var (
-			year  int
-			id    int64
-			title string
+			year   int
+			id     int64
+			title  string
+			workID int64
 		)
-		if err := rows.Scan(&year, &id, &title); err != nil {
+		if err := rows.Scan(&year, &id, &title, &workID); err != nil {
 			return nil, err
 		}
 		if len(out) == 0 || out[len(out)-1].Year != year {
@@ -833,7 +846,7 @@ func groupYearStats(rows pgx.Rows) ([]YearCount, error) {
 		b := &out[len(out)-1]
 		b.Count++
 		if len(b.Books) < yearStatsBooksCap {
-			b.Books = append(b.Books, YearBook{ID: id, Title: title})
+			b.Books = append(b.Books, YearBook{ID: id, WorkID: workID, Title: title})
 		}
 	}
 	return out, rows.Err()
@@ -868,12 +881,10 @@ func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int
 func (s *Service) querySeriesYearStats(ctx context.Context, seriesID int64, excludeGenres, excludeLangs []string, hideCompilations bool) ([]YearCount, error) {
 	exClause, exArgs := bookExclusionClause(2, excludeGenres, excludeLangs, hideCompilations)
 	args := append([]any{seriesID}, exArgs...)
-	rows, err := s.pool.Query(ctx, `
-		SELECT b.written_year::int AS year, b.id, b.title
+	rows, err := s.pool.Query(ctx, yearStatsSQL(`
+		SELECT b.id, b.work_id, b.written_year, b.title
 		FROM books b
-		WHERE b.series_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+`
-		ORDER BY b.written_year, b.title
-	`, args...)
+		WHERE b.series_id = $1 AND b.deleted = false`+exClause), args...)
 	if err != nil {
 		return nil, fmt.Errorf("query series year stats: %w", err)
 	}

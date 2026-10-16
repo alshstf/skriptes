@@ -9,8 +9,11 @@ import {
   CartesianGrid,
   LabelList,
 } from 'recharts';
+import { Button } from '@/components/ui/button';
 import type { YearCount } from '@/lib/catalog';
 import { pluralBooks } from '@/lib/format';
+import { useContainerWidth } from '@/lib/useContainerWidth';
+import { binLabel, binStep, binYears, useHistogramMode, visibleLabels, type YearBin } from '@/lib/yearHistogram';
 
 /**
  * YearHistogram — bar chart распределения книг по годам написания.
@@ -19,8 +22,10 @@ import { pluralBooks } from '@/lib/format';
  * блок прячется (см. условие в родителе), иначе одинокий столбик выглядит
  * глупо.
  *
- * Над каждым столбиком — число книг, слева — ось Y со счётчиком; при
- * наведении тултип показывает ЧТО за книги написаны в этот год (titles).
+ * Над столбиками — число книг (в плотной — только не налезающие, #530), слева —
+ * ось Y со счётчиком; при наведении тултип показывает ЧТО за книги написаны в
+ * этот год или период (titles). Режим «Годы / Периоды» — переключателем
+ * рядом с заголовком (lib/yearHistogram.ts).
  *
  * Цвета НЕ хардкодим — берём из активной темы (CSS-переменные shadcn).
  * Раньше тут были захардкожены светлые oklch (чёрные бары, светлая сетка):
@@ -135,11 +140,68 @@ type TooltipRenderProps = {
   payload?: Array<{ payload?: YearCount }>;
 };
 
-export function YearHistogram({ data }: { data: YearCount[] }) {
-  // recharts ожидает массив объектов; наш YearCount уже подходит.
-  // Year оставляем числом — recharts не любит "2023" как строку
-  // на linear axis. На XAxis приводим к строке для подписи.
+const Y_AXIS_W = 28;
+const MARGIN_R = 8;
+
+/**
+ * YearHistogram с заголовком и переключателем режима «Годы / Периоды»
+ * (#530, lib/yearHistogram.ts). Переключатель — только когда периоды что-то
+ * меняют (по ширине нужны корзины); иначе — столбик на год.
+ */
+export function YearHistogram({ data, title }: { data: YearCount[]; title: string }) {
   const c = useChartColors();
+  const [ref, width] = useContainerWidth<HTMLDivElement>();
+  const [mode, setMode] = useHistogramMode();
+  const plotWidth = Math.max(0, width - Y_AXIS_W - MARGIN_R);
+  const step = binStep(data, plotWidth);
+  const periods = step > 1 && mode === 'periods';
+  return (
+    <div className="space-y-1">
+      <div className="flex min-h-7 flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <div className="text-xs font-medium uppercase text-muted-foreground">{title}</div>
+        {step > 1 ? (
+          <div className="ml-auto flex shrink-0 gap-1" role="group" aria-label="Столбики гистограммы">
+            {(
+              [
+                ['years', 'Годы'],
+                ['periods', 'Периоды'],
+              ] as const
+            ).map(([m, label]) => (
+              <Button
+                key={m}
+                size="sm"
+                variant={(m === 'periods') === periods ? 'default' : 'outline'}
+                aria-pressed={(m === 'periods') === periods}
+                className="h-7 px-2 text-xs"
+                onClick={() => setMode(m)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+      <div ref={ref} className="h-48 w-full" data-testid="year-histogram" data-mode={periods ? 'periods' : 'years'}>
+        {periods ? (
+          <BinnedChart bins={binYears(data, step)} colors={c} />
+        ) : (
+          <YearChart data={data} plotWidth={plotWidth} colors={c} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function tooltipContent(c: ChartColors, title: (d: YearCount) => string | number | undefined) {
+  return (props: unknown) => {
+    const { active, payload } = props as TooltipRenderProps;
+    const datum = payload?.[0]?.payload;
+    if (!active || !datum) return null;
+    return <YearTooltip year={title(datum)} datum={datum} colors={c} />;
+  };
+}
+
+function YearChart({ data, plotWidth, colors: c }: { data: YearCount[]; plotWidth: number; colors: ChartColors }) {
   // Числовая (линейная) ось X: расстояние между столбиками пропорционально
   // разрыву в годах (2007→2010→2015 не равноудалены). Тики — строго по
   // годам книг. domain паддим на полусреднего-разрыва, чтобы крайние бары
@@ -149,49 +211,81 @@ export function YearHistogram({ data }: { data: YearCount[] }) {
   const maxY = years.length ? Math.max(...years) : 1;
   const pad = years.length > 1 ? Math.max(1, Math.round((maxY - minY) / (years.length - 1) / 2)) : 1;
   const domain: [number, number] = [minY - pad, maxY + pad];
+  const xs = years.map((y) => ((y - domain[0]) / (domain[1] - domain[0])) * plotWidth);
+  const shown = plotWidth > 0 ? visibleLabels(xs, data.map((d) => d.count)) : new Set(data.map((_, i) => i));
   return (
-    <div className="h-48 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 16, right: 8, bottom: 0, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
-          <XAxis
-            dataKey="year"
-            type="number"
-            scale="linear"
-            domain={domain}
-            ticks={years}
-            allowDecimals={false}
-            tick={{ fontSize: 11, fill: c.tick }}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            allowDecimals={false}
-            tick={{ fontSize: 11, fill: c.tick }}
-            tickLine={false}
-            axisLine={false}
-            width={28}
-          />
-          <Tooltip
-            cursor={{ fill: c.cursor }}
-            content={(props) => {
-              const { active, payload, label } = props as unknown as TooltipRenderProps;
-              const datum = payload?.[0]?.payload;
-              if (!active || !datum) return null;
-              return <YearTooltip year={label} datum={datum} colors={c} />;
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={data} margin={{ top: 16, right: MARGIN_R, bottom: 0, left: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+        <XAxis
+          dataKey="year"
+          type="number"
+          scale="linear"
+          domain={domain}
+          ticks={years}
+          allowDecimals={false}
+          tick={{ fontSize: 11, fill: c.tick }}
+          tickLine={false}
+          axisLine={false}
+        />
+        <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: c.tick }} tickLine={false} axisLine={false} width={Y_AXIS_W} />
+        <Tooltip cursor={{ fill: c.cursor }} content={tooltipContent(c, (d) => d.year)} />
+        <Bar dataKey="count" fill={c.bar} radius={[3, 3, 0, 0]} maxBarSize={56} isAnimationActive={false}>
+          <LabelList
+            dataKey="count"
+            position="top"
+            fill={c.label}
+            fontSize={11}
+            content={(p) => {
+              const { x, y, width: w, value, index } = p as { x?: number; y?: number; width?: number; value?: number; index?: number };
+              if (index == null || !shown.has(index) || x == null || y == null) return null;
+              return (
+                <text x={Number(x) + Number(w ?? 0) / 2} y={Number(y) - 4} fill={c.label} fontSize={11} textAnchor="middle">
+                  {value}
+                </text>
+              );
             }}
           />
-          <Bar
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+function BinnedChart({ bins, colors: c }: { bins: YearBin[]; colors: ChartColors }) {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={bins} margin={{ top: 16, right: MARGIN_R, bottom: 0, left: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+        <XAxis
+          dataKey="year"
+          type="category"
+          tickFormatter={(y: number) => String(y)}
+          tick={{ fontSize: 11, fill: c.tick }}
+          tickLine={false}
+          axisLine={false}
+          minTickGap={4}
+        />
+        <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: c.tick }} tickLine={false} axisLine={false} width={Y_AXIS_W} />
+        <Tooltip cursor={{ fill: c.cursor }} content={tooltipContent(c, (d) => binLabel(d as YearBin))} />
+        <Bar dataKey="count" fill={c.bar} radius={[3, 3, 0, 0]} maxBarSize={56} isAnimationActive={false}>
+          <LabelList
             dataKey="count"
-            fill={c.bar}
-            radius={[3, 3, 0, 0]}
-            maxBarSize={56}
-            isAnimationActive={false}
-          >
-            <LabelList dataKey="count" position="top" fill={c.label} fontSize={11} />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+            position="top"
+            fill={c.label}
+            fontSize={11}
+            content={(p) => {
+              const { x, y, width: w, value } = p as { x?: number; y?: number; width?: number; value?: number };
+              if (!value || x == null || y == null) return null;
+              return (
+                <text x={Number(x) + Number(w ?? 0) / 2} y={Number(y) - 4} fill={c.label} fontSize={11} textAnchor="middle">
+                  {value}
+                </text>
+              );
+            }}
+          />
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
   );
 }
