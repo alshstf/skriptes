@@ -47,6 +47,8 @@ function baseState(): State {
       wikidata_rpm: 20,
       not_found_retry_days: 90,
       error_retry_hours: 24,
+      fantlab: false,
+      fantlab_rpm: 20,
       year_backfill_running: false,
       year_backfill_mode: 'off',
       coverage: { total: 100, with_year: 41, by_source: { fb2_title: 30, openlibrary: 11 } },
@@ -296,6 +298,24 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     await vi.waitFor(() => {
       expect(puts.year).toMatchObject({ enabled: true, wikidata: true });
     });
+  });
+
+  it('Фантлаб у года: тумблер включает воркер, не оживляя Wikidata при стоящем воркере; лимит и учёт (#533)', async () => {
+    const user = userEvent.setup();
+    setup((s) => {
+      s.collection.prewarm = true; // год «Фоном» от локального fb2-прохода, воркер стоит
+      s.year.coverage = { ...(s.year.coverage as object), fantlab: { authors: 12, found: 9, dated: 340 } };
+    });
+    const fl = await screen.findByLabelText('Фантлаб (библиография автора)');
+    expect(fl).not.toBeChecked();
+    expect(document.querySelector('#year-fl-rpm')).toBeNull();
+    await user.click(fl);
+    await vi.waitFor(() => {
+      expect(puts.year).toMatchObject({ enabled: true, fantlab: true, wikidata: false });
+    });
+    expect(await screen.findByText(/спрошено авторов 12, найдено 9, год получили 340 работ/)).toBeInTheDocument();
+    expect((document.querySelector('#year-fl-rpm') as HTMLInputElement).value).toBe('20');
+    expect(document.querySelector('#year-wd-rpm')).toBeNull();
   });
 
   it('внешний воркер обложек выключен — тумблеры источников «выкл» (#497)', async () => {

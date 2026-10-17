@@ -256,6 +256,9 @@ export type YearEnrichmentSettings = {
   wikidata_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
+  /** Фаза «библиография автора на Фантлабе» (#533) и её лимит запросов. */
+  fantlab: boolean;
+  fantlab_rpm: number;
   // статус воркера (read-only)
   year_backfill_running: boolean;
   year_backfill_mode: 'off' | 'continuous' | 'once';
@@ -264,6 +267,8 @@ export type YearEnrichmentSettings = {
     total: number;
     with_year: number;
     by_source: Record<string, number>;
+    /** Фантлаб по автору: авторов спрошено / найдено, работ получили год. */
+    fantlab?: { authors: number; found: number; dated: number };
   };
 };
 
@@ -275,6 +280,8 @@ export type YearEnrichmentInput = {
   wikidata_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
+  fantlab: boolean;
+  fantlab_rpm: number;
 };
 
 const YEAR_KEY = ['admin', 'year-enrichment'] as const;

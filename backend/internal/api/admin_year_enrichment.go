@@ -25,6 +25,8 @@ func toYearBackfillConfig(c settings.YearEnrichmentConfig) metadata.YearBackfill
 		WikidataRPM:       c.WikidataRPM,
 		NotFoundRetryDays: c.NotFoundRetryDays,
 		ErrorRetryHours:   c.ErrorRetryHours,
+		Fantlab:           c.Fantlab,
+		FantlabRPM:        c.FantlabRPM,
 	}
 }
 
@@ -64,7 +66,7 @@ func handleUpdateYearEnrichment(d SettingsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
 			return
 		}
-		if cfg.WikidataRPM < 0 || cfg.NotFoundRetryDays < 0 || cfg.ErrorRetryHours < 0 {
+		if cfg.WikidataRPM < 0 || cfg.FantlabRPM < 0 || cfg.NotFoundRetryDays < 0 || cfg.ErrorRetryHours < 0 {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "values must be non-negative"})
 			return
 		}

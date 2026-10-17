@@ -156,6 +156,8 @@ function buildYearInput(d: YearEnrichmentSettings, patch: Partial<YearEnrichment
     wikidata_rpm: d.wikidata_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
+    fantlab: d.fantlab,
+    fantlab_rpm: d.fantlab_rpm,
     ...patch,
   };
 }
@@ -531,10 +533,12 @@ export function AdminBackgroundPage() {
   }, [cq.data]);
 
   const [wdRpmY, setWdRpmY] = useState('');
+  const [flRpmY, setFlRpmY] = useState('');
   const yearInit = useRef(false);
   useEffect(() => {
     if (yq.data && !yearInit.current) {
       setWdRpmY(String(yq.data.wikidata_rpm));
+      setFlRpmY(String(yq.data.fantlab_rpm));
       yearInit.current = true;
     }
   }, [yq.data]);
@@ -624,6 +628,7 @@ export function AdminBackgroundPage() {
   const coverOl = (xq.data?.enabled ?? false) && (xq.data?.openlibrary ?? false);
   const coverGb = (xq.data?.enabled ?? false) && (xq.data?.googlebooks ?? false);
   const yearWd = (yq.data?.enabled ?? false) && (yq.data?.wikidata ?? false);
+  const yearFl = (yq.data?.enabled ?? false) && (yq.data?.fantlab ?? false);
   const authorMode: Mode = gates.author_disabled ? 'off' : (bq.data?.bios ?? false) ? 'bg' : 'lazy';
   const adaptationMode: Mode = gates.adaptation_disabled
     ? 'off'
@@ -680,7 +685,9 @@ export function AdminBackgroundPage() {
         await updateYear.mutateAsync(
           buildYearInput(
             yq.data,
-            mode === 'bg' && !yq.data.wikidata ? { enabled: true, wikidata: true } : { enabled: mode === 'bg' },
+            mode === 'bg' && !yq.data.wikidata && !yq.data.fantlab
+              ? { enabled: true, wikidata: true }
+              : { enabled: mode === 'bg' },
           ),
         );
       }
@@ -865,9 +872,16 @@ export function AdminBackgroundPage() {
     const gb = which === 'googlebooks' ? v : coverGb;
     void applyCover({ openlibrary: ol, googlebooks: gb, enabled: ol || gb }, 'Применено');
   };
+  // Воркер года включён, пока включён хоть один внешний источник (Wikidata,
+  // Фантлаб); второй флаг пишем по видимому состоянию — флаг при стоящем воркере
+  // не должен ожить вместе с соседним тумблером (#497).
   const toggleYearWikidata = (v: boolean) => {
     if (!yq.data) return;
-    void applyYear({ wikidata: v, enabled: v }, 'Применено');
+    void applyYear({ wikidata: v, fantlab: yearFl, enabled: v || yearFl }, 'Применено');
+  };
+  const toggleYearFantlab = (v: boolean) => {
+    if (!yq.data) return;
+    void applyYear({ fantlab: v, wikidata: yearWd, enabled: v || yearWd }, 'Применено');
   };
 
   // ── Действия (run/stop/clear) ──
@@ -979,8 +993,8 @@ export function AdminBackgroundPage() {
       posterMB !== String(cq.data.poster_cache_max_mb) ||
       photoMB !== String(cq.data.photo_cache_max_mb));
   const colInvalid = [minFreeMB, coverBudgetMB, posterMB, photoMB].some(badNum);
-  const yearDirty = !!yq.data && wdRpmY !== String(yq.data.wikidata_rpm);
-  const yearInvalid = badNum(wdRpmY);
+  const yearDirty = !!yq.data && (wdRpmY !== String(yq.data.wikidata_rpm) || flRpmY !== String(yq.data.fantlab_rpm));
+  const yearInvalid = badNum(wdRpmY) || badNum(flRpmY);
   const srcLangDirty = !!sq.data && wdRpmS !== String(sq.data.wikidata_rpm);
   const srcLangInvalid = badNum(wdRpmS);
   const coverDirty = !!xq.data && (olRpmC !== String(xq.data.openlibrary_rpm) || gbRpmC !== String(xq.data.googlebooks_rpm));
@@ -1024,6 +1038,7 @@ export function AdminBackgroundPage() {
     }
     if (yq.data) {
       setWdRpmY(String(yq.data.wikidata_rpm));
+      setFlRpmY(String(yq.data.fantlab_rpm));
     }
     if (sq.data) {
       setWdRpmS(String(sq.data.wikidata_rpm));
@@ -1066,9 +1081,10 @@ export function AdminBackgroundPage() {
       }
       if (yearDirty && !yearInvalid && yq.data) {
         const saved = await updateYear.mutateAsync(
-          buildYearInput(yq.data, { wikidata_rpm: num(wdRpmY) }),
+          buildYearInput(yq.data, { wikidata_rpm: num(wdRpmY), fantlab_rpm: num(flRpmY) }),
         );
         setWdRpmY(String(saved.wikidata_rpm));
+        setFlRpmY(String(saved.fantlab_rpm));
       }
       if (srcLangDirty && !srcLangInvalid && sq.data) {
         const saved = await updateSrcLang.mutateAsync(
@@ -1423,6 +1439,13 @@ export function AdminBackgroundPage() {
                       onChange={(v) => setLocalFb2('year', v)}
                     />
                     <SourceSwitch
+                      id="year-src-fl"
+                      label="Фантлаб (библиография автора)"
+                      checked={yearFl}
+                      disabled={updateYear.isPending}
+                      onChange={toggleYearFantlab}
+                    />
+                    <SourceSwitch
                       id="year-src-wd"
                       label="Wikidata (P577)"
                       checked={yearWd}
@@ -1433,23 +1456,52 @@ export function AdminBackgroundPage() {
                       Хотя бы один источник; если выключить все — год наполняться не будет.
                     </p>
                   </div>
-                  {yearWd ? (
+                  {yearWd || yearFl ? (
                     <div className="space-y-3 border-t border-border pt-3">
-                      <FieldLabel>Внешний источник (Wikidata)</FieldLabel>
-                      <ScopeControl
-                        whole={yq.data?.whole_collection ?? false}
-                        disabled={updateYear.isPending}
-                        onChange={(v) => void applyYear({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: фолбэк')}
-                        warning="Вся коллекция: год запрашивается у Wikidata и для книг, которых fb2-проход не касался. Десятки тысяч запросов, очень долго."
-                      />
+                      <FieldLabel>Внешние источники</FieldLabel>
+                      {yearFl ? (
+                        <p className="text-xs text-muted-foreground text-pretty">
+                          Фантлаб: один запрос библиографии на автора — год получают сразу все его работы без года, по
+                          названию. Идёт первым, ядро — по известности авторов.
+                        </p>
+                      ) : null}
+                      {yearWd ? (
+                        <ScopeControl
+                          whole={yq.data?.whole_collection ?? false}
+                          disabled={updateYear.isPending}
+                          onChange={(v) => void applyYear({ whole_collection: v }, v ? 'Режим: вся коллекция' : 'Режим: фолбэк')}
+                          warning="Вся коллекция: год запрашивается у Wikidata и для книг, которых fb2-проход не касался. Десятки тысяч запросов, очень долго."
+                          fallbackHint={
+                            yearFl
+                              ? 'Wikidata дозапрашивает только книги, у которых локальный fb2-проход прошёл, но года не дал (дешевле). Фантлаба охват не касается.'
+                              : undefined
+                          }
+                        />
+                      ) : null}
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <label htmlFor="year-wd-rpm" className="text-sm">
-                            Wikidata, зап./мин
-                          </label>
-                          <Input id="year-wd-rpm" type="number" min={0} value={wdRpmY} onChange={(e) => setWdRpmY(e.target.value)} />
-                        </div>
+                        {yearFl ? (
+                          <div className="space-y-1.5">
+                            <label htmlFor="year-fl-rpm" className="text-sm">
+                              Фантлаб, зап./мин
+                            </label>
+                            <Input id="year-fl-rpm" type="number" min={0} value={flRpmY} onChange={(e) => setFlRpmY(e.target.value)} />
+                          </div>
+                        ) : null}
+                        {yearWd ? (
+                          <div className="space-y-1.5">
+                            <label htmlFor="year-wd-rpm" className="text-sm">
+                              Wikidata, зап./мин
+                            </label>
+                            <Input id="year-wd-rpm" type="number" min={0} value={wdRpmY} onChange={(e) => setWdRpmY(e.target.value)} />
+                          </div>
+                        ) : null}
                       </div>
+                      {yearFl && yCov?.fantlab && yCov.fantlab.authors > 0 ? (
+                        <p className="text-xs text-muted-foreground tabular-nums">
+                          Фантлаб: спрошено авторов {yCov.fantlab.authors}, найдено {yCov.fantlab.found}, год получили{' '}
+                          {yCov.fantlab.dated} работ
+                        </p>
+                      ) : null}
                       <div className="flex flex-wrap gap-2">
                         {yearOnceMode === 'once' ? (
                           <Button variant="outline" size="sm" onClick={onStopYear} disabled={stopYear.isPending}>
@@ -1475,7 +1527,7 @@ export function AdminBackgroundPage() {
                 <div className="space-y-2">
                   <FieldLabel>Источники</FieldLabel>
                   <p className="text-xs text-muted-foreground text-pretty">
-                    Год не заполняется. Источники (fb2, Wikidata) выбираются в режиме «Фоном».
+                    Год не заполняется. Источники (fb2, Фантлаб, Wikidata) выбираются в режиме «Фоном».
                   </p>
                 </div>
               )}

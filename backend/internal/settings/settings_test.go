@@ -71,13 +71,15 @@ func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 	want := settings.YearEnrichmentConfig{
 		Enabled: true, Wikidata: false,
 		WikidataRPM: 10, NotFoundRetryDays: 30, ErrorRetryHours: 6,
+		Fantlab: true, FantlabRPM: 15,
 	}
 	require.NoError(t, store.SetYearEnrichment(ctx, want))
 	got, err = store.YearEnrichment(ctx)
 	require.NoError(t, err)
 	require.Equal(t, want, got)
 
-	// Сохранённое до 1.39.4 (с OpenLibrary) читается: старые ключи игнорируются.
+	// Сохранённое до 1.39.4 (с OpenLibrary) читается: старые ключи игнорируются,
+	// новых (Фантлаб, 1.46.0) нет — их умолчания: фаза выключена, лимит 20.
 	_, err = pool.Exec(ctx, `UPDATE app_settings SET value = $1 WHERE key = 'year_enrichment'`,
 		`{"enabled": true, "openlibrary": true, "wikidata": true, "openlibrary_rpm": 60, "wikidata_rpm": 20,
 		  "whole_collection": false, "not_found_retry_days": 90, "error_retry_hours": 24}`)
@@ -85,7 +87,7 @@ func TestSettings_YearEnrichmentRoundTrip(t *testing.T) {
 	got, err = store.YearEnrichment(ctx)
 	require.NoError(t, err)
 	require.Equal(t, settings.YearEnrichmentConfig{Enabled: true, Wikidata: true, WikidataRPM: 20,
-		NotFoundRetryDays: 90, ErrorRetryHours: 24}, got)
+		NotFoundRetryDays: 90, ErrorRetryHours: 24, FantlabRPM: 20}, got)
 }
 
 func TestSettings_CoverEnrichmentRoundTrip(t *testing.T) {
