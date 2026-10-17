@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"slices"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode"
@@ -47,8 +49,11 @@ var fantlabBiblioSkipTypes = map[int]bool{
 var fantlabBiblioBlockTypes = map[int]bool{3: true, 4: true, 17: true, 56: true}
 
 // parseFantlabBiblio — произведения из ответа /autor/{id}?biblio_blocks=1: все
-// объекты с work_id и work_name (вложены в блоки и циклы, один и тот же
-// work_id встречается несколько раз — берём первое вхождение).
+// объекты с work_id и work_name (вложены в блоки и циклы). Один work_id
+// встречается несколько раз, и не всегда с одинаковыми полями — вхождения
+// сливаются: названия объединяются, год и тип — первые известные. Ключи
+// объектов обходятся по порядку: обход map в Go случаен, и итог зависел от
+// того, какое вхождение попалось первым.
 func parseFantlabBiblio(r io.Reader) ([]fantlabBiblioWork, error) {
 	dec := json.NewDecoder(r)
 	dec.UseNumber()
@@ -56,36 +61,56 @@ func parseFantlabBiblio(r io.Reader) ([]fantlabBiblioWork, error) {
 	if err := dec.Decode(&root); err != nil {
 		return nil, fmt.Errorf("decode fantlab biblio: %w", err)
 	}
-	seen := map[int64]bool{}
+	pos := map[int64]int{}
 	var out []fantlabBiblioWork
 	var walk func(any)
 	walk = func(x any) {
 		switch v := x.(type) {
 		case map[string]any:
-			if id := jsonInt(v["work_id"]); id > 0 {
-				if name, ok := v["work_name"].(string); ok && !seen[int64(id)] {
-					seen[int64(id)] = true
-					w := fantlabBiblioWork{WorkID: int64(id), TypeID: jsonInt(v["work_type_id"])}
-					w.Names = append(w.Names, name)
+			if id := int64(jsonInt(v["work_id"])); id > 0 {
+				if name, ok := v["work_name"].(string); ok {
+					names := []string{name}
 					if orig, ok := v["work_name_orig"].(string); ok && orig != "" {
-						w.Names = append(w.Names, orig)
+						names = append(names, orig)
 					}
 					if alt, ok := v["work_name_alt"].(string); ok {
 						for _, a := range strings.Split(alt, ";") {
 							if a = strings.TrimSpace(a); a != "" {
-								w.Names = append(w.Names, a)
+								names = append(names, a)
 							}
 						}
 					}
-					w.Year = plausibleYear(jsonInt(v["work_year_of_write"]))
-					if w.Year == 0 {
-						w.Year = plausibleYear(jsonInt(v["work_year"]))
+					year := plausibleYear(jsonInt(v["work_year_of_write"]))
+					if year == 0 {
+						year = plausibleYear(jsonInt(v["work_year"]))
 					}
-					out = append(out, w)
+					i, ok := pos[id]
+					if !ok {
+						i = len(out)
+						pos[id] = i
+						out = append(out, fantlabBiblioWork{WorkID: id})
+					}
+					w := &out[i]
+					for _, n := range names {
+						if !slices.Contains(w.Names, n) {
+							w.Names = append(w.Names, n)
+						}
+					}
+					if w.Year == 0 {
+						w.Year = year
+					}
+					if w.TypeID == 0 {
+						w.TypeID = jsonInt(v["work_type_id"])
+					}
 				}
 			}
-			for _, child := range v {
-				walk(child)
+			keys := make([]string, 0, len(v))
+			for k := range v {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				walk(v[k])
 			}
 		case []any:
 			for _, child := range v {
@@ -235,6 +260,73 @@ func matchFantlabBiblio(works []FantlabWorkQuery, biblio []fantlabBiblioWork) []
 	return out
 }
 
+// FantlabKindMatch — наша работа, чьё название в библиографии — только у цикла,
+// сборника или антологии автора (#532): это том-сборник, а не произведение.
+type FantlabKindMatch struct {
+	WorkID int64
+	Kind   string // omnibus | collection | anthology
+}
+
+// fantlabBlockKind — тип нашей работы по типу записи Фантлаба: цикл целиком
+// одной книгой — том собрания («Гарри Поттер», «Земноморье»), сборник —
+// сборник, антология — антология.
+func fantlabBlockKind(typeID int) string {
+	switch typeID {
+	case 4:
+		return "omnibus"
+	case 3:
+		return "collection"
+	case 17, 56:
+		return "anthology"
+	}
+	return ""
+}
+
+// matchFantlabKinds — наши работы, чьи ключи названия совпали с циклом,
+// сборником или антологией Фантлаба — и ни с одним произведением (роман с
+// названием цикла — «Дюна» — остаётся романом). Разные типы у совпавших записей
+// — не решаем.
+func matchFantlabKinds(works []FantlabWorkQuery, biblio []fantlabBiblioWork) []FantlabKindMatch {
+	ordinary, block := map[string]bool{}, map[string][]int{}
+	for i, w := range biblio {
+		blockKind := fantlabBlockKind(w.TypeID)
+		if blockKind == "" && fantlabBiblioSkipTypes[w.TypeID] {
+			continue // отрывки, рецензии, интервью — не сигнал
+		}
+		for _, n := range w.Names {
+			for _, k := range biblioTitleVariants(n) {
+				if blockKind != "" {
+					block[k] = append(block[k], i)
+				} else {
+					ordinary[k] = true
+				}
+			}
+		}
+	}
+	var out []FantlabKindMatch
+	for _, w := range works {
+		kinds := map[string]bool{}
+		clash := false
+		for _, t := range append([]string{w.Title}, w.SrcTitles...) {
+			for _, k := range biblioTitleVariants(t) {
+				if ordinary[k] {
+					clash = true
+				}
+				for _, i := range block[k] {
+					kinds[fantlabBlockKind(biblio[i].TypeID)] = true
+				}
+			}
+		}
+		if clash || len(kinds) != 1 {
+			continue
+		}
+		for k := range kinds {
+			out = append(out, FantlabKindMatch{WorkID: w.ID, Kind: k})
+		}
+	}
+	return out
+}
+
 func firstYear(m map[int]bool) int {
 	for y := range m {
 		return y
@@ -256,6 +348,7 @@ type FantlabAuthorYears struct {
 	FantlabID int64
 	Via       string
 	Matched   []FantlabYearMatch
+	Kinds     []FantlabKindMatch // тома-сборники по названию цикла/сборника (#532)
 }
 
 // fantlabSearchGate — сколько наших работ должно найтись в библиографии
@@ -285,7 +378,8 @@ func (p *FantlabProvider) AuthorYears(ctx context.Context, a FantlabAuthorQuery,
 		if err != nil {
 			return FantlabAuthorYears{}, err
 		}
-		return FantlabAuthorYears{FantlabID: a.FantlabID, Via: "wikidata", Matched: matchFantlabBiblio(works, b)}, nil
+		return FantlabAuthorYears{FantlabID: a.FantlabID, Via: "wikidata",
+			Matched: matchFantlabBiblio(works, b), Kinds: matchFantlabKinds(works, b)}, nil
 	}
 	last := biblioTitleKey(a.LastName)
 	if len([]rune(last)) < 2 || strings.TrimSpace(a.FirstName) == "" || len(works) < fantlabSearchGate {
@@ -315,7 +409,7 @@ func (p *FantlabProvider) AuthorYears(ctx context.Context, a FantlabAuthorQuery,
 			return FantlabAuthorYears{}, err
 		}
 		if m := matchFantlabBiblio(works, b); len(m) >= fantlabSearchGate {
-			return FantlabAuthorYears{FantlabID: h.ID, Via: "search", Matched: m}, nil
+			return FantlabAuthorYears{FantlabID: h.ID, Via: "search", Matched: m, Kinds: matchFantlabKinds(works, b)}, nil
 		}
 	}
 	return FantlabAuthorYears{}, ErrNotFound

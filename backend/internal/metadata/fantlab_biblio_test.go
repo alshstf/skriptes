@@ -31,7 +31,11 @@ const testBiblioJSON = `{
     {"work_id": 18, "work_name": "", "work_name_orig": "Detective", "work_name_alt": "Сыщик", "work_type_id": 18, "work_year": 1922, "work_year_of_write": 1899},
     {"work_id": 19, "work_name": "Сыщик", "work_type_id": 4, "work_year": 1887},
     {"work_id": 20, "work_name": "Дорога", "work_type_id": 1, "work_year": 1965},
-    {"work_id": 21, "work_name": "Дорога", "work_type_id": 4, "work_year": 1965}
+    {"work_id": 21, "work_name": "Дорога", "work_type_id": 4, "work_year": 1965},
+    {"work_id": 22, "work_name": "Тень", "work_name_orig": "Shadow", "work_type_id": 45, "work_year": null}
+  ]},
+  "z_block": {"list": [
+    {"work_id": 22, "work_name": "Тень", "work_name_alt": "Тень на стене", "work_type_id": 45, "work_year": 1931}
   ]}}
 }`
 
@@ -42,7 +46,15 @@ func TestParseFantlabBiblio(t *testing.T) {
 	for _, w := range ws {
 		byID[w.WorkID] = w
 	}
-	require.Len(t, byID, 12, "повтор work_id 11 — один раз")
+	require.Len(t, byID, 13, "повтор work_id 11 — один раз")
+	require.Equal(t, []string{"Тень", "Shadow", "Тень на стене"}, byID[22].Names, "вхождения одного work_id сливаются")
+	require.Equal(t, 1931, byID[22].Year, "год — из того вхождения, где он есть")
+	// Порядок и итог не зависят от обхода map: разбор стабилен.
+	for range 20 {
+		again, err := parseFantlabBiblio(strings.NewReader(testBiblioJSON))
+		require.NoError(t, err)
+		require.Equal(t, ws, again)
+	}
 	require.Equal(t, 1924, byID[12].Year, "год написания, когда нет года публикации")
 	require.Equal(t, 1918, byID[13].Year, "год строкой")
 	require.Equal(t, []string{"Самовар", "The Samovar", "Сказка про самовар", "Самоварчик"}, byID[13].Names)
@@ -71,6 +83,20 @@ func TestMatchFantlabBiblio(t *testing.T) {
 		{WorkID: 7, Year: 0, FlWorkID: 17},
 		{WorkID: 10, Year: 1965, FlWorkID: 20},
 	}, got)
+}
+
+func TestMatchFantlabKinds(t *testing.T) {
+	ws, err := parseFantlabBiblio(strings.NewReader(testBiblioJSON))
+	require.NoError(t, err)
+	got := matchFantlabKinds([]FantlabWorkQuery{
+		{ID: 1, Title: "Записки"},             // только цикл → том собрания
+		{ID: 2, Title: "Избранное (сборник)"}, // только сборник
+		{ID: 3, Title: "Дорога"},              // роман с названием цикла — роман
+		{ID: 4, Title: "Сыщик (Том 1)"},       // цикл и пьеса (альт. название) — не решаем
+		{ID: 5, Title: "Красная корона"},      // произведение
+		{ID: 6, Title: "Чужая книга"},
+	}, ws)
+	require.Equal(t, []FantlabKindMatch{{WorkID: 1, Kind: "omnibus"}, {WorkID: 2, Kind: "collection"}}, got)
 }
 
 func TestFantlabAuthorYears(t *testing.T) {
