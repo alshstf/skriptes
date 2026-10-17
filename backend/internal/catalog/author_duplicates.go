@@ -109,10 +109,10 @@ func notRejected(x, y string) string {
 
 // dupAuthorCols — поля DuplicateAuthor по автору под алиасом a.
 const dupAuthorCols = `a.id, a.last_name, COALESCE(a.first_name, ''), COALESCE(a.middle_name, ''), a.book_count, a.renown,
-	(SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-	  WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL),
-	(SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-	  WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL)`
+	(SELECT min(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+	  WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL),
+	(SELECT max(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+	  WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL)`
 
 func scanDupAuthor(row pgx.Row, d *DuplicateAuthor, extra ...any) error {
 	var last, first, middle string

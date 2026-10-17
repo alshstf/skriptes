@@ -759,10 +759,10 @@ func (s *Service) queryAuthorMeta(ctx context.Context, a *Author, id int64, excl
 		     WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL`+exClause+notCompilationClause+`)),
 		  EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		     JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = $1`+exClause+notCompilationClause+`),
-		  (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`),
-		  (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		     WHERE ba.author_id = $1 AND b.deleted = false AND b.written_year IS NOT NULL`+exClause+notCompilationClause+`)
+		  (SELECT min(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL`+exClause+notCompilationClause+`),
+		  (SELECT max(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+		     WHERE ba.author_id = $1 AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL`+exClause+notCompilationClause+`)
 	`, args...).Scan(&extRating, &extSource, &readerAvg, &readerCnt, &hasAdapt, &yrFrom, &yrTo)
 	if err != nil {
 		return fmt.Errorf("query author meta: %w", err)
