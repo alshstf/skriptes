@@ -60,8 +60,10 @@ func (p *Fb2Provider) Local() bool { return true }
 // статистику по годам написания (и будущую корреляцию с биографией), а
 // edition — справочное поле «это издание». Смешивать их нельзя.
 //
-// document-info/date (когда СДЕЛАН fb2) и src-title-info (инфо об
-// оригинале перевода) сознательно игнорируем — это не год произведения.
+// document-info/date (когда СДЕЛАН fb2) сознательно игнорируем — это не год
+// произведения. src-title-info/date (год оригинала перевода) — не год ЭТОГО
+// издания: его собирает FetchEditionMeta (SrcYear → books.src_year), а в год
+// работы он входит отдельным кандидатом (work_years.go).
 func (p *Fb2Provider) FetchYears(_ context.Context, q BookQuery) (written int, edition int, err error) {
 	if q.ArchivePath == "" || q.FB2Name == "" {
 		return 0, 0, ErrNotFound
@@ -407,7 +409,7 @@ func scanFb2Years(r io.Reader) (written int, edition int) {
 // Секции <description> и интересующие нас поля:
 //
 //	title-info     → lang (TitleLang), src-lang (SrcLang), translator (первый)
-//	src-title-info → book-title (SrcTitle), lang (SrcLang, fallback), author (первый)
+//	src-title-info → book-title (SrcTitle), lang (SrcLang, fallback), author (первый), date (SrcYear)
 //	publish-info   → isbn, publisher, book-name (EditionTitle), year (EditionYear)
 //	document-info  → id (FB2DocID)
 //
@@ -473,6 +475,14 @@ func scanFb2EditionMeta(r io.Reader) EditionMeta {
 				continue
 			case name == "author" && sec == "src-title-info" && em.SrcAuthor == "":
 				em.SrcAuthor = parseFb2PersonName(dec)
+				continue
+			case name == "date" && sec == "src-title-info" && em.SrcYear == 0:
+				y := parseFb2Year(attrValue(t, "value"))
+				txt := elemText(dec)
+				if y == 0 {
+					y = parseFb2Year(txt)
+				}
+				em.SrcYear = plausibleYear(y)
 				continue
 			case name == "translator" && sec == "title-info" && em.Translator == "":
 				em.Translator = parseFb2PersonName(dec)

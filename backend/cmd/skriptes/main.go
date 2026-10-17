@@ -240,6 +240,18 @@ func run() error {
 	metadata.Go(func(c context.Context) {
 		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)
 	})
+	// Год оригинала переводов (<src-title-info><date>, #533 этап 4) — разовый
+	// догон уже просканированных; после старта, чтобы не мешать разовым шагам.
+	metadata.Go(func(c context.Context) {
+		select {
+		case <-c.Done():
+			return
+		case <-time.After(10 * time.Minute):
+		}
+		if _, err := metadata.BackfillSrcYears(c, pool, cfg.BooksRoot, imp, logger); err != nil && c.Err() == nil {
+			logger.Warn("fb2 src years backfill failed — will resume next start", "err", err)
+		}
+	})
 	collectionsSvc := collections.New(pool)
 	booksSvc := books.New(pool, meili, historySvc)
 	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление

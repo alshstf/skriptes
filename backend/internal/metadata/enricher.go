@@ -477,10 +477,11 @@ func (e *Enricher) EnsureEditionMeta(ctx context.Context, q BookQuery) bool {
 			src_author_normalized   = COALESCE(src_author_normalized, NULLIF($8, '')::citext),
 			fb2_doc_id              = COALESCE(fb2_doc_id, NULLIF($9, '')),
 			edition_year            = COALESCE(edition_year, NULLIF($10, 0)::smallint),
+			src_year                = COALESCE(src_year, NULLIF($11, 0)::smallint),
 			edition_meta_scanned_at = now()
 		WHERE id = $1
 	`, q.ID, em.Translator, em.ISBN, em.Publisher, em.EditionTitle,
-		srcLang, em.SrcTitle, srcAuthorNorm, em.FB2DocID, em.EditionYear); err != nil {
+		srcLang, em.SrcTitle, srcAuthorNorm, em.FB2DocID, em.EditionYear, em.SrcYear); err != nil {
 		e.logger.Warn("metadata: edition meta write failed", "book_id", q.ID, "err", err)
 		return false
 	}

@@ -34,6 +34,13 @@
 - `0027_external_rating_lookups` (`book_external_rating_lookups`); `0026_external_rating` (`books.external_rating`/`_source`/`_count` — внешний рейтинг из сети, см. граблю №17)
 - `0025_rating_prompts` (`reads.acquired_at` + `book_rating_prompts` для отложенных запросов оценки); `0024_book_ratings` (пользовательские оценки книг), `0023_favorites_collection` (★-избранное → служебная полка, граблю №16), `0022_feed_dismissals`, `0021_collections`, `0020_genre_favorites`, `0019_book_work_lookups` (граблю №15).
 
+## 0063_book_src_year
+
+Год оригинала перевода (#533, этап 4): `books.src_year SMALLINT` из fb2 `<src-title-info><date>`. Пишет обработка коллекции
+(`EnsureEditionMeta`, `scanFb2EditionMeta` → `EditionMeta.SrcYear`); уже просканированные переводы догоняет разовый
+`metadata/src_year_backfill.go::BackfillSrcYears` (по архивам, курсор `app_settings.fb2_src_years_v1`, старт через 10 мин
+после запуска). Читает `RecomputeWorkYears` — ещё один fb2-кандидат года работы (источник `fb2_src`).
+
 ## 0062_author_fantlab_lookups
 
 Год написания из библиографии автора на Фантлабе (#533): `author_fantlab_lookups(author_id PK, outcome found/not_found/error,

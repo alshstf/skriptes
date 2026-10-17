@@ -107,6 +107,29 @@ func TestFb2Provider_FetchEditionMeta(t *testing.T) {
 		require.Empty(t, em.SrcAuthor)
 	})
 
+	t.Run("год оригинала — из src-title-info/date, не из title-info/date (#533)", func(t *testing.T) {
+		desc := `<title-info><book-title>X</book-title><date value="2005-01-01">2005</date></title-info>
+		<src-title-info><book-title>Original</book-title><date value="1965-03-01">март 1965</date></src-title-info>`
+		em, err := p.FetchEditionMeta(context.Background(), BookQuery{ArchivePath: makeFB2Archive(t, wrap(desc)), FB2Name: "book.fb2"})
+		require.NoError(t, err)
+		require.Equal(t, 1965, em.SrcYear)
+
+		desc = `<src-title-info><book-title>Original</book-title><date>1934</date></src-title-info>`
+		em, err = p.FetchEditionMeta(context.Background(), BookQuery{ArchivePath: makeFB2Archive(t, wrap(desc)), FB2Name: "book.fb2"})
+		require.NoError(t, err)
+		require.Equal(t, 1934, em.SrcYear, "год текстом, без value")
+
+		desc = `<title-info><book-title>X</book-title><date>2005</date></title-info>`
+		em, err = p.FetchEditionMeta(context.Background(), BookQuery{ArchivePath: makeFB2Archive(t, wrap(desc)), FB2Name: "book.fb2"})
+		require.NoError(t, err)
+		require.Zero(t, em.SrcYear, "без src-title-info — нет года оригинала")
+
+		desc = `<src-title-info><book-title>Original</book-title><date>2999</date></src-title-info>`
+		em, err = p.FetchEditionMeta(context.Background(), BookQuery{ArchivePath: makeFB2Archive(t, wrap(desc)), FB2Name: "book.fb2"})
+		require.NoError(t, err)
+		require.Zero(t, em.SrcYear, "неправдоподобный — нет")
+	})
+
 	t.Run("мусорный isbn отбрасывается", func(t *testing.T) {
 		desc := `<title-info><book-title>X</book-title></title-info><publish-info><isbn>нет</isbn></publish-info>`
 		em, err := p.FetchEditionMeta(context.Background(), BookQuery{ArchivePath: makeFB2Archive(t, wrap(desc)), FB2Name: "book.fb2"})

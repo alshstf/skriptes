@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.48.1**.
+конвертируются на лету через fb2cng. Текущая версия — **1.49.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0062_author_fantlab_lookups`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0063_book_src_year`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 

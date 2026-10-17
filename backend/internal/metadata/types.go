@@ -340,6 +340,7 @@ type EditionMeta struct {
 	SrcLang      string // язык оригинала (<title-info><src-lang> / <src-title-info><lang>)
 	SrcTitle     string // оригинальное название (<src-title-info><book-title>)
 	SrcAuthor    string // первый <src-title-info><author>, display-форма
+	SrcYear      int    // <src-title-info><date> — год оригинала перевода, 0 — нет
 	TitleLang    string // <title-info><lang>
 	FB2DocID     string // <document-info><id>
 }
