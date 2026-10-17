@@ -37,6 +37,7 @@ type YearBackfiller struct {
 	resyncer YearResyncer // nil → без авто-ресинка Meili-года
 
 	yearChanged atomic.Int64 // сколько книг получили written_year за проход
+	kindChanged atomic.Int64 // сколько работ получили тип тома-сборника (фаза Фантлаба, #532)
 	lookedUp    atomic.Int64 // сколько запросов к источникам сделано за проход (для логов)
 
 	changedMu    sync.Mutex // processBatch гоняет writeFound из нескольких горутин
@@ -158,6 +159,7 @@ func (c yearCandidate) wikidataShortcut(q *BookQuery, notFoundTTL time.Duration,
 
 func (b *YearBackfiller) drain(ctx context.Context) int {
 	b.yearChanged.Store(0)
+	b.kindChanged.Store(0)
 	b.lookedUp.Store(0)
 	b.changedMu.Lock()
 	b.changedBooks = nil
@@ -189,7 +191,7 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 			cursor = batch[len(batch)-1].id
 		}
 	}
-	if b.yearChanged.Load() == 0 || ctx.Err() != nil {
+	if (b.yearChanged.Load() == 0 && b.kindChanged.Load() == 0) || ctx.Err() != nil {
 		return total
 	}
 	// Год работы — по правилам work_years.go (потолок — самое раннее издание, не

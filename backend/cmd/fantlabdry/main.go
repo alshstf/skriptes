@@ -55,6 +55,7 @@ func main() {
 	outPath := flag.String("out", "", "предложения (tsv)")
 	diffPath := flag.String("diff", "", "расхождения с известным годом (tsv)")
 	perAuthorPath := flag.String("per-author", "", "итог по авторам (tsv): кто найден, сколько работ без года датировано")
+	kindsPath := flag.String("kinds", "", "типы томов-сборников по названию цикла/сборника (tsv, #532)")
 	rpm := flag.Int("rpm", 30, "запросов к Фантлабу в минуту (кэш не считается)")
 	flag.Parse()
 	if *authorsPath == "" || *worksPath == "" {
@@ -98,6 +99,8 @@ func main() {
 	perAuthor := newTSV(*perAuthorPath)
 	defer perAuthor.close()
 	perAuthor.printf("автор|известность|итог|работ|видимых без года|датировано\n")
+	kinds := newTSV(*kindsPath)
+	defer kinds.close()
 
 	var st struct {
 		authors, viaWD, viaSearch, notFound, errs   int
@@ -137,6 +140,10 @@ func main() {
 			st.viaWD++
 		default:
 			st.viaSearch++
+		}
+		for _, k := range res.Kinds {
+			w := byID[k.WorkID]
+			kinds.printf("%d|%s|%s|%d|%t|%s %s\n", k.WorkID, w.q.Title, k.Kind, w.year, w.visible, a.last, a.first)
 		}
 		hit := 0
 		for _, m := range res.Matched {

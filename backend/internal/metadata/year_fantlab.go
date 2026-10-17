@@ -30,6 +30,11 @@ type fantlabIDResolver interface {
 const (
 	fantlabAuthorBatch    = 25
 	fantlabFoundRetryDays = 180 // найденного автора перепроверять — у него выходят книги, Фантлаб дополняется
+	// fantlabOmnibusSizeRatio — том по циклу должен быть во столько раз больше
+	// медианы обычных работ автора: у сетевых серий первый роман назван как цикл
+	// («Империя Оствер» — 1,25 медианы), у томов — 3–30 («Хроники Амбера» — 33).
+	// Прогон на проде 2026-10-17: из 307 совпадений с циклом проходят 183.
+	fantlabOmnibusSizeRatio = 2.5
 )
 
 type fantlabAuthor struct {
@@ -183,7 +188,44 @@ func (b *YearBackfiller) processFantlabAuthor(ctx context.Context, a fantlabAuth
 		}
 	}
 	b.yearChanged.Add(int64(dated))
+	b.writeFantlabKinds(ctx, a.id, res.Kinds)
 	b.storeFantlabLookup(ctx, a.id, "found", res, dated)
+}
+
+// writeFantlabKinds — тип тома-сборника по библиографии (#532): название работы
+// у Фантлаба — только цикл/сборник/антология автора. Кандидаты — работы без
+// типа (fantlabWorks); решение «это роман» воркера «Известность» (kind NULL,
+// kind_source fantlab) и ручную правку не трогаем. Изменённые работы — в
+// works-индекс (kind — его поле) вместе с годами.
+func (b *YearBackfiller) writeFantlabKinds(ctx context.Context, authorID int64, kinds []FantlabKindMatch) {
+	median := -1.0 // медиана размера обычных работ автора; считается при первом томе по циклу
+	for _, k := range kinds {
+		minSize := 0.0
+		if k.Kind == "omnibus" {
+			if median < 0 {
+				median = b.authorMedianWorkSize(ctx, authorID)
+			}
+			if median <= 0 {
+				continue // размеров нет — не отличить том от романа с названием цикла
+			}
+			minSize = fantlabOmnibusSizeRatio * median
+		}
+		tag, err := b.pool.Exec(ctx, `
+			UPDATE works w SET kind = $2, kind_source = 'fantlab', updated_at = now()
+			WHERE w.id = $1 AND w.kind IS DISTINCT FROM $2 AND (w.kind_source IS NULL OR w.kind_source = 'heuristic')
+			  AND COALESCE((SELECT max(b.size_bytes) FROM books b WHERE b.work_id = w.id AND NOT b.deleted), 0) >= $3::float8`,
+			k.WorkID, k.Kind, minSize)
+		if err != nil {
+			b.logger.Warn("year backfill: write fantlab kind failed", "work_id", k.WorkID, "err", err)
+			continue
+		}
+		if tag.RowsAffected() > 0 {
+			b.kindChanged.Add(1)
+			b.changedMu.Lock()
+			b.changedWorks = append(b.changedWorks, k.WorkID)
+			b.changedMu.Unlock()
+		}
+	}
 }
 
 // fantlabWorks — работы автора для сопоставления (основной автор, не сборники,
@@ -210,6 +252,26 @@ func (b *YearBackfiller) fantlabWorks(ctx context.Context, authorID int64) ([]Fa
 		out = append(out, q)
 	}
 	return out, rows.Err()
+}
+
+// authorMedianWorkSize — медиана размера (крупнейшее издание) обычных работ
+// автора, байт; 0 — не известна.
+func (b *YearBackfiller) authorMedianWorkSize(ctx context.Context, authorID int64) float64 {
+	var m *float64
+	if err := b.pool.QueryRow(ctx, `
+		SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY sz)
+		FROM (SELECT max(bk.size_bytes) AS sz
+		      FROM works w JOIN books bk ON bk.work_id = w.id AND NOT bk.deleted
+		      WHERE w.primary_author_id = $1 AND COALESCE(w.kind, '') = ''
+		      GROUP BY w.id) s
+		WHERE sz > 0`, authorID).Scan(&m); err != nil {
+		b.logger.Warn("year backfill: author median size failed", "author_id", authorID, "err", err)
+		return 0
+	}
+	if m == nil {
+		return 0
+	}
+	return *m
 }
 
 func (b *YearBackfiller) storeFantlabLookup(ctx context.Context, authorID int64, outcome string, res FantlabAuthorYears, dated int) {

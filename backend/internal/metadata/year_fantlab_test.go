@@ -14,6 +14,7 @@ import (
 // fakeFantlabYears — подменный источник: годы по названию работы, исход по фамилии.
 type fakeFantlabYears struct {
 	years map[string]int
+	kinds map[string]string
 	calls map[string]int
 	fail  map[string]error
 }
@@ -24,12 +25,16 @@ func (f *fakeFantlabYears) AuthorYears(_ context.Context, a FantlabAuthorQuery, 
 		return FantlabAuthorYears{}, err
 	}
 	var m []FantlabYearMatch
+	var k []FantlabKindMatch
 	for _, w := range works {
 		if y, ok := f.years[w.Title]; ok {
 			m = append(m, FantlabYearMatch{WorkID: w.ID, Year: y, FlWorkID: int64(1000 + y)})
 		}
+		if kind, ok := f.kinds[w.Title]; ok {
+			k = append(k, FantlabKindMatch{WorkID: w.ID, Kind: kind})
+		}
 	}
-	return FantlabAuthorYears{FantlabID: 7, Via: "search", Matched: m}, nil
+	return FantlabAuthorYears{FantlabID: 7, Via: "search", Matched: m, Kinds: k}, nil
 }
 
 // TestYearBackfill_FantlabAuthors — фаза «Фантлаб по автору» (#533): внешний год
@@ -145,4 +150,66 @@ func TestYearBackfill_FantlabAuthors(t *testing.T) {
 	cov, err = ctrl.Coverage(ctx)
 	require.NoError(t, err)
 	require.Equal(t, FantlabCoverage{Authors: 1, Found: 1, Dated: 3}, cov.Fantlab)
+}
+
+// TestYearBackfill_FantlabKinds — тип тома-сборника из библиографии (#532):
+// работа без года с названием цикла получает omnibus (kind_source=fantlab),
+// только если она в 2,5+ раза больше медианы работ автора (роман с названием
+// цикла — нет); сборник — без порога; ручную правку не трогаем.
+func TestYearBackfill_FantlabKinds(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	rowling := seedGroupAuthor(t, ctx, pool, "Роулинг", "роулинг джоан")
+	work := func(lib, title string) int64 {
+		return workIDOf(t, ctx, pool, seedGroupBook(t, ctx, pool, collID, archID, rowling, lib, title, title, "ru", "", "", ""))
+	}
+	cycle := work("K1", "Гарри Поттер")
+	heur := work("K2", "Сказки барда Бидля")
+	manual := work("K3", "Фантастические твари")
+	novel := work("K4", "Корморан Страйк") // роман с названием цикла
+	coll := work("K5", "Истории Хогвартса")
+	for _, w := range []string{"N1", "N2", "N3"} {
+		work(w, "Роман "+w)
+	}
+	size := func(workID, n int64) {
+		_, err := pool.Exec(ctx, `UPDATE books SET size_bytes = $2 WHERE work_id = $1`, workID, n)
+		require.NoError(t, err)
+	}
+	_, err := pool.Exec(ctx, `UPDATE books SET size_bytes = 1000000 WHERE work_id IN (SELECT id FROM works WHERE primary_author_id = $1)`, rowling)
+	require.NoError(t, err)
+	size(cycle, 7000000)
+	size(novel, 1300000)
+	_, err = pool.Exec(ctx, `UPDATE works SET kind = 'collection', kind_source = 'heuristic' WHERE id = $1`, heur)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE works SET kind = NULL, kind_source = 'override' WHERE id = $1`, manual)
+	require.NoError(t, err)
+
+	fake := &fakeFantlabYears{
+		years: map[string]int{},
+		kinds: map[string]string{"Гарри Поттер": "omnibus", "Сказки барда Бидля": "omnibus", "Фантастические твари": "omnibus",
+			"Корморан Страйк": "omnibus", "Истории Хогвартса": "collection"},
+		calls: map[string]int{}, fail: map[string]error{},
+	}
+	cfg := YearBackfillConfig{Fantlab: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+	NewYearBackfiller(pool, nil, cfg, nil, quiet).withFantlab(fake).drain(ctx)
+
+	k, src := kindOf(t, ctx, pool, cycle)
+	require.Equal(t, "omnibus", k, "название цикла — том собрания")
+	require.Equal(t, "fantlab", src)
+	k, _ = kindOf(t, ctx, pool, heur)
+	require.Equal(t, "collection", k, "работа с типом — не кандидат фазы (выборка без сборников)")
+	k, src = kindOf(t, ctx, pool, manual)
+	require.Empty(t, k, "ручная правка неприкосновенна")
+	require.Equal(t, "override", src)
+	k, _ = kindOf(t, ctx, pool, novel)
+	require.Empty(t, k, "1,3 медианы — роман с названием цикла, не том")
+	k, src = kindOf(t, ctx, pool, coll)
+	require.Equal(t, "collection", k, "сборник — без порога размера")
+	require.Equal(t, "fantlab", src)
 }
