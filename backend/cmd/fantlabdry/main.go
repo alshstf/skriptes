@@ -62,7 +62,10 @@ func main() {
 	}
 	authors := readAuthors(*authorsPath)
 	works := readWorks(*worksPath)
-	client := &http.Client{Timeout: 90 * time.Second, Transport: &cachingTransport{dir: *cacheDir, next: http.DefaultTransport}}
+	// Лимит запросов — в транспорте: ответы из кэша его не ждут, повтор прогона быстрый.
+	client := &http.Client{Timeout: 90 * time.Second, Transport: &cachingTransport{
+		dir: *cacheDir, next: http.DefaultTransport, interval: time.Minute / time.Duration(max(1, *rpm)),
+	}}
 	ctx := context.Background()
 
 	// FantLab ID по Wikidata P7433 — пачками.
@@ -85,15 +88,7 @@ func main() {
 	}
 
 	fl := metadata.NewFantlabProvider(client)
-	interval := time.Minute / time.Duration(max(1, *rpm))
-	var last time.Time
-	wait := func(context.Context) error {
-		if d := time.Until(last.Add(interval)); d > 0 {
-			time.Sleep(d)
-		}
-		last = time.Now()
-		return nil
-	}
+	wait := func(context.Context) error { return nil }
 
 	out := newTSV(*outPath)
 	defer out.close()
@@ -283,10 +278,13 @@ func must[T any](v T, err error) T {
 	return v
 }
 
-// cachingTransport — дисковый кэш ответов 200/404 по методу, URL и телу запроса.
+// cachingTransport — дисковый кэш ответов 200/404 по методу, URL и телу запроса;
+// сетевые запросы — не чаще interval.
 type cachingTransport struct {
-	dir  string
-	next http.RoundTripper
+	dir      string
+	next     http.RoundTripper
+	interval time.Duration
+	last     time.Time
 }
 
 func (t *cachingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
@@ -304,6 +302,10 @@ func (t *cachingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 		}
 		return &http.Response{StatusCode: code, Body: io.NopCloser(bytes.NewReader(b)), Header: http.Header{}, Request: r}, nil
 	}
+	if d := time.Until(t.last.Add(t.interval)); d > 0 {
+		time.Sleep(d)
+	}
+	t.last = time.Now()
 	resp, err := t.next.RoundTrip(r)
 	if err != nil || (resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotFound) {
 		return resp, err
