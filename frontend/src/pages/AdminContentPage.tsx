@@ -7,6 +7,7 @@ import { SaveBar } from '@/components/SaveBar';
 import { useAdminContent, useUpdateAdminContent, useLanguages, sameSet, type ContentSettings } from '@/lib/content';
 import { useGenres } from '@/lib/genres';
 import { ApiError } from '@/lib/api';
+import { LoadError } from '@/components/LoadError';
 
 /**
  * AdminContentPage — /admin/content. Глобальная видимость контента: какие
@@ -91,7 +92,7 @@ export function AdminContentPage() {
       {loading ? (
         <Skeleton className="h-64 w-full" />
       ) : failed ? (
-        <p className="text-sm text-destructive">Не удалось загрузить данные.</p>
+        <LoadError error={failed}>Не удалось загрузить данные.</LoadError>
       ) : (
         <ContentEditor
           languages={langsQ.data ?? []}

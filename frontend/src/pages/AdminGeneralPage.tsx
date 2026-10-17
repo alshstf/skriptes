@@ -8,6 +8,7 @@ import { SaveBar } from '@/components/SaveBar';
 import { useBrandingSettings, useUpdateBrandingSettings } from '@/lib/admin';
 import { DEFAULT_INSTANCE_NAME } from '@/lib/version';
 import { ApiError } from '@/lib/api';
+import { LoadError } from '@/components/LoadError';
 
 const MAX_NAME_LEN = 60;
 
@@ -57,7 +58,7 @@ export function AdminGeneralPage() {
       {branding.isLoading ? (
         <Skeleton className="h-24 w-full max-w-md" />
       ) : branding.error ? (
-        <p className="text-sm text-destructive">Не удалось загрузить настройки.</p>
+        <LoadError error={branding.error}>Не удалось загрузить настройки.</LoadError>
       ) : (
         <div className="max-w-md space-y-2">
           <Label htmlFor="instance-name">Название инстанса</Label>

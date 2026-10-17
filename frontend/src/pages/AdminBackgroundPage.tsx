@@ -79,6 +79,7 @@ import {
   type WorkGroupingInput,
 } from '@/lib/admin';
 import { ApiError } from '@/lib/api';
+import { LoadError } from '@/components/LoadError';
 
 /**
  * AdminBackgroundPage — /admin/background. Управление обогащением карточек,
@@ -1165,7 +1166,7 @@ export function AdminBackgroundPage() {
       {loading ? (
         <Skeleton className="h-64 w-full" />
       ) : failed ? (
-        <p className="text-sm text-destructive">Не удалось загрузить настройки.</p>
+        <LoadError error={failed}>Не удалось загрузить настройки.</LoadError>
       ) : (
         <>
           {/* ─────────── Общие ─────────── */}

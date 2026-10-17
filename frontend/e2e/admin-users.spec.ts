@@ -201,3 +201,25 @@ test('admin: reset password — toast после сброса', async ({ mockedP
     timeout: 5_000,
   });
 });
+
+test('admin: снаружи домашней сети — причина отказа, а не «не удалось загрузить» (375 px)', async ({
+  mockedPage: page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  // Так отвечает Caddy на админ-API не из SKRIPTES_LAN_CIDRS (infra/Caddyfile.public).
+  await page.route(/\/api\/admin\/users$/, (route) =>
+    route.fulfill({
+      status: 403,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'администрирование доступно только из домашней сети' }),
+    }),
+  );
+  await page.goto('/admin/users');
+  const alert = page.getByRole('alert').filter({ hasText: 'Администрирование доступно только из домашней сети' });
+  await expect(alert).toBeVisible();
+  await expect(page.getByText(/Частный узел iCloud/)).toBeVisible();
+  await expect(page.getByText('Не удалось загрузить список.')).toHaveCount(0);
+  // Подсказка не вылезает за экран.
+  const box = await page.getByText(/Частный узел iCloud/).boundingBox();
+  expect(box && box.x + box.width).toBeLessThanOrEqual(375);
+});
