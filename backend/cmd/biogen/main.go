@@ -133,7 +133,7 @@ func cmdFetch(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("fetch", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список через запятую)")
 	out := fs.String("out", "work", "рабочая папка")
-	langs := fs.String("langs", "", "языки статей через запятую (ru,en); пусто — ru и en только при короткой ru")
+	langs := fs.String("langs", "", "языки статей через запятую (ru,en,de); пусто — ru, en при короткой ru, язык оригинала (не ru/en) из Wikidata")
 	_ = fs.Parse(args)
 	if *qid == "" {
 		return errors.New("нужен -qid")
@@ -288,7 +288,7 @@ func cmdRun(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("run", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
-	langs := fs.String("langs", "", "языки статей через запятую (ru,en); пусто — ru и en только при короткой ru")
+	langs := fs.String("langs", "", "языки статей через запятую (ru,en,de); пусто — ru, en при короткой ru, язык оригинала (не ru/en) из Wikidata")
 	retries := fs.Int("retries", 2, "повторов извлечения после сбоя (лимит подписки, сеть)")
 	retryWait := fs.Duration("retry-wait", 10*time.Minute, "пауза перед повтором")
 	engine, binary, model, effort := engineFlags(fs)
