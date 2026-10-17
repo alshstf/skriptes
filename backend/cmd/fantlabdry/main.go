@@ -56,6 +56,7 @@ func main() {
 	diffPath := flag.String("diff", "", "расхождения с известным годом (tsv)")
 	perAuthorPath := flag.String("per-author", "", "итог по авторам (tsv): кто найден, сколько работ без года датировано")
 	kindsPath := flag.String("kinds", "", "типы томов-сборников по названию цикла/сборника (tsv, #532)")
+	matchesPath := flag.String("matches", "", "все сопоставления: наша работа → произведение Фантлаба (tsv)")
 	rpm := flag.Int("rpm", 30, "запросов к Фантлабу в минуту (кэш не считается)")
 	flag.Parse()
 	if *authorsPath == "" || *worksPath == "" {
@@ -101,6 +102,8 @@ func main() {
 	perAuthor.printf("автор|известность|итог|работ|видимых без года|датировано\n")
 	kinds := newTSV(*kindsPath)
 	defer kinds.close()
+	matches := newTSV(*matchesPath)
+	defer matches.close()
 
 	var st struct {
 		authors, viaWD, viaSearch, notFound, errs   int
@@ -144,6 +147,12 @@ func main() {
 		for _, k := range res.Kinds {
 			w := byID[k.WorkID]
 			kinds.printf("%d|%s|%s|%d|%t|%s %s\n", k.WorkID, w.q.Title, k.Kind, w.year, w.visible, a.last, a.first)
+		}
+		for _, m := range res.Matched {
+			if m.FlWorkID > 0 && m.Exact {
+				w := byID[m.WorkID]
+				matches.printf("%d|%d|%d|%s|%d|%s %s\n", a.id, m.WorkID, m.FlWorkID, w.q.Title, w.year, a.last, a.first)
+			}
 		}
 		hit := 0
 		for _, m := range res.Matched {

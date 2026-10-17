@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -189,6 +190,7 @@ func (b *YearBackfiller) processFantlabAuthor(ctx context.Context, a fantlabAuth
 	}
 	b.yearChanged.Add(int64(dated))
 	b.writeFantlabKinds(ctx, a.id, res.Kinds)
+	b.recordFantlabWorkKeys(ctx, a.id, res.Matched)
 	b.storeFantlabLookup(ctx, a.id, "found", res, dated)
 }
 
@@ -252,6 +254,54 @@ func (b *YearBackfiller) fantlabWorks(ctx context.Context, authorID int64) ([]Fa
 		out = append(out, q)
 	}
 	return out, rows.Err()
+}
+
+// recordFantlabWorkKeys — ключ группировки «произведение Фантлаба» (#532) для
+// изданий работ автора, сошедшихся по ПОЛНОМУ названию к одному произведению
+// библиографии: «Гарри Поттер и философский камень» и «…и Волшебный камень»
+// (перевод Спивак) — разные названия одного произведения. Склеивает их
+// группировка (Tier-1 по найденным ключам, гейт fantlabBucketConflicts):
+// новый или изменённый ключ снимает work_scanned_at, как RecordBookWorkKey.
+// Одиночкам ключ не пишем — склеивать не с чем.
+func (b *YearBackfiller) recordFantlabWorkKeys(ctx context.Context, authorID int64, matched []FantlabYearMatch) {
+	byFl := map[int64][]int64{}
+	for _, m := range matched {
+		if m.Exact && m.FlWorkID > 0 {
+			byFl[m.FlWorkID] = append(byFl[m.FlWorkID], m.WorkID)
+		}
+	}
+	var works []int64
+	var keys []string
+	for fl, ws := range byFl {
+		if len(ws) < 2 {
+			continue
+		}
+		for _, w := range ws {
+			works = append(works, w)
+			keys = append(keys, strconv.FormatInt(fl, 10))
+		}
+	}
+	if len(works) == 0 {
+		return
+	}
+	tag, err := b.pool.Exec(ctx, `
+		WITH k AS (SELECT * FROM unnest($1::bigint[], $2::text[]) AS t(work_id, key)),
+		up AS (
+			INSERT INTO book_work_lookups (book_id, source, outcome, work_key, checked_at)
+			SELECT bk.id, $3, 'found', k.key, now()
+			FROM k JOIN books bk ON bk.work_id = k.work_id AND NOT bk.deleted
+			ON CONFLICT (book_id, source) DO UPDATE SET outcome = 'found', work_key = EXCLUDED.work_key, checked_at = now()
+			WHERE book_work_lookups.outcome <> 'found' OR book_work_lookups.work_key IS DISTINCT FROM EXCLUDED.work_key
+			RETURNING book_id
+		)
+		UPDATE books SET work_scanned_at = NULL WHERE id IN (SELECT book_id FROM up)`, works, keys, fantlabWorkKeySource)
+	if err != nil {
+		b.logger.Warn("year backfill: record fantlab work keys failed", "author_id", authorID, "err", err)
+		return
+	}
+	if n := tag.RowsAffected(); n > 0 {
+		b.logger.Info("year backfill: fantlab work keys recorded", "author_id", authorID, "editions", n)
+	}
 }
 
 // authorMedianWorkSize — медиана размера (крупнейшее издание) обычных работ

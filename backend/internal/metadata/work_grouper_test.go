@@ -285,3 +285,37 @@ func TestClusterTier1_AnthologyGate(t *testing.T) {
 		require.Equal(t, [][]int64{{1}, {2}}, clustersOf(books, clusterTier1(books)))
 	})
 }
+
+// TestFantlabBucketConflicts — гейт ключа Фантлаба (#532): разные номера в
+// разных сериях (издательская нумерация) и разные названия одного языка — не
+// конфликт; разные оригиналы, тома и номера в одной серии — конфликт.
+func TestFantlabBucketConflicts(t *testing.T) {
+	books := []groupBook{
+		{id: 1, title: "Пятый элефант", seriesID: 10, serNo: 24},           // 0
+		{id: 2, title: "The Fifth Elephant", seriesID: 11, serNo: 5},       // 1
+		{id: 3, title: "Вольные Мальцы", lang: "ru"},                       // 2
+		{id: 4, title: "Вольный народец", lang: "ru"},                      // 3
+		{id: 5, title: "Танец с драконами", seriesID: 12, serNo: 1},        // 4
+		{id: 6, title: "Танец с драконами", seriesID: 12, serNo: 2},        // 5
+		{id: 7, title: "Oliver Twist", srcTitleNorm: "oliver twist"},       // 6
+		{id: 8, title: "Оливер", srcTitleNorm: "the adventures of oliver"}, // 7
+		{id: 9, title: "1Q84. Книга 1"},                                    // 8
+		{id: 10, title: "1Q84. Книга 2"},                                   // 9
+	}
+	cases := []struct {
+		name string
+		idxs []int
+		want bool
+	}{
+		{"номера в разных сериях — не конфликт", []int{0, 1}, false},
+		{"разные названия одного языка — не конфликт", []int{2, 3}, false},
+		{"разные номера в одной серии — конфликт", []int{4, 5}, true},
+		{"разные оригиналы — конфликт", []int{6, 7}, true},
+		{"разные тома — конфликт", []int{8, 9}, true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.want, fantlabBucketConflicts(books, tc.idxs))
+		})
+	}
+}

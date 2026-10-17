@@ -73,15 +73,17 @@ func TestMatchFantlabBiblio(t *testing.T) {
 		{ID: 6, Title: "Записки"},                                             // цикл — не сопоставляем
 		{ID: 7, Title: "Без года"},                                            // найдено, года нет
 		{ID: 8, Title: "Чужая книга"},
-		{ID: 9, Title: "Сыщик (Том 1)"}, // том цикла, не пьеса с альт. названием
-		{ID: 10, Title: "Дорога"},       // роман и цикл одного года — роман
+		{ID: 9, Title: "Сыщик (Том 1)"},   // том цикла, не пьеса с альт. названием
+		{ID: 10, Title: "Дорога"},         // роман и цикл одного года — роман
+		{ID: 11, Title: "Богема (Том 1)"}, // год — по названию без скобок; ключом группировки не годится
 	}, ws)
 	require.Equal(t, []FantlabYearMatch{
-		{WorkID: 1, Year: 1922, FlWorkID: 11},
-		{WorkID: 2, Year: 1918, FlWorkID: 13},
-		{WorkID: 3, Year: 1918, FlWorkID: 13},
-		{WorkID: 7, Year: 0, FlWorkID: 17},
-		{WorkID: 10, Year: 1965, FlWorkID: 20},
+		{WorkID: 1, Year: 1922, FlWorkID: 11, Exact: true},
+		{WorkID: 2, Year: 1918, FlWorkID: 13, Exact: true},
+		{WorkID: 3, Year: 1918, FlWorkID: 13, Exact: true},
+		{WorkID: 7, Year: 0, FlWorkID: 17, Exact: true},
+		{WorkID: 10, Year: 1965, FlWorkID: 20, Exact: true},
+		{WorkID: 11, Year: 1924, FlWorkID: 12},
 	}, got)
 }
 
@@ -132,7 +134,8 @@ func TestFantlabAuthorYears(t *testing.T) {
 	res, err = p.AuthorYears(ctx, FantlabAuthorQuery{LastName: "Булгаков", FirstName: "Михаил"}, works, wait)
 	require.NoError(t, err)
 	require.Equal(t, FantlabAuthorYears{FantlabID: 186, Via: "search", Matched: []FantlabYearMatch{
-		{WorkID: 1, Year: 1922, FlWorkID: 11}, {WorkID: 2, Year: 1918, FlWorkID: 13}, {WorkID: 3, Year: 1924, FlWorkID: 12},
+		{WorkID: 1, Year: 1922, FlWorkID: 11, Exact: true}, {WorkID: 2, Year: 1918, FlWorkID: 13, Exact: true},
+		{WorkID: 3, Year: 1924, FlWorkID: 12, Exact: true},
 	}}, res)
 
 	// Чужой автор в выдаче поиска (фамилия не совпала) — не наш.

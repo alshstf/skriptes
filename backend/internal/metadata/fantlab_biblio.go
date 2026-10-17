@@ -190,6 +190,10 @@ type FantlabYearMatch struct {
 	WorkID   int64 // наша
 	Year     int   // 0 — найдена, но у Фантлаба нет года
 	FlWorkID int64 // 0 — одно название у нескольких записей (id неоднозначен)
+	// Exact — совпало полное название (не вариант без скобок): только такое
+	// совпадение годится ключом группировки — «1Q84 (Книга първа)» и «(Книга
+	// втора)» без скобок сходятся к одному роману, а это разные тома.
+	Exact bool
 }
 
 // matchFantlabBiblio — наши работы, однозначно найденные в библиографии:
@@ -218,11 +222,14 @@ func matchFantlabBiblio(works []FantlabWorkQuery, biblio []fantlabBiblioWork) []
 	}
 	var out []FantlabYearMatch
 	for _, w := range works {
-		hits, blockers := map[int]bool{}, map[int]bool{}
+		hits, blockers, exact := map[int]bool{}, map[int]bool{}, map[int]bool{}
 		for _, t := range append([]string{w.Title}, w.SrcTitles...) {
-			for _, k := range biblioTitleVariants(t) {
+			for vi, k := range biblioTitleVariants(t) {
 				for _, i := range idx[k] {
 					hits[i] = true
+					if vi == 0 {
+						exact[i] = true
+					}
 				}
 				for _, i := range block[k] {
 					blockers[i] = true
@@ -254,7 +261,7 @@ func matchFantlabBiblio(works []FantlabWorkQuery, biblio []fantlabBiblioWork) []
 			// работа найдена, но FantLab-id неоднозначен.
 			out = append(out, FantlabYearMatch{WorkID: w.ID, Year: firstYear(years)})
 		default:
-			out = append(out, FantlabYearMatch{WorkID: w.ID, Year: biblio[pick].Year, FlWorkID: biblio[pick].WorkID})
+			out = append(out, FantlabYearMatch{WorkID: w.ID, Year: biblio[pick].Year, FlWorkID: biblio[pick].WorkID, Exact: exact[pick]})
 		}
 	}
 	return out

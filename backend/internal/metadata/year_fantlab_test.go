@@ -14,6 +14,7 @@ import (
 // fakeFantlabYears — подменный источник: годы по названию работы, исход по фамилии.
 type fakeFantlabYears struct {
 	years map[string]int
+	fl    map[string]int64 // произведение Фантлаба по полному названию (Exact)
 	kinds map[string]string
 	calls map[string]int
 	fail  map[string]error
@@ -29,6 +30,8 @@ func (f *fakeFantlabYears) AuthorYears(_ context.Context, a FantlabAuthorQuery, 
 	for _, w := range works {
 		if y, ok := f.years[w.Title]; ok {
 			m = append(m, FantlabYearMatch{WorkID: w.ID, Year: y, FlWorkID: int64(1000 + y)})
+		} else if id, ok := f.fl[w.Title]; ok {
+			m = append(m, FantlabYearMatch{WorkID: w.ID, FlWorkID: id, Exact: true})
 		}
 		if kind, ok := f.kinds[w.Title]; ok {
 			k = append(k, FantlabKindMatch{WorkID: w.ID, Kind: kind})
@@ -212,4 +215,62 @@ func TestYearBackfill_FantlabKinds(t *testing.T) {
 	k, src = kindOf(t, ctx, pool, coll)
 	require.Equal(t, "collection", k, "сборник — без порога размера")
 	require.Equal(t, "fantlab", src)
+}
+
+// TestYearBackfill_FantlabWorkKeys — ключ группировки «произведение Фантлаба»
+// (#532): две работы автора с одним произведением библиографии по полному
+// названию получают ключ, группировка склеивает их — альтернативные переводы
+// одного языка тоже (общий Tier-2 их не склеил бы); разные номера в одной серии
+// — нет; одиночке ключ не пишется.
+func TestYearBackfill_FantlabWorkKeys(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	rowling := seedGroupAuthor(t, ctx, pool, "Роулинг", "роулинг джоан")
+	book := func(lib, title string) int64 {
+		return seedGroupBook(t, ctx, pool, collID, archID, rowling, lib, title, title, "ru", "", "", "")
+	}
+	stone := book("H1", "Гарри Поттер и философский камень")
+	spivak := book("H2", "Гарри Поттер и Волшебный камень")
+	vol1 := book("D1", "Танец с драконами. Грёзы и пыль")
+	vol2 := book("D2", "Танец с драконами. Искры над пеплом")
+	single := book("S1", "Сказки барда Бидля")
+	putInSeries(t, ctx, pool, vol1, "танец с драконами")
+	putInSeries(t, ctx, pool, vol2, "танец с драконами")
+	_, err := pool.Exec(ctx, `UPDATE books SET ser_no = CASE WHEN id = $1 THEN 1 ELSE 2 END WHERE id IN ($1, $2)`, vol1, vol2)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE books SET work_scanned_at = now()`)
+	require.NoError(t, err)
+
+	fake := &fakeFantlabYears{
+		years: map[string]int{},
+		fl: map[string]int64{
+			"Гарри Поттер и философский камень": 3651, "Гарри Поттер и Волшебный камень": 3651,
+			"Танец с драконами. Грёзы и пыль": 9000, "Танец с драконами. Искры над пеплом": 9000,
+			"Сказки барда Бидля": 7777,
+		},
+		calls: map[string]int{}, fail: map[string]error{},
+	}
+	cfg := YearBackfillConfig{Fantlab: true, NotFoundRetryDays: 90, ErrorRetryHours: 24}
+	NewYearBackfiller(pool, nil, cfg, nil, quiet).withFantlab(fake).drain(ctx)
+
+	var keyed, unscanned int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM book_work_lookups WHERE source = 'fantlab' AND outcome = 'found'`).Scan(&keyed))
+	require.Equal(t, 4, keyed, "ключ — изданиям сошедшихся работ, не одиночке")
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books WHERE work_scanned_at IS NULL`).Scan(&unscanned))
+	require.Equal(t, 4, unscanned, "группировка пересмотрит автора")
+
+	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	require.NoError(t, g.groupAuthorTier1(ctx, rowling))
+	require.Equal(t, workIDOf(t, ctx, pool, stone), workIDOf(t, ctx, pool, spivak), "переводы одного произведения — одна работа")
+	require.NotEqual(t, workIDOf(t, ctx, pool, vol1), workIDOf(t, ctx, pool, vol2), "разные номера в одной серии — разные тома")
+	require.NotEqual(t, workIDOf(t, ctx, pool, stone), workIDOf(t, ctx, pool, single))
+	var fl string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(ext_ids->>'fl_id', '') FROM works WHERE id = $1`, workIDOf(t, ctx, pool, stone)).Scan(&fl))
+	require.Equal(t, "3651", fl, "ключ — в ext_ids работы как fl_id")
 }
