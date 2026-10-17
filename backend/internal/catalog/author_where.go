@@ -158,19 +158,22 @@ func (w *authorWhere) filters(skip string) []string {
 
 	if p.YearFrom > 0 || p.YearTo > 0 {
 		// Пересечение диапазона активности автора [min,max] с [from,to]:
-		// существует видимая книга автора с written_year в [from,to].
+		// существует видимая книга автора с годом в [from,to]. Год — работы
+		// (works.written_year), у работы без года — издания: как годы активности
+		// на карточке и гистограмма (год издания бывает опечаткой fb2: «1014»).
 		lo, hi := p.YearFrom, p.YearTo
-		yearCond := "b.written_year IS NOT NULL"
+		const yr = "COALESCE(wy.written_year, b.written_year)"
+		yearCond := yr + " IS NOT NULL"
 		if lo > 0 {
 			n := w.add(lo)
-			yearCond += fmt.Sprintf(" AND b.written_year >= $%d", n)
+			yearCond += fmt.Sprintf(" AND %s >= $%d", yr, n)
 		}
 		if hi > 0 {
 			n := w.add(hi)
-			yearCond += fmt.Sprintf(" AND b.written_year <= $%d", n)
+			yearCond += fmt.Sprintf(" AND %s <= $%d", yr, n)
 		}
 		where = append(where, "EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false"+
-			" WHERE ba.author_id = a.id AND "+yearCond+w.aggExclusion()+")")
+			" LEFT JOIN works wy ON wy.id = b.work_id WHERE ba.author_id = a.id AND "+yearCond+w.aggExclusion()+")")
 	}
 
 	if p.HasAdaptations && skip != FacetAdaptations {

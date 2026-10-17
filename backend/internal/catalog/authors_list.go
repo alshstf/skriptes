@@ -56,8 +56,10 @@ type AuthorListItem struct {
 	// Languages — языки изданий автора (lang + src_lang), нормализованные
 	// lower+trim (см. граблю №14), по убыванию числа книг.
 	Languages []string `json:"languages,omitempty"`
-	// YearsActive — мин/макс год НАПИСАНИЯ (written_year) среди книг автора.
-	// written_year ≠ date_added (граблю №3). nil, если год нигде не извлечён.
+	// YearsActive — мин/макс год НАПИСАНИЯ работ автора: год работы
+	// (works.written_year, правила правдоподобия work_years.go), у работы без
+	// года — её изданий, как в гистограмме; год издания бывает опечаткой fb2.
+	// written_year ≠ date_added (граблю №3). nil — года нет.
 	YearsActive *YearsRange `json:"years_active,omitempty"`
 	// HasAdaptations — есть ли экранизация хоть у одной книги автора.
 	HasAdaptations bool `json:"has_adaptations"`
@@ -298,10 +300,10 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		          JOIN book_authors ba ON ba.book_id = fcb.book_id
 		          JOIN books b ON b.id = fcb.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false%[7]s)::int AS fav_books,
-		       (SELECT min(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[8]s) AS yr_from,
-		       (SELECT max(b.written_year) FROM book_authors ba JOIN books b ON b.id = ba.book_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND b.written_year IS NOT NULL%[9]s) AS yr_to,
+		       (SELECT min(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL%[8]s) AS yr_from,
+		       (SELECT max(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
+		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL%[9]s) AS yr_to,
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[10]s) AS has_adapt,
 		       a.stat_rating::float8 AS external_rating,
