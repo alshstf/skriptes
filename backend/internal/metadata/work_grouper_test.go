@@ -301,6 +301,12 @@ func TestFantlabBucketConflicts(t *testing.T) {
 		{id: 8, title: "Оливер", srcTitleNorm: "the adventures of oliver"}, // 7
 		{id: 9, title: "1Q84. Книга 1"},                                    // 8
 		{id: 10, title: "1Q84. Книга 2"},                                   // 9
+		// Работа 100 уже несёт британский и американский оригиналы, работа 101 —
+		// один из них, работа 102 (перевод Спивак) — ни одного.
+		{id: 11, workID: 100, srcTitleNorm: "philosophers stone"},       // 10
+		{id: 12, workID: 100, srcTitleNorm: "sorcerers stone"},          // 11
+		{id: 13, workID: 101, srcTitleNorm: "philosophers stone"},       // 12
+		{id: 14, workID: 102, title: "Гарри Поттер и Волшебный камень"}, // 13
 	}
 	cases := []struct {
 		name string
@@ -312,6 +318,8 @@ func TestFantlabBucketConflicts(t *testing.T) {
 		{"разные номера в одной серии — конфликт", []int{4, 5}, true},
 		{"разные оригиналы — конфликт", []int{6, 7}, true},
 		{"разные тома — конфликт", []int{8, 9}, true},
+		{"оригиналы внутри уже склеенной работы — не конфликт", []int{10, 11, 12, 13}, false},
+		{"две работы с непересекающимися оригиналами — конфликт", []int{11, 12}, true},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"slices"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -856,35 +857,73 @@ const fantlabWorkKeySource = "fantlab"
 // разные названия одного языка тут и есть свидетельство — оба названия у
 // Фантлаба имена одного произведения (альтернативные переводы), а разные номера
 // в РАЗНЫХ сериях — издательская нумерация. Остаются конфликты, которые и у
-// ключа Фантлаба значат разные тексты: ≥2 разных оригинала, разные номера тома
-// в названиях, разные номера в ОДНОЙ серии («Танец с драконами» — два
-// французских тома). Прогон на проде 2026-10-17 (1000 авторов): склеивается 96 %
-// групп против 62 % с общим гейтом; выборки — без ложных склеек.
+// ключа Фантлаба значат разные тексты: оригиналы, номера тома в названиях,
+// номера в ОДНОЙ серии («Танец с драконами» — два французских тома). Сравниваются
+// РАБОТЫ бакета, а не издания: уже склеенная работа несёт и «Philosopher's
+// Stone», и «Sorcerer's Stone» (британское и американское названия) — это не
+// конфликт; конфликт — когда наборы двух работ не пересекаются (1.48.1: в
+// 1.48.0 сравнивались издания, и пара Роулинг/Спивак не склеивалась). Прогон на
+// проде 2026-10-17 (1000 авторов): склеивается 96 % групп против 62 % с общим
+// гейтом; выборки — без ложных склеек.
 func fantlabBucketConflicts(books []groupBook, idxs []int) bool {
-	srcs := map[string]struct{}{}
-	vols := map[string]struct{}{}
-	bySeries := map[int64]map[int]struct{}{}
+	type agg struct {
+		srcs, vols map[string]struct{}
+		ser        map[int64]map[string]struct{}
+	}
+	byWork := map[int64]*agg{}
+	var order []int64
 	for _, i := range idxs {
 		b := books[i]
+		key := b.workID
+		if key == 0 {
+			key = -b.id // издание без работы — сама себе работа
+		}
+		a := byWork[key]
+		if a == nil {
+			a = &agg{srcs: map[string]struct{}{}, vols: map[string]struct{}{}, ser: map[int64]map[string]struct{}{}}
+			byWork[key] = a
+			order = append(order, key)
+		}
 		if b.srcTitleNorm != "" {
-			srcs[b.srcTitleNorm] = struct{}{}
+			a.srcs[b.srcTitleNorm] = struct{}{}
 		}
 		if v := volumeNumber(b.title); v != "" {
-			vols[v] = struct{}{}
+			a.vols[v] = struct{}{}
 		}
 		if b.seriesID != 0 && b.serNo > 0 {
-			if bySeries[b.seriesID] == nil {
-				bySeries[b.seriesID] = map[int]struct{}{}
+			if a.ser[b.seriesID] == nil {
+				a.ser[b.seriesID] = map[string]struct{}{}
 			}
-			bySeries[b.seriesID][b.serNo] = struct{}{}
+			a.ser[b.seriesID][strconv.Itoa(b.serNo)] = struct{}{}
 		}
 	}
-	for _, nos := range bySeries {
-		if len(nos) > 1 {
-			return true
+	for x := 0; x < len(order); x++ {
+		for y := x + 1; y < len(order); y++ {
+			p, q := byWork[order[x]], byWork[order[y]]
+			if disjointSets(p.srcs, q.srcs) || disjointSets(p.vols, q.vols) {
+				return true
+			}
+			for sid, nos := range p.ser {
+				if disjointSets(nos, q.ser[sid]) {
+					return true
+				}
+			}
 		}
 	}
-	return len(srcs) > 1 || len(vols) > 1
+	return false
+}
+
+// disjointSets — оба набора непусты и не пересекаются.
+func disjointSets(a, b map[string]struct{}) bool {
+	if len(a) == 0 || len(b) == 0 {
+		return false
+	}
+	for k := range a {
+		if _, ok := b[k]; ok {
+			return false
+		}
+	}
+	return true
 }
 
 // sameLangTitleConflict — в бакете есть издания одного языка с разными
