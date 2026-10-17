@@ -194,8 +194,12 @@ func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
 	}
 	var prev *bio.Author
 	var pa bio.Author
-	if err := readJSON(filepath.Join("internal", "bio", "data", "authors", q+".json"), &pa); err == nil {
+	// Путь относительный: из backend/ автор датасета извлекается как регенерация
+	// (модели подаётся прежний файл), из папки прогона — с нуля. Для сравнения
+	// моделей запускать не из backend/ — иначе модель повторит готовый файл.
+	if pp := filepath.Join("internal", "bio", "data", "authors", q+".json"); readJSON(pp, &pa) == nil {
 		prev = &pa
+		fmt.Printf("%s: регенерация — модели подан прежний файл %s\n", q, pp)
 	}
 	a, raw, err := x.Extract(ctx, &src, prev)
 	if raw != "" {

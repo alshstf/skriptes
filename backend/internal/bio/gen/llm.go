@@ -42,6 +42,7 @@ type draftEvent struct {
 		From      string `json:"from"`
 		To        string `json:"to"`
 		Precision string `json:"precision"`
+		OldStyle  bool   `json:"old_style"`
 	} `json:"date"`
 	Type    string `json:"type"`
 	Tier    string `json:"tier"`
@@ -95,6 +96,7 @@ func outputSchema() map[string]any {
 			"date": obj(map[string]any{
 				"from": str, "to": nstr,
 				"precision": map[string]any{"type": "string", "enum": []string{"year", "month", "day"}},
+				"old_style": map[string]any{"type": "boolean"},
 			}),
 			"type":    map[string]any{"type": "string", "enum": types},
 			"tier":    map[string]any{"type": "string", "enum": []string{"major", "minor"}},
@@ -198,6 +200,13 @@ func fromDraft(src *Sources, d *draft, prev *bio.Author) *bio.Author {
 		for _, e := range prev.Events {
 			k := string(e.Type) + "-" + strconv.Itoa(bio.YearOf(e.Date.From))
 			prevKeys[k] = append(prevKeys[k], e.Key)
+		}
+	}
+	// Старый стиль → новый до сортировки и ключей: год может сдвинуться.
+	for i := range d.Events {
+		de := &d.Events[i]
+		if de.Date.OldStyle {
+			de.Date.From, de.Date.To = convertOldStyle(de.Date.From, de.Date.To, bio.Precision(de.Date.Precision))
 		}
 	}
 	// Сначала хронология, потом ключи: нумерация -2, -3 идёт по дате.
