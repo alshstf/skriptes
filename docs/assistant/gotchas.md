@@ -1217,7 +1217,8 @@ id серии нет ни в INPX, ни в fb2, а такие названия �
   линк на работу — только прямая связь по источникам, `note` — только задокументированная; вехи «написал X» не заводим,
   у работы есть `written {from,to}`.
 - **Генератор** `cmd/biogen` (`internal/bio/gen`): `fetch` (один SPARQL-скелет + extracts Википедии с обрезкой
-  небиографических разделов, ru → en при короткой ru) → `extract` (structured output по строгой схеме `outputSchema()`;
+  небиографических разделов на ru/en/de/fr/es/it/pl/cs/pt/ja; ru, + en при короткой ru, + статья на языке оригинала
+  из Wikidata — P6886, без него P103, если не ru/en и не короче 5 тыс. символов: у Кафки, Гюго, Борхеса она полнее en) → `extract` (structured output по строгой схеме `outputSchema()`;
   движок по умолчанию `claude-cli` — headless Claude Code `claude -p --json-schema --system-prompt-file`, токены по
   подписке владельца, ответ в `structured_output`; `-engine api` — Anthropic SDK, `claude-opus-5-5`, нужен ключ) → `verify` (отбраковка, не правка: `evidence`-цитата должна найтись в
   тексте — нормализация режет типографику и ударения, фрагменты через «…»; год — в цитате или в фактах Wikidata;

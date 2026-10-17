@@ -27,6 +27,103 @@ func TestTrimToBiography(t *testing.T) {
 	}
 }
 
+func TestTrimToBiographyOtherLangs(t *testing.T) {
+	text := "Lead.\n== Leben ==\nGeboren.\n== Werk ==\nSchrieb nachts.\n== Werke (Auswahl) ==\nListe.\n== Rezeption ==\nKritik.\n== Einzelnachweise ==\nFußnote.\n== Œuvres ==\nLivres.\n== Obras ==\nLibros.\n== Przypisy ==\nPrzypis.\n== 脚注 ==\n注."
+	got := TrimToBiography(text, 0)
+	for _, want := range []string{"Geboren.", "Schrieb nachts."} {
+		if !strings.Contains(got, want) {
+			t.Errorf("пропало %q", want)
+		}
+	}
+	for _, drop := range []string{"Liste.", "Kritik.", "Fußnote.", "Livres.", "Libros.", "Przypis.", "注."} {
+		if strings.Contains(got, drop) {
+			t.Errorf("не вырезано %q", drop)
+		}
+	}
+}
+
+func TestOrigLang(t *testing.T) {
+	for _, c := range []struct {
+		written, native []string
+		want            string
+	}{
+		{[]string{"de"}, []string{"de"}, "de"}, // Кафка, Гессе
+		{nil, []string{"pl"}, "pl"},            // нет P6886 — родной
+		{[]string{"ru", "en"}, nil, ""},        // Набоков: ru/en берутся и так
+		{[]string{"en"}, []string{"pl"}, ""},   // Конрад: пишет по-английски
+		{[]string{"fr", "cs"}, nil, "cs"},      // Кундера: первый по алфавиту
+		{[]string{"nb"}, nil, "no"},            // букмол → no.wikipedia.org
+		{nil, nil, ""},
+	} {
+		if got := origLang(c.written, c.native); got != c.want {
+			t.Errorf("origLang(%v, %v) = %q, want %q", c.written, c.native, got, c.want)
+		}
+	}
+}
+
+func TestFetchOrigLangArticle(t *testing.T) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/sparql", func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{"results": map[string]any{"bindings": []map[string]map[string]string{
+			{"prop": {"value": "P569"}, "date": {"value": "1883-07-03T00:00:00Z"}},
+			{"prop": {"value": "P6886"}, "v": {"value": "http://www.wikidata.org/entity/Q188"}, "vLabel": {"value": "немецкий"}, "code": {"value": "de"}},
+			{"prop": {"value": "P103"}, "v": {"value": "http://www.wikidata.org/entity/Q188"}, "vLabel": {"value": "немецкий"}, "code": {"value": "de"}},
+		}}})
+	})
+	mux.HandleFunc("/wd", func(w http.ResponseWriter, r *http.Request) {
+		site := r.URL.Query().Get("sitefilter")
+		_ = json.NewEncoder(w).Encode(map[string]any{"entities": map[string]any{"Q905": map[string]any{"sitelinks": map[string]any{
+			site: map[string]any{"title": "Kafka " + site},
+		}}}})
+	})
+	page := func(extract string) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			_ = json.NewEncoder(w).Encode(map[string]any{"query": map[string]any{"pages": []map[string]any{{
+				"title": r.URL.Query().Get("titles"), "extract": extract, "revisions": []map[string]any{{"revid": 1}},
+			}}}})
+		}
+	}
+	mux.HandleFunc("/ru", page(strings.Repeat("Биография. ", 1500)))
+	mux.HandleFunc("/en", page(strings.Repeat("Biography. ", 1000)))
+	mux.HandleFunc("/de", page(strings.Repeat("Leben. ", 1000)+"\n== Einzelnachweise ==\nFußnote."))
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+	f := NewFetcher(srv.Client())
+	f.SPARQLURL = srv.URL + "/sparql"
+	f.WikidataAPI = func() string { return srv.URL + "/wd" }
+	f.WikiAPI = func(lang string) string { return srv.URL + "/" + lang }
+
+	src, err := f.Fetch(context.Background(), "Q905")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if src.OrigLang != "de" || len(src.Facts) != 1 {
+		t.Fatalf("orig_lang=%q facts=%d (языки в факты не идут)", src.OrigLang, len(src.Facts))
+	}
+	var langs []string
+	for _, a := range src.Articles {
+		langs = append(langs, a.Lang)
+	}
+	if strings.Join(langs, ",") != "ru,en,de" {
+		t.Fatalf("статьи: %v", langs)
+	}
+	if strings.Contains(src.Articles[2].Text, "Fußnote") || !strings.HasPrefix(src.Articles[2].URL, "https://de.wikipedia.org/") {
+		t.Fatalf("de: %+v", src.Articles[2].URL)
+	}
+
+	// Короткая статья на языке оригинала ничего не добавит — не берётся.
+	f.WikiAPI = func(lang string) string {
+		if lang == "de" {
+			return srv.URL + "/de-short"
+		}
+		return srv.URL + "/" + lang
+	}
+	mux.HandleFunc("/de-short", page("Kurz."))
+	if src, err = f.Fetch(context.Background(), "Q905"); err != nil || len(src.Articles) != 2 {
+		t.Fatalf("короткая de: err=%v статей=%d", err, len(src.Articles))
+	}
+}
+
 func TestIsoDate(t *testing.T) {
 	if isoDate("1868-05-24T00:00:00Z") != "1868-05-24" || isoDate("") != "" {
 		t.Fatal("isoDate")

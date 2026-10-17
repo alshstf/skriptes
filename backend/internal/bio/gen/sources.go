@@ -43,10 +43,13 @@ type Article struct {
 
 // Sources — всё, что видит модель и проверка.
 type Sources struct {
-	QID      string    `json:"qid"`
-	Label    string    `json:"label"`
-	Born     string    `json:"born"`
-	Died     string    `json:"died,omitempty"`
+	QID   string `json:"qid"`
+	Label string `json:"label"`
+	Born  string `json:"born"`
+	Died  string `json:"died,omitempty"`
+	// OrigLang — язык оригинала (код раздела Википедии), если не ru и не en:
+	// статья на нём добавляется к ru/en.
+	OrigLang string    `json:"orig_lang,omitempty"`
 	Facts    []Fact    `json:"facts"`
 	Articles []Article `json:"articles"`
 }
@@ -63,7 +66,7 @@ type Fetcher struct {
 	MaxTextRunes int
 	// Langs — явный список языков статей (например, ["ru", "en"]); пусто —
 	// эвристика: ru, плюс en, если ru короче 20 тыс. символов или en в полтора
-	// раза длиннее ru.
+	// раза длиннее ru, плюс статья на языке оригинала (OrigLang).
 	Langs []string
 }
 
@@ -77,7 +80,8 @@ func NewFetcher(c *http.Client) *Fetcher {
 	}
 }
 
-// Fetch — источники по QID: скелет фактов + статьи (ru, при короткой ru — и en).
+// Fetch — источники по QID: скелет фактов + статьи (ru, при короткой ru — и en,
+// у пишущих не по-русски и не по-английски — и на языке оригинала).
 func (f *Fetcher) Fetch(ctx context.Context, qid string) (*Sources, error) {
 	src := &Sources{QID: qid}
 	if err := f.fetchFacts(ctx, src); err != nil {
@@ -123,16 +127,60 @@ func (f *Fetcher) Fetch(ctx context.Context, qid string) (*Sources, error) {
 			src.Articles = append(src.Articles, *en)
 		}
 	}
+	// Статья на языке оригинала: у немцев, французов, поляков… она обычно
+	// подробнее и en, и ru (пересказов с неё); модель переводит, как и en.
+	// Совсем короткая ничего не добавит — не берём.
+	if src.OrigLang != "" {
+		o, err := f.fetchArticle(ctx, src.OrigLang, qid)
+		if err != nil {
+			return nil, fmt.Errorf("%swiki: %w", src.OrigLang, err)
+		}
+		if o != nil && utf8.RuneCountInString(o.Text) >= minOrigRunes {
+			src.Articles = append(src.Articles, *o)
+		}
+	}
 	if len(src.Articles) == 0 {
 		return nil, fmt.Errorf("нет статьи ни в ru, ни в en Википедии")
 	}
 	return src, nil
 }
 
+// minOrigRunes — статья на языке оригинала короче (после обрезки) не берётся.
+const minOrigRunes = 5_000
+
+var wikiLangRe = regexp.MustCompile(`^[a-z]{2,3}(-[a-z]+)?$`)
+
+// origLang — язык оригинала для статьи Википедии: языки произведений (P6886),
+// без них — родной язык (P103), коды P424. Пишет по-русски или по-английски —
+// пусто (эти статьи берутся и так); из нескольких — первый по алфавиту.
+func origLang(written, native []string) string {
+	codes := written
+	if len(codes) == 0 {
+		codes = native
+	}
+	codes = append([]string(nil), codes...)
+	sort.Strings(codes)
+	for _, c := range codes {
+		if c == "ru" || c == "en" {
+			return ""
+		}
+	}
+	for _, c := range codes {
+		c = strings.ToLower(strings.TrimSpace(c))
+		if c == "nb" {
+			c = "no" // норвежский букмол — no.wikipedia.org
+		}
+		if wikiLangRe.MatchString(c) {
+			return c
+		}
+	}
+	return ""
+}
+
 // sparqlFacts — один UNION-запрос: жизнь, браки, дети, родители, места
 // жительства, учёба, награды, главные работы. Подписи — ru, фолбэк en.
 const sparqlFacts = `
-SELECT ?prop ?itemLabel ?v ?vLabel ?date ?start ?end ?vBorn ?vDied WHERE {
+SELECT ?prop ?itemLabel ?v ?vLabel ?date ?start ?end ?vBorn ?vDied ?code WHERE {
   VALUES ?item { wd:%s }
   {
     VALUES ?prop { "P569" "P570" }
@@ -164,6 +212,11 @@ SELECT ?prop ?itemLabel ?v ?vLabel ?date ?start ?end ?vBorn ?vDied WHERE {
   } UNION {
     BIND("P800" AS ?prop) ?item wdt:P800 ?v .
     OPTIONAL { ?v wdt:P571 ?date }
+  } UNION {
+    VALUES ?prop { "P6886" "P103" }
+    ?item ?pd ?v . ?pp wikibase:directClaim ?pd . BIND(STRAFTER(STR(?pp), "entity/") AS ?prop)
+    FILTER(?pd IN (wdt:P6886, wdt:P103))
+    ?v wdt:P424 ?code .
   }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ru,en". }
 }`
@@ -197,9 +250,16 @@ func (f *Fetcher) fetchFacts(ctx context.Context, src *Sources) error {
 		return fmt.Errorf("sparql decode: %w", err)
 	}
 	seen := map[string]bool{}
+	langs := map[string][]string{} // P6886/P103 → коды языков; в факты не идут
 	for _, b := range body.Results.Bindings {
 		if src.Label == "" {
 			src.Label = b["itemLabel"].Value
+		}
+		if p := b["prop"].Value; p == "P6886" || p == "P103" {
+			if c := b["code"].Value; c != "" {
+				langs[p] = append(langs[p], c)
+			}
+			continue
 		}
 		fact := Fact{
 			Prop:  b["prop"].Value,
@@ -229,6 +289,7 @@ func (f *Fetcher) fetchFacts(ctx context.Context, src *Sources) error {
 		src.Facts = append(src.Facts, fact)
 	}
 	sort.SliceStable(src.Facts, func(i, j int) bool { return src.Facts[i].Prop < src.Facts[j].Prop })
+	src.OrigLang = origLang(langs["P6886"], langs["P103"])
 	return nil
 }
 
@@ -345,7 +406,19 @@ func (f *Fetcher) sitelink(ctx context.Context, lang, qid string) (string, error
 }
 
 // Разделы, которые не биография: библиография, память, экранизации, сноски…
-var nonBioSection = regexp.MustCompile(`(?i)^(библиограф|сочинен|произведен|издани|собрани|память|увековеч|экраниз|фильмограф|примечани|литератур|ссылки|см\. также|адреса|галере|награды и премии|премии и награды|образ в |в культуре|в искусстве|музеи|памятники|переводы|наследие|bibliography|works|selected works|legacy|adaptations|references|notes|external links|see also|further reading|awards|honou?rs|filmography|in popular culture|memorials)`)
+// Кроме ru и en — основные языки оригинала (de, fr, es, it, pl, cs, pt, ja):
+// списки произведений, сноски, ссылки, премии, наследие. Обзор творчества
+// («Werk», «Obra», «Dílo» — как «Творчество») остаётся: там обстоятельства
+// работы над текстами.
+var nonBioSection = regexp.MustCompile(`(?i)^(библиограф|сочинен|произведен|издани|собрани|память|увековеч|экраниз|фильмограф|примечани|литератур|ссылки|см\. также|адреса|галере|награды и премии|премии и награды|образ в |в культуре|в искусстве|музеи|памятники|переводы|наследие|bibliogra|works|selected works|legacy|adaptations|referenc|notes|external links|see also|further reading|awards|honou?rs|filmogra|in popular culture|memorials|` +
+	`werke|schriften|werkausgabe|literatur|weblinks|einzelnachweise|anmerkungen|quellen|siehe auch|verfilmung|auszeichnungen|ehrungen|rezeption|nachwirkung|nachleben|` +
+	`œuvres|oeuvres|notes et références|références|liens externes|voir aussi|distinctions|hommages|postérité|filmographie|` +
+	`obras|notas|enlaces externos|véase también|premios|adaptaciones|legado|filmografía|` +
+	`opere|note|collegamenti esterni|voci correlate|riconoscimenti|adattamenti|premi|` +
+	`dzieła|utwory|przypisy|linki zewnętrzne|zobacz też|upamiętnienie|ekranizacje|nagrody|odznaczenia|` +
+	`odkazy|externí odkazy|ocenění|` +
+	`referências|ligações externas|ver também|prémios|prêmios|` +
+	`作品|著作|脚注|出典|参考文献|外部リンク|関連項目)`)
 
 var sectionRe = regexp.MustCompile(`(?m)^(={2,})\s*(.+?)\s*={2,}\s*$`)
 
