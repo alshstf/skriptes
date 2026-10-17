@@ -178,6 +178,7 @@ func run() error {
 		runOnceExternalBookYears(c, pool, imp, logger)
 		runOnceOpenLibraryYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
+		runOnceFantlabWorkKeys(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
@@ -1756,6 +1757,34 @@ func runOnceFantlabRatings(ctx context.Context, pool *pgxpool.Pool, logger *slog
 		logger.Warn("fantlab ratings: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time fantlab ratings refetch scheduled", "works", tag.RowsAffected())
+}
+
+// runOnceFantlabWorkKeys — разово переспросить авторов, которых фаза «Фантлаб
+// по автору» нашла до 1.48.0: тогда она не писала ключ группировки (#532), и
+// их переводы под разными названиями склеились бы только через 180 дней (TTL
+// найденных). Год у переспрошенных не меняется, ключи и типы пишутся заново.
+// Гейт fantlab_work_keys_v1.
+func runOnceFantlabWorkKeys(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "fantlab_work_keys_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("fantlab work keys: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	tag, err := pool.Exec(ctx, `DELETE FROM author_fantlab_lookups WHERE outcome = 'found'`)
+	if err != nil {
+		logger.Warn("fantlab work keys: reset lookups failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("fantlab work keys: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time fantlab work keys refetch scheduled", "authors", tag.RowsAffected())
 }
 
 // runOnceStaleRenown — разово сбросить счётчики «Известности», по которым

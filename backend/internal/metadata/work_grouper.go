@@ -345,8 +345,8 @@ func (g *WorkGrouper) fetchTier2Authors(ctx context.Context, after int64, limit 
 		JOIN works w ON w.id = b.work_id
 		WHERE b.deleted = false
 		  AND w.edition_count = 1
-		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.outcome = 'found')
-		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.checked_at > now() - make_interval(days => $3))
+		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.source <> '`+fantlabWorkKeySource+`' AND l.outcome = 'found')
+		  AND NOT EXISTS (SELECT 1 FROM book_work_lookups l WHERE l.book_id = b.id AND l.source <> '`+fantlabWorkKeySource+`' AND l.checked_at > now() - make_interval(days => $3))
 		  AND ba.author_id > $1
 		ORDER BY ba.author_id
 		LIMIT $2
@@ -796,7 +796,11 @@ func (g *WorkGrouper) unionKeyBuckets(books []groupBook, uf *unionFind, keyBucke
 	extByRoot := map[int]map[string]string{}
 	for bk, idxs := range keyBuckets {
 		src, workKey := splitKey(bk)
-		if len(idxs) > 1 && (tier2BucketConflicts(books, idxs) || sameLangTitleConflict(books, idxs)) {
+		conflict := tier2BucketConflicts(books, idxs) || sameLangTitleConflict(books, idxs)
+		if src == fantlabWorkKeySource {
+			conflict = fantlabBucketConflicts(books, idxs)
+		}
+		if len(idxs) > 1 && conflict {
 			g.logger.Info("work grouping: tier-2 bucket skipped (conflicting titles/src_title/ser_no/volume)",
 				"source", src, "work_key", workKey, "editions", len(idxs))
 			continue
@@ -839,6 +843,48 @@ func tier2BucketConflicts(books []groupBook, idxs []int) bool {
 		}
 	}
 	return len(srcs) > 1 || len(sers) > 1 || len(vols) > 1
+}
+
+// fantlabWorkKeySource — источник ключа «произведение Фантлаба» в
+// book_work_lookups: его пишет фаза «Фантлаб по автору» воркера года
+// (year_fantlab.go), когда две работы автора сошлись к одному произведению
+// библиографии по ПОЛНОМУ названию (#532: «Гарри Поттер и философский камень»
+// ~ «…и Волшебный камень» Спивак).
+const fantlabWorkKeySource = "fantlab"
+
+// fantlabBucketConflicts — гейт бакета ключа Фантлаба. Мягче общего Tier-2:
+// разные названия одного языка тут и есть свидетельство — оба названия у
+// Фантлаба имена одного произведения (альтернативные переводы), а разные номера
+// в РАЗНЫХ сериях — издательская нумерация. Остаются конфликты, которые и у
+// ключа Фантлаба значат разные тексты: ≥2 разных оригинала, разные номера тома
+// в названиях, разные номера в ОДНОЙ серии («Танец с драконами» — два
+// французских тома). Прогон на проде 2026-10-17 (1000 авторов): склеивается 96 %
+// групп против 62 % с общим гейтом; выборки — без ложных склеек.
+func fantlabBucketConflicts(books []groupBook, idxs []int) bool {
+	srcs := map[string]struct{}{}
+	vols := map[string]struct{}{}
+	bySeries := map[int64]map[int]struct{}{}
+	for _, i := range idxs {
+		b := books[i]
+		if b.srcTitleNorm != "" {
+			srcs[b.srcTitleNorm] = struct{}{}
+		}
+		if v := volumeNumber(b.title); v != "" {
+			vols[v] = struct{}{}
+		}
+		if b.seriesID != 0 && b.serNo > 0 {
+			if bySeries[b.seriesID] == nil {
+				bySeries[b.seriesID] = map[int]struct{}{}
+			}
+			bySeries[b.seriesID][b.serNo] = struct{}{}
+		}
+	}
+	for _, nos := range bySeries {
+		if len(nos) > 1 {
+			return true
+		}
+	}
+	return len(srcs) > 1 || len(vols) > 1
 }
 
 // sameLangTitleConflict — в бакете есть издания одного языка с разными
@@ -1950,6 +1996,8 @@ func extFieldFor(source string) string {
 		return "ol_work"
 	case "wikidata":
 		return "wd_qid"
+	case fantlabWorkKeySource:
+		return "fl_id"
 	default:
 		return source
 	}
