@@ -1128,8 +1128,9 @@ func runOnceLangResync(ctx context.Context, pool *pgxpool.Pool, imp *importer.Im
 func runOnceWorkKindClassify(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, logger *slog.Logger) {
 	// v2 — правила #284 (серия — только если в ней все издания работы, без «Миры X»
 	// и «Собрание сочинений», ≥4 авторов не для нон-фикшна, известные романы не
-	// красятся): все эвристические типы пересчитываются заново.
-	const flag = "work_kind_classified_v2"
+	// красятся): все эвристические типы пересчитываются заново. v3 — тома собраний
+	// по названию (#532: ПСС, «Миры X. Том N», «Том N. Рассказы…»).
+	const flag = "work_kind_classified_v3"
 	var done bool
 	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
 		logger.Warn("work kind classify: check flag failed — skip", "err", err)

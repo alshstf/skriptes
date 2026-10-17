@@ -269,3 +269,51 @@ func TestClassifyWorkKinds_Rules284(t *testing.T) {
 	require.NoError(t, err)
 	require.Empty(t, again, "повторная переклассификация ничего не меняет")
 }
+
+// TestClassifyWorkKinds_Volumes532 — тома собраний по названию (#532), кейсы с
+// прода: ПСС, «Миры X. Том N», «Том N.» с жанровым словом или ≥3 названиями —
+// omnibus; «Полное собрание стихотворений» — collection; анти-кейсы — издание
+// одного романа в собрании, часть романа, подзаголовок, «в одном томе» у романа.
+func TestClassifyWorkKinds_Volumes532(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	collID, archID := seedTitleFixture(t, ctx, pool)
+	author := seedGroupAuthor(t, ctx, pool, "Толстой", "толстой лев")
+
+	cases := []struct{ title, kind string }{
+		{"ПСС. Том 25. Произведения, 1880 гг.", "omnibus"},
+		{"ПСС. Том 6", "omnibus"},
+		{"Полное собрание произведений о Шерлоке Холмсе в одном томе", "omnibus"},
+		{"Миры Пола Андерсона. Том 17. Терранская Империя", "omnibus"},
+		{"Миры Роджера Желязны. Том 15", "omnibus"},
+		{"Гарри Поттер. Полная коллекция", "omnibus"},
+		{"Профессиональный некромант. Пенталогия в одном томе", "omnibus"},
+		{"Анима. Весь цикл в одном томе", "omnibus"},
+		{"Том 1. Рассказы", "omnibus"},
+		{"Том 24. Письма 1895-1897", "omnibus"},
+		{"Том 4. Чокки. Паутина. Семена времени", "omnibus"},
+		{"Полное собрание стихотворений", "collection"},
+		{"Все рассказы об отце Брауне", "collection"},
+		// Анти-кейсы.
+		{"Том 9. Мастер и Маргарита", ""},
+		{"Том 2. Тихий Дон. Книга первая", ""},
+		{"Том 3. Простые числа. Долгая дорога к бесконечности", ""},
+		{"Крошка Доррит. Знаменитый «роман тайн» в одном томе", ""},
+		{"Все новые сказки", ""},
+	}
+	ids := make([]int64, len(cases))
+	for i, c := range cases {
+		ids[i] = workIDOf(t, ctx, pool, seedGroupBook(t, ctx, pool, collID, archID, author,
+			"V"+string(rune('a'+i)), c.title, c.title, "ru", "", "", ""))
+	}
+	_, err := ClassifyWorkKinds(ctx, pool)
+	require.NoError(t, err)
+	for i, c := range cases {
+		k, _ := kindOf(t, ctx, pool, ids[i])
+		require.Equal(t, c.kind, k, c.title)
+	}
+}
