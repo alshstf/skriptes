@@ -24,7 +24,10 @@ import (
 //     года (works.external_year: Фантлаб — год первой публикации); если самый
 //     ранний год издания работы ещё раньше, он и есть потолок («год написания /
 //     первого издания»);
-//   - ручная правка года (metadata_overrides) неприкосновенна.
+//   - ручная правка года (metadata_overrides) неприкосновенна;
+//   - год оригинала перевода (books.src_year, fb2 <src-title-info><date>, этап 4
+//     #533, источник fb2_src) — ещё один fb2-кандидат с теми же границами: сверка
+//     выборки с Wikidata (2026-10-17) — 92 % в пределах ±1.
 //
 // Опечатки и заглушки (#465: «Сами боги» Азимова — 1073 из одного французского
 // издания; ~30 работ с годом 1000–1449 на проде 2026-10):
@@ -96,18 +99,27 @@ func recomputeWorkYears(ctx context.Context, ex pgxExec, ids []int64, allWorks b
 		           min(b.written_year) FILTER (WHERE b.written_year BETWEEN lo.y AND $4 AND CASE WHEN b.written_year = b.edition_year AND b.edition_year < $5 THEN anc.book_id IS NOT NULL ELSE true END) AS wy,
 		           (array_agg(b.written_year_source ORDER BY b.written_year)
 		              FILTER (WHERE b.written_year BETWEEN lo.y AND $4 AND CASE WHEN b.written_year = b.edition_year AND b.edition_year < $5 THEN anc.book_id IS NOT NULL ELSE true END))[1] AS wsrc,
-		           min(b.edition_year) FILTER (WHERE b.edition_year BETWEEN GREATEST(lo.y, $5) AND $4) AS ey
+		           min(b.edition_year) FILTER (WHERE b.edition_year BETWEEN GREATEST(lo.y, $5) AND $4) AS ey,
+		           -- Год оригинала перевода (<src-title-info><date>, этап 4 #533): те же
+		           -- границы; раньше minEditionYear — только у старинной литературы.
+		           min(b.src_year) FILTER (WHERE b.src_year BETWEEN lo.y AND $4 AND (b.src_year >= $5 OR anc.book_id IS NOT NULL)) AS sy
 		    FROM books b JOIN lo ON lo.work_id = b.work_id
 		    LEFT JOIN anc ON anc.book_id = b.id
 		    WHERE b.deleted = false AND b.work_id IS NOT NULL
 		    GROUP BY b.work_id
+		), ed2 AS (
+		    -- fb2-кандидат работы — самый ранний из года издания-fb2 и года оригинала.
+		    SELECT work_id, ey,
+		           CASE WHEN sy IS NOT NULL AND (wy IS NULL OR sy < wy) THEN sy ELSE wy END AS wy,
+		           CASE WHEN sy IS NOT NULL AND (wy IS NULL OR sy < wy) THEN 'fb2_src' ELSE wsrc END AS wsrc
+		    FROM ed
 		), calc AS (
 		    SELECT w.id,
 		           -- fb2-год с потолком по самому раннему изданию.
 		           CASE WHEN ed.wy IS NOT NULL AND ed.ey IS NOT NULL AND ed.ey < ed.wy THEN ed.ey ELSE ed.wy END AS by,
 		           CASE WHEN ed.wy IS NOT NULL AND ed.ey IS NOT NULL AND ed.ey < ed.wy THEN 'edition_year' ELSE ed.wsrc END AS bsrc,
 		           CASE WHEN w.external_year >= lo.y THEN w.external_year END AS xy, w.external_year_source AS xsrc
-		    FROM works w JOIN lo ON lo.work_id = w.id LEFT JOIN ed ON ed.work_id = w.id
+		    FROM works w JOIN lo ON lo.work_id = w.id LEFT JOIN ed2 ed ON ed.work_id = w.id
 		    WHERE NOT EXISTS (SELECT 1 FROM metadata_overrides o
 		                      WHERE o.target_kind = 'work' AND o.target_id = w.id AND o.field = 'written_year')
 		), pick AS (
