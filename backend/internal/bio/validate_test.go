@@ -43,6 +43,7 @@ func TestValidateRules(t *testing.T) {
 	}{
 		{"год в short", func(a *Author) { a.Events[0].Short = "Смерть дочери в 1868" }, "год в формулировке"},
 		{"название работы в short", func(a *Author) { a.Events[0].Short = "Работа над «Идиотом» в Женеве" }, "название работы"},
+		{"название работы в начале short", func(a *Author) { a.Events[0].Short = "Идиот: замысел в Женеве" }, "название работы"},
 		{"short длиннее 60", func(a *Author) { a.Events[0].Short = strings.Repeat("а", 61) }, "> 60"},
 		{"ключ не совпадает с типом", func(a *Author) { a.Events[0].Key = "love-1868" }, "тип в ключе"},
 		{"ключ не совпадает с годом", func(a *Author) { a.Events[0].Key = "loss-1869" }, "год в ключе"},
@@ -69,6 +70,20 @@ func TestValidateRules(t *testing.T) {
 				t.Fatalf("ожидалась ошибка %q, получено: %v", c.want, ps)
 			}
 		})
+	}
+}
+
+func TestTitleInCommonNoun(t *testing.T) {
+	titles := []string{"Приговор", "Идиот"}
+	for short, want := range map[string]string{
+		"Арест на митинге против смертного приговора": "", // нарицательное, Кафка
+		"Ночь, за которую написан «Приговор»":         "Приговор",
+		"Выход „Идиота“":                              "Идиот",
+		"Неидиотский поступок":                        "", // не с начала слова
+	} {
+		if got := titleIn(short, titles); got != want {
+			t.Errorf("%q → %q, want %q", short, got, want)
+		}
 	}
 }
 
