@@ -179,6 +179,7 @@ func run() error {
 		runOnceOpenLibraryYears(c, pool, imp, logger)
 		runOnceFantlabRatings(c, pool, logger)
 		runOnceFantlabWorkKeys(c, pool, logger)
+		runOnceFantlabWorkKeysRegroup(c, pool, logger)
 		runOnceStaleRenown(c, pool, imp, logger)
 		runOnceCatalogInvariants(c, pool, imp, logger)
 		// Склейки, которые новые гейты Tier-2 уже не допустили бы (#279), — до
@@ -1785,6 +1786,37 @@ func runOnceFantlabWorkKeys(ctx context.Context, pool *pgxpool.Pool, logger *slo
 		logger.Warn("fantlab work keys: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time fantlab work keys refetch scheduled", "authors", tag.RowsAffected())
+}
+
+// runOnceFantlabWorkKeysRegroup — разово вернуть группировке издания с ключом
+// Фантлаба: в 1.48.0 гейт бакета сравнивал издания, а не работы, и склейки вроде
+// «Гарри Поттер и философский камень» + «…и Волшебный камень» (у первой работы
+// два оригинала — британский и американский) отклонялись, а издания
+// помечались просмотренными. Гейт fantlab_work_keys_regroup_v1 (1.48.1).
+func runOnceFantlabWorkKeysRegroup(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "fantlab_work_keys_regroup_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("fantlab work keys regroup: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	tag, err := pool.Exec(ctx, `
+		UPDATE books SET work_scanned_at = NULL
+		WHERE work_scanned_at IS NOT NULL
+		  AND id IN (SELECT book_id FROM book_work_lookups WHERE source = 'fantlab' AND outcome = 'found')`)
+	if err != nil {
+		logger.Warn("fantlab work keys regroup: reset failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("fantlab work keys regroup: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time fantlab work keys regroup scheduled", "editions", tag.RowsAffected())
 }
 
 // runOnceStaleRenown — разово сбросить счётчики «Известности», по которым

@@ -236,7 +236,13 @@ func TestYearBackfill_FantlabWorkKeys(t *testing.T) {
 		return seedGroupBook(t, ctx, pool, collID, archID, rowling, lib, title, title, "ru", "", "", "")
 	}
 	stone := book("H1", "Гарри Поттер и философский камень")
+	stoneUS := book("H3", "Гарри Поттер и философский камень") // то же произведение, американский оригинал
 	spivak := book("H2", "Гарри Поттер и Волшебный камень")
+	_, err0 := pool.Exec(ctx, `UPDATE books SET src_title = CASE WHEN id = $1 THEN 'Harry Potter and the Philosopher''s Stone'
+		ELSE 'Harry Potter and the Sorcerer''s Stone' END WHERE id IN ($1, $2)`, stone, stoneUS)
+	require.NoError(t, err0)
+	_, err0 = pool.Exec(ctx, `UPDATE books SET work_id = $1 WHERE id = $2`, workIDOf(t, ctx, pool, stone), stoneUS)
+	require.NoError(t, err0)
 	vol1 := book("D1", "Танец с драконами. Грёзы и пыль")
 	vol2 := book("D2", "Танец с драконами. Искры над пеплом")
 	single := book("S1", "Сказки барда Бидля")
@@ -261,13 +267,14 @@ func TestYearBackfill_FantlabWorkKeys(t *testing.T) {
 
 	var keyed, unscanned int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM book_work_lookups WHERE source = 'fantlab' AND outcome = 'found'`).Scan(&keyed))
-	require.Equal(t, 4, keyed, "ключ — изданиям сошедшихся работ, не одиночке")
+	require.Equal(t, 5, keyed, "ключ — изданиям сошедшихся работ, не одиночке")
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM books WHERE work_scanned_at IS NULL`).Scan(&unscanned))
-	require.Equal(t, 4, unscanned, "группировка пересмотрит автора")
+	require.Equal(t, 5, unscanned, "группировка пересмотрит автора")
 
 	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
 	require.NoError(t, g.groupAuthorTier1(ctx, rowling))
-	require.Equal(t, workIDOf(t, ctx, pool, stone), workIDOf(t, ctx, pool, spivak), "переводы одного произведения — одна работа")
+	require.Equal(t, workIDOf(t, ctx, pool, stone), workIDOf(t, ctx, pool, spivak),
+		"переводы одного произведения — одна работа, хотя у неё два оригинала (британский и американский)")
 	require.NotEqual(t, workIDOf(t, ctx, pool, vol1), workIDOf(t, ctx, pool, vol2), "разные номера в одной серии — разные тома")
 	require.NotEqual(t, workIDOf(t, ctx, pool, stone), workIDOf(t, ctx, pool, single))
 	var fl string
