@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -315,17 +316,27 @@ func Validate(a *Author) Problems {
 	return ps
 }
 
-// titleIn — название работы (≥ 4 символов) встречается в формулировке; «Игрок»
-// в «Роман надиктован…» не встречается, «Идиот» в «Выход „Идиота“» — да.
+// titleIn — название работы (≥ 4 символов) встречается в формулировке с начала
+// слова и с заглавной, как пишут названия: «Идиот» в «Выход „Идиота“» — да,
+// «Игрок» в «Роман надиктован…» — нет, «Приговор» Кафки в «Арест на митинге
+// против смертного приговора» — нет (нарицательное слово; до 2026-10-17
+// сравнение было без регистра, и такая веха отбраковывалась).
 func titleIn(short string, titles []string) string {
-	ls := strings.ToLower(short)
 	for _, t := range titles {
-		lt := strings.ToLower(strings.TrimSpace(t))
-		if utf8.RuneCountInString(lt) < 4 {
+		t = strings.TrimSpace(t)
+		if utf8.RuneCountInString(t) < 4 {
 			continue
 		}
-		if strings.Contains(ls, lt) {
-			return t
+		for i := 0; ; {
+			j := strings.Index(short[i:], t)
+			if j < 0 {
+				break
+			}
+			r, _ := utf8.DecodeLastRuneInString(short[:i+j])
+			if i+j == 0 || !unicode.IsLetter(r) {
+				return t
+			}
+			i += j + len(t)
 		}
 	}
 	return ""

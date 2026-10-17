@@ -3,6 +3,7 @@ package gen
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode"
@@ -61,7 +62,10 @@ func Verify(a *bio.Author, src *Sources) (*bio.Author, []Flag) {
 				flags = append(flags, Flag{Key: e.Key, Msg: "цитата-основание не найдена в тексте статьи", Dropped: true})
 				continue
 			}
-			if !containsYear(q, year) && !factIndex.hasYear(year) {
+			// Пересчитанный конец декабря старого стиля — январь следующего года:
+			// в цитате прошлый год.
+			inQuote := containsYear(q, year) || (oldStyleYearShift(e.Date.From) && containsYear(q, year-1))
+			if !inQuote && !factIndex.hasYear(year) {
 				// Год есть не в цитате и не в фактах — вероятно, модель
 				// перенесла дату из другого места. Жёстко.
 				flags = append(flags, Flag{Key: e.Key, Msg: fmt.Sprintf("год %d не найден ни в основании, ни в фактах Wikidata", year), Dropped: true})
@@ -86,9 +90,12 @@ func Verify(a *bio.Author, src *Sources) (*bio.Author, []Flag) {
 		out.Events = append(out.Events, e)
 	}
 
-	// Механические огрехи модели правим, а не выбрасываем: snake_case в ключах,
-	// длинный long, лишние major (этап B: у 7 авторов из 29 файл не грузился из-за
-	// «time_machine», 21 major, long в 301 символ).
+	// Механические огрехи модели правим, а не выбрасываем: дата старого стиля,
+	// выданная за новый, snake_case в ключах, длинный long, лишние major (этап B: у
+	// 7 авторов из 29 файл не грузился из-за «time_machine», 21 major, long в 301
+	// символ).
+	flags = append(flags, fixOldStyleCopies(&out, src)...)
+	sort.SliceStable(out.Events, func(i, j int) bool { return out.Events[i].Date.From < out.Events[j].Date.From })
 	flags = append(flags, normalizeRefs(&out)...)
 	flags = append(flags, trimTexts(&out)...)
 	flags = append(flags, fixWritten(&out)...)
