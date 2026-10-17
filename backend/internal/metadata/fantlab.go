@@ -22,6 +22,7 @@ import (
 type FantlabProvider struct {
 	httpClient *http.Client
 	searchURL  string
+	biblioBase string // база API библиографий (fantlab_biblio.go); пусто — fantlabAPIBase
 }
 
 const fantlabSearchURL = "https://api.fantlab.ru/search-works"

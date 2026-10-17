@@ -382,13 +382,17 @@ func run() error {
 		logger.Warn("read year enrichment settings — using defaults", "err", err)
 		yearCfg = settings.DefaultYearEnrichmentConfig()
 	}
+	// Фаза «библиография автора на Фантлабе» (#533) — тумблер Fantlab, по умолчанию
+	// выключена; свой экземпляр провайдера и свой лимит запросов.
 	yearBackfillCtl := metadata.NewYearBackfillController(pool, wdAdaptations, metadata.YearBackfillConfig{
 		Wikidata:          yearCfg.Wikidata,
 		WholeCollection:   yearCfg.WholeCollection,
 		WikidataRPM:       yearCfg.WikidataRPM,
 		NotFoundRetryDays: yearCfg.NotFoundRetryDays,
 		ErrorRetryHours:   yearCfg.ErrorRetryHours,
-	}, imp, logger)
+		Fantlab:           yearCfg.Fantlab,
+		FantlabRPM:        yearCfg.FantlabRPM,
+	}, imp, logger).WithFantlab(metadata.NewFantlabProvider(olHTTPClient))
 	if yearCfg.Enabled {
 		yearBackfillCtl.Start()
 	}

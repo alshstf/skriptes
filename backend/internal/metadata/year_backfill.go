@@ -28,10 +28,12 @@ import (
 // локальная fb2-фаза уже отработала, года нет → пробуем внешние.
 type YearBackfiller struct {
 	pool     *pgxpool.Pool
-	wd       YearProvider // nil → источник недоступен
+	wd       YearProvider      // nil → источник недоступен
+	fl       FantlabYearSource // nil → фаза «Фантлаб по автору» недоступна (year_fantlab.go)
 	logger   *slog.Logger
 	cfg      YearBackfillConfig
 	wdGate   *rateGate
+	flGate   *rateGate
 	resyncer YearResyncer // nil → без авто-ресинка Meili-года
 
 	yearChanged atomic.Int64 // сколько книг получили written_year за проход
@@ -39,6 +41,7 @@ type YearBackfiller struct {
 
 	changedMu    sync.Mutex // processBatch гоняет writeFound из нескольких горутин
 	changedBooks []int64    // id книг, у которых год появился (для works-индекса)
+	changedWorks []int64    // id работ с новым внешним годом (фаза Фантлаба)
 }
 
 // YearBackfillConfig — рантайм-параметры воркера (зеркало
@@ -50,6 +53,10 @@ type YearBackfillConfig struct {
 	WikidataRPM       int
 	NotFoundRetryDays int
 	ErrorRetryHours   int
+	// Fantlab — фаза «библиография автора на Фантлабе» (#533, year_fantlab.go);
+	// FantlabRPM — её лимит запросов (свой, отдельно от воркера известности).
+	Fantlab    bool
+	FantlabRPM int
 }
 
 const (
@@ -68,16 +75,23 @@ func NewYearBackfiller(pool *pgxpool.Pool, wd YearProvider, cfg YearBackfillConf
 	}
 	b := &YearBackfiller{
 		pool: pool, wd: wd, cfg: cfg, resyncer: resyncer, logger: logger,
-		wdGate: &rateGate{},
+		wdGate: &rateGate{}, flGate: &rateGate{},
 	}
 	b.wdGate.setRPM(cfg.WikidataRPM)
+	b.flGate.setRPM(cfg.FantlabRPM)
+	return b
+}
+
+// withFantlab подключает фазу «Фантлаб по автору».
+func (b *YearBackfiller) withFantlab(fl FantlabYearSource) *YearBackfiller {
+	b.fl = fl
 	return b
 }
 
 // Run — долгоживущий цикл: дозаполнить все pending-книги, поспать, пересканить
 // (новые книги / истёкшие TTL). Блокирующий; вызывать в горутине.
 func (b *YearBackfiller) Run(ctx context.Context) {
-	if b.pool == nil || b.wd == nil {
+	if b.pool == nil || (b.wd == nil && b.fl == nil) {
 		return
 	}
 	b.logger.Info("year backfill: started", "workers", yearBackfillWorkers)
@@ -147,13 +161,18 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 	b.lookedUp.Store(0)
 	b.changedMu.Lock()
 	b.changedBooks = nil
+	b.changedWorks = nil
 	b.changedMu.Unlock()
-	total := 0
+	// Сначала Фантлаб по автору (#533): один запрос — годы десятков работ.
+	total := b.drainFantlabAuthors(ctx)
 	// Двухфазный обход «сначала ядро, потом хвост» (bookCoreCond): год приходит
 	// знаменитым/переиздаваемым книгам на дни раньше, полнота прохода не меняется.
 	// Кандидат, обработанный в фазе ядра, во второй фазе не всплывает (условия
 	// взаимоисключающие); TTL lookups страхует от повторов между пересканами.
 	for _, phase := range corePhases {
+		if len(b.sources()) == 0 {
+			break // книжных источников нет (только Фантлаб) — книги не перебираем
+		}
 		ttl := b.ttl().forPhase(phase)
 		var cursor int64
 		for ctx.Err() == nil {
@@ -177,6 +196,9 @@ func (b *YearBackfiller) drain(ctx context.Context) int {
 	// раньше рождения автора). До 1.39.3 воркер его не пересчитывал, и найденный
 	// год книги шёл на карточку как есть (COALESCE(w.written_year, b.written_year)).
 	workIDs := b.changedWorkIDs(ctx)
+	b.changedMu.Lock()
+	workIDs = append(workIDs, b.changedWorks...)
+	b.changedMu.Unlock()
 	if _, err := RecomputeWorkYears(ctx, b.pool, workIDs); err != nil {
 		b.logger.Warn("year backfill: recompute work years failed", "err", err)
 	}
@@ -549,11 +571,22 @@ type YearCoverage struct {
 	Total    int            `json:"total"`
 	WithYear int            `json:"with_year"`
 	BySource map[string]int `json:"by_source"`
+	// Fantlab — фаза «Фантлаб по автору» (#533): авторов спрошено / найдено на
+	// Фантлабе, работ получили внешний год.
+	Fantlab FantlabCoverage `json:"fantlab"`
+}
+
+// FantlabCoverage — учёт фазы «Фантлаб по автору» (author_fantlab_lookups).
+type FantlabCoverage struct {
+	Authors int `json:"authors"`
+	Found   int `json:"found"`
+	Dated   int `json:"dated"`
 }
 
 type YearBackfillController struct {
 	pool     *pgxpool.Pool
 	wd       YearProvider
+	fl       FantlabYearSource
 	resyncer YearResyncer
 	logger   *slog.Logger
 
@@ -570,8 +603,19 @@ func NewYearBackfillController(pool *pgxpool.Pool, wd YearProvider, cfg YearBack
 	return &YearBackfillController{pool: pool, wd: wd, resyncer: resyncer, cfg: cfg, logger: logger}
 }
 
+// WithFantlab подключает фазу «Фантлаб по автору» (#533); включается
+// настройкой Fantlab.
+func (c *YearBackfillController) WithFantlab(fl FantlabYearSource) *YearBackfillController {
+	c.fl = fl
+	return c
+}
+
 func (c *YearBackfillController) ready() bool {
-	return c.pool != nil && c.wd != nil
+	return c.pool != nil && (c.wd != nil || c.fl != nil)
+}
+
+func (c *YearBackfillController) backfiller(cfg YearBackfillConfig) *YearBackfiller {
+	return NewYearBackfiller(c.pool, c.wd, cfg, c.resyncer, c.logger).withFantlab(c.fl)
 }
 
 // ResetFailedLookups удаляет неудачные попытки (not_found/error) из
@@ -585,7 +629,12 @@ func (c *YearBackfillController) ResetFailedLookups(ctx context.Context) (int64,
 	if err != nil {
 		return 0, err
 	}
-	return tag.RowsAffected(), nil
+	// И учёт фазы «Фантлаб по автору»: не найденные и сбои спросим заново.
+	fl, err := c.pool.Exec(ctx, `DELETE FROM author_fantlab_lookups WHERE outcome IN ('not_found', 'error')`)
+	if err != nil {
+		return tag.RowsAffected(), err
+	}
+	return tag.RowsAffected() + fl.RowsAffected(), nil
 }
 
 func (c *YearBackfillController) Status() YearBackfillStatus {
@@ -609,7 +658,7 @@ func (c *YearBackfillController) Start() {
 	}
 	ctx, cancel := context.WithCancel(workersCtx)
 	c.contCancel = cancel
-	b := NewYearBackfiller(c.pool, c.wd, c.cfg, c.resyncer, c.logger)
+	b := c.backfiller(c.cfg)
 	spawn(func() { b.Run(ctx) })
 	c.logger.Info("year backfill: continuous job started")
 }
@@ -659,7 +708,7 @@ func (c *YearBackfillController) RunOnce() {
 	cfg := c.cfg
 	c.mu.Unlock()
 	spawn(func() {
-		b := NewYearBackfiller(c.pool, c.wd, cfg, c.resyncer, c.logger)
+		b := c.backfiller(cfg)
 		n := b.drain(ctx)
 		cancel()
 		c.mu.Lock()
@@ -748,5 +797,11 @@ func (c *YearBackfillController) Coverage(ctx context.Context) (YearCoverage, er
 		}
 		out.BySource[src] = n
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return out, err
+	}
+	err = c.pool.QueryRow(ctx, `
+		SELECT count(*), count(*) FILTER (WHERE outcome = 'found'), COALESCE(sum(dated), 0)
+		FROM author_fantlab_lookups`).Scan(&out.Fantlab.Authors, &out.Fantlab.Found, &out.Fantlab.Dated)
+	return out, err
 }

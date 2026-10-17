@@ -173,6 +173,11 @@ const yearEnrichmentKey = "year_enrichment"
 //	                         вернувший not_found (данные со временем дополняются).
 //	ErrorRetryHours         — через сколько ретраить источник после ошибки
 //	                         (транзиентные 429/таймауты — быстрее, чем not_found).
+//	Fantlab                 — фаза «библиография автора на Фантлабе» (#533): один
+//	                         запрос на автора, год — внешний год работы. По
+//	                         умолчанию выключена — включается после сухого прогона.
+//	FantlabRPM              — её лимит запросов в минуту (свой, отдельно от
+//	                         «Известности», которая тоже ходит в Фантлаб).
 type YearEnrichmentConfig struct {
 	Enabled           bool `json:"enabled"`
 	Wikidata          bool `json:"wikidata"`
@@ -180,6 +185,8 @@ type YearEnrichmentConfig struct {
 	WikidataRPM       int  `json:"wikidata_rpm"`
 	NotFoundRetryDays int  `json:"not_found_retry_days"`
 	ErrorRetryHours   int  `json:"error_retry_hours"`
+	Fantlab           bool `json:"fantlab"`
+	FantlabRPM        int  `json:"fantlab_rpm"`
 }
 
 // DefaultYearEnrichmentConfig — воркер выключен (opt-in), Wikidata включена,
@@ -192,6 +199,8 @@ func DefaultYearEnrichmentConfig() YearEnrichmentConfig {
 		WikidataRPM:       20,
 		NotFoundRetryDays: 90,
 		ErrorRetryHours:   24,
+		Fantlab:           false,
+		FantlabRPM:        20,
 	}
 }
 
