@@ -26,6 +26,7 @@ import {
 } from '@/lib/admin';
 import { useMe, MIN_PASSWORD_LEN, type Role } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
+import { LoadError } from '@/components/LoadError';
 
 /**
  * AdminUsersPage — /admin/users. Доступна только админам (router guard
@@ -67,7 +68,7 @@ export function AdminUsersPage() {
               <Skeleton className="h-12 w-full" />
             </div>
           ) : usersQ.error ? (
-            <p className="text-sm text-destructive">Не удалось загрузить список.</p>
+            <LoadError error={usersQ.error}>Не удалось загрузить список.</LoadError>
           ) : (
             <UsersList users={usersQ.data ?? []} myId={me.data?.id ?? 0} />
           )}

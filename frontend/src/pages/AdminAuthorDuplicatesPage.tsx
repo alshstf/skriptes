@@ -7,6 +7,7 @@ import { Callout } from '@/components/ui/callout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { duplicateReasonText, useDuplicatePairs, useRejectAuthorDuplicate, type DuplicateAuthor } from '@/lib/admin';
 import { pluralBooks, pluralRu } from '@/lib/format';
+import { LoadError } from '@/components/LoadError';
 
 /**
  * AdminAuthorDuplicatesPage — /admin/authors: пары возможных дублей авторов
@@ -37,11 +38,7 @@ export function AdminAuthorDuplicatesPage() {
         </p>
       </header>
 
-      {error ? (
-        <p role="alert" className="text-sm text-destructive">
-          Не удалось загрузить: {(error as Error).message}
-        </p>
-      ) : null}
+      {error ? <LoadError error={error}>Не удалось загрузить: {(error as Error).message}</LoadError> : null}
 
       {isLoading ? (
         <div className="space-y-2">

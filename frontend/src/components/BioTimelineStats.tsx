@@ -5,9 +5,10 @@
  * управлять нечем, только смотреть.
  */
 import { useBioTimelineStats } from '@/lib/bioTimeline';
+import { LoadError } from '@/components/LoadError';
 
 export function BioTimelineStats() {
-  const { data, isError } = useBioTimelineStats();
+  const { data, isError, error } = useBioTimelineStats();
   return (
     <section className="rounded-lg border border-border bg-card p-4" data-testid="bio-timeline-stats">
       <h2 className="mb-1 text-base font-medium">Био-таймлайн авторов</h2>
@@ -16,7 +17,7 @@ export function BioTimelineStats() {
         версии. Внешних запросов нет; правки — через датасет, скрыть веху можно на странице таймлайна в режиме правки.
       </p>
       {isError ? (
-        <p className="text-sm text-destructive">Не удалось загрузить статистику.</p>
+        <LoadError error={error}>Не удалось загрузить статистику.</LoadError>
       ) : !data ? (
         <p className="text-sm text-muted-foreground">Загрузка…</p>
       ) : (
