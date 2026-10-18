@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestTrimToBiography(t *testing.T) {
@@ -124,6 +125,42 @@ func TestFetchOrigLangArticle(t *testing.T) {
 	mux.HandleFunc("/de-short", page("Kurz."))
 	if src, err = f.Fetch(context.Background(), "Q905"); err != nil || len(src.Articles) != 2 {
 		t.Fatalf("короткая de: err=%v статей=%d", err, len(src.Articles))
+	}
+}
+
+func TestFetchRetriesTransientErrors(t *testing.T) {
+	calls := 0
+	failAlways := false
+	mux := http.NewServeMux()
+	mux.HandleFunc("/sparql", func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		switch {
+		case failAlways || calls == 1:
+			w.WriteHeader(http.StatusBadGateway) // разовый сбой Wikidata
+			return
+		case calls == 2:
+			w.Header().Set("Retry-After", "0")
+			w.WriteHeader(http.StatusTooManyRequests)
+			return
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"results": map[string]any{"bindings": []map[string]map[string]string{
+			{"prop": {"value": "P569"}, "date": {"value": "1821-11-11T00:00:00Z"}},
+		}}})
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+	f := NewFetcher(srv.Client())
+	f.SPARQLURL = srv.URL + "/sparql"
+	f.RetryWait = time.Millisecond
+
+	src := &Sources{QID: "Q991"}
+	if err := f.fetchFacts(context.Background(), src); err != nil || src.Born != "1821-11-11" || calls != 3 {
+		t.Fatalf("err=%v born=%q calls=%d", err, src.Born, calls)
+	}
+	// Постоянный сбой — после Retries повторов ошибка со статусом.
+	calls, failAlways, f.Retries = 0, true, 1
+	if err := f.fetchFacts(context.Background(), &Sources{QID: "Q991"}); err == nil || !strings.Contains(err.Error(), "502") || calls != 2 {
+		t.Fatalf("ожидалась ошибка 502 после 2 попыток: err=%v calls=%d", err, calls)
 	}
 }
 
