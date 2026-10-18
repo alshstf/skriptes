@@ -13,7 +13,9 @@ import (
 	"net/url"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -64,6 +66,10 @@ type Fetcher struct {
 	WikidataAPI func() string
 	// MaxTextRunes — кап текста одной статьи после обрезки (модель видит не больше).
 	MaxTextRunes int
+	// Retries — повторов запроса при сбое сети, 429 и 5xx; RetryWait — первая
+	// пауза (дальше ×2, ×3), Retry-After сервера главнее (до 2 мин).
+	Retries   int
+	RetryWait time.Duration
 	// Langs — явный список языков статей (например, ["ru", "en"]); пусто —
 	// эвристика: ru, плюс en, если ru короче 20 тыс. символов или en в полтора
 	// раза длиннее ru, плюс статья на языке оригинала (OrigLang).
@@ -77,6 +83,35 @@ func NewFetcher(c *http.Client) *Fetcher {
 		SPARQLURL:    "https://query.wikidata.org/sparql",
 		WikiAPI:      func(lang string) string { return "https://" + lang + ".wikipedia.org/w/api.php" },
 		MaxTextRunes: 90_000,
+		Retries:      3,
+		RetryWait:    15 * time.Second,
+	}
+}
+
+// do — GET с повтором при сбое сети, 429 и 5xx: Wikidata SPARQL и Википедия
+// под нагрузкой отвечают 502/429 разово (пачка 2026-10-18 — 2 сбоя на первые
+// 50 авторов), а без повтора автор ждал следующего раунда пачки (20 мин–1 ч).
+// Последний ответ с ошибочным статусом возвращается как есть — вызывающий
+// превращает его в ошибку.
+func (f *Fetcher) do(req *http.Request) (*http.Response, error) {
+	for attempt := 0; ; attempt++ {
+		resp, err := f.Client.Do(req)
+		retryable := err != nil || resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode >= 500
+		if !retryable || attempt >= f.Retries || req.Context().Err() != nil {
+			return resp, err
+		}
+		wait := f.RetryWait * time.Duration(attempt+1)
+		if resp != nil {
+			if sec, perr := strconv.Atoi(resp.Header.Get("Retry-After")); perr == nil && sec > 0 {
+				wait = min(time.Duration(sec)*time.Second, 2*time.Minute)
+			}
+			_ = resp.Body.Close()
+		}
+		select {
+		case <-req.Context().Done():
+			return nil, req.Context().Err()
+		case <-time.After(wait):
+		}
 	}
 }
 
@@ -243,7 +278,7 @@ func (f *Fetcher) fetchFacts(ctx context.Context, src *Sources) error {
 	}
 	req.Header.Set("Accept", "application/sparql-results+json")
 	req.Header.Set("User-Agent", userAgent)
-	resp, err := f.Client.Do(req)
+	resp, err := f.do(req)
 	if err != nil {
 		return err
 	}
@@ -340,7 +375,7 @@ func (f *Fetcher) fetchArticle(ctx context.Context, lang, qid string) (*Article,
 		return nil, err
 	}
 	req.Header.Set("User-Agent", userAgent)
-	resp, err := f.Client.Do(req)
+	resp, err := f.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -390,7 +425,7 @@ func (f *Fetcher) sitelink(ctx context.Context, lang, qid string) (string, error
 		req, _ = http.NewRequestWithContext(ctx, http.MethodGet, f.WikidataAPI()+"?"+v.Encode(), nil)
 	}
 	req.Header.Set("User-Agent", userAgent)
-	resp, err := f.Client.Do(req)
+	resp, err := f.do(req)
 	if err != nil {
 		return "", err
 	}
