@@ -1,0 +1,1014 @@
+{
+  "qid": "Q151820",
+  "name": "Луи-Фердинан Селин",
+  "born": "1894-05-27",
+  "died": "1961-07-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BB%D0%B8%D0%BD%2C_%D0%9B%D1%83%D0%B8-%D0%A4%D0%B5%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D0%BD%D0%B4",
+      "rev": 155089018
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Louis-Ferdinand_C%C3%A9line",
+      "rev": 1378160657
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Louis-Ferdinand_C%C3%A9line",
+      "rev": 240000767
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Пассаж Шуазель и ученичество",
+      "from": 1894,
+      "to": 1913
+    },
+    {
+      "key": "war",
+      "title": "Война, Лондон, Камерун",
+      "from": 1914,
+      "to": 1917
+    },
+    {
+      "key": "doctor",
+      "title": "Врач, Женева, Клиши",
+      "from": 1918,
+      "to": 1931
+    },
+    {
+      "key": "writer",
+      "title": "Слава и памфлеты",
+      "from": 1932,
+      "to": 1939
+    },
+    {
+      "key": "occupation",
+      "title": "Годы оккупации",
+      "from": 1940,
+      "to": 1943
+    },
+    {
+      "key": "exile",
+      "title": "Бегство, Зигмаринген, Дания",
+      "from": 1944,
+      "to": 1951
+    },
+    {
+      "key": "meudon",
+      "title": "Мёдон",
+      "from": 1952,
+      "to": 1961
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1894",
+      "date": {
+        "from": "1894-05-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Курбевуа",
+      "long": "Единственный сын страхового служащего Фердинанда Детуша и торговки кружевами Маргериты Гиё. Настоящее имя — Луи-Фердинан Детуш.",
+      "place": {
+        "label": "Курбевуа"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 27 мая 1894 года, в городе Курбевуа, в семье менеджера страховой компании Фердинанда Детуша и хозяйки магазина Маргериты Гиё."
+      }
+    },
+    {
+      "key": "education-1908",
+      "date": {
+        "from": "1908",
+        "to": "1910",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Языковая учёба в Германии и Англии",
+      "long": "Родители отправили его на языковую учёбу в Германию и Англию — по году в каждой стране, чтобы подготовить к будущей работе.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1908 по 1910 год ездил в Германию и Великобританию на учёбу."
+      }
+    },
+    {
+      "key": "war-1912",
+      "date": {
+        "from": "1912-09-28",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Добровольный призыв в кирасирский полк",
+      "long": "В восемнадцать лет добровольцем записался в армию на три года, по собственным словам — в знак бунта против родителей. Дослужился до сержанта.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "s'engage pour trois ans dans l'armée française le 28 septembre 1912, à 18 ans, par devancement d'appel."
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914-10-25",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Ранение под Ипром, Воинская медаль",
+      "long": "Под Ипром ранен в правую руку при доставке донесения под огнём; в ноябре награждён Воинской медалью. Остались сильные головные боли и шум в ушах.",
+      "place": {
+        "label": "Ипр"
+      },
+      "works": [
+        {
+          "ref": "journey-to-the-end-of-the-night",
+          "note": "война — тема первого романа, по литературоведению (Мерлин Томас, Маккарти)"
+        }
+      ],
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 25 October 1914, he volunteered to deliver a message when others were reluctant to do so because of heavy German fire. Near Ypres, during his attempt to deliver the message, he was wounded in his right arm."
+      }
+    },
+    {
+      "key": "relocation-1915",
+      "date": {
+        "from": "1915-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Лондон, паспортное бюро",
+      "long": "Направлен в Лондон в паспортное бюро французского консульства; в сентябре признан негодным к службе и уволен из армии.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "guignols-band",
+          "note": "лондонский опыт лёг в основу романа (по статье английской Википедии)"
+        }
+      ],
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1915, he was sent to London to work in the French passport office."
+      }
+    },
+    {
+      "key": "career-1916",
+      "date": {
+        "from": "1916",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Год в Камеруне на лесной компании",
+      "long": "Служил надсмотрщиком на плантации и в торговом пункте, вёл аптеку для местных жителей. В апреле 1917 года уехал из-за болезни; остался с неприязнью к колониализму.",
+      "place": {
+        "label": "Камерун"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916, Céline went to French-administered Cameroon as an employee of the Forestry Company of Sangha-Oubangui."
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Знакомство с доктором Фолле в Бретани",
+      "long": "Работал в группе Фонда Рокфеллера, читавшей в Бретани лекции о туберкулёзе и гигиене; познакомился с доктором Атаназом Фолле, который советовал ему учиться медицине.",
+      "place": {
+        "label": "Бретань"
+      },
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1918, Céline was employed by the Rockefeller Foundation as part of a team travelling around Brittany delivering information sessions on tuberculosis and hygiene."
+      }
+    },
+    {
+      "key": "love-1919",
+      "date": {
+        "from": "1919-08-10",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эдит Фолле",
+      "long": "Первая официальная женитьба — на Эдит Фолле, дочери доктора Атаназа Фолле.",
+      "place": {
+        "label": "Кентен"
+      },
+      "chapter": "doctor",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 10 août 1919, il épouse la fille du docteur, Édith Follet, à Quintin"
+      }
+    },
+    {
+      "key": "education-1920",
+      "date": {
+        "from": "1920-04",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на медицинском факультете в Ренне",
+      "long": "Поступил на медицинский факультет в Ренне; учился по облегчённой программе для ветеранов войны до 1924 года.",
+      "place": {
+        "label": "Ренн"
+      },
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Céline enrolled in the Medical Faculty at Rennes in April 1920, and in June, Édith gave birth to a daughter, Collette Destouches."
+      }
+    },
+    {
+      "key": "child-1920",
+      "date": {
+        "from": "1920-06",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Колетт",
+      "long": "Родилась дочь Колетт — единственный ребёнок писателя.",
+      "place": {
+        "label": "Ренн"
+      },
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Céline enrolled in the Medical Faculty at Rennes in April 1920, and in June, Édith gave birth to a daughter, Collette Destouches."
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924",
+        "to": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в Лиге Наций в Женеве",
+      "long": "Работал в гигиенической секции Лиги Наций, много ездил по Европе, Африке и Америке; жена и дочь остались в Ренне. Покинул Лигу в конце 1927 года.",
+      "place": {
+        "label": "Женева"
+      },
+      "works": [
+        {
+          "ref": "the-church",
+          "note": "пьеса написана на материале службы в Лиге Наций (по статье английской Википедии)"
+        }
+      ],
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1924 Céline joined the Health Department of the League of Nations in Geneva, leaving his wife and daughter in Rennes."
+      }
+    },
+    {
+      "key": "education-1924",
+      "date": {
+        "from": "1924-05",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская диссертация о Земмельвейсе",
+      "long": "Защитил в Париже докторскую диссертацию о Земмельвейсе, которую позже называют его первым литературным произведением.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "semmelweis-thesis"
+        }
+      ],
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in May 1924 defended his dissertation The Life and Work of Philippe-Ignace Semmelweis (1818–1865)"
+      }
+    },
+    {
+      "key": "love-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Элизабет Крэйг",
+      "long": "Познакомился в Женеве с американской танцовщицей Элизабет Крэйг; они прожили вместе около шести лет. Ей посвящён первый роман.",
+      "place": {
+        "label": "Женева"
+      },
+      "works": [
+        {
+          "ref": "journey-to-the-end-of-the-night",
+          "note": "роман посвящён Элизабет; писался в годы жизни вместе (по статьям)"
+        }
+      ],
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Édith divorced him in June 1926, and a few months later he met Elizabeth Craig, an American dancer studying in Geneva."
+      }
+    },
+    {
+      "key": "family-1926",
+      "date": {
+        "from": "1926-06",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Эдит Фолле",
+      "long": "Эдит Фолле развелась с ним.",
+      "chapter": "doctor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Édith divorced him in June 1926, and a few months later he met Elizabeth Craig, an American dancer studying in Geneva."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Частная практика в Клиши, диспансер",
+      "long": "Открыл частный кабинет в рабочем пригороде Парижа, но закрыл его из-за отсутствия пациентов; затем стал врачом диспансера в Клиши.",
+      "place": {
+        "label": "Клиши"
+      },
+      "chapter": "doctor",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "en ouvrant en novembre 1927 un cabinet à Clichy qu'il ferme rapidement, faute de clientèle"
+      }
+    },
+    {
+      "key": "creation-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Скандал вокруг Гонкура, премия Ренодо",
+      "long": "Первый роман вышел в октябре 1932 года, считался фаворитом Гонкуровской премии, но получил премию Ренодо; скандал вокруг Гонкура увеличил известность книги.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "journey-to-the-end-of-the-night"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel was the favourite for the Prix Goncourt of 1932. When the prize was awarded to Mazeline's Les Loups, the resulting scandal increased publicity"
+      }
+    },
+    {
+      "key": "loss-1932",
+      "date": {
+        "from": "1932-03-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Фердинан Детуш (по данным Викиданных, 14 марта 1932 года).",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "writer",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Ferdinand Destouches, né en 1865 au Havre, mort en 1932 à Paris (2e arrondissement) ; père de Céline"
+      }
+    },
+    {
+      "key": "loss-1933",
+      "date": {
+        "from": "1933-06",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Разрыв с Элизабет Крэйг",
+      "long": "Элизабет Крэйг навсегда вернулась в Америку; поездка к ней в Лос-Анджелес не убедила её вернуться.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1933 Elizabeth Craig returned permanently to America."
+      }
+    },
+    {
+      "key": "love-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Люсетт Альмансор",
+      "long": "Познакомился с танцовщицей Люсетт Альмансор, будущей женой.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Впервые встретились в 1935 году."
+      }
+    },
+    {
+      "key": "love-1935-2",
+      "date": {
+        "from": "1935-04",
+        "to": "1936-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с пианисткой Люсьенн Дельфорж",
+      "long": "Роман с пианисткой Люсьенн Дельфорж; вместе ездили в Данию, Швецию и Австрию.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Céline a une relation avec la pianiste Lucienne Delforge entre avril 1935 et avril 1936."
+      }
+    },
+    {
+      "key": "other-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в СССР",
+      "long": "Побывал в СССР по приглашению (по статьям — в августе или сентябре); по возвращении написал резкий памфлет против Советского Союза.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "works": [
+        {
+          "ref": "mea-culpa",
+          "note": "памфлет написан сразу по возвращении из СССР"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1936, il est invité en URSS, notamment sous l'influence d'Elsa Triolet. À son retour, il écrit son premier pamphlet, Mea culpa"
+      }
+    },
+    {
+      "key": "other-1936-2",
+      "date": {
+        "from": "1936-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Холодный приём второго романа",
+      "long": "Второй роман вышел с купюрами издателя; критика была резко разделена, большинство отзывов — отрицательные. Некоторые биографы связывают с этим переход к памфлетам.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "death-on-credit"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mort à credit was published in May 1936, with numerous blank spaces where passages had been removed by the publisher for fear of prosecution for obscenity. The critical response was sharply divided"
+      }
+    },
+    {
+      "key": "other-1937",
+      "date": {
+        "from": "1937",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Антисемитские памфлеты",
+      "long": "Серия антисемитских памфлетов, где он выступал за союз с нацистской Германией; они закрепили за ним репутацию антисемита и стали причиной запретов после войны.",
+      "works": [
+        {
+          "ref": "bagatelles-pour-un-massacre"
+        },
+        {
+          "ref": "ecole-des-cadavres"
+        },
+        {
+          "ref": "les-beaux-draps"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1937 Céline wrote a series of antisemitic polemical works in which he advocated a military alliance with Nazi Germany."
+      }
+    },
+    {
+      "key": "persecution-1939",
+      "date": {
+        "from": "1939-05-10",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Снятие памфлетов с продажи",
+      "long": "Автор и издатель сняли два памфлета с продажи после декрета Маршандо против расистских публикаций.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "writer",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 10 mai 1939, Céline et Robert Denoël décident de retirer de la vente Bagatelles pour un massacre et L'École des cadavres."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "to": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главный врач диспансера в Безоне",
+      "long": "Работал главным врачом диспансеров в Сартрувиле и Безоне.",
+      "place": {
+        "label": "Безон"
+      },
+      "works": [
+        {
+          "ref": "guignols-band"
+        }
+      ],
+      "chapter": "occupation",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "ensuite comme médecin-chef au dispensaire de Sartrouville puis à Bezons de 1940 à 1944"
+      }
+    },
+    {
+      "key": "persecution-1941",
+      "date": {
+        "from": "1941-12-04",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет памфлета правительством Виши",
+      "long": "Правительство Виши запретило памфлет в свободной зоне за критику режима.",
+      "works": [
+        {
+          "ref": "les-beaux-draps"
+        }
+      ],
+      "chapter": "occupation",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Les Beaux Draps fut interdit en zone libre le 4 décembre 1941 par le gouvernement de Vichy"
+      }
+    },
+    {
+      "key": "love-1943",
+      "date": {
+        "from": "1943-02-15",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Люсетт Альмансор",
+      "long": "Женился на Люсетт Альмансор; они оставались вместе до его смерти.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "occupation",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "ils se sont mariés le 15 février 1943 à Paris 18e"
+      }
+    },
+    {
+      "key": "relocation-1944",
+      "date": {
+        "from": "1944-06-17",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Бегство из Франции",
+      "long": "После высадки союзников, опасаясь за жизнь (получал угрозы), уехал из Франции с женой Люсетт.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Après le débarquement allié en Normandie le 6 juin 1944, Céline, craignant pour sa vie, confie le manuscrit de Guignol's band II et quelques pages de Casse-pipe à sa secrétaire particulière Marie Canavaggia puis, le 17 juin, il quitte la France avec son épouse Lucette."
+      }
+    },
+    {
+      "key": "relocation-1944-2",
+      "date": {
+        "from": "1944-10",
+        "to": "1945-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Зигмаринген среди изгнанников Виши",
+      "long": "Жил в замке Зигмаринген, где разместилось правительство Виши в изгнании, и практиковал как врач; в конце марта 1945 года добрался до Копенгагена.",
+      "place": {
+        "label": "Зигмаринген"
+      },
+      "works": [
+        {
+          "ref": "castle-to-castle",
+          "note": "эпизод изложен в романе"
+        },
+        {
+          "ref": "rigadoon",
+          "note": "дорога в Зигмаринген описана в романе"
+        },
+        {
+          "ref": "north",
+          "note": "пребывание в Кранцлине (Цорнхоф) отражено в романе"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "fin octobre 1944, il s'installe avec sa femme et son chat Bébert dans le château de Sigmaringen et côtoie le dernier carré des pétainistes et des dignitaires du régime de Vichy, épisode qu'il raconte dans D'un château l'autre"
+      }
+    },
+    {
+      "key": "loss-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Маргерит Гиё, владелица кружевной лавки в пассаже Шуазель.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Marguerite Guillou (née en 1868 à Paris 20e arrondissement, morte en 1945 à Paris 9e arrondissement) ; mère de Céline"
+      }
+    },
+    {
+      "key": "persecution-1945",
+      "date": {
+        "from": "1945-12",
+        "to": "1947-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест и тюрьма Вестре в Копенгагене",
+      "long": "Арестован датской полицией по запросу Франции об экстрадиции; около полутора лет в тюрьме Вестре, освобождён в июне 1947 года с запретом покидать Данию.",
+      "place": {
+        "label": "Копенгаген"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 17 décembre 1945, il est arrêté par la police danoise. Il passe au Danemark près d'une année et demie dans la prison Ouest"
+      }
+    },
+    {
+      "key": "poverty-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Хутор у Большого Бельта",
+      "long": "Поселился в хуторе на берегу Большого Бельта, принадлежавшем его датскому адвокату; жил на спрятанное золото.",
+      "place": {
+        "label": "Корсёр"
+      },
+      "works": [
+        {
+          "ref": "fable-for-another-time"
+        },
+        {
+          "ref": "normance"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1948 he moved to a farmhouse on the coast of the Great Belt owned by his Danish lawyer where he worked on the novels which were to become Féerie pour une autre fois (1952, Fable for Another Time) and Normance (1954)."
+      }
+    },
+    {
+      "key": "persecution-1950",
+      "date": {
+        "from": "1950-02-21",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Заочный приговор за коллаборационизм",
+      "long": "Заочно осуждён на год тюрьмы, штраф в 50 000 франков, конфискацию половины имущества и национальное бесчестье.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 21 février 1950, dans le cadre de l'épuration, il est condamné définitivement par contumace par la chambre civique de la Cour de justice de Paris pour collaboration"
+      }
+    },
+    {
+      "key": "persecution-1951",
+      "date": {
+        "from": "1951-04-20",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Амнистия как инвалида войны",
+      "long": "Военный трибунал амнистировал его как инвалида войны; позже кассационный суд отменил амнистию «в интересах закона», сохранив её для Селина лично.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Louis-Ferdinand Céline est amnistié le 20 avril 1951."
+      }
+    },
+    {
+      "key": "relocation-1951",
+      "date": {
+        "from": "1951-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение во Францию, Мёдон",
+      "long": "Вернулся во Францию, подписал контракт с Галлимаром на переиздание книг; осенью поселился в Мёдоне.",
+      "place": {
+        "label": "Мёдон"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1951 году покинутый друзьями и полузабытый на родине Селин по амнистии возвратился во Францию, поселился в парижском пригороде Мёдоне"
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Врачебная практика в Мёдоне",
+      "long": "Вновь вписан в Орден врачей и начал практиковать дома; жена открыла танцевальную школу.",
+      "place": {
+        "label": "Мёдон"
+      },
+      "chapter": "meudon",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He registered as a doctor in 1953 and set up a practice in his Meudon home"
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение читательского успеха",
+      "long": "После слабо принятых романов 1952 и 1954 годов хроника Зигмарингена вернула ему внимание прессы и читателей и вновь разожгла спор о его военной роли.",
+      "works": [
+        {
+          "ref": "castle-to-castle"
+        }
+      ],
+      "chapter": "meudon",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, his 1957 novel D'un château l'autre, a chronicle of his time in Sigmaringen, attracted considerable media and critical interest"
+      }
+    },
+    {
+      "key": "creation-1961",
+      "date": {
+        "from": "1961-06-30",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Последняя рукопись накануне смерти",
+      "long": "Закончил второй вариант последнего романа за день до смерти.",
+      "place": {
+        "label": "Мёдон"
+      },
+      "works": [
+        {
+          "ref": "rigadoon"
+        }
+      ],
+      "chapter": "meudon",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Céline completed a second draft of his final novel, Rigodon, on 30 June 1961."
+      }
+    },
+    {
+      "key": "death-1961",
+      "date": {
+        "from": "1961-07-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Мёдоне",
+      "long": "Умер дома в Мёдоне; похоронен 4 июля на кладбище Лонг-Реаж.",
+      "place": {
+        "label": "Мёдон"
+      },
+      "chapter": "meudon",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Louis-Ferdinand Destouches meurt à son domicile de Meudon le 1er juillet 1961"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "semmelweis-thesis",
+      "title": "Жизнь и труд Филиппа Игнаца Земмельвейса",
+      "written": {
+        "from": 1923,
+        "to": 1924
+      }
+    },
+    {
+      "ref": "the-church",
+      "title": "Церковь",
+      "written": {
+        "from": 1926,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "journey-to-the-end-of-the-night",
+      "title": "Путешествие на край ночи",
+      "qid": "Q774233",
+      "written": {
+        "from": 1928,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "death-on-credit",
+      "title": "Смерть в кредит",
+      "qid": "Q2779187",
+      "written": {
+        "from": 1933,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "mea-culpa",
+      "title": "Mea culpa",
+      "qid": "Q377436",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "bagatelles-pour-un-massacre",
+      "title": "Безделицы для погрома",
+      "qid": "Q787823",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "ecole-des-cadavres",
+      "title": "Школа трупов",
+      "qid": "Q3205193",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "les-beaux-draps",
+      "title": "Попали в переделку",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "guignols-band",
+      "title": "Guignol's Band",
+      "qid": "Q2062047",
+      "written": {
+        "from": 1940,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "fable-for-another-time",
+      "title": "Феерия для другого раза",
+      "qid": "Q3092267",
+      "written": {
+        "from": 1948,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "normance",
+      "title": "Норманс",
+      "qid": "Q3343835",
+      "written": {
+        "from": 1948,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "castle-to-castle",
+      "title": "Из замка в замок",
+      "qid": "Q3010992",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "north",
+      "title": "Север",
+      "qid": "Q3343553",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "rigadoon",
+      "title": "Ригодон",
+      "qid": "Q3431948",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    }
+  ]
+}

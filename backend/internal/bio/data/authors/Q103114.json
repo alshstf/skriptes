@@ -1,0 +1,642 @@
+{
+  "qid": "Q103114",
+  "name": "Мишель Уэльбек",
+  "born": "1956-02-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D1%8D%D0%BB%D1%8C%D0%B1%D0%B5%D0%BA%2C_%D0%9C%D0%B8%D1%88%D0%B5%D0%BB%D1%8C",
+      "rev": 150698683
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michel_Houellebecq",
+      "rev": 1378096513
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Michel_Houellebecq",
+      "rev": 240028441
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-study",
+      "title": "Реюньон, бабушка, агрономия",
+      "from": 1956,
+      "to": 1982
+    },
+    {
+      "key": "office-poet",
+      "title": "Служба и первые стихи",
+      "from": 1983,
+      "to": 1993
+    },
+    {
+      "key": "fame",
+      "title": "Слава и скандал",
+      "from": 1994,
+      "to": 1999
+    },
+    {
+      "key": "exile",
+      "title": "Ирландия, Испания, Гонкур",
+      "from": 2000,
+      "to": 2012
+    },
+    {
+      "key": "return",
+      "title": "Возвращение в Париж",
+      "from": 2013,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956-02-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на острове Реюньон",
+      "long": "Родился на острове Реюньон; по собственному утверждению писателя, настоящий год рождения — 1958.",
+      "place": {
+        "label": "Сен-Пьер"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 26 февраля 1956, Сен-Пьер, остров Реюньон"
+      }
+    },
+    {
+      "key": "education-1975",
+      "date": {
+        "from": "1975",
+        "to": "1978",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в агрономическом институте",
+      "long": "Учился в агрономическом институте Париж-Гриньон, основал недолговечный литературный журнал «Карамазов»; в 1978 году получил диплом по экологии.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "чтобы в 1975 году поступить в Национальный агрономический институт Париж-Гриньон"
+      }
+    },
+    {
+      "key": "child-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Этьена",
+      "long": "В год окончания школы кинематографии Луи Люмьера родился сын Этьен.",
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "которую заканчивает в 1981 году…В том же году появляется на свет его сын Этьен."
+      }
+    },
+    {
+      "key": "illness-1981",
+      "date": {
+        "from": "1981",
+        "to": "1983",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Безработица, развод и депрессия",
+      "long": "После периода безработицы последовал развод с женой; всё это вызвало у него глубокую депрессию.",
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "которую заканчивает в 1981 году…Далее в жизни Уэльбека наступает период безработицы и происходит развод с женой."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба системным администратором",
+      "long": "Работал системным администратором, затем в Министерстве сельского хозяйства; этот период отражён в дебютном романе.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "whatever-1994",
+          "note": "работа в Министерстве сельского хозяйства отражена в романе (по статье)"
+        }
+      ],
+      "chapter": "office-poet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1983 года Уэльбек работает в Париже системным администратором"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в Национальной ассамблее",
+      "long": "Сдал конкурс на должность в информационной службе Национальной ассамблеи; стабильный доход дал ему необходимое спокойствие.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "office-poet",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "réussit en 1990 le concours externe d'adjoint administratif au service informatique"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые книги, оставшиеся незамеченными",
+      "long": "Вышли эссе «Остаться живым» и книга о Лавкрафте; первые произведения остались незамеченными.",
+      "works": [
+        {
+          "ref": "lovecraft-against-the-world"
+        },
+        {
+          "ref": "rester-vivant"
+        }
+      ],
+      "chapter": "office-poet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1991 году писатель публикует свои первые книги"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Тристана Тцара",
+      "long": "Получил премию Тристана Тцара за сборник стихов.",
+      "works": [
+        {
+          "ref": "poursuite-du-bonheur"
+        }
+      ],
+      "chapter": "office-poet",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1992, Michel Houellebecq reçoit le prix Tristan-Tzara"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая известность",
+      "long": "Первый роман, отвергнутый многими издателями, принёс известность и сделал его представителем поколения.",
+      "works": [
+        {
+          "ref": "whatever-1994"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Известность к Мишелю Уэльбеку приходит вместе с выходом его первого романа «Расширение пространства борьбы» (1994)"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход со службы ради писательства",
+      "long": "Взял отпуск со службы в Национальной ассамблее, чтобы посвятить себя литературе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1996, ayant acquis l’ancienneté nécessaire et voulant se consacrer à l’écriture, il demande sa mise en disponibilité."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Скандал и мировая слава",
+      "long": "Роман вызвал небывалый медийный скандал; автор был исключён из журнала «Перпендикуляр», книга принесла мировую славу.",
+      "works": [
+        {
+          "ref": "atomised-1998"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1998, Les Particules élémentaires, son second roman, provoque un tapage médiatique exceptionnel"
+      }
+    },
+    {
+      "key": "love-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак, с Мари-Пьер Готье",
+      "long": "Женился во второй раз на Мари-Пьер Готье; развод состоялся в 2010 году.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1998 he married his second wife, Marie-Pierre Gauthier."
+      }
+    },
+    {
+      "key": "career-1998-2",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ноябрь",
+      "long": "Получил премию Ноябрь; основатель премии выступил против награждения и ушёл в отставку, премия сменила название.",
+      "works": [
+        {
+          "ref": "atomised-1998"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии Ноябрь за роман «Элементарные частицы» (1998)"
+      }
+    },
+    {
+      "key": "relocation-2000",
+      "date": {
+        "from": "2000",
+        "to": "2002",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в Ирландию",
+      "long": "Уехал в Ирландию с женой; в 2002 году поселился в Андалусии.",
+      "place": {
+        "label": "Ирландия"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2000, il s'exile en Irlande avec sa deuxième épouse, Marie-Pierre Gauthier"
+      }
+    },
+    {
+      "key": "persecution-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Судебный процесс из-за слов об исламе",
+      "long": "После интервью об исламе мусульманские организации подали на писателя в суд за разжигание расовой ненависти; суд его оправдал.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "platform-2001",
+          "note": "интервью дано в связи с выходом романа"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году он сказал, что «ислам — глупая и опасная религия»…После обнародования этого интервью четыре мусульманские организации"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Интералье",
+      "long": "Роман получил премию Интералье.",
+      "works": [
+        {
+          "ref": "possibility-of-an-island"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман Уэльбека «Возможность острова» (2005) завоевал литературную премию Интералье."
+      }
+    },
+    {
+      "key": "family-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Книга матери против сына",
+      "long": "Мать, которую он не видел семнадцать лет, выпустила книгу, резко враждебную к сыну.",
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2008, alors qu'il n'a pas revu sa mère depuis dix-sept années"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал собственного фильма",
+      "long": "Собственная экранизация романа получила разгромные рецензии и провалилась в прокате.",
+      "place": {
+        "label": "Локарно"
+      },
+      "works": [
+        {
+          "ref": "possibility-of-an-island"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "премьера которой состоялась в августе 2008 года в рамках кинофестиваля в Локарно"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гонкуровская премия",
+      "long": "Получил Гонкуровскую премию, на которую претендовал не раз; в том же году был обвинён в плагиате из Википедии.",
+      "works": [
+        {
+          "ref": "map-and-territory"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Avec La Carte et le Territoire, Michel Houellebecq reçoit le prix Goncourt en 2010"
+      }
+    },
+    {
+      "key": "family-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод со второй женой",
+      "long": "Развод со второй женой Мари-Пьер Готье.",
+      "chapter": "exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1998 he married his second wife, Marie-Pierre Gauthier. They divorced in 2010."
+      }
+    },
+    {
+      "key": "relocation-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение во Францию",
+      "long": "На фоне споров о налоговой эмиграции объявил о возвращении во Францию и поселился в Париже.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Fin 2012, en pleine polémique d'exil fiscal, il annonce son retour en France."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-01-07",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход романа в день нападения на «Шарли Эбдо»",
+      "long": "Роман вышел в день теракта против «Шарли Эбдо»; на обложке номера журнала был его карикатурный портрет. Книга вызвала острую полемику.",
+      "works": [
+        {
+          "ref": "submission-2015"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Son roman Soumission, paru le 7 janvier 2015 aux éditions Flammarion"
+      }
+    },
+    {
+      "key": "love-2018",
+      "date": {
+        "from": "2018-09-21",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Третий брак",
+      "long": "Третий брак, с Цяньюнь Лисис Ли.",
+      "chapter": "return",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 21 septembre 2018, à 62 ans, il se marie une troisième fois"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-04-19",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Президент Макрон вручил ему орден Почётного легиона.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "19 апреля 2019 года Президент Франции Эмманюэль Макрон вручил Мишелю Уэльбеку высшую награду страны — Орден Почетного легиона"
+      }
+    },
+    {
+      "key": "persecution-2022",
+      "date": {
+        "from": "2022-12-28",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Жалоба Парижской соборной мечети",
+      "long": "После интервью журналу «Фрон популер» Парижская соборная мечеть объявила о жалобе; позже её отозвали.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 28 décembre 2022, la Grande mosquée de Paris annonce porter plainte contre Michel Houellebecq"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "lovecraft-against-the-world",
+      "title": "Г. Ф. Лавкрафт: Против человечества, против прогресса",
+      "written": {
+        "from": 1990,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "rester-vivant",
+      "title": "Остаться живым",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "poursuite-du-bonheur",
+      "title": "Погоня за счастьем",
+      "written": {
+        "from": 1991,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "whatever-1994",
+      "title": "Расширение пространства борьбы",
+      "qid": "Q784197",
+      "written": {
+        "from": 1993,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "atomised-1998",
+      "title": "Элементарные частицы",
+      "qid": "Q700483",
+      "written": {
+        "from": 1996,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "platform-2001",
+      "title": "Платформа",
+      "qid": "Q1425106",
+      "written": {
+        "from": 2000,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "possibility-of-an-island",
+      "title": "Возможность острова",
+      "qid": "Q975304",
+      "written": {
+        "from": 2003,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "map-and-territory",
+      "title": "Карта и территория",
+      "qid": "Q1734550",
+      "written": {
+        "from": 2009,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "submission-2015",
+      "title": "Покорность",
+      "qid": "Q18643289",
+      "written": {
+        "from": 2013,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "annihilation-2022",
+      "title": "Annihilation",
+      "qid": "Q110243542",
+      "written": {
+        "from": 2019,
+        "to": 2022
+      }
+    }
+  ]
+}

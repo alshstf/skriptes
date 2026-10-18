@@ -1,0 +1,328 @@
+{
+  "qid": "Q6950",
+  "name": "Тесс Герритсен",
+  "born": "1953-06-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D1%80%D1%80%D0%B8%D1%82%D1%81%D0%B5%D0%BD%2C_%D0%A2%D0%B5%D1%81%D1%81",
+      "rev": 154639990
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tess_Gerritsen",
+      "rev": 1372121968
+    }
+  ],
+  "chapters": [
+    {
+      "key": "san-diego-i-medicina",
+      "title": "Сан-Диего и медицина",
+      "from": 1953,
+      "to": 1985
+    },
+    {
+      "key": "romanticheskie-trillery",
+      "title": "Романтические триллеры",
+      "from": 1986,
+      "to": 1995
+    },
+    {
+      "key": "medicinskie-trillery",
+      "title": "Медицинские триллеры",
+      "from": 1996,
+      "to": 2000
+    },
+    {
+      "key": "rizzoli-i-aylz",
+      "title": "Риццоли, Айлз и Мэн",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1953",
+      "date": {
+        "from": "1953-06-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сан-Диего",
+      "long": "Родилась в Сан-Диего, Калифорния, в семье китайского происхождения; отец был владельцем китайского ресторана.",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "san-diego-i-medicina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Тесс Герритсен родилась и выросла в городе Сан-Диего, штат Калифорния (США), в семье владельца китайского ресторана."
+      }
+    },
+    {
+      "key": "education-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Стэнфорда, бакалавр антропологии",
+      "long": "Окончила Стэнфордский университет со степенью бакалавра по антропологии.",
+      "place": {
+        "label": "Стэнфорд"
+      },
+      "chapter": "san-diego-i-medicina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году она окончила Стэнфордский университет, получив степень бакалавра по антропологии"
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом врача в Сан-Франциско",
+      "long": "Окончила Калифорнийский университет в Сан-Франциско и получила диплом врача; затем началась врачебная практика в Гонолулу.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "san-diego-i-medicina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1979 году, закончив Калифорнийский университет в Сан-Франциско, получила диплом врача"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Продажа первого романа в Harlequin Intrigue",
+      "long": "После двух неопубликованных пробных романов издательство Harlequin Intrigue приобрело «Call After Midnight»; книга вышла годом позже.",
+      "works": [
+        {
+          "ref": "call-after-midnight"
+        }
+      ],
+      "chapter": "romanticheskie-trillery",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Call After Midnight» был приобретен издательством «Harlequin Intrigue» в 1986 году и опубликован год спустя"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к медицинскому триллеру, первый бестселлер",
+      "long": "Первый медицинский триллер, вдохновлённый разговором с отставным детективом, стал её первым романом в твёрдом переплёте и вошёл в список бестселлеров New York Times; вызвал критику врачей-трансплантологов.",
+      "works": [
+        {
+          "ref": "harvest",
+          "note": "сюжет вдохновлён разговором с отставным детективом отдела убийств"
+        }
+      ],
+      "chapter": "medicinskie-trillery",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году Герритсен опубликовала свой первый роман в жанре медицинского триллера под названием «Harvest»"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало серии о Джейн Риццоли",
+      "long": "Вышел первый детективный триллер, представивший бостонского детектива Джейн Риццоли, ставшую героиней длинной серии.",
+      "works": [
+        {
+          "ref": "the-surgeon"
+        }
+      ],
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году увидел свет первый детективный триллер Герритсен под названием «Хирург»"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия RITA за лучший романтический саспенс",
+      "long": "Роман «Хирург» получил премию RITA Ассоциации авторов любовных романов Америки.",
+      "works": [
+        {
+          "ref": "the-surgeon"
+        }
+      ],
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Surgeon received a RITA award Romance Writers of America in 2002 for Best Romantic Suspense Novel."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Nero Award, номинации на Edgar и Macavity",
+      "long": "Роман получил премию Nero за лучший детектив и был номинирован на Edgar и Macavity.",
+      "works": [
+        {
+          "ref": "vanish"
+        }
+      ],
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006, Vanish received the Nero Award for best mystery novel"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-07-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сериал «Риццоли и Айлз» по её книгам",
+      "long": "Первый сезон сериала по мотивам книг стартовал 12 июля 2010 года на канале TNT; Герритсен работала над несколькими сценариями.",
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый сезон этого сериала стартовал 12 июля 2010 года на телеканале «TNT» (США)."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Crimezone Thriller Awards",
+      "long": "Получила награду Crimezone Thriller Awards.",
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Crimezone Thriller Awards 2012-01-01"
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014",
+        "to": "2015",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Судебный иск к Warner Bros.",
+      "long": "Подала иск к Warner Bros., утверждая, что фильм Альфонсо Куарона «Гравитация» (2013) основан на её книге; иск отклонён в 2015 году.",
+      "works": [
+        {
+          "ref": "gravity"
+        }
+      ],
+      "chapter": "rizzoli-i-aylz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, Gerritsen sued Warner Bros., charging that Alfonso Cuarón's 2013 film Gravity was derived from her book of the same title"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "call-after-midnight",
+      "title": "Call After Midnight",
+      "written": {
+        "from": 1986,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "harvest",
+      "title": "Harvest",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "life-support",
+      "title": "Life Support",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "bloodstream",
+      "title": "Bloodstream",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "gravity",
+      "title": "Gravity",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "the-surgeon",
+      "title": "Хирург",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "vanish",
+      "title": "Vanish",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-bone-garden",
+      "title": "The Bone Garden",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

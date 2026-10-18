@@ -1,0 +1,301 @@
+{
+  "qid": "Q550449",
+  "name": "Мюррей Лейнстер",
+  "born": "1896-06-16",
+  "died": "1975-06-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D1%8E%D1%80%D1%80%D0%B5%D0%B9_%D0%9B%D0%B5%D0%B9%D0%BD%D1%81%D1%82%D0%B5%D1%80",
+      "rev": 147490450
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Murray_Leinster",
+      "rev": 1374220355
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Норфолк и первые рассказы",
+      "from": 1896,
+      "to": 1918
+    },
+    {
+      "key": "pulp-years",
+      "title": "Бульварные журналы и семья",
+      "from": 1919,
+      "to": 1938
+    },
+    {
+      "key": "war-and-golden-age",
+      "title": "Война и золотой век",
+      "from": 1939,
+      "to": 1950
+    },
+    {
+      "key": "late-career",
+      "title": "Хьюго и сериальные романы",
+      "from": 1951,
+      "to": 1975
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1896",
+      "date": {
+        "from": "1896-06-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Норфолке, Виргиния",
+      "long": "Уильям Фицджеральд Дженкинс родился в Норфолке, штат Виргиния, в семье бухгалтера.",
+      "place": {
+        "label": "Норфолк"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Норфолк 1896-06-16"
+      }
+    },
+    {
+      "key": "relocation-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь семьи на Манхэттене",
+      "long": "По переписи 1910 года семья жила на Манхэттене; позже из-за финансовых трудностей семьи он бросил школу в восьмом классе.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the family lived in Manhattan in 1910, according to the 1910 Federal Census"
+      }
+    },
+    {
+      "key": "career-1916",
+      "date": {
+        "from": "1916-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в журнале Менкена The Smart Set",
+      "long": "В 20 лет он дебютировал рассказом в журнале Г. Л. Менкена The Smart Set; за два года там вышли ещё четыре рассказа и около десятка зарисовок.",
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leinster was just 20 when his first story, \"The Anti-Climax\", appeared in the July 1916 issue of H. L. Mencken's literary magazine The Smart Set."
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в армии в Первую мировую",
+      "long": "В годы Первой мировой войны служил в Комитете общественной информации и в армии США (в пехоте).",
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leinster served with the Committee of Public Information and the United States Army (1917–1918)"
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919-02-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый фантастический рассказ",
+      "long": "Первый фантастический рассказ вышел в журнале Argosy 22 февраля 1919 года; в 1926 году его перепечатал Amazing Stories.",
+      "chapter": "pulp-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leinster's first science fiction story, \"The Runaway Skyscraper\", appeared in the February 22, 1919 issue of Argosy"
+      }
+    },
+    {
+      "key": "love-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мэри Мандола",
+      "long": "Женился на Мэри Мандола; в браке родились четыре дочери.",
+      "chapter": "pulp-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1921, he married Mary Mandola. They had four daughters."
+      }
+    },
+    {
+      "key": "creation-1934",
+      "date": {
+        "from": "1934-06",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Ранняя история о параллельных мирах",
+      "long": "Рассказ о параллельных мирах вышел в Astounding на четыре года раньше «Легиона времени» Уильямсона и повлиял на других авторов.",
+      "works": [
+        {
+          "ref": "sidewise-in-time"
+        }
+      ],
+      "chapter": "pulp-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leinster published his \"Sidewise in Time\" in the June 1934 issue of Astounding."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Публикации в Esquire",
+      "long": "С 1936 года печатался в Collier's Weekly, с 1939 года — в Esquire.",
+      "chapter": "war-and-golden-age",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collier's Weekly beginning in 1936 and Esquire starting in 1939"
+      }
+    },
+    {
+      "key": "other-1953",
+      "date": {
+        "from": "1953-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выступление в передаче об изобретениях",
+      "long": "Выступил в образовательной передаче American Inventory, где говорил о возможности космических полётов; известен также как изобретатель (фронтальная проекция).",
+      "chapter": "late-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He appeared in September 1953 on an episode of the educational series American Inventory, in which he discussed the possibility of space travel."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» за короткую повесть",
+      "long": "Получил премию «Хьюго» за короткую повесть «Exploration Team».",
+      "works": [
+        {
+          "ref": "exploration-team"
+        }
+      ],
+      "chapter": "late-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won a Hugo Award for his 1956 story \"Exploration Team\"."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Романы по мотивам телесериалов",
+      "long": "Написал романы по мотивам телесериалов «Туннель времени» и «Земля гигантов», отступая от сюжетов самих сериалов.",
+      "chapter": "late-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "two original novels based on The Time Tunnel (1967), and three based on Land of the Giants (1968–69)"
+      }
+    },
+    {
+      "key": "death-1975",
+      "date": {
+        "from": "1975-06-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Глостере",
+      "long": "Умер в Глостере за восемь дней до 79-летия.",
+      "place": {
+        "label": "Глостер"
+      },
+      "chapter": "late-career",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Глостер 1975-06-08"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sidewise-in-time",
+      "title": "Sidewise in Time",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "first-contact",
+      "title": "First Contact",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "a-logic-named-joe",
+      "title": "A Logic Named Joe",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "exploration-team",
+      "title": "Exploration Team",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "time-tunnel",
+      "title": "Time Tunnel",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    }
+  ]
+}

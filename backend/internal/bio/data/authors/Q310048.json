@@ -1,0 +1,406 @@
+{
+  "qid": "Q310048",
+  "name": "Дон Делилло",
+  "born": "1936-11-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B5%D0%BB%D0%B8%D0%BB%D0%BB%D0%BE%2C_%D0%94%D0%BE%D0%BD",
+      "rev": 151698622
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Don_DeLillo",
+      "rev": 1379218246
+    }
+  ],
+  "chapters": [
+    {
+      "key": "bronx-and-fordham",
+      "title": "Бронкс, Фордхэм, реклама",
+      "from": 1936,
+      "to": 1963
+    },
+    {
+      "key": "americana-years",
+      "title": "Уход из рекламы и первый роман",
+      "from": 1964,
+      "to": 1977
+    },
+    {
+      "key": "greece",
+      "title": "Греция и пьесы",
+      "from": 1978,
+      "to": 1984
+    },
+    {
+      "key": "big-novels",
+      "title": "Национальная премия и большие романы",
+      "from": 1985,
+      "to": 1999
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 2000,
+      "to": 2016
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1936",
+      "date": {
+        "from": "1936-11-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в итало-американской семье в Бронксе",
+      "long": "Родился в итало-американской семье в Бронксе, Нью-Йорк; семья связана с регионом Молизе в Италии.",
+      "place": {
+        "label": "Бронкс"
+      },
+      "chapter": "bronx-and-fordham",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "DeLillo was born on November 20, 1936, in New York City"
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Cardinal Hayes",
+      "long": "Окончил школу Cardinal Hayes High School в Бронксе в 1954 году.",
+      "place": {
+        "label": "Бронкс"
+      },
+      "chapter": "bronx-and-fordham",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from Cardinal Hayes High School in the Bronx in 1954"
+      }
+    },
+    {
+      "key": "education-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Фордхэмском университете",
+      "long": "Получил степень бакалавра в Фордхэмском университете в 1958 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "bronx-and-fordham",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Учился в Фордхэмском университите, где получил степень бакалавра в 1958 году."
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "to": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа копирайтером в рекламном агентстве",
+      "long": "Не сумев устроиться в издательское дело, работал копирайтером в рекламном агентстве Ogilvy \u0026 Mather на 5-й Авеню около пяти лет.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "bronx-and-fordham",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "from Fordham University with a bachelor's degree in communication arts in 1958, DeLillo took a job in advertising because he could not get one in publishing"
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая публикация рассказа в журнале Epoch",
+      "long": "Первый рассказ опубликован в литературном журнале Epoch Корнеллского университета.",
+      "chapter": "bronx-and-fordham",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый рассказ Делилло «Река Иордан» был опубликован в 1960 году в литературном журнале «Эпоха» (Epoch) Корнеллского университета."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из рекламы и начало первого романа",
+      "long": "Оставил работу в рекламе и приступил к первому роману; по его словам, ушёл не ради прозы, а потому что больше не хотел работать.",
+      "works": [
+        {
+          "ref": "americana",
+          "note": "работа над дебютным романом началась после ухода с работы"
+        }
+      ],
+      "chapter": "americana-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году Делилло бросил работу в рекламе и начал писать свой первый роман."
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Барбарой Беннет",
+      "long": "Женился на Барбаре Беннет, бывшей банкирше, ставшей ландшафтным дизайнером; детей в браке нет.",
+      "chapter": "americana-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году Делилло женился на Барбаре Беннет, бывшей банкирше, работающей ландшафтным дизайнером."
+      }
+    },
+    {
+      "key": "relocation-1978",
+      "date": {
+        "from": "1978",
+        "to": "1981",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Несколько лет в Греции",
+      "long": "В конце 1970-х несколько лет жил в Греции, где написал роман «Имена».",
+      "place": {
+        "label": "Афины"
+      },
+      "works": [
+        {
+          "ref": "the-names",
+          "note": "роман написан в Греции"
+        }
+      ],
+      "chapter": "greece",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Афины 1978-01-01 – 1981-01-01"
+      }
+    },
+    {
+      "key": "creation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы в драматургии",
+      "long": "Помимо романов и эссе, начал писать для театра; первая из пяти основных пьес — «The Engineer of Moonlight» (1979).",
+      "chapter": "greece",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Since 1979, in addition to his novels and occasional essays, DeLillo has been active as a playwright."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия и широкое признание",
+      "long": "Роман «Белый шум» принёс широкое признание и Национальную книжную премию США, до того критики хвалили его книги, но широкой публики они не достигали.",
+      "works": [
+        {
+          "ref": "white-noise"
+        }
+      ],
+      "chapter": "big-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его романы, расхваливаемые критиками, не получали широкого общественного признания до публикации «Белого шума», выигравшего Национальную книжную премию США в 1985 году."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия ПЕН/Фолкнер",
+      "long": "Получил премию ПЕН/Фолкнер; по английской статье — за роман «Мао II».",
+      "works": [
+        {
+          "ref": "mao-ii"
+        }
+      ],
+      "chapter": "big-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Американская литературная премия ПЕН/Фолкнер (1992 и 2012)."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Иерусалимская премия",
+      "long": "Награждён Иерусалимской премией.",
+      "chapter": "big-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Иерусалимская премия (1999)"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Уильяма Дина Хауэллса",
+      "long": "Получил медаль Уильяма Дина Хауэллса; по английской статье — за роман «Underworld».",
+      "works": [
+        {
+          "ref": "underworld"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: медаль Уильяма Дина Хауэллса 2000-01-01"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Библиотеки Конгресса",
+      "long": "Награждён премией Библиотеки Конгресса США за американскую художественную литературу.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "премия Библиотеки Конгресса (2013)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "americana",
+      "title": "Americana",
+      "written": {
+        "from": 1964,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "the-names",
+      "title": "Имена",
+      "written": {
+        "from": 1978,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "white-noise",
+      "title": "Белый шум",
+      "qid": "Q2623505",
+      "written": {
+        "from": 1984,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "libra",
+      "title": "Весы",
+      "qid": "Q1093807",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "mao-ii",
+      "title": "Мао II",
+      "qid": "Q6753587",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "underworld",
+      "title": "Underworld",
+      "qid": "Q2249650",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "cosmopolis",
+      "title": "Космополис",
+      "qid": "Q1083795",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "falling-man",
+      "title": "Falling Man",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "point-omega",
+      "title": "Точка Омега",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "zero-k",
+      "title": "Ноль К",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

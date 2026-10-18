@@ -1,0 +1,651 @@
+{
+  "qid": "Q9358",
+  "name": "Фридрих Ницше",
+  "born": "1844-10-15",
+  "died": "1900-08-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%B8%D1%86%D1%88%D0%B5%2C_%D0%A4%D1%80%D0%B8%D0%B4%D1%80%D0%B8%D1%85",
+      "rev": 155514025
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Friedrich_Nietzsche",
+      "rev": 1380915180
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Friedrich_Nietzsche",
+      "rev": 271411699
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-pforta",
+      "title": "Пасторский дом и Пфорта",
+      "from": 1844,
+      "to": 1863
+    },
+    {
+      "key": "studenchestvo-bazel",
+      "title": "Студент, солдат, профессор",
+      "from": 1864,
+      "to": 1878
+    },
+    {
+      "key": "stranstviya",
+      "title": "Отставка и годы странствий",
+      "from": 1879,
+      "to": 1888
+    },
+    {
+      "key": "bezumie",
+      "title": "Помрачение и последние годы",
+      "from": 1889,
+      "to": 1900
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1844",
+      "date": {
+        "from": "1844-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в пасторской семье",
+      "long": "Родился в Рёккене в семье лютеранского пастора Карла Людвига Ницше и Франциски, урождённой Элер.",
+      "place": {
+        "label": "Рёккен"
+      },
+      "chapter": "detstvo-pforta",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1844 году в Рёккене (недалеко от Лейпцига, провинция Саксония в составе Пруссии)"
+      }
+    },
+    {
+      "key": "loss-1849",
+      "date": {
+        "from": "1849",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца и младшего брата",
+      "long": "В 1849 году умер отец, пастор Карл Людвиг Ницше; спустя полгода умер младший брат Людвиг Йозеф. Семья переехала в Наумбург.",
+      "place": {
+        "label": "Рёккен"
+      },
+      "chapter": "detstvo-pforta",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брат Людвиг Йозеф, умерший в 1849 году спустя полгода после смерти их отца."
+      }
+    },
+    {
+      "key": "relocation-1850",
+      "date": {
+        "from": "1850",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Наумбург",
+      "long": "После смерти отца семья поселилась в Наумбурге, в доме бабушки и двух незамужних тёток, так называемом «женском хозяйстве».",
+      "place": {
+        "label": "Наумбург"
+      },
+      "chapter": "detstvo-pforta",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Наумбург 1850-01-01"
+      }
+    },
+    {
+      "key": "education-1858",
+      "date": {
+        "from": "1858-10-05",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в школу Пфорта",
+      "long": "Принят стипендиатом в школу Пфорта, где учился до 1864 года и подружился с Паулем Дойссеном и Карлом фон Герсдорфом.",
+      "place": {
+        "label": "Пфорта"
+      },
+      "chapter": "detstvo-pforta",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 5. Oktober 1858 wurde Nietzsche als Stipendiat in die Landesschule Pforta aufgenommen"
+      }
+    },
+    {
+      "key": "education-1864",
+      "date": {
+        "from": "1864-10",
+        "to": "1865-01",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бонн, отказ от теологии",
+      "long": "Начал изучать филологию и теологию в Бонне, но через семестр оставил теологию, к огорчению матери, а в 1865 году перешёл в Лейпциг вслед за Ричлем.",
+      "place": {
+        "label": "Бонн"
+      },
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Wintersemester 1864/65 begann Nietzsche an der Universität Bonn das Studium der klassischen Philologie und der evangelischen Theologie"
+      }
+    },
+    {
+      "key": "education-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Знакомство с философией Шопенгауэра",
+      "long": "В Лейпциге он углубился в Шопенгауэра, чьё сочинение пробудило его философский интерес; тогда же сблизился с Эрвином Роде.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1865 Nietzsche thoroughly studied the works of Arthur Schopenhauer."
+      }
+    },
+    {
+      "key": "war-1867",
+      "date": {
+        "from": "1867",
+        "to": "1868",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Артиллерийская служба и увечье",
+      "long": "Служил вольноопределяющимся в прусской артиллерии в Наумбурге; в марте 1868 года при падении с лошади порвал мышцы груди и был освобождён от службы.",
+      "place": {
+        "label": "Наумбург"
+      },
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1867 Nietzsche signed up for one year of voluntary service with the Prussian artillery division in Naumburg."
+      }
+    },
+    {
+      "key": "love-1868",
+      "date": {
+        "from": "1868-11-08",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Рихардом Вагнером",
+      "long": "Знакомство с Вагнером в Лейпциге; с 1869 года Ницше стал частым гостем в доме Вагнера в Трибшене.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "works": [
+        {
+          "ref": "birth-of-tragedy"
+        }
+      ],
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "8 ноября 1868 года Ницше познакомился с Рихардом Вагнером"
+      }
+    },
+    {
+      "key": "career-1869",
+      "date": {
+        "from": "1869",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессор классической филологии в Базеле",
+      "long": "В 24 года, не защитив докторскую диссертацию, получил кафедру классической филологии в Базеле. Отказался от прусского подданства и остался без гражданства.",
+      "place": {
+        "label": "Базель"
+      },
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1869 году в возрасте 24 лет он стал самым молодым человеком, когда-либо занимавшим кафедру классической филологии Базельского университета."
+      }
+    },
+    {
+      "key": "war-1870",
+      "date": {
+        "from": "1870",
+        "to": "1871",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Санитаром на Франко-прусской войне",
+      "long": "Служил санитаром в Франко-прусской войне; сопровождая вагон с ранеными, заразился дизентерией и дифтерией.",
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ницше не смог принять участия во Франко-прусской войне 1870 года"
+      }
+    },
+    {
+      "key": "other-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Критика среди филологов",
+      "long": "Книга была отвергнута или обойдена молчанием большинством филологов; Виламовиц-Мёллендорф выступил с резкой критикой, Роде и Вагнер встали на защиту Ницше.",
+      "place": {
+        "label": "Базель"
+      },
+      "works": [
+        {
+          "ref": "birth-of-tragedy"
+        }
+      ],
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1872 veröffentlichte Nietzsche sein erstes größeres Werk, Die Geburt der Tragödie aus dem Geiste der Musik"
+      }
+    },
+    {
+      "key": "love-1873",
+      "date": {
+        "from": "1873",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Увлечение Бертой Рор",
+      "long": "В 1873 году в Флимсе познакомился с Бертой Рор и полюбил её.",
+      "place": {
+        "label": "Флимс"
+      },
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Jahre 1873 lernte Nietzsche Bertha Rohr (1848–1940) in Flims kennen und lieben."
+      }
+    },
+    {
+      "key": "other-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Разрыв с Вагнером",
+      "long": "Разочарование первым Байройтским фестивалем 1876 года стало поводом отдалиться от Вагнера; разрыв оформился после «Человеческого, слишком человеческого» (1878).",
+      "place": {
+        "label": "Байройт"
+      },
+      "works": [
+        {
+          "ref": "human-all-too-human"
+        },
+        {
+          "ref": "case-of-wagner"
+        }
+      ],
+      "chapter": "studenchestvo-bazel",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seine Enttäuschung über die ersten Bayreuther Festspiele von 1876, wo er sich von der Banalität des Schauspiels und der Niveaulosigkeit des Publikums abgestoßen fühlte, nahm Nietzsche zum Anlass, sich von Wagner zu entfernen."
+      }
+    },
+    {
+      "key": "relocation-1879",
+      "date": {
+        "from": "1879",
+        "to": "1888",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Годы странствий в поисках климата",
+      "long": "Лето проводил в Зильс-Мария, зимы — в Генуе, Рапалло, Турине и Ницце, в поисках климата, облегчающего болезнь. Жил скромно, на пенсию.",
+      "works": [
+        {
+          "ref": "gay-science"
+        },
+        {
+          "ref": "beyond-good-and-evil"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Getrieben von seinen Krankheiten auf der ständigen Suche nach für ihn optimalen Klimabedingungen, reiste er nun viel und lebte bis 1889 als freier Autor an verschiedenen Orten."
+      }
+    },
+    {
+      "key": "illness-1879",
+      "date": {
+        "from": "1879-05-02",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Отставка из-за болезни",
+      "long": "Из-за болезни (головные боли, почти слепота, бессонница) оставил Базельский университет; жил на пенсию и поддержку друзей.",
+      "place": {
+        "label": "Базель"
+      },
+      "works": [
+        {
+          "ref": "daybreak"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2 мая 1879 года он оставил преподавание в университете, получив пенсию с годовым содержанием 3000 франков."
+      }
+    },
+    {
+      "key": "love-1882",
+      "date": {
+        "from": "1882-04",
+        "to": "1882-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Лу Саломе, отказ и разрыв",
+      "long": "В 1882 году в Риме познакомился с Лу Саломе; дважды или трижды делал ей предложение и получил отказ. Дружба с Саломе и Паулем Ре распалась в конце 1882 года.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "thus-spoke-zarathustra",
+          "note": "влияние Лу и её «идеальной дружбы» угадывается в книге"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Die Annäherung an die junge Frau gipfelte in einem mehrwöchigen gemeinsamen Aufenthalt in Tautenburg, mit Nietzsches Schwester Elisabeth als Anstandsdame."
+      }
+    },
+    {
+      "key": "creation-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Рапалло, первая часть главной книги за десять дней",
+      "long": "В изоляции, после ссоры с матерью и сестрой из-за Саломе, уехал в Рапалло и за десять дней написал первую часть «Заратустры».",
+      "place": {
+        "label": "Рапалло"
+      },
+      "works": [
+        {
+          "ref": "thus-spoke-zarathustra",
+          "note": "первая часть написана за десять дней после разрыва с Саломе"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "flüchtete nach Rapallo, wo er in nur zehn Tagen den ersten Teil von Also sprach Zarathustra zu Papier brachte."
+      }
+    },
+    {
+      "key": "career-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание за свой счёт тиражом 40 экземпляров",
+      "long": "Четвёртую часть «Заратустры» издал за свой счёт тиражом 40 экземпляров и раздал лишь немногим друзьям.",
+      "works": [
+        {
+          "ref": "thus-spoke-zarathustra"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1885 году Ницше издал на собственные деньги четвёртую и последнюю в количестве всего 40 экземпляров"
+      }
+    },
+    {
+      "key": "career-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Разрыв с издателем-антисемитом",
+      "long": "Порвал с издателем Шмайцнером из-за его антисемитских взглядов и напечатал книгу за свой счёт.",
+      "works": [
+        {
+          "ref": "beyond-good-and-evil"
+        }
+      ],
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1886 Nietzsche broke with his publisher Ernst Schmeitzner, disgusted by his antisemitic opinions."
+      }
+    },
+    {
+      "key": "family-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Отъезд сестры в Парагвай",
+      "long": "Сестра Элизабет вышла замуж за антисемита Бернарда Фёрстера и уехала с ним в Парагвай; из-за её антисемитизма отношения были напряжёнными.",
+      "chapter": "stranstviya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Элизабет уехала с ним в 1886 году в Парагвай"
+      }
+    },
+    {
+      "key": "illness-1889-2",
+      "date": {
+        "from": "1889-01-03",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Помрачение рассудка в Турине",
+      "long": "В Турине после уличного происшествия наступил психический срыв; затем Ницше рассылал друзьям «записки безумия», и Овербек отвёз его в Базель.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "bezumie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 3 January 1889, Nietzsche suffered a mental breakdown."
+      }
+    },
+    {
+      "key": "family-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Возвращение сестры и контроль над наследием",
+      "long": "Сестра вернулась из Парагвая после самоубийства мужа и постепенно взяла под контроль уход за братом и издание его рукописей.",
+      "place": {
+        "label": "Наумбург"
+      },
+      "chapter": "bezumie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1893, Nietzsche's sister, Elisabeth, returned from Nueva Germania in Paraguay following the suicide of her husband."
+      }
+    },
+    {
+      "key": "loss-1897",
+      "date": {
+        "from": "1897-04-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, переезд в Веймар к сестре",
+      "long": "После смерти матери Ницше жил в Веймаре на попечении сестры.",
+      "place": {
+        "label": "Наумбург"
+      },
+      "chapter": "bezumie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Остальные годы он прожил на попечении матери до её смерти в 1897 году, а затем со своей сестрой Элизабет Фёрстер-Ницше."
+      }
+    },
+    {
+      "key": "death-1900",
+      "date": {
+        "from": "1900-08-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Веймаре",
+      "long": "Умер в Веймаре после воспаления лёгких и очередного удара; похоронен рядом с отцом в Рёккене.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "bezumie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Болезнь не отступала от Ницше до самой смерти 25 августа 1900 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "birth-of-tragedy",
+      "title": "Рождение трагедии из духа музыки",
+      "qid": "Q1053359",
+      "written": {
+        "from": 1871,
+        "to": 1872
+      }
+    },
+    {
+      "ref": "untimely-meditations",
+      "title": "Несвоевременные размышления",
+      "qid": "Q1605652",
+      "written": {
+        "from": 1873,
+        "to": 1876
+      }
+    },
+    {
+      "ref": "human-all-too-human",
+      "title": "Человеческое, слишком человеческое",
+      "written": {
+        "from": 1876,
+        "to": 1878
+      }
+    },
+    {
+      "ref": "daybreak",
+      "title": "Утренняя заря",
+      "written": {
+        "from": 1880,
+        "to": 1881
+      }
+    },
+    {
+      "ref": "gay-science",
+      "title": "Веселая наука",
+      "written": {
+        "from": 1881,
+        "to": 1882
+      }
+    },
+    {
+      "ref": "thus-spoke-zarathustra",
+      "title": "Так говорил Заратустра",
+      "qid": "Q199774",
+      "written": {
+        "from": 1883,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "beyond-good-and-evil",
+      "title": "По ту сторону добра и зла",
+      "written": {
+        "from": 1885,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "genealogy-of-morals",
+      "title": "К генеалогии морали",
+      "written": {
+        "from": 1887,
+        "to": 1887
+      }
+    },
+    {
+      "ref": "case-of-wagner",
+      "title": "Казус Вагнер",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "twilight-of-the-idols",
+      "title": "Сумерки идолов",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "antichrist",
+      "title": "Антихрист",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "ecce-homo",
+      "title": "Ecce homo",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    }
+  ]
+}

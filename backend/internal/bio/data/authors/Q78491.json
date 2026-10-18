@@ -1,0 +1,742 @@
+{
+  "qid": "Q78491",
+  "name": "Стефан Цвейг",
+  "born": "1881-11-28",
+  "died": "1942-02-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A6%D0%B2%D0%B5%D0%B9%D0%B3%2C_%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD",
+      "rev": 154998973
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Stefan_Zweig",
+      "rev": 1380533920
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Stefan_Zweig",
+      "rev": 271432375
+    }
+  ],
+  "chapters": [
+    {
+      "key": "vienna-youth",
+      "title": "Вена: гимназия и университет",
+      "from": 1881,
+      "to": 1904
+    },
+    {
+      "key": "travels-war",
+      "title": "Первые книги, путешествия, война",
+      "from": 1905,
+      "to": 1916
+    },
+    {
+      "key": "switzerland",
+      "title": "Швейцарские годы",
+      "from": 1917,
+      "to": 1918
+    },
+    {
+      "key": "salzburg",
+      "title": "Зальцбург: слава и брак",
+      "from": 1919,
+      "to": 1933
+    },
+    {
+      "key": "london-bath",
+      "title": "Изгнание: Лондон и Бат",
+      "from": 1934,
+      "to": 1939
+    },
+    {
+      "key": "americas",
+      "title": "Америка, Бразилия, конец",
+      "from": 1940,
+      "to": 1942
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1881",
+      "date": {
+        "from": "1881-11-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в богатой еврейской семье",
+      "long": "Родился в Вене в богатой еврейской семье: отец Мориц Цвейг владел текстильной фабрикой, мать Ида Бреттауэр происходила из семьи банкиров.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "vienna-youth",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Вена 1881-11-28"
+      }
+    },
+    {
+      "key": "education-1900",
+      "date": {
+        "from": "1900",
+        "to": "1904",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Венский университет, докторская степень",
+      "long": "После гимназии поступил в Венский университет, изучал философию; в 1904 году получил докторскую степень.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "vienna-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончив в 1900 году гимназию, Цвейг поступил в Венский университет, где изучал философию и в 1904 году получил докторскую степень."
+      }
+    },
+    {
+      "key": "creation-1901",
+      "date": {
+        "from": "1901",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый сборник стихов за свой счёт, дружба с Рильке",
+      "long": "Первый сборник стихов вышел на собственные средства. Автор отправил его Рильке, и так завязалась дружба, продолжавшаяся до смерти Рильке.",
+      "place": {
+        "label": "Вена"
+      },
+      "works": [
+        {
+          "ref": "silver-strings"
+        }
+      ],
+      "chapter": "vienna-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уже во время учёбы на собственные средства опубликовал первый сборник своих стихов («Серебряные струны» (нем. Silberne Saiten, 1901)"
+      }
+    },
+    {
+      "key": "love-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Фридерикой фон Винтерниц",
+      "long": "Познакомился с Фридерикой фон Винтерниц, будущей женой; на тот момент она была замужем за журналистом Феликсом Винтерницем.",
+      "chapter": "travels-war",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Jänner 1920 heiratete er die von dem Journalisten Felix Winternitz geschiedene Friderike von Winternitz, die er bereits 1912 kennengelernt hatte."
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Увольнение с военной службы в военном архиве",
+      "long": "В начале войны вызвался на военную службу и был переведён в военный архив; в 1917 году получил отпуск, а затем был полностью освобождён от службы.",
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Er wurde 1917 vom Militärdienst beurlaubt und später ganz entlassen."
+      }
+    },
+    {
+      "key": "relocation-1917",
+      "date": {
+        "from": "1917",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в нейтральной Швейцарии",
+      "long": "Подготовка постановки трагедии «Иеремия» в Цюрихе дала повод переехать в Швейцарию, где он общался с эмигрировавшими интеллектуалами, пацифистами, и работал корреспондентом венской газеты.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "works": [
+        {
+          "ref": "jeremias",
+          "note": "постановка пьесы в цюрихском театре стала поводом для переезда (Zweig, автобиография, по литературоведению)"
+        }
+      ],
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Последние годы Первой мировой войны жил в Швейцарии (1917—1918)"
+      }
+    },
+    {
+      "key": "other-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покупка дома на Капуцинерберге",
+      "long": "Купил запущенный замок Пашингер-Шлёссль на горе Капуцинерберг в Зальцбурге, позднее ставший его домом.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zweig fuhr nach Salzburg, wo er im Krieg, Anfang 1918, das desolate Paschinger Schlössl auf dem Kapuzinerberg gekauft hatte."
+      }
+    },
+    {
+      "key": "relocation-1919",
+      "date": {
+        "from": "1919-03-24",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Австрию, переезд в Зальцбург",
+      "long": "Вернулся в Австрию и поселился в Зальцбурге, отдалившись от Вены.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "chapter": "salzburg",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach Kriegsende kehrte Zweig nach Österreich zurück, zufälligerweise am 24. März 1919 ein"
+      }
+    },
+    {
+      "key": "love-1920",
+      "date": {
+        "from": "1920-01",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Фридерикой фон Винтерниц",
+      "long": "Женился на Фридерике фон Винтерниц, у которой было две дочери от первого брака. Она работала при нём секретарём и помощницей.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "chapter": "salzburg",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Jänner 1920 heiratete er die von dem Journalisten Felix Winternitz geschiedene Friderike von Winternitz"
+      }
+    },
+    {
+      "key": "loss-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть Райнера Мария Рильке",
+      "long": "Умер Рильке, с которым Цвейг дружил с начала 1900-х годов.",
+      "chapter": "salzburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Так завязалась дружба, продолжавшаяся до самой кончины Рильке в 1926 году."
+      }
+    },
+    {
+      "key": "loss-1926-2",
+      "date": {
+        "from": "1926-03-02",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Мориц Цвейг, владелец текстильной фабрики.",
+      "chapter": "salzburg",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Moritz Zweig 1845-12-28 – 1926-03-02"
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в СССР на толстовский юбилей",
+      "long": "Поездка в СССР на толстовские торжества; встречался с Фединым, познакомился с Горьким. Позже стал критически относиться к Советскому Союзу.",
+      "chapter": "salzburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году Цвейг приехал в Советский Союз на торжества по случаю столетия со дня рождения Льва Толстого."
+      }
+    },
+    {
+      "key": "relocation-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Австрии, эмиграция в Лондон",
+      "long": "Покинул Австрию после прихода нацистов к власти в Германии и установления режима Дольфуса; поселился в Лондоне. С женой жил теперь отдельно.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "erasmus",
+          "note": "написана в Лондоне"
+        },
+        {
+          "ref": "castellio",
+          "note": "написана в лондонском изгнании"
+        }
+      ],
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году, после прихода Гитлера к власти в Германии и установления режима Дольфуса в Австрии, Цвейг покинул Австрию и уехал в Лондон."
+      }
+    },
+    {
+      "key": "persecution-1934",
+      "date": {
+        "from": "1934-02-18",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Обыск в зальцбургском доме",
+      "long": "Полиция провела обыск в доме Цвейга в Зальцбурге под предлогом поиска оружия. Обыск пришёлся на время работы над книгой об Эразме.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "works": [
+        {
+          "ref": "erasmus",
+          "note": "обыск произошёл, когда Цвейг работал над книгой об Эразме (литературоведческий комментарий)"
+        }
+      ],
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 18. Februar 1934, wenige Tage nach dem Februaraufstand, durchsuchten vier Polizisten das Haus des erklärten Pazifisten Stefan Zweig"
+      }
+    },
+    {
+      "key": "persecution-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет книг в нацистской Германии",
+      "long": "Книги Цвейга внесены в список сожжённых и запрещённых в нацистской Германии.",
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zweig wurde auf die Liste der Bücherverbrennungen gesetzt und 1935 in die Liste verbotener Autoren aufgenommen."
+      }
+    },
+    {
+      "key": "persecution-1935-2",
+      "date": {
+        "from": "1935-06-24",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Премьера оперы по его либретто и её запрет",
+      "long": "На премьере оперы Рихарда Штрауса «Молчаливая женщина» по либретто Цвейга имя автора осталось в программе; после трёх представлений оперу запретили.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Strauss famously defied the Nazi regime by refusing to sanction the removal of Zweig's name from the programme for the work's première on 24 June 1935 in Dresden."
+      }
+    },
+    {
+      "key": "other-1936",
+      "date": {
+        "from": "1936-09-28",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Охлаждение с Роменом Ролланом",
+      "long": "В письме Роллану резко осудил московские процессы; это привело к охлаждению отношений с давним другом.",
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 сентября 1936 года он писал Ромену Роллану: «… в Вашей России Зиновьев, Каменев, ветераны Революции, первые соратники Ленина расстреляны как бешеные собаки…"
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Продажа зальцбургского дома",
+      "long": "Продал дом в Зальцбурге, окончательно оборвав связь с Австрией.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Sein Haus in Salzburg konnte er im Mai 1937 verkaufen."
+      }
+    },
+    {
+      "key": "persecution-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Аншлюс, потеря австрийского гражданства",
+      "long": "После аншлюса Австрии лишился австрийского гражданства и стал лицом без гражданства; его книги по-немецки печатали в Швеции.",
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach dem „Anschluss“ Österreichs 1938 wurden seine deutschen Schriften in Schweden gedruckt. … Erschwert wurde dies durch den „Anschluss“, mit dem er die österreichische Staatsbürgerschaft verlor und ein Staatenloser wurde"
+      }
+    },
+    {
+      "key": "loss-1938",
+      "date": {
+        "from": "1938-08-23",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Ида Цвейг (урождённая Бреттауэр).",
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Ida Zweig 1854-05-05 – 1938-08-23"
+      }
+    },
+    {
+      "key": "family-1938",
+      "date": {
+        "from": "1938-11",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Фридерикой",
+      "long": "Брак с Фридерикой расторгнут земельным судом Зальцбурга. Переписка и встречи с ней продолжались до его смерти.",
+      "place": {
+        "label": "Зальцбург"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seine Ehe mit Friderike Zweig, von der er ab seiner Flucht aus Salzburg 1934 partiell getrennt lebte, wurde im November 1938 vom Landesgericht Salzburg in Abwesenheit der Ehepartner geschieden."
+      }
+    },
+    {
+      "key": "relocation-1939",
+      "date": {
+        "from": "1939-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Бат",
+      "long": "Переехал с женой из Лондона в Бат и купил там дом.",
+      "place": {
+        "label": "Бат"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Er zog mit seiner Frau im Juli 1939 von London nach Bath und kaufte sich dort ein Haus"
+      }
+    },
+    {
+      "key": "love-1939",
+      "date": {
+        "from": "1939-09",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Шарлоттой Альтман",
+      "long": "Женился на своей секретарше Шарлотте Альтман, которая сопровождала его в поездках.",
+      "place": {
+        "label": "Бат"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1939, Zweig married his secretary Elisabet Charlotte \"Lotte\" Altmann in Bath, England."
+      }
+    },
+    {
+      "key": "loss-1939",
+      "date": {
+        "from": "1939-09-26",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Похороны Зигмунда Фрейда",
+      "long": "Выступил с прощальной речью на похоронах умершего в эмиграции друга Зигмунда Фрейда.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-bath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Bei der Trauerfeier für seinen im Exil verstorbenen Freund Sigmund Freud am 26. September 1939 im Krematorium von Golders Green in London hielt er eine Abschiedsrede."
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Бегство из Европы в Америку",
+      "long": "Из-за угрозы вторжения в Англию уехал с женой в США, затем отправился в Латинскую Америку. В 1940 году получил британское гражданство.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "americas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1940 he and his second wife crossed the Atlantic to the United States, settling in New York City"
+      }
+    },
+    {
+      "key": "persecution-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Лишение докторской степени нацистами",
+      "long": "Нацисты лишили Цвейга докторской степени Венского университета; в 2003 году решение признано недействительным.",
+      "chapter": "americas",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1941 erfolgte die Aberkennung des Doktorgrades durch die Nationalsozialisten"
+      }
+    },
+    {
+      "key": "relocation-1941",
+      "date": {
+        "from": "1941-08-22",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Последний дом в Петрополисе",
+      "long": "Поселился в Петрополисе близ Рио-де-Жанейро. Здесь написаны книга о Бразилии, мемуары и шахматная новелла; росли депрессия и тоска по Европе.",
+      "place": {
+        "label": "Петрополис"
+      },
+      "works": [
+        {
+          "ref": "brazil",
+          "note": "написана в Петрополисе"
+        },
+        {
+          "ref": "chess-novella",
+          "note": "создавалась в Бразилии в последние годы"
+        },
+        {
+          "ref": "world-of-yesterday",
+          "note": "мемуары завершены перед смертью в Бразилии"
+        }
+      ],
+      "chapter": "americas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 22 August 1941, they moved again to Petrópolis, 68 kilometres north of Rio de Janeiro."
+      }
+    },
+    {
+      "key": "death-1942",
+      "date": {
+        "from": "1942-02-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть вместе с женой Шарлоттой",
+      "long": "Вместе с женой Шарлоттой принял смертельную дозу веронала в своём доме в Петрополисе, оставив прощальные письма.",
+      "place": {
+        "label": "Петрополис"
+      },
+      "chapter": "americas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 февраля 1942 года Цвейг и его жена приняли смертельную дозу веронала"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "silver-strings",
+      "title": "Серебряные струны",
+      "written": {
+        "from": 1901,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "jeremias",
+      "title": "Иеремия",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "amok",
+      "title": "Амок",
+      "written": {
+        "from": 1922,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "letter-from-unknown-woman",
+      "title": "Письмо незнакомки",
+      "qid": "Q914123",
+      "written": {
+        "from": 1922,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "confusion-of-feelings",
+      "title": "Смятение чувств",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "sternstunden",
+      "title": "Звёздные часы человечества",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "fouche",
+      "title": "Жозеф Фуше",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "marie-antoinette",
+      "title": "Мария-Антуанетта",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "erasmus",
+      "title": "Триумф и трагедия Эразма Роттердамского",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "mary-stuart",
+      "title": "Мария Стюарт",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "castellio",
+      "title": "Совесть против насилия",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "magellan",
+      "title": "Подвиг Магеллана",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "beware-of-pity",
+      "title": "Нетерпение сердца",
+      "qid": "Q1428590",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "world-of-yesterday",
+      "title": "Вчерашний мир",
+      "qid": "Q1217507",
+      "written": {
+        "from": 1939,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "brazil",
+      "title": "Бразилия, страна будущего",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "chess-novella",
+      "title": "Шахматная новелла",
+      "qid": "Q1513820",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    }
+  ]
+}

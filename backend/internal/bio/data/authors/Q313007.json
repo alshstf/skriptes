@@ -1,0 +1,298 @@
+{
+  "qid": "Q313007",
+  "name": "Ник Хорнби",
+  "born": "1957-04-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%BE%D1%80%D0%BD%D0%B1%D0%B8%2C_%D0%9D%D0%B8%D0%BA",
+      "rev": 153455031
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nick_Hornby",
+      "rev": 1375399195
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-uchyoba",
+      "title": "Развод родителей и Кембридж",
+      "from": 1957,
+      "to": 1982
+    },
+    {
+      "key": "pervye-knigi",
+      "title": "Болельщик становится писателем",
+      "from": 1983,
+      "to": 1997
+    },
+    {
+      "key": "semya-i-kino",
+      "title": "Сын, TreeHouse и кино",
+      "from": 1998,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-04-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Редхилле",
+      "long": "Родился в Редхилле, графство Суррей, недалеко от Лондона; сын Дерека Хорнби, председателя London and Continental Railways.",
+      "place": {
+        "label": "Редхилл"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хорнби родился 17 апреля 1957 года в городе Редхилл в графстве Суррей"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало писательской и журналистской карьеры",
+      "long": "Начал карьеру писателя и журналиста.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году он начал свою карьеру писателя и журналиста."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех и спортивная премия",
+      "long": "Автобиографическая книга о страсти к «Арсеналу» принесла первое признание и премию William Hill Sports Book of the Year; после неё Хорнби стал публиковаться в Sunday Times, Time Out, TLS и The New Yorker.",
+      "works": [
+        {
+          "ref": "fever-pitch"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hornby's second book, Fever Pitch, also published in 1992, is an autobiographical story detailing his fanatical support for Arsenal Football Club.  As a result, Hornby received the William Hill Sports Book of the Year Award."
+      }
+    },
+    {
+      "key": "child-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Дэнни, диагноз — аутизм",
+      "long": "У Хорнби и Вирджинии Боуэлл родился сын Дэнни; у мальчика определили аутизм.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1993 году у Хорнби и его жены Вирджинии Боуэлл родился сын Дэнни. У него определили аутизм"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Членство в Королевском литературном обществе",
+      "long": "Избран членом Королевского литературного общества.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Член Королевского литературного общества 1996-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Э. М. Форстера",
+      "long": "Получил премию Э. М. Форстера Американской академии искусств и литературы.",
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1999, Hornby received the E. M. Forster Award of the American Academy of Arts and Letters."
+      }
+    },
+    {
+      "key": "child-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение первого сына в браке с Амандой Поузи",
+      "long": "У Хорнби и его второй жены, продюсера Аманды Поузи, родились двое сыновей — в 2001 и 2004 годах.",
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They have two sons, born in 2001 and 2004."
+      }
+    },
+    {
+      "key": "other-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Антология в пользу TreeHouse",
+      "long": "Составил антологию рассказов друзей, часть доходов от которой передал TreeHouse — благотворительной организации для детей с аутизмом, которую помог создать в поисках специального образования для сына.",
+      "works": [
+        {
+          "ref": "speaking-with-the-angel"
+        }
+      ],
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Part of the money he earned with his next book, Speaking with the Angel in 2002, was donated to TreeHouse, a charity for autistic children: Hornby's own son is autistic."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарная карьера, номинация на «Оскар»",
+      "long": "Адаптировал мемуары Линн Барбер для фильма; номинирован на «Оскар» и две премии BAFTA. Позже писал сценарии к «Дикой» и «Бруклину».",
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, Hornby adapted an autobiographical memoir by the journalist Lynn Barber for the screen as An Education"
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание Ministry of Stories",
+      "long": "Стал соучредителем Ministry of Stories — некоммерческой организации в Восточном Лондоне, помогающей детям и молодёжи развивать навыки письма.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Hornby co-founded the Ministry of Stories, a non-profit organisation in East London"
+      }
+    },
+    {
+      "key": "illness-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Публичный рассказ о депрессии",
+      "long": "В радиопередаче BBC Radio 4 рассказал о своих эпизодах депрессии.",
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hornby discussed his bouts of depression in 2012 on the BBC Radio 4 broadcast"
+      }
+    },
+    {
+      "key": "family-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Расставание со второй женой",
+      "long": "Хорнби и Аманда Поузи расстались.",
+      "chapter": "semya-i-kino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hornby's second wife is producer Amanda Posey. They separated in 2021."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fever-pitch",
+      "title": "Футбольная горячка",
+      "qid": "Q574875",
+      "written": {
+        "from": 1991,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "high-fidelity",
+      "title": "Hi-Fi",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "about-a-boy",
+      "title": "Мой мальчик",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "how-to-be-good",
+      "title": "Как стать хорошим",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "speaking-with-the-angel",
+      "title": "Объяснение с ангелом",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "a-long-way-down",
+      "title": "Долгое падение",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    }
+  ]
+}

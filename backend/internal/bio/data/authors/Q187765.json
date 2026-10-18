@@ -1,0 +1,852 @@
+{
+  "qid": "Q187765",
+  "name": "Генри Миллер",
+  "born": "1891-12-26",
+  "died": "1980-06-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B8%D0%BB%D0%BB%D0%B5%D1%80%2C_%D0%93%D0%B5%D0%BD%D1%80%D0%B8",
+      "rev": 149586742
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Henry_Miller",
+      "rev": 1371935253
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-years",
+      "title": "Бруклин, Western Union, первый брак",
+      "from": 1891,
+      "to": 1923
+    },
+    {
+      "key": "june-and-writing",
+      "title": "Джун и решение писать",
+      "from": 1924,
+      "to": 1929
+    },
+    {
+      "key": "paris",
+      "title": "Париж, Нин и запретные книги",
+      "from": 1930,
+      "to": 1939
+    },
+    {
+      "key": "greece-big-sur",
+      "title": "Греция, Калифорния, Биг-Сур",
+      "from": 1940,
+      "to": 1962
+    },
+    {
+      "key": "pacific-palisades",
+      "title": "Пасифик-Палисейдс",
+      "from": 1963,
+      "to": 1980
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1891",
+      "date": {
+        "from": "1891-12-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье немецких эмигрантов",
+      "long": "Родился в Йорквилле на Манхэттене в семье немецких эмигрантов; детство прошло в Бруклине.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель родился 26 декабря 1891 года в Нью-Йорке, в Йорквилльском округе Манхэттена"
+      }
+    },
+    {
+      "key": "love-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Беатрисой Уикенз",
+      "long": "Летом 1917 года женился на пианистке Беатрисе Сильвас Уикенз, избегая военной службы.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "moloch",
+          "note": "роман основан на первом браке и работе в Western Union (англоязычная статья)"
+        }
+      ],
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1917 года, спасаясь от военной службы, двадцатипятилетний Миллер вступает в свой первый брак — с Беатрисой Сильвас Уикенз."
+      }
+    },
+    {
+      "key": "child-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Барбары",
+      "long": "В браке с Беатрисой родилась дочь Барбара.",
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1919 году у них родилась дочь Барбара."
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "to": "1924",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Western Union",
+      "long": "Работал управляющим по найму в отделе курьеров телеграфной компании Western Union.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "moloch",
+          "note": "роман основан на годах работы в Western Union"
+        }
+      ],
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he worked there from 1920 to 1924 as personnel manager in the messenger department"
+      }
+    },
+    {
+      "key": "creation-1922",
+      "date": {
+        "from": "1922-03",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый роман за время отпуска",
+      "long": "За трёхнедельный отпуск написал первый роман «Подрезанные крылья»; он не издан, сохранились лишь фрагменты.",
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1922, during a three-week vacation, he wrote his first novel, Clipped Wings."
+      }
+    },
+    {
+      "key": "family-1923",
+      "date": {
+        "from": "1923-12-21",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Беатрисой",
+      "long": "Развод с Беатрисой Уикенз оформлен 21 декабря 1923 года.",
+      "chapter": "brooklyn-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "their divorce was granted on December 21, 1923"
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход со службы ради литературы",
+      "long": "По настоянию Джун оставил работу в Western Union и посвятил себя литературе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "june-and-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1924 Miller quit Western Union to dedicate himself completely to writing."
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924-06-01",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джун Эдит Смит",
+      "long": "Женился на танцовщице Джун Мэнсфилд (Джун Эдит Смит), с которой познакомился в 1923 году; она стала главной героиней его книг.",
+      "works": [
+        {
+          "ref": "tropic-of-capricorn",
+          "note": "Джун — главная тема автобиографических романов (статья)"
+        }
+      ],
+      "chapter": "june-and-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They began an affair, and married on June 1, 1924."
+      }
+    },
+    {
+      "key": "love-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отъезд Джун и Мары в Париж",
+      "long": "Джун и Джин Кронски, жившая у Миллеров с 1926 года, уехали в Париж, оставив Миллера одного; он подозревал их в близких отношениях.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "crazy-cock",
+          "note": "роман рассказывает о близости Джун и Мары (англоязычная статья)"
+        }
+      ],
+      "chapter": "june-and-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kronski lived with Miller and June from 1926 until 1927, when June and Kronski went to Paris together, leaving Miller behind, which upset him greatly."
+      }
+    },
+    {
+      "key": "creation-1927",
+      "date": {
+        "from": "1927",
+        "to": "1928",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман под именем жены на деньги поклонника",
+      "long": "Роман писался как будто от имени Джун: её богатый поклонник Роланд Фридман платил ей за книгу.",
+      "works": [
+        {
+          "ref": "moloch"
+        }
+      ],
+      "chapter": "june-and-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Moloch: or, This Gentile World, was written in 1927–28, initially under the guise of a novel by his wife Juliet (June)."
+      }
+    },
+    {
+      "key": "relocation-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Первая поездка в Париж с Джун",
+      "long": "Несколько месяцев провёл в Париже с Джун на деньги Роланда Фридмана.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "june-and-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1928, Miller spent several months in Paris with June, a trip financed by Freedman."
+      }
+    },
+    {
+      "key": "loss-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Самоубийство Джин Кронски",
+      "long": "Джин Кронски (Мара), подруга Джун, покончила с собой около 1930 года.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kronski died by suicide around 1930."
+      }
+    },
+    {
+      "key": "relocation-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж без денег",
+      "long": "Переехал в Париж один; первый год жил почти без денег и в дешёвых отелях, начал работу над книгой о Париже.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "tropic-of-cancer",
+          "note": "в письме другу Миллер сообщал, что начинает «парижскую книгу» (англоязычная статья)"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1930, Miller moved to Paris unaccompanied."
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа корректором в парижской газете",
+      "long": "Работал корректором парижского издания Chicago Tribune благодаря другу Альфреду Перлесу.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1931, Miller was employed by the Chicago Tribune Paris edition as a proofreader, thanks to his friend Alfred Perlès, who worked there."
+      }
+    },
+    {
+      "key": "love-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Роман с Анаис Нин и её поддержка",
+      "long": "Анаис Нин, ставшая его возлюбленной, избавила Миллера от материальных проблем; это положило начало разрыву с Джун.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "tropic-of-cancer"
+        },
+        {
+          "ref": "black-spring",
+          "note": "по влиянию Нин Миллер стал записывать воспоминания о детстве — основа книги (статья)"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Состояние Анаис избавило Генри от материальных проблем, и в 1932 году он полностью посвятил себя работе над «Тропиком Рака»."
+      }
+    },
+    {
+      "key": "persecution-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет первой книги в США",
+      "long": "Первая книга вышла в Париже и была запрещена в США за непристойность; запрет на другие романы держался до 1960-х.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "tropic-of-cancer"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первая опубликованная книга «Тропик рака» (1934) была опубликована издательством «Обелиск-пресс» в Париже и запрещена в Соединенных Штатах за непристойность."
+      }
+    },
+    {
+      "key": "family-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Джун",
+      "long": "Джун развелась с Миллером заочно, через представителя, в Мехико.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Late in 1934, June divorced Miller by proxy in Mexico City."
+      }
+    },
+    {
+      "key": "relocation-1939",
+      "date": {
+        "from": "1939",
+        "to": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Поездка в Грецию к Дарреллу",
+      "long": "Уехал из Франции в Грецию по приглашению Лоренса Даррелла и вернулся в США в 1940 году.",
+      "place": {
+        "label": "Керкира"
+      },
+      "works": [
+        {
+          "ref": "colossus-of-maroussi",
+          "note": "поездка описана в книге (статья)"
+        }
+      ],
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 году Лоренс Даррелл, который жил на Керкире, пригласил Миллера в Грецию."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отзыв Оруэлла о Миллере",
+      "long": "Джордж Оруэлл в эссе «Внутри кита» назвал Миллера единственным заметным прозаиком среди англоязычных авторов.",
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "One of the first acknowledgments of Miller as a major modern writer was by George Orwell in his 1940 essay \"Inside the Whale\"."
+      }
+    },
+    {
+      "key": "creation-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над трилогией о Бруклине",
+      "long": "Начал первый роман трилогии о шести годах в Бруклине; трилогия завершена в 1959 году.",
+      "works": [
+        {
+          "ref": "sexus"
+        }
+      ],
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1942 году, незадолго до переезда в Калифорнию, Миллер начал писать первый роман в трилогии «Благостное распятие» «Сексус»."
+      }
+    },
+    {
+      "key": "relocation-1942",
+      "date": {
+        "from": "1942-06",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Калифорнию",
+      "long": "После годичной поездки по США переехал в Калифорнию, сначала жил в Беверли-Глен.",
+      "place": {
+        "label": "Беверли-Глен"
+      },
+      "works": [
+        {
+          "ref": "air-conditioned-nightmare",
+          "note": "поездка по стране стала материалом книги (англоязычная статья)"
+        }
+      ],
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he moved to California in June 1942, initially residing just outside Hollywood in Beverly Glen"
+      }
+    },
+    {
+      "key": "relocation-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Поселение в Биг-Суре",
+      "long": "Поселился в Биг-Суре, где писал картины и жил среди богемных художников и писателей.",
+      "place": {
+        "label": "Биг-Сур"
+      },
+      "works": [
+        {
+          "ref": "big-sur-oranges",
+          "note": "в книге рассказано о жизни в Биг-Суре (статья)"
+        }
+      ],
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1944 году он поселился в живописном, тогда ещё не успевшем обрести популярность среди туристов местечке под названием Биг-Сур."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Яниной Лепской, рождение двоих детей",
+      "long": "Женился на Янине Лепской; в браке родились сын Тони и дочь Валентина.",
+      "place": {
+        "label": "Биг-Сур"
+      },
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1944 году Миллер познакомился со своей третьей женой, Яниной Мартой Лепской, студенткой философии, которая была на тридцать лет младше него."
+      }
+    },
+    {
+      "key": "family-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Яниной Лепской",
+      "long": "Брак с Яниной Лепской распался.",
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они развелись в 1952 году."
+      }
+    },
+    {
+      "key": "love-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Евой Мак-Клюр",
+      "long": "Женился на художнице Еве Мак-Клюр, которая была младше на тридцать семь лет.",
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The next year, he married artist Eve McClure, who was 37 years his junior."
+      }
+    },
+    {
+      "key": "family-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Евой Мак-Клюр",
+      "long": "Брак с Евой Мак-Клюр распался.",
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они развелись в 1960 году, и она умерла в 1966 году, вероятно, в результате алкоголизма."
+      }
+    },
+    {
+      "key": "persecution-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Американское издание и суды о непристойности",
+      "long": "Издание в США привело к серии судебных процессов о непристойности; суд признал книгу литературным произведением.",
+      "works": [
+        {
+          "ref": "tropic-of-cancer"
+        }
+      ],
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The publication of Miller's Tropic of Cancer in the United States in 1961 by Grove Press led to a series of obscenity trials that tested American laws on pornography."
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Встреча с Джун после трёх десятилетий",
+      "long": "Встретился с Джун в Нью-Йорке спустя почти три десятилетия; её внешность его потрясла.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "greece-big-sur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году Миллер воссоединился в Нью-Йорке со своей бывшей женой и главной темой трилогии «Благостное распятие» Джун."
+      }
+    },
+    {
+      "key": "relocation-1963",
+      "date": {
+        "from": "1963-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Пасифик-Палисейдс",
+      "long": "Переехал в дом на Окампо-Драйв, где устраивал обеды для артистов и литераторов.",
+      "place": {
+        "label": "Пасифик-Палисейдс"
+      },
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1963 года Миллер переехал в Пасифик Палисейдс в Лос-Анджелесе, где он провёл последние семнадцать лет жизни."
+      }
+    },
+    {
+      "key": "loss-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть Евы Мак-Клюр",
+      "long": "Бывшая жена Ева Мак-Клюр умерла, вероятно, от последствий алкоголизма.",
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они развелись в 1960 году, и она умерла в 1966 году, вероятно, в результате алкоголизма."
+      }
+    },
+    {
+      "key": "love-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Хоки Токуда",
+      "long": "Женился на певице и актрисе Хоки Токуда.",
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году он женился на певице японского происхождения Хоки Токуда, ставшей его пятой женой."
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Налоговый протест против войны во Вьетнаме",
+      "long": "Подписал обязательство отказаться от уплаты налогов в знак протеста против войны во Вьетнаме.",
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1968 году Миллер подписал «Военный налоговый протест писателей и редакторов», пообещав отказаться от уплаты налогов в знак протеста против войны во Вьетнаме."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на Нобелевскую премию",
+      "long": "Профессор Копенгагенского университета Аллан Филип выдвинул Миллера на Нобелевскую премию по литературе.",
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1973, Miller was nominated for the Nobel Prize in Literature by University of Copenhagen professor Allan Philip."
+      }
+    },
+    {
+      "key": "family-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Хоки Токуда",
+      "long": "Брак с Хоки Токуда распался.",
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Миллер и Токуда развелись в 1977 году."
+      }
+    },
+    {
+      "key": "death-1980",
+      "date": {
+        "from": "1980-06-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Пасифик-Палисейдс",
+      "long": "Умер дома от осложнений болезни органов кровообращения; прах разделён между сыном и дочерью.",
+      "place": {
+        "label": "Пасифик-Палисейдс"
+      },
+      "chapter": "pacific-palisades",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Miller died of circulatory complications at his home in Pacific Palisades, Los Angeles, on June 7, 1980, aged 88."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "moloch",
+      "title": "Молох",
+      "written": {
+        "from": 1927,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "crazy-cock",
+      "title": "Одуревший петух",
+      "written": {
+        "from": 1928,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "tropic-of-cancer",
+      "title": "Тропик Рака",
+      "qid": "Q1501700",
+      "written": {
+        "from": 1930,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "black-spring",
+      "title": "Чёрная весна",
+      "qid": "Q3403720",
+      "written": {
+        "from": 1932,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "tropic-of-capricorn",
+      "title": "Тропик Козерога",
+      "qid": "Q663887",
+      "written": {
+        "from": 1930,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "colossus-of-maroussi",
+      "title": "Колосс Маруссийский",
+      "qid": "Q7726865",
+      "written": {
+        "from": 1939,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "air-conditioned-nightmare",
+      "title": "Аэрокондиционированный кошмар",
+      "qid": "Q28407758",
+      "written": {
+        "from": 1941,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "sexus",
+      "title": "Сексус",
+      "qid": "Q3480964",
+      "written": {
+        "from": 1942,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "plexus",
+      "title": "Плексус",
+      "qid": "Q98876657",
+      "written": {
+        "from": 1949,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "nexus",
+      "title": "Нексус",
+      "written": {
+        "from": 1953,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "big-sur-oranges",
+      "title": "Биг-Сур и апельсины Иеронима Босха",
+      "written": {
+        "from": 1944,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "quiet-days-in-clichy",
+      "title": "Тихие дни в Клиши",
+      "qid": "Q2349576",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    }
+  ]
+}

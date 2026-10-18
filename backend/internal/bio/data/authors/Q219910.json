@@ -1,0 +1,459 @@
+{
+  "qid": "Q219910",
+  "name": "Пьер Буль",
+  "born": "1912-02-20",
+  "died": "1994-01-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D0%BB%D1%8C%2C_%D0%9F%D1%8C%D0%B5%D1%80",
+      "rev": 155656022
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Pierre_Boulle",
+      "rev": 1371698178
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Pierre_Boulle",
+      "rev": 240317043
+    }
+  ],
+  "chapters": [
+    {
+      "key": "avignon-and-supelec",
+      "title": "Авиньон и Высшая школа электрики",
+      "from": 1912,
+      "to": 1935
+    },
+    {
+      "key": "malaya-plantations",
+      "title": "Каучуковые плантации Малайи",
+      "from": 1936,
+      "to": 1939
+    },
+    {
+      "key": "free-france-and-captivity",
+      "title": "Свободная Франция, плен и побег",
+      "from": 1940,
+      "to": 1945
+    },
+    {
+      "key": "paris-and-first-books",
+      "title": "Возвращение и первые книги в Париже",
+      "from": 1946,
+      "to": 1957
+    },
+    {
+      "key": "fame-and-late-years",
+      "title": "Слава «Квая» и «Планеты обезьян»",
+      "from": 1958,
+      "to": 1994
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-02-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Авиньоне",
+      "long": "Родился в Авиньоне в семье адвоката Эжена Буля и Жюльетты Сеген; рос с двумя сёстрами, Сюзанной и Мадлен.",
+      "place": {
+        "label": "Авиньон"
+      },
+      "chapter": "avignon-and-supelec",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Pierre Boulle, né le 20 février 1912 à Avignon"
+      }
+    },
+    {
+      "key": "education-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в лицей Авиньона",
+      "long": "В 1918 году поступил в начальные классы авиньонского лицея.",
+      "place": {
+        "label": "Авиньон"
+      },
+      "chapter": "avignon-and-supelec",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Vers la fin de la guerre, en 1918, il entre dans les petites classes au lycée d’Avignon."
+      }
+    },
+    {
+      "key": "loss-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, с которым Буль делил любовь к книгам и охоте, умер от болезни сердца, когда сыну было 14 лет.",
+      "place": {
+        "label": "Авиньон"
+      },
+      "chapter": "avignon-and-supelec",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Son père meurt d’une maladie du cœur en 1926"
+      }
+    },
+    {
+      "key": "education-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом инженера Высшей школы электрики",
+      "long": "Учился в Высшей школе электрики (Supélec) и получил диплом инженера (по французской статье — в 1932 году).",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "avignon-and-supelec",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He studied at the prestigious École supérieure d'électricité (Supélec) where he received a degree in engineering in 1933."
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936",
+        "to": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Техник на каучуковых плантациях Малайи",
+      "long": "Работал техником на плантациях компании SOCFIN в Малайе; этот опыт лёг в основу романа о Малайе, а наблюдения за дикой природой повлияли на замысел «Планеты обезьян».",
+      "place": {
+        "label": "Малайя"
+      },
+      "works": [
+        {
+          "ref": "planet-of-the-apes",
+          "note": "вдохновение от наблюдений за дикой природой на плантациях Малайи (английская статья)"
+        }
+      ],
+      "chapter": "malaya-plantations",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1936 to 1939, he worked as a technician at SOCFIN rubber plantations in Malaya."
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Добровольцем на фронт в Индокитай",
+      "long": "С началом войны вызвался на фронт, отправился в Сингапур, затем в Сайгон, где был мобилизован.",
+      "place": {
+        "label": "Сайгон"
+      },
+      "chapter": "free-france-and-captivity",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Dès la déclaration de guerre de 1939, volontaire pour partir sur le front, il se rend à Singapour puis à Saïgon où il est mobilisé sur place."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Бронеавтомобильный взвод на границе Сиама",
+      "long": "После разгрома французской армии командовал взводом бронеавтомобилей на границе с Сиамом.",
+      "chapter": "free-france-and-captivity",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En juin 1940, l'armée française s'effondre devant les troupes allemandes. Pierre Boulle est envoyé à la frontière siamoise à la tête d'un peloton d'automitrailleuses"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Вступление в «Свободную Францию»",
+      "long": "Примкнул к голлистскому движению в Сингапуре, стал офицером связи; по документам на имя Питера Джона Рула отправлялся с заданиями против японцев в Индокитае.",
+      "place": {
+        "label": "Сингапур"
+      },
+      "works": [
+        {
+          "ref": "a-noble-profession",
+          "note": "роман частично основан на опыте работы Буля тайным агентом (английская статья)"
+        }
+      ],
+      "chapter": "free-france-and-captivity",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1941, alors que la France est occupée, il décide de rejoindre le mouvement gaulliste"
+      }
+    },
+    {
+      "key": "persecution-1943",
+      "date": {
+        "from": "1943",
+        "to": "1944",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Плен у вишистов в Индокитае",
+      "long": "Схвачен сторонниками режима Виши на Меконге; по французской статье осуждён на пожизненную каторгу. Около двух лет провёл в заключении.",
+      "place": {
+        "label": "Меконг"
+      },
+      "works": [
+        {
+          "ref": "bridge-over-the-river-kwai",
+          "note": "военный опыт Буля вдохновил роман (английская статья)"
+        },
+        {
+          "ref": "my-own-river-kwai",
+          "note": "военные приключения изложены в документальной книге"
+        }
+      ],
+      "chapter": "free-france-and-captivity",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1943, he was captured by Vichy France loyalists on the Mekong River."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Побег из плена",
+      "long": "В конце 1944 года Булю удалось бежать из плена; по французской статье он присоединился к Force 136 в Калькутте.",
+      "place": {
+        "label": "Сайгон"
+      },
+      "chapter": "free-france-and-captivity",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце 1944 году ему удалось бежать из плена."
+      }
+    },
+    {
+      "key": "other-1946",
+      "date": {
+        "from": "1946-04-24",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Медаль Сопротивления",
+      "long": "Награждён медалью Сопротивления (декрет от 24 апреля 1946 года); среди его наград также Военный крест и орден Почётного легиона.",
+      "chapter": "paris-and-first-books",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Médaille de la Résistance française (décret du 24 avril 1946)"
+      }
+    },
+    {
+      "key": "relocation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Париж и начало писательства",
+      "long": "Вернулся из Малайи в Париж и начал писать, опираясь на воспоминания о Малайе и Индокитае; жил в гостинице, затем у овдовевшей сестры Мадлен.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "bridge-over-the-river-kwai",
+          "note": "роман написан в Париже на материале военного опыта (английская статья)"
+        }
+      ],
+      "chapter": "paris-and-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949 he moved back to Paris and began to write, drawing from his memories of Malaya and Indochina."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Сент-Бёва",
+      "long": "Роман о железной дороге смерти получил премию Сент-Бёва и стал мировым бестселлером.",
+      "works": [
+        {
+          "ref": "bridge-over-the-river-kwai"
+        }
+      ],
+      "chapter": "paris-and-first-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Prix Sainte-Beuve 1952-01-01"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958-03-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Оскар» за сценарий фильма, которого он не писал",
+      "long": "Фильм Дэвида Лина по роману получил семь «Оскаров»; Буль значился автором сценария, так как настоящие сценаристы были в чёрном списке, и получил награду, не зная английского.",
+      "works": [
+        {
+          "ref": "bridge-over-the-river-kwai"
+        }
+      ],
+      "chapter": "fame-and-late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Оскар» за лучший адаптированный сценарий 1958-03-26"
+      }
+    },
+    {
+      "key": "creation-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Сценарий продолжения «Планеты людей»",
+      "long": "После первого фильма о планете обезьян написал сценарий «Планета людей»; студии его отклонили.",
+      "works": [
+        {
+          "ref": "planet-of-the-apes"
+        }
+      ],
+      "chapter": "fame-and-late-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1968, après le premier volet au cinéma, Boulle écrit un script sous le titre La Planète des hommes ; refusé par les studios"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при Общества литераторов",
+      "long": "Получил Большую литературную премию Общества французских писателей за творчество в целом.",
+      "chapter": "fame-and-late-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "1976 : grand prix de la Société des gens de lettres pour l’ensemble de son œuvre"
+      }
+    },
+    {
+      "key": "death-1994",
+      "date": {
+        "from": "1994-01-30",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже",
+      "long": "Умер в Париже в возрасте 81 года.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame-and-late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Boulle died in Paris, on 30 January 1994, at the age of 81."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "william-conrad",
+      "title": "Уильям Конрад",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "bridge-over-the-river-kwai",
+      "title": "Мост через реку Квай",
+      "qid": "Q1211785",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "contes-de-labsurde",
+      "title": "Сказки абсурда",
+      "written": {
+        "from": 1949,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "a-noble-profession",
+      "title": "Благородное ремесло",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "planet-of-the-apes",
+      "title": "Планета обезьян",
+      "qid": "Q2418926",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "my-own-river-kwai",
+      "title": "У истоков реки Квай",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    }
+  ]
+}

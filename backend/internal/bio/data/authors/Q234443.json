@@ -1,0 +1,238 @@
+{
+  "qid": "Q234443",
+  "name": "Джоди Пиколт",
+  "born": "1966-05-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B8%D0%BA%D0%BE%D0%BB%D1%82%2C_%D0%94%D0%B6%D0%BE%D0%B4%D0%B8",
+      "rev": 152788778
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jodi_Picoult",
+      "rev": 1380241411
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-new-england",
+      "title": "Лонг-Айленд и Нью-Гэмпшир",
+      "from": 1966,
+      "to": 1986
+    },
+    {
+      "key": "princeton-and-first-jobs",
+      "title": "Принстон, работа и семья",
+      "from": 1987,
+      "to": 2002
+    },
+    {
+      "key": "bestsellers",
+      "title": "Бестселлеры и публичная позиция",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-05-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Несконсете, Лонг-Айленд",
+      "long": "Родилась в Несконсете на острове Лонг-Айленд, штат Нью-Йорк; в 13 лет переехала в Нью-Гэмпшир.",
+      "place": {
+        "label": "Несконсет"
+      },
+      "chapter": "childhood-new-england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "(англ. Jodi Lynn Picoult, род. 19 мая 1966)"
+      }
+    },
+    {
+      "key": "education-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Принстонского университета",
+      "long": "Изучала писательское мастерство в Принстонском университете, окончила его со степенью бакалавра по английской литературе. Ещё студенткой издала два рассказа в журнале «Семнадцать».",
+      "place": {
+        "label": "Принстон"
+      },
+      "chapter": "princeton-and-first-jobs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писательство она изучала в Университете Принстона и получила высшее образование в 1987 году."
+      }
+    },
+    {
+      "key": "love-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с будущим мужем Тимом Ван Лиром",
+      "long": "В 1989 году в колледже познакомилась с Тимом Ван Лиром, за которого впоследствии вышла замуж; у них трое детей.",
+      "chapter": "princeton-and-first-jobs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джоди Пиколт замужем за Тимом Ван Лиром, с которым познакомилась в 1989 году в колледже."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия New England Bookseller Award",
+      "long": "В 2003 году получила премию New England Bookseller Award в области художественной литературы.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2003, she was awarded the New England Bookseller Award for fiction."
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание молодёжной театральной труппы",
+      "long": "Вместе с Марджори Роуз основала молодёжную театральную труппу Trumbull Hall Troupe в долине Аппер-Вэлли; в первые годы труппа играла спектакли по сценариям Пиколт.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, Picoult co-founded Trumbull Hall Troupe with Marjorie Rose"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-03-09",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке бестселлеров «Нью-Йорк Таймс»",
+      "long": "Роман о последствиях школьной стрельбы стал первой книгой Пиколт, дебютировавшей на первом месте списка бестселлеров «Нью-Йорк Таймс».",
+      "works": [
+        {
+          "ref": "nineteen-minutes"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "her novel Nineteen Minutes, which is about the aftermath of a school shooting in a small town, published on March 9, 2007, was her first book to debut at number 1 on the New York Times Best Seller list."
+      }
+    },
+    {
+      "key": "career-2007-2",
+      "date": {
+        "from": "2007-03-28",
+        "to": "2007-06-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарист комикса «Чудо-женщина»",
+      "long": "Писала сценарии комикса DC Comics «Чудо-женщина» (том 3) вместо Аллана Хайнберга: выпуски с шестого по десятый.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her first issue, number 6, was released on March 28, 2007, and her last was issue number 10, released on June 27, 2007."
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичный скандал в Twitter",
+      "long": "Широко освещавшийся спор в сети со студенткой Брук Нельсон из-за списка книг для университетской программы; после критики Пиколт принесла извинения в Twitter.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2019, Picoult was involved in a widely reported online controversy with Brooke Nelson"
+      }
+    },
+    {
+      "key": "persecution-2023",
+      "date": {
+        "from": "2023-03",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Изъятие её книг из школ Флориды",
+      "long": "В марте 2023 года из школьных библиотек округа Мартин во Флориде изъяли на проверку 92 книги, 20 из них — книги Пиколт; в тот год она активно выступала против запретов книг.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Throughout 2023, Picoult was an outspoken critic of book bannings across the United States, particularly Florida. In March of that year, 92 titles—20 of which were authored by Picoult—were removed from Florida's Martin County School District for review"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "nineteen-minutes",
+      "title": "Девятнадцать минут",
+      "qid": "Q4352527",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "change-of-heart",
+      "title": "Перемена сердца",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "handle-with-care",
+      "title": "Обращаться осторожно",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "house-rules",
+      "title": "Правила дома",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "by-any-other-name",
+      "title": "Под любым другим именем",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "qid": "Q235014",
+  "name": "Софи Кинселла",
+  "born": "1969-12-12",
+  "died": "2025-12-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D1%84%D0%B8_%D0%9A%D0%B8%D0%BD%D1%81%D0%B5%D0%BB%D0%BB%D0%B0",
+      "rev": 155515798
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sophie_Kinsella",
+      "rev": 1376326556
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-oksford",
+      "title": "Детство и Оксфорд",
+      "from": 1969,
+      "to": 1990
+    },
+    {
+      "key": "brak-i-pervye-romany",
+      "title": "Брак и первые романы",
+      "from": 1991,
+      "to": 1999
+    },
+    {
+      "key": "shopogolik-i-slava",
+      "title": "Шопоголик и слава",
+      "from": 2000,
+      "to": 2021
+    },
+    {
+      "key": "bolezn",
+      "title": "Болезнь и последние годы",
+      "from": 2022,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1969",
+      "date": {
+        "from": "1969-12-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родилась как Мэдлен Таунли в Рогемптоне, юго-западный Лондон, старшей из трёх сестёр.",
+      "place": {
+        "label": "Рогемптон"
+      },
+      "chapter": "detstvo-i-oksford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мэдлен Таунли родилась 12 декабря 1969 года в Лондоне."
+      }
+    },
+    {
+      "key": "love-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Генри Уикемом",
+      "long": "Вышла замуж за Генри Уикема, с которым познакомилась в Оксфорде. Он стал директором школы и вёл её деловые дела.",
+      "chapter": "brak-i-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, Kinsella married Henry Wickham, whom she had met at Oxford."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Бетти Траск за первый роман",
+      "long": "Дебютный роман, вышедший под именем Мадлен Уикем, получил премию Бетти Траск.",
+      "works": [
+        {
+          "ref": "tennis-party"
+        }
+      ],
+      "chapter": "brak-i-pervye-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Бетти Траск 1995 года за The Tennis Party."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Раскрытие настоящего имени за псевдонимом",
+      "long": "С выходом четвёртого романа под псевдонимом Кинселла писательница впервые раскрыла своё настоящее имя.",
+      "works": [
+        {
+          "ref": "can-you-keep-a-secret"
+        }
+      ],
+      "chapter": "shopogolik-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She revealed her real identity for the first time when her fourth pseudonymous novel Can You Keep a Secret? (her seventh novel overall) was published in December 2003."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Награда Glamour Award",
+      "long": "Получила награду Glamour Award.",
+      "chapter": "shopogolik-i-slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Glamour Award 2009-01-01"
+      }
+    },
+    {
+      "key": "child-2010",
+      "date": {
+        "from": "2010-04-15",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение четвёртого ребёнка",
+      "long": "Родился четвёртый ребёнок; в семье в итоге пятеро детей: дочь Сибелла и четверо сыновей.",
+      "chapter": "shopogolik-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В четвёртый раз Мадлен стала мамой 15 апреля 2010 года."
+      }
+    },
+    {
+      "key": "illness-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: глиобластома, операция",
+      "long": "В конце 2022 года диагностирована глиобластома; перенесла нейрохирургическую операцию. О болезни рассказала публично в 2024 году.",
+      "chapter": "bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2024, Kinsella revealed she had glioblastoma, an aggressive form of brain cancer, with which she was diagnosed in late 2022. She underwent neurosurgery."
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-12-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умерла дома в Дорсете за два дня до 56-летия.",
+      "place": {
+        "label": "Дорсет"
+      },
+      "chapter": "bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kinsella died at her home in Dorset on 10 December 2025."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tennis-party",
+      "title": "The Tennis Party",
+      "written": {
+        "from": 1994,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "secret-dreamworld-of-a-shopaholic",
+      "title": "Тайный мир шопоголика",
+      "qid": "Q7501131",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "shopaholic-abroad",
+      "title": "Шопоголик за границей",
+      "qid": "Q3790948",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "can-you-keep-a-secret",
+      "title": "А ты умеешь хранить секреты?",
+      "qid": "Q2490677",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "remember-me",
+      "title": "Remember Me?",
+      "qid": "Q3991065",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "twenties-girl",
+      "title": "Twenties Girl",
+      "qid": "Q3823822",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "ive-got-your-number",
+      "title": "I've Got Your Number",
+      "qid": "Q16563465",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

@@ -1,0 +1,587 @@
+{
+  "qid": "Q208101",
+  "name": "Джозеф Хеллер",
+  "born": "1923-05-01",
+  "died": "1999-12-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B5%D0%BB%D0%BB%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%BE%D0%B7%D0%B5%D1%84",
+      "rev": 150432947
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Joseph_Heller",
+      "rev": 1374048226
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Бруклин и Кони-Айленд",
+      "from": 1923,
+      "to": 1941
+    },
+    {
+      "key": "war",
+      "title": "Бомбардировщик над Италией",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "studies-ads",
+      "title": "Учёба, реклама, замысел романа",
+      "from": 1946,
+      "to": 1960
+    },
+    {
+      "key": "fame",
+      "title": "Слава и преподавание",
+      "from": 1961,
+      "to": 1980
+    },
+    {
+      "key": "illness",
+      "title": "Болезнь и конец первого брака",
+      "from": 1981,
+      "to": 1986
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1987,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1923",
+      "date": {
+        "from": "1923-05-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в бедной еврейской семье",
+      "long": "Родился в Бруклине (Кони-Айленд) в бедной еврейской семье выходцев из России.",
+      "place": {
+        "label": "Кони-Айленд, Бруклин"
+      },
+      "works": [
+        {
+          "ref": "now-and-then",
+          "note": "в мемуарах автор возвращается к детству на Кони-Айленде"
+        }
+      ],
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джозеф Хеллер (англ. Joseph Heller, 1 мая 1923, Нью-Йорк, США"
+      }
+    },
+    {
+      "key": "education-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы, случайные заработки",
+      "long": "Окончил школу имени Авраама Линкольна, затем год работал помощником кузнеца, курьером и клерком.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Закончив в 1941 году школу им. Авраама Линкольна"
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Вступление в ВВС США",
+      "long": "В 19 лет вступил в американские военно-воздушные силы.",
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1942 году (в возрасте 19 лет) вступил в ряды американских ВВС"
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ширли Хелд",
+      "long": "Женился на Ширли Хелд; брак продлился до 1981 года, в нём родились двое детей.",
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was married to Shirley Held from 1945 to 1981 and they had two children"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация рассказа",
+      "long": "Первый рассказ вышел в журнале The Atlantic и едва не получил премию «Atlantic First».",
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was first published in 1948, when The Atlantic ran one of his short stories."
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистерская степень в Колумбийском университете",
+      "long": "Получил степень магистра искусств в Колумбийском университете.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году получил степень магистра искусств в Колумбийском университете."
+      }
+    },
+    {
+      "key": "education-1949-2",
+      "date": {
+        "from": "1949",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Год в Оксфорде по стипендии Фулбрайта",
+      "long": "Год провёл в Оксфорде по стипендии Фулбрайта.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949—1950 годы вёл научную работу в Оксфорде по программе стипендий Фулбрайта."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в рекламе",
+      "long": "Работал рекламным копирайтером в журналах «Тайм» и «Лук», дома при этом писал.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "писал рекламные тексты для журналов «Тайм» (1952—1956) и «Лук» (1956—1958)"
+      }
+    },
+    {
+      "key": "child-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Эрики",
+      "long": "Родилась дочь Эрика.",
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had two children, Erica (born 1952) and Theodore (born 1956)"
+      }
+    },
+    {
+      "key": "creation-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало работы над первым романом",
+      "long": "Однажды утром 1953 года пришла первая фраза; за неделю написана первая глава, после чего год ушёл на обдумывание замысла.",
+      "works": [
+        {
+          "ref": "catch-22",
+          "note": "начало работы над романом"
+        }
+      ],
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году приступил к работе над романом «Уловка-22»."
+      }
+    },
+    {
+      "key": "child-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Теодора",
+      "long": "Родился сын Теодор.",
+      "chapter": "studies-ads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had two children, Erica (born 1952) and Theodore (born 1956)"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первого романа, разные отзывы",
+      "long": "Роман вышел с противоречивыми отзывами и продался в США тиражом около 30 тысяч; в Великобритании сразу стал бестселлером № 1.",
+      "works": [
+        {
+          "ref": "catch-22"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel was published in hardback in 1961 to mixed reviews"
+      }
+    },
+    {
+      "key": "career-1961-2",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из рекламы в преподавание",
+      "long": "Оставил рекламную работу ради творческих семинаров в Йеле и Пенсильванском университете.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году оставил эту работу, чтобы вести творческие семинары по прозе и драматургии"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа прав на экранизацию, богатство",
+      "long": "Продажа прав на экранизацию вместе с гонорарами сделала его миллионером.",
+      "works": [
+        {
+          "ref": "catch-22"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The movie rights to the novel were purchased in 1962, and, combined with his royalties, made Heller a millionaire."
+      }
+    },
+    {
+      "key": "creation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Антивоенная пьеса за шесть недель",
+      "long": "Пьеса с антивоенным посылом, затрагивающая войну во Вьетнаме, написана за шесть недель; затем поставлена в Йеле и на Бродвее.",
+      "works": [
+        {
+          "ref": "we-bombed-in-new-haven"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967, Heller wrote a play called We Bombed in New Haven. He completed the play in only six weeks"
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Дружба с Куртом Воннегутом",
+      "long": "Началась дружба с Куртом Воннегутом.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с которым Хеллер дружил с 1968 года"
+      }
+    },
+    {
+      "key": "other-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход фильма по первому роману",
+      "long": "Фильм Майка Николса по первому роману вышел на экраны.",
+      "works": [
+        {
+          "ref": "catch-22"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман был экранизирован Майком Николсом в 1970 году."
+      }
+    },
+    {
+      "key": "family-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Окончание брака с Ширли Хелд",
+      "long": "Брак с Ширли Хелд, начавшийся в 1945 году, завершился.",
+      "chapter": "illness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was married to Shirley Held from 1945 to 1981"
+      }
+    },
+    {
+      "key": "illness-1981",
+      "date": {
+        "from": "1981-12-13",
+        "to": "1982-01-26",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Синдром Гийена — Барре, паралич",
+      "long": "Диагностирован синдром Гийена — Барре, временный паралич; до 26 января 1982 года лежал в реанимации, затем переведён в реабилитационный институт.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "no-laughing-matter",
+          "note": "болезнь и выздоровление описаны в книге, написанной вместе со Спидом Фогелем"
+        }
+      ],
+      "chapter": "illness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On Sunday, December 13, 1981, Heller was diagnosed with Guillain–Barré syndrome, a debilitating syndrome that left him temporarily paralyzed."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Медичи за иностранное произведение",
+      "long": "Получил французскую премию Медичи за лучшее иностранное произведение.",
+      "chapter": "illness",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Медичи за лучшее произведение на иностранном языке 1985"
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Валери Хамфрис, бывшей медсестрой",
+      "long": "Женился на Валери Хамфрис, ухаживавшей за ним во время болезни.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987 he married Valerie Humphries, formerly one of his nurses when he had Guillain–Barré syndrome."
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Возвращение в Оксфорд, почётное членство",
+      "long": "Вернулся в оксфордский колледж Святой Екатерины приглашённым научным сотрудником и стал его почётным членом.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Heller returned to St. Catherine's as a visiting Fellow, for a term, in 1991 and was appointed an Honorary Fellow of the college."
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-12-12",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от инфаркта",
+      "long": "Умер от инфаркта дома в Ист-Хамптоне вскоре после завершения последнего романа.",
+      "place": {
+        "label": "Ист-Хамптон"
+      },
+      "works": [
+        {
+          "ref": "portrait-of-an-artist-as-an-old-man"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died of a heart attack at his home in East Hampton, on Long Island, in December 1999"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "catch-22",
+      "title": "Уловка-22",
+      "qid": "Q278208",
+      "written": {
+        "from": 1953,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "we-bombed-in-new-haven",
+      "title": "Мы бомбили Нью-Хейвен",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "something-happened",
+      "title": "Что-то случилось",
+      "qid": "Q839220",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "good-as-gold",
+      "title": "Чистое золото",
+      "qid": "Q3282109",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "god-knows",
+      "title": "Господу ведомо",
+      "qid": "Q742491",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "no-laughing-matter",
+      "title": "Это не шутка",
+      "qid": "Q7044341",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "picture-this",
+      "title": "Вообрази себе картину",
+      "qid": "Q4124941",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "closing-time",
+      "title": "Лавочка закрывается",
+      "qid": "Q5135450",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "now-and-then",
+      "title": "Время от времени",
+      "qid": "Q7065909",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "portrait-of-an-artist-as-an-old-man",
+      "title": "Портрет художника в старости",
+      "qid": "Q7232344",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    }
+  ]
+}

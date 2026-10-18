@@ -1,0 +1,643 @@
+{
+  "qid": "Q42",
+  "name": "Дуглас Адамс",
+  "born": "1952-03-11",
+  "died": "2001-05-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B4%D0%B0%D0%BC%D1%81%2C_%D0%94%D1%83%D0%B3%D0%BB%D0%B0%D1%81",
+      "rev": 153849180
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Douglas_Adams",
+      "rev": 1380668285
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-uchyoba",
+      "title": "Эссекс и Кембридж",
+      "from": 1952,
+      "to": 1974
+    },
+    {
+      "key": "neudachi",
+      "title": "Годы без успеха",
+      "from": 1975,
+      "to": 1977
+    },
+    {
+      "key": "avtostop",
+      "title": "Путеводитель и слава",
+      "from": 1978,
+      "to": 1984
+    },
+    {
+      "key": "zrelost",
+      "title": "Тигры, носороги и компьютеры",
+      "from": 1985,
+      "to": 1993
+    },
+    {
+      "key": "finale",
+      "title": "Цифровая деревня и Санта-Барбара",
+      "from": 1994,
+      "to": 2001
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-03-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Кембридже",
+      "long": "Дуглас Ноэль Адамс родился в Кембридже; вскоре семья переехала в Ист-Лондон.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дуглас Ноэль Адамс родился 11 марта 1952 года в Кембридже."
+      }
+    },
+    {
+      "key": "family-1955",
+      "date": {
+        "from": "1955-03",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Рождение сестры Сьюзен",
+      "long": "В марте 1955 года родилась младшая сестра Сьюзен.",
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His sister Susan was born in March 1955."
+      }
+    },
+    {
+      "key": "family-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод родителей и переезд в Брентвуд",
+      "long": "К пяти годам родители развелись; Дуглас, сестра и мать поселились в приюте для животных РОЗЖ в Брентвуде, которым управляли его дед и бабушка по матери.",
+      "place": {
+        "label": "Брентвуд"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1957 родители Адамса развелись. Дуглас, его мать и сестра поселились в приюте для животных Королевского общества защиты животных в Брентвуде"
+      }
+    },
+    {
+      "key": "education-1959",
+      "date": {
+        "from": "1959-09",
+        "to": "1970-12",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Брентвуд-скул",
+      "long": "В сентябре 1959 года поступил в подготовительную школу при Брентвуд-скул; школу окончил в декабре 1970 года.",
+      "place": {
+        "label": "Брентвуд"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He entered the prep school for Brentwood School in September 1959."
+      }
+    },
+    {
+      "key": "creation-1962",
+      "date": {
+        "from": "1962-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первые публикации в школьном журнале",
+      "long": "Первый опубликованный текст — заметка в школьном журнале The Brentwoodian в сентябре 1962 года; в 1965 году рассказ вышел в детском комиксе Eagle.",
+      "place": {
+        "label": "Брентвуд"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published work was a brief report on the prep school's photography society in The Brentwoodian in September 1962."
+      }
+    },
+    {
+      "key": "education-1971",
+      "date": {
+        "from": "1971",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба английской литературе в колледже Святого Иоанна",
+      "long": "Поступил в колледж Святого Иоанна в Кембридже, где вступил в студенческий комик-клуб Footlights (февраль 1972); окончил курс в 1974 году.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He entered the university in 1971, hoping to follow in the footsteps of comedy writer-performers like Monty Python."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа телохранителем в арабской семье",
+      "long": "Чтобы сводить концы с концами, после университета работал телохранителем богатой арабской семьи.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "neudachi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Adams moved back to London after leaving university, determined to break into television and radio as a writer."
+      }
+    },
+    {
+      "key": "career-1974-2",
+      "date": {
+        "from": "1974-07",
+        "to": "1977-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сотрудничество с Грэмом Чэпменом",
+      "long": "Познакомившись с Чэпменом в июле 1974 года, Адамс стал соавтором скетча в четвёртом сезоне «Монти Пайтона»; сотрудничество прекратилось к 1977 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "neudachi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Chapman met Adams in July 1974 at the West End opening night party of Chox."
+      }
+    },
+    {
+      "key": "creation-1978",
+      "date": {
+        "from": "1978-03-08",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Радиосериал на BBC — начало главного цикла",
+      "long": "Идея названия возникла в 1971 году в Инсбруке; пилот записан 28 июня 1977 года, первая серия вышла в эфир 8 марта 1978 года и быстро стала хитом.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "hitchhikers-guide"
+        }
+      ],
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Hitchhiker's Guide to the Galaxy's first series, broadcast weekly from 8 March 1978, quickly became a hit with audiences"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Внезапная слава после выхода романа",
+      "long": "Роман вышел в октябре 1979 года, стал мгновенным бестселлером; Адамс сравнил успех с вертолётной высадкой на вершину Эвереста.",
+      "works": [
+        {
+          "ref": "hitchhikers-guide"
+        }
+      ],
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Hitchhiker's Guide novel adaptation (titled The Hitchhiker's Guide to the Galaxy), published in October 1979, was an instant bestseller."
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981-02",
+        "to": "1981-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с писательницей Салли Эмерсон",
+      "long": "С февраля по декабрь 1981 года Адамс состоял в отношениях с писательницей Салли Эмерсон; отношения закончились, когда она вернулась к мужу.",
+      "works": [
+        {
+          "ref": "life-universe-everything",
+          "note": "книга посвящена Эмерсон"
+        }
+      ],
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From February to December 1981, Adams was in a relationship with novelist Sally Emerson, who was then separated from her husband Peter Stothard."
+      }
+    },
+    {
+      "key": "love-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с Джейн Белсон",
+      "long": "Друзья познакомили Адамса с юристом Джейн Белсон, с ней он жил в Лос-Анджелесе в 1983 году и затем в Излингтоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shortly afterwards, Adams's friends introduced him to barrister Jane Elizabeth Belson as a replacement flatmate."
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Работа над киносценарием в Лос-Анджелесе",
+      "long": "В 1983 году пара жила в Лос-Анджелесе, пока Адамс работал над сценарием фильма; после срыва сделки вернулись в Лондон.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple lived in Los Angeles together in 1983 while Adams worked on an early screenplay of the Hitchhiker's Guide to the Galaxy film."
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рукопись под присмотром редактора в гостиничном номере",
+      "long": "За недели до срока было написано лишь 25 страниц; Адамса заперли в гостиничном номере с редактором Pan Books Сонни Мехтой, пока рукопись не была закончена.",
+      "works": [
+        {
+          "ref": "so-long-thanks-fish",
+          "note": "задокументированная история написания книги"
+        }
+      ],
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Weeks before his manuscript for So Long, and Thanks for All the Fish was due, he had only written 25 pages. He was locked in a hotel suite with Sonny Mehta"
+      }
+    },
+    {
+      "key": "creation-1984-2",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Компьютерная игра для Infocom",
+      "long": "В 1984 году Адамс и Стив Мерецки создали для Infocom игру по «Путеводителю»; тогда же он впервые увидел Macintosh.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "avtostop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1984, Adams and Steve Meretzky co-created a video game adaptation of The Hitchhiker's Guide for Infocom."
+      }
+    },
+    {
+      "key": "other-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Экспедиция на Мадагаскар в поисках руконожки",
+      "long": "В 1985 году по заказу WWF и The Observer вместе с Марком Карвардайном отправился на Мадагаскар и сфотографировал руконожку в дикой природе.",
+      "place": {
+        "label": "Мадагаскар"
+      },
+      "works": [
+        {
+          "ref": "last-chance-to-see"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1985, the World Wildlife Fund and The Observer organised for Adams and naturalist Mark Carwardine to travel to Madagascar to search for the endangered aye-aye."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход от главного цикла к детективному",
+      "long": "Устав от давления издателей, Адамс начал новую серию и выпустил детективную комедию в 1987 году; продолжение вышло в 1988-м.",
+      "works": [
+        {
+          "ref": "dirk-gently",
+          "note": "материал отменённого сценария «Шады» использован в романе"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He satirised detective fiction with Dirk Gently's Holistic Detective Agency (1987), a humorous whodunit novel"
+      }
+    },
+    {
+      "key": "other-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Кругосветная экспедиция за вымирающими видами",
+      "long": "В 1988 году Адамс и Карвардайн путешествовали по миру в поисках редких видов; Адамс стал экологическим активистом.",
+      "works": [
+        {
+          "ref": "last-chance-to-see"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Adams and Carwardine spent 1988 travelling the world in search of other endangered species, such as the kākāpō and baiji"
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Расставание с Белсон и возобновление отношений",
+      "long": "В 1988 году Адамс и Белсон расстались, в 1991 году возобновили отношения.",
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Adams and Belson separated in 1988, but resumed their relationship in 1991."
+      }
+    },
+    {
+      "key": "creation-1990",
+      "date": {
+        "from": "1990",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Спад писательской продуктивности",
+      "long": "В 1990-е годы Адамс, измотанный писательством, выпускал меньше книг; пятый роман цикла вышел в 1992 году.",
+      "works": [
+        {
+          "ref": "mostly-harmless"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Adams was exhausted by writing and produced fewer books in the 1990s."
+      }
+    },
+    {
+      "key": "love-1991",
+      "date": {
+        "from": "1991-11-25",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейн Белсон",
+      "long": "Адамс и Джейн Белсон поженились 25 ноября 1991 года.",
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married on 25 November 1991."
+      }
+    },
+    {
+      "key": "child-1994",
+      "date": {
+        "from": "1994-06-22",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Полли",
+      "long": "22 июня 1994 года у пары родилась дочь Полли Джейн Рокет Адамс.",
+      "chapter": "finale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 июня 1994 года у пары родилась дочь — Полли Джейн Рокет Адамс."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание компании The Digital Village",
+      "long": "В 1995 году вместе с Робби Стэмпом основал компанию цифровых медиа; в 1999 году запустил вики-энциклопедию h2g2.",
+      "chapter": "finale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1995, Adams and his friend Robbie Stamp founded The Digital Village, a digital media and technology company"
+      }
+    },
+    {
+      "key": "relocation-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Санта-Барбару",
+      "long": "В 1999 году семья переехала из Лондона в Санта-Барбару, где жила до его смерти.",
+      "place": {
+        "label": "Санта-Барбара"
+      },
+      "chapter": "finale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году семья переехала из Лондона в Санта-Барбару (штат Калифорния)"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа h2g2 компании BBC",
+      "long": "После краха доткомов в январе 2001 года проект h2g2 был продан BBC.",
+      "chapter": "finale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With the dotcom crash, h2g2 was sold to the BBC in January 2001"
+      }
+    },
+    {
+      "key": "death-2001",
+      "date": {
+        "from": "2001-05-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "11 мая 2001 года Адамс потерял сознание в спортзале в Санта-Барбаре и умер в тот же день в больнице, в возрасте 49 лет.",
+      "place": {
+        "label": "Санта-Барбара"
+      },
+      "chapter": "finale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 11 May 2001, Adams was resting from a workout at Platinum Fitness, a private gym in Santa Barbara, when he collapsed from a heart attack."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hitchhikers-guide",
+      "title": "Автостопом по галактике",
+      "qid": "Q25169",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "restaurant-end-universe",
+      "title": "Ресторан «У конца Вселенной»",
+      "written": {
+        "from": 1979,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "life-universe-everything",
+      "title": "Жизнь, Вселенная и всё остальное",
+      "written": {
+        "from": 1981,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "so-long-thanks-fish",
+      "title": "Всего хорошего, и спасибо за рыбу",
+      "written": {
+        "from": 1983,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "meaning-of-liff",
+      "title": "Смысл Лиффа",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "dirk-gently",
+      "title": "Детективное агентство Дирка Джентли",
+      "qid": "Q20736364",
+      "written": {
+        "from": 1986,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "long-dark-tea-time",
+      "title": "Долгое чаепитие",
+      "written": {
+        "from": 1987,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "last-chance-to-see",
+      "title": "Последний шанс увидеть",
+      "written": {
+        "from": 1988,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "mostly-harmless",
+      "title": "В основном безвредна",
+      "written": {
+        "from": 1991,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "shada",
+      "title": "Шада",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    }
+  ]
+}

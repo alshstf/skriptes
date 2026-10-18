@@ -1,0 +1,264 @@
+{
+  "qid": "Q816409",
+  "name": "Бен Ааронович",
+  "born": "1964-02-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B0%D1%80%D0%BE%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%2C_%D0%91%D0%B5%D0%BD",
+      "rev": 150687309
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ben_Aaronovitch",
+      "rev": 1371368183
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-early-years",
+      "title": "Лондон и случайные заработки",
+      "from": 1964,
+      "to": 1986
+    },
+    {
+      "key": "doctor-who-years",
+      "title": "«Доктор Кто» и телевидение",
+      "from": 1987,
+      "to": 2010
+    },
+    {
+      "key": "rivers-of-london-years",
+      "title": "Писатель на полной ставке",
+      "from": 2011,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-02-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Камдене",
+      "long": "Родился в Камдене, Большой Лондон, в семье экономиста Сэма Аароновича, младший брат актёра Оуэна и журналиста Дэвида Аароновичей.",
+      "place": {
+        "label": "Камден, Лондон"
+      },
+      "chapter": "london-early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ben Dylan Aaronovitch (born 22 February 1964) is an English author and screenwriter."
+      }
+    },
+    {
+      "key": "creation-1987",
+      "date": {
+        "from": "1987-05",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Сценарий для «Доктора Кто» отклонён",
+      "long": "В мае 1987 года предложил продюсерам «Доктора Кто» сценарий о приватизации для 25-го сезона; редактор Эндрю Картмел счёл его неподходящим для сериала.",
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1987, Aaronovitch submitted Knight Fall to the Doctor Who production office for season 25."
+      }
+    },
+    {
+      "key": "creation-1987-2",
+      "date": {
+        "from": "1987-06",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Второе предложение сериалу — рассказ о порталах",
+      "long": "В июне 1987 года представил рассказ о станции метро с порталами по Солнечной системе; на экране он не вышел, позже был издан книгой.",
+      "works": [
+        {
+          "ref": "transit"
+        }
+      ],
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Aaronovitch submitted a story in June 1987, entitled Transit."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый сценарий «Доктора Кто» на BBC",
+      "long": "Сценарий серии «Поминовение далеков» вышел на телеканале BBC; автор также написал его новеллизацию.",
+      "works": [
+        {
+          "ref": "remembrance-of-the-daleks"
+        }
+      ],
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Aaronovitch wrote two Doctor Who serials, Remembrance of the Daleks (1988) and Battlefield (1989), for BBC television"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая серия «Доктора Кто»",
+      "long": "На BBC вышла вторая написанная им серия «Доктора Кто» — «Поле брани».",
+      "works": [
+        {
+          "ref": "battlefield"
+        }
+      ],
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Aaronovitch wrote two Doctor Who serials, Remembrance of the Daleks (1988) and Battlefield (1989), for BBC television"
+      }
+    },
+    {
+      "key": "career-1989-2",
+      "date": {
+        "from": "1989-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Закрытие «Доктора Кто» на BBC",
+      "long": "В сентябре 1989 года BBC отменила показ «Доктора Кто» после 26-го сезона; из-за этого не был реализован предложенный Аароновичем сценарий для 27-го сезона.",
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "declining audiences led the BBC to cancel Doctor Who in September 1989 after its 26th season"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа сценаристом на телевидении",
+      "long": "Написал эпизод для сериала «Несчастный случай», затем стал постоянным сценаристом фантастического сериала «Луна Юпитера».",
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote one episode for Casualty (1990) and was then a regular writer on the science fiction series Jupiter Moon."
+      }
+    },
+    {
+      "key": "creation-1992",
+      "date": {
+        "from": "1992-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Нереализованный сценарий становится книгой",
+      "long": "В декабре 1992 года адаптировал отвергнутый телесценарий в роман серии Virgin New Adventures.",
+      "works": [
+        {
+          "ref": "transit"
+        }
+      ],
+      "chapter": "doctor-who-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he would adapt the story as a book for Virgin New Adventures series in December 1992"
+      }
+    },
+    {
+      "key": "creation-2011",
+      "date": {
+        "from": "2011-07",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Выход аудиодрамы по старому замыслу",
+      "long": "В июле 2011 года Big Finish Productions выпустила в аудиоформате историю, предложенную Аароновичем сериалу в 1988 году, под названием Earth Aid.",
+      "chapter": "rivers-of-london-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 2011, Big Finish Productions released the story as Earth Aid, by Aaronovitch and Cartmel."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Учреждение премии Future Worlds Prize",
+      "long": "Основал премию для авторов фантастики и фэнтези, направленную на большее разнообразие в издательском деле.",
+      "chapter": "rivers-of-london-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2020 he founded the Future Worlds Prize, then known as the Gollancz and Rivers of London BAME SFF Award"
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Анонс телеадаптации главного цикла",
+      "long": "Объявлено об экранизации цикла как совместного проекта Pure Fiction Television, See-Saw Films и компании самого автора.",
+      "chapter": "rivers-of-london-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023 it was announced that Rivers of London would be adapted for TV"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "remembrance-of-the-daleks",
+      "title": "Поминовение далеков",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "battlefield",
+      "title": "Поле брани",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "transit",
+      "title": "Transit",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    }
+  ]
+}

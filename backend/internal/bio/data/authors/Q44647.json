@@ -1,0 +1,595 @@
+{
+  "qid": "Q44647",
+  "name": "Отфрид Пройслер",
+  "born": "1923-10-20",
+  "died": "2013-02-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D0%B9%D1%81%D0%BB%D0%B5%D1%80%2C_%D0%9E%D1%82%D1%84%D1%80%D0%B8%D0%B4",
+      "rev": 150932825
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Otfried_Preu%C3%9Fler",
+      "rev": 1380077636
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Otfried_Preu%C3%9Fler",
+      "rev": 266508409
+    }
+  ],
+  "chapters": [
+    {
+      "key": "bohemian-youth",
+      "title": "Богемское детство и юность",
+      "from": 1923,
+      "to": 1941
+    },
+    {
+      "key": "war-captivity",
+      "title": "Фронт и плен",
+      "from": 1942,
+      "to": 1949
+    },
+    {
+      "key": "teacher-years",
+      "title": "Школа и первые сказки",
+      "from": 1950,
+      "to": 1970
+    },
+    {
+      "key": "krabat-academy",
+      "title": "Крабат и Академия",
+      "from": 1971,
+      "to": 1991
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1992,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1923",
+      "date": {
+        "from": "1923-10-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Рейхенберге, в семье учителей",
+      "long": "Родился в Рейхенберге (Либерец) в семье двух учителей; при рождении носил фамилию Сыроватка. Отец увлекался краеведением и привил сыну интерес к истории края.",
+      "place": {
+        "label": "Либерец"
+      },
+      "chapter": "bohemian-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 20 октября 1923 года в богемском Рейхенберге."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые публикации в журнале «Kameraden»",
+      "long": "Три текста в форме писем «Lieber Soldat!» вышли в журнале «Kameraden»; шестнадцатилетний автор рассказывал в них о работе в организации «Дойчес юнгфольк».",
+      "chapter": "bohemian-youth",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seine ersten Publikationen waren drei in Briefform geschriebene Texte mit dem Titel Lieber Soldat!, die 1940 in der Zeitschrift Kameraden"
+      }
+    },
+    {
+      "key": "creation-1940",
+      "date": {
+        "from": "1940",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Юношеская книга в духе идеологии гитлерюгенда",
+      "long": "Зимой 1940/41 написал юношескую книгу о сельскохозяйственном лагере «Дойчес юнгфольк» в Судетах; издана в Берлине в 1944 году, о ней стало широко известно лишь в 2015 году.",
+      "works": [
+        {
+          "ref": "erntelager-geyer"
+        }
+      ],
+      "chapter": "bohemian-youth",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Preußler schon im Winter 1940/41 das Buch Erntelager Geyer geschrieben hatte, ein im böhmischen Wernersdorf spielendes Jugendbuch im Stil der HJ-Ideologie"
+      }
+    },
+    {
+      "key": "family-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Смена фамилии семьи на Пройслер",
+      "long": "Семья сменила чешскую фамилию Сыроватка на немецкую Пройслер.",
+      "chapter": "bohemian-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They changed their family name from the Czech Syrowatka to the German Preußler in 1941 during the Nazi occupation of Czechoslovakia."
+      }
+    },
+    {
+      "key": "other-1941",
+      "date": {
+        "from": "1941-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Членство в НСДАП, указанное в заявлении",
+      "long": "В заявлении о приёме в Имперскую палату письменности указал членство в НСДАП с сентября 1941 года; партийное членство отмечено и в деле военнопленного.",
+      "chapter": "bohemian-youth",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "eine Mitgliedschaft in der NSDAP seit September 1941 an (Mitgliedsnummer 8.637.519)"
+      }
+    },
+    {
+      "key": "education-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Аттестат с отличием, зачисление в Карлов университет",
+      "long": "Мечтал стать профессором истории; поступил на философский факультет Карлова университета, но учиться не начал — был призван на военную службу.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "war-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach seinem Abitur 1942, das er mit Auszeichnung bestand, immatrikulierte er sich an der Philosophischen Fakultät der Karls-Universität."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942-03",
+        "to": "1944-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в вермахте на Восточном фронте",
+      "long": "Призван в вермахт 20 марта 1942 года; по его словам, пошёл добровольцем. Служил на нескольких участках Восточного фронта, в мае 1944 года произведён в лейтенанты запаса.",
+      "chapter": "war-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Unmittelbar nach seinem Abitur wurde Preußler am 20. März 1942 zum Kriegsdienst im Zweiten Weltkrieg einberufen."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-03-15",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Железный крест II класса",
+      "long": "Награждён Железным крестом II класса, в то время был ефрейтором.",
+      "chapter": "war-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Mit dem Eisernen Kreuz II. Klasse wurde er am 15. März 1943 ausgezeichnet."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944-08",
+        "to": "1949-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Пять лет советского плена в Татарии",
+      "long": "В августе 1944 года под Кишинёвом его часть была окружена; пять лет провёл в лагерях Татарской республики (Елабуга, Казань), болел тифом и малярией. В плену писал стихи и пьесы для лагерной сцены.",
+      "place": {
+        "label": "Елабуга, Казань"
+      },
+      "chapter": "war-captivity",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1944 году лейтенантом попадает в советский плен"
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Возвращение из плена, женитьба на Аннелис Кинд",
+      "long": "После освобождения в июне 1949 года нашёл в Розенхайме родных и невесту Аннелис Кинд; в том же году они поженились. В семье родились три дочери.",
+      "place": {
+        "label": "Розенхайм"
+      },
+      "chapter": "war-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach seiner Entlassung im Juni 1949 fand er im oberbayerischen Rosenheim seine heimatvertriebenen Angehörigen und seine Verlobte Annelies Kind aus Reichenberg wieder. Noch im selben Jahr heirateten sie."
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на учителя начальной школы",
+      "long": "Начал обучение на учителя начальной школы в Мюнхене ради стабильного заработка и свободного времени для писательства; параллельно работал местным репортёром и писал для детского радио.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "folgte er diesem Wunsch 1951 und begann eine Ausbildung in München zum Grundschullehrer."
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Учитель, затем директор школы в Баварии",
+      "long": "Сначала учитель народной школы, затем директор школы в Штефанскирхене близ Розенхайма. Истории, рассказанные ученикам, позже записывал и издавал.",
+      "place": {
+        "label": "Штефанскирхен"
+      },
+      "works": [
+        {
+          "ref": "little-water-sprite"
+        },
+        {
+          "ref": "little-witch"
+        },
+        {
+          "ref": "robber-hotzenplotz"
+        }
+      ],
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1953 and 1970, he was initially a primary school teacher, then a school principal in Rosenheim."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Специальная премия, первая известность",
+      "long": "Первая сказка о Водяном получила специальную премию Немецкой премии в области детской литературы, что принесло автору известность. Тогда же вышла «Маленькая Баба-Яга».",
+      "works": [
+        {
+          "ref": "little-water-sprite"
+        }
+      ],
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Немецкая премия в области детской литературы 1957"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за пересказ «Кота Микеша»",
+      "long": "Премия за немецкий пересказ «Кота Микеша» чешского автора Йозефа Лады.",
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Für die deutsche Nacherzählung erhielt Preußler 1963 in der Sparte Kinderbuch den Deutschen Jugendbuchpreis."
+      }
+    },
+    {
+      "key": "illness-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Досрочный уход из школы по болезни",
+      "long": "Оставил школу из-за болезни и вышел на раннюю пенсию; после этого писательство стало основным занятием.",
+      "place": {
+        "label": "Штефанскирхен"
+      },
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "danach war er bis 1970 zunächst als Volksschullehrer, dann als Rektor an der später nach ihm benannten Otfried-Preußler-Schule in Stephanskirchen tätig… Nach seiner gesundheitsbedingten Frühpensionierung erschien 1971 das Jugendbuch Krabat"
+      }
+    },
+    {
+      "key": "creation-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман о Крабате после десяти лет работы",
+      "long": "Над романом работал более десяти лет; называл его своей историей и историей своего поколения, основанной на лужицкой легенде.",
+      "works": [
+        {
+          "ref": "krabat",
+          "note": "автор называл книгу «моей историей, историей моего поколения»"
+        }
+      ],
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach seiner gesundheitsbedingten Frühpensionierung erschien 1971 das Jugendbuch Krabat, an dem er mehr als zehn Jahre gearbeitet hatte und das er als seine persönliche Auseinandersetzung mit seiner Adoleszenz im Nationalsozialismus beschrieben hat"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая юношеская премия за роман-сказку",
+      "long": "За «Крабата» получил Немецкую премию в области юношеской литературы.",
+      "works": [
+        {
+          "ref": "krabat"
+        }
+      ],
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Für das Jugendbuch wurde Preußler 1972 mit dem deutschen Jugendbuchpreis ausgezeichnet."
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Академии детской литературы",
+      "long": "Вместе с коллегами основал в Фолькахе Немецкую академию детской и юношеской литературы.",
+      "place": {
+        "label": "Фольках"
+      },
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1976 gründete er mit Kolleginnen und Kollegen in Volkach die Deutsche Akademie für Kinder- und Jugendliteratur"
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход из PEN-центра Германии",
+      "long": "Вышел из немецкого PEN-центра.",
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "dem folgte der Austritt aus dem PEN-Zentrum Deutschland 1977"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Баварский орден «За заслуги»",
+      "long": "Награждён Баварским орденом «За заслуги».",
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Баварский орден «За заслуги» (1979 год)"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор «Volkacher Bote»",
+      "long": "Редактировал информационный бюллетень Академии детской и юношеской литературы.",
+      "place": {
+        "label": "Фольках"
+      },
+      "chapter": "krabat-academy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zwischen 1981 und 1988 übernahm er die Redaktion des Volkacher Boten, des Mitteilungsblatts der Deutschen Akademie für Kinder- und Jugendliteratur."
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание фонда помощи детской клинике",
+      "long": "Вместе с другими основал фонд помощи ортопедической детской клинике в Ашау; с 1993 года возглавлял его.",
+      "place": {
+        "label": "Ашау"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1992 rief Preußler zusammen mit anderen das Hilfswerk für die Orthopädische Kinderklinik in Aschau ins Leben."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Офицерский крест ордена «За заслуги» ФРГ",
+      "long": "Награждён офицерским крестом ордена «За заслуги перед ФРГ».",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Офицерский крест ордена «За заслуги перед Федеративной Республикой Германия» (1993 год)"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Баварский орден Максимилиана",
+      "long": "Награждён баварским орденом Максимилиана.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Баварский орден Максимилиана «За достижения в науке и искусстве» (2010 год)"
+      }
+    },
+    {
+      "key": "death-2013",
+      "date": {
+        "from": "2013-02-18",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Прин-ам-Кимзее",
+      "long": "Умер в Прин-ам-Кимзее в возрасте 89 лет. Воспоминания о советском плене изданы после смерти.",
+      "place": {
+        "label": "Прин-ам-Кимзее"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Otfried Preußler starb 2013 in Prien am Chiemsee im Alter von 89 Jahren."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "erntelager-geyer",
+      "title": "Erntelager Geyer",
+      "written": {
+        "from": 1940,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "little-water-sprite",
+      "title": "Маленький водяной",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "little-witch",
+      "title": "Маленькая Баба-Яга",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "robber-hotzenplotz",
+      "title": "Разбойник Хотценплотц",
+      "qid": "Q107437994",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "little-ghost",
+      "title": "Маленькое привидение",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "strong-vanya",
+      "title": "Приключения сильного Вани",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "krabat",
+      "title": "Крабат, или Легенды старой мельницы",
+      "qid": "Q367732",
+      "written": {
+        "from": 1960,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "silly-augustine",
+      "title": "Глупая Августина",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "qid": "Q551570",
+  "name": "Жан-Кристоф Гранже",
+  "born": "1961-07-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BD%D0%B6%D0%B5%2C_%D0%96%D0%B0%D0%BD-%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84",
+      "rev": 153081952
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jean-Christophe_Grang%C3%A9",
+      "rev": 1380548580
+    }
+  ],
+  "chapters": [
+    {
+      "key": "formation",
+      "title": "Париж, Сорбонна, реклама",
+      "from": 1961,
+      "to": 1988
+    },
+    {
+      "key": "journalism",
+      "title": "Репортажи по всему миру",
+      "from": 1989,
+      "to": 1993
+    },
+    {
+      "key": "novels",
+      "title": "Романы и признание",
+      "from": 1994,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1961",
+      "date": {
+        "from": "1961-07-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился в Париже 15 июля 1961 года.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 15 июля 1961 года в Париже."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа международным корреспондентом",
+      "long": "В 28 лет стал международным корреспондентом, работал для Paris Match, Sunday Times и National Geographic.",
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1989 году в возрасте 28 лет стал известным международным корреспондентом"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Рейтер",
+      "long": "Получил премию Рейтер за журналистские репортажи.",
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "он получил две главные награды в мире журналистики: премию Рейтер (1991)"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия World Press",
+      "long": "Получил премию World Press за репортажи.",
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "премию World Press (1992)"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гран-при RTL-Lire",
+      "long": "Удостоен Гран-при RTL-Lire в год выхода романа «Пурпурные реки», ставшего популярным.",
+      "works": [
+        {
+          "ref": "rivieres-pourpres"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии Рейтер (1991), премии World Press (1992) и Гран-при RTL-Lire (1998)."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация второго романа",
+      "long": "Экранизация «Пурпурных рек» усилила популярность романа.",
+      "works": [
+        {
+          "ref": "rivieres-pourpres"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "особенно после того, как в 2000 году был экранизирован"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "vol-des-cigognes",
+      "title": "Полёт аистов",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "rivieres-pourpres",
+      "title": "Пурпурные реки",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "concile-de-pierre",
+      "title": "Братство камня",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "empire-des-loups",
+      "title": "Империя волков",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    }
+  ]
+}

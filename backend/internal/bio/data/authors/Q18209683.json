@@ -1,0 +1,288 @@
+{
+  "qid": "Q18209683",
+  "name": "Ли Бардуго",
+  "born": "1975-04-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D1%80%D0%B4%D1%83%D0%B3%D0%BE%2C_%D0%9B%D0%B8",
+      "rev": 152799834
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Leigh_Bardugo",
+      "rev": 1380753835
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Иерусалим, Лос-Анджелес, Йель",
+      "from": 1975,
+      "to": 1997
+    },
+    {
+      "key": "do-pisatelstva",
+      "title": "Голливуд, группа и семейные утраты",
+      "from": 1998,
+      "to": 2011
+    },
+    {
+      "key": "grishaverse",
+      "title": "Гришаверс и признание",
+      "from": 2012,
+      "to": 2018
+    },
+    {
+      "key": "vzroslaya-proza",
+      "title": "Взрослая проза",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "relocation-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лос-Анджелес, воспитание бабушкой и дедушкой",
+      "long": "Переехала в Лос-Анджелес, где её воспитывали бабушка и дедушка.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ли Бардуго родилась в 1975 году в Иерусалиме, после переехала в Лос-Анджелес, где воспитывалась бабушкой и дедушкой."
+      }
+    },
+    {
+      "key": "birth-1975",
+      "date": {
+        "from": "1975-04-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Иерусалиме",
+      "long": "Родилась в Иерусалиме, Израиль.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ли Бардуго (англ. Leigh Bardugo; род. 6 апреля 1975, Иерусалим, Израиль)"
+      }
+    },
+    {
+      "key": "education-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом Йельского университета",
+      "long": "Окончила Йельский университет по специальности «Английский язык».",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году получила диплом Йельского университета по специальности «Английский язык»."
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "to": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вокалистка группы Captain Automatic",
+      "long": "Пела в музыкальной группе Captain Automatic.",
+      "chapter": "do-pisatelstva",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bardugo was a singer in the band Captain Automatic from 2006 to 2007."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в Macmillan и первый успех",
+      "long": "Дебютный роман вышел в Macmillan, попал в список бестселлеров The New York Times (8-е место) и был куплен для экранизации.",
+      "works": [
+        {
+          "ref": "shadow-and-bone"
+        }
+      ],
+      "chapter": "grishaverse",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебютный роман «Тень и кость» был опубликован издательством Macmillan в 2012 году."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дилогия о Шестёрке воронов",
+      "long": "Вышла дилогия о Шестёрке воронов; в 2016 году первая книга названа Notable Book по версии The New York Times.",
+      "works": [
+        {
+          "ref": "six-of-crows"
+        }
+      ],
+      "chapter": "grishaverse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Six of Crows duology (Six of Crows and Crooked Kingdom) was published by Macmillan in 2015 and 2016."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый взрослый роман и премия Goodreads",
+      "long": "Вышел первый роман для взрослых; он получил премию Goodreads Choice Award как лучшее фэнтези.",
+      "works": [
+        {
+          "ref": "ninth-house"
+        }
+      ],
+      "chapter": "vzroslaya-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019, Bardugo's first adult novel, Ninth House, was published by Flatiron Books. It won the 2019 Goodreads Choice Award for best fantasy novel."
+      }
+    },
+    {
+      "key": "love-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак после четырёх лет отношений",
+      "long": "Вышла замуж, тайно сбежав с партнёром, с которым была вместе четыре года.",
+      "chapter": "vzroslaya-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2022, she eloped with her partner of four years."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт на несколько книг и пикеты гильдии",
+      "long": "Заключила контракт с Macmillan на несколько книг, подписала договор с агентством WME и участвовала в пикетах Гильдии сценаристов.",
+      "chapter": "vzroslaya-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, she reached a multi-book deal with Macmillan Publishers. She signed with WME agency. She picketed for the Writers Guild of America."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shadow-and-bone",
+      "title": "Тень и Кость",
+      "qid": "Q7460625",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "six-of-crows",
+      "title": "Шестёрка воронов",
+      "qid": "Q23763076",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "crooked-kingdom",
+      "title": "Продажное королевство",
+      "qid": "Q60746982",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "ninth-house",
+      "title": "Девятый Дом",
+      "qid": "Q85789202",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "king-of-scars",
+      "title": "Король шрамов",
+      "qid": "Q102036200",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "siege-and-storm",
+      "title": "Штурм и буря",
+      "qid": "Q104579879",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "ruin-and-rising",
+      "title": "Крах и восход",
+      "qid": "Q104580110",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "rule-of-wolves",
+      "title": "Правление волков",
+      "qid": "Q107299173",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

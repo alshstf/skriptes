@@ -1,0 +1,562 @@
+{
+  "qid": "Q465700",
+  "name": "Хилари Мантел",
+  "born": "1952-07-06",
+  "died": "2022-09-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BD%D1%82%D0%B5%D0%BB%2C_%D0%A5%D0%B8%D0%BB%D0%B0%D1%80%D0%B8",
+      "rev": 152607267
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Hilary_Mantel",
+      "rev": 1380226345
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-uchyoba",
+      "title": "Детство и учёба",
+      "from": 1952,
+      "to": 1973
+    },
+    {
+      "key": "bolezn-afrika",
+      "title": "Болезнь, Ботсвана, Джидда",
+      "from": 1974,
+      "to": 1984
+    },
+    {
+      "key": "pisatelnitsa",
+      "title": "Первые романы и критика",
+      "from": 1985,
+      "to": 2008
+    },
+    {
+      "key": "kromvel",
+      "title": "Кромвель и Букер",
+      "from": 2009,
+      "to": 2022
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-07-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Глоссопе",
+      "long": "Родилась в Глоссопе, Дербишир, старшей из трёх детей; выросла в католической семье в фабричном посёлке Хадфилд.",
+      "place": {
+        "label": "Глоссоп"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hilary Mary Thompson was born on 6 July 1952 in Glossop, Derbyshire"
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "to": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на юриста в Лондоне и Шеффилде",
+      "long": "Начала изучать право в Лондонской школе экономики, затем перевелась в Шеффилдский университет и окончила его в 1973 году. В университете считала себя социалисткой.",
+      "place": {
+        "label": "Шеффилд"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1970, she began studies at the London School of Economics to read law. She transferred to the University of Sheffield and graduated as a Bachelor of Jurisprudence in 1973."
+      }
+    },
+    {
+      "key": "love-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с геологом Джеральдом Маккьюэном",
+      "long": "Вышла замуж за геолога Джеральда Маккьюэна.",
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1973, she married Gerald McEwen, a geologist."
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало романа о Французской революции",
+      "long": "Начала роман о Французской революции, но не нашла издателя; книга вышла только в 1992 году.",
+      "works": [
+        {
+          "ref": "a-place-of-greater-safety"
+        }
+      ],
+      "chapter": "bolezn-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, she began writing a novel about the French Revolution, but was unable to find a publisher"
+      }
+    },
+    {
+      "key": "relocation-1977",
+      "date": {
+        "from": "1977",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Пять лет в Ботсване",
+      "long": "Переехала с мужем в Ботсвану, где они прожили пять лет.",
+      "place": {
+        "label": "Ботсвана"
+      },
+      "chapter": "bolezn-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977 Mantel moved with her husband to Botswana, where they lived for the next five years."
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Эндометриоз и бесплодие",
+      "long": "Тяжёлая болезнь сначала считалась психическим расстройством; в Ботсване она предположила эндометриоз, диагноз подтвердили в Лондоне. Хирургическая менопауза в 27 лет лишила её возможности иметь детей.",
+      "chapter": "bolezn-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977 Mantel moved with her husband to Botswana…During her twenties, Mantel had a debilitating and painful illness."
+      }
+    },
+    {
+      "key": "family-1981",
+      "date": {
+        "from": "1981",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод и повторный брак",
+      "long": "Развелась с Джеральдом Маккьюэном в 1981 году и вновь вышла за него в 1982.",
+      "chapter": "bolezn-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They divorced in 1981 but remarried in 1982."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в прозе",
+      "long": "Вышел первый роман, продолжение — годом позже.",
+      "works": [
+        {
+          "ref": "every-day-is-mothers-day"
+        }
+      ],
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mantel's first novel, Every Day Is Mother's Day, was published in 1985"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кинокритик в The Spectator",
+      "long": "Вернувшись в Англию, работала кинокритиком в The Spectator и рецензентом в британских и американских изданиях.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she became the film critic of The Spectator, a position she held from 1987 to 1991"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Уинифред Холтби",
+      "long": "Роман получил Мемориальную премию Уинифред Холтби.",
+      "works": [
+        {
+          "ref": "fludd"
+        }
+      ],
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her Winifred Holtby Memorial Prize-winning novel Fludd (1989)"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Членство в Королевском литературном обществе",
+      "long": "Избрана членом Королевского литературного общества.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году была избрана членом Королевского литературного общества."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание исторического романа",
+      "long": "Роман о Дантоне, Робеспьере и Демулене, начатый в 1974 году, вышел и получил премию Sunday Express.",
+      "works": [
+        {
+          "ref": "a-place-of-greater-safety"
+        }
+      ],
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A Place of Greater Safety (1992) became The Sunday Express Book of the Year"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Готорнденская премия",
+      "long": "Получила Готорнденскую премию.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "An Experiment in Love (1996), which won the Hawthornden Prize"
+      }
+    },
+    {
+      "key": "creation-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Мемуары и премия MIND",
+      "long": "Опубликовала мемуары, получившие премию MIND «Книга года».",
+      "works": [
+        {
+          "ref": "giving-up-the-ghost"
+        }
+      ],
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2003, Mantel published her memoir, Giving Up the Ghost, which won the MIND \"Book of the Year\" award."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-06-17",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи (CBE)",
+      "long": "Стала командором ордена Британской империи (CBE).",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2006 году стала командором ордена Британской империи (CBE)"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая Букеровская премия",
+      "long": "Роман о Томасе Кромвеле получил Букеровскую премию: жюри проголосовало три голоса против двух.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "wolf-hall"
+        }
+      ],
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was published in 2009 to critical acclaim. The book won that year's Booker Prize"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вторая Букеровская премия",
+      "long": "Продолжение получило вторую Букеровскую премию — Мантел первой из женщин и британских авторов выиграла её дважды.",
+      "works": [
+        {
+          "ref": "bring-up-the-bodies"
+        }
+      ],
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the Costa Book of the Year and the 2012 Man Booker Prize; Mantel thus became the first British writer and the first woman to win the Booker Prize more than once."
+      }
+    },
+    {
+      "key": "other-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг эссе о королевских женщинах",
+      "long": "Выступление и эссе о королевских женщинах вызвали общественную дискуссию; её критиковали премьер-министр и лидер оппозиции.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a 2013 speech on media and royal women at the British Museum, Mantel commented on Catherine Middleton"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание дамы-командора ордена",
+      "long": "Получила звание дамы-командора ордена Британской империи.",
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 2014 году — Дамой-Командором этого ордена (DBE)"
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг рассказа о Тэтчер",
+      "long": "После интервью The Guardian о вымышленном убийстве Тэтчер сторонники политика потребовали полицейской проверки.",
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 2014, in an interview published in The Guardian, Mantel said she had fantasised about the murder of the British prime minister Margaret Thatcher in 1983"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лекции Рейта на BBC",
+      "long": "Прочла пять лекций Рейта на BBC Radio 4 об историческом романе.",
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She delivered five 2017 Reith Lectures on BBC Radio Four, talking about the theme of historical fiction."
+      }
+    },
+    {
+      "key": "creation-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершение трилогии о Кромвеле",
+      "long": "Завершила трилогию о Кромвеле; роман вошёл в длинный список Букера.",
+      "works": [
+        {
+          "ref": "the-mirror-and-the-light"
+        }
+      ],
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2020, Mantel published the third novel of the Thomas Cromwell trilogy, called The Mirror \u0026 the Light. It was selected for the longlist for the 2020 Booker Prize."
+      }
+    },
+    {
+      "key": "death-2022",
+      "date": {
+        "from": "2022-09-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Эксетере",
+      "long": "Умерла в больнице Эксетера в возрасте 70 лет от осложнений инсульта, случившегося тремя днями раньше.",
+      "place": {
+        "label": "Эксетер"
+      },
+      "chapter": "kromvel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mantel died on 22 September 2022, aged 70, at a hospital in Exeter from complications of a stroke three days earlier."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "every-day-is-mothers-day",
+      "title": "День матери",
+      "qid": "Q5417481",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "eight-months-on-ghazzah-street",
+      "title": "Восемь месяцев на улице Газзах",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "fludd",
+      "title": "Фладд",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "a-place-of-greater-safety",
+      "title": "Сердце бури",
+      "written": {
+        "from": 1974,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "a-change-of-climate",
+      "title": "Перемена климата",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "giving-up-the-ghost",
+      "title": "Giving Up the Ghost",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "beyond-black",
+      "title": "Чернее чёрного",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "wolf-hall",
+      "title": "Вулфхолл",
+      "qid": "Q2657795",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "bring-up-the-bodies",
+      "title": "Введите обвиняемых",
+      "qid": "Q3644822",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "the-mirror-and-the-light",
+      "title": "Зеркало и свет",
+      "written": {
+        "from": 2012,
+        "to": 2020
+      }
+    }
+  ]
+}

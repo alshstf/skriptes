@@ -1,0 +1,348 @@
+{
+  "qid": "Q339577",
+  "name": "Кевин Джей Андерсон",
+  "born": "1962-03-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D0%B5%D1%80%D1%81%D0%BE%D0%BD%2C_%D0%9A%D0%B5%D0%B2%D0%B8%D0%BD_%D0%94%D0%B6%D0%B5%D0%B9",
+      "rev": 155086841
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kevin_J._Anderson",
+      "rev": 1375340168
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-fizika",
+      "title": "Висконсин и физика",
+      "from": 1962,
+      "to": 1981
+    },
+    {
+      "key": "pervye-romany",
+      "title": "Лаборатория и первые романы",
+      "from": 1982,
+      "to": 1993
+    },
+    {
+      "key": "zvezdnye-voyny",
+      "title": "Звёздные войны и Секретные материалы",
+      "from": 1994,
+      "to": 1998
+    },
+    {
+      "key": "dyuna",
+      "title": "Контракт на Дюну",
+      "from": 1999,
+      "to": 2010
+    },
+    {
+      "key": "wordfire",
+      "title": "WordFire и признание",
+      "from": 2011,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-03-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Расине, детство в Орегоне, Висконсин",
+      "long": "Родился в Расине, штат Висконсин; вырос в городе Орегон в том же штате.",
+      "place": {
+        "label": "Расин, Висконсин"
+      },
+      "chapter": "detstvo-i-fizika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kevin J. Anderson was born March 27, 1962, in Racine, Wisconsin, and grew up in Oregon, Wisconsin."
+      }
+    },
+    {
+      "key": "education-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом физика-астронома в Висконсинском университете",
+      "long": "Получил степень бакалавра по физике и астрономии с отличием в Висконсинском университете в Мадисоне.",
+      "place": {
+        "label": "Мадисон"
+      },
+      "chapter": "detstvo-i-fizika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anderson received a B.S. degree in Physics/Astronomy with honors from the University of Wisconsin–Madison in 1981."
+      }
+    },
+    {
+      "key": "creation-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман и номинация на премию Брэма Стокера",
+      "long": "Первый роман вышел в 1988 году и был номинирован на премию Брэма Стокера как лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "resurrection-inc"
+        }
+      ],
+      "chapter": "pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anderson's first novel, Resurrection, Inc., was published in 1988 and nominated for a Bram Stoker Award for Best First Novel."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинации на «Небьюлу» и «Локус» за роман с Бисоном",
+      "long": "Роман, написанный в соавторстве с Дугом Бисоном, номинирован на премии «Небьюла» и «Локус».",
+      "works": [
+        {
+          "ref": "assemblers-of-infinity"
+        }
+      ],
+      "chapter": "pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His 1993 collaboration with Beason, Assemblers of Infinity, was nominated for both a Nebula and Locus Award."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт на романы по «Звёздным войнам»",
+      "long": "По контракту на романы расширенной вселенной «Звёздных войн» опубликовал трилогию об академии джедаев.",
+      "works": [
+        {
+          "ref": "jedi-academy-trilogy"
+        }
+      ],
+      "chapter": "zvezdnye-voyny",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Contracted to write novels in the Star Wars expanded universe, Anderson published the Jedi Academy trilogy in 1994"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Романы по «Секретным материалам»",
+      "long": "Написал три романа по «Секретным материалам»; первый вышел в 1995 году и возглавил список Sunday Times.",
+      "chapter": "zvezdnye-voyny",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anderson wrote The X-Files novels Ground Zero (1995), Ruins (1996) and Antibodies (1997)."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт на приквелы к «Дюне» на 3 млн долларов",
+      "long": "Вместе с Брайаном Гербертом подписал с Bantam Books договор на трилогию-приквел к «Дюне» Фрэнка Герберта.",
+      "works": [
+        {
+          "ref": "dune-house-atreides"
+        }
+      ],
+      "chapter": "zvezdnye-voyny",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, Anderson and Brian Herbert signed a $3 million deal with Bantam Books to coauthor a prequel trilogy"
+      }
+    },
+    {
+      "key": "creation-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство с Дином Кунцем",
+      "long": "Написал совместно с Дином Кунцем первую книгу серии о Франкенштейне.",
+      "chapter": "dyuna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Anderson co-wrote, along with Dean Koontz, the first book in the Frankenstein series"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание издательства WordFire Press",
+      "long": "Вместе с Ребеккой Месталь основал издательскую марку WordFire Press для переиздания книг, вышедших из печати.",
+      "chapter": "wordfire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Anderson and Moesta founded their own publishing imprint, WordFire Press"
+      }
+    },
+    {
+      "key": "creation-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман по альбому Rush вместе с Нилом Пpeartом",
+      "long": "В 2012 году вместе с барабанщиком Rush Нилом Пиртом написал роман по альбому «Clockwork Angels».",
+      "works": [
+        {
+          "ref": "clockwork-angels"
+        }
+      ],
+      "chapter": "wordfire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2012, Anderson coauthored a novelization of Clockwork Angels, an album by the Canadian rock band Rush, with Rush's drummer, Neil Peart."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера ассоциации авторов novelization",
+      "long": "Избран гроссмейстером Международной ассоциации авторов книг по мотивам фильмов и игр.",
+      "chapter": "wordfire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2012 was elected Grandmaster of the International Association of Media Tie-In Writers."
+      }
+    },
+    {
+      "key": "education-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра изящных искусств",
+      "long": "Получил степень MFA по художественной прозе в Университете Линдинвуда.",
+      "chapter": "wordfire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2017, he also received an MFA with an emphasis in Fiction from Lindenwood University."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в Зал славы авторов Колорадо",
+      "long": "Принят в Зал славы авторов Колорадо вместе со Стивеном Кингом и Джеймсом Миченером.",
+      "chapter": "wordfire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, Anderson was inducted into the Colorado Authors Hall of Fame along with Stephen King and James Michener."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "resurrection-inc",
+      "title": "Resurrection, Inc.",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "assemblers-of-infinity",
+      "title": "Assemblers of Infinity",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "jedi-academy-trilogy",
+      "title": "Трилогия об академии джедаев",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "dune-house-atreides",
+      "title": "Dune: House Atreides",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "saga-of-seven-suns",
+      "title": "Сага Семи Солнц",
+      "written": {
+        "from": 2002,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "hunters-of-dune",
+      "title": "Hunters of Dune",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "clockwork-angels",
+      "title": "Clockwork Angels",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

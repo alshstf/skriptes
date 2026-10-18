@@ -1,0 +1,662 @@
+{
+  "qid": "Q410",
+  "name": "Карл Саган",
+  "born": "1934-11-09",
+  "died": "1996-12-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B0%D0%B3%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D1%80%D0%BB",
+      "rev": 154978990
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Carl_Sagan",
+      "rev": 1379614001
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-rahway",
+      "title": "Бруклин и Ровей",
+      "from": 1934,
+      "to": 1950
+    },
+    {
+      "key": "chicago-berkeley",
+      "title": "Чикаго, диссертация, Гарвард",
+      "from": 1951,
+      "to": 1967
+    },
+    {
+      "key": "cornell-years",
+      "title": "Корнелл и первые книги",
+      "from": 1968,
+      "to": 1979
+    },
+    {
+      "key": "cosmos-druyan",
+      "title": "«Космос» и Энн Друян",
+      "from": 1980,
+      "to": 1985
+    },
+    {
+      "key": "activism-illness",
+      "title": "Активизм и болезнь",
+      "from": 1986,
+      "to": 1996
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1934",
+      "date": {
+        "from": "1934-11-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине (Нью-Йорк) в семье, исповедовавшей реформистский иудаизм.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-rahway",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Бруклин 1934-11-09"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Всемирная выставка в Нью-Йорке",
+      "long": "Посещение Всемирной выставки в Нью-Йорке произвело на четырёхлетнего Карла огромное впечатление.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "brooklyn-rahway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На четырёхлетнего Карла произвело огромное впечатление посещение Всемирной выставки 1939 года в Нью-Йорке."
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Ровей",
+      "long": "Семья переехала в Ровей, где Карл учился в старшей школе; окончил её в 1951 году.",
+      "place": {
+        "label": "Ровей"
+      },
+      "chapter": "brooklyn-rahway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948 году семья Саганов переехала в промышленный городок Ровей, поблизости от Нью-Йорка."
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Поступление в Чикагский университет",
+      "long": "Поступил в Чикагский университет в 16 лет; стал бакалавром (1955) и магистром физики (1956), работал с Юри, Койпером, Мёллером.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1951 году Саган поступил в Чикагский университет, где получил степень бакалавра (1955), а затем магистра (1956) физики"
+      }
+    },
+    {
+      "key": "love-1957",
+      "date": {
+        "from": "1957-06-16",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с биологом Линн Маргулис",
+      "long": "Первый брак — с биологом Линн Маргулис; в семье родились сыновья Дорион и Джереми.",
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Саган женился трижды: в 1957 году — на известном биологе Линн Маргулис (матери Дориона и Джереми Саган)"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретный проект А119 для ВВС США",
+      "long": "Вместе с Койпером участвовал в секретном проекте ВВС США А119 — плане ядерного взрыва на Луне.",
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1958, Sagan and Kuiper worked on the classified military Project A119, a secret United States Air Force plan to detonate a nuclear warhead on the Moon and document its effects."
+      }
+    },
+    {
+      "key": "child-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Дориона",
+      "long": "Родился сын Дорион, первый ребёнок от брака с Линн Маргулис.",
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Дорион Саган 1959"
+      }
+    },
+    {
+      "key": "child-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джереми",
+      "long": "Родился сын Джереми.",
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Джереми Саган 1960"
+      }
+    },
+    {
+      "key": "education-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень по астрономии",
+      "long": "Защитил докторскую диссертацию по астрономии и астрофизике в Чикагском университете.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1960 году защитил докторскую (PhD) диссертацию по астрономии и астрофизике"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постдокторская работа в Беркли и Стэнфорде",
+      "long": "Работал ассистентом в Йеркской обсерватории, Беркли и Стэнфорде; сотрудничал с JPL над миссиями «Маринер» к Венере.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960—1962 годах Саган работал ассистентом в Йеркской обсерватории Чикагского университета, Калифорнийском университете в Беркли и Стэнфордском университете."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Гарварде",
+      "long": "Преподавал астрономию в Гарварде и вёл исследования по планетам.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "chicago-berkeley",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962—1968 годах Карл Саган преподавал астрономию в Гарвардском университете."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ в постоянной должности в Гарварде",
+      "long": "Гарвард отказал в постоянной должности; Саган принял предложение Корнеллского университета, где проработал до конца жизни.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968, Sagan was denied academic tenure at Harvard."
+      }
+    },
+    {
+      "key": "love-1968",
+      "date": {
+        "from": "1968-04-06",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с художницей Линдой Зальцман",
+      "long": "Второй брак — с художницей Линдой Зальцман; в 1970 году родился сын Ник.",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1968 году — на художнице Линде Зальцман Саган (матери Ника Сагана)"
+      }
+    },
+    {
+      "key": "child-1970",
+      "date": {
+        "from": "1970-09-16",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Ника",
+      "long": "Родился сын Ник, ребёнок от брака с Линдой Зальцман.",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Ник Саган 1970-09-16"
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профессорство в Корнелле",
+      "long": "Стал профессором астрономии и космических исследований Корнелла и директором лаборатории по изучению планет.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1971 году Саган становится профессором астрономии и космических исследований, а также директором лаборатории по изучению планет."
+      }
+    },
+    {
+      "key": "creation-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Послание на борту «Пионера-10»",
+      "long": "Подготовил первое физическое послание к внеземным цивилизациям — пластину на зонде «Пионер-10».",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a gold-plated plaque, attached to the space probe Pioneer 10, launched in 1972"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор журнала «Икар»",
+      "long": "Был главным редактором планетологического журнала «Икар».",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He edited Icarus from 1975 to 1979."
+      }
+    },
+    {
+      "key": "creation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Золотая пластинка «Вояджера»",
+      "long": "Участвовал в создании Золотой пластинки «Вояджера» — самого подробного послания к внеземному разуму.",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He contributed to the Voyager Golden Record, a sample of the sights and sounds of Earth sent with the Voyager space probes in 1977."
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию за книгу «Драконы Эдема».",
+      "works": [
+        {
+          "ref": "dragons-of-eden",
+          "note": "премия присуждена именно за эту книгу"
+        }
+      ],
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Пулитцеровская премия за нехудожественную литературу 1978"
+      }
+    },
+    {
+      "key": "loss-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец Самуил (Сэм) Саган.",
+      "chapter": "cornell-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Отец Самуил (Сэм) Саган (1905—1979)"
+      }
+    },
+    {
+      "key": "career-1980-2",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Планетарного общества",
+      "long": "Стал одним из основателей Планетарного общества.",
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1980, he cofounded the Planetary Society."
+      }
+    },
+    {
+      "key": "family-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Линдой Зальцман",
+      "long": "Брак с Линдой Зальцман завершился разводом.",
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sagan married artist Linda Salzman in 1968 and they had a child together, Nick Sagan, and divorced in 1981."
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Энн Друян",
+      "long": "Третий брак — с писательницей Энн Друян, соавтором «Космоса»; после этого Саган заметно активизировался политически.",
+      "works": [
+        {
+          "ref": "cosmos-series",
+          "note": "Друян — соавтор сериала"
+        }
+      ],
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following his marriage to his third wife (novelist Ann Druyan) in June 1981, Sagan became more politically active"
+      }
+    },
+    {
+      "key": "loss-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать Рэйчел Молли Грубер.",
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рэйчел Молли Грубер (1907—1982)"
+      }
+    },
+    {
+      "key": "child-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Саши",
+      "long": "Родилась дочь Саша, первый ребёнок от брака с Энн Друян.",
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Саша Саган 1982"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гипотеза «ядерной зимы» (TTAPS)",
+      "long": "Соавтор модели TTAPS, где впервые прозвучал термин «ядерная зима»; Саган активно выступал за разоружение.",
+      "chapter": "cosmos-druyan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, he was one of five authors—the \"S\"—in the follow-up \"TTAPS\" model"
+      }
+    },
+    {
+      "key": "persecution-1986",
+      "date": {
+        "from": "1986",
+        "to": "1987",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Антиядерные протесты, два ареста",
+      "long": "Участвовал в протестах на ядерном полигоне в Неваде и был дважды арестован.",
+      "place": {
+        "label": "Невада"
+      },
+      "chapter": "activism-illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Саган был в числе антивоенных активистов, протестовавших в Неваде на протяжении 1986—1987 годов за прекращение «холодной войны», и даже был дважды арестован."
+      }
+    },
+    {
+      "key": "child-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Сэма",
+      "long": "Родился сын Сэм, второй ребёнок от брака с Энн Друян.",
+      "chapter": "activism-illness",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Samuel Sagan 1991"
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Судебный спор с Apple",
+      "long": "Узнав, что Apple использует его имя как кодовое название компьютера, подал в суд; процессы проиграл, проект переименовали.",
+      "chapter": "activism-illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1994 году компания Apple Computer начала разрабатывать новую версию своего компьютера Power Macintosh 7100.… когда Саган узнал об этом, он подал в суд на фирму Apple Computer"
+      }
+    },
+    {
+      "key": "illness-1994",
+      "date": {
+        "from": "1994",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Миелодисплазия и пересадки костного мозга",
+      "long": "Около двух лет боролся с миелодисплазией; по английской статье, перенёс три пересадки костного мозга от сестры.",
+      "chapter": "activism-illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Саган умер от воспаления лёгких, вызванного двухлетней борьбой организма с миелодисплазией (заболеванием костного мозга) 20 декабря 1996 года"
+      }
+    },
+    {
+      "key": "death-1996",
+      "date": {
+        "from": "1996-12-20",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Сиэтле",
+      "long": "Умер от воспаления лёгких в онкологическом центре Фреда Хатчинсона в Сиэтле; похоронен в Итаке.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "activism-illness",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Сиэтл 1996-12-20"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dragons-of-eden",
+      "title": "Драконы Эдема",
+      "written": {
+        "from": 1976,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "cosmos-series",
+      "title": "Космос: персональное путешествие",
+      "qid": "Q866368",
+      "written": {
+        "from": 1978,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "cosmos-book",
+      "title": "Космос",
+      "qid": "Q1194705",
+      "written": {
+        "from": 1979,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "brocas-brain",
+      "title": "Мозг Брока",
+      "qid": "Q4972600",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "contact",
+      "title": "Контакт",
+      "qid": "Q741013",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "pale-blue-dot",
+      "title": "Голубая точка",
+      "qid": "Q5231098",
+      "written": {
+        "from": 1994,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "demon-haunted-world",
+      "title": "Мир, полный демонов",
+      "qid": "Q2482106",
+      "written": {
+        "from": 1995,
+        "to": 1996
+      }
+    }
+  ]
+}

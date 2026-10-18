@@ -1,0 +1,583 @@
+{
+  "qid": "Q364189",
+  "name": "Питер Страуб",
+  "born": "1943-03-02",
+  "died": "2022-09-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%B0%D1%83%D0%B1%2C_%D0%9F%D0%B8%D1%82%D0%B5%D1%80",
+      "rev": 153781771
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Peter_Straub",
+      "rev": 1378368808
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-and-study",
+      "title": "Милуоки, университеты, брак",
+      "from": 1943,
+      "to": 1968
+    },
+    {
+      "key": "ireland-london",
+      "title": "Дублин и Лондон",
+      "from": 1969,
+      "to": 1978
+    },
+    {
+      "key": "ghost-story-years",
+      "title": "Призраки, Кинг и возвращение в Америку",
+      "from": 1979,
+      "to": 1987
+    },
+    {
+      "key": "blue-rose",
+      "title": "«Голубая роза» и признание",
+      "from": 1988,
+      "to": 2003
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 2004,
+      "to": 2022
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-03-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Милуоки",
+      "long": "Питер Фрэнсис Страуб родился в Милуоки, штат Висконсин, в семье Гордона Энтони и Элвены Страуб.",
+      "place": {
+        "label": "Милуоки"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Страуб родился 2 марта 1943 года в городе Милуоки, штат Висконсин, США."
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Висконсинского университета",
+      "long": "Окончил Висконсинский университет в Мадисоне со степенью по английской словесности.",
+      "place": {
+        "label": "Мадисон"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году окончил Висконсинский университет в Мадисоне, в 1966 году — Колумбийский университет"
+      }
+    },
+    {
+      "key": "education-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура в Колумбийском университете",
+      "long": "Получил степень магистра английской словесности в Колумбийском университете.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году окончил Висконсинский университет в Мадисоне, в 1966 году — Колумбийский университет, получив в обоих учебных заведениях степень магистра английской словесности."
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Сьюзен Биткер",
+      "long": "Женился на Сьюзен Биткер; у них родились двое детей, сын Бенджамин и писательница Эмма Страуб.",
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966, Straub married Susan Bitker."
+      }
+    },
+    {
+      "key": "relocation-1969",
+      "date": {
+        "from": "1969",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Ирландию",
+      "long": "Уехал с женой в Ирландию готовиться к защите докторской диссертации; жили в Дублине до 1972 года. Там написан первый роман.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "marriages-1973",
+          "note": "первый роман написан в Ирландии"
+        }
+      ],
+      "chapter": "ireland-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1969 году вместе с женой уехал в Ирландию, чтобы подготовиться к защите докторской диссертации. В Ирландии был написан первый роман Страуба"
+      }
+    },
+    {
+      "key": "creation-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Поэтические брошюры Seafront Press",
+      "long": "Вместе с другом Томасом Тессье выпустил в Дублине серию из шести поэтических брошюр в издательстве Seafront Press.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "ireland-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "My Life in Pictures appeared in 1971 as part of a series of six poetry pamphlets Straub published with his friend Thomas Tessier under the Seafront Press imprint while living in Dublin."
+      }
+    },
+    {
+      "key": "relocation-1972",
+      "date": {
+        "from": "1972",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Семь лет в Лондоне",
+      "long": "В 1972 году переехал в Лондон, в 1979 году вернулся в США.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ireland-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году Страуб переехал в Лондон; семь лет спустя вернулся в США."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Неудача первого романа и поворот к готике",
+      "long": "Первый роман не имел финансового успеха; по совету литературного агента Страуб обратился к готике.",
+      "works": [
+        {
+          "ref": "julia-1975",
+          "note": "следующие романы написаны в рамках викторианской готики"
+        }
+      ],
+      "chapter": "ireland-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вышедший в 1973 году мейнстримовый Marriages не пользовался финансовым успехом, и Питер обратился за советом к своему литературному агенту, который и порекомендовал ему присмотреться к жанру готики."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв у широкой публики",
+      "long": "Пятый роман принёс широкую известность и успех у критики; позднее был вольно экранизирован.",
+      "works": [
+        {
+          "ref": "ghost-story-1979"
+        }
+      ],
+      "chapter": "ghost-story-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "came to widespread public attention with his fifth novel, Ghost Story (1979), which was a critical success"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Августа Дерлета",
+      "long": "Получил премию Августа Дерлета; в статье она связана с романом, написанным после возвращения в Америку.",
+      "works": [
+        {
+          "ref": "floating-dragon-1983"
+        }
+      ],
+      "chapter": "ghost-story-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Августа Дерлета 1984-01-01"
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Соавторство со Стивеном Кингом",
+      "long": "Написал хоррор-фэнтези в соавторстве со Стивеном Кингом, давним другом.",
+      "works": [
+        {
+          "ref": "talisman-1984"
+        }
+      ],
+      "chapter": "ghost-story-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He coauthored the horror-fantasy The Talisman (1984) with his longtime friend Stephen King."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение после творческой паузы",
+      "long": "После затишья вернулся романом о войне во Вьетнаме без сверхъестественного; начало трилогии «Голубая роза».",
+      "works": [
+        {
+          "ref": "koko-1988"
+        }
+      ],
+      "chapter": "blue-rose",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After a fallow period, Straub re-emerged in 1988 with Koko, a non-supernatural (though horrific) novel about the Vietnam war."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези",
+      "long": "Получил Всемирную премию фэнтези за лучший роман.",
+      "works": [
+        {
+          "ref": "koko-1988"
+        }
+      ],
+      "chapter": "blue-rose",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший роман 1989-01-01"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за роман",
+      "long": "Завершающий роман трилогии «Голубая роза» получил премию Брэма Стокера.",
+      "works": [
+        {
+          "ref": "throat-1993"
+        }
+      ],
+      "chapter": "blue-rose",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Глотка» (1993, обладатель Bram Stoker Award)"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера ужасов",
+      "long": "Удостоен звания гроссмейстера Всемирной конвенции ужасов.",
+      "chapter": "blue-rose",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году Питер был удостоен звания World Horror Grandmaster"
+      }
+    },
+    {
+      "key": "creation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Второй роман в соавторстве с Кингом",
+      "long": "Вновь написал со Стивеном Кингом роман — продолжение первой совместной книги.",
+      "works": [
+        {
+          "ref": "black-house-2001"
+        }
+      ],
+      "chapter": "blue-rose",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Straub and King rejoined forces for Black House, the sequel to The Talisman"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Две премии Брэма Стокера за связанные романы",
+      "long": "Два связанных романа, сочетающих сверхъестественное и детектив, получили премию Брэма Стокера.",
+      "works": [
+        {
+          "ref": "lost-boy-lost-girl-2003"
+        },
+        {
+          "ref": "in-the-night-room-2004"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lost Boy, Lost Girl was published in 2003; a year later, the related In the Night Room was released. Both won the Bram Stoker Award."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор тома Лавкрафта в Library of America",
+      "long": "Составил том рассказов Лавкрафта для серии Library of America; в 2009 году составил антологию American Fantastic Tales.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Straub edited the Library of America volume H. P. Lovecraft: Tales."
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Архив писателя в библиотеке Фейлса",
+      "long": "Личный архив писателя приобрела библиотека Фейлса Нью-Йоркского университета.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Straub's personal papers were acquired by the Fales Library at New York University."
+      }
+    },
+    {
+      "key": "death-2022",
+      "date": {
+        "from": "2022-09-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нью-Йорке",
+      "long": "Умер в возрасте 79 лет от осложнений после перелома бедра; жил в Бруклине с женой.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Straub died on September 4, 2022, aged 79, from complications of a broken hip."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "marriages-1973",
+      "title": "Marriages",
+      "written": {
+        "from": 1969,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "julia-1975",
+      "title": "Julia",
+      "written": {
+        "from": 1973,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "if-you-could-see-me-now-1977",
+      "title": "Возвращение в Арден",
+      "written": {
+        "from": 1975,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "ghost-story-1979",
+      "title": "История с привидениями",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "shadowland-1980",
+      "title": "Обитель теней",
+      "written": {
+        "from": 1979,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "floating-dragon-1983",
+      "title": "Парящий дракон",
+      "written": {
+        "from": 1980,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "talisman-1984",
+      "title": "Талисман",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "koko-1988",
+      "title": "Коко",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "mystery-1990",
+      "title": "Тайна",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "throat-1993",
+      "title": "Глотка",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "hellfire-club-1996",
+      "title": "The Hellfire Club",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "mr-x-1999",
+      "title": "Mr. X",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "black-house-2001",
+      "title": "Чёрный дом",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "lost-boy-lost-girl-2003",
+      "title": "Lost Boy, Lost Girl",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "in-the-night-room-2004",
+      "title": "In the Night Room",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "a-dark-matter-2010",
+      "title": "A Dark Matter",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

@@ -1,0 +1,848 @@
+{
+  "qid": "Q214622",
+  "name": "Никос Казандзакис",
+  "born": "1883-03-02",
+  "died": "1957-10-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D0%B4%D0%B7%D0%B0%D0%BA%D0%B8%D1%81%2C_%D0%9D%D0%B8%D0%BA%D0%BE%D1%81",
+      "rev": 155464730
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nikos_Kazantzakis",
+      "rev": 1380628183
+    },
+    {
+      "id": "elwiki",
+      "url": "https://el.wikipedia.org/wiki/%CE%9D%CE%AF%CE%BA%CE%BF%CF%82_%CE%9A%CE%B1%CE%B6%CE%B1%CE%BD%CF%84%CE%B6%CE%AC%CE%BA%CE%B7%CF%82",
+      "rev": 11857004
+    }
+  ],
+  "chapters": [
+    {
+      "key": "iraklion-naksos",
+      "title": "Ираклион и Наксос",
+      "from": 1883,
+      "to": 1901
+    },
+    {
+      "key": "afiny-parizh",
+      "title": "Афины и Париж",
+      "from": 1902,
+      "to": 1910
+    },
+    {
+      "key": "brak-afon-zorbas",
+      "title": "Брак, Афон, шахта Зорбаса",
+      "from": 1911,
+      "to": 1921
+    },
+    {
+      "key": "berlin-moskva-odisseya",
+      "title": "Берлин, Москва, «Одиссея»",
+      "from": 1922,
+      "to": 1944
+    },
+    {
+      "key": "ministr-antib",
+      "title": "Министр, Антиб, последний путь",
+      "from": 1945,
+      "to": 1957
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1883",
+      "date": {
+        "from": "1883-03-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ираклионе, на османском Крите",
+      "long": "Родился в Ираклионе на Крите, находившемся тогда под властью Османской империи.",
+      "place": {
+        "label": "Ираклион"
+      },
+      "chapter": "iraklion-naksos",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kazantzakis was born on 18 February 1883 (OS)"
+      }
+    },
+    {
+      "key": "education-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Французская школа на Наксосе",
+      "long": "Поступил во французскую школу на Наксосе, где изучал французский и итальянский языки и впервые соприкоснулся с западной культурой.",
+      "place": {
+        "label": "Наксос"
+      },
+      "chapter": "iraklion-naksos",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "το 1897 γράφτηκε στη Γαλλική Εμπορική Σχολή του Τίμιου Σταυρού στη Νάξο"
+      }
+    },
+    {
+      "key": "education-1902",
+      "date": {
+        "from": "1902",
+        "to": "1906",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Юридический факультет Афинского университета",
+      "long": "Учился на юридическом факультете Афинского университета; в 1906 году защитил диссертацию о Ницше в философии права.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "afiny-parizh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1902 to 1906 Kazantzakis studied law at the University of Athens"
+      }
+    },
+    {
+      "key": "creation-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая публикация под псевдонимом",
+      "long": "Первое опубликованное произведение — повесть «Змей и лилия», подписанная псевдонимом Карма Нирвами.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "afiny-parizh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kazantzakis's first published work was the 1906 narrative, Serpent and Lily (Όφις και Κρίνο), which he signed with the pen name 'Karma Nirvami'"
+      }
+    },
+    {
+      "key": "education-1907",
+      "date": {
+        "from": "1907",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Философия в Сорбонне, влияние Бергсона",
+      "long": "Изучал философию в Сорбонне и слушал лекции Бергсона; в 1909 году защитил переработанную диссертацию о Ницше.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "afiny-parizh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he went to the Sorbonne in 1907 to study philosophy and fell under the spell of Henri Bergson"
+      }
+    },
+    {
+      "key": "career-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия драматического конкурса",
+      "long": "Драма «Первый мастер» получила первую премию на драматическом конкурсе имени Лассанис.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "afiny-parizh",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το τελευταίο υποβλήθηκε το 1910 στον Λασσάνειο Δραματικό Αγώνα και κέρδισε το πρώτο βραβείο"
+      }
+    },
+    {
+      "key": "love-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Галатеей Алексиу",
+      "long": "Женился на Галатее Алексиу; венчание прошло в церкви на кладбище Ираклиона, поскольку отец был против невесты.",
+      "place": {
+        "label": "Ираклион"
+      },
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Nikos Kazantzakis married Galateia Alexiou in 1911."
+      }
+    },
+    {
+      "key": "war-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Добровольцем в Первую Балканскую войну",
+      "long": "Во время Первой Балканской войны вступил добровольцем, но был назначен в канцелярию премьер-министра Венизелоса.",
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Στον Α΄ Βαλκανικό Πόλεμο, το 1912, κατατάχθηκε εθελοντής"
+      }
+    },
+    {
+      "key": "other-1914",
+      "date": {
+        "from": "1914",
+        "to": "1916",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Дружба и странствия с Ангелосом Сикелианосом",
+      "long": "Познакомился с поэтом Ангелосом Сикелианосом; вместе они два года путешествовали по местам православной культуры, в том числе около сорока дней провели на Афоне.",
+      "place": {
+        "label": "Афон"
+      },
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1914 he met the writer Angelos Sikelianos. Together they travelled for two years"
+      }
+    },
+    {
+      "key": "faith-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Решение: религия важнее литературы",
+      "long": "За чтением Толстого решил, что религия важнее литературы, и поклялся начать с того места, где остановился Толстой.",
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το επόμενο έτος, 1915, κι ενώ διάβαζε Τολστόι, αποφάσισε πως η θρησκεία είναι σημαντικότερη από τη λογοτεχνία"
+      }
+    },
+    {
+      "key": "poverty-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Неудачная шахта в Мани с Георгием Зорбасом",
+      "long": "Вместе с рабочим Йоргисом Зорбасом пытался разрабатывать буроугольную шахту в Мани; неудачное предприятие позднее легло в основу романа о Зорбе.",
+      "place": {
+        "label": "Прастова, Мани"
+      },
+      "works": [
+        {
+          "ref": "zorba-the-greek",
+          "note": "Опыт шахты в Мани и 1915 года позднее преобразован в роман (по статье о биографии)."
+        }
+      ],
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Η αποτυχημένη αυτή εμπειρία, μαζί με μία άλλη παρόμοια, το 1917, όπου με έναν εργάτη, τον Γιώργη Ζορμπά, προσπάθησαν να εκμεταλλευθούν ένα λιγνιτωρυχείο στην Πραστοβά της Μάνης, μεταμορφώθηκαν πολύ αργότερα στο μυθιστόρημα"
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919",
+        "to": "1920",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Министерство и репатриация греков с Кавказа",
+      "long": "Венизелос назначил его генеральным директором министерства социального обеспечения для репатриации 150 тысяч греков с Кавказа; в 1920 году после поражения либералов он оставил пост.",
+      "place": {
+        "label": "Афины"
+      },
+      "works": [
+        {
+          "ref": "christ-recrucified",
+          "note": "Впечатления этой работы использованы в романе (литературоведение в статье)."
+        }
+      ],
+      "chapter": "brak-afon-zorbas",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το 1919 ο Ελευθέριος Βενιζέλος διόρισε τον Καζαντζάκη Γενικό Διευθυντή του Υπουργείου Περιθάλψεως με αποστολή τον επαναπατρισμό 150.000 Ελλήνων"
+      }
+    },
+    {
+      "key": "relocation-1922",
+      "date": {
+        "from": "1922",
+        "to": "1924",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Берлин и знакомство с коммунизмом",
+      "long": "В Берлине, где обстановка была взрывоопасной, заинтересовался коммунизмом и стал почитателем Ленина.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Paris and Berlin (from 1922 to 1924)"
+      }
+    },
+    {
+      "key": "creation-1924",
+      "date": {
+        "from": "1924",
+        "to": "1938",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Четырнадцать лет работы над эпосом",
+      "long": "Четырнадцать лет, в семи редакциях, работал над эпической поэмой из 33 333 стихов — главным, по его мнению, делом жизни.",
+      "works": [
+        {
+          "ref": "odyssey-modern-sequel",
+          "note": "Поэма писалась в эти годы в семи редакциях."
+        }
+      ],
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kazantzakis began writing The Odyssey: A Modern Sequel in 1924, and completed it in 1938 after fourteen years of writing and revision"
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924-05",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Элени Самиу",
+      "long": "Познакомился с Элени Самиу, с которой прожил 21 год без брака; она стала его помощницей и секретарём.",
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "το 1924 έμεινε για τρεις μήνες στην Ιταλία. Τον Μάιο του ίδιου έτους γνώρισε την Ελένη Σαμίου"
+      }
+    },
+    {
+      "key": "persecution-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Суточный арест в Ираклионе",
+      "long": "Арестован в Ираклионе из-за связи с коммунистической организацией беженцев и ветеранов, но удерживался лишь сутки.",
+      "place": {
+        "label": "Ираклион"
+      },
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το 1925 ο Καζαντζάκης συνελήφθη στο Ηράκλειο της Κρήτης, αλλά κρατήθηκε μόνο για είκοσι τέσσερις ώρες"
+      }
+    },
+    {
+      "key": "love-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Галатеей",
+      "long": "Развод с Галатеей Алексиу.",
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The two divorced in 1926, two years after Kazantzakis had met Eleni Samiou"
+      }
+    },
+    {
+      "key": "other-1927",
+      "date": {
+        "from": "1927-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Поездка в СССР по приглашению правительства",
+      "long": "Приглашён в Москву на празднование десятилетия Октябрьской революции; познакомился с Панаитом Истрати. Позднее разочаровался в сталинизме.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Τον Οκτώβριο του 1927, ο Καζαντζάκης, τότε αριστερός, έφυγε για τη Μόσχα προσκεκλημένος από την κυβέρνηση της Σοβιετικής Ένωσης"
+      }
+    },
+    {
+      "key": "faith-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Первое церковное осуждение философского трактата",
+      "long": "Епископ Сироса в записке Синоду осудил «Аскетику» — первая церковная реакция на его сочинения.",
+      "works": [
+        {
+          "ref": "saviors-of-god"
+        }
+      ],
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Η πρώτη εκκλησιαστική αντίδραση στο έργο του Νίκου Καζαντζάκη εκδηλώθηκε το 1928, όταν ο επίσκοπος Σύρου Αθανάσιος με υπόμνημά του στη Σύνοδο καταδίκαζε την Ασκητική."
+      }
+    },
+    {
+      "key": "persecution-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Судебное преследование за речь о СССР",
+      "long": "После выступления в афинском театре «Аламбра» в защиту СССР против него возбуждено дело; суд назначали на 3 апреля, но он так и не состоялся.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Τον Ιανουάριο του 1928 στο θέατρο «Αλάμπρα», στην Αθήνα, μίλησαν εξυμνώντας τη Σοβιετική Ένωση, ο Καζαντζάκης και ο Ιστράτι."
+      }
+    },
+    {
+      "key": "creation-1929",
+      "date": {
+        "from": "1929-05",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Уединение в Чехословакии, романы по-французски",
+      "long": "Уединился на ферме в Чехословакии и закончил по-французски романы в рамках попытки добиться международного признания.",
+      "works": [
+        {
+          "ref": "toda-raba",
+          "note": "Роман завершён на ферме в Чехословакии в мае 1929 года."
+        }
+      ],
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Τον Μάιο του 1929 απομονώθηκε σε ένα αγρόκτημα στην Τσεχοσλοβακία, όπου ολοκλήρωσε στα Γαλλικά τα μυθιστορήματα Τόντα - Ράμπα"
+      }
+    },
+    {
+      "key": "persecution-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Обвинение в атеизме, суд не состоялся",
+      "long": "Против него возбуждено дело об атеизме за «Аскетику»; суд назначали на 10 июня, но он не состоялся.",
+      "works": [
+        {
+          "ref": "saviors-of-god"
+        }
+      ],
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το 1930 θα δικαζόταν, πάλι, ο Καζαντζάκης για αθεϊσμό, για την Ασκητική. Η δίκη ορίσθηκε για τις 10 Ιουνίου, αλλά κι αυτή δεν έγινε ποτέ."
+      }
+    },
+    {
+      "key": "other-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Путешествие в Японию и Китай",
+      "long": "Поездка в Японию и Китай, обогатившая его путевые очерки.",
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το 1935 πραγματοποίησε ταξίδι στην Ιαπωνία και την Κίνα"
+      }
+    },
+    {
+      "key": "creation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа в годы оккупации",
+      "long": "Несмотря на лишения оккупации завершил роман о Зорбе, а вместе с Какридисом переводил «Илиаду».",
+      "place": {
+        "label": "Афины"
+      },
+      "works": [
+        {
+          "ref": "zorba-the-greek"
+        }
+      ],
+      "chapter": "berlin-moskva-odisseya",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "δουλεύοντας ακούραστα παρά τις στερήσεις της Κατοχής, το 1943 ολοκλήρωσε το μυθιστόρημα Βίος και πολιτεία του Αλέξη Ζορμπά"
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945-11",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элени Самиу",
+      "long": "Венчание с Элени Самиу; свидетелями были Ангелос и Анна Сикелианос.",
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Παντρεύτηκαν τελικά το 1945"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945-11-26",
+        "to": "1946-01-11",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Министр без портфеля в правительстве Софулиса",
+      "long": "Возглавил небольшую некоммунистическую левую партию и вошёл министром без портфеля в правительство Софулиса; вышел из него через полтора месяца.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "διετέλεσε και υπουργός άνευ χαρτοφυλακίου της κυβέρνησης του Θεμιστοκλή Σοφούλη από τις 26 Νοεμβρίου 1945 έως τις 11 Ιανουαρίου 1946"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "to": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бюро переводов ЮНЕСКО",
+      "long": "Возглавлял бюро переводов ЮНЕСКО, затем оставил пост, чтобы сосредоточиться на писательстве.",
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946 he became the head of the UNESCO Bureau of Translations, the organisation which promoted translations of literary works. However, he resigned in 1947"
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Антиб ради писательства",
+      "long": "Поселился в Антибе во Франции; последующие годы стали самыми плодотворными, и большая часть его прозы написана там.",
+      "place": {
+        "label": "Антиб"
+      },
+      "works": [
+        {
+          "ref": "christ-recrucified",
+          "note": "Романы этого периода созданы в Антибе (по статье)."
+        },
+        {
+          "ref": "captain-michalis"
+        },
+        {
+          "ref": "last-temptation"
+        }
+      ],
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Παραιτήθηκε τελικά το 1948, προκειμένου να αφοσιωθεί στο λογοτεχνικό του έργο. Για τον σκοπό αυτό εγκαταστάθηκε στην Αντίμπ της Γαλλίας"
+      }
+    },
+    {
+      "key": "illness-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Глазная инфекция, потеря зрения правого глаза",
+      "long": "Глазная инфекция потребовала лечения в Нидерландах и Париже; правый глаз перестал видеть.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Το 1953 προσβλήθηκε από μία μόλυνση στο μάτι … Τελικά έχασε την όρασή του από το δεξί μάτι."
+      }
+    },
+    {
+      "key": "persecution-1954",
+      "date": {
+        "from": "1954-01",
+        "to": "1954-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Кампания Церкви против романов, угроза отлучения",
+      "long": "Священный Синод обсуждал «Капитана Михалиса» и «Последнее искушение»; вопрос об отлучении возник, но не был решён. Казандзакис ответил: «Вы дали мне проклятие, святые отцы, я даю вам благословение».",
+      "place": {
+        "label": "Афины"
+      },
+      "works": [
+        {
+          "ref": "captain-michalis",
+          "note": "Синод рассматривал роман по докладам Пантелеимона Хиосского."
+        },
+        {
+          "ref": "last-temptation"
+        }
+      ],
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "Στις 26 Ιανουαρίου 1954 ήλθε προς συζήτηση στη συνεδρίαση της Ιεράς Συνόδου το ζήτημα του βιβλίου Ο καπετάν Μιχάλης"
+      }
+    },
+    {
+      "key": "persecution-1954-2",
+      "date": {
+        "from": "1954-01-12",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Включение романа в Индекс запрещённых книг",
+      "long": "Роман внесён в Индекс запрещённых книг Католической церкви; Казандзакис телеграммой подал апелляцию в Комиссию Индекса.",
+      "works": [
+        {
+          "ref": "last-temptation"
+        }
+      ],
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "ο Τελευταίος πειρασμός προστέθηκε στις 12 Ιανουαρίου 1954 στον Κατάλογο των Απαγορευμένων Βιβλίων της Ρωμαιοκαθολικής Εκκλησίας"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Международная премия Мира",
+      "long": "Удостоен Международной премии Мира, также получил государственную театральную премию в Афинах.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Международной премии Мира (1956)."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Нобелевская премия: уступка Камю одним голосом",
+      "long": "Всего номинировался на Нобелевскую премию по литературе в девяти разных годах; в 1957 году уступил Камю одним голосом.",
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1957 he lost the Prize to Albert Camus by a single vote."
+      }
+    },
+    {
+      "key": "illness-1957",
+      "date": {
+        "from": "1957-06",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Последняя поездка в Китай, лейкемия",
+      "long": "Поехал в Китай по приглашению правительства, вернулся с подорванным здоровьем; лечился в Копенгагене и Фрайбурге.",
+      "place": {
+        "label": "Фрайбург-им-Брайсгау"
+      },
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "elwiki",
+        "quote": "επιχείρησε δεύτερο ταξίδι εκεί τον Ιούνιο του 1957, προσκεκλημένος της κινεζικής κυβέρνησης. Επέστρεψε με κλονισμένη την υγεία του προσβληθείς από λευχαιμία."
+      }
+    },
+    {
+      "key": "death-1957",
+      "date": {
+        "from": "1957-10-26",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть во Фрайбурге",
+      "long": "Умер во Фрайбурге в возрасте 74 лет; похоронен на бастионе Мартиненго в Ираклионе. На надгробии: «Ни на что не надеюсь. Ничего не страшусь. Я свободен».",
+      "place": {
+        "label": "Фрайбург-им-Брайсгау"
+      },
+      "chapter": "ministr-antib",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер от лейкемии 26 октября 1957 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "odyssey-modern-sequel",
+      "title": "Одиссея",
+      "qid": "Q7754712",
+      "written": {
+        "from": 1924,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "saviors-of-god",
+      "title": "Аскетика (Спасители Бога)",
+      "qid": "Q7762362",
+      "written": {
+        "from": 1922,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "toda-raba",
+      "title": "Тода-Раба",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "zorba-the-greek",
+      "title": "Грек Зорба",
+      "qid": "Q1059553",
+      "written": {
+        "from": 1941,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "christ-recrucified",
+      "title": "Христа распинают вновь",
+      "qid": "Q4740031",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "captain-michalis",
+      "title": "Капитан Михалис",
+      "qid": "Q3555725",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "last-temptation",
+      "title": "Последнее искушение Христа",
+      "qid": "Q1323860",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "gods-pauper",
+      "title": "Беднячок из Ассизи",
+      "qid": "Q20723586",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "fratricides",
+      "title": "Братоубийцы",
+      "qid": "Q137782545",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "report-to-greco",
+      "title": "Отчёт перед Эль Греко",
+      "qid": "Q20048817",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    }
+  ]
+}

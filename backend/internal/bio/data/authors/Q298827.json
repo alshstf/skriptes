@@ -1,0 +1,569 @@
+{
+  "qid": "Q298827",
+  "name": "Гастон Леру",
+  "born": "1868-05-06",
+  "died": "1927-04-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D1%80%D1%83%2C_%D0%93%D0%B0%D1%81%D1%82%D0%BE%D0%BD",
+      "rev": 154698510
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Gaston_Leroux",
+      "rev": 1376243408
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Gaston_Leroux",
+      "rev": 239629684
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Нормандия, школа, право",
+      "from": 1868,
+      "to": 1889
+    },
+    {
+      "key": "law-and-press",
+      "title": "Адвокат и судебный хроникёр",
+      "from": 1890,
+      "to": 1903
+    },
+    {
+      "key": "russia",
+      "title": "Корреспондент в России, уход из журналистики",
+      "from": 1904,
+      "to": 1907
+    },
+    {
+      "key": "rouletabille",
+      "title": "Успех и романы о Рультабийе",
+      "from": 1908,
+      "to": 1917
+    },
+    {
+      "key": "cinema",
+      "title": "Кинороманы и последние годы",
+      "from": 1918,
+      "to": 1927
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1868",
+      "date": {
+        "from": "1868-05-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился 6 мая 1868 года на улице Фобур Сен-Мартен; родители, строительный подрядчик Альфред Леру и Мари-Альфонсина Бидо, на тот момент не состояли в браке.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гастон родился 6 мая 1868 года."
+      }
+    },
+    {
+      "key": "education-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа в Э, дружба с Филиппом Орлеанским",
+      "long": "Семья переехала в Э, где отец руководил реставрацией замка. Одноклассником и другом Гастона стал Филипп Орлеанский; в школе Леру начал писать стихи.",
+      "place": {
+        "label": "Э"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1880 году он поступил в школу в Э, куда они переехали, когда отец Альфред Леру возглавил работы по реставрации тамошнего замка."
+      }
+    },
+    {
+      "key": "education-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление на юридический факультет",
+      "long": "Окончил бакалавриат 29 июля 1886 года и в том же году поступил на юридический факультет Парижского университета.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "29 июля 1886 года Леру закончил бакалавриат в Каннах и в том же году записался на юридический факультет Парижского университета."
+      }
+    },
+    {
+      "key": "career-1887",
+      "date": {
+        "from": "1887",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые публикации в газетах",
+      "long": "Первый рассказ вышел в газете «Французская республика»; тогда же появились первая статья в «Lutèce» и первый сонет, посвящённый Ламартину.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1887 году напечатал свой первый рассказ, «Маленький торговец жареным картофелем», в газете «Французская республика»"
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890",
+        "to": "1893",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Годы адвокатской практики",
+      "long": "После университета работал адвокатом, затем перешёл в журналистику.",
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1890—1893 годах служил адвокатом."
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Судебный хроникёр «Матен», процессы анархистов",
+      "long": "Как судебный хроникёр «Матен» освещал процессы анархистов Эмиля Анри и Санте Иеронимо Казерио; судебная хроника стала основой его журналистской репутации.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Печатал отчёты о знаменитых судебных процессах, в том числе над анархистами Эмилем Анри и Санте Иеронимо Казерио (1894)"
+      }
+    },
+    {
+      "key": "career-1894-2",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководитель отдела информации в «Матен»",
+      "long": "Стал руководителем отдела информации в «Матен» и много ездил по Франции и за границей, в частности в Испанию и Марокко.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1894, devenu chef des informations au Matin, il effectue de nombreux voyages en France et à l"
+      }
+    },
+    {
+      "key": "other-1896",
+      "date": {
+        "from": "1896-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Россию с президентом Фором",
+      "long": "В составе группы репортёров сопровождал президента Феликса Фора в поездке в Россию.",
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1896 года Леру был включён в группу репортёров, сопровождавших Президента Франции Феликса Фора в его поездке в Россию."
+      }
+    },
+    {
+      "key": "career-1898",
+      "date": {
+        "from": "1898",
+        "to": "1899",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортажи о деле Дрейфуса",
+      "long": "Писал репортажи о деле Дрейфуса для «Матен».",
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а также о деле Дрейфуса (1898—1899)"
+      }
+    },
+    {
+      "key": "love-1899",
+      "date": {
+        "from": "1899",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мари Лефран",
+      "long": "Женился на Мари Лефран, но вскоре расстался с ней.",
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Gaston Leroux épouse en 1899 Marie Lefranc, mais s'en sépare très vite."
+      }
+    },
+    {
+      "key": "love-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с Жанной Кайатт",
+      "long": "Познакомился с Жанной Кайатт в Лейзене (Швейцария); вскоре они стали жить как супруги, у них родились двое детей.",
+      "place": {
+        "label": "Лейзен"
+      },
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1902, il rencontre Jeanne Cayatte à Leysin, en Suisse, avec qui il vit bientôt maritalement"
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902-01-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кавалер ордена Почётного легиона",
+      "long": "Награждён орденом Почётного легиона за журналистскую работу.",
+      "chapter": "law-and-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1902 году Леру стал кавалером Ордена Почетного легиона за свою работу в прессе."
+      }
+    },
+    {
+      "key": "relocation-1904",
+      "date": {
+        "from": "1904-06",
+        "to": "1906-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Корреспондент «Матен» в России",
+      "long": "Постоянный специальный корреспондент «Матен» в России; освещал начало революционных событий, ездил по городам империи. Русской теме посвящены несколько его романов.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "rouletabille-chez-le-tsar",
+          "note": "русской теме посвящены романы «Рультабий у царя» и «Чёрные женщины»"
+        }
+      ],
+      "chapter": "russia",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Envoyé spécial permanent du Matin en Russie, de juin 1904 à mars 1906"
+      }
+    },
+    {
+      "key": "career-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортажи о Первой русской революции",
+      "long": "Был свидетелем событий Первой русской революции и описывал их в репортажах.",
+      "chapter": "russia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was present at, and covered, the 1905 Russian Revolution."
+      }
+    },
+    {
+      "key": "child-1905",
+      "date": {
+        "from": "1905-07",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Андре Гастона",
+      "long": "В Санкт-Петербурге родился сын Андре Гастон, которого называли Мики.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "russia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1905 года в Санкт-Петербурге у Леру родился сын Андре Гастон («Мики»)."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из журналистики ради прозы",
+      "long": "Оставил журналистику и стал писать художественную прозу.",
+      "works": [
+        {
+          "ref": "mystery-of-the-yellow-room",
+          "note": "прозу начал с романа о Рультабийе"
+        }
+      ],
+      "chapter": "russia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He left journalism in 1907, after returning from covering a volcanic eruption and being immediately sent on another assignment without vacation time, and began writing fiction."
+      }
+    },
+    {
+      "key": "career-1907-2",
+      "date": {
+        "from": "1907-01-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Провал пьесы в «Одеоне»",
+      "long": "Пьеса «Дом судей» шла в «Одеоне» около двух недель. После неудачи Леру предложил журналу «Иллюстрация» написать роман, в том числе о приключениях репортёра.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "mystery-of-the-yellow-room",
+          "note": "после неудачи пьесы предложил «Иллюстрации» роман о репортёре"
+        }
+      ],
+      "chapter": "russia",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Montée par Antoine à … le 26 janvier 1907"
+      }
+    },
+    {
+      "key": "career-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый крупный успех как романиста",
+      "long": "Роман о преступлении в запертой комнате и репортёре Рультабийе принёс Леру успех и восхищение сюрреалистов.",
+      "works": [
+        {
+          "ref": "mystery-of-the-yellow-room"
+        }
+      ],
+      "chapter": "rouletabille",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "un chef-d’œuvre d’ingéniosité qui inspire les surréalistes et lui assure le succès en 1908"
+      }
+    },
+    {
+      "key": "relocation-1908",
+      "date": {
+        "from": "1908",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Ментон, затем в Ниццу",
+      "long": "В 1908 году поселился в Ментоне, в 1909-м переехал в Ниццу, где жил до конца жизни.",
+      "place": {
+        "label": "Ницца"
+      },
+      "chapter": "rouletabille",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1908 году обосновался в Ментоне, а в 1909 году переселился в Ниццу."
+      }
+    },
+    {
+      "key": "child-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Мадлен",
+      "long": "Родилась дочь Мадлен, впоследствии снявшаяся в фильмах по его сценариям.",
+      "chapter": "rouletabille",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "dont il a deux enfants : Alfred Gaston, dit Miki (1905-1970), et Madeleine (1908-1984)"
+      }
+    },
+    {
+      "key": "love-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Жанной Кайатт",
+      "long": "После согласия Мари Лефран на развод женился на Жанне Кайатт, матери своих детей.",
+      "chapter": "rouletabille",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Marie Lefranc ayant fini par accepter le divorce, il épouse Jeanne en 1917."
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918",
+        "to": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Общество кинороманов» в Ницце",
+      "long": "Основал в Ницце «Общество кинороманов» с Рене Наварром и Артуром Бернедом; был продюсером и сценаристом. Фирма просуществовала до 1922 года и перешла к «Пате».",
+      "place": {
+        "label": "Ницца"
+      },
+      "chapter": "cinema",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1918, Leroux fonde à Nice la Société des cinéromans, avec notamment René Navarre"
+      }
+    },
+    {
+      "key": "death-1927",
+      "date": {
+        "from": "1927-04-15",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Ницце",
+      "long": "Умер в Ницце в возрасте 58 лет; похоронен на кладбище Шато.",
+      "place": {
+        "label": "Ницца"
+      },
+      "chapter": "cinema",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 15 апреля 1927 года от последствий хирургической операции."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mystery-of-the-yellow-room",
+      "title": "Тайна жёлтой комнаты",
+      "qid": "Q2563691",
+      "written": {
+        "from": 1907,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "perfume-of-the-lady-in-black",
+      "title": "Аромат дамы в чёрном",
+      "qid": "Q3225240",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "phantom-of-the-opera",
+      "title": "Призрак Оперы",
+      "qid": "Q272506",
+      "written": {
+        "from": 1909,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "double-life-of-theophraste-longuet",
+      "title": "Двойная жизнь Теофраста Лонге",
+      "qid": "Q3208351",
+      "written": {
+        "from": 1903,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "rouletabille-chez-le-tsar",
+      "title": "Рультабиль у царя",
+      "qid": "Q3443344",
+      "written": {
+        "from": 1912,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "cheri-bibi",
+      "title": "Шери-Биби",
+      "qid": "Q125775706",
+      "written": {
+        "from": 1913,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "balaoo",
+      "title": "Балаоо",
+      "written": {
+        "from": 1911,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "la-poupee-sanglante",
+      "title": "Окровавленная кукла",
+      "written": {
+        "from": 1923,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "mister-flow",
+      "title": "Мистер Флоу",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    }
+  ]
+}

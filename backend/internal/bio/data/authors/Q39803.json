@@ -1,0 +1,940 @@
+{
+  "qid": "Q39803",
+  "name": "Марио Варгас Льоса",
+  "born": "1936-03-28",
+  "died": "2025-04-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D1%80%D0%B3%D0%B0%D1%81_%D0%9B%D1%8C%D0%BE%D1%81%D0%B0%2C_%D0%9C%D0%B0%D1%80%D0%B8%D0%BE",
+      "rev": 154894434
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mario_Vargas_Llosa",
+      "rev": 1378094015
+    },
+    {
+      "id": "eswiki",
+      "url": "https://es.wikipedia.org/wiki/Mario_Vargas_Llosa",
+      "rev": 175363921
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-three-cities",
+      "title": "Кочабамба, Пьюра, Лима",
+      "from": 1936,
+      "to": 1949
+    },
+    {
+      "key": "academy-and-san-marcos",
+      "title": "Военное училище и Сан-Маркос",
+      "from": 1950,
+      "to": 1959
+    },
+    {
+      "key": "paris-and-first-novels",
+      "title": "Париж, два брака, первые романы",
+      "from": 1960,
+      "to": 1974
+    },
+    {
+      "key": "pen-and-politics",
+      "title": "ПЕН-клуб, Учураккай, политика",
+      "from": 1975,
+      "to": 1989
+    },
+    {
+      "key": "election-and-spain",
+      "title": "Выборы, поражение, Испания",
+      "from": 1990,
+      "to": 2009
+    },
+    {
+      "key": "nobel-and-last-years",
+      "title": "Нобель и поздние годы",
+      "from": 2010,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1936",
+      "date": {
+        "from": "1936-03-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Арекипе",
+      "long": "Родился в Арекипе в семье среднего достатка; родители расстались за несколько месяцев до его рождения.",
+      "place": {
+        "label": "Арекипа"
+      },
+      "chapter": "childhood-three-cities",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 марта 1936, Арекипа, Перу — 13 апреля 2025, Лима"
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство в боливийской Кочабамбе",
+      "long": "С матерью и её семьёй жил в боливийской Кочабамбе, где дед управлял хлопковой плантацией; мальчику внушали, что отец умер.",
+      "place": {
+        "label": "Кочабамба"
+      },
+      "chapter": "childhood-three-cities",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Кочабамба 1937-01-01 — 1945-01-01"
+      }
+    },
+    {
+      "key": "family-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Встреча с отцом и переезд в Лиму",
+      "long": "В десять лет впервые встретился с отцом; родители возобновили совместную жизнь и поселились в Лиме. Отношения с отцом остались тяжёлыми.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "childhood-three-cities",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1946 году супруги Варгас возобновили совместную жизнь и поселились в Лиме"
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "to": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Военное училище имени Леонсио Прадо",
+      "long": "По настоянию отца учился в военном училище имени Леонсио Прадо в Кальяо — закрытом интернате с жёсткой дисциплиной.",
+      "place": {
+        "label": "Кальяо"
+      },
+      "works": [
+        {
+          "ref": "city-and-dogs",
+          "note": "роман основан на реальных впечатлениях писателя от учёбы в военной академии"
+        }
+      ],
+      "chapter": "academy-and-san-marcos",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Военная академия Леонсио Прадо 1950-03 — 1951-12"
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из училища, журналистика в Пьюре",
+      "long": "Начал работать журналистом, оставил военное училище и переехал в Пьюру, где закончил школу и работал в газете «La Industria».",
+      "place": {
+        "label": "Пьюра"
+      },
+      "chapter": "academy-and-san-marcos",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Durante las vacaciones veraniegas de 1952, Vargas Llosa empezó a trabajar como periodista en el diario limeño La Crónica… Ese mismo año se retiró del colegio militar y se trasladó a Piura"
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в университет Сан-Маркос",
+      "long": "Поступил в университет Сан-Маркос в Лиме; участвовал в университетской политике в кругу коммунистов.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "academy-and-san-marcos",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году Варгас Льоса поступил на филологический факультет университета Сан-Маркос"
+      }
+    },
+    {
+      "key": "love-1955",
+      "date": {
+        "from": "1955-05",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Хулией Уркиди",
+      "long": "В девятнадцать лет женился на Хулии Уркиди, разведённой женщине на десять лет старше. Семья не одобрила брак, пара зарабатывала на жизнь несколькими работами.",
+      "place": {
+        "label": "Лима"
+      },
+      "works": [
+        {
+          "ref": "aunt-julia-and-the-scriptwriter",
+          "note": "в романе в гротескной форме изображена история первого брака; Хулия Уркиди — прототип героини"
+        }
+      ],
+      "chapter": "academy-and-san-marcos",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En mayo de 1955, a la edad de 19 años, contrajo matrimonio con Julia Urquidi Illanes"
+      }
+    },
+    {
+      "key": "education-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Стипендия и учёба в Мадриде",
+      "long": "Получил стипендию и уехал в Мадрид для учёбы в Мадридском университете; диссертация посвящена Рубену Дарио.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "academy-and-san-marcos",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получил стипендию Мадридского университета и в 1958 году защитил там диссертацию о творчестве Рубена Дарио"
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж без стипендии",
+      "long": "Обещанный грант получить не удалось, но с Хулией он остался в Париже, работал журналистом на радио и телевидении и писал первый роман.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "city-and-dogs",
+          "note": "в Париже закончен первый роман"
+        }
+      ],
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году Варгас Льоса переехал в Париж, где ему обещали предоставить новый грант на литературные исследования"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Библиотеки Бреве",
+      "long": "Первый роман получил премию Библиотеки Бреве и вышел в Барселоне в издательстве Seix Barral.",
+      "place": {
+        "label": "Барселона"
+      },
+      "works": [
+        {
+          "ref": "city-and-dogs"
+        }
+      ],
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "La novela consiguió en 1962 el Premio Biblioteca Breve y se publicó al año siguiente"
+      }
+    },
+    {
+      "key": "other-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка на Кубу во время Карибского кризиса",
+      "long": "Побывал на революционной Кубе как корреспондент во время Карибского кризиса и выразил симпатию к революции.",
+      "place": {
+        "label": "Куба"
+      },
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En 1962, visitó la Cuba revolucionaria como corresponsal durante la crisis de los misiles"
+      }
+    },
+    {
+      "key": "persecution-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Скандал в Перу вокруг первого романа",
+      "long": "Первый роман принёс успех, но вызвал скандал в Перу: несколько генералов обвинили автора в клевете на армию.",
+      "place": {
+        "label": "Лима"
+      },
+      "works": [
+        {
+          "ref": "city-and-dogs"
+        }
+      ],
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Vargas Llosa's first novel, The Time of the Hero (La ciudad y los perros), was published in 1963… Nevertheless, its sharp criticism of the Peruvian military establishment led to controversy in Peru"
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв с Хулией Уркиди",
+      "long": "Брак с Хулией Уркиди завершился разводом.",
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году Варгас Льоса и Уркиди расстались."
+      }
+    },
+    {
+      "key": "love-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Патрисией Льоса",
+      "long": "Женился на двоюродной сестре Патрисии Льоса; в браке родились трое детей.",
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году Варгас Льоса и Уркиди расстались. Годом позже Марио женился на второй своей кузине Патрисии"
+      }
+    },
+    {
+      "key": "creation-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Литературный агент и содержание на время работы",
+      "long": "Кармен Бальсельс стала его литературным агентом и обеспечила средства на время работы над третьим романом.",
+      "works": [
+        {
+          "ref": "conversation-in-the-cathedral",
+          "note": "Бальсельс обеспечила средства на время работы над романом"
+        }
+      ],
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En 1966, durante la lectura que Carmen Balc hizo de La casa verde (quien era entonces responsable de derechos de la editorial) propone al escritor convertirse en su agente literario… Lo animó a centrarse exclusivamente en la literatura y le consiguió sustento económico durante el tiempo que durase la redacción de Conversación en La Catedral"
+      }
+    },
+    {
+      "key": "child-1966",
+      "date": {
+        "from": "1966-03-18",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Альваро",
+      "long": "Родился первый сын Альваро, впоследствии писатель и публицист.",
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Альваро Варгас Льоса 1966-03-18"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Ромуло Гальегоса",
+      "long": "Второй роман первым удостоился премии Ромуло Гальегоса, опередив Онетти и Гарсиа Маркеса.",
+      "works": [
+        {
+          "ref": "green-house"
+        }
+      ],
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Ромуло Гальегоса (1967)"
+      }
+    },
+    {
+      "key": "child-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Гонсало",
+      "long": "Родился сын Гонсало.",
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gonzalo (born 1967), an international civil servant"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Королевском колледже Лондона",
+      "long": "Преподавал испаноамериканскую литературу в Королевском колледже Лондона.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Vargas Llosa lectured on Spanish American Literature at King's College London from 1969 to 1970."
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Барселоне",
+      "long": "Жил в Барселоне и занимался профессиональной литературной работой.",
+      "place": {
+        "label": "Барселона"
+      },
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Барселона 1970-01-01 — 1974-01-01"
+      }
+    },
+    {
+      "key": "other-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Разрыв с кубинским режимом из-за дела Падильи",
+      "long": "После заключения поэта Эберто Падильи вместе с другими интеллектуалами протестовал в письме Кастро и порвал с кубинским режимом.",
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "particularly after the imprisonment of Cuban poet Heberto Padilla in 1971"
+      }
+    },
+    {
+      "key": "education-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская диссертация о Гарсиа Маркесе",
+      "long": "Защитил докторскую диссертацию о Гарсиа Маркесе в Мадридском университете Комплутенсе.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "paris-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1971 году писатель защитил в Мадридском университете Комплутенсе фундаментальную диссертацию по творчеству Габриэля Гарсии Маркеса"
+      }
+    },
+    {
+      "key": "other-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Разрыв с Гарсиа Маркесом",
+      "long": "Публично ударил Габриэля Гарсиа Маркеса, что положило конец их дружбе.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году Варгас Льоса публично закатил своему бывшему приятелю пощёчину в присутствии журналистов"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент международного ПЕН-клуба",
+      "long": "Избран президентом международного ПЕН-клуба; занимал пост до 1979 года.",
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976 he was elected President of PEN International"
+      }
+    },
+    {
+      "key": "relocation-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Лиму",
+      "long": "Вернулся в Лиму, но продолжал много ездить по миру.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году вернулся в Лиму"
+      }
+    },
+    {
+      "key": "persecution-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Комиссия по делу Учураккая и травля в прессе",
+      "long": "Возглавил комиссию по расследованию убийства восьми журналистов в Учураккае; выводы комиссии вызвали резкую критику и травлю в прессе.",
+      "place": {
+        "label": "Учураккай"
+      },
+      "works": [
+        {
+          "ref": "who-killed-palomino-molero",
+          "note": "роман начат вскоре после расследования и назван критиком «литературным экзорцизмом»"
+        }
+      ],
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With his appointment to the Investigatory Commission on the Uchuraccay massacre in 1983"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Предложение возглавить правительство Перу",
+      "long": "Президент Белаунде предложил возглавить правительство; писатель сначала согласился, но затем отказался.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En abril de 1984, el presidente Fernando Belaúnde Terry le propuso encabezar el Consejo de Ministros"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход в политику, партия «Движение за свободу»",
+      "long": "На волне протестов против национализации банков основал партию «Движение за свободу» и стал политическим лидером.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "pen-and-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, he helped form and soon became a leader of the centre-right party Movimiento Libertad"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Кандидат в президенты Перу",
+      "long": "Баллотировался в президенты Перу с программой либеральных реформ и приватизации; противники использовали против него цитаты из его романа.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "election-and-spain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1990 году выдвигался кандидатом в президенты Перу от партии «Демократический фронт»"
+      }
+    },
+    {
+      "key": "other-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Поражение на выборах от Фухимори и отъезд из Перу",
+      "long": "Выиграл первый тур, но проиграл второй Альберто Фухимори, покинул Перу и поселился сначала в Лондоне, затем в Мадриде.",
+      "place": {
+        "label": "Лима"
+      },
+      "works": [
+        {
+          "ref": "a-fish-in-the-water",
+          "note": "опыт избирательной кампании описан в книге"
+        }
+      ],
+      "chapter": "election-and-spain",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "se presentó como candidato a la presidencia del Perú en 1990. Durante gran parte de la campaña electoral, fue el candidato favorito. El súbito crecimiento de la popularidad de Alberto Fujimori, quien hasta 15 días antes de la elección aparecía con menos del 10 % de las preferencias, forzó una segunda vuelta electoral en la cual Vargas Llosa fue derrotado"
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Испанское гражданство",
+      "long": "По его просьбе получил испанское гражданство: правительство Фухимори грозило лишить его перуанского.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "election-and-spain",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "el Gobierno español le concedió la ciudadanía española por carta de naturaleza en 1993"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Сервантеса",
+      "long": "Получил премию Сервантеса; в том же году избран в Королевскую академию испанского языка.",
+      "chapter": "election-and-spain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Сервантеса (1994)"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Нобелевская премия присуждена «за изображение структуры власти и яркие картины человеческого сопротивления, восстания и поражения».",
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Нобелевская премия по литературе 2010 года"
+      }
+    },
+    {
+      "key": "love-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Расставание с Патрисией, роман с Изабель Прейслер",
+      "long": "Расстался с Патрисией Льоса и начал отношения с Изабель Прейслер; в том же году развёлся.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015, Vargas Llosa embarked on a relationship with Filipina Spanish socialite and TV personality Isabel Preysler and separated from his second wife Patricia Llosa."
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход из международного ПЕН-клуба",
+      "long": "Вышел из международного ПЕН-клуба из-за несогласия с его позицией по каталонскому сепаратизму.",
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En 2019, renunció al PEN Club Internacional por su desacuerdo con su postura ante el independentismo catalán."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021-11-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание во Французскую академию",
+      "long": "Избран во Французскую академию — первым членом, никогда не писавшим по-французски.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "25 ноября 2021 года избран во Французскую академию и занял кресло № 18"
+      }
+    },
+    {
+      "key": "illness-2022",
+      "date": {
+        "from": "2022-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Госпитализация с COVID-19",
+      "long": "Заразился COVID-19 и был госпитализирован в Мадриде.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2022, he was infected with COVID-19 and hospitalized."
+      }
+    },
+    {
+      "key": "love-2022",
+      "date": {
+        "from": "2022-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв с Изабель Прейслер",
+      "long": "Объявлено о разрыве с Изабель Прейслер.",
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 2022, it was announced that Vargas Llosa and Preysler had split up."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из художественной литературы",
+      "long": "Объявил об уходе из художественной литературы; в декабре того же года опубликовал последнюю колонку в El País.",
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En octubre de 2023 publicó su novela Le dedico mi silencio, con la que marcaba su retiro de la literatura de ficción."
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-04-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лиме",
+      "long": "Умер в Лиме в 89 лет в окружении семьи.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "nobel-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 13 апреля 2025 года в Лиме в возрасте 89 лет."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "city-and-dogs",
+      "title": "Город и псы",
+      "qid": "Q763199",
+      "written": {
+        "from": 1960,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "green-house",
+      "title": "Зелёный дом",
+      "qid": "Q463698",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "conversation-in-the-cathedral",
+      "title": "Разговор в «Соборе»",
+      "qid": "Q1519372",
+      "written": {
+        "from": 1966,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "captain-pantoja",
+      "title": "Капитан Панталеон Пантоха и Рота добрых услуг",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "aunt-julia-and-the-scriptwriter",
+      "title": "Тётушка Хулия и писака",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "war-of-the-end-of-the-world",
+      "title": "Война конца света",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "history-of-mayta",
+      "title": "История Майты",
+      "written": {
+        "from": 1983,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "who-killed-palomino-molero",
+      "title": "Кто убил Паломино Молеро?",
+      "written": {
+        "from": 1983,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "a-fish-in-the-water",
+      "title": "Рыба в воде",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "death-in-the-andes",
+      "title": "Литума в Андах",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "feast-of-the-goat",
+      "title": "Праздник Козла",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "dream-of-the-celt",
+      "title": "Сон кельта",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

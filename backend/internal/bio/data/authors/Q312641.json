@@ -1,0 +1,597 @@
+{
+  "qid": "Q312641",
+  "name": "Фредерик Пол",
+  "born": "1919-11-26",
+  "died": "2013-09-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BB%2C_%D0%A4%D1%80%D0%B5%D0%B4%D0%B5%D1%80%D0%B8%D0%BA",
+      "rev": 153540587
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Frederik_Pohl",
+      "rev": 1371927878
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-futurians",
+      "title": "Бруклин, футурианцы, первые журналы",
+      "from": 1919,
+      "to": 1942
+    },
+    {
+      "key": "war-and-agency",
+      "title": "Армия, агентство, три брака",
+      "from": 1943,
+      "to": 1952
+    },
+    {
+      "key": "galaxy-years",
+      "title": "Соавторы и журнал Galaxy",
+      "from": 1953,
+      "to": 1970
+    },
+    {
+      "key": "novelist-return",
+      "title": "Возвращение романиста",
+      "from": 1971,
+      "to": 1983
+    },
+    {
+      "key": "late-years",
+      "title": "Элизабет Халл и поздние годы",
+      "from": 1984,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1919",
+      "date": {
+        "from": "1919-11-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Родился в Нью-Йорке в семье коммивояжёра немецкого происхождения; вырос главным образом в Бруклине.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фредерик Пол (англ. Frederik Pohl; 26 ноября 1919, Нью-Йорк"
+      }
+    },
+    {
+      "key": "other-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в Молодёжную коммунистическую лигу",
+      "long": "В 1936 году вступил в Молодёжную коммунистическую лигу, став председателем местного отделения в Бруклине; вышел из неё после пакта Молотова — Риббентропа.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1936, Pohl joined the Young Communist League because of its positions in support of unions and against racial prejudice"
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы литературным агентом",
+      "long": "Начал карьеру литературного агента; до конца войны это было подработкой, потом занятие стало основным.",
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pohl started a career as a literary agent in 1937, but it was a sideline for him until after World War II"
+      }
+    },
+    {
+      "key": "career-1937-2",
+      "date": {
+        "from": "1937-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация под псевдонимом",
+      "long": "Первая публикация — стихотворение под псевдонимом Элтон Эндрюс в журнале Amazing Stories, октябрь 1937 года.",
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first publication was the poem \"Elegy to a Dead Satellite: Luna\" under the name of Elton Andrews, in the October 1937 issue of Amazing Stories"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход из коммунистической лиги",
+      "long": "После пакта Молотова — Риббентропа 1939 года вышел из Молодёжной коммунистической лиги.",
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pohl said he left the YCL after Molotov–Ribbentrop Pact of 1939, when the communist position changed to partnership with Hitler."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "to": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор двух pulp-журналов",
+      "long": "Редактировал журналы Astonishing Stories и Super Science Stories, где публиковал и собственные рассказы под псевдонимами; перестал быть агентом Азимова.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he became editor from 1939 to 1943 of two pulp magazines, Astonishing Stories and Super Science Stories"
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с Лесли Перри",
+      "long": "Женился на Лесли Перри, участнице группы футурианцев; развелись в 1944 году.",
+      "chapter": "brooklyn-futurians",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first wife, Leslie Perri, was another Futurian; they were married in August 1940, and divorced in 1944."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-04",
+        "to": "1945-11",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в армии США, метеоролог в Италии",
+      "long": "Служил сержантом-метеорологом в авиации армии США; в основном в Италии, в 456-й бомбардировочной группе.",
+      "place": {
+        "label": "Италия"
+      },
+      "chapter": "war-and-agency",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During World War II, Pohl served in the United States Army from April 1943 until November 1945, rising to sergeant as an elite Air Corps weatherman."
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак с Дороти Лес Тиной",
+      "long": "Женился в Париже на Дороти Лес Тине, когда оба служили в Европе; брак закончился в 1947 году.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-and-agency",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He then married Dorothy Les Tina in Paris in August 1945 while both were serving in the military in Europe; the marriage ended in 1947."
+      }
+    },
+    {
+      "key": "love-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джудит Меррил, рождение дочери Энн",
+      "long": "Женился на писательнице Джудит Меррил, у них родилась дочь Энн; развелись в 1952 году.",
+      "chapter": "war-and-agency",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1948, he married Judith Merril; they had a daughter, Ann. Pohl and Merril divorced in 1952."
+      }
+    },
+    {
+      "key": "love-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кэрол Ульф Стэнтон",
+      "long": "Женился на Кэрол Ульф Стэнтон; в браке родились трое детей, вместе написали несколько книг.",
+      "chapter": "galaxy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953, he married Carol M. Ulf Stanton, with whom he had three children and collaborated on several books"
+      }
+    },
+    {
+      "key": "loss-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть новорождённого сына Фредерика",
+      "long": "Сын Фредерик III родился и умер в 1954 году в возрасте одного месяца.",
+      "chapter": "galaxy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Frederik III (born and died in 1954, aged one month)"
+      }
+    },
+    {
+      "key": "creation-1954",
+      "date": {
+        "from": "1954",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство с Джеком Уильямсоном",
+      "long": "Многолетнее соавторство с Джеком Уильямсоном; результатом стали десять совместных романов.",
+      "chapter": "galaxy-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1954 по 1991 годы Фредерик Пол сотрудничал с Джеком Уильямсоном"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Три «Хьюго» подряд журналу If",
+      "long": "Журнал If под его редакцией три года подряд получал «Хьюго» как лучший профессиональный журнал.",
+      "chapter": "galaxy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "If won the Hugo Award for Best Professional Magazine for 1966, 1967 and 1968"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за рассказ в соавторстве с Корнблатом",
+      "long": "Рассказ «Встреча», написанный вместе с Корнблатом, разделил премию «Хьюго».",
+      "chapter": "novelist-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"The Meeting\" (with Kornbluth) tied in 1973"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Небьюла» за первый роман после журналов",
+      "long": "Роман, первый после ухода с редакторской работы, получил «Небьюлу»; началось возвращение Пола как романиста.",
+      "works": [
+        {
+          "ref": "man-plus"
+        }
+      ],
+      "chapter": "novelist-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won back-to-back Nebula Awards with Man Plus in 1976 and Gateway, the first Heechee novel, in 1977."
+      }
+    },
+    {
+      "key": "love-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв с Кэрол Ульф Стэнтон",
+      "long": "Расстался с Кэрол Ульф Стэнтон; развод оформлен в 1983 году.",
+      "chapter": "novelist-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they separated in 1977 and were divorced in 1983"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Четыре главные премии за роман",
+      "long": "Роман получил «Хьюго», «Локус» и премию Кэмпбелла, а годом раньше — «Небьюлу»; высшее признание в карьере.",
+      "works": [
+        {
+          "ref": "gateway"
+        }
+      ],
+      "chapter": "novelist-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1978, Gateway swept the other two major novel honors, also winning the Hugo Award for Best Novel and John W. Campbell Memorial Award"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная книжная премия США",
+      "long": "Роман «Джем» получил Национальную книжную премию США в категории научной фантастики.",
+      "works": [
+        {
+          "ref": "jem"
+        }
+      ],
+      "chapter": "novelist-return",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия 1980-01-01"
+      }
+    },
+    {
+      "key": "love-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элизабет Энн Халл",
+      "long": "Пятый брак — с исследовательницей фантастики Элизабет Энн Халл; длился до смерти Пола.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1984 until his death, Pohl was married to science-fiction expert and academic Elizabeth Anne Hull."
+      }
+    },
+    {
+      "key": "relocation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в пригород Чикаго",
+      "long": "Поселился в Палатайне, пригороде Чикаго; прежде многие годы жил в Миддлтауне, Нью-Джерси.",
+      "place": {
+        "label": "Палатин"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1984 on, he lived in Palatine, Illinois, a suburb of Chicago."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Гроссмейстер фантастики»",
+      "long": "Ассоциация писателей-фантастов Америки присудила ему премию «Гроссмейстер фантастики» имени Деймона Найта.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "named Pohl its 12th recipient of the Damon Knight Memorial Grand Master Award in 1993"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в Зал славы фантастики",
+      "long": "Введён в Зал славы научной фантастики и фэнтези.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he was inducted by the Science Fiction and Fantasy Hall of Fame in 1998"
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008-08-05",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Завершение романа, начатого Кларком",
+      "long": "Завершил роман, начатый Артуром Кларком; книга вышла 5 августа 2008 года.",
+      "works": [
+        {
+          "ref": "the-last-theorem"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He finished a novel begun by Arthur C. Clarke, The Last Theorem, which was published on August 5, 2008."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за блог",
+      "long": "В 90 лет получил «Хьюго» как лучший автор-любитель за блог.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pohl won the Hugo Award for Best Fan Writer in 2010, for his blog, \"The Way the Future Blogs\"."
+      }
+    },
+    {
+      "key": "death-2013",
+      "date": {
+        "from": "2013-09-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в возрасте 93 лет",
+      "long": "2 сентября 2013 года был госпитализирован с острой дыхательной недостаточностью и в тот же день умер в возрасте 93 лет.",
+      "place": {
+        "label": "Арлингтон-Хайтс"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pohl went to the hospital in respiratory distress on the morning of September 2, 2013, and died that afternoon at the age of 93."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "space-merchants",
+      "title": "Торговцы космосом",
+      "qid": "Q3391635",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "preferred-risk",
+      "title": "Preferred Risk",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "age-of-the-pussyfoot",
+      "title": "Эпоха Пусси-фут",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "man-plus",
+      "title": "Человек плюс",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "gateway",
+      "title": "Врата",
+      "qid": "Q651682",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "jem",
+      "title": "Джем",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-way-the-future-was",
+      "title": "The Way the Future Was",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "years-of-the-city",
+      "title": "Годы города",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "the-last-theorem",
+      "title": "Последняя теорема",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "all-the-lives-he-led",
+      "title": "All the Lives He Led",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

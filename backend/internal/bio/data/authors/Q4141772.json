@@ -1,0 +1,329 @@
+{
+  "qid": "Q4141772",
+  "name": "Василий Васильевич Головачёв",
+  "born": "1948-06-21",
+  "died": "2025-09-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0%D1%87%D1%91%D0%B2%2C_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 155600387
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Vasili_Golovachyov",
+      "rev": 1319536835
+    }
+  ],
+  "chapters": [
+    {
+      "key": "zhukovka-ryazan",
+      "title": "Жуковка и Рязань",
+      "from": 1948,
+      "to": 1971
+    },
+    {
+      "key": "armiya-dnepropetrovsk",
+      "title": "Армия и Днепропетровск, инженер и фантаст",
+      "from": 1972,
+      "to": 1988
+    },
+    {
+      "key": "professionalnyj-pisatel",
+      "title": "Профессиональный писатель",
+      "from": 1989,
+      "to": 1999
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и последние годы",
+      "from": 2000,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-06-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в посёлке Жуковка",
+      "long": "Родился в рабочем посёлке Жуковка Брянской области.",
+      "place": {
+        "label": "Жуковка"
+      },
+      "chapter": "zhukovka-ryazan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "(21 июня 1948, Жуковка, Брянская область"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературный дебют",
+      "long": "Дебютировал в литературе рассказом «Эволюция».",
+      "chapter": "zhukovka-ryazan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Golovachev made his debut in 1969 with the short story “Evolution”."
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Рязанского радиотехнического института",
+      "long": "Окончил Рязанский радиотехнический институт по специальности инженера-конструктора радиоэлектронной аппаратуры.",
+      "place": {
+        "label": "Рязань"
+      },
+      "chapter": "armiya-dnepropetrovsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году окончил Рязанский радиотехнический институт по специальности инженера-конструктора радиоэлектронной аппаратуры."
+      }
+    },
+    {
+      "key": "war-1972",
+      "date": {
+        "from": "1972",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Армейская служба в Приморском крае",
+      "long": "Проходил службу в армии в посёлке Пограничный Приморского края.",
+      "place": {
+        "label": "Пограничный"
+      },
+      "chapter": "armiya-dnepropetrovsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972—1974 году проходил службу в армии в посёлке Пограничный Приморского края."
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Днепропетровск, работа инженером",
+      "long": "Поселился в Днепропетровске и работал инженером, руководителем группы, затем начальником конструкторского отдела института «Металлургавтоматика»; прозу писал параллельно с работой.",
+      "place": {
+        "label": "Днепропетровск"
+      },
+      "works": [
+        {
+          "ref": "unforeseen-encounters"
+        },
+        {
+          "ref": "relic"
+        }
+      ],
+      "chapter": "armiya-dnepropetrovsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1974 года жил в Днепропетровске (УССР), где работал в Украинском государственном проектно-конструкторском институте «Металлургавтоматика»"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз писателей",
+      "long": "Стал членом Союза писателей.",
+      "chapter": "armiya-dnepropetrovsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член Союза писателей России и Украины с 1983 года."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из института ради писательства",
+      "long": "Ушёл из института и полностью посвятил себя писательской работе.",
+      "place": {
+        "label": "Днепропетровск"
+      },
+      "chapter": "professionalnyj-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1989 году ушёл из института и полностью посвятил себя писательской работе."
+      }
+    },
+    {
+      "key": "other-1990",
+      "date": {
+        "from": "1990",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Увлечение «русским боем» и движением «Радогора»",
+      "long": "Увлёкся «русским боем» и заинтересовался спортивным движением «Радогора»; в статье отмечено, что с этого времени в книгах появился герой — мастер боевых искусств.",
+      "chapter": "professionalnyj-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В первой половине 1990-х годов в рамках своего увлечения «русским боем» начал интересоваться спортивным движением «Радогора»"
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Участие в художественных выставках",
+      "long": "Участвовал в художественных выставках в Днепропетровске и Москве.",
+      "place": {
+        "label": "Днепропетровск"
+      },
+      "chapter": "professionalnyj-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992—1994 годах принимал участие в художественных выставках в Днепропетровске и Москве."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало сотрудничества с «Эксмо»",
+      "long": "Начал регулярно публиковаться в издательстве «Эксмо».",
+      "chapter": "professionalnyj-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1997 года регулярно публиковался в издательстве «Эксмо»."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Аэлита»",
+      "long": "Получил премию «Аэлита».",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, he was awarded the Aelita Prize."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Запись в Российской книге рекордов",
+      "long": "Имя писателя внесено в Российскую книгу рекордов как автора 40 оригинальных произведений тиражом почти 20 млн экземпляров.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году имя писателя внесено в Российскую книгу рекордов (Гиннеса)"
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-09-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умер в Москве от сердечного приступа после тяжёлой болезни: в последние месяцы перенёс серию инсультов, но продолжал писать.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "— 7 сентября 2025, Москва, Россия"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "unforeseen-encounters",
+      "title": "Незапланированные встречи",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "relic",
+      "title": "Реликт",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "shadow-of-lucifers-wing",
+      "title": "Тень Люцеферова крыла",
+      "written": {
+        "from": 1991,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "vedich",
+      "title": "Ведич",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "not-the-russians-are-coming",
+      "title": "Не русские идут, или носители смерти",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

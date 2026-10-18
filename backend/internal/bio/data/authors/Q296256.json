@@ -1,0 +1,455 @@
+{
+  "qid": "Q296256",
+  "name": "Филип Хосе Фармер",
+  "born": "1918-01-26",
+  "died": "2009-02-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D1%80%D0%BC%D0%B5%D1%80%2C_%D0%A4%D0%B8%D0%BB%D0%B8%D0%BF_%D0%A5%D0%BE%D1%81%D0%B5",
+      "rev": 151302961
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Philip_Jos%C3%A9_Farmer",
+      "rev": 1380671017
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Детство и учёба",
+      "from": 1918,
+      "to": 1940
+    },
+    {
+      "key": "stalelitejnyj-zavod",
+      "title": "Брак и сталелитейный завод",
+      "from": 1941,
+      "to": 1951
+    },
+    {
+      "key": "hyugo-i-tekhpisatel",
+      "title": "Хьюго и годы технического писателя",
+      "from": 1952,
+      "to": 1969
+    },
+    {
+      "key": "peoriya-grossmejster",
+      "title": "Пеория и признание",
+      "from": 1970,
+      "to": 2009
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1918",
+      "date": {
+        "from": "1918-01-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Терре-Хот",
+      "long": "Родился в Терре-Хот, штат Индиана; вырос в Пеории, штат Иллинойс. Отец был инженером и руководителем местной энергетической компании.",
+      "place": {
+        "label": "Терре-Хот"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 26 января 1918 года в городке Терре-Хот (Индиана)."
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Работа электромонтёром и первая учёба",
+      "long": "После школы в 1936 году работал электромонтёром и одновременно учился в институте Брэдли в Пеории и в Университете штата Миссури.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания школы, в 1936 году, работал электромонтёром и одновременно учился в политехническом институте Брэдли"
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Бетти Андре",
+      "long": "В 1941 году женился на Бетти Андре; они оставались вместе всю жизнь, у них родились сын и дочь. Из-за женитьбы бросил учёбу.",
+      "chapter": "stalelitejnyj-zavod",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1941 году женился. Это событие заставило его бросить учёбу"
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа контролёром и крановщиком на заводе",
+      "long": "Ушёл с учёбы на тяжёлую, но высокооплачиваемую работу на сталеплавильном заводе в Пеории, где проработал 11 лет контролёром и крановщиком.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "stalelitejnyj-zavod",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1941 году женился. Это событие заставило его бросить учёбу и перейти на достаточно тяжёлую и высокооплачиваемую работу — на сталеплавильный завод в Пеории, где он проработал следующие 11 лет контролёром и крановщиком."
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Возвращение в университет, степень бакалавра",
+      "long": "Возобновил учёбу в Университете Брэдли и в 1950 году окончил его бакалавром английской филологии в возрасте 32 лет.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "stalelitejnyj-zavod",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году возобновляет обучение в теперь уже Университете Брэдли, который успешно заканчивает в 1950 году со степенью бакалавра английской филологии."
+      }
+    },
+    {
+      "key": "creation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман-победитель конкурса без публикации и приза",
+      "long": "Роман, написанный за месяц для конкурса издателя, выиграл первую премию, но не вышел, а деньги были присвоены; Фармер почти бросил писательство. Позже материал лёг в основу цикла «Мир реки».",
+      "works": [
+        {
+          "ref": "to-your-scattered-bodies-go",
+          "note": "Материал утраченного романа переработан в «Мир реки» (предисловие автора к изданию 1983 года)"
+        }
+      ],
+      "chapter": "hyugo-i-tekhpisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Riverworld series originated in a novel, Owe for the Flesh, written in one month in 1952 as a contest entry. It won the contest, but the book was left unpublished and orphaned when the prize money was misappropriated, and Farmer nearly gave up writing altogether."
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» лучшему новому автору",
+      "long": "Повесть, опубликованная в августе 1952 года, принесла премию «Хьюго» лучшему новому автору. После этого Фармер оставил работу и стал писать профессионально.",
+      "works": [
+        {
+          "ref": "the-lovers"
+        }
+      ],
+      "chapter": "hyugo-i-tekhpisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won a Hugo Award for Best New SF Author or Artist in 1953, the first of three Hugo awards he won in his career."
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Четырнадцать лет техническим писателем",
+      "long": "Литературный успех не дал финансовой стабильности, и Фармер уехал из Пеории работать техническим писателем у оборонных подрядчиков, продолжая писать фантастику в свободное время.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "hyugo-i-tekhpisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Literary success did not translate into financial security, so he left Peoria in 1956 to launch a career as a technical writer. He spent the next 14 years working in that capacity for various defense contractors"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия «Хьюго»",
+      "long": "Вторая премия «Хьюго» — за повесть, стилизованную под «Поминки по Финнегану» и сатирически изображающую государство всеобщего благоденствия.",
+      "works": [
+        {
+          "ref": "riders-of-the-purple-wage"
+        }
+      ],
+      "chapter": "hyugo-i-tekhpisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Farmer won a second Hugo award in 1968, in the category Best Novella"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение к профессиональному писательству",
+      "long": "Через год после второй «Хьюго» Фармер вновь смог жить на литературные доходы.",
+      "chapter": "hyugo-i-tekhpisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вскоре после этого, в 1969 году, Фармер снова смог стать профессиональным писателем."
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Пеорию, самый плодотворный период",
+      "long": "Вернулся в Пеорию; за следующие десять лет вышло 25 его книг.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После возвращения обратно в Пеорию в 1970 году для него начался самый плодотворный период творчества, в котором за 10 лет было издано 25 его книг."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Третья премия «Хьюго»",
+      "long": "Третья премия «Хьюго» — за роман, переработку неопубликованного конкурсного романа двадцатилетней давности.",
+      "works": [
+        {
+          "ref": "to-your-scattered-bodies-go"
+        }
+      ],
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novel To Your Scattered Bodies Go (a reworking of the unpublished prize-winning first novel of 20 years before) won him a third Hugo in 1972, for Best Novel."
+      }
+    },
+    {
+      "key": "other-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Резкая рецензия в The New York Times",
+      "long": "Критик The New York Times назвал Фармера «банальным работягой» в научной фантастике; другие критики, как Лесли Фидлер, высоко ценили его.",
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кристофер Леманн-Хаупт писал в 1972 году в The New York Times, что Фармер является «банальным работягой в жанре научной фантастики»."
+      }
+    },
+    {
+      "key": "other-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг псевдонима Килгор Траут",
+      "long": "Роман вышел под именем вымышленного писателя Килгора Траута из книг Воннегута; часть рецензентов приняла его за работу самого Воннегута, который остался недоволен.",
+      "works": [
+        {
+          "ref": "venus-on-the-half-shell"
+        }
+      ],
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A 1975 novel, Venus on the Half-Shell, created a stir in the larger literary community and media."
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый бестселлер и крупный контракт",
+      "long": "Первый бестселлер; затем издательство Berkley Books заключило с ним контракт на шестизначную сумму под три новых романа.",
+      "works": [
+        {
+          "ref": "the-dark-design"
+        }
+      ],
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Farmer achieved his first bestseller in 1978 with The Dark Design which surpassed 20,000 copies in hardback and 300,000 in paperback."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Гроссмейстера и премия за жизненные достижения",
+      "long": "Получил Всемирную премию фэнтези за жизненные достижения и стал 19-м Гроссмейстером Ассоциации писателей-фантастов Америки.",
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001 Farmer won the World Fantasy Award for Life Achievement and the Science Fiction Writers of America made him its 19th SFWA Grand Master in the same year."
+      }
+    },
+    {
+      "key": "death-2009",
+      "date": {
+        "from": "2009-02-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Пеории",
+      "long": "Умер в Пеории. На момент смерти у него с женой Бетти было двое детей, шесть внуков и четыре правнука.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "peoriya-grossmejster",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Филип Фармер умер 25 февраля 2009 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-lovers",
+      "title": "Любящие",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "night-of-light",
+      "title": "Ночь света",
+      "written": {
+        "from": 1957,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "strange-relations",
+      "title": "Странные отношения",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "the-maker-of-universes",
+      "title": "Создатель вселенных",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "riders-of-the-purple-wage",
+      "title": "Пассажиры с пурпурной карточкой",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "to-your-scattered-bodies-go",
+      "title": "Восстаньте из праха",
+      "written": {
+        "from": 1952,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "tarzan-alive",
+      "title": "Тарзан жив",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "the-other-log-of-phileas-fogg",
+      "title": "Другой дневник Филеаса Фогга",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "venus-on-the-half-shell",
+      "title": "Венера на половинке раковины",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "the-dark-design",
+      "title": "Тёмный замысел",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+{
+  "qid": "Q273034",
+  "name": "Люси Мод Монтгомери",
+  "born": "1874-11-30",
+  "died": "1942-04-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%BD%D1%82%D0%B3%D0%BE%D0%BC%D0%B5%D1%80%D0%B8%2C_%D0%9B%D1%8E%D1%81%D0%B8_%D0%9C%D0%BE%D0%B4",
+      "rev": 154095478
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lucy_Maud_Montgomery",
+      "rev": 1378305430
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-kavendish",
+      "title": "Кавендиш: детство и учёба",
+      "from": 1874,
+      "to": 1896
+    },
+    {
+      "key": "uchitelnitsa-pisatelnitsa",
+      "title": "Учительница, женихи и первая книга",
+      "from": 1897,
+      "to": 1910
+    },
+    {
+      "key": "leaskdale",
+      "title": "Брак и Лескдейл",
+      "from": 1911,
+      "to": 1919
+    },
+    {
+      "key": "sudy-s-peidzhem",
+      "title": "Суды с издателем",
+      "from": 1920,
+      "to": 1925
+    },
+    {
+      "key": "norval-i-suonsi",
+      "title": "Норвал, Суонси и последние годы",
+      "from": 1926,
+      "to": 1942
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1874",
+      "date": {
+        "from": "1874-11-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на острове Принца Эдуарда",
+      "long": "Родилась в Клифтоне (ныне Нью-Лондон) на острове Принца Эдуарда.",
+      "place": {
+        "label": "Клифтон, остров Принца Эдуарда"
+      },
+      "chapter": "detstvo-kavendish",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Люси Мод Монтгомери родилась в Клифтоне (совр. Нью-Лондон) на острове Принца Эдуарда 30 ноября 1874 года."
+      }
+    },
+    {
+      "key": "family-1890",
+      "date": {
+        "from": "1890",
+        "to": "1891",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Год у отца и мачехи",
+      "long": "Год жила с отцом и мачехой; отношения с мачехой не сложились.",
+      "chapter": "detstvo-kavendish",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1890—1891 годах Мод жила со своим отцом и мачехой Мэри Энн МакРэй, отношения с которой не наладились"
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое опубликованное стихотворение",
+      "long": "Первая публикация: стихотворение в шарлоттаунской газете.",
+      "place": {
+        "label": "Шарлоттаун"
+      },
+      "chapter": "detstvo-kavendish",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1890 году газета Шарлоттауна «The Daily Patriot» опубликовала стихотворение Л. М. Монтгомери «On Cape LeForce»."
+      }
+    },
+    {
+      "key": "education-1893",
+      "date": {
+        "from": "1893",
+        "to": "1894",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Колледж Принца Уэльского, учительский аттестат",
+      "long": "Двухлетний курс прошла за год и получила учительский аттестат.",
+      "place": {
+        "label": "Шарлоттаун"
+      },
+      "chapter": "detstvo-kavendish",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1893 году после окончания школьного образования в Кавендише Монтгомери поступила в колледж Принца Уэльского в Шарлоттауне."
+      }
+    },
+    {
+      "key": "education-1895",
+      "date": {
+        "from": "1895",
+        "to": "1896",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Литература в университете Дальхузи",
+      "long": "Изучала литературу, но по финансовым причинам не получила степень.",
+      "place": {
+        "label": "Галифакс"
+      },
+      "chapter": "detstvo-kavendish",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1895 и 1896 годах она изучала литературу в университете Дальхузи в Галифаксе (Новая Шотландия), но по финансовым причинам не получила степень."
+      }
+    },
+    {
+      "key": "loss-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть друга Уилла Причарда",
+      "long": "Умер от гриппа Уилл Причард, с которым она много лет переписывалась.",
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писательница отвергла брачные предложения обоих, но поддерживала дружескую переписку с Причардом до его смерти от гриппа в 1897 году."
+      }
+    },
+    {
+      "key": "love-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Помолвка с Эдвином Симпсоном",
+      "long": "Приняла предложение Эдвина Симпсона, но вскоре возненавидела жениха; помолвку разорвала в 1898 году.",
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1897 году Монтгомери приняла предложение Эдвина Симпсона, считая свои перспективы туманными."
+      }
+    },
+    {
+      "key": "career-1897",
+      "date": {
+        "from": "1897",
+        "to": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Учительство и первые рассказы в журналах",
+      "long": "Работала учительницей на острове и опубликовала более 100 рассказов.",
+      "place": {
+        "label": "остров Принца Эдуарда"
+      },
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1897 по 1907 годы она опубликовала более 100 рассказов."
+      }
+    },
+    {
+      "key": "family-1898",
+      "date": {
+        "from": "1898",
+        "to": "1911",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Уход за бабушкой в Кавендише",
+      "long": "Вернулась в Кавендиш ухаживать за овдовевшей бабушкой и жила там до её смерти.",
+      "place": {
+        "label": "Кавендиш"
+      },
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1898 году Монтгомери вернулась обратно в Кавендиш, чтобы ухаживать за своей овдовевшей бабушкой, которая скончалась в 1911 году."
+      }
+    },
+    {
+      "key": "career-1901",
+      "date": {
+        "from": "1901",
+        "to": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в галифаксских газетах",
+      "long": "Работала в галифаксских газетах «Morning Chronicle» и «The Daily Echo».",
+      "place": {
+        "label": "Галифакс"
+      },
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В течение недолгого периода с 1901 по 1902 года она работала в Галифаксе в газетах «Morning Chronicle» и «The Daily Echo»."
+      }
+    },
+    {
+      "key": "career-1908",
+      "date": {
+        "from": "1908-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех первой книги об Энн",
+      "long": "Первая книга принесла мгновенный успех и славу.",
+      "works": [
+        {
+          "ref": "anne-of-green-gables"
+        }
+      ],
+      "chapter": "uchitelnitsa-pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вернувшись домой вновь она взялась за свою первую книгу, которая вышла в свет в июне 1908 года под названием «Энн из Зелёных крыш». Мгновенные успех и слава свалились на Монтгомери."
+      }
+    },
+    {
+      "key": "creation-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над романом о шотландском наследии",
+      "long": "Роман основан на шотландско-канадском наследии автора и воспоминаниях юности.",
+      "works": [
+        {
+          "ref": "story-girl"
+        }
+      ],
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Основываясь на своём канадо-шотландском культурном наследии Монтгомери в 1911 году написала роман «Рассказчица»"
+      }
+    },
+    {
+      "key": "love-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с пастором Ивеном Макдональдом",
+      "long": "Вышла замуж за священника Ивена Макдональда; супруги переехали в Лескдейл, Онтарио. Медовый месяц провели в Англии и Шотландии.",
+      "place": {
+        "label": "Лескдейл, Онтарио"
+      },
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911 году вскоре после смерти бабушки писательница вышла замуж за пресвитерианского священника Ивена"
+      }
+    },
+    {
+      "key": "loss-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть бабушки",
+      "long": "Умерла бабушка Люси Макнилл, с которой писательница жила с раннего детства.",
+      "place": {
+        "label": "Кавендиш"
+      },
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911 году вскоре после смерти бабушки писательница вышла замуж"
+      }
+    },
+    {
+      "key": "child-1912",
+      "date": {
+        "from": "1912-07-07",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Честера",
+      "long": "Родился старший сын Честер.",
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Честер Кэмерон Макдональд (англ. Chester Cameron Macdonald) (7 июля 1912—1964);"
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Первая мировая: патриотические призывы",
+      "long": "Писала статьи с призывами идти добровольцами на фронт и покупать облигации; в её классе в воскресной школе были убитые и раненые.",
+      "place": {
+        "label": "Лескдейл"
+      },
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Монтгомери тяжело переживала события в охваченной войной Европе после статьи «Изнасилование Бельгии» в 1914 году."
+      }
+    },
+    {
+      "key": "loss-1914",
+      "date": {
+        "from": "1914-08-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Мертворождённый сын Хью",
+      "long": "Второй сын родился мёртвым; в «Анином Доме Мечты» описана смерть первого ребёнка Энн.",
+      "works": [
+        {
+          "ref": "annes-house-of-dreams",
+          "note": "Сюжет о смерти ребёнка Энн, возможно, связан с этим событием (по предположению статьи)"
+        }
+      ],
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хью Александр Макдональд (англ. Hugh Alexander Macdonald) — мальчик родился мёртвым 13 августа 1914 года"
+      }
+    },
+    {
+      "key": "child-1915",
+      "date": {
+        "from": "1915-10-07",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Ивена Стюарта",
+      "long": "Родился младший сын Ивен Стюарт.",
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ивен Стюарт Макдональд (англ. Ewan Stuart Macdonald) (7 октября 1915—1982)."
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Разрыв с издателем Пейджем",
+      "long": "Поняла, что издатель Пейдж платит ей вместо 19 лишь 7 центов с доллара, и решила сменить издателя.",
+      "works": [
+        {
+          "ref": "annes-house-of-dreams",
+          "note": "Пейдж требовал права на эту книгу"
+        }
+      ],
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "писательница в 1917 году решила сменить издателя."
+      }
+    },
+    {
+      "key": "loss-1919",
+      "date": {
+        "from": "1919-01-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть лучшей подруги Фредерики",
+      "long": "От испанского гриппа умерла лучшая подруга Фредерика Кэмпбелл Макфарлейн.",
+      "chapter": "leaskdale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лучшая подруга Фредерика Кэмбелл МакФалэйн скончалась от этой болезни 20 января 1919 года."
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Возмущение экранизацией книги об Энн",
+      "long": "Была возмущена фильмом, где Энн сделали американкой; все выплаты за экранизации получил издатель Пейдж.",
+      "chapter": "sudy-s-peidzhem",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году Монтгомери возмутилась экранизацией своего произведения «Аня из Зелёных мезонинов» (1919)"
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от продолжения серии об Энн",
+      "long": "Устав от героини, перестала писать об Энн и взялась за других героинь; к февралю 1921 года заработала на книгах об Энн около 100 тысяч долларов.",
+      "works": [
+        {
+          "ref": "emily-of-new-moon",
+          "note": "Планировала заменить Энн Эмили (дневник)"
+        }
+      ],
+      "chapter": "sudy-s-peidzhem",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Л. М. Монтгомери прекратила развивать историю Энн Ширли где-то в 1920 году, признавшись в дневнике, что устала от героини. К февралю 1921 года она подсчитала"
+      }
+    },
+    {
+      "key": "relocation-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Норвал",
+      "long": "Семья переехала в Норвал, Онтарио.",
+      "place": {
+        "label": "Норвал, Онтарио"
+      },
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1926 году семейство Макдональдов переехало в Пресвитерианское объединение Норвала (современный Холтон Хиллз), Онтарио."
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928-11-07",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выплата долга издателем Пейджем",
+      "long": "Получила чек на 15 тысяч долларов, завершив многолетнюю борьбу с издателем.",
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "7 ноября 1928 года Л. М. Монтгомери получила чек на 15 тысяч долларов, которые задолжал ей Пейдж."
+      }
+    },
+    {
+      "key": "illness-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Санаторий мужа и последующая паранойя",
+      "long": "Муж лёг в санаторий; после выписки ошибочно получил лекарство с примесью инсектицида, стал параноиком и в припадках избивал жену.",
+      "place": {
+        "label": "Гвельф"
+      },
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году в глубочайшей депрессии Ивен Макдональд сам отправился в санаторий в Гвельфе."
+      }
+    },
+    {
+      "key": "relocation-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Суонси, дом «Конец путешествия»",
+      "long": "Купила дом «Конец путешествия» и после 15-летнего перерыва вернулась к героине Энн Ширли.",
+      "place": {
+        "label": "Суонси, Торонто"
+      },
+      "works": [
+        {
+          "ref": "anne-of-windy-poplars"
+        },
+        {
+          "ref": "anne-of-ingleside"
+        },
+        {
+          "ref": "jane-of-lantern-hill"
+        }
+      ],
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1935 году, после ухода мужа на пенсию, Монтгомери переехала в пригород Торонто Суонси, Онтарио"
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935-06-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи",
+      "long": "Король Георг V назвал её офицером ордена Британской империи; церемония состоялась 8 сентября 1935 года.",
+      "place": {
+        "label": "Оттава"
+      },
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 3, 1935 (1935 Birthday Honours), King George V named Montgomery an Officer of the Order of the British Empire (OBE)"
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940",
+        "to": "1942",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Вторая мировая война и угнетённое состояние",
+      "long": "Тяжело переживала войну; опасалась призыва сыновей, в письмах писала о подавленности. Зависела от лекарств, принимаемых при депрессии.",
+      "works": [
+        {
+          "ref": "blythes-are-quoted",
+          "note": "Книга с антивоенным посылом завершена в последний год жизни"
+        }
+      ],
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Montgomery was greatly upset by World War II, calling the war in a 1940 letter \"this nightmare that has been loosed on the world... unfair that we should have to go through it again.\""
+      }
+    },
+    {
+      "key": "death-1942",
+      "date": {
+        "from": "1942-04-24",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Торонто",
+      "long": "Найдена мёртвой в своём доме в Торонто; в свидетельстве указан тромбоз, внучка в 2008 году заявила о возможной передозировке лекарств. Похоронена в Кавендише.",
+      "place": {
+        "label": "Торонто"
+      },
+      "works": [
+        {
+          "ref": "blythes-are-quoted",
+          "note": "Рукопись передана издателю в день смерти"
+        }
+      ],
+      "chapter": "norval-i-suonsi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "24 апреля 1942 года Монтгомери обнаружили мёртвой в её комнате дома в Торонто."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "anne-of-green-gables",
+      "title": "Аня из Зелёных Мезонинов",
+      "qid": "Q565911",
+      "written": {
+        "from": 1905,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "anne-of-avonlea",
+      "title": "Аня из Авонлеи",
+      "qid": "Q1331757",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "anne-of-the-island",
+      "title": "Аня с острова Принца Эдуарда",
+      "qid": "Q1352419",
+      "written": {
+        "from": 1915,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "story-girl",
+      "title": "Рассказчица",
+      "qid": "Q3270964",
+      "written": {
+        "from": 1909,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "annes-house-of-dreams",
+      "title": "Анин Дом Мечты",
+      "qid": "Q2420701",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "rainbow-valley",
+      "title": "Аня из Долины Радуг",
+      "qid": "Q2394369",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "rilla-of-ingleside",
+      "title": "Рилла из Инглсайда",
+      "qid": "Q734757",
+      "written": {
+        "from": 1921,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "emily-of-new-moon",
+      "title": "Эмили из Молодого Месяца",
+      "qid": "Q73706",
+      "written": {
+        "from": 1921,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "pat-of-silver-bush",
+      "title": "Pat of Silver Bush",
+      "qid": "Q11813443",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "anne-of-windy-poplars",
+      "title": "Аня из Шумящих тополей",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "jane-of-lantern-hill",
+      "title": "Джейн из Ясных Холмов",
+      "qid": "Q6153000",
+      "written": {
+        "from": 1935,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "anne-of-ingleside",
+      "title": "Аня из Инглсайда",
+      "qid": "Q2562708",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "blythes-are-quoted",
+      "title": "Цитируя Блайтов",
+      "written": {
+        "from": 1941,
+        "to": 1942
+      }
+    }
+  ]
+}

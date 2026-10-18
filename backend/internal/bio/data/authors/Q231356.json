@@ -1,0 +1,520 @@
+{
+  "qid": "Q231356",
+  "name": "Нора Робертс",
+  "born": "1950-10-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%BE%D1%80%D0%B0_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82%D1%81",
+      "rev": 146297122
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nora_Roberts",
+      "rev": 1374426495
+    }
+  ],
+  "chapters": [
+    {
+      "key": "maryland-and-early-marriage",
+      "title": "Мэриленд, школа и ранний брак",
+      "from": 1950,
+      "to": 1978
+    },
+    {
+      "key": "blizzard-and-first-novels",
+      "title": "Метель и первые романы",
+      "from": 1979,
+      "to": 1991
+    },
+    {
+      "key": "putnam-and-jd-robb",
+      "title": "Putnam и появление Дж. Д. Робб",
+      "from": 1992,
+      "to": 2006
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и гостиница в Бунсборо",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-10-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Силвер-Спринг",
+      "long": "Родилась в Силвер-Спринг, штат Мэриленд, младшей из пятерых детей в семье ирландского происхождения.",
+      "place": {
+        "label": "Силвер-Спринг"
+      },
+      "chapter": "maryland-and-early-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Roberts was born on October 10, 1950, in Silver Spring, Maryland, the youngest of five children."
+      }
+    },
+    {
+      "key": "love-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Ранний брак вопреки воле родителей",
+      "long": "В школе Montgomery Blair познакомилась с Рональдом Ауфдем-Бринке; они поженились вопреки желанию родителей сразу после выпуска и поселились в Мэриленде. В семье родились два сына, Дэн и Джейсон.",
+      "place": {
+        "label": "Мэриленд"
+      },
+      "chapter": "maryland-and-early-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married, against her parents' wishes, in 1968, as soon as she graduated, and settled in Boonsboro, Maryland."
+      }
+    },
+    {
+      "key": "education-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Montgomery Blair",
+      "long": "Окончила среднюю школу Montgomery Blair, до этого училась в католической школе.",
+      "place": {
+        "label": "Силвер-Спринг"
+      },
+      "chapter": "maryland-and-early-marriage",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Montgomery Blair High School 1968"
+      }
+    },
+    {
+      "key": "creation-1979",
+      "date": {
+        "from": "1979-02",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Метель и первые страницы прозы",
+      "long": "Метель на неделю заперла её с двумя сыновьями дома, и она начала записывать рассказ. Затем были три года труда и несколько отвергнутых рукописей.",
+      "works": [
+        {
+          "ref": "irish-thoroughbred"
+        }
+      ],
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She began to write during a blizzard in February 1979."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман в Silhouette",
+      "long": "Дебютный роман вышел в издательстве Silhouette под псевдонимом Нора Робертс — сокращённой формой настоящего имени.",
+      "works": [
+        {
+          "ref": "irish-thoroughbred"
+        }
+      ],
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Roberts's first novel, Irish Thoroughbred, was published in 1981, using the pseudonym Nora Roberts"
+      }
+    },
+    {
+      "key": "family-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с первым мужем",
+      "long": "Брак с Рональдом Ауфдем-Бринке закончился разводом.",
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple divorced in 1983."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия RITA",
+      "long": "Первая из многочисленных премий RITA, высшей награды жанра любовного романа.",
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: RITA Awards 1983"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый бестселлер серии о Макгрегорах",
+      "long": "Роман, открывший серию о семье Макгрегор, сразу стал бестселлером.",
+      "works": [
+        {
+          "ref": "playing-the-odds"
+        }
+      ],
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1985, Playing the Odds, the first novel in the MacGregor family series, was published and was an immediate bestseller."
+      }
+    },
+    {
+      "key": "love-1985",
+      "date": {
+        "from": "1985-07",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с плотником Брюсом Уайлдером",
+      "long": "Со вторым мужем, плотником Брюсом Уайлдером, познакомилась, наняв его строить книжные полки; поженились в июле 1985 года.",
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они поженились в июле 1985 года и до сих пор счастливы."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход к отдельным романам в Bantam",
+      "long": "Начала писать отдельные романы вне серий для издательства Bantam.",
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, she began writing single title books for Bantam."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое появление в списке NYT",
+      "long": "Первое попадание в список бестселлеров The New York Times; к 2001 году в нём побывали 68 её книг.",
+      "chapter": "blizzard-and-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her first appearance on The New York Times Best Seller list came in 1991"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в издательство Putnam",
+      "long": "Перешла в Putnam; издатель не успевал выпускать всё написанное, и ей предложили второй псевдоним.",
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After moving to Putnam in 1992, the publishing company quickly realized that they were unable to keep up with Roberts's prolific output."
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Второй псевдоним — Дж. Д. Робб",
+      "long": "Под псевдонимом Дж. Д. Робб (инициалы сыновей) вышла первая книга цикла о детективе Еве Даллас; сначала авторство не раскрывали.",
+      "works": [
+        {
+          "ref": "in-death"
+        }
+      ],
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "her first romantic suspense novel was published in 1995 under the pseudonym J. D. Robb."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сотый роман",
+      "long": "Перешагнула рубеж в сто романов; книга вышла в твёрдой обложке и попала в списки бестселлеров.",
+      "works": [
+        {
+          "ref": "montana-sky"
+        }
+      ],
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, Roberts passed the hundred-novel mark with Montana Sky"
+      }
+    },
+    {
+      "key": "persecution-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Плагиат Джанет Дейли и иск",
+      "long": "Писательница Джанет Дейли признала многократный плагиат из книг Робертс; та подала в суд.",
+      "works": [
+        {
+          "ref": "sweet-revenge"
+        }
+      ],
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, another best-selling romance writer, Janet Dailey, admitted to repeatedly plagiarizing Roberts' work."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия RWA за вклад в жанр",
+      "long": "Получила премию Romance Writers of America за вклад в жанр; позже она получила её имя.",
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997 she was awarded the RWA Lifetime Achievement Award"
+      }
+    },
+    {
+      "key": "other-1998",
+      "date": {
+        "from": "1998-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Мировое соглашение с Дейли",
+      "long": "Дело против Дейли закончилось мировым соглашением; полученные деньги Робертс пожертвовала литературным организациям.",
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1998, Dailey settled the case."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое и второе места в Publishers Weekly",
+      "long": "Её книги заняли первое и второе места в списке Publishers Weekly: роман под своим именем и книга Дж. Д. Робб.",
+      "works": [
+        {
+          "ref": "time-and-again"
+        }
+      ],
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 2001, for the first time Roberts took the numbers 1 and 2 spots on the Publishers Weekly bestseller list"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Книга цикла в твёрдой обложке",
+      "long": "Девятнадцатая книга цикла впервые вышла в твёрдой обложке и стала первым бестселлером года для писательницы.",
+      "works": [
+        {
+          "ref": "divided-in-death"
+        }
+      ],
+      "chapter": "putnam-and-jd-robb",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book became Roberts's first bestselling novel of 2004."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Список самых влиятельных людей Time",
+      "long": "Журнал Time включил её в список ста самых влиятельных людей; в том же году Lifetime экранизировал четыре её романа.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Time magazine named Roberts one of their 100 Most Influential People in 2007"
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008-02",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пожар в семейном отеле в Бунсборо",
+      "long": "Принадлежавший семье исторический отель Boone Hotel в Бунсборо сгорел; его восстановили, и в 2009 году он открылся как Inn BoonsBoro.",
+      "place": {
+        "label": "Бунсборо"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After it was destroyed by a fire in February 2008, it was restored and reopened as the Inn BoonsBoro in 2009"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Двухсотый роман",
+      "long": "К 2012 году число изданных романов дошло до двухсот.",
+      "works": [
+        {
+          "ref": "the-witness"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2012, doubled that with The Witness"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "irish-thoroughbred",
+      "title": "Ирландский чистокровка",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "playing-the-odds",
+      "title": "Playing the Odds",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "sweet-revenge",
+      "title": "Sweet Revenge",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "montana-sky",
+      "title": "Montana Sky",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "in-death",
+      "title": "Цикл «Следствие ведёт Ева Даллас»",
+      "written": {
+        "from": 1995,
+        "to": 2026
+      }
+    },
+    {
+      "ref": "divided-in-death",
+      "title": "Divided in Death",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "time-and-again",
+      "title": "Time and Again",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "the-witness",
+      "title": "The Witness",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

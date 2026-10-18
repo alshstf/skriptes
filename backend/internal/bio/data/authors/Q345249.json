@@ -1,0 +1,429 @@
+{
+  "qid": "Q345249",
+  "name": "Чарльз Стросс",
+  "born": "1964-10-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%BE%D1%81%D1%81%2C_%D0%A7%D0%B0%D1%80%D0%BB%D1%8C%D0%B7",
+      "rev": 147566250
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Charles_Stross",
+      "rev": 1375784873
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leeds-pharmacy",
+      "title": "Лидс и фармацевтика",
+      "from": 1964,
+      "to": 1989
+    },
+    {
+      "key": "programmer-years",
+      "title": "Программист и технический автор",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Писатель на полную ставку",
+      "from": 2000,
+      "to": 2009
+    },
+    {
+      "key": "recognition",
+      "title": "Премии и «Прачечная»",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-10-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лидсе",
+      "long": "Родился в Лидсе, Англия.",
+      "place": {
+        "label": "Лидс"
+      },
+      "chapter": "leeds-pharmacy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Charles David George \"Charlie\" Stross (born 18 October 1964)"
+      }
+    },
+    {
+      "key": "education-1986",
+      "date": {
+        "from": "1986",
+        "to": "1987",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на фармацевта",
+      "long": "Получил степень бакалавра фармацевтики в 1986 году, в 1987 году получил квалификацию фармацевта.",
+      "chapter": "leeds-pharmacy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated with a bachelor's degree in Pharmacy in 1986 and qualified as a pharmacist in 1987."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация рассказа",
+      "long": "Первый опубликованный рассказ «The Boys» вышел в журнале «Interzone».",
+      "chapter": "leeds-pharmacy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published short story, The Boys, appeared in Interzone in 1987."
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Брэдфордском университете",
+      "long": "Поступил в Брэдфордский университет на последипломную программу по информатике.",
+      "place": {
+        "label": "Брэдфорд"
+      },
+      "chapter": "leeds-pharmacy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, he enrolled at University of Bradford for a post-graduate degree in computer science."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа техническим автором и программистом",
+      "long": "Начал работать техническим автором и программистом.",
+      "chapter": "programmer-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990, he went to work as a technical author and programmer."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "to": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка о Linux в Computer Shopper",
+      "long": "Писал для журнала «Computer Shopper», вёл ежемесячную колонку о Linux; ушёл, чтобы уделять больше времени романам.",
+      "chapter": "programmer-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1994 and 2004, he was also an active writer for the magazine Computer Shopper and was responsible for its monthly Linux column."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к писательству на полную ставку",
+      "long": "Стал работать писателем на полную ставку: сначала техническим автором, затем с успехом как автор художественной прозы.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2000, he began working as a writer full-time, as a technical writer at first, but then became successful as a fiction writer."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» за повесть",
+      "long": "Повесть «The Concrete Jungle» получила премию «Хьюго» в категории повести.",
+      "works": [
+        {
+          "ref": "concrete-jungle"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novella The Concrete Jungle (published in The Atrocity Archives) won the Hugo award for its category in 2005."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за научно-фантастический роман",
+      "long": "Роман «Accelerando» получил премию «Локус» за лучший научно-фантастический роман.",
+      "works": [
+        {
+          "ref": "accelerando"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novel Accelerando won the 2006 Locus Award for Best Science Fiction Novel"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Прометей»",
+      "long": "Роман «Glasshouse» получил премию «Прометей».",
+      "works": [
+        {
+          "ref": "glasshouse"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Glasshouse won the 2007 Prometheus Award"
+      }
+    },
+    {
+      "key": "career-2007-2",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за повесть",
+      "long": "Повесть «Missile Gap» получила премию «Локус».",
+      "works": [
+        {
+          "ref": "missile-gap"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novella Missile Gap won the 2007 Locus Award for best novella"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Скайларк»",
+      "long": "На конвенте Boskone награждён Мемориальной премией Эдварда Э. Смита («Скайларк»).",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he was awarded the Edward E. Smith Memorial Award or Skylark at Boskone 2008."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия «Хьюго»",
+      "long": "Вторая премия «Хьюго» в категории повести — за «Палимпсест».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2010 — «Хьюго» в категории «Повесть» за «»Палимпсест (2009)"
+      }
+    },
+    {
+      "key": "creation-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство с Кори Доктороу",
+      "long": "Вышел роман «The Rapture of the Nerds», написанный в соавторстве с Кори Доктороу; оба связаны с движением за лицензии Creative Commons.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 2012, Stross released The Rapture of the Nerds, a novel written in collaboration with Cory Doctorow."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за роман фэнтези",
+      "long": "Премия «Локус» в категории романа фэнтези.",
+      "works": [
+        {
+          "ref": "apocalypse-codex"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2013 — «Локус» в категории «Роман фэнтези» за The Apocalypse Codex (2012)"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Третья премия «Хьюго»",
+      "long": "Третья премия «Хьюго» в категории повести.",
+      "works": [
+        {
+          "ref": "equoid"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2014 — «Хьюго» в категории «Повесть» за Equoid (2013)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "toast",
+      "title": "Toast: And Other Rusted Futures",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "singularity-sky",
+      "title": "Небо сингулярности",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "atrocity-archives",
+      "title": "The Atrocity Archives",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "concrete-jungle",
+      "title": "The Concrete Jungle",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "family-trade",
+      "title": "The Family Trade",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "accelerando",
+      "title": "Accelerando",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "glasshouse",
+      "title": "Glasshouse",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "missile-gap",
+      "title": "Missile Gap",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "halting-state",
+      "title": "Halting State",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "apocalypse-codex",
+      "title": "The Apocalypse Codex",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "equoid",
+      "title": "Equoid",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

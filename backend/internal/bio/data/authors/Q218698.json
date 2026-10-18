@@ -1,0 +1,485 @@
+{
+  "qid": "Q218698",
+  "name": "Джером Клапка Джером",
+  "born": "1859-05-02",
+  "died": "1927-06-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B5%D1%80%D0%BE%D0%BC%2C_%D0%94%D0%B6%D0%B5%D1%80%D0%BE%D0%BC_%D0%9A%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0",
+      "rev": 154250890
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jerome_K._Jerome",
+      "rev": 1377271139
+    }
+  ],
+  "chapters": [
+    {
+      "key": "bednost-i-teatr",
+      "title": "Бедность, железная дорога и сцена",
+      "from": 1859,
+      "to": 1884
+    },
+    {
+      "key": "uspekh-i-lodka",
+      "title": "Успех, брак и Темза",
+      "from": 1885,
+      "to": 1891
+    },
+    {
+      "key": "redaktor",
+      "title": "Редактор и суд",
+      "from": 1892,
+      "to": 1907
+    },
+    {
+      "key": "drama-i-voyna",
+      "title": "Драматург и война",
+      "from": 1908,
+      "to": 1920
+    },
+    {
+      "key": "poslednie-gody",
+      "title": "Последние годы",
+      "from": 1921,
+      "to": 1927
+    }
+  ],
+  "events": [
+    {
+      "key": "poverty-1859",
+      "date": {
+        "from": "1859",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Разорение семьи",
+      "long": "Семья обеднела после неудачных инвестиций в горнодобывающую промышленность; дом посещали кредиторы.",
+      "chapter": "bednost-i-teatr",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Семья Джеромов обеднела после неудачных инвестиций в местную горнодобывающую промышленность."
+      }
+    },
+    {
+      "key": "birth-1859",
+      "date": {
+        "from": "1859-05-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уолсолле",
+      "long": "Родился в Уолсолле, четвёртым ребёнком в семье торговца скобяными изделиями и проповедника.",
+      "place": {
+        "label": "Уолсолл"
+      },
+      "chapter": "bednost-i-teatr",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jerome was born in Walsall, England on 2 May 1859."
+      }
+    },
+    {
+      "key": "loss-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть родителей, работа на железной дороге",
+      "long": "После смерти родителей в 13 лет Джером прервал учёбу и пошёл работать в железнодорожную компанию. Английская статья датирует смерть отца 1871 годом.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "bednost-i-teatr",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "смерть его родителей в 1872 году (Джерому тогда только исполнилось 13 лет), заставила его прервать обучение и искать работу"
+      }
+    },
+    {
+      "key": "career-1877",
+      "date": {
+        "from": "1877",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Актёрская труппа, нищета",
+      "long": "Под псевдонимом Гарольд Крайтон поступил в бродячую труппу, пробыл в ней около трёх лет без успеха.",
+      "works": [
+        {
+          "ref": "on-the-stage-and-off",
+          "note": "позднее описал этот период в новелле"
+        }
+      ],
+      "chapter": "bednost-i-teatr",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1877 году, под влиянием своей сестры Бландины, увлечённой театром, Джером решает попытать себя в актёрском ремесле под сценическим псевдонимом Гарольд Крайтон"
+      }
+    },
+    {
+      "key": "career-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех в печати",
+      "long": "Юмористическая новелла о жизни в труппе принесла первый успех и открыла путь к пьесам и эссе.",
+      "works": [
+        {
+          "ref": "on-the-stage-and-off"
+        }
+      ],
+      "chapter": "uspekh-i-lodka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1885 году к нему пришёл успех после публикации юмористической новеллы «На сцене и за сценой»"
+      }
+    },
+    {
+      "key": "career-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый бестселлер — сборник эссе",
+      "long": "Сборник юмористических эссе разошёлся очень хорошо и дал финансовую стабильность.",
+      "works": [
+        {
+          "ref": "idle-thoughts-of-an-idle-fellow"
+        }
+      ],
+      "chapter": "uspekh-i-lodka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1886 Jerome had his first big seller with the book Idle Thoughts of an Idle Fellow (1886)"
+      }
+    },
+    {
+      "key": "creation-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Медовый месяц на Темзе и начало книги",
+      "long": "Медовый месяц провели на лодке по Темзе; сразу после возвращения Джером начал писать повесть.",
+      "works": [
+        {
+          "ref": "three-men-in-a-boat",
+          "note": "работа началась сразу после возвращения из медового месяца"
+        }
+      ],
+      "chapter": "uspekh-i-lodka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Медовый месяц пара провела на Темзе, на небольшой лодке, что, как считается, в значительной степени повлияло на создание последующего и наиболее важного произведения Джерома"
+      }
+    },
+    {
+      "key": "love-1888",
+      "date": {
+        "from": "1888-06-21",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Этти Мэррис",
+      "long": "21 июня 1888 года женился на Джорджине Элизабет Генриетте Мэррис (Этти) через девять дней после её развода; у неё была дочь Элси.",
+      "place": {
+        "label": "Челси"
+      },
+      "chapter": "uspekh-i-lodka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 21 June 1888, nine days after her decree absolute, she married Jerome at St Luke's Church, Chelsea."
+      }
+    },
+    {
+      "key": "career-1889",
+      "date": {
+        "from": "1889",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Оглушительный успех книги о Темзе",
+      "long": "Книга имела огромный успех, позволила целиком посвятить себя творчеству; критики отзывались о ней неодобрительно.",
+      "works": [
+        {
+          "ref": "three-men-in-a-boat"
+        }
+      ],
+      "chapter": "uspekh-i-lodka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Книга была напечатана в 1889 году, имела оглушительный успех и переиздаётся до сих пор."
+      }
+    },
+    {
+      "key": "career-1892",
+      "date": {
+        "from": "1892",
+        "to": "1897",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор журналов «Лентяй» и «Сегодня»",
+      "long": "В 1892 году стал редактором «Лентяя», в 1893 основал журнал «Сегодня».",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1892 году Роберт Барр пригласил Джерома в журнал «Лентяй» (Idler) на должность редактора"
+      }
+    },
+    {
+      "key": "child-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Ровены",
+      "long": "Родилась дочь Ровена, впоследствии актриса. Источники расходятся: 1897 или 1898 год.",
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1898 году родилась дочь Ровена."
+      }
+    },
+    {
+      "key": "relocation-1899",
+      "date": {
+        "from": "1899",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка в Россию",
+      "long": "Посетил Россию и описал впечатления в статье.",
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1899 году Джером К. Джером посетил Россию"
+      }
+    },
+    {
+      "key": "relocation-1900",
+      "date": {
+        "from": "1900",
+        "to": "1902",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Два года с семьёй в Дрездене",
+      "long": "Перевёз семью в Дрезден на два года.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1900 году Джером перевёз всю семью в Дрезден на два года."
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание критиков",
+      "long": "Полуавтобиографический роман был очень хорошо принят; критики впервые отнеслись к автору серьёзно.",
+      "works": [
+        {
+          "ref": "paul-kelver"
+        }
+      ],
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jerome published a semi-autobiographical novel, Paul Kelver, in 1902. It was exceptionally well received."
+      }
+    },
+    {
+      "key": "career-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Триумф пьесы на лондонской сцене",
+      "long": "Пьеса стала большим успехом у публики, критики разошлись во мнениях.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "the-passing-of-the-third-floor-back"
+        }
+      ],
+      "chapter": "drama-i-voyna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was not until 1908 that Jerome won real fame as a dramatist, with The Passing of the Third Floor Back"
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Командировка в Архангельск корреспондентом",
+      "long": "Побывал в Архангельске как корреспондент «Таймс»; по возвращении секретарь писал о нём как о «сломленном человеке».",
+      "place": {
+        "label": "Архангельск"
+      },
+      "chapter": "drama-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1918 году побывал в Архангельске как корреспондент газеты «Таймс»"
+      }
+    },
+    {
+      "key": "loss-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть падчерицы Элси",
+      "long": "Умерла падчерица Элси в возрасте 38 лет.",
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "смерть падчерицы Элси в 1921 году в возрасте 38 лет"
+      }
+    },
+    {
+      "key": "creation-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Мемуары и звание почётного жителя Уолсолла",
+      "long": "Издал мемуары, вскоре после этого получил звание почётного жителя Уолсолла.",
+      "works": [
+        {
+          "ref": "my-life-and-times"
+        }
+      ],
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1926 году Джером издаёт свои мемуары «Моя жизнь и эпоха» (My Life and Times). Вскоре после этого его наградили званием «Почётный житель района Уолсолл»"
+      }
+    },
+    {
+      "key": "death-1927",
+      "date": {
+        "from": "1927-06-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть после инсульта в Нортгемптоне",
+      "long": "Во время поездки из Девона в Лондон случился инсульт; умер в больнице Нортгемптона.",
+      "place": {
+        "label": "Нортгемптон"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "где 14 июня 1927 года он скончался"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "idle-thoughts-of-an-idle-fellow",
+      "title": "Праздные мысли лентяя",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "three-men-in-a-boat",
+      "title": "Трое в лодке, не считая собаки",
+      "qid": "Q955910",
+      "written": {
+        "from": 1888,
+        "to": 1889
+      }
+    },
+    {
+      "ref": "three-men-on-the-bummel",
+      "title": "Трое на четырёх колёсах",
+      "qid": "Q948984",
+      "written": {
+        "from": 1898,
+        "to": 1900
+      }
+    },
+    {
+      "ref": "paul-kelver",
+      "title": "Пол Келвер",
+      "written": {
+        "from": 1902,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "the-passing-of-the-third-floor-back",
+      "title": "Прохождение третьего этажа",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "my-life-and-times",
+      "title": "Моя жизнь и эпоха",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "on-the-stage-and-off",
+      "title": "На сцене и за сценой",
+      "written": {
+        "from": 1885,
+        "to": 1885
+      }
+    }
+  ]
+}

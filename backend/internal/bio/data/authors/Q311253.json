@@ -1,0 +1,764 @@
+{
+  "qid": "Q311253",
+  "name": "Харлан Эллисон",
+  "born": "1934-05-27",
+  "died": "2018-06-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%BB%D0%BB%D0%B8%D1%81%D0%BE%D0%BD%2C_%D0%A5%D0%B0%D1%80%D0%BB%D0%B0%D0%BD",
+      "rev": 155295095
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Harlan_Ellison",
+      "rev": 1380405109
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early",
+      "title": "Кливленд и Пейнсвилл",
+      "from": 1934,
+      "to": 1950
+    },
+    {
+      "key": "ny-army",
+      "title": "Университет, Нью-Йорк, армия",
+      "from": 1951,
+      "to": 1959
+    },
+    {
+      "key": "hollywood",
+      "title": "Голливуд и «Опасные видения»",
+      "from": 1960,
+      "to": 1975
+    },
+    {
+      "key": "disputes",
+      "title": "Новые браки и судебные войны",
+      "from": 1976,
+      "to": 1993
+    },
+    {
+      "key": "late",
+      "title": "Болезни и поздние годы",
+      "from": 1994,
+      "to": 2018
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1934",
+      "date": {
+        "from": "1934-05-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в еврейской семье в Кливленде",
+      "long": "Родился в еврейской семье в Кливленде, штат Огайо; отец — стоматолог и ювелир, у Харлана была старшая сестра Беверли.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "early",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison was born to a Jewish family in Cleveland, Ohio, on May 27, 1934"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация — письмо в комикс-журнал",
+      "long": "Письмо поклонника в журнал Real Fact Comics стало его первой опубликованной строкой.",
+      "chapter": "early",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1947, a fan letter he wrote to Real Fact Comics became his first published writing."
+      }
+    },
+    {
+      "key": "loss-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, возвращение в Кливленд",
+      "long": "Семья, переехавшая ранее в Пейнсвилл, вернулась в Кливленд после смерти отца.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "early",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "but returned to Cleveland in 1949, following his father's death"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рассказы в газете Cleveland News",
+      "long": "В газете Cleveland News вышли два его рассказа с продолжением; в те же годы он издавал фэнзины и участвовал в фэндоме.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "early",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison published two serialized stories in the Cleveland News during 1949"
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "to": "1953",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в Университете Огайо и отчисление",
+      "long": "Учился в Университете штата Огайо 18 месяцев и был отчислен. Сам Эллисон связывал это со ссорой с профессором, биографы называют причиной низкую успеваемость.",
+      "place": {
+        "label": "Колумбус"
+      },
+      "chapter": "ny-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison attended Ohio State University for 18 months (1951–53) before being expelled."
+      }
+    },
+    {
+      "key": "relocation-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Нью-Йорк, жизнь с Силвербергом",
+      "long": "Переехал в Нью-Йорк и жил вместе с Робертом Силвербергом; за два года опубликовал более сотни рассказов и статей.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "sex-gang",
+          "note": "рассказы сборника относятся к нью-йоркскому периоду"
+        }
+      ],
+      "chapter": "ny-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison moved to New York City in 1955 and lived with Robert Silverberg as they both pursued writing careers."
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак, с Шарлоттой Стейн",
+      "long": "Первый брак — с Шарлоттой Стейн; позже он называл его «четырьмя годами ада».",
+      "chapter": "ny-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first wife was Charlotte Stein, whom he married in 1956."
+      }
+    },
+    {
+      "key": "war-1957",
+      "date": {
+        "from": "1957",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба в армии США",
+      "long": "Служил в армии США, в том числе в информационном отделе в Форт-Ноксе, где писал статьи для гарнизонной газеты.",
+      "place": {
+        "label": "Форт-Нокс"
+      },
+      "works": [
+        {
+          "ref": "web-of-the-city",
+          "note": "по словам Эллисона, основную часть романа он написал на учебных сборах"
+        }
+      ],
+      "chapter": "ny-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served in the U.S. Army from 1957 to 1959."
+      }
+    },
+    {
+      "key": "family-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с первой женой",
+      "long": "Развод с Шарлоттой Стейн.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They divorced in 1960, and he later described the marriage as \"four years of hell as sustained as the whine of a generator.\""
+      }
+    },
+    {
+      "key": "love-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак, с Билли Джойс Сандерс",
+      "long": "Женился на Билли Джойс Сандерс; брак закончился разводом в 1963 году.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They divorced in 1960… Later that year he married Billie Joyce Sanders; they divorced in 1963."
+      }
+    },
+    {
+      "key": "relocation-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Калифорнию, работа для Голливуда",
+      "long": "Переехал в Калифорнию и начал продавать сценарии для телевидения: Burke's Law, «Внешние пределы», «Альфред Хичкок представляет», Star Trek и другие сериалы.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "works": [
+        {
+          "ref": "soldier"
+        },
+        {
+          "ref": "demon-with-a-glass-hand"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison moved to California in 1962 and began selling his writing to Hollywood."
+      }
+    },
+    {
+      "key": "other-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Участие в маршах из Сельмы в Монтгомери",
+      "long": "Участвовал во втором и третьем маршах из Сельмы в Монтгомери под руководством Мартина Лютера Кинга.",
+      "place": {
+        "label": "Сельма"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1965, he participated in the second and third Selma to Montgomery marches, led by Martin Luther King Jr."
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак, с Лоретой Патрик, на семь недель",
+      "long": "Брак с Лоретой Патрик продлился семь недель.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His 1966 marriage to Loretta Patrick lasted only seven weeks."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые премии «Хьюго» и «Небьюла»",
+      "long": "Получил первую из премий «Хьюго» (рассказ) и «Небьюла» (1966).",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший рассказ 1966-01-01"
+      }
+    },
+    {
+      "key": "creation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Редактор антологии нового направления в фантастике",
+      "long": "Составил антологию, получившую специальную награду Всемирного конвента фантастики как самая значимая и спорная книга года.",
+      "works": [
+        {
+          "ref": "dangerous-visions"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967, Ellison edited the Dangerous Visions collection"
+      }
+    },
+    {
+      "key": "creation-1967-2",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Спор о переделке сценария серии Star Trek",
+      "long": "Эллисон неоднократно критиковал Джина Родденберри и других за переписывание его сценария серии Star Trek, но оставил на нём своё имя; позже получил премии за оба варианта.",
+      "works": [
+        {
+          "ref": "city-on-the-edge-of-forever"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "rewrote his original script for the 1967 episode \"The City on the Edge of Forever\""
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка о телевидении в Los Angeles Free Press",
+      "long": "Вёл колонку о телевидении, его влиянии на политику и культуру, в газете Los Angeles Free Press.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "works": [
+        {
+          "ref": "the-glass-teat"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1968 to 1970, Ellison wrote a regular column on television for the Los Angeles Free Press."
+      }
+    },
+    {
+      "key": "other-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал на конвенте AggieCon",
+      "long": "Выступление против армии на конвенте AggieCon чуть не лишило конвент одобрения университета на следующий год.",
+      "place": {
+        "label": "Texas A\u0026M University"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1969, Ellison was Guest of Honor at Texas A\u0026M University's first science fiction convention, AggieCon, where he reportedly referred to the university's Corps of Cadets as \"America's next generation of Nazis\""
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Четвёртый брак, с Лори Горовиц",
+      "long": "Женился на 19-летней Лори Горовиц; брак распался через восемь месяцев.",
+      "chapter": "disputes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, he married Lori Horowitz."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отстранение от экранизации «Я, робот»",
+      "long": "После конфликта с главой производства Warner Bros. Эллисона отстранили от проекта; позднее сценарий вышел в журнале и отдельной книгой.",
+      "chapter": "disputes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shortly after the release of Star Wars (1977), Ben Roberts contacted Ellison to develop a script based on Isaac Asimov's I, Robot short story collection for Warner Bros."
+      }
+    },
+    {
+      "key": "other-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выигранный иск против ABC и Paramount",
+      "long": "Вместе с Беном Бова выиграл иск против ABC и Paramount на 337 тысяч долларов — один из многих его судебных споров об авторских правах.",
+      "chapter": "disputes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a 1980 lawsuit against ABC and Paramount Pictures, Ellison and Ben Bova claimed that the TV series Future Cop was based on their short story \"Brillo\", winning a $337,000 judgement."
+      }
+    },
+    {
+      "key": "love-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак со Сьюзен Тот",
+      "long": "Пятый брак, с Сьюзен Тот, оказался последним и длился до его смерти; жили в Шерман-Оукс.",
+      "place": {
+        "label": "Шерман-Оукс"
+      },
+      "chapter": "disputes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and Susan Toth (1960–2020) married in 1986, and they remained together, living in Sherman Oaks, until his death 32 years later."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986-05",
+        "to": "1987-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ведущий радиошоу Hour 25",
+      "long": "Вёл радиошоу Hour 25 о фантастике после смерти его основателя Майка Ходела.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "disputes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison's tenure was from May 1986 to June 1987."
+      }
+    },
+    {
+      "key": "illness-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инфаркт и операция на сердце",
+      "long": "Перенёс сердечный приступ и четырёхкратное коронарное шунтирование.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994, he had a heart attack and was hospitalized for quadruple coronary artery bypass surgery."
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над компьютерной игрой по своему рассказу",
+      "long": "Участвовал в создании игры по своему рассказу и озвучил компьютер AM.",
+      "works": [
+        {
+          "ref": "i-have-no-mouth"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The story was the basis of a 1995 computer game; Ellison participated in the game's design and provided the voice of the god-computer AM."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Гроссмейстер фантастики»",
+      "long": "Получил звание гроссмейстера фантастики.",
+      "chapter": "late",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Мемориальная премия имени Деймона Найта «Гроссмейстер фантастики» 2006-01-01"
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Инцидент на церемонии «Хьюго»",
+      "long": "На церемонии «Хьюго» поведение Эллисона по отношению к ведущей Конни Уиллис вызвало критику; он позже жаловался, что она не приняла его извинения.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison was presented with a special committee award at the 2006 Hugo Awards ceremony… He then placed his hand on her breast during an embrace."
+      }
+    },
+    {
+      "key": "other-2006-2",
+      "date": {
+        "from": "2006-09-20",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск к издательству Fantagraphics",
+      "long": "Подал иск о клевете к издательству Fantagraphics из-за книги об истории компании; дело закрыто в 2007 году без выплат и извинений.",
+      "place": {
+        "label": "Санта-Моника"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 20, 2006, Ellison sued comic book and magazine publisher Fantagraphics"
+      }
+    },
+    {
+      "key": "other-2009",
+      "date": {
+        "from": "2009-03-13",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск к CBS Paramount из-за серии Star Trek",
+      "long": "Потребовал 25% доходов от сопутствующих продаж по серии Star Trek; в октябре 2009 года стороны урегулировали спор.",
+      "works": [
+        {
+          "ref": "city-on-the-edge-of-forever"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On March 13, 2009, Ellison sued CBS Paramount Television"
+      }
+    },
+    {
+      "key": "illness-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лечение клинической депрессии",
+      "long": "Начал лечение клинической депрессии; позже была диагностирована биполярность.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 2010, he received treatment for clinical depression."
+      }
+    },
+    {
+      "key": "illness-2014",
+      "date": {
+        "from": "2014-10",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт и паралич правой стороны",
+      "long": "Перенёс инсульт, остался паралич правой стороны тела; речь и мышление не пострадали.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On about October 10, 2014, Ellison had a stroke."
+      }
+    },
+    {
+      "key": "death-2018",
+      "date": {
+        "from": "2018-06-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть во сне в собственном доме",
+      "long": "Скончался во сне у себя дома; литературным душеприказчиком стал Дж. Майкл Стражински.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ellison died in his sleep at his home in Los Angeles on the morning of June 28, 2018."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "firefly",
+      "title": "Светляк",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "sex-gang",
+      "title": "Sex Gang",
+      "written": {
+        "from": 1955,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "web-of-the-city",
+      "title": "Web of the City",
+      "written": {
+        "from": 1957,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "soldier",
+      "title": "Солдат",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "demon-with-a-glass-hand",
+      "title": "Demon with a Glass Hand",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "repent-harlequin",
+      "title": "Покайся, Арлекин! — сказал Тиктакщик",
+      "qid": "Q4540312",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "i-have-no-mouth",
+      "title": "У меня нет рта, но я должен кричать",
+      "qid": "Q2307397",
+      "written": {
+        "from": 1966,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "dangerous-visions",
+      "title": "Dangerous Visions",
+      "qid": "Q745250",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "city-on-the-edge-of-forever",
+      "title": "The City on the Edge of Forever",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-glass-teat",
+      "title": "The Glass Teat",
+      "written": {
+        "from": 1968,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "again-dangerous-visions",
+      "title": "Again, Dangerous Visions",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "strange-wine",
+      "title": "Strange Wine",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "man-who-rowed-columbus-ashore",
+      "title": "The Man Who Rowed Christopher Columbus Ashore",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    }
+  ]
+}

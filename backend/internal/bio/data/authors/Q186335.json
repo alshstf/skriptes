@@ -1,0 +1,546 @@
+{
+  "qid": "Q186335",
+  "name": "Дэшил Хэммет",
+  "born": "1894-05-27",
+  "died": "1961-01-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D0%BC%D0%BC%D0%B5%D1%82%2C_%D0%94%D1%8D%D1%88%D0%B8%D0%BB",
+      "rev": 152686733
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Dashiell_Hammett",
+      "rev": 1378229837
+    }
+  ],
+  "chapters": [
+    {
+      "key": "baltimore-pinkerton",
+      "title": "Балтимор и агентство Пинкертона",
+      "from": 1894,
+      "to": 1921
+    },
+    {
+      "key": "san-francisco-writer",
+      "title": "Сан-Франциско и «Чёрная маска»",
+      "from": 1922,
+      "to": 1930
+    },
+    {
+      "key": "hellman-politics",
+      "title": "Лиллиан Хеллман и левая политика",
+      "from": 1931,
+      "to": 1941
+    },
+    {
+      "key": "army-aleutians",
+      "title": "Алеуты и армия",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "blacklist-prison",
+      "title": "Суд, тюрьма и чёрный список",
+      "from": 1946,
+      "to": 1961
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1894",
+      "date": {
+        "from": "1894-05-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мэриленде",
+      "long": "Родился на ферме в округе Сент-Мэрис, штат Мэриленд, в семье Ричарда Хэммета и Анны Бонд Дэшил.",
+      "place": {
+        "label": "округ Сент-Мэрис, Мэриленд"
+      },
+      "chapter": "baltimore-pinkerton",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Балтимор 1894-05-27"
+      }
+    },
+    {
+      "key": "education-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из школы ради заработка",
+      "long": "В тринадцать лет бросил школу из-за болезни отца и необходимости зарабатывать на семью.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "baltimore-pinkerton",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he dropped out in 1908, when he was thirteen years old, due to his father's declining health and the need for him to earn money to support the family"
+      }
+    },
+    {
+      "key": "illness-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Армейская служба и туберкулёз",
+      "long": "Вступил в армию, служил в санитарной службе; перенёс испанку, затем заболел туберкулёзом и провёл большую часть службы пациентом госпиталя в Такоме.",
+      "place": {
+        "label": "Такома"
+      },
+      "chapter": "baltimore-pinkerton",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hammett enlisted in 1918 and served in the United States Army Ambulance Service."
+      }
+    },
+    {
+      "key": "child-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Мэри Джейн",
+      "long": "Родилась первая дочь, Мэри Джейн.",
+      "chapter": "baltimore-pinkerton",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hammett and Dolan had two daughters, Mary Jane (born 1921) and Josephine (born 1926)."
+      }
+    },
+    {
+      "key": "love-1921",
+      "date": {
+        "from": "1921-07-07",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с медсестрой Жозефиной Долан",
+      "long": "Женился в Сан-Франциско на медсестре Жозефине Долан, с которой познакомился в госпитале.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "baltimore-pinkerton",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a nurse, Josephine Dolan, whom he married on July 7, 1921, in San Francisco"
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в журнале",
+      "long": "Первая публикация в журнале The Smart Set; материал для прозы брал из опыта работы у Пинкертона.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hammett was first published in 1922 in the magazine The Smart Set."
+      }
+    },
+    {
+      "key": "creation-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Появление Оперативника «Континенталя»",
+      "long": "В «Чёрной маске» вышел первый рассказ о безымянном сотруднике агентства «Континенталь»; цикл вырос в более чем двадцать рассказов.",
+      "works": [
+        {
+          "ref": "red-harvest"
+        },
+        {
+          "ref": "gutting-of-couffignal"
+        }
+      ],
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1923 году в pulp-журнале «Чёрная маска» появился первый рассказ о сотруднике детективного агентства «Континенталь»."
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ссора с редактором и работа копирайтером",
+      "long": "После спора с редактором о долгах за прежние рассказы ненадолго перестал писать для «Чёрной маски» и работал копирайтером в ювелирной фирме; летом вернулся по приглашению нового редактора Шоу.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Because of a disagreement with editor Philip C. Cody about money owed from previous stories, Hammett briefly stopped writing for Black Mask in 1926."
+      }
+    },
+    {
+      "key": "family-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Рождение второй дочери и распад семьи",
+      "long": "После рождения второй дочери Жозефины медсёстры сообщили жене, что из-за туберкулёза Хэммета ей с детьми не следует жить с ним постоянно; семья распалась.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary Jane (born 1921) and Josephine (born 1926). Shortly after the birth of their second child, health services nurses informed Dolan"
+      }
+    },
+    {
+      "key": "love-1929",
+      "date": {
+        "from": "1929",
+        "to": "1930",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с писательницей Нелл Мартин",
+      "long": "Роман с писательницей Нелл Мартин, которой посвящён «Стеклянный ключ».",
+      "works": [
+        {
+          "ref": "glass-key",
+          "note": "роман посвящён Нелл Мартин"
+        }
+      ],
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "For much of 1929 and 1930, he was romantically involved with Nell Martin, a writer of short stories and several novels."
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первого романа",
+      "long": "Вышел первый роман; в 1930 году — «Мальтийский сокол», самый известный его роман.",
+      "works": [
+        {
+          "ref": "red-harvest"
+        }
+      ],
+      "chapter": "san-francisco-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хэммет опубликовал свой первый роман «Кровавая жатва» в 1929 году."
+      }
+    },
+    {
+      "key": "love-1931",
+      "date": {
+        "from": "1931",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Тридцатилетний роман с Лиллиан Хеллман",
+      "long": "Начались тридцатилетние отношения с драматургом Лиллиан Хеллман; в 1940-е жили на её ферме в Плезантвилле, последние четыре года жизни он провёл у неё.",
+      "works": [
+        {
+          "ref": "thin-man",
+          "note": "роман посвящён Хеллман"
+        }
+      ],
+      "chapter": "hellman-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1931 году начался его 30-летний роман с коллегой-писательницей Лилиан Хеллман"
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933",
+        "to": "1934",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Последний роман и уход от прозы",
+      "long": "Написал последний роман; после него занимался в основном сценариями и общественной деятельностью.",
+      "works": [
+        {
+          "ref": "thin-man"
+        }
+      ],
+      "chapter": "hellman-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he wrote his final novel in 1933, more than 25 years before his death"
+      }
+    },
+    {
+      "key": "other-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Вступление в Коммунистическую партию США",
+      "long": "Вступил в Коммунистическую партию США после активного антифашизма и поддержки испанских республиканцев.",
+      "chapter": "hellman-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Левые и антифашистские симпатии Хэммета привели к его вступлению в Коммунистическую партию США в 1937 году."
+      }
+    },
+    {
+      "key": "persecution-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Наблюдение ФБР",
+      "long": "ФБР установило за ним постоянное наблюдение и собрало 278-страничное досье.",
+      "chapter": "hellman-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начиная с 1940 года, Хэммет находился под постоянным наблюдением ФБР, собравшим на него 278-страничное досье."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба на Алеутских островах",
+      "long": "В 48 лет вновь пошёл в армию; служил на Алеутских островах и редактировал армейскую газету The Adakian. Там у него развилась эмфизема.",
+      "place": {
+        "label": "Алеутские острова"
+      },
+      "chapter": "army-aleutians",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1942 году, после нападения на Перл-Харбор, Хэммет снова поступил на службу в армию и провёл большую часть Второй мировой войны в качестве сержанта на Алеутских островах"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946-06-05",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Конгресса по гражданским правам",
+      "long": "Избран президентом Конгресса по гражданским правам и посвятил ему большую часть рабочего времени.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was elected president of the Civil Rights Congress (CRC) on June 5, 1946"
+      }
+    },
+    {
+      "key": "illness-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Отказ от алкоголя по предписанию врачей",
+      "long": "Бросил пить по требованию врачей.",
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "alcoholism continued to trouble him until 1948, when he quit under doctor's orders"
+      }
+    },
+    {
+      "key": "persecution-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Шесть месяцев в тюрьме",
+      "long": "Шесть месяцев провёл в федеральной тюрьме в Западной Виргинии, где, по словам Хеллман, чистил туалеты.",
+      "place": {
+        "label": "Западная Виргиния"
+      },
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1951 году был обвинен в антиамериканской пропаганде за активно выражаемые симпатии к коммунистической партии и провёл 6 месяцев в тюрьме"
+      }
+    },
+    {
+      "key": "persecution-1951-2",
+      "date": {
+        "from": "1951-07-09",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отказ давать показания о фонде Конгресса",
+      "long": "Отказался назвать жертвователей фонда залога, сославшись на Пятую поправку, и был признан виновным в неуважении к суду.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hammett testified on July 9, 1951, in front of United States District Court Judge Sylvester Ryan"
+      }
+    },
+    {
+      "key": "poverty-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Нищета, отмена радиопередач, налоговый арест",
+      "long": "Отмена радиопередач по его произведениям и налоговый арест доходов привели к нищете; книги перестали переиздавать.",
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1952, Hammett's popularity had declined as result of the hearings. He found himself impoverished"
+      }
+    },
+    {
+      "key": "persecution-1953",
+      "date": {
+        "from": "1953-03-26",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Слушания в Комитете по антиамериканской деятельности",
+      "long": "Давал показания перед Комитетом по расследованию антиамериканской деятельности, отказавшись сотрудничать; попал в чёрный список.",
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He testified on March 26, 1953, before the House Committee on Un-American Activities"
+      }
+    },
+    {
+      "key": "death-1961",
+      "date": {
+        "from": "1961-01-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгких",
+      "long": "Умер от рака лёгких, диагностированного за два месяца до смерти; похоронен на Арлингтонском кладбище как ветеран двух войн.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "blacklist-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hammett died in Lenox Hill Hospital in Manhattan on January 10, 1961, of lung cancer"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "red-harvest",
+      "title": "Кровавая жатва",
+      "qid": "Q1935469",
+      "written": {
+        "from": 1927,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "dain-curse",
+      "title": "Проклятие Дейнов",
+      "qid": "Q1193455",
+      "written": {
+        "from": 1928,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "maltese-falcon",
+      "title": "Мальтийский сокол",
+      "qid": "Q221462",
+      "written": {
+        "from": 1929,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "glass-key",
+      "title": "Стеклянный ключ",
+      "qid": "Q6035197",
+      "written": {
+        "from": 1930,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "thin-man",
+      "title": "Худой мужчина",
+      "qid": "Q1198493",
+      "written": {
+        "from": 1933,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "gutting-of-couffignal",
+      "title": "The Gutting of Couffignal",
+      "qid": "Q16251893",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    }
+  ]
+}

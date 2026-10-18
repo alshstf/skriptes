@@ -1,0 +1,654 @@
+{
+  "qid": "Q43444",
+  "name": "Гюстав Флобер",
+  "born": "1821-12-12",
+  "died": "1880-05-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%BB%D0%BE%D0%B1%D0%B5%D1%80%2C_%D0%93%D1%8E%D1%81%D1%82%D0%B0%D0%B2",
+      "rev": 155297573
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Gustave_Flaubert",
+      "rev": 1380118340
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Gustave_Flaubert",
+      "rev": 239710667
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-rouen",
+      "title": "Руан, право, первый припадок",
+      "from": 1821,
+      "to": 1843
+    },
+    {
+      "key": "croisset-orient",
+      "title": "Круассе, Луиза Коле, Восток",
+      "from": 1844,
+      "to": 1855
+    },
+    {
+      "key": "bovary-salammbo",
+      "title": "Суд и слава",
+      "from": 1856,
+      "to": 1868
+    },
+    {
+      "key": "losses-debts",
+      "title": "Утраты, война, долги",
+      "from": 1869,
+      "to": 1880
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1821",
+      "date": {
+        "from": "1821-12-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье руанского хирурга",
+      "long": "Родился в Руане в семье Ахилле-Клеофаса Флобера, врача, заведовавшего хирургическим отделением руанской больницы.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гюстав Флобер родился 12 декабря 1821 года в городе Руане в буржуазной семье."
+      }
+    },
+    {
+      "key": "education-1832",
+      "date": {
+        "from": "1832",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в руанском коллеже и лицее",
+      "long": "Учился в Королевском коллеже и лицее в Руане.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1832 года учился в Королевском коллеже и лицее в Руане"
+      }
+    },
+    {
+      "key": "creation-1834",
+      "date": {
+        "from": "1834",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рукописный журнал с другом-лицеистом",
+      "long": "Вместе с Эрнестом Шевалье организовал рукописный журнал «Искусство и прогресс», где появился его первый публичный текст.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с приятелем (Эрнест Шевалье) организовал рукописный журнал «Искусство и прогресс» в 1834 году"
+      }
+    },
+    {
+      "key": "love-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с Элизой Шлезингер, безответная страсть",
+      "long": "Встреча с Элизой Шлезингер, женой издателя Мориса Шлезингера; безответную страсть к ней Флобер пронёс через всю жизнь.",
+      "works": [
+        {
+          "ref": "sentimental-education-1869",
+          "note": "Страсть к Элизе отражена в романе (литературоведение: Мари Арну восходит к ней)"
+        }
+      ],
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1836 году он встретил жену французского издателя Мориса Шлезингера — Элизу Шлезингер, которая оказала глубокое влияние на писателя."
+      }
+    },
+    {
+      "key": "education-1840",
+      "date": {
+        "from": "1840",
+        "to": "1843",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на юридическом факультете в Париже",
+      "long": "Поступил на юридический факультет в Париже, вёл богемную жизнь, много писал; учёбу бросил в 1843 году.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1840 году Флобер поступил на факультет права в Париже."
+      }
+    },
+    {
+      "key": "illness-1843",
+      "date": {
+        "from": "1843",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первый эпилептический припадок, конец учёбы",
+      "long": "После провала на экзамене и первого эпилептического припадка оставил учёбу; болезнь сопровождала его дальше.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth-rouen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Бросил учёбу в 1843 году после провала на экзамене и первого эпилептического припадка."
+      }
+    },
+    {
+      "key": "relocation-1844",
+      "date": {
+        "from": "1844",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Круассе, замкнутая жизнь",
+      "long": "Поселился в Круассе близ Руана; замкнутый образ жизни, посвящённый литературе, остался с ним до конца.",
+      "place": {
+        "label": "Круассе"
+      },
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1844 году писатель поселился на берегу Сены, в Круассе недалеко от Руана."
+      }
+    },
+    {
+      "key": "loss-1846",
+      "date": {
+        "from": "1846",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, наследство",
+      "long": "Умер отец, Ахилле-Клеофас Флобер; оставленное им наследство позволило писателю жить без заработка.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1846 году умер его отец, а через некоторое время и сестра. Его отец оставил ему солидное наследство, на которое он мог безбедно жить."
+      }
+    },
+    {
+      "key": "loss-1846-2",
+      "date": {
+        "from": "1846",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры",
+      "long": "Вскоре после отца умерла сестра Флобера.",
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1846 году умер его отец, а через некоторое время и сестра."
+      }
+    },
+    {
+      "key": "love-1846",
+      "date": {
+        "from": "1846",
+        "to": "1854",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с поэтессой Луизой Коле",
+      "long": "Связь с поэтессой Луизой Коле; сохранилась обширная переписка. Биограф Фаге считал её единственными серьёзными романтическими отношениями Флобера.",
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1846 по 1854 год Флобер имел отношения с поэтессой Луизой Коле; его письма к ней сохранились."
+      }
+    },
+    {
+      "key": "other-1848",
+      "date": {
+        "from": "1848",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Парижская революция",
+      "long": "Приехал в Париж, чтобы увидеть революцию 1848 года; впоследствии описал её события в романе.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "sentimental-education-1869",
+          "note": "События 1848 года описаны в романе"
+        }
+      ],
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Флобер вернулся в Париж в 1848 году для участия в Революции."
+      }
+    },
+    {
+      "key": "relocation-1849",
+      "date": {
+        "from": "1849",
+        "to": "1852",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Путешествие на Восток с Дю Каном",
+      "long": "Долгое путешествие с Максимом Дю Каном в Египет, Иерусалим, через Константинополь и Италию; впечатления записывались и использовались в произведениях.",
+      "works": [
+        {
+          "ref": "three-tales",
+          "note": "Впечатления поездки питают, в частности, «Иродиаду»"
+        }
+      ],
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Gustave Flaubert organise, avec Maxime Du Camp, un long voyage en Orient qui se réalise entre 1849 et 1852."
+      }
+    },
+    {
+      "key": "creation-1849",
+      "date": {
+        "from": "1849-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Совет друзей сжечь первую рукопись",
+      "long": "Завершил первую версию «Искушения святого Антония»; друзья Буйе и Дю Кан после чтения посоветовали бросить рукопись в огонь и писать о повседневной жизни.",
+      "works": [
+        {
+          "ref": "temptation-of-saint-anthony",
+          "note": "Первая версия завершена в эти недели"
+        }
+      ],
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1849, Flaubert completed the first version of a novel, The Temptation of Saint Anthony."
+      }
+    },
+    {
+      "key": "creation-1851",
+      "date": {
+        "from": "1851",
+        "to": "1856",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Пять лет работы над первым зрелым романом",
+      "long": "Пять лет работы над романом, начатой осенью 1851 года.",
+      "place": {
+        "label": "Круассе"
+      },
+      "works": [
+        {
+          "ref": "madame-bovary"
+        }
+      ],
+      "chapter": "croisset-orient",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Работу над романом «Госпожа Бовари» Гюстав Флобер начал в 1851 году и работал пять лет."
+      }
+    },
+    {
+      "key": "persecution-1857",
+      "date": {
+        "from": "1857-02",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Судебный процесс за «оскорбление морали»",
+      "long": "Флобер, издатель журнала и печатник предстали перед судом за «оскорбление морали»; все были оправданы, роман вышел отдельным изданием.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "madame-bovary"
+        }
+      ],
+      "chapter": "bovary-salammbo",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En février 1857, le gérant de la revue, Léon Laurent-Pichat, l’imprimeur et Gustave Flaubert sont jugés pour « outrage à la morale publique et religieuse et aux bonnes mœurs »."
+      }
+    },
+    {
+      "key": "other-1858",
+      "date": {
+        "from": "1858-04",
+        "to": "1858-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Тунис ради романа о Карфагене",
+      "long": "Поездка в Тунис, чтобы изучить место действия будущего романа о Карфагене.",
+      "place": {
+        "label": "Тунис"
+      },
+      "works": [
+        {
+          "ref": "salammbo"
+        }
+      ],
+      "chapter": "bovary-salammbo",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En avril-juin 1858, il séjourne à Tunis pour s’imprégner du cadre de son histoire."
+      }
+    },
+    {
+      "key": "career-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Восторженный приём исторического романа",
+      "long": "Исторический роман о Карфагене был принят с большим энтузиазмом.",
+      "works": [
+        {
+          "ref": "salammbo"
+        }
+      ],
+      "chapter": "bovary-salammbo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда роман появился в 1862 году, его приняли с большим энтузиазмом."
+      }
+    },
+    {
+      "key": "career-1866",
+      "date": {
+        "from": "1866-08-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён орденом Почётного легиона.",
+      "chapter": "bovary-salammbo",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "reçoit la Légion d'honneur en 1866"
+      }
+    },
+    {
+      "key": "loss-1869",
+      "date": {
+        "from": "1869-07",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть друга Луи Буйе",
+      "long": "Смерть близкого друга, поэта Луи Буйе, сильно потрясла писателя.",
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1869 его сильно потрясла смерть друга Луи Буйе."
+      }
+    },
+    {
+      "key": "war-1870",
+      "date": {
+        "from": "1870",
+        "to": "1871",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Прусская оккупация, укрытие в Руане",
+      "long": "Во время прусской оккупации Круассе писатель с матерью укрылся у племянницы Каролины в Руане.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Durant l'hiver 1870-1871, les Prussiens occupant une partie de la France dont la Normandie et Croisset, Flaubert se réfugie avec sa mère chez sa nièce, Caroline, à Rouen"
+      }
+    },
+    {
+      "key": "loss-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Анна Жюстин Каролин Флобер.",
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его мать умерла в 1872 году, и в это время у писателя уже начались проблемы с деньгами."
+      }
+    },
+    {
+      "key": "creation-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Замысел сатирического романа о копировальщиках",
+      "long": "Появился замысел сатиры на глупость современников; над романом Флобер работал до конца жизни.",
+      "works": [
+        {
+          "ref": "bouvard-et-pecuchet"
+        }
+      ],
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Замысел романа «Бувар и Пекюше» появился в 1872 году."
+      }
+    },
+    {
+      "key": "poverty-1872",
+      "date": {
+        "from": "1872",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Финансовые трудности и болезни",
+      "long": "После смерти матери из-за неудачных дел мужа племянницы писатель оказался в долгах, продал фермы и оставил парижскую квартиру; здоровье ухудшалось.",
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his mother died in 1872. After her death, he fell into financial difficulty due to business failures on the part of his niece's husband."
+      }
+    },
+    {
+      "key": "other-1873",
+      "date": {
+        "from": "1873",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покровительство молодому Мопассану",
+      "long": "Флобер поддерживал начинающего Ги де Мопассана, видевшего в нём духовного отца.",
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Guy de Maupassant, dont il a encouragé la carrière depuis 1873"
+      }
+    },
+    {
+      "key": "career-1874",
+      "date": {
+        "from": "1874-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал пьесы для театра",
+      "long": "Провал пьесы «Кандидат».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "juste après l'échec de sa pièce de théâtre Le Candidat en mars 1874"
+      }
+    },
+    {
+      "key": "creation-1877",
+      "date": {
+        "from": "1877",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Последние годы за неоконченным романом",
+      "long": "Последние годы жизни заняла работа над неоконченным романом, опубликованным в 1881 году.",
+      "place": {
+        "label": "Круассе"
+      },
+      "works": [
+        {
+          "ref": "bouvard-et-pecuchet"
+        }
+      ],
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1877 по 1880 год он занимался редакцией романа «Бувар и Пекюше»."
+      }
+    },
+    {
+      "key": "death-1880",
+      "date": {
+        "from": "1880-05-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Круассе",
+      "long": "Умер в Круассе от кровоизлияния в мозг; на похоронах были Золя, Доде, Эдмон Гонкур.",
+      "place": {
+        "label": "Круассе"
+      },
+      "chapter": "losses-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер Гюстав Флобер 8 мая 1880 года в результате инсульта."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "madame-bovary",
+      "title": "Госпожа Бовари",
+      "qid": "Q193417",
+      "written": {
+        "from": 1851,
+        "to": 1856
+      }
+    },
+    {
+      "ref": "salammbo",
+      "title": "Саламбо",
+      "qid": "Q117182",
+      "written": {
+        "from": 1857,
+        "to": 1862
+      }
+    },
+    {
+      "ref": "sentimental-education-1869",
+      "title": "Воспитание чувств",
+      "qid": "Q1212285",
+      "written": {
+        "from": 1864,
+        "to": 1869
+      }
+    },
+    {
+      "ref": "sentimental-education-1845",
+      "title": "Воспитание чувств (первая версия)",
+      "written": {
+        "from": 1843,
+        "to": 1845
+      }
+    },
+    {
+      "ref": "temptation-of-saint-anthony",
+      "title": "Искушение святого Антония",
+      "qid": "Q1217245",
+      "written": {
+        "from": 1848,
+        "to": 1874
+      }
+    },
+    {
+      "ref": "three-tales",
+      "title": "Три повести",
+      "qid": "Q2126429",
+      "written": {
+        "from": 1875,
+        "to": 1877
+      }
+    },
+    {
+      "ref": "bouvard-et-pecuchet",
+      "title": "Бувар и Пекюше",
+      "qid": "Q728104",
+      "written": {
+        "from": 1872,
+        "to": 1880
+      }
+    }
+  ]
+}

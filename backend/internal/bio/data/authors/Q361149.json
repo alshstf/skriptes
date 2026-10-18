@@ -1,0 +1,495 @@
+{
+  "qid": "Q361149",
+  "name": "Джин Вулф",
+  "born": "1931-05-07",
+  "died": "2019-04-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D1%83%D0%BB%D1%84%2C_%D0%94%D0%B6%D0%B8%D0%BD",
+      "rev": 154693253
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Gene_Wolfe",
+      "rev": 1372843795
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Бруклин, Хьюстон, колледж",
+      "from": 1931,
+      "to": 1950
+    },
+    {
+      "key": "army-university",
+      "title": "Корея и университет",
+      "from": 1951,
+      "to": 1955
+    },
+    {
+      "key": "engineer",
+      "title": "Инженер, редактор, Книга Нового Солнца",
+      "from": 1956,
+      "to": 1983
+    },
+    {
+      "key": "writer",
+      "title": "Профессиональный писатель",
+      "from": 1984,
+      "to": 2012
+    },
+    {
+      "key": "peoria",
+      "title": "Пеория, вдовство",
+      "from": 2013,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-05-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Нью-Йорке (Бруклин) в семье торговца.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джин Родман Вулф (англ. Gene Wolfe; 7 мая 1931 — 14 апреля 2019)"
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в колледж",
+      "long": "В 1949 году поступил в колледж (по английской статье — Техасский университет A\u0026M).",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году Вулф поступил в колледж"
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из колледжа",
+      "long": "В 1951 году оставил учёбу и пошёл в армию; в студенческом журнале вышел его первый рассказ.",
+      "chapter": "army-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "и уже в 1951 году в студенческом журнале «Комментатор» он опубликовал свой первый рассказ — «Дело об исчезающем призраке». В тот же год Вулф оставил обучение и пошёл в армию."
+      }
+    },
+    {
+      "key": "war-1952",
+      "date": {
+        "from": "1952",
+        "to": "1954",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Армейская служба, Корейская война",
+      "long": "Служил в армии в 1952–1954 годах, участвовал в боевых действиях последних месяцев Корейской войны.",
+      "chapter": "army-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Там он провёл годы с 1952 по 1954 и даже принял участие в боевых действиях последних месяцев Корейской войны."
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Хьюстонского университета",
+      "long": "После армии учился в Хьюстонском университете по праву, данному армейской службой; стал промышленным инженером.",
+      "place": {
+        "label": "Хьюстон"
+      },
+      "chapter": "engineer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Хьюстонский университет 1956"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Procter \u0026 Gamble",
+      "long": "Работал в компании Procter \u0026 Gamble; участвовал в разработке машины для производства чипсов «Принглз».",
+      "chapter": "engineer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1956 по 1972 год Вулф работал на компанию «Procter \u0026 Gamble»"
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956-11",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Розмари Дейч",
+      "long": "В ноябре 1956 года женился на Розмари Франсес Дейч; в браке было четверо детей.",
+      "chapter": "engineer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1956 года Джин Вулф женился на Розмари Франсес Дейч."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый роман и неудача",
+      "long": "Первый роман вышел в 1970 году и не имел успеха.",
+      "works": [
+        {
+          "ref": "operation-ares"
+        }
+      ],
+      "chapter": "engineer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first novel, Operation Ares, was published by Berkley Books in 1970 and was unsuccessful."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое признание критики",
+      "long": "В начале 1970-х появились книги, сразу признанные шедеврами, — в частности триптих, вышедший в 1972 году.",
+      "works": [
+        {
+          "ref": "fifth-head-of-cerberus"
+        }
+      ],
+      "chapter": "engineer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 1970-х годов Вулф создал две книги, сразу же признанные шедеврами: триптих научно-фантастических повестей «Пятая голова Цербера» (1972)"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Небьюла» за повесть",
+      "long": "Получил «Небьюлу» в номинации «Повесть».",
+      "works": [
+        {
+          "ref": "death-of-doctor-island"
+        }
+      ],
+      "chapter": "engineer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1973 год — Премия «Небьюла» (англ. Nebula Award), в номинации Повесть (Novella)"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премии за Книгу Нового Солнца",
+      "long": "В 1981 году получил Всемирную премию фэнтези за первый том цикла и «Небьюлу» за роман.",
+      "works": [
+        {
+          "ref": "book-of-the-new-sun"
+        }
+      ],
+      "chapter": "engineer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1981 год — «Всемирная премия фэнтези», в номинации Роман (Novel) за Пыточных дел мастер"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из журнала, профессиональное писательство",
+      "long": "Успех цикла позволил в 1984 году оставить пост редактора журнала «Plant Engineering» и писать профессионально.",
+      "works": [
+        {
+          "ref": "book-of-the-new-sun",
+          "note": "критический и финансовый успех романа сделал возможным уход из журнала"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "позволил Вулфу в 1984 году наконец-то уйти с поста редактора журнала и стать профессиональным писателем."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за заслуги перед жанром",
+      "long": "Получил Всемирную премию фэнтези за заслуги перед жанром.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1996 год — «Всемирная премия фэнтези» за заслуги перед жанром (Life Achievement)."
+      }
+    },
+    {
+      "key": "illness-2010",
+      "date": {
+        "from": "2010-04-24",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция аортокоронарного шунтирования",
+      "long": "24 апреля 2010 года перенёс двойное шунтирование.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wolfe underwent double bypass surgery on April 24, 2010."
+      }
+    },
+    {
+      "key": "relocation-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Баррингтона в Пеорию",
+      "long": "Супруги переехали из Баррингтона (пригород Чикаго) в Пеорию, штат Иллинойс.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "peoria",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Wolfes moved to Peoria, Illinois in 2013."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Гроссмейстера фантастики",
+      "long": "Удостоен звания Гроссмейстера от Ассоциации писателей-фантастов Америки.",
+      "chapter": "peoria",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Мемориальная премия имени Деймона Найта «Гроссмейстер фантастики» 2013"
+      }
+    },
+    {
+      "key": "loss-2013",
+      "date": {
+        "from": "2013-12-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Розмари",
+      "long": "Розмари умерла 14 декабря 2013 года после ряда болезней, включая болезнь Альцгеймера.",
+      "chapter": "peoria",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wolfe's wife, Rosemary, died on December 14, 2013, after a series of illnesses including Alzheimer's disease."
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-04-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Пеории",
+      "long": "Скончался дома в Пеории от сердечно-сосудистых заболеваний в возрасте 87 лет.",
+      "place": {
+        "label": "Пеория"
+      },
+      "chapter": "peoria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джин Вулф скончался в своём доме в Пеории от сердечно-сосудистых заболеваний 14 апреля 2019 года"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "operation-ares",
+      "title": "Операция «Арес»",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "fifth-head-of-cerberus",
+      "title": "Пятая голова Цербера",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "death-of-doctor-island",
+      "title": "Смерть доктора Айленда",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "peace",
+      "title": "Покой",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "book-of-the-new-sun",
+      "title": "Книга Нового Солнца",
+      "qid": "Q3269840",
+      "written": {
+        "from": 1980,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "castle-of-the-otter",
+      "title": "Замок выдры",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "urth-of-the-new-sun",
+      "title": "Урс Нового Солнца",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "soldier-of-the-mist",
+      "title": "Воин тумана",
+      "written": {
+        "from": 1985,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "castle-view",
+      "title": "Вид на замок",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "book-of-the-long-sun",
+      "title": "Книга Длинного Солнца",
+      "written": {
+        "from": 1993,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "book-of-the-short-sun",
+      "title": "Книга Короткого Солнца",
+      "written": {
+        "from": 1999,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "the-knight",
+      "title": "Рыцарь-чародей",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "soldier-of-sidon",
+      "title": "Солдат Сидона",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "pirate-freedom",
+      "title": "Пиратская свобода",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

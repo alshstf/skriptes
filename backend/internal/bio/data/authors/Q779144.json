@@ -1,0 +1,356 @@
+{
+  "qid": "Q779144",
+  "name": "Франк Тилье",
+  "born": "1973-10-15",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Franck_Thilliez",
+      "rev": 1372760685
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Franck_Thilliez",
+      "rev": 240266423
+    }
+  ],
+  "chapters": [
+    {
+      "key": "annecy-lille-inzhener",
+      "title": "Инженер и первые книги",
+      "from": 1973,
+      "to": 2005
+    },
+    {
+      "key": "uspekh-chambre-des-morts",
+      "title": "Успех и признание",
+      "from": 2006,
+      "to": 2013
+    },
+    {
+      "key": "sharko-i-henebelle",
+      "title": "Шарко, Энебель и тиражи",
+      "from": 2014,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Анси",
+      "long": "Родился в Анси из-за служебного назначения отца; родом из Мазенгарба в Па-де-Кале.",
+      "place": {
+        "label": "Анси"
+      },
+      "chapter": "annecy-lille-inzhener",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "né le 15 octobre 1973 à Annecy"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия читателей «Набережных детектива»",
+      "long": "Роман «Комната мёртвых» получил премию читателей фестиваля «Набережные детектива».",
+      "works": [
+        {
+          "ref": "la-chambre-des-morts"
+        }
+      ],
+      "chapter": "uspekh-chambre-des-morts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Prix des lecteurs Quais du polar 2006"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия SNCF за французский детектив",
+      "long": "«Комната мёртвых» удостоена премии SNCF за французский детектив.",
+      "works": [
+        {
+          "ref": "la-chambre-des-morts"
+        }
+      ],
+      "chapter": "uspekh-chambre-des-morts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Prix SNCF du polar français 2007"
+      }
+    },
+    {
+      "key": "career-2007-2",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Экранизация романа",
+      "long": "Роман «Комната мёртвых» экранизирован Альфредом Ло.",
+      "works": [
+        {
+          "ref": "la-chambre-des-morts"
+        }
+      ],
+      "chapter": "uspekh-chambre-des-morts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Adaptation cinématographique par Alfred Lot en 2007"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы сценаристом на телевидении",
+      "long": "Первая работа сценариста на телевидении — телефильм «Одержимости» Фредерика Теллье на France 2.",
+      "chapter": "uspekh-chambre-des-morts",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "2010 : Obsessions, téléfilm de Frédéric Tellier (1re diffusion le 10 février 2010 sur France 2)"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Мирей-Лантери",
+      "long": "Получил премию Миреей-Лантери от Общества драматургов и композиторов (SACD).",
+      "chapter": "uspekh-chambre-des-morts",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: prix Mireille-Lantéri 2011-01-01"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Лучший триллер года» и премия Étoiles du Parisien",
+      "long": "Роман «Ангор» признан лучшим триллером года и принёс премию Étoiles du Parisien.",
+      "works": [
+        {
+          "ref": "angor"
+        }
+      ],
+      "chapter": "sharko-i-henebelle",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Angor was voted best thriller of 2014 and won him the Étoiles du Parisien-Aujourd'hui en France award"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Средиземноморская премия за лучший детектив",
+      "long": "Получил Средиземноморскую премию за лучший детектив.",
+      "chapter": "sharko-i-henebelle",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Средиземноморская премия за лучший детектив 2019-01-01"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Четвёртое место среди франкоязычных авторов по продажам",
+      "long": "По данным GfK занял четвёртое место среди франкоязычных романистов по продажам во Франции в 2020 году: 741 835 экземпляров.",
+      "chapter": "sharko-i-henebelle",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "classé en quatrième position dans la liste des auteurs de romans francophones ayant vendu le plus de livres en 2020 en France (741 835 ouvrages)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "train-d-enfer-pour-ange-rouge",
+      "title": "Адский поезд для Красного Ангела",
+      "qid": "Q3536548",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "la-chambre-des-morts",
+      "title": "Комната мёртвых",
+      "qid": "Q3207176",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "deuils-de-miel",
+      "title": "Deuils de miel",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "la-foret-des-ombres",
+      "title": "La Forêt des ombres",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "la-memoire-fantome",
+      "title": "La Mémoire fantôme",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "l-anneau-de-moebius",
+      "title": "L'Anneau de Moebius",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "fractures",
+      "title": "Fractures",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "le-syndrome-e",
+      "title": "Монреальский синдром",
+      "qid": "Q3227481",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "gataca",
+      "title": "Gataca",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "atomka",
+      "title": "Atomka",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "puzzle",
+      "title": "Puzzle",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "angor",
+      "title": "Angor",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "pandemia",
+      "title": "Пандемия",
+      "qid": "Q26195918",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "sharko",
+      "title": "Sharko",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "le-manuscrit-inacheve",
+      "title": "Le Manuscrit inachevé",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "luca",
+      "title": "Luca",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "1991",
+      "title": "1991",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "la-faille",
+      "title": "La Faille",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

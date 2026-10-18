@@ -1,0 +1,705 @@
+{
+  "qid": "Q355879",
+  "name": "Роберт Блох",
+  "born": "1917-04-05",
+  "died": "1994-09-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D0%BE%D1%85%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82",
+      "rev": 150524963
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Bloch",
+      "rev": 1378452137
+    }
+  ],
+  "chapters": [
+    {
+      "key": "chicago-maywood",
+      "title": "Чикаго и Мейвуд",
+      "from": 1917,
+      "to": 1928
+    },
+    {
+      "key": "milwaukee-lovecraft",
+      "title": "Милуоки, Лавкрафт и Weird Tales",
+      "from": 1929,
+      "to": 1939
+    },
+    {
+      "key": "ad-radio-war",
+      "title": "Реклама, радио и первые книги",
+      "from": 1940,
+      "to": 1952
+    },
+    {
+      "key": "weyauwega-psycho",
+      "title": "Уэяуэга и «Психо»",
+      "from": 1953,
+      "to": 1963
+    },
+    {
+      "key": "hollywood-elly",
+      "title": "Голливуд и Элли",
+      "from": 1964,
+      "to": 1980
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1981,
+      "to": 1994
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1917",
+      "date": {
+        "from": "1917-04-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго",
+      "long": "Роберт Блох родился в Чикаго в семье немецких евреев: банковского кассира Рафаэля Блоха и социальной работницы Стеллы Леб.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-maywood",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Чикаго 1917-04-05"
+      }
+    },
+    {
+      "key": "other-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый фильм ужасов и повторяющиеся кошмары",
+      "long": "Сцена, где Чейни снимает маску, напугала восьмилетнего Блоха и пробудила интерес к ужасам; около двух лет его преследовали кошмары.",
+      "place": {
+        "label": "Мейвуд"
+      },
+      "chapter": "chicago-maywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1925 году, в возрасте восьми лет, он посетил вечерний показ фильма Лона Чейни-старшего «Призрак оперы» (1925)."
+      }
+    },
+    {
+      "key": "relocation-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Потеря работы отцом, переезд в Милуоки",
+      "long": "После потери отцом работы в банке в разгар Великой депрессии семья переехала в Милуоки; мать работала в поселении еврейского типа.",
+      "place": {
+        "label": "Милуоки"
+      },
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929 году отец Блоха Рэй Блох потерял работу в банке, и их семья переехала в Милуоки"
+      }
+    },
+    {
+      "key": "other-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Письмо Лавкрафту и начало переписки",
+      "long": "Письмо Лавкрафту положило начало переписке до самой его смерти; Лавкрафт одобрил первые рассказы Блоха и посоветовал писать другим авторам его круга.",
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Будучи подростком, Блох написал Лавкрафту фанатское письмо (1933), спрашивая, где он может найти копии более ранних рассказов Лавкрафта"
+      }
+    },
+    {
+      "key": "education-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание средней школы",
+      "long": "Блох окончил среднюю школу Линкольна в Милуоки вместе с другом Гарольдом Гауэром.",
+      "place": {
+        "label": "Милуоки"
+      },
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Блох и Гауэр окончили Линкольн в 1934 году"
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первые профессиональные продажи в Weird Tales",
+      "long": "В 17 лет Блох продал первые рассказы журналу Weird Tales и начал профессиональную литературную карьеру.",
+      "works": [
+        {
+          "ref": "feast-in-the-abbey"
+        }
+      ],
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первыми профессиональными продажами в журнале Weird Tales в возрасте 17 лет (июль 1934 г.) были рассказы «Пир в аббатстве» и «Тайна в гробнице»."
+      }
+    },
+    {
+      "key": "other-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Посвящённый Блоху рассказ Лавкрафта",
+      "long": "Лавкрафт вывел Блоха под именем Роберта Блейка в рассказе, посвящённом ему, и убил героя — в ответ на «любезность» Блоха, убившего двойника Лавкрафта в рассказе 1935 года.",
+      "works": [
+        {
+          "ref": "shambler-from-the-stars",
+          "note": "ответ на рассказ Блоха, где погибает фигура Лавкрафта (воспоминания Блоха)"
+        }
+      ],
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The young Bloch appears, thinly disguised, as the character Robert Blake in Lovecraft's story \"The Haunter of the Dark\" (1936), which is dedicated to Bloch."
+      }
+    },
+    {
+      "key": "loss-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Лавкрафта",
+      "long": "Блох вспоминал, что часть его умерла вместе с Лавкрафтом, получившим при жизни так мало признания.",
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Смерть Лавкрафта в 1937 году глубоко повлияла на Блоха, которому тогда было всего 20 лет."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в кампании кандидата в мэры Милуоки",
+      "long": "Блох с другом Гауэром писал речи и придумывал рекламные ходы для кампании Карла Цейдлера; после победы им не выплатили обещанных денег.",
+      "place": {
+        "label": "Милуоки"
+      },
+      "chapter": "milwaukee-lovecraft",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1939, Bloch was contacted by James Doolittle, who was managing the campaign for Mayor of Milwaukee"
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940-10-02",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Марион Холкомб",
+      "long": "Первый брак с Марион Рут Холкомб, по сообщениям, был заключён, чтобы Блоха не призвали в армию.",
+      "chapter": "ad-radio-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 2, 1940, Bloch married Marion Ruth Holcombe; it was reportedly a marriage of convenience designed to keep Bloch out of the army."
+      }
+    },
+    {
+      "key": "child-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Салли",
+      "long": "В 1943 году у Блоха и Марион родилась дочь Салли; после развода она осталась жить с отцом.",
+      "chapter": "ad-radio-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloch's daughter Sally (born 1943) elected to stay with him."
+      }
+    },
+    {
+      "key": "loss-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать Блоха Стелла Леб, социальная работница.",
+      "chapter": "ad-radio-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "социальной работницы Стеллы Леб (1880—1944)"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственное радиошоу ужасов",
+      "long": "Блоха попросили написать 39 пятнадцатиминутных эпизодов собственной радиопрограммы ужасов, во многом по его рассказам.",
+      "chapter": "ad-radio-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Towards the end of World War Two, in 1945, Bloch was asked to write 39 15-minute episodes of his own radio horror show"
+      }
+    },
+    {
+      "key": "loss-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец Блоха Рафаэль Блох, банковский кассир.",
+      "chapter": "ad-radio-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "банковского кассира Рафаэля «Рея» Блоха (1884—1952)"
+      }
+    },
+    {
+      "key": "relocation-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Уэяуэгу из-за болезни жены",
+      "long": "Блох ушёл из рекламного агентства и переехал в Уэяуэгу, родной город жены Марион, страдавшей туберкулёзом кости.",
+      "place": {
+        "label": "Уэяуэга"
+      },
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloch left in 1953 and moved to Weyauwega, Marion's home town, so she could be close to friends and family."
+      }
+    },
+    {
+      "key": "poverty-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Три романа за год ради заработка",
+      "long": "Ради содержания семьи Блох выпустил за год три романа.",
+      "works": [
+        {
+          "ref": "the-kidnapper"
+        }
+      ],
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloch published three novels in 1954 – Spiderweb, The Kidnapper and The Will to Kill as he endeavored to support his family."
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Хьюго» за лучший рассказ",
+      "long": "Блох получил премию «Хьюго» за лучший рассказ.",
+      "works": [
+        {
+          "ref": "that-hell-bound-train"
+        }
+      ],
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloch won the Hugo Award for Best Short Story for \"That Hellbound Train\" in 1959"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Фильм Хичкока по роману и мировая известность",
+      "long": "Фильм Хичкока по роману принёс Блоху главную известность, хотя в съёмках он почти не участвовал и дополнительных выплат не получил.",
+      "works": [
+        {
+          "ref": "psycho-1959",
+          "note": "Блох называл поводом саму ситуацию — убийца, незамеченный в типичном городке (интервью, воспоминания)"
+        }
+      ],
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He is best known as the writer of the novel Psycho (1959), the basis for the 1960 film Psycho directed by Alfred Hitchcock."
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Голливуд, работа на телевидении",
+      "long": "После переезда в Голливуд Блох стал часто писать сценарии для телевидения и кино в жанре детектива, саспенса и ужасов.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following his move to Hollywood, around 1960, Bloch had multiple assignments from various television companies."
+      }
+    },
+    {
+      "key": "family-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Марион",
+      "long": "Брак с Марион закончился разводом; дочь осталась жить с отцом.",
+      "chapter": "weyauwega-psycho",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Although she was eventually cured of tuberculosis, she and Bloch divorced in 1963."
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964-10-16",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элеонорой Александр",
+      "long": "Блох женился на Элеоноре («Элли») Александр, овдовевшей за три месяца до этого; медовый месяц провели на Таити. Брак длился до его смерти.",
+      "chapter": "hollywood-elly",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году Блох встретил недавно овдовевшую Элеонору Александр. Они поженились 16 октября этого же года"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарии для «Звёздного пути»",
+      "long": "Блох написал три сценария для оригинального сериала «Звёздный путь».",
+      "works": [
+        {
+          "ref": "a-toy-for-juliette"
+        }
+      ],
+      "chapter": "hollywood-elly",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He penned three scripts for the original Star Trek series which were screened in 1966 and 1967"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Ассоциации детективных писателей США",
+      "long": "Блох возглавил Ассоциацию детективных писателей США.",
+      "chapter": "hollywood-elly",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году Блох был избран на пост председателя Ассоциации детективных писателей США."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за заслуги перед жанром в Провиденсе",
+      "long": "Блох получил премию за заслуги перед жанром — бюст Лавкрафта; это был его первый визит в Провиденс.",
+      "place": {
+        "label": "Провиденс"
+      },
+      "chapter": "hollywood-elly",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1975, Bloch won the Lifetime Achievement Award at the First World Fantasy Convention held in Providence, Rhode Island."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за заслуги перед жанром",
+      "long": "Блох получил премию Брэма Стокера за заслуги перед жанром.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Брэма Стокера за заслуги перед жанром 1989-01-01"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия гроссмейстера Всемирной конвенции ужасов",
+      "long": "Блох получил премию гроссмейстера Всемирной конвенции ужасов.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия гроссмейстера Всемирной конвенции ужасов 1991-01-01"
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Собственный некролог",
+      "long": "Журнал «Locus» назвал это шуткой человека, всю жизнь писавшего о смерти.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1994 года Роберт Блох публикует свой собственный некролог."
+      }
+    },
+    {
+      "key": "death-1994",
+      "date": {
+        "from": "1994-09-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Блох умер от рака; прах захоронен в колумбарии Вествудского кладбища в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloch died on September 23, 1994, from cancer aged 77."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "psycho-1959",
+      "title": "Психо",
+      "qid": "Q1275361",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "the-scarf",
+      "title": "Шарф",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "the-opener-of-the-way",
+      "title": "The Opener of the Way",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "that-hell-bound-train",
+      "title": "Этот поезд в ад",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "yours-truly-jack-the-ripper",
+      "title": "Искренне ваш, Джек-потрошитель",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "shambler-from-the-stars",
+      "title": "Звёздный бродяга",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "feast-in-the-abbey",
+      "title": "Пир в аббатстве",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "the-kidnapper",
+      "title": "The Kidnapper",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "the-dead-beat",
+      "title": "The Dead Beat",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "the-couch",
+      "title": "The Couch",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "a-toy-for-juliette",
+      "title": "Игрушка для Джульетты",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "american-gothic",
+      "title": "American Gothic",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "strange-eons",
+      "title": "Strange Eons",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "psycho-ii",
+      "title": "Психо II",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "night-of-the-ripper",
+      "title": "Night of the Ripper",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "psycho-house",
+      "title": "Дом Психо",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "once-around-the-bloch",
+      "title": "Once Around the Bloch",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    }
+  ]
+}

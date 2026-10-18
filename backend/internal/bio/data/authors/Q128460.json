@@ -1,0 +1,496 @@
+{
+  "qid": "Q128460",
+  "name": "Шарль Перро",
+  "born": "1628-01-12",
+  "died": "1703-05-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D1%80%D0%BE%2C_%D0%A8%D0%B0%D1%80%D0%BB%D1%8C",
+      "rev": 152534975
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Charles_Perrault",
+      "rev": 1375794629
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Charles_Perrault",
+      "rev": 239795149
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Дети, коллеж и адвокатура",
+      "from": 1628,
+      "to": 1662
+    },
+    {
+      "key": "colbert",
+      "title": "При Кольбере",
+      "from": 1663,
+      "to": 1682
+    },
+    {
+      "key": "quarrel",
+      "title": "Опала и спор о древних и новых",
+      "from": 1683,
+      "to": 1696
+    },
+    {
+      "key": "tales",
+      "title": "Сказки матушки Гусыни",
+      "from": 1697,
+      "to": 1703
+    }
+  ],
+  "events": [
+    {
+      "key": "loss-1628",
+      "date": {
+        "from": "1628",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата-близнеца Франсуа",
+      "long": "Вместе с Шарлем родился брат-близнец Франсуа, умерший через шесть месяцев.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Шарль Перро родился 12 января 1628 года в Париже … брат-близнец Франсуа, умерший через 6 месяцев"
+      }
+    },
+    {
+      "key": "birth-1628",
+      "date": {
+        "from": "1628-01-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился в Париже, младшим из детей судьи Парижского парламента Пьера Перро.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Шарль Перро родился 12 января 1628 года в Париже"
+      }
+    },
+    {
+      "key": "education-1651",
+      "date": {
+        "from": "1651",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Звание адвоката",
+      "long": "Получил степень лиценциата права и был принят в адвокаты, но вскоре тяготился адвокатской службой.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Reçu avocat en 1651 après avoir obtenu sa licence de droit, il s'inscrit au barreau"
+      }
+    },
+    {
+      "key": "loss-1652",
+      "date": {
+        "from": "1652",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Пьер Перро, адвокат Парижского парламента.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "son père Pierre († 1652), avocat au Parlement de Paris"
+      }
+    },
+    {
+      "key": "career-1654",
+      "date": {
+        "from": "1654",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба клерком у брата",
+      "long": "Поселился у брата Пьера, купившего должность главного сборщика налогов Парижа, и стал его клерком; служба оставляла время для поэзии.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1654, he moved in with his brother Pierre, who had purchased the position of chief tax collector of the city of Paris."
+      }
+    },
+    {
+      "key": "loss-1657",
+      "date": {
+        "from": "1657",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Пакетта Леклерк.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Paquette Le Clerc († 1657)"
+      }
+    },
+    {
+      "key": "career-1663",
+      "date": {
+        "from": "1663",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Секретарь Академии надписей при Кольбере",
+      "long": "По протекции Кольбера назначен секретарём вновь созданной Академии надписей и изящной словесности; во многом определял художественную политику двора Людовика XIV.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "colbert",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Благодаря Жану Кольберу Шарль Перро в 1663 году назначен секретарём вновь образованной Академии надписей и изящной словесности."
+      }
+    },
+    {
+      "key": "career-1667",
+      "date": {
+        "from": "1667-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Брат Клод в комиссии по фасаду Лувра",
+      "long": "Добился назначения брата Клода в комиссию, разработавшую восточный фасад Лувра (колоннаду).",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "colbert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in April 1667 he was able to get his brother, Claude Perrault, appointed to a committee of three"
+      }
+    },
+    {
+      "key": "career-1669",
+      "date": {
+        "from": "1669",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Совет по лабиринту Версаля",
+      "long": "Посоветовал Людовику XIV украсить лабиринт Версаля тридцатью девятью фонтанами по басням Эзопа.",
+      "place": {
+        "label": "Версаль"
+      },
+      "chapter": "colbert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1669 Perrault advised Louis XIV to include thirty-nine fountains each representing one of the fables of Aesop in the labyrinth of Versailles"
+      }
+    },
+    {
+      "key": "career-1671",
+      "date": {
+        "from": "1671",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание во Французскую академию",
+      "long": "По настоянию Кольбера избран во Французскую академию.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "colbert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At Colbert's instigation, Perrault was elected to the Académie française in 1671."
+      }
+    },
+    {
+      "key": "career-1672",
+      "date": {
+        "from": "1672",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контролёр королевских строений",
+      "long": "Занял пост генерального контролёра сюринтендантства королевских строений.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "colbert",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "puis en 1672 en tant que contrôleur général de la Surintendance des bâtiments du roi"
+      }
+    },
+    {
+      "key": "love-1672",
+      "date": {
+        "from": "1672-04-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мари Гишон",
+      "long": "Женился на 19-летней Мари Гишон; в браке родились четверо детей.",
+      "chapter": "colbert",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1672 году он женился на Мари Гишон, которой было 19 лет."
+      }
+    },
+    {
+      "key": "loss-1678",
+      "date": {
+        "from": "1678",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мари Гишон",
+      "long": "Умерла жена, Мари Гишон; младшие дети остались на попечении отца.",
+      "chapter": "colbert",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1672 году он женился на Мари Гишон, которой было 19 лет. Она умерла в 1678 году."
+      }
+    },
+    {
+      "key": "child-1678",
+      "date": {
+        "from": "1678",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Пьера",
+      "long": "Родился младший сын Пьер, позже получивший имя Пьер Перро д’Арманкур.",
+      "chapter": "colbert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He had actually published his collection under the name of his last son (born in 1678), Pierre (Perrault) Darmancourt"
+      }
+    },
+    {
+      "key": "career-1683",
+      "date": {
+        "from": "1683",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Смерть Кольбера, опала и потеря пенсии",
+      "long": "После смерти Кольбера попал в немилость, потерял пенсию литератора и придворные должности.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "quarrel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти своего покровителя в 1683 году он впал в немилость и потерял выплачивавшуюся ему как литератору пенсию"
+      }
+    },
+    {
+      "key": "faith-1686",
+      "date": {
+        "from": "1686",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Религиозная эпическая поэма и насмешки Буало",
+      "long": "Обратился к эпической поэзии на религиозный сюжет; поэма стала мишенью насмешек Буало.",
+      "works": [
+        {
+          "ref": "saint-paulin"
+        }
+      ],
+      "chapter": "quarrel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After this, in 1686, Perrault decided to write epic poetry and show his genuine devotion to Christianity, writing Saint Paulin, évêque de Nôle"
+      }
+    },
+    {
+      "key": "creation-1687",
+      "date": {
+        "from": "1687-01-27",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало спора древних и новых",
+      "long": "Прочёл в Академии поэму, поставившую XVII век выше античности; Буало возмутился. Так начался спор древних и новых, главой «новых» стал Перро.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "siecle-de-louis-le-grand"
+        },
+        {
+          "ref": "parallele-des-anciens-et-des-modernes"
+        }
+      ],
+      "chapter": "quarrel",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 27 janvier 1687, Charles Perrault faire lire à l’Académie française un poème intitulé le Siècle de Louis le Grand."
+      }
+    },
+    {
+      "key": "other-1694",
+      "date": {
+        "from": "1694",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Примирение с Буало",
+      "long": "При посредничестве Антуана Арно примирился с Буало, хотя полемика ещё продолжалась.",
+      "chapter": "quarrel",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Les deux ennemis se sont réconciliés, du moins en apparence, en 1694, après médiation de leur ami commun Antoine Arnauld"
+      }
+    },
+    {
+      "key": "career-1695",
+      "date": {
+        "from": "1695",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Потеря места секретаря",
+      "long": "Лишился места секретаря Академии и решил посвятить себя детям.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "contes-de-ma-mere-l-oye",
+          "note": "после потери должности занялся детьми и сказками; первая рукописная версия сказок датируется 1695 годом"
+        }
+      ],
+      "chapter": "quarrel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1695 году лишился и места секретаря."
+      }
+    },
+    {
+      "key": "creation-1697",
+      "date": {
+        "from": "1697",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Сказки под именем сына",
+      "long": "Сборник восьми сказок вышел под именем 19-летнего сына Пьера Перро д’Арманкура; книга принесла автору известность за пределами литературного круга.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "contes-de-ma-mere-l-oye"
+        }
+      ],
+      "chapter": "tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1697 году Перро опубликовал сборник «Сказки матушки Гусыни, или Истории и сказки былых времён с поучениями» … Свои сказки Перро издал не под собственным именем, а под именем своего 19-летнего сына Пьера Перро д’Арманкура"
+      }
+    },
+    {
+      "key": "death-1703",
+      "date": {
+        "from": "1703-05-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже",
+      "long": "Умер в Париже в возрасте 75 лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Шарль Перро скончался 16 мая 1703 года в возрасте 75 лет в Париже."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "murs-de-troie",
+      "title": "Стены Трои, или Происхождение бурлеска",
+      "written": {
+        "from": 1653,
+        "to": 1653
+      }
+    },
+    {
+      "ref": "siecle-de-louis-le-grand",
+      "title": "Век Людовика Великого",
+      "written": {
+        "from": 1687,
+        "to": 1687
+      }
+    },
+    {
+      "ref": "parallele-des-anciens-et-des-modernes",
+      "title": "Параллели между древними и новыми",
+      "written": {
+        "from": 1688,
+        "to": 1697
+      }
+    },
+    {
+      "ref": "saint-paulin",
+      "title": "Святой Павлин, епископ Нольский",
+      "written": {
+        "from": 1686,
+        "to": 1686
+      }
+    },
+    {
+      "ref": "contes-de-ma-mere-l-oye",
+      "title": "Сказки матушки Гусыни",
+      "qid": "Q5104112",
+      "written": {
+        "from": 1695,
+        "to": 1697
+      }
+    }
+  ]
+}
