@@ -1,0 +1,78 @@
+{
+  "qid": "Q610567",
+  "name": "Майк Кэри",
+  "born": "1959",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mike_Carey_%28writer%29",
+      "rev": 1380374211
+    }
+  ],
+  "chapters": [
+    {
+      "key": "liverpool-oxford",
+      "title": "Ливерпуль и Оксфорд",
+      "from": 1959,
+      "to": 1990
+    },
+    {
+      "key": "teacher-comics",
+      "title": "Учитель, ставший автором комиксов",
+      "from": 1991,
+      "to": 2005
+    },
+    {
+      "key": "vertigo-marvel",
+      "title": "Vertigo, Marvel и первый роман",
+      "from": 2006,
+      "to": 2013
+    },
+    {
+      "key": "carey-mr",
+      "title": "M. R. Carey и экранизация",
+      "from": 2014,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ливерпуле",
+      "long": "Родился в Ливерпуле, Англия.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "liverpool-oxford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carey was born in Liverpool, England, in 1959."
+      }
+    },
+    {
+      "key": "other-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Детское увлечение комиксами",
+      "long": "В детстве увлёкся комиксами, писал и рисовал для младшего брата простые истории.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "liverpool-oxford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As a child, he maintained an interest in comics, writing and drawing primitive stories to entertain his younger brother."
+      }
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "qid": "Q4211820",
+  "name": "Вера Камша",
+  "born": "1962-11-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BC%D1%88%D0%B0%2C_%D0%92%D0%B5%D1%80%D0%B0_%D0%92%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 153796852
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Vera_Kamsha",
+      "rev": 1371708383
+    }
+  ],
+  "chapters": [
+    {
+      "key": "lvov-leningrad",
+      "title": "Львов и Ленинград",
+      "from": 1962,
+      "to": 1993
+    },
+    {
+      "key": "zhurnalistika",
+      "title": "Журналистика",
+      "from": 1994,
+      "to": 2000
+    },
+    {
+      "key": "fentezi",
+      "title": "Встреча с Перумовым и фэнтези",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-11-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Львове",
+      "long": "Родилась во Львове, в Украинской ССР.",
+      "place": {
+        "label": "Львов"
+      },
+      "chapter": "lvov-leningrad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "5 ноября 1962, Львов, Украинская ССР"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы журналистом",
+      "long": "После работы помощником депутата Ленсовета в Ленинграде занялась журналистикой.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем, в 1994 году занялась журналистикой"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Знакомство с Ником Перумовым",
+      "long": "Знакомство с Ником Перумовым, у которого она брала интервью, стало поворотным в карьере; под его влиянием она начала писать и издавать фэнтези.",
+      "works": [
+        {
+          "ref": "dark-star",
+          "note": "первый роман написан под влиянием Перумова"
+        },
+        {
+          "ref": "chronicles-of-arcia",
+          "note": "цикл возник под влиянием произведений Перумова"
+        }
+      ],
+      "chapter": "fentezi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The turning point in her career was her 2001 meeting with Nick Perumov"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dark-star",
+      "title": "Тёмная звезда",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "chronicles-of-arcia",
+      "title": "Хроники Арции",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    }
+  ]
+}

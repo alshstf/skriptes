@@ -1,0 +1,813 @@
+{
+  "qid": "Q484779",
+  "name": "Люк Бессон",
+  "born": "1959-03-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D1%81%D1%81%D0%BE%D0%BD%2C_%D0%9B%D1%8E%D0%BA",
+      "rev": 154897173
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Luc_Besson",
+      "rev": 1380666707
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Luc_Besson",
+      "rev": 240335871
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-and-cinema",
+      "title": "Подводный мир и первые шаги в кино",
+      "from": 1959,
+      "to": 1982
+    },
+    {
+      "key": "first-films",
+      "title": "Подземка, Большая синева, браки",
+      "from": 1983,
+      "to": 1991
+    },
+    {
+      "key": "leon-fifth-element",
+      "title": "Майвенн, Милла, Пятый элемент",
+      "from": 1992,
+      "to": 1999
+    },
+    {
+      "key": "europacorp",
+      "title": "EuropaCorp и киноимперия",
+      "from": 2000,
+      "to": 2016
+    },
+    {
+      "key": "crisis-and-return",
+      "title": "Провалы, обвинения, возвращение",
+      "from": 2017,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1959",
+      "date": {
+        "from": "1959-03-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился в Париже в семье инструкторов по подводному плаванию Club Med.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood-and-cinema",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Luc Paul Maurice Besson (born 18 March 1959) is a French filmmaker."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый короткометражный фильм",
+      "long": "Первая режиссёрская работа — короткометражка «Предпоследний»; её сюжет лёг в основу первого полнометражного фильма.",
+      "works": [
+        {
+          "ref": "the-last-battle"
+        }
+      ],
+      "chapter": "childhood-and-cinema",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il réalise son premier court métrage en 1981, L'Avant-dernier."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный полнометражный фильм и приз в Авориазе",
+      "long": "Первый полнометражный фильм, снятый в чёрно-белом CinemaScope, отмечен на фестивале фантастического кино в Авориазе; в 1983 году получил и приз в Ситжесе.",
+      "works": [
+        {
+          "ref": "the-last-battle"
+        }
+      ],
+      "chapter": "first-films",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "est distingué au Festival international du film fantastique d'Avoriaz en 1983"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Номинация BAFTA и широкое признание",
+      "long": "Третий фильм принёс Бессону широкое признание и номинацию Британской киноакадемии.",
+      "works": [
+        {
+          "ref": "subway"
+        }
+      ],
+      "chapter": "first-films",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наиболее широкое признание Люк Бессон получил после выхода на экраны своего третьего фильма «Подземка», за который он был номинирован на «Лучший фильм на иностранном языке» Британской киноакадемии в 1986 году."
+      }
+    },
+    {
+      "key": "love-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с актрисой Анн Парийо",
+      "long": "Женился на актрисе Анн Парийо, позднее сыгравшей главную роль в «Никите».",
+      "works": [
+        {
+          "ref": "nikita"
+        }
+      ],
+      "chapter": "first-films",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1986 по 1991 год Бессон был женат на актрисе Анн Парийо, сыгравшей главную роль в его фильме «Никита» (1990)."
+      }
+    },
+    {
+      "key": "child-1987",
+      "date": {
+        "from": "1987-05-21",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Жюльетт",
+      "long": "Родилась дочь Жюльетт, первый ребёнок Бессона и Парийо.",
+      "chapter": "first-films",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Juliette Besson née le 21 mai 1987."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Каннская премьера и зрительский успех",
+      "long": "Фильм был разруган на каннской премьере, но имел огромный зрительский успех и стал культовым для французской молодёжи.",
+      "place": {
+        "label": "Канны"
+      },
+      "works": [
+        {
+          "ref": "the-big-blue"
+        }
+      ],
+      "chapter": "first-films",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When the film had its premiere on opening night at the 1988 Cannes Film Festival, it was mercilessly drubbed, but no matter; it was a smash"
+      }
+    },
+    {
+      "key": "family-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Анн Парийо",
+      "long": "Брак с Анн Парийо закончился разводом.",
+      "chapter": "first-films",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They divorced in 1991."
+      }
+    },
+    {
+      "key": "love-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Майвенн",
+      "long": "Женился на Майвенн: отношения начались, когда ей было 15 лет, а ему 31. По словам Майвенн, эти отношения вдохновили фильм «Леон».",
+      "works": [
+        {
+          "ref": "leon",
+          "note": "по словам Майвенн, их отношения вдохновили Бессона на фильм"
+        }
+      ],
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они поженились в 1992 году, когда она была беременна их дочерью Шанной, родившейся 3 января 1993 года."
+      }
+    },
+    {
+      "key": "child-1993",
+      "date": {
+        "from": "1993-01-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Шанны",
+      "long": "Родилась дочь Шанна, ребёнок Бессона и Майвенн.",
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они поженились в 1992 году, когда она была беременна их дочерью Шанной, родившейся 3 января 1993 года."
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Бойкот церемонии «Сезар»",
+      "long": "Бессон бойкотировал церемонию «Сезар» после того, как приз за лучший иностранный фильм получил «Четыре свадьбы и одни похороны», а не «Список Шиндлера».",
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1994, lors de la 20e cérémonie des César, il boycotte la cérémonie, à la suite de la remise du César du meilleur film étranger à Quatre Mariages et un enterrement"
+      }
+    },
+    {
+      "key": "relocation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лос-Анджелес ради съёмок",
+      "long": "Переехал в Лос-Анджелес с семьёй ради съёмок самого дорогого на тот момент французского фильма.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "works": [
+        {
+          "ref": "fifth-element"
+        }
+      ],
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1997, il s'installe à Los Angeles avec son épouse, la comédienne Maïwenn, et leur fille Shanna, pour le tournage avec Gaumont du film français le plus coûteux de l'histoire"
+      }
+    },
+    {
+      "key": "love-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Конец брака с Майвенн, роман с Миллой Йовович",
+      "long": "Брак с Майвенн закончился: во время съёмок Бессон начал отношения с Миллой Йовович.",
+      "works": [
+        {
+          "ref": "fifth-element"
+        }
+      ],
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Их брак закончился в 1997 году, когда Бессон начал отношения с актрисой Миллой Йовович во время съёмок «Пятого элемента»."
+      }
+    },
+    {
+      "key": "love-1997-2",
+      "date": {
+        "from": "1997-12-14",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Миллой Йовович",
+      "long": "Женился на Милле Йовович; через полтора года брак был расторгнут.",
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il épouse celle-ci le 14 décembre 1997 puis en divorce le 12 juin 1999."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Сезар» за лучшую режиссуру",
+      "long": "Получил «Сезар» за лучшую режиссуру.",
+      "works": [
+        {
+          "ref": "fifth-element"
+        }
+      ],
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия «Сезар» за лучшую режиссуру (1998) — за фильм «Пятый элемент»."
+      }
+    },
+    {
+      "key": "family-1999",
+      "date": {
+        "from": "1999-06-12",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Миллой Йовович",
+      "long": "Развод с Миллой Йовович.",
+      "chapter": "leon-fifth-element",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il épouse celle-ci le 14 décembre 1997 puis en divorce le 12 juin 1999."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание студии EuropaCorp",
+      "long": "Основал вместе с Пьер-Анжем Ле Погамом студию EuropaCorp и стал преимущественно продюсером и сценаристом.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2000, Besson superseded his production company by co-founding EuropaCorp with Pierre-Ange Le Pogam"
+      }
+    },
+    {
+      "key": "career-2000-2",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель жюри Каннского фестиваля",
+      "long": "Возглавил жюри Каннского кинофестиваля.",
+      "place": {
+        "label": "Канны"
+      },
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La présidence du jury lui est confiée au Festival de Cannes 2000."
+      }
+    },
+    {
+      "key": "child-2001",
+      "date": {
+        "from": "2001-08-01",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Талии",
+      "long": "Родилась дочь Талия, первый ребёнок от Виржини Силла.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "avec qui il a trois enfants : Thalia (1er août 2001), Sateen (7 mai 2003) et Mao (16 septembre 2005)."
+      }
+    },
+    {
+      "key": "child-2003",
+      "date": {
+        "from": "2003-05-07",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сатин",
+      "long": "Родилась дочь Сатин.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "avec qui il a trois enfants : Thalia (1er août 2001), Sateen (7 mai 2003) et Mao (16 septembre 2005)."
+      }
+    },
+    {
+      "key": "love-2004",
+      "date": {
+        "from": "2004-08-28",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с продюсером Виржини Силла",
+      "long": "Женился на продюсере Виржини Силла, с которой был знаком с 1990 года.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Depuis le 28 août 2004, il est marié à la productrice Virginie Silla"
+      }
+    },
+    {
+      "key": "child-2005",
+      "date": {
+        "from": "2005-09-16",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Мао",
+      "long": "Родился сын Мао.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "avec qui il a trois enfants : Thalia (1er août 2001), Sateen (7 mai 2003) et Mao (16 septembre 2005)."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход EuropaCorp на биржу",
+      "long": "EuropaCorp вышла на биржу, чтобы при поддержке государства финансировать собственные студии Cité du Cinéma.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "EuropaCorp went public in 2006 to finance, with the help of the State, its own studios at the Cité du Cinéma."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание школы кино École de la Cité",
+      "long": "Основал бесплатную школу сценаристов и режиссёров без требований к образованию.",
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2012, il y fonde l'École de la Cité, qui propose des formations gratuites et sans condition de diplôme aux métiers de scénariste et réalisateur."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Рекордный мировой успех после череды неудач",
+      "long": "После нескольких неудач фильм стал самым кассовым французским фильмом в мире (469 млн долларов).",
+      "works": [
+        {
+          "ref": "lucy"
+        }
+      ],
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After several failures, Besson returned to creative form and to international success with Lucy (2014), which became the world's most successful French feature film"
+      }
+    },
+    {
+      "key": "other-2016",
+      "date": {
+        "from": "2016-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Суд по делу о плагиате фильма «Lock Out»",
+      "long": "Апелляционный суд Парижа признал фильм «Особо охраняемая территория» плагиатом «Нью-Йорка 1997» и присудил выплатить 465 тысяч евро.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "europacorp",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En juillet 2016, Luc Besson, ses deux co-scénaristes Stephen St. Leger et James Mather, ainsi que sa société EuropaCorp sont condamnés par la cour d'appel de Paris à verser 465 000 euros"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Провал самого дорогого фильма",
+      "long": "Самый дорогой европейский независимый фильм (бюджет около 180 млн долларов) не окупился; акции EuropaCorp резко упали.",
+      "works": [
+        {
+          "ref": "valerian"
+        }
+      ],
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "But by the summer of 2017, Chinese critics were snubbing it and the investment seemed impossible to make profitable."
+      }
+    },
+    {
+      "key": "other-2018",
+      "date": {
+        "from": "2018-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Обвинение в изнасиловании, дело Ван Рой",
+      "long": "Актриса Сэнд Ван Рой обвинила Бессона в изнасиловании; он обвинения отверг. Позднее ещё несколько женщин заявили о сексуальных домогательствах.",
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 2018 года Бессон был обвинён в изнасиловании. Обвинения были выдвинуты актрисой Сэнд Ван Рой. Адвокат Бессона отверг обвинения."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Грань банкротства EuropaCorp",
+      "long": "Новый провал привёл EuropaCorp на грань банкротства; компания перешла кредитору, бесплатная школа была закрыта.",
+      "works": [
+        {
+          "ref": "anna"
+        }
+      ],
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Besson's failure was repeated with his next film, Anna (2019), placing his company in near bankruptcy and forcing him to sell it to a creditor and then close the free"
+      }
+    },
+    {
+      "key": "creation-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Съёмки на смартфоны во время пандемии",
+      "long": "Во время пандемии снял на смартфоны малобюджетный фильм с командой из 12 человек.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "works": [
+        {
+          "ref": "june-and-john"
+        }
+      ],
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Besson's film June \u0026 John (2025) was shot guerrilla-style in Los Angeles in 2020, during the COVID-19 pandemic."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход с поста гендиректора EuropaCorp",
+      "long": "Бессон оставил пост гендиректора EuropaCorp, сохранив председательство в совете и роль художественного руководителя.",
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En août 2020, le conseil d'administration d'EuropaCorp nomme un nouveau directeur général, Axel Duroux, qui remplace Luc Besson."
+      }
+    },
+    {
+      "key": "other-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Окончательное прекращение дела судом",
+      "long": "Кассационный суд окончательно прекратил дело по обвинению Сэнд Ван Рой.",
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2023 году Кассационный суд (высшая судебная инстанция Франции) окончательно вынес решение в пользу Люка Бессона, прекратив дело."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023-08-31",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премьера в конкурсе Венецианского фестиваля",
+      "long": "Фильм, снятый в студии виртуального производства и в Нью-Джерси, участвовал в конкурсе Венецианского фестиваля.",
+      "place": {
+        "label": "Венеция"
+      },
+      "works": [
+        {
+          "ref": "dogman"
+        }
+      ],
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dogman was selected to compete for the Golden Lion at the 80th Venice International Film Festival, where it had its world premiere on 31 August 2023."
+      }
+    },
+    {
+      "key": "creation-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Съёмки нового фильма о вампире",
+      "long": "Снял экранизацию «Дракулы»; фильм стал самым кассовым французским фильмом 2025 года.",
+      "works": [
+        {
+          "ref": "dracula"
+        }
+      ],
+      "chapter": "crisis-and-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In summer 2024, Besson directed Dracula, an adaptation of Dracula starring Caleb Landry Jones and featuring Christoph Waltz."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-last-battle",
+      "title": "Последняя битва",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "subway",
+      "title": "Подземка",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "the-big-blue",
+      "title": "Голубая бездна",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "nikita",
+      "title": "Никита",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "leon",
+      "title": "Леон",
+      "qid": "Q484675",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "fifth-element",
+      "title": "Пятый элемент",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "joan-of-arc",
+      "title": "Жанна д’Арк",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "arthur-and-the-minimoys",
+      "title": "Артур и минипуты",
+      "qid": "Q550232",
+      "written": {
+        "from": 2002,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "lucy",
+      "title": "Люси",
+      "written": {
+        "from": 2013,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "valerian",
+      "title": "Валериан и город тысячи планет",
+      "written": {
+        "from": 2016,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "anna",
+      "title": "Анна",
+      "written": {
+        "from": 2017,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "june-and-john",
+      "title": "Джун и Джон",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "dogman",
+      "title": "Догмэн",
+      "written": {
+        "from": 2022,
+        "to": 2023
+      }
+    },
+    {
+      "ref": "dracula",
+      "title": "Дракула",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

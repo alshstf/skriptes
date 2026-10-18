@@ -1,0 +1,659 @@
+{
+  "qid": "Q79759",
+  "name": "Джон Мильтон",
+  "born": "1608-12-09",
+  "died": "1674-11-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B8%D0%BB%D1%8C%D1%82%D0%BE%D0%BD%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 154898430
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Milton",
+      "rev": 1378908503
+    }
+  ],
+  "chapters": [
+    {
+      "key": "school-and-cambridge",
+      "title": "Школа, Кембридж, годы учения",
+      "from": 1608,
+      "to": 1637
+    },
+    {
+      "key": "italy-and-divorce",
+      "title": "Италия, брак и трактаты о разводе",
+      "from": 1638,
+      "to": 1648
+    },
+    {
+      "key": "secretary-and-blindness",
+      "title": "Секретарь Республики, слепота, утраты",
+      "from": 1649,
+      "to": 1659
+    },
+    {
+      "key": "restoration",
+      "title": "Реставрация и великие поэмы",
+      "from": 1660,
+      "to": 1674
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1608",
+      "date": {
+        "from": "1608-12-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился на Бред-стрит в Лондоне в семье нотариуса и композитора Джона Мильтона и Сары Джеффри.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "school-and-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John Milton was born in Bread Street, London, on 9 December 1608"
+      }
+    },
+    {
+      "key": "education-1615",
+      "date": {
+        "from": "1615",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Святого Павла",
+      "long": "Поступил в лондонскую школу Святого Павла, одну из лучших грамматических школ страны; до этого учился у частного учителя Томаса Янга.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "school-and-cambridge",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1615 году (или, возможно, в 1620) Мильтон поступил в школу Святого Павла"
+      }
+    },
+    {
+      "key": "education-1625",
+      "date": {
+        "from": "1625",
+        "to": "1632",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в Колледже Христа, Кембридж",
+      "long": "В 1625 году поступил в Колледж Христа Кембриджского университета, в 1629 получил степень бакалавра, в 1632 — магистра.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "school-and-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1625, Milton gained entry to Christ's College at the University of Cambridge, where he graduated with a BA in 1629"
+      }
+    },
+    {
+      "key": "education-1635",
+      "date": {
+        "from": "1635",
+        "to": "1638",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Годы самообразования в Хортоне",
+      "long": "С 1635 года жил в Хортоне и шесть лет занимался самостоятельным изучением богословия, философии, истории и литературы.",
+      "place": {
+        "label": "Хортон"
+      },
+      "works": [
+        {
+          "ref": "comus"
+        }
+      ],
+      "chapter": "school-and-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He also lived at Horton, Berkshire, from 1635 and undertook six years of self-directed private study."
+      }
+    },
+    {
+      "key": "loss-1637",
+      "date": {
+        "from": "1637-04-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Мать поэта, Сара Джеффри, умерла 3 апреля 1637 года.",
+      "chapter": "school-and-cambridge",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Sara Jeffrey died 1637-04-03"
+      }
+    },
+    {
+      "key": "relocation-1638",
+      "date": {
+        "from": "1638-05",
+        "to": "1639-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Путешествие по Франции и Италии",
+      "long": "В мае 1638 года отправился в 15-месячное путешествие по Франции и Италии, встречался с Гуго Гроцием и другими учёными и поэтами.",
+      "place": {
+        "label": "Париж, Флоренция, Рим"
+      },
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1638, accompanied by a manservant, Milton embarked upon a tour of France and Italy for 15 months"
+      }
+    },
+    {
+      "key": "other-1638",
+      "date": {
+        "from": "1638-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Встреча с Галилеем во Флоренции",
+      "long": "Во Флоренции познакомился с Галилеем, находившимся под домашним арестом в Арчетри, и вошёл в круг флорентийских литераторов.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He reached Florence in July 1638. … he met the astronomer Galileo who was under house arrest at Arcetri"
+      }
+    },
+    {
+      "key": "love-1642",
+      "date": {
+        "from": "1642-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мэри Поуэл",
+      "long": "В июне 1642 года в возрасте 34 лет женился на 17-летней Мэри Поуэл; брак с самого начала сложился неудачно.",
+      "place": {
+        "label": "Форест-Хилл"
+      },
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1642, Milton paid a visit to the manor house at Forest Hill, Oxfordshire, and, aged 34, married the 17-year-old Mary Powell."
+      }
+    },
+    {
+      "key": "persecution-1643",
+      "date": {
+        "from": "1643",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Столкновение с властями из-за трактатов о разводе",
+      "long": "В 1643 году трактаты о разводе навлекли на Мильтона неприятности с властями; пресвитериане сочли его взгляды ересью.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "areopagitica",
+          "note": "враждебный приём трактатов о разводе побудил Мильтона написать «Ареопагитику»"
+        }
+      ],
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1643, Milton had a brush with the authorities over these writings"
+      }
+    },
+    {
+      "key": "child-1646",
+      "date": {
+        "from": "1646-07-07",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны",
+      "long": "После примирения с Мэри в семье родилась старшая дочь Анна.",
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Anne Milton 1646-07-07"
+      }
+    },
+    {
+      "key": "loss-1647",
+      "date": {
+        "from": "1647",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец поэта, Джон Мильтон-старший, лондонский нотариус и композитор.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Мильтон-старший (1562?—1647)"
+      }
+    },
+    {
+      "key": "child-1648",
+      "date": {
+        "from": "1648-10-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Мэри",
+      "long": "Родилась вторая дочь Мэри.",
+      "chapter": "italy-and-divorce",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Mary Milton 1648-10-25"
+      }
+    },
+    {
+      "key": "career-1649",
+      "date": {
+        "from": "1649",
+        "to": "1660",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Секретарь по иностранным языкам при Государственном совете",
+      "long": "С марта 1649 года вёл латинскую иностранную переписку республики, а также писал пропагандистские сочинения и служил цензором; в должности оставался до 1660 года.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "eikonoklastes"
+        },
+        {
+          "ref": "defensio-pro-populo-anglicano",
+          "note": "написана по поручению Государственного совета"
+        }
+      ],
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Milton's political reputation got him appointed Secretary for Foreign Tongues by the Council of State in March 1649."
+      }
+    },
+    {
+      "key": "illness-1652",
+      "date": {
+        "from": "1652",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Полная слепота",
+      "long": "К началу 1652 года Мильтон полностью ослеп; с тех пор диктовал стихи и прозу помощникам.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "paradise-lost",
+          "note": "поэма сочинялась слепым поэтом и диктовалась помощникам"
+        }
+      ],
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 1652 года Мильтон полностью ослеп."
+      }
+    },
+    {
+      "key": "career-1652",
+      "date": {
+        "from": "1652-02-24",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Европейская известность после латинского памфлета",
+      "long": "Латинская «Защита английского народа», опубликованная 24 февраля 1652 года, принесла Мильтону европейскую репутацию.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "defensio-pro-populo-anglicano"
+        }
+      ],
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 24 February 1652, Milton published his Latin defence of the English people Defensio pro Populo Anglicano, also known as the First Defence."
+      }
+    },
+    {
+      "key": "loss-1652",
+      "date": {
+        "from": "1652-05-05",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мэри Поуэл",
+      "long": "Мэри Поуэл умерла 5 мая 1652 года от осложнений после рождения дочери Деборы.",
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary Powell died on 5 May 1652 from complications following Deborah's birth."
+      }
+    },
+    {
+      "key": "loss-1652-2",
+      "date": {
+        "from": "1652-06",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сына Джона",
+      "long": "Сын Джон, родившийся в марте 1651 года, умер в июне 1652 года.",
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John (16 March 1651 – June 1652)"
+      }
+    },
+    {
+      "key": "love-1656",
+      "date": {
+        "from": "1656-11-12",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак, с Кэтрин Вудкок",
+      "long": "12 ноября 1656 года женился на Кэтрин Вудкок в церкви Св. Маргариты в Вестминстере.",
+      "place": {
+        "label": "Вестминстер"
+      },
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 12 November 1656, Milton married Katherine Woodcock at St Margaret's, Westminster."
+      }
+    },
+    {
+      "key": "other-1658",
+      "date": {
+        "from": "1658",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Смерть Кромвеля и распад республики",
+      "long": "После смерти Кромвеля республика распалась на враждующие военные и политические группировки; Мильтон продолжал отстаивать республиканские взгляды.",
+      "works": [
+        {
+          "ref": "ready-and-easy-way"
+        }
+      ],
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cromwell's death in 1658 caused the English Republic to collapse into feuding military and political factions."
+      }
+    },
+    {
+      "key": "creation-1658",
+      "date": {
+        "from": "1658",
+        "to": "1664",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Сочинение эпоса слепым, нищим поэтом",
+      "long": "«Потерянный рай» создавался в 1658–1664 годах слепым и разорённым Мильтоном, диктовавшим стихи нескольким помощникам.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "paradise-lost"
+        }
+      ],
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Paradise Lost, was composed by the blind and impoverished Milton from 1658 to 1664"
+      }
+    },
+    {
+      "key": "loss-1658",
+      "date": {
+        "from": "1658-02-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть второй жены и новорождённой дочери",
+      "long": "Кэтрин Вудкок умерла 3 февраля 1658 года, менее чем через четыре месяца после рождения дочери, которая тоже умерла.",
+      "chapter": "secretary-and-blindness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died on 3 February 1658, less than four months after giving birth to her daughter Katherine, who also died."
+      }
+    },
+    {
+      "key": "persecution-1660",
+      "date": {
+        "from": "1660-05",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Реставрация: укрытие, ордер на арест, тюрьма",
+      "long": "В мае 1660 года Мильтон скрывался, на него выдали ордер на арест, а сочинения сожгли; после общей амнистии его всё же арестовали, но вскоре освободили по ходатайству друзей.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "ready-and-easy-way"
+        }
+      ],
+      "chapter": "restoration",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Upon the Restoration in May 1660, Milton, fearing for his life, went into hiding, while a warrant was issued for his arrest and his writings were burnt."
+      }
+    },
+    {
+      "key": "love-1663",
+      "date": {
+        "from": "1663-02-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Третий брак, с Элизабет Миншулл",
+      "long": "24 февраля 1663 года женился на 24-летней Элизабет Миншулл; брак продлился более 12 лет, до смерти поэта.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "restoration",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Milton married for a third time on 24 February 1663 to Elizabeth Mynshull or Minshull (1638–1728)"
+      }
+    },
+    {
+      "key": "relocation-1665",
+      "date": {
+        "from": "1665",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Чалфонт-Сент-Джайлс",
+      "long": "Во время Великой лондонской чумы жил в коттедже в Чалфонт-Сент-Джайлс — единственном сохранившемся доме Мильтона.",
+      "place": {
+        "label": "Чалфонт-Сент-Джайлс"
+      },
+      "chapter": "restoration",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Чалфонт-Сент-Джайлс start 1665-01-01"
+      }
+    },
+    {
+      "key": "career-1667",
+      "date": {
+        "from": "1667-04-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа прав на поэму за пять фунтов",
+      "long": "27 апреля 1667 года продал издателю Сэмюэлу Симмонсу права на «Потерянный рай» за 5 фунтов с доплатой по мере распродажи тиражей.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "paradise-lost"
+        }
+      ],
+      "chapter": "restoration",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 27 April 1667, Milton sold the publication rights for Paradise Lost to publisher Samuel Simmons for £5"
+      }
+    },
+    {
+      "key": "death-1674",
+      "date": {
+        "from": "1674-11-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Умер в ноябре 1674 года, похоронен в церкви Св. Жиля без Криплгейта; причиной смерти называют чахотку или подагру.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "restoration",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Milton died on 9 or 10 November 1674, a month before he turned 66."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "paradise-lost",
+      "title": "Потерянный рай",
+      "qid": "Q28754",
+      "written": {
+        "from": 1658,
+        "to": 1664
+      }
+    },
+    {
+      "ref": "paradise-regained",
+      "title": "Возвращённый рай",
+      "written": {
+        "from": 1671,
+        "to": 1671
+      }
+    },
+    {
+      "ref": "samson-agonistes",
+      "title": "Самсон-борец",
+      "written": {
+        "from": 1671,
+        "to": 1671
+      }
+    },
+    {
+      "ref": "areopagitica",
+      "title": "Ареопагитика",
+      "qid": "Q642635",
+      "written": {
+        "from": 1644,
+        "to": 1644
+      }
+    },
+    {
+      "ref": "comus",
+      "title": "Комос",
+      "written": {
+        "from": 1634,
+        "to": 1634
+      }
+    },
+    {
+      "ref": "lycidas",
+      "title": "Люсидас",
+      "written": {
+        "from": 1638,
+        "to": 1638
+      }
+    },
+    {
+      "ref": "doctrine-discipline-divorce",
+      "title": "О разводе",
+      "written": {
+        "from": 1643,
+        "to": 1643
+      }
+    },
+    {
+      "ref": "eikonoklastes",
+      "title": "Иконоборец",
+      "written": {
+        "from": 1649,
+        "to": 1649
+      }
+    },
+    {
+      "ref": "defensio-pro-populo-anglicano",
+      "title": "Защита английского народа",
+      "written": {
+        "from": 1650,
+        "to": 1652
+      }
+    },
+    {
+      "ref": "ready-and-easy-way",
+      "title": "Скорый и лёгкий путь к установлению свободной республики",
+      "written": {
+        "from": 1660,
+        "to": 1660
+      }
+    }
+  ]
+}

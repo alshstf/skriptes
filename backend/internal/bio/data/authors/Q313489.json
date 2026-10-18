@@ -1,0 +1,660 @@
+{
+  "qid": "Q313489",
+  "name": "Джеффри Арчер",
+  "born": "1940-04-15",
+  "died": "2026-10-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D1%80%D1%87%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%B5%D1%84%D1%84%D1%80%D0%B8",
+      "rev": 155634151
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jeffrey_Archer",
+      "rev": 1380904768
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Уэстон-супер-Мар и школа",
+      "from": 1940,
+      "to": 1962
+    },
+    {
+      "key": "oxford-politics",
+      "title": "Оксфорд, брак и парламент",
+      "from": 1963,
+      "to": 1973
+    },
+    {
+      "key": "bankruptcy-novels",
+      "title": "Банкротство и первые романы",
+      "from": 1974,
+      "to": 1984
+    },
+    {
+      "key": "party-peerage",
+      "title": "Партия, суды и пэрство",
+      "from": 1985,
+      "to": 1999
+    },
+    {
+      "key": "prison",
+      "title": "Приговор и тюрьма",
+      "from": 2000,
+      "to": 2003
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние книги",
+      "from": 2004,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1940",
+      "date": {
+        "from": "1940-04-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Холлоуэе",
+      "long": "Родился в родильном доме в Холлоуэе, Лондон. Через две недели семья переехала в Сомерсет и поселилась в Уэстон-супер-Маре.",
+      "place": {
+        "label": "Холлоуэй, Лондон"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jeffrey Howard Archer was born on 15 April 1940 at the City of London Maternity Hospital in Holloway, London."
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Стипендия в школе Уэллингтон",
+      "long": "Получил стипендию в школу Уэллингтон в Сомерсете. Заметки матери-журналистки о нём в местной газете привели к травле в школе.",
+      "place": {
+        "label": "Уэллингтон, Сомерсет"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1951, Archer won a scholarship to Wellington School in Somerset"
+      }
+    },
+    {
+      "key": "loss-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец Уильям, которому было 64 года к моменту рождения сына. Он был двоежёнцем и мошенником.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer's father, William (died 1956), was 64 years old when Archer was born."
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Оксфорде, колледж Брейзноуз",
+      "long": "Принят на педагогический диплом в Оксфорде, стал членом колледжа Брейзноуз. Всего провёл в Оксфорде три года, добился успехов в лёгкой атлетике.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1963, Archer was offered a place at the University of Oxford Delegacy of Extra-Mural Studies to study for a Diploma of Education."
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966-07",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мэри Уидден",
+      "long": "Женился на Мэри Уидден, с которой познакомился в Оксфорде. Брак продлился до его смерти.",
+      "chapter": "oxford-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer married Mary Weeden in July 1966"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Член Совета Большого Лондона",
+      "long": "Член Совета Большого Лондона от консерваторов, представлял Хейверинг. Начало политической карьеры.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "oxford-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "serving as a Conservative councillor for Havering on the Greater London Council (1967–1970)"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969-12-04",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Палату общин",
+      "long": "В 29 лет избран в Палату общин от округа Лаут на дополнительных выборах, один из самых молодых депутатов.",
+      "place": {
+        "label": "Лаут, Линкольншир"
+      },
+      "chapter": "oxford-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At 29, Archer was elected Member of Parliament (MP) for the Lincolnshire constituency of Louth, holding the seat for the Conservative Party in a by-election on 4 December 1969."
+      }
+    },
+    {
+      "key": "child-1972",
+      "date": {
+        "from": "1972-05",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Уильяма",
+      "long": "Родился сын Уильям.",
+      "chapter": "oxford-politics",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: William Harold Archer 1972-05"
+      }
+    },
+    {
+      "key": "poverty-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение из-за «Аквабласта», уход из парламента",
+      "long": "Потерял состояние в мошеннической схеме вокруг канадской компании «Аквабласт» и остался должен почти 500 тысяч фунтов. Отказался от переизбрания в октябре 1974 года.",
+      "works": [
+        {
+          "ref": "not-a-penny-more-not-a-penny-less"
+        }
+      ],
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, Archer was a casualty of a fraudulent investment scheme involving a Canadian company called Aquablast."
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман как путь из долгов",
+      "long": "Первый роман написан осенью 1974 года как способ избежать банкротства. Книга вышла сначала в США, затем в Британии.",
+      "works": [
+        {
+          "ref": "not-a-penny-more-not-a-penny-less",
+          "note": "роман написан осенью после краха «Аквабласта», чтобы избежать банкротства"
+        }
+      ],
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer wrote his first book, Not a Penny More, Not a Penny Less, in the autumn of 1974, as a means of avoiding bankruptcy."
+      }
+    },
+    {
+      "key": "child-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джеймса",
+      "long": "Родился сын Джеймс, впоследствии финансовый консультант и бизнесмен.",
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Джеймс Арчер 1974"
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг романа о покушении на президента",
+      "long": "Роман о заговоре против президента США, в роли которого выведен Эдвард Кеннеди, вызвал скандал в США и Британии. Позднее текст переработали, заменив Кеннеди вымышленной Флорентиной Кейн.",
+      "works": [
+        {
+          "ref": "shall-we-tell-the-president"
+        }
+      ],
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977 Archer published the novel Shall We Tell the President a fictionalized account of a plot to assassinate the President of the United States"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех главного бестселлера",
+      "long": "Роман стал самой продаваемой книгой автора: права проданы с аукциона за 3 млн долларов, книга возглавила список бестселлеров «Нью-Йорк таймс».",
+      "works": [
+        {
+          "ref": "kane-and-abel"
+        }
+      ],
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kane and Abel (1979) proved to be his best-selling work, auctioning the publishing rights for $3 million, and reaching number one on The New York Times bestseller list."
+      }
+    },
+    {
+      "key": "relocation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Покупка дома в Грантчестере",
+      "long": "Семья купила Старый дом приходского священника в Грантчестере, где каждое лето устраивала приёмы.",
+      "place": {
+        "label": "Грантчестер"
+      },
+      "chapter": "bankruptcy-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1979, the Archers purchased the Old Vicarage, Grantchester, the setting of Rupert Brooke's famous poem of the same name."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Заместитель председателя консерваторов",
+      "long": "Маргарет Тэтчер назначила его заместителем председателя Консервативной партии.",
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was appointed deputy chairman of the Conservative Party by Margaret Thatcher in September 1985."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отставка после газетного скандала",
+      "long": "Ушёл с поста после статьи в «Ньюс оф зе уорлд», обвинившей его в выплате денег проститутке Монике Коглан.",
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer resigned as deputy chairman in October 1986 owing to a scandal caused by an article in the News of the World"
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Выигранный иск против «Дейли стар»",
+      "long": "Выиграл иск о клевете против «Дейли стар» и получил 500 тысяч фунтов. Позже выяснилось, что он лжесвидетельствовал.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The case came to court in July 1987.… Archer won the case and was awarded £500,000 damages."
+      }
+    },
+    {
+      "key": "other-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Благотворительность в пользу курдов",
+      "long": "Основал вместе с Красным Крестом благотворительную кампанию «Простая правда» в помощь курдам; позже её отчётность вызвала споры.",
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When Saddam Hussein suppressed Kurdish uprisings in 1991, Archer, with the Red Cross, set up the charity Simple Truth"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992-07-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пожизненное пэрство",
+      "long": "Получил пожизненное пэрство по рекомендации Джона Мейджора.",
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer was made a life peer on 27 July 1992 as Baron Archer of Weston-super-Mare"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999-11-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ от выдвижения в мэры Лондона",
+      "long": "Снял кандидатуру на выборах мэра Лондона после обвинений в лжесвидетельстве на процессе 1987 года.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "party-peerage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 21 November 1999, the News of the World published allegations made by Ted Francis, a former friend, that Archer had committed perjury in his 1987 libel case. Archer withdrew his candidature the following day."
+      }
+    },
+    {
+      "key": "persecution-2000",
+      "date": {
+        "from": "2000-02-04",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Исключение из партии",
+      "long": "Исключён из Консервативной партии на пять лет.",
+      "chapter": "prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 4 February 2000, Archer was expelled from the party for five years."
+      }
+    },
+    {
+      "key": "persecution-2000-2",
+      "date": {
+        "from": "2000-09-26",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Обвинение в лжесвидетельстве",
+      "long": "Предъявлено обвинение в лжесвидетельстве. В это время он играл главную роль в собственной пьесе о судебном процессе.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "the-accused",
+          "note": "пьеса шла в лондонском театре одновременно с предъявлением обвинения"
+        }
+      ],
+      "chapter": "prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 26 September 2000, Archer was charged with perjury and perverting the course of justice during the 1987 libel trial."
+      }
+    },
+    {
+      "key": "loss-2001",
+      "date": {
+        "from": "2001-07",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Мать Лола умерла незадолго до вынесения приговора; его на день отпустили на похороны.",
+      "chapter": "prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 19 July 2001, Archer was found guilty of perjury and perverting the course of justice at the 1987 trial.…Archer's mother died shortly before sentencing and he was released for the day to attend her funeral."
+      }
+    },
+    {
+      "key": "persecution-2001",
+      "date": {
+        "from": "2001-07-19",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Приговор к четырём годам тюрьмы",
+      "long": "Признан виновным в лжесвидетельстве и воспрепятствовании правосудию, приговорён к четырём годам тюрьмы.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 19 July 2001, Archer was found guilty of perjury and perverting the course of justice at the 1987 trial. He was sentenced to four years' imprisonment"
+      }
+    },
+    {
+      "key": "poverty-2002",
+      "date": {
+        "from": "2002-10",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Возврат присуждённых damages газете",
+      "long": "Вернул «Дейли стар» полученные в 1987 году 500 тысяч фунтов, а также судебные издержки и проценты — 1,3 млн фунтов.",
+      "chapter": "prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2002, Archer repaid the Daily Star the £500,000 damages he had received in 1987, as well as legal costs and interest of £1.3 million."
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Обвинения властей Экваториальной Гвинеи",
+      "long": "Власти Экваториальной Гвинеи заявили, что он был одним из финансистов неудавшегося переворота; Арчер отрицал причастность.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, the government of Equatorial Guinea alleged that Archer was one of the financiers of the failed 2004 coup d'état attempt against it"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024-07-04",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из Палаты лордов",
+      "long": "Вышел в отставку из Палаты лордов, где всё время после освобождения не участвовал в работе активно.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Archer did not take an active part in parliamentary proceedings until his retirement from the Lords on 4 July 2024"
+      }
+    },
+    {
+      "key": "creation-2026",
+      "date": {
+        "from": "2026-01",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Объявление о последнем романе",
+      "long": "Объявил, что готовящийся роман станет последним.",
+      "works": [
+        {
+          "ref": "adam-and-eve"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2026 года писатель объявил, что его грядущий роман, «Адам и Ева», станет последним в его жизни."
+      }
+    },
+    {
+      "key": "death-2026",
+      "date": {
+        "from": "2026-10-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть дома в Лондоне",
+      "long": "Умер дома в Лондоне за сутки до выхода последнего романа, накануне подписывал книги на встрече с читателями.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "adam-and-eve"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "5 октября 2026 года, за сутки до выхода своего последнего романа, Джеффри Арчер неожиданно скончался у себя дома."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "not-a-penny-more-not-a-penny-less",
+      "title": "Ни пенсом больше, ни пенсом меньше",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "shall-we-tell-the-president",
+      "title": "Говорить ли президенту?",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "kane-and-abel",
+      "title": "Каин и Авель",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-accused",
+      "title": "Обвиняемый (пьеса)",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "a-prison-diary",
+      "title": "Дневник заключённого",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "gospel-according-to-judas",
+      "title": "Евангелие от Иуды",
+      "written": {
+        "from": 2006,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "clifton-chronicles",
+      "title": "Хроники Клифтонов",
+      "written": {
+        "from": 2011,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "adam-and-eve",
+      "title": "Адам и Ева",
+      "written": {
+        "from": 2025,
+        "to": 2026
+      }
+    }
+  ]
+}

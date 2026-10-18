@@ -1,0 +1,241 @@
+{
+  "qid": "Q113233",
+  "name": "Одри Ниффенеггер",
+  "born": "1963-06-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%B8%D1%84%D1%84%D0%B5%D0%BD%D0%B5%D0%B3%D0%B3%D0%B5%D1%80%2C_%D0%9E%D0%B4%D1%80%D0%B8",
+      "rev": 147524216
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Audrey_Niffenegger",
+      "rev": 1379260063
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Мичиган и Эванстон",
+      "from": 1963,
+      "to": 1977
+    },
+    {
+      "key": "art-school",
+      "title": "Рисунок и школа искусств",
+      "from": 1978,
+      "to": 1993
+    },
+    {
+      "key": "columbia",
+      "title": "Преподавание и книжное искусство",
+      "from": 1994,
+      "to": 2002
+    },
+    {
+      "key": "novels",
+      "title": "Романы и признание",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1963",
+      "date": {
+        "from": "1963-06-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Саут-Хейвене, штат Мичиган",
+      "long": "Родилась в городке Саут-Хейвен, штат Мичиган; затем семья перебралась в Эванстон, штат Иллинойс.",
+      "place": {
+        "label": "Саут-Хейвен"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Одри Ниффенеггер (англ. Audrey Niffenegger, родилась 13 июня 1963 года)"
+      }
+    },
+    {
+      "key": "education-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Первые занятия рисунком у Уильяма Уиммера",
+      "long": "Начала заниматься рисунком под руководством Уильяма Уиммера.",
+      "chapter": "art-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уже в 1978 году она начала делать свои первые шаги в искусстве. Занималась рисунком под покровительством Уильяма Уиммера"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выставки в галерее Printworks в Чикаго",
+      "long": "Её рисунки, картины, литографии и комиксы стали выставляться и продаваться в чикагской галерее Printworks Gallery.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "art-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1987 года её рисунки, картины, литографии и комиксы выставляются и продаются в Чикагской галерее Printworks Gallery."
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра искусств",
+      "long": "Получила степень магистра искусств (MFA).",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "art-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Получила степень Магистра искусств (англ. MFA) в Чикагском университете в 1991 году."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "to": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание в Колумбийском колледже Чикаго",
+      "long": "Преподавала на факультете творческого письма Колумбийского колледжа Чикаго, где участвовала в основании Центра книжного и полиграфического искусства.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1994 to 2015, Niffenegger served on the faculty of the Creative Writing Department at Columbia College Chicago, where she co-founded the Columbia College Chicago Center for the Book and Paper Arts."
+      }
+    },
+    {
+      "key": "creation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Замысел книги о путешественнике во времени",
+      "long": "Задумала графическую новеллу о путешественнике во времени и его жене; поняв, что неподвижным изображением эффект перемещений передать трудно, решила написать роман.",
+      "works": [
+        {
+          "ref": "time-travelers-wife"
+        }
+      ],
+      "chapter": "columbia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году у Одри Ниффенеггер появилась идея создания графической новеллы о путешественнике во времени и его жене."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех дебютного романа, бестселлер",
+      "long": "Дебютный роман вышел в независимом издательстве MacAdam/Cage и стал бестселлером.",
+      "works": [
+        {
+          "ref": "time-travelers-wife"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Книга «Жена путешественника во времени» была опубликована в 2003 году независимым издательством MacAdam/Cage. Роман стал бестселлером."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Продажа второго романа за 5 миллионов долларов",
+      "long": "Второй роман продан издательству Charles Scribner's Sons за 5 миллионов долларов после аукциона; местом действия стало Хайгейтское кладбище в Лондоне, где она работала экскурсоводом.",
+      "works": [
+        {
+          "ref": "her-fearful-symmetry"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 2009 года Ниффенеггер продала свой второй роман Соразмерный образ мой за 5 миллионов долларов издательству «Charles Scribner's Sons»"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013-06-21",
+        "to": "2013-11-10",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ретроспектива в музее женщин в искусстве",
+      "long": "Национальный музей женщин в искусстве показал ретроспективу её живописи, рисунков, гравюр и книжного искусства.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From June 21 to November 10, 2013, the National Museum of Women in the Arts exhibited Awake in the Dream World: The Art of Audrey Niffenegger"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "time-travelers-wife",
+      "title": "Жена путешественника во времени",
+      "qid": "Q1212645",
+      "written": {
+        "from": 1997,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "her-fearful-symmetry",
+      "title": "Соразмерный образ мой",
+      "qid": "Q4003598",
+      "written": {
+        "from": 2007,
+        "to": 2009
+      }
+    }
+  ]
+}

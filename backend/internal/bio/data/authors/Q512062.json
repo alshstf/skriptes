@@ -1,0 +1,609 @@
+{
+  "qid": "Q512062",
+  "name": "Ласло Краснахоркаи",
+  "born": "1954-01-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%85%D0%BE%D1%80%D0%BA%D0%B0%D0%B8%2C_%D0%9B%D0%B0%D1%81%D0%BB%D0%BE",
+      "rev": 155520318
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/L%C3%A1szl%C3%B3_Krasznahorkai",
+      "rev": 1376279570
+    },
+    {
+      "id": "huwiki",
+      "url": "https://hu.wikipedia.org/wiki/Krasznahorkai_L%C3%A1szl%C3%B3",
+      "rev": 29419433
+    }
+  ],
+  "chapters": [
+    {
+      "key": "gyula-childhood",
+      "title": "Дьюла и латынь",
+      "from": 1954,
+      "to": 1972
+    },
+    {
+      "key": "law-and-letters",
+      "title": "Право, филология, первые тексты",
+      "from": 1973,
+      "to": 1984
+    },
+    {
+      "key": "satantango-berlin",
+      "title": "Сатанинское танго и Западный Берлин",
+      "from": 1985,
+      "to": 1989
+    },
+    {
+      "key": "roads-east-west",
+      "title": "Дороги: Азия, Европа, Киото",
+      "from": 1990,
+      "to": 2008
+    },
+    {
+      "key": "recognition",
+      "title": "Букер, Нобель, мировое признание",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-01-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дьюле",
+      "long": "Родился в Дьюле, в семье адвоката Дьёрдя Краснахоркаи и Юлии Палинкаш, сотрудницы министерства социальной защиты.",
+      "place": {
+        "label": "Дьюла"
+      },
+      "chapter": "gyula-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 5 января 1954 года в Дьюле в пяти километрах от границы с Румынией."
+      }
+    },
+    {
+      "key": "education-1968",
+      "date": {
+        "from": "1968",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Гимназия с углублённой латынью",
+      "long": "С 1968 по 1972 год учился в гимназии имени Ференца Эркеля в Дьюле, где изучал латынь.",
+      "place": {
+        "label": "Дьюла"
+      },
+      "chapter": "gyula-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1968 to 1972, he attended Erkel Ferenc High School in Gyula, specializing in Latin."
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Начало юридической учёбы в Сегеде",
+      "long": "После года обязательной военной службы начал изучать право в Сегеде, но через три недели прервал учёбу, не чувствуя принадлежности к юридической профессии.",
+      "place": {
+        "label": "Сегед"
+      },
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he began studying law in 1973 at József Attila University (now the University of Szeged), but he suspended his studies after three weeks"
+      }
+    },
+    {
+      "key": "education-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Переход на юридический факультет в Будапеште",
+      "long": "В 1976 году перевёлся на юридический факультет университета имени Лоранда Этвёша в Будапеште, где учился до 1978 года.",
+      "place": {
+        "label": "Будапешт"
+      },
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, he transferred to the Faculty of Law of Eötvös Loránd University in Budapest, where he continued his legal studies until 1978."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в журнале «Мозго вилаг»",
+      "long": "Первая публикация — рассказ «Tebenned hittem» в журнале «Мозго вилаг».",
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published work, a short story titled \"Tebenned hittem\" (\"I Believed in You\"), appeared in Mozgó Világ in 1977."
+      }
+    },
+    {
+      "key": "career-1977-2",
+      "date": {
+        "from": "1977",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в издательстве «Гондолат»",
+      "long": "С 1977 по 1982 год работал документалистом в издательстве «Гондолат».",
+      "place": {
+        "label": "Будапешт"
+      },
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During his studies, he worked at the Gondolat publishing house as a documenter from 1977 to 1982."
+      }
+    },
+    {
+      "key": "child-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Каты",
+      "long": "Родилась дочь Ката.",
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Kata Krasznahorkai 1977"
+      }
+    },
+    {
+      "key": "education-1978",
+      "date": {
+        "from": "1978",
+        "to": "1983",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Филологический факультет, диплом о Мараи",
+      "long": "Учился венгерскому языку и литературе на гуманитарном факультете; диплом посвятил творчеству Шандора Мараи в эмиграции.",
+      "place": {
+        "label": "Будапешт"
+      },
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1978, he studied Hungarian and cultural education at the Faculty of Humanities of Eötvös Loránd University, graduating in 1983. His thesis focused on the work of writer Sándor Márai following his emigration from Hungary."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход на положение свободного писателя",
+      "long": "Оставил работу в издательстве и с 1982 года живёт как свободный писатель.",
+      "chapter": "law-and-letters",
+      "evidence": {
+        "source": "huwiki",
+        "quote": "1977–1982 között a Gondolat Könyvkiadónál dokumentátor, 1982-től szabadfoglalkozású író."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех дебютного романа",
+      "long": "Дебютный роман сразу имел успех и сделал автора заметной фигурой венгерской литературы.",
+      "works": [
+        {
+          "ref": "satantango"
+        }
+      ],
+      "chapter": "satantango-berlin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His debut novel, Sátántangó (1985), was an immediate success that established him as a leading figure in Hungarian literature."
+      }
+    },
+    {
+      "key": "career-1985-2",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы с режиссёром Белой Тарром",
+      "long": "С 1985 года режиссёр Бела Тарр, друг писателя, снимает фильмы почти исключительно по его книгам и сценариям.",
+      "works": [
+        {
+          "ref": "satantango"
+        },
+        {
+          "ref": "melancholy-of-resistance"
+        }
+      ],
+      "chapter": "satantango-berlin",
+      "evidence": {
+        "source": "huwiki",
+        "quote": "1985 óta filmrendező barátja, Tarr Béla szinte kizárólag az ő könyveiből, illetve forgatókönyveiből készítette filmjeit"
+      }
+    },
+    {
+      "key": "relocation-1987",
+      "date": {
+        "from": "1987",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Год в Западном Берлине по стипендии DAAD",
+      "long": "Впервые выехал за пределы коммунистической Венгрии: год провёл в Западном Берлине по стипендии DAAD.",
+      "place": {
+        "label": "Западный Берлин"
+      },
+      "chapter": "satantango-berlin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Krasznahorkai first travelled outside Communist Hungary in 1987–1988, when he spent one year in West Berlin as a fellow of the DAAD Artists-in-Berlin Program."
+      }
+    },
+    {
+      "key": "love-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с Анико Пелье",
+      "long": "В 1990 году начался первый брак с Анико Пелье, закончившийся разводом.",
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Krasznahorkai was married to his first wife, Anikó Pelyhe, from 1990 until their divorce."
+      }
+    },
+    {
+      "key": "relocation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Первая долгая поездка в Монголию и Китай",
+      "long": "Первая длительная поездка в Восточную Азию, в Монголию и Китай, сильно повлияла на его творчество.",
+      "place": {
+        "label": "Монголия, Китай"
+      },
+      "works": [
+        {
+          "ref": "prisoner-of-urga",
+          "note": "впечатления от Монголии и Китая легли в основу книги"
+        },
+        {
+          "ref": "destruction-and-sorrow",
+          "note": "впечатления от Монголии и Китая легли в основу книги"
+        }
+      ],
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first extended trip to East Asia in 1990 profoundly influenced his work; his experiences in Mongolia and China informed the books The Prisoner of Urga and Destruction and Sorrow Beneath the Heavens."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая премия Bestenliste",
+      "long": "Роман получил в Германии премию Bestenliste как лучшее литературное произведение года.",
+      "works": [
+        {
+          "ref": "melancholy-of-resistance"
+        }
+      ],
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novel The Melancholy of Resistance (1989) received the German Bestenliste-Prize for the best literary work of the year in 1993."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Научного колледжа в Берлине",
+      "long": "В 1996 году работал по стипендии в берлинском Научном колледже (Wissenschaftskolleg).",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, he was a fellow at the Wissenschaftskolleg in Berlin."
+      }
+    },
+    {
+      "key": "relocation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Полгода в Киото",
+      "long": "Дважды по полгода (1996, 2000, 2005) жил в Киото; эстетика Дальнего Востока заметно изменила его стиль и темы.",
+      "place": {
+        "label": "Киото"
+      },
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He later spent six months in Kyoto in 1996, 2000, and 2005, with the aesthetics and literary theory of the Far East causing significant shifts in his style and themes."
+      }
+    },
+    {
+      "key": "love-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Дорой Копчани",
+      "long": "Женился на Доре Копчани, синологе и графическом дизайнере.",
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, he married Dóra Kopcsányi, a sinologist and graphic designer."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кошута",
+      "long": "Получил премию Кошута, высшую государственную награду Венгрии в области культуры.",
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "премий Аттилы Йожефа (1987), Тибора Дери (1992), Дьюлы Круди (1993), Шандора Мараи (1998), Кошута (2004)"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённая профессура в Свободном университете",
+      "long": "Преподавал как приглашённый профессор в Свободном университете Берлина.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "roads-east-west",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году писатель был приглашённым профессором Берлинского Свободного университета."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Последняя совместная работа с Тарром",
+      "long": "Фильм «Туринская лошадь» (2011) стал, по словам писателя, последней совместной работой с Тарром.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Krasznahorkai stated that their 2011 film, The Turin Horse, would be their final collaboration."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Резиденция в Колумбийском университете",
+      "long": "Весной 2014 года — писатель в резиденции Института Гарримана Колумбийского университета, вёл семинар о сотрудничестве с Белой Тарром.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Krasznahorkai was the Spring 2014 Harriman Writer in Residence at Harriman Institute of Columbia University"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-05-18",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Международная Букеровская премия",
+      "long": "Первым из венгерских авторов получил Международную Букеровскую премию.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "huwiki",
+        "quote": "2015. május 18-án elnyerte a Nemzetközi Man Booker-díjat"
+      }
+    },
+    {
+      "key": "other-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Архив писателя в Австрийской национальной библиотеке",
+      "long": "Австрийская национальная библиотека в Вене приобрела литературный архив писателя (Vorlass).",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2024, the Austrian National Library in Vienna acquired Krasznahorkai"
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025-10-09",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Шведская академия присудила Нобелевскую премию по литературе за «увлекательное и провидческое творчество, утверждающее силу искусства среди апокалиптического ужаса».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "huwiki",
+        "quote": "2025. október 9-én a Svéd Akadémia neki ítélte az irodalmi Nobel-díjat"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "satantango",
+      "title": "Сатанинское танго",
+      "qid": "Q1315145",
+      "written": {
+        "from": 1982,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "melancholy-of-resistance",
+      "title": "Меланхолия сопротивления",
+      "qid": "Q785109",
+      "written": {
+        "from": 1985,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "prisoner-of-urga",
+      "title": "Узник Урги",
+      "written": {
+        "from": 1990,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "war-and-war",
+      "title": "Война и война",
+      "qid": "Q19843038",
+      "written": {
+        "from": 1993,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "destruction-and-sorrow",
+      "title": "Разрушение и скорбь под небесами",
+      "qid": "Q28450891",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "seiobo-there-below",
+      "title": "Seiobo There Below",
+      "qid": "Q16746713",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "the-world-goes-on",
+      "title": "The World Goes On",
+      "qid": "Q98617483",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "baron-wenckheim",
+      "title": "Baron Wenckheim's Homecoming",
+      "qid": "Q85745490",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "chasing-homer",
+      "title": "Chasing Homer",
+      "qid": "Q117662262",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

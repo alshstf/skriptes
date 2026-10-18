@@ -1,0 +1,617 @@
+{
+  "qid": "Q200661",
+  "name": "Хуан Рульфо",
+  "born": "1917-05-16",
+  "died": "1986-01-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D1%83%D0%BB%D1%8C%D1%84%D0%BE%2C_%D0%A5%D1%83%D0%B0%D0%BD",
+      "rev": 149828799
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Juan_Rulfo",
+      "rev": 1372079257
+    },
+    {
+      "id": "eswiki",
+      "url": "https://es.wikipedia.org/wiki/Juan_Rulfo",
+      "rev": 175809404
+    }
+  ],
+  "chapters": [
+    {
+      "key": "siroty-halisko",
+      "title": "Сирота из Халиско",
+      "from": 1917,
+      "to": 1934
+    },
+    {
+      "key": "mehiko-i-rasskazy",
+      "title": "Мехико, службы и первые рассказы",
+      "from": 1935,
+      "to": 1951
+    },
+    {
+      "key": "dve-knigi",
+      "title": "Стипендия и две книги",
+      "from": 1952,
+      "to": 1958
+    },
+    {
+      "key": "molchanie-i-slava",
+      "title": "Молчание и признание",
+      "from": 1959,
+      "to": 1986
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1917",
+      "date": {
+        "from": "1917-05-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в штате Халиско",
+      "long": "Родился 16 мая 1917 года в Апулько, штат Халиско; зарегистрирован в Сайюле. Из-за неточной даты при поступлении в военное училище год рождения часто указывают как 1918.",
+      "place": {
+        "label": "Апулько"
+      },
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rulfo was born in 1917 in Apulco, Jalisco"
+      }
+    },
+    {
+      "key": "loss-1923",
+      "date": {
+        "from": "1923-06",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Убийство отца",
+      "long": "Отец Рульфо был убит в июне 1923 года, когда мальчику было шесть лет; семья пострадала от Мексиканской революции и войны кристерос.",
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "su padre fue asesinado por Guadalupe Nava Palacios en junio de 1923"
+      }
+    },
+    {
+      "key": "loss-1927",
+      "date": {
+        "from": "1927-11",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "В ноябре 1927 года умерла мать; мальчика воспитывала бабушка в Гвадалахаре.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Cuatro años más tarde, en noviembre de 1927, su madre falleció."
+      }
+    },
+    {
+      "key": "education-1928",
+      "date": {
+        "from": "1928",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа-приют Луиса Сильвы",
+      "long": "С 1928 по 1932 год жил и учился в школе Луиса Сильвы в Гвадалахаре; окончил её со специальностью бухгалтера, но по ней не работал.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rulfo was sent to study in the Luis Silva School, where he lived from 1928 to 1932."
+      }
+    },
+    {
+      "key": "education-1932",
+      "date": {
+        "from": "1932",
+        "to": "1934",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в семинарии",
+      "long": "В 1932–1934 годах учился в семинарии; в университет Гвадалахары не поступил, так как тот был закрыт из-за забастовки.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rulfo attended a seminary (analogous to a secondary school) from 1932 to 1934"
+      }
+    },
+    {
+      "key": "relocation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Мехико",
+      "long": "Университет Гвадалахары бастовал, и Рульфо переехал в Мехико, где поступил в Военную академию и покинул её через три месяца.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "siroty-halisko",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "en 1933 intentó ingresar a la Universidad de Guadalajara pero, al estar esta en huelga, optó por trasladarse a la Ciudad de México"
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в архиве и лекции в университете",
+      "long": "Благодаря дяде получил место архивного служащего в иммиграционной службе и смог вольнослушателем посещать лекции по литературе в университете.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1936, Rulfo was able to audit courses in literature at the university, because he obtained a job as an immigration file clerk through his uncle."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа иммиграционным агентом",
+      "long": "С 1941 года работал иммиграционным агентом в Гвадалахаре, где подружился с писателем Хуаном Хосе Арреолой.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Desde 1941 Rulfo trabajó como agente de migración en Guadalajara"
+      }
+    },
+    {
+      "key": "career-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание журнала «Пан»",
+      "long": "В 1944 году стал одним из основателей литературного журнала «Пан» в Гвадалахаре.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, Rulfo co-founded the literary journal Pan."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Кларой Апарисио",
+      "long": "В 1944 году познакомился с Кларой Анхелиной Апарисио Рейес, будущей женой.",
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "se casó con Clara Angelina Aparicio Reyes, a quien había conocido en 1944"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа торговым агентом на «Гудрич-Эускади»",
+      "long": "Работал на фирме «Гудрич-Эускади», затем разъездным торговым агентом по югу Мексики; уволен в 1952 году.",
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, he started as a foreman for Goodrich-Euzkadi, but his mild temperament led him to prefer working as a wholesale traveling sales agent."
+      }
+    },
+    {
+      "key": "other-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало занятий фотографией",
+      "long": "С 1946 года занимался фотографией; после него осталось более 6000 негативов.",
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "A partir de 1946 se dedicó, también, a la labor fotográfica"
+      }
+    },
+    {
+      "key": "love-1948",
+      "date": {
+        "from": "1948-04-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кларой Апарисио",
+      "long": "Женился на Кларе Анхелине Апарисио Рейес в Гвадалахаре; в браке родилось четверо детей. В письмах к ней 1947 года упоминается замысел будущего романа.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "works": [
+        {
+          "ref": "pedro-paramo",
+          "note": "в письмах невесте 1947 года Рульфо описывает роман под рабочим названием «Звезда рядом с луной»"
+        }
+      ],
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rulfo married Clara Angelina Aparicio Reyes (b. 12 August 1928) in Guadalajara, Jalisco, on 24 April 1948"
+      }
+    },
+    {
+      "key": "child-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Клаудии Беренис",
+      "long": "В 1949 году родилась дочь Клаудия Беренис, первый ребёнок в семье.",
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had four children: Claudia Berenice (born 1949), Juan Francisco (1950), Juan Pablo (1955) and Juan Carlos (1964)."
+      }
+    },
+    {
+      "key": "child-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Хуана Франсиско",
+      "long": "В 1950 году родился сын Хуан Франсиско.",
+      "chapter": "mehiko-i-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had four children: Claudia Berenice (born 1949), Juan Francisco (1950), Juan Pablo (1955) and Juan Carlos (1964)."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "to": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Стипендия Мексиканского центра писателей",
+      "long": "После увольнения получил стипендию Мексиканского центра писателей; за эти годы завершил сборник рассказов и дописал роман.",
+      "place": {
+        "label": "Мехико"
+      },
+      "works": [
+        {
+          "ref": "pedro-paramo",
+          "note": "роман завершён во второй год стипендии (1953–1954)"
+        },
+        {
+          "ref": "llano-en-llamas"
+        }
+      ],
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rulfo obtained a fellowship at the Centro Mexicano de Escritores, supported by the Rockefeller Foundation. There, between 1952 and 1954, he was able to write two books."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Комиссии реки Папалоапан",
+      "long": "В 1954–1957 годах сотрудничал с Комиссией реки Папалоапан, занимавшейся развитием прибрежных поселений.",
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1954 to 1957, Rulfo collaborated with the Río Papaloapan Commission"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Хавьера Вильяуррутии",
+      "long": "Роман получил премию Хавьера Вильяуррутии в год выхода; поначалу критика приняла его сдержанно, продано было около двух тысяч экземпляров за четыре года.",
+      "works": [
+        {
+          "ref": "pedro-paramo"
+        }
+      ],
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Хавьера Вильяуррутьи (1955)"
+      }
+    },
+    {
+      "key": "child-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Хуана Пабло",
+      "long": "В 1955 году родился сын Хуан Пабло.",
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had four children: Claudia Berenice (born 1949), Juan Francisco (1950), Juan Pablo (1955) and Juan Carlos (1964)."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над киносценариями",
+      "long": "Режиссёр Эмилио Фернандес заказал Рульфо киносценарии; часть из них написана совместно с Арреолой.",
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En 1956, el director de cine Emilio «el Indio» Fernández le solicitó a Rulfo guiones para cine."
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над второй повестью",
+      "long": "В 1956–1958 годах работал над повестью, изданной лишь в 1980 году по настоянию друзей.",
+      "works": [
+        {
+          "ref": "gallo-de-oro"
+        }
+      ],
+      "chapter": "dve-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1956 and 1958, Rulfo worked on a novella entitled El gallo de oro (The Golden Cockerel), which was not published until 1980."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "to": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор Национального индигенистского института",
+      "long": "С 1962 года до смерти работал редактором в Национальном индигенистском институте.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1962 until his death in 1986, he worked as an editor for the National Institute for Indigenous People."
+      }
+    },
+    {
+      "key": "child-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Хуана Карлоса",
+      "long": "В 1964 году родился младший сын Хуан Карлос.",
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they had four children: Claudia Berenice (born 1949), Juan Francisco (1950), Juan Pablo (1955) and Juan Carlos (1964)."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная премия в области искусств и науки",
+      "long": "Получил Национальную премию Мексики в области искусств и науки.",
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная премия в области искусств и науки 1970-01-01"
+      }
+    },
+    {
+      "key": "other-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Европу",
+      "long": "Поехал в Европу на студенческий конгресс в Варшавском университете и в составе президентской делегации посетил несколько стран.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En 1974 Rulfo viajó a Europa para participar en el Congreso de Estudiantes de la Universidad de Varsovia."
+      }
+    },
+    {
+      "key": "other-1974-2",
+      "date": {
+        "from": "1974-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Объяснение отказа от писательства",
+      "long": "Объяснил, почему перестал писать книги: умер дядя Селерино, рассказывавший ему все истории.",
+      "place": {
+        "label": "Каракас"
+      },
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En marzo de 1974, durante un diálogo estudiantil en la Universidad Central de Venezuela, justificó ese abandono por la muerte de su tío Celerino"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976-07-09",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Мексиканскую академию языка",
+      "long": "Избран членом Мексиканской академии языка; кресло XXXV занял 25 сентября 1980 года.",
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "El 9 de julio de 1976 fue elegido miembro de la Academia Mexicana de la Lengua"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия принцессы Астурийской",
+      "long": "Удостоен премии принцессы Астурийской за литературу.",
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Литературная премия принца Астурийского (1983)"
+      }
+    },
+    {
+      "key": "death-1986",
+      "date": {
+        "from": "1986-01-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгкого",
+      "long": "Умер в Мехико 7 января 1986 года от рака лёгкого.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "molchanie-i-slava",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Rulfo falleció la tarde del 7 de enero de 1986, a causa de un cáncer de pulmón."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "llano-en-llamas",
+      "title": "Равнина в огне",
+      "qid": "Q1195272",
+      "written": {
+        "from": 1945,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "pedro-paramo",
+      "title": "Педро Парамо",
+      "qid": "Q1427966",
+      "written": {
+        "from": 1947,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "gallo-de-oro",
+      "title": "Золотой петух",
+      "written": {
+        "from": 1956,
+        "to": 1958
+      }
+    }
+  ]
+}

@@ -1,0 +1,388 @@
+{
+  "qid": "Q237087",
+  "name": "Фред Варгас",
+  "born": "1957-06-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D1%80%D0%B3%D0%B0%D1%81%2C_%D0%A4%D1%80%D0%B5%D0%B4",
+      "rev": 150007179
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Fred_Vargas",
+      "rev": 1371874174
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Fred_Vargas",
+      "rev": 240341670
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-nauka",
+      "title": "Париж, учёба и археозоология",
+      "from": 1957,
+      "to": 1987
+    },
+    {
+      "key": "cnrs-i-pervye-romany",
+      "title": "CNRS и первые романы",
+      "from": 1988,
+      "to": 1999
+    },
+    {
+      "key": "chuma-i-kinzhal",
+      "title": "Чума и «Кинжал»",
+      "from": 2000,
+      "to": 2009
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Премия Астурии и климат",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-06-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Фредерик Одуэн-Рузо родилась в Париже; её сестра-близнец — художница Жо Варгас. Отец — писатель Филипп Одуэн, мать — инженер-химик.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-i-nauka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фредерик Одуэн-Рузо родилась 7 июня 1957 года в Париже."
+      }
+    },
+    {
+      "key": "loss-1985",
+      "date": {
+        "from": "1985-09-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, писателя Филиппа Одуэна",
+      "long": "Умер отец, писатель Филипп Одуэн (1924–1985).",
+      "chapter": "detstvo-i-nauka",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Philippe Audoin 1924-06-22 – 1985-09-15"
+      }
+    },
+    {
+      "key": "creation-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый детектив параллельно с раскопками в Ньевре",
+      "long": "Первый детектив написан параллельно с работой на археологических раскопках в департаменте Ньевр; роман получил приз за дебютный роман фестиваля в Коньяке. Псевдоним взят от псевдонима сестры Жо Варгас.",
+      "place": {
+        "label": "Ньевр"
+      },
+      "works": [
+        {
+          "ref": "les-jeux-de-l-amour-et-de-la-mort"
+        }
+      ],
+      "chapter": "detstvo-i-nauka",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Fred Vargas écrit son premier roman policier, Les Jeux de l'amour et de la mort, au milieu des années 1980 (1986) en parallèle à son travail sur un chantier archéologique dans la Nièvre."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в CNRS, археозоология",
+      "long": "Начала работать в Национальном центре научных исследований (CNRS), специализировалась на археозоологии; в CNRS проработала около 15 лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "cnrs-i-pervye-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1988 года работала во французском Национальном центре научных исследований, где специализировалась на археозоологии."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия книготорговцев и приз читательниц Elle",
+      "long": "Роман получил премию книготорговцев и Гран-при читательниц журнала Elle.",
+      "works": [
+        {
+          "ref": "pars-vite-et-reviens-tard"
+        }
+      ],
+      "chapter": "chuma-i-kinzhal",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Pars vite et reviens tard (2001) — Prix des libraires 2002, Grand prix des lectrices de Elle 2002, Deutscher Krimipreis."
+      }
+    },
+    {
+      "key": "creation-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Научный труд об эпидемиологии чумы",
+      "long": "Под настоящим именем опубликовала научный труд об эпидемиологии Чёрной смерти и бубонной чумы.",
+      "chapter": "chuma-i-kinzhal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фредерик проводила эпидемиологические исследования «Черной смерти» и бубонной чумы, написав в 2003 году на эту тему научный труд «Les chemins de la peste» (Пути Чумы)."
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Кампания в защиту Чезаре Баттисти",
+      "long": "С 2004 года активно участвует в кампании против экстрадиции Чезаре Баттисти, осуждённого в Италии за четыре убийства; составила сборник «Правда о Чезаре Баттисти».",
+      "chapter": "chuma-i-kinzhal",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À partir de 2004, Fred Vargas s'engage très activement dans la campagne qui réunit nombre de personnalités politiques et d'intellectuels de gauche et d'extrême gauche français protestant contre l'extradition de l'activiste et terroriste italien d'extrême gauche Cesare Battisti"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия «International Dagger»",
+      "long": "Первая из трёх премий «International Dagger» Ассоциации писателей-криминалистов; награда разделена с переводчицей Сиан Рейнольдс.",
+      "chapter": "chuma-i-kinzhal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006 her next novel, The Three Evangelists, won the inaugural Duncan Lawrie International Dagger."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Третья «International Dagger» подряд",
+      "long": "Третья «International Dagger» (после 2006 и 2008) — первая писательница, получившая её за три романа подряд.",
+      "chapter": "chuma-i-kinzhal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009 Vargas was again awarded the International Dagger, becoming the first author to receive it for three successive novels"
+      }
+    },
+    {
+      "key": "other-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка «Пакта по финансам и климату»",
+      "long": "Поддержала европейский коллектив «Пакт по финансам и климату», выступающий за договор о финансировании энергетического перехода.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Elle soutient en 2017 le collectif européen « Pacte Finance Climat » destiné à promouvoir un traité européen en faveur d'un financement pérenne de la transition énergétique et environnementale"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия принцессы Астурийской",
+      "long": "В мае 2018 года получила премию принцессы Астурийской за литературу.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En mai 2018, elle reçoit le prix Princesse des Asturies."
+      }
+    },
+    {
+      "key": "creation-2019",
+      "date": {
+        "from": "2019-04",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Публицистика о климате и биоразнообразии",
+      "long": "Издала публицистическую книгу о климатическом и биологическом кризисе; в 2022 году выпустила продолжение.",
+      "works": [
+        {
+          "ref": "l-humanite-en-peril"
+        }
+      ],
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En avril 2019, elle publie L'Humanité en péril, un ouvrage sur la « catastrophe » en cours au niveau du climat et de la biodiversité."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "les-jeux-de-l-amour-et-de-la-mort",
+      "title": "Игры любви и смерти",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "ceux-qui-vont-mourir-te-saluent",
+      "title": "Идущие на смерть приветствуют тебя",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "l-homme-aux-cercles-bleus",
+      "title": "Человек с синими кругами",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "debout-les-morts",
+      "title": "Вставайте, мертвецы",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "un-peu-plus-loin-sur-la-droite",
+      "title": "Чуть подальше справа",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "sans-feu-ni-lieu",
+      "title": "Без кола и двора",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "l-homme-a-l-envers",
+      "title": "Человек наизнанку",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "pars-vite-et-reviens-tard",
+      "title": "Уходи скорей и возвращайся не скоро",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "sous-les-vents-de-neptune",
+      "title": "Под ветрами Нептуна",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "dans-les-bois-eternels",
+      "title": "В лесах вечности",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "un-lieu-incertain",
+      "title": "Неверное место",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "l-armee-furieuse",
+      "title": "Яростное войско",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "temps-glaciaires",
+      "title": "Ледниковый период",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "quand-sort-la-recluse",
+      "title": "Когда выходит затворница",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "l-humanite-en-peril",
+      "title": "Человечество в опасности",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

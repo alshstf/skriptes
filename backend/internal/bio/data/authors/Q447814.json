@@ -1,0 +1,286 @@
+{
+  "qid": "Q447814",
+  "name": "Иоанна Хмелевская",
+  "born": "1932-04-02",
+  "died": "2013-10-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%BC%D0%B5%D0%BB%D0%B5%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%2C_%D0%98%D0%BE%D0%B0%D0%BD%D0%BD%D0%B0",
+      "rev": 152894826
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Joanna_Chmielewska",
+      "rev": 1373527583
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-okkupaciya",
+      "title": "Варшава, оккупация, учёба",
+      "from": 1932,
+      "to": 1949
+    },
+    {
+      "key": "arhitektor-mat",
+      "title": "Архитектор и мать",
+      "from": 1950,
+      "to": 1963
+    },
+    {
+      "key": "pisatelnitsa",
+      "title": "Иронический детектив",
+      "from": 1964,
+      "to": 1989
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и поздние годы",
+      "from": 1990,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1932",
+      "date": {
+        "from": "1932-04-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье банковского директора",
+      "long": "Родилась в Варшаве в семье директора банка Яна Беккера и Янины Конопацкой; воспитывали мать, бабушка и две тётки.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "detstvo-okkupaciya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Иоанна Хмелевская родилась 2 апреля 1932 года в Варшаве"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Монастырский интернат в оккупированной Варшаве",
+      "long": "Из-за оккупации Польши она бросила школу; сначала занималась с тёткой Люциной, затем в 1943 году её отдали в монастырский интернат.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "detstvo-okkupaciya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а потом, в 1943 году, Хмелевскую отдали в интернат при монастыре Воскресения Господня в Варшаве"
+      }
+    },
+    {
+      "key": "child-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение старшего сына Ежи",
+      "long": "В первом и единственном официальном браке со Станиславом Кюном родился старший сын Ежи.",
+      "chapter": "arhitektor-mat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В этом браке у неё родилось два сына — Ежи (род. в 1951) и Станислав Роберт (род. в 1956)."
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом архитектора Варшавского политеха",
+      "long": "Окончила архитектурный факультет Варшавского политехнического университета со специальностью инженера-архитектора; позже оставила профессию ради писательства.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "arhitektor-mat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Chmielewska graduated as an architect in 1954 from Warsaw University of Technology"
+      }
+    },
+    {
+      "key": "child-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение второго сына Роберта",
+      "long": "Родился второй сын, Станислав Роберт.",
+      "chapter": "arhitektor-mat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В этом браке у неё родилось два сына — Ежи (род. в 1951) и Станислав Роберт (род. в 1956)."
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый рассказ в журнале",
+      "long": "Первый рассказ появился в популярном журнале «Культура и жизнь».",
+      "chapter": "arhitektor-mat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her first short story was published in the popular magazine Kultura i Życie (transl. Culture and Life) in 1958"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Совета Министров за детскую литературу",
+      "long": "Получила премию Председателя Совета Министров за творчество для детей и юношества.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премии Председателя Совета Министров за творчество для детей и юношества (1989)"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "to": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия книготорговой сети «ЭМПиК»",
+      "long": "Дважды, в 2000 и 2001 годах, стала лауреатом премии крупнейшей польской книготорговой сети «АО ЭМПиК».",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "двукратный лауреат премии «АО ЭМПиК» (крупнейшая в Польше книготорговая сеть) (2000, 2001)"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Возрождения Польши",
+      "long": "Награждена офицерским крестом ордена Возрождения Польши.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, she was awarded the Officer's Cross of the Order of Polonia Restituta."
+      }
+    },
+    {
+      "key": "death-2013",
+      "date": {
+        "from": "2013-10-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Варшаве",
+      "long": "Умерла в Варшаве; похоронена на кладбище Старые Повонзки.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончалась утром 7 октября 2013 года в Варшаве на 82-м году жизни."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "klin-klinom",
+      "title": "Клин клином",
+      "qid": "Q11740118",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "wszyscy-jestesmy-podejrzani",
+      "title": "Все мы жулики…",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "krokodyl-z-kraju-karoliny",
+      "title": "Крокодил из страны Каролины",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "cale-zdanie-nieboszczyka",
+      "title": "Что сказал покойник",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "wszystko-czerwone",
+      "title": "Всё красное",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "studnie-przodkow",
+      "title": "Колодцы предков",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "autobiografia",
+      "title": "Автобиография",
+      "written": {
+        "from": 1994,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "zlota-mucha",
+      "title": "Золотая муха",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    }
+  ]
+}

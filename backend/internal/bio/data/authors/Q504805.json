@@ -1,0 +1,365 @@
+{
+  "qid": "Q504805",
+  "name": "Джон Варли",
+  "born": "1947-08-09",
+  "died": "2025-12-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D1%80%D0%BB%D0%B8%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 155522535
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Varley_%28author%29",
+      "rev": 1372820415
+    }
+  ],
+  "chapters": [
+    {
+      "key": "texas-childhood",
+      "title": "Техас и школа",
+      "from": 1947,
+      "to": 1966
+    },
+    {
+      "key": "haight-ashbury",
+      "title": "Хиппи, случайные работы, первые рассказы",
+      "from": 1967,
+      "to": 1978
+    },
+    {
+      "key": "awards-hollywood",
+      "title": "Премии и Голливуд",
+      "from": 1979,
+      "to": 1991
+    },
+    {
+      "key": "return",
+      "title": "Возвращение в литературу",
+      "from": 1992,
+      "to": 2020
+    },
+    {
+      "key": "last-years",
+      "title": "Болезнь и последние годы",
+      "from": 2021,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-08-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Остине, Техас",
+      "long": "Родился в Остине, штат Техас.",
+      "place": {
+        "label": "Остин"
+      },
+      "chapter": "texas-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 9 августа 1947 года в Остине, штат Техас."
+      }
+    },
+    {
+      "key": "relocation-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Порт-Артур",
+      "long": "Семья, какое-то время жившая в Форт-Уэрте, переехала в Порт-Артур, Техас. Среднюю школу Варли окончил в Нидерланде, Техас.",
+      "place": {
+        "label": "Порт-Артур"
+      },
+      "chapter": "texas-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Какое-то время семья Варли жила в Форт-Уэрте, а потом, в 1957 году, переехала в Порт-Артур (Техас)."
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Уход из университета, Хейт-Эшбери",
+      "long": "Бросил Мичиганский государственный университет, где учился на физика, затем на английском, до 20-летия и приехал в Сан-Франциско к «Лету любви» 1967 года.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "haight-ashbury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "left school before his 20th birthday and arrived in the Haight-Ashbury district of San Francisco just in time for the \"Summer of Love\" in 1967"
+      }
+    },
+    {
+      "key": "poverty-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Случайные заработки и нужда в Сан-Франциско",
+      "long": "В Сан-Франциско работал на неквалифицированных работах, питался в миссии Св. Антония и просил милостыню, прежде чем решил зарабатывать писательством.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "haight-ashbury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1967. There he worked at various unskilled jobs, depended on St. Anthony's Mission for meals, and panhandled"
+      }
+    },
+    {
+      "key": "other-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Случайное присутствие на Вудстоке",
+      "long": "Оказался возле Вудстока, когда у его машины кончился бензин в полумиле от фестиваля.",
+      "chapter": "haight-ashbury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was serendipitously present at Woodstock in 1969 when his car ran out of gas a half-mile away."
+      }
+    },
+    {
+      "key": "creation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первые «Хьюго» и «Локус» за повесть",
+      "long": "Повесть получила премии «Хьюго» и «Локус» (в 1978 году — «Небьюла»); в 1979 году «Локус» получили также сборник и короткая повесть, а в 1980-м — роман «Титан».",
+      "works": [
+        {
+          "ref": "persistence-of-vision"
+        }
+      ],
+      "chapter": "awards-hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1979 год — Премия «Хьюго», в номинации Повесть за «Навязчивость зрения»"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над сценарием фильма «Тысячелетие»",
+      "long": "Первая встреча по фильму «Тысячелетие» состоялась в 1979 году; Варли переписал сценарий шесть раз при четырёх режиссёрах, и многое из замысла потерялось.",
+      "chapter": "awards-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "We had the first meeting on Millennium in 1979. I ended up writing it six times."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ещё одна «Хьюго» и две «Локус»",
+      "long": "В 1982 году получил «Хьюго» за рассказ и две премии «Локус» (рассказ и повесть).",
+      "works": [
+        {
+          "ref": "the-pusher"
+        },
+        {
+          "ref": "blue-champagne"
+        }
+      ],
+      "chapter": "awards-hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1982 год — Премия «Хьюго», в номинации Рассказ за «Толкач» (1981 год)"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» и «Локус» за повесть",
+      "long": "В 1985 году повесть получила «Хьюго» и «Локус»; «Небьюла» — в 1984-м.",
+      "works": [
+        {
+          "ref": "press-enter"
+        }
+      ],
+      "chapter": "awards-hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1985 год — Премия «Хьюго», в номинации Повесть за «Нажмите „Ввод“» (1984 год)"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Разочарование в Голливуде, возвращение в литературу",
+      "long": "После сосредоточенности на киносценариях с середины 1980-х, большая часть которых не была снята, и разочарования в Голливуде вернулся в литературу романом.",
+      "works": [
+        {
+          "ref": "steel-beach"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К середине 1980-х годов Варли сосредоточился на киносценариях, но большая часть написанного им так и не воплотилась в фильмах. Разочаровавшись в Голливуде, Варли в 1992 году вернулся в литературу"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Молчание до конца столетия",
+      "long": "После выхода романа писатель замолчал; до конца столетия новых вещей не появилось.",
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Варли в 1992 году вернулся в литературу с романом «Steel Beach». Однако после публикации писатель вдруг замолчал, и до конца столетия новых вещей из-под его пера не выходило."
+      }
+    },
+    {
+      "key": "illness-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Операция на сердце, COVID-19, пневмония",
+      "long": "Сообщил о проблемах со здоровьем: четверном шунтировании, COVID-19 и бактериальной пневмонии; коллеги организовали сбор средств на его расходы.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, Varley announced a series of health problems including a quadruple bypass, COVID-19, and bacterial pneumonia."
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-12-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Бивертоне, Орегон",
+      "long": "Умер в Бивертоне, штат Орегон, в возрасте 78 лет.",
+      "place": {
+        "label": "Бивертон"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 10 декабря 2025 года в Бивертоне, штат Орегон."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "persistence-of-vision",
+      "title": "Навязчивость зрения",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "titan",
+      "title": "Титан",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-pusher",
+      "title": "Толкач",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "blue-champagne",
+      "title": "Голубое шампанское",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "press-enter",
+      "title": "Нажмите «Ввод»",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "steel-beach",
+      "title": "Steel Beach",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "the-golden-globe",
+      "title": "The Golden Globe",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "red-thunder",
+      "title": "Red Thunder",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    }
+  ]
+}

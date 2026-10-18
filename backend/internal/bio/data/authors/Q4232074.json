@@ -1,0 +1,57 @@
+{
+  "qid": "Q4232074",
+  "name": "Владислав Николаевич Конюшевский",
+  "born": "1967-07-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%8E%D1%88%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%2C_%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D1%81%D0%BB%D0%B0%D0%B2_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 155259812
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Тбилиси, учёба и армия",
+      "from": 1967,
+      "to": 2008
+    },
+    {
+      "key": "fantastika",
+      "title": "Алма-Ата и фантастика",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-07-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тбилиси",
+      "long": "Родился в Тбилиси 25 июля 1967 года.",
+      "place": {
+        "label": "Тбилиси"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в Тбилиси 25 июля 1967 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "inoy-variant",
+      "title": "Иной вариант",
+      "written": {
+        "from": 2009,
+        "to": 2012
+      }
+    }
+  ]
+}

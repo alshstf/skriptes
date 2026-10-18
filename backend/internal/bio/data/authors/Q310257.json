@@ -1,0 +1,263 @@
+{
+  "qid": "Q310257",
+  "name": "Майкл Каннингем",
+  "born": "1952-11-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%BD%D0%B8%D0%BD%D0%B3%D0%B5%D0%BC%2C_%D0%9C%D0%B0%D0%B9%D0%BA%D0%BB",
+      "rev": 154901679
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michael_Cunningham",
+      "rev": 1378409314
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Огайо, Калифорния, университеты",
+      "from": 1952,
+      "to": 1979
+    },
+    {
+      "key": "pervye-knigi",
+      "title": "Рассказы и первые романы",
+      "from": 1980,
+      "to": 1998
+    },
+    {
+      "key": "posle-chasov",
+      "title": "Пулитцер и признание",
+      "from": 1999,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-11-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Цинциннати",
+      "long": "Майкл Каннингем родился 6 ноября 1952 года в Цинциннати, штат Огайо. Детство прошло в Пасадене, Калифорния.",
+      "place": {
+        "label": "Цинциннати"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Майкл Каннингем родился 6 ноября 1952 года в Цинциннати, штат Огайо."
+      }
+    },
+    {
+      "key": "education-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Стэнфорде",
+      "long": "В 1975 году Каннингем получил степень бакалавра по английской литературе в Стэнфордском университете; затем учился в магистратуре Университета Айовы.",
+      "place": {
+        "label": "Стэнфорд"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году Каннингем получил степень бакалавра по английской литературе в Стэнфордском университете"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Национального фонда искусств",
+      "long": "В 1988 году Каннингем получил стипендию Национального фонда искусств США.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1988, Cunningham received a National Endowment for the Arts Fellowship and in 1993 a Guggenheim Fellowship."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рассказ в сборнике лучших рассказов Америки",
+      "long": "В 1989 году новелла «Белый ангел» вошла в ежегодный сборник лучших американских рассказов; позже она стала главой первого известного романа автора.",
+      "works": [
+        {
+          "ref": "a-home-at-the-end-of-the-world",
+          "note": "новелла позже стала главой романа"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1989 году новелла Каннингема «Белый ангел» (White Angel), ставшая позже главой в «Доме на краю света», попала в ежегодный сборник лучших американских рассказов."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "В 1993 году Каннингем получил стипендию Гуггенхайма.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1988, Cunningham received a National Endowment for the Arts Fellowship and in 1993 a Guggenheim Fellowship."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Уайтинга",
+      "long": "В 1995 году Каннингем получил премию Уайтинга.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1995 he was awarded a Whiting Award."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Роман «Часы» принёс Каннингему Пулитцеровскую премию 1999 года; в том же году он получил премию ПЕН/Фолкнер.",
+      "works": [
+        {
+          "ref": "the-hours"
+        }
+      ],
+      "chapter": "posle-chasov",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман «Часы» принёс Каннингему Пулитцеровскую премию 1999 года."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в кино: фильм «Вечер»",
+      "long": "Каннингем был сопродюсером фильма «Вечер» (2007) и соавтором сценария по роману Сьюзен Миноу.",
+      "chapter": "posle-chasov",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was a producer for the 2007 film Evening, starring Glenn Close, Toni Collette, and Meryl Streep."
+      }
+    },
+    {
+      "key": "persecution-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Изъятие романа из продажи в России",
+      "long": "В 2024 году роман «Дом на краю света» был изъят из продаж в России по «рекомендации Российского книжного союза» из-за «ЛГБТ-пропаганды».",
+      "works": [
+        {
+          "ref": "a-home-at-the-end-of-the-world"
+        }
+      ],
+      "chapter": "posle-chasov",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2024 писатель стал жертвой российской анти-ЛГБТ-кампании"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "a-home-at-the-end-of-the-world",
+      "title": "Дом на краю света",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "flesh-and-blood",
+      "title": "Плоть и кровь",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "the-hours",
+      "title": "Часы",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "specimen-days",
+      "title": "Избранные дни",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "by-nightfall",
+      "title": "Начинается ночь",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-snow-queen",
+      "title": "Снежная королева",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "a-wild-swan",
+      "title": "Дикий лебедь и другие истории",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

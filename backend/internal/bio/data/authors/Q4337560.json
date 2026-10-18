@@ -1,0 +1,319 @@
+{
+  "qid": "Q4337560",
+  "name": "Валентина Александровна Осеева",
+  "born": "1902-04-28",
+  "died": "1969-07-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D1%81%D0%B5%D0%B5%D0%B2%D0%B0%2C_%D0%92%D0%B0%D0%BB%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 154935173
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство в семье революционеров",
+      "from": 1902,
+      "to": 1922
+    },
+    {
+      "key": "pedagogue",
+      "title": "Беспризорники и первые рассказы",
+      "from": 1923,
+      "to": 1940
+    },
+    {
+      "key": "war-books",
+      "title": "Война, эвакуация, трилогия",
+      "from": 1941,
+      "to": 1951
+    },
+    {
+      "key": "crimea",
+      "title": "Крым и последние годы",
+      "from": 1952,
+      "to": 1969
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1902",
+      "date": {
+        "from": "1902-04-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Киеве в семье инженера",
+      "long": "Родилась в Киеве в семье инженера Александра Осеева; мать работала корректором в газете.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 15 (28) апреля 1902 года в Киеве в семье инженера"
+      }
+    },
+    {
+      "key": "persecution-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест отца-революционера",
+      "long": "Отец, участник революционного движения, арестован и заключён в крепость; семья из-за преследований полиции часто переезжала.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1909 году мой отец был арестован и посажен в крепость"
+      }
+    },
+    {
+      "key": "family-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Уход отца из семьи",
+      "long": "Отец оставил семью и женился во второй раз.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1916 году Александр Осеев оставил свою семью и женился на молдаванке"
+      }
+    },
+    {
+      "key": "relocation-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Москву, Трудкоммуна для беспризорниц",
+      "long": "Мать с дочерьми переехала в Москву; всех троих определили в Трудкоммуну имени Клары Цеткин воспитывать беспризорниц.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "pedagogue",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1923 году Ариадна Осеева с дочерьми Анжеликой и Валентиной переехала в Москву."
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924",
+        "to": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Воспитатель в детских коммунах и приёмниках",
+      "long": "Работала педагогом и воспитателем в детских коммунах и приёмниках для беспризорных детей, в том числе в Даниловском детприёмнике.",
+      "chapter": "pedagogue",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1924—1940 годах работала педагогом и воспитателем в детских коммунах и приёмниках для беспризорных детей."
+      }
+    },
+    {
+      "key": "child-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Леонида",
+      "long": "Родился сын Леонид, в первом браке с Сергеем Хмелёвым.",
+      "chapter": "pedagogue",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын — Леонид Хмелев (1926—1994)."
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый рассказ в редакции",
+      "long": "Отнесла в редакцию свой первый рассказ.",
+      "chapter": "pedagogue",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1937 году В. А. Осеева отнесла в редакцию свой первый рассказ «Гришка»."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход первой книги",
+      "long": "Вышла первая книга писательницы.",
+      "works": [
+        {
+          "ref": "ryzhiy-kot"
+        }
+      ],
+      "chapter": "pedagogue",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940 году вышла первая книга «Рыжий кот»."
+      }
+    },
+    {
+      "key": "loss-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, инженер Александр Дмитриевич Осеев.",
+      "chapter": "war-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Александра Дмитриевича Осеева (1864—1943)"
+      }
+    },
+    {
+      "key": "relocation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Крым со вторым мужем",
+      "long": "Поселилась с вторым мужем, писателем В. Д. Охотниковым, в посёлке Изюмовка близ Старого Крыма.",
+      "place": {
+        "label": "Изюмовка"
+      },
+      "chapter": "crimea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1952 года вместе с вторым мужем, писателем-фантастом В. Д. Охотниковым, проживала в Крыму"
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сталинская премия третьей степени",
+      "long": "Удостоена Сталинской премии третьей степени.",
+      "chapter": "crimea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Сталинской премии третьей степени (1952)."
+      }
+    },
+    {
+      "key": "loss-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Ариадна Леонидовна.",
+      "chapter": "crimea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "мать — Ариадна Леонидовна Осеева (урожд. Венераки; 1868—1962)"
+      }
+    },
+    {
+      "key": "loss-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры Ангелины",
+      "long": "Умерла сестра Ангелина (Анжела).",
+      "chapter": "crimea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Галина (1897—1983) и Ангелина (1897—1965)"
+      }
+    },
+    {
+      "key": "death-1969",
+      "date": {
+        "from": "1969-07-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умерла в Москве, похоронена на Ваганьковском кладбище.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "crimea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умерла 5 июля 1969 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ryzhiy-kot",
+      "title": "Рыжий кот",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "vasek-trubachev",
+      "title": "Васёк Трубачёв и его товарищи",
+      "qid": "Q28666363",
+      "written": {
+        "from": 1947,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "dinka",
+      "title": "Динка",
+      "qid": "Q4161933",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "dinka-proshchaetsya-s-detstvom",
+      "title": "Динка прощается с детством",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    }
+  ]
+}

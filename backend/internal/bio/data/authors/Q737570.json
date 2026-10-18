@@ -1,0 +1,188 @@
+{
+  "qid": "Q737570",
+  "name": "Джефф Нун",
+  "born": "1957-11-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D1%83%D0%BD%2C_%D0%94%D0%B6%D0%B5%D1%84%D1%84",
+      "rev": 153101793
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jeff_Noon",
+      "rev": 1372805971
+    }
+  ],
+  "chapters": [
+    {
+      "key": "manchester-years",
+      "title": "Дройлсден и Манчестер",
+      "from": 1957,
+      "to": 1992
+    },
+    {
+      "key": "vurt-years",
+      "title": "Вирт и признание",
+      "from": 1993,
+      "to": 1999
+    },
+    {
+      "key": "brighton-years",
+      "title": "Брайтон и поиски формы",
+      "from": 2000,
+      "to": 2012
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-11-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дройлсдене",
+      "long": "Родился в Дройлсдене, Великобритания.",
+      "place": {
+        "label": "Дройлсден"
+      },
+      "chapter": "manchester-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Дройлсден 1957-11-24"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Артура Кларка",
+      "long": "Дебютный роман получил премию Артура Кларка.",
+      "works": [
+        {
+          "ref": "vurt"
+        }
+      ],
+      "chapter": "vurt-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book won the 1994 Arthur C. Clarke Award."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "Получил премию Джона В. Кэмпбелла лучшему новому писателю-фантасту.",
+      "chapter": "vurt-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Джона В. Кэмпбелла лучшему новому писателю-фантасту 1995-01-01"
+      }
+    },
+    {
+      "key": "relocation-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Брайтон",
+      "long": "Переехал из Манчестера в Брайтон; до этого действие большинства его книг происходило в версии Манчестера.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "brighton-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Prior to his relocation in 2000 to Brighton, Noon set most of his stories in some version of his native city of Manchester."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "vurt",
+      "title": "Вирт",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "pollen",
+      "title": "Пыльца",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "automated-alice",
+      "title": "Автоматическая Алиса",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "nymphomation",
+      "title": "Нимформация",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "pixel-juice",
+      "title": "Пиксельный сок",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "needle-in-the-groove",
+      "title": "Игла в бороздке",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "cobralingus",
+      "title": "Кобралингус",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "falling-out-of-cars",
+      "title": "Брошенные машины",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "channel-sk1n",
+      "title": "Канал Кожа",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "qid": "Q1354608",
+  "name": "Эрин Моргенштерн",
+  "born": "1978-07-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D1%80%D0%B3%D0%B5%D0%BD%D1%88%D1%82%D0%B5%D1%80%D0%BD%2C_%D0%AD%D1%80%D0%B8%D0%BD",
+      "rev": 154345933
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Erin_Morgenstern",
+      "rev": 1371553913
+    }
+  ],
+  "chapters": [
+    {
+      "key": "massachusetts-i-smith",
+      "title": "Массачусетс и колледж Смит",
+      "from": 1978,
+      "to": 2002
+    },
+    {
+      "key": "nanowrimo-i-cirk",
+      "title": "NaNoWriMo и замысел цирка",
+      "from": 2003,
+      "to": 2009
+    },
+    {
+      "key": "agent-i-debyut",
+      "title": "Агент, контракт, дебют",
+      "from": 2010,
+      "to": 2011
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и новые книги",
+      "from": 2012,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1978",
+      "date": {
+        "from": "1978-07-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родилась 8 июля 1978 года; выросла в Маршфилде, штат Массachusetts.",
+      "place": {
+        "label": "Маршфилд"
+      },
+      "chapter": "massachusetts-i-smith",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Erin Morgenstern (born July 8, 1978)"
+      }
+    },
+    {
+      "key": "education-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в колледже Смит",
+      "long": "Изучала театральное и изобразительное искусство в колледже Смит в Нортгемптоне, в 2000 году получила степень бакалавра.",
+      "place": {
+        "label": "Нортгемптон"
+      },
+      "chapter": "massachusetts-i-smith",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "studied theater and studio art at Smith College in Northampton, Massachusetts, graduating in 2000"
+      }
+    },
+    {
+      "key": "creation-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Участие в марафоне NaNoWriMo",
+      "long": "С 2003 года участвует в ежегодном марафоне National Novel Writing Month.",
+      "chapter": "nanowrimo-i-cirk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She has participated in National Novel Writing Month since 2003"
+      }
+    },
+    {
+      "key": "creation-2005",
+      "date": {
+        "from": "2005-11",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первые наброски будущего романа",
+      "long": "В ноябре 2005 года, во время NaNoWriMo, написала первый текст о том, что позже стало романом «Ночной цирк».",
+      "works": [
+        {
+          "ref": "night-circus"
+        }
+      ],
+      "chapter": "nanowrimo-i-cirk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "first wrote about what would become The Night Circus in November 2005"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Договор с агентством после тридцати отказов",
+      "long": "В мае 2010 года заключила договор с агентством Inkwell Management после отказов тридцати литературных агентов.",
+      "works": [
+        {
+          "ref": "night-circus"
+        }
+      ],
+      "chapter": "agent-i-debyut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She signed with Inkwell Management in May 2010 after being rejected by thirty literary agents"
+      }
+    },
+    {
+      "key": "career-2010-2",
+      "date": {
+        "from": "2010-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа дебютного романа Doubleday",
+      "long": "В сентябре 2010 года продала дебютный роман издательству Doubleday.",
+      "works": [
+        {
+          "ref": "night-circus"
+        }
+      ],
+      "chapter": "agent-i-debyut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "sold her debut novel to Doubleday in September 2010"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии «Локус» и «Алекс»",
+      "long": "Дебютный роман получил премию «Алекс» Американской библиотечной ассоциации и премию «Локус» за лучший дебютный роман 2012 года.",
+      "works": [
+        {
+          "ref": "night-circus"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won an Alex Award from the American Library Association, the 2012 Locus Award for Best First Novel"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018-11-08",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Объявление о втором романе",
+      "long": "8 ноября 2018 года объявлено, что Doubleday выпустит новый роман писательницы.",
+      "works": [
+        {
+          "ref": "starless-sea"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On November 8, 2018, it was announced that Doubleday would publish a new novel by Morgenstern titled The Starless Sea"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Dragon Award",
+      "long": "Получила премию Dragon Award за лучший фэнтези-роман.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Dragon Award for Best Fantasy Novel 2020-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "night-circus",
+      "title": "Ночной цирк",
+      "qid": "Q10594892",
+      "written": {
+        "from": 2005,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "starless-sea",
+      "title": "Беззвёздное море",
+      "written": {
+        "from": 2018,
+        "to": 2019
+      }
+    }
+  ]
+}

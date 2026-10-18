@@ -1,0 +1,470 @@
+{
+  "qid": "Q336081",
+  "name": "Микки Спиллейн",
+  "born": "1918-03-09",
+  "died": "2006-07-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D0%BB%D0%BB%D0%B5%D0%B9%D0%BD%2C_%D0%9C%D0%B8%D0%BA%D0%BA%D0%B8",
+      "rev": 154587033
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mickey_Spillane",
+      "rev": 1379357259
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-yunost",
+      "title": "Бруклин и первые заработки",
+      "from": 1918,
+      "to": 1940
+    },
+    {
+      "key": "komiksy-i-vojna",
+      "title": "Комиксы и авиация",
+      "from": 1941,
+      "to": 1945
+    },
+    {
+      "key": "mayk-hammer-i-slava",
+      "title": "Майк Хаммер и слава",
+      "from": 1946,
+      "to": 1962
+    },
+    {
+      "key": "kino-i-vtoroy-brak",
+      "title": "Кино, второй брак",
+      "from": 1963,
+      "to": 1982
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Третий брак и поздние годы",
+      "from": 1983,
+      "to": 2006
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1918",
+      "date": {
+        "from": "1918-03-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в семье ирландца-бармена и шотландки; вырос главным образом в Элизабете, штат Нью-Джерси.",
+      "place": {
+        "label": "Бруклин, Нью-Йорк"
+      },
+      "chapter": "detstvo-i-yunost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Спиллейн родился 9 марта 1918 года в Бруклине (Нью-Йорк)."
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Эразма",
+      "long": "Окончил школу Эразма в Бруклине, куда семья вернулась в его юности. Писать начал ещё в школе.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "detstvo-i-yunost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he graduated from Erasmus Hall High School in 1936"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы сценаристом комиксов",
+      "long": "Знакомство с Джо Гиллом, а затем с его братом Реем, писавшим для Funnies Inc., привело Спиллейна в комиксы; он писал по восьмистраничной истории в день.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-i-yunost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While working as a salesman in Gimbels department store basement in 1940, he met tie salesman Joe Gill"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941-12-08",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в авиации армии США",
+      "long": "Вступил в авиацию армии США на следующий день после нападения на Перл-Харбор; стал лётчиком-истребителем и лётным инструктором.",
+      "chapter": "komiksy-i-vojna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Spillane joined the United States Army Air Corps on December 8, 1941, the day after the attack on Pearl Harbor."
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Мэри Энн Пирс",
+      "long": "Познакомился с Мэри Энн Пирс и женился на ней, когда служил инструктором в Гринвуде, штат Миссисипи; в браке родилось четверо детей.",
+      "place": {
+        "label": "Гринвуд, Миссисипи"
+      },
+      "chapter": "komiksy-i-vojna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he met and married first wife Mary Ann Pearce in 1945"
+      }
+    },
+    {
+      "key": "creation-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман и успех Майка Хаммера",
+      "long": "Роман написан за девять дней, чтобы заработать на загородный дом; в нём появился Майк Хаммер. Только в США разошлось 6,5 млн экземпляров.",
+      "works": [
+        {
+          "ref": "i-the-jury"
+        }
+      ],
+      "chapter": "mayk-hammer-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With the combined total of the 1947 hardcover and the Signet paperback (December 1948), I, the Jury sold 6-1/2 million copies in the United States alone."
+      }
+    },
+    {
+      "key": "faith-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Связь со «Свидетелями Иеговы»",
+      "long": "С 1950-х годов сотрудничал со «Свидетелями Иеговы», в том числе как миссионер; позднее стал активным членом организации.",
+      "chapter": "mayk-hammer-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Спиллейн с 1950-х годов сотрудничал с организацией «Свидетели Иеговы», в том числе в качестве миссионера."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая роль в кино",
+      "long": "Сыграл детектива в фильме «Кольцо страха» и без указания в титрах переписал его сценарий.",
+      "chapter": "mayk-hammer-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Spillane portrayed himself as a detective in Ring of Fear (1954)"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рекордные тиражи и враждебная критика",
+      "long": "Шесть романов Спиллейна вошли в десятку самых продаваемых американских книг; критики и литературный истеблишмент при этом оценивали их резко отрицательно.",
+      "chapter": "mayk-hammer-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the 1956 informative guide Sixty Years of Best Sellers found that the six novels Spillane had written up to that point were among the top ten best selling American fiction titles of all time"
+      }
+    },
+    {
+      "key": "family-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Распад первого брака",
+      "long": "Брак с Мэри Энн Пирс, длившийся с 1945 года, распался.",
+      "chapter": "mayk-hammer-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their marriage ended in 1962."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Роль Майка Хаммера в экранизации",
+      "long": "В британской экранизации сыграл Майка Хаммера — один из редких случаев, когда автор исполняет роль собственного героя.",
+      "place": {
+        "label": "Англия"
+      },
+      "works": [
+        {
+          "ref": "the-girl-hunters"
+        }
+      ],
+      "chapter": "kino-i-vtoroy-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In The Girl Hunters (1963) filmed in England, Spillane himself appeared as Hammer"
+      }
+    },
+    {
+      "key": "love-1965",
+      "date": {
+        "from": "1965-11",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак с Шерри Мэлину",
+      "long": "Женился на певице ночного клуба Шерри Мэлину; она позировала для обложки его книги 1972 года, ей посвящённой.",
+      "works": [
+        {
+          "ref": "the-erection-set"
+        }
+      ],
+      "chapter": "kino-i-vtoroy-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1965, he married his second wife, nightclub singer Sherri Malinou."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Роль в сериале «Коломбо»",
+      "long": "Сыграл в эпизоде сериала «Коломбо» писателя, которого убивают.",
+      "chapter": "kino-i-vtoroy-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1974, he appeared with Jack Cassidy in the television series Columbo starring Peter Falk in the episode \"Publish or Perish\"."
+      }
+    },
+    {
+      "key": "family-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод со второй женой",
+      "long": "Брак с Шерри Мэлину закончился разводом и судебным процессом.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The marriage ended in divorce (and a lawsuit) in 1983."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Шеймус»",
+      "long": "Получил премию «Шеймус» американского сообщества частных детективов-писателей.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Шеймус» 1983-01-01"
+      }
+    },
+    {
+      "key": "love-1983",
+      "date": {
+        "from": "1983-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак с Джейн Роджерс Джонсон",
+      "long": "Женился на Джейн Роджерс Джонсон; поселился с ней и двумя её дочерьми в доме на берегу в Мюррелс-Инлет, Южная Каролина.",
+      "place": {
+        "label": "Мюррелс-Инлет"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1983, Spillane married Jane Rogers Johnson, his final wife."
+      }
+    },
+    {
+      "key": "other-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Разрушение дома ураганом «Хьюго»",
+      "long": "Ураган «Хьюго» разрушил его дом в Мюррелс-Инлет так, что тот пришлось почти полностью отстраивать заново.",
+      "place": {
+        "label": "Мюррелс-Инлет"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, Hurricane Hugo ravaged his Murrells Inlet house to such a degree it had to be almost entirely reconstructed."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера премии Эдгара По",
+      "long": "Получил звание гроссмейстера премии Эдгара Аллана По.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гроссмейстер премии Эдгара Аллана По 1995-01-01"
+      }
+    },
+    {
+      "key": "death-2006",
+      "date": {
+        "from": "2006-07-17",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака в Мюррелс-Инлет",
+      "long": "Умер дома в Мюррелс-Инлет от рака поджелудочной железы. Литературный душеприказчик Макс Аллан Коллинз затем редактировал и дописывал его неизданные рукописи.",
+      "place": {
+        "label": "Мюррелс-Инлет"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Spillane died on July 17, 2006, at his home in Murrells Inlet, of pancreatic cancer."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "i-the-jury",
+      "title": "Суд — это я",
+      "qid": "Q1196500",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "my-gun-is-quick",
+      "title": "Мой револьвер быстр",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "vengeance-is-mine",
+      "title": "Месть — моё дело",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "one-lonely-night",
+      "title": "Одинокая ночь",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "the-long-wait",
+      "title": "Долгое ожидание",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "kiss-me-deadly",
+      "title": "Целуй меня насмерть",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "the-girl-hunters",
+      "title": "Охотники за девушкой",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "the-delta-factor",
+      "title": "Дельта-фактор",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-erection-set",
+      "title": "The Erection Set",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    }
+  ]
+}

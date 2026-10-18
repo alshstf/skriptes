@@ -1,0 +1,316 @@
+{
+  "qid": "Q356428",
+  "name": "Даррен О’Шонесси",
+  "born": "1972-07-02",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Darren_O%27Shaughnessy",
+      "rev": 1377005478
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-limerick",
+      "title": "Лондон и Лимерик",
+      "from": 1972,
+      "to": 1989
+    },
+    {
+      "key": "study-first-books",
+      "title": "Учёба и первые шаги",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "saga-years",
+      "title": "Сага о Даррене Шэне и её продолжения",
+      "from": 2000,
+      "to": 2013
+    },
+    {
+      "key": "family-pseudonyms",
+      "title": "Семья и новые имена",
+      "from": 2014,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-07-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился в больнице Св. Томаса в Лондоне. Детство прошло в районе Элефант-энд-Касл.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-limerick",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "born 2 July 1972"
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Ирландии",
+      "long": "Окончил среднюю школу Copsewood College в Паласкенри близ Лимерика, где семья жила с его шести лет.",
+      "place": {
+        "label": "Паласкенри"
+      },
+      "chapter": "london-limerick",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "attended secondary school at Copsewood College, Pallaskenry, graduating in 1989"
+      }
+    },
+    {
+      "key": "education-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Рохамптоне",
+      "long": "Вернулся в Лондон и учился на социологии и английском языке в Рохамптонском институте высшего образования.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "study-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He returned to London in 1990 to pursue a degree in Sociology and English from Roehampton Institute of Higher Education."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Договор с литературным агентом",
+      "long": "Заключил договор с литературным агентством Кристофера Литтла, которое представляло его до смерти Литтла в 2021 году.",
+      "chapter": "study-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "O'Shaughnessy signed up with the Christopher Little Literary Agency in 1996"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый прорыв в литературе",
+      "long": "Первый успех принёс роман «Ayuamarca», изданный Orion Publishing Group под полным именем автора.",
+      "works": [
+        {
+          "ref": "city-trilogy"
+        }
+      ],
+      "chapter": "study-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His breakthrough came with Ayuamarca, published in February 1999 by Orion Publishing Group under his full name."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех подросткового цикла",
+      "long": "Вышла первая книга «Саги о Даррене Шэне»; серия стала мировым успехом: к 2021 году книги продавались в 40 странах, тираж — около тридцати миллионов.",
+      "works": [
+        {
+          "ref": "saga-of-darren-shan"
+        }
+      ],
+      "chapter": "saga-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2000, Shan released Cirque du Freak, the first book of The Saga of Darren Shan series in the United Kingdom and Ireland."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-10-23",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация цикла студией Universal",
+      "long": "Universal Studios экранизировала первые три книги «Саги» в одном фильме «Цирк уродов: Помощник вампира».",
+      "works": [
+        {
+          "ref": "saga-of-darren-shan"
+        }
+      ],
+      "chapter": "saga-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "released in the US on 23 October 2009"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Новый псевдоним для взрослых книг",
+      "long": "Начал издавать книги для взрослых под псевдонимом Даррен Деш, чтобы их не путали с детскими книгами под именем Даррен Шэн.",
+      "chapter": "family-pseudonyms",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, O'Shaughnessy started publishing his books for adults under the name of \"Darren Dash\""
+      }
+    },
+    {
+      "key": "child-2014",
+      "date": {
+        "from": "2014-09-23",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Данте",
+      "long": "У писателя и его жены Хелен Базини родился первый ребёнок — сын Данте.",
+      "chapter": "family-pseudonyms",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 23 September 2014, the couple celebrated the birth of their first child, Dante"
+      }
+    },
+    {
+      "key": "child-2019",
+      "date": {
+        "from": "2019-03-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Гайи",
+      "long": "Родилась вторая дочь пары — Гайя.",
+      "chapter": "family-pseudonyms",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "welcomed their second child, a daughter named Gaia, on 26 March 2019"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020-04-01",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Самиздат в годы пандемии",
+      "long": "В условиях пандемии COVID-19 выпустил самостоятельно в электронном виде первые три книги серии «Арчибальд Локс».",
+      "works": [
+        {
+          "ref": "archibald-lox"
+        }
+      ],
+      "chapter": "family-pseudonyms",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 1 April 2020, O'Shaughnessy announced that he had silently released three books digitally due to the COVID-19 pandemic"
+      }
+    },
+    {
+      "key": "other-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Налоговая проверка и выплата 2,14 млн евро",
+      "long": "После финансовой проверки выплатил налоговой службе Ирландии 2,14 млн евро; недоплата составляла 1,4 млн евро.",
+      "place": {
+        "label": "Ирландия"
+      },
+      "chapter": "family-pseudonyms",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, Shan paid a tax bill of €2.14 million to the Revenue Commissioners"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "city-trilogy",
+      "title": "Город (трилогия)",
+      "qid": "Q7723165",
+      "written": {
+        "from": 1999,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "saga-of-darren-shan",
+      "title": "Сага о Даррене Шэне",
+      "qid": "Q853855",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "thin-executioner",
+      "title": "Тонкий палач",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "larten-crepsley",
+      "title": "Сага о Лартене Крепсли",
+      "written": {
+        "from": 2010,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "zom-b",
+      "title": "Зом-Б",
+      "written": {
+        "from": 2011,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "archibald-lox",
+      "title": "Арчибальд Локс",
+      "written": {
+        "from": 2020,
+        "to": 2022
+      }
+    }
+  ]
+}

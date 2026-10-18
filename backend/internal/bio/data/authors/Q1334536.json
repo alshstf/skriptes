@@ -1,0 +1,278 @@
+{
+  "qid": "Q1334536",
+  "name": "Том Роб Смит",
+  "born": "1979-02-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BC%D0%B8%D1%82%2C_%D0%A2%D0%BE%D0%BC_%D0%A0%D0%BE%D0%B1",
+      "rev": 154001559
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tom_Rob_Smith",
+      "rev": 1378497699
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-childhood",
+      "title": "Южный Лондон и Далвич",
+      "from": 1979,
+      "to": 1997
+    },
+    {
+      "key": "cambridge-pavia",
+      "title": "Кембридж, Павия, сценарии",
+      "from": 1998,
+      "to": 2007
+    },
+    {
+      "key": "child-44-trilogy",
+      "title": "Малыш 44 и трилогия",
+      "from": 2008,
+      "to": 2014
+    },
+    {
+      "key": "television",
+      "title": "Телевидение",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1979",
+      "date": {
+        "from": "1979-02-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Южном Лондоне",
+      "long": "Родился в Южном Лондоне в семье шведки и англичанина, торговцев антиквариатом; там же прошло детство.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1979 году в Южном Лондоне в семье шведки и англичанина."
+      }
+    },
+    {
+      "key": "education-1987",
+      "date": {
+        "from": "1987",
+        "to": "1997",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Даличе",
+      "long": "Учился в Даличском колледже с 1987 по 1997 год.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Обучался в Далвиче с 1987 по 1997 год."
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание колледжа Святого Иоанна в Кембридже",
+      "long": "Окончил колледж Святого Иоанна в Кембридже в 2001 году.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "cambridge-pavia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following his graduation from St John's College, Cambridge, in 2001"
+      }
+    },
+    {
+      "key": "education-2001-2",
+      "date": {
+        "from": "2001",
+        "to": "2002",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Стипендия Харпер Вуд и учёба в Павии",
+      "long": "Получил стипендию Harper Wood Studentship и год изучал творческое письмо в Университете Павии в Италии.",
+      "place": {
+        "label": "Павия"
+      },
+      "chapter": "cambridge-pavia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following his graduation from St John's College, Cambridge, in 2001, he received the Harper Wood Studentship for English Poetry and Literature and continued his Creative Writing studies for a year at the University of Pavia, in Italy."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Опцион Ридли Скотта на экранизацию",
+      "long": "В 2007 году Ридли Скотт приобрёл опцион на права экранизации романа «Малыш 44».",
+      "works": [
+        {
+          "ref": "child-44"
+        }
+      ],
+      "chapter": "cambridge-pavia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Ridley Scott optioned the film rights."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в литературе, международный успех",
+      "long": "В 2008 году вышел первый роман — криминальный триллер о послевоенном СССР; книга переведена на 36 языков.",
+      "works": [
+        {
+          "ref": "child-44"
+        }
+      ],
+      "chapter": "child-44-trilogy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году стартовал в литературе с книгой «Малыш 44»"
+      }
+    },
+    {
+      "key": "career-2008-2",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Стальной кинжал» имени Яна Флеминга",
+      "long": "Дебютный роман получил премию Ассоциации писателей-криминалистов, вошёл в длинный список Букера и в список Costa First Novel.",
+      "works": [
+        {
+          "ref": "child-44"
+        }
+      ],
+      "chapter": "child-44-trilogy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was awarded the 2008 Ian Fleming Steel Dagger for best thriller of the year by the Crime Writers' Association"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Барри за лучший дебютный роман",
+      "long": "Получил премию Барри за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "child-44"
+        }
+      ],
+      "chapter": "child-44-trilogy",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший дебютный роман 2009-01-01"
+      }
+    },
+    {
+      "key": "career-2009-2",
+      "date": {
+        "from": "2009-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Waverton Good Read Award и Galaxy Book Award",
+      "long": "В июле 2009 года получил премию Waverton Good Read Award за первые романы и Galaxy Book Award как лучший новичок.",
+      "works": [
+        {
+          "ref": "child-44"
+        }
+      ],
+      "chapter": "child-44-trilogy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 2009, he won the Waverton Good Read Award for first novels and the Galaxy Book Award for Best Newcomer with Child 44."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Телесериал «Лондонский шпион» на BBC Two",
+      "long": "В ноябре 2015 года на BBC Two вышел драматический сериал «Лондонский шпион», автором и сценаристом которого был Смит.",
+      "chapter": "television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Smith also wrote a drama television series, London Spy, which was first broadcast on BBC Two in November 2015."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "child-44",
+      "title": "Малыш 44",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "secret-speech",
+      "title": "Секретная речь",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "agent-6",
+      "title": "Агент 6",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-farm",
+      "title": "Ферма",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

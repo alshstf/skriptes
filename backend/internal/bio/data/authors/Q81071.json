@@ -1,0 +1,749 @@
+{
+  "qid": "Q81071",
+  "name": "Джеймс Кейн",
+  "born": "1892-07-01",
+  "died": "1977-10-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D0%B9%D0%BD%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 147492043
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_M._Cain",
+      "rev": 1379848644
+    }
+  ],
+  "chapters": [
+    {
+      "key": "maryland-youth",
+      "title": "Мэриленд: школа и случайные занятия",
+      "from": 1892,
+      "to": 1916
+    },
+    {
+      "key": "war-and-newspaper",
+      "title": "Газета, фронт, шахты",
+      "from": 1917,
+      "to": 1923
+    },
+    {
+      "key": "new-york-mercury",
+      "title": "Нью-Йорк и «Америкэн Меркьюри»",
+      "from": 1924,
+      "to": 1930
+    },
+    {
+      "key": "hollywood-novels",
+      "title": "Голливуд и чёрные романы",
+      "from": 1931,
+      "to": 1948
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1949,
+      "to": 1977
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1892",
+      "date": {
+        "from": "1892-07-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Аннаполисе",
+      "long": "Родился в Аннаполисе, штат Мэриленд, первым из пяти детей в семье преподавателя и бывшей певицы.",
+      "place": {
+        "label": "Аннаполис"
+      },
+      "chapter": "maryland-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She gave birth to the first of her five children on July 1, 1892: James Mallahan Cain."
+      }
+    },
+    {
+      "key": "relocation-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Честертаун",
+      "long": "Отец стал президентом Вашингтон-колледжа, и семья переехала в Честертаун, где мальчик начал заниматься в подготовительных классах колледжа.",
+      "place": {
+        "label": "Честертаун"
+      },
+      "chapter": "maryland-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1903, when Cain turned eleven, the family relocated to Chestertown, Maryland."
+      }
+    },
+    {
+      "key": "career-1910",
+      "date": {
+        "from": "1910",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Годы случайных занятий",
+      "long": "После колледжа сменил несколько занятий: учитель, дорожный инспектор, певец, продавец страховок. По мнению биографа Хупса, этот опыт отразился в его романах.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "works": [
+        {
+          "ref": "double-indemnity",
+          "note": "биограф Рой Хупс связывает роман с работой автора в страховой компании"
+        },
+        {
+          "ref": "serenade",
+          "note": "биограф Рой Хупс связывает музыкальные главы с его недолгой певческой карьерой"
+        },
+        {
+          "ref": "mildred-pierce",
+          "note": "биограф Рой Хупс связывает музыкальную линию с его недолгой певческой карьерой"
+        }
+      ],
+      "chapter": "maryland-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания школы в 1910 Кейн сменил несколько профессий (учитель, дорожный инспектор, певец, продавец страховок)"
+      }
+    },
+    {
+      "key": "career-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Директор школы в Вене, Мэриленд",
+      "long": "Принял место директора школы в Вене (Мэриленд); там же выступал как певец, но мать отговорила его от оперной карьеры.",
+      "place": {
+        "label": "Вена, Мэриленд"
+      },
+      "chapter": "maryland-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1913 he accepted a job as principal of a high school in Vienna, Maryland"
+      }
+    },
+    {
+      "key": "education-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Преподавание в Вашингтон-колледже",
+      "long": "Вернулся в Честертаун, преподавал английский в Вашингтон-колледже и получил степень магистра по драме.",
+      "place": {
+        "label": "Честертаун"
+      },
+      "chapter": "maryland-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain returned home to Chestertown in 1914 and was hired as an English instructor at Washington College"
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало журналистской карьеры в Балтиморе",
+      "long": "Начал работать репортёром в Балтиморе; в 1918 году перешёл в «Балтимор Сан».",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 1917 года стал работать корреспондентом газеты «Балтимор Сан»"
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918-06",
+        "to": "1919-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в армии США, Франция",
+      "long": "Призван в армию в июне 1918 года, служил во Франции в 79-й пехотной дивизии, редактировал газету 157-й бригады; демобилизован 5 июня 1919 года.",
+      "place": {
+        "label": "Кэмп-Мид, Мэриленд"
+      },
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1918, Cain, a skeptic of American war propaganda, was inducted into the Army and began basic training at Camp Meade, Maryland."
+      }
+    },
+    {
+      "key": "war-1918-2",
+      "date": {
+        "from": "1918-09",
+        "to": "1918-10",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Мёз-Аргоннское наступление, отравление газом",
+      "long": "Участвовал в Мёз-Аргоннском наступлении, держал связь с 157-й бригадой 26–27 сентября; в конце октября едва выжил при газовой атаке.",
+      "place": {
+        "label": "Мёз-Аргонн, Франция"
+      },
+      "works": [
+        {
+          "ref": "the-taking-of-montfaucon",
+          "note": "попытки установить связь с бригадой 26–27 сентября легли в основу рассказа"
+        }
+      ],
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Private First Class Cain's unit was engaged in the summer of 1918, after the Battle of the Marne, in a major offensive action, the Meuse-Argonne campaign… In late October, weeks before the end of the war, Cain barely survived a poison gas attack."
+      }
+    },
+    {
+      "key": "love-1920",
+      "date": {
+        "from": "1920-01-17",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мэри Клоу",
+      "long": "Женился на Мэри Ребекке Клоу, подруге студенческих лет.",
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain married Mary Rebekah Clough, his college sweetheart, on January 17, 1920."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "to": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортажи об угольных шахтах Западной Виргинии",
+      "long": "Освещал процесс Билла Близзарда, затем спускался в угольную шахту в Западной Виргинии; очерк о шахтёрах вышел в «Атлантик» в октябре 1922 года.",
+      "place": {
+        "label": "Западная Виргиния"
+      },
+      "works": [
+        {
+          "ref": "past-all-dishonor",
+          "note": "опыт работы в шахте, по статье, лёг в основу романа"
+        },
+        {
+          "ref": "the-butterfly",
+          "note": "опыт работы в шахте, по статье, лёг в основу романа"
+        }
+      ],
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1921, Cain covered the Bill Blizzard treason trial for the Sun"
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в колледже Св. Иоанна",
+      "long": "Переехал с женой в Аннаполис и начал преподавать журналистику и английский в колледже Св. Иоанна.",
+      "place": {
+        "label": "Аннаполис"
+      },
+      "chapter": "war-and-newspaper",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1923, Cain and his wife Mary moved to Annapolis, Maryland, where he began teaching courses in journalism and English at St. John's College."
+      }
+    },
+    {
+      "key": "relocation-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Нью-Йорк, журнал Менкена",
+      "long": "По приглашению Г. Л. Менкена стал автором журнала «Америкэн Меркьюри», оставил преподавание и переехал в Нью-Йорк, позже работал в «Нью-Йорк Уорлд».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-mercury",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Журналистская карьера Кейна оказалась успешной, и в 1924 году он переезжает в Нью-Йорк."
+      }
+    },
+    {
+      "key": "illness-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лечение туберкулёза в санатории",
+      "long": "Лечился от туберкулёза в санатории, к сентябрю 1924 года был выписан.",
+      "chapter": "new-york-mercury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain entered a sanitorium for treatment of tuberculosis and was successfully treated and released by September 1924."
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Неудача первой пьесы",
+      "long": "Первая пьеса, написанная по впечатлениям от репортажей в Западной Виргинии, сошла со сцены через две недели.",
+      "place": {
+        "label": "Стамфорд"
+      },
+      "chapter": "new-york-mercury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Crashing the Gates opened in New England at Stamford and Worcester in February 1926 but closed after two weeks, receiving mixed reviews."
+      }
+    },
+    {
+      "key": "family-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Мэри Клоу",
+      "long": "Брак с Мэри Клоу, распавшийся в 1924 году, был расторгнут официально.",
+      "chapter": "new-york-mercury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They would separate in 1924 and divorce in 1927."
+      }
+    },
+    {
+      "key": "love-1927",
+      "date": {
+        "from": "1927-07-02",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элиной Тышецки",
+      "long": "Женился на финско-американке Элине Тышецки, матери двоих детей; своих детей у Кейна не было.",
+      "chapter": "new-york-mercury",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On July 2, 1927, Cain married Elina Tyszecki, a Finnish-American divorcee and mother of two children"
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ответственный редактор «Нью-Йоркера»",
+      "long": "После закрытия «Нью-Йорк Уорлд» девять месяцев руководил редакцией «Нью-Йоркера».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When the New York World ceased publishing in 1931, Cain, on the recommendation of Morris Markey, was hired by Harold Ross to act as managing editor for The New Yorker."
+      }
+    },
+    {
+      "key": "relocation-1931",
+      "date": {
+        "from": "1931-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в Голливуд, контракт с «Парамаунт»",
+      "long": "Ушёл из «Нью-Йоркера» после конфликта с Россом и уехал в Голливуд сценаристом студии «Парамаунт».",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain's tempestuous relationship with Ross led to his departure in November 1931 when Cain's agent, James Geller, negotiated a contract as a screenwriter for Paramount Pictures at $400 a week."
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Увольнение из «Парамаунт»",
+      "long": "Уволен с «Парамаунт» после неудачных сценарных работ; к кинематографу остался равнодушен.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "the-baby-in-the-icebox",
+          "note": "оставшись без работы в 1932 году, Кейн написал рассказ по калифорнийским впечатлениям"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain was terminated by Paramount in May 1932"
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над первым романом",
+      "long": "Большую часть года писал первый роман — историю об адюльтере и убийстве, рассказанную от первого лица (по русской статье — шесть месяцев).",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "the-postman-always-rings-twice"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "For most of 1933, Cain was occupied writing the novel that would demonstrate a mastery of the first-person confessional that would make him famous: The Postman Always Rings Twice."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый коммерческий успех",
+      "long": "Первый роман стал бестселлером, затем получил театральную постановку и экранизацию.",
+      "works": [
+        {
+          "ref": "the-postman-always-rings-twice"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Опубликованный в 1934 «Почтальон всегда звонит дважды» становится одной из первых коммерчески успешных американских книг"
+      }
+    },
+    {
+      "key": "creation-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Сериал для журнала «Либерти»",
+      "long": "Написал для журнала «Либерти» сериал в том же стиле, что и первый роман; его популярность резко увеличила тираж журнала.",
+      "works": [
+        {
+          "ref": "double-indemnity"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain wrote a facsimile of Postman that published as a Liberty magazine serial in 1936: Double Indemnity"
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал театральной постановки романа",
+      "long": "Несмотря на многочисленные правки Кейна, рецензии были в основном отрицательными, спектакль закрылся после 73 представлений.",
+      "works": [
+        {
+          "ref": "the-postman-always-rings-twice"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "director Robert B. Sinclair staged a theatrical adaptation of The Postman Always Rings Twice, opening in February 1936."
+      }
+    },
+    {
+      "key": "other-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Литературная буря вокруг оперного романа",
+      "long": "Оперный роман, затрагивавший тему гомосексуальности, вызвал литературную полемику и укрепил положение автора.",
+      "works": [
+        {
+          "ref": "serenade"
+        }
+      ],
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain's next literary project was 1938's Serenade, an opera-themed novel… Cain's handling of the \"sensational\" topic placed him at \"the center of a literary tempest,\""
+      }
+    },
+    {
+      "key": "family-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Элиной Тышецки",
+      "long": "Брак с Элиной Тышецки, начавшийся в 1927 году, закончился разводом.",
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They would divorce in 1942."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с актрисой Эйлин Прингл",
+      "long": "В 1944 году женился на актрисе Эйлин Прингл; брак был бурным и через два года распался.",
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, Cain married the film actress Aileen Pringle, but the marriage was tempestuous and dissolved in a bitter divorce two years later."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Проект «Американского авторского управления»",
+      "long": "Предложил создать организацию для защиты авторских прав писателей; идею назвали «планом Кейна», многие авторы осудили её, и она была оставлена.",
+      "chapter": "hollywood-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, Cain wrote four articles for Screen Writer magazine in which he proposed the creation of an \"American Authors' Authority\""
+      }
+    },
+    {
+      "key": "loss-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Флоренс Макбет",
+      "long": "Умерла четвёртая жена, бывшая оперная певица Флоренс Макбет.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His fourth marriage to Florence Macbeth lasted until her death in 1966."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера премии Эдгара По",
+      "long": "Удостоен звания гроссмейстера премии Эдгара Аллана По.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1970, Cain became one of the Edgar Awards' Grand Masters."
+      }
+    },
+    {
+      "key": "death-1977",
+      "date": {
+        "from": "1977-10-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умер в возрасте 85 лет; писал до последних лет жизни.",
+      "place": {
+        "label": "Юниверсити-Парк"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cain continued writing up to his death in 1977 at the age of 85."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-postman-always-rings-twice",
+      "title": "Почтальон всегда звонит дважды",
+      "qid": "Q934430",
+      "written": {
+        "from": 1933,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "double-indemnity",
+      "title": "Двойная страховка",
+      "qid": "Q2270341",
+      "written": {
+        "from": 1935,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "serenade",
+      "title": "Серенада",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "mildred-pierce",
+      "title": "Милдред Пирс",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "past-all-dishonor",
+      "title": "Past All Dishonor",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "the-butterfly",
+      "title": "The Butterfly",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "the-moth",
+      "title": "The Moth",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "galatea",
+      "title": "Galatea",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "mignon",
+      "title": "Mignon",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "the-baby-in-the-icebox",
+      "title": "Младенец в холодильнике",
+      "written": {
+        "from": 1932,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "pastorale",
+      "title": "Pastorale",
+      "written": {
+        "from": 1928,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "the-taking-of-montfaucon",
+      "title": "The Taking of Montfaucon",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    }
+  ]
+}

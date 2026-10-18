@@ -1,0 +1,268 @@
+{
+  "qid": "Q105994",
+  "name": "Патрик Зюскинд",
+  "born": "1949-03-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%97%D1%8E%D1%81%D0%BA%D0%B8%D0%BD%D0%B4%2C_%D0%9F%D0%B0%D1%82%D1%80%D0%B8%D0%BA",
+      "rev": 151453377
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Patrick_S%C3%BCskind",
+      "rev": 1376281329
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-bavaria",
+      "title": "Детство в Баварии",
+      "from": 1949,
+      "to": 1967
+    },
+    {
+      "key": "studies",
+      "title": "Мюнхен и Прованс",
+      "from": 1968,
+      "to": 1973
+    },
+    {
+      "key": "paris",
+      "title": "Париж, пьеса и сценарии",
+      "from": 1974,
+      "to": 1984
+    },
+    {
+      "key": "perfume-years",
+      "title": "«Парфюмер» и уединение",
+      "from": 1985,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1949",
+      "date": {
+        "from": "1949-03-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье писателя",
+      "long": "Родился в Амбахе близ Мюнхена в семье писателя и журналиста Вильгельма Эмануэля Зюскинда; мать — спортивный тренер.",
+      "place": {
+        "label": "Амбах"
+      },
+      "chapter": "childhood-bavaria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Патрик Зюскинд родился 26 марта 1949 года в Амбахе"
+      }
+    },
+    {
+      "key": "education-1968",
+      "date": {
+        "from": "1968",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на историка в Мюнхене и Эксе",
+      "long": "Изучал историю в Мюнхенском университете и два семестра учился в Экс-ан-Провансе; курс не завершил.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "studies",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Süskind studied medieval and modern history at LMU Munich and two semesters in Aix-en-Provence from 1968 to 1974, but never graduated."
+      }
+    },
+    {
+      "key": "loss-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, писатель и журналист Вильгельм Эмануэль Зюскинд.",
+      "chapter": "studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вильгельма Эмануэля Зюскинда (1901—1970)"
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж ради литературы",
+      "long": "На деньги родителей переехал в Париж и занялся литературой; писал рассказы и сценарии, ни один из которых не был опубликован.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году Зюскинд благодаря финансовой поддержке родителей переехал в Париж и начал заниматься литературным творчеством."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех: монолог для театра",
+      "long": "Первый крупный успех принёс монолог, задуманный как радиопьеса; в сезоне 1984–85 его сыграли более 500 раз.",
+      "works": [
+        {
+          "ref": "double-bass"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981, he had his first major success with the play Der Kontrabaß (The Double Bass), which was conceived originally as a radio play."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировая известность после романа",
+      "long": "Выход романа принёс широкую известность; он семь лет держался в списке бестселлеров Der Spiegel.",
+      "works": [
+        {
+          "ref": "perfume-1985"
+        }
+      ],
+      "chapter": "perfume-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году был опубликован роман «Парфюмер», принёсший писателю широкую известность."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези",
+      "long": "Получил Всемирную премию фэнтези за лучший роман.",
+      "works": [
+        {
+          "ref": "perfume-1985"
+        }
+      ],
+      "chapter": "perfume-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший роман 1987-01-01"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за сценарий «Россини»",
+      "long": "Получил премию за сценарий фильма «Россини» режиссёра Гельмута Дитля; от ряда других наград отказывался.",
+      "chapter": "perfume-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996 he won the Screenplay Prize of the German Department for Culture for his screenplay of Rossini, directed by Dietl."
+      }
+    },
+    {
+      "key": "loss-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть старшего брата Мартина",
+      "long": "Умер старший брат Мартин, журналист.",
+      "chapter": "perfume-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а старший брат Мартин (1944—2009) — журналистом"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "double-bass",
+      "title": "Контрабас",
+      "qid": "Q1194921",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "perfume-1985",
+      "title": "Парфюмер. История одного убийцы",
+      "qid": "Q459303",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "pigeon",
+      "title": "Голубка",
+      "qid": "Q1216687",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "story-of-mr-sommer",
+      "title": "Повесть о господине Зоммере",
+      "qid": "Q1212974",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "three-stories-and-a-reflection",
+      "title": "Три истории и одно наблюдение",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "on-love-and-death",
+      "title": "О любви и смерти",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    }
+  ]
+}

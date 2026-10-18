@@ -1,0 +1,204 @@
+{
+  "qid": "Q506102",
+  "name": "Андре Асиман",
+  "born": "1951-01-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D1%81%D0%B8%D0%BC%D0%B0%D0%BD%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5",
+      "rev": 155004052
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Andr%C3%A9_Aciman",
+      "rev": 1380065831
+    }
+  ],
+  "chapters": [
+    {
+      "key": "alexandria",
+      "title": "Александрия",
+      "from": 1951,
+      "to": 1965
+    },
+    {
+      "key": "exile",
+      "title": "Рим и Нью-Йорк",
+      "from": 1966,
+      "to": 1972
+    },
+    {
+      "key": "study",
+      "title": "Учёба и преподавание",
+      "from": 1973,
+      "to": 2006
+    },
+    {
+      "key": "recognition",
+      "title": "Признание",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1951",
+      "date": {
+        "from": "1951-01-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в сефардской семье в Александрии",
+      "long": "Родился в Александрии в богатой сефардской семье; отец владел трикотажной фабрикой. Дома говорили в основном по-французски.",
+      "place": {
+        "label": "Александрия"
+      },
+      "chapter": "alexandria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Андре Асиман (англ. André Aciman; род. 2 января 1951, Александрия)"
+      }
+    },
+    {
+      "key": "persecution-1956",
+      "date": {
+        "from": "1956",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Изгнание евреев из Египта, семья остаётся",
+      "long": "Большая часть евреев была изгнана из Египта при Насере; семья Асиманов этой участи избежала, но осталась без египетского гражданства.",
+      "place": {
+        "label": "Александрия"
+      },
+      "chapter": "alexandria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956—1957 годах большая часть евреев была изгнана из Египта президентом Гамаль Абдель Насером."
+      }
+    },
+    {
+      "key": "relocation-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Вынужденный отъезд семьи из Египта",
+      "long": "Из-за роста антисемитских настроений семья покинула Египет. Отец купил итальянское гражданство; мать с сыновьями поселилась в Риме, отец — в Париже.",
+      "place": {
+        "label": "Александрия"
+      },
+      "works": [
+        {
+          "ref": "out-of-egypt"
+        }
+      ],
+      "chapter": "alexandria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "была вынуждена покинуть страну восемь лет спустя (в 1965 году)"
+      }
+    },
+    {
+      "key": "relocation-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Нью-Йорк",
+      "long": "Семья переехала из Рима в Нью-Йорк.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1968 году семья перебралась в Нью-Йорк."
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в колледже Леман",
+      "long": "Получил степень бакалавра английского языка и литературы в колледже Леман в Бронксе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He earned a B.A. degree in English and Comparative Literature from Lehman College in 1973"
+      }
+    },
+    {
+      "key": "education-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистр и PhD по литературе в Гарварде",
+      "long": "Получил степени магистра и PhD по сравнительному литературоведению в Гарвардском университете.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "an M.A. and PhD in Comparative Literature from Harvard University in 1988"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Лямбда» за гей-прозу",
+      "long": "Роман получил премию «Лямбда» за гей-литературу в 2008 году.",
+      "works": [
+        {
+          "ref": "call-me-by-your-name"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "winner of the 2008 Lambda Literary Award for Gay Fiction"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "out-of-egypt",
+      "title": "Из Египта",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "call-me-by-your-name",
+      "title": "Назови меня своим именем",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

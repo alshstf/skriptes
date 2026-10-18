@@ -1,0 +1,312 @@
+{
+  "qid": "Q3113265",
+  "name": "Грэм Макнилл",
+  "born": "1971-08-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D0%BD%D0%B8%D0%BB%D0%BB%2C_%D0%93%D1%80%D1%8D%D0%BC",
+      "rev": 151678857
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Graham_McNeill",
+      "rev": 1343780754
+    }
+  ],
+  "chapters": [
+    {
+      "key": "glasgow-architecture",
+      "title": "Глазго и архитектура",
+      "from": 1971,
+      "to": 1999
+    },
+    {
+      "key": "games-workshop",
+      "title": "Games Workshop и Чёрная библиотека",
+      "from": 2000,
+      "to": 2014
+    },
+    {
+      "key": "riot-games",
+      "title": "Riot Games",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1971",
+      "date": {
+        "from": "1971-08-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Глазго",
+      "long": "Грэм Макнилл родился в Глазго, Шотландия.",
+      "place": {
+        "label": "Глазго"
+      },
+      "chapter": "glasgow-architecture",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Глазго 1971-08-15"
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Изучение архитектуры в Глазго",
+      "long": "Изучал архитектуру в Каледонском университете Глазго в 1989–1996 годах.",
+      "place": {
+        "label": "Глазго"
+      },
+      "chapter": "glasgow-architecture",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Изучал архитектуру в Glasgow Caledonian University в 1989—1996 годах."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа архитектором",
+      "long": "С 1996 года работал в архитектурном бюро, проектируя жилые и коммерческие здания, пока не увидел объявление о наборе писателей.",
+      "chapter": "glasgow-architecture",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1996 года работал архитектором до тех пор, пока не увидел объявление о наборе писателей в номера журнала White Dwarf от декабря 1999 года."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Штатный писатель Games Workshop",
+      "long": "В феврале 2000 года стал штатным автором в Games Workshop, писал статьи для White Dwarf и книги по армиям.",
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 2000, McNeill started work for Games Workshop as a staff writer for games development"
+      }
+    },
+    {
+      "key": "career-2000-2",
+      "date": {
+        "from": "2000-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в команду Warhammer 40,000",
+      "long": "В мае 2000 года начал писать для команды Warhammer 40,000; позже работал над кодексами, в том числе Codex: Tau.",
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 2000 he started writing for the Warhammer 40,000 team"
+      }
+    },
+    {
+      "key": "creation-2006",
+      "date": {
+        "from": "2006",
+        "to": "2008",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Романы цикла «Ересь Хоруса»",
+      "long": "Написал для Чёрной библиотеки романы серии Horus Heresy: в 2006–2008 годах вышли три книги.",
+      "works": [
+        {
+          "ref": "false-gods"
+        },
+        {
+          "ref": "fulgrim"
+        },
+        {
+          "ref": "mechanicum"
+        }
+      ],
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His works — False Gods (2006), Fulgrim (2007) and Mechanicum (2008), are part of The Black Library's Horus Heresy novel series."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый роман вне Чёрной библиотеки",
+      "long": "В начале 2009 года вышел его первый роман вне Black Library — по вселенной StarCraft от Blizzard.",
+      "works": [
+        {
+          "ref": "i-mengsk"
+        }
+      ],
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Early 2009 saw the release of his first novel outside of the Black Library, I, Mengsk"
+      }
+    },
+    {
+      "key": "creation-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Совместная работа с Дэном Эбнеттом над сюжетом",
+      "long": "Роман о Тысяче Сынов вышел в 2011 году и попал на 22-е место в списке бестселлеров New York Times; писался согласованно с романом Эбнетта о том же событии.",
+      "works": [
+        {
+          "ref": "a-thousand-sons",
+          "note": "писался в согласовании с романом Дэна Эбнетта Prospero Burns, оба автора сверяли сюжетные точки"
+        }
+      ],
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was released in 2011, and entered at number 22 on The New York Times Best Seller List"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый роман для Fantasy Flight Games",
+      "long": "В 2011 году написал первый роман для Fantasy Flight Games по настольной игре Arkham Horror.",
+      "works": [
+        {
+          "ref": "ghouls-of-the-miskatonic"
+        }
+      ],
+      "chapter": "games-workshop",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, McNeill wrote his first novel for Fantasy Flight Games"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в Riot Games",
+      "long": "В июне 2015 года начал работать в Riot Games старшим сценаристом, создавая предыстории персонажей и мира League of Legends.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "riot-games",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2015 McNeill commenced work with Riot Games"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из Riot Games",
+      "long": "В январе 2024 года был уволен из Riot Games.",
+      "chapter": "riot-games",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2024 McNeill was laid off from Riot Games."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "false-gods",
+      "title": "Ложные боги",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "fulgrim",
+      "title": "Фулгрим",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "mechanicum",
+      "title": "Механикум",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "the-killing-ground",
+      "title": "The Killing Ground",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "i-mengsk",
+      "title": "I, Mengsk",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "a-thousand-sons",
+      "title": "Тысяча Сынов",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "ghouls-of-the-miskatonic",
+      "title": "Ghouls of the Miskatonic",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

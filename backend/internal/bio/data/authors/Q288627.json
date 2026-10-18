@@ -1,0 +1,309 @@
+{
+  "qid": "Q288627",
+  "name": "Энн Перри",
+  "born": "1938-10-28",
+  "died": "2023-04-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D1%80%D0%B8%2C_%D0%AD%D0%BD%D0%BD",
+      "rev": 148167071
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Anne_Perry",
+      "rev": 1374977562
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство и болезнь",
+      "from": 1938,
+      "to": 1953
+    },
+    {
+      "key": "murder-and-prison",
+      "title": "Убийство, суд, заключение",
+      "from": 1954,
+      "to": 1959
+    },
+    {
+      "key": "new-name",
+      "title": "Новое имя и первые романы",
+      "from": 1960,
+      "to": 1993
+    },
+    {
+      "key": "revelation",
+      "title": "Разоблачение и поздние годы",
+      "from": 1994,
+      "to": 2023
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1938",
+      "date": {
+        "from": "1938-10-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье физика Хьюма",
+      "long": "Родилась как Джульет Мэрион Хьюм в семье физика Генри Рейнсфорда Хьюма.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Juliet Marion Hulme was born on 28 October 1938 in London"
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Приезд в Новую Зеландию к семье",
+      "long": "После лечения туберкулёза в тёплых краях Джульет воссоединилась с семьёй в Новой Зеландии, где отец стал ректором университетского колледжа Кентербери.",
+      "place": {
+        "label": "Крайстчерч"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A 1948 Auckland Star photograph of Hulme arriving in New Zealand"
+      }
+    },
+    {
+      "key": "family-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод родителей и угроза разлуки с подругой",
+      "long": "Мать объявила о разводе и о планах отправить Джульет в ЮАР к тётке; подруги не хотели разлучаться.",
+      "place": {
+        "label": "Крайстчерч"
+      },
+      "chapter": "murder-and-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 1954 года мать Хьюм объявила дочери, что она решила развестись с мужем"
+      }
+    },
+    {
+      "key": "other-1954",
+      "date": {
+        "from": "1954-06-22",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Убийство матери подруги",
+      "long": "Пятнадцатилетняя Джульет вместе с подругой Полин Паркер убила мать подруги Хонору Рипер во время прогулки в парке.",
+      "place": {
+        "label": "Крайстчерч"
+      },
+      "chapter": "murder-and-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 22 June 1954, the girls and Rieper went for a walk in Victoria Park"
+      }
+    },
+    {
+      "key": "persecution-1954",
+      "date": {
+        "from": "1954-08-28",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Суд и приговор к тюремному заключению",
+      "long": "Как несовершеннолетние, обе были приговорены к содержанию «по усмотрению Её Величества»; Джульет отправили в тюрьму Маунт-Иден в Окленде.",
+      "place": {
+        "label": "Крайстчерч"
+      },
+      "chapter": "murder-and-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Parker and Hulme stood trial in Christchurch in 1954 and were found guilty on 28 August."
+      }
+    },
+    {
+      "key": "other-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Смена имени на Энн Перри",
+      "long": "Взяла имя Энн Перри, использовав фамилию отчима.",
+      "chapter": "murder-and-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После освобождения в 1959 году Хьюм сменила имя на Энн Перри"
+      }
+    },
+    {
+      "key": "relocation-1959",
+      "date": {
+        "from": "1959-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Освобождение и возвращение в Англию",
+      "long": "После пяти лет заключения вышла на свободу и вернулась в Англию.",
+      "chapter": "murder-and-prison",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After being released from prison in November 1959, Perry returned to England"
+      }
+    },
+    {
+      "key": "faith-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Вступление в церковь мормонов",
+      "long": "Живя в США, вступила в Церковь Иисуса Христа Святых последних дней.",
+      "chapter": "new-name",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "где в 1968 году присоединилась к Церкви Иисуса Христа Святых последних дней"
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Раскрытие прошлого после выхода фильма",
+      "long": "Из-за выхода фильма «Небесные создания» СМИ раскрыли, что Энн Перри — Джульет Хьюм; об этом она узнала накануне премьеры.",
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994, it became public knowledge that Perry had been convicted of murder in Christchurch, New Zealand, in 1954"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Эдгара По за рассказ",
+      "long": "Рассказ «Герои» получил премию Эдгара По как лучший рассказ.",
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the 2000 Edgar Award for Best Short Story"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Агаты за вклад в жанр",
+      "long": "Получила награду Agatha Awards за вклад в жанр.",
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009 she received a lifetime achievement award at the Agatha Awards."
+      }
+    },
+    {
+      "key": "relocation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Шотландии в США",
+      "long": "Покинула Шотландию и переехала в США, чтобы продвигать экранизации своих романов.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2017, Perry left Scotland and moved to the US in order to more effectively promote films based on her novels."
+      }
+    },
+    {
+      "key": "illness-2022",
+      "date": {
+        "from": "2022-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Сердечный приступ",
+      "long": "В декабре 2022 года перенесла сердечный приступ.",
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She had a heart attack in December 2022"
+      }
+    },
+    {
+      "key": "death-2023",
+      "date": {
+        "from": "2023-04-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лос-Анджелесе",
+      "long": "Умерла в больнице Лос-Анджелеса в возрасте 84 лет.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "revelation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died at a hospital in Los Angeles on 10 April 2023, aged 84"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "cater-street-hangman",
+      "title": "Призрак с Кейтер-стрит",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "face-of-a-stranger",
+      "title": "Лицо незнакомца",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    }
+  ]
+}

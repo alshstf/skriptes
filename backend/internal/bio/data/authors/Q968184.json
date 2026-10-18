@@ -1,0 +1,830 @@
+{
+  "qid": "Q968184",
+  "name": "Виктор Петрович Астафьев",
+  "born": "1924-05-01",
+  "died": "2001-11-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D1%81%D1%82%D0%B0%D1%84%D1%8C%D0%B5%D0%B2%2C_%D0%92%D0%B8%D0%BA%D1%82%D0%BE%D1%80_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 155614108
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Viktor_Astafyev",
+      "rev": 1371711943
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ovsyanka-igarka",
+      "title": "Овсянка, Игарка, детдом",
+      "from": 1924,
+      "to": 1941
+    },
+    {
+      "key": "war",
+      "title": "Фронт и возвращение",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "chusovoy",
+      "title": "Чусовой: семья и газета",
+      "from": 1946,
+      "to": 1961
+    },
+    {
+      "key": "perm-vologda",
+      "title": "Пермь и Вологда",
+      "from": 1962,
+      "to": 1979
+    },
+    {
+      "key": "krasnoyarsk",
+      "title": "Красноярск, споры и утраты",
+      "from": 1980,
+      "to": 1993
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы",
+      "from": 1994,
+      "to": 2001
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1924",
+      "date": {
+        "from": "1924-05-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в селе Овсянка",
+      "long": "Родился в селе Овсянка на Енисее, третьим ребёнком в семье; две старшие сестры умерли во младенчестве. Дата рождения в источниках расходится (1 или 2 мая, 22 марта).",
+      "place": {
+        "label": "Овсянка"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 1 мая (по другим сведениям — 2 мая или 22 марта) 1924 года в селе Овсянка Енисейской губернии"
+      }
+    },
+    {
+      "key": "persecution-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест отца и раскулачивание семьи",
+      "long": "Отец, дед и прадед арестованы в ходе раскулачивания; отец получил пять лет и был отправлен на строительство Беломорканала.",
+      "place": {
+        "label": "Овсянка"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1931, two tragedies struck the Astafyev family. First, Viktor's father, grandfather, and great-grandfather were arrested as part of the Dekulakization campaign"
+      }
+    },
+    {
+      "key": "family-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Жизнь в семье дедушки и бабушки",
+      "long": "Мальчик остался в доме деда и бабушки по матери, Ильи Евграфовича и Екатерины Петровны Потылицыных. Позже он описал жизнь начала 1930-х в «Последнем поклоне».",
+      "place": {
+        "label": "Овсянка"
+      },
+      "works": [
+        {
+          "ref": "last-bow",
+          "note": "Сам писатель говорил, что жизнь начала 1930-х описана в этой книге рассказов"
+        }
+      ],
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1931, two tragedies struck the Astafyev family. … Seven-year-old Viktor found himself in the house of his maternal grandparents, Yekaterina Petrovna and Ilya Yevgrafovich Potylitsyn"
+      }
+    },
+    {
+      "key": "loss-1931",
+      "date": {
+        "from": "1931-06-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель матери на Енисее",
+      "long": "Мать, Лидия Ильинична, утонула в Енисее, когда ехала к арестованному мужу. Виктору было семь лет.",
+      "place": {
+        "label": "Енисей"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "12 июня 1931 года, во время очередной поездки Лидии Ильиничны к мужу, лодка, в которой среди прочих находилась и она, перевернулась."
+      }
+    },
+    {
+      "key": "relocation-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Игарку, жизнь на улице",
+      "long": "Отец, вернувшийся в 1934 году из лагеря и женившийся вторично, перевёз семью в Игарку. Мачеха и отец мальчиком не занимались, он оказался на улице.",
+      "place": {
+        "label": "Игарка"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "then in 1935 moved the family to Igarka where they settled as spetspereselentsy"
+      }
+    },
+    {
+      "key": "poverty-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Детский дом в Игарке",
+      "long": "Беспризорного подростка поместили в детский дом в Игарке; там он начал писать стихи, и учителя поддержали его литературные способности.",
+      "place": {
+        "label": "Игарка"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1937, he was taken to an orphanage and joined the 5th grade of its special school"
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа коновозчиком, отъезд в Красноярск",
+      "long": "Окончил шесть классов, работал коновозчиком на кирпичном заводе, затем уехал из Игарки в Красноярск и выучился на составителя поездов в школе ФЗО.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "ovsyanka-igarka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1941 году Виктор окончил шесть классов и устроился на кирпичный завод коновозчиком. … Заработав денег на пароходный билет, выехал из Игарки в Красноярск."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Война: добровольцем на фронт, связист",
+      "long": "Ушёл добровольцем, хотя имел бронь как железнодорожник. Воевал связистом артиллерийской бригады, был ранен, награждён; после ранения служил во Львове.",
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1942 году ушёл добровольцем на фронт, хотя как железнодорожник имел бронь."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-07",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Бои на Курской дуге",
+      "long": "Связист 92-й тяжёлой гаубичной артиллерийской бригады участвовал в прорыве северного фланга на Курской дуге.",
+      "place": {
+        "label": "Курская дуга"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в июле 1943 года — участник прорыва северного фланга на Курской дуге."
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943-11-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль «За отвагу»",
+      "long": "За восстановление телефонной связи под обстрелом получил медаль «За отвагу»; в апреле 1944 года награждён орденом Красной Звезды.",
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Был награждён медалью «За отвагу» (25 ноября 1943 г.), орденом Красной звезды (21 апреля 1944 г.)"
+      }
+    },
+    {
+      "key": "illness-1944",
+      "date": {
+        "from": "1944-09-17",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлое ранение под Дуклей",
+      "long": "Тяжело ранен близ польского города Дукля, около восьми месяцев провёл в госпиталях и был признан негодным к строевой службе.",
+      "place": {
+        "label": "Дукля"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 17 September 1944, Astafyev was badly injured near the Polish town of Dukla and spent the next 8 months in hospitals."
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Демобилизация, переезд в Чусовой",
+      "long": "После демобилизации поселился в Чусовом, в доме родителей жены.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Демобилизовался в 1945 году и уехал в город Чусовой Молотовской области (ныне — Пермский край)."
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Марии Корякиной",
+      "long": "Женился на Марии Семёновне Корякиной, с которой познакомился на фронте; впоследствии она стала писательницей.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Демобилизовался в 1945 году и уехал в город Чусовой Молотовской области (ныне — Пермский край). В том же году женился на Марии Семёновне Корякиной."
+      }
+    },
+    {
+      "key": "loss-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Рождение и смерть дочери Лидии",
+      "long": "Первая дочь Лидия родилась и умерла в 1947 году.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочери Лидия (родилась и умерла в 1947 году)"
+      }
+    },
+    {
+      "key": "child-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Ирины",
+      "long": "Родилась вторая дочь, Ирина.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочери Лидия (родилась и умерла в 1947 году) и Ирина (1948—1987)"
+      }
+    },
+    {
+      "key": "child-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Андрея",
+      "long": "Родился сын Андрей.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "и сын Андрей (родился в 1950 году)"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в газете «Чусовской рабочий»",
+      "long": "Работал в редакции «Чусовского рабочего», писал репортажи и рассказы; в 1955 году ушёл из газеты, чтобы писать первый роман.",
+      "place": {
+        "label": "Чусовой"
+      },
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1951 года работал в редакции газеты «Чусовской рабочий», где впервые опубликовал свой рассказ"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приём в Союз писателей",
+      "long": "Принят в Союз писателей СССР.",
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958 году принят в Союз писателей СССР."
+      }
+    },
+    {
+      "key": "education-1959",
+      "date": {
+        "from": "1959",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Высшие литературные курсы в Москве",
+      "long": "Учился на Высших литературных курсах при Литературном институте имени Горького в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "chusovoy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959—1961 годах учился на Высших литературных курсах в Москве."
+      }
+    },
+    {
+      "key": "relocation-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Пермь",
+      "long": "Переехал в Пермь; после 1962 года стал профессиональным писателем.",
+      "place": {
+        "label": "Пермь"
+      },
+      "chapter": "perm-vologda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962 году переехал в Пермь, в 1969 году — в Вологду, а в 1980 году уехал на родину — в Красноярск."
+      }
+    },
+    {
+      "key": "relocation-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Вологду",
+      "long": "Семья переехала в Вологду, где жили многие литературные друзья писателя.",
+      "place": {
+        "label": "Вологда"
+      },
+      "chapter": "perm-vologda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962 году переехал в Пермь, в 1969 году — в Вологду, а в 1980 году уехал на родину — в Красноярск."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Государственная премия РСФСР имени Горького",
+      "long": "Получил Государственную премию РСФСР имени Горького за повести, среди которых «Перевал», «Кража», «Последний поклон», «Пастух и пастушка».",
+      "works": [
+        {
+          "ref": "the-pass",
+          "note": "Премия присуждена, в частности, за эту повесть"
+        },
+        {
+          "ref": "the-theft",
+          "note": "Премия присуждена, в частности, за эту повесть"
+        },
+        {
+          "ref": "last-bow",
+          "note": "Премия присуждена, в частности, за эту книгу"
+        },
+        {
+          "ref": "shepherd-and-shepherdess",
+          "note": "Премия присуждена, в частности, за эту повесть"
+        }
+      ],
+      "chapter": "perm-vologda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Государственная премия РСФСР имени М. Горького (1975)"
+      }
+    },
+    {
+      "key": "child-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анастасии",
+      "long": "Родилась внебрачная дочь Анастасия, впоследствии писательница; её мать — писатель и журналист Нина Веселова.",
+      "chapter": "perm-vologda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Анастасия (род. 1975; её мать — писатель и журналист Нина Веселова)"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Государственная премия СССР",
+      "long": "Удостоен Государственной премии СССР за книгу «Царь-рыба».",
+      "works": [
+        {
+          "ref": "tsar-fish",
+          "note": "Премия присуждена за эту книгу"
+        }
+      ],
+      "chapter": "perm-vologda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Государственная премия СССР (1978) — за книгу «Царь-рыба»"
+      }
+    },
+    {
+      "key": "relocation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение на родину в Красноярск",
+      "long": "Вернулся на родину, в Красноярск; к этому времени купил дом в Овсянке.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962 году переехал в Пермь, в 1969 году — в Вологду, а в 1980 году уехал на родину — в Красноярск."
+      }
+    },
+    {
+      "key": "child-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Виталии",
+      "long": "Родилась внебрачная дочь Виталия, впоследствии врач.",
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Виталия (род. 1984; её мать — Клавдия Ивановна Белякова, медсестра)"
+      }
+    },
+    {
+      "key": "persecution-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Переписка с Эйдельманом, обвинения в ксенофобии",
+      "long": "Эйдельман обвинил писателя в ксенофобии и антисемитизме; публикация переписки вызвала множество возмущённых писем, часть читателей возвращала его книги.",
+      "works": [
+        {
+          "ref": "sad-detective",
+          "note": "Переписку, по английской статье, вызвали упрёки в адрес этого романа и рассказа 1986 года"
+        }
+      ],
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1986 году Астафьев вступил в острую переписку с историком и литературоведом Натаном Эйдельманом"
+      }
+    },
+    {
+      "key": "loss-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Ирины",
+      "long": "Умерла дочь Ирина; Астафьевы взяли к себе маленьких внуков Виктора и Полину.",
+      "place": {
+        "label": "Вологда"
+      },
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вторая дочь Ирина (1948—1987) скончалась в Вологде, похоронена на кладбище в Овсянке. Астафьевы забрали к себе маленьких внуков Виктора (род. 1987)"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Народный депутат СССР",
+      "long": "Был народным депутатом СССР, участвовал в Съезде народных депутатов 1989 года.",
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1989 по 1991 год был народным депутатом СССР."
+      }
+    },
+    {
+      "key": "career-1989-2",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Героя Социалистического Труда",
+      "long": "Указом от 21 августа 1989 года удостоен звания Героя Социалистического Труда.",
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Герой Социалистического Труда (1989)"
+      }
+    },
+    {
+      "key": "other-1993",
+      "date": {
+        "from": "1993-10-05",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "«Письмо сорока двух»",
+      "long": "Подпись писателя появилась в «Письме сорока двух» в поддержку силового разгона съезда народных депутатов; по словам Кублановского, он говорил, что подпись поставили без спроса.",
+      "chapter": "krasnoyarsk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "5 октября 1993 года подпись Астафьева появилась в «Письме сорока двух»"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Государственная премия России",
+      "long": "Получил Государственную премию Российской Федерации за роман «Прокляты и убиты».",
+      "works": [
+        {
+          "ref": "cursed-and-slain",
+          "note": "Премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Государственная премия Российской Федерации (1995) — за роман «Прокляты и убиты»"
+      }
+    },
+    {
+      "key": "persecution-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Враждебный приём романа о солдатах",
+      "long": "Роман о жестокости в Советской армии встретил крайне враждебный приём; английская статья связывает это с ухудшением здоровья писателя.",
+      "works": [
+        {
+          "ref": "jolly-soldier"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1999, his novel Jolly Soldier, which portrayed the horrors of the Soviet Army was met with extremely adverse reaction"
+      }
+    },
+    {
+      "key": "illness-2001",
+      "date": {
+        "from": "2001-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт и ухудшение здоровья",
+      "long": "Осенью самочувствие резко ухудшилось, он снова оказался в больнице и по своей просьбе был отпущен домой.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 2001 года у Астафьева случился инсульт."
+      }
+    },
+    {
+      "key": "death-2001",
+      "date": {
+        "from": "2001-11-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Красноярске",
+      "long": "Умер в Красноярске, похоронен в родной Овсянке.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 29 ноября 2001 года. Похоронен на кладбище в деревне Овсянка под Красноярском."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "last-bow",
+      "title": "Последний поклон",
+      "written": {
+        "from": 1968,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "tsar-fish",
+      "title": "Царь-рыба",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "sad-detective",
+      "title": "Печальный детектив",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "cursed-and-slain",
+      "title": "Прокляты и убиты",
+      "written": {
+        "from": 1992,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "jolly-soldier",
+      "title": "Весёлый солдат",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "the-pass",
+      "title": "Перевал",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "starodub",
+      "title": "Стародуб",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "the-theft",
+      "title": "Кража",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "shepherd-and-shepherdess",
+      "title": "Пастух и пастушка",
+      "written": {
+        "from": 1967,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "snows-melting",
+      "title": "Тают снега",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "starfall",
+      "title": "Звездопад",
+      "written": {
+        "from": 1960,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "overton",
+      "title": "Обертон",
+      "written": {
+        "from": 1995,
+        "to": 1996
+      }
+    }
+  ]
+}

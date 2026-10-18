@@ -1,0 +1,168 @@
+{
+  "qid": "Q15071142",
+  "name": "Николай Иванович Леонов",
+  "born": "1933-06-18",
+  "died": "1999-01-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE%D0%BD%D0%BE%D0%B2%2C_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9_%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%87_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 153914167
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo",
+      "title": "Москва, детство и юность",
+      "from": 1933,
+      "to": 1952
+    },
+    {
+      "key": "ugolovnyj-rozysk",
+      "title": "Годы в уголовном розыске",
+      "from": 1953,
+      "to": 1962
+    },
+    {
+      "key": "literatura",
+      "title": "Литература и цикл о Гурове",
+      "from": 1963,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1933",
+      "date": {
+        "from": "1933-06-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье инженера-мостостроителя",
+      "long": "Родился в Москве в семье инженера-мостостроителя.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Москва 1933-06-18"
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба в Московском уголовном розыске",
+      "long": "С 1953 года работал в Московском уголовном розыске, начав с оперативной работы. Окончил заочный юридический институт.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "ugolovnyj-rozysk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1953 года работал в Московском уголовном розыске, где начинал с оперативной работы."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из МВД ради литературы",
+      "long": "В 1963 году в звании капитана ушёл из органов МВД и занялся литературным творчеством.",
+      "chapter": "literatura",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1963 году в звании капитана покинул органы МВД и занялся литературным творчеством."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая опубликованная повесть",
+      "long": "В 1965 году вышла первая повесть писателя.",
+      "works": [
+        {
+          "ref": "pristupayu-k-zaderzhaniyu"
+        }
+      ],
+      "chapter": "literatura",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая повесть «Приступаю к задержанию» вышла в 1965 году."
+      }
+    },
+    {
+      "key": "creation-1998",
+      "date": {
+        "from": "1998-11",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Завершение последнего романа",
+      "long": "В ноябре 1998 года завершён последний роман писателя.",
+      "works": [
+        {
+          "ref": "pir-vo-vremya-chumy"
+        }
+      ],
+      "chapter": "literatura",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Пир во время чумы» (завершён в ноябре 1998)"
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-01-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Иркутске",
+      "long": "Умер 13 января 1999 года в Иркутске; похоронен на Митинском кладбище в Москве.",
+      "place": {
+        "label": "Иркутск"
+      },
+      "chapter": "literatura",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "13 января 1999, Иркутск"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "pristupayu-k-zaderzhaniyu",
+      "title": "Приступаю к задержанию",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "pir-vo-vremya-chumy",
+      "title": "Пир во время чумы",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    }
+  ]
+}

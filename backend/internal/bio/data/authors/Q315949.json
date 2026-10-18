@@ -1,0 +1,495 @@
+{
+  "qid": "Q315949",
+  "name": "Робер Мерль",
+  "born": "1908-08-29",
+  "died": "2004-03-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%80%D0%BB%D1%8C%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80",
+      "rev": 152571526
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Merle",
+      "rev": 1371549273
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Robert_Merle",
+      "rev": 240427736
+    }
+  ],
+  "chapters": [
+    {
+      "key": "alzhir-i-poterya-ottsa",
+      "title": "Алжир и потеря отца",
+      "from": 1908,
+      "to": 1917
+    },
+    {
+      "key": "parizh-i-uchyoba",
+      "title": "Париж, учёба, преподавание",
+      "from": 1918,
+      "to": 1938
+    },
+    {
+      "key": "voyna-i-plen",
+      "title": "Дюнкерк и лагерь под Дортмундом",
+      "from": 1939,
+      "to": 1943
+    },
+    {
+      "key": "universitet-i-gonkur",
+      "title": "Реннский университет и Гонкур",
+      "from": 1944,
+      "to": 1968
+    },
+    {
+      "key": "literatura-i-sudba-frantsii",
+      "title": "Литература и «Судьба Франции»",
+      "from": 1969,
+      "to": 2004
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1908",
+      "date": {
+        "from": "1908-08-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тебессе, Алжир",
+      "long": "Родился в Тебессе (Алжир) в семье «чёрноногих»; Алжир покинул в десять лет.",
+      "place": {
+        "label": "Тебесса"
+      },
+      "chapter": "alzhir-i-poterya-ottsa",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Robert Merle est né à Tébessa en Algérie le 29 août 1908"
+      }
+    },
+    {
+      "key": "loss-1915",
+      "date": {
+        "from": "1915-09-02",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, офицера-переводчика",
+      "long": "Отец Феликс Мерль, офицер-переводчик, умер в военном госпитале Марселя после болезни, перенесённой на фронте; сыну было шесть лет, семья оказалась в бедности.",
+      "place": {
+        "label": "Марсель"
+      },
+      "chapter": "alzhir-i-poterya-ottsa",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "né à Constantine le 16 février 1871 et mort pour la France le 2 septembre 1915 à Marseille dans un hôpital militaire"
+      }
+    },
+    {
+      "key": "relocation-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из Алжира во Францию",
+      "long": "Переехал из Алжира во Францию, учился в лицее Людовика Великого, получил степень лиценциата по философии и английскому языку.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "parizh-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1918 году переехал во Францию, где окончил лицей Людовика Великого"
+      }
+    },
+    {
+      "key": "education-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Звание агреже по английскому",
+      "long": "Первым прошёл конкурс на звание агреже по английскому языку; затем преподавал в лицеях Бордо, Марселя и Нёйи-сюр-Сен, где познакомился с Сартром.",
+      "chapter": "parizh-i-uchyoba",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "agrégé d'anglais (reçu 1er au concours en 1933)"
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Мобилизация, переводчик при британцах",
+      "long": "Мобилизован, служил переводчиком и офицером связи при британском экспедиционном корпусе.",
+      "chapter": "voyna-i-plen",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Mobilisé en 1939, Robert Merle est agent de liaison avec les forces britanniques."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940",
+        "to": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Дюнкерк и немецкий плен под Дортмундом",
+      "long": "Попал в плен у Дюнкерка, находился в лагере Stalag VI D под Дортмундом; попытка побега закончилась поимкой на бельгийской границе.",
+      "place": {
+        "label": "Дюнкерк"
+      },
+      "works": [
+        {
+          "ref": "week-end-a-zuydcoote",
+          "note": "опыт Дюнкерка использован в романе; Мерль свидетельствовал о нём и в документальном фильме"
+        }
+      ],
+      "chapter": "voyna-i-plen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940, he was in the Dunkirk evacuation on the beach of Zuydcoote"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-07",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Репатриация из плена",
+      "long": "Освобождён из плена и репатриирован во Францию.",
+      "chapter": "voyna-i-plen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was repatriated in July 1943"
+      }
+    },
+    {
+      "key": "career-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение к преподаванию в Ренне",
+      "long": "Вернулся к преподаванию в Реннском университете; профессором стал в 1949 году. Основал студенческий театр.",
+      "place": {
+        "label": "Ренн"
+      },
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1944, de retour de captivité, il devient maître de conférences d'anglais à l'université de Rennes"
+      }
+    },
+    {
+      "key": "education-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская диссертация об Уайльде",
+      "long": "Защитил докторскую диссертацию, посвящённую Оскару Уайльду.",
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "puis professeur en 1949 tout de suite après sa thèse de 1948"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гонкуровская премия за первый роман",
+      "long": "Первый роман получил Гонкуровскую премию, принёс успех у критики и читателей.",
+      "works": [
+        {
+          "ref": "week-end-a-zuydcoote"
+        }
+      ],
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Признание критики и Гонкуровскую премию ему принёс в 1949 году антимилитаристский роман"
+      }
+    },
+    {
+      "key": "child-1956",
+      "date": {
+        "from": "1956-09-06",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Оливье",
+      "long": "Родился сын Оливье Мерль. Всего от трёх браков у писателя было четыре сына и две дочери.",
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Olivier Merle 1956-09-06"
+      }
+    },
+    {
+      "key": "creation-1961",
+      "date": {
+        "from": "1961",
+        "to": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Дача-башня дю Буске как кабинет",
+      "long": "Дача в башне дю Буске служила ему кабинетом; там написаны «Мальвиль» и первые главы цикла, а окрестные пейзажи описаны в обоих романах.",
+      "place": {
+        "label": "Дю Буске"
+      },
+      "works": [
+        {
+          "ref": "malevil",
+          "note": "роман написан в кабинете башни, пейзаж окрестностей описан в тексте"
+        },
+        {
+          "ref": "fortune-de-france",
+          "note": "первые главы написаны там же"
+        }
+      ],
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il a écrit Malevil et les premiers chapitres de Fortune de France dans son cabinet d'écriture en haut de la tour du Bousquet, qui fut sa maison de vacances entre 1961 et 1977"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Братства",
+      "long": "Получил премию Братства за роман.",
+      "works": [
+        {
+          "ref": "lile"
+        }
+      ],
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "1962 : prix de la Fraternité pour L'Île"
+      }
+    },
+    {
+      "key": "creation-1967",
+      "date": {
+        "from": "1967-11",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Интервью со студентами Нантера",
+      "long": "Преподавая в Нантере, начал собирать интервью с тридцатью студентами для будущего романа; события мая 1968 года дали ему материал.",
+      "place": {
+        "label": "Нантер"
+      },
+      "works": [
+        {
+          "ref": "derriere-la-vitre",
+          "note": "записи бесед со студентами легли в основу синтеза, ставшего романом"
+        }
+      ],
+      "chapter": "universitet-i-gonkur",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Dès novembre 1967, il a fait circuler une petite annonce sur le campus"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из университета ради литературы",
+      "long": "Взял отпуск из университета Нантера, чтобы целиком посвятить себя литературе.",
+      "place": {
+        "label": "Нантер"
+      },
+      "chapter": "literatura-i-sudba-frantsii",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1969, excédé par la déliquescence de l'ambiance à Nanterre, il demande un congé pour se consacrer entièrement à la littérature."
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Членство во Французской компартии",
+      "long": "Вступил во Французскую компартию и отошёл от неё после критики ввода советских войск в Афганистан.",
+      "chapter": "literatura-i-sudba-frantsii",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il adhéra au Parti communiste français en 1977 et prit ses distances deux années plus tard"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большая премия Жана Жионо",
+      "long": "Получил Большую премию Жана Жионо за роман.",
+      "works": [
+        {
+          "ref": "le-glaive-et-les-amours"
+        }
+      ],
+      "chapter": "literatura-i-sudba-frantsii",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году получил Большую премию Жана Жионо за роман «Меч и любовь»"
+      }
+    },
+    {
+      "key": "death-2004",
+      "date": {
+        "from": "2004-03-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в имении Ла Мальмезон",
+      "long": "Скончался в возрасте 95 лет от сердечного приступа в своём имении Ла Мальмезон; похоронен в Эгийоне.",
+      "place": {
+        "label": "Гросрувр"
+      },
+      "chapter": "literatura-i-sudba-frantsii",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Décédé à l'âge de 95 ans le 27 mars 2004 dans son domaine de La Malmaison à Grosrouvre"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "week-end-a-zuydcoote",
+      "title": "Уик-энд на берегу океана",
+      "qid": "Q899026",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "flamineo",
+      "title": "Фламинео",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "la-mort-est-mon-metier",
+      "title": "Смерть — моё ремесло",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "lile",
+      "title": "Остров",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "un-animal-doue-de-raison",
+      "title": "Разумное животное",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "derriere-la-vitre",
+      "title": "За стеклом",
+      "written": {
+        "from": 1967,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "malevil",
+      "title": "Мальвиль",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "les-hommes-proteges",
+      "title": "Защищённые мужчины",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "fortune-de-france",
+      "title": "Судьба Франции",
+      "written": {
+        "from": 1977,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "le-glaive-et-les-amours",
+      "title": "Меч и любовь",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    }
+  ]
+}

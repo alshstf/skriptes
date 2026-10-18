@@ -1,0 +1,257 @@
+{
+  "qid": "Q774860",
+  "name": "Сара Шепард",
+  "born": "1977-04-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%B5%D0%BF%D0%B0%D1%80%D0%B4%2C_%D0%A1%D0%B0%D1%80%D0%B0",
+      "rev": 149423408
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sara_Shepard",
+      "rev": 1380270683
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Детство и учёба",
+      "from": 1977,
+      "to": 1999
+    },
+    {
+      "key": "zhurnaly-i-ghostwriting",
+      "title": "Журналы и работа за других",
+      "from": 2000,
+      "to": 2004
+    },
+    {
+      "key": "svoi-knigi",
+      "title": "Собственные книги и экранизации",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1977",
+      "date": {
+        "from": "1977-04-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Филадельфии",
+      "long": "Сара Шепард родилась 8 апреля 1977 года в Филадельфии, Пенсильвания.",
+      "place": {
+        "label": "Филадельфия"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родилась 8 апреля 1977 года в Филадельфии, Пенсильвания, США"
+      }
+    },
+    {
+      "key": "education-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание средней школы в Даунингтауне",
+      "long": "Окончила среднюю школу Даунингтауна в штате Пенсильвания.",
+      "place": {
+        "label": "Даунингтаун"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Она окончила среднюю школу Даунингтауна в Даунингтауне, штат Пенсильвания, в 1995 году."
+      }
+    },
+    {
+      "key": "education-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Нью-Йоркского университета",
+      "long": "Окончила Нью-Йоркский университет со степенью бакалавра.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She attended New York University, where she graduated with a B.S. degree in 1999"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "to": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Time, Inc. Custom Publishing",
+      "long": "С 2000 по 2005 год выпускала журналы о стиле жизни для корпоративных клиентов.",
+      "chapter": "zhurnaly-i-ghostwriting",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 2000 to 2005, Shepard worked at Time, Inc. Custom Publishing and produced lifestyle magazines for corporate clients."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы фрилансером-литературным «негром»",
+      "long": "В 2002 году начала писать как фрилансер, в том числе за других авторов.",
+      "chapter": "zhurnaly-i-ghostwriting",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She started ghostwriting as a freelancer in 2002"
+      }
+    },
+    {
+      "key": "education-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистерская степень в Бруклинском колледже",
+      "long": "Получила степень магистра изящных искусств по писательскому мастерству в Бруклинском колледже.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "zhurnaly-i-ghostwriting",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "an MFA in Creative Writing from Brooklyn College in 2004"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к написанию собственных книг",
+      "long": "В 2005 году начала писать собственные книги, оставив работу в Time, Inc.",
+      "works": [
+        {
+          "ref": "pretty-little-liars"
+        }
+      ],
+      "chapter": "svoi-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "writing her own books in 2005"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017-09-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Анонс сериала по её новой серии",
+      "long": "25 сентября 2017 года объявлено о создании сериала «Милые обманщицы: Перфекционистки» по книгам Шепард.",
+      "works": [
+        {
+          "ref": "the-perfectionists"
+        }
+      ],
+      "chapter": "svoi-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 25, 2017, it was announced that Shephard’s 2014 book series The Perfectionists would be loosely adapted into a television series"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продюсирование веб-сериала Crown Lake",
+      "long": "В мае 2019 года объявлено, что Шепард продюсирует веб-сериал Crown Lake; он вышел 20 июня 2019 года.",
+      "chapter": "svoi-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 2019, it was announced that Shepard would produce the anthology web series Crown Lake"
+      }
+    },
+    {
+      "key": "creation-2021",
+      "date": {
+        "from": "2021-07-06",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Подкаст Cruise Ship",
+      "long": "6 июля 2021 года вышла серия подкастов Cruise Ship, созданная Шепард.",
+      "chapter": "svoi-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shepard created a podcast series titled Cruise Ship, which was released by Meet Cute on July 6, 2021."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "pretty-little-liars",
+      "title": "Милые обманщицы",
+      "qid": "Q32450",
+      "written": {
+        "from": 2006,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-lying-game",
+      "title": "Игра в ложь",
+      "written": {
+        "from": 2010,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "the-perfectionists",
+      "title": "Перфекционисты",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-heiresses",
+      "title": "Наследницы",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "qid": "Q465890",
+  "name": "Кейт Мортон",
+  "born": "1976-07-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D1%80%D1%82%D0%BE%D0%BD%2C_%D0%9A%D0%B5%D0%B9%D1%82",
+      "rev": 146710912
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kate_Morton",
+      "rev": 1377863454
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Детство и учёба",
+      "from": 1976,
+      "to": 2005
+    },
+    {
+      "key": "pisatelnitsa",
+      "title": "Первый роман и мировой успех",
+      "from": 2006,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "relocation-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство на горе Тамборин",
+      "long": "Семья несколько раз переезжала, пока не поселилась в городке Гора Тамборин, где Мортон ходила в маленькую местную школу.",
+      "place": {
+        "label": "Гора Тамборин"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мортон старшая из трёх сестёр. Её семья несколько раз переезжала, пока не поселилась в городке Гора Тамборин"
+      }
+    },
+    {
+      "key": "birth-1976",
+      "date": {
+        "from": "1976-07-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Берри, Австралия",
+      "long": "Родилась в Берри, Австралия, старшей из трёх сестёр.",
+      "place": {
+        "label": "Берри"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Berri 1976-07-19"
+      }
+    },
+    {
+      "key": "education-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Квинслендского университета",
+      "long": "С отличием окончила Квинслендский университет по английской литературе в 1999 году и получила стипендию для магистратуры по трагедии в викторианской литературе.",
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Later she earned first-class honours in English Literature at the University of Queensland (1999)"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман и успех в Великобритании",
+      "long": "Первый изданный роман вошёл в летний список чтения Richard and Judy 2007 года; за первую неделю продано 63 128 экземпляров.",
+      "works": [
+        {
+          "ref": "house-at-riverton"
+        }
+      ],
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before writing The House at Riverton (The Shifting Fog), which was published in 2006"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "house-at-riverton",
+      "title": "Когда рассеется туман",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "forgotten-garden",
+      "title": "Забытый сад",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "distant-hours",
+      "title": "Далёкие часы",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "secret-keeper",
+      "title": "Хранительница тайн",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "lake-house",
+      "title": "Озёрный дом",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "clockmakers-daughter",
+      "title": "Дочь часовщика",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "homecoming",
+      "title": "Возвращение домой",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

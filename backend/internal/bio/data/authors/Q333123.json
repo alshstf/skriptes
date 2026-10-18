@@ -1,0 +1,295 @@
+{
+  "qid": "Q333123",
+  "name": "Роберт Лоуренс Стайн",
+  "born": "1943-10-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D0%B9%D0%BD%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82_%D0%9B%D0%BE%D1%83%D1%80%D0%B5%D0%BD%D1%81",
+      "rev": 151591207
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/R._L._Stine",
+      "rev": 1377384885
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ohio",
+      "title": "Детство в Огайо",
+      "from": 1943,
+      "to": 1964
+    },
+    {
+      "key": "humor-new-york",
+      "title": "Университет, Нью-Йорк и юмор",
+      "from": 1965,
+      "to": 1985
+    },
+    {
+      "key": "turn-to-horror",
+      "title": "Поворот к ужасам",
+      "from": 1986,
+      "to": 1991
+    },
+    {
+      "key": "goosebumps",
+      "title": "Эпоха «Ужастиков»",
+      "from": 1992,
+      "to": 1999
+    },
+    {
+      "key": "recognition",
+      "title": "Возвращения и признание",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-10-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Колумбусе, Огайо",
+      "long": "Родился в Колумбусе, штат Огайо, в семье клерка судоходства Льюиса Стайна и Анны Файнштейн. Вырос в Бексли, Огайо.",
+      "place": {
+        "label": "Колумбус"
+      },
+      "chapter": "ohio",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роберт Лоуренс Стайн родился 8 октября 1943 года в Колумбусе"
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Университета штата Огайо",
+      "long": "Окончил Университет штата Огайо со степенью бакалавра по английскому языку; три года редактировал университетский юмористический журнал The Sundial. Затем переехал в Нью-Йорк.",
+      "place": {
+        "label": "Колумбус"
+      },
+      "chapter": "humor-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stine graduated from Ohio State University in 1965 with a Bachelor of Arts in English."
+      }
+    },
+    {
+      "key": "love-1969",
+      "date": {
+        "from": "1969-06-22",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейн Уайлдхорн",
+      "long": "Женился на Джейн Уайлдхорн, редакторе и писательнице, позднее соучредителе Parachute Publishing.",
+      "chapter": "humor-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 июня 1969 года Стайн женился на Джейн Уайлдхорн"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "to": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор юмористического журнала Bananas",
+      "long": "Создал юмористический журнал для подростков Bananas (72 номера в издательстве Scholastic), был его редактором и автором значительной части текстов; параллельно писал юмористические книги для детей как Jovial Bob Stine.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "humor-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bananas was written for teenagers and published by Scholastic Press for 72 issues between 1975 and 1984"
+      }
+    },
+    {
+      "key": "child-1980",
+      "date": {
+        "from": "1980-06-07",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Мэтью",
+      "long": "У Роберта и Джейн Стайн родился единственный ребёнок, сын Мэтью.",
+      "chapter": "humor-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "7 июня 1980 года у пары родился ребёнок, Мэтью Стайн"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Parachute Publishing женой",
+      "long": "Жена Стайна Джейн основала вместе с другими издательство Parachute Publishing (Parachute Press), с которым связан выпуск его серий.",
+      "chapter": "humor-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джейн Уайлдхорн, редакторе и писательнице, которая в 1983 году стала соучредителем Parachute Publishing"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход от юмора к литературе ужасов",
+      "long": "После лет юмористической прозы написал первый роман ужасов для подростков, начав новое направление в творчестве.",
+      "works": [
+        {
+          "ref": "blind-date"
+        }
+      ],
+      "chapter": "turn-to-horror",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1986, Stine wrote his first horror novel, called Blind Date."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "to": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Телесериал по главной серии",
+      "long": "По «Ужастикам» вышел телесериал в четырёх сезонах. В 1995 году был издан и первый роман Стайна для взрослых.",
+      "works": [
+        {
+          "ref": "superstitious"
+        }
+      ],
+      "chapter": "goosebumps",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Also produced was a Goosebumps TV series that ran for four seasons from 1995 to 1998"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за заслуги перед жанром",
+      "long": "Получил премию Брэма Стокера за заслуги перед жанром.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Брэма Стокера за заслуги перед жанром 2013-01-01"
+      }
+    },
+    {
+      "key": "creation-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение к подростковой серии ужасов",
+      "long": "Вернулся к серии «Улица страха» романом Party Games.",
+      "works": [
+        {
+          "ref": "party-games"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, Stine brought the Fear Street books back with his novel Party Games"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "Награждён премией «Инкпот».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Инкпот» 2017-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "blind-date",
+      "title": "Blind Date",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "fear-street",
+      "title": "Улица страха",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "goosebumps",
+      "title": "Ужастики",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "superstitious",
+      "title": "Superstitious",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "party-games",
+      "title": "Party Games",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "qid": "Q538508",
+  "name": "Дональд Уэстлейк",
+  "born": "1933-07-12",
+  "died": "2008-12-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D1%8D%D1%81%D1%82%D0%BB%D0%B5%D0%B9%D0%BA%2C_%D0%94%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%B4",
+      "rev": 153879013
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Donald_E._Westlake",
+      "rev": 1372835876
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Бруклин, Олбани, колледж",
+      "from": 1933,
+      "to": 1953
+    },
+    {
+      "key": "armiya-i-pervye-rasskazy",
+      "title": "Армия и первые рассказы",
+      "from": 1954,
+      "to": 1959
+    },
+    {
+      "key": "professiya-pisatelya",
+      "title": "Писатель на полной ставке: Старк и Дортмундер",
+      "from": 1960,
+      "to": 1974
+    },
+    {
+      "key": "psevdonimy-i-molchanie",
+      "title": "Годы под чужими именами",
+      "from": 1975,
+      "to": 1989
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Анкрам, признание и возвращение Старка",
+      "from": 1990,
+      "to": 2008
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1933",
+      "date": {
+        "from": "1933-07-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине, Нью-Йорк, в ирландской семье; вырос в Олбани.",
+      "place": {
+        "label": "Бруклин, Нью-Йорк"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Donald Edwin Westlake (July 12, 1933 – December 31, 2008)"
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в колледж Чемплейн",
+      "long": "Поступил в колледж Чемплейн в Плэттсбурге, но не доучился и ушёл в армию.",
+      "place": {
+        "label": "Плэттсбург"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дональд в 1950-м поступает в колледж Чемплейн (Champlain College) в Плэттсбурге, штат Нью-Йорк."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая продажа рассказа после 200 отказов",
+      "long": "С юности писал постоянно; после 200 отказов продал первый рассказ.",
+      "chapter": "armiya-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "after 200 rejections, his first short story sale was in 1954."
+      }
+    },
+    {
+      "key": "war-1954",
+      "date": {
+        "from": "1954",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба в ВВС США в Западной Европе",
+      "long": "Служил в частях ВВС США в Западной Европе; затем окончил колледж Харпура в Бингхэмптоне.",
+      "place": {
+        "label": "Западная Европа"
+      },
+      "chapter": "armiya-i-pervye-rasskazy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Не доучившись, он идет в армию, где проходит службу в 1954-56 гг. в частях ВВС США в Западной Европе."
+      }
+    },
+    {
+      "key": "relocation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Нью-Йорк, работа в литагентстве",
+      "long": "Переехал в Нью-Йорк, сначала работал в литературном агентстве, а писал параллельно.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "armiya-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Westlake moved to New York City in 1959, initially to work for a literary agency while writing on the side."
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Дебют под псевдонимом Ричард Старк",
+      "long": "Под псевдонимом Ричард Старк вышел первый рассказ; позже под этим именем печатались романы о Паркере.",
+      "chapter": "armiya-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stark debuted in 1959, with a story in Mystery Digest."
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Эротические романы в мягкой обложке под псевдонимами",
+      "long": "Писал под псевдонимами Алан Маршалл и Алан Марш дешёвые романы эротического содержания (до 28 книг).",
+      "chapter": "armiya-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Westlake acknowledged writing as many as 28 paperback soft-porn titles from 1959 to 1964 under these names"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному письму",
+      "long": "К 1960 году писал уже на полной ставке; в том же году вышел первый роман под собственным именем.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "the-mercenaries"
+        }
+      ],
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1960, he was writing full-time."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Объявление об уходе из научной фантастики",
+      "long": "В фэнзине Xero резко объявил об уходе из научной фантастики.",
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1962 used Xero as a venue for a harsh announcement that he was leaving the science fiction field."
+      }
+    },
+    {
+      "key": "creation-1962",
+      "date": {
+        "from": "1962",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Цикл романов о Паркере под именем Старка",
+      "long": "Шестнадцать романов о профессиональном воре Паркере вышли под именем Ричарда Старка.",
+      "works": [
+        {
+          "ref": "the-hunter"
+        }
+      ],
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Then, from 1962 to 1974, sixteen novels about the relentless and remorseless professional thief Parker and his accomplices (including larcenous actor Alan Grofield) appeared"
+      }
+    },
+    {
+      "key": "other-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Суд против экранизации Годара без прав",
+      "long": "Подал иск против фильма Годара, свободно экранизировавшего его роман без покупки прав; коммерческий прокат в США был запрещён.",
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jean-Luc Godard's Made in U.S.A. in 1966 was an extremely loose adaptation of The Jugger. Neither the film's producer nor Godard purchased the rights to the novel, so Westlake successfully sued"
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Премия Эдгара По за лучший роман",
+      "long": "Получил премию Эдгара По за лучший роман — первую из трёх «Эдгаров» в разных категориях.",
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "1968, Best Novel, God Save the Mark"
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Невозможность писать как Старк",
+      "long": "После романа 1974 года не смог вернуться к «личности» Старка, несмотря на повторные попытки.",
+      "works": [
+        {
+          "ref": "butchers-moon"
+        }
+      ],
+      "chapter": "professiya-pisatelya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Butcher's Moon in 1974, Westlake unexpectedly found himself unable to tap into what he called Stark's \"personality.\""
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Опыт с псевдонимом Сэмюэл Холт",
+      "long": "Попробовал выпускать романы под новым именем Сэмюэл Холт; издатель раскрыл псевдоним одновременно с первой книгой.",
+      "chapter": "psevdonimy-i-molchanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Samuel Holt: four mystery novels featuring the character of Sam Holt, 1986–1989… he was dismayed when his publisher revealed the true identity of \"Holt\" simultaneously with the release of the first book."
+      }
+    },
+    {
+      "key": "relocation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Нью-Йорка в Анкрам",
+      "long": "Вместе с женой Эбигейл, автором нон-фикшн, переехал из Нью-Йорка в Анкрам на севере штата.",
+      "place": {
+        "label": "Анкрам, Нью-Йорк"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple moved from New York City to Ancram in upstate New York in 1990."
+      }
+    },
+    {
+      "key": "other-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Эдгара По за киносценарий",
+      "long": "Получил третий «Эдгар» — за киносценарий; в 1990 году был награждён за короткий рассказ.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "1991, Best Motion Picture Screenplay, The Grifters"
+      }
+    },
+    {
+      "key": "other-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Звание Грандмастера детектива",
+      "long": "Ассоциация детективных писателей Америки присвоила звание Грандмастера — высшую награду общества.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1993, the Mystery Writers of America named Westlake a Grand Master, the highest honor bestowed by the society."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент Ассоциации детективных писателей",
+      "long": "Был президентом Ассоциации детективных писателей США.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Возглавлял Ассоциацию детективных писателей США в 1996 году."
+      }
+    },
+    {
+      "key": "creation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение Паркера и Ричарда Старка",
+      "long": "После перерыва в двадцать с лишним лет снова начал публиковать романы о Паркере под именем Ричарда Старка.",
+      "works": [
+        {
+          "ref": "comeback"
+        }
+      ],
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stark was inactive until 1997, when Westlake once again began writing and publishing Parker novels under Stark's name beginning with Comeback."
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия «Шеймус»",
+      "long": "Получил премию «Шеймус» Ассоциации частных детективных писателей.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Шеймус» 2004"
+      }
+    },
+    {
+      "key": "death-2008",
+      "date": {
+        "from": "2008-12-31",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа в Мексике",
+      "long": "Умер от сердечного приступа 31 декабря на отдыхе в Мексике, по дороге на новогодний ужин.",
+      "place": {
+        "label": "Мексика"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался от сердечного приступа 31 декабря 2008 года в канун Нового года на отдыхе в Мексике."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-mercenaries",
+      "title": "Наёмники",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "the-hunter",
+      "title": "Охотник",
+      "qid": "Q3618223",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "anarchaos",
+      "title": "Анархаос",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-hot-rock",
+      "title": "Проклятый изумруд",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "plunder-squad",
+      "title": "Plunder Squad",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "bank-shot",
+      "title": "Ограбление банка",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "jimmy-the-kid",
+      "title": "Малыш Джимми",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "butchers-moon",
+      "title": "Butcher's Moon",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "drowned-hopes",
+      "title": "Утонувшие надежды",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "comeback",
+      "title": "Comeback",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    }
+  ]
+}

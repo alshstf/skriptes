@@ -1,0 +1,408 @@
+{
+  "qid": "Q460414",
+  "name": "Луиза Пенни",
+  "born": "1958-07-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D0%BD%D0%BD%D0%B8%2C_%D0%9B%D1%83%D0%B8%D0%B7%D0%B0",
+      "rev": 150876809
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Louise_Penny",
+      "rev": 1380898701
+    }
+  ],
+  "chapters": [
+    {
+      "key": "toronto-childhood",
+      "title": "Детство в Торонто",
+      "from": 1958,
+      "to": 1978
+    },
+    {
+      "key": "cbc-years",
+      "title": "Учёба и радио КТК",
+      "from": 1979,
+      "to": 1996
+    },
+    {
+      "key": "gamache-and-awards",
+      "title": "Гамаш и первые премии",
+      "from": 1997,
+      "to": 2012
+    },
+    {
+      "key": "years-of-care",
+      "title": "Болезнь и смерть мужа",
+      "from": 2013,
+      "to": 2016
+    },
+    {
+      "key": "later-years",
+      "title": "Признание и новые книги",
+      "from": 2017,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1958",
+      "date": {
+        "from": "1958-07-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Торонто",
+      "long": "Луиза Пенни родилась 1 июля 1958 года в Торонто. Мать много читала и любила детективы; в детстве Луиза читала Кристи, Сименона, Сэйерс и Иннеса.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Луиза Пенни родилась в Торонто в 1958 году."
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом бакалавра в Университете Райерсона",
+      "long": "В 1979 году Пенни получила степень бакалавра прикладных искусств (радио и телевидение) в Университете Райерсона.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "cbc-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Луиза Пенни защитила степень бакалавра прикладных искусств (в области радио и телевидения) в Университете Райерсона в 1979 году."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа радиоведущей и журналисткой в КТК",
+      "long": "После учёбы, в 21 год, начала восемнадцатилетнюю карьеру радиоведущей и журналистки в Канадской телерадиовещательной корпорации; в начале карьеры работала вдали от дома и близких.",
+      "chapter": "cbc-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1979. After graduation, aged 21, she embarked on an 18-year career as a radio host and journalist with the Canadian Broadcasting Corporation (CBC)."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из КТК ради писательства",
+      "long": "В 1996 году Пенни ушла из КТК, чтобы писать. Начала исторический роман, но не смогла его закончить и перешла к детективам; первый роман отправила на конкурс Debut Dagger.",
+      "works": [
+        {
+          "ref": "still-life",
+          "note": "первый роман, написанный после перехода от исторического романа к детективу"
+        }
+      ],
+      "chapter": "gamache-and-awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Penny left the CBC in 1996 to take up writing."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премии за дебютный роман",
+      "long": "Дебютный роман получил британскую премию New Blood Dagger; затем также награды Артура Эллиса, Дилис, Энтони и Барри.",
+      "works": [
+        {
+          "ref": "still-life"
+        }
+      ],
+      "chapter": "gamache-and-awards",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: CWA New Blood Dagger 2006-01-01"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "to": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пять премий Агаты подряд",
+      "long": "В 2007–2010 годах Пенни пять раз подряд получала премию Агаты за лучший детективный роман года; в 2010–2013 годах — премию Энтони за лучший роман.",
+      "chapter": "gamache-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "пять раз подряд (2007—2010) премию Агаты за лучший детективный роман года"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Учреждение премии для начинающих авторов",
+      "long": "В 2009 году помогла учредить премию Unhanged Arthur для канадских авторов неопубликованного первого детектива.",
+      "chapter": "gamache-and-awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, Penny helped to launch a new award for aspiring Canadian mystery writers, the Unhanged Arthur for Best Unpublished First Novel."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация первого романа",
+      "long": "Пенни согласилась продать права на экранизацию первых двух романов; фильм по первому вышел в 2012 году, на CBC показан в 2013.",
+      "chapter": "gamache-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Still Life вышел в 2012 году с британским актером Натаниелем Паркером в роли старшего инспектора Гамаша."
+      }
+    },
+    {
+      "key": "illness-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз деменции у мужа",
+      "long": "В 2013 году у Майкла Уайтхеда диагностировали деменцию; Пенни стала его основным опекуном.",
+      "chapter": "years-of-care",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Whitehead was diagnosed with dementia in 2013 and Penny took on the role as his primary caregiver."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Орден Канады",
+      "long": "В 2013 году получила Орден Канады за вклад в культуру Канады как писателя, освещающего Восточные кантоны Квебека.",
+      "chapter": "years-of-care",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году она получила Орден Канады «за вклад в культуру Канады как писателя, освещающего Восточные кантоны Квабека»."
+      }
+    },
+    {
+      "key": "loss-2016",
+      "date": {
+        "from": "2016-09-18",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Майкла Уайтхеда",
+      "long": "Муж Пенни, Майкл Уайтхед, умер 18 сентября 2016 года.",
+      "chapter": "years-of-care",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died on September 18, 2016."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Офицер Национального ордена Квебека",
+      "long": "В 2017 году Пенни стала офицером Национального ордена Квебека.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "an Officer of the National Order of Quebec in 2017"
+      }
+    },
+    {
+      "key": "other-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка библиотеки Хаскелл, отказ от тура по США",
+      "long": "В 2025 году Пенни публично поддержала библиотеку Хаскелл на границе Канады и США и пожертвовала 50 тысяч канадских долларов; отказалась от рекламного тура по США.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, Penny publicly supported the Haskell Free Library and Opera House"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "still-life",
+      "title": "Still Life",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "a-fatal-grace",
+      "title": "A Fatal Grace",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "the-cruelest-month",
+      "title": "The Cruelest Month",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "the-brutal-telling",
+      "title": "The Brutal Telling",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "bury-your-dead",
+      "title": "Bury Your Dead",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "a-trick-of-the-light",
+      "title": "A Trick of the Light",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-beautiful-mystery",
+      "title": "The Beautiful Mystery",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "how-the-light-gets-in",
+      "title": "How the Light Gets In",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "the-long-way-home",
+      "title": "The Long Way Home",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-nature-of-the-beast",
+      "title": "The Nature of the Beast",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "a-great-reckoning",
+      "title": "A Great Reckoning",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "glass-houses",
+      "title": "Glass Houses",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "kingdom-of-the-blind",
+      "title": "Kingdom of the Blind",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "a-better-man",
+      "title": "A Better Man",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "all-the-devils-are-here",
+      "title": "All the Devils Are Here",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "state-of-terror",
+      "title": "State of Terror",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

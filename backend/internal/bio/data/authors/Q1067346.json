@@ -1,0 +1,271 @@
+{
+  "qid": "Q1067346",
+  "name": "Яцек Дукай",
+  "born": "1974-07-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D1%83%D0%BA%D0%B0%D0%B9%2C_%D0%AF%D1%86%D0%B5%D0%BA",
+      "rev": 149614177
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jacek_Dukaj",
+      "rev": 1376896971
+    },
+    {
+      "id": "plwiki",
+      "url": "https://pl.wikipedia.org/wiki/Jacek_Dukaj",
+      "rev": 80685384
+    }
+  ],
+  "chapters": [
+    {
+      "key": "tarnow-debut",
+      "title": "Тарнув и ранний дебют",
+      "from": 1974,
+      "to": 1996
+    },
+    {
+      "key": "first-books",
+      "title": "Первые книги и признание",
+      "from": 1997,
+      "to": 2006
+    },
+    {
+      "key": "lod-and-prizes",
+      "title": "«Лёд» и европейская известность",
+      "from": 2007,
+      "to": 2020
+    },
+    {
+      "key": "business",
+      "title": "Игры и бизнес",
+      "from": 2021,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1974",
+      "date": {
+        "from": "1974-07-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тарнуве",
+      "long": "Родился в Тарнуве.",
+      "place": {
+        "label": "Тарнув"
+      },
+      "chapter": "tarnow-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 30 июля 1974 года в Тарнуве."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный дебют в журнале «Fantastyka»",
+      "long": "В пятнадцать лет дебютировал рассказом, написанным двумя годами ранее, в ежемесячнике «Fantastyka» (февраль 1990).",
+      "works": [
+        {
+          "ref": "zlota-galera"
+        }
+      ],
+      "chapter": "tarnow-debut",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Debiutował w wieku 15 lat, napisanym dwa lata wcześniej opowiadaniem Złota Galera, opublikowanym w lutym 1990 w miesięczniku „Fantastyka”."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Книжный дебют",
+      "long": "Вышла первая книга — сборник двух микророманов.",
+      "works": [
+        {
+          "ref": "xavras-wyzryn"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "W 1997 roku ukazał się jego debiut książkowy, zbiór dwóch mikropowieści Xavras Wyżryn"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Януша Зайделя",
+      "long": "Получил премию имени Януша Зайделя.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия имени Януша Зайделя 2003-01-01"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Фонда Костельских",
+      "long": "Получил премию Фонда имени Костельских за роман «Лёд».",
+      "works": [
+        {
+          "ref": "lod"
+        }
+      ],
+      "chapter": "lod-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Kościelski (2008) за роман «Лёд»"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Европейского союза по литературе",
+      "long": "Получил Премию Европейского союза по литературе за роман «Лёд».",
+      "works": [
+        {
+          "ref": "lod"
+        }
+      ],
+      "chapter": "lod-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Европейского союза по литературе (2009) за роман «Лёд»"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-10-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль «Gloria Artis»",
+      "long": "Награждён бронзовой медалью «За заслуги в культуре Gloria Artis».",
+      "chapter": "lod-and-prizes",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: бронзовая медаль «За заслуги в культуре Gloria Artis» 2012-10-12"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Компания Nolensum и видеоигры",
+      "long": "Стал основным акционером и генеральным директором компании Nolensum, производящей видеоигры по его историям.",
+      "chapter": "business",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2021 года Яцек Дукай также занимается бизнесом: он основной акционер и генеральный директор компании Nolensum"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "zlota-galera",
+      "title": "Золотая галера",
+      "written": {
+        "from": 1988,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "xavras-wyzryn",
+      "title": "Ксаврас Выжрин",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "czarne-oceany",
+      "title": "Чёрные океаны",
+      "qid": "Q5201589",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "extensa",
+      "title": "Extensa",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "inne-piesni",
+      "title": "Иные песни",
+      "qid": "Q6035299",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "perfekcyjna-niedoskonalosc",
+      "title": "Идеальное несовершенство",
+      "qid": "Q7167995",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "lod",
+      "title": "Лёд",
+      "qid": "Q5985169",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "wroniec",
+      "title": "Вронец",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

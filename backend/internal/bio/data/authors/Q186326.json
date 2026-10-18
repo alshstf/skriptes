@@ -1,0 +1,424 @@
+{
+  "qid": "Q186326",
+  "name": "Рюноскэ Акутагава",
+  "born": "1892-03-01",
+  "died": "1927-07-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BA%D1%83%D1%82%D0%B0%D0%B3%D0%B0%D0%B2%D0%B0%2C_%D0%A0%D1%8E%D0%BD%D0%BE%D1%81%D0%BA%D1%8D",
+      "rev": 154217374
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ry%C5%ABnosuke_Akutagawa",
+      "rev": 1380176453
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-v-sem-e-akutagava",
+      "title": "Приёмный сын дяди",
+      "from": 1892,
+      "to": 1909
+    },
+    {
+      "key": "uchenichestvo-i-slava",
+      "title": "Университет, Сосэки и первая слава",
+      "from": 1910,
+      "to": 1920
+    },
+    {
+      "key": "kitay-i-bolezn",
+      "title": "Китай и болезнь",
+      "from": 1921,
+      "to": 1924
+    },
+    {
+      "key": "poslednie-gody",
+      "title": "Последние годы и уход",
+      "from": 1925,
+      "to": 1927
+    }
+  ],
+  "events": [
+    {
+      "key": "family-1892",
+      "date": {
+        "from": "1892",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Болезнь матери и усыновление дядей",
+      "long": "Когда мальчику было восемь месяцев, мать поместили в психиатрическую лечебницу; его усыновил её брат Митиаки Акутагава, чью фамилию он принял.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "detstvo-v-sem-e-akutagava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда Рюноскэ было восемь месяцев, его мать была помещена в психиатрическую лечебницу, после чего он был усыновлён бездетным братом матери Митиаки Акутагавой"
+      }
+    },
+    {
+      "key": "birth-1892",
+      "date": {
+        "from": "1892-03-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Токио",
+      "long": "Родился в Токио в семье торговца молоком Тосидзо Ниихары.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "detstvo-v-sem-e-akutagava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рюноскэ Акутагава (яп. 芥川 龍之介 Акутагава Рю:носукэ, 1 марта 1892 года, Токио"
+      }
+    },
+    {
+      "key": "education-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на английском отделении университета",
+      "long": "Поступил на отделение английской литературы; вместе с друзьями издавал журнал «Синситё».",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1913 году поступил на отделение английской литературы филологического факультета Токийского университета"
+      }
+    },
+    {
+      "key": "love-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отказ семьи в браке с Ясои Есида",
+      "long": "Предложение руки подруге детства Ясои Есида; приёмная семья не одобрила союз.",
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While still a student, he proposed marriage to a childhood friend, Yayoi Yoshida, but his adoptive family did not approve the union."
+      }
+    },
+    {
+      "key": "career-1915",
+      "date": {
+        "from": "1915-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Знакомство с Нацумэ Сосэки",
+      "long": "В декабре 1915 года посетил литературный кружок своего кумира Нацумэ Сосэки.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Akutagawa gathered up the courage to visit his idol, Natsume Sōseki, in December 1915 for Sōseki's weekly literary circles."
+      }
+    },
+    {
+      "key": "career-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая известность после похвалы Сосэки",
+      "long": "Рассказ получил письмо с похвалой от Сосэки и принёс Акутагаве первую известность.",
+      "works": [
+        {
+          "ref": "nose"
+        }
+      ],
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early 1916 he published Hana (\"The Nose\", 1916), which received a letter of praise from Sōseki and secured Akutagawa his first taste of fame."
+      }
+    },
+    {
+      "key": "career-1916-2",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание английского в Морском училище",
+      "long": "Преподавал английский язык в Морском механическом училище.",
+      "place": {
+        "label": "Йокосука"
+      },
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1916 года Акутагава преподавал английский язык в Морском механическом училище."
+      }
+    },
+    {
+      "key": "love-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Фуми Цукамото",
+      "long": "Женился на Фуми Цукамото, с которой был помолвлен с 1916 года.",
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916 he became engaged to Fumi Tsukamoto, whom he married in 1918."
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в газете «Осака майнити симбун»",
+      "long": "Поступил на работу в газету «Осака майнити симбун».",
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1919 году поступил на работу в газету «Осака майнити симбун»."
+      }
+    },
+    {
+      "key": "child-1920",
+      "date": {
+        "from": "1920-03-20",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Хироси",
+      "long": "Родился первый сын, будущий драматург Хироси Акутагава.",
+      "chapter": "uchenichestvo-i-slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Хироси Акутагава 1920-03-20"
+      }
+    },
+    {
+      "key": "illness-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Четыре месяца в Китае, подорванное здоровье",
+      "long": "Четыре месяца в Китае корреспондентом газеты; поездка тяжело сказалась на здоровье, он страдал бессонницей и нервными расстройствами.",
+      "place": {
+        "label": "Китай"
+      },
+      "works": [
+        {
+          "ref": "in-a-grove"
+        }
+      ],
+      "chapter": "kitay-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В качестве специального корреспондента в 1921 году был отправлен на четыре месяца в Китай."
+      }
+    },
+    {
+      "key": "child-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Такаси",
+      "long": "Родился второй сын Такаси; погиб в 1945 году в Бирме в качестве студента-призывника.",
+      "chapter": "kitay-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Takashi Akutagawa (1922–1945) was killed as a student draftee in Burma"
+      }
+    },
+    {
+      "key": "child-1925",
+      "date": {
+        "from": "1925-07-12",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Ясуси",
+      "long": "Родился третий сын, будущий композитор Ясуси Акутагава.",
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Ясуси Акутагава 1925-07-12"
+      }
+    },
+    {
+      "key": "illness-1926",
+      "date": {
+        "from": "1926",
+        "to": "1927",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Галлюцинации и страх наследственного безумия",
+      "long": "В последние годы ухудшилось физическое и психическое здоровье; он страдал зрительными галлюцинациями и боялся унаследовать болезнь матери (в 1927 году).",
+      "works": [
+        {
+          "ref": "cogwheels"
+        }
+      ],
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The final phase of Akutagawa's literary career was marked by deteriorating physical and mental health."
+      }
+    },
+    {
+      "key": "illness-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Попытка самоубийства",
+      "long": "Пережил попытку самоубийства вместе со знакомой жены.",
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1927, he survived a suicide attempt, together with a friend of his wife."
+      }
+    },
+    {
+      "key": "death-1927",
+      "date": {
+        "from": "1927-07-24",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Токио",
+      "long": "Покончил с собой, приняв веронал; в прощальном письме написал об усталости от жизни и «смутной тревоге».",
+      "place": {
+        "label": "Токио"
+      },
+      "works": [
+        {
+          "ref": "fools-life"
+        }
+      ],
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "24 июля 1927 года он покончил с собой, приняв смертельную дозу веронала."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "rashomon",
+      "title": "Ворота Расёмон",
+      "qid": "Q1076912",
+      "written": {
+        "from": 1915,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "nose",
+      "title": "Нос",
+      "qid": "Q7754406",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "hell-screen",
+      "title": "Муки ада",
+      "qid": "Q1041621",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "spider-thread",
+      "title": "Паутинка",
+      "qid": "Q2471238",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "mandarin-oranges",
+      "title": "Мандарины",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "in-a-grove",
+      "title": "В чаще",
+      "qid": "Q3015488",
+      "written": {
+        "from": 1922,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "kappa",
+      "title": "Каппа",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "cogwheels",
+      "title": "Зубчатые колёса",
+      "qid": "Q11546816",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "fools-life",
+      "title": "Жизнь идиота",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    }
+  ]
+}

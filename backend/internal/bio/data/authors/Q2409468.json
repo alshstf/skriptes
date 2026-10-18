@@ -1,0 +1,212 @@
+{
+  "qid": "Q2409468",
+  "name": "Кирилл Юрьевич Еськов",
+  "born": "1956-09-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%95%D1%81%D1%8C%D0%BA%D0%BE%D0%B2%2C_%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BB_%D0%AE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 152432731
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kirill_Yeskov",
+      "rev": 1380709035
+    }
+  ],
+  "chapters": [
+    {
+      "key": "moskva-i-universitet",
+      "title": "Москва и университет",
+      "from": 1956,
+      "to": 1978
+    },
+    {
+      "key": "nauka-i-paleontologiya",
+      "title": "Арахнолог и палеонтолог",
+      "from": 1979,
+      "to": 1998
+    },
+    {
+      "key": "krikptoistoriya-i-priznanie",
+      "title": "Криптоистория и признание",
+      "from": 1999,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956-09-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Родился в Москве 16 сентября 1956 года.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 16 сентября 1956, Москва"
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание биофака МГУ",
+      "long": "Окончил кафедру энтомологии биологического факультета МГУ, затем работал во ВНИИ охраны природы и заповедного дела.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "nauka-i-paleontologiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил кафедру энтомологии биологического факультета Московского университета (1979)"
+      }
+    },
+    {
+      "key": "education-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Кандидатская степень по биологии",
+      "long": "Получил степень кандидата биологических наук; диссертация посвящена паукам Северной Сибири.",
+      "chapter": "nauka-i-paleontologiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кандидат биологических наук (1986)"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в Палеонтологическом институте РАН",
+      "long": "С 1988 года работает старшим научным сотрудником в лаборатории артропод Палеонтологического института РАН, изучает ископаемых членистоногих.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "nauka-i-paleontologiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1988 года работает старшим научным сотрудником в лаборатории артропод Палеонтологического института РАН."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Известность после выхода романа о Мордоре",
+      "long": "Роман, пересказывающий «Властелина Колец» с точки зрения Мордора, вышел в России и был тепло встречен; принёс автору известность.",
+      "works": [
+        {
+          "ref": "last-ringbearer"
+        }
+      ],
+      "chapter": "krikptoistoriya-i-priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book was \"published to acclaim\" in his homeland in 1999."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Странник»",
+      "long": "Получил премию «Странник» (в Wikidata указаны 2001 и 2002 годы). В статье премия связана с романом «Последний кольценосец».",
+      "works": [
+        {
+          "ref": "last-ringbearer"
+        }
+      ],
+      "chapter": "krikptoistoriya-i-priznanie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Странник 2001-01-01"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Бронзовая улитка»",
+      "long": "Награждён премией «Бронзовая улитка».",
+      "chapter": "krikptoistoriya-i-priznanie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Бронзовая улитка 2002-01-01"
+      }
+    },
+    {
+      "key": "other-2012",
+      "date": {
+        "from": "2012-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Открытое письмо в защиту Константина Крылова",
+      "long": "Выступил с инициативой открытого письма, осуждавшего преследование оппозиционера Константина Крылова (псевдоним Михаил Харитонов).",
+      "chapter": "krikptoistoriya-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 2012 года выступил с инициативой открытого письма, в котором осуждалось преследование оппозиционера Константина Крылова"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Имперская культура»",
+      "long": "Получил национальную премию «Имперская культура» имени Эдуарда Володина за книгу «Америка (reload game)».",
+      "chapter": "krikptoistoriya-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Национальная премия «Имперская культура» имени Эдуарда Володина (2015 год)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "last-ringbearer",
+      "title": "Последний кольценосец",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    }
+  ]
+}

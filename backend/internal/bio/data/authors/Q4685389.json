@@ -1,0 +1,218 @@
+{
+  "qid": "Q4685389",
+  "name": "Адриан Чайковски",
+  "born": "1972-06-14",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Adrian_Tchaikovsky",
+      "rev": 1380457063
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Линкольншир и Рединг",
+      "from": 1972,
+      "to": 1995
+    },
+    {
+      "key": "yurist-i-otkazy",
+      "title": "Юрист и годы отказов",
+      "from": 1996,
+      "to": 2007
+    },
+    {
+      "key": "pervye-knigi",
+      "title": "Первые книги",
+      "from": 2008,
+      "to": 2018
+    },
+    {
+      "key": "polnoe-pisatelstvo",
+      "title": "Писатель на полную ставку",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-06-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вудхолл-Спа",
+      "long": "Родился в Вудхолл-Спа, Линкольншир, в семье польского происхождения.",
+      "place": {
+        "label": "Вудхолл-Спа"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Adrian Czajkowski was born in Woodhall Spa, Lincolnshire in June 1972."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые рассказы в журнале Xenos",
+      "long": "Первые литературные опыты: отправил несколько рассказов в журнал Xenos.",
+      "chapter": "yurist-i-otkazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Tchaikovsky's first foray into writing was in 1996 when he submitted several stories for publication in Xenos magazine."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый изданный роман после пятнадцати лет попыток",
+      "long": "После пятнадцати лет попыток опубликоваться вышел первый роман в издательстве Tor Books (UK).",
+      "works": [
+        {
+          "ref": "empire-in-black-and-gold"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, after Tchaikovsky had spent fifteen years trying to get published, his novel Empire in Black and Gold was finally published by Tor Books (UK)"
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Артура Кларка",
+      "long": "Роман получил 30-ю премию Артура Кларка и принёс автору широкую известность.",
+      "works": [
+        {
+          "ref": "children-of-time"
+        }
+      ],
+      "chapter": "polnoe-pisatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Children of Time was awarded the 30th Arthur C. Clarke Award in 2016."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с юридической службы в писательство",
+      "long": "Оставил работу юриста в Лидсе и стал профессиональным писателем.",
+      "place": {
+        "label": "Лидс"
+      },
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until late 2018 when he became a full-time writer"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-01-23",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор искусств Линкольнского университета",
+      "long": "Университет Линкольна присвоил почётную степень доктора искусств.",
+      "place": {
+        "label": "Линкольн"
+      },
+      "chapter": "polnoe-pisatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 23 January 2019, Tchaikovsky was awarded an Honorary Doctorate of the Arts by the University of Lincoln."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Хьюго» за лучшую серию",
+      "long": "Цикл «Дети времени» отмечен премией «Хьюго» за лучшую серию.",
+      "works": [
+        {
+          "ref": "children-of-time"
+        }
+      ],
+      "chapter": "polnoe-pisatelstvo",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучшую серию 2023"
+      }
+    },
+    {
+      "key": "other-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подкаст Starship Alexandria с Эммой Ньюман",
+      "long": "Вместе с Эммой Ньюман запустил подкаст Starship Alexandria.",
+      "chapter": "polnoe-pisatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, with Emma Newman, he launched a new podcast, Starship Alexandria."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shadows-of-the-apt",
+      "title": "Shadows of the Apt (Тени Апта)",
+      "written": {
+        "from": 2008,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "empire-in-black-and-gold",
+      "title": "Empire in Black and Gold",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "children-of-time",
+      "title": "Children of Time (Дети времени)",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

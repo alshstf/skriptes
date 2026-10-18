@@ -1,0 +1,869 @@
+{
+  "qid": "Q335064",
+  "name": "Владимир Галактионович Короленко",
+  "born": "1853-07-27",
+  "died": "1921-12-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D0%B5%D0%BD%D0%BA%D0%BE%2C_%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%93%D0%B0%D0%BB%D0%B0%D0%BA%D1%82%D0%B8%D0%BE%D0%BD%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 154896221
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Vladimir_Korolenko",
+      "rev": 1378745828
+    }
+  ],
+  "chapters": [
+    {
+      "key": "zhitomir-rovno",
+      "title": "Житомир и Ровно",
+      "from": 1853,
+      "to": 1870
+    },
+    {
+      "key": "instituty-ssylki",
+      "title": "Институты, кружки, первые ссылки",
+      "from": 1871,
+      "to": 1880
+    },
+    {
+      "key": "prisyaga-yakutiya",
+      "title": "Отказ от присяги и Якутия",
+      "from": 1881,
+      "to": 1885
+    },
+    {
+      "key": "nizhny-novgorod",
+      "title": "Нижний Новгород, семья, голод и Мултан",
+      "from": 1886,
+      "to": 1899
+    },
+    {
+      "key": "poltava-publicist",
+      "title": "Полтава, академия, борьба с властью",
+      "from": 1900,
+      "to": 1916
+    },
+    {
+      "key": "revolyuciya-grazhdanskaya",
+      "title": "Революция и гражданская война",
+      "from": 1917,
+      "to": 1921
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1853",
+      "date": {
+        "from": "1853-07-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье житомирского судьи",
+      "long": "Родился в Житомире в семье уездного судьи Галактиона Афанасьевича Короленко; мать, Эвелина Иосифовна, была полькой.",
+      "place": {
+        "label": "Житомир"
+      },
+      "chapter": "zhitomir-rovno",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Житомир 1853-07-27"
+      }
+    },
+    {
+      "key": "loss-1868",
+      "date": {
+        "from": "1868",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, уездного судьи",
+      "long": "Умер отец, уездный судья, оказавший огромное влияние на формирование мировоззрения сына; среднее образование Короленко окончил уже после его смерти.",
+      "place": {
+        "label": "Ровно"
+      },
+      "works": [
+        {
+          "ref": "v-durnom-obshchestve",
+          "note": "образ отца запечатлён писателем в повести"
+        }
+      ],
+      "chapter": "zhitomir-rovno",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Галактион Афанасьевич Короленко (1810—1868)"
+      }
+    },
+    {
+      "key": "education-1871",
+      "date": {
+        "from": "1871",
+        "to": "1874",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Технологический институт, уход из-за нужды",
+      "long": "Поступил в Петербургский технологический институт, но из-за материальных трудностей покинул его; в 1874 году перешёл на стипендию в Петровскую земледельческую академию в Москве.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1871 году поступил в Петербургский технологический институт, но из-за материальных трудностей вынужден был его покинуть и перейти в 1874 году на стипендию"
+      }
+    },
+    {
+      "key": "persecution-1876",
+      "date": {
+        "from": "1876",
+        "to": "1877",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Исключение из академии, ссылка в Кронштадт",
+      "long": "За участие в народнических студенческих кружках исключён из Петровской академии и выслан в Кронштадт под надзор полиции; там зарабатывал чертёжной работой.",
+      "place": {
+        "label": "Кронштадт"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1876 году за участие в народнических студенческих кружках он был исключён из академии и выслан в Кронштадт под надзор полиции."
+      }
+    },
+    {
+      "key": "education-1877",
+      "date": {
+        "from": "1877",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Горном институте",
+      "long": "По окончании срока кронштадтской ссылки вернулся в Петербург и поступил в Горный институт; к этому времени относится начало литературной деятельности.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "возвратился в Петербург и в 1877 поступил в Горный институт"
+      }
+    },
+    {
+      "key": "persecution-1879",
+      "date": {
+        "from": "1879-06",
+        "to": "1880-08",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Исключение из института, ссылки по Вятской губернии",
+      "long": "Исключён из Горного института по подозрению в революционной деятельности и выслан в Глазов; затем Берёзовские починки, вятская и Вышневолоцкая тюрьмы, этап в Сибирь.",
+      "place": {
+        "label": "Глазов"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Но ещё весной 1879 года по подозрению в революционной деятельности Короленко вновь был исключён из института и выслан в Глазов Вятской губернии."
+      }
+    },
+    {
+      "key": "career-1879",
+      "date": {
+        "from": "1879-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в журнале «Слово»",
+      "long": "В журнале «Слово» напечатана первая новелла; ранее Салтыков-Щедрин вернул рукопись из «Отечественных записок» со словами «зелено… зелено очень».",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "epizody-iz-zhizni-iskatelya"
+        }
+      ],
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1879 года в петербургском журнале «Слово» была напечатана первая новелла писателя"
+      }
+    },
+    {
+      "key": "persecution-1880",
+      "date": {
+        "from": "1880-08-21",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Этап в Томск и возвращение в Европейскую Россию",
+      "long": "Прибыл с партией ссыльных в Томск; по решению комиссии Лорис-Меликова шестерым, включая Короленко, объявили о возвращении в Европейскую Россию под надзор полиции.",
+      "place": {
+        "label": "Томск"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 августа 1880 года вместе с очередной партией ссыльных он прибыл в Томск для дальнейшего следования на восток."
+      }
+    },
+    {
+      "key": "relocation-1880",
+      "date": {
+        "from": "1880-09",
+        "to": "1881-08",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Политический ссыльный в Перми",
+      "long": "Жил в Перми как политический ссыльный, служил табельщиком и письмоводителем на железной дороге.",
+      "place": {
+        "label": "Пермь"
+      },
+      "chapter": "instituty-ssylki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С сентября 1880 года по август 1881 года жил в Перми в качестве политического ссыльного, служил табельщиком и письмоводителем на железной дороге."
+      }
+    },
+    {
+      "key": "persecution-1881",
+      "date": {
+        "from": "1881",
+        "to": "1885",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Ссылка в Якутию, Амгинская слобода",
+      "long": "Выслан в Якутскую область, срок ссылки отбывал в Амгинской слободе; сибирские впечатления стали материалом многих рассказов.",
+      "place": {
+        "label": "Амга"
+      },
+      "works": [
+        {
+          "ref": "son-makara",
+          "note": "сибирские впечатления стали материалом для рассказов (биограф С. Венгеров)"
+        }
+      ],
+      "chapter": "prisyaga-yakutiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "11 августа 1881 года был выслан из Перми в Сибирь…Срок ссылки в Сибири отбывал в Якутской области в Амгинской слободе"
+      }
+    },
+    {
+      "key": "persecution-1881-2",
+      "date": {
+        "from": "1881-03",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отказ от присяги Александру III",
+      "long": "Отказался от индивидуальной присяги новому царю Александру III; за это в августе 1881 года был выслан из Перми в Сибирь.",
+      "place": {
+        "label": "Пермь"
+      },
+      "chapter": "prisyaga-yakutiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 1881 года Короленко отказался от индивидуальной присяги новому царю Александру ІІІ"
+      }
+    },
+    {
+      "key": "relocation-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение из ссылки, поселение в Нижнем Новгороде",
+      "long": "Получил разрешение поселиться в Нижнем Новгороде, где стал центром местной общественной активности.",
+      "place": {
+        "label": "Нижний Новгород"
+      },
+      "chapter": "prisyaga-yakutiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where in 1885 he was finally allowed to settle in"
+      }
+    },
+    {
+      "key": "love-1886",
+      "date": {
+        "from": "1886-01",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Евдокии Ивановской",
+      "long": "Женился на Евдокии Семёновне Ивановской, революционерке-народнице, с которой был знаком по Москве; брак описан как очень счастливый.",
+      "place": {
+        "label": "Нижний Новгород"
+      },
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1886 Vladimir Korolenko married Evdokiya Semyonovna Ivanovskaya"
+      }
+    },
+    {
+      "key": "child-1886",
+      "date": {
+        "from": "1886-10-28",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Софьи",
+      "long": "Родилась дочь Софья, впоследствии личный секретарь отца и директор музея Короленко в Полтаве.",
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Софья Владимировна Короленко 1886-10-28"
+      }
+    },
+    {
+      "key": "child-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Натальи",
+      "long": "Родилась вторая дочь Наталья, впоследствии филолог и литературовед; ещё двое детей умерли в младенчестве.",
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Двое детей: Наталья (1888 — 1950; в замужестве Ляхович)"
+      }
+    },
+    {
+      "key": "other-1891",
+      "date": {
+        "from": "1891",
+        "to": "1892",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Работа в голодающих губерниях",
+      "long": "Участвовал в помощи голодающим: собирал пожертвования, организовал сорок пять бесплатных столовых, присылал корреспонденции.",
+      "works": [
+        {
+          "ref": "v-golodny-god",
+          "note": "корреспонденции с места событий составили книгу"
+        }
+      ],
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1891-1892, when famine struck several regions of Central Russia, he went to work on the ground, taking part in the relief missions"
+      }
+    },
+    {
+      "key": "other-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Чикаго корреспондентом",
+      "long": "Посетил Всемирную выставку в Чикаго как корреспондент «Русского богатства».",
+      "place": {
+        "label": "Чикаго"
+      },
+      "works": [
+        {
+          "ref": "bez-yazyka",
+          "note": "повесть написана после поездки в Америку"
+        }
+      ],
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After visiting the Chicago exhibition during 1893 as a correspondent for Russkoye Bogatstvo, Korolenko wrote the novella"
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в журнале «Русское богатство»",
+      "long": "Вошёл в редакцию журнала «Русское богатство», с которым был связан до 1918 года.",
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1894, he joined the staff of Russkoye Bogatstvo (the magazine he stayed with until 1918)"
+      }
+    },
+    {
+      "key": "relocation-1896",
+      "date": {
+        "from": "1896",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Петербург",
+      "long": "Переехал с семьёй в Петербург.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "nizhny-novgorod",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1896 Korolenko moved his family to Saint Petersburg."
+      }
+    },
+    {
+      "key": "career-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание почётным академиком",
+      "long": "Избран почётным академиком Петербургской академии наук по разряду изящной словесности.",
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1900 году Короленко наряду с Львом Толстым, Антоном Чеховым, Владимиром Соловьёвым и Петром Боборыкиным был избран почётным академиком"
+      }
+    },
+    {
+      "key": "illness-1900",
+      "date": {
+        "from": "1900-09",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Нервное расстройство, возвращение в Полтаву",
+      "long": "Из-за вызванных стрессом психических расстройств, включая бессонницу, вернулся в Полтаву, где прожил до конца жизни.",
+      "place": {
+        "label": "Полтава"
+      },
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Suffering from some stress-induced psychological disorders, including insomnia, in September 1900 he returned to Poltava."
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ от звания академика в защиту Горького",
+      "long": "Сложил звание почётного академика в знак протеста против исключения Максима Горького.",
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "но в 1902 году сложил с себя звание академика в знак протеста против исключения из рядов академиков Максима Горького"
+      }
+    },
+    {
+      "key": "loss-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя, Эвелина Иосифовна, полька по происхождению.",
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эвелина Иосифовна (в девичестве Скуревич; 1833—1903)"
+      }
+    },
+    {
+      "key": "persecution-1903",
+      "date": {
+        "from": "1903",
+        "to": "1905",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Цензурный запрет очерка о Кишинёвском погроме",
+      "long": "Очерк о Кишинёвском погроме 1903 года запрещён российской цензурой и впервые напечатан только в 1905 году.",
+      "works": [
+        {
+          "ref": "dom-13"
+        }
+      ],
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his historic description of the Chișinău pogrom of 1903, was banned by the Russian censorship and appeared in print in 1905 for the first time"
+      }
+    },
+    {
+      "key": "loss-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть старшего брата Юлиана",
+      "long": "Умер старший брат Юлиан, с которым Короленко вместе переводил Мишле.",
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "У Короленко был старший брат Юлиан (1851—1904)"
+      }
+    },
+    {
+      "key": "persecution-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Противостояние черносотенцам в Полтаве",
+      "long": "Выступал в Полтаве против черносотенцев и еврейских погромов; из-за многочисленных угроз смертью у его квартиры выставили рабочую охрану.",
+      "place": {
+        "label": "Полтава"
+      },
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As the 1905 Revolution started, Korolenko made a stand against the Black Hundred in Poltava."
+      }
+    },
+    {
+      "key": "persecution-1905-2",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Судебные преследования и обыски как редактора",
+      "long": "После публикации манифеста Петербургского совета рабочих депутатов в «Русском богатстве» против редактора неоднократно возбуждали дела, в квартире проводили обыски.",
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1905 Russkoye Bogatstvo (which he had started editing a year earlier) published the Manifest by the Petersburg Soviet of the Workers' deputies.…As its editor-in-chief, Korolenko was repeatedly sued by the authorities, had his flat raided by the police"
+      }
+    },
+    {
+      "key": "other-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Разоблачение карательной экспедиции в Сорочинцах",
+      "long": "Выступил в печати против жестокостей карательной экспедиции Ф. В. Филонова в Сорочинцах.",
+      "place": {
+        "label": "Сорочинцы"
+      },
+      "works": [
+        {
+          "ref": "sorochinskaya-tragediya"
+        }
+      ],
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "осуждал государственные власти за жестокость мер по отношению к крестьянам, борющимся за свои права («Сорочинская трагедия», 1906)"
+      }
+    },
+    {
+      "key": "persecution-1907",
+      "date": {
+        "from": "1907-03-25",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Травля за «подстрекательство к убийству»",
+      "long": "После убийства Филонова началась травля за «подстрекательство к убийству»; в Государственной думе Шульгин назвал Короленко «писателем-убийцей».",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Началась травля Короленко за «подстрекательство к убийству». 12 марта 1907 года в Государственной думе монархист В. В. Шульгин назвал Короленко «писателем-убийцей»."
+      }
+    },
+    {
+      "key": "career-1911",
+      "date": {
+        "from": "1911",
+        "to": "1913",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выступления в защиту обвинённого по делу Бейлиса",
+      "long": "Выступил в защиту евреев в деле Бейлиса; обращение «К русскому обществу» опубликовано 30 ноября 1911 года в газете «Речь».",
+      "works": [
+        {
+          "ref": "k-russkomu-obshchestvu"
+        }
+      ],
+      "chapter": "poltava-publicist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911—1913 годах Короленко выступал в защиту евреев в деле Бейлиса."
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Повторное избрание почётным академиком",
+      "long": "После свержения монархии Академия наук повторно избрала Короленко почётным академиком.",
+      "chapter": "revolyuciya-grazhdanskaya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Российская академия наук в 1918 году избрала Короленко почётным академиком повторно"
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Письма Луначарскому с критикой большевистской политики",
+      "long": "Написал шесть писем Луначарскому с критикой внесудебных смертных приговоров ЧК и политики военного коммунизма; копии переданы за границу, изданы в Париже в 1922 году.",
+      "place": {
+        "label": "Полтава"
+      },
+      "works": [
+        {
+          "ref": "pisma-k-lunacharskomu"
+        }
+      ],
+      "chapter": "revolyuciya-grazhdanskaya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году Короленко написал шесть писем А. В. Луначарскому, в которых критиковал внесудебные полномочия ЧК по вынесению смертных приговоров"
+      }
+    },
+    {
+      "key": "other-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Помощь голодающим и политзаключённым в Полтаве",
+      "long": "Организовывал в Полтаве помощь голодающим вместе с И. И. Горбуновым-Посадовым; вместе с сестрой жены П. С. Ивановской — помощь политзаключённым.",
+      "place": {
+        "label": "Полтава"
+      },
+      "works": [
+        {
+          "ref": "pisma-iz-poltavy"
+        }
+      ],
+      "chapter": "revolyuciya-grazhdanskaya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1921 году В. Г. Короленко и И. И. Горбунов-Посадов вместе организовывали в Полтаве помощь голодающим."
+      }
+    },
+    {
+      "key": "death-1921",
+      "date": {
+        "from": "1921-12-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Полтаве",
+      "long": "Умер в Полтаве от осложнений после пневмонии; последние годы страдал прогрессирующей болезнью сердца.",
+      "place": {
+        "label": "Полтава"
+      },
+      "chapter": "revolyuciya-grazhdanskaya",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Полтава 1921-12-25"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "epizody-iz-zhizni-iskatelya",
+      "title": "Эпизоды из жизни «искателя»",
+      "written": {
+        "from": 1879,
+        "to": 1879
+      }
+    },
+    {
+      "ref": "son-makara",
+      "title": "Сон Макара",
+      "written": {
+        "from": 1885,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "v-durnom-obshchestve",
+      "title": "В дурном обществе",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "slepoi-muzykant",
+      "title": "Слепой музыкант",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "les-shumit",
+      "title": "Лес шумит",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "pavlovskie-ocherki",
+      "title": "Павловские очерки",
+      "written": {
+        "from": 1890,
+        "to": 1890
+      }
+    },
+    {
+      "ref": "v-golodny-god",
+      "title": "В голодный год",
+      "written": {
+        "from": 1891,
+        "to": 1893
+      }
+    },
+    {
+      "ref": "bez-yazyka",
+      "title": "Без языка",
+      "written": {
+        "from": 1893,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "multanskoe-delo",
+      "title": "Мултанское дело",
+      "written": {
+        "from": 1896,
+        "to": 1896
+      }
+    },
+    {
+      "ref": "dom-13",
+      "title": "Дом № 13",
+      "written": {
+        "from": 1903,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "istoriya-moego-sovremennika",
+      "title": "История моего современника",
+      "written": {
+        "from": 1905,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "sorochinskaya-tragediya",
+      "title": "Сорочинская трагедия",
+      "written": {
+        "from": 1906,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "bytovoe-yavlenie",
+      "title": "Бытовое явление",
+      "written": {
+        "from": 1910,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "k-russkomu-obshchestvu",
+      "title": "К русскому обществу. По поводу кровавого навета на евреев",
+      "written": {
+        "from": 1911,
+        "to": 1912
+      }
+    },
+    {
+      "ref": "voina-otechestvo-i-chelovechestvo",
+      "title": "Война, отечество и человечество",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "pisma-k-lunacharskomu",
+      "title": "Письма к Луначарскому",
+      "written": {
+        "from": 1920,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "pisma-iz-poltavy",
+      "title": "Письма из Полтавы",
+      "written": {
+        "from": 1921,
+        "to": 1921
+      }
+    }
+  ]
+}

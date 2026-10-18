@@ -1,0 +1,689 @@
+{
+  "qid": "Q134262",
+  "name": "Теннесси Уильямс",
+  "born": "1911-03-26",
+  "died": "1983-02-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC%D1%81%2C_%D0%A2%D0%B5%D0%BD%D0%BD%D0%B5%D1%81%D1%81%D0%B8",
+      "rev": 151432484
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tennessee_Williams",
+      "rev": 1380022011
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-south",
+      "title": "Юг, болезнь и Сент-Луис",
+      "from": 1911,
+      "to": 1928
+    },
+    {
+      "key": "student-years",
+      "title": "Университеты и первые поиски",
+      "from": 1929,
+      "to": 1938
+    },
+    {
+      "key": "early-fame",
+      "title": "Новый Орлеан и первый успех",
+      "from": 1939,
+      "to": 1947
+    },
+    {
+      "key": "broadway-years",
+      "title": "Рим, Бродвей и признание",
+      "from": 1948,
+      "to": 1959
+    },
+    {
+      "key": "decline",
+      "title": "После Мерло: смятение и неудачи",
+      "from": 1960,
+      "to": 1983
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1911",
+      "date": {
+        "from": "1911-03-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Колумбусе, Миссисипи",
+      "long": "Родился в Колумбусе, штат Миссисипи, в семье Корнелиуса Уильямса, разъездного торговца обувью, и Эдвины Дэйкин. Детство прошло в доме деда-священника в Кларксдейле.",
+      "place": {
+        "label": "Колумбус"
+      },
+      "chapter": "childhood-south",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Колумбус 1911-03-26"
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая поездка в Европу с дедом",
+      "long": "Первая поездка в Европу вместе с дедом по матери, преподобным Уолтером Дэйкином.",
+      "chapter": "childhood-south",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Later, in 1928, Williams first visited Europe with his maternal grandfather Dakin."
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация рассказа в «Weird Tales»",
+      "long": "Первый опубликованный рассказ вышел в августовском номере журнала «Weird Tales» за подписью Томас Ланир Уильямс.",
+      "chapter": "childhood-south",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his short story \"The Vengeance of Nitocris\" was published (as by \"Thomas Lanier Williams\") in the August 1928 issue of the magazine Weird Tales"
+      }
+    },
+    {
+      "key": "education-1929",
+      "date": {
+        "from": "1929",
+        "to": "1931",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Миссурийском университете",
+      "long": "Занятия казались ему скучными, его выбила из колеи безответная любовь. Отец забрал его из университета после проваленного курса военной подготовки и отправил на обувную фабрику.",
+      "place": {
+        "label": "Колумбия"
+      },
+      "chapter": "student-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929—1931 гг. Уильямс учился в Миссурийском университете, где посещал курсы журналистики."
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "to": "1938",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Сент-Луисе и Айове, степень бакалавра",
+      "long": "Поступил в Университет Вашингтона в Сент-Луисе, затем перевёлся в Айовский университет и окончил его бакалавром искусств; позже учился в театральной мастерской Новой школы в Нью-Йорке.",
+      "place": {
+        "label": "Сент-Луис"
+      },
+      "chapter": "student-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1936 Уильямс поступил в Университет Вашингтона в Сент-Луисе, в 1938 перевёлся в Айовский университет, который и окончил со степенью «Бакалавр искусств»."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Грант Рокфеллера и контракт с MGM",
+      "long": "Грант фонда Рокфеллера в 1000 долларов привлёк к нему внимание киноиндустрии и принёс полугодовой контракт с Metro-Goldwyn-Mayer.",
+      "works": [
+        {
+          "ref": "battle-of-angels",
+          "note": "грант присуждён в знак признания этой пьесы"
+        }
+      ],
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 благодаря своему агенту Одри Вуд он получил грант на сумму 1000 долларов от фонда Рокфеллера в знак признания его пьесы «Битва ангелов»"
+      }
+    },
+    {
+      "key": "relocation-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Новый Орлеан",
+      "long": "Поселился в Французском квартале, сначала на Тулуз-стрит, 722.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "works": [
+        {
+          "ref": "vieux-carre",
+          "note": "дом на Тулуз-стрит, 722 — место действия пьесы"
+        }
+      ],
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 на остатки гранта Уильямс переехал в Новый Орлеан, чтобы писать для Управления общественных работ (WPA)"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Литературный псевдоним «Теннесси»",
+      "long": "Псевдоним отсылает к родине предков отца — восточному Теннесси.",
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 взял псевдоним «Теннесси»."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Неудачная постановка в Бостоне",
+      "long": "Поставленная в Бостоне пьеса была принята плохо.",
+      "place": {
+        "label": "Бостон"
+      },
+      "works": [
+        {
+          "ref": "battle-of-angels"
+        }
+      ],
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was produced in Boston, Massachusetts in 1940 and was poorly received."
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с танцором Кипом Кирнаном",
+      "long": "Кирнан ушёл от него, чтобы жениться на женщине, что повергло Уильямса в смятение.",
+      "place": {
+        "label": "Провинстаун"
+      },
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1940 года Уильямс завязал отношения с Кипом Кирнаном (1918—1944), молодым канадским танцором, с которым познакомился в Провинстауне."
+      }
+    },
+    {
+      "key": "illness-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Лоботомия сестры Роуз",
+      "long": "Сестре Роуз, страдавшей шизофренией, сделали лоботомию; остаток жизни она провела в специальных учреждениях, Уильямс оплачивал её содержание.",
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943, когда её состояние стало критическим, ей сделали лоботомию."
+      }
+    },
+    {
+      "key": "loss-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть Кипа Кирнана",
+      "long": "Смерть Кирнана в 26 лет стала для Уильямса тяжёлым ударом.",
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кипом Кирнаном (1918—1944)…ещё более тяжёлый удар последовал со смертью Кирнана в возрасте 26 лет"
+      }
+    },
+    {
+      "key": "career-1944",
+      "date": {
+        "from": "1944",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый большой успех на сцене",
+      "long": "Пьеса прошла в Чикаго, затем на Бродвее, где стала хитом и получила премию Нью-йоркского кружка театральных критиков.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "works": [
+        {
+          "ref": "glass-menagerie"
+        }
+      ],
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Зимой 1944—1945 в Чикаго с успехом была поставлена «пьеса-воспоминание» «Стеклянный зверинец», собравшая хорошую критику."
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945",
+        "to": "1947",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с Панчо Родригесом",
+      "long": "Отношения с Панчо Родригесом, омрачённые ревностью и выпивкой; с февраля 1946 жили вместе в Новом Орлеане, в конце 1947 Уильямс их прекратил.",
+      "place": {
+        "label": "Таос"
+      },
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году в Таосе Уильямс познакомился с мексиканцем Панчо Родригес-и-Гонсалесом, служащим отеля.…В конце 1947 года Уильямс прекратил отношения"
+      }
+    },
+    {
+      "key": "family-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Раздельное проживание родителей",
+      "long": "Родители договорились о юридическом раздельном проживании, но так и не развелись.",
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They agreed to a legal separation in 1946 but never divorced."
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Громкий успех и репутация крупного драматурга",
+      "long": "Успех пьесы закрепил за ним репутацию крупного драматурга; при этом он оставался неуверенным в себе и боялся не повторить успех.",
+      "works": [
+        {
+          "ref": "streetcar-named-desire"
+        }
+      ],
+      "chapter": "early-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1947, the huge success of Williams' next play, A Streetcar Named Desire, cemented his reputation as a great playwright."
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая Пулитцеровская премия",
+      "long": "Первая Пулитцеровская премия за лучшую драму.",
+      "chapter": "broadway-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Пулитцеровская премия за лучшую драму 1948-01-01"
+      }
+    },
+    {
+      "key": "love-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Весна и лето в Риме",
+      "long": "Уильямс провёл весну и лето в Риме с юношей, которого в «Мемуарах» назвал Рафаэлло, и несколько лет помогал ему материально.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "roman-spring-of-mrs-stone",
+          "note": "эта ситуация легла в основу первого романа"
+        }
+      ],
+      "chapter": "broadway-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весну и лето 1948 Уильямс провёл в Риме в компании итальянского подростка"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951-03-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Тони» за лучшую пьесу",
+      "long": "Премия «Тони» за лучшую пьесу.",
+      "chapter": "broadway-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Тони» за лучшую пьесу 1951-03-25"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая Пулитцеровская премия",
+      "long": "Вторая Пулитцеровская премия за лучшую драму.",
+      "chapter": "broadway-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Пулитцеровская премия за лучшую драму 1955-01-01"
+      }
+    },
+    {
+      "key": "loss-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Корнелиус Коффин Уильямс.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cornelius Coffin \"C. C.\" Williams (1879–1957)"
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Годы смятения и творческих неудач",
+      "long": "Алкоголизм и зависимость от лекарств ухудшили качество работы; пьесы этих лет проваливались в прокате.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1960-е и 1970-е в жизни Уильямса отмечены смятением и чередой творческих неудач."
+      }
+    },
+    {
+      "key": "loss-1963",
+      "date": {
+        "from": "1963-09-21",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Фрэнка Мерло",
+      "long": "После разрыва с Фрэнком Мерло, с которым прожил 14 лет, Уильямс ухаживал за ним, больным раком лёгких, до смерти. Затем наступил период депрессии и госпитализаций.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уильямс вернулся и заботился о нём до его смерти 21 сентября 1963 года."
+      }
+    },
+    {
+      "key": "other-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Завещание с просьбой о погребении в море",
+      "long": "В завещании выразил желание быть похороненным в море, у места гибели поэта Харта Крейна.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote in his will in 1972:"
+      }
+    },
+    {
+      "key": "love-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв с Робертом Кэрроллом",
+      "long": "Расстался с Робертом Кэрроллом, с которым был в длительных отношениях в 1970-е.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When the two men broke up in 1979, Williams called Carroll a \"twerp\", but they remained friends until Williams died four years later."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в Театральный зал славы",
+      "long": "Введён в Американский театральный зал славы.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1979, four years before his death, Williams was inducted into the American Theater Hall of Fame."
+      }
+    },
+    {
+      "key": "loss-1980",
+      "date": {
+        "from": "1980-06-01",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Эдвина Дэйкин.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Edwina Estelle Dakin 1980-06-01"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постановка последней пьесы",
+      "long": "Последняя пьеса шла в Чикаго всего 40 представлений, несмотря на в основном положительные отзывы.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1982, Williams' last play, A House Not Meant to Stand, was produced in Chicago."
+      }
+    },
+    {
+      "key": "death-1983",
+      "date": {
+        "from": "1983-02-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в нью-йоркском отеле",
+      "long": "Найден мёртвым в отеле «Элизе»; причиной смерти назвали удушье колпачком от пузырька, позднее — токсичный уровень секобарбитала. Похоронен в Сент-Луисе вопреки завещанию.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "decline",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "25 февраля 1983 Уильямс был найден мёртвым в номере отеля «Элизе» в Нью-Йорке."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "battle-of-angels",
+      "title": "Битва ангелов",
+      "written": {
+        "from": 1939,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "glass-menagerie",
+      "title": "Стеклянный зверинец",
+      "qid": "Q678832",
+      "written": {
+        "from": 1943,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "streetcar-named-desire",
+      "title": "Трамвай «Желание»",
+      "qid": "Q842106",
+      "written": {
+        "from": 1945,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "summer-and-smoke",
+      "title": "Лето и дым",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "roman-spring-of-mrs-stone",
+      "title": "Римская весна миссис Стоун",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "rose-tattoo",
+      "title": "The Rose Tattoo",
+      "qid": "Q1219620",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "camino-real",
+      "title": "Камино Реал",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "cat-on-a-hot-tin-roof",
+      "title": "Кошка на раскалённой крыше",
+      "qid": "Q606930",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "orpheus-descending",
+      "title": "Орфей спускается в ад",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "sweet-bird-of-youth",
+      "title": "Сладкоголосая птица юности",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "night-of-the-iguana",
+      "title": "Ночь игуаны",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "vieux-carre",
+      "title": "Французский квартал",
+      "written": {
+        "from": 1977,
+        "to": 1978
+      }
+    }
+  ]
+}

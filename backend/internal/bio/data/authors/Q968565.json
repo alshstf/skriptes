@@ -1,0 +1,234 @@
+{
+  "qid": "Q968565",
+  "name": "Уильям Тенн",
+  "born": "1920-05-09",
+  "died": "2010-02-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC_%D0%A2%D0%B5%D0%BD%D0%BD",
+      "rev": 147488246
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Tenn",
+      "rev": 1378491334
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-brooklyn-army",
+      "title": "Лондон, Бруклин, армия",
+      "from": 1920,
+      "to": 1945
+    },
+    {
+      "key": "humorist-of-sf",
+      "title": "Юморист фантастики",
+      "from": 1946,
+      "to": 1965
+    },
+    {
+      "key": "penn-state",
+      "title": "Профессор в Пенсильвании",
+      "from": 1966,
+      "to": 1987
+    },
+    {
+      "key": "pittsburgh-recognition",
+      "title": "Питтсбург и признание",
+      "from": 1988,
+      "to": 2010
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1920",
+      "date": {
+        "from": "1920-05-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне в семье жестянщика",
+      "long": "Филип Класс родился в Лондоне в семье еврейского иммигранта из Российской империи, жестянщика. В раннем детстве семья переехала в Нью-Йорк, он вырос в Бруклине.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-brooklyn-army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уильям Тенн (англ. William Tenn, 9 мая 1920, Лондон"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в научной фантастике",
+      "long": "Работая в лаборатории Bell Labs, дебютировал рассказом, замысел которого подсказал опыт работы в радарной лаборатории; рассказ вышел в журнале Astounding Science Fiction.",
+      "works": [
+        {
+          "ref": "alexander-the-bait",
+          "note": "замысел рассказа подсказан работой автора в радарной лаборатории"
+        }
+      ],
+      "chapter": "humorist-of-sf",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Как писатель-фантаст дебютировал рассказом «Александр-наживка» (1946)."
+      }
+    },
+    {
+      "key": "love-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Фрумой Класс",
+      "long": "Филип Класс женился на Фруме Класс; в браке родилась дочь Адина.",
+      "chapter": "humorist-of-sf",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Phillip and Fruma Klass married in 1957"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переезд в Пенсильванию, преподавание в университете",
+      "long": "Семья переехала в Стейт-Колледж, Пенсильвания; Класс преподавал английскую и сравнительную литературу в Университете штата Пенсильвания 22 года, вёл курсы по научной фантастике.",
+      "place": {
+        "label": "Стейт-Колледж"
+      },
+      "chapter": "penn-state",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they moved in 1966 to State College, Pennsylvania, where he taught English and comparative literature at Penn State University for 22 years"
+      }
+    },
+    {
+      "key": "relocation-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в пригород Питтсбурга после отставки",
+      "long": "После выхода на пенсию супруги переехали в Маунт-Лебанон, пригород Питтсбурга.",
+      "place": {
+        "label": "Маунт-Лебанон"
+      },
+      "chapter": "pittsburgh-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple moved to the Pittsburgh suburb of Mt. Lebanon in 1988"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётное звание «Заслуженный автор»",
+      "long": "Ассоциация писателей-фантастов США присвоила Тенну почётное звание «Заслуженный автор» за вклад в фантастику.",
+      "chapter": "pittsburgh-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was given the Author Emeritus honor by the Science Fiction and Fantasy Writers of America in 1999."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный гость Всемирного конвента фантастики",
+      "long": "Был почётным гостем Всемирного конвента фантастики Noreascon 4.",
+      "chapter": "pittsburgh-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Phil Klass was a Guest of Honor at Noreascon 4, the 2004 World Science Fiction Convention."
+      }
+    },
+    {
+      "key": "death-2010",
+      "date": {
+        "from": "2010-02-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Маунт-Лебаноне",
+      "long": "Умер от застойной сердечной недостаточности в Маунт-Лебаноне; последние месяцы был тяжело болен.",
+      "place": {
+        "label": "Маунт-Лебанон"
+      },
+      "chapter": "pittsburgh-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died on February 7, 2010, of congestive heart failure"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "alexander-the-bait",
+      "title": "Александр-наживка",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "childs-play",
+      "title": "Детская игра",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "venus-and-the-seven-sexes",
+      "title": "Венера и семь полов",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "a-lamp-for-medusa",
+      "title": "Лампа для Медузы",
+      "written": {
+        "from": 1951,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "of-men-and-monsters",
+      "title": "Люди в стенах",
+      "written": {
+        "from": 1963,
+        "to": 1968
+      }
+    }
+  ]
+}

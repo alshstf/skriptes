@@ -1,0 +1,399 @@
+{
+  "qid": "Q53411010",
+  "name": "Ребекка Ф. Куанг",
+  "born": "1996-05-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%B0%D0%BD%D0%B3%2C_%D0%A0%D0%B5%D0%B1%D0%B5%D0%BA%D0%BA%D0%B0_%D0%A4.",
+      "rev": 155003778
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/R._F._Kuang",
+      "rev": 1379556005
+    }
+  ],
+  "chapters": [
+    {
+      "key": "guangzhou-dallas",
+      "title": "Из Гуанчжоу в Даллас",
+      "from": 1996,
+      "to": 2013
+    },
+    {
+      "key": "georgetown-debut",
+      "title": "Джорджтаун и первый роман",
+      "from": 2014,
+      "to": 2018
+    },
+    {
+      "key": "britain-yale",
+      "title": "Британия и Йель",
+      "from": 2019,
+      "to": 2021
+    },
+    {
+      "key": "fame",
+      "title": "Признание и новые книги",
+      "from": 2022,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1996",
+      "date": {
+        "from": "1996-05-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гуанчжоу",
+      "long": "Родилась в Гуанчжоу, Китай, 29 мая 1996 года.",
+      "place": {
+        "label": "Гуанчжоу"
+      },
+      "chapter": "guangzhou-dallas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 29 мая 1996"
+      }
+    },
+    {
+      "key": "education-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Гринхилл",
+      "long": "Окончила школу Гринхилл в Далласе и поступила в Джорджтаунский университет.",
+      "place": {
+        "label": "Даллас"
+      },
+      "chapter": "guangzhou-dallas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "окончила школу Гринхилл в 2013 году"
+      }
+    },
+    {
+      "key": "education-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Литературная мастерская Odyssey",
+      "long": "Окончила литературную мастерскую Odyssey Writing Workshop, в годы учёбы в Джорджтауне.",
+      "chapter": "georgetown-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She graduated from the Odyssey Writing Workshop in 2016"
+      }
+    },
+    {
+      "key": "education-2018",
+      "date": {
+        "from": "2018",
+        "to": "2020",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Стипендия Маршалла и магистратура в Британии",
+      "long": "Стипендия Маршалла оплатила учёбу в Британии: магистратура по китаеведению в Кембридже, затем по современному китаеведению в Оксфорде.",
+      "place": {
+        "label": "Кембридж, Оксфорд"
+      },
+      "chapter": "georgetown-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2018 году Ребекка Куанг выиграла стипендию Маршалла, которая полностью оплатила её обучение в Великобритании."
+      }
+    },
+    {
+      "key": "education-2018-2",
+      "date": {
+        "from": "2018-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Джорджтаунского университета",
+      "long": "Окончила Джорджтаунский университет в июне 2018 года; лето провела, тренируя дискуссионный лагерь в Колорадо.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "georgetown-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ребекка окончила университет в июне 2018 года."
+      }
+    },
+    {
+      "key": "education-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Возвращение в США, аспирантура в Йеле",
+      "long": "Осенью 2020 года вернулась в США и начала учёбу в аспирантуре Йеля по языкам и литературе Восточной Азии.",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "chapter": "britain-yale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 2020 года Куанг вернулась в США, чтобы продолжить обучение в аспирантуре Йельского университета"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "Получила премию Джона В. Кэмпбелла лучшему новому писателю-фантасту.",
+      "chapter": "britain-yale",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Джона В. Кэмпбелла лучшему новому писателю-фантасту 2020-01-01"
+      }
+    },
+    {
+      "key": "career-2020-2",
+      "date": {
+        "from": "2020-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Трилогия в списке лучших фэнтези журнала Time",
+      "long": "Первые две книги трилогии вошли в список 100 лучших фэнтези всех времён по версии журнала Time.",
+      "works": [
+        {
+          "ref": "poppy-war"
+        },
+        {
+          "ref": "dragon-republic"
+        }
+      ],
+      "chapter": "britain-yale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2020, the first two books in the Poppy War trilogy were included in Time magazine's list of the 100 best fantasy books of all time."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое место в списке бестселлеров NYT",
+      "long": "Роман возглавил список бестселлеров The New York Times в категории художественной прозы в твёрдой обложке.",
+      "works": [
+        {
+          "ref": "babel"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the second week of September 2022, Babel was placed at the top spot on The New York Times Best Seller list for hardcover fiction"
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии «Небьюла» и «Локус»",
+      "long": "Роман получил премии «Небьюла» за лучший роман и «Локус» за лучший роман фэнтези.",
+      "works": [
+        {
+          "ref": "babel"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 2023 году был удостоен премии «Небьюла» за лучший роман 2022 года и премии «Локус» за лучший роман фэнтези"
+      }
+    },
+    {
+      "key": "persecution-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Исключение из списка премии «Хьюго»",
+      "long": "Роман исключили из списка кандидатов на премию «Хьюго»; позже утёкшая переписка показала рекомендацию исключить книги с потенциально спорным для Китая содержанием.",
+      "place": {
+        "label": "Чэнду"
+      },
+      "works": [
+        {
+          "ref": "babel"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kuang's Babel was excluded from consideration for the 2023 Hugo Award along with Chinese Canadian author Xiran Jay Zhao's Iron Widow."
+      }
+    },
+    {
+      "key": "education-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Два месяца в Тайбэе на курсе китайского",
+      "long": "Два месяца провела в Тайбэе на интенсивном курсе китайского языка.",
+      "place": {
+        "label": "Тайбэй"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, she spent two months in Taipei for an intensive Mandarin course at the International Chinese Language Program."
+      }
+    },
+    {
+      "key": "career-2023-2",
+      "date": {
+        "from": "2023-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Роман в списке бестселлеров NYT",
+      "long": "Роман дебютировал на пятом месте списка бестселлеров The New York Times.",
+      "works": [
+        {
+          "ref": "yellowface"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the first week of June 2023, Yellowface debuted at the fifth spot on The New York Times Best Seller list for hardcover fiction."
+      }
+    },
+    {
+      "key": "love-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Беннетом Эккертом-Куангом",
+      "long": "Вышла замуж за Беннета Эккерта-Куанга, с которым была знакома со старших классов школы.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2024 году Ребекка Куанг вышла замуж за Беннета Эккерта-Куанга, аспиранта в Массачусетском технологическом институте"
+      }
+    },
+    {
+      "key": "career-2026",
+      "date": {
+        "from": "2026-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Писатель в резиденции колледжа Святого Креста",
+      "long": "Назначена первым писателем в резиденции имени Милларда в колледже Святого Креста.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2026, she was appointed as the inaugural Millard Distinguished Writer in Residence at the College of the Holy Cross."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "poppy-war",
+      "title": "Опиумная война",
+      "qid": "Q56491386",
+      "written": {
+        "from": 2015,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "dragon-republic",
+      "title": "Республика Дракон",
+      "qid": "Q109349567",
+      "written": {
+        "from": 2018,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "burning-god",
+      "title": "Пылающий бог",
+      "qid": "Q114088979",
+      "written": {
+        "from": 2019,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "babel",
+      "title": "Вавилон. Сокрытая история",
+      "qid": "Q114310172",
+      "written": {
+        "from": 2021,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "yellowface",
+      "title": "Йеллоуфейс",
+      "qid": "Q119803356",
+      "written": {
+        "from": 2021,
+        "to": 2023
+      }
+    },
+    {
+      "ref": "katabasis",
+      "title": "Катабасис",
+      "written": {
+        "from": 2023,
+        "to": 2025
+      }
+    },
+    {
+      "ref": "taipei-story",
+      "title": "Тайбэйская история",
+      "qid": "Q141592264",
+      "written": {
+        "from": 2024,
+        "to": 2025
+      }
+    }
+  ]
+}

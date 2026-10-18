@@ -1,0 +1,211 @@
+{
+  "qid": "Q4334952",
+  "name": "Ольга Онойко",
+  "born": "1984-07-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D0%BD%D0%BE%D0%B9%D0%BA%D0%BE%2C_%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0_%D0%92%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 149434615
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Москва и консерваторская учёба",
+      "from": 1984,
+      "to": 2004
+    },
+    {
+      "key": "debyut-i-priznanie",
+      "title": "Дебют и первые премии",
+      "from": 2005,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1984",
+      "date": {
+        "from": "1984-07-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Ольга Онойко родилась 21 июля 1984 года в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ольга Онойко родилась 21 июля 1984 года в Москве."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный дебют под псевдонимом",
+      "long": "Дебютировала в издательстве «Лениздат» под псевдонимом Олег Серёгин; в 2007 году там же вышло продолжение романа.",
+      "works": [
+        {
+          "ref": "dominiruyushchaya-rasa"
+        }
+      ],
+      "chapter": "debyut-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебютировала в 2005 году в издательстве «Лениздат» романом «Доминирующая раса» под псевдонимом Олег Серёгин."
+      }
+    },
+    {
+      "key": "education-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание музыкально-педагогического института",
+      "long": "Окончила ГМПИ им. М. М. Ипполитова-Иванова по специальности «музыковедение», затем преподавала музыкально-теоретические дисциплины.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году закончила ГМПИ им. М. М. Ипполитова-Иванова по специальности «музыковедение»."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Дебют» в номинации «Фантастика»",
+      "long": "Третий роман получил премию «Дебют»; последующие книги выходили под настоящей фамилией.",
+      "works": [
+        {
+          "ref": "khirurgicheskoe-vmeshatelstvo"
+        }
+      ],
+      "chapter": "debyut-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году третий роман Ольги Онойко «Хирургическое вмешательство» получил премию «Дебют» в номинации «Фантастика»."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поощрительная премия ESFS молодому автору",
+      "long": "Получила поощрительную премию Европейского общества научной фантастики; на неё писательницу выдвинула делегация Украины.",
+      "chapter": "debyut-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Ольга Онойко получила поощрительную премию Европейского общества научной фантастики молодому автору"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Дни фантастики в Киеве» за лучшую повесть",
+      "long": "Премия фестиваля «Дни фантастики в Киеве» в номинации «Лучшая повесть».",
+      "place": {
+        "label": "Киев"
+      },
+      "works": [
+        {
+          "ref": "letchik-i-devushka"
+        }
+      ],
+      "chapter": "debyut-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2011 — Премия фестиваля фантастики «Дни фантастики в Киеве» в номинации «Лучшая повесть»"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Странник» за лучший сюжет",
+      "long": "Премия «Странник» в номинации «Лучший сюжет».",
+      "works": [
+        {
+          "ref": "more-imen"
+        }
+      ],
+      "chapter": "debyut-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2013 — Премия «Странник» в номинации «Лучший сюжет» за роман «Море Имён»."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dominiruyushchaya-rasa",
+      "title": "Доминирующая раса",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "dikiy-port",
+      "title": "Дикий порт",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "khirurgicheskoe-vmeshatelstvo",
+      "title": "Хирургическое вмешательство",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "letchik-i-devushka",
+      "title": "Лётчик и девушка",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "more-imen",
+      "title": "Море Имён",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

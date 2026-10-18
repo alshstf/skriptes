@@ -1,0 +1,331 @@
+{
+  "qid": "Q2518093",
+  "name": "Мэри Мейпс Додж",
+  "born": "1831-01-26",
+  "died": "1905-08-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D0%B4%D0%B6%2C_%D0%9C%D1%8D%D1%80%D0%B8_%D0%9C%D0%B5%D0%B9%D0%BF%D1%81",
+      "rev": 154894486
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mary_Mapes_Dodge",
+      "rev": 1371369819
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-marriage",
+      "title": "Дом Мейпсов и замужество",
+      "from": 1831,
+      "to": 1857
+    },
+    {
+      "key": "widowhood-writing",
+      "title": "Вдовство и начало писательства",
+      "from": 1858,
+      "to": 1872
+    },
+    {
+      "key": "st-nicholas",
+      "title": "«Святой Николай»",
+      "from": 1873,
+      "to": 1905
+    }
+  ],
+  "events": [
+    {
+      "key": "education-1831",
+      "date": {
+        "from": "1831",
+        "to": "1850",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Домашнее образование",
+      "long": "Вместе с сёстрами получила домашнее образование: языки, музыка, рисование.",
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Как и её сёстры получила домашнее образование, изучала английский, французский и латинский языки, музыку, рисование."
+      }
+    },
+    {
+      "key": "birth-1831",
+      "date": {
+        "from": "1831-01-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье изобретателя Мейпса",
+      "long": "Родилась в Нью-Йорке в семье изобретателя и химика Джеймса Джей Мейпса и Софии Феррман.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 января 1831, Нью-Йорк"
+      }
+    },
+    {
+      "key": "love-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с адвокатом Уильямом Доджем",
+      "long": "Вышла замуж за нью-йоркского адвоката Уильяма Доджа.",
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1851 году вышла замуж за адвоката Уильяма Доджа"
+      }
+    },
+    {
+      "key": "child-1851",
+      "date": {
+        "from": "1851",
+        "to": "1855",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение второго сына Харрингтона",
+      "long": "В течение четырёх лет после свадьбы родила двух сыновей — Джеймса и Харрингтона.",
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в течение четырёх последующих лет родила двоих сыновей — Джеймса и Харрингтона"
+      }
+    },
+    {
+      "key": "child-1852",
+      "date": {
+        "from": "1852-06-30",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Джеймса",
+      "long": "Родился сын Джеймс Мейпс Додж, будущий изобретатель и продолжатель издательского дела матери.",
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Джеймс Мейпс Додж 1852-06-30"
+      }
+    },
+    {
+      "key": "poverty-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Финансовые проблемы мужа",
+      "long": "У мужа начались серьёзные финансовые трудности.",
+      "chapter": "childhood-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1857 году у Уильяма возникли серьёзные финансовые проблемы"
+      }
+    },
+    {
+      "key": "career-1859",
+      "date": {
+        "from": "1859",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание журналов вместе с отцом",
+      "long": "Начала работать с отцом над изданием журналов Working Farmer и United States Journal.",
+      "chapter": "widowhood-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1859, she began working with her father to publish two magazines, the Working Farmer and the United States Journal."
+      }
+    },
+    {
+      "key": "career-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех детской книги о Голландии",
+      "long": "Книга стала бестселлером, была переведена на несколько языков; Французская академия присудила за неё Монтионовскую премию.",
+      "works": [
+        {
+          "ref": "hans-brinker"
+        }
+      ],
+      "chapter": "widowhood-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hans Brinker, or The Silver Skates (New York, 1865); translated into Dutch, French, German, Russian and Italian"
+      }
+    },
+    {
+      "key": "career-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор детского отдела Hearth and Home",
+      "long": "Стала помощником редактора семейного еженедельника Hearth and Home, где вела детский и домашний отделы.",
+      "chapter": "widowhood-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she accepted the position of associate editor of Hearth and Home in 1870"
+      }
+    },
+    {
+      "key": "career-1873",
+      "date": {
+        "from": "1873",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор журнала «Святой Николай»",
+      "long": "Стала редактором нового детского журнала «Святой Николай», который редактировала более 30 лет.",
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1873, when St. Nicholas Magazine was started, she became its editor."
+      }
+    },
+    {
+      "key": "other-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Монтионовская премия",
+      "long": "Отмечена Монтионовской премией Французской академии.",
+      "works": [
+        {
+          "ref": "hans-brinker"
+        }
+      ],
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Монтионовская премия 1876-01-01"
+      }
+    },
+    {
+      "key": "loss-1881",
+      "date": {
+        "from": "1881",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Харрингтона",
+      "long": "Умер младший сын Харрингтон; издательское дело продолжил сын Джеймс.",
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1881 году Харрингтон Додж умер"
+      }
+    },
+    {
+      "key": "relocation-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Покупка летнего дома в Онтеоре",
+      "long": "Купила в дачном посёлке Онтеора-Парк в горах Катскилл коттедж «Ярроу», куда возвращалась каждое лето.",
+      "place": {
+        "label": "Онтеора-Парк"
+      },
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1888, she purchased a cottage, which she named \"Yarrow\", in the summer colony at Onteora Park"
+      }
+    },
+    {
+      "key": "illness-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь и переезд в Онтеору",
+      "long": "Несколько месяцев тяжело болела; переезд в Онтеору не помог.",
+      "place": {
+        "label": "Онтеора"
+      },
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Додж долгие месяцы болела и переехала в Онтеору (Нью-Йорк) в надежде поправить здоровье."
+      }
+    },
+    {
+      "key": "death-1905",
+      "date": {
+        "from": "1905-08-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умерла после долгой болезни.",
+      "place": {
+        "label": "Онтеора"
+      },
+      "chapter": "st-nicholas",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "писательница скончалась 21 августа 1905 года"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hans-brinker",
+      "title": "Серебряные коньки",
+      "qid": "Q2710575",
+      "written": {
+        "from": 1864,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "irvington-stories",
+      "title": "Эрвингтонские истории",
+      "written": {
+        "from": 1864,
+        "to": 1864
+      }
+    },
+    {
+      "ref": "donald-and-dorothy",
+      "title": "Дональд и Дороти",
+      "written": {
+        "from": 1883,
+        "to": 1883
+      }
+    }
+  ]
+}

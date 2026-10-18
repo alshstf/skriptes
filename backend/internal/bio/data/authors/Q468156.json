@@ -1,0 +1,241 @@
+{
+  "qid": "Q468156",
+  "name": "Джеймс Оливер Кервуд",
+  "born": "1878-06-12",
+  "died": "1927-08-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D1%80%D0%B2%D1%83%D0%B4%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81_%D0%9E%D0%BB%D0%B8%D0%B2%D0%B5%D1%80",
+      "rev": 154249578
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Oliver_Curwood",
+      "rev": 1372296612
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-redakcii",
+      "title": "Овоссо, университет, журналистика",
+      "from": 1878,
+      "to": 1906
+    },
+    {
+      "key": "sever",
+      "title": "Дороги Канады и Севера",
+      "from": 1907,
+      "to": 1921
+    },
+    {
+      "key": "zamok",
+      "title": "Слава, замок и охрана природы",
+      "from": 1922,
+      "to": 1927
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1878",
+      "date": {
+        "from": "1878-06-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Овоссо, Мичиган",
+      "long": "Родился в Овоссо, штат Мичиган, младшим из четырёх детей. Прабабушка по происхождению была из народа могавков.",
+      "place": {
+        "label": "Овоссо"
+      },
+      "chapter": "detstvo-i-redakcii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Curwood was born in Owosso, Michigan, the youngest of four children."
+      }
+    },
+    {
+      "key": "education-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Мичиганском университете",
+      "long": "Оставил школу до выпуска, сдал вступительный экзамен в Мичиганский университет и учился на отделении английского языка, изучая журналистику. Через два года бросил учёбу ради работы репортёром в Детройте.",
+      "place": {
+        "label": "Анн-Арбор"
+      },
+      "chapter": "detstvo-i-redakcii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1898, he sold his first story while attending the University of Michigan."
+      }
+    },
+    {
+      "key": "career-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый проданный рассказ",
+      "long": "В 1898 году, во время учёбы в университете, продал свой первый рассказ.",
+      "chapter": "detstvo-i-redakcii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1898, he sold his first story while attending the University of Michigan."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поручение канадского правительства о поездках на север",
+      "long": "В 1907 году канадское правительство наняло его для поездок на север Канады и публикации путевых отчётов ради привлечения туристов. Эти поездки вдохновили его приключенческие рассказы.",
+      "chapter": "sever",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1907 he was hired by the Canadian government to travel to the northern reaches of Canada to write and publish accounts of his travels to encourage tourism"
+      }
+    },
+    {
+      "key": "other-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое путешествие по Канаде",
+      "long": "В 1909 году совершил первое путешествие по Канаде; затем подолгу ездил по Канаде и Аляске, собирая впечатления для романов.",
+      "chapter": "sever",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1909 году совершил первое путешествие по Канаде."
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Строительство Замка Кервуд в Овоссо",
+      "long": "Разбогатев на книгах и посетив европейские замки, в 1922 году построил в родном городе дом в стиле французского шато XVIII века, где устроил кабинет.",
+      "place": {
+        "label": "Овоссо"
+      },
+      "chapter": "zamok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1922 году построил в своём родном городе дом в стиле XVIII века — Замок Кервуд"
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Член комиссии по защите природы Мичигана",
+      "long": "Давний охотник, стал сторонником охраны природы; в 1926 году вошёл в Мичиганскую комиссию по защите окружающей среды.",
+      "chapter": "zamok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1926 году стал членом Мичиганской комиссии по защите окружающей среды"
+      }
+    },
+    {
+      "key": "illness-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Укус на рыбалке во Флориде и заражение",
+      "long": "В 1927 году на рыбалке во Флориде был укушен или ужален неизвестным существом; начавшаяся инфекция ухудшалась в течение нескольких месяцев.",
+      "place": {
+        "label": "Флорида"
+      },
+      "chapter": "zamok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году поехал во Флориду, где во время рыбалки был укушен пауком, что вызвало аллергическую реакцию, заражение крови и смерть."
+      }
+    },
+    {
+      "key": "death-1927",
+      "date": {
+        "from": "1927-08-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Овоссо в 49 лет",
+      "long": "Умер в Овоссо в возрасте 49 лет, похоронен на кладбище Оук-Хилл в семейном участке.",
+      "place": {
+        "label": "Овоссо"
+      },
+      "chapter": "zamok",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died in Owosso at the age of 49, and was interred in Oak Hill Cemetery there in a family plot."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "kazan",
+      "title": "Казан",
+      "written": {
+        "from": 1914,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "the-grizzly-king",
+      "title": "Гризли",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "nomads-of-the-north",
+      "title": "Бродяги Севера",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "baree-son-of-kazan",
+      "title": "Сын Казана",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "the-rivers-end",
+      "title": "Конец реки",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    }
+  ]
+}

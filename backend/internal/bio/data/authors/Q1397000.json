@@ -1,0 +1,452 @@
+{
+  "qid": "Q1397000",
+  "name": "Ершов, Пётр Павлович",
+  "born": "1815-03-06",
+  "died": "1869-08-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%95%D1%80%D1%88%D0%BE%D0%B2%2C_%D0%9F%D1%91%D1%82%D1%80_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 154898621
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Pyotr_Pavlovich_Yershov",
+      "rev": 1375167495
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Сибирское детство и гимназия",
+      "from": 1815,
+      "to": 1829
+    },
+    {
+      "key": "petersburg",
+      "title": "Петербург, университет, первый успех",
+      "from": 1830,
+      "to": 1835
+    },
+    {
+      "key": "tobolsk-family",
+      "title": "Возвращение в Тобольск и первая семья",
+      "from": 1836,
+      "to": 1845
+    },
+    {
+      "key": "losses",
+      "title": "Новые браки и утраты",
+      "from": 1846,
+      "to": 1856
+    },
+    {
+      "key": "director",
+      "title": "Директор гимназии и отставка",
+      "from": 1857,
+      "to": 1869
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1815",
+      "date": {
+        "from": "1815-03-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье чиновника",
+      "long": "Родился в семье чиновника Павла Ершова в деревне Безруково Тобольской губернии.",
+      "place": {
+        "label": "Безруково"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 22 февраля (6 марта) 1815 года в семье чиновника Павла Алексеевича Ершова"
+      }
+    },
+    {
+      "key": "education-1827",
+      "date": {
+        "from": "1827",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Тобольская гимназия",
+      "long": "Родители определили Петра и его брата Николая в Тобольскую гимназию; мальчики жили в семье родственников матери, купцов Пиленковых.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1827 году родители определили Петра и его брата Николая в Тобольскую гимназию."
+      }
+    },
+    {
+      "key": "education-1830",
+      "date": {
+        "from": "1830",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Переезд в Петербург, поступление в университет",
+      "long": "Отец перевёлся в Петербург, братья Пётр и Николай поступили в Санкт-Петербургский университет.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1830 году отец перевёлся в Петербург, где братья поступили в Императорский Санкт-Петербургский университет"
+      }
+    },
+    {
+      "key": "loss-1834",
+      "date": {
+        "from": "1834",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца и брата Николая",
+      "long": "Вскоре после успеха сказки с разницей в несколько дней умерли отец и брат Николай.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1834, just after the triumph of The Humpbacked Horse, both Pyotr's father and brother died within a few days."
+      }
+    },
+    {
+      "key": "education-1834",
+      "date": {
+        "from": "1834",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университета",
+      "long": "Окончил философско-юридический факультет со степенью кандидата.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1834 году Пётр Ершов со степенью кандидата окончил философско-юридический факультет Санкт-Петербургского университета."
+      }
+    },
+    {
+      "key": "career-1834",
+      "date": {
+        "from": "1834-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех сказки, известность в литературе",
+      "long": "Сказка вышла отдельным изданием; отрывок появился в мае в «Библиотеке для чтения». Студент-поэт стал известен, его хвалил Пушкин.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "konek-gorbunok"
+        }
+      ],
+      "chapter": "petersburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в октябре 1834 года сказка Ершова была опубликована отдельным изданием. Успех сопутствовал молодому поэту"
+      }
+    },
+    {
+      "key": "relocation-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Тобольск, учитель гимназии",
+      "long": "Вернулся в Сибирь, порвав с петербургской литературной средой, и стал учителем Тобольской гимназии.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вернувшись на родину летом 1836 года, Ершов работал учителем Тобольской гимназии."
+      }
+    },
+    {
+      "key": "loss-1838",
+      "date": {
+        "from": "1838",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Ефимия Васильевна Ершова.",
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мать — Ефимия Васильевна Ершова, в девичестве Пилёнкова (1785—1838), умерла, когда Петру Ершову было 23 года"
+      }
+    },
+    {
+      "key": "love-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Серафимой Лещёвой",
+      "long": "Женился на Серафиме Алексеевне Лещёвой, вдове с детьми от первого брака.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая жена (с 1839) — Серафима Алексеевна Лещёва, урожд. Протопопова (1809—1845), умерла при родах."
+      }
+    },
+    {
+      "key": "loss-1840",
+      "date": {
+        "from": "1840",
+        "to": "1845",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть четверых детей в младенчестве",
+      "long": "Четверо детей от первого брака умерли в младенчестве.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дети от первого брака — Серафима I (1840—1840), Серафима II (1841—1841), Иван (1843—1843), Павел (1845—1845)"
+      }
+    },
+    {
+      "key": "career-1844",
+      "date": {
+        "from": "1844",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Должность инспектора гимназии",
+      "long": "Стал инспектором Тобольской гимназии.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1844 года он — инспектор"
+      }
+    },
+    {
+      "key": "loss-1845",
+      "date": {
+        "from": "1845",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть первой жены при родах",
+      "long": "Первая жена Серафима умерла при родах.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "tobolsk-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая жена (с 1839) — Серафима Алексеевна Лещёва, урожд. Протопопова (1809—1845), умерла при родах."
+      }
+    },
+    {
+      "key": "love-1846",
+      "date": {
+        "from": "1846",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак с Олимпиадой Кузьминой",
+      "long": "Женился на Олимпиаде Васильевне Кузьминой.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "losses",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вторая жена (с 1846) — Олимпиада Васильевна Кузьмина (ок. 1831—1853)."
+      }
+    },
+    {
+      "key": "loss-1853",
+      "date": {
+        "from": "1853",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть второй жены",
+      "long": "Умерла вторая жена Олимпиада; в том же году умерла и дочь Серафима.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "losses",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вторая жена (с 1846) — Олимпиада Васильевна Кузьмина (ок. 1831—1853)."
+      }
+    },
+    {
+      "key": "love-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак с Еленой Черкасовой",
+      "long": "Женился на Елене Николаевне Черкасовой, дочери генерал-майора.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "losses",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Третья жена (с 1854) — Елена Николаевна Черкасова (1821—после 1885)"
+      }
+    },
+    {
+      "key": "persecution-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Цензурные купюры в сказке",
+      "long": "До 1856 года сказка печаталась с цензурными купюрами, на месте которых стояли точки.",
+      "works": [
+        {
+          "ref": "konek-gorbunok"
+        }
+      ],
+      "chapter": "losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Until 1856, the tale was published with dots representing omitted verses and songs in many sections."
+      }
+    },
+    {
+      "key": "career-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Директор гимназии и училищ губернии",
+      "long": "Стал директором Тобольской гимназии и дирекции училищ губернии; в 1859 году получил чин статского советника.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "director",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а с 1857 года — директор гимназии и дирекции училищ Тобольской губернии"
+      }
+    },
+    {
+      "key": "career-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отставка",
+      "long": "Весной подал в отставку с должности директора.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "director",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1862 года Ершов подал в отставку."
+      }
+    },
+    {
+      "key": "family-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Свадьба падчерицы с Менделеевым",
+      "long": "Приёмная дочь Феозва Лещёва вышла замуж за Д. И. Менделеева, бывшего ученика гимназии.",
+      "chapter": "director",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1862, Pyotr Pavlovich Yershov became the father-in-law of Dmitri Ivanovich Mendeleev"
+      }
+    },
+    {
+      "key": "death-1869",
+      "date": {
+        "from": "1869-08-30",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Тобольске",
+      "long": "Умер в Тобольске, похоронен на Завальном кладбище.",
+      "place": {
+        "label": "Тобольск"
+      },
+      "chapter": "director",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 18 (30) августа 1869 года. Похоронен в Тобольске на Завальном кладбище."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "konek-gorbunok",
+      "title": "Конёк-Горбунок",
+      "written": {
+        "from": 1834,
+        "to": 1834
+      }
+    },
+    {
+      "ref": "suvorov-i-stantsionnyi-smotritel",
+      "title": "Суворов и станционный смотритель",
+      "written": {
+        "from": 1835,
+        "to": 1835
+      }
+    }
+  ]
+}

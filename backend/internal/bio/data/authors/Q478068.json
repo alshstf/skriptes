@@ -1,0 +1,191 @@
+{
+  "qid": "Q478068",
+  "name": "Саймон Грин",
+  "born": "1955-08-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B8%D0%BD%2C_%D0%A1%D0%B0%D0%B9%D0%BC%D0%BE%D0%BD_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154737504
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Simon_R._Green",
+      "rev": 1374741151
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Детство и учёба",
+      "from": 1955,
+      "to": 1978
+    },
+    {
+      "key": "otkazy-i-bezrabotitsa",
+      "title": "Отказы и безработица",
+      "from": 1979,
+      "to": 1987
+    },
+    {
+      "key": "kontrakty-i-uspekh",
+      "title": "Контракты и успех",
+      "from": 1988,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1955",
+      "date": {
+        "from": "1955-08-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Брадфорд-он-Эйвоне",
+      "long": "Родился 25 августа 1955 года в Брадфорд-он-Эйвоне, графство Уилтшир, Англия.",
+      "place": {
+        "label": "Брадфорд-он-Эйвон"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 25 августа 1955 года в городке Брадфорд-он-Эйвон"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало писательской работы в студенческие годы",
+      "long": "Начал писательскую карьеру ещё студентом в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свою писательскую карьеру Саймон Грин начал ещё будучи студентом в Лондоне, в 1973 году."
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа первого рассказа",
+      "long": "Продал первый рассказ, хотя издан он был значительно позже.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свой первый рассказ он продал в 1976 году, хотя издали его значительно позже."
+      }
+    },
+    {
+      "key": "education-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра в Университете Лестера",
+      "long": "Получил степень магистра искусств по современной английской и американской литературе в Университете Лестера, где также изучал историю.",
+      "place": {
+        "label": "Лестер"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году в университете Лестера Саймон Грин (где он также изучал историю) получил степень магистра искусств"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт на семь романов после отказов",
+      "long": "Устроившись в книжный магазин в Бате, через два дня получил предложение издателя и подписал контракт на семь романов серии о Хоке и Фишер.",
+      "place": {
+        "label": "Бат"
+      },
+      "works": [
+        {
+          "ref": "hawk-and-fisher"
+        }
+      ],
+      "chapter": "kontrakty-i-uspekh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1988 году Грин, до того три с половиной года будучи без работы, устроился в книжный магазин «Бильбо» в Бате, а ещё через два дня последовало предложение от издателя"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второй контракт на два романа",
+      "long": "Подписал ещё один контракт на два других романа.",
+      "chapter": "kontrakty-i-uspekh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1989 году — ещё на два других."
+      }
+    },
+    {
+      "key": "career-1989-2",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Заказ на новеллизацию фильма о Робин Гуде",
+      "long": "Получил заказ на новеллизацию фильма «Робин Гуд: Принц воров»; книга разошлась тиражом более 370 тысяч экземпляров.",
+      "works": [
+        {
+          "ref": "robin-hood-prince-of-thieves"
+        }
+      ],
+      "chapter": "kontrakty-i-uspekh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1989, he received a commission to write the novelization of the Kevin Costner film Robin Hood: Prince of Thieves, which has sold more than 370,000 copies."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hawk-and-fisher",
+      "title": "Хок и Фишер",
+      "written": {
+        "from": 1988,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "robin-hood-prince-of-thieves",
+      "title": "Робин Гуд: Принц воров (новеллизация)",
+      "written": {
+        "from": 1989,
+        "to": 1991
+      }
+    }
+  ]
+}

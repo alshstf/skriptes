@@ -1,0 +1,550 @@
+{
+  "qid": "Q298035",
+  "name": "Адольфо Биой Касарес",
+  "born": "1914-09-15",
+  "died": "1999-03-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B8%D0%BE%D0%B9_%D0%9A%D0%B0%D1%81%D0%B0%D1%80%D0%B5%D1%81%2C_%D0%90%D0%B4%D0%BE%D0%BB%D1%8C%D1%84%D0%BE",
+      "rev": 147487374
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Adolfo_Bioy_Casares",
+      "rev": 1378035847
+    },
+    {
+      "id": "eswiki",
+      "url": "https://es.wikipedia.org/wiki/Adolfo_Bioy_Casares",
+      "rev": 175423914
+    }
+  ],
+  "chapters": [
+    {
+      "key": "recoleta-first-books",
+      "title": "Реколета и первые книги",
+      "from": 1914,
+      "to": 1931
+    },
+    {
+      "key": "meeting-borges",
+      "title": "Встреча с Борхесом",
+      "from": 1932,
+      "to": 1939
+    },
+    {
+      "key": "morel-and-marriage",
+      "title": "Брак, роман об острове, Бустос Домек",
+      "from": 1940,
+      "to": 1953
+    },
+    {
+      "key": "children-and-stories",
+      "title": "Дети, рассказы, свиньи и сон на солнце",
+      "from": 1954,
+      "to": 1980
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и первые потери",
+      "from": 1981,
+      "to": 1992
+    },
+    {
+      "key": "last-years",
+      "title": "Утраты и последние годы",
+      "from": 1993,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1914",
+      "date": {
+        "from": "1914-09-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Буэнос-Айресе, в Реколете",
+      "long": "Родился в Реколете, единственный сын Адольфо Бьоя Доменка и Марты Игнасии Касарес Линч, в состоятельной семье.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "recoleta-first-books",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Nació el 15 de septiembre de 1914 en Buenos Aires, siendo el único hijo de Adolfo Bioy Domecq y Marta Ignacia Casares Lynch"
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая книга, изданная на средства отца",
+      "long": "Первая книга вышла в издании, оплаченном и выправленном отцом. Позже он отрёкся от ранних книг и запретил их переиздание.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "recoleta-first-books",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "en 1929 Bioy publicó su primer libro, Prólogo, en una edición costeada y corregida por su padre"
+      }
+    },
+    {
+      "key": "other-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Знакомство с Борхесом на вилле Окампо",
+      "long": "На встрече у Виктории Окампо познакомился с Хорхе Луисом Борхесом; завязалась дружба и сотрудничество на всю жизнь.",
+      "place": {
+        "label": "Сан-Исидро"
+      },
+      "chapter": "meeting-borges",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Fue durante una de estas reuniones que en 1932 Bioy conoció a Jorge Luis Borges, con quien se convertiría en íntimo amigo y colaborador."
+      }
+    },
+    {
+      "key": "love-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Сильвиной Окампо",
+      "long": "В том же году познакомился с Сильвиной Окампо, сестрой Виктории, писательницей и художницей, ставшей его спутницей.",
+      "place": {
+        "label": "Сан-Исидро"
+      },
+      "chapter": "meeting-borges",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "en 1932 Bioy conoció a Jorge Luis Borges … Ese mismo año también conoció a Silvina Ocampo, la hermana de Victoria"
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Сильвиной Окампо",
+      "long": "Женился на Сильвине Окампо, которая была на одиннадцать лет старше; до брака они прожили вместе восемь лет.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "morel-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940, Bioy Casares married Silvina Ocampo, Victoria's sister, who was a painter as well as a writer."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало писательской зрелости",
+      "long": "Вышла повесть с предисловием Борхеса; по словам статьи, она открыла период литературной зрелости, а сам автор отсчитывал от неё своё творчество.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "works": [
+        {
+          "ref": "invention-of-morel"
+        }
+      ],
+      "chapter": "morel-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940, he published the short novel The Invention of Morel, which marked the beginning of his literary maturity."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая муниципальная литературная премия",
+      "long": "Повесть получила Первую муниципальную премию по литературе.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "works": [
+        {
+          "ref": "invention-of-morel"
+        }
+      ],
+      "chapter": "morel-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "received the Primer Premio Municipal de Literatura (First Municipal Prize of Literature) in 1941"
+      }
+    },
+    {
+      "key": "creation-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство с Борхесом под псевдонимом",
+      "long": "Совместно с Борхесом выпустил сборник детективных рассказов под псевдонимом Бустос Домек.",
+      "works": [
+        {
+          "ref": "seis-problemas-para-don-isidro-parodi"
+        }
+      ],
+      "chapter": "morel-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1942 году совместно с Борхесом Касарес выпускает сборник детективных рассказов «Шесть задач для дона Исидоро Пароди»."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактирование серии детективов с Борхесом",
+      "long": "Вместе с Борхесом руководил серией переводов лучших англоязычных детективов в издательстве «Эмесе».",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "morel-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1945 and 1955, they directed \"El séptimo círculo\" (\"The Seventh Circle\"), a collection of translations of popular English detective fiction"
+      }
+    },
+    {
+      "key": "child-1954",
+      "date": {
+        "from": "1954-07-08",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение внебрачной дочери Марты",
+      "long": "Дочь Марта родилась от связи с одной из возлюбленных; её усыновила и воспитала Сильвина.",
+      "chapter": "children-and-stories",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Hasta 1954 no apareció su siguiente libro, El sueño de los héroes … El 8 de julio de ese año nació su hija Marta"
+      }
+    },
+    {
+      "key": "child-1963",
+      "date": {
+        "from": "1963-08-15",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Фабиана",
+      "long": "Второй ребёнок, сын Фабиан, родился от внебрачной связи; Бьой сблизился с ним уже взрослым.",
+      "chapter": "children-and-stories",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "El 15 de agosto de 1963 nació su segundo hijo, Fabián, también de una relación extramatrimonial"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большая почётная премия Общества писателей",
+      "long": "Получил Большую почётную премию Аргентинского общества писателей.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "children-and-stories",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gran Premio de Honor of SADE (the Argentine Society of Writers, 1975)"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Стал кавалером французского ордена Почётного легиона.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the French Legion of Honour (1981)"
+      }
+    },
+    {
+      "key": "loss-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Борхеса",
+      "long": "Умер Хорхе Луис Борхес, друг и соавтор на протяжении более полувека.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "una amistad que duraría hasta la muerte de Borges en 1986"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание почётного гражданина Буэнос-Айреса",
+      "long": "Объявлен почётным гражданином Буэнос-Айреса.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the title of Illustrious Citizen of Buenos Aires (1986)"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Сервантеса за творчество в целом",
+      "long": "Получил премию Сервантеса, высшую награду испаноязычной литературы, и в тот же год — премию Альфонсо Рейеса.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии Сервантеса (1990)."
+      }
+    },
+    {
+      "key": "illness-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Двойной перелом бедра",
+      "long": "Перенёс двойной перелом бедра.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "una doble fractura de cadera en 1992"
+      }
+    },
+    {
+      "key": "loss-1993",
+      "date": {
+        "from": "1993-12-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Сильвины Окампо",
+      "long": "Умерла Сильвина Окампо, последние три года страдавшая болезнью Альцгеймера.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "las muertes casi simultáneas de Silvina Ocampo, para entonces ya muy afectada por un Alzheimer que la tuvo postrada los últimos tres años, y de su hija Marta, víctima de un accidente automovilístico, entre diciembre de 1993 y enero de 1994"
+      }
+    },
+    {
+      "key": "loss-1994",
+      "date": {
+        "from": "1994-01",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель дочери Марты в аварии",
+      "long": "Дочь Марта погибла в автомобильной аварии через три недели после смерти Сильвины.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "погибла в 1994 году в аварии, через три недели после смерти Сильвины"
+      }
+    },
+    {
+      "key": "family-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Официальное признание сына Фабиана",
+      "long": "Официально признал сына Фабиана, с которым сблизился в последние годы.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "a su hijo Fabián, a quien reconoció oficialmente en 1998"
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-03-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Буэнос-Айресе после болезни",
+      "long": "Умер в 84 года после ряда госпитализаций; по его просьбе прощания не устраивали, похоронен в семейном склепе на кладбище Реколета.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Bioy Casares falleció el 8 de marzo de 1999, a los 84 años."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "invention-of-morel",
+      "title": "Изобретение Мореля",
+      "qid": "Q2563052",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "seis-problemas-para-don-isidro-parodi",
+      "title": "Шесть задач для дона Исидоро Пароди",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "plan-de-evasion",
+      "title": "План побега",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "dos-fantasias-memorables",
+      "title": "Две памятные фантазии",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "la-trama-celeste",
+      "title": "Небесный заговор",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "el-sueno-de-los-heroes",
+      "title": "Сон героев",
+      "written": {
+        "from": 1947,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "historia-prodigiosa",
+      "title": "Удивительная история",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "cronicas-de-bustos-domecq",
+      "title": "Хроники Бустоса Домека",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "diario-de-la-guerra-del-cerdo",
+      "title": "Дневник войны со свиньями",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "dormir-al-sol",
+      "title": "Уснувший на солнце",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "la-aventura-de-un-fotografo-en-la-plata",
+      "title": "Приключение фотографа в Ла-Плате",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "de-un-mundo-a-otro",
+      "title": "Из мира в мир",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    }
+  ]
+}
