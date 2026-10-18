@@ -1,0 +1,529 @@
+{
+  "qid": "Q76498",
+  "name": "Михаэль Энде",
+  "born": "1929-11-12",
+  "died": "1995-08-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%BD%D0%B4%D0%B5%2C_%D0%9C%D0%B8%D1%85%D0%B0%D1%8D%D0%BB%D1%8C",
+      "rev": 149824354
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michael_Ende",
+      "rev": 1377647236
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Michael_Ende",
+      "rev": 270726377
+    }
+  ],
+  "chapters": [
+    {
+      "key": "war-childhood",
+      "title": "Мюнхен, война, Штутгарт",
+      "from": 1929,
+      "to": 1949
+    },
+    {
+      "key": "stage-cabaret",
+      "title": "Сцена, кабаре и рукопись",
+      "from": 1950,
+      "to": 1959
+    },
+    {
+      "key": "jim-button",
+      "title": "Успех и брак",
+      "from": 1960,
+      "to": 1969
+    },
+    {
+      "key": "italy",
+      "title": "Италия и мировая слава",
+      "from": 1970,
+      "to": 1984
+    },
+    {
+      "key": "late-years",
+      "title": "Вдовство, Япония, болезнь",
+      "from": 1985,
+      "to": 1995
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1929",
+      "date": {
+        "from": "1929-11-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гармиш-Партенкирхене",
+      "long": "Родился в семье художника-сюрреалиста Эдгара Энде.",
+      "place": {
+        "label": "Гармиш-Партенкирхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Гармиш-Партенкирхен 1929-11-12"
+      }
+    },
+    {
+      "key": "relocation-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в мюнхенский Швабинг",
+      "long": "Семья переехала в «квартал художников» Швабинг в Мюнхене.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1935, when Michael was six, the Ende family moved to the \"artists' quarter of Schwabing\" in Munich"
+      }
+    },
+    {
+      "key": "persecution-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Работы отца объявлены «дегенеративным искусством»",
+      "long": "Живопись Эдгара Энде была объявлена «дегенеративным искусством»; семья лишилась основного дохода, отец был вынужден работать тайно.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1936, his father's work was declared \"degenerate art\" and banned by the Nazi Party"
+      }
+    },
+    {
+      "key": "education-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в мюнхенской гимназии Максимилиана",
+      "long": "С 1940 года посещал гимназию Максимилиана; по собственным словам, учился плохо и ненавидел школу.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ab 1940 besuchte Ende das Maximiliansgymnasium in München, wobei er nach eigenen Angaben ein schlechter Schüler war und die Schule verabscheute."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Эвакуация гимназии, возвращение в Гармиш",
+      "long": "Гимназию эвакуировали, и Энде вернулся в Гармиш-Партенкирхен; там пробудился его интерес к поэзии.",
+      "place": {
+        "label": "Гармиш-Партенкирхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1943 wurde das Gymnasium evakuiert und Ende kam mit der Kinderlandverschickung in seinen Geburtsort Garmisch-Partenkirchen zurück."
+      }
+    },
+    {
+      "key": "loss-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Гибель мастерской отца в огне бомбардировки",
+      "long": "Мастерская Эдгара Энде в Мюнхене сгорела, уничтожено более 250 картин и рисунков.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, Edgar Ende's studio at no. 90 Kaulbachstraße, Munich went up in flames and over two hundred and fifty paintings and sketches were destroyed"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Разорванная повестка и «Акция за свободу Баварии»",
+      "long": "За несколько недель до конца войны 15-летний Энде получил повестку в армию, разорвал её и примкнул к группе сопротивления, где был связным.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "war-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1945, German youths as young as fourteen were drafted into the Volkssturm … Ende was also drafted, but tore up his call-up papers and joined a secret German resistance group"
+      }
+    },
+    {
+      "key": "love-1952",
+      "date": {
+        "from": "1952-12-31",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с актрисой Ингеборг Хоффманн",
+      "long": "В новогоднюю ночь на вечеринке у друзей познакомился с Ингеборг Хоффманн; начались отношения, приведшие к браку.",
+      "chapter": "stage-cabaret",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On New Year's Eve 1952, Michael Ende met the actress Ingeborg Hoffmann during a party with friends."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кинокритик Баварского радио",
+      "long": "Работал кинокритиком; это был его первый постоянный доход.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "stage-cabaret",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Von 1954 bis 1962 war er auch als Filmkritiker für den Bayerischen Rundfunk tätig, was erstmals ein festes Einkommen für ihn war."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые заказы от кабаре",
+      "long": "Кабаре «Маленькие рыбки» заказало ему скетч к годовщине смерти Шиллера; последовали заказы от других кабаре.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "stage-cabaret",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1955, Therese Angeloff, head of Die kleinen Fische (the 'Little Fish' cabaret), commissioned Ende to write a piece in commemoration of the 150th anniversary of Friedrich Schiller's death."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия и конец нужды после первой книги",
+      "long": "В день объявления о премии Энде судился с хозяйкой из-за долга по аренде за семь месяцев; призовые 5000 марок изменили его положение.",
+      "works": [
+        {
+          "ref": "jim-button-and-luke"
+        }
+      ],
+      "chapter": "jim-button",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first of the Jim Button novels was published in 1960. About a year later, on the morning of the announcement that his novel, Jim Button and Luke the Engine Driver, had won the German Prize for Children's Fiction, Ende was being sued by his landlady for seven months' rent back payment."
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964-08-07",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ингеборг Хоффманн в Риме",
+      "long": "Женился на актрисе Ингеборг Хоффманн, которая на восемь лет старше; она обсуждала с ним рукописи и влияла на его жизнь.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "jim-button",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Ingeborg Hoffmann 1964-08-07"
+      }
+    },
+    {
+      "key": "relocation-1965",
+      "date": {
+        "from": "1965",
+        "to": "1971",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Старом замке в Валли",
+      "long": "С женой жил в Старом замке в Валли под Мюнхеном.",
+      "place": {
+        "label": "Валли"
+      },
+      "chapter": "jim-button",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zwischen den Jahren 1965 bis 1971 lebte Ende mit seiner Familie im Alten Schloss in Valley"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал постановки своей пьесы",
+      "long": "Постановка трагикомедии получила плохие критики; критики же обвиняли Энде в эскапизме.",
+      "chapter": "jim-button",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Eine Enttäuschung für ihn war 1967 die erfolglose Inszenierung seiner Tragikomödie Die Spielverderber, die schlechte Kritiken bekam."
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Десять лет в Дженцано под Римом",
+      "long": "Из-за дебатов об эскапизме Энде с женой поселились в вилле «Единорог» в Дженцано-ди-Рома; там создана большая часть «Момо».",
+      "place": {
+        "label": "Дженцано-ди-Рома"
+      },
+      "works": [
+        {
+          "ref": "momo",
+          "note": "большая часть романа написана в Дженцано"
+        }
+      ],
+      "chapter": "italy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Unter anderem wegen dieser Eskapismus-Debatte zogen Ende und seine Frau Anfang der 1970er-Jahre nach Italien."
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Марико Сато",
+      "long": "Познакомился с Марико Сато, будущей переводчицей и второй женой.",
+      "place": {
+        "label": "Болонья"
+      },
+      "chapter": "italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He first met Mariko Sato in 1976."
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая поездка в Японию",
+      "long": "Побывал в Токио и Киото, впервые увидел театр кабуки и но.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first trip took place in 1977 and included visits to Tokyo and Kyoto."
+      }
+    },
+    {
+      "key": "other-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Конфликт с создателями экранизации",
+      "long": "Увидев фильм, Энде ужаснулся, потребовал убрать имя из титров и безуспешно судился с авторами.",
+      "works": [
+        {
+          "ref": "neverending-story"
+        }
+      ],
+      "chapter": "italy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Die großangelegte Verfilmung der unendlichen Geschichte im Jahr 1984 durch den Produzenten Bernd Eichinger befürwortete Ende zunächst; als er den fertigen Film zu sehen bekam, war er aber entsetzt"
+      }
+    },
+    {
+      "key": "loss-1985",
+      "date": {
+        "from": "1985-03-27",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Ингеборг Хоффманн",
+      "long": "Жена внезапно умерла от тромбоэмболии в 63 года; Энде продал дом в Италии и вернулся в Мюнхен.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Ingeborg Hoffmann end 1985-03-27"
+      }
+    },
+    {
+      "key": "love-1989",
+      "date": {
+        "from": "1989-09-04",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Марико Сато",
+      "long": "Женился на японской переводчице Марико Сато.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Марико Сато 1989-09-04"
+      }
+    },
+    {
+      "key": "illness-1994",
+      "date": {
+        "from": "1994-06",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз «рак желудка»",
+      "long": "В июне 1994 года у Энде диагностировали рак желудка; лечение не остановило болезнь.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1994, Ende was diagnosed with stomach cancer."
+      }
+    },
+    {
+      "key": "death-1995",
+      "date": {
+        "from": "1995-08-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Фильдерштадте",
+      "long": "Умер от рака желудка в 65 лет.",
+      "place": {
+        "label": "Фильдерштадт"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Фильдерштадт 1995-08-28"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "jim-button-and-luke",
+      "title": "Джим Пуговка и машинист Лукас",
+      "qid": "Q704677",
+      "written": {
+        "from": 1957,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "jim-button-and-wild-thirteen",
+      "title": "Джим Пуговка и Лютая Дюжина",
+      "qid": "Q19587249",
+      "written": {
+        "from": 1960,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "momo",
+      "title": "Момо",
+      "qid": "Q874381",
+      "written": {
+        "from": 1970,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "neverending-story",
+      "title": "Бесконечная история",
+      "qid": "Q463108",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "mirror-in-the-mirror",
+      "title": "Зеркало в зеркале",
+      "qid": "Q1197004",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "wunschpunsch",
+      "title": "Пунш Желаний",
+      "qid": "Q837055",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    }
+  ]
+}

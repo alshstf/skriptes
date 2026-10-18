@@ -1,0 +1,421 @@
+{
+  "qid": "Q270648",
+  "name": "Филлис Дороти Джеймс",
+  "born": "1920-08-03",
+  "died": "2014-11-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81%2C_%D0%A4%D0%B8%D0%BB%D0%BB%D0%B8%D1%81_%D0%94%D0%BE%D1%80%D0%BE%D1%82%D0%B8",
+      "rev": 130669217
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/P._D._James",
+      "rev": 1371381691
+    }
+  ],
+  "chapters": [
+    {
+      "key": "oxford-school",
+      "title": "Оксфорд, школа, театр",
+      "from": 1920,
+      "to": 1940
+    },
+    {
+      "key": "marriage-war",
+      "title": "Брак и война",
+      "from": 1941,
+      "to": 1948
+    },
+    {
+      "key": "hospital-first-novel",
+      "title": "Больница и первый роман",
+      "from": 1949,
+      "to": 1964
+    },
+    {
+      "key": "home-office",
+      "title": "Министерство внутренних дел",
+      "from": 1965,
+      "to": 1990
+    },
+    {
+      "key": "baroness",
+      "title": "Баронесса и классик жанра",
+      "from": 1991,
+      "to": 2014
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1920",
+      "date": {
+        "from": "1920-08-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Оксфорде",
+      "long": "Родилась в Оксфорде в семье налогового инспектора Сидни Джеймса.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "3 августа 1920 года, Оксфорд"
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941-08-08",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с военным врачом Коннором Уайтом",
+      "long": "8 августа 1941 года вышла замуж за военного врача Эрнеста Коннора Бэнтри Уайта.",
+      "chapter": "marriage-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She married Ernest Connor Bantry White (called \"Connor\"), an army doctor, on 8 August 1941."
+      }
+    },
+    {
+      "key": "child-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Клэр",
+      "long": "Родилась старшая дочь Клэр.",
+      "chapter": "marriage-war",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Clare Bantry White 1942-01-01"
+      }
+    },
+    {
+      "key": "child-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Джейн",
+      "long": "Родилась вторая дочь Джейн.",
+      "chapter": "marriage-war",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Jane Bantry White 1944-01-01"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа администратором в лондонской больнице",
+      "long": "После курсов администраторов работала в лондонской больнице; в эти годы содержала семью, пока муж был болен.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "hospital-first-novel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1949 по 1968 год Дороти, окончившая курсы администраторов, работала администратором в лондонской больнице."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба в Министерстве внутренних дел",
+      "long": "После смерти мужа сменила работу и служила гражданским служащим в нескольких отделах Министерства внутренних дел, включая уголовный, до выхода в отставку в 1979 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "home-office",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "James's husband died on 5 August 1964. … She worked in government service until her retirement in 1979."
+      }
+    },
+    {
+      "key": "loss-1964",
+      "date": {
+        "from": "1964-08-05",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Коннора Уайта",
+      "long": "Муж, вернувшийся с войны психически больным, умер 5 августа 1964 года; до этого она не решалась менять работу.",
+      "chapter": "hospital-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Two years after the publication of Cover Her Face, James's husband died on 5 August 1964."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи",
+      "long": "Стала офицером ордена Британской империи.",
+      "chapter": "home-office",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Офицер ордена Британской империи (1983)."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Бриллиантовый кинжал Картье»",
+      "long": "Получила премию «Бриллиантовый кинжал Картье».",
+      "chapter": "home-office",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Бриллиантовый кинжал Картье 1987-01-01"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991-02-07",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пожизненное пэрство, баронесса Джеймс",
+      "long": "Получила пожизненное пэрство как баронесса Джеймс из Холланд-парка и заседала в Палате лордов как консерватор.",
+      "chapter": "baroness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 7 February 1991, James was created a life peer as Baroness James of Holland Park"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера премии Эдгара По",
+      "long": "Удостоена звания гроссмейстера премии Эдгара Аллана По.",
+      "chapter": "baroness",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гроссмейстер премии Эдгара Аллана По 1999-01-01"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый редактор программы Today",
+      "long": "Была приглашённым редактором программы Today на BBC Radio 4 и взяла интервью у генерального директора BBC Марка Томпсона.",
+      "chapter": "baroness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As guest editor of BBC Radio 4's Today programme in December 2009"
+      }
+    },
+    {
+      "key": "death-2014",
+      "date": {
+        "from": "2014-11-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Оксфорде",
+      "long": "Умерла от рака у себя дома в Оксфорде в возрасте 94 лет.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "baroness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "James died from cancer at her home in Oxford on 27 November 2014, aged 94."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "cover-her-face",
+      "title": "Лицо её закройте",
+      "qid": "Q3693209",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "a-mind-to-murder",
+      "title": "Изощренное убийство",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "shroud-for-a-nightingale",
+      "title": "Саван для соловья",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "unsuitable-job-for-a-woman",
+      "title": "Неподходящее занятие для женщины",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "black-tower",
+      "title": "Чёрная башня",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "death-of-an-expert-witness",
+      "title": "Смерть эксперта-свидетеля",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "innocent-blood",
+      "title": "Невинная кровь",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "skull-beneath-the-skin",
+      "title": "Череп под кожей",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "taste-for-death",
+      "title": "Пристрастие к смерти",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "devices-and-desires",
+      "title": "Ухищрения и вожделения",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "children-of-men",
+      "title": "Дитя человеческое",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "original-sin",
+      "title": "Первородный грех",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "a-certain-justice",
+      "title": "Бесспорное правосудие",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "death-in-holy-orders",
+      "title": "Убийство в теологическом колледже",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "murder-room",
+      "title": "Комната убийств",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "the-lighthouse",
+      "title": "Маяк",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "private-patient",
+      "title": "Женщина со шрамом",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "death-comes-to-pemberley",
+      "title": "Смерть приходит в Пемберли",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

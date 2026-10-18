@@ -1,0 +1,564 @@
+{
+  "qid": "Q110436",
+  "name": "Кори Доктороу",
+  "born": "1971-07-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D1%83%2C_%D0%9A%D0%BE%D1%80%D0%B8",
+      "rev": 153543314
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Cory_Doctorow",
+      "rev": 1379742418
+    }
+  ],
+  "chapters": [
+    {
+      "key": "toronto",
+      "title": "Торонто и ранние годы",
+      "from": 1971,
+      "to": 1998
+    },
+    {
+      "key": "opencola-eff",
+      "title": "Opencola, EFF и первый роман",
+      "from": 1999,
+      "to": 2005
+    },
+    {
+      "key": "london-family",
+      "title": "Лондон, семья, «Младший брат»",
+      "from": 2006,
+      "to": 2014
+    },
+    {
+      "key": "los-angeles",
+      "title": "Лос-Анджелес и борьба с DRM",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1971",
+      "date": {
+        "from": "1971-07-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Торонто",
+      "long": "Кори Доктороу родился в Торонто 17 июля 1971 года в семье преподавателей.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cory Efram Doctorow was born in Toronto, on 17 July 1971."
+      }
+    },
+    {
+      "key": "education-1993",
+      "date": {
+        "from": "1993",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Университете Ватерлоо без диплома",
+      "long": "В 1993–1994 годах учился в университете Ватерлоо, но ушёл, не завершив диссертацию.",
+      "place": {
+        "label": "Ватерлоо"
+      },
+      "chapter": "toronto",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He had been a student in the program during 1993–94, but had left without completing a thesis."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Соучредитель компании Opencola",
+      "long": "В июне 1999 года вместе с Джоном Хенсоном и Градом Коннем основал компанию по разработке свободного P2P-ПО.",
+      "chapter": "opencola-eff",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1999, Doctorow co-founded the free software P2P company Opencola with John Henson and Grad Conn"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа Opencola компании Open Text",
+      "long": "Летом 2003 года Opencola была продана корпорации Open Text из Ватерлоо.",
+      "chapter": "opencola-eff",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was sold to the Open Text Corporation of Waterloo, Ontario, in the summer of 2003"
+      }
+    },
+    {
+      "key": "career-2003-2",
+      "date": {
+        "from": "2003-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман под лицензией Creative Commons",
+      "long": "В январе 2003 года вышел первый роман Доктороу, впервые изданный в электронной версии под лицензией Creative Commons одновременно с бумажной.",
+      "works": [
+        {
+          "ref": "down-and-out-in-the-magic-kingdom"
+        }
+      ],
+      "chapter": "opencola-eff",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Down and Out in the Magic Kingdom, Doctorow's first novel, was published in January 2003, and was the first novel released under one of the Creative Commons licences"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший дебютный роман",
+      "long": "В 2004 году дебютный роман получил премию «Локус» и был номинирован на «Небьюлу».",
+      "works": [
+        {
+          "ref": "down-and-out-in-the-magic-kingdom"
+        }
+      ],
+      "chapter": "opencola-eff",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the Locus Award for Best First Novel in 2004"
+      }
+    },
+    {
+      "key": "other-2005",
+      "date": {
+        "from": "2005-10-31",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Конфликт вокруг DRM с Sony-BMG",
+      "long": "31 октября 2005 года Доктороу оказался вовлечён в скандал вокруг защиты от копирования DRM компании Sony-BMG.",
+      "chapter": "opencola-eff",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 31 October 2005, Doctorow was involved in a controversy concerning digital rights management with Sony-BMG"
+      }
+    },
+    {
+      "key": "relocation-2006",
+      "date": {
+        "from": "2006",
+        "to": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Год в Лос-Анджелесе по программе Фулбрайта",
+      "long": "В 2006–2007 годах — канадский профессор Фулбрайта по публичной дипломатии в Университете Южной Калифорнии, с годичной резиденцией в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was named the 2006–2007 Canadian Fulbright Chair for Public Diplomacy at the USC Center on Public Diplomacy"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из EFF ради писательства",
+      "long": "В январе 2006 года после четырёх лет работы европейским координатором Фонда электронных рубежей в Лондоне оставил штатную должность, чтобы писать на постоянной основе.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before leaving the EFF to pursue writing full-time in January 2006"
+      }
+    },
+    {
+      "key": "child-2008",
+      "date": {
+        "from": "2008-02-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Поэзи",
+      "long": "3 февраля 2008 года у Доктороу и Элис Тейлор родилась дочь Поэзи Эммелин Фибоначчи Наутилус Тейлор Доктороу.",
+      "chapter": "london-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "3 февраля 2008 года у Доктороу и его ныне жены Элис Тейлор родилась дочь"
+      }
+    },
+    {
+      "key": "love-2008",
+      "date": {
+        "from": "2008-10-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элис Тейлор",
+      "long": "26 октября 2008 года женился на Элис Тейлор.",
+      "chapter": "london-family",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Элис Тейлор 2008-10-26"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии за подростковый роман",
+      "long": "Роман номинирован на «Хьюго» и в 2009 году получил премии «Прометей», «Сансбёрст» и мемориальную премию Кэмпбелла.",
+      "works": [
+        {
+          "ref": "little-brother"
+        }
+      ],
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was nominated for a Hugo Award for Best Novel in 2009, and won the 2009 Prometheus Award, Sunburst Award, and the 2009 John W. Campbell Memorial Award."
+      }
+    },
+    {
+      "key": "career-2009-2",
+      "date": {
+        "from": "2009-09",
+        "to": "2010-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый профессор Открытого университета",
+      "long": "С сентября 2009 по август 2010 года — приглашённый профессор Открытого университета в Великобритании.",
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Doctorow was also a visiting professor at the Open University in the United Kingdom from September 2009 to August 2010."
+      }
+    },
+    {
+      "key": "relocation-2011",
+      "date": {
+        "from": "2011-08-12",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Британское гражданство",
+      "long": "12 августа 2011 года получил британское гражданство по натурализации.",
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Doctorow became a British citizen by naturalisation on 12 August 2011."
+      }
+    },
+    {
+      "key": "education-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Почётная докторская степень Открытого университета",
+      "long": "В 2012 году Открытый университет присвоил Доктороу почётную докторскую степень.",
+      "chapter": "london-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2012 he was awarded an honorary doctorate from The Open University."
+      }
+    },
+    {
+      "key": "relocation-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Лондона в Лос-Анджелес",
+      "long": "В 2015 году решил покинуть Лондон и переехать в Лос-Анджелес, объяснив это разочарованием итогами британских выборов.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015, Doctorow decided to leave London and move to Los Angeles"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение в EFF для борьбы с DRM",
+      "long": "В январе 2015 года вновь пришёл в Фонд электронных рубежей, чтобы бороться с DRM.",
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He rejoined the EFF in January 2015 to campaign for the eradication of digital rights management (DRM)."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из Boing Boing после 19 лет",
+      "long": "В январе 2020 года покинул блог Boing Boing, соучредителем которого оставался, и начал собственный проект Pluralistic.",
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Doctorow left Boing Boing in January 2020, and soon started a solo blogging project titled Pluralistic."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Популяризация термина «эншитификация»",
+      "long": "В 2022 году Доктороу популяризировал термин для описания деградации онлайн-платформ из-за жадности.",
+      "works": [
+        {
+          "ref": "enshittification",
+          "note": "позднее термин развит в отдельной книге"
+        }
+      ],
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Doctorow in 2022 popularised the neologism enshittification"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профессор Корнеллского университета",
+      "long": "В июле 2024 года Корнелльский университет назначил его профессором-at-large имени А. Д. Уайта на шесть лет.",
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 2024 Doctorow was appointed by Cornell University to be an A.D. White Professor-at-large for a six-year term."
+      }
+    },
+    {
+      "key": "illness-2026",
+      "date": {
+        "from": "2026-06",
+        "to": "2026-07",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Лечение рака",
+      "long": "В июне 2026 года сообщил в интервью, что проходит лечение от рака; в июле 2026 года объявил, что болезнь побеждена.",
+      "chapter": "los-angeles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2026, he mentioned in an interview on the podcast Dreaming Against the Machine that he was undergoing treatment for cancer."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "down-and-out-in-the-magic-kingdom",
+      "title": "Down and Out in the Magic Kingdom",
+      "qid": "Q3015406",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "a-place-so-foreign-and-eight-more",
+      "title": "A Place So Foreign and Eight More",
+      "qid": "Q4658859",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "eastern-standard-tribe",
+      "title": "Eastern Standard Tribe",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "someone-comes-to-town-someone-leaves-town",
+      "title": "Someone Comes to Town, Someone Leaves Town",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "little-brother",
+      "title": "Младший брат",
+      "qid": "Q1865620",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "makers",
+      "title": "Makers",
+      "qid": "Q6739298",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "for-the-win",
+      "title": "For the Win",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "pirate-cinema",
+      "title": "Pirate Cinema",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "homeland",
+      "title": "Homeland",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "walkaway",
+      "title": "Walkaway",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "radicalized",
+      "title": "Radicalized",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "attack-surface",
+      "title": "Attack Surface",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "red-team-blues",
+      "title": "Red Team Blues",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    },
+    {
+      "ref": "the-lost-cause",
+      "title": "The Lost Cause",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    },
+    {
+      "ref": "the-bezzle",
+      "title": "The Bezzle",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    },
+    {
+      "ref": "picks-and-shovels",
+      "title": "Picks and Shovels",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    },
+    {
+      "ref": "enshittification",
+      "title": "Дерьмофикация",
+      "qid": "Q122584861",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

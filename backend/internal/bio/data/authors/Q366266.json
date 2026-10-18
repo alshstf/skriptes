@@ -1,0 +1,261 @@
+{
+  "qid": "Q366266",
+  "name": "Клайв Касслер",
+  "born": "1931-07-15",
+  "died": "2020-02-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%81%D1%81%D0%BB%D0%B5%D1%80%2C_%D0%9A%D0%BB%D0%B0%D0%B9%D0%B2",
+      "rev": 147997965
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Clive_Cussler",
+      "rev": 1375534985
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-armiya",
+      "title": "Детство, колледж и служба",
+      "from": 1931,
+      "to": 1954
+    },
+    {
+      "key": "reklama-pervye-romany",
+      "title": "Реклама и первые романы",
+      "from": 1955,
+      "to": 1978
+    },
+    {
+      "key": "slava-numa",
+      "title": "Слава и поиски затонувших кораблей",
+      "from": 1979,
+      "to": 2002
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Поздние годы",
+      "from": 2003,
+      "to": 2020
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-07-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ароре, Иллинойс",
+      "long": "Родился в Ароре, штат Иллинойс; вырос в Алхамбре, Калифорния.",
+      "place": {
+        "label": "Орора"
+      },
+      "chapter": "detstvo-armiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Clive Cussler was born in Aurora, Illinois"
+      }
+    },
+    {
+      "key": "love-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Барбарой Найт",
+      "long": "Женился на Барбаре Найт; брак продлился почти 50 лет, до её смерти.",
+      "chapter": "reklama-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Clive Cussler married Barbara Knight in 1955"
+      }
+    },
+    {
+      "key": "child-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Дирка",
+      "long": "Родился сын Дирк, впоследствии соавтор отца.",
+      "chapter": "reklama-pervye-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Dirk Cussler 1961-01-01"
+      }
+    },
+    {
+      "key": "child-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Дэйны",
+      "long": "Родилась дочь Дэйна.",
+      "chapter": "reklama-pervye-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Дэйна Касслер 1964-01-01"
+      }
+    },
+    {
+      "key": "creation-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало писательства в вечерние часы",
+      "long": "Начал писать, когда жена устроилась на ночную работу в полицию, а вечера оказались свободными.",
+      "works": [
+        {
+          "ref": "mediterranean-caper"
+        }
+      ],
+      "chapter": "reklama-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Clive Cussler began writing in 1965 when his wife took a job working nights for the local police department"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Неудачная экранизация и отказ от кино",
+      "long": "Фильм очень не понравился писателю, и долгое время он не разрешал экранизировать свои книги; следующий фильм вышел в 2005 году.",
+      "works": [
+        {
+          "ref": "raise-the-titanic"
+        }
+      ],
+      "chapter": "slava-numa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1980 году вышел фильм «Поднять „Титаник“» по его одноимённому роману. Он очень не понравился Касслеру"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Степень доктора литературы",
+      "long": "Морской колледж Университета штата Нью-Йорк присвоил степень доктора литературы, приняв книгу вместо диссертации.",
+      "works": [
+        {
+          "ref": "the-sea-hunters"
+        }
+      ],
+      "chapter": "slava-numa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he was awarded a Doctor of Letters degree in 1997 by the Board of Governors of the State University of New York Maritime College"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за морские исследования",
+      "long": "Получил премию за вклад в морские исследования.",
+      "chapter": "slava-numa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2002, Cussler was awarded the Naval Heritage Award from the U.S. Navy Memorial Foundation"
+      }
+    },
+    {
+      "key": "loss-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Барбары",
+      "long": "Жена Барбара умерла в 2003 году, после почти 50 лет брака.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "they remained married for nearly 50 years until her death in 2003"
+      }
+    },
+    {
+      "key": "death-2020",
+      "date": {
+        "from": "2020-02-24",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Парадайз-Вэлли",
+      "long": "Умер дома в Парадайз-Вэлли, Аризона, в возрасте 88 лет.",
+      "place": {
+        "label": "Парадайз-Вэлли"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cussler died at his home in Paradise Valley, Arizona, on February 24, 2020"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mediterranean-caper",
+      "title": "Средиземноморский пират",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "raise-the-titanic",
+      "title": "Поднять «Титаник»",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "sahara",
+      "title": "Сахара",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "the-sea-hunters",
+      "title": "Охотники за морскими сокровищами",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    }
+  ]
+}

@@ -1,0 +1,606 @@
+{
+  "qid": "Q315059",
+  "name": "Альфред ван Вогт",
+  "born": "1912-04-26",
+  "died": "2000-01-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D0%BD_%D0%92%D0%BE%D0%B3%D1%82%2C_%D0%90%D0%BB%D1%8C%D1%84%D1%80%D0%B5%D0%B4",
+      "rev": 154856833
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/A._E._van_Vogt",
+      "rev": 1379080766
+    }
+  ],
+  "chapters": [
+    {
+      "key": "prairies-depression",
+      "title": "Прерии и Великая депрессия",
+      "from": 1912,
+      "to": 1937
+    },
+    {
+      "key": "astounding-debut",
+      "title": "Дебют в «Astounding»",
+      "from": 1938,
+      "to": 1944
+    },
+    {
+      "key": "hollywood-dianetics",
+      "title": "Голливуд и дианетика",
+      "from": 1945,
+      "to": 1961
+    },
+    {
+      "key": "return-to-writing",
+      "title": "Возвращение к прозе",
+      "from": 1962,
+      "to": 1978
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы и признание",
+      "from": 1979,
+      "to": 2000
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-04-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Манитобе",
+      "long": "Родился в семье голландских эмигрантов, в мэннонитской общине Эденбург близ Гретны (Манитоба), третьим из шести детей юриста Генри Фогта.",
+      "place": {
+        "label": "Гретна"
+      },
+      "chapter": "prairies-depression",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 апреля 1912, Виннипег, Канада"
+      }
+    },
+    {
+      "key": "relocation-1922",
+      "date": {
+        "from": "1922",
+        "to": "1926",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Частые переезды семьи по прериям",
+      "long": "Отец несколько раз перевозил семью по прериям; в 1922–1926 годах они жили в Мордене, затем переехали в Виннипег. Писатель вспоминал детство как тяжёлое время.",
+      "place": {
+        "label": "Морден"
+      },
+      "chapter": "prairies-depression",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Morden, Manitoba where he lived from 1922 to 1926, before moving to Winnipeg for high school"
+      }
+    },
+    {
+      "key": "poverty-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение отца, отказ от колледжа",
+      "long": "Биржевой крах 1929 года разорил отца; семья не смогла оплатить сыну учёбу в колледже. Он работал батраком и водителем грузовика.",
+      "chapter": "prairies-depression",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the stock market crash of 1929 proved financially disastrous, and the family could not afford to send Alfred to college"
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая проданная история",
+      "long": "Осенью продал первый рассказ; затем печатал анонимные «исповедальные» истории в журналах вроде True Story.",
+      "chapter": "prairies-depression",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He sold his first story in fall 1932."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Решение писать научную фантастику",
+      "long": "Вдохновлённый августовским номером Astounding Science Fiction, решил перейти на научную фантастику; Кэмпбелл отклонил первый рассказ, но предложил попробовать снова.",
+      "place": {
+        "label": "Виннипег"
+      },
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1938, van Vogt decided to switch to writing science fiction, a genre he enjoyed reading."
+      }
+    },
+    {
+      "key": "love-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эдной Мэйн Холл",
+      "long": "Женился на Эдне Мэйн Холл, землячке из Манитобы; она стала его машинисткой и соавтором ряда произведений.",
+      "place": {
+        "label": "Виннипег"
+      },
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Женился в 1939 году на писательнице Эдне Холл"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в научной фантастике",
+      "long": "В журнале Astounding Science Fiction напечатан первый фантастический рассказ.",
+      "works": [
+        {
+          "ref": "black-destroyer"
+        }
+      ],
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Женился в 1939 году на писательнице Эдне Холл… В том же году состоялся его дебют в фантастике"
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939-09",
+        "to": "1941-05",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Работа клерком в министерстве обороны",
+      "long": "Из-за плохого зрения не годился к военной службе и работал клерком в министерстве обороны Канады, ради чего вернулся в Оттаву.",
+      "place": {
+        "label": "Оттава"
+      },
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The outbreak of World War II in September 1939 caused a change in van Vogt's circumstances. Ineligible for military service due to his poor eyesight, he accepted a clerking job with the Canadian Department of National Defence."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Широкая известность после первого романа",
+      "long": "Роман о девятилетнем сверхчеловеке в мире, где его сородичей истребляют, печатался в Astounding с сентября по декабрь.",
+      "works": [
+        {
+          "ref": "slan"
+        }
+      ],
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940 году выходит роман «Слэн», принесший ему широкую известность."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход на профессиональное писательство",
+      "long": "Оставил службу в министерстве обороны и стал профессиональным писателем; осенью семья переехала в Торонто.",
+      "place": {
+        "label": "Оттава"
+      },
+      "chapter": "astounding-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in May 1941 van Vogt decided to become a full-time writer, quitting his job at the Canadian Department of National Defence"
+      }
+    },
+    {
+      "key": "relocation-1944",
+      "date": {
+        "from": "1944-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Голливуд",
+      "long": "Вместе с женой переехал в Голливуд и остался в Калифорнии до конца жизни.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1944, van Vogt and Hull moved to Hollywood; van Vogt would spend the rest of his life in California."
+      }
+    },
+    {
+      "key": "other-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Американское гражданство и смена имени",
+      "long": "При получении американского гражданства официально сменил имя с Альфреда Фогта на Альфреда Элтона ван Вогта.",
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "as part of the process of obtaining American citizenship in 1945 he finally and formally changed his legal name from Alfred Vogt to Alfred Elton van Vogt"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный гость Всемирного конвента фантастики",
+      "long": "Вместе с женой почётный гость четвёртого Всемирного конвента научной фантастики.",
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, van Vogt and his first wife, Edna Mayne Hull, were Guests of Honor at the fourth World Science Fiction Convention."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Руководство дианетикой в Калифорнии",
+      "long": "Ненадолго возглавил калифорнийское отделение дианетики Хаббарда; через девять месяцев оно разорилось, но банкротства удалось избежать благодаря договорённостям с кредиторами.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, van Vogt was briefly appointed as head of L. Ron Hubbard's Dianetics operation in California."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Десять лет дианетики без новой прозы",
+      "long": "Занимался дианетикой вместе с женой в собственном центре и не писал новой прозы; выходили лишь сборники и романы-«фикс-апы» из прежних рассказов.",
+      "works": [
+        {
+          "ref": "weapon-shops-of-isher",
+          "note": "книги этих лет составлены из рассказов 1939–1950 годов"
+        },
+        {
+          "ref": "mixed-men",
+          "note": "книги этих лет составлены из рассказов 1939–1950 годов"
+        },
+        {
+          "ref": "war-against-the-rull",
+          "note": "книги этих лет составлены из рассказов 1939–1950 годов"
+        }
+      ],
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1951 until 1961, van Vogt's focus was on Dianetics, and he produced no new fiction."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Закрытие центра дианетики",
+      "long": "После более десяти лет работы супруги закрыли собственный центр дианетики.",
+      "chapter": "hollywood-dianetics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After more than a decade of running their Dianetics center, Hull and van Vogt closed it in 1961."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение к писательству после перерыва",
+      "long": "Вернулся к писательству с реалистическим романом о коммунистическом Китае; для работы прочёл около ста книг о Китае. Отзывы были сдержанными.",
+      "works": [
+        {
+          "ref": "violent-man",
+          "note": "для романа автор прочёл около 100 книг о Китае"
+        }
+      ],
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "van Vogt had not published any wholly new fiction for almost 12 years when he decided to return to writing in 1962"
+      }
+    },
+    {
+      "key": "loss-1975",
+      "date": {
+        "from": "1975-01-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Эдны от рака",
+      "long": "Умерла от рака первая жена, Эдна Мэйн Холл, соавтор и машинистка писателя.",
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "20 января 1975 от рака скончалась его жена."
+      }
+    },
+    {
+      "key": "love-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Лидией Берегинской",
+      "long": "Второй брак — с Лидией Берегинской; она пережила писателя.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ван Вогт женился на Лидии Берегинской в 1979 году; они оставались вместе до его смерти."
+      }
+    },
+    {
+      "key": "other-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск о плагиате к создателям «Чужого»",
+      "long": "После выхода фильма «Чужой» подал иск о плагиате к студии 20th Century Fox и получил во внесудебном порядке 50 тысяч долларов.",
+      "works": [
+        {
+          "ref": "black-destroyer",
+          "note": "сюжет фильма совпал с сюжетом этого рассказа и «Багрового разлада»"
+        },
+        {
+          "ref": "space-beagle"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When the 1979 film Alien appeared, it was noted that the plot closely matched the plots of both Black Destroyer and Discord in Scarlet… Van Vogt sued the production company for plagiarism, and eventually collected an out-of-court settlement of $50,000 from 20th Century Fox."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Каспер» за вклад в литературу",
+      "long": "Получил премию «Каспер» за вклад в литературу.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1980, van Vogt received a \"Casper Award\" (precursor to the Canadian Prix Aurora Awards) for Lifetime Achievement."
+      }
+    },
+    {
+      "key": "illness-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Последний рассказ, слабеющее здоровье",
+      "long": "При ухудшающемся здоровье опубликовал последний рассказ.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In increasingly frail health, van Vogt published his final short story in 1986."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Грандмастера фантастики",
+      "long": "Ассоциация SFWA присвоила звание Грандмастера (вручено в 1996 году) — после долгого спора о задержке награды.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 году ван Вогту присуждено звание Грандмастера американской литературной премии в области фантастики Небьюла."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Зал славы научной фантастики и фэнтези",
+      "long": "Включён в первый состав Зала славы научной фантастики и фэнтези.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Зал славы научной фантастики и фэнтези 1996-01-01"
+      }
+    },
+    {
+      "key": "death-2000",
+      "date": {
+        "from": "2000-01-26",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от болезни Альцгеймера",
+      "long": "Умер в Лос-Анджелесе от болезни Альцгеймера; пережила вторая жена.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 января 2000 года Альфред ван Вогт умер в Лос-Анджелесе от болезни Альцгеймера."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "black-destroyer",
+      "title": "Чёрный разрушитель",
+      "written": {
+        "from": 1938,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "slan",
+      "title": "Слэн",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "book-of-ptath",
+      "title": "Книга Птаха",
+      "written": {
+        "from": 1941,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "world-of-null-a",
+      "title": "Мир Нуль-А",
+      "qid": "Q957076",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "weapon-shops-of-isher",
+      "title": "Оружейные лавки империи Ишер",
+      "qid": "Q2005135",
+      "written": {
+        "from": 1941,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "pawns-of-null-a",
+      "title": "Пешки Ноль-А",
+      "qid": "Q2017697",
+      "written": {
+        "from": 1948,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "space-beagle",
+      "title": "Путешествие «Космической гончей»",
+      "written": {
+        "from": 1939,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "mixed-men",
+      "title": "Перемешанные",
+      "written": {
+        "from": 1943,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "war-against-the-rull",
+      "title": "Война против Руллов",
+      "written": {
+        "from": 1940,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "violent-man",
+      "title": "Жестокий человек",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    }
+  ]
+}

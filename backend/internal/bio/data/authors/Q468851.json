@@ -1,0 +1,255 @@
+{
+  "qid": "Q468851",
+  "name": "Брайан Джейкс",
+  "born": "1939-06-15",
+  "died": "2011-02-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B5%D0%B9%D0%BA%D1%81%2C_%D0%91%D1%80%D0%B0%D0%B9%D0%B0%D0%BD",
+      "rev": 147486253
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Brian_Jacques",
+      "rev": 1370851421
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kirkdale-childhood",
+      "title": "Детство у ливерпульских доков",
+      "from": 1939,
+      "to": 1953
+    },
+    {
+      "key": "sea-and-trades",
+      "title": "Море и много профессий",
+      "from": 1954,
+      "to": 1979
+    },
+    {
+      "key": "theatre-and-redwall",
+      "title": "Театр, молочный маршрут и Рэдволл",
+      "from": 1980,
+      "to": 1999
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и последние годы",
+      "from": 2000,
+      "to": 2011
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1939",
+      "date": {
+        "from": "1939-06-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ливерпуле",
+      "long": "Родился в Ливерпуле, вырос в районе Кёркдейл рядом с доками.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "kirkdale-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 15 июня 1939 года в Ливерпуле."
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Фолк-группа «Ливерпульские рыбаки»",
+      "long": "В 1960-е вместе с братьями и друзьями создал фолк-группу «Ливерпульские рыбаки».",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "sea-and-trades",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960-е Брайан со своими братьями и друзьями организовал фолк-группу «Ливерпульские рыбаки»."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Драматург при театре «Эвриман»",
+      "long": "В 1981 году получил долгосрочное место драматурга при театре «Эвриман» в Ливерпуле, где ставились его пьесы.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "theatre-and-redwall",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1981 won a long term Residency at the Everyman Theatre, Liverpool, where his plays Brown Bitter, Wet Nellies and Scouse were performed."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "to": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Радиопередача Jakestown на BBC",
+      "long": "С 1986 по 2006 год вёл на BBC Radio Merseyside передачу Jakestown с подборками любимых опер.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "theatre-and-redwall",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He hosted a radio show called Jakestown on BBC Radio Merseyside from 1986 to 2006, featuring selections from his favourite operas."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор литературы Ливерпульского университета",
+      "long": "В июне 2005 года Ливерпульский университет присвоил ему почётную степень доктора литературы.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2005, he was awarded an Honorary Doctorate of Letters by the University of Liverpool."
+      }
+    },
+    {
+      "key": "illness-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Экстренная операция по поводу аневризмы аорты",
+      "long": "В 2011 году был госпитализирован в Королевскую ливерпульскую больницу для экстренной операции по поводу аневризмы аорты.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Jacques was admitted to the Royal Liverpool Hospital to undergo emergency surgery for an aortic aneurysm."
+      }
+    },
+    {
+      "key": "death-2011",
+      "date": {
+        "from": "2011-02-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "Умер 5 февраля 2011 года от сердечного приступа в возрасте 71 года.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "5 февраля 2011 года Брайан Джейкс умер от сердечного приступа в возрасте 71 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "redwall",
+      "title": "Рэдволл",
+      "written": {
+        "from": 1980,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "mossflower",
+      "title": "Мшистый Цветок",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "mattimeo",
+      "title": "Маттимео",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "mariel-of-redwall",
+      "title": "Мариэль из Рэдволла",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "salamandastron",
+      "title": "Саламандастрон",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "martin-the-warrior",
+      "title": "Мартин Воитель",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "seven-strange-and-ghostly-tales",
+      "title": "Seven Strange and Ghostly Tales",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "castaways-of-the-flying-dutchman",
+      "title": "Castaways of the Flying Dutchman",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "the-ribbajack-and-other-curious-yarns",
+      "title": "The Ribbajack \u0026 Other Curious Yarns",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

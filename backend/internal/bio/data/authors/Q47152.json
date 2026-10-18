@@ -1,0 +1,835 @@
+{
+  "qid": "Q47152",
+  "name": "Мэри Шелли",
+  "born": "1797-08-30",
+  "died": "1851-02-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%B5%D0%BB%D0%BB%D0%B8%2C_%D0%9C%D1%8D%D1%80%D0%B8",
+      "rev": 154774266
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mary_Shelley",
+      "rev": 1379902087
+    }
+  ],
+  "chapters": [
+    {
+      "key": "godwin-house",
+      "title": "Дом Годвина",
+      "from": 1797,
+      "to": 1813
+    },
+    {
+      "key": "flight-with-shelley",
+      "title": "Побег с Шелли, Женева",
+      "from": 1814,
+      "to": 1817
+    },
+    {
+      "key": "italy-losses",
+      "title": "Италия и потери",
+      "from": 1818,
+      "to": 1822
+    },
+    {
+      "key": "widow-and-pen",
+      "title": "Вдова и профессиональный писатель",
+      "from": 1823,
+      "to": 1838
+    },
+    {
+      "key": "illness-last-years",
+      "title": "Болезнь и последние годы",
+      "from": 1839,
+      "to": 1851
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1797",
+      "date": {
+        "from": "1797-08-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сомерс-Тауне, Лондон",
+      "long": "Родилась как Мэри Уолстонкрафт Годвин, дочь философа Уильяма Годвина и писательницы Мэри Уолстонкрафт.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "godwin-house",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary Shelley was born Mary Wollstonecraft Godwin in Somers Town, London, in 1797."
+      }
+    },
+    {
+      "key": "loss-1797",
+      "date": {
+        "from": "1797-09-10",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери после родов",
+      "long": "Мэри Уолстонкрафт умерла от родильной горячки через 11 дней после рождения дочери; Мэри воспитывал отец.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "godwin-house",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Мэри Уолстонкрафт 1759-04-27 – 1797-09-10"
+      }
+    },
+    {
+      "key": "family-1801",
+      "date": {
+        "from": "1801-12",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Вторая женитьба отца, мачеха Мэри Джейн Клермонт",
+      "long": "Годвин женился на соседке Мэри Джейн Клермонт; у Мэри с мачехой сложились враждебные отношения.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "godwin-house",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1801, he married Mary Jane Clairmont, a well-educated woman with two young children of her own"
+      }
+    },
+    {
+      "key": "education-1811",
+      "date": {
+        "from": "1811",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Полгода в пансионе в Рамсгейте",
+      "long": "Систематического образования почти не получила: отец занимался с ней сам, полгода она провела в пансионе.",
+      "place": {
+        "label": "Рамсгейт"
+      },
+      "chapter": "godwin-house",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "For six months in 1811, she also attended a boarding school in Ramsgate."
+      }
+    },
+    {
+      "key": "relocation-1812",
+      "date": {
+        "from": "1812-06",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в шотландской семье Бакстеров",
+      "long": "Отец отправил её в семью радикала Уильяма Бакстера близ Данди; летом 1813 года она вернулась туда ещё на 10 месяцев.",
+      "place": {
+        "label": "Данди"
+      },
+      "chapter": "godwin-house",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1812, Mary's father sent her to stay with the dissenting family of the radical William Baxter, near Dundee, Scotland."
+      }
+    },
+    {
+      "key": "love-1814",
+      "date": {
+        "from": "1814-06-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Объяснение с Перси Шелли у могилы матери",
+      "long": "Мэри и Шелли, женатый, тайно встречались у могилы Уолстонкрафт и признались друг другу в любви; отец был против.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 26 June 1814, Shelley and Godwin declared their love for each other"
+      }
+    },
+    {
+      "key": "relocation-1814",
+      "date": {
+        "from": "1814-07-28",
+        "to": "1814-09-13",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Побег с Шелли и Клэр Клэрмонт на континент",
+      "long": "Втроём они уехали во Францию и дошли до Швейцарии; из-за нехватки денег вернулись, прибыв в Грейвсенд 13 сентября.",
+      "place": {
+        "label": "Кале"
+      },
+      "works": [
+        {
+          "ref": "history-of-six-weeks-tour",
+          "note": "в поездке они вели совместный дневник, ставший основой книги"
+        }
+      ],
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 28 July 1814, the couple eloped and secretly left for France, taking Mary's stepsister, Claire Clairmont, with them."
+      }
+    },
+    {
+      "key": "poverty-1814",
+      "date": {
+        "from": "1814-09",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Нужда и отказ отца принимать дочь",
+      "long": "По возвращении в Англию пара осталась без денег, а Годвин отказался с ней видеться.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "arriving at Gravesend, Kent, on 13 September 1814."
+      }
+    },
+    {
+      "key": "loss-1815",
+      "date": {
+        "from": "1815-03",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть новорождённой дочери",
+      "long": "22 февраля 1815 года родилась недоношенная девочка; в начале марта Мэри сообщила Хоггу, что ребёнок умер. Последовала тяжёлая депрессия.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 22 February 1815, she gave birth to a two-months-premature baby girl, who was not expected to survive. On 6 March, she wrote to Hogg:"
+      }
+    },
+    {
+      "key": "child-1816",
+      "date": {
+        "from": "1816-01-24",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Вильяма",
+      "long": "Сына назвали в честь деда, Уильяма Годвина.",
+      "place": {
+        "label": "Бишопсгейт"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 24 January 1816, Mary gave birth to a second child, William, named after her father"
+      }
+    },
+    {
+      "key": "creation-1816",
+      "date": {
+        "from": "1816-05",
+        "to": "1816-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Лето у Женевского озера с Байроном",
+      "long": "С Шелли и Клэр Клэрмонт жила близ Женевы рядом с Байроном и Полидори; по предложению Байрона каждый должен был написать страшную историю, и Мэри задумала свой роман.",
+      "place": {
+        "label": "Колоньи"
+      },
+      "works": [
+        {
+          "ref": "frankenstein",
+          "note": "замысел романа возник в то лето (вступление 1831 года)"
+        }
+      ],
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The party arrived in Geneva on 14 May 1816, where Mary called herself \"Mrs Shelley\"."
+      }
+    },
+    {
+      "key": "loss-1816",
+      "date": {
+        "from": "1816-10",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Самоубийство сводной сестры Фэнни Имлей",
+      "long": "Фэнни была найдена мёртвой в гостинице в Суонси; в декабре утонула и жена Шелли Гарриет, обе смерти замалчивались.",
+      "place": {
+        "label": "Суонси"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P3373: Фэнни Имлей 1794-05-14 – 1816-10-09"
+      }
+    },
+    {
+      "key": "love-1816",
+      "date": {
+        "from": "1816-12-30",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Венчание с Перси Биши Шелли",
+      "long": "Брак заключён вскоре после самоубийства первой жены Шелли Гарриет; на венчании присутствовали Годвины, что положило конец разладу с отцом.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "so he and Mary, who was pregnant again, married on 30 December 1816 at St Mildred's Church, Bread Street, London."
+      }
+    },
+    {
+      "key": "career-1818",
+      "date": {
+        "from": "1818-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Анонимный выход первого романа",
+      "long": "Роман вышел без имени автора, с предисловием Шелли; читатели и рецензенты считали автором Перси Шелли.",
+      "works": [
+        {
+          "ref": "frankenstein"
+        }
+      ],
+      "chapter": "flight-with-shelley",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "published anonymously in January 1818. Reviewers and readers assumed that Percy Shelley was the author"
+      }
+    },
+    {
+      "key": "relocation-1818",
+      "date": {
+        "from": "1818-03-12",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Англии в Италию",
+      "long": "Из-за долгов, болезней и страха потерять опеку над детьми Шелли пара покинула Англию, не собираясь возвращаться.",
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple's decision to leave England for Italy on 12 March 1818, taking Claire Clairmont and Alba with them"
+      }
+    },
+    {
+      "key": "loss-1818",
+      "date": {
+        "from": "1818-09",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Клары",
+      "long": "Клара умерла в Венеции; Мэри впала в глубокую депрессию.",
+      "place": {
+        "label": "Венеция"
+      },
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the deaths of both her children—Clara, in September 1818 in Venice, and William, in June 1819 in Rome."
+      }
+    },
+    {
+      "key": "loss-1819",
+      "date": {
+        "from": "1819-06-07",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Вильяма от малярии",
+      "long": "Мальчик умер в Риме; Мэри осталась без детей. Горе она пыталась пережить в письме.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "matilda",
+          "note": "чтобы справиться с горем, она написала повесть, ставшую «Матильдой»"
+        }
+      ],
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the deaths of both her children—Clara, in September 1818 in Venice, and William, in June 1819 in Rome."
+      }
+    },
+    {
+      "key": "child-1819",
+      "date": {
+        "from": "1819-11-12",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Перси Флоренса",
+      "long": "Единственный выживший ребёнок Мэри; его рождение вернуло ей душевные силы.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The birth of her fourth child, Percy Florence, on 12 November 1819, finally lifted her spirits"
+      }
+    },
+    {
+      "key": "illness-1822",
+      "date": {
+        "from": "1822-06-16",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Выкидыш и тяжёлая кровопотеря",
+      "long": "В Вилла-Маньи Мэри чуть не умерла от потери крови; Шелли спас её, посадив в ванну со льдом.",
+      "place": {
+        "label": "Сан-Теренцо"
+      },
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1822, a pregnant Mary moved with Percy, Claire, and Edward and Jane Williams to the isolated Villa Magni"
+      }
+    },
+    {
+      "key": "loss-1822",
+      "date": {
+        "from": "1822-07-08",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель Шелли в шторм у Виареджо",
+      "long": "Шелли и Эдвард Уильямс вышли из Ливорно на лодке и не вернулись; через десять дней тела вынесло на берег, Шелли кремировали на пляже.",
+      "place": {
+        "label": "Виареджо"
+      },
+      "works": [
+        {
+          "ref": "last-man",
+          "note": "образ Адриана — портрет Шелли, погибшего при крушении лодки (признание Мэри)"
+        }
+      ],
+      "chapter": "italy-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1822, her husband drowned when his sailing boat sank during a storm near Viareggio."
+      }
+    },
+    {
+      "key": "relocation-1823",
+      "date": {
+        "from": "1823-07-23",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Англию, жизнь пером",
+      "long": "После года в Генуе Мэри уехала в Англию, решив жить литературным трудом и ради сына; средств было мало, свёкор давал ограниченное содержание.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 23 July 1823, she left Genoa for England and stayed with her father and stepmother in the Strand"
+      }
+    },
+    {
+      "key": "career-1823",
+      "date": {
+        "from": "1823-08-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая театральная постановка главного романа",
+      "long": "Мэри посетила спектакль в Английской опере; успех пьесы привёл к новому изданию романа.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "frankenstein"
+        }
+      ],
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 29 August 1823, she attended a performance of Presumption; or, the Fate of Frankenstein, the first stage adaptation of her novel"
+      }
+    },
+    {
+      "key": "career-1824",
+      "date": {
+        "from": "1824",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание посмертных стихов мужа",
+      "long": "Начало её многолетней работы над наследием Шелли; свёкор запрещал публиковать его биографию.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary began her fostering of Percy's poetic reputation in 1824 with the publication of his Posthumous Poems."
+      }
+    },
+    {
+      "key": "love-1826",
+      "date": {
+        "from": "1826",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отказ американскому актёру Пейну",
+      "long": "Джон Говард Пейн предложил ей выйти за него замуж; она отказалась, сказав, что после гения может выйти только за гения.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Payne fell in love with her and in 1826 asked her to marry him. She refused"
+      }
+    },
+    {
+      "key": "illness-1828",
+      "date": {
+        "from": "1828",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Оспа в Париже",
+      "long": "Во время визита к друзьям в Париже заболела оспой; выздоровела без рубцов, но утратила юную красоту.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1828, she fell ill with smallpox while visiting them in Paris"
+      }
+    },
+    {
+      "key": "career-1830",
+      "date": {
+        "from": "1830",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа прав на новое издание главного романа",
+      "long": "Права на новое издание романа Мэри продала за 60 фунтов издателям Колберну и Бентли.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "frankenstein"
+        }
+      ],
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1830, she sold the copyright for a new edition of Frankenstein for £60 to Henry Colburn and Richard Bentley"
+      }
+    },
+    {
+      "key": "career-1832",
+      "date": {
+        "from": "1832",
+        "to": "1839",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Биографии для «Кабинетной энциклопедии» Ларднера",
+      "long": "Написала жизнеописания итальянских, испанских, португальских и французских авторов для серии Дионисия Ларднера.",
+      "works": [
+        {
+          "ref": "lives-cabinet-cyclopaedia"
+        }
+      ],
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1832 and 1839, Mary Shelley wrote many biographies of notable Italian, Spanish, Portuguese, and French men and a few women"
+      }
+    },
+    {
+      "key": "loss-1836",
+      "date": {
+        "from": "1836-04-07",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Уильяма Годвина",
+      "long": "Годвин умер в возрасте 80 лет; по его завещанию Мэри два года собирала письма и мемуар, но проект оставила.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After her father's death in 1836 at the age of eighty, she began assembling his letters and a memoir for publication"
+      }
+    },
+    {
+      "key": "career-1838",
+      "date": {
+        "from": "1838",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактура собрания сочинений Шелли",
+      "long": "Издатель Эдвард Моксон заплатил ей 500 фунтов за подготовку «Поэтических произведений»; биографию свёкор запретил, и она включила биографические примечания.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "widow-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary was paid £500 to edit the Poetical Works (1838), which Sir Timothy insisted should not include a biography."
+      }
+    },
+    {
+      "key": "illness-1839",
+      "date": {
+        "from": "1839",
+        "to": "1851",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Головные боли и приступы паралича",
+      "long": "С 1839 года болезнь, вероятно опухоль мозга, временами мешала читать и писать; она же стала причиной смерти.",
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1839, she suffered from headaches and bouts of paralysis in parts of her body, which sometimes prevented her from reading and writing."
+      }
+    },
+    {
+      "key": "other-1840",
+      "date": {
+        "from": "1840",
+        "to": "1842",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездки по континенту с сыном",
+      "long": "Вместе с Перси Флоренсом и его университетскими друзьями Мэри путешествовала по Германии и Италии.",
+      "works": [
+        {
+          "ref": "rambles-germany-italy",
+          "note": "книга построена как письма об этих поездках"
+        }
+      ],
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1840 and 1842, mother and son travelled together on the continent"
+      }
+    },
+    {
+      "key": "loss-1844",
+      "date": {
+        "from": "1844",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть свёкра, финансовая независимость",
+      "long": "Сэр Тимоти Шелли умер в 90 лет; впервые Мэри и сын стали независимы от его содержания, хотя наследство оказалось меньше ожидаемого.",
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1844, Sir Timothy Shelley finally died at the age of ninety"
+      }
+    },
+    {
+      "key": "persecution-1845",
+      "date": {
+        "from": "1845",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Шантаж из-за писем",
+      "long": "Итальянский эмигрант Гаттески угрожал опубликовать её письма; в том же году её шантажировали ещё двое.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1845, an Italian political exile called Gatteschi, whom she had met in Paris, threatened to publish letters she had sent him."
+      }
+    },
+    {
+      "key": "family-1848",
+      "date": {
+        "from": "1848",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Женитьба сына на Джейн Гибсон Сент-Джон",
+      "long": "Брак был счастливым; Мэри жила с сыном и невесткой в Филд-Плейс и на Честер-сквер.",
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1848, Percy Florence married Jane Gibson St John."
+      }
+    },
+    {
+      "key": "death-1851",
+      "date": {
+        "from": "1851-02-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от опухоли мозга на Честер-сквер",
+      "long": "Умерла в 53 года; похоронена в церкви Св. Петра в Борнмуте.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "illness-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 1 February 1851, at Chester Square, she died at the age of fifty-three from what her physician suspected was a brain tumour."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "frankenstein",
+      "title": "Франкенштейн, или Современный Прометей",
+      "qid": "Q150827",
+      "written": {
+        "from": 1816,
+        "to": 1817
+      }
+    },
+    {
+      "ref": "history-of-six-weeks-tour",
+      "title": "История шестинедельного путешествия",
+      "written": {
+        "from": 1814,
+        "to": 1817
+      }
+    },
+    {
+      "ref": "matilda",
+      "title": "Матильда",
+      "written": {
+        "from": 1819,
+        "to": 1820
+      }
+    },
+    {
+      "ref": "valperga",
+      "title": "Вальперга",
+      "written": {
+        "from": 1818,
+        "to": 1823
+      }
+    },
+    {
+      "ref": "last-man",
+      "title": "Последний человек",
+      "qid": "Q2323961",
+      "written": {
+        "from": 1824,
+        "to": 1826
+      }
+    },
+    {
+      "ref": "perkin-warbeck",
+      "title": "Судьба Перкина Уорбека",
+      "written": {
+        "from": 1830,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "lodore",
+      "title": "Лодор",
+      "written": {
+        "from": 1835,
+        "to": 1835
+      }
+    },
+    {
+      "ref": "falkner",
+      "title": "Фолкнер",
+      "written": {
+        "from": 1837,
+        "to": 1837
+      }
+    },
+    {
+      "ref": "lives-cabinet-cyclopaedia",
+      "title": "Жизнеописания для «Кабинетной энциклопедии» Ларднера",
+      "written": {
+        "from": 1832,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "rambles-germany-italy",
+      "title": "Странствия по Германии и Италии",
+      "written": {
+        "from": 1840,
+        "to": 1844
+      }
+    }
+  ]
+}

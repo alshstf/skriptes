@@ -209,6 +209,10 @@ func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
 	if err != nil {
 		return fmt.Errorf("%s: %w", q, err)
 	}
+	if gen.NoEvents(a) {
+		// Разовый сбой модели (главы и работы есть, вех нет) — ошибка, run повторит.
+		return fmt.Errorf("%s: модель вернула ответ без вех", q)
+	}
 	p := filepath.Join(out, "draft", q+".json")
 	if err := writeJSON(p, a); err != nil {
 		return err
@@ -336,6 +340,11 @@ func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, re
 	}
 	if err := writeJSON(filepath.Join(out, "sources", q+".json"), src); err != nil {
 		return err
+	}
+	if !gen.HasBirthDate(src) {
+		// Не ошибка: повтор раунда ничего не изменит, а модель стоит денег.
+		fmt.Printf("%s: пропуск — в Wikidata нет даты рождения (%q), таймлайн не строится\n", q, src.Born)
+		return nil
 	}
 	for attempt := 0; ; attempt++ {
 		err = extractOne(ctx, x, out, q)

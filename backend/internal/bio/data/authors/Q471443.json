@@ -1,0 +1,419 @@
+{
+  "qid": "Q471443",
+  "name": "Илья Ильф",
+  "born": "1897-10-15",
+  "died": "1937-04-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%98%D0%BB%D1%8C%D1%84%2C_%D0%98%D0%BB%D1%8C%D1%8F_%D0%90%D1%80%D0%BD%D0%BE%D0%BB%D1%8C%D0%B4%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 154195579
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ilya_Ilf",
+      "rev": 1379372603
+    }
+  ],
+  "chapters": [
+    {
+      "key": "odessa",
+      "title": "Одесса: юность и война",
+      "from": 1897,
+      "to": 1922
+    },
+    {
+      "key": "moscow-gudok",
+      "title": "Москва и «Гудок»",
+      "from": 1923,
+      "to": 1927
+    },
+    {
+      "key": "ilf-petrov",
+      "title": "Ильф и Петров",
+      "from": 1928,
+      "to": 1934
+    },
+    {
+      "key": "america-end",
+      "title": "Америка и последние месяцы",
+      "from": 1935,
+      "to": 1937
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1897",
+      "date": {
+        "from": "1897-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Одессе",
+      "long": "Родился в Одессе в семье банковского служащего Арье Файнзильберга, третьим из четырёх сыновей. Сам отмечал день рождения 16 октября.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Илья (Иехиел-Лейб) Файнзильберг родился 3 (15) октября 1897 год"
+      }
+    },
+    {
+      "key": "education-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание технической школы, работа на заводах",
+      "long": "Окончил техническую школу и стал работать в чертёжном бюро, затем монтёром на телефонной станции и токарем на военном заводе.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1913 году окончил техническую школу, после чего работал в чертёжном бюро"
+      }
+    },
+    {
+      "key": "war-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в Красной армии в Гражданскую войну",
+      "long": "С лета 1919 года служил в красноармейском караульном полку, сформированном из негодных к строевой службе призывников; участвовал в боях против войск Деникина.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С лета 1919 года участвовал в Гражданской войне, служил в красноармейском караульном полку"
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "to": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Опродкомгубе",
+      "long": "Работал заведующим складом и бухгалтером в организации по снабжению Красной армии продовольствием.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920—1921 годах работал заведующим складом и бухгалтером в Опродкомгубе"
+      }
+    },
+    {
+      "key": "love-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Марией Тарасенко",
+      "long": "В Одессе познакомился с Марией Николаевной Тарасенко, ставшей его женой.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "odessa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1921, in Odessa, Ilf met the love of his life, Maria Nikolayevna Tarasenko (1904–1981)."
+      }
+    },
+    {
+      "key": "loss-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Миндль Ароновна Файнзильберг.",
+      "chapter": "odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "его жены Миндль Ароновны (урождённая Котлова; 1868—1922)"
+      }
+    },
+    {
+      "key": "relocation-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Москву, работа в «Гудке»",
+      "long": "Переехал из Одессы в Москву и стал сотрудником железнодорожной газеты «Гудок»: литобработчик, корреспондент, затем автор фельетонов.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-gudok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1923 году переехал в Москву, став сотрудником газеты «Гудок»."
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Марией Тарасенко",
+      "long": "Женился на Марии Тарасенко; венчание состоялось в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-gudok",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in Moscow in 1924, and had a daughter Aleksandra born in 1935."
+      }
+    },
+    {
+      "key": "creation-1925",
+      "date": {
+        "from": "1925",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Ведение «Записных книжек»",
+      "long": "Вёл записные книжки: дневники поездок, наброски очерков и фельетонов, удачные фразы; позднее они сложились в особое сочинение.",
+      "works": [
+        {
+          "ref": "notebooks"
+        }
+      ],
+      "chapter": "moscow-gudok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Записные книжки» Ильф вёл с 1925 года до самой смерти."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало соавторства с Евгением Петровым",
+      "long": "Началась совместная работа с Евгением Петровым, также сотрудником «Гудка»; так возник дуэт Ильф и Петров.",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "twelve-chairs"
+        }
+      ],
+      "chapter": "moscow-gudok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году с совместной работы над романом «Двенадцать стульев» началось творческое содружество Ильи Ильфа и Евгения Петрова"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Увольнение из «Гудка», переход в «Чудак»",
+      "long": "Уволен из «Гудка» из-за сокращения штата сатирического отдела; вскоре они с Петровым стали сотрудниками еженедельного журнала «Чудак».",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "kolokolamsk"
+        }
+      ],
+      "chapter": "ilf-petrov",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году Илья Ильф был уволен из газеты из-за сокращения штата сатирического отдела, вслед за ним ушёл Евгений Петров."
+      }
+    },
+    {
+      "key": "other-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Увлечение фотографией",
+      "long": "Петров одолжил ему 800 рублей на фотоаппарат; Ильф увлёкся фотографией, спустя годы дочь нашла и опубликовала около 200 его снимков.",
+      "chapter": "ilf-petrov",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1929, Yevgeni Petrov lent him 800 rubles for a camera"
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Фельетоны для «Правды» и «Крокодила»",
+      "long": "Вместе с Петровым писал фельетоны для «Правды», «Литературной газеты» и «Крокодила».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "ilf-petrov",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1932—1937 годах Ильф и Петров писали фельетоны для газет «Правда», «Литературная газета» и журнала «Крокодил»."
+      }
+    },
+    {
+      "key": "loss-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Арье Бениаминович Файнзильберг.",
+      "chapter": "ilf-petrov",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Арье Бениаминовича Файнзильберга (1863—1933)"
+      }
+    },
+    {
+      "key": "child-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Александры",
+      "long": "Родилась дочь Александра Ильинична, позже нашедшая и обнародовавшая фотографии отца.",
+      "chapter": "america-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in Moscow in 1924, and had a daughter Aleksandra born in 1935."
+      }
+    },
+    {
+      "key": "illness-1935",
+      "date": {
+        "from": "1935",
+        "to": "1936",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Поездка по США, обострение туберкулёза",
+      "long": "Совершил с Петровым путешествие на автомобиле по США. Во время поездки у него открылся давний туберкулёз.",
+      "works": [
+        {
+          "ref": "one-storey-america"
+        }
+      ],
+      "chapter": "america-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "documented their journey through the United States between 1935 and 1936"
+      }
+    },
+    {
+      "key": "death-1937",
+      "date": {
+        "from": "1937-04-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от туберкулёза",
+      "long": "Умер в Москве от туберкулёза вскоре после возвращения из США. Немецкая газета «Ангрифф» заявила о самоубийстве; Петров опроверг это в «Правде».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "america-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вскоре приведший к его кончине после возвращения в Москву 13 апреля 1937 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "twelve-chairs",
+      "title": "Двенадцать стульев",
+      "qid": "Q245194",
+      "written": {
+        "from": 1927,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "golden-calf",
+      "title": "Золотой телёнок",
+      "qid": "Q1171231",
+      "written": {
+        "from": 1929,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "kolokolamsk",
+      "title": "Необыкновенные истории из жизни города Колоколамска",
+      "written": {
+        "from": 1928,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "one-storey-america",
+      "title": "Одноэтажная Америка",
+      "written": {
+        "from": 1936,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "notebooks",
+      "title": "Записные книжки",
+      "written": {
+        "from": 1925,
+        "to": 1937
+      }
+    }
+  ]
+}

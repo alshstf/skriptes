@@ -1,0 +1,712 @@
+{
+  "qid": "Q219780",
+  "name": "Хантер Стоктон Томпсон",
+  "born": "1937-07-18",
+  "died": "2005-02-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D0%BE%D0%BC%D0%BF%D1%81%D0%BE%D0%BD%2C_%D0%A5%D0%B0%D0%BD%D1%82%D0%B5%D1%80_%D0%A1%D1%82%D0%BE%D0%BA%D1%82%D0%BE%D0%BD",
+      "rev": 155230846
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Hunter_S._Thompson",
+      "rev": 1380312602
+    }
+  ],
+  "chapters": [
+    {
+      "key": "louisville",
+      "title": "Луисвилл и ранние годы",
+      "from": 1937,
+      "to": 1955
+    },
+    {
+      "key": "army-press",
+      "title": "Авиабаза и первые газеты",
+      "from": 1956,
+      "to": 1959
+    },
+    {
+      "key": "caribbean-angels",
+      "title": "Карибы, Биг-Сюр, Ангелы ада",
+      "from": 1960,
+      "to": 1966
+    },
+    {
+      "key": "woody-creek-gonzo",
+      "title": "Вуди-Крик и рождение гонзо",
+      "from": 1967,
+      "to": 1979
+    },
+    {
+      "key": "late-years",
+      "title": "Спад и последние годы",
+      "from": 1980,
+      "to": 2005
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-07-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Луисвилле, Кентукки",
+      "long": "Родился в Луисвилле в семье страхового агента и библиотекаря, старшим из трёх сыновей.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "louisville",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Луисвилл 1937-07-18"
+      }
+    },
+    {
+      "key": "loss-1952",
+      "date": {
+        "from": "1952-07-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, Джек Томпсон, умер от миастении в 58 лет, когда Хантеру было 14. Мальчиков растила мать, работавшая библиотекарем.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "louisville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On July 3, 1952, when Thompson was 14, his father died of myasthenia gravis at age 58."
+      }
+    },
+    {
+      "key": "persecution-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Приговор к 60 дням тюрьмы, исключение из клуба",
+      "long": "Обвинён в соучастии в ограблении, приговорён к 60 дням тюрьмы, отсидел 31. Его не допустили к выпускным экзаменам, после освобождения он поступил на службу в ВВС.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "louisville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the group ejected Thompson in 1955 for criminal activity. Charged as an accessory to robbery after being in a car with the perpetrator, Thompson was sentenced to 60 days in Kentucky's Jefferson County Jail."
+      }
+    },
+    {
+      "key": "war-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в ВВС США",
+      "long": "Ушёл в армию, чтобы избежать ответственности за ДТП; служил на авиабазе Эглин, в 1958 году командир рекомендовал досрочное увольнение.",
+      "place": {
+        "label": "Эглин, Флорида"
+      },
+      "chapter": "army-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956 году Хантер ушёл в армию США, чтобы избежать ответственности за ДТП, в котором он разбил грузовик своего работодателя."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Спортивный редактор армейской газеты",
+      "long": "Во время службы на авиабазе Эглин стал спортивным редактором газеты «Главный курьер» и писал в местные издания, критикуя армейское руководство.",
+      "place": {
+        "label": "Эглин, Флорида"
+      },
+      "chapter": "army-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время службы на авиабазе Эглин во Флориде в 1956 году стал спортивным редактором армейской газеты «Главный курьер»."
+      }
+    },
+    {
+      "key": "education-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Нью-Йорк и учёба в Колумбийском университете",
+      "long": "После увольнения из ВВС переехал в Нью-Йорк и по армейской программе оплаты образования посещал курсы в Колумбийском университете.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "army-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958 году командир Томпсона рекомендовал его к досрочному увольнению из ВВС… он переехал в Нью-Йорк"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Увольнение из журнала Time за нарушение субординации",
+      "long": "Работал в Time, где перепечатывал на машинке «Великого Гэтсби» и «Прощай, оружие!»; уволен, затем потерял и место репортёра в Middletown Daily Record.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "army-press",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959 году Томпсон был уволен из The Time за нарушение субординации."
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Пуэрто-Рико",
+      "long": "Переехал в Сан-Хуан ради работы в спортивном журнале El Sportivo, который вскоре закрылся; путешествовал по Карибам и Южной Америке, писал для газет.",
+      "place": {
+        "label": "Сан-Хуан"
+      },
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году Томпсон переехал в Сан Хуан, Пуэрто-Рико, чтобы принять предложение о работе в спортивном журнале El Sportivo, который вскоре закрылся."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Восемь месяцев охранником в Биг-Суре",
+      "long": "Служил охранником и смотрителем в Big Sur Hot Springs, будущем Эзалинском институте; в это время написал повести.",
+      "place": {
+        "label": "Биг-Сюр"
+      },
+      "works": [
+        {
+          "ref": "rum-diary",
+          "note": "в этот период написаны повести, среди них «Ромовый дневник»"
+        }
+      ],
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году в течение восьми месяцев Томпсон служил охранником и смотрителем в Big Sur Hot Springs"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962-05",
+        "to": "1963-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Корреспондент в Южной Америке",
+      "long": "Год провёл в Южной Америке как корреспондент еженедельника National Observer, несколько месяцев работал в Рио-де-Жанейро.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1962, Thompson traveled to South America for a year as a correspondent for the Dow Jones-owned weekly paper, the National Observer."
+      }
+    },
+    {
+      "key": "love-1963",
+      "date": {
+        "from": "1963-05-09",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Сандрой Конклин",
+      "long": "Женился на давней подруге Сандре Конклин. Развелись в 1980 году, оставшись близкими друзьями.",
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 мая 1963 года он женился на своей давней девушке Сандре Конклин"
+      }
+    },
+    {
+      "key": "child-1964",
+      "date": {
+        "from": "1964-03-23",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Хуана",
+      "long": "У Томпсонов родился сын Хуан Фицджеральд. Позже пара пыталась завести ещё детей: были выкидыши, двое детей умерли в младенчестве.",
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 1964 года у них родился сын Хуан Фицджеральд Томпсон."
+      }
+    },
+    {
+      "key": "creation-1965",
+      "date": {
+        "from": "1965",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Год среди «Ангелов ада»",
+      "long": "По заказу журнала The Nation жил и ездил с мотоклубом; отношения оборвались, байкеры жестоко избили Томпсона. Статья вышла 17 мая 1965 года, книга — в 1966-м.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "works": [
+        {
+          "ref": "hells-angels",
+          "note": "книга основана на году жизни рядом с клубом"
+        }
+      ],
+      "chapter": "caribbean-angels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году редактор «The Nation» Кэрри МакВильямс предложила Томпсону написать несколько статей, основанных на его общении с байкерами из мотоклуба Hells Angels."
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Вуди-Крик, Колорадо",
+      "long": "С семьёй переехал в горную деревню близ Аспена и жил там до смерти; в 1969 году купил собственный дом.",
+      "place": {
+        "label": "Вуди-Крик"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году Томпсон с семьёй переехал в пригород Аспена, горную деревню Вуди-Крик"
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Президентская кампания и съезд демократов в Чикаго",
+      "long": "На аванс издательства Random House объезжал страну и побывал на съезде демократов в Чикаго; позже говорил, что события сильно повлияли на его политические взгляды.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He used a $6,000 advance from Random House to travel the country covering the 1968 United States presidential election and attend the Democratic National Convention in Chicago for research."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка дома и земли в Вуди-Крик",
+      "long": "Роялти за «Ангелов ада» позволило купить участок и дом, где он жил до конца жизни.",
+      "place": {
+        "label": "Вуди-Крик"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в начале 1969 года, получив крупное роялти за «Ангелов ада», приобрел собственное."
+      }
+    },
+    {
+      "key": "career-1969-2",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы с журналом «Роллинг стоун»",
+      "long": "После декабря 1969 года, впечатлённый освещением концерта в Альтамонте, написал редактору Яну Веннеру и принял приглашение сотрудничать; журнал стал его основной площадкой.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thompson was impressed by Rolling Stone magazine's coverage of the disastrous Altamont Free Concert in December 1969."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выдвижение в шерифы округа Питкин",
+      "long": "Баллотировался в шерифы от «Власти фриков»; проиграл, набрав 44% голосов. Репортаж об этом стал его первым материалом для «Роллинг стоун».",
+      "place": {
+        "label": "Аспен"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1970, Thompson ran for sheriff of Pitkin County, Colorado, as part of a group of citizens running for local offices"
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Рождение гонзо-журналистики",
+      "long": "Статья для Scanlan's Monthly в паре с художником Ральфом Стедманом, написанная в цейтноте, считается первым образцом гонзо-стиля.",
+      "works": [
+        {
+          "ref": "kentucky-derby",
+          "note": "срок поджимал, и Томпсон отправлял в журнал страницы, вырванные из блокнота"
+        }
+      ],
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году он написал нетрадиционную статью «Дерби в Кентукки упадочно и порочно»"
+      }
+    },
+    {
+      "key": "creation-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Поездки в Лас-Вегас с Оскаром Акостой",
+      "long": "Начав готовить материал о гибели журналиста Рубена Салазара, Томпсон с адвокатом Акостой отправился в Лас-Вегас на гонку «Минт 400» и конференцию полиции.",
+      "place": {
+        "label": "Лас-Вегас"
+      },
+      "works": [
+        {
+          "ref": "fear-loathing-vegas",
+          "note": "две поездки стали основой книги"
+        }
+      ],
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Опубликованная в 1971 году «Страх и отвращение в Лас-Вегасе: Безумная поездка в сердце Американской мечты» являлась своего рода отчётом от первого лица журналиста"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Срыв репортажа о бое в Киншасе",
+      "long": "Пропустил бой Али — Формана и не сдал материал; по словам Веннера, после Африки Томпсон «не мог писать». Работа стала всё хуже.",
+      "place": {
+        "label": "Киншаса"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thompson's journalistic work began to seriously suffer after his 1974 trip to Kinshasa, Zaire to cover the Rumble in the Jungle"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командировка в Сайгон, отказ сдать репортаж",
+      "long": "Приехал в Сайгон в момент падения Южного Вьетнама, быстро уехал и не прислал репортаж; отношения с журналом осложнились.",
+      "place": {
+        "label": "Сайгон"
+      },
+      "chapter": "woody-creek-gonzo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1975, Wenner assigned Thompson to travel to Vietnam to cover what appeared to be the end of the Vietnam War."
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Сандрой Конклин",
+      "long": "Томпсон и Сандра развелись, оставшись близкими друзьями до конца его жизни.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хантер и Сэнди развелись в 1980 году, оставаясь близкими друзьями до самой смерти Хантера."
+      }
+    },
+    {
+      "key": "creation-1980",
+      "date": {
+        "from": "1980",
+        "to": "1983",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Гавайи и гонзо-отчёт о марафоне",
+      "long": "Переехал на Гавайи, чтобы писать об Гонолульском марафоне 1980 года; книга с иллюстрациями Стедмана была принята плохо.",
+      "place": {
+        "label": "Гавайи"
+      },
+      "works": [
+        {
+          "ref": "curse-of-lono",
+          "note": "книга написана по итогам работы на Гавайях"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1980, Thompson divorced his wife, Sandra Conklin… Later that year, Thompson relocated to Hawaii to research and write The Curse of Lono"
+      }
+    },
+    {
+      "key": "war-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Репортаж о вторжении США на Гренаду",
+      "long": "Освещал американское вторжение на Гренаду, но написал об этом лишь двадцать лет спустя, в книге 2003 года.",
+      "place": {
+        "label": "Гренада"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, he covered the U.S. invasion of Grenada, but did not write or discuss the experiences until the publication of Kingdom of Fear in 2003."
+      }
+    },
+    {
+      "key": "persecution-1990",
+      "date": {
+        "from": "1990-03",
+        "to": "1990-05",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Уголовное дело по обвинению в нападении",
+      "long": "После обвинения Гейл Палмер и обыска в доме Томпсону предъявили ряд обвинений; через два месяца их сняли.",
+      "place": {
+        "label": "Вуди-Крик"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thompson faced a sexual assault charge in March 1990 when former pornographic film director Gail Palmer claimed… The charges were dropped two months later."
+      }
+    },
+    {
+      "key": "loss-1993",
+      "date": {
+        "from": "1993-03-25",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата Джеймса от СПИДа",
+      "long": "Умер младший брат Джеймс; по его словам, братья никогда не были близки.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брат Хантера Джеймс (родился 2 февраля 1949 года и умер от СПИДа 25 марта 1993 года)"
+      }
+    },
+    {
+      "key": "loss-1998",
+      "date": {
+        "from": "1998-03-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Вирджинии",
+      "long": "Умерла мать, Вирджиния Рэй Томпсон, много лет страдавшая от пристрастия к алкоголю. Русская статья называет 1999 год, английская — 1998.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Virginia Davison Ray (1908, Springfield, Kentucky – March 20, 1998, Louisville)"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "to": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Еженедельная колонка для ESPN.com",
+      "long": "До самой смерти вёл спортивную колонку «Hey, Rube», вернувшись к спортивной теме, с которой начинал карьеру.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 2000 until his death in 2005, he wrote a weekly column for ESPN.com's Page 2"
+      }
+    },
+    {
+      "key": "love-2003",
+      "date": {
+        "from": "2003-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Анитой Бежмук",
+      "long": "Женился на давней ассистентке Аните Бежмук; даты в русской и английской статьях различаются на день.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хантер женился на своей давней ассистентке Аните Бежмук 24 апреля 2003 года."
+      }
+    },
+    {
+      "key": "death-2005",
+      "date": {
+        "from": "2005-02-20",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Вуди-Крик",
+      "long": "Умер в своём доме от огнестрельного ранения в голову, в возрасте 67 лет; в доме находились сын с семьёй.",
+      "place": {
+        "label": "Вуди-Крик"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Томпсон умер в своём доме в Вуди Крик, Колорадо, 20 февраля 2005 года"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hells-angels",
+      "title": "Ангелы ада",
+      "qid": "Q841931",
+      "written": {
+        "from": 1965,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "rum-diary",
+      "title": "Ромовый дневник",
+      "qid": "Q840085",
+      "written": {
+        "from": 1960,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "kentucky-derby",
+      "title": "Дерби в Кентукки упадочно и порочно",
+      "qid": "Q4158685",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "fear-loathing-vegas",
+      "title": "Страх и отвращение в Лас-Вегасе",
+      "qid": "Q772435",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "campaign-trail-72",
+      "title": "Страх и отвращение предвыборной гонки '72",
+      "qid": "Q1399262",
+      "written": {
+        "from": 1971,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "curse-of-lono",
+      "title": "Проклятие Гавайев",
+      "qid": "Q7728463",
+      "written": {
+        "from": 1980,
+        "to": 1983
+      }
+    }
+  ]
+}

@@ -1,0 +1,561 @@
+{
+  "qid": "Q233046",
+  "name": "Энн Маккефри",
+  "born": "1926-04-01",
+  "died": "2011-11-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D0%BA%D0%B5%D1%84%D1%80%D0%B8%2C_%D0%AD%D0%BD%D0%BD",
+      "rev": 152487228
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Anne_McCaffrey",
+      "rev": 1378737098
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-radcliffe",
+      "title": "Детство и Рэдклифф",
+      "from": 1926,
+      "to": 1949
+    },
+    {
+      "key": "brak-i-pervye-rasskazy",
+      "title": "Брак, дети, первые рассказы",
+      "from": 1950,
+      "to": 1964
+    },
+    {
+      "key": "polnaya-zanyatost",
+      "title": "Профессия писателя и «Хьюго»",
+      "from": 1965,
+      "to": 1969
+    },
+    {
+      "key": "irlandiya",
+      "title": "Ирландия и трудные годы",
+      "from": 1970,
+      "to": 1976
+    },
+    {
+      "key": "drakony-perna",
+      "title": "Драконы Перна и признание",
+      "from": 1977,
+      "to": 2011
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1926",
+      "date": {
+        "from": "1926-04-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родилась в Кембридже, Массачусетс, вторым из трёх детей в семье полковника Джорджа Герберта Маккефри.",
+      "place": {
+        "label": "Кембридж, Массачусетс"
+      },
+      "chapter": "detstvo-i-radcliffe",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 1 апреля 1926 года в Кембридже, Массачусетс."
+      }
+    },
+    {
+      "key": "education-1944",
+      "date": {
+        "from": "1944",
+        "to": "1947",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Рэдклифф-колледже",
+      "long": "Училась в Рэдклифф-колледже, окончила его с отличием по специальности «славянские языки и литература».",
+      "place": {
+        "label": "Кембридж, Массачусетс"
+      },
+      "chapter": "detstvo-i-radcliffe",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1944 to 1947 she attended Radcliffe College, where her tutors included Samuel H. Cross, graduating cum laude with a degree in Slavonic languages and Literature."
+      }
+    },
+    {
+      "key": "love-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Хорасом Джонсоном",
+      "long": "Вышла замуж за Хораса Райта Джонсона, разделявшего её интерес к музыке, опере и балету.",
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950 she married Horace Wright Johnson (died 2009), who shared her interests in music, opera and ballet."
+      }
+    },
+    {
+      "key": "child-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Алека",
+      "long": "Родился первый ребёнок — сын Алек Энтони.",
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had three children: Alec Anthony, born 1952; Todd, born 1956; and Georgeanne (\"Gigi\", Georgeanne Kennedy), born 1959."
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация",
+      "long": "Первый рассказ вышел в журнале; написан в 1952 году, во время беременности Алеком.",
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая публикация — «Свобода соревноваться» (1953)."
+      }
+    },
+    {
+      "key": "loss-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, полковник Джордж Маккефри. Позднее писательница говорила, что переживание этой смерти и тяжёлый брак вошли в её рассказ о корабле.",
+      "works": [
+        {
+          "ref": "the-ship-who-sang",
+          "note": "сама автор в интервью 1994–2004 годов связывала рассказ со смертью отца и неудачным браком"
+        }
+      ],
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "I put much of myself into it: myself and the troubles I had in accepting my father's death [1954] and a troubled marriage."
+      }
+    },
+    {
+      "key": "child-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Тодда",
+      "long": "Родился сын Тодд, впоследствии соавтор матери по циклу о Перне.",
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had three children: Alec Anthony, born 1952; Todd, born 1956; and Georgeanne (\"Gigi\", Georgeanne Kennedy), born 1959."
+      }
+    },
+    {
+      "key": "child-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Жоржанн",
+      "long": "Родилась дочь Жоржанн («Джиджи»).",
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had three children: Alec Anthony, born 1952; Todd, born 1956; and Georgeanne (\"Gigi\", Georgeanne Kennedy), born 1959."
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Милфордский семинар писателей",
+      "long": "После первого семинара писателей в Милфорде занялась рассказом, с которого начался цикл о кораблях-«мозгах».",
+      "place": {
+        "label": "Милфорд"
+      },
+      "works": [
+        {
+          "ref": "the-ship-who-sang",
+          "note": "рассказ начат после семинара"
+        }
+      ],
+      "chapter": "brak-i-pervye-rasskazy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After her first Milford workshop in 1959 she worked on \"The Ship Who Sang\", the story which began the Brain \u0026 Brawn Ship series."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переезд и писательство на полной ставке",
+      "long": "Семья переехала в Си-Клифф на Лонг-Айленде; Маккефри стала профессиональным писателем на полной занятости.",
+      "place": {
+        "label": "Си-Клифф, Лонг-Айленд"
+      },
+      "chapter": "polnaya-zanyatost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They moved to Sea Cliff, Long Island in 1965, and McCaffrey became a full-time writer."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго»",
+      "long": "Первый рассказ о Перне получил «Хьюго» за лучшую повесть; Маккефри стала первой женщиной, получившей эту премию за прозу.",
+      "works": [
+        {
+          "ref": "dragonflight",
+          "note": "рассказ вошёл в первый роман о Перне"
+        }
+      ],
+      "chapter": "polnaya-zanyatost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the 1968 Hugo Award for best novella, voted by participants in the annual World Science Fiction Convention."
+      }
+    },
+    {
+      "key": "career-1968-2",
+      "date": {
+        "from": "1968",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретарь-казначей Ассоциации фантастов",
+      "long": "Секретарь-казначей Ассоциации американских писателей-фантастов; изготавливала призы «Небьюла» и вела рассылку бюллетеней.",
+      "chapter": "polnaya-zanyatost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "McCaffrey served a term as secretary-treasurer of the Science Fiction Writers of America from 1968 to 1970."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Небьюла»",
+      "long": "Второй рассказ о Перне получил «Небьюлу»; Маккефри стала первой женщиной, получившей и «Хьюго», и «Небьюлу» за прозу.",
+      "works": [
+        {
+          "ref": "dragonflight"
+        }
+      ],
+      "chapter": "polnaya-zanyatost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The second Pern story, \"Dragonrider\", won the 1969 Nebula Award for best novella, voted annually by the Science Fiction Writers of America."
+      }
+    },
+    {
+      "key": "family-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с мужем",
+      "long": "Через несколько недель после подачи на развод Маккефри уехала в Ирландию с двумя младшими детьми.",
+      "chapter": "irlandiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 Энн развелась, после чего эмигрировала в Ирландию."
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Ирландию с детьми",
+      "long": "Переехала в Ирландию с двумя младшими детьми; там писателям-резидентам не облагали доходы налогом. Вскоре к ним присоединилась мать.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "dragonquest",
+          "note": "роман был почти закончен до переезда в Ирландию"
+        }
+      ],
+      "chapter": "irlandiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "McCaffrey immigrated to Ireland with her two younger children in 1970, weeks after filing for divorce."
+      }
+    },
+    {
+      "key": "other-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый британский конвент, знакомство с Джеком Коэном",
+      "long": "Почётный гость первого британского конвента; там познакомилась с биологом Джеком Коэном, позже консультировавшим её по науке Перна.",
+      "chapter": "irlandiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The following spring, McCaffrey was guest of honour at her first British science-fiction convention (Eastercon 22, 1971)."
+      }
+    },
+    {
+      "key": "poverty-1971",
+      "date": {
+        "from": "1971",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Безденежье и переезды в окрестностях Дублина",
+      "long": "Работа над продолжением застопорилась; семья несколько раз переезжала и жила на пособие на детей и скудные гонорары.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "the-white-dragon",
+          "note": "после заключения контракта на роман работа остановилась"
+        }
+      ],
+      "chapter": "irlandiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "completing for 1971 publication Dragonquest and two Gothic novels for Dell… During the next few years the family moved several times in the Dublin area and struggled to make ends meet"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка дома «Драконья крепость»",
+      "long": "Контракт с издательством Atheneum позволил купить дом, названный «Драконья крепость» (Dragonhold).",
+      "place": {
+        "label": "Ирландия"
+      },
+      "works": [
+        {
+          "ref": "dragonsong"
+        }
+      ],
+      "chapter": "irlandiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "McCaffrey completed Menolly's story as Dragonsong and contracted for a sequel before its publication in 1976… With a contract with Atheneum she was able to buy a home"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер списка New York Times",
+      "long": "Завершивший «исходную трилогию» роман попал в список бестселлеров New York Times — одним из первых научно-фантастических романов.",
+      "works": [
+        {
+          "ref": "the-white-dragon"
+        }
+      ],
+      "chapter": "drakony-perna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her 1978 novel The White Dragon became one of the first science-fiction books to appear on the New York Times Best Seller list."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Маргарет Эдвардс",
+      "long": "Американская библиотечная ассоциация присудила премию Маргарет Эдвардс за вклад в литературу для подростков.",
+      "chapter": "drakony-perna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1999, the American Library Association gave McCaffrey the 11th Margaret A. Edwards Award for lifetime achievement in writing for teens."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Великого Мастера фантастики",
+      "long": "Ассоциация американских писателей-фантастов присвоила звание Великого Мастера (Гроссмейстера).",
+      "chapter": "drakony-perna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году на церемонии вручения премии «Небьюла» Американская ассоциация писателей-фантастов назвала Маккефри 22-м Великим Мастером."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Зал славы научной фантастики",
+      "long": "Включена в Зал славы научной фантастики и фэнтези.",
+      "chapter": "drakony-perna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "А в 2006 она была включена в Зал славы научной фантастики."
+      }
+    },
+    {
+      "key": "death-2011",
+      "date": {
+        "from": "2011-11-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умерла дома в Ирландии от инсульта в возрасте 85 лет.",
+      "place": {
+        "label": "Ирландия"
+      },
+      "chapter": "drakony-perna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Энн Маккефри ушла из жизни 21 ноября 2011 примерно в 17 часов на 86-м году жизни у себя дома в Ирландии от инсульта."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "restoree",
+      "title": "Восстановленная",
+      "qid": "Q7316246",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-ship-who-sang",
+      "title": "Корабль, который пел",
+      "qid": "Q3823324",
+      "written": {
+        "from": 1959,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "dragonflight",
+      "title": "Заря драконов",
+      "qid": "Q2737699",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "decision-at-doona",
+      "title": "Решение в Дуне",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "dragonquest",
+      "title": "Поиск драконов",
+      "written": {
+        "from": 1970,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "dragonsong",
+      "title": "Песнь дракона",
+      "written": {
+        "from": 1975,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "the-white-dragon",
+      "title": "Белый дракон",
+      "written": {
+        "from": 1974,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "the-crystal-singer",
+      "title": "Поющий кристалл",
+      "written": {
+        "from": 1974,
+        "to": 1982
+      }
+    }
+  ]
+}

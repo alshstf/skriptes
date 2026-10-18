@@ -1,0 +1,279 @@
+{
+  "qid": "Q713778",
+  "name": "Джаспер Ффорде",
+  "born": "1961-01-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D1%84%D0%BE%D1%80%D0%B4%D0%B5%2C_%D0%94%D0%B6%D0%B0%D1%81%D0%BF%D0%B5%D1%80",
+      "rev": 154674646
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jasper_Fforde",
+      "rev": 1379259253
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-cinema",
+      "title": "Лондон и кино",
+      "from": 1961,
+      "to": 2000
+    },
+    {
+      "key": "rejections-fame",
+      "title": "Отказы и признание",
+      "from": 2001,
+      "to": 2013
+    },
+    {
+      "key": "crisis",
+      "title": "Годы без книг",
+      "from": 2014,
+      "to": 2018
+    },
+    {
+      "key": "return",
+      "title": "Возвращение к письму",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1961",
+      "date": {
+        "from": "1961-01-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился в Лондоне в семье Джона Стэндиша Ффорде, 24-го главного казначея Банка Англии; внук Джозефа Ретингера.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-cinema",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в Лондоне 11 января 1961 года."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман после 76 издательских отказов",
+      "long": "Первый роман вышел в печать лишь после 76 отказов издателей.",
+      "works": [
+        {
+          "ref": "eyre-affair"
+        }
+      ],
+      "chapter": "rejections-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "был напечатан в 2001 году, после 76 издательских отказов."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Вудхауза",
+      "long": "Получил премию Вудхауза за комическую прозу.",
+      "works": [
+        {
+          "ref": "well-of-lost-plots"
+        }
+      ],
+      "chapter": "rejections-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2004 году за «Кладезь погибших сюжетов» автор получил премию Вудхауза."
+      }
+    },
+    {
+      "key": "creation-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Переработка первого неизданного романа",
+      "long": "Роман 2005 года стал переработкой самого первого, так и не изданного романа автора, изначально названного «Кто убил Шалтая-Болтая?».",
+      "works": [
+        {
+          "ref": "big-over-easy"
+        }
+      ],
+      "chapter": "rejections-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "написанный Ффорде в 2005 году, является переработкой его самого первого романа, который так никогда и не нашёл издателя"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Жюли Верланже",
+      "long": "Получил премию Жюли Верланже.",
+      "chapter": "rejections-fame",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Жюли Верланже 2012-01-01"
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014",
+        "to": "2018",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Творческий кризис без публикаций",
+      "long": "С 2014 по 2018 год переживал творческий кризис и не опубликовал ни одного произведения.",
+      "chapter": "crisis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2014 по 2018 год Ффорде переживал творческий кризис и не опубликовал ни одного произведения."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход из творческого кризиса",
+      "long": "В 2018 году вышел из творческого кризиса, выпустив внецикловый роман.",
+      "works": [
+        {
+          "ref": "early-bird"
+        }
+      ],
+      "chapter": "crisis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вырваться из кризиса он смог в 2018 году с внецикловым романом «Ранняя пташка»"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "eyre-affair",
+      "title": "Дело Джен, или Эйра немилосердия",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "well-of-lost-plots",
+      "title": "Кладезь погибших сюжетов, или Марш генератов",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "big-over-easy",
+      "title": "Тайна выеденного яйца, или Смерть Шалтая",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "fourth-bear",
+      "title": "The Fourth Bear",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "shades-of-grey",
+      "title": "Полный вперед назад, или Оттенки серого",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "last-dragonslayer",
+      "title": "Последняя охотница на драконов",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "song-of-the-quarkbeast",
+      "title": "Песнь Кваркозверя",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "eye-of-zoltar",
+      "title": "Око Золтара",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "early-bird",
+      "title": "Ранняя пташка",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "eternal-rabbit",
+      "title": "Вечный кролик",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "great-troll-war",
+      "title": "The Great Troll War",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "red-side-story",
+      "title": "Рэдсайдская история",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

@@ -1,0 +1,746 @@
+{
+  "qid": "Q209641",
+  "name": "Джон ле Карре",
+  "born": "1931-10-19",
+  "died": "2020-12-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5_%D0%9A%D0%B0%D1%80%D1%80%D0%B5%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 155607457
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_le_Carr%C3%A9",
+      "rev": 1379216445
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-schools",
+      "title": "Детство, школы, Берн",
+      "from": 1931,
+      "to": 1951
+    },
+    {
+      "key": "oxford-mi5",
+      "title": "Оксфорд, Итон, МИ-5",
+      "from": 1952,
+      "to": 1958
+    },
+    {
+      "key": "bonn-hamburg",
+      "title": "Бонн, Гамбург, МИ-6",
+      "from": 1959,
+      "to": 1964
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Писатель и Смайли",
+      "from": 1965,
+      "to": 1988
+    },
+    {
+      "key": "after-cold-war",
+      "title": "После холодной войны",
+      "from": 1989,
+      "to": 2020
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-10-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Пуле",
+      "long": "Родился в Пуле (Дорсет) в семье Рональда Корнуэлла и Олив Корнуэлл; настоящее имя — Дэвид Джон Мур Корнуэлл.",
+      "place": {
+        "label": "Пул"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "19 октября 1931, Пул, Англия"
+      }
+    },
+    {
+      "key": "education-1948",
+      "date": {
+        "from": "1948",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Бернском университете",
+      "long": "Покинув школу Шерборн раньше срока, год изучал немецкую литературу и иностранные языки в Бернском университете.",
+      "place": {
+        "label": "Берн"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948 году ле Карре уехал в Швейцарию, где учился в Бернском университете"
+      }
+    },
+    {
+      "key": "war-1950",
+      "date": {
+        "from": "1950",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Военная служба в Австрии",
+      "long": "Призван на национальную службу, служил в разведывательном корпусе в оккупированной Австрии, где допрашивал перебежчиков с востока на немецком языке.",
+      "place": {
+        "label": "Австрия"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, he was called up for National Service in the British Army, and was commissioned in the Intelligence Corps as a second lieutenant"
+      }
+    },
+    {
+      "key": "education-1952",
+      "date": {
+        "from": "1952",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Оксфорд и тайная работа на МИ-5",
+      "long": "Учился в Линкольн-колледже Оксфорда и одновременно негласно сотрудничал с МИ-5, наблюдая за левыми студенческими организациями.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1952, he returned to England to study at Lincoln College, Oxford, where he worked covertly for the Security Service, MI5, spying on far-left groups"
+      }
+    },
+    {
+      "key": "love-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Анной Шарп",
+      "long": "Женился на подруге детства Анне Веронике Шарп; в этом браке родились трое сыновей.",
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году он женился на Анне Веронике Шарп."
+      }
+    },
+    {
+      "key": "poverty-1954",
+      "date": {
+        "from": "1954",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Банкротство отца, перерыв в учёбе",
+      "long": "После банкротства отца оставил Оксфорд и год преподавал в подготовительной школе Миллфилд, затем вернулся в университет.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When his father was declared bankrupt in 1954, Cornwell left Oxford to teach at Millfield Preparatory School; however, a year later, he returned to Oxford"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Оксфорда",
+      "long": "Окончил Линкольн-колледж с первоклассной степенью по современным языкам.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "который окончил в 1956 году с первоклассной степенью с отличием по современным языкам"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Итоне",
+      "long": "Два года преподавал французский и немецкий языки в Итонском колледже.",
+      "place": {
+        "label": "Итон"
+      },
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Два года (1956/58) ле Карре преподавал французский и немецкий языки в Итонском колледже"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Штатный сотрудник МИ-5",
+      "long": "Стал штатным сотрудником контрразведки МИ-5.",
+      "chapter": "oxford-mi5",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1958 году начал работу в качестве штатного сотрудника МИ-5"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "МИ-6 под дипломатическим прикрытием в ФРГ",
+      "long": "Перешёл в МИ-6; работал вторым секретарём посольства в Бонне, затем консулом в Гамбурге. В эти годы написаны первые романы.",
+      "place": {
+        "label": "Бонн"
+      },
+      "works": [
+        {
+          "ref": "a-murder-of-quality",
+          "note": "написан в Гамбурге в годы службы"
+        },
+        {
+          "ref": "spy-who-came-in-from-the-cold",
+          "note": "написан в Гамбурге в годы службы"
+        }
+      ],
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959 году он перешёл на работу в разведслужбу МИ-6, где работал последующие пять лет под дипломатическим прикрытием в ФРГ."
+      }
+    },
+    {
+      "key": "creation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Псевдоним из-за службы в разведке",
+      "long": "Первый роман вышел под псевдонимом, поскольку сотрудникам службы запрещалось публиковаться под своими именами.",
+      "works": [
+        {
+          "ref": "call-for-the-dead"
+        }
+      ],
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ле Карре опубликовал свой первый роман «Звонок мертвецу» в 1961 году. В это время он работал на государственной службе, поэтому был вынужден взять псевдоним."
+      }
+    },
+    {
+      "key": "child-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Тимоти",
+      "long": "Родился сын Тимоти, будущий журналист, третий ребёнок от первого брака.",
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "journalist Tim Cornwell (1962-2022)"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех третьей книги",
+      "long": "Третий роман стал международным бестселлером и позволил оставить службу ради литературы.",
+      "works": [
+        {
+          "ref": "spy-who-came-in-from-the-cold"
+        }
+      ],
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Le Carré's third novel, The Spy Who Came in from the Cold (1963), became an international best-seller"
+      }
+    },
+    {
+      "key": "career-1963-2",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Золотой кинжал» и другие премии",
+      "long": "Получил «Золотой кинжал»; в 1964 году — премию Сомерсета Моэма, в 1965-м — «Эдгара».",
+      "works": [
+        {
+          "ref": "spy-who-came-in-from-the-cold"
+        }
+      ],
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получил в 1963 году «Золотой кинжал» — премию Британской ассоциации детективного и политического романа"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Конец разведывательной карьеры",
+      "long": "Служба в разведке завершилась после того, как Ким Филби выдал КГБ прикрытия британских агентов; ле Карре стал профессиональным писателем.",
+      "works": [
+        {
+          "ref": "tinker-tailor-soldier-spy",
+          "note": "Филби показан как прототип крота, которого ищет Смайли"
+        }
+      ],
+      "chapter": "bonn-hamburg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1964, le Carré's career as an intelligence officer came to an end as the result of the betrayal of British agents' covers to the KGB by Kim Philby"
+      }
+    },
+    {
+      "key": "family-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с первой женой",
+      "long": "Развод с Анной Шарп.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Через год после развода, последовавшего в 1971 году"
+      }
+    },
+    {
+      "key": "love-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейн Юстас",
+      "long": "Женился на Джейн Юстас, редакторе издательства Hodder \u0026 Stoughton; у них родился сын Николас (писатель Ник Харкуэй).",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1972, Cornwell married Jane Eustace, a book editor with Hodder \u0026 Stoughton"
+      }
+    },
+    {
+      "key": "child-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Николаса",
+      "long": "Родился сын Николас, впоследствии писатель Ник Харкуэй.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Nick Harkaway 1972-01-01"
+      }
+    },
+    {
+      "key": "loss-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Рональд Корнуэлл; писатель оплатил поминальную службу, но не присутствовал на ней. Тот же эпизод повторён в романе.",
+      "works": [
+        {
+          "ref": "a-perfect-spy",
+          "note": "отец послужил прообразом Рика Пима; эпизод с похоронами повторён в сюжете"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When his father died in 1975, Cornwell paid for a memorial funeral service but did not attend, a plot point repeated in A Perfect Spy."
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в СССР",
+      "long": "Побывал в Советском Союзе.",
+      "place": {
+        "label": "СССР"
+      },
+      "works": [
+        {
+          "ref": "russia-house"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году Ле Карре приезжал в СССР."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поворот к постхолодной войне",
+      "long": "После падения железного занавеса писатель перешёл к сюжетам о новом многополярном мире.",
+      "works": [
+        {
+          "ref": "night-manager"
+        }
+      ],
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With the fall of the Iron Curtain in 1989, le Carré's writing shifted to the portrayal of the new multilateral world."
+      }
+    },
+    {
+      "key": "other-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездки в Грузию",
+      "long": "Во время работы над книгой дважды побывал в Грузии, в том числе в Мегрелии.",
+      "place": {
+        "label": "Грузия"
+      },
+      "works": [
+        {
+          "ref": "single-and-single"
+        }
+      ],
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Работая над книгой «Сингл и Сингл», в 1998 году дважды посетил Грузию"
+      }
+    },
+    {
+      "key": "other-2003",
+      "date": {
+        "from": "2003-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Эссе против войны в Ираке",
+      "long": "В The Times вышло эссе, критикующее подготовку войны в Ираке; писатель участвовал в лондонских протестах.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2003, two months prior to the invasion, The Times published le Carré's essay \"The United States Has Gone Mad\""
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Архив передан Бодлианской библиотеке",
+      "long": "Передал свой литературный архив Бодлианской библиотеке в Оксфорде.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, le Carré donated his literary archive to the Bodleian Library, Oxford."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Гёте",
+      "long": "Награждён Медалью Гёте.",
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2011 г. награждён Медалью Гёте, вручаемой Институтом имени Гёте (Германия)."
+      }
+    },
+    {
+      "key": "relocation-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Ирландское гражданство после Брексита",
+      "long": "После референдума о выходе из ЕС получил ирландское гражданство, опираясь на ирландское происхождение бабушки.",
+      "works": [
+        {
+          "ref": "agent-running-in-the-field"
+        }
+      ],
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Le Carré was so disillusioned by the 2016 Brexit vote to leave the European Union that he secured Irish citizenship."
+      }
+    },
+    {
+      "key": "death-2020",
+      "date": {
+        "from": "2020-12-12",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Труро",
+      "long": "Умер в Королевском Корнуоллском госпитале в Труро; коронерское дознание установило причиной смерти травмы от падения дома.",
+      "place": {
+        "label": "Труро"
+      },
+      "chapter": "after-cold-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ле Карре умер 12 декабря 2020 года в Королевском Корнуоллском госпитале в городе Труро"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "call-for-the-dead",
+      "title": "Звонок мертвецу",
+      "qid": "Q652350",
+      "written": {
+        "from": 1959,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "a-murder-of-quality",
+      "title": "Убийство высокого качества",
+      "written": {
+        "from": 1961,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "spy-who-came-in-from-the-cold",
+      "title": "Шпион, пришедший с холода",
+      "qid": "Q468071",
+      "written": {
+        "from": 1961,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "looking-glass-war",
+      "title": "Война в Зазеркалье",
+      "qid": "Q268112",
+      "written": {
+        "from": 1963,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "tinker-tailor-soldier-spy",
+      "title": "Шпион, выйди вон!",
+      "qid": "Q582811",
+      "written": {
+        "from": 1972,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "honourable-schoolboy",
+      "title": "Достопочтенный школяр",
+      "qid": "Q1239133",
+      "written": {
+        "from": 1974,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "smileys-people",
+      "title": "Люди Смайли",
+      "qid": "Q1231505",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "little-drummer-girl",
+      "title": "Маленькая барабанщица",
+      "qid": "Q1214462",
+      "written": {
+        "from": 1980,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "a-perfect-spy",
+      "title": "Идеальный шпион",
+      "written": {
+        "from": 1983,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "russia-house",
+      "title": "Русский дом",
+      "written": {
+        "from": 1987,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "night-manager",
+      "title": "Ночной администратор",
+      "qid": "Q3222334",
+      "written": {
+        "from": 1990,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "tailor-of-panama",
+      "title": "Портной из Панамы",
+      "qid": "Q1187056",
+      "written": {
+        "from": 1994,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "single-and-single",
+      "title": "Сингл и Сингл",
+      "qid": "Q7523810",
+      "written": {
+        "from": 1998,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "constant-gardener",
+      "title": "Верный садовник",
+      "qid": "Q1249425",
+      "written": {
+        "from": 2000,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "absolute-friends",
+      "title": "Абсолютные друзья",
+      "qid": "Q3614232",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "most-wanted-man",
+      "title": "Особо опасен",
+      "qid": "Q1899295",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "our-kind-of-traitor",
+      "title": "Такой же предатель, как мы",
+      "qid": "Q2517778",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "agent-running-in-the-field",
+      "title": "Агент, работающий в поле",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

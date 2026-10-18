@@ -1,0 +1,516 @@
+{
+  "qid": "Q361617",
+  "name": "Элвин Брукс Уайт",
+  "born": "1899-07-11",
+  "died": "1985-10-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B0%D0%B9%D1%82%2C_%D0%AD%D0%BB%D0%B2%D0%B8%D0%BD_%D0%91%D1%80%D1%83%D0%BA%D1%81",
+      "rev": 149946258
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/E._B._White",
+      "rev": 1380663660
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-cornell",
+      "title": "Детство и Корнелл",
+      "from": 1899,
+      "to": 1920
+    },
+    {
+      "key": "reporter-years",
+      "title": "Репортёр в дороге",
+      "from": 1921,
+      "to": 1924
+    },
+    {
+      "key": "new-yorker",
+      "title": "The New Yorker, брак и сын",
+      "from": 1925,
+      "to": 1944
+    },
+    {
+      "key": "children-books",
+      "title": "Книги для детей и стиль",
+      "from": 1945,
+      "to": 1969
+    },
+    {
+      "key": "late-years",
+      "title": "Награды и последние годы",
+      "from": 1970,
+      "to": 1985
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1899",
+      "date": {
+        "from": "1899-07-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье фортепианного фабриканта",
+      "long": "Родился в Маунт-Верноне, штат Нью-Йорк, шестым и младшим ребёнком в семье главы фортепианной фирмы Сэмюэла Тилли Уайта.",
+      "place": {
+        "label": "Маунт-Вернон"
+      },
+      "chapter": "childhood-cornell",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "White was born in Mount Vernon, New York, on July 11, 1899, the sixth and youngest child of Samuel Tilly White"
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Студенческий армейский корпус в Корнелле",
+      "long": "В Корнелле недолго был рядовым Студенческого армейского учебного корпуса; в декабре 1918 года программу распустили, и в действующей армии Уайт не служил.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "childhood-cornell",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the SATC program was disbanded in December 1918, and White did not serve with the active armed forces"
+      }
+    },
+    {
+      "key": "education-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Корнеллского университета",
+      "long": "Окончил Корнеллский университет со степенью бакалавра; там же его профессором был Уильям Странк-младший, автор первой версии «Elements of Style».",
+      "place": {
+        "label": "Итака"
+      },
+      "works": [
+        {
+          "ref": "elements-of-style"
+        }
+      ],
+      "chapter": "reporter-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1921, White graduated from Cornell University with a Bachelor of Arts degree."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "to": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в United Press и American Legion News Service",
+      "long": "После университета работал в агентстве United Press и American Legion News Service.",
+      "chapter": "reporter-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "went to work for the United Press, later United Press International, and the American Legion News Service in 1921 and 1922"
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922-09",
+        "to": "1923-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортёр сиэтлской газеты",
+      "long": "Начинающий репортёр The Seattle Times; был уволен, затем писал для конкурирующей Seattle Post-Intelligencer и некоторое время работал на пожарном катере на Аляске.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "reporter-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From September 1922 to June 1923, he was a cub reporter for The Seattle Times."
+      }
+    },
+    {
+      "key": "relocation-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Нью-Йорк",
+      "long": "После почти двух лет в рекламном агентстве Фрэнка Симэна вернулся в Нью-Йорк.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "reporter-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before returning to New York City in 1924"
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая статья в The New Yorker",
+      "long": "После основания журнала начал присылать туда рукописи; литературный редактор Кэтрин Энджелл рекомендовала главному редактору Гарольду Россу взять его в штат.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "White published his first article for The New Yorker in 1925, then joined the staff in 1927"
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приход в штат The New Yorker",
+      "long": "Вошёл в штат The New Yorker и писал для журнала почти шесть десятилетий; постепенно стал одним из главных его авторов.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "White published his first article for The New Yorker in 1925, then joined the staff in 1927"
+      }
+    },
+    {
+      "key": "love-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кэтрин Энджелл",
+      "long": "Женился на Кэтрин Энджелл после романа, приведшего к её разводу; её сын от первого брака Роджер Энджелл стал его пасынком.",
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "But in 1929, after an affair that led to Katharine Angell's divorce, she and White were married."
+      }
+    },
+    {
+      "key": "child-1930",
+      "date": {
+        "from": "1930-12-21",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Джоэла",
+      "long": "Родился сын Джоэл Уайт, впоследствии кораблестроитель, владелец верфи Brooklin Boat Yard.",
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Joel White 1930-12-21"
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936-05-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Джесси Харт Уайт, дочь художника Уильяма Харта.",
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Jessica Wallace Hart 1858-07-15 – 1936-05-14"
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "to": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка в журнале Harper's",
+      "long": "Параллельно с работой в The New Yorker вёл колонку в журнале Harper's.",
+      "chapter": "new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He also was a columnist for Harper's Magazine from 1938 to 1943."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сдержанный приём первой детской книги",
+      "long": "Первая детская книга была встречена литературным сообществом прохладно, но позже получила высокую оценку.",
+      "works": [
+        {
+          "ref": "stuart-little"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first children's book, Stuart Little, was published in 1945, and Charlotte's Web followed in 1952. Stuart Little initially received a lukewarm welcome from the literary community."
+      }
+    },
+    {
+      "key": "creation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Заказ журнала Holiday о Нью-Йорке",
+      "long": "Книга выросла из статьи, заказанной журналом Holiday; на заказ Уайт ответил, что писать никогда не бывает «весело».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "here-is-new-york",
+          "note": "книга основана на статье, написанной по заказу Holiday"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949, White published Here Is New York, a short book based on an article he had been commissioned to write for Holiday."
+      }
+    },
+    {
+      "key": "other-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Почётный диплом медали Ньюбери",
+      "long": "«Паутина Шарлотты» получила почётный диплом медали Ньюбери, но медаль досталась другой книге.",
+      "works": [
+        {
+          "ref": "charlottes-web"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: почётный диплом медали Ньюбери 1953-01-01"
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Переработка справочника Странка",
+      "long": "Переработал и обновил справочник, написанный в 1918 году его корнеллским профессором Уильямом Странком-младшим; издание было очень хорошо принято.",
+      "works": [
+        {
+          "ref": "elements-of-style"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1959, White edited and updated The Elements of Style."
+      }
+    },
+    {
+      "key": "other-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Президентская медаль свободы",
+      "long": "Награждён Президентской медалью свободы.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He also received the Presidential Medal of Freedom in 1963"
+      }
+    },
+    {
+      "key": "other-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Медаль Лауры Инглз-Уайлдер",
+      "long": "Медаль отметила «существенный и долговременный вклад в детскую литературу»; в тот же год Уайт стал вторым в конкурсе на премию Андерсена.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "White received the Laura Ingalls Wilder Medal from the U.S. professional children's librarians in 1970."
+      }
+    },
+    {
+      "key": "loss-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Кэтрин",
+      "long": "Умерла жена Кэтрин; Уайт похоронен рядом с ней на кладбище Бруклина.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "beside Katharine, who died in 1977"
+      }
+    },
+    {
+      "key": "other-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Особая Пулитцеровская премия",
+      "long": "Получил специальную Пулитцеровскую премию за письма, эссе и всё творчество.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1978, White was awarded a special Pulitzer Prize, citing \"his letters, essays and the full body of his work\"."
+      }
+    },
+    {
+      "key": "death-1985",
+      "date": {
+        "from": "1985-10-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть на ферме в Мэне",
+      "long": "Умер в своём фермерском доме в Норт-Бруклине, штат Мэн; в последние годы болел болезнью Альцгеймера.",
+      "place": {
+        "label": "Норт-Бруклин"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died on October 1, 1985, at his farm home in North Brooklin, Maine."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "is-sex-necessary",
+      "title": "Is Sex Necessary? Or, Why You Feel the Way You Do",
+      "qid": "Q6075483",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "subtreasury-of-american-humor",
+      "title": "Subtreasury of American Humor",
+      "qid": "Q7632255",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "one-mans-meat",
+      "title": "One Man's Meat",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "stuart-little",
+      "title": "Стюарт Литтл",
+      "qid": "Q5241443",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "here-is-new-york",
+      "title": "Here Is New York",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "charlottes-web",
+      "title": "Паутина Шарлотты",
+      "qid": "Q45735",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "elements-of-style",
+      "title": "The Elements of Style",
+      "qid": "Q3010059",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "trumpet-of-the-swan",
+      "title": "Голос лебедя-трубача",
+      "qid": "Q854213",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    }
+  ]
+}

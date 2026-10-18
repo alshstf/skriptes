@@ -1,0 +1,604 @@
+{
+  "qid": "Q465179",
+  "name": "Мэрион Зиммер Брэдли",
+  "born": "1930-06-03",
+  "died": "1999-09-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%80%D1%8D%D0%B4%D0%BB%D0%B8%2C_%D0%9C%D1%8D%D1%80%D0%B8%D0%BE%D0%BD_%D0%97%D0%B8%D0%BC%D0%BC%D0%B5%D1%80",
+      "rev": 151409654
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Marion_Zimmer_Bradley",
+      "rev": 1380065949
+    }
+  ],
+  "chapters": [
+    {
+      "key": "albany-farm",
+      "title": "Ферма под Олбани",
+      "from": 1930,
+      "to": 1948
+    },
+    {
+      "key": "first-sales-first-marriage",
+      "title": "Первые публикации и первый брак",
+      "from": 1949,
+      "to": 1963
+    },
+    {
+      "key": "breen-berkeley-darkover",
+      "title": "Брин, Беркли, Даркоувер",
+      "from": 1964,
+      "to": 1978
+    },
+    {
+      "key": "avalon-years",
+      "title": "Годы Авалона",
+      "from": 1979,
+      "to": 1989
+    },
+    {
+      "key": "last-decade",
+      "title": "Последнее десятилетие",
+      "from": 1990,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1930",
+      "date": {
+        "from": "1930-06-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Олбани, штат Нью-Йорк",
+      "long": "Родилась Мэрион Элеонор Зиммер; жила на ферме в Олбани, штат Нью-Йорк.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "albany-farm",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Born Marion Eleanor Zimmer on June 3, 1930, she lived on a farm in Albany, New York"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая продажа рассказа в Amazing Stories",
+      "long": "Рассказ принят журналом Amazing Stories в связи с конкурсом любительской прозы; это первая продажа текста.",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949 Bradley made her first sale as an adjunct to an amateur fiction contest in Amazing Stories with the short story \"Outpost\"."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949-10-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Робертом Олденом Брэдли",
+      "long": "26 октября 1949 года вышла замуж за Роберта Олдена Брэдли; брак продолжался до развода в 1964 году.",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was married to Robert Alden Bradley from October 26, 1949, until their divorce on May 19, 1964."
+      }
+    },
+    {
+      "key": "child-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Дэвида",
+      "long": "Родился сын Дэвид Роберт Брэдли (1950–2008).",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had a son, David Robert Bradley (1950–2008)."
+      }
+    },
+    {
+      "key": "other-1950",
+      "date": {
+        "from": "1950",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Знакомство с «Дочерями Билитис»",
+      "long": "В 1950-е годы познакомилась с организацией защиты прав лесбиянок «Дочери Билитис».",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the 1950s she was introduced to lesbian advocacy organization the Daughters of Bilitis."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало профессионального писательства",
+      "long": "С 1952 года пишет фантастику профессионально.",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Профессионально писать фантастику она стала с 1952 года."
+      }
+    },
+    {
+      "key": "creation-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Появление мира Даркоувер",
+      "long": "Роман вводит планету Даркоувер — потерянную человеческую колонию, ставшую местом действия большого цикла.",
+      "works": [
+        {
+          "ref": "planet-savers",
+          "note": "роман, в котором впервые появляется Даркоувер"
+        }
+      ],
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bradley's 1958 novel The Planet Savers introduced the planet of Darkover, which became the setting of a popular series"
+      }
+    },
+    {
+      "key": "faith-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Эзотерический орден, посвящение учеников",
+      "long": "К 1961 году формально посвящала других в Aquarian Order of the Restoration, основанный ею с Уолтером Брином.",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1961 she was formally initiating others, including Ramfis S. Firethorn."
+      }
+    },
+    {
+      "key": "creation-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Лесбийская прозa под псевдонимами",
+      "long": "Под псевдонимами писала лесбийские и гей-романы массового рынка; по меркам своего времени их считали порнографическими.",
+      "chapter": "first-sales-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Early in her career, writing as Morgan Ives, Miriam Gardner, John Dexter, and Lee Chapman, Bradley produced several works outside the speculative fiction genre, including gay and lesbian pulp fiction novels; I Am a Lesbian was published in 1962."
+      }
+    },
+    {
+      "key": "family-1964",
+      "date": {
+        "from": "1964-05-19",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Робертом Брэдли",
+      "long": "19 мая 1964 года развелась с Робертом Брэдли.",
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was married to Robert Alden Bradley from October 26, 1949, until their divorce on May 19, 1964."
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964-06-03",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с нумизматом Уолтером Брином",
+      "long": "Вышла замуж за нумизмата Уолтера Брина; позднее у них родились дочь Мойра и сын Марк.",
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After her divorce, Bradley married numismatist Walter Breen on June 3, 1964."
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр университета Хардина—Симмонса",
+      "long": "Получила степень бакалавра в университете Хардина—Симмонса в Абилине, Техас (русская статья называет 1964 год).",
+      "place": {
+        "label": "Абилин"
+      },
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1965, Bradley graduated with a Bachelor of Arts degree from Hardin-Simmons University in Abilene, Texas."
+      }
+    },
+    {
+      "key": "relocation-1965",
+      "date": {
+        "from": "1965",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Беркли, аспирантура",
+      "long": "Переехала в Беркли и в 1965–1967 годах училась в аспирантуре Калифорнийского университета; Беркли остался её домом.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Afterward, she moved to Berkeley, California, to pursue graduate studies at the University of California, Berkeley, between 1965 and 1967."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сооснование Общества творческого анахронизма",
+      "long": "Стала одним из основателей Общества творческого анахронизма и придумала его название.",
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966, Bradley became a co-founder of the Society for Creative Anachronism and is credited with coining the name of that group."
+      }
+    },
+    {
+      "key": "faith-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Языческий круг Darkmoon Circle",
+      "long": "Участвовала в Darkmoon Circle, основанном в 1978 году женщинами из её ордена; в своём гараже устроила для него и других местных языческих групп зал собраний.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "breen-berkeley-darkover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bradley was active in Darkmoon Circle, which was founded in 1978 by several women who were members of her Aquarian Order of the Restoration."
+      }
+    },
+    {
+      "key": "family-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разъезд с Брином без развода",
+      "long": "Брэдли и Брин расстались, но остались в браке; сохранили деловые отношения и жили на одной улице больше десяти лет.",
+      "chapter": "avalon-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bradley and Breen separated in 1979 but remained married."
+      }
+    },
+    {
+      "key": "faith-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Центр нетрадиционной религии",
+      "long": "Вместе с Дайаной Пэксон и Элизабет Уотерс зарегистрировала Центр нетрадиционной религии.",
+      "chapter": "avalon-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981 Bradley, Diana L. Paxson, and Elisabeth Waters incorporated the Center for Non-Traditional Religion."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший фэнтези-роман",
+      "long": "Получила премию «Локус» за лучший роман в жанре фэнтези.",
+      "chapter": "avalon-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Локус» за лучший роман в жанре фэнтези 1984-01-01"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "Получила премию «Инкпот».",
+      "chapter": "avalon-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Инкпот» 1986-01-01"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание собственного журнала фэнтези",
+      "long": "Издавала и редактировала журнал Marion Zimmer Bradley's Fantasy Magazine, выходивший с 1988 по 1999 год.",
+      "chapter": "avalon-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брэдли издавала и редактировала журнал Marion Zimmer Bradley's Fantasy Magazine. Журнал издавался c 1988 по 1999 годы."
+      }
+    },
+    {
+      "key": "persecution-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест Брина по обвинению в растлении",
+      "long": "Брина арестовали по обвинению в растлении после заявления 13-летнего мальчика.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They officially divorced on May 9, 1990, the year Breen was arrested on child molestation charges after a 13-year-old boy reported that Breen had been molesting him for four years."
+      }
+    },
+    {
+      "key": "faith-1990",
+      "date": {
+        "from": "1990",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Возвращение к христианству",
+      "long": "В 1990-е заявила, что возвращается к христианству, и ходила в епископальную церковь.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the 1990s Bradley said she would return to Christianity, telling an interviewer"
+      }
+    },
+    {
+      "key": "family-1990",
+      "date": {
+        "from": "1990-05-09",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Официальный развод с Брином",
+      "long": "9 мая 1990 года официально развелась с Брином.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They officially divorced on May 9, 1990, the year Breen was arrested on child molestation charges after a 13-year-old boy reported that Breen had been molesting him for four years."
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Спор с фанаткой, запрет фанфикшена",
+      "long": "После спора с поклонницей из-за использования фрагментов её рассказа роман остался неизданным, а Брэдли потребовала прекратить всю фанфикцию по Даркоуверу.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "when Bradley wanted to use some parts of the fan's story she had read in a Darkover novel she was working in 1992."
+      }
+    },
+    {
+      "key": "loss-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть Уолтера Брина в тюрьме",
+      "long": "Бывший муж Уолтер Брин умер в тюрьме от рака.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он умер в тюрьме от рака в 1993 году."
+      }
+    },
+    {
+      "key": "illness-1999",
+      "date": {
+        "from": "1999-09",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Сердечный приступ после лет болезни",
+      "long": "После многолетнего ухудшения здоровья перенесла сердечный приступ за четыре дня до смерти.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After suffering declining health for years, Bradley died at Alta Bates Medical Center in Berkeley on September 25, 1999, four days after suffering a heart attack."
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-09-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Беркли",
+      "long": "Умерла в медицинском центре Альта-Бейтс в Беркли. Прах развеян на холме Гластонбери-Тор.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bradley died at Alta Bates Medical Center in Berkeley on September 25, 1999, four days after suffering a heart attack."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "falcons-of-narabedla",
+      "title": "Falcons of Narabedla",
+      "qid": "Q3790781",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "planet-savers",
+      "title": "The Planet Savers",
+      "qid": "Q3407200",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "spell-sword",
+      "title": "The Spell Sword",
+      "qid": "Q3205415",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "heritage-of-hastur",
+      "title": "The Heritage of Hastur",
+      "qid": "Q3203913",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "shattered-chain",
+      "title": "The Shattered Chain",
+      "qid": "Q3207312",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "forbidden-tower",
+      "title": "The Forbidden Tower",
+      "qid": "Q3213211",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "mists-of-avalon",
+      "title": "Туманы Авалона",
+      "qid": "Q605697",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "thendara-house",
+      "title": "Thendara House",
+      "qid": "Q1760447",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "firebrand",
+      "title": "The Firebrand",
+      "qid": "Q1212422",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "forest-house",
+      "title": "Лесная обитель",
+      "qid": "Q735979",
+      "written": {
+        "from": 1947,
+        "to": 1999
+      }
+    }
+  ]
+}

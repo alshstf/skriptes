@@ -1,0 +1,505 @@
+{
+  "qid": "Q326467",
+  "name": "Шеридан Ле Фаню",
+  "born": "1814-08-28",
+  "died": "1873-02-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5_%D0%A4%D0%B0%D0%BD%D1%8E%2C_%D0%A8%D0%B5%D1%80%D0%B8%D0%B4%D0%B0%D0%BD",
+      "rev": 154856792
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sheridan_Le_Fanu",
+      "rev": 1377208127
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dublin-limerick",
+      "title": "Дублин, Лимерик, Тринити-колледж",
+      "from": 1814,
+      "to": 1837
+    },
+    {
+      "key": "zhurnal-i-gazety",
+      "title": "Журнал и газеты",
+      "from": 1838,
+      "to": 1843
+    },
+    {
+      "key": "brak-i-semya",
+      "title": "Брак, дети, голод",
+      "from": 1844,
+      "to": 1857
+    },
+    {
+      "key": "utraty",
+      "title": "Смерть жены и молчание",
+      "from": 1858,
+      "to": 1860
+    },
+    {
+      "key": "redaktor",
+      "title": "Редактор и романы",
+      "from": 1861,
+      "to": 1873
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1814",
+      "date": {
+        "from": "1814-08-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в литературной семье гугенотов",
+      "long": "Родился в Дублине в семье священника Томаса Ле Фаню, потомка гугенотов; бабушка и двоюродный дед были драматургами.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin-limerick",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Le Fanu was born on 28 August 1814 in Dominick Street Lower, Dublin"
+      }
+    },
+    {
+      "key": "relocation-1826",
+      "date": {
+        "from": "1826",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Эбингтон",
+      "long": "Семья переехала в Эбингтон, графство Лимерик; знания Ле Фаню черпал в основном из отцовской библиотеки.",
+      "place": {
+        "label": "Эбингтон"
+      },
+      "chapter": "dublin-limerick",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1826 года отец Джозефа получает должность ректора на юге Ирландии — и вся семья переезжает туда."
+      }
+    },
+    {
+      "key": "other-1832",
+      "date": {
+        "from": "1832",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Десятинная война в приходе отца",
+      "long": "В районе Эбингтона начались беспорядки «десятинной войны»; доход отца-ректора целиком уходил на десятины, семью преследовали финансовые трудности.",
+      "place": {
+        "label": "Эбингтон"
+      },
+      "chapter": "dublin-limerick",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1832 году начались беспорядки, вызванные войной против десятины."
+      }
+    },
+    {
+      "key": "education-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание юридического курса в Тринити-колледже",
+      "long": "Изучал право в Тринити-колледже в Дублине, был избран аудитором Исторического общества колледжа; окончил курс в 1836 году.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin-limerick",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sheridan Le Fanu studied law at Trinity College Dublin, where he was elected Auditor of the College Historical Society, and graduated in 1836."
+      }
+    },
+    {
+      "key": "career-1838",
+      "date": {
+        "from": "1838",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в Журнале Дублинского университета",
+      "long": "Начал печатать рассказы в Журнале Дублинского университета, в том числе первую историю о привидениях.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "ghost-and-the-bone-setter",
+          "note": "первая история о привидениях, напечатанная в журнале в этом году"
+        }
+      ],
+      "chapter": "zhurnal-i-gazety",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1838 he began contributing stories to the Dublin University Magazine, including his first ghost story, entitled \"The Ghost and the Bone-Setter\" (1838)."
+      }
+    },
+    {
+      "key": "career-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Допуск к адвокатуре и отказ от права ради журналистики",
+      "long": "Получил право адвокатской практики, но не practиковал и вскоре оставил юриспруденцию ради журналистики.",
+      "chapter": "zhurnal-i-gazety",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was called to the bar in 1839, but he never practised and soon abandoned law for journalism."
+      }
+    },
+    {
+      "key": "career-1840",
+      "date": {
+        "from": "1840",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приобретение нескольких газет",
+      "long": "Стал владельцем нескольких газет, среди них Dublin Evening Mail и Warder.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "zhurnal-i-gazety",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He became the owner of several newspapers from 1840, including the Dublin Evening Mail and the Warder."
+      }
+    },
+    {
+      "key": "loss-1841",
+      "date": {
+        "from": "1841-03",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть старшей сестры Екатерины",
+      "long": "Старшая сестра Екатерина около десяти лет болела; её смерть стала для Ле Фаню тяжёлым потрясением.",
+      "works": [
+        {
+          "ref": "spalatro",
+          "note": "новелла написана после смерти сестры (биография У. Дж. Маккормака)"
+        }
+      ],
+      "chapter": "zhurnal-i-gazety",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Le Fanu wrote this story after the death of his elder sister Catherine in March 1841."
+      }
+    },
+    {
+      "key": "love-1844",
+      "date": {
+        "from": "1844-12-18",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак со Сьюзен Беннет",
+      "long": "Женился на Сьюзен Беннет, дочери известного дублинского адвоката; свидетелем на свадьбе был Исаак Батт.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 18 December 1844, Le Fanu married Susan Bennett, the daughter of a leading Dublin barrister"
+      }
+    },
+    {
+      "key": "loss-1845",
+      "date": {
+        "from": "1845",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца и продажа библиотеки за долги",
+      "long": "После смерти отца осталось мало средств; чтобы расплатиться с долгами, семье пришлось продать его библиотеку.",
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On the elder Le Fanu's death in 1845, he had very little left to leave to his sons, and the family had to sell his library to pay off some of his debts."
+      }
+    },
+    {
+      "key": "child-1845",
+      "date": {
+        "from": "1845",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Элеоноры",
+      "long": "Родилась первая дочь Элеонора; затем появились Эмма (1846), Томас (1847) и Джордж (1854).",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their first child, Eleanor, was born in 1845, followed by Emma in 1846, Thomas in 1847 and George in 1854."
+      }
+    },
+    {
+      "key": "other-1847",
+      "date": {
+        "from": "1847",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка кампании против безразличия к голоду",
+      "long": "Поддержал Джона Митчела и Томаса Мигера в кампании против безразличия правительства к голоду в Ирландии.",
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1847 Le Fanu supported John Mitchel and Thomas Francis Meagher in their campaign against the indifference of the government to the Irish Famine."
+      }
+    },
+    {
+      "key": "career-1852",
+      "date": {
+        "from": "1852",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Потеря выдвижения в парламент от тори",
+      "long": "Из-за поддержки кампании 1847 года лишился выдвижения кандидатом от тори в парламент от графства Карлоу.",
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His support cost him the nomination as Tory MP for County Carlow in 1852."
+      }
+    },
+    {
+      "key": "child-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джорджа",
+      "long": "Родился младший сын Джордж Бринсли Ле Фаню.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their first child, Eleanor, was born in 1845, followed by Emma in 1846, Thomas in 1847 and George in 1854."
+      }
+    },
+    {
+      "key": "relocation-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд на Мэррион-сквер",
+      "long": "Семья переехала в дом родителей жены на Мэррион-сквер; в браке нарастали трудности из-за душевного состояния Сьюзен.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1856 году Джозеф с семьёй переезжает из Уоррингтон Плейс в дом родителей его жены в Мэррион Сквер"
+      }
+    },
+    {
+      "key": "loss-1858",
+      "date": {
+        "from": "1858-04",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Сьюзен",
+      "long": "У Сьюзен случился нервный срыв, на следующий день она умерла; обстоятельства остались невыясненными. По дневникам Ле Фаню считал себя виновным.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "utraty",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1858, she suffered an \"hysterical attack\" and died the following day in unclear circumstances."
+      }
+    },
+    {
+      "key": "career-1861",
+      "date": {
+        "from": "1861",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор и владелец Журнала Дублинского университета",
+      "long": "Стал редактором и владельцем Журнала Дублинского университета, где сначала печатал романы, затем перерабатывал их для английского рынка.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "house-by-the-churchyard",
+          "note": "роман печатался в журнале и затем перерабатывался для английского издания"
+        }
+      ],
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1861, Le Fanu became the editor and proprietor of the Dublin University Magazine"
+      }
+    },
+    {
+      "key": "loss-1861",
+      "date": {
+        "from": "1861-03-11",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, конец молчания",
+      "long": "После смерти жены Ле Фаню не писал прозу вплоть до смерти матери, Эммы Лукреции; затем вернулся к литературе.",
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From then on he did not write any fiction until the death of his mother in 1861."
+      }
+    },
+    {
+      "key": "death-1873",
+      "date": {
+        "from": "1873-02-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Дублине",
+      "long": "Умер в Дублине от сердечного приступа в возрасте 58 лет.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Le Fanu died of a heart attack in his native Dublin on 7 February 1873"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ghost-and-the-bone-setter",
+      "title": "Призрак и костоправ",
+      "written": {
+        "from": 1838,
+        "to": 1838
+      }
+    },
+    {
+      "ref": "purcell-papers",
+      "title": "Бумаги Перселла",
+      "written": {
+        "from": 1838,
+        "to": 1840
+      }
+    },
+    {
+      "ref": "spalatro",
+      "title": "Спалатро",
+      "written": {
+        "from": 1843,
+        "to": 1843
+      }
+    },
+    {
+      "ref": "cock-and-anchor",
+      "title": "Петух и якорь",
+      "written": {
+        "from": 1845,
+        "to": 1845
+      }
+    },
+    {
+      "ref": "torlogh-obrien",
+      "title": "Судьба полковника Торло О'Брайена",
+      "written": {
+        "from": 1847,
+        "to": 1847
+      }
+    },
+    {
+      "ref": "house-by-the-churchyard",
+      "title": "Дом у кладбища",
+      "written": {
+        "from": 1861,
+        "to": 1863
+      }
+    },
+    {
+      "ref": "uncle-silas",
+      "title": "Дядя Сайлас",
+      "qid": "Q3835925",
+      "written": {
+        "from": 1864,
+        "to": 1864
+      }
+    },
+    {
+      "ref": "wylders-hand",
+      "title": "Рука Уайлдера",
+      "written": {
+        "from": 1864,
+        "to": 1864
+      }
+    },
+    {
+      "ref": "guy-deverell",
+      "title": "Гай Деверелл",
+      "written": {
+        "from": 1865,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "carmilla",
+      "title": "Кармилла",
+      "qid": "Q1043792",
+      "written": {
+        "from": 1871,
+        "to": 1872
+      }
+    },
+    {
+      "ref": "in-a-glass-darkly",
+      "title": "Сквозь тусклое стекло",
+      "written": {
+        "from": 1872,
+        "to": 1872
+      }
+    }
+  ]
+}

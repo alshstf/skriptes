@@ -1,0 +1,605 @@
+{
+  "qid": "Q187019",
+  "name": "Филип Рот",
+  "born": "1933-03-19",
+  "died": "2018-05-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D1%82%2C_%D0%A4%D0%B8%D0%BB%D0%B8%D0%BF",
+      "rev": 148618850
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Philip_Roth",
+      "rev": 1379548469
+    }
+  ],
+  "chapters": [
+    {
+      "key": "newark-and-universities",
+      "title": "Ньюарк и университеты",
+      "from": 1933,
+      "to": 1955
+    },
+    {
+      "key": "chicago-and-first-marriage",
+      "title": "Чикаго и первый брак",
+      "from": 1956,
+      "to": 1968
+    },
+    {
+      "key": "portnoy-and-fame",
+      "title": "Слава и поиски формы",
+      "from": 1969,
+      "to": 1989
+    },
+    {
+      "key": "bloom-and-big-novels",
+      "title": "Брак с Блум и большие романы",
+      "from": 1990,
+      "to": 1997
+    },
+    {
+      "key": "laureate",
+      "title": "Премии и поздние книги",
+      "from": 1998,
+      "to": 2012
+    },
+    {
+      "key": "retirement",
+      "title": "Отставка от литературы",
+      "from": 2013,
+      "to": 2018
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1933",
+      "date": {
+        "from": "1933-03-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ньюарке в еврейской семье",
+      "long": "Родился в Ньюарке, штат Нью-Джерси, во второй семье еврейских иммигрантов во втором поколении; отец был страховым агентом.",
+      "place": {
+        "label": "Ньюарк"
+      },
+      "chapter": "newark-and-universities",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Philip Roth was born in Newark, New Jersey, on March 19, 1933"
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Год в Ратгерском университете",
+      "long": "Год учился в Ратгерском университете в Ньюарке, затем перевёлся в Бакнеллский университет.",
+      "place": {
+        "label": "Ньюарк"
+      },
+      "chapter": "newark-and-universities",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Ратгерский университет 1951-1952"
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Бакнеллского университета",
+      "long": "Окончил Бакнеллский университет в Пенсильвании со степенью бакалавра по английской литературе.",
+      "chapter": "newark-and-universities",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил Бакнеллский университет в 1954 году."
+      }
+    },
+    {
+      "key": "education-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра и медицинская демобилизация",
+      "long": "Получил магистерскую степень в Чикагском университете. В том же году пошёл в армию добровольцем, но из-за травмы спины на учебной подготовке был демобилизован.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "newark-and-universities",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "earned an M.A. in English literature in 1955 and briefly worked as an instructor in the university's writing program. That same year, rather than wait to be drafted, Roth enlisted in the army, but suffered a back injury during basic training and was given a medical discharge."
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Маргарет Мартинсон",
+      "long": "В Чикаго познакомился с Маргарет Мартинсон, будущей первой женой. В том же году вернулся в университет, но бросил докторантуру после одного семестра.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-and-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While at Chicago in 1956, Roth met Margaret Martinson, who became his first wife in 1959."
+      }
+    },
+    {
+      "key": "love-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Маргарет Мартинсон",
+      "long": "Женился на Маргарет Мартинсон; она стала прообразом героинь нескольких его романов.",
+      "works": [
+        {
+          "ref": "when-she-was-good",
+          "note": "Мартинсон — основа персонажа Люси Нельсон; роман частично основан на жизни Маргарет Мартинсон Уильямс"
+        }
+      ],
+      "chapter": "chicago-and-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While at Chicago in 1956, Roth met Margaret Martinson, who became his first wife in 1959."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия за первую книгу",
+      "long": "Первая книга, сборник «Прощай, Коламбус», получила Национальную книжную премию.",
+      "works": [
+        {
+          "ref": "goodbye-columbus"
+        }
+      ],
+      "chapter": "chicago-and-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the National Book Award in 1960."
+      }
+    },
+    {
+      "key": "family-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Расставание с женой",
+      "long": "Расставание с Маргарет Мартинсон; по словам статьи, оно оставило заметный след в его прозе.",
+      "chapter": "chicago-and-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their separation in 1963, and Martinson's subsequent death in a car crash in 1968, left a lasting mark on Roth's literary output."
+      }
+    },
+    {
+      "key": "loss-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель в автокатастрофе бывшей жены",
+      "long": "Маргарет Мартинсон погибла в автокатастрофе; она вдохновила женские образы в нескольких романах, в том числе Мод Тарнопол.",
+      "works": [
+        {
+          "ref": "when-she-was-good",
+          "note": "Мартинсон — основа персонажа Люси Нельсон"
+        }
+      ],
+      "chapter": "chicago-and-first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their separation in 1963, and Martinson's subsequent death in a car crash in 1968, left a lasting mark on Roth's literary output."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Скандальный бестселлер и широкая известность",
+      "long": "Самый скандальный роман принёс Роту широкий коммерческий и критический успех и заметно поднял его известность.",
+      "works": [
+        {
+          "ref": "portnoys-complaint"
+        }
+      ],
+      "chapter": "portnoy-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The publication in 1969 of his fourth and most controversial novel, Portnoy's Complaint, gave Roth widespread commercial and critical success"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Начало совместной жизни с Клэр Блум",
+      "long": "Начал жить вместе с британской актрисой Клэр Блум.",
+      "chapter": "portnoy-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990, Roth married his longtime companion, English actress Claire Bloom, with whom he had been living since 1976."
+      }
+    },
+    {
+      "key": "love-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Клэр Блум",
+      "long": "Женился на Клэр Блум после четырнадцати лет совместной жизни.",
+      "chapter": "bloom-and-big-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990, Roth married his longtime companion, English actress Claire Bloom"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Окончание преподавания в Пенсильванском университете",
+      "long": "Прекратил преподавание в Пенсильванском университете, где был преподавателем сравнительного литературоведения.",
+      "chapter": "portnoy-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he taught comparative literature until retiring from teaching in 1991"
+      }
+    },
+    {
+      "key": "family-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Клэр Блум",
+      "long": "Развод с Клэр Блум.",
+      "chapter": "bloom-and-big-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They divorced in 1994, and Bloom published a 1996 memoir"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая Национальная книжная премия",
+      "long": "Вторая Национальная книжная премия — за «Театр Шаббата».",
+      "works": [
+        {
+          "ref": "sabbaths-theater"
+        }
+      ],
+      "chapter": "bloom-and-big-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия за лучшее художественное произведение 1995"
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Мемуары Блум о браке с Ротом",
+      "long": "Блум выпустила мемуары «Покидая кукольный дом», где изобразила Рота женоненавистником и деспотом; некоторые критики видят в образе Евы Фрейм параллели с Блум.",
+      "works": [
+        {
+          "ref": "i-married-a-communist",
+          "note": "Критики усматривают параллели между Блум и персонажем Евой Фрейм"
+        }
+      ],
+      "chapter": "bloom-and-big-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bloom published a 1996 memoir, Leaving a Doll's House, that depicted Roth as a misogynist and control freak."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию за «Американскую пастораль».",
+      "works": [
+        {
+          "ref": "american-pastoral"
+        }
+      ],
+      "chapter": "laureate",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Филип Рот — лауреат Пулитцеровской премии (1998)"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия Франца Кафки",
+      "long": "Первый лауреат премии Франца Кафки, врученной в Праге.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "laureate",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Roth received the inaugural Franz Kafka Prize in Prague."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собрание сочинений в «Библиотеке Америки»",
+      "long": "«Библиотека Америки» начала издавать его собрание сочинений при жизни автора.",
+      "chapter": "laureate",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, the Library of America began publishing his complete works"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Международная Букеровская премия",
+      "long": "Получил Международную Букеровскую премию.",
+      "chapter": "laureate",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "лауреат Пулитцеровской премии (1998) и Международной Букеровской премии (2011)"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Объявление об уходе из литературы",
+      "long": "В интервью французскому журналу объявил об уходе из литературы; позднее подтвердил в «Монд», что больше не будет публиковать прозу.",
+      "chapter": "laureate",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In an October 2012 interview with the French magazine Les Inrockuptibles, Roth announced that he would be retiring from writing"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Министр иностранных дел Франции Лоран Фабиус вручил ему орден Почётного легиона.",
+      "chapter": "retirement",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В сентябре 2013 года министр иностранных дел Франции Лоран Фабиус торжественно вручил писателю высшую французскую награду — орден Почётного легиона."
+      }
+    },
+    {
+      "key": "death-2018",
+      "date": {
+        "from": "2018-05-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нью-Йорке",
+      "long": "Умер от сердечной недостаточности в манхэттенской больнице в возрасте 85 лет; похоронен на кладбище Бард-колледжа.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "retirement",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Roth died at a Manhattan hospital of heart failure on May 22, 2018, at the age of 85."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "goodbye-columbus",
+      "title": "Прощай, Коламбус",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "letting-go",
+      "title": "Наплевательство",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "when-she-was-good",
+      "title": "Когда она была хорошей",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "portnoys-complaint",
+      "title": "Случай Портного",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "our-gang",
+      "title": "Наша шайка",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "the-breast",
+      "title": "Грудь",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "sabbaths-theater",
+      "title": "Театр Шаббата",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "american-pastoral",
+      "title": "Американская пастораль",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "i-married-a-communist",
+      "title": "Я вышла замуж за коммуниста",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "operation-shylock",
+      "title": "Операция «Шейлок»",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "the-plot-against-america",
+      "title": "Заговор против Америки",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "everyman",
+      "title": "Всякий человек",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "exit-ghost",
+      "title": "Уходящий призрак",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "indignation",
+      "title": "Негодование",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "nemesis",
+      "title": "Némesis",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

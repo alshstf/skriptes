@@ -1,0 +1,146 @@
+{
+  "qid": "Q533400",
+  "name": "Кристин Ханна",
+  "born": "1960-09-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D0%BD%D0%BD%D0%B0%2C_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%BD",
+      "rev": 154050219
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kristin_Hannah",
+      "rev": 1378025786
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Реклама, право, первые шаги",
+      "from": 1960,
+      "to": 1990
+    },
+    {
+      "key": "romany-o-lyubvi",
+      "title": "Любовные романы",
+      "from": 1991,
+      "to": 2007
+    },
+    {
+      "key": "bolshaya-proza",
+      "title": "Большая историческая проза",
+      "from": 2008,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1960",
+      "date": {
+        "from": "1960-09-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Калифорнии",
+      "long": "Родилась 25 сентября 1960 года в Гарден-Гроуве, Калифорния.",
+      "place": {
+        "label": "Гарден-Гров"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кристин Ханна (англ. Kristin Hannah, род. 25 сентября 1960)"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый опубликованный роман",
+      "long": "Выпустила первый роман и начала карьеру писательницы в жанре любовной прозы.",
+      "chapter": "romany-o-lyubvi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hannah published her first novel, A Handful of Heaven, in 1991."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв к широкой аудитории",
+      "long": "После перехода от love-романов к современной женской прозе роман о дружбе двух женщин стал бестселлером и заметно расширил круг читателей.",
+      "works": [
+        {
+          "ref": "firefly-lane"
+        }
+      ],
+      "chapter": "bolshaya-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her breakthrough came with Firefly Lane (2008), which follows a decades-long friendship between two women."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "firefly-lane",
+      "title": "Улица Светлячков",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "winter-garden",
+      "title": "Зимний сад",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-nightingale",
+      "title": "Соловей",
+      "qid": "Q25218724",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "the-great-alone",
+      "title": "Один великий",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "the-four-winds",
+      "title": "Четыре ветра",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "the-women",
+      "title": "Женщины",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

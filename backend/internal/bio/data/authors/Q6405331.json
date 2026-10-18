@@ -1,0 +1,170 @@
+{
+  "qid": "Q6405331",
+  "name": "Кира Касс",
+  "born": "1981-05-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%81%D1%81%2C_%D0%9A%D0%B8%D1%80%D0%B0",
+      "rev": 154440186
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kiera_Cass",
+      "rev": 1380280967
+    }
+  ],
+  "chapters": [
+    {
+      "key": "myrtle-beach-years",
+      "title": "Мертл-Бич и учёба",
+      "from": 1981,
+      "to": 2003
+    },
+    {
+      "key": "marriage-and-first-book",
+      "title": "Брак и первая книга",
+      "from": 2004,
+      "to": 2011
+    },
+    {
+      "key": "selection-years",
+      "title": "«Отбор» и его мир",
+      "from": 2012,
+      "to": 2022
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1981",
+      "date": {
+        "from": "1981-05-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мертл-Бич",
+      "long": "Родилась в Мертл-Бич, штат Южная Каролина; по происхождению пуэрториканка.",
+      "place": {
+        "label": "Мертл-Бич"
+      },
+      "chapter": "myrtle-beach-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kiera Cass (born May 19, 1981) is an American writer of young adult fiction"
+      }
+    },
+    {
+      "key": "love-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Каллауэем Кассом",
+      "long": "В 2004 году вышла замуж за Каллауэя Касса; у пары двое детей, сын и дочь.",
+      "chapter": "marriage-and-first-book",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cass has been married to Callaway Cass since 2004."
+      }
+    },
+    {
+      "key": "other-2012",
+      "date": {
+        "from": "2012-01-12",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Скандал вокруг отзыва на Goodreads",
+      "long": "Литературный агент Касс публично обсуждала с ней негативный отзыв на «Отбор» и способы поднять рейтинг положительных; история вызвала критику блогеров и изданий.",
+      "works": [
+        {
+          "ref": "the-selection"
+        }
+      ],
+      "chapter": "selection-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 12 January 2012 a one-star review of The Selection was posted on the book reviewing site Goodreads"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-siren",
+      "title": "Сирена",
+      "written": {
+        "from": 2008,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "the-selection",
+      "title": "Отбор",
+      "qid": "Q3662846",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "the-elite",
+      "title": "Элита",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "the-one",
+      "title": "Единственная",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-heir",
+      "title": "Наследница",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "the-crown",
+      "title": "Корона",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "the-betrothed",
+      "title": "Обручённая",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "the-betrayed",
+      "title": "Преданная",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "a-thousand-heartbeats",
+      "title": "Тысяча ударов сердца",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

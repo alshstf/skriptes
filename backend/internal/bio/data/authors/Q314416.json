@@ -1,0 +1,239 @@
+{
+  "qid": "Q314416",
+  "name": "Стивен Бакстер",
+  "born": "1957-11-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%BA%D1%81%D1%82%D0%B5%D1%80%2C_%D0%A1%D1%82%D0%B8%D0%B2%D0%B5%D0%BD_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154066223
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Stephen_Baxter_%28author%29",
+      "rev": 1371566096
+    }
+  ],
+  "chapters": [
+    {
+      "key": "liverpool-and-study",
+      "title": "Ливерпуль, учёба и преподавание",
+      "from": 1957,
+      "to": 1994
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Профессиональный писатель",
+      "from": 1995,
+      "to": 2009
+    },
+    {
+      "key": "long-earth-years",
+      "title": "Соавторства и признание",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-11-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ливерпуле",
+      "long": "Стивен Бакстер родился 13 ноября 1957 года в Ливерпуле, Англия.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "liverpool-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stephen Baxter was born in Liverpool, England, in 1957."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "После работы преподавателем математики, физики и информационных технологий Бакстер стал писателем на полную ставку.",
+      "works": [
+        {
+          "ref": "time-ships"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baxter taught maths, physics, and information technology before becoming a full-time author in 1995."
+      }
+    },
+    {
+      "key": "career-1995-2",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия BSFA за лучший роман",
+      "long": "Бакстер получил премию Британской ассоциации научной фантастики за лучший роман; в статье отмечено, что его первый широко признанный роман получил три литературные премии.",
+      "works": [
+        {
+          "ref": "time-ships"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Британской ассоциации научной фантастики за лучший роман 1995-01-01"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кэмпбелла за лучший роман",
+      "long": "Бакстер получил мемориальную премию Джона В. Кэмпбелла за лучший научно-фантастический роман.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: мемориальная премия Джона В. Кэмпбелла за лучший научно-фантастический роман 1996-01-01"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вице-президент Общества Герберта Уэллса",
+      "long": "Бакстер, на которого сильно повлиял Герберт Уэллс, с 2006 года вице-президент международного Общества Г. Уэллса.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baxter has been vice-president of the international H. G. Wells Society since 2006."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на премию «Хьюго»",
+      "long": "Рассказ Бакстера «Last Contact» номинирован на премию «Хьюго» 2008 года.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baxter's story \"Last Contact\" was nominated for the 2008 Hugo Award for best short story."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Член жюри премии Sidewise",
+      "long": "Бакстер стал членом жюри премии Sidewise за альтернативную историю, первым бывшим лауреатом в составе жюри.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, Baxter became a judge for the Sidewise Award for Alternate History, the first former winner among the panel."
+      }
+    },
+    {
+      "key": "creation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало серии с Терри Пратчеттом",
+      "long": "Бакстер начал работу над новой серией вместе с Терри Пратчеттом; соавторство дало пять книг цикла «Долгая Земля».",
+      "works": [
+        {
+          "ref": "long-earth"
+        }
+      ],
+      "chapter": "long-earth-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Baxter began working on a new series with Terry Pratchett."
+      }
+    },
+    {
+      "key": "education-2023",
+      "date": {
+        "from": "2023-03-31",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Звание почётного доктора",
+      "long": "Бакстеру присвоено звание почётного доктора.",
+      "chapter": "long-earth-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: почётный доктор 2023-03-31"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "time-ships",
+      "title": "Корабли времени",
+      "qid": "Q2531100",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "xeelee-sequence",
+      "title": "Xeelee Sequence",
+      "qid": "Q8043415",
+      "written": {
+        "from": 1993,
+        "to": 2026
+      }
+    },
+    {
+      "ref": "manifold-trilogy",
+      "title": "Manifold Trilogy",
+      "qid": "Q6749566",
+      "written": {
+        "from": 1999,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "long-earth",
+      "title": "Бесконечная земля",
+      "qid": "Q7748196",
+      "written": {
+        "from": 2010,
+        "to": 2016
+      }
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "qid": "Q86417",
+  "name": "Керстин Гир",
+  "born": "1966-10-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B8%D1%80%2C_%D0%9A%D0%B5%D1%80%D1%81%D1%82%D0%B8%D0%BD",
+      "rev": 149174093
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kerstin_Gier",
+      "rev": 1371841119
+    }
+  ],
+  "chapters": [
+    {
+      "key": "years-of-study",
+      "title": "Бергиш-Гладбах и учёба",
+      "from": 1966,
+      "to": 1994
+    },
+    {
+      "key": "women-novels",
+      "title": "Женские романы и первый успех",
+      "from": 1995,
+      "to": 2008
+    },
+    {
+      "key": "young-adult",
+      "title": "Молодёжная фантастика",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-10-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бергиш-Гладбахе",
+      "long": "Родилась в Бергиш-Гладбахе, Северный Рейн-Вестфалия, Германия.",
+      "place": {
+        "label": "Бергиш-Гладбах"
+      },
+      "chapter": "years-of-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 8 октября 1966[…], Бергиш-Гладбах, Северный Рейн-Вестфалия"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало писательской работы после безработицы",
+      "long": "После периодов безработицы, окончив учёбу с дипломом педагога, начала писать женские романы; первый же роман имел успех и был экранизирован.",
+      "works": [
+        {
+          "ref": "maenner-und-andere-katastrophen"
+        }
+      ],
+      "chapter": "women-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Время от времени она оставалась без работы и в 1995 году начала писать женские романы."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия DeLiA за лучший любовный роман",
+      "long": "Роман удостоен литературной премии DeLiA как лучший немецкий любовный роман.",
+      "works": [
+        {
+          "ref": "ein-unmoralisches-sonderangebot"
+        }
+      ],
+      "chapter": "women-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году её роман «Ein unmoralisches Sonderangebot» («Непристойное предложение») удостоился литературной премии DeLiA как лучший немецкий любовный роман."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к молодёжной фантастике",
+      "long": "Обратилась к молодёжной фантастике; трилогия имела большой успех и была экранизирована.",
+      "works": [
+        {
+          "ref": "timeless"
+        }
+      ],
+      "chapter": "young-adult",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Керстин попробовала себя в жанре молодёжной фантастики: трилогия «Таймлесс» имела немалый успех и была экранизирована."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "maenner-und-andere-katastrophen",
+      "title": "Мужчины и другие катастрофы",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "ein-unmoralisches-sonderangebot",
+      "title": "Непристойное предложение",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "timeless",
+      "title": "Таймлесс",
+      "qid": "Q21028117",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

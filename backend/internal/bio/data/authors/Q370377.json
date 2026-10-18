@@ -1,0 +1,371 @@
+{
+  "qid": "Q370377",
+  "name": "Джо Хилл",
+  "born": "1972-06-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B8%D0%BB%D0%BB%2C_%D0%94%D0%B6%D0%BE_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154944785
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Joe_Hill_%28writer%29",
+      "rev": 1373694946
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Сын писателей, Бангор и Вассар",
+      "from": 1972,
+      "to": 1996
+    },
+    {
+      "key": "pod-psevdonimom",
+      "title": "Псевдоним и первые рассказы",
+      "from": 1997,
+      "to": 2006
+    },
+    {
+      "key": "romany-i-komiksy",
+      "title": "Романы и комиксы",
+      "from": 2007,
+      "to": 2017
+    },
+    {
+      "key": "novaya-sem-ya",
+      "title": "Второй брак и новые проекты",
+      "from": 2018,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-06-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье Стивена и Табиты Кинг",
+      "long": "Родился в Бангоре, штат Мэн, в семье писателей Стивена и Табиты Кинг.",
+      "place": {
+        "label": "Бангор"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джозеф Хиллстром Кинг родился 4 июня 1972 года в Бангоре, штат Мэн, в семье известного американского писателя Стивена Кинга"
+      }
+    },
+    {
+      "key": "other-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Роль в фильме «Калейдоскоп ужасов»",
+      "long": "В девять лет снялся в фильме Джорджа Ромеро «Калейдоскоп ужасов», сценарий к которому написал его отец.",
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At age nine, he appeared in the 1982 film Creepshow, directed by George A. Romero, which co-starred and was written by his father."
+      }
+    },
+    {
+      "key": "education-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Вассара",
+      "long": "Окончил колледж Вассара, где изучал английскую словесность, и занялся литературой.",
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Изучал английскую словесность в колледже Вассара, и после его окончания в 1995 году по примеру родителей занялся литературой."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выбор псевдонима Джо Хилл",
+      "long": "Взял псевдоним Джо Хилл, чтобы добиваться успеха независимо от известности отца.",
+      "chapter": "pod-psevdonimom",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hill chose to use an abbreviated form of his middle name for his professional surname in 1997, out of a desire to succeed based solely on his own merits"
+      }
+    },
+    {
+      "key": "love-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Леанорой Легран",
+      "long": "Женился на Леаноре Легран, с которой познакомился в колледже Вассар; в браке родились трое детей.",
+      "chapter": "pod-psevdonimom",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году Джо Хилл женился на Леаноре Легран, с которой познакомился в колледже Вассар. У них трое детей."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая книга в малотиражном издательстве",
+      "long": "Британское издательство «PS Publishing» выпустило небольшим тиражом первый сборник рассказов после нескольких лет публикаций только в журналах.",
+      "works": [
+        {
+          "ref": "20th-century-ghosts"
+        }
+      ],
+      "chapter": "pod-psevdonimom",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Только в 2005 году Джо Хиллу удалось убедить британское издательство «PS Publishing» опубликовать сборник его рассказов"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кроуфорда и признание критиков",
+      "long": "Получил премию Уильяма Кроуфорда как лучший начинающий автор в жанре фэнтези; повесть «Добровольное заключение» отмечена Всемирной премией фэнтези.",
+      "works": [
+        {
+          "ref": "20th-century-ghosts"
+        }
+      ],
+      "chapter": "pod-psevdonimom",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сам Джо Хилл за «Призраки двадцатого века» в 2006 году получил премию «William L. Crawford Award» как лучший начинающий автор"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман и раскрытие личности",
+      "long": "Вышел дебютный роман; права на экранизацию были куплены ещё до публикации. Книга получила премию Брэма Стокера. В 2007 году Хилл публично подтвердил, что он сын Стивена Кинга.",
+      "works": [
+        {
+          "ref": "heart-shaped-box"
+        }
+      ],
+      "chapter": "romany-i-komiksy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 2007 года в США (в Великобритании — в марте 2007) вышел дебютный роман Джо Хилла «Коробка в форме сердца»."
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008-02-20",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Старт комикс-серии, распроданной за день",
+      "long": "Первый выпуск комикса «Ключи Локков» вышел 20 февраля 2008 года, и тираж разошёлся за день.",
+      "works": [
+        {
+          "ref": "locke-and-key"
+        }
+      ],
+      "chapter": "romany-i-komiksy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, Hill's comic book series Locke \u0026 Key was released. The first issue, released on February 20, 2008, sold out its initial publication run in one day."
+      }
+    },
+    {
+      "key": "love-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Леанорой Легран",
+      "long": "Брак с Леанорой Легран завершился разводом.",
+      "chapter": "romany-i-komiksy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пара развелась в 2010 году."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Роман в списке бестселлеров New York Times",
+      "long": "Третий роман вошёл в список бестселлеров New York Times, достигнув пятого места.",
+      "works": [
+        {
+          "ref": "nos4a2"
+        }
+      ],
+      "chapter": "romany-i-komiksy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "NOS4A2, his third novel, was published in April 2013. The novel peaked at number five on the New York Times Best Seller list."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое место в списке бестселлеров",
+      "long": "Четвёртый роман сразу возглавил список бестселлеров New York Times — его высшее достижение.",
+      "works": [
+        {
+          "ref": "the-fireman"
+        }
+      ],
+      "chapter": "romany-i-komiksy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hill's fourth novel, The Fireman, was released in May 2016. It entered the New York Times Best Seller list at number one"
+      }
+    },
+    {
+      "key": "love-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джиллиан Редфирн",
+      "long": "Женился на британской издательнице Джиллиан Редфирн.",
+      "chapter": "novaya-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2018 году Джо Хилл женился на британской издательнице Джиллиан Редферн."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор линии Hill House Comics",
+      "long": "После закрытия издательской линии Vertigo в DC Comics объявили, что Хилл будет курировать новую линию хоррор-комиксов Hill House Comics.",
+      "chapter": "novaya-sem-ya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following DC Comics's announcement in June 2019 that it would suspend publication of its Vertigo Comics imprint, they announced that Hill would oversee and share the writing for a new horror line, Hill House Comics."
+      }
+    },
+    {
+      "key": "child-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение близнецов",
+      "long": "У Хилла и Джиллиан Редфирн родились близнецы.",
+      "chapter": "novaya-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2022 году у них родились близнецы."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "20th-century-ghosts",
+      "title": "Призраки двадцатого века",
+      "qid": "Q1762654",
+      "written": {
+        "from": 1999,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "heart-shaped-box",
+      "title": "Коробка в форме сердца",
+      "qid": "Q3221827",
+      "written": {
+        "from": 2006,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "locke-and-key",
+      "title": "Ключи Локков",
+      "qid": "Q6665339",
+      "written": {
+        "from": 2008,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "horns",
+      "title": "Рога",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "nos4a2",
+      "title": "Страна Рождества",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "the-fireman",
+      "title": "Пожарный",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

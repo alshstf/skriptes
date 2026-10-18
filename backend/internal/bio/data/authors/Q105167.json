@@ -1,0 +1,441 @@
+{
+  "qid": "Q105167",
+  "name": "Том Клэнси",
+  "born": "1947-04-12",
+  "died": "2013-10-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D1%8D%D0%BD%D1%81%D0%B8%2C_%D0%A2%D0%BE%D0%BC",
+      "rev": 154739592
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tom_Clancy",
+      "rev": 1377556058
+    }
+  ],
+  "chapters": [
+    {
+      "key": "baltimore-school-college",
+      "title": "Балтимор, школа и колледж",
+      "from": 1947,
+      "to": 1969
+    },
+    {
+      "key": "insurance-agent",
+      "title": "Страховой агент и первая рукопись",
+      "from": 1970,
+      "to": 1983
+    },
+    {
+      "key": "bestsellers-empire",
+      "title": "Бестселлеры, контракты и развод",
+      "from": 1984,
+      "to": 1998
+    },
+    {
+      "key": "late-years",
+      "title": "Второй брак и последние годы",
+      "from": 1999,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-04-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Балтиморе",
+      "long": "Родился в Балтиморе, штат Мэриленд, в ирландско-американской семье; второй из троих детей.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "baltimore-school-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Томас Клэнси родился 12 апреля 1947 года в городе Балтимор (штат Мэриленд)."
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание католической школы в Таусоне",
+      "long": "Окончил частную католическую иезуитскую школу Loyola High School в Таусоне; учёбу оплачивала мать.",
+      "place": {
+        "label": "Таусон"
+      },
+      "chapter": "baltimore-school-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Учился в частной католической школе Лойола Блэйкфилд, в Таусоне (штат Мэриленд), окончил в 1965 году."
+      }
+    },
+    {
+      "key": "love-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Вандой Томас",
+      "long": "Женился на медсестре Ванде Томас Кинг; в браке родились четверо детей.",
+      "chapter": "baltimore-school-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1969 году Том Клэнси женился на Ванде Томас (Wanda Thomas)."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в семейном страховом агентстве",
+      "long": "Пришёл в небольшое страховое агентство в Оуингсе, основанное дедом его жены.",
+      "place": {
+        "label": "Оуингс"
+      },
+      "chapter": "insurance-agent",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1973, Clancy joined the O. F. Bowen Agency, a small insurance agency based in Owings, Maryland, founded by his wife's grandfather."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка страхового агентства",
+      "long": "Выкупил агентство у бабушки жены; романы писал в свободное время.",
+      "place": {
+        "label": "Оуингс"
+      },
+      "chapter": "insurance-agent",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1980, he purchased the insurance agency from his wife's grandmother and wrote novels in his spare time."
+      }
+    },
+    {
+      "key": "creation-1982",
+      "date": {
+        "from": "1982",
+        "to": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман от рукописи до продажи издательству",
+      "long": "Начал писать первый роман в 1982 году; в 1984-м продал его издательству Naval Institute Press за 5000 долларов. Тираж превысил 45 000 экземпляров.",
+      "works": [
+        {
+          "ref": "hunt-for-red-october"
+        }
+      ],
+      "chapter": "insurance-agent",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Clancy's literary career began in 1982 when he started writing The Hunt for Red October, which in 1984 he sold for publishing to the Naval Institute Press for $5,000."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт на три книги за три миллиона",
+      "long": "К 1988 году заработал на первом романе 1,3 млн долларов и подписал контракт на три книги на 3 млн.",
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1988, Clancy had earned $1.3 million for The Hunt for Red October and had signed a $3 million contract for his next three books."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рекордная сделка на права за 14 миллионов",
+      "long": "Продал североамериканские права на роман за 14 млн долларов — рекорд для одной книги.",
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1992, he sold North American rights to Without Remorse for $14 million, a record for a single book."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка доли в бейсбольном клубе «Ориолс»",
+      "long": "Вошёл в группу инвесторов, купившую «Балтимор Ориолс».",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1993 году Клэнси приобрёл бейсбольный клуб «Балтимор Ориолс»."
+      }
+    },
+    {
+      "key": "loss-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Томас Лео Клэнси-старший, работавший на почте.",
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thomas Leo Clancy (1918–1995), who worked for the United States Postal Service"
+      }
+    },
+    {
+      "key": "family-1997",
+      "date": {
+        "from": "1997",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Вандой",
+      "long": "Супруги окончательно расстались в декабре 1996 года; развод оформлен в январе 1999-го, акции «Ориолс» были поделены.",
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году Клэнси подал на развод, который вступил в силу в 1999 году."
+      }
+    },
+    {
+      "key": "other-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от покупки «Миннесота Вайкингс»",
+      "long": "Отказался от покупки «Миннесота Вайкингс» из-за расходов, связанных с разводом.",
+      "chapter": "bestsellers-empire",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1998 году он достиг договорённости о покупке футбольного клуба «Миннесота Вайкингс», но вынужден был отказаться от сделки из-за убытков, вызванных бракоразводным процессом."
+      }
+    },
+    {
+      "key": "love-1999",
+      "date": {
+        "from": "1999-06-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Александрой Ллуэллин",
+      "long": "Женился на журналистке Александре Мэри Ллуэллин, с которой познакомился в 1997 году; в браке родилась дочь.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 июня 1999 года, в возрасте 52 лет, Клэнси вторично женился на 32-летней писательнице Александре Мэри Ллуэллин."
+      }
+    },
+    {
+      "key": "loss-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Кэтрин Мэри Клэнси, работавшая в кредитном отделе магазина.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Catherine Mary Clancy (née Langan; 1918–2001), who worked in a store's credit department"
+      }
+    },
+    {
+      "key": "other-2001",
+      "date": {
+        "from": "2001-09-11",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Интервью CNN в день терактов 11 сентября",
+      "long": "В день терактов дал интервью CNN и выступил в защиту ислама; его пригласили из-за сценария в романе о самолёте, направленном на Капитолий.",
+      "works": [
+        {
+          "ref": "debt-of-honor",
+          "note": "Автора пригласили на эфир из-за сценария атаки на Капитолий в этом романе"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 11, 2001, Clancy was interviewed by Judy Woodruff on CNN."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа имени компании Ubisoft",
+      "long": "Компания Ubisoft приобрела право использовать имя Клэнси для игр и сопутствующих продуктов.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, the French video game manufacturer Ubisoft purchased the use of Clancy's name for an undisclosed sum."
+      }
+    },
+    {
+      "key": "death-2013",
+      "date": {
+        "from": "2013-10-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Балтиморе",
+      "long": "Умер от сердечной недостаточности в больнице Джонса Хопкинса; ранее перенёс сердечный приступ и шунтирование.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Clancy died of heart failure on October 1, 2013, at Johns Hopkins Hospital, near his Baltimore home."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hunt-for-red-october",
+      "title": "Охота за «Красным Октябрём»",
+      "qid": "Q5255573",
+      "written": {
+        "from": 1982,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "red-storm-rising",
+      "title": "Красный шторм поднимается",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "clear-and-present-danger",
+      "title": "Прямая и явная угроза",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "debt-of-honor",
+      "title": "Долг чести",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "executive-orders",
+      "title": "Слово президента",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "ssn",
+      "title": "Ударная подлодка",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "teeth-of-the-tiger",
+      "title": "Зубы тигра",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "dead-or-alive",
+      "title": "Живым или мёртвым",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "locked-on",
+      "title": "На прицеле",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "threat-vector",
+      "title": "Вектор угрозы",
+      "qid": "Q7797192",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "command-authority",
+      "title": "Власть командования",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

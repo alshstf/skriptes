@@ -1,0 +1,355 @@
+{
+  "qid": "Q16198845",
+  "name": "Роберт Джексон Беннетт",
+  "born": "1984-06-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BD%D0%BD%D0%B5%D1%82%D1%82%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82_%D0%94%D0%B6%D0%B5%D0%BA%D1%81%D0%BE%D0%BD",
+      "rev": 155102352
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Jackson_Bennett",
+      "rev": 1374743643
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-uchyoba",
+      "title": "Луизиана и Остин",
+      "from": 1984,
+      "to": 2009
+    },
+    {
+      "key": "debyut-i-rannie-romany",
+      "title": "Дебют и ранние романы",
+      "from": 2010,
+      "to": 2013
+    },
+    {
+      "key": "bozhestvennye-goroda",
+      "title": "Божественные города",
+      "from": 2014,
+      "to": 2017
+    },
+    {
+      "key": "osnovateli-i-hyugo",
+      "title": "Основатели и «Хьюго»",
+      "from": 2018,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1984",
+      "date": {
+        "from": "1984-06-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Батон-Руж",
+      "long": "Родился в Батон-Руж, штат Луизиана.",
+      "place": {
+        "label": "Батон-Руж"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роберт Джексон Беннетт родился в Батон-Руж, штат Луизиана."
+      }
+    },
+    {
+      "key": "education-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Техасского университета, переезд в Остин",
+      "long": "Окончил Техасский университет в Остине с отличием по специальности «английский язык» и остался жить в Остине.",
+      "place": {
+        "label": "Остин"
+      },
+      "chapter": "detstvo-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил Техасский университет в Остине с отличием по специальности английский язык в 2005 году и переехал в Остин."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный дебют",
+      "long": "Вышла дебютная книга — мистический триллер, действие которого происходит во времена Великой депрессии.",
+      "works": [
+        {
+          "ref": "mr-shivers"
+        }
+      ],
+      "chapter": "debyut-i-rannie-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2010 году была опубликована дебютная книга Беннетта «Господин Шиверс» (Mr. Shivers) в жанре мистического триллера."
+      }
+    },
+    {
+      "key": "career-2010-2",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ширли Джексон за лучший роман",
+      "long": "Получил премию Ширли Джексон за лучший роман.",
+      "chapter": "debyut-i-rannie-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Ширли Джексон за лучший роман 2010-01-01"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Эдгара По за книгу в мягкой обложке",
+      "long": "Получил премию Эдгара Аллана По за лучшую книгу в мягкой обложке.",
+      "chapter": "debyut-i-rannie-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Эдгара Аллана По за лучшую книгу в мягкой обложке 2012-01-01"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия Ширли Джексон",
+      "long": "Вторично получил премию Ширли Джексон за лучший роман.",
+      "chapter": "debyut-i-rannie-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Ширли Джексон за лучший роман 2013-01-01"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало трилогии в жанре фэнтези",
+      "long": "Вышел первый роман трилогии «Божественные города» — поворот от мистики к эпическому фэнтези.",
+      "works": [
+        {
+          "ref": "city-of-stairs"
+        }
+      ],
+      "chapter": "bozhestvennye-goroda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2014 году вышел пятый роман автора — «Город лестниц» (City of Stairs), открывший трилогию фэнтези «Божественные города»"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шортлист «Хьюго» за лучшую серию",
+      "long": "Трилогия «Божественные города» вошла в шортлист премии «Хьюго» как лучшая серия.",
+      "works": [
+        {
+          "ref": "city-of-stairs"
+        }
+      ],
+      "chapter": "bozhestvennye-goroda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эта серия вошла в шортлист премий «Хьюго» в категории лучшей серии в 2018 году."
+      }
+    },
+    {
+      "key": "career-2018-2",
+      "date": {
+        "from": "2018-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Новая трилогия в издательстве Crown",
+      "long": "Издательство Crown выпустило первую книгу трилогии «Основатели».",
+      "works": [
+        {
+          "ref": "foundryside"
+        }
+      ],
+      "chapter": "osnovateli-i-hyugo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 2018-го издательство Crown выпустило книгу Foundryside, ставшую первой частью трилогии «Основатели»"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало нового цикла в Del Rey",
+      "long": "Издательство Del Rey опубликовало первую книгу цикла «Тень Левиафана».",
+      "works": [
+        {
+          "ref": "the-tainted-cup"
+        }
+      ],
+      "chapter": "osnovateli-i-hyugo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 2024 года издательством Del Rey был опубликован роман «Испорченный кубок» (The Tainted Cup), первая книга цикла «Тень Левиафана»"
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» за лучший роман",
+      "long": "Роман получил премию «Хьюго» за лучший роман.",
+      "works": [
+        {
+          "ref": "the-tainted-cup"
+        }
+      ],
+      "chapter": "osnovateli-i-hyugo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2025 году его роман в жанре фэнтези «Испорченный кубок» (The Tainted Cup) удостоился премии «Хьюго» за лучший роман."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mr-shivers",
+      "title": "Господин Шиверс",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-company-man",
+      "title": "Корпоративный человек",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-troupe",
+      "title": "Группа",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "american-elsewhere",
+      "title": "Нездешние",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "city-of-stairs",
+      "title": "Город лестниц",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "city-of-blades",
+      "title": "Город клинков",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "city-of-miracles",
+      "title": "Город чудес",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "foundryside",
+      "title": "Foundryside",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "shorefall",
+      "title": "Шорафолл",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "locklands",
+      "title": "Локслендс",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "the-tainted-cup",
+      "title": "Испорченный кубок",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    },
+    {
+      "ref": "a-drop-of-corruption",
+      "title": "Капля порчи",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "qid": "Q937084",
+  "name": "Филип Рив",
+  "born": "1966-02-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%B8%D0%B2%2C_%D0%A4%D0%B8%D0%BB%D0%B8%D0%BF",
+      "rev": 155174909
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Philip_Reeve",
+      "rev": 1380203104
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Брайтон и учёба",
+      "from": 1966,
+      "to": 1997
+    },
+    {
+      "key": "illustrator",
+      "title": "Иллюстратор и сцена",
+      "from": 1998,
+      "to": 2000
+    },
+    {
+      "key": "mortal-engines",
+      "title": "Дартмур и «Хищные города»",
+      "from": 2001,
+      "to": 2008
+    },
+    {
+      "key": "later",
+      "title": "Новые книги и соавторство",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-02-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Брайтоне",
+      "long": "Филип Рив родился в Брайтоне.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Филип Рив родился 28 февраля 1966 года в Брайтоне."
+      }
+    },
+    {
+      "key": "creation-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Замысел будущего романа о движущихся городах",
+      "long": "Первые идеи романа о движущихся городах появились в 1989 или 1990 году; работа над ним заняла более десяти лет.",
+      "works": [
+        {
+          "ref": "mortal-engines"
+        }
+      ],
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Reeve spent more than ten years on Mortal Engines, coming up with ideas in 1989 or 1990, leading to publication in 2001."
+      }
+    },
+    {
+      "key": "relocation-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд с женой из Брайтона в Девоншир",
+      "long": "В 1998 году Рив с женой Сарой переехал из Брайтона в Девоншир; позже поселился в Дартмуре.",
+      "place": {
+        "label": "Девоншир"
+      },
+      "chapter": "illustrator",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1998 году Рив с женой Сарой переехал из Брайтона в Девоншир."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Антиутопический мюзикл с Брайаном Митчеллом",
+      "long": "Вместе с Брайаном Митчеллом Рив написал антиутопический комический мюзикл «Министерство печенья», позже шедший в Брайтоне, Гилфорде и на Эдинбургском фестивале Fringe 1999 года.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "illustrator",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With Brian Mitchell, Reeve is the author of a 1998 dystopian comic musical, The Ministry of Biscuits."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход от иллюстрации к писательству",
+      "long": "Роман писался урывками между заказами на иллюстрации; когда Рив уверился, что сможет закончить, он сократил иллюстраторскую работу и больше времени отдавал письму.",
+      "works": [
+        {
+          "ref": "mortal-engines"
+        }
+      ],
+      "chapter": "mortal-engines",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Reeve spent more than ten years on Mortal Engines, coming up with ideas in 1989 or 1990, leading to publication in 2001. He was working on it part-time between illustration jobs"
+      }
+    },
+    {
+      "key": "child-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Сэма",
+      "long": "В 2002 году у Рива и его жены Сары родился сын Сэм.",
+      "chapter": "mortal-engines",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 году у них родился сын Сэм."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Детская книжная премия Nestlé",
+      "long": "Первый роман для старших читателей получил золото Nestlé Smarties Book Prize в категории 9–11 лет.",
+      "works": [
+        {
+          "ref": "mortal-engines"
+        }
+      ],
+      "chapter": "mortal-engines",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2002 — Nestlé Smarties Book Prize (золото, категория 9—11 лет) за «Смертные машины»"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Guardian за детскую прозу",
+      "long": "За четвёртый том тетралогии Рив получил премию Guardian за детскую художественную литературу.",
+      "works": [
+        {
+          "ref": "a-darkling-plain"
+        }
+      ],
+      "chapter": "mortal-engines",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2006 — Guardian Children's Fiction Prize за «Надвинувшаяся тьма»"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Медаль Карнеги",
+      "long": "Рив получил медаль Карнеги — высшую награду британской детской литературы.",
+      "works": [
+        {
+          "ref": "here-lies-arthur"
+        }
+      ],
+      "chapter": "mortal-engines",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2008 — Медаль Карнеги за «Здесь покоится Артур»"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соавторство с Сарой Макинтайр",
+      "long": "Вышла первая совместная книга Рива и Сары Макинтайр; позже она получила премию UKLA, а у пары появился контракт на новые книги.",
+      "works": [
+        {
+          "ref": "oliver-and-the-seawigs"
+        }
+      ],
+      "chapter": "later",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, Reeve had his first co-authored, highly illustrated book with British-American writer-illustrator Sarah McIntyre published by Oxford University Press: Oliver and the Seawigs."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Независимое кино с женой, Bonehill Films",
+      "long": "Рив с женой Сарой снимает независимые фильмы под маркой Bonehill Films; первый из названных — «Гвиневера» (2023).",
+      "chapter": "later",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their films include Gwenevere (2023), Prairie Rascals (2025)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mortal-engines",
+      "title": "Смертные машины",
+      "written": {
+        "from": 1989,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "predators-gold",
+      "title": "Золото хищника",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "infernal-devices",
+      "title": "Адские устройства",
+      "written": {
+        "from": 2003,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "a-darkling-plain",
+      "title": "Надвинувшаяся тьма",
+      "written": {
+        "from": 2005,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "here-lies-arthur",
+      "title": "Здесь покоится Артур",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "larklight",
+      "title": "Ларклайт",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "fever-crumb",
+      "title": "Фивер Крамб",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "oliver-and-the-seawigs",
+      "title": "Oliver and the Seawigs",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

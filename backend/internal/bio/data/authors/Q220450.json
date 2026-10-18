@@ -1,0 +1,243 @@
+{
+  "qid": "Q220450",
+  "name": "Дэвид Геммел",
+  "born": "1948-08-01",
+  "died": "2006-07-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D0%BC%D0%BC%D0%B5%D0%BB%2C_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4",
+      "rev": 154338731
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/David_Gemmell",
+      "rev": 1371383653
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-youth",
+      "title": "Лондонское детство и улицы",
+      "from": 1948,
+      "to": 1965
+    },
+    {
+      "key": "reporter-and-manuscript",
+      "title": "Репортёр и рукопись в ящике",
+      "from": 1966,
+      "to": 1985
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Профессиональный писатель",
+      "from": 1986,
+      "to": 2006
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-08-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился в западном Лондоне; первые годы его растила одна мать.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дэвид Эндрю Геммел (англ. David Andrew Gemmell, 1 августа 1948 — 28 июля 2006)"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в газете",
+      "long": "После исключения из школы в 16 лет и случайных работ (землекоп, вышибала в Сохо) стал стажёром, затем репортёром газеты; позже редактировал местные газеты Восточного Сассекса.",
+      "chapter": "reporter-and-manuscript",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году Геммел уже работал стажёром, а затем и репортером в газете"
+      }
+    },
+    {
+      "key": "illness-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз рака, позже признанный ошибочным",
+      "long": "Диагноз рака, который он счёл смертельным, подтолкнул его за две недели написать роман об осаде крепости; позднее диагноз оказался ошибочным.",
+      "works": [
+        {
+          "ref": "legend",
+          "note": "роман написан за две недели как метафора болезни: крепость — сам автор, захватчики — рак (по воспоминаниям автора)"
+        }
+      ],
+      "chapter": "reporter-and-manuscript",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, after being diagnosed with a cancer he believed to be terminal, he wrote The Siege of Dros Delnoch in order to take his mind off his illness"
+      }
+    },
+    {
+      "key": "creation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение к отложенной рукописи",
+      "long": "После выяснения ошибки в диагнозе рукопись лежала в стороне; в 1980 году друг прочёл её и убедил доработать текст для новой попытки публикации.",
+      "works": [
+        {
+          "ref": "legend"
+        }
+      ],
+      "chapter": "reporter-and-manuscript",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he set The Siege of Dros Delnoch to one side until 1980, when a friend read the manuscript and convinced Gemmell to sharpen up the novel"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Увольнение из газеты",
+      "long": "Был уволен из газеты после того, как использовал имена коллег для персонажей романа; руководитель счёл это злой атакой на свою репутацию.",
+      "works": [
+        {
+          "ref": "waylander",
+          "note": "имена коллег использованы для персонажей романа"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until the publication of his third novel Waylander in 1986, when he was fired after using colleagues' names for characters in the book"
+      }
+    },
+    {
+      "key": "career-1986-2",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "Оставив журналистику, стал писателем на постоянной основе и написал более тридцати романов.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1986 года становится профессиональным писателем."
+      }
+    },
+    {
+      "key": "illness-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Операция на сердце после поездки на Аляску",
+      "long": "Во время поездки на Аляску ему стало плохо; он вернулся в Великобританию, где перенёс четверное шунтирование, и вскоре вернулся к работе.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In mid-2006, Gemmell was on a trip to Alaska when he became discomforted…underwent quadruple heart bypass surgery in a private London hospital"
+      }
+    },
+    {
+      "key": "death-2006",
+      "date": {
+        "from": "2006-07-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от коронарной болезни",
+      "long": "Умер от коронарной болезни за четыре дня до 58-летия; жена нашла его за компьютером, он работал над заключительным томом Троянской трилогии.",
+      "place": {
+        "label": "Гастингс"
+      },
+      "works": [
+        {
+          "ref": "troy-fall-of-kings",
+          "note": "роман остался незаконченным, дописан вдовой Стеллой"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер Геммел утром 28 июля 2006 года"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "legend",
+      "title": "Легенда",
+      "qid": "Q824307",
+      "written": {
+        "from": 1976,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "the-king-beyond-the-gate",
+      "title": "Царь Каменных Врат",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "waylander",
+      "title": "Уэйлендер",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "white-knight-black-swan",
+      "title": "Белый рыцарь, чёрный лебедь",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "troy-fall-of-kings",
+      "title": "Троя: Падение царей",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    }
+  ]
+}

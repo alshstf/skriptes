@@ -1,0 +1,247 @@
+{
+  "qid": "Q2754186",
+  "name": "Энтони Дорр",
+  "born": "1973-10-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D1%80%D1%80%2C_%D0%AD%D0%BD%D1%82%D0%BE%D0%BD%D0%B8",
+      "rev": 155252812
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Anthony_Doerr",
+      "rev": 1372741580
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cleveland-and-study",
+      "title": "Кливленд и учёба",
+      "from": 1973,
+      "to": 1995
+    },
+    {
+      "key": "first-books",
+      "title": "Первые книги и Айдахо",
+      "from": 1996,
+      "to": 2009
+    },
+    {
+      "key": "years-of-the-novel",
+      "title": "Годы большого романа",
+      "from": 2010,
+      "to": 2014
+    },
+    {
+      "key": "after-pulitzer",
+      "title": "После Пулитцера",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-10-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Кливленде",
+      "long": "Родился 27 октября 1973 года в Кливленде, штат Огайо, там же вырос.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "cleveland-and-study",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Кливленд 1973-10-27"
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университетской школы",
+      "long": "Окончил Университетскую школу в пригороде Кливленда.",
+      "place": {
+        "label": "Хантинг-Вэлли"
+      },
+      "chapter": "cleveland-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Учился в школе при университете, которую окончил в 1991 году."
+      }
+    },
+    {
+      "key": "education-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Боудин-колледжа",
+      "long": "Изучал историю в Боудин-колледже и окончил его в 1995 году; позднее получил степень магистра изящных искусств в Университете Боулинг Грин.",
+      "place": {
+        "label": "Брансуик"
+      },
+      "chapter": "cleveland-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Боудин-колледже будущий писатель специализировался по истории, окончил колледж в 1995 году."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Римская премия",
+      "long": "Получил Римскую премию; в 2002 году также отмечен премией О. Генри и стипендией Национального фонда искусств.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Римская премия 2002"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "to": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Писатель при штате Айдахо",
+      "long": "С 2007 по 2010 год был штатным писателем (Writer in Residence) штата Айдахо.",
+      "place": {
+        "label": "Айдахо"
+      },
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 2007 to 2010, he was the Writer in Residence for the state of Idaho."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Получил стипендию Гуггенхайма.",
+      "chapter": "years-of-the-novel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: стипендия Гуггенхайма 2010-01-01"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Роман получил Пулитцеровскую премию за художественную книгу; в том же году автору присуждена медаль Эндрю Карнеги.",
+      "works": [
+        {
+          "ref": "all-the-light-we-cannot-see"
+        }
+      ],
+      "chapter": "after-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the Pulitzer Prize for Fiction in 2015."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шорт-лист Национальной книжной премии",
+      "long": "Новый роман вошёл в шорт-лист Национальной книжной премии в категории художественной прозы.",
+      "works": [
+        {
+          "ref": "cloud-cuckoo-land"
+        }
+      ],
+      "chapter": "after-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was shortlisted for the 2021 National Book Award for Fiction."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shell-collector",
+      "title": "Собиратель ракушек",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "about-grace",
+      "title": "О Грейс",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "four-seasons-in-rome",
+      "title": "Четыре сезона в Риме",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "memory-wall",
+      "title": "Стена памяти",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "all-the-light-we-cannot-see",
+      "title": "Весь невидимый нам свет",
+      "qid": "Q18109559",
+      "written": {
+        "from": 2004,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "cloud-cuckoo-land",
+      "title": "Облачная кукушия страна",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

@@ -1,0 +1,571 @@
+{
+  "qid": "Q241248",
+  "name": "Орхан Памук",
+  "born": "1952-06-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D0%BC%D1%83%D0%BA%2C_%D0%9E%D1%80%D1%85%D0%B0%D0%BD",
+      "rev": 154481116
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Orhan_Pamuk",
+      "rev": 1374815871
+    },
+    {
+      "id": "trwiki",
+      "url": "https://tr.wikipedia.org/wiki/Orhan_Pamuk",
+      "rev": 38209012
+    }
+  ],
+  "chapters": [
+    {
+      "key": "nisantasi-i-kolledzh",
+      "title": "Нишанташи и колледж",
+      "from": 1952,
+      "to": 1973
+    },
+    {
+      "key": "reshenie-pisat",
+      "title": "Решение стать романистом",
+      "from": 1974,
+      "to": 1984
+    },
+    {
+      "key": "nyu-york-i-slava",
+      "title": "Нью-Йорк, дочь, признание",
+      "from": 1985,
+      "to": 1999
+    },
+    {
+      "key": "razvod-process-nobel",
+      "title": "Развод, процесс, Нобель",
+      "from": 2000,
+      "to": 2006
+    },
+    {
+      "key": "kolumbiya-i-muzej",
+      "title": "Колумбия и музей",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-06-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в состоятельной стамбульской семье",
+      "long": "Родился в состоятельной стамбульской семье инженера; вырос в районе Нишанташи.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "chapter": "nisantasi-i-kolledzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 7 июня 1952, Стамбул, Турция"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Решение стать профессиональным писателем",
+      "long": "Бросив архитектурный факультет, в 1974 году начал регулярно писать и решил стать профессиональным писателем.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "chapter": "reshenie-pisat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pamuk started writing regularly in 1974."
+      }
+    },
+    {
+      "key": "education-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание института журналистики",
+      "long": "Окончил институт журналистики Стамбульского университета (по данным английской статьи — в 1976 году).",
+      "place": {
+        "label": "Стамбул"
+      },
+      "chapter": "reshenie-pisat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 Памук окончил институт журналистики Стамбульского университета."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Победа в конкурсе романов газеты «Миллиет»",
+      "long": "Первый роман разделил победу в конкурсе газеты «Миллиет»; опубликован в 1982 году.",
+      "works": [
+        {
+          "ref": "cevdet-bey-and-his-sons",
+          "note": "первый роман, представленный на конкурс"
+        }
+      ],
+      "chapter": "reshenie-pisat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was a co-winner of the 1979 Milliyet Press Novel Contest"
+      }
+    },
+    {
+      "key": "love-1982",
+      "date": {
+        "from": "1982-03-01",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на историке Айлин Тюрегюн",
+      "long": "Женился на историке Айлин Тюрегюн; брак продлился до 2002 года.",
+      "chapter": "reshenie-pisat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 1 March 1982, Pamuk married historian Aylin Türegün."
+      }
+    },
+    {
+      "key": "relocation-1985",
+      "date": {
+        "from": "1985",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Три года в Нью-Йорке, Колумбийский университет",
+      "long": "Жил в США, работал приглашённым исследователем в Колумбийском университете, пока жена училась в аспирантуре; затем вернулся в Стамбул.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "black-book",
+          "note": "роман писался в библиотеке Батлер Колумбийского университета"
+        }
+      ],
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1985 to 1988, while she was a graduate student at Columbia University, Pamuk assumed the position of visiting scholar there, using the time to conduct research and write his novel The Black Book at the university's Butler Library."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Индепендент» за переводную прозу",
+      "long": "Премия «Индепендент» за переводную прозу упрочила известность писателя за рубежом.",
+      "works": [
+        {
+          "ref": "white-castle",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the 1990 Independent Award for Foreign Fiction and extended his reputation abroad"
+      }
+    },
+    {
+      "key": "child-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Рюйи",
+      "long": "В семье родилась дочь Рюйя (по-турецки «мечта»).",
+      "works": [
+        {
+          "ref": "my-name-is-red",
+          "note": "роман посвящён дочери Рюйе"
+        }
+      ],
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991 he and his wife had a daughter, Rüya"
+      }
+    },
+    {
+      "key": "creation-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Сценарий к фильму по мотивам романа",
+      "long": "Написал сценарий фильма Омера Кавура «Тайное лицо» по мотивам своего романа.",
+      "works": [
+        {
+          "ref": "black-book",
+          "note": "сценарий написан по мотивам романа"
+        }
+      ],
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1992, he wrote the screenplay for the movie Gizli Yüz (Secret Face), based on Kara Kitap"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рекордные продажи пятого романа",
+      "long": "Пятый роман вызвал сенсацию в Турции и стал самой быстро продаваемой книгой в истории страны.",
+      "works": [
+        {
+          "ref": "new-life"
+        }
+      ],
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "caused a sensation in Turkey upon its 1994 publication and became the fastest-selling book in Turkish history"
+      }
+    },
+    {
+      "key": "persecution-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Суд за эссе о положении курдов",
+      "long": "Среди группы авторов привлечён к суду за эссе с критикой обращения с курдами в Турции.",
+      "chapter": "nyu-york-i-slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1995, he was among a group of authors tried for writing essays that criticized Turkey's treatment of the Kurds."
+      }
+    },
+    {
+      "key": "love-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Айлин Тюрегюн",
+      "long": "Брак с Айлин Тюрегюн расторгнут. Позже писатель называл годы работы над книгой о Стамбуле кризисными: развод, болезнь и смерть отца.",
+      "works": [
+        {
+          "ref": "istanbul-memories",
+          "note": "в интервью писатель назвал время работы кризисным: развод, умирающий отец"
+        }
+      ],
+      "chapter": "razvod-process-nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2002, they were divorced."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дублинская литературная премия",
+      "long": "Роман удостоен одной из самых щедрых литературных премий мира.",
+      "works": [
+        {
+          "ref": "my-name-is-red",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "razvod-process-nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "has been translated into 24 languages and in 2003 won the International Dublin Literary Award"
+      }
+    },
+    {
+      "key": "persecution-2005",
+      "date": {
+        "from": "2005-02",
+        "to": "2006-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Уголовное дело за слова о курдах и армянах",
+      "long": "После интервью о гибели курдов и армян возбуждено дело по статье 301, началась кампания ненависти. 22 января 2006 года обвинения сняты.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "chapter": "razvod-process-nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The criminal charges against Pamuk resulted from remarks he made during an interview in February 2005 with the Swiss publication Das Magazin"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-10-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Нобелевская премия присуждена «за поиски меланхоличной души родного города». Первый турецкий лауреат.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "razvod-process-nobel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "12 октября 2006 Орхану Памуку была присуждена Нобелевская премия по литературе"
+      }
+    },
+    {
+      "key": "relocation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Нью-Йорк после убийства Динка",
+      "long": "После убийства Гранта Динка вернулся в Нью-Йорк; с 2007 года профессор Колумбийского университета.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "До 2007 года жил в Стамбуле, но после убийства турецким экстремистом известного правозащитника армянского происхождения Гранта Динка вернулся в Нью-Йорк."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лекции Нортона в Гарварде",
+      "long": "Прочитал в Гарварде цикл лекций «Наивный и сентиментальный романист».",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, he was Harvard's Charles Eliot Norton Lecturer"
+      }
+    },
+    {
+      "key": "love-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Начало отношений с Аслы Акъяваш",
+      "long": "Начались отношения с Аслы Акъяваш (по английской статье — с 2011 года).",
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2010 года гражданской супругой Орхана Памука является Аслы Акъяваш"
+      }
+    },
+    {
+      "key": "creation-2012",
+      "date": {
+        "from": "2012-04-28",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Открытие реального музея по мотивам романа",
+      "long": "В Стамбуле открылся музей предметов, связанных с сюжетом романа; коллекцию писатель собирал сам.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "works": [
+        {
+          "ref": "museum-of-innocence",
+          "note": "по словам Памука, он собирал коллекцию для такого музея, как описан в книге"
+        }
+      ],
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 апреля 2012 года Музей невинности открыл свои двери."
+      }
+    },
+    {
+      "key": "persecution-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Дело по статье 301 из-за нового романа",
+      "long": "Дело по обвинению в оскорблении Ататюрка и турецкого флага в новом романе.",
+      "works": [
+        {
+          "ref": "nights-of-plague",
+          "note": "обвинение касалось содержания этого романа"
+        }
+      ],
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2021 году на Орхана Памука снова завели дело по статье 301"
+      }
+    },
+    {
+      "key": "love-2022",
+      "date": {
+        "from": "2022-04-06",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Аслы Акъяваш",
+      "long": "Женился на Аслы Акъяваш, с которой в отношениях с 2010–2011 годов.",
+      "chapter": "kolumbiya-i-muzej",
+      "evidence": {
+        "source": "trwiki",
+        "quote": "6 Nisan 2022'de Aslı Akyavaş ile evlendi."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "cevdet-bey-and-his-sons",
+      "title": "Джевдет-бей и его сыновья",
+      "qid": "Q6089373",
+      "written": {
+        "from": 1974,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "silent-house",
+      "title": "Тихий дом",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "white-castle",
+      "title": "Белая крепость",
+      "qid": "Q2559737",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "black-book",
+      "title": "Чёрная книга",
+      "qid": "Q463060",
+      "written": {
+        "from": 1985,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "new-life",
+      "title": "Новая жизнь",
+      "qid": "Q31720",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "my-name-is-red",
+      "title": "Имя мне — Красный",
+      "qid": "Q470464",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "snow",
+      "title": "Снег",
+      "qid": "Q1478870",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "istanbul-memories",
+      "title": "Стамбул. Город воспоминаний",
+      "qid": "Q557511",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "museum-of-innocence",
+      "title": "Музей невинности",
+      "qid": "Q785974",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "nights-of-plague",
+      "title": "Чумные ночи",
+      "qid": "Q97234903",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

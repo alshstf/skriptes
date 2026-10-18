@@ -1,0 +1,693 @@
+{
+  "qid": "Q44519",
+  "name": "Сельма Лагерлёф",
+  "born": "1858-11-20",
+  "died": "1940-03-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D0%B3%D0%B5%D1%80%D0%BB%D1%91%D1%84%2C_%D0%A1%D0%B5%D0%BB%D1%8C%D0%BC%D0%B0",
+      "rev": 155280028
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Selma_Lagerl%C3%B6f",
+      "rev": 1380279880
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/Selma_Lagerl%C3%B6f",
+      "rev": 59664105
+    }
+  ],
+  "chapters": [
+    {
+      "key": "vermland-childhood",
+      "title": "Вермланд, болезнь, разорение",
+      "from": 1858,
+      "to": 1880
+    },
+    {
+      "key": "seminary-landskrona",
+      "title": "Семинария и Ландскруна",
+      "from": 1881,
+      "to": 1894
+    },
+    {
+      "key": "writer-falun",
+      "title": "Свобода писательства и Фалун",
+      "from": 1895,
+      "to": 1908
+    },
+    {
+      "key": "nobel-marbacka",
+      "title": "Нобель и возвращение в Морбакку",
+      "from": 1909,
+      "to": 1920
+    },
+    {
+      "key": "late-years",
+      "title": "Последние годы",
+      "from": 1921,
+      "to": 1940
+    }
+  ],
+  "events": [
+    {
+      "key": "illness-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Паралич ног в раннем детстве",
+      "long": "Летом 1862 года девочка заболела и потеряла способность ходить; паралич прошёл так же внезапно, как возник. Она росла среди рассказов бабушки и тёти.",
+      "place": {
+        "label": "Морбакка"
+      },
+      "chapter": "vermland-childhood",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "När hon var tre och ett halvt år gammal, sommaren 1862, blev hon sjuk och helt förlamad i båda benen."
+      }
+    },
+    {
+      "key": "loss-1863",
+      "date": {
+        "from": "1863",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть бабушки",
+      "long": "Умерла бабушка, рассказывавшая внучке сказки и семейные предания; позже Лагерлёф вспоминала, что для неё «захлопнулась дверь» в заколдованный мир.",
+      "place": {
+        "label": "Морбакка"
+      },
+      "chapter": "vermland-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сельма тяжело пережила смерть бабушки в 1863 году"
+      }
+    },
+    {
+      "key": "illness-1867",
+      "date": {
+        "from": "1867",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лечение в стокгольмской клинике",
+      "long": "В Стокгольме после курса лечения в специальной клинике она снова смогла ходить. Семья к тому времени сильно обеднела.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "vermland-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1867 году Сельма переехала в Стокгольм, где после курса лечения в специальной клинике снова смогла ходить."
+      }
+    },
+    {
+      "key": "education-1882",
+      "date": {
+        "from": "1882",
+        "to": "1885",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Высшей учительской семинарии",
+      "long": "Училась в Высшей учительской семинарии в Стокгольме, по шведской статье — вопреки воле отца.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lagerlöf studied at the Högre lärarinneseminariet in Stockholm from 1882 to 1885."
+      }
+    },
+    {
+      "key": "loss-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "В 1885 году умер отец, Эрик Густав Лагерлёф; его пристрастие к алкоголю и азартным играм способствовало разорению семьи.",
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1885 году умер отец, а в 1888 году Морбакка была продана за долги"
+      }
+    },
+    {
+      "key": "career-1885",
+      "date": {
+        "from": "1885",
+        "to": "1895",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Учительница в Ландскруне",
+      "long": "Десять лет преподавала в женской школе в Ландскруне на юге Швеции; именно там начала работу над первым романом.",
+      "place": {
+        "label": "Ландскрона"
+      },
+      "works": [
+        {
+          "ref": "gosta-berling-saga",
+          "note": "работа над романом шла в Ландскруне параллельно со службой"
+        }
+      ],
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She worked as a country schoolteacher at a high school for girls in Landskrona from 1885 to 1895."
+      }
+    },
+    {
+      "key": "poverty-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Продажа Морбакки за долги",
+      "long": "Родовая усадьба Морбакка была продана за долги, в ней поселились чужие люди.",
+      "place": {
+        "label": "Морбакка"
+      },
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1885 году умер отец, а в 1888 году Морбакка была продана за долги, и в усадьбе поселились чужие люди."
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Победа в конкурсе газеты «Идун»",
+      "long": "Отправила в газету «Идун» главы неоконченного романа и выиграла конкурс; полученная премия позволила завершить книгу.",
+      "works": [
+        {
+          "ref": "gosta-berling-saga",
+          "note": "на конкурс были посланы главы ещё не оконченного романа"
+        }
+      ],
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1890 года газета «Идун» объявила конкурс на произведение, которое заинтересовало бы её читателей. В августе этого же года Лагерлёф отослала в газету несколько глав ещё не оконченного произведения и выиграла конкурс."
+      }
+    },
+    {
+      "key": "career-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и признание после отзыва Брандеса",
+      "long": "Дебютный роман вышел полностью; после положительных отзывов Георга Брандеса, прочитавшего датский перевод, популярность книги выросла.",
+      "works": [
+        {
+          "ref": "gosta-berling-saga"
+        }
+      ],
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Полностью «Сага о Йёсте Берлинге» была опубликована в 1891 году. Книга была замечена датским критиком Георгом Брандесом и получила широкое признание."
+      }
+    },
+    {
+      "key": "love-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Софи Элькан",
+      "long": "Познакомилась с писательницей Софи Элькан, ставшей её подругой и спутницей; они обсуждали книги друг друга, переписка издана.",
+      "chapter": "seminary-landskrona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "писательницей Софи Элькан, с которой познакомилась в 1894 году"
+      }
+    },
+    {
+      "key": "career-1895",
+      "date": {
+        "from": "1895",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из школы ради литературы",
+      "long": "Оставила место учительницы и с этого времени жила литературным трудом.",
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1895 году Лагерлёф оставила службу и всецело посвятила себя литературному творчеству."
+      }
+    },
+    {
+      "key": "other-1895",
+      "date": {
+        "from": "1895",
+        "to": "1896",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Италию",
+      "long": "Вместе с Софи Элькан путешествовала по Италии; по английской статье, услышанная там легенда вдохновила роман.",
+      "place": {
+        "label": "Италия"
+      },
+      "works": [
+        {
+          "ref": "antichrist-miracles",
+          "note": "итальянская легенда о подменённом изображении младенца Христа вдохновила роман"
+        }
+      ],
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1895—1896 годах она посетила Италию, в которой происходит действие её романа «Чудеса антихриста» (1897)."
+      }
+    },
+    {
+      "key": "relocation-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Фалун",
+      "long": "Переехала в Фалун (по шведской статье — вместе с тётей, чтобы быть ближе к сестре Герде); прожила там много лет.",
+      "place": {
+        "label": "Фалун"
+      },
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She moved to Falun in 1897"
+      }
+    },
+    {
+      "key": "other-1899",
+      "date": {
+        "from": "1899",
+        "to": "1900",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Путешествие на Ближний Восток",
+      "long": "Вместе с Софи Элькан побывала на Ближнем Востоке, в том числе в американской колонии в Иерусалиме; вернувшись, написала роман.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "works": [
+        {
+          "ref": "jerusalem",
+          "note": "по шведской статье, роман написан сразу по возвращении из поездки"
+        }
+      ],
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Lagerlöf gjorde tillsammans med Sophie Elkan flera längre resor i Europa och år 1899–1900 en längre resa till Mellanöstern."
+      }
+    },
+    {
+      "key": "love-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с Вальборг Оландер",
+      "long": "Начались близкие отношения с Вальборг Оландер, учительницей и суфражисткой, ставшей её секретарём и литературным помощником; переписка издана.",
+      "place": {
+        "label": "Фалун"
+      },
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Från 1902 utvecklade Olander och Lagerlöf en kärleksrelation."
+      }
+    },
+    {
+      "key": "creation-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Заказ учебной книги о Швеции",
+      "long": "Национальная ассоциация учителей попросила её написать детскую книгу по географии Швеции; из неё выросла книга о Нильсе и гусях.",
+      "works": [
+        {
+          "ref": "nils-holgersson",
+          "note": "книга первоначально задумывалась как учебная"
+        }
+      ],
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1902, Lagerlöf was asked by the National Teachers' Association to write a geography book for children."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907-05-24",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор Уппсальского университета",
+      "long": "Стала первой женщиной — почётным доктором Уппсальского университета; назвала это «отличием для всего женского пола».",
+      "place": {
+        "label": "Уппсала"
+      },
+      "chapter": "writer-falun",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "När Lagerlöf utsågs till hedersdoktor vid Uppsala universitet 24 maj 1907 var hon den första kvinnan"
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Первая женщина — лауреат Нобелевской премии по литературе. По шведской статье, кандидатуру прежде блокировал секретарь Академии Вирсен.",
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1909 году писательнице была вручена Нобелевская премия по литературе"
+      }
+    },
+    {
+      "key": "relocation-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Выкуп Морбакки и возвращение домой",
+      "long": "На деньги Нобелевской премии выкупила родовую усадьбу и вернулась в неё; жила в Морбакке до конца жизни.",
+      "place": {
+        "label": "Морбакка"
+      },
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Från 1909 bodde hon periodvis åter på Mårbacka; med hjälp av prissumman från sitt Nobelpris lyckades hon köpa tillbaka jordbruket."
+      }
+    },
+    {
+      "key": "other-1911",
+      "date": {
+        "from": "1911-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Речь на конгрессе за права женщин",
+      "long": "Выступила с вступительной речью на Международном конгрессе за избирательные права женщин в Стокгольме; участвовала в шведском суфражистском движении.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she spoke at the International Suffrage Congress in Stockholm in June 1911, where she gave the opening address"
+      }
+    },
+    {
+      "key": "career-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Шведскую академию",
+      "long": "Стала первой женщиной — членом Шведской академии.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1914 году первой из женщин вошла в состав Шведской академии"
+      }
+    },
+    {
+      "key": "loss-1915",
+      "date": {
+        "from": "1915-12-11",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Элизабет Ловиса Вальрот; письма Лагерлёф к ней изданы под названием «Мамина Сельма».",
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "мать — Элизабет Ловиса Вальрот (1827—1915), учительница"
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа прав на экранизации",
+      "long": "Продала студии Svenska Biografteatern права на экранизацию всех своих ещё не изданных произведений; позже по её книгам сняли много фильмов.",
+      "chapter": "nobel-marbacka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1919, Lagerlöf sold all the movie rights to all of her as-yet unpublished works to Swedish Cinema Theatre"
+      }
+    },
+    {
+      "key": "loss-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Софи Элькан",
+      "long": "Умерла Софи Элькан, с которой Лагерлёф связывали отношения и многолетняя переписка.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Deras relation fortsatte fram till Elkans död 1921."
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928-11-20",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Празднование 70-летия",
+      "long": "К 70-летию в Королевском театре поставили драму по её первому роману.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "I samband med sin 70-årsdag den 20 november 1928, firades hon genom en festföreställning på Kungliga Teatern."
+      }
+    },
+    {
+      "key": "death-1940",
+      "date": {
+        "from": "1940-03-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Морбакке",
+      "long": "Умерла в своём доме в Морбакке в возрасте 81 года после болезни; рядом была Вальборг Оландер.",
+      "place": {
+        "label": "Морбакка"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "död 16 mars 1940 på Mårbacka i Östra Ämterviks församling i Värmlands län"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "gosta-berling-saga",
+      "title": "Сага о Йёсте Берлинге",
+      "qid": "Q1559656",
+      "written": {
+        "from": 1881,
+        "to": 1891
+      }
+    },
+    {
+      "ref": "invisible-links",
+      "title": "Невидимые узы",
+      "written": {
+        "from": 1894,
+        "to": 1894
+      }
+    },
+    {
+      "ref": "antichrist-miracles",
+      "title": "Чудеса антихриста",
+      "written": {
+        "from": 1895,
+        "to": 1897
+      }
+    },
+    {
+      "ref": "queens-of-kungahalla",
+      "title": "Королевы из Кунгахеллы",
+      "written": {
+        "from": 1899,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "jerusalem",
+      "title": "Иерусалим",
+      "qid": "Q478463",
+      "written": {
+        "from": 1901,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "mr-arnes-money",
+      "title": "Деньги господина Арне",
+      "written": {
+        "from": 1904,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "christ-legends",
+      "title": "Легенды о Христе",
+      "written": {
+        "from": 1904,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "nils-holgersson",
+      "title": "Чудесное путешествие Нильса Хольгерссона по Швеции",
+      "qid": "Q726254",
+      "written": {
+        "from": 1906,
+        "to": 1907
+      }
+    },
+    {
+      "ref": "liljecrona-home",
+      "title": "Дом Лильекруны",
+      "written": {
+        "from": 1911,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "phantom-carriage",
+      "title": "Возница",
+      "written": {
+        "from": 1912,
+        "to": 1912
+      }
+    },
+    {
+      "ref": "emperor-of-portugallia",
+      "title": "Император Португальский",
+      "written": {
+        "from": 1914,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "exile",
+      "title": "Изгнанник",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "morbacka",
+      "title": "Морбакка",
+      "written": {
+        "from": 1922,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "lowenskold-ring",
+      "title": "Перстень Лёвеншёльдов",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "charlotte-lowenskold",
+      "title": "Шарлотта Лёвеншёльд",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "anna-svard",
+      "title": "Анна Сверд",
+      "written": {
+        "from": 1928,
+        "to": 1928
+      }
+    }
+  ]
+}

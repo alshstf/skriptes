@@ -1,0 +1,617 @@
+{
+  "qid": "Q277308",
+  "name": "Джон Скальци",
+  "born": "1969-05-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BA%D0%B0%D0%BB%D1%8C%D1%86%D0%B8%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 154248388
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Scalzi",
+      "rev": 1377269166
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-chicago",
+      "title": "Детство и Чикаго",
+      "from": 1969,
+      "to": 1990
+    },
+    {
+      "key": "journalism-aol",
+      "title": "Газета, AOL и блог",
+      "from": 1991,
+      "to": 1998
+    },
+    {
+      "key": "freelance-old-mans-war",
+      "title": "Вольный писатель и «Война старика»",
+      "from": 1999,
+      "to": 2007
+    },
+    {
+      "key": "hugo-and-sfwa",
+      "title": "Хьюго, SFWA и Ohio",
+      "from": 2008,
+      "to": 2014
+    },
+    {
+      "key": "tor-deal",
+      "title": "Контракт с Tor и новые циклы",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "poverty-1969",
+      "date": {
+        "from": "1969",
+        "to": "1987",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Детство в бедности",
+      "long": "Рос в бедности в пригородах Лос-Анджелеса; этот опыт лёг в основу эссе «Being Poor».",
+      "place": {
+        "label": "Ковина"
+      },
+      "chapter": "childhood-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi's childhood was spent in poverty, an experience that inspired him to write his most famous essay, \"Being Poor\"."
+      }
+    },
+    {
+      "key": "birth-1969",
+      "date": {
+        "from": "1969-05-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Фэрфилде, Калифорния",
+      "long": "Родился в Фэрфилде, Калифорния, в семье одинокой матери; вырос в пригородах Лос-Анджелеса.",
+      "place": {
+        "label": "Фэрфилд"
+      },
+      "chapter": "childhood-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi was born in Fairfield, California, on May 10, 1969."
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Редактор газеты Chicago Maroon",
+      "long": "В 1989–1990 учебном году был главным редактором студенческой газеты The Chicago Maroon; с 1990 года писал для Chicago Sun-Times.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "childhood-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During his 1989–1990 school year, Scalzi was the editor-in-chief of The Chicago Maroon."
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Чикагского университета",
+      "long": "Получил степень бакалавра по философии в Чикагском университете, не завершив дипломную работу.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi graduated from Chicago in 1991 with a Bachelor of Arts."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кинокритик в «Fresno Bee»",
+      "long": "После университета стал кинокритиком и автором юмористической колонки в газете «Fresno Bee».",
+      "place": {
+        "label": "Фресно"
+      },
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания университета в 1991 году Скальци устроился кинокритиком в газету «Fresno Bee»"
+      }
+    },
+    {
+      "key": "love-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кристин Блаузер",
+      "long": "Женился на Кристин Энн Блаузер, с которой познакомился во Фресно.",
+      "place": {
+        "label": "Фресно"
+      },
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He met his wife Kristine Ann Blauser when he was living in Fresno, and they married in 1995."
+      }
+    },
+    {
+      "key": "relocation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Вашингтон, работа в AOL",
+      "long": "Семья переехала в район Вашингтона: Скальци нанят штатным автором и редактором в AOL.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, he and his family moved to the Washington, D.C. area after he was hired as the in-house writer and editor at AOL."
+      }
+    },
+    {
+      "key": "child-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери",
+      "long": "В 1998 году родился единственный ребёнок — дочь.",
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His only child, a daughter, was born in 1998."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из AOL, начало вольной работы",
+      "long": "Уволен из AOL в 1998 году; с тех пор работает независимым писателем.",
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was laid off in 1998, and since then he has been a full-time freelance writer and author."
+      }
+    },
+    {
+      "key": "creation-1998",
+      "date": {
+        "from": "1998-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Запуск блога Whatever",
+      "long": "В сентябре 1998 года начал вести личный блог Whatever, который ведёт ежедневно.",
+      "chapter": "journalism-aol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi began writing for his personal blog Whatever in September 1998."
+      }
+    },
+    {
+      "key": "creation-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый роман выложен в сети бесплатно",
+      "long": "Роман, написанный в 1997 году, опубликован на сайте автора для свободного чтения; за пять лет читатели прислали около 4000 долларов.",
+      "works": [
+        {
+          "ref": "agent-to-the-stars"
+        }
+      ],
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi's first novel, Agent to the Stars, was written in 1997 and published free to read on his website in 1999."
+      }
+    },
+    {
+      "key": "relocation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Брадфорд, Огайо",
+      "long": "Семья переехала в Брадфорд, Огайо, чтобы жить ближе к родным жены.",
+      "place": {
+        "label": "Брадфорд"
+      },
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and his family live in Bradford, Ohio, where they moved in 2001 to be closer to his wife's family."
+      }
+    },
+    {
+      "key": "creation-2002",
+      "date": {
+        "from": "2002-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман публикуется по главе в день на сайте",
+      "long": "В декабре 2002 года выкладывал роман по главе в день на своём сайте; редактор Tor Патрик Нильсен Хейден предложил его издать.",
+      "works": [
+        {
+          "ref": "old-mans-war"
+        }
+      ],
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi serialized a chapter a day in December 2002. Tor Books executive editor Patrick Nielsen Hayden offered to buy the novel"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003-08",
+        "to": "2007-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Блогер AOL Journals",
+      "long": "С августа 2003 по декабрь 2007 года профессионально вёл блог для сервиса AOL Journals.",
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi was a professional blogger for America Online's AOL Journals and AIM Blogs service from August 2003 through December 2007."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первого романа в Tor",
+      "long": "В январе 2005 года вышло издание романа в твёрдой обложке; в 2006 году роман стал финалистом премии «Хьюго».",
+      "works": [
+        {
+          "ref": "old-mans-war"
+        }
+      ],
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it was published by Tor in January 2005. The novel became a finalist for the 2006 Hugo Award for Best Novel."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "В августе 2006 года награждён премией Джона Кэмпбелла как лучший новый автор-фантаст 2005 года.",
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 2006, Scalzi was awarded the John W. Campbell Award for Best New Writer for best new science fiction writer of 2005."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Неудачная попытка выдвижения в президенты SFWA",
+      "long": "В 2007 году баллотировался в президенты SFWA как write-in кандидат против единственного номинанта, но не был избран.",
+      "chapter": "freelance-old-mans-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He had previously run as a write-in candidate in 2007, challenging the sole ballot nominee that year, but was not successful."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» лучшему автору-любителю",
+      "long": "В 2008 году получил «Хьюго» как лучший автор-любитель, главным образом за блог Whatever.",
+      "chapter": "hugo-and-sfwa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the Hugo Award for Best Fan Writer in 2008 based predominantly on that blog"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Консультант сериала «Звёздные врата: Вселенная»",
+      "long": "В 2009 году был творческим консультантом сериала Stargate Universe, указан в 39 эпизодах.",
+      "chapter": "hugo-and-sfwa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, Scalzi was a creative consultant on science-fiction television show Stargate Universe."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Президент Ассоциации писателей-фантастов (SFWA)",
+      "long": "В 2010 году впервые избран президентом SFWA; полномочия закончились 30 июня 2013 года, на четвёртый срок не баллотировался.",
+      "chapter": "hugo-and-sfwa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scalzi was first elected president of the Science Fiction and Fantasy Writers of America in 2010."
+      }
+    },
+    {
+      "key": "persecution-2012",
+      "date": {
+        "from": "2012-10",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Травля со стороны Вокса Дэя",
+      "long": "После сатирической записи в блоге в октябре 2012 года стал мишенью писателя Вокса Дэя и его сторонников; ответил сбором более 50 000 долларов на благотворительность.",
+      "chapter": "hugo-and-sfwa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After writing a satirical blog post in October 2012 criticizing some conservative politicians for their positions on abortion, Scalzi was targeted by writer Vox Day and his supporters."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Хьюго» и «Локус» за лучший роман",
+      "long": "В 2013 году роман о «красных рубашках» получил премию «Хьюго» за лучший роман и премию «Локус».",
+      "works": [
+        {
+          "ref": "redshirts"
+        }
+      ],
+      "chapter": "hugo-and-sfwa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году за фантастический роман «Люди в красном» был удостоен премии Хьюго в номинации «Лучший роман» и премии «Локус» в аналогичной номинации."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-05-24",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Десятилетний контракт с Tor на 3,4 млн долларов",
+      "long": "24 мая 2015 года Tor объявило о договоре на 13 книг на 10 лет; договор окончательно заключён 25 ноября 2015 года.",
+      "works": [
+        {
+          "ref": "the-collapsing-empire"
+        }
+      ],
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 24, 2015, Tor announced that it had agreed to a $3.4 million deal with Scalzi spanning 10 years and 13 books"
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016-03-30",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колумнист Los Angeles Times",
+      "long": "30 марта 2016 года Los Angeles Times объявила Скальци одним из десяти «критиков-обозревателей» газеты.",
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On March 30, 2016, the Los Angeles Times announced that Scalzi was one of ten \"Critics-at-Large\""
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Адаптации рассказов в «Любовь. Смерть. Роботы»",
+      "long": "В 2019 году три его рассказа экранизированы в первом сезоне антологии Netflix.",
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019, three of his short stories were adapted for episodes of the first season of the Netflix anthology series Love, Death \u0026 Robots"
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» и премия Хайнлайна",
+      "long": "В 2023 году роман «Общество охраны кайдзю» получил премию «Локус», сам автор — премию Роберта Хайнлайна.",
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023 he received the Robert A. Heinlein Award."
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Новый договор с Tor на десять книг",
+      "long": "В 2024 году Tor Books объявило о подписании договора ещё на 10 книг.",
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2024, Tor Books announced that they signed a deal for 10 more books by Scalzi."
+      }
+    },
+    {
+      "key": "career-2026",
+      "date": {
+        "from": "2026",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за лучшую серию",
+      "long": "В 2026 году цикл «Война старика» получил премию «Хьюго» за лучшую серию.",
+      "works": [
+        {
+          "ref": "old-mans-war"
+        }
+      ],
+      "chapter": "tor-deal",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2026, his Old Man's War series won the Hugo Award for Best Series."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "agent-to-the-stars",
+      "title": "Звёздный агент",
+      "written": {
+        "from": 1997,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "old-mans-war",
+      "title": "Война старика",
+      "qid": "Q18356739",
+      "written": {
+        "from": 2002,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-ghost-brigades",
+      "title": "Бригады призраков",
+      "written": {
+        "from": 2005,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-android-s-dream",
+      "title": "Сон андроида",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-last-colony",
+      "title": "Последняя колония",
+      "written": {
+        "from": 2006,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "redshirts",
+      "title": "Люди в красном",
+      "qid": "Q7306263",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "the-collapsing-empire",
+      "title": "Крушение империи",
+      "written": {
+        "from": 2015,
+        "to": 2017
+      }
+    }
+  ]
+}

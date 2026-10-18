@@ -1,0 +1,683 @@
+{
+  "qid": "Q78511",
+  "name": "Густав Майринк",
+  "born": "1868-01-19",
+  "died": "1932-12-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%B9%D1%80%D0%B8%D0%BD%D0%BA%2C_%D0%93%D1%83%D1%81%D1%82%D0%B0%D0%B2",
+      "rev": 154232026
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Gustav_Meyrink",
+      "rev": 1375377129
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Gustav_Meyrink",
+      "rev": 271385162
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Незаконный сын и пражская гимназия",
+      "from": 1868,
+      "to": 1888
+    },
+    {
+      "key": "prague-bank",
+      "title": "Банкир и оккультист в Праге",
+      "from": 1889,
+      "to": 1902
+    },
+    {
+      "key": "prison-and-pen",
+      "title": "Тюрьма, журналы, переводы",
+      "from": 1903,
+      "to": 1910
+    },
+    {
+      "key": "starnberg-golem",
+      "title": "Штарнберг и «Голем»",
+      "from": 1911,
+      "to": 1919
+    },
+    {
+      "key": "villa-years",
+      "title": "Дом у последнего фонаря",
+      "from": 1920,
+      "to": 1926
+    },
+    {
+      "key": "last-years",
+      "title": "Буддизм и утрата сына",
+      "from": 1927,
+      "to": 1932
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1868",
+      "date": {
+        "from": "1868-01-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вене",
+      "long": "Густав Мейер (Майринк) родился в Вене как незаконнорождённый сын министра Карла Варнбюллера и актрисы Марии Майер.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "19 января 1868, Вена, Австро-Венгрия"
+      }
+    },
+    {
+      "key": "relocation-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд матери с сыном в Прагу",
+      "long": "После детства в разъездах (Мюнхен, Гамбург) начался пражский период: Майринк прожил в Праге около двадцати лет.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1883 начался пражский период жизни и творчества писателя."
+      }
+    },
+    {
+      "key": "education-1885",
+      "date": {
+        "from": "1885",
+        "to": "1888",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в пражской торговой академии",
+      "long": "Майринк учился в торговой академии в Праге, после чего стал банкиром.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach dem Besuch der Handelsakademie in Prag (1885–88)"
+      }
+    },
+    {
+      "key": "career-1889",
+      "date": {
+        "from": "1889",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание банка «Майер и Моргенштерн»",
+      "long": "Вместе с племянником поэта Кристиана Моргенштерна Майринк основал торговый банк, некоторое время работавший успешно.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1889 году вместе с племянником поэта Кристиана Моргенштерна Майринк основал торговый банк под названием «Майер и Моргенштерн»"
+      }
+    },
+    {
+      "key": "faith-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Теософская ложа «Zum blauen Stern»",
+      "long": "Майринк стал сооснователем и председателем пражской ложи Теософского общества «Zum blauen Stern».",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Jahre 1891 wurde Meyrink Mitbegründer und Vorsitzender der Loge „Zum blauen Stern“"
+      }
+    },
+    {
+      "key": "love-1892",
+      "date": {
+        "from": "1892",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с Едвигой Цертль",
+      "long": "Майринк быстро разочаровался в браке и не разводился до 1905 года из-за упорства супруги и юридических деталей.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1892 году Майринк женился на Едвиге Марии Цертль"
+      }
+    },
+    {
+      "key": "faith-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Кризис и обращение к мистике",
+      "long": "Из-за любовной тоски Майринк хотел застрелиться; ему подсунули под дверь книгу о жизни после смерти. После этого он занялся теософией, каббалой и учениями Востока.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Это было в 1893 году, из-за любовной тоски он хотел покончить с собой"
+      }
+    },
+    {
+      "key": "illness-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Начало болезни спинного мозга",
+      "long": "У Майринка развилось заболевание спинного мозга; боль в позвоночнике преследовала его и позже.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Jahre 1900 brach eine Rückenmarkserkrankung bei ihm aus."
+      }
+    },
+    {
+      "key": "persecution-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест по ложному обвинению и крах дел",
+      "long": "Майринка обвинили в использовании спиритизма в банковских делах и держали в тюрьме два с половиной месяца; невиновность доказали, но предприятие пришлось оставить.",
+      "place": {
+        "label": "Прага"
+      },
+      "works": [
+        {
+          "ref": "golem",
+          "note": "опыт заключения пригодился при написании романа"
+        }
+      ],
+      "chapter": "prague-bank",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1902 году на Майринка в пражскую полицию поступило клеветническое обвинение в использовании спиритизма и колдовства в банкирской деятельности"
+      }
+    },
+    {
+      "key": "career-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сатирические рассказы в «Симплициссимусе»",
+      "long": "Майринк начал печатать короткие сатирические рассказы в журнале, подписываясь фамилией матери.",
+      "works": [
+        {
+          "ref": "hot-soldier"
+        }
+      ],
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1903 года Майринк начал публиковать короткие сатирические рассказы в журнале «Симплициссимус», подписываясь фамилией матери."
+      }
+    },
+    {
+      "key": "relocation-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Вену, редакция «Lieber Augustin»",
+      "long": "Майринк переехал в Вену и возглавил редакцию сатирического журнала.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1903 zog er nach Wien um, wo er die Redaktion der Wiener Satirezeitschrift Lieber Augustin übernahm."
+      }
+    },
+    {
+      "key": "illness-1904",
+      "date": {
+        "from": "1904",
+        "to": "1905",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Обострение болезни и исцеление йогой",
+      "long": "Врачи сочли болезнь неизлечимой, но в течение года Майринк выздоровел и приписал исцеление упражнениям йоги.",
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1904 verstärkte sich das Rückenmarksleiden; die Ärzte erklärten Meyrinks Fall für unheilbar."
+      }
+    },
+    {
+      "key": "family-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с первой женой",
+      "long": "Брак с Едвигой Цертль был расторгнут в 1905 году.",
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "не разводился до 1905 года лишь из-за упорства супруги и некоторых юридических деталей"
+      }
+    },
+    {
+      "key": "love-1905",
+      "date": {
+        "from": "1905-05-08",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Филоминой Бернт",
+      "long": "Майринк женился на Филомине Бернт, с которой был знаком с 1896 года; супруги много путешествовали по Европе.",
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "8 мая 1905 года Майринк женился на Филомине Бернт"
+      }
+    },
+    {
+      "key": "relocation-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Мюнхен",
+      "long": "Семья переехала из Вены в Мюнхен.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1906 folgte ein Umzug nach München."
+      }
+    },
+    {
+      "key": "child-1906",
+      "date": {
+        "from": "1906-07-16",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Фелицитас Сибиллы",
+      "long": "У Майринка и Филомины родилась дочь Фелицитас Сибилла.",
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "16 июля 1906 года у него родилась дочь Фелицитас Сибилла"
+      }
+    },
+    {
+      "key": "child-1908",
+      "date": {
+        "from": "1908-01-17",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Харро Фортуната",
+      "long": "Родился сын Харро Фортунат; его имя Майринк дал герою романа.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "works": [
+        {
+          "ref": "green-face",
+          "note": "главный герой романа получил то же имя"
+        }
+      ],
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 17 January 1908, two days before Meyrink's fortieth birthday, the second son, Harro Fortunat, was born."
+      }
+    },
+    {
+      "key": "poverty-1909",
+      "date": {
+        "from": "1909",
+        "to": "1914",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Переводы Диккенса ради заработка",
+      "long": "Рассказы не кормили семью, и Майринк стал переводчиком, переведя на немецкий многие тома Диккенса, а также Киплинга.",
+      "chapter": "prison-and-pen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zwischen 1909 und 1914 übersetzte Meyrink Werke von Charles Dickens"
+      }
+    },
+    {
+      "key": "relocation-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Штарнберг",
+      "long": "Майринк с семьёй переехал в баварский городок Штарнберг, где прожил до смерти.",
+      "place": {
+        "label": "Штарнберг"
+      },
+      "chapter": "starnberg-golem",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911 году Майринк с семьёй переехал в маленький баварский городок Штарнберг"
+      }
+    },
+    {
+      "key": "career-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех первого романа",
+      "long": "Роман имел мировой успех и тираж более 100 000 экземпляров; он обеспечил популярность последующим книгам.",
+      "works": [
+        {
+          "ref": "golem"
+        }
+      ],
+      "chapter": "starnberg-golem",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1915 году вышел в свет первый и самый известный роман Майринка, «Голем»… Роман имел мировой успех"
+      }
+    },
+    {
+      "key": "persecution-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет сборника рассказов в Австрии",
+      "long": "Сборник, высмеивавший армию и церковь, запретили в Австрии; Майринк, противник войны, подвергался нападкам немецких националистов.",
+      "works": [
+        {
+          "ref": "des-deutschen-spiessers-wunderhorn"
+        }
+      ],
+      "chapter": "starnberg-golem",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916 Des deutschen Spießers Wunderhorn was banned in Austria."
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Заказ МИД на антимасонский роман",
+      "long": "Берлинское ведомство предложило написать пропагандистский роман о вине масонов в войне; Майринк принял заказ, но до завершения был от него отстранён.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "starnberg-golem",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Er wurde 1917 vom Auswärtigen Amt in Berlin aufgefordert, einen propagandistischen okkulten Roman zu schreiben"
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покупка виллы «Дом у последнего фонаря»",
+      "long": "Финансовые дела поправились, и Майринк купил виллу в Штарнберге; в ней он прожил восемь лет с семьёй и написал два романа.",
+      "place": {
+        "label": "Штарнберг"
+      },
+      "works": [
+        {
+          "ref": "white-dominican"
+        },
+        {
+          "ref": "angel-of-the-west-window"
+        }
+      ],
+      "chapter": "villa-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К 1920 году финансовые дела Майринка существенно поправились, и он смог купить виллу в Штарнберге."
+      }
+    },
+    {
+      "key": "faith-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Переход в буддизм",
+      "long": "Майринк перешёл из протестантизма в буддизм махаяны.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году Майринк перешёл в буддизм."
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Продажа дома в Штарнберге",
+      "long": "Дом в Штарнберге, где Майринк жил с 1920 года, был продан.",
+      "place": {
+        "label": "Штарнберг"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1928 kam es zum Verkauf des Hauses in Starnberg"
+      }
+    },
+    {
+      "key": "loss-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Тяжёлая травма сына Харро на лыжах",
+      "long": "Харро получил травму позвоночника, приковавшую его к инвалидному креслу.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Зимой 1932 года сын Майринка Харро, катаясь на лыжах, получил тяжёлую травму позвоночника, приковавшую его к инвалидному креслу на всю оставшуюся жизнь"
+      }
+    },
+    {
+      "key": "loss-1932-2",
+      "date": {
+        "from": "1932-06-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Харро",
+      "long": "Сын Харро покончил с собой в возрасте 24 лет; Майринк пережил его на полгода.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "покончил с собой 12 июня 1932 года в возрасте 24 лет"
+      }
+    },
+    {
+      "key": "death-1932",
+      "date": {
+        "from": "1932-12-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Штарнберге",
+      "long": "Майринк скончался в Штарнберге; официальной причиной по словам жены стала уремия. Похоронен рядом с могилой сына.",
+      "place": {
+        "label": "Штарнберг"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он скончался 4 декабря 1932 года в баварском Штарнберге"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "golem",
+      "title": "Голем",
+      "qid": "Q673861",
+      "written": {
+        "from": 1908,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "hot-soldier",
+      "title": "Горячий солдат и другие рассказы",
+      "written": {
+        "from": 1903,
+        "to": 1903
+      }
+    },
+    {
+      "ref": "orchid",
+      "title": "Орхидея. Странные истории",
+      "written": {
+        "from": 1903,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "waxworks",
+      "title": "Восковые фигуры",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "des-deutschen-spiessers-wunderhorn",
+      "title": "Волшебный рог немецкого обывателя",
+      "written": {
+        "from": 1909,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "bats",
+      "title": "Летучие мыши",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "green-face",
+      "title": "Зелёный лик",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "walpurgis-night",
+      "title": "Вальпургиева ночь",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "white-dominican",
+      "title": "Белый доминиканец",
+      "written": {
+        "from": 1920,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "angel-of-the-west-window",
+      "title": "Ангел западного окна",
+      "written": {
+        "from": 1921,
+        "to": 1927
+      }
+    }
+  ]
+}

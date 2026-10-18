@@ -1,0 +1,368 @@
+{
+  "qid": "Q2057843",
+  "name": "Пэтрик Несс",
+  "born": "1971-10-17",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Patrick_Ness",
+      "rev": 1372535938
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-america",
+      "title": "Детство и учёба в Америке",
+      "from": 1971,
+      "to": 1998
+    },
+    {
+      "key": "london-first-books",
+      "title": "Переезд в Лондон, первые книги",
+      "from": 1999,
+      "to": 2007
+    },
+    {
+      "key": "chaos-walking-carnegie",
+      "title": "Бегущий в лабиринте и две медали Карнеги",
+      "from": 2008,
+      "to": 2016
+    },
+    {
+      "key": "release-and-after",
+      "title": "Личные книги и новые проекты",
+      "from": 2017,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1971",
+      "date": {
+        "from": "1971-10-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Виргинии, в семье военного",
+      "long": "Родился 17 октября 1971 года близ базы Форт-Белвуар у Александрии, штат Виргиния; отец служил сержантом армии США.",
+      "place": {
+        "label": "Фэрфакс"
+      },
+      "chapter": "childhood-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Patrick Ness FRSL (born 17 October 1971) is an American-British author"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый рассказ в журнале Genre",
+      "long": "В 1997 году опубликовал первый рассказ в журнале Genre; работал над первым романом.",
+      "chapter": "childhood-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He published his first story in Genre in 1997"
+      }
+    },
+    {
+      "key": "relocation-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лондон",
+      "long": "В 1999 году, работая над первым романом, переехал из США в Лондон.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "crash-of-hennington"
+        }
+      ],
+      "chapter": "london-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was working on his first novel when he moved to London in 1999"
+      }
+    },
+    {
+      "key": "other-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Британское гражданство",
+      "long": "В 2005 году получил британское гражданство, сохранив американское.",
+      "chapter": "london-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ness was naturalised as a British citizen in 2005."
+      }
+    },
+    {
+      "key": "love-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Гражданское партнёрство",
+      "long": "В 2006 году, меньше чем через два месяца после вступления в силу закона о гражданских партнёрствах, заключил гражданское партнёрство.",
+      "chapter": "london-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He entered into a civil partnership with his partner in 2006, less than two months after the Civil Partnership Act came into force."
+      }
+    },
+    {
+      "key": "creation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершение книги умершей Шивон Даud",
+      "long": "Ирландская писательница Шивон Дауд, больной раком, умерла в 2007 году, не закончив историю; издательство Walker Books поручило Нессу завершить её по заметкам.",
+      "works": [
+        {
+          "ref": "a-monster-calls",
+          "note": "Несс завершил книгу по заметкам Дауд, с иллюстратором Джимом Кеем не встречаясь"
+        }
+      ],
+      "chapter": "london-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "had been diagnosed with cancer and was unable to complete the story before she died in 2007"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Guardian за первый роман для подростков",
+      "long": "Первый роман для подростков получил Детскую премию газеты The Guardian в 2008 году.",
+      "works": [
+        {
+          "ref": "knife-of-never-letting-go"
+        }
+      ],
+      "chapter": "chaos-walking-carnegie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the Guardian Children's Fiction Prize in 2008."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "to": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Две медали Карнеги подряд",
+      "long": "Получил медаль Карнеги в 2011 и 2012 годах — одним из семи авторов, дважды удостоенных награды, и вторым подряд.",
+      "works": [
+        {
+          "ref": "monsters-of-men"
+        },
+        {
+          "ref": "a-monster-calls"
+        }
+      ],
+      "chapter": "chaos-walking-carnegie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ness won the annual Carnegie Medal in 2011 and in 2012"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-10-01",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Создание сериала «Класс» для BBC",
+      "long": "1 октября 2015 года BBC объявила, что Несс напишет спин-офф «Доктора Кто» «Класс»; сериал вышел в 2016 году и был закрыт после одного сезона.",
+      "chapter": "chaos-walking-carnegie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 1 October 2015, the BBC announced that Ness would be writing a Doctor Who spin-off entitled Class."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий экранизации своего романа",
+      "long": "Написал сценарий фильма 2016 года по собственной книге.",
+      "works": [
+        {
+          "ref": "a-monster-calls"
+        }
+      ],
+      "chapter": "chaos-walking-carnegie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote the screenplay of the 2016 film adaptation of A Monster Calls"
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017-05-04",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Самая личная книга",
+      "long": "Роман вышел 4 мая 2017 года; автор назвал его «личной и напряжённой» книгой, навеянной собственными переживаниями.",
+      "works": [
+        {
+          "ref": "release",
+          "note": "по словам автора, книга навеяна личными переживаниями"
+        }
+      ],
+      "chapter": "release-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Release, was published on 4 May 2017, described by Ness as a \"private and intense book\" inspired more by his personal feelings than any before it."
+      }
+    },
+    {
+      "key": "love-2022",
+      "date": {
+        "from": "2022-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ником Ковени",
+      "long": "В октябре 2022 года женился на Нике Ковени в Лас-Вегасе; сообщил об этом в феврале 2023 года и добавил, что за предыдущие 4–5 лет развёлся.",
+      "place": {
+        "label": "Лас-Вегас"
+      },
+      "chapter": "release-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he had married Nick Coveney in Las Vegas in October 2022"
+      }
+    },
+    {
+      "key": "other-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Избрание в Королевское литературное общество",
+      "long": "В 2023 году избран членом Королевского литературного общества.",
+      "chapter": "release-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, Ness was elected a Fellow of the Royal Society of Literature."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "crash-of-hennington",
+      "title": "Крушение Хеннингтона",
+      "written": {
+        "from": 1999,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "knife-of-never-letting-go",
+      "title": "Нож, которому нельзя покоя",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "ask-and-the-answer",
+      "title": "Вопрос и ответ",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "monsters-of-men",
+      "title": "Люди и монстры",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "a-monster-calls",
+      "title": "Голос монстра",
+      "qid": "Q4658340",
+      "written": {
+        "from": 2007,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "more-than-this",
+      "title": "Больше, чем это",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "crane-wife",
+      "title": "Жена журавля",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "rest-of-us-just-live-here",
+      "title": "Остальные просто живут здесь",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "release",
+      "title": "Освобождение",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

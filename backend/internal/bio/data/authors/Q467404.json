@@ -1,0 +1,258 @@
+{
+  "qid": "Q467404",
+  "name": "Джеймс Роллинс",
+  "born": "1961-08-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%BB%D0%BB%D0%B8%D0%BD%D1%81%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 154214660
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Rollins",
+      "rev": 1371730916
+    }
+  ],
+  "chapters": [
+    {
+      "key": "chicago-missouri",
+      "title": "Чикаго и Миссури",
+      "from": 1961,
+      "to": 1984
+    },
+    {
+      "key": "veterinarian",
+      "title": "Ветеринар, пишущий в обед",
+      "from": 1985,
+      "to": 1997
+    },
+    {
+      "key": "two-names",
+      "title": "Два имени, две полки",
+      "from": 1998,
+      "to": 2006
+    },
+    {
+      "key": "full-time",
+      "title": "Писатель на полный день",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1961",
+      "date": {
+        "from": "1961-08-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго",
+      "long": "Джеймс Пол Чайковски родился в Чикаго, в многодетной семье; отец работал на консервном заводе Libby's, мать была домохозяйкой.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-missouri",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "James Paul Czajkowski (born August 20, 1961)"
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Parkway West",
+      "long": "Окончил школу Parkway West в Боллуине, штат Миссури.",
+      "place": {
+        "label": "Боллуин"
+      },
+      "chapter": "chicago-missouri",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated from Parkway West High School in Ballwin, Missouri in 1979."
+      }
+    },
+    {
+      "key": "education-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Степень доктора ветеринарной медицины",
+      "long": "Получил степень доктора ветеринарной медицины в Миссурийском университете в Колумбии; вскоре переехал в Калифорнию и открыл ветеринарную практику.",
+      "place": {
+        "label": "Колумбия"
+      },
+      "chapter": "veterinarian",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году он получил докторскую степень по ветеринарной медицине Университета Миссури."
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало писательской работы при клинике",
+      "long": "Первый роман писал, работая в ветеринарной клинике; по словам Роллинса, начал писать в обеденный перерыв.",
+      "works": [
+        {
+          "ref": "subterranean",
+          "note": "первый роман написан в годы работы в клинике (интервью Роллинса 2012 года)"
+        }
+      ],
+      "chapter": "veterinarian",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писательскую деятельность Джеймс начал ещё в 1995 году."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Долгий поиск издателя для первого романа",
+      "long": "После долгих поисков нашёл издательство для первого романа, но книга вышла лишь через три года.",
+      "works": [
+        {
+          "ref": "subterranean"
+        }
+      ],
+      "chapter": "veterinarian",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джеймс долго искал издательство, которое бы опубликовало его роман, но нашёл только в 1996 году, однако издан он был лишь спустя 3 года."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Фэнтези под псевдонимом Джеймс Клеменс",
+      "long": "В ожидании публикации переключился на фэнтези и выпустил под псевдонимом Джеймс Клеменс первую книгу цикла «Проклятые и изгнанные».",
+      "works": [
+        {
+          "ref": "witch-fire"
+        }
+      ],
+      "chapter": "two-names",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джеймс решил переключиться на жанр фэнтези, и в 1998 году вышло первое произведение из цикла «Проклятые и изгнанные»"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Заказ на книгу по фильму об Индиане Джонсе",
+      "long": "Получил заказ на novelization фильма «Индиана Джонс и Королевство хрустального черепа».",
+      "works": [
+        {
+          "ref": "indiana-jones-crystal-skull"
+        }
+      ],
+      "chapter": "full-time",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году Джеймс был нанят для написания книжной версии фильма об Индиане Джонсе"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Scribe Award",
+      "long": "Книга по фильму об Индиане Джонсе получила премию Scribe Award как лучший адаптированный роман.",
+      "works": [
+        {
+          "ref": "indiana-jones-crystal-skull"
+        }
+      ],
+      "chapter": "full-time",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novelization won the Scribe Award for Best Adapted Novel (General) in 2009."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "subterranean",
+      "title": "Подземелье",
+      "written": {
+        "from": 1995,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "witch-fire",
+      "title": "Огонь ведьмы",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "sandstorm",
+      "title": "Песчаная буря",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "map-of-bones",
+      "title": "Карта костей",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "black-order",
+      "title": "Чёрный орден",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "indiana-jones-crystal-skull",
+      "title": "Индиана Джонс и Королевство хрустального черепа",
+      "written": {
+        "from": 2007,
+        "to": 2008
+      }
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+{
+  "qid": "Q57971",
+  "name": "Корнелия Функе",
+  "born": "1958-12-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D1%83%D0%BD%D0%BA%D0%B5%2C_%D0%9A%D0%BE%D1%80%D0%BD%D0%B5%D0%BB%D0%B8%D1%8F",
+      "rev": 153348756
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Cornelia_Funke",
+      "rev": 1371376812
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Cornelia_Funke",
+      "rev": 271219446
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dorsten-hamburg",
+      "title": "Дорстен и Гамбург",
+      "from": 1958,
+      "to": 1978
+    },
+    {
+      "key": "brak-i-pervye-knigi",
+      "title": "Брак, дети и первые книги",
+      "from": 1979,
+      "to": 2001
+    },
+    {
+      "key": "proryv",
+      "title": "Прорыв на английском языке",
+      "from": 2002,
+      "to": 2004
+    },
+    {
+      "key": "los-andzheles",
+      "title": "Лос-Анджелес и утрата",
+      "from": 2005,
+      "to": 2020
+    },
+    {
+      "key": "toskana",
+      "title": "Возвращение в Европу",
+      "from": 2021,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1958",
+      "date": {
+        "from": "1958-12-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дорстене",
+      "long": "Родилась в Дорстене (Северный Рейн — Вестфалия) в семье Карла-Хайнца и Хельми Функе.",
+      "place": {
+        "label": "Дорстен"
+      },
+      "chapter": "dorsten-hamburg",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Cornelia Funke wurde am 10. Dezember 1958 im nordrhein-westfälischen Dorsten geboren."
+      }
+    },
+    {
+      "key": "love-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Рольфом Фрамом",
+      "long": "Вышла замуж за полиграфиста Рольфа Фрама; семья прожила в Гамбурге 24 года.",
+      "place": {
+        "label": "Гамбург"
+      },
+      "chapter": "brak-i-pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1979 году Функе вышла замуж за полиграфиста Рольфа Фрама."
+      }
+    },
+    {
+      "key": "child-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны",
+      "long": "Родилась дочь Анна.",
+      "chapter": "brak-i-pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Их дочь Анна родилась в 1989 году"
+      }
+    },
+    {
+      "key": "child-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Бена",
+      "long": "Родился сын Бен.",
+      "chapter": "brak-i-pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1994 году родился их сын Бен"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Международный прорыв после английского перевода",
+      "long": "Английский перевод романа вышел в издательстве The Chicken House, получил широкое признание и попал в списки бестселлеров; с этого началась известность автора за пределами Германии.",
+      "works": [
+        {
+          "ref": "herr-der-diebe"
+        }
+      ],
+      "chapter": "proryv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The translation, released by The Chicken House in 2002, won widespread acclaim and reached several bestseller lists."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Одновременный выход романа в пяти странах",
+      "long": "Роман вышел одновременно в Германии, Великобритании, США, Канаде и Австралии.",
+      "works": [
+        {
+          "ref": "tintenherz"
+        }
+      ],
+      "chapter": "proryv",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ihr Roman Tintenherz erschien im September 2003 bereits gleichzeitig in Deutschland, Großbritannien, den USA, Kanada und Australien."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в список влиятельных людей журнала «Time»",
+      "long": "Журнал «Time» включил писательницу в число самых влиятельных людей мира.",
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году журнал «Time» назвал Корнелию Функе «самой влиятельной немкой в мире»."
+      }
+    },
+    {
+      "key": "relocation-2005",
+      "date": {
+        "from": "2005-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи из Гамбурга в Лос-Анджелес",
+      "long": "Семья покинула Гамбург и переехала в Лос-Анджелес; Функе приняла предложение стать продюсером экранизации «Чернильного сердца».",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The family lived in Hamburg for 24 years, until they moved to Los Angeles in May 2005."
+      }
+    },
+    {
+      "key": "loss-2006",
+      "date": {
+        "from": "2006-03-05",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Рольфа Фрама",
+      "long": "Муж Рольф Фрам умер в возрасте 58 лет от рака кишечника.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ihr Mann starb am 5. März 2006 mit 58 Jahren an einer Darmkrebserkrankung."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-10-04",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое место в списке бестселлеров Spiegel",
+      "long": "Впервые книга Функе сразу возглавила бестселлер-список Spiegel, который до этого долго не включал её книги из-за преимущественно юной аудитории.",
+      "works": [
+        {
+          "ref": "tintentod"
+        }
+      ],
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Tintentod lag am 4. Oktober 2007 sofort auf dem ersten Platz."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден «За заслуги перед ФРГ»",
+      "long": "Награждена кавалерским крестом ордена «За заслуги перед Федеративной Республикой Германия».",
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: кавалерский крест ордена «За заслуги перед Федеративной Республикой Германия» 2008-01-01"
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010-02",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покровительство детскому хосписа Bethel",
+      "long": "Стала официальным покровителем детского хосписа Bethel.",
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Корнелия — официальный покровитель детского хосписа Bethel (с февраля 2010 года)."
+      }
+    },
+    {
+      "key": "other-2012",
+      "date": {
+        "from": "2012-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Посол Германии по биоразнообразию ООН",
+      "long": "Стала одним из послов Германии в Десятилетии ООН по биоразнообразию.",
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С мая 2012 года она является одним из послов Германии по биоразнообразию ООН."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание аудиокнижного лейбла Atmende Bücher",
+      "long": "Совместно с Эдуардо Гарсией основала аудиокнижное издательство Atmende Bücher, чтобы независимо управлять звучанием своих историй.",
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "gründete Funke im Frühjahr 2016 zusammen mit Eduardo García, Inhaber und Produzent des Hamburger Tonstudios German Wahnsinn, das Hörbuchlabel Atmende Bücher."
+      }
+    },
+    {
+      "key": "relocation-2017",
+      "date": {
+        "from": "2017",
+        "to": "2021",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь на ферме в Малибу",
+      "long": "Жила на авокадовой ферме в Малибу; уехала, в частности, из-за высокой угрозы лесных пожаров.",
+      "place": {
+        "label": "Малибу"
+      },
+      "chapter": "los-andzheles",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Von 2017 bis 2021 lebte Funke auf einer Avocadofarm in Malibu."
+      }
+    },
+    {
+      "key": "relocation-2021",
+      "date": {
+        "from": "2021-09",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Тоскану",
+      "long": "Покинула США и поселилась в Тоскане близ Вольтерры; на территории усадьбы принимает молодых художников.",
+      "place": {
+        "label": "Вольтерра"
+      },
+      "chapter": "toskana",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, Funke then left the United States and moved to Tuscany, Italy."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "drachenreiter",
+      "title": "Повелитель драконов",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "herr-der-diebe",
+      "title": "Король воров",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "tintenherz",
+      "title": "Чернильное сердце",
+      "qid": "Q1458903",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "tintentod",
+      "title": "Чернильная смерть",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "reckless",
+      "title": "Reckless",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "die-wilden-huehner",
+      "title": "Дикие куры",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "gespensterjaeger",
+      "title": "Охотники за привидениями",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    }
+  ]
+}

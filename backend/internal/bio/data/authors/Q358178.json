@@ -1,0 +1,72 @@
+{
+  "qid": "Q358178",
+  "name": "Джонатан Страуд",
+  "born": "1970-10-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%B0%D1%83%D0%B4%2C_%D0%94%D0%B6%D0%BE%D0%BD%D0%B0%D1%82%D0%B0%D0%BD",
+      "rev": 147586564
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jonathan_Stroud",
+      "rev": 1379801815
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-and-study",
+      "title": "Сент-Олбанс, болезнь и книги",
+      "from": 1970,
+      "to": 1989
+    },
+    {
+      "key": "editor-and-writer",
+      "title": "Редактор и писатель",
+      "from": 1990,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1970",
+      "date": {
+        "from": "1970-10-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бедфорде",
+      "long": "Родился в Бедфорде, Англия.",
+      "place": {
+        "label": "Бедфорд"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Бедфорд 1970-10-27"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "bartimaeus-sequence",
+      "title": "Трилогия Бартимеуса",
+      "qid": "Q107432986",
+      "written": {
+        "from": 2003,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "lockwood-and-co",
+      "title": "Агентство «Локвуд и компания»",
+      "qid": "Q107618566",
+      "written": {
+        "from": 2013,
+        "to": 2017
+      }
+    }
+  ]
+}

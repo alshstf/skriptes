@@ -1,0 +1,334 @@
+{
+  "qid": "Q233566",
+  "name": "Шарлин Харрис",
+  "born": "1951-11-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D1%80%D1%80%D0%B8%D1%81%2C_%D0%A8%D0%B0%D1%80%D0%BB%D0%B8%D0%BD",
+      "rev": 150821428
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Charlaine_Harris",
+      "rev": 1380355489
+    }
+  ],
+  "chapters": [
+    {
+      "key": "delta-i-kolledzh",
+      "title": "Дельта и колледж",
+      "from": 1951,
+      "to": 1972
+    },
+    {
+      "key": "gazety-i-brak",
+      "title": "Газеты, брак, первый роман",
+      "from": 1973,
+      "to": 1989
+    },
+    {
+      "key": "tsikly-i-vampiry",
+      "title": "Циклы и вампиры",
+      "from": 1990,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1951",
+      "date": {
+        "from": "1951-11-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тьюнике, Миссисипи",
+      "long": "Шарлин Харрис родилась 25 ноября 1951 года в Тьюнике, штат Миссисипи.",
+      "place": {
+        "label": "Тьюника"
+      },
+      "chapter": "delta-i-kolledzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Шарлин Харрис родилась 25 ноября 1951 года в Тьюнике, штат Миссисипи."
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Родс",
+      "long": "Окончила колледж Родс в Мемфисе со степенью бакалавра по английскому языку и коммуникативным искусствам.",
+      "place": {
+        "label": "Мемфис"
+      },
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "который окончила в 1973 году со степенью бакалавра"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "to": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в газетах по городам штата",
+      "long": "Переезжала по городам штата, работала в газетных изданиях: фотолаборанткой, наборщицей.",
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период с 1973 по 1977 годы Харрис переезжает с места на место, по городам штата, и работает в различных газетных изданиях"
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "to": "1978",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Работа наборщицей в FedEx",
+      "long": "Вернулась в Мемфис и работала наборщицей в FedEx.",
+      "place": {
+        "label": "Мемфис"
+      },
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году Харрис возвращается в Мемфисе, и устраивается наборщицей в «FedEx»"
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Хэлом Шульцем",
+      "long": "В 1978 году познакомилась со вторым мужем Хэлом Шульцем, сделавшим ей предложение на втором свидании.",
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году Шарлин знакомится со своим вторым мужем Хэлом Шульцем"
+      }
+    },
+    {
+      "key": "creation-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман на подаренной машинке",
+      "long": "Первый роман написан, по воспоминаниям Харрис, после того как муж подарил ей на свадьбу электрическую пишущую машинку; издан в 1981 году.",
+      "works": [
+        {
+          "ref": "sweet-and-deadly",
+          "note": "по воспоминаниям самой Харрис, машинка была свадебным подарком мужа"
+        }
+      ],
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свой первый роман, детектив «Sweet and Deadly», Шарлин Харрис написала в 1978 году"
+      }
+    },
+    {
+      "key": "love-1978-2",
+      "date": {
+        "from": "1978-08-05",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Хэлом Шульцем",
+      "long": "5 августа 1978 года вышла замуж за Хэла Шульца; у пары трое детей — Патрик, Тимоти и Джулия.",
+      "chapter": "gazety-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "И 5 августа 1978 года Шарлин Харрис выходит за него замуж."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало цикла об Авроре Тигарден",
+      "long": "Начала первый детективный цикл об Авроре Тигарден; первый роман выдвинут на премию «Агаты».",
+      "works": [
+        {
+          "ref": "real-murders"
+        }
+      ],
+      "chapter": "tsikly-i-vampiry",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году Шарлин начала свой первый детективный цикл «Аврора Тигарден»"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Цикл о Лили Бард",
+      "long": "Начала цикл о Лили Бард, уборщице из вымышленного города Шекспир в Арканзасе.",
+      "works": [
+        {
+          "ref": "shakespeares-landlord"
+        }
+      ],
+      "chapter": "tsikly-i-vampiry",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Следующий свой детективный цикл Харрис начала в 1996 году."
+      }
+    },
+    {
+      "key": "creation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало цикла о Сьюки Стакхаус",
+      "long": "Начала цикл «Вампирские тайны» о телепатке-официантке Сьюки Стакхаус; по нему позже создан сериал «Настоящая кровь».",
+      "works": [
+        {
+          "ref": "southern-vampire-mysteries"
+        }
+      ],
+      "chapter": "tsikly-i-vampiry",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году Харрис начинает ещё один цикл — «Вампирские тайны»"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Энтони за первую книгу о Сьюки",
+      "long": "Первый роман цикла о Сьюки Стакхаус получил премию Энтони за лучший оригинальный роман в мягкой обложке.",
+      "works": [
+        {
+          "ref": "southern-vampire-mysteries"
+        }
+      ],
+      "chapter": "tsikly-i-vampiry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first book, Dead Until Dark, won the Anthony Award for Best Paperback Mystery in 2001."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "to": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сериал «Настоящая кровь» на HBO",
+      "long": "Телесериал HBO по циклу о Сьюки шёл семь сезонов, с 2008 по 2014 год.",
+      "works": [
+        {
+          "ref": "southern-vampire-mysteries"
+        }
+      ],
+      "chapter": "tsikly-i-vampiry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "running seven seasons, from 2008 through 2014"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sweet-and-deadly",
+      "title": "Sweet and Deadly",
+      "written": {
+        "from": 1978,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "a-secret-rage",
+      "title": "A Secret Rage",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "real-murders",
+      "title": "Real Murders",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "shakespeares-landlord",
+      "title": "Shakespeare's Landlord",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "southern-vampire-mysteries",
+      "title": "Вампирские тайны",
+      "qid": "Q666121",
+      "written": {
+        "from": 2001,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "a-touch-of-dead",
+      "title": "Мертвы, пока светло",
+      "qid": "Q2659748",
+      "written": {
+        "from": 2004,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "grave-sight",
+      "title": "Grave Sight",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    }
+  ]
+}

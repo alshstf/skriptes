@@ -1,0 +1,614 @@
+{
+  "qid": "Q1067",
+  "name": "Данте Алигьери",
+  "born": "1265",
+  "died": "1321-09-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B0%D0%BD%D1%82%D0%B5_%D0%90%D0%BB%D0%B8%D0%B3%D1%8C%D0%B5%D1%80%D0%B8",
+      "rev": 154892680
+    },
+    {
+      "id": "itwiki",
+      "url": "https://it.wikipedia.org/wiki/Dante_Alighieri",
+      "rev": 152698395
+    }
+  ],
+  "chapters": [
+    {
+      "key": "florence-youth",
+      "title": "Флоренция, Беатриче, учёба",
+      "from": 1265,
+      "to": 1294
+    },
+    {
+      "key": "florence-politics",
+      "title": "Приорат и падение белых гвельфов",
+      "from": 1295,
+      "to": 1301
+    },
+    {
+      "key": "wandering",
+      "title": "Изгнание и скитания",
+      "from": 1302,
+      "to": 1312
+    },
+    {
+      "key": "verona",
+      "title": "Верона при дворе Кангранде",
+      "from": 1313,
+      "to": 1317
+    },
+    {
+      "key": "ravenna",
+      "title": "Равенна",
+      "from": 1318,
+      "to": 1321
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1265",
+      "date": {
+        "from": "1265-05",
+        "precision": "month"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Флоренции",
+      "long": "Родился во Флоренции в семье менялы Алигьеро ди Беллинчоне; точная дата неизвестна, по Боккаччо — май 1265 года.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По свидетельству Боккаччо, Данте родился в мае 1265 года."
+      }
+    },
+    {
+      "key": "love-1274",
+      "date": {
+        "from": "1274-05",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первая встреча с Беатриче Портинари",
+      "long": "На майском празднике девятилетний Данте увидел восьмилетнюю Беатриче Портинари — это его первое биографическое воспоминание.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "works": [
+        {
+          "ref": "vita-nuova",
+          "note": "любовь к Беатриче воспета в «Новой жизни»"
+        }
+      ],
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1274 году девятилетний Данте залюбовался на майском празднике девочкой восьми лет, дочерью соседа, Беатриче Портинари"
+      }
+    },
+    {
+      "key": "loss-1282",
+      "date": {
+        "from": "1282",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Отец, Алигьеро ди Беллинчоне, умер в 1282–1283 годах по разным источникам; к тому времени мать давно умерла, отец успел вторично жениться.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "che probabilmente aveva già quarant'anni quando Dante nacque e che morì in base alle fonti nel 1282-1283"
+      }
+    },
+    {
+      "key": "love-1285",
+      "date": {
+        "from": "1285",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джеммой Донати",
+      "long": "Брак с Джеммой Донати был оговорён в 1277 году; женился Данте в 1285 году (по другим данным — в 1298). Семья Донати позднее возглавила чёрных гвельфов.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Quando Dante aveva dodici anni, nel 1277, fu concordato il suo matrimonio con Gemma, figlia di Messer Manetto Donati, che successivamente sposò all'età di vent'anni nel 1285."
+      }
+    },
+    {
+      "key": "education-1286",
+      "date": {
+        "from": "1286",
+        "to": "1287",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Несколько месяцев в Болонье",
+      "long": "Вероятно, несколько месяцев жил в Болонье; исследователи допускают, что причиной могла быть учёба в университете.",
+      "place": {
+        "label": "Болонья"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с достаточно большой степенью достоверности предполагается, что в 1286—1287 годах Данте жил несколько месяцев в Болонье"
+      }
+    },
+    {
+      "key": "war-1289",
+      "date": {
+        "from": "1289-06-11",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Военная служба, битва при Кампальдино",
+      "long": "Участвовал в качестве всадника в походах Флоренции против Ареццо (битва при Кампальдино, 11 июня 1289) и Пизы.",
+      "place": {
+        "label": "Кампальдино"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Poco dopo il matrimonio, Dante cominciò a partecipare come cavaliere ad alcune campagne militari che Firenze stava conducendo contro i suoi nemici esterni, tra cui Arezzo (battaglia di Campaldino dell'11 giugno 1289)"
+      }
+    },
+    {
+      "key": "loss-1290",
+      "date": {
+        "from": "1290",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Беатриче Портинари",
+      "long": "Умерла Беатриче Портинари, к тому времени замужняя женщина; её образ остался центральным в творчестве Данте.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "works": [
+        {
+          "ref": "vita-nuova",
+          "note": "книга о любви к Беатриче составлена из стихов и прозаического комментария"
+        }
+      ],
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Беатриче Портинари, которая умерла в 1290 году в 24-летнем возрасте"
+      }
+    },
+    {
+      "key": "education-1291",
+      "date": {
+        "from": "1291",
+        "to": "1295",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Занятия философией в монастырских школах",
+      "long": "После смерти Беатриче углубился в философию и теологию в школах доминиканцев Санта-Мария-Новелла и францисканцев Санта-Кроче.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-youth",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante, all'indomani della morte dell'amata Beatrice (in un periodo oscillante tra il 1291 e il 1294/1295), cominciò a raffinare la propria cultura filosofica frequentando le scuole organizzate dai domenicani di Santa Maria Novella"
+      }
+    },
+    {
+      "key": "career-1295",
+      "date": {
+        "from": "1295-07-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в цех и начало политической карьеры",
+      "long": "После смягчения законов вступил в цех врачей и аптекарей и получил доступ к государственным должностям; с конца 1295 года заседал в советах Флоренции.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-politics",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante fu escluso dalla politica cittadina fino al 6 luglio del 1295, quando furono promulgati i Temperamenti, leggi che ridiedero diritto ai nobili di rivestire ruoli istituzionali, purché si immatricolassero alle Arti. Dante, pertanto, si iscrisse all'Arte dei Medici e Speziali."
+      }
+    },
+    {
+      "key": "career-1300",
+      "date": {
+        "from": "1300-06-15",
+        "to": "1300-08-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приорат во Флоренции",
+      "long": "Избран одним из семи приоров Флоренции на два месяца; в этот срок подписал указ об изгнании представителей обеих партий, включая друга Гвидо Кавальканти.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-politics",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nell'anno 1300, Dante fu eletto uno dei sette priori per il bimestre 15 giugno-15 agosto."
+      }
+    },
+    {
+      "key": "child-1301",
+      "date": {
+        "from": "1301",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Трое детей: Пьетро, Якопо и Антония",
+      "long": "К 1301 году у Данте и Джеммы было трое детей — Пьетро, Якопо и Антония; по преданию, был и четвёртый, Джованни.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "florence-politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Известно, что в 1301 году у него уже было трое детей (Пьетро, Якопо и Антония)."
+      }
+    },
+    {
+      "key": "persecution-1301",
+      "date": {
+        "from": "1301-11-01",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Посольство в Рим, захват власти чёрными гвельфами",
+      "long": "Находясь во главе посольства в Риме, Данте не был во Флоренции, когда в город вошёл Карл Валуа, и чёрные гвельфы расправились с белыми.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "florence-politics",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante si trovava quindi a Roma, sembra trattenuto oltre misura da Bonifacio VIII, quando Carlo di Valois entrò a Firenze il giorno di Ognissanti del 1301."
+      }
+    },
+    {
+      "key": "persecution-1302",
+      "date": {
+        "from": "1302",
+        "to": "1321",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Изгнание из Флоренции",
+      "long": "Изгнан из Флоренции вместе с белыми гвельфами; больше родного города не увидел и умер в изгнании. Жена Джемма осталась во Флоренции с детьми.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "wandering",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1302 году Данте был изгнан из Флоренции вместе с партией (т. н. белые гвельфы), к которой он принадлежал."
+      }
+    },
+    {
+      "key": "persecution-1302-2",
+      "date": {
+        "from": "1302-01-27",
+        "to": "1302-03-10",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Заочный приговор: конфискация и костёр",
+      "long": "Заочно обвинён во взяточничестве: 27 января 1302 года приговорён к конфискации имущества, 10 марта — к сожжению.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "wandering",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante (considerato reo confesso in quanto contumace) venne condannato dal podestà Gabrielli dapprima, il 27 gennaio 1302, alla confisca delle proprietà, e successivamente, il 10 marzo, al rogo."
+      }
+    },
+    {
+      "key": "war-1304",
+      "date": {
+        "from": "1304",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Поражение белых, начало скитаний",
+      "long": "После поражения белых при Ластре (1304) Данте отошёл от изгнанников-единомышленников и начал долгие скитания по городам и дворам Италии.",
+      "place": {
+        "label": "Лаштра"
+      },
+      "chapter": "wandering",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "поражение в 1304 г. его партии, пытавшейся силой добиться водворения во Флоренцию, обрекло его на долгое странствование по Италии"
+      }
+    },
+    {
+      "key": "career-1306",
+      "date": {
+        "from": "1306-10-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Мирный договор для Маласпина в Луниджане",
+      "long": "Как полномочный представитель Маласпина добился мира с епископом Луни; гостеприимство Маласпина прославлено в «Чистилище».",
+      "place": {
+        "label": "Кастельнуово"
+      },
+      "works": [
+        {
+          "ref": "divine-comedy",
+          "note": "гостеприимство Маласпина прославлено в VIII песни «Чистилища»"
+        }
+      ],
+      "chapter": "wandering",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante riuscì a far firmare da ambo le parti la pace di Castelnuovo del 6 ottobre del 1306"
+      }
+    },
+    {
+      "key": "relocation-1308",
+      "date": {
+        "from": "1308",
+        "to": "1309",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Пребывание в Париже",
+      "long": "По традиционной версии, был в Париже и участвовал в университетских диспутах; в итальянской статье пребывание в Париже названо сомнительным.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "wandering",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1308—1309 гг. очутился в Париже, где выступал с честью на публичных диспутах, обычных в университетах того времени"
+      }
+    },
+    {
+      "key": "other-1311",
+      "date": {
+        "from": "1311-03-31",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Надежды на императора Генриха VII",
+      "long": "Связывая надежды на возвращение с походом императора Генриха VII в Италию, написал резкое послание флорентийцам.",
+      "works": [
+        {
+          "ref": "de-monarchia",
+          "note": "по одной из реконструкций, трактат писался в 1308–1311 годах"
+        }
+      ],
+      "chapter": "wandering",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "manifestò le sue aperte simpatie imperiali, scagliando una violenta lettera contro i fiorentini il 31 marzo del 1311"
+      }
+    },
+    {
+      "key": "relocation-1313",
+      "date": {
+        "from": "1313",
+        "to": "1318",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Вероне при Кангранде делла Скала",
+      "long": "Жил в Вероне при дворе Кангранде делла Скала вместе с сыновьями Пьетро и Якопо; значительная часть «Рая» написана в эти годы.",
+      "place": {
+        "label": "Верона"
+      },
+      "works": [
+        {
+          "ref": "divine-comedy",
+          "note": "«Рай» в основном составлен во время веронского пребывания"
+        }
+      ],
+      "chapter": "verona",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P551: Верона 1313-01-01 — 1318-01-01"
+      }
+    },
+    {
+      "key": "loss-1313",
+      "date": {
+        "from": "1313-08-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть императора Генриха VII",
+      "long": "Внезапная смерть Генриха VII положила конец надеждам Данте на возвращение во Флоренцию.",
+      "place": {
+        "label": "Буонконвенто"
+      },
+      "chapter": "verona",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il sogno dantesco di una Renovatio Imperii si infrangerà il 24 agosto del 1313, quando l'imperatore venne a mancare, improvvisamente, a Buonconvento."
+      }
+    },
+    {
+      "key": "persecution-1315",
+      "date": {
+        "from": "1315-11-06",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Подтверждение изгнания Данте и его сыновей",
+      "long": "Приговор об изгнании подтверждён и распространён на сыновей Данте; им грозила казнь в случае ареста флорентийцами.",
+      "place": {
+        "label": "Флоренция"
+      },
+      "chapter": "verona",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а 6 ноября 1315 г. Раньери ди Заккария из Орвьетто, наместник короля Роберта во Флоренции, подтвердил декрет изгнания в отношении Данте Алигьери, его сыновей"
+      }
+    },
+    {
+      "key": "relocation-1318",
+      "date": {
+        "from": "1318",
+        "to": "1321",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Последние годы в Равенне",
+      "long": "Поселился в Равенне при дворе Гвидо Новелло да Полента; рядом жили сыновья Пьетро и Якопо и дочь Антония.",
+      "place": {
+        "label": "Равенна"
+      },
+      "works": [
+        {
+          "ref": "divine-comedy",
+          "note": "«Рай» дописывался в Равенне"
+        }
+      ],
+      "chapter": "ravenna",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dante, per motivi ancora sconosciuti, si allontanò da Verona per approdare, nel 1318, a Ravenna, presso la corte di Guido Novello da Polenta"
+      }
+    },
+    {
+      "key": "career-1321",
+      "date": {
+        "from": "1321",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Посольство в Венецию",
+      "long": "Отправлен послом Гвидо да Полента в Венецию для заключения мира; на обратном пути заболел.",
+      "place": {
+        "label": "Венеция"
+      },
+      "chapter": "ravenna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1321 года Данте, как посол правителя Равенны, отправился в Венецию для заключения мира с республикой Святого Марка."
+      }
+    },
+    {
+      "key": "death-1321",
+      "date": {
+        "from": "1321-09-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Равенне",
+      "long": "Заболел малярией на обратном пути из Венеции и умер в Равенне в ночь с 13 на 14 сентября 1321 года; похоронен там же.",
+      "place": {
+        "label": "Равенна"
+      },
+      "chapter": "ravenna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По дороге назад Данте заболел малярией и умер в Равенне в ночь с 13 на 14 сентября 1321 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "vita-nuova",
+      "title": "Новая жизнь",
+      "qid": "Q18084",
+      "written": {
+        "from": 1292,
+        "to": 1292
+      }
+    },
+    {
+      "ref": "convivio",
+      "title": "Пир",
+      "qid": "Q666014",
+      "written": {
+        "from": 1304,
+        "to": 1307
+      }
+    },
+    {
+      "ref": "de-vulgari-eloquentia",
+      "title": "О народном красноречии",
+      "qid": "Q18081",
+      "written": {
+        "from": 1304,
+        "to": 1306
+      }
+    },
+    {
+      "ref": "de-monarchia",
+      "title": "Монархия",
+      "qid": "Q134221",
+      "written": {
+        "from": 1308,
+        "to": 1311
+      }
+    },
+    {
+      "ref": "divine-comedy",
+      "title": "Божественная комедия",
+      "qid": "Q40185",
+      "written": {
+        "from": 1306,
+        "to": 1321
+      }
+    },
+    {
+      "ref": "eclogues",
+      "title": "Эклоги",
+      "qid": "Q921273",
+      "written": {
+        "from": 1319,
+        "to": 1319
+      }
+    },
+    {
+      "ref": "quaestio-de-aqua-et-terra",
+      "title": "Рассуждение о воде и земле",
+      "qid": "Q122600816",
+      "written": {
+        "from": 1320,
+        "to": 1320
+      }
+    }
+  ]
+}

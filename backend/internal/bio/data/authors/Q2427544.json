@@ -1,0 +1,455 @@
+{
+  "qid": "Q2427544",
+  "name": "Нора Джемисин",
+  "born": "1972-09-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B5%D0%BC%D0%B8%D1%81%D0%B8%D0%BD%2C_%D0%9D%D0%BE%D1%80%D0%B0",
+      "rev": 146705557
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/N._K._Jemisin",
+      "rev": 1379951280
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Нью-Йорк и Мобил",
+      "from": 1972,
+      "to": 1989
+    },
+    {
+      "key": "studies",
+      "title": "Тулейн и психология",
+      "from": 1990,
+      "to": 2001
+    },
+    {
+      "key": "debut",
+      "title": "Мастерская и дебют",
+      "from": 2002,
+      "to": 2015
+    },
+    {
+      "key": "fame",
+      "title": "Расколотая земля и признание",
+      "from": 2016,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-09-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Айова-Сити",
+      "long": "Родилась в Айова-Сити, где её родители учились в магистратуре Университета Айовы. Выросла в Нью-Йорке и Мобиле (Алабама).",
+      "place": {
+        "label": "Айова-Сити"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 19 сентября 1972 года, Айова-Сити, Айова, США"
+      }
+    },
+    {
+      "key": "education-1990",
+      "date": {
+        "from": "1990",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба психологии в Тулейнском университете",
+      "long": "Училась в Тулейнском университете, получила степень бакалавра психологии; позже окончила магистратуру Мэрилендского университета.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1990 по 1994 года обучалась в Тулейнском университете, получив степень бакалавра психологии."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало писательской карьеры",
+      "long": "В 2002 году начала писательскую карьеру; в том же году окончила писательскую мастерскую Viable Paradise. До перехода на полный день писательства работала консультантом по психическому здоровью и карьере.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Карьеру писателя начала в 2002 году, написав несколько рассказов и романов."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Финал «Небьюлы» и «Хьюго» за рассказ",
+      "long": "Рассказ «Non-Zero Probabilities» вышел в финал премий «Небьюла» и «Хьюго» за лучший рассказ.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2010 году рассказ Норы «Non-Zero Probabilities» стал финалистом премий «Небьюла» и «Хьюго» в номинации «Лучший рассказ»"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Локус» за лучший дебютный роман",
+      "long": "Дебютный роман номинировался на «Хьюго», Всемирную премию фэнтези и «Локус» и получил «Локус» как лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "hundred-thousand-kingdoms"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2011 году номинировался на премии: «Хьюго», «Всемирную премию фэнтези» и «Локус» (победа в номинации «За лучший дебютный роман»)."
+      }
+    },
+    {
+      "key": "other-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Речь на Continuum и конфликт вокруг SFWA",
+      "long": "В речи почётной гостьи на конвенте Continuum в Австралии указала, что 10% членов SFWA голосовали за Теодора Била; тот ответил резкой публикацией и позже был исключён из организации.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During her delivery of the Guest of Honour speech at the 2013 Continuum in Australia, Jemisin pointed out that 10% of the Science Fiction and Fantasy Writers of America (SFWA) membership voted for alt-right writer Theodore Beale"
+      }
+    },
+    {
+      "key": "creation-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Замысел трилогии: сон и Фергюсон",
+      "long": "Роман частично вдохновлён увиденным во сне и протестами в Фергюсоне (Миссури) после смерти Майкла Брауна.",
+      "works": [
+        {
+          "ref": "fifth-season",
+          "note": "источник вдохновения назван в рассказе автора о романе"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jemisin's novel The Fifth Season was published in 2015, the first of the Broken Earth trilogy. The novel was inspired in part from a dream Jemisin had and the protests in Ferguson, Missouri about the death of Michael Brown."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая «Хьюго» за лучший роман",
+      "long": "Стала первой афроамериканской писательницей, получившей «Хьюго» за лучший роман.",
+      "works": [
+        {
+          "ref": "fifth-season"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2016 году её роман «Пятое время года» из цикла «Расколотая земля» получил премию «Хьюго» за лучший роман."
+      }
+    },
+    {
+      "key": "career-2016-2",
+      "date": {
+        "from": "2016-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка в The New York Times",
+      "long": "В январе 2016 года начала вести раз в два месяца колонку «Otherworldly» в The New York Times.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2016, Jemisin started writing \"Otherworldly\", a bimonthly column for The New York Times."
+      }
+    },
+    {
+      "key": "career-2016-3",
+      "date": {
+        "from": "2016-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с работы ради писательства",
+      "long": "Кампания на Patreon собрала достаточно средств, чтобы она оставила работу консультанта и занялась только писательством.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 2016, Jemisin mounted a Patreon campaign which raised sufficient funding to allow her to quit her job as a counselor and focus full-time on her writing."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая «Хьюго» подряд",
+      "long": "Вторая подряд «Хьюго» за лучший роман.",
+      "works": [
+        {
+          "ref": "obelisk-gate"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Продолжение цикла — роман «Врата обелиска» — стал победителем «Хьюго» в 2017 году."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Третья «Хьюго» и «Небьюла» с «Локусом»",
+      "long": "Третий роман цикла получил «Локус», «Небьюла» и «Хьюго»; она первой выиграла «Хьюго» за лучший роман три года подряд и за все три романа трилогии.",
+      "works": [
+        {
+          "ref": "stone-sky"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получил в 2018 году все три главные премии для авторов фантастических произведений: «Локус», «Небьюла» и «Хьюго»"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Четвёртая «Хьюго» за повесть",
+      "long": "Четвёртая премия «Хьюго» — за повесть Emergency Skin.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She won a fourth Hugo in 2020 for the novelette Emergency Skin"
+      }
+    },
+    {
+      "key": "career-2020-2",
+      "date": {
+        "from": "2020-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Стипендия Макартура",
+      "long": "В октябре 2020 года объявлена стипендиаткой Фонда Макартура.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2020, Jemisin was announced as a recipient of the MacArthur Fellows Program Genius Grant."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Список Time 100",
+      "long": "Включена в ежегодный список Time 100 самых влиятельных людей мира.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, she was included in the Time 100, Time's annual list of the 100 most influential people in the world."
+      }
+    },
+    {
+      "key": "career-2021-2",
+      "date": {
+        "from": "2021-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Права на экранизацию трилогии проданы TriStar",
+      "long": "TriStar Pictures приобрела права на экранизацию трилогии; сценарий должна писать сама Джемисин.",
+      "works": [
+        {
+          "ref": "broken-earth"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2021, Sony's TriStar Pictures won the rights to adapt The Broken Earth trilogy in a seven-figure deal with Jemisin adapting the novels for the screen herself."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пятая «Хьюго» за комикс",
+      "long": "Пятая премия «Хьюго» — за комикс-серию Far Sector.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a fifth in 2022 for the comic book series Far Sector"
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Великого мастера SFWA",
+      "long": "Ассоциация SFWA назвала её 42-м Великим мастером памяти Деймона Найта.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, the Science Fiction and Fantasy Writers Association named Jemisin the 42nd Damon Knight Memorial Grand Master"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hundred-thousand-kingdoms",
+      "title": "Сто тысяч королевств",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "inheritance-trilogy",
+      "title": "Трилогия Наследия",
+      "qid": "Q7742030",
+      "written": {
+        "from": 2010,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "killing-moon",
+      "title": "Убивающая луна",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "broken-earth",
+      "title": "Расколотая земля",
+      "qid": "Q51844551",
+      "written": {
+        "from": 2015,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "fifth-season",
+      "title": "Пятое время года",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "obelisk-gate",
+      "title": "Врата обелиска",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "stone-sky",
+      "title": "Каменные Небеса",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "how-long-til-black-future-month",
+      "title": "How Long 'til Black Future Month?",
+      "written": {
+        "from": 2004,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "city-we-became",
+      "title": "The City We Became",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "world-we-make",
+      "title": "The World We Make",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "qid": "Q740928",
+  "name": "Уолтер Тевис",
+  "born": "1928-02-28",
+  "died": "1984-08-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%B2%D0%B8%D1%81%2C_%D0%A3%D0%BE%D0%BB%D1%82%D0%B5%D1%80",
+      "rev": 149917031
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Walter_Tevis",
+      "rev": 1370842296
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo",
+      "title": "Сан-Франциско и Кентукки",
+      "from": 1928,
+      "to": 1944
+    },
+    {
+      "key": "flot-universitet",
+      "title": "Флот, университет, бильярд",
+      "from": 1945,
+      "to": 1956
+    },
+    {
+      "key": "brak-romany",
+      "title": "Брак и первые романы",
+      "from": 1957,
+      "to": 1964
+    },
+    {
+      "key": "ohio",
+      "title": "Годы в Университете Огайо",
+      "from": 1965,
+      "to": 1978
+    },
+    {
+      "key": "nyu-york",
+      "title": "Последние годы",
+      "from": 1979,
+      "to": 1984
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1928",
+      "date": {
+        "from": "1928-02-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сан-Франциско",
+      "long": "Родился в Сан-Франциско, вырос в районе Сансет.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "detstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 февраля 1928 года, Сан-Франциско, Калифорния, США"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба на флоте на Тихом океане",
+      "long": "В конце Второй мировой войны 17-летний Тевис служил на Тихом океане помощником столяра на корабле ВМС США. После увольнения окончил школу.",
+      "chapter": "flot-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце Второй мировой войны 17-летний Тевис служил на Тихом океане помощником столяра на борту корабля ВМС США «Гамильтон»… в 1945 году он окончил школу"
+      }
+    },
+    {
+      "key": "education-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Кентуккийский университет",
+      "long": "В 1945 году окончил школу и поступил в Кентуккийский университет; во время учёбы подрабатывал в бильярдном зале.",
+      "chapter": "flot-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После увольнения, в 1945 году он окончил школу и поступил в Кентуккийский университет."
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "to": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степени бакалавра и магистра английской литературы",
+      "long": "Получил степени бакалавра (1949) и магистра (1954) по английской литературе в Кентуккийском университете, учился у А. Б. Гатри-младшего.",
+      "chapter": "flot-universitet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "received B.A. (1949) and M.A. (1954) degrees in English literature"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая журнальная публикация — бильярдный рассказ",
+      "long": "В 1955 году в журнале Collier's вышел бильярдный рассказ Тевиса; затем рассказы выходили в Cosmopolitan, Esquire, Playboy и других журналах.",
+      "chapter": "flot-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После бильярдного рассказа The Big Hustle, опубликованного в журнале Collier's в 1955 году"
+      }
+    },
+    {
+      "key": "love-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейми Григгс",
+      "long": "Женился на Джейми Григгс; брак продлился более двадцати лет, у них было двое детей — сын Уильям Томас и дочь Джулия Энн.",
+      "chapter": "brak-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Tevis married Jamie Griggs in 1957"
+      }
+    },
+    {
+      "key": "education-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень MFA в Писательской мастерской Айовы",
+      "long": "Получил степень MFA по творческому письму в Писательской мастерской Айовы.",
+      "chapter": "brak-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he received an MFA in creative writing in 1960"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "to": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание в Университете Огайо",
+      "long": "Преподавал английскую литературу и творческое письмо в Университете Огайо в Атенсе, где получил звание университетского профессора.",
+      "place": {
+        "label": "Атенс"
+      },
+      "works": [
+        {
+          "ref": "mockingbird",
+          "note": "наблюдение за падением грамотности студентов дало идею романа"
+        }
+      ],
+      "chapter": "ohio",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1965 по 1978 годы Тевис преподавал английскую литературу и творческое письмо в Университете Огайо."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на «Небьюлу» за лучший роман",
+      "long": "Номинирован на премию «Небьюла» за лучший роман.",
+      "works": [
+        {
+          "ref": "mockingbird"
+        }
+      ],
+      "chapter": "nyu-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Tevis was a nominee for the Nebula Award for Best Novel in 1980 for Mockingbird."
+      }
+    },
+    {
+      "key": "love-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Элеонорой Уокер",
+      "long": "Женился на Элеоноре Уокер, впоследствии распорядительнице его литературного наследия.",
+      "chapter": "nyu-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, Tevis married Eleanora Walker"
+      }
+    },
+    {
+      "key": "death-1984",
+      "date": {
+        "from": "1984-08-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгких",
+      "long": "Умер от рака лёгких в Нью-Йорке; похоронен в Ричмонде, штат Кентукки.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "nyu-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1984 году Тевис умер от рака легких и был похоронен в Ричмонде"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-hustler",
+      "title": "Мошенник",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "man-who-fell-to-earth",
+      "title": "Человек, который упал на Землю",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "mockingbird",
+      "title": "Пересмешник",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "far-from-home",
+      "title": "Вдали от дома",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "steps-of-the-sun",
+      "title": "Шаги солнца",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "queens-gambit",
+      "title": "Ход королевы",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "color-of-money",
+      "title": "Цвет денег",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    }
+  ]
+}

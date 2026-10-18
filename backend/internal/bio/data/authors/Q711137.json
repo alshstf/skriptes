@@ -1,0 +1,199 @@
+{
+  "qid": "Q711137",
+  "name": "Брайан Герберт",
+  "born": "1947-06-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D1%80%D0%B1%D0%B5%D1%80%D1%82%2C_%D0%91%D1%80%D0%B0%D0%B9%D0%B0%D0%BD",
+      "rev": 152823029
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Brian_Herbert",
+      "rev": 1372569138
+    }
+  ],
+  "chapters": [
+    {
+      "key": "son-of-writer",
+      "title": "Старший сын писателя",
+      "from": 1947,
+      "to": 1985
+    },
+    {
+      "key": "after-father",
+      "title": "После отца",
+      "from": 1986,
+      "to": 1998
+    },
+    {
+      "key": "dune-continues",
+      "title": "Дюна продолжается",
+      "from": 1999,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-06-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье Фрэнка Герберта",
+      "long": "Родился в Сиэтле, старший сын писателя-фантаста Фрэнка Герберта.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "son-of-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "29 июня 1947 года, Сиэтл, Вашингтон, США"
+      }
+    },
+    {
+      "key": "loss-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, Фрэнка Герберта",
+      "long": "В 1986 году умер отец, Фрэнк Герберт; он оставил наброски и заметки к задуманному седьмому роману о Дюне.",
+      "works": [
+        {
+          "ref": "hunters-of-dune",
+          "note": "Позднее романы продолжения основаны на заметках и плане, оставленных отцом"
+        }
+      ],
+      "chapter": "after-father",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "left behind by Frank Herbert after his 1986 death"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на премию «Небьюла»",
+      "long": "Роман «The Race for God» номинирован на премию «Небьюла» в 1990 году.",
+      "works": [
+        {
+          "ref": "race-for-god"
+        }
+      ],
+      "chapter": "after-father",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«The Race for God» (номинировавшийся на премию «Небьюла» в 1990 году)"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало соавторства с Кевином Андерсоном",
+      "long": "Начало соавторства с Кевином Андерсоном: первый роман новой трилогии о мире «Дюны».",
+      "works": [
+        {
+          "ref": "prelude-to-dune"
+        }
+      ],
+      "chapter": "dune-continues",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году Брайан Герберт выпустил в соавторстве с Кевином Андерсоном роман «Дюна: Дом Атрейдесов»"
+      }
+    },
+    {
+      "key": "creation-2006",
+      "date": {
+        "from": "2006",
+        "to": "2007",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершение цикла по черновикам отца",
+      "long": "Вместе с Андерсоном по черновикам отца написал дилогию, завершающую Хроники Дюны.",
+      "works": [
+        {
+          "ref": "hunters-of-dune",
+          "note": "Основаны на черновиках Фрэнка Герберта"
+        },
+        {
+          "ref": "sandworms-of-dune",
+          "note": "Основаны на черновиках Фрэнка Герберта"
+        }
+      ],
+      "chapter": "dune-continues",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2006—2007 годах Брайан Герберт и Кевин Андерсон, опираясь на черновики Фрэнка Герберта, выпустили дилогию"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "race-for-god",
+      "title": "The Race for God",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "prelude-to-dune",
+      "title": "Прелюдия к Дюне",
+      "written": {
+        "from": 1999,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "legends-of-dune",
+      "title": "Легенды Дюны",
+      "written": {
+        "from": 2002,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "dreamer-of-dune",
+      "title": "Мечтатель Дюны",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "hunters-of-dune",
+      "title": "Охотники Дюны",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "sandworms-of-dune",
+      "title": "Песчаные черви Дюны",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

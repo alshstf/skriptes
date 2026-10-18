@@ -1,0 +1,627 @@
+{
+  "qid": "Q192069",
+  "name": "Энид Блайтон",
+  "born": "1897-08-11",
+  "died": "1968-11-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D0%B0%D0%B9%D1%82%D0%BE%D0%BD%2C_%D0%AD%D0%BD%D0%B8%D0%B4",
+      "rev": 155539673
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Enid_Blyton",
+      "rev": 1378700634
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-school",
+      "title": "Бекенхем и школа Св. Христофора",
+      "from": 1897,
+      "to": 1915
+    },
+    {
+      "key": "teacher-poet",
+      "title": "Учительница и первые стихи",
+      "from": 1916,
+      "to": 1923
+    },
+    {
+      "key": "first-marriage",
+      "title": "Брак с Поллоком, Старый Дом, Зелёные Изгороди",
+      "from": 1924,
+      "to": 1942
+    },
+    {
+      "key": "second-marriage",
+      "title": "Второй брак и вершина славы",
+      "from": 1943,
+      "to": 1959
+    },
+    {
+      "key": "decline",
+      "title": "Болезнь и последние годы",
+      "from": 1960,
+      "to": 1968
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1897",
+      "date": {
+        "from": "1897-08-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ист-Далидже",
+      "long": "Родилась в Ист-Далидже на юге Лондона, старшая из трёх детей в семье торговца Томаса Кэри Блайтона.",
+      "place": {
+        "label": "Ист-Далидж, Лондон"
+      },
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Enid Blyton was born on 11 August 1897 in East Dulwich, south London"
+      }
+    },
+    {
+      "key": "education-1907",
+      "date": {
+        "from": "1907",
+        "to": "1915",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Св. Христофора в Бекенхеме",
+      "long": "Училась в школе Св. Христофора в Бекенхеме; любила спорт и писать, хуже давалась математика.",
+      "place": {
+        "label": "Бекенхем"
+      },
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1907 to 1915, Blyton attended St Christopher's School in Beckenham"
+      }
+    },
+    {
+      "key": "career-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поэтический конкурс Артура Ми",
+      "long": "Участвовала в детском поэтическом конкурсе Артура Ми; он предложил напечатать её стихи и поощрил писать дальше.",
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1911, entered Arthur Mee's children's poetry competition"
+      }
+    },
+    {
+      "key": "relocation-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Уход из родительского дома",
+      "long": "По окончании школы переехала из родительского дома к подруге Мэри Аттенборо; к этому времени почти прервала связь с семьёй.",
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After finishing school, in 1915, as head girl, she moved out of the family home to live with her friend Mary Attenborough"
+      }
+    },
+    {
+      "key": "career-1916",
+      "date": {
+        "from": "1916-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые стихи в журнале",
+      "long": "Первые стихи напечатаны в Nash's Magazine после многих отказов издателей.",
+      "chapter": "teacher-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1916, her first poems were published in Nash's Magazine."
+      }
+    },
+    {
+      "key": "education-1916",
+      "date": {
+        "from": "1916-09",
+        "to": "1918-12",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Педагогическая подготовка в Ипсвиче",
+      "long": "Поступила на курс подготовки учителей Национального союза Фрёбеля в Ипсвиче; курс окончила в декабре 1918 года.",
+      "place": {
+        "label": "Ипсвич"
+      },
+      "chapter": "teacher-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "enrolled in a National Froebel Union teacher training course at the school in September 1916"
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "to": "1924",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гувернантка в семье Томпсонов",
+      "long": "Работала гувернанткой в семье архитектора Хораса Томпсона; при доме выросла небольшая школа для соседских детей.",
+      "place": {
+        "label": "Сурбитон"
+      },
+      "chapter": "teacher-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1920, she moved to Southernhay, in Hook Road Surbiton, as nursery governess to the four sons of architect Horace Thompson"
+      }
+    },
+    {
+      "key": "loss-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Томас Кэри Блайтон; на похоронах родителей она не присутствовала.",
+      "chapter": "teacher-poet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Томаса Кэри Блайтона (1870—1920), торговца ножевыми изделиями"
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924-08-28",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Хью Поллоком",
+      "long": "Вышла замуж за майора Хью Александра Поллока, редактора издательства Джорджа Ньюнса, без приглашения семьи.",
+      "place": {
+        "label": "Бромли"
+      },
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 28 August 1924, Blyton married Major Hugh Alexander Pollock at Bromley Register Office"
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор журнала Sunny Stories",
+      "long": "Взяла на себя редактирование детского журнала Sunny Stories, укрепив репутацию детской писательницы.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1926 she took over the editing of Sunny Stories"
+      }
+    },
+    {
+      "key": "relocation-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Старый Дом в Борн-Энде",
+      "long": "Семья переехала в дом Старая Солома в Борн-Энде, названный в её книгах Питерсвудом.",
+      "place": {
+        "label": "Борн-Энд"
+      },
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "then to Old Thatch in Bourne End (called Peterswood in her books) in 1929"
+      }
+    },
+    {
+      "key": "child-1931",
+      "date": {
+        "from": "1931-07-15",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Джиллиан",
+      "long": "Родилась первая дочь, Джиллиан.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Blyton's first daughter, Gillian, was born on 15 July 1931"
+      }
+    },
+    {
+      "key": "loss-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Выкидыш",
+      "long": "Выкидыш.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "after a miscarriage in 1934, she gave birth to a second daughter, Imogen, on 27 October 1935"
+      }
+    },
+    {
+      "key": "child-1935",
+      "date": {
+        "from": "1935-10-27",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Имоджен",
+      "long": "Родилась вторая дочь, Имоджен.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she gave birth to a second daughter, Imogen, on 27 October 1935"
+      }
+    },
+    {
+      "key": "relocation-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Зелёные Изгороди",
+      "long": "Семья переехала в дом в Биконсфилде, получивший от читателей журнала название Зелёные Изгороди; она жила там до конца жизни.",
+      "place": {
+        "label": "Биконсфилд"
+      },
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938, she and her family moved to a house in Beaconsfield, named Green Hedges by Blyton's readers"
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Роман с хирургом Кеннетом Уотерсом",
+      "long": "Познакомилась с лондонским хирургом Кеннетом Даррелл Уотерсом; начался роман, ставший причиной развода.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941, Blyton met Kenneth Fraser Darrell Waters, a London surgeon with whom she began a serious affair."
+      }
+    },
+    {
+      "key": "family-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Хью Поллоком",
+      "long": "Брак с Поллоком, долго бывший непростым, закончился разводом по её иску; после развода Поллок не виделся с дочерьми.",
+      "chapter": "first-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1924 по 1942 год была замужем за майором Хью Александром Поллоком"
+      }
+    },
+    {
+      "key": "love-1943",
+      "date": {
+        "from": "1943-10-20",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кеннетом Даррелл Уотерсом",
+      "long": "Вышла замуж за Кеннета Даррелла Уотерса; дочери получили его фамилию.",
+      "place": {
+        "label": "Вестминстер, Лондон"
+      },
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Blyton and Darrell Waters married at the City of Westminster Register Office on 20 October 1943."
+      }
+    },
+    {
+      "key": "loss-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Потеря ребёнка во время беременности",
+      "long": "Выкидыш после падения с лестницы; это был бы первый ребёнок от Уотерса, сын, которого оба желали.",
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After discovering she was pregnant in the spring of 1945, Blyton miscarried five months later, following a fall from a ladder."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание компании Darrell Waters Ltd",
+      "long": "Основала компанию Darrell Waters Ltd для управления своими делами.",
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, Blyton established the company Darrell Waters Ltd to manage her affairs."
+      }
+    },
+    {
+      "key": "loss-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Тереза Мэри; отношения с ней давно были разорваны.",
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Терезы Мэри, урождённой Харрисон (1874—1950)"
+      }
+    },
+    {
+      "key": "career-1950-2",
+      "date": {
+        "from": "1950",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пик продуктивности, полсотни книг в год",
+      "long": "В начале 1950-х достигла пика продуктивности, нередко выпуская более пятидесяти книг в год.",
+      "works": [
+        {
+          "ref": "famous-five"
+        },
+        {
+          "ref": "secret-seven"
+        },
+        {
+          "ref": "noddy"
+        }
+      ],
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, Blyton established the company Darrell Waters Ltd to manage her affairs. By the early 1950s, she had reached the peak of her output, often publishing more than fifty books a year"
+      }
+    },
+    {
+      "key": "persecution-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Иск из-за слухов о литературных неграх",
+      "long": "Из-за слухов о «литературных неграх» подала иск против библиотекаря; та принесла публичные извинения в суде в начале следующего года.",
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Blyton decided in 1955 to begin legal proceedings."
+      }
+    },
+    {
+      "key": "illness-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Начало ухудшения здоровья",
+      "long": "Во время игры в гольф почувствовала слабость и одышку; с этого времени здоровье ухудшалось.",
+      "chapter": "second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Blyton's health began to deteriorate in 1957, when, during a round of golf, she started to feel faint and breathless"
+      }
+    },
+    {
+      "key": "illness-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первые признаки деменции",
+      "long": "Появились признаки деменции, позднее определённой как болезнь Альцгеймера; после 1963 года писала в основном короткие тексты для малышей.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "by 1960, she was displaying signs of dementia"
+      }
+    },
+    {
+      "key": "loss-1967",
+      "date": {
+        "from": "1967-09-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Кеннета Уотерса",
+      "long": "Умер муж Кеннет Даррелл Уотерс, чьё здоровье ухудшалось в течение 1960-х.",
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he suffered from severe arthritis in his neck and hips, deafness, and became increasingly ill-tempered and erratic until his death on 15 September 1967"
+      }
+    },
+    {
+      "key": "death-1968",
+      "date": {
+        "from": "1968-11-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в лечебнице в Хампстеде",
+      "long": "Умерла во сне от болезни Альцгеймера в частной лечебнице Гринуэйз в Хампстеде в возрасте 71 года.",
+      "place": {
+        "label": "Хампстед, Лондон"
+      },
+      "chapter": "decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died in her sleep of Alzheimer's disease at the Greenways Nursing Home, Hampstead, north London, on 28 November 1968"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "famous-five",
+      "title": "Великолепная пятёрка",
+      "qid": "Q1134354",
+      "written": {
+        "from": 1942,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "secret-seven",
+      "title": "Тайная семёрка",
+      "qid": "Q2165270",
+      "written": {
+        "from": 1949,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "noddy",
+      "title": "Нодди",
+      "qid": "Q42192377",
+      "written": {
+        "from": 1949,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "malory-towers",
+      "title": "Malory Towers",
+      "written": {
+        "from": 1946,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "st-clares",
+      "title": "St. Clare's",
+      "written": {
+        "from": 1941,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "five-find-outers",
+      "title": "Пять юных сыщиков и верный пёс",
+      "written": {
+        "from": 1943,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "enchanted-wood",
+      "title": "The Enchanted Wood",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "magic-faraway-tree",
+      "title": "The Magic Faraway Tree",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "wishing-chair",
+      "title": "Adventures of the Wishing-Chair",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "adventure-series",
+      "title": "Adventure series",
+      "written": {
+        "from": 1944,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "mary-mouse",
+      "title": "Mary Mouse",
+      "written": {
+        "from": 1942,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "secret-island",
+      "title": "The Secret Island",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    }
+  ]
+}

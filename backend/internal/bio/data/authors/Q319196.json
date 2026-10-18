@@ -1,0 +1,469 @@
+{
+  "qid": "Q319196",
+  "name": "Чайна Мьевиль",
+  "born": "1972-09-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D1%8C%D0%B5%D0%B2%D0%B8%D0%BB%D1%8C%2C_%D0%A7%D0%B0%D0%B9%D0%BD%D0%B0",
+      "rev": 153547509
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/China_Mi%C3%A9ville",
+      "rev": 1377469459
+    }
+  ],
+  "chapters": [
+    {
+      "key": "london-childhood",
+      "title": "Детство в Лондоне",
+      "from": 1972,
+      "to": 1989
+    },
+    {
+      "key": "egypt-cambridge",
+      "title": "Египет и Кембридж",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "law-and-bas-lag",
+      "title": "Диссертация, выборы, Бас-Лаг",
+      "from": 2000,
+      "to": 2012
+    },
+    {
+      "key": "left-politics",
+      "title": "Разрыв с СРП, Левое единство, «Сальваж»",
+      "from": 2013,
+      "to": 2017
+    },
+    {
+      "key": "recent-years",
+      "title": "Защита частной жизни",
+      "from": 2018,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-09-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Норидже",
+      "long": "Родился в Нориджe; с раннего детства жил в Лондоне, воспитывался матерью.",
+      "place": {
+        "label": "Норидж"
+      },
+      "chapter": "london-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 6 сентября 1972, Норидж"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание английского в Египте",
+      "long": "В восемнадцать лет год преподавал английский в Египте, где появился интерес к арабской культуре и ближневосточной политике.",
+      "place": {
+        "label": "Египет"
+      },
+      "chapter": "egypt-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At the age of eighteen, in 1990, he taught English for a year in Egypt, where he developed an interest in Arab culture and in Middle Eastern politics."
+      }
+    },
+    {
+      "key": "education-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Кембриджа, социальная антропология",
+      "long": "Окончил Клэр-колледж Кембриджского университета со степенью бакалавра социальной антропологии; в университете стал марксистом.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "egypt-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Miéville studied for a BA degree in social anthropology at Clare College, Cambridge, graduating in 1994"
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень в Лондонской школе экономики",
+      "long": "Получил степень магистра и доктора философии по международному праву в Лондонской школе экономики; диссертация адаптировала марксистскую теорию права к международному праву.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "between-equal-rights"
+        }
+      ],
+      "chapter": "law-and-bas-lag",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "gained both a master's degree and PhD in international law from the London School of Economics in 2001"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выдвижение в парламент от Социалистического альянса",
+      "long": "Баллотировался в Палату общин от Социалистического альянса и получил 459 голосов (1,2 %).",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "law-and-bas-lag",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году баллотировался в Палату общин от Социалистического альянса, набрав 459 голосов, то есть 1,2 %."
+      }
+    },
+    {
+      "key": "career-2001-2",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Артура Кларка",
+      "long": "Роман «Вокзал потерянных снов» получил премию Артура Кларка.",
+      "works": [
+        {
+          "ref": "perdido-street-station"
+        }
+      ],
+      "chapter": "law-and-bas-lag",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Артура Кларка 2001-01-01"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии «Хьюго» и Кларка за роман о двух городах",
+      "long": "Роман удостоен премий Артура Кларка, «Хьюго», «Локус» и World Fantasy.",
+      "works": [
+        {
+          "ref": "the-city-and-the-city"
+        }
+      ],
+      "chapter": "law-and-bas-lag",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Город и Город» в 2010 году удостоен премий Артура Кларка, «Хьюго», «Локус», World Fantasy и других."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Писатель-резидент в Чикаго",
+      "long": "Работал писателем-резидентом в Университете Рузвельта в Чикаго.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "law-and-bas-lag",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 2012–13, he was writer-in-residence at Roosevelt University in Chicago."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013-03-13",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход из Социалистической рабочей партии",
+      "long": "Вышел из Социалистической рабочей партии из-за несогласия с реакцией руководства на внутрипартийный сексуальный скандал; в январе выступил с критикой руководства.",
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until 13 March 2013, was also a member of the Socialist Workers Party"
+      }
+    },
+    {
+      "key": "career-2013-2",
+      "date": {
+        "from": "2013-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание партии «Левое единство»",
+      "long": "Среди девяти подписантов письма в «Гардиан» об основании новой левой партии «Левое единство».",
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 2013, Miéville was one of nine signatories"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход из Международной социалистической сети",
+      "long": "Вместе с Ричардом Сеймуром и другими вышел из Международной социалистической сети из-за спора о «расовой игре».",
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, together with Richard Seymour and others, Miéville quit the International Socialist Network"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Членство в Королевском литературном обществе",
+      "long": "Избран членом Королевского литературного общества.",
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He became a Fellow of the Royal Society of Literature in 2015."
+      }
+    },
+    {
+      "key": "career-2015-2",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор журнала «Сальваж»",
+      "long": "Стал одним из основателей-редакторов журнала революционных искусств и литературы «Сальваж»; с 2014 года директор издательства Salvage Publications.",
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015, he was announced as one of the founding editors of a \"bi-annual journal of revolutionary arts and letters\", Salvage."
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Книга о Русской революции",
+      "long": "Вышла нон-фикшн книга о Русской революции 1917 года.",
+      "works": [
+        {
+          "ref": "october"
+        }
+      ],
+      "chapter": "left-politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "October, published in 2017, documents the dramatic events of the Russian revolution."
+      }
+    },
+    {
+      "key": "persecution-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Защита частной жизни после кампании травли",
+      "long": "Принял меры по защите частной жизни после кампании травли и клеветы в сети, как он её описывал.",
+      "chapter": "recent-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Since 2018, he has taken steps to defend his privacy, following what he described as a campaign of harassment and online defamation."
+      }
+    },
+    {
+      "key": "other-2024",
+      "date": {
+        "from": "2024-04-22",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от стипендии DAAD",
+      "long": "Отказался от стипендии DAAD, протестуя против отмены профессуры Нэнси Фрейзер в Кёльнском университете.",
+      "chapter": "recent-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a letter to Joybrato Mukherjee on 22 April 2024, Miéville rejected his nomination for a DAAD fellowship"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "king-rat",
+      "title": "Крысиный король",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "perdido-street-station",
+      "title": "Вокзал потерянных снов",
+      "qid": "Q1143215",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "the-scar",
+      "title": "Шрам",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "the-tain",
+      "title": "Тайн",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "iron-council",
+      "title": "Железный совет",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "between-equal-rights",
+      "title": "При столкновении двух равных прав",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "looking-for-jake",
+      "title": "В поисках Джейка",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "un-lun-dun",
+      "title": "Лондонкая",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "the-city-and-the-city",
+      "title": "Город и город",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "kraken",
+      "title": "Кракен",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "embassytown",
+      "title": "Посольский город",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "railsea",
+      "title": "Рельсовое море",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "three-moments-of-an-explosion",
+      "title": "Три момента взрыва",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "this-census-taker",
+      "title": "Этот счётчик населения",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "october",
+      "title": "Октябрь",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

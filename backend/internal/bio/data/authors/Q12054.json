@@ -1,0 +1,669 @@
+{
+  "qid": "Q12054",
+  "name": "Бернар Вербер",
+  "born": "1961-09-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D1%80%D0%B1%D0%B5%D1%80%2C_%D0%91%D0%B5%D1%80%D0%BD%D0%B0%D1%80",
+      "rev": 155581801
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Bernard_Werber",
+      "rev": 1370634043
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Bernard_Werber",
+      "rev": 240491622
+    }
+  ],
+  "chapters": [
+    {
+      "key": "toulouse-childhood",
+      "title": "Тулуза: рисунки, рассказы, звёзды",
+      "from": 1961,
+      "to": 1977
+    },
+    {
+      "key": "lyceum-and-ants",
+      "title": "Лицей, право и первая рукопись",
+      "from": 1978,
+      "to": 1981
+    },
+    {
+      "key": "paris-journalism",
+      "title": "Париж и годы отказов",
+      "from": 1982,
+      "to": 1990
+    },
+    {
+      "key": "first-novels",
+      "title": "Муравьи и первые книги",
+      "from": 1991,
+      "to": 1999
+    },
+    {
+      "key": "bestsellers",
+      "title": "Бестселлеры, сцена и награды",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1961",
+      "date": {
+        "from": "1961-09-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тулузе",
+      "long": "Родился в Тулузе в еврейской семье.",
+      "place": {
+        "label": "Тулуза"
+      },
+      "chapter": "toulouse-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Бернар Вербер родился 18 сентября 1961 года в Тулузе в еврейской семье."
+      }
+    },
+    {
+      "key": "creation-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Окончание лицея, начало работы над рукописью",
+      "long": "Окончив лицей, начал писать роман «Муравьи» на основе семистраничного сценария комикса и ввёл для себя режим: по четыре часа работы каждое утро.",
+      "place": {
+        "label": "Тулуза"
+      },
+      "works": [
+        {
+          "ref": "fourmis",
+          "note": "работа над рукописью началась в этот год, по рассказу автора"
+        }
+      ],
+      "chapter": "lyceum-and-ants",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году, окончив лицей, стал писать книгу «Муравьи»."
+      }
+    },
+    {
+      "key": "education-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Курсы при Институте криминологии",
+      "long": "Во время учёбы на факультете права посещал курсы Института криминологии и ходил на заседания судов в поисках тем для детективных рассказов.",
+      "place": {
+        "label": "Тулуза"
+      },
+      "chapter": "lyceum-and-ants",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1980 году Вербер посещал курсы при Институте криминологии Тулузы."
+      }
+    },
+    {
+      "key": "relocation-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж, журналистская школа",
+      "long": "Оставил изучение права и переехал в Париж, чтобы учиться в Высшей журналистской школе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1982 году Бернар Вербер бросил право и переехал в Париж, чтобы заниматься там журналистикой в Высшей журналистской школе."
+      }
+    },
+    {
+      "key": "creation-1982",
+      "date": {
+        "from": "1982-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рукопись на тысячу страниц после 18 переписываний",
+      "long": "К этому времени он переписал роман 18 раз; версия «Муравьи-Р63» насчитывала более тысячи страниц.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "fourmis",
+          "note": "версия «Муравьи-Р63» объёмом более 1000 страниц"
+        }
+      ],
+      "chapter": "paris-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В сентябре 1982 года у него на руках была версия «Муравьи-Р63» объёмом более 1000 страниц."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия фонда News лучшему молодому репортёру",
+      "long": "Получил премию фонда News как лучший молодой репортёр за репортаж о муравьях Берега Слоновой Кости.",
+      "chapter": "paris-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году получил премию фонда News как лучший молодой репортёр за репортаж о некоем виде муравьёв, обитающем на Берегу Слоновой Кости."
+      }
+    },
+    {
+      "key": "career-1983-2",
+      "date": {
+        "from": "1983",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Семь лет в Le Nouvel Observateur, увольнение",
+      "long": "Семь лет писал в Le Nouvel Observateur статьи на научные темы, после столкновения с руководством был уволен; затем поступил на Высшие курсы сценаристов при INA.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году получил премию фонда News как лучший молодой репортёр… Затем 7 лет без особого успеха работал в журнале Le Nouvel Observateur"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман после двенадцати лет и десятков отказов",
+      "long": "После двенадцати лет работы и десятков отказов издательств вышел первый роман; издатель просил сократить рукопись с 1463 до 350 страниц. Критики книгу почти не заметили.",
+      "works": [
+        {
+          "ref": "fourmis"
+        }
+      ],
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Après douze ans de travail et des dizaines de refus auprès des maisons d'édition, son premier roman Les Fourmis est édité en mars 1991."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приз читательниц журнала Elle",
+      "long": "«День муравья» получил приз читательниц журнала Elle, хотя критики оставались сдержанными.",
+      "works": [
+        {
+          "ref": "jour-des-fourmis"
+        }
+      ],
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1993, le Jour des fourmis obtient le prix des lectrices du magazine Elle."
+      }
+    },
+    {
+      "key": "other-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая поездка в Южную Корею",
+      "long": "Первая поездка в Южную Корею, которая позже стала одним из главных рынков его книг.",
+      "place": {
+        "label": "Южная Корея"
+      },
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1993 году появилась публикация «Энциклопедии знания относительного и абсолютного»… Тогда же Вербер совершил путешествие в Южную Корею, в которую влюбился с первого взгляда."
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Депрессия после равнодушия критиков",
+      "long": "Роман о смерти и потустороннем мире не получил внимания критиков; автор впал в депрессию и пытался отвлечься рисованием.",
+      "works": [
+        {
+          "ref": "thanatonautes"
+        }
+      ],
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1994 году Вербер опубликовал роман «Танатонавты»… Публикация очередного романа снова не завоевала внимания критиков, и писатель погрузился в депрессию."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Правило: по книге каждый октябрь",
+      "long": "Принял решение выпускать по одной книге в год, каждый октябрь; исключения — 1999 и 2011 годы, когда выходили только комиксы.",
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Depuis 1996, Bernard Werber a décidé de sortir un livre par an, chaque début d'octobre."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Год попыток экранизации книг",
+      "long": "Целый год занимался попытками экранизировать свои произведения.",
+      "chapter": "first-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весь 1999 год Вербер посвящает попыткам экранизации своих произведений."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в продажах",
+      "long": "Роман, написанный за два года, сразу занял первое место в списках продаж.",
+      "works": [
+        {
+          "ref": "empire-des-anges"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "L'Empire des anges se classe no 1 des ventes dès avril 2000."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Три месяца на первом месте в Корее",
+      "long": "В Южной Корее сборник оставался на первом месте три месяца.",
+      "place": {
+        "label": "Южная Корея"
+      },
+      "works": [
+        {
+          "ref": "arbre-des-possibles"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2002 en Corée, L'arbre des possibles reste numéro 1 pendant trois mois."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пьеса в театре Comédie Bastille",
+      "long": "Пьеса «Наши друзья Человеки» шла в парижском театре Comédie Bastille около года.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Octobre 2003 : sortie de la pièce de théâtre Nos amis les humains qui sera jouée pendant un an à la Comédie Bastille."
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Визит в Москву на книжную ярмарку",
+      "long": "Посетил Москву на Московской международной книжной выставке-ярмарке.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 2006 года Бернар Вербер в рамках Московской международной книжной выставки-ярмарки посетил Москву."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход на сцену со спектаклем-рассказом",
+      "long": "Впервые вышел на сцену со спектаклем-рассказом; позже он превратился в интерактивные «управляемые медитации».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En septembre 2016, Bernard Werber monte sur scène au théâtre des feux de la rampe pour un spectacle de conteur."
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над романом под влиянием медиумов",
+      "long": "Роман «С того света» написан под влиянием двух медиумов — Моники Паран Бакан и Патрисии Дарре.",
+      "works": [
+        {
+          "ref": "depuis-lau-dela",
+          "note": "написан под влиянием двух медиумов"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2017, Bernard Werber rédige Depuis L’au-delà sous l’influence de deux médiums : Monique Parent Baccan et Patricia Darré."
+      }
+    },
+    {
+      "key": "creation-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Опыт регрессивного гипноза как основа романа",
+      "long": "Роман построен на его собственном опыте исследования прошлых жизней под регрессивным гипнозом.",
+      "works": [
+        {
+          "ref": "boite-de-pandore",
+          "note": "роман пересказывает собственные опыты автора с регрессивным гипнозом"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "L'année suivante en 2018, il écrit La Boîte de Pandore, en romançant ses expériences d'exploration des vies antérieures sous hypnose régressive."
+      }
+    },
+    {
+      "key": "other-2020",
+      "date": {
+        "from": "2020-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Покровитель Праздника науки",
+      "long": "Стал патроном Праздника науки 2020 года; в связи с Covid-19 призывал к взвешенности.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Fin juin 2020, il parraine l'édition 2020 de la fête de la science."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022-04-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Офицер ордена Искусств и литературы",
+      "long": "Произведён в офицеры ордена Искусств и литературы.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 15 avril 2022, il est promu au grade d'officier dans l'ordre des Arts et des Lettres, au titre d' « écrivain »."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023-08-30",
+        "to": "2024-06-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Еженедельная хроника на France Culture",
+      "long": "Каждую среду вёл на France Culture хронику «Le biais de Bernard Werber» об эволюции современности; последний выпуск — 26 июня 2024.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Depuis le 30 août 2023, il présente chaque mercredi à 7 h 55 « Le biais de Bernard Werber » sur France Culture"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024-10-23",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Спектакль в «Олимпии»",
+      "long": "Показал спектакль V.I.E в парижском зале «Олимпия» при полном аншлаге.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 23 Octobre 2024, il joue le spectacle V.I.E à l'Olympia avec encore une salle qui affiche complet."
+      }
+    },
+    {
+      "key": "illness-2025",
+      "date": {
+        "from": "2025-11-30",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Признание в болезни — анкилозирующий спондилоартрит",
+      "long": "В интервью France 2 рассказал, что страдает анкилозирующим спондилоартритом — аутоиммунным заболеванием.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 30 novembre 2025, dans une interview accordée à France 2, il confie souffrir de spondylarthrite ankylosante, une maladie auto-immune."
+      }
+    },
+    {
+      "key": "career-2026",
+      "date": {
+        "from": "2026-05-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кавалер Национального ордена за заслуги",
+      "long": "Назначен кавалером Национального ордена за заслуги как «писатель, 35 лет службы».",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 15 mai 2026, Bernard Werber est nommé au grade de chevalier dans l'ordre national du Mérite"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fourmis",
+      "title": "Муравьи",
+      "qid": "Q1193990",
+      "written": {
+        "from": 1978,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "jour-des-fourmis",
+      "title": "День муравья",
+      "written": {
+        "from": 1991,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "revolution-des-fourmis",
+      "title": "Революция муравьёв",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "encyclopedie-du-savoir",
+      "title": "Энциклопедия относительного и абсолютного знания",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "thanatonautes",
+      "title": "Танатонавты",
+      "written": {
+        "from": 1993,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "livre-du-voyage",
+      "title": "Книга путешествий",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "pere-de-nos-peres",
+      "title": "Отцы наших отцов",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "empire-des-anges",
+      "title": "Империя ангелов",
+      "written": {
+        "from": 1998,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "ultime-secret",
+      "title": "Последний секрет",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "arbre-des-possibles",
+      "title": "Древо возможного",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "nous-les-dieux",
+      "title": "Мы, боги",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "depuis-lau-dela",
+      "title": "С того света",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "boite-de-pandore",
+      "title": "Ящик Пандоры",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

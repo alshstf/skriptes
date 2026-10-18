@@ -1,0 +1,230 @@
+{
+  "qid": "Q240212",
+  "name": "Филиппа Грегори",
+  "born": "1954-01-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B5%D0%B3%D0%BE%D1%80%D0%B8%2C_%D0%A4%D0%B8%D0%BB%D0%B8%D0%BF%D0%BF%D0%B0",
+      "rev": 153118842
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Philippa_Gregory",
+      "rev": 1373037336
+    }
+  ],
+  "chapters": [
+    {
+      "key": "nairobi-bristol-universities",
+      "title": "Из Найроби в Англию",
+      "from": 1954,
+      "to": 1981
+    },
+    {
+      "key": "doctorate-wideacre",
+      "title": "Диссертация и «Вайдекр»",
+      "from": 1982,
+      "to": 1992
+    },
+    {
+      "key": "fame-gambia",
+      "title": "Слава и сады Гамбии",
+      "from": 1993,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-01-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Найроби",
+      "long": "Родилась в Найроби, в то время столице колонии Кения, в семье бортрадиста и штурмана East African Airways.",
+      "place": {
+        "label": "Найроби"
+      },
+      "chapter": "nairobi-bristol-universities",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Philippa Gregory was born on 9 January 1954 in Nairobi"
+      }
+    },
+    {
+      "key": "education-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра истории в Суссексе",
+      "long": "Поступила в Суссекский университет на английскую литературу, перешла на историю и в 1982 году получила степень бакалавра по истории.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "doctorate-wideacre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1982, she received a B.A. degree in history from Sussex University."
+      }
+    },
+    {
+      "key": "education-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень в Эдинбурге",
+      "long": "После двух лет на радио BBC училась в Эдинбургском университете; в 1985 году защитила докторскую по литературе XVIII века.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "doctorate-wideacre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "obtained a Ph.D. degree in 18th-century literature in 1985"
+      }
+    },
+    {
+      "key": "creation-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман в коттедже на Пеннинской тропе",
+      "long": "Первый роман писала, заканчивая докторскую, в коттедже на Пеннинской тропе, с первым мужем Питером Чизлеттом и маленькой дочерью; до выхода книги брак распался.",
+      "works": [
+        {
+          "ref": "wideacre",
+          "note": "роман написан в период работы над диссертацией"
+        }
+      ],
+      "chapter": "doctorate-wideacre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "obtained a Ph.D. degree in 18th-century literature in 1985… Gregory wrote her first novel Wideacre while completing her doctorate"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всемирная известность после первого романа",
+      "long": "Первый же роман принёс авторке всемирную известность и дал начало трилогии о семействе Лейси.",
+      "works": [
+        {
+          "ref": "wideacre"
+        }
+      ],
+      "chapter": "doctorate-wideacre",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Всемирную известность Филиппе Грегори принёс первый же роман — «Вайдекр», вышедший в свет в 1987 году"
+      }
+    },
+    {
+      "key": "other-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Основание фонда «Сады для Гамбии»",
+      "long": "Во время поездки в Гамбию за материалом для романа основала благотворительную организацию, строящую колодцы в школьных садах.",
+      "place": {
+        "label": "Гамбия"
+      },
+      "works": [
+        {
+          "ref": "a-respectable-trade",
+          "note": "фонд основан во время сбора материала для романа"
+        }
+      ],
+      "chapter": "fame-gambia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gardens for The Gambia was established in 1993 when Gregory was in The Gambia, researching for her book A Respectable Trade."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание члена совета Кингстонского университета",
+      "long": "Преподавала в Даремском и Тиссайдском университетах и в Открытом университете; в 1994 году стала членом совета Кингстонского университета.",
+      "chapter": "fame-gambia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was made a fellow of Kingston University in 1994"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи (CBE)",
+      "long": "Назначена командором ордена Британской империи за заслуги в литературе и благотворительности в Великобритании и Гамбии.",
+      "chapter": "fame-gambia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gregory was appointed Commander of the Order of the British Empire (CBE) in the 2021 Birthday Honours"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "wideacre",
+      "title": "Вайдекр",
+      "written": {
+        "from": 1985,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "a-respectable-trade",
+      "title": "Достойная торговля",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "the-other-boleyn-girl",
+      "title": "Ещё одна из рода Болейн",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "the-white-queen",
+      "title": "Белая королева",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

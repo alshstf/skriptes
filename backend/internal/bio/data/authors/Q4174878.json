@@ -1,0 +1,371 @@
+{
+  "qid": "Q4174878",
+  "name": "Михаил Юрьевич Елизаров",
+  "born": "1973-01-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%95%D0%BB%D0%B8%D0%B7%D0%B0%D1%80%D0%BE%D0%B2%2C_%D0%9C%D0%B8%D1%85%D0%B0%D0%B8%D0%BB_%D0%AE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 154414776
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mikhail_Elizarov",
+      "rev": 1374324242
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ukraine",
+      "title": "Украина: Франковск, Харьков, армия",
+      "from": 1973,
+      "to": 2000
+    },
+    {
+      "key": "germany",
+      "title": "Ганновер и Берлин",
+      "from": 2001,
+      "to": 2006
+    },
+    {
+      "key": "moscow",
+      "title": "Москва и «Букер»",
+      "from": 2007,
+      "to": 2018
+    },
+    {
+      "key": "earth",
+      "title": "«Земля» и новые роли",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-01-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился 28 января 1973 года в Ивано-Франковске.",
+      "place": {
+        "label": "Ивано-Франковск"
+      },
+      "chapter": "ukraine",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Ивано-Франковск 1973-01-28"
+      }
+    },
+    {
+      "key": "education-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание филфака Харьковского университета",
+      "long": "Окончил филологический факультет Харьковского университета; во время учёбы отслужил в армии.",
+      "place": {
+        "label": "Харьков"
+      },
+      "chapter": "ukraine",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году окончил филологический факультет Харьковского университета."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный дебют, замеченный критикой",
+      "long": "Выход сборника в издательстве Ad Marginem привлёк внимание к писателю; Лев Данилкин назвал его лучшим дебютом года. По словам автора, рассказы он писал с девятнадцати до двадцати семи лет.",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "nogti",
+          "note": "по словам автора, рассказы сборника писались с девятнадцати до двадцати семи лет"
+        }
+      ],
+      "chapter": "germany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году в издательстве Ad Marginem вышел сборник «Ногти», привлёкший внимание к писателю."
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "to": "2003",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба на телережиссёра в Ганновере",
+      "long": "В 2001–2003 годах жил в Ганновере и учился в киношколе на телережиссёра.",
+      "place": {
+        "label": "Ганновер"
+      },
+      "chapter": "germany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001—2003 годах жил в Ганновере, где учился в киношколе на телережиссёра."
+      }
+    },
+    {
+      "key": "relocation-2003",
+      "date": {
+        "from": "2003",
+        "to": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь и работа в Берлине",
+      "long": "В 2003–2007 годах жил и работал в Берлине.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "germany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003—2007 годах жил и работал в Берлине."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Спор критиков вокруг первого романа",
+      "long": "Роман получил неоднозначные оценки: часть критиков резко отозвалась о книге, другие высоко её оценили.",
+      "works": [
+        {
+          "ref": "pasternak"
+        }
+      ],
+      "chapter": "germany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году вышел роман «Pasternak»… Роман «Pasternak» получил неоднозначные оценки."
+      }
+    },
+    {
+      "key": "relocation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Москву",
+      "long": "Переехал из Берлина в Москву, где живёт с 2007 года.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2007 года живёт в Москве."
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Немецкое гражданство",
+      "long": "Незадолго до переезда в Москву получил немецкое гражданство, сохранив украинское.",
+      "chapter": "moscow",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Elizarov, shortly before that obtained German citizenship and moved to Moscow"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Русский Букер»",
+      "long": "Роман «Библиотекарь» получил премию «Русский Букер».",
+      "works": [
+        {
+          "ref": "librarian",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "moscow",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В декабре 2008 года роман стал лауреатом «Русского Букера»."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало музыкальной карьеры",
+      "long": "Создал музыкальный проект и начал исполнять собственные песни; жанр назвал «бард-панк-шансоном».",
+      "chapter": "moscow",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2010 году создал музыкальный проект."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия НОС по выбору зрителей",
+      "long": "Получил премию НОС в номинации «Приз зрительских симпатий» за сборник рассказов.",
+      "works": [
+        {
+          "ref": "we-went-out-to-smoke",
+          "note": "премия присуждена за сборник"
+        }
+      ],
+      "chapter": "moscow",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, Elizarov won the NOS Prize in the nomination \"Audience Choice Award\""
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в лаборатории СПбГУ",
+      "long": "С 2019 года работает инженером-исследователем лаборатории «Современная алгебра и приложения» Санкт-Петербургского государственного университета.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "earth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Since 2019, he worked as a researcher at the Modern Algebra and Applications Laboratory"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Национальный бестселлер»",
+      "long": "Роман «Земля» получил премию «Национальный бестселлер»; в том же году получил Григорьевскую поэтическую премию.",
+      "works": [
+        {
+          "ref": "earth",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "earth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the National Bestseller Literary Prize in 2020 for Earth"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "nogti",
+      "title": "Ногти",
+      "written": {
+        "from": 1992,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "pasternak",
+      "title": "Pasternak",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "red-film",
+      "title": "Красная плёнка",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "librarian",
+      "title": "Библиотекарь",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "kubiki",
+      "title": "Кубики",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "cartoons",
+      "title": "Мультики",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "we-went-out-to-smoke",
+      "title": "Мы вышли покурить на 17 лет",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "earth",
+      "title": "Земля",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}
