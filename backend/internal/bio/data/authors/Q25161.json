@@ -1,0 +1,905 @@
+{
+  "qid": "Q25161",
+  "name": "Роальд Даль",
+  "born": "1916-09-13",
+  "died": "1990-11-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B0%D0%BB%D1%8C%2C_%D0%A0%D0%BE%D0%B0%D0%BB%D1%8C%D0%B4",
+      "rev": 155671006
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Roald_Dahl",
+      "rev": 1379807407
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Норвежские дети в Уэльсе",
+      "from": 1916,
+      "to": 1933
+    },
+    {
+      "key": "africa",
+      "title": "Шелл и Танганьика",
+      "from": 1934,
+      "to": 1938
+    },
+    {
+      "key": "war",
+      "title": "Небо над пустыней",
+      "from": 1939,
+      "to": 1941
+    },
+    {
+      "key": "washington",
+      "title": "Вашингтон и первые рассказы",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "new-york",
+      "title": "Нью-Йорк, семья, первые утраты",
+      "from": 1946,
+      "to": 1962
+    },
+    {
+      "key": "children-books",
+      "title": "Испытания и детские книги",
+      "from": 1963,
+      "to": 1982
+    },
+    {
+      "key": "late",
+      "title": "Поздние годы",
+      "from": 1983,
+      "to": 1990
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1916",
+      "date": {
+        "from": "1916-09-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье норвежских эмигрантов",
+      "long": "Родился в Лландаффе (Кардифф, Уэльс) в семье норвежских эмигрантов; назван в честь полярника Руаля Амундсена.",
+      "place": {
+        "label": "Лландафф"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роальд Даль родился в Вилла Мари (англ. Villa Marie) на Фэруотер-Роуд в Лландаффе (Кардифф, Уэльс, Британская империя) 13 сентября 1916 года"
+      }
+    },
+    {
+      "key": "loss-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры Астри",
+      "long": "Семилетняя сестра Астри умерла от аппендицита, когда Роальду было три года.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году, когда Роальду было три года, его старшая сестра, 7-летняя Астри умерла от аппендицита"
+      }
+    },
+    {
+      "key": "loss-1920-2",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Харальда Даля",
+      "long": "Через несколько недель после сестры умер от пневмонии отец, Харальд Даль. Мать осталась в Англии одна с детьми, чтобы они учились в английских школах.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году, когда Роальду было три года, ... а спустя несколько недель на рыболовецком судне в Антарктике в возрасте 57 лет умер отец семейства, заболев пневмонией"
+      }
+    },
+    {
+      "key": "education-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Рептон",
+      "long": "В школе Рептон (Дербишир) Даль столкнулся с дедовщиной и издевательствами; присылаемый компанией «Cadbury» шоколад для проб, по статье, привёл его позже к замыслу книги о шоколадной фабрике.",
+      "place": {
+        "label": "Рептон"
+      },
+      "works": [
+        {
+          "ref": "charlie-and-the-chocolate-factory-1964",
+          "note": "воспоминания о шоколаде «Cadbury» в школе привели к созданию книги"
+        }
+      ],
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929-м, когда Далю исполнилось тринадцать, семья переехала в Кент. Даль продолжил обучение в школе Рептон"
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поступление в нефтяную компанию «Шелл»",
+      "long": "Отказавшись от университета, Даль поступил в нефтяную компанию «Шелл» и четыре года проходил обучение в Великобритании.",
+      "chapter": "africa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1934, Dahl joined the Shell Petroleum Company."
+      }
+    },
+    {
+      "key": "relocation-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в Танганьику",
+      "long": "Сотрудником «Шелл» отправился в Восточную Африку. Опыт жизни там описан в «Полётах в одиночку».",
+      "place": {
+        "label": "Дар-эс-Салам"
+      },
+      "works": [
+        {
+          "ref": "going-solo-1986",
+          "note": "африканские приключения описаны автором в этой книге"
+        }
+      ],
+      "chapter": "africa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1936 году в качестве сотрудника «Шелл» Даль отбыл туда, куда хотел — в Восточную Африку, в Танганьику (ныне Танзания)."
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939-11",
+        "to": "1946-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в Королевских ВВС",
+      "long": "После начала войны вступил добровольцем в ВВС Великобритании в Найроби; в августе 1946 года по состоянию здоровья уволен со службы.",
+      "place": {
+        "label": "Найроби"
+      },
+      "works": [
+        {
+          "ref": "going-solo-1986",
+          "note": "война вдохновила автора на автобиографическую книгу"
+        }
+      ],
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1939, Dahl joined the Royal Air Force (RAF) as an aircraftman with service number 774022."
+      }
+    },
+    {
+      "key": "illness-1940",
+      "date": {
+        "from": "1940-09-19",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Авария «Гладиатора» в Ливийской пустыне",
+      "long": "Из-за неверных координат совершил вынужденную посадку в Ливийской пустыне; самолёт разбился, у Даля был проломлен череп, несколько недель он оставался слепым. Последствия травмы позже привели к увольнению из авиации.",
+      "place": {
+        "label": "Ливийская пустыня"
+      },
+      "works": [
+        {
+          "ref": "going-solo-1986",
+          "note": "события этого периода изложены в мемуарах автора"
+        }
+      ],
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 19 September 1940, Dahl and another pilot were ordered to fly their Gladiators ... Dahl's skull was fractured and his nose was smashed; he was temporarily blinded."
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941-04-15",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Первый воздушный бой над Грецией",
+      "long": "В греческой кампании сбил над Халкидой бомбардировщик Ju 88; позже участвовал в боях над Афинами и в Сирии.",
+      "place": {
+        "label": "Халкида"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dahl flew in his first aerial combat on 15 April 1941, while flying alone over the city of Chalcis."
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Назначение помощником атташе в Вашингтоне",
+      "long": "Признанный негодным к лётной службе, назначен помощником атташе британского посольства в Вашингтоне; в обязанности входила пропаганда в пользу Британии.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его отправили домой в Англию, где в 1942 году он получил назначение в Вашингтон в качестве помощника военного атташе посольства Великобритании."
+      }
+    },
+    {
+      "key": "creation-1942",
+      "date": {
+        "from": "1942-08-01",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первая публикация после встречи с Форестером",
+      "long": "По предложению писателя С. С. Форестера записал свою историю о лётных приключениях; её купила «Saturday Evening Post». Так началась писательская карьера.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "works": [
+        {
+          "ref": "over-to-you-1946",
+          "note": "сборник рассказов о лётчиках вырос из первых военных рассказов"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dahl's first published work, inspired by a meeting with C. S. Forester, was ... on 1 August 1942."
+      }
+    },
+    {
+      "key": "creation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая детская книга о гремлинах",
+      "long": "Первая детская книга о гремлинах, мифических существах из лётного фольклора RAF; Дисней хотел снять по ней фильм, но он не вышел.",
+      "works": [
+        {
+          "ref": "gremlins-1943"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first children's book was The Gremlins, published in 1943"
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Англию к матери",
+      "long": "После войны вернулся в Англию к матери, где написал роман о ядерной угрозе.",
+      "chapter": "washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году Даль вернулся в Англию к матери."
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал романа о ядерной войне",
+      "long": "Роман о возможной ядерной войне провалился и стал единственной книгой Даля, ни разу не переиздававшейся.",
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "он написал роман о возможной ядерной войне («Sometime Never», 1948). Роман провалился"
+      }
+    },
+    {
+      "key": "love-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с актрисой Патрицией Нил",
+      "long": "В Нью-Йорке на вечеринке познакомился с актрисой Патрицией Нил.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На одной вечеринке в 1951 году он встретил восходящую звезду Голливуда Патрицию Нил"
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв: сборник новелл у Кнопфа",
+      "long": "Издатель Альфред Кнопф выпустил сборник новелл; критики отметили «демоническое» видение мира и неожиданные концовки.",
+      "works": [
+        {
+          "ref": "someone-like-you-1953"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году издатель Альфред Кнопф увлёкся рассказами Даля и выпустил книгу его новелл"
+      }
+    },
+    {
+      "key": "love-1953",
+      "date": {
+        "from": "1953-07-02",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Патрицией Нил",
+      "long": "Женился на актрисе Патриции Нил в нью-йоркской церкви Троицы; брак продлился тридцать лет, в нём родились пятеро детей.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dahl married American actress Patricia Neal on 2 July 1953 at Trinity Church in New York City."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия Эдгара По",
+      "long": "Первая из трёх премий Эдгара По — за сборник рассказов.",
+      "works": [
+        {
+          "ref": "someone-like-you-1953"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Даль получил престижную премию Эдгара По (1954)."
+      }
+    },
+    {
+      "key": "relocation-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поселение в Gipsy House",
+      "long": "Поселился в Gipsy House в Грейт-Миссенден (Бакингемшир), где прожил до конца жизни.",
+      "place": {
+        "label": "Грейт-Миссенден"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gipsy House, Great Missenden, Buckinghamshire, which had been Dahl's home since 1954."
+      }
+    },
+    {
+      "key": "child-1955",
+      "date": {
+        "from": "1955-04-20",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Оливии",
+      "long": "Родилась старшая дочь Оливия Твенти.",
+      "chapter": "new-york",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Оливия Даль 1955-04-20"
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957-04-11",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Тессы",
+      "long": "Родилась дочь Шанталь София, «Тесса».",
+      "chapter": "new-york",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Тесса Дал 1957-04-11"
+      }
+    },
+    {
+      "key": "illness-1960",
+      "date": {
+        "from": "1960-12-05",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлая травма сына Тео",
+      "long": "Коляску с четырёхмесячным сыном Тео сбило такси; у ребёнка развилась гидроцефалия. Даль участвовал в создании клапана WDT для лечения этого состояния.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 5 December 1960, four-month-old Theo was severely injured when his baby carriage was struck by a taxicab in New York City."
+      }
+    },
+    {
+      "key": "creation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рукопись, отданная в печать по настоянию семьи",
+      "long": "Семья уговорила Даля отнести рукопись в редакцию; успех книги определил его дальнейший путь детского писателя.",
+      "works": [
+        {
+          "ref": "james-and-the-giant-peach-1961",
+          "note": "публиковать книгу автор не собирался, рукопись отнесли по настоянию семьи"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Книгу «Джеймс и гигантский персик» (1961) Даль публиковать не собирался, однако семья уговорила его отнести рукопись в редакцию."
+      }
+    },
+    {
+      "key": "faith-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Потеря веры после смерти дочери",
+      "long": "После смерти дочери и разговора с бывшим архиепископом Кентерберийским Даль стал воспринимать христианство как обман.",
+      "chapter": "new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Olivia's death and a meeting with a Church official, Dahl came to view Christianity as a sham."
+      }
+    },
+    {
+      "key": "loss-1962",
+      "date": {
+        "from": "1962-11",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть семилетней дочери Оливии",
+      "long": "Семилетняя Оливия умерла от коревого энцефалита. Даль стал сторонником иммунизации.",
+      "works": [
+        {
+          "ref": "the-bfg-1982",
+          "note": "книга посвящена умершей дочери"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1962 года от коревого энцефалита умерла дочь Оливия"
+      }
+    },
+    {
+      "key": "child-1964",
+      "date": {
+        "from": "1964-05-12",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Офелии",
+      "long": "Родилась дочь Офелия Магдалена.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Офелия Дал 1964-05-12"
+      }
+    },
+    {
+      "key": "illness-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Аневризма у жены Патриции Нил",
+      "long": "У Патриции Нил разорвались сосуды мозга; Даль взял на себя её реабилитацию, и она вернулась к актёрской работе.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году жена перенесла аневризму сосудов головного мозга во время беременности их пятым ребёнком, Люси."
+      }
+    },
+    {
+      "key": "child-1965",
+      "date": {
+        "from": "1965-08-04",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Люси",
+      "long": "Родилась младшая дочь Люси Нил.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Люси Дал 1965-08-04"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа киносценаристом над фильмами по Флемингу",
+      "long": "Написал сценарии к фильмам по произведениям Яна Флеминга, своего друга.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Живёшь только дважды» («You Only Live Twice», 1967) с Шоном Коннери в роли Джеймса Бонда ... «Читти-читти-бэнг-бэнг» («Chitty Chitty Bang Bang», 1968)"
+      }
+    },
+    {
+      "key": "loss-1967",
+      "date": {
+        "from": "1967-11-17",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Софи Магдалена Даль; позже он узнал, что она сберегла все его школьные письма.",
+      "works": [
+        {
+          "ref": "boy-1984",
+          "note": "детские школьные годы описаны автором в этой книге"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Только после смерти матери в 1967 году он узнал, что она сохранила все его письма"
+      }
+    },
+    {
+      "key": "love-1972",
+      "date": {
+        "from": "1972",
+        "to": "1983",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с Фелисити Кроуленд",
+      "long": "Познакомился с Фелисити Кроуленд, работавшей художником-постановщиком с его женой; начался одиннадцатилетний роман.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1972, Roald Dahl met Felicity ... they began an 11-year affair."
+      }
+    },
+    {
+      "key": "creation-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа в фургоне-вардо в саду",
+      "long": "Писал книгу в цыганском фургоне-вардо, стоявшем в саду; похожий фургон появляется в сюжете.",
+      "place": {
+        "label": "Грейт-Миссенден"
+      },
+      "works": [
+        {
+          "ref": "danny-champion-of-the-world-1975",
+          "note": "книга написана в вардо, подобный фургон есть в сюжете"
+        }
+      ],
+      "chapter": "children-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He later used the vardo as a writing room, where he wrote Danny, the Champion of the World in 1975."
+      }
+    },
+    {
+      "key": "family-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Патрицией Нил",
+      "long": "Брак с Патрицией Нил, длившийся тридцать лет, закончился разводом.",
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году Даль и Нил развелись"
+      }
+    },
+    {
+      "key": "love-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Фелисити Д’Абро",
+      "long": "Женился на Фелисити Д’Абро, с которой прожил до конца жизни; она переехала в Gipsy House.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "и позднее в том же году Даль женился на Фелисити Д’Абро, с которой прожил до конца жизни"
+      }
+    },
+    {
+      "key": "other-1983",
+      "date": {
+        "from": "1983-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг рецензии о войне в Ливане",
+      "long": "Рецензия на книгу об осаде Бейрута вызвала критику в прессе как антисемитская; Даль публично высказывался на эту тему и позже. В 2020 году семья принесла извинения.",
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1983, Dahl reviewed Australian author Tony Clifton's God Cried ... appeared in the Literary Review and was the subject of media comment and criticism at the time."
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "to": "1986",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над автобиографическими книгами",
+      "long": "Написал две автобиографические книги — о детстве и о годах в Африке и на войне.",
+      "works": [
+        {
+          "ref": "boy-1984"
+        },
+        {
+          "ref": "going-solo-1986"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В последние годы жизни Даль написал два автобиографичных романа — «Мальчик. Рассказы о детстве» (1984) и «Полёты в одиночку» (1986)."
+      }
+    },
+    {
+      "key": "death-1990",
+      "date": {
+        "from": "1990-11-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Оксфорде",
+      "long": "Умер в Оксфорде от миелодиспластического синдрома (редкий рак крови); похоронен в Грейт-Миссенден.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Roald Dahl died on 23 November 1990, at the age of 74 of a rare cancer of the blood, myelodysplastic syndrome, in Oxford"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "gremlins-1943",
+      "title": "Гремлины",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "over-to-you-1946",
+      "title": "Перехожу на приём",
+      "written": {
+        "from": 1942,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "someone-like-you-1953",
+      "title": "Кто-то вроде тебя",
+      "written": {
+        "from": 1946,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "kiss-kiss-1959",
+      "title": "Поцелуй",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "james-and-the-giant-peach-1961",
+      "title": "Джеймс и гигантский персик",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "charlie-and-the-chocolate-factory-1964",
+      "title": "Чарли и шоколадная фабрика",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "fantastic-mr-fox-1970",
+      "title": "Изумительный мистер Лис",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "danny-champion-of-the-world-1975",
+      "title": "Дэнни — чемпион мира",
+      "qid": "Q1164830",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "the-twits-1980",
+      "title": "Семейство Твит",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "the-bfg-1982",
+      "title": "БДВ, или Большой и добрый великан",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "the-witches-1983",
+      "title": "Ведьмы",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "boy-1984",
+      "title": "Мальчик. Рассказы о детстве",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "going-solo-1986",
+      "title": "Полёты в одиночку",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "matilda-1988",
+      "title": "Матильда",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "esio-trot-1990",
+      "title": "Ахап Ереч",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    }
+  ]
+}

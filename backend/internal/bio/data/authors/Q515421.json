@@ -1,0 +1,319 @@
+{
+  "qid": "Q515421",
+  "name": "Джо Аберкромби",
+  "born": "1974-12-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D0%B5%D1%80%D0%BA%D1%80%D0%BE%D0%BC%D0%B1%D0%B8%2C_%D0%94%D0%B6%D0%BE",
+      "rev": 154940153
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Joe_Abercrombie",
+      "rev": 1377393032
+    }
+  ],
+  "chapters": [
+    {
+      "key": "lancaster-manchester-tv",
+      "title": "Ланкастер, Манчестер, телевидение",
+      "from": 1974,
+      "to": 2001
+    },
+    {
+      "key": "first-novel",
+      "title": "Первый роман и Gollancz",
+      "from": 2002,
+      "to": 2007
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и новые циклы",
+      "from": 2008,
+      "to": 2018
+    },
+    {
+      "key": "age-of-madness",
+      "title": "Эпоха Безумия и новый контракт",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1974",
+      "date": {
+        "from": "1974-12-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ланкастере",
+      "long": "Джо Аберкромби родился 31 декабря 1974 года в Ланкастере, Англия.",
+      "place": {
+        "label": "Ланкастер"
+      },
+      "chapter": "lancaster-manchester-tv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 31 декабря 1974, Ланкастер, Англия"
+      }
+    },
+    {
+      "key": "creation-2002",
+      "date": {
+        "from": "2002",
+        "to": "2004",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над первым романом в перерывах между заказами",
+      "long": "Работая фрилансером-монтажёром на телевидении, в свободное время начал писать первый роман; начат в 2002 году, закончен в 2004-м.",
+      "works": [
+        {
+          "ref": "blade-itself"
+        }
+      ],
+      "chapter": "first-novel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "начал писать свой первый роман «Кровь и железо» (англ. The Blade Itself) в 2002 году, который закончил в 2004"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт с издательством Gollancz",
+      "long": "После года отказов литературных агентств Джиллиан Редфирн из Gollancz приняла рукопись; контракт на сумму из пяти цифр. Роман вышел в 2006 году.",
+      "works": [
+        {
+          "ref": "blade-itself"
+        }
+      ],
+      "chapter": "first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After a year of rejections by publishing agencies, Gillian Redfearn of Gollancz accepted the book for a five-figure deal in 2005."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Финалист премии Кэмпбелла за лучший дебют",
+      "long": "В 2008 году Аберкромби вышел в финал премии Джона Кэмпбелла лучшему новому писателю.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, Abercrombie was a finalist for the John W. Campbell award for Best New Writer."
+      }
+    },
+    {
+      "key": "career-2008-2",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Участие в телепроекте BBC о фэнтези",
+      "long": "В 2008 году участвовал в телевизионном проекте BBC World of Fantasy вместе с Майклом Муркоком, Терри Пратчеттом и Чайной Мьевилем.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году Джо участвовал в телевизионном проекте BBC World of Fantasy"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Новый договор с Gollancz на четыре книги",
+      "long": "В 2011 году подписал с Gollancz договор ещё на четыре книги в мире «Первого закона».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Abercrombie signed a deal with Gollancz for four more books set in the First Law world."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Договор с HarperCollins на книги для подростков",
+      "long": "В 2013 году HarperCollins приобрёл права на три книги Аберкромби для юных читателей; они вышли как трилогия «Расколотое море».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, HarperCollins' fantasy and children's imprints acquired the rights to three books by Abercrombie, aimed at younger readers."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за книгу для подростков",
+      "long": "Роман Half a King получил в 2015 году премию «Локус» как лучшая книга для подростков.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novel Half a King won the 2015 Locus Award for best young adult book."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение к «Земному Кругу» после трёхлетнего перерыва",
+      "long": "В 2019 году после трёхлетнего перерыва начал выпуск трилогии «Эпоха Безумия» о мире «Земного Круга» в индустриальную эпоху.",
+      "works": [
+        {
+          "ref": "a-little-hatred"
+        }
+      ],
+      "chapter": "age-of-madness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2019 году, после трёхлетнего перерыва, начал выпуск новой трилогии «Эпоха Безумия»."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Аукцион и контракт с Tor на новую трилогию",
+      "long": "В апреле 2022 года издательство Tor объявило, что приобрело на аукционе новую трилогию Аберкромби.",
+      "chapter": "age-of-madness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2022, Tor announced that it had acquired a new trilogy from Abercrombie at auction."
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Права на экранизацию у компании Джеймса Кэмерона",
+      "long": "В июне 2025 года стало известно, что компания Джеймса Кэмерона приобрела права на The Devils; Кэмерон и Аберкромби напишут сценарий вместе.",
+      "works": [
+        {
+          "ref": "the-devils"
+        }
+      ],
+      "chapter": "age-of-madness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2025, it was announced that James Cameron's production company acquired the rights to The Devils"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "blade-itself",
+      "title": "Кровь и железо",
+      "qid": "Q3986014",
+      "written": {
+        "from": 2002,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "before-they-are-hanged",
+      "title": "Прежде чем их повесят",
+      "qid": "Q16582849",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "last-argument-of-kings",
+      "title": "Последний довод королей",
+      "qid": "Q20430977",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "best-served-cold",
+      "title": "Лучше подавать холодным",
+      "qid": "Q65319807",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "the-heroes",
+      "title": "Герои",
+      "qid": "Q54870937",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "red-country",
+      "title": "Red Country",
+      "qid": "Q131414127",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "a-little-hatred",
+      "title": "Немного ненависти",
+      "qid": "Q131414129",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "the-devils",
+      "title": "The Devils",
+      "qid": "Q135264602",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

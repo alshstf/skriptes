@@ -1,0 +1,513 @@
+{
+  "qid": "Q190220",
+  "name": "Филип Пулман",
+  "born": "1946-10-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%83%D0%BB%D0%BC%D0%B0%D0%BD%2C_%D0%A4%D0%B8%D0%BB%D0%B8%D0%BF",
+      "rev": 152077650
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Philip_Pullman",
+      "rev": 1376632713
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-shkola",
+      "title": "Детство: Норидж, Австралия, Уэльс",
+      "from": 1946,
+      "to": 1964
+    },
+    {
+      "key": "oksford-i-shkola",
+      "title": "Оксфорд и школьный класс",
+      "from": 1965,
+      "to": 1987
+    },
+    {
+      "key": "kolledzh-i-severnoe-siyanie",
+      "title": "Колледж и замысел «Тёмных начал»",
+      "from": 1988,
+      "to": 1995
+    },
+    {
+      "key": "pisatel-na-polnoe-vremya",
+      "title": "Признание и литературная слава",
+      "from": 1996,
+      "to": 2012
+    },
+    {
+      "key": "obshchestvennaya-rol",
+      "title": "Президент Общества авторов",
+      "from": 2013,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1946",
+      "date": {
+        "from": "1946-10-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Норидже",
+      "long": "Родился в Норидже, Англия.",
+      "place": {
+        "label": "Норидж"
+      },
+      "chapter": "detstvo-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sir Philip Nicholas Outram Pullman  (born 19 October 1946) is an English writer."
+      }
+    },
+    {
+      "key": "loss-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель отца, лётчика ВВС",
+      "long": "Отец, лётчик Королевских ВВС Альфред Аутрам Пулман, погиб в авиакатастрофе в Кении, когда мальчику было семь лет.",
+      "place": {
+        "label": "Кения"
+      },
+      "chapter": "detstvo-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was killed in a plane crash in Kenya in 1954, when Pullman was seven"
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Полтора года в Южной Австралии",
+      "long": "Семья провела около полутора лет в Южной Австралии, куда был направлен отчим. Наводнение, которое Пулман там увидел, позднее легло в основу сюжета «La Belle Sauvage».",
+      "place": {
+        "label": "Южная Австралия"
+      },
+      "works": [
+        {
+          "ref": "the-book-of-dust",
+          "note": "наводнение в Южной Австралии автор использовал в центральной сюжетной линии первого тома"
+        }
+      ],
+      "chapter": "detstvo-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Around 1956, Pullman and his family spent around 18 months in South Australia, after his stepfather was posted to Woomera."
+      }
+    },
+    {
+      "key": "education-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа в Северном Уэльсе",
+      "long": "С 1957 года учился в школе Ysgol Ardudwy в Харлеке, Гуинет, куда семья переехала в Северный Уэльс.",
+      "place": {
+        "label": "Харлех"
+      },
+      "chapter": "detstvo-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1957, Pullman was educated at Ysgol Ardudwy in Harlech, Gwynedd"
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Эксетер-колледже, Оксфорд",
+      "long": "Учился английской филологии в Эксетер-колледже Оксфорда, окончил со степенью бакалавра третьего класса.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oksford-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1965, Pullman attended Exeter College, Oxford, receiving a Third Class BA in 1968."
+      }
+    },
+    {
+      "key": "love-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джудит Спеллер",
+      "long": "Женился на Джудит Спеллер; у пары двое сыновей.",
+      "chapter": "oksford-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pullman married Judith Speller in 1970 and they have two sons."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы школьным учителем",
+      "long": "Начал преподавать детям 9–13 лет в школе Bishop Kirk Middle School в Оксфорде и писал для них школьные пьесы, из которых выросла первая детская книга.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "works": [
+        {
+          "ref": "count-karlstein",
+          "note": "школьные пьесы стали основой первой детской книги"
+        }
+      ],
+      "chapter": "oksford-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pullman married Judith Speller in 1970 and they have two sons. At the time of his marriage he began teaching children aged 9 to 13 at Bishop Kirk Middle School"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия для молодых писателей",
+      "long": "Дебютный роман разделил премию New English Library для молодых писателей.",
+      "works": [
+        {
+          "ref": "the-haunted-storm"
+        }
+      ],
+      "chapter": "oksford-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pullman was a joint-winner of the New English Library's Young Writer's Award in 1972."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из школьного преподавания",
+      "long": "Вскоре после выхода первой книги о Салли Локхарт оставил работу школьного учителя.",
+      "works": [
+        {
+          "ref": "sally-lockhart"
+        }
+      ],
+      "chapter": "oksford-i-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He stopped teaching shortly after the publication of The Ruby in the Smoke (1985)"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Вестминстер-колледже",
+      "long": "Преподавал на неполной ставке в Вестминстер-колледже в Оксфорде, продолжая писать детские книги.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "kolledzh-i-severnoe-siyanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1988 and 1996, Pullman taught part-time at Westminster College, Oxford"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Медаль Карнеги за первый том трилогии",
+      "long": "Первый том трилогии получил медаль Карнеги и премию Guardian за детскую прозу.",
+      "works": [
+        {
+          "ref": "his-dark-materials"
+        }
+      ],
+      "chapter": "kolledzh-i-severnoe-siyanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Northern Lights was published in 1995 (entitled The Golden Compass in the U.S., 1996). Pullman won both the annual Carnegie Medal and the Guardian Children's Fiction Prize"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "Оставил преподавание и стал писать профессионально, продолжая выступать с лекциями и статьями в The Guardian.",
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pullman began writing full-time in 1996"
+      }
+    },
+    {
+      "key": "persecution-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Критика трилогии со стороны католиков",
+      "long": "Католические организации критиковали «Тёмные начала» за отношение к религии; в Catholic Herald книги назвали более достойными костра, чем «Гарри Поттер».",
+      "works": [
+        {
+          "ref": "his-dark-materials"
+        }
+      ],
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Writing in the Catholic Herald in 1999, Leonie Caldecott cited Pullman's work as an example of fiction \"far more worthy of the bonfire than Harry [Potter]\""
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Королевское литературное общество",
+      "long": "Избран членом Королевского литературного общества.",
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001 he was elected a Fellow of the Royal Society of Literature."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Whitbread — книга года, впервые детская",
+      "long": "Третий том трилогии получил премию Whitbread как книга года — первая детская книга, удостоенная этой награды.",
+      "works": [
+        {
+          "ref": "his-dark-materials"
+        }
+      ],
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the Whitbread Book of the Year prize in January 2002, the first children's book so honoured."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден CBE и пост президента Общества Блейка",
+      "long": "Получил орден Британской империи (CBE) и был избран президентом Общества Блейка.",
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was awarded a CBE in the New Year's Honours list in 2004. In the same year, he was elected president of the Blake Society."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия памяти Астрид Линдгрен",
+      "long": "Получил Мемориальную премию Астрид Линдгрен за вклад в детскую и юношескую литературу.",
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Pullman won the annual Astrid Lindgren Memorial Award from the Swedish Arts Council"
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над новой трилогией",
+      "long": "Начал работу над «Книгой Пыли», спутником «Тёмных начал»; в том же году возглавил кампанию против возрастной маркировки детских книг.",
+      "works": [
+        {
+          "ref": "the-book-of-dust"
+        }
+      ],
+      "chapter": "pisatel-na-polnoe-vremya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, he authored \"The Adventures of John Blake\" for the British children's comic The DFC with artist John Aggs and began The Book of Dust"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент Общества авторов",
+      "long": "Избран президентом Общества авторов — высшая почесть британского писательского объединения.",
+      "chapter": "obshchestvennaya-rol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, Pullman was elected President of the Society of Authors"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рыцарское звание",
+      "long": "Возведён в рыцарское достоинство за заслуги перед литературой.",
+      "chapter": "obshchestvennaya-rol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pullman was named a Knight Bachelor in the 2019 New Year's Honours list."
+      }
+    },
+    {
+      "key": "other-2021",
+      "date": {
+        "from": "2021-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал с твитом и уход с поста президента",
+      "long": "После резкого твита о критиках книги Кейт Клэнчи, который он удалил и за который извинился, Общество авторов дистанцировалось от него, и Пулман ушёл с поста президента.",
+      "chapter": "obshchestvennaya-rol",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 10 August 2021, Pullman tweeted a response to what he wrongly thought was criticism of Kate Clanchy's teaching memoir"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-haunted-storm",
+      "title": "The Haunted Storm",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "galatea",
+      "title": "Galatea",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "count-karlstein",
+      "title": "Count Karlstein",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "sally-lockhart",
+      "title": "Таинственные расследования Салли Локхарт",
+      "written": {
+        "from": 1985,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "his-dark-materials",
+      "title": "Тёмные начала",
+      "qid": "Q129240",
+      "written": {
+        "from": 1993,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "the-firework-makers-daughter",
+      "title": "The Firework-Maker's Daughter",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "the-book-of-dust",
+      "title": "Книга Пыли",
+      "qid": "Q18578",
+      "written": {
+        "from": 2008,
+        "to": 2025
+      }
+    }
+  ]
+}

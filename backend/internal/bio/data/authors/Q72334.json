@@ -1,0 +1,675 @@
+{
+  "qid": "Q72334",
+  "name": "Тони Моррисон",
+  "born": "1931-02-18",
+  "died": "2019-08-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D1%80%D1%80%D0%B8%D1%81%D0%BE%D0%BD%2C_%D0%A2%D0%BE%D0%BD%D0%B8",
+      "rev": 152850313
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Toni_Morrison",
+      "rev": 1380655539
+    }
+  ],
+  "chapters": [
+    {
+      "key": "lorain-howard-cornell",
+      "title": "Лорейн, Говард, Корнелл",
+      "from": 1931,
+      "to": 1957
+    },
+    {
+      "key": "marriage-and-editor",
+      "title": "Брак, развод, редакторский стол",
+      "from": 1958,
+      "to": 1982
+    },
+    {
+      "key": "leaving-publishing",
+      "title": "Уход из издательства, «Возлюбленная»",
+      "from": 1983,
+      "to": 1992
+    },
+    {
+      "key": "nobel-years",
+      "title": "Нобелевская премия и Принстон",
+      "from": 1993,
+      "to": 2009
+    },
+    {
+      "key": "late-years",
+      "title": "Утрата сына и поздние годы",
+      "from": 2010,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-02-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в рабочей семье в Лорейне",
+      "long": "Хлоя Арделия Уоффорд родилась в рабочей семье в Лорейне, штат Огайо, второй из четырёх детей.",
+      "place": {
+        "label": "Лорейн"
+      },
+      "chapter": "lorain-howard-cornell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "18 февраля 1931, Лорейн, Огайо"
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Поступление в Говардский университет",
+      "long": "Поступила в Говардский университет в Вашингтоне; там впервые столкнулась с расовой сегрегацией в ресторанах и транспорте, а в университетском кружке начала писать прозу.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "works": [
+        {
+          "ref": "the-bluest-eye",
+          "note": "рассказ для кружка писателей Говарда позднее стал основой романа"
+        }
+      ],
+      "chapter": "lorain-howard-cornell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году Моррисон поступила в Говардский университет на специальность «английский язык и литература»."
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Говардского университета",
+      "long": "Окончила Говардский университет со степенью бакалавра.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "lorain-howard-cornell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году Моррисон окончила университет со степенью бакалавра"
+      }
+    },
+    {
+      "key": "education-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистерская степень в Корнеллском университете",
+      "long": "Получила степень магистра в Корнеллском университете; диссертация посвящена Фолкнеру и Вирджинии Вулф.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "lorain-howard-cornell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1955 году получила степень магистра в Корнеллском университете на основании магистерской диссертации о теме самоубийства в романах Фолкнера и Вирджинии Вулф"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание английского в Хьюстоне",
+      "long": "Преподавала английский язык в Хьюстоне, затем вернулась работать в Говардский университет.",
+      "place": {
+        "label": "Хьюстон"
+      },
+      "chapter": "lorain-howard-cornell",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "преподавать английский язык в Университете Южного Техаса в Хьюстоне, штат Техас (1955—1957)"
+      }
+    },
+    {
+      "key": "love-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с архитектором Гарольдом Моррисоном",
+      "long": "Вышла замуж за ямайского архитектора Гарольда Моррисона, чью фамилию взяла.",
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958 году она вышла замуж за своего сокурсника, ямайского архитектора, Гарольда Моррисона"
+      }
+    },
+    {
+      "key": "child-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Гарольда Форда",
+      "long": "Родился первый сын, Гарольд Форд.",
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their first son, Harold Ford, was born in 1961."
+      }
+    },
+    {
+      "key": "family-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Гарольдом Моррисоном",
+      "long": "Брак с Гарольдом Моррисоном распался; она ожидала второго ребёнка и растила детей одна.",
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году супруги развелись."
+      }
+    },
+    {
+      "key": "child-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Слэйда",
+      "long": "Родился второй сын, Слэйд Кевин Моррисон.",
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her second son, Slade Kevin Morrison, was born in 1965"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор в Random House, Сиракьюс",
+      "long": "Начала работать редактором учебной литературы в подразделении Random House в Сиракьюсе; позднее перешла в нью-йоркский офис издательства.",
+      "place": {
+        "label": "Сиракьюс"
+      },
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After her divorce and the birth of her son Slade in 1965, Morrison began working as an editor for L. W. Singer, a textbook division of publisher Random House, in Syracuse, New York."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман, написанный по утрам, пока дети спят",
+      "long": "Первый роман писала, вставая в четыре утра и одна растя двоих детей; книга вышла в 1970 году и сначала продавалась плохо.",
+      "works": [
+        {
+          "ref": "the-bluest-eye",
+          "note": "рассказ из кружка Говарда развит в роман; писала с четырёх утра"
+        }
+      ],
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Morrison later developed the story as her first novel, The Bluest Eye, getting up every morning at 4 am to write, while raising two children on her own.…The Bluest Eye was published by Holt, Rinehart, and Winston in 1970"
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Редактура антологии о жизни чернокожих американцев",
+      "long": "Составила и отредактировала антологию документов и фотографий о жизни чернокожих американцев. Там она нашла историю Маргарет Гарнер.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "beloved",
+          "note": "историю Маргарет Гарнер Моррисон обнаружила при составлении этого сборника"
+        }
+      ],
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Among other books that Morrison developed and edited is The Black Book (1974)"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальное признание после третьего романа",
+      "long": "Третий роман принёс национальное признание: его выбрал Клуб «Книга месяца», он получил премию Национального кружка книжных критиков.",
+      "works": [
+        {
+          "ref": "song-of-solomon"
+        }
+      ],
+      "chapter": "marriage-and-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Song of Solomon (1977), follows the life of Macon \"Milkman\" Dead III, from birth to adulthood, as he discovers his heritage. This novel brought her national acclaim"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из издательства ради писательства",
+      "long": "Оставила Random House, чтобы больше времени посвящать писательству; жила в переделанном лодочном доме на Гудзоне.",
+      "place": {
+        "label": "Найак"
+      },
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 Тони Моррисон ушла из издательства."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кафедра Альберта Швейцера в Олбани",
+      "long": "Получила кафедру Альберта Швейцера в университете штата Нью-Йорк в Олбани.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1984 получила должность профессора кафедры Альберта Швейцера в университете штата Нью-Йорк в Олбани."
+      }
+    },
+    {
+      "key": "creation-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман по реальной истории беглой рабыни",
+      "long": "Роман основан на истории беглой рабыни Маргарет Гарнер, убившей свою двухлетнюю дочь, чтобы не вернуть её в рабство. Книга продержалась в списках бестселлеров 25 недель.",
+      "works": [
+        {
+          "ref": "beloved",
+          "note": "прототип — Маргарет Гарнер, история найдена при составлении сборника"
+        }
+      ],
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, Morrison published her most celebrated novel, Beloved. It was inspired by the true story of an enslaved African-American woman, Margaret Garner, whose story Morrison had discovered when compiling The Black Book."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Роман получил Пулитцеровскую премию за художественную прозу, а также премию Анисфилд-Вулф.",
+      "works": [
+        {
+          "ref": "beloved"
+        }
+      ],
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году опубликовала роман «Возлюбленная», который получил в 1988 году Пулитцеровскую премию."
+      }
+    },
+    {
+      "key": "career-1988-2",
+      "date": {
+        "from": "1988-01-24",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Письмо в защиту романа после обделённых премий",
+      "long": "Сорок восемь чернокожих критиков и писателей публично возразили против того, что роман не получил Национальную книжную премию и премию критиков.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "beloved"
+        }
+      ],
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Forty-eight Black critics and writers, among them Maya Angelou, protested the omission in a statement that The New York Times published on January 24, 1988."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "to": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кафедра в Принстонском университете",
+      "long": "Занимала гуманитарную кафедру Роберта Ф. Гоена в Принстоне до выхода на пенсию; создала там программу Princeton Atelier.",
+      "place": {
+        "label": "Принстон"
+      },
+      "chapter": "leaving-publishing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1989 года работала на кафедре Роберта Ф. Гоена в Принстонском университете. В 2006 году вышла на пенсию."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Получила Нобелевскую премию по литературе, став первой чернокожей женщиной-лауреатом.",
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Before the third novel of the Beloved Trilogy was published, Morrison was awarded the Nobel Prize in Literature in 1993."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Книги Моррисон в клубе Опры Уинфри",
+      "long": "Опра Уинфри выбрала роман для своего книжного клуба; позднее выбрала ещё три книги Моррисон, что заметно увеличило продажи.",
+      "works": [
+        {
+          "ref": "song-of-solomon"
+        }
+      ],
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, television talk-show host Oprah Winfrey selected Song of Solomon for her newly launched Book Club"
+      }
+    },
+    {
+      "key": "career-1996-2",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Джефферсоновская лекция",
+      "long": "Выбрана для Джефферсоновской лекции — высшей федеральной награды США в области гуманитарных наук.",
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, the National Endowment for the Humanities selected Morrison for the Jefferson Lecture"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная гуманитарная медаль США",
+      "long": "Награждена Национальной гуманитарной медалью США.",
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году награждена Национальной гуманитарной медалью США."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый куратор в Лувре",
+      "long": "Выступила приглашённым куратором месячной программы Лувра на тему «Дом чужестранца».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2006, Morrison visited the Louvre museum in Paris as the second in its \"Grand Invité\" program to guest-curate a month-long series of events"
+      }
+    },
+    {
+      "key": "loss-2010",
+      "date": {
+        "from": "2010-12-22",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть младшего сына Слэйда",
+      "long": "Младший сын, художник и музыкант, соавтор её детских книг, умер от рака поджелудочной железы в 45 лет. Работу над романом она прервала на несколько месяцев и посвятила книгу сыну.",
+      "works": [
+        {
+          "ref": "home",
+          "note": "роман был наполовину написан; Моррисон объясняла, что прекратила писать, затем закончила и посвятила его сыну"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Slade died of pancreatic cancer on December 22, 2010, aged 45, when Morrison's novel Home (2012) was half-completed."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-05-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентская медаль Свободы",
+      "long": "Президент Обама вручил ей Президентскую медаль Свободы.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "President Barack Obama presented her with the Presidential Medal of Freedom on May 29, 2012."
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-08-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нью-Йорке",
+      "long": "Умерла в медицинском центре Монтефиоре в Бронксе в возрасте 88 лет от осложнений пневмонии.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Тони Моррисон ушла из жизни 5 августа 2019 года в Нью-Йорке."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-bluest-eye",
+      "title": "Самые голубые глаза",
+      "qid": "Q1069956",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "sula",
+      "title": "Сула",
+      "qid": "Q3503405",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "song-of-solomon",
+      "title": "Песнь Соломона",
+      "qid": "Q3480330",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "tar-baby",
+      "title": "Смоляное чучелко",
+      "qid": "Q7684981",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "beloved",
+      "title": "Возлюбленная",
+      "qid": "Q971767",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "jazz",
+      "title": "Джаз",
+      "qid": "Q3163324",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "paradise",
+      "title": "Рай",
+      "qid": "Q7134233",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "love",
+      "title": "Любовь",
+      "qid": "Q3614534",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "a-mercy",
+      "title": "Милосердие",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "home",
+      "title": "Дом",
+      "qid": "Q5888076",
+      "written": {
+        "from": 2010,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "god-help-the-child",
+      "title": "Боже, храни это дитя",
+      "qid": "Q19824684",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "qid": "Q240786",
+  "name": "Роберт Чарльз Уилсон",
+  "born": "1953-12-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D1%81%D0%BE%D0%BD%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82_%D0%A7%D0%B0%D1%80%D0%BB%D1%8C%D0%B7",
+      "rev": 150553877
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Charles_Wilson",
+      "rev": 1363983986
+    }
+  ],
+  "chapters": [
+    {
+      "key": "california-toronto",
+      "title": "Калифорния и Торонто",
+      "from": 1953,
+      "to": 1974
+    },
+    {
+      "key": "first-books",
+      "title": "Первые публикации и ранние романы",
+      "from": 1975,
+      "to": 1997
+    },
+    {
+      "key": "spin-and-recognition",
+      "title": "«Спин», «Хьюго» и канадское гражданство",
+      "from": 1998,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1953",
+      "date": {
+        "from": "1953-12-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уиттиере, Калифорния",
+      "long": "Родился в Уиттиере, Калифорния, США; детство провёл в Торонто, Онтарио.",
+      "place": {
+        "label": "Уиттиер"
+      },
+      "chapter": "california-toronto",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "15 декабря 1953 года, Уиттиер, Калифорния, США"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Недолгое возвращение в Калифорнию",
+      "long": "В начале 1970-х недолгое время жил в Уиттиере, Калифорния, после детства в районе Торонто.",
+      "place": {
+        "label": "Уиттиер"
+      },
+      "chapter": "california-toronto",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970-х годах жил в городе Уиттиер, Калифорния."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая журнальная публикация",
+      "long": "Первый рассказ «Equinocturne» вышел в журнале Analog Science Fiction под именем Боб Чак Уилсон.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "appeared in the February 1975 issue of Analog Science Fiction, under the name Bob Chuck Wilson"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Филипа К. Дика",
+      "long": "Роман «Mysterium» получил премию Филипа К. Дика за лучшую оригинальную книгу в мягкой обложке.",
+      "works": [
+        {
+          "ref": "mysterium"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1995, Mysterium won the Philip K. Dick Award for best original paperback"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа с редактором Терезой Нильсен Хейден",
+      "long": "С 1998 года многие книги Уилсона, включая «Спин», редактирует Тереза Нильсен Хейден из издательства Tor Books.",
+      "works": [
+        {
+          "ref": "darwinia"
+        }
+      ],
+      "chapter": "spin-and-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Starting in 1998, many of his books (including Darwinia, Blind Lake, and the Spin trilogy) have been edited by Teresa Nielsen Hayden of Tor Books."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Мемориальная премия Кэмпбелла",
+      "long": "Получил мемориальную премию Джона У. Кэмпбелла за лучший научно-фантастический роман.",
+      "chapter": "spin-and-recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: мемориальная премия Джона В. Кэмпбелла за лучший научно-фантастический роман 2002-01-01"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Хьюго» за лучший роман",
+      "long": "Роман «Спин», вышедший в 2005 году, получил премию «Хьюго» за лучший роман; он положил начало трилогии.",
+      "works": [
+        {
+          "ref": "spin"
+        }
+      ],
+      "chapter": "spin-and-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Spin won the Hugo Award for Best Novel in 2006"
+      }
+    },
+    {
+      "key": "relocation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Канадское гражданство",
+      "long": "Прожив большую часть жизни в Канаде, получил канадское гражданство.",
+      "chapter": "spin-and-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2007 he became a Canadian citizen"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mysterium",
+      "title": "Mysterium",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "darwinia",
+      "title": "Darwinia",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "spin",
+      "title": "Спин",
+      "qid": "Q2301398",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "axis",
+      "title": "Ось",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "vortex",
+      "title": "Вихрь",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "last-year",
+      "title": "Last Year",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

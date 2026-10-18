@@ -150,26 +150,36 @@ const minOrigRunes = 5_000
 
 var wikiLangRe = regexp.MustCompile(`^[a-z]{2,3}(-[a-z]+)?$`)
 
+// regionSubtagRe — код с региональным уточнением («en-gb», «pt-br»): раздела
+// Википедии под ним нет, берётся основной язык. «be-tarask», «zh-yue» —
+// отдельные разделы, не регион.
+var regionSubtagRe = regexp.MustCompile(`^([a-z]{2,3})-[a-z]{2}$`)
+
 // origLang — язык оригинала для статьи Википедии: языки произведений (P6886),
-// без них — родной язык (P103), коды P424. Пишет по-русски или по-английски —
-// пусто (эти статьи берутся и так); из нескольких — первый по алфавиту.
+// без них — родной язык (P103), коды P424. Пишет по-русски или по-английски
+// (в том числе «en-gb») — пусто: эти статьи берутся и так; из нескольких —
+// первый по алфавиту.
 func origLang(written, native []string) string {
 	codes := written
 	if len(codes) == 0 {
 		codes = native
 	}
-	codes = append([]string(nil), codes...)
-	sort.Strings(codes)
-	for _, c := range codes {
-		if c == "ru" || c == "en" {
-			return ""
-		}
-	}
+	norm := make([]string, 0, len(codes))
 	for _, c := range codes {
 		c = strings.ToLower(strings.TrimSpace(c))
+		if m := regionSubtagRe.FindStringSubmatch(c); m != nil {
+			c = m[1]
+		}
 		if c == "nb" {
 			c = "no" // норвежский букмол — no.wikipedia.org
 		}
+		if c == "ru" || c == "en" {
+			return ""
+		}
+		norm = append(norm, c)
+	}
+	sort.Strings(norm)
+	for _, c := range norm {
 		if wikiLangRe.MatchString(c) {
 			return c
 		}

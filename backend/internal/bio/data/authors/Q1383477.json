@@ -1,0 +1,161 @@
+{
+  "qid": "Q1383477",
+  "name": "Саймон Бекетт",
+  "born": "1960-04-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BA%D0%B5%D1%82%D1%82%2C_%D0%A1%D0%B0%D0%B9%D0%BC%D0%BE%D0%BD",
+      "rev": 150060504
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Simon_Beckett",
+      "rev": 1371563502
+    }
+  ],
+  "chapters": [
+    {
+      "key": "yunost-i-zhurnalistika",
+      "title": "Шеффилд, Испания, журналистика",
+      "from": 1960,
+      "to": 2001
+    },
+    {
+      "key": "doktor-hanter",
+      "title": "Тело-ферма и доктор Хантер",
+      "from": 2002,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1960",
+      "date": {
+        "from": "1960-04-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в рабочей семье в Шеффилде",
+      "long": "Родился 20 апреля 1960 года в Шеффилде в рабочей семье.",
+      "place": {
+        "label": "Шеффилд"
+      },
+      "chapter": "yunost-i-zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Simon Beckett was born on 20 April 1960 in Sheffield, England, to a working-class background."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало писательской работы",
+      "long": "К середине 1990-х Бекетт начал писать прозу; в 1994 году вышел один из его ранних романов.",
+      "chapter": "yunost-i-zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote several novels, including Fine Lines in 1994"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шорт-лист «Золотого кинжала»",
+      "long": "Первый роман о Дэвиде Хантере вошёл в шорт-лист премии «Золотой кинжал» 2006 года.",
+      "works": [
+        {
+          "ref": "chemistry-of-death"
+        }
+      ],
+      "chapter": "doktor-hanter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Chemistry of Death was shortlisted for the 2006 Gold Dagger award."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Лидер продаж в континентальной Европе",
+      "long": "К 2010 году продал свыше четырёх миллионов книг за пределами Британии; в континентальной Европе в тот год его продажи превзошли Роулинг и Макьюэна.",
+      "chapter": "doktor-hanter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "by 2010 he had sold over four million books outside of the United Kingdom and in the same year had outsold J K Rowling and Ian McEwan in Continental Europe"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ripper Award",
+      "long": "В феврале 2019 года получил европейскую премию Ripper Award за криминальную литературу, разделив её с Арне Даалем.",
+      "chapter": "doktor-hanter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 2019, he was presented with a Ripper Award (the European Prize from Criminal Literature)."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт на новую серию о Джоне Колли",
+      "long": "В марте 2020 года издательство Trapeze Books объявило о контракте на две книги новой серии о полицейском Джоне Колли.",
+      "works": [
+        {
+          "ref": "the-lost"
+        }
+      ],
+      "chapter": "doktor-hanter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2020, Trapeze Books announced that Beckett had signed a two-book deal with them"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "chemistry-of-death",
+      "title": "Химия смерти",
+      "qid": "Q930591",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-lost",
+      "title": "The Lost",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

@@ -1,0 +1,575 @@
+{
+  "qid": "Q207544",
+  "name": "Лаймен Фрэнк Баум",
+  "born": "1856-05-15",
+  "died": "1919-05-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D1%83%D0%BC%2C_%D0%9B%D0%B0%D0%B9%D0%BC%D0%B5%D0%BD_%D0%A4%D1%80%D1%8D%D0%BD%D0%BA",
+      "rev": 154583633
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/L._Frank_Baum",
+      "rev": 1375582692
+    }
+  ],
+  "chapters": [
+    {
+      "key": "rose-lawn",
+      "title": "Роза Лоун и птичий двор",
+      "from": 1856,
+      "to": 1879
+    },
+    {
+      "key": "theater",
+      "title": "Театр, брак и потеря отца",
+      "from": 1880,
+      "to": 1887
+    },
+    {
+      "key": "dakota",
+      "title": "Абердин и «Пионер»",
+      "from": 1888,
+      "to": 1891
+    },
+    {
+      "key": "chicago",
+      "title": "Чикаго и Матушка Гусыня",
+      "from": 1892,
+      "to": 1899
+    },
+    {
+      "key": "oz",
+      "title": "Волшебник и страна Оз",
+      "from": 1900,
+      "to": 1910
+    },
+    {
+      "key": "films",
+      "title": "Банкротство, кино, Голливуд",
+      "from": 1911,
+      "to": 1919
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1856",
+      "date": {
+        "from": "1856-05-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Читтенанго",
+      "long": "Родился в Читтенанго, штат Нью-Йорк, в состоятельной семье Бенджамина Уорда и Синтии Энн Баум; вырос в родительском имении Роза Лоун.",
+      "place": {
+        "label": "Читтенанго"
+      },
+      "chapter": "rose-lawn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "15 мая 1856 года, Читтенанго, США"
+      }
+    },
+    {
+      "key": "career-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственный театр в Ричбурге",
+      "long": "Отец построил Бауму театр в Ричбурге (штат Нью-Йорк); Баум писал пьесы, собирал труппу и играл в них сам.",
+      "place": {
+        "label": "Ричбург"
+      },
+      "chapter": "theater",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1880, his father built him a theater in Richburg, New York"
+      }
+    },
+    {
+      "key": "career-1880-2",
+      "date": {
+        "from": "1880-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Журнал по птицеводству",
+      "long": "После увлечения разведением гамбургских кур Баум в марте 1880 года начал издавать журнал по птицеводству.",
+      "chapter": "theater",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 1880 года он начал издавать журнал по птицеводству"
+      }
+    },
+    {
+      "key": "love-1882",
+      "date": {
+        "from": "1882-11-09",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мод Гейдж",
+      "long": "Женился на Мод Гейдж, дочери известной суфражистки Матильды Джослин Гейдж.",
+      "chapter": "theater",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On November 9, 1882, Baum married Maud Gage, a daughter of Matilda Joslyn Gage"
+      }
+    },
+    {
+      "key": "child-1883",
+      "date": {
+        "from": "1883-12-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Фрэнка Джослина",
+      "long": "Родился первый сын, Фрэнк Джослин Баум.",
+      "chapter": "theater",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Frank Joslyn Baum 1883-12-03"
+      }
+    },
+    {
+      "key": "loss-1887",
+      "date": {
+        "from": "1887-02-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Бенджамин Уорд Баум; к этому времени Баум пережил банкротство и пожар, уничтоживший театральное имущество.",
+      "chapter": "theater",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Benjamin Ward Baum 1821-01-03 – 1887-02-14"
+      }
+    },
+    {
+      "key": "relocation-1888",
+      "date": {
+        "from": "1888-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Абердин, открытие магазина",
+      "long": "Семья переехала на Запад, в Абердин, где Баум открыл магазин; продажа в кредит привела к разорению лавки.",
+      "place": {
+        "label": "Абердин"
+      },
+      "works": [
+        {
+          "ref": "wonderful-wizard-of-oz",
+          "note": "описание Канзаса в сказке основано на впечатлениях от засушливой Южной Дакоты"
+        }
+      ],
+      "chapter": "dakota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1888, Baum and his wife moved to Aberdeen, Dakota Territory where he opened a store, Baum's Bazaar."
+      }
+    },
+    {
+      "key": "child-1889",
+      "date": {
+        "from": "1889-12-18",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Гарри Нила",
+      "long": "Родился второй сын, Гарри Нил Баум.",
+      "place": {
+        "label": "Абердин"
+      },
+      "chapter": "dakota",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Harry Neal Baum 1889-12-18"
+      }
+    },
+    {
+      "key": "poverty-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Закрытие магазина, долги",
+      "long": "Магазин в Абердине закрылся: число должников росло, а капитал таял.",
+      "place": {
+        "label": "Абердин"
+      },
+      "chapter": "dakota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Под новый 1890 год магазин закрылся"
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор газеты «Пионер Дакоты»",
+      "long": "Занял место редактора газеты и почти единолично писал для неё материалы, включая юмористическую колонку.",
+      "place": {
+        "label": "Абердин"
+      },
+      "works": [
+        {
+          "ref": "wonderful-wizard-of-oz",
+          "note": "шутка о зелёных очках для скота из газетной колонки позже использована в образе Изумрудного города"
+        }
+      ],
+      "chapter": "dakota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Под новый 1890 год магазин закрылся … Месяц спустя он занял место редактора газеты «Пионер Дакоты»."
+      }
+    },
+    {
+      "key": "other-1890",
+      "date": {
+        "from": "1890-12-20",
+        "to": "1891-01-03",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Колонки о «полном уничтожении индейцев»",
+      "long": "В двух редакционных колонках (20 декабря 1890 и 3 января 1891) Баум призвал к уничтожению индейцев; потомки писателя позже принесли публичные извинения.",
+      "place": {
+        "label": "Абердин"
+      },
+      "chapter": "dakota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "20 декабря 1890 года в редакционной колонке газеты «Абердинский субботний пионер» (Aberdeen Saturday Pioneer) он в связи с гибелью Сидящего Быка предложил полностью уничтожить индейцев"
+      }
+    },
+    {
+      "key": "relocation-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Крах газеты, переезд в Чикаго",
+      "long": "Газета прекратила существование, и семья переехала в Чикаго, где Баум стал репортёром газеты «Ивнинг пост».",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "dakota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baum's newspaper failed in 1891, and he, Maud, and their four sons moved to the Humboldt Park section of Chicago"
+      }
+    },
+    {
+      "key": "career-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поворот к детской литературе",
+      "long": "При финансовых трудностях в Чикаго Баум обратился к детской литературе; успех сборника позволил ему оставить работу коммивояжёра.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "works": [
+        {
+          "ref": "mother-goose-in-prose"
+        }
+      ],
+      "chapter": "chicago",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Тогда Баум решил попробовать писать для детей. В 1897 году он опубликовал «Рассказы Матушки Гусыни в прозе»"
+      }
+    },
+    {
+      "key": "creation-1898",
+      "date": {
+        "from": "1898-05",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рождение названия «Оз»",
+      "long": "По семейной легенде, название страны возникло, когда Баум увидел картотечные ящики «A—N» и «O—Z».",
+      "works": [
+        {
+          "ref": "wonderful-wizard-of-oz",
+          "note": "по семейной легенде, название появилось во время устного рассказа сказки детям"
+        }
+      ],
+      "chapter": "chicago",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "название «Оз» возникло майским вечером 1898 года, когда Баум рассказывал сказку детям"
+      }
+    },
+    {
+      "key": "career-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание первой сказки об Оз",
+      "long": "Книга имела успех у критики и читателей и два года оставалась самой продаваемой детской книгой.",
+      "works": [
+        {
+          "ref": "wonderful-wizard-of-oz"
+        }
+      ],
+      "chapter": "oz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1900, Baum and Denslow (with whom he shared the copyright) published The Wonderful Wizard of Oz to much critical acclaim and financial success."
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценическая версия сказки об Оз",
+      "long": "Мюзикл по первой книге об Оз открылся в Чикаго, затем шёл на Бродвее; Баум по контрактным требованиям внёс изменения против своей воли.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "oz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "This stage version opened in Chicago in 1902"
+      }
+    },
+    {
+      "key": "career-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал спектакля, отказ от парка Оз",
+      "long": "Спектакль, написанный по второй книге об Оз, провалился; Баум отказался от замысла парка Оз на острове у калифорнийского берега.",
+      "works": [
+        {
+          "ref": "marvelous-land-of-oz"
+        }
+      ],
+      "chapter": "oz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baum abandoned his Oz park project after the failure of The Woggle-Bug, which was playing at the Garrick Theatre in 1905."
+      }
+    },
+    {
+      "key": "poverty-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Дорогое мультимедийное шоу, долги",
+      "long": "Дорогостоящее представление со слайдами, фильмом и живыми актёрами принесло долги перед кинокомпанией.",
+      "chapter": "oz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "One of Baum's worst financial endeavors was his The Fairylogue and Radio-Plays (1908)"
+      }
+    },
+    {
+      "key": "poverty-1911",
+      "date": {
+        "from": "1911-08",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Банкротство",
+      "long": "Баум объявил себя банкротом; ранее он продал права на многие ранние книги, большую часть имущества оформил на жену.",
+      "chapter": "films",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He claimed bankruptcy in August 1911."
+      }
+    },
+    {
+      "key": "career-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Собственная киностудия",
+      "long": "Основал киностудию, где был президентом, главным продюсером и сценаристом; название Оз не принесло кассовых сборов.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "films",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1914, Baum started his own film production company The Oz Film Manufacturing Company"
+      }
+    },
+    {
+      "key": "illness-1919",
+      "date": {
+        "from": "1919-05-05",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Инсульт",
+      "long": "Здоровье Баума давно ухудшалось; у него случился инсульт, несколько недель он находился в больнице.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "films",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 5, 1919, Baum suffered a stroke, slipped into a coma and died the following day"
+      }
+    },
+    {
+      "key": "death-1919",
+      "date": {
+        "from": "1919-05-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Голливуде",
+      "long": "Умер в Голливуде в возрасте 62 лет; похоронен на кладбище Форест-Лон в Глендейле.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "films",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "6 мая 1919 года, Голливуд, США"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mother-goose-in-prose",
+      "title": "Матушка Гусыня в прозе",
+      "qid": "Q6917355",
+      "written": {
+        "from": 1897,
+        "to": 1897
+      }
+    },
+    {
+      "ref": "father-goose-his-book",
+      "title": "Father Goose: His Book",
+      "qid": "Q5437600",
+      "written": {
+        "from": 1899,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "wonderful-wizard-of-oz",
+      "title": "Удивительный волшебник из страны Оз",
+      "qid": "Q130295",
+      "written": {
+        "from": 1898,
+        "to": 1900
+      }
+    },
+    {
+      "ref": "marvelous-land-of-oz",
+      "title": "Чудесная Страна Оз",
+      "qid": "Q1659447",
+      "written": {
+        "from": 1904,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "ozma-of-oz",
+      "title": "Озма из Страны Оз",
+      "qid": "Q634885",
+      "written": {
+        "from": 1906,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "dorothy-and-the-wizard-in-oz",
+      "title": "Дороти и Волшебник в Стране Оз",
+      "qid": "Q473588",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "road-to-oz",
+      "title": "Путешествие в Страну Оз",
+      "qid": "Q1250364",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "emerald-city-of-oz",
+      "title": "Изумрудный город страны Оз",
+      "qid": "Q1250366",
+      "written": {
+        "from": 1910,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "rinkitink-in-oz",
+      "title": "Ринкитинк в стране Оз",
+      "qid": "Q7335058",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "tin-woodman-of-oz",
+      "title": "Железный Дровосек из страны Оз",
+      "qid": "Q7769442",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    }
+  ]
+}

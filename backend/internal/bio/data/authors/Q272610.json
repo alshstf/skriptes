@@ -1,0 +1,647 @@
+{
+  "qid": "Q272610",
+  "name": "Кормак Маккарти",
+  "born": "1933-07-20",
+  "died": "2023-06-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D0%BA%D0%B0%D1%80%D1%82%D0%B8%2C_%D0%9A%D0%BE%D1%80%D0%BC%D0%B0%D0%BA",
+      "rev": 155489654
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Cormac_McCarthy",
+      "rev": 1379912324
+    }
+  ],
+  "chapters": [
+    {
+      "key": "te",
+      "title": "Теннесси, армия, первые рассказы",
+      "from": 1933,
+      "to": 1960
+    },
+    {
+      "key": "braki-i-evropa",
+      "title": "Первый роман, браки и Европа",
+      "from": 1961,
+      "to": 1968
+    },
+    {
+      "key": "ambar-i-el-paso",
+      "title": "Амбар, нищета, Эль-Пасо",
+      "from": 1969,
+      "to": 1980
+    },
+    {
+      "key": "yugo-zapad",
+      "title": "Стипендия и Юго-Запад",
+      "from": 1981,
+      "to": 1991
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и Пулитцер",
+      "from": 1992,
+      "to": 2013
+    },
+    {
+      "key": "poslednie-gody",
+      "title": "Институт Санта-Фе, последние годы",
+      "from": 2014,
+      "to": 2023
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1933",
+      "date": {
+        "from": "1933-07-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье юриста",
+      "long": "Родился в Провиденсе (Род-Айленд) в семье юриста, третьим из шести детей; при рождении получил имя Чарльз.",
+      "place": {
+        "label": "Провиденс"
+      },
+      "chapter": "te",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 20 июля 1933 в семье преуспевающего юриста, из шести детей был третьим по старшинству."
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Ноксвилл",
+      "long": "Семья переехала в Ноксвилл, где мальчик пошёл в католическую школу.",
+      "place": {
+        "label": "Ноксвилл"
+      },
+      "chapter": "te",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1937 году семья Маккарти поселилась в Ноксвилле (штат Теннесси), где Кормак стал посещать католическую школу."
+      }
+    },
+    {
+      "key": "education-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Университете Теннесси",
+      "long": "Поступил в Университет Теннесси, изучал гуманитарные науки; интерес к письму возник после работы над расстановкой знаков препинания в сборнике эссе.",
+      "place": {
+        "label": "Ноксвилл"
+      },
+      "chapter": "te",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1951, he began attending the University of Tennessee, studying liberal arts."
+      }
+    },
+    {
+      "key": "war-1953",
+      "date": {
+        "from": "1953",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в ВВС США, Аляска",
+      "long": "Четыре года служил в ВВС США, два из них на Аляске, где много читал и работал диктором армейского радио.",
+      "place": {
+        "label": "Аляска"
+      },
+      "chapter": "te",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году Кормак Маккарти был призван в армию и четыре года (два из них на Аляске) прослужил в ВВС США."
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ли Холлиман",
+      "long": "Женился на студентке Ли Холлиман; университет он не окончил. Брак распался в 1962 году.",
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году Маккарти женится на Ли Холлиман, тоже студентке, и после рождения сына Каллена Маккарти бросает университет."
+      }
+    },
+    {
+      "key": "child-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Каллена",
+      "long": "В хижине у подножия Смоки-Маунтинс родился сын Каллен; вскоре жена уехала в Вайоминг и подала на развод.",
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "There, the couple had a son, Cullen, in 1962."
+      }
+    },
+    {
+      "key": "love-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Рейс в Ирландию, знакомство с Энн Делайл",
+      "long": "По стипендии Американской академии искусств и литературы отправился морем в Ирландию; на лайнере познакомился с Энн Делайл, будущей женой.",
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году, получив специальную стипендию от Американской академии искусств и литературы, писатель отправляется на родину предков в Ирландию…Во время путешествия Маккарти знакомится с английской певицей и танцовщицей Энн Делайл"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Фолкнера за дебют",
+      "long": "Дебютный роман получил премию Фонда Фолкнера; издательство Random House выпустило его в том же году.",
+      "works": [
+        {
+          "ref": "orchard-keeper"
+        }
+      ],
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1965 — премия Фолкнера за роман «Хранитель сада»"
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Энн Делайл",
+      "long": "Женился на Энн Делайл в Англии; по ru-статье, брак состоялся в 1967 году, расходились до 1981 года.",
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966, they were married in England."
+      }
+    },
+    {
+      "key": "relocation-1966",
+      "date": {
+        "from": "1966",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Европейский тур и жизнь на Ивисе",
+      "long": "На грант Фонда Рокфеллера путешествовал с женой по Западной и Южной Европе и некоторое время жил на Ивисе.",
+      "place": {
+        "label": "Ивиса"
+      },
+      "works": [
+        {
+          "ref": "outer-dark",
+          "note": "второй роман закончен на Ивисе в этот период"
+        }
+      ],
+      "chapter": "braki-i-evropa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году Маккарти удостаивается ещё одного гранта, на сей раз от Фонда Рокфеллера, благодаря которому может позволить себе и жене масштабный тур по Западной и Южной Европе."
+      }
+    },
+    {
+      "key": "poverty-1969",
+      "date": {
+        "from": "1969",
+        "to": "1976",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Жизнь в амбаре в нищете",
+      "long": "Поселился с женой в перестроенном молочном амбаре в Луисвилле (Теннесси); по словам Делайл, жили в «полной нищете».",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "works": [
+        {
+          "ref": "child-of-god",
+          "note": "книга написана, пока жил в амбаре"
+        }
+      ],
+      "chapter": "ambar-i-el-paso",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1969, the couple moved to Louisville, Tennessee, and purchased a dairy barn, which McCarthy renovated, doing the stonework himself."
+      }
+    },
+    {
+      "key": "relocation-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Разрыв со второй женой, переезд в Эль-Пасо",
+      "long": "Расстался с Энн Делайл и переехал в Эль-Пасо (Техас); развод оформлен лишь через несколько лет.",
+      "place": {
+        "label": "Эль-Пасо"
+      },
+      "chapter": "ambar-i-el-paso",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году Маккарти расстается со второй женой (официально развод был оформлен лишь через несколько лет) и переезжает в Эль-Пасо, штат Техас"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Огастой Бритт",
+      "long": "Познакомился с Огастой Бритт; по статье, отношения и дружба продолжались до его смерти. Их общий опыт лёг в основу работы над книгой.",
+      "works": [
+        {
+          "ref": "suttree",
+          "note": "использовал их общий опыт в работе над книгой"
+        }
+      ],
+      "chapter": "ambar-i-el-paso",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, when McCarthy was 42, he met then-16-year-old Finnish-American Augusta Britt at a motel in Arizona."
+      }
+    },
+    {
+      "key": "other-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от алкоголя",
+      "long": "По словам Маккарти в интервью Вудворду, в Эль-Пасо он бросил пить.",
+      "place": {
+        "label": "Эль-Пасо"
+      },
+      "works": [
+        {
+          "ref": "suttree",
+          "note": "по оценке интервьюера Вудворда, книга читается как прощание с прежней жизнью"
+        }
+      ],
+      "chapter": "ambar-i-el-paso",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he quit 16 years ago [i.e. in 1976] in El Paso"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Стипендия Макартуров",
+      "long": "Стипендия Фонда Макартуров в 236 тысяч долларов дала финансовую независимость и возможность изучать американский Юго-Запад.",
+      "works": [
+        {
+          "ref": "blood-meridian",
+          "note": "грант позволил поездками по Юго-Западу собрать материал для романа"
+        }
+      ],
+      "chapter": "yugo-zapad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981, McCarthy was awarded a MacArthur Fellowship worth $236,000."
+      }
+    },
+    {
+      "key": "family-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Энн Делайл",
+      "long": "Развод с Энн Делайл.",
+      "chapter": "yugo-zapad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Анни Делайл (поженились в 1967 году, развелись в 1981 году)"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Малые тиражи, «лучший неизвестный романист»",
+      "long": "Ни один из романов не разошёлся тиражом более 5000 экземпляров в твёрдой обложке; даже агента у него долго не было.",
+      "chapter": "yugo-zapad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As of 1991, none of McCarthy's novels had sold more than 5,000 hardcover copies"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия, первый успех",
+      "long": "Получил Национальную книжную премию и премию Круга критиков; книга стала бестселлером, пришло широкое признание.",
+      "works": [
+        {
+          "ref": "all-the-pretty-horses"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 году Кормак Маккарти получил Национальную книжную премию и Национальную книжную премию критиков за роман «Кони, кони»."
+      }
+    },
+    {
+      "key": "career-1992-2",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход редактора Эрскина, переход в Knopf",
+      "long": "Редактор Альберт Эрскин ушёл на пенсию; Маккарти перешёл в издательство Knopf.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After working with McCarthy for 20 years, Albert Erskine retired from Random House in 1992."
+      }
+    },
+    {
+      "key": "love-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Дженнифер Уинкли",
+      "long": "Женился на Дженнифер Уинкли; от этого брака родился сын Джон.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дженнифер Уинкли (поженились в 1997 году, развелись в 2006 году)"
+      }
+    },
+    {
+      "key": "family-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Дженнифер Уинкли",
+      "long": "Развод с Дженнифер Уинкли.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "McCarthy and Winkley divorced in 2006."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию; ранее, в 2006 году, роман был отмечен премией Джеймса Тейта Блэка. На церемонию не приехал.",
+      "works": [
+        {
+          "ref": "the-road"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2007 — Пулитцеровская премия в номинации художественная литература за роман «Дорога»"
+      }
+    },
+    {
+      "key": "career-2007-2",
+      "date": {
+        "from": "2007-06-05",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое телеинтервью у Опры Уинфри",
+      "long": "Дал первое телевизионное интервью; рассказал о бедности и об отцовстве в позднем возрасте.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "works": [
+        {
+          "ref": "the-road",
+          "note": "в интервью назвал сына источником замысла романа"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Оно транслировалось на шоу Опры Уинфри 5 июня 2007 года."
+      }
+    },
+    {
+      "key": "other-2009",
+      "date": {
+        "from": "2009-12",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Продажа пишущей машинки на аукционе",
+      "long": "Пишущая машинка Olivetti Lettera 32, на которой он писал полвека, продана на аукционе за 254 500 долларов в пользу Института Санта-Фе.",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His Olivetti was auctioned in December 2009 at Christie's"
+      }
+    },
+    {
+      "key": "death-2023",
+      "date": {
+        "from": "2023-06-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Санта-Фе",
+      "long": "Умер в своём доме в Санта-Фе в возрасте 89 лет.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 13 июня 2023 года в возрасте 89 лет"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "orchard-keeper",
+      "title": "Хранитель сада",
+      "written": {
+        "from": 1959,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "outer-dark",
+      "title": "Тьма снаружи",
+      "written": {
+        "from": 1966,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "child-of-god",
+      "title": "Дитя Господне",
+      "written": {
+        "from": 1969,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "suttree",
+      "title": "Саттри",
+      "qid": "Q3978367",
+      "written": {
+        "from": 1959,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "blood-meridian",
+      "title": "Кровавый меридиан",
+      "qid": "Q581426",
+      "written": {
+        "from": 1981,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "all-the-pretty-horses",
+      "title": "Кони, кони",
+      "qid": "Q264519",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "the-crossing",
+      "title": "За чертой",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "cities-of-the-plain",
+      "title": "Города прерии",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "no-country-for-old-men",
+      "title": "Старикам тут не место",
+      "qid": "Q611689",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-road",
+      "title": "Дорога",
+      "qid": "Q1140295",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-passenger",
+      "title": "Пассажир",
+      "qid": "Q113456487",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "stella-maris",
+      "title": "Стелла Марис",
+      "qid": "Q113549027",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

@@ -1,0 +1,1005 @@
+{
+  "qid": "Q6538",
+  "name": "Гюнтер Грасс",
+  "born": "1927-10-16",
+  "died": "2015-04-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D1%81%D1%81%2C_%D0%93%D1%8E%D0%BD%D1%82%D0%B5%D1%80",
+      "rev": 154372658
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/G%C3%BCnter_Grass",
+      "rev": 271372839
+    }
+  ],
+  "chapters": [
+    {
+      "key": "danzig-war",
+      "title": "Данциг, гитлерюгенд, СС",
+      "from": 1927,
+      "to": 1945
+    },
+    {
+      "key": "captivity-academies",
+      "title": "Плен, камень и академии",
+      "from": 1946,
+      "to": 1955
+    },
+    {
+      "key": "paris-drum",
+      "title": "Париж и жестяной барабан",
+      "from": 1956,
+      "to": 1960
+    },
+    {
+      "key": "brandt-years",
+      "title": "Слава, Брандт, Вевельсфлет",
+      "from": 1961,
+      "to": 1982
+    },
+    {
+      "key": "unification-years",
+      "title": "Академия, Калькутта, объединение",
+      "from": 1983,
+      "to": 1998
+    },
+    {
+      "key": "nobel-late",
+      "title": "Нобель, скандал и последние годы",
+      "from": 1999,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1927",
+      "date": {
+        "from": "1927-10-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вольном городе Данциг",
+      "long": "Родился в Вольном городе Данциг в семье торговца; мать — кашубка, отец — немец-протестант.",
+      "place": {
+        "label": "Данциг"
+      },
+      "chapter": "danzig-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "16 октября 1927, Вольный город Данциг (ныне Гданьск)"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Помощник при зенитных батареях",
+      "long": "В 16 лет стал помощником при зенитных батареях люфтваффе; в 1944 году отбыл полгода в Имперской службе труда.",
+      "place": {
+        "label": "Данциг"
+      },
+      "chapter": "danzig-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году, в возрасте 16 лет, Грасс был помощником по обслуживанию зенитных батарей ПВО"
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944-11-10",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Призыв в ваффен-СС",
+      "long": "Подав заявление на подводный флот и получив отказ, 10 ноября 1944 года был призван в 10-ю танковую дивизию СС «Фрундсберг».",
+      "works": [
+        {
+          "ref": "peeling-the-onion",
+          "note": "служба описана в мемуарах 2006 года"
+        }
+      ],
+      "chapter": "danzig-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 ноября 1944 года (в возрасте 17 лет) он был призван на службу в ваффен-СС"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945-04-20",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Ранение под Шпрембергом",
+      "long": "Ранен под Шпрембергом во время Шпремберг-Торгауской операции.",
+      "place": {
+        "label": "Шпремберг"
+      },
+      "chapter": "danzig-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "20 апреля 1945 года был ранен под немецким городом Шпрембергом"
+      }
+    },
+    {
+      "key": "war-1945-2",
+      "date": {
+        "from": "1945-05-08",
+        "to": "1946-04-24",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Американский плен",
+      "long": "Взят американцами в плен под Мариенбадом 8 мая 1945 года; до 24 апреля 1946 года находился в лагере для военнопленных в Бад-Айблинге.",
+      "place": {
+        "label": "Бад-Айблинг"
+      },
+      "chapter": "danzig-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "8 мая 1945 года взят в плен под Мариенбадом (ныне Марианске-Лазне, Чехия) американскими войсками… до 24 апреля 1946 года"
+      }
+    },
+    {
+      "key": "education-1947",
+      "date": {
+        "from": "1947",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Обучение ремеслу каменотёса",
+      "long": "Практически обучался ремеслу каменотёса в Дюссельдорфе.",
+      "place": {
+        "label": "Дюссельдорф"
+      },
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1947—1948 году Грасс на практике обучался профессии каменотёса в Дюссельдорфе."
+      }
+    },
+    {
+      "key": "education-1948",
+      "date": {
+        "from": "1948",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Дюссельдорфская академия художеств",
+      "long": "Изучал графику и скульптуру в Дюссельдорфской академии художеств у Йозефа Магеса и Отто Панкока.",
+      "place": {
+        "label": "Дюссельдорф"
+      },
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Дюссельдорфская академия художеств 1948-1952"
+      }
+    },
+    {
+      "key": "love-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с будущей женой Анной",
+      "long": "На обратном пути из Франции через Швейцарию познакомился с будущей женой Анной Шварц.",
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Auf der Rückreise 1952 durch die Schweiz lernte er seine spätere Frau Anna kennen"
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба у Карла Хартунга в Берлине",
+      "long": "Учился у скульптора Карла Хартунга; в 1956 году стал его мастер-учеником.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953—1956 годах Грасс продолжил образование в Берлинском университете искусств"
+      }
+    },
+    {
+      "key": "other-1953",
+      "date": {
+        "from": "1953-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Свидетель рабочих выступлений в Берлине",
+      "long": "Был свидетелем выступлений рабочих в Восточном Берлине в июне 1953 года.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "plebeians-rehearse-the-uprising",
+          "note": "пьеса посвящена событиям июня 1953 года, очевидцем которых он был"
+        }
+      ],
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Находясь летом 1953 года в Берлине вместе со своей будущей женой Анной Шварц, Грасс был непосредственным свидетелем тех событий."
+      }
+    },
+    {
+      "key": "loss-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "В 1954 году умерла мать писателя Хелена Грасс.",
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "dem Todesjahr von Grass‘ Mutter und dem Jahr seiner Eheschließung mit Anna"
+      }
+    },
+    {
+      "key": "love-1954",
+      "date": {
+        "from": "1954-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Анной Шварц",
+      "long": "В апреле 1954 года женился на Анне Шварц в её родном Ленцбурге; в браке родилось четверо детей.",
+      "place": {
+        "label": "Ленцбург"
+      },
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году женился на Анне Маргарете Шварц, швейцарской студентке балетного училища."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое выступление в «Группе 47»",
+      "long": "После третьей премии на поэтическом конкурсе радио получил приглашение на встречу «Группы 47» в Берлине.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "captivity-academies",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Einladung Hans Werner Richters zum Treffen der Gruppe 47 im Mai des Jahres 1955"
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в Париже и Швейцарии",
+      "long": "Жил с женой в Париже, временами в Швейцарии; здесь была создана рукопись первого романа.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "tin-drum",
+          "note": "рукопись написана в Париже и Швейцарии"
+        }
+      ],
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период от начала 1956 до начала 1960 года Грасс с женой проживали в Париже и временами в городе Веттингене в Швейцарии."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебют в поэзии",
+      "long": "Дебютировал как лирический поэт, в 1956–1957 годах прошли первые выставки его скульптур и графики.",
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956 году дебютировал как лирический поэт, в 1957 — как автор театральных пьес и балетных либретто."
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957-09",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение близнецов Франца и Рауля",
+      "long": "У Анны и Гюнтера родились близнецы Франц и Рауль.",
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im September 1957 brachte Anna daheim in der Schweiz die Zwillinge Franz und Raoul zur Welt"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Группы 47» за рукопись",
+      "long": "После чтения отрывков неизданной рукописи получил премию «Группы 47».",
+      "works": [
+        {
+          "ref": "tin-drum"
+        }
+      ],
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Грасс уже в 1958 году, после чтений им отрывков из ещё неопубликованной рукописи, удостоился премии «Группы 47»"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Международное признание",
+      "long": "Дебютный роман принёс Грассу международное признание как выдающегося писателя послевоенной Германии.",
+      "works": [
+        {
+          "ref": "tin-drum"
+        }
+      ],
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Благодаря дебютному роману «Жестяной барабан» (нем. Die Blechtrommel) (1959 год) получил международное признание"
+      }
+    },
+    {
+      "key": "persecution-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отказ сената Бремена утвердить премию",
+      "long": "Сенат Бремена отказался утвердить решение жюри о присуждении премии, сославшись на возможный запрет книги; это вызвало протесты писателей.",
+      "place": {
+        "label": "Бремен"
+      },
+      "works": [
+        {
+          "ref": "tin-drum"
+        }
+      ],
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году жюри Литературной премии Свободного ганзейского города Бремена хотело присудить свою премию роману «Жестяной барабан», но этому воспротивился сенат Бремена"
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Берлин",
+      "long": "Семья вернулась в Берлин; по немецкой статье, в сыром парижском подвале у Грасса развился туберкулёз.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "paris-drum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вернувшись в 1960 году в Берлин, до 1972 года проживал в районе Берлин-Фриденау"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выступления в поддержку Вилли Брандта",
+      "long": "Во время кампании против кандидата СДПГ Вилли Брандта стал писать ему речи; поддержка СДПГ на выборах продолжалась десятилетиями.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "im Vorfeld der Bundestagswahl 1961 die Diffamierung des SPD-Kanzlerkandidaten Willy Brandt… Grass war es, der diesen Dienst übernahm."
+      }
+    },
+    {
+      "key": "persecution-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Попытка запрета новеллы",
+      "long": "Министр земли Гессен потребовал внести новеллу в список запрещённых книг; после протестов запрос отозвали.",
+      "works": [
+        {
+          "ref": "cat-and-mouse"
+        }
+      ],
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1961 году министр труда, народного благосостояния и здравоохранения земли Гессен, в основном из-за описанной в романе сцены онанизма, поручил соответствующему федеральному органу надзора внести роман в список запрещённых книг"
+      }
+    },
+    {
+      "key": "child-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Лауры",
+      "long": "В Берлине родилась дочь Лаура; в 1965 году — сын Бруно.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После возвращения в Берлин в 1961 году родилась дочь Лаура, а в 1965 — сын Бруно."
+      }
+    },
+    {
+      "key": "other-1961",
+      "date": {
+        "from": "1961-08-14",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Открытое письмо Анне Зегерс",
+      "long": "На следующий день после возведения Берлинской стены обратился с открытым письмом к Анне Зегерс с призывом к протесту.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "nach der Errichtung der Berliner Mauer am 13. August 1961… Am darauffolgenden Tag rief er die Vorsitzende des Schriftstellerverbands der DDR Anna Seghers in einem offenen Brief zum Protest"
+      }
+    },
+    {
+      "key": "child-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Бруно",
+      "long": "Родился сын Бруно, четвёртый ребёнок в браке с Анной.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родилась дочь Лаура, а в 1965 — сын Бруно"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Георга Бюхнера",
+      "long": "Получил премию Георга Бюхнера.",
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Георга Бюхнера (1965)"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Предвыборная кампания СДПГ",
+      "long": "Провёл около 60 избирательных округов, выступив с 94 речами; на выборах победила коалиция во главе с Брандтом.",
+      "works": [
+        {
+          "ref": "local-anaesthetic",
+          "note": "роман создан в период участия в предвыборной кампании"
+        },
+        {
+          "ref": "diary-of-a-snail",
+          "note": "книга — отчёт о работе в кампании"
+        }
+      ],
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Vor der Bundestagswahl 1969 engagierte sich Grass im Wahlkampf nochmals intensiver."
+      }
+    },
+    {
+      "key": "love-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Расставание с Анной",
+      "long": "Грасс и Анна расстались; он уехал из Берлина к Веронике Шрётер.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году Гюнтер и Анна Грасс расстались, но официальный развод оформили только в 1978 году."
+      }
+    },
+    {
+      "key": "relocation-1972",
+      "date": {
+        "from": "1972",
+        "to": "1987",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Вевельсфлет",
+      "long": "Поселился в Вевельсфлете, оборудовал там дом с мастерской.",
+      "place": {
+        "label": "Вевельсфлет"
+      },
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1972 до 1987 года жил в городке Вевельсфлет в земле Шлезвиг-Гольштейн."
+      }
+    },
+    {
+      "key": "child-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Хелены",
+      "long": "Родилась дочь Хелена от Вероники Шрётер, с которой писатель жил в 1970-е годы.",
+      "works": [
+        {
+          "ref": "the-flounder",
+          "note": "по немецкой статье, девять месяцев до рождения дочери стали фоном замысла романа"
+        }
+      ],
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Актриса Хелена Грасс (род. в 1974 году) — дочь Гюнтера Грасса и архитектора и художницы Вероники Шрётер"
+      }
+    },
+    {
+      "key": "faith-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Разрыв с Католической церковью",
+      "long": "Вышел из Католической церкви в знак протеста против её позиции в споре о § 218.",
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году Грасс порвал с Католической церковью"
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Анной",
+      "long": "Официально оформлен развод с Анной Шварц.",
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году Гюнтер и Анна Грасс расстались, но официальный развод оформили только в 1978 году."
+      }
+    },
+    {
+      "key": "love-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Утой Грунерт",
+      "long": "Женился на органистке Уте Грунерт, у которой было двое сыновей; в тот же год родилась дочь Неле.",
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1979 году родилась Неле Крюгер, дочь Грасса и преподавательницы Ингрид Крюгер. В том же году Грасс женился во второй раз"
+      }
+    },
+    {
+      "key": "other-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в СДПГ",
+      "long": "После десятилетий поддержки партии на выборах вступил в СДПГ.",
+      "chapter": "brandt-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Но членом СДПГ он стал только в 1982 году."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент Берлинской академии искусств",
+      "long": "Избран президентом Берлинской академии искусств.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "unification-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seit Juni 1983 gewählter Präsident der Berliner Akademie der Künste"
+      }
+    },
+    {
+      "key": "relocation-1986",
+      "date": {
+        "from": "1986-08",
+        "to": "1987-01",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Полгода в Калькутте",
+      "long": "Прожил с Утой несколько месяцев в Индии, главным образом в Калькутте.",
+      "place": {
+        "label": "Калькутта"
+      },
+      "chapter": "unification-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С августа 1986 до января 1987 года Гюнтер Грасс вместе с Утой Грунерт проживал в Индии, главным образом в Калькутте."
+      }
+    },
+    {
+      "key": "other-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Против воссоединения Германии",
+      "long": "Выступил против воссоединения Германии, предлагая конфедерацию двух государств.",
+      "chapter": "unification-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году высказался против воссоединения Германии (Федеративной Республики Германия и ГДР), за создание конфедерации обоих государств."
+      }
+    },
+    {
+      "key": "relocation-1995",
+      "date": {
+        "from": "1995",
+        "to": "2015",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поселение в Белендорфе",
+      "long": "Поселился в Белендорфе близ Любека и жил там до конца жизни.",
+      "place": {
+        "label": "Белендорф"
+      },
+      "chapter": "unification-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1995 года и вплоть до своей кончины Гюнтер Грасс жил в земле Шлезвиг-Гольштейн в небольшом городке Белендорф"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Получил Нобелевскую премию по литературе; первый за 27 лет немецкий лауреат.",
+      "chapter": "nobel-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году в возрасте 72 лет Гюнтер Грасс был удостоен Нобелевской премии по литературе за своё творчество."
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Скандал после признания о службе в СС",
+      "long": "Признание о службе в ваффен-СС вызвало скандал в Германии и подтолкнуло к написанию мемуаров.",
+      "works": [
+        {
+          "ref": "peeling-the-onion",
+          "note": "признание прозвучало в связи с выходом мемуаров"
+        }
+      ],
+      "chapter": "nobel-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 2006 года в Германии вокруг имени Гюнтера Грасса и его моральной роли в послевоенной Германии разгорелся скандал. Писатель признался в том, что в молодости состоял в рядах ваффен-СС."
+      }
+    },
+    {
+      "key": "persecution-2012",
+      "date": {
+        "from": "2012-04-08",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет на въезд в Израиль",
+      "long": "После стихотворения с критикой Израиля Израиль объявил его персоной нон грата.",
+      "chapter": "nobel-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "8 апреля 2012 года Израиль объявил Гюнтера Грасса персоной нон грата за обнародование стихотворения"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от работы над романами",
+      "long": "Заявил, что больше не будет писать романы из-за возраста и здоровья; занимался акварелью.",
+      "works": [
+        {
+          "ref": "vonne-endlichkait"
+        }
+      ],
+      "chapter": "nobel-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году писатель заявил, что больше не будет писать романы"
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-04-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Любеке",
+      "long": "Умер в Любеке от лёгочной инфекции; последняя книга была завершена за три дня до смерти.",
+      "place": {
+        "label": "Любек"
+      },
+      "works": [
+        {
+          "ref": "vonne-endlichkait",
+          "note": "завершена за три дня до смерти"
+        }
+      ],
+      "chapter": "nobel-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "скончался 13 апреля 2015 года в возрасте 87 лет в клинической больнице города Любека от лёгочной инфекции"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tin-drum",
+      "title": "Жестяной барабан",
+      "qid": "Q899334",
+      "written": {
+        "from": 1957,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "cat-and-mouse",
+      "title": "Кошки-мышки",
+      "qid": "Q1736859",
+      "written": {
+        "from": 1959,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "dog-years",
+      "title": "Собачьи годы",
+      "qid": "Q499564",
+      "written": {
+        "from": 1961,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "plebeians-rehearse-the-uprising",
+      "title": "Плебеи репетируют восстание",
+      "written": {
+        "from": 1964,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "local-anaesthetic",
+      "title": "Под местным наркозом",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "diary-of-a-snail",
+      "title": "Из дневника улитки",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "the-flounder",
+      "title": "Камбала",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "the-meeting-at-telgte",
+      "title": "Встреча в Тельгте",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-rat",
+      "title": "Крысиха",
+      "qid": "Q765047",
+      "written": {
+        "from": 1984,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "a-broad-field",
+      "title": "Ein weites Feld",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "crabwalk",
+      "title": "Траектория краба",
+      "qid": "Q1460598",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "peeling-the-onion",
+      "title": "Луковица памяти",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "vonne-endlichkait",
+      "title": "Vonne Endlichkait",
+      "written": {
+        "from": 2013,
+        "to": 2015
+      }
+    }
+  ]
+}

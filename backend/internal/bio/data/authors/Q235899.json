@@ -1,0 +1,472 @@
+{
+  "qid": "Q235899",
+  "name": "Андре Нортон",
+  "born": "1912-02-17",
+  "died": "2005-03-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%BE%D1%80%D1%82%D0%BE%D0%BD%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5",
+      "rev": 154635221
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Andre_Norton",
+      "rev": 1375403293
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cleveland-school",
+      "title": "Кливленд и школьные годы",
+      "from": 1912,
+      "to": 1931
+    },
+    {
+      "key": "library-years",
+      "title": "Библиотеки, Депрессия и война",
+      "from": 1932,
+      "to": 1949
+    },
+    {
+      "key": "gnome-press",
+      "title": "Гном-пресс и профессия писателя",
+      "from": 1950,
+      "to": 1965
+    },
+    {
+      "key": "witch-world-florida",
+      "title": "Колдовской мир и Флорида",
+      "from": 1966,
+      "to": 1996
+    },
+    {
+      "key": "tennessee",
+      "title": "Теннесси и признание",
+      "from": 1997,
+      "to": 2005
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-02-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Кливленде",
+      "long": "Алиса Мэри Нортон родилась в Кливленде, штат Огайо, в семье Адальберта Фрили Нортона, владельца ковровой компании, и Берты Стемм Нортон.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "cleveland-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Alice Mary Norton was born in Cleveland, Ohio in 1912."
+      }
+    },
+    {
+      "key": "education-1930",
+      "date": {
+        "from": "1930",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Университете Западного резерва",
+      "long": "После школы Collinwood High School Нортон собиралась стать учительницей и поступила в колледж Флоры Стоун Мэзер при Университете Западного резерва; учёбу прервала в 1932 году.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "cleveland-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from high school in 1930, Norton planned to become a teacher, and began studying at Flora Stone Mather College of Western Reserve University."
+      }
+    },
+    {
+      "key": "poverty-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Уход из университета из-за Депрессии, работа в библиотеке",
+      "long": "Из-за Великой депрессии Нортон пришлось оставить университет; она пошла работать в Кливлендскую библиотечную систему, где проработала около 18 лет.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "library-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, in 1932 she had to leave because of the Depression and began working for the Cleveland Library System"
+      }
+    },
+    {
+      "key": "other-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Официальная смена имени на Андре",
+      "long": "Нортон официально сменила имя на Андре Элис Нортон — псевдоним, взятый для первой книги, чтобы привлечь мужскую аудиторию.",
+      "works": [
+        {
+          "ref": "prince-commands"
+        }
+      ],
+      "chapter": "library-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1934, she legally changed her name to Andre Alice Norton, a pen name she had adopted for her first book, published later that year"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Библиотеке Конгресса",
+      "long": "Работала специальным библиотекарем в каталогизационном отделе Библиотеки Конгресса; проект, в котором она участвовала, прекратился со вступлением США во Вторую мировую войну.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "library-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1940–1941, she worked as a special librarian in the cataloging department of the Library of Congress."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка и крах книжного магазина",
+      "long": "Купила книжный магазин «Mystery House» в Маунт-Рейнье, штат Мэриленд; дело провалилось, и она вернулась в Кливлендскую публичную библиотеку.",
+      "place": {
+        "label": "Маунт-Рейнье"
+      },
+      "chapter": "library-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941 she bought a bookstore called Mystery House in Mount Rainier, Maryland"
+      }
+    },
+    {
+      "key": "creation-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало работы в жанре фантастики",
+      "long": "Первый фантастический рассказ вышел под псевдонимом Эндрю Норт в журнале Fantasy Book; с этого началась её работа в фантастике.",
+      "works": [
+        {
+          "ref": "people-of-the-crater"
+        }
+      ],
+      "chapter": "library-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фантастику начала писать в 1947 году («Люди кратера»)."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из библиотеки по болезни, работа в «Гном-пресс»",
+      "long": "В 1950 году ушла из библиотеки из-за болезни и стала читчицей издателя Мартина Гринберга в нью-йоркском «Гном-пресс», где работала до 1958 года.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "gnome-press",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returned to the Cleveland Public Library until 1950, when she retired due to ill health. She then began working as a reader for publisher-editor Martin Greenberg at Gnome Press"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к полной занятости писателем",
+      "long": "К выходу 21 романа Нортон оставила издательство и стала профессиональным писателем на постоянной основе.",
+      "chapter": "gnome-press",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She remained until 1958, when, with 21 novels published, she became a full-time professional writer."
+      }
+    },
+    {
+      "key": "relocation-1966",
+      "date": {
+        "from": "1966-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд во Флориду из-за здоровья",
+      "long": "Из-за неустойчивого здоровья переехала в Уинтер-Парк, штат Флорида, где прожила до 1997 года.",
+      "place": {
+        "label": "Уинтер-Парк"
+      },
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she moved to Winter Park, Florida in November 1966, where she remained until 1997."
+      }
+    },
+    {
+      "key": "loss-1967",
+      "date": {
+        "from": "1967-11-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, Берты Нортон",
+      "long": "Умерла мать писательницы Берта Стемм Нортон.",
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Bertha Stemm Norton 1872-01-04 – 1967-11-24"
+      }
+    },
+    {
+      "key": "other-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Приглашение Гайгэкса в Dungeons \u0026 Dragons",
+      "long": "Гэри Гайгэкс пригласил Нортон сыграть в Dungeons \u0026 Dragons в его мире Грейхок; позднее она написала роман, действие которого частично происходит в Грейхоке.",
+      "works": [
+        {
+          "ref": "quag-keep",
+          "note": "Нортон написала роман после игры в D\u0026D в мире Грейхок по приглашению Гайгэкса"
+        }
+      ],
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, Gary Gygax invited Norton to play Dungeons \u0026 Dragons in his Greyhawk world."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Гроссмейстера фэнтези",
+      "long": "Нортон получила звание Гроссмейстера фэнтези — первой среди женщин.",
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1977: Премия Хьюго. Гроссмейстер (Grandmaster) фэнтези."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Введение в Зал славы женщин Огайо",
+      "long": "Введена в Зал славы женщин Огайо.",
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Зал славы женщин Огайо 1981-01-01"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Великого Мастера SFWA",
+      "long": "Удостоена звания Гроссмейстера фантастики Американской ассоциации писателей-фантастов — первой среди женщин.",
+      "chapter": "witch-world-florida",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Мемориальная премия имени Деймона Найта «Гроссмейстер фантастики» 1984-01-01"
+      }
+    },
+    {
+      "key": "relocation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Мерфрисборо",
+      "long": "После почти 31 года во Флориде переехала в Мерфрисборо, штат Теннесси.",
+      "place": {
+        "label": "Мерфрисборо"
+      },
+      "chapter": "tennessee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She moved to Murfreesboro, Tennessee in 1997"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Введение в Зал славы фантастики и фэнтези",
+      "long": "Введена в Зал славы научной фантастики и фэнтези — первой среди женщин.",
+      "chapter": "tennessee",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1997: Введена в Зал Славы"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за вклад в жанр",
+      "long": "Получила Всемирную премию фэнтези за вклад в жанр после трёх номинаций.",
+      "chapter": "tennessee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was nominated three times for the World Fantasy Award for lifetime achievement, winning the award in 1998."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999-02",
+        "to": "2004-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Библиотека High Hallack",
+      "long": "Нортон участвовала в создании исследовательской библиотеки High Hallack для авторов и исследователей жанровой литературы; закрыта из-за ухудшения здоровья Нортон.",
+      "place": {
+        "label": "Мерфрисборо"
+      },
+      "chapter": "tennessee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The facility was opened on February 28, 1999, and operated until March 2004."
+      }
+    },
+    {
+      "key": "death-2005",
+      "date": {
+        "from": "2005-03-17",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Мерфрисборо",
+      "long": "Умерла дома в Мерфрисборо от застойной сердечной недостаточности; с 21 февраля находилась под опекой хосписа.",
+      "place": {
+        "label": "Мерфрисборо"
+      },
+      "chapter": "tennessee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died at home on March 17, 2005, of congestive heart failure."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "prince-commands",
+      "title": "Повеление принца",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "people-of-the-crater",
+      "title": "Люди кратера",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "huon-of-the-horn",
+      "title": "Huon of the Horn",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "star-mans-son",
+      "title": "Star Man's Son, 2250 A.D.",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "witch-world",
+      "title": "Колдовской Мир",
+      "written": {
+        "from": 1963,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "quag-keep",
+      "title": "Quag Keep",
+      "written": {
+        "from": 1976,
+        "to": 1978
+      }
+    }
+  ]
+}

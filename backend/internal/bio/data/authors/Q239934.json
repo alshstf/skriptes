@@ -1,0 +1,411 @@
+{
+  "qid": "Q239934",
+  "name": "Элис Сиболд",
+  "born": "1962-09-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%B1%D0%BE%D0%BB%D0%B4%2C_%D0%AD%D0%BB%D0%B8%D1%81",
+      "rev": 149667794
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alice_Sebold",
+      "rev": 1371331815
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-pensilvaniya",
+      "title": "Детство в Пенсильвании",
+      "from": 1962,
+      "to": 1980
+    },
+    {
+      "key": "sirakuzy",
+      "title": "Сиракузы: нападение и суд",
+      "from": 1981,
+      "to": 1984
+    },
+    {
+      "key": "nyu-york-kaliforniya",
+      "title": "Нью-Йорк, Калифорния, поиски книги",
+      "from": 1985,
+      "to": 1998
+    },
+    {
+      "key": "izvestnost",
+      "title": "Мемуары, роман и слава",
+      "from": 1999,
+      "to": 2011
+    },
+    {
+      "key": "peresmotr-dela",
+      "title": "Развод и реабилитация Бродуотера",
+      "from": 2012,
+      "to": 2021
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-09-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мадисоне",
+      "long": "Родилась в Мадисоне, штат Висконсин; выросла в Пейоли, пригороде Филадельфии.",
+      "place": {
+        "label": "Мадисон"
+      },
+      "chapter": "detstvo-pensilvaniya",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Мадисон 1962-09-06"
+      }
+    },
+    {
+      "key": "education-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Great Valley",
+      "long": "Окончила среднюю школу Great Valley в Малверне, Пенсильвания, затем поступила в Сиракузский университет.",
+      "place": {
+        "label": "Малверн"
+      },
+      "chapter": "detstvo-pensilvaniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sebold graduated from Great Valley High School in Malvern, Pennsylvania, in 1980."
+      }
+    },
+    {
+      "key": "other-1981",
+      "date": {
+        "from": "1981-05-08",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Нападение и изнасилование у кампуса",
+      "long": "Первокурсницу Сиракузского университета избили и изнасиловали на пути домой возле кампуса. Она заявила в полицию, но подозреваемых найти не удалось.",
+      "place": {
+        "label": "Сиракузы"
+      },
+      "works": [
+        {
+          "ref": "lucky-1999",
+          "note": "Мемуары написаны об этом событии; по словам автора, сначала ей нужно было написать о нём, а потом закончить роман."
+        },
+        {
+          "ref": "lovely-bones-2002",
+          "note": "Работа над романом о изнасиловании и убийстве девочки изначально была основана на этом опыте."
+        }
+      ],
+      "chapter": "sirakuzy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the early hours of May 8, 1981, while she was a freshman at Syracuse University, Sebold was assaulted and raped"
+      }
+    },
+    {
+      "key": "other-1981-2",
+      "date": {
+        "from": "1981-10-05",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Опознание Энтони Бродуотера и суд",
+      "long": "Встретив на улице мужчину, которого сочла нападавшим, обратилась в полицию. Задержали Энтони Бродуотера, против которого она дала показания в суде; он отсидел 16 лет.",
+      "place": {
+        "label": "Сиракузы"
+      },
+      "works": [
+        {
+          "ref": "lucky-1999",
+          "note": "Расследование и суд описаны во второй части мемуаров."
+        }
+      ],
+      "chapter": "sirakuzy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "ранним утром 8 мая 1981 года Сиболд… 5 октября того же года, идя по улице около Сиракузского университетского городка, она увидела афроамериканца, в котором опознала своего насильника."
+      }
+    },
+    {
+      "key": "education-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Сиракузского университета",
+      "long": "Получила степень бакалавра в Сиракузском университете; недолго училась в магистратуре Хьюстонского университета.",
+      "place": {
+        "label": "Сиракузы"
+      },
+      "chapter": "sirakuzy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating in 1984, she briefly attended the University of Houston in Texas, for graduate school, then moved to Manhattan for the next 10 years."
+      }
+    },
+    {
+      "key": "relocation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Десять лет на Манхэттене, работа официанткой",
+      "long": "Переехала на Манхэттен, где жила около десяти лет, работала официанткой; стихи и попытки написать роман результата не дали.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "nyu-york-kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating in 1984, she briefly attended the University of Houston in Texas, for graduate school, then moved to Manhattan for the next 10 years."
+      }
+    },
+    {
+      "key": "creation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над первым романом",
+      "long": "Начала роман о изнасиловании и убийстве девочки-подростка под рабочим названием «Монстры»; не сумев его закончить, решила сначала написать о собственном изнасиловании.",
+      "works": [
+        {
+          "ref": "lovely-bones-2002",
+          "note": "Роман «Монстры» позже вышел как «Милые кости» (интервью и статья о создании)."
+        },
+        {
+          "ref": "lucky-1999",
+          "note": "Мемуары написаны, чтобы продолжить работу над романом."
+        }
+      ],
+      "chapter": "nyu-york-kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996 or 1997, she began writing a novel about the rape and murder of an adolescent girl based upon this experience."
+      }
+    },
+    {
+      "key": "education-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра в Ирвайне",
+      "long": "Получила степень магистра изящных искусств в Калифорнийском университете в Ирвайне.",
+      "place": {
+        "label": "Ирвайн"
+      },
+      "chapter": "nyu-york-kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She earned an MFA from the University of California, Irvine in 1998."
+      }
+    },
+    {
+      "key": "love-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писателем Гленом Дэвидом Голдом",
+      "long": "Вышла замуж за писателя Глена Дэвида Голда.",
+      "chapter": "izvestnost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Sebold married the novelist Glen David Gold; the couple divorced in 2012."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех первого романа",
+      "long": "Роман стал бестселлером и тиражом в десять миллионов экземпляров к 2007 году; вслед за ним вырос интерес к мемуарам.",
+      "works": [
+        {
+          "ref": "lovely-bones-2002"
+        },
+        {
+          "ref": "lucky-1999",
+          "note": "После успеха романа интерес к мемуарам вырос, они разошлись тиражом более миллиона."
+        }
+      ],
+      "chapter": "izvestnost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Sebold became successful with her 2002 novel, The Lovely Bones, interest in the memoir picked up and it went on to sell over one million copies."
+      }
+    },
+    {
+      "key": "career-2002-2",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за дебютный роман",
+      "long": "Получила премию Брэма Стокера за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "lovely-bones-2002"
+        }
+      ],
+      "chapter": "izvestnost",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Брэма Стокера за лучший дебютный роман 2002-01-01"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактура сборника лучших рассказов Америки",
+      "long": "Выступила приглашённым редактором сборника The Best American Short Stories.",
+      "chapter": "izvestnost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sebold guest-edited The Best American Short Stories 2009."
+      }
+    },
+    {
+      "key": "family-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Гленом Дэвидом Голдом",
+      "long": "Брак с Гленом Дэвидом Голдом, заключённый в 2001 году, закончился разводом.",
+      "chapter": "peresmotr-dela",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Sebold married the novelist Glen David Gold; the couple divorced in 2012."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отмена экранизации мемуаров, сомнения продюсера",
+      "long": "Работа над экранизацией мемуаров прекратилась из-за потери финансирования; продюсер, готовивший фильм, усомнился в описании суда и нанял частного детектива.",
+      "works": [
+        {
+          "ref": "lucky-1999"
+        }
+      ],
+      "chapter": "peresmotr-dela",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The film adaptation of Lucky was canceled after losing its funding in mid-2021."
+      }
+    },
+    {
+      "key": "other-2021",
+      "date": {
+        "from": "2021-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Реабилитация Бродуотера, ложное опознание",
+      "long": "Верховный суд Нью-Йорка отменил обвинительный приговор Бродуотеру. Издатель мемуаров прекратил их распространение до пересмотра текста.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "lucky-1999",
+          "note": "Издатель объявил о прекращении распространения книги."
+        }
+      ],
+      "chapter": "peresmotr-dela",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2021, Broadwater was exonerated by a New York Supreme Court justice"
+      }
+    },
+    {
+      "key": "other-2021-2",
+      "date": {
+        "from": "2021-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичные извинения перед Бродуотером",
+      "long": "Через неделю после реабилитации Бродуотера публично извинилась перед ним; форма извинения вызвала критику.",
+      "chapter": "peresmotr-dela",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2021, Broadwater was exonerated… A week later, Sebold publicly apologized for her part in his conviction"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "lucky-1999",
+      "title": "Счастливая",
+      "qid": "Q4447766",
+      "written": {
+        "from": 1997,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "lovely-bones-2002",
+      "title": "Милые кости",
+      "qid": "Q1783411",
+      "written": {
+        "from": 1996,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "almost-moon-2007",
+      "title": "Почти луна",
+      "qid": "Q4375376",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

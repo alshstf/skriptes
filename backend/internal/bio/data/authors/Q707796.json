@@ -1,0 +1,420 @@
+{
+  "qid": "Q707796",
+  "name": "Кристофер Прист",
+  "born": "1943-07-14",
+  "died": "2024-02-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D1%81%D1%82%2C_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80",
+      "rev": 148231230
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Christopher_Priest_%28novelist%29",
+      "rev": 1375395630
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cheadle-clerk",
+      "title": "Чидл и конторская работа",
+      "from": 1943,
+      "to": 1967
+    },
+    {
+      "key": "free-writer",
+      "title": "Вольный литератор",
+      "from": 1968,
+      "to": 1980
+    },
+    {
+      "key": "tuttle-years",
+      "title": "Признание и брак с Лизой Таттл",
+      "from": 1981,
+      "to": 1987
+    },
+    {
+      "key": "kennedy-years",
+      "title": "Годы с Ли Кеннеди",
+      "from": 1988,
+      "to": 2010
+    },
+    {
+      "key": "allan-years",
+      "title": "Нина Аллан и последние годы",
+      "from": 2011,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-07-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чидле",
+      "long": "Родился 14 июля 1943 года в Чидле, графство Чешир, Англия.",
+      "place": {
+        "label": "Чидл"
+      },
+      "chapter": "cheadle-clerk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Christopher Mackenzie Priest was born on 14 July 1943 in Cheadle, Cheshire, England."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "В мае 1966 года в журнале Impulse вышел первый опубликованный рассказ Приста — «The Run».",
+      "chapter": "cheadle-clerk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published story, \"The Run,\" appeared in Impulse magazine in May 1966."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из конторы в свободное писательство",
+      "long": "Бросил конторскую работу (прежде был бухгалтерским клерком и аудитором) и стал профессиональным писателем-фрилансером.",
+      "chapter": "free-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1968 he gave up clerical employment to devote himself fully to a career as a freelance writer."
+      }
+    },
+    {
+      "key": "love-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Кристиной Мерчант, переезд в Лондон",
+      "long": "Женился на Кристине Мерчант, с которой переехал в Лондон; брак продлился четыре года.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "free-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1969 he married Christine Merchant, with whom he moved to London; the marriage ended after four years."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "to": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Помощник редактора журнала Foundation",
+      "long": "С 1974 по 1977 год — помощник редактора журнала Foundation; с 1964 года участвовал в фэндоме и фанзинах.",
+      "chapter": "free-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "serving as associate editor of Foundation magazine from 1974 to 1977."
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Лизой Таттл",
+      "long": "Женился на американской писательнице Лизе Таттл.",
+      "chapter": "tuttle-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981 he married the American writer Lisa Tuttle, from whom he divorced in 1987."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Список лучших молодых британских романистов Granta",
+      "long": "Включён журналом Granta в список лучших молодых британских романистов.",
+      "chapter": "tuttle-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, he was named as one of Granta's Best of Young British Novelists"
+      }
+    },
+    {
+      "key": "family-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Лизой Таттл",
+      "long": "Развод с Лизой Таттл.",
+      "chapter": "tuttle-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981 he married the American writer Lisa Tuttle, from whom he divorced in 1987."
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ли Кеннеди",
+      "long": "Женился на писательнице-фантасте Ли Кеннеди; в браке родились близнецы Элизабет и Саймон.",
+      "chapter": "kennedy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "from whom he divorced in 1987. The following year he married the science fiction writer Leigh Kennedy"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези",
+      "long": "Получил Всемирную премию фэнтези за лучший роман.",
+      "chapter": "kennedy-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший роман 1996"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонки и некрологи для The Guardian",
+      "long": "Начал писать для The Guardian, в основном некрологи писателей-фантастов.",
+      "chapter": "kennedy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Priest wrote for The Guardian from 2002, largely obituaries"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Артура Кларка",
+      "long": "Получил премию Артура Кларка.",
+      "chapter": "kennedy-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Артура Кларка 2003"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вице-президент Общества Г. Уэллса",
+      "long": "Назначен вице-президентом международного Общества Г. Уэллса; Уэллс сильно повлиял на его творчество.",
+      "chapter": "kennedy-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2006 was appointed Vice-President of the international H. G. Wells Society."
+      }
+    },
+    {
+      "key": "family-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Конец брака с Ли Кеннеди",
+      "long": "Закончился брак с Ли Кеннеди.",
+      "chapter": "allan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before their marriage ended in 2011. That same year Priest began a relationship with the writer Nina Allan."
+      }
+    },
+    {
+      "key": "love-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Союз с писательницей Ниной Аллан",
+      "long": "Начались отношения с писательницей Ниной Аллан, с которой он жил вместе до конца жизни.",
+      "chapter": "allan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "That same year Priest began a relationship with the writer Nina Allan. They lived together from then on"
+      }
+    },
+    {
+      "key": "love-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ниной Аллан",
+      "long": "Женился на Нине Аллан.",
+      "chapter": "allan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They lived together from then on and were married in 2023."
+      }
+    },
+    {
+      "key": "death-2024",
+      "date": {
+        "from": "2024-02-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Ротсее",
+      "long": "Умер 2 февраля 2024 года на острове Бьют (Ротсей) от мелкоклеточного рака; почти закончил книгу о Дж. Г. Балларде.",
+      "place": {
+        "label": "Ротсей"
+      },
+      "chapter": "allan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Christopher Priest died on 2 February 2024, at the age of eighty."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fugue-for-a-darkening-island",
+      "title": "Фуга для темнеющего острова",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "inverted-world",
+      "title": "Опрокинутый мир",
+      "qid": "Q1623320",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "the-space-machine",
+      "title": "Машина пространства",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "a-dream-of-wessex",
+      "title": "Сон о Уэссексе",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "the-affirmation",
+      "title": "Утверждение",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "the-glamour",
+      "title": "Гламур",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "the-prestige",
+      "title": "Престиж",
+      "qid": "Q944991",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "the-separation",
+      "title": "The Separation",
+      "qid": "Q3213011",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "the-islanders",
+      "title": "Островитяне",
+      "qid": "Q7742712",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-adjacent",
+      "title": "Смежное",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

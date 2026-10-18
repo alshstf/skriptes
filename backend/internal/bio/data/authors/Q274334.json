@@ -1,0 +1,557 @@
+{
+  "qid": "Q274334",
+  "name": "Светлана Александровна Алексиевич",
+  "born": "1948-05-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B8%D0%B5%D0%B2%D0%B8%D1%87%2C_%D0%A1%D0%B2%D0%B5%D1%82%D0%BB%D0%B0%D0%BD%D0%B0_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 155598843
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Svetlana_Alexievich",
+      "rev": 1379082026
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство и школа",
+      "from": 1948,
+      "to": 1971
+    },
+    {
+      "key": "journalism",
+      "title": "Журналистика и первые книги",
+      "from": 1972,
+      "to": 1988
+    },
+    {
+      "key": "zinky-boys-and-trials",
+      "title": "Афганистан, суды, Чернобыль",
+      "from": 1989,
+      "to": 1999
+    },
+    {
+      "key": "abroad",
+      "title": "Годы вне Беларуси",
+      "from": 2000,
+      "to": 2014
+    },
+    {
+      "key": "nobel-and-protest",
+      "title": "Нобель и протесты 2020 года",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-05-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Станиславе",
+      "long": "Родилась в Станиславе (ныне Ивано-Франковск) в семье белоруса и украинки; позднее семья переехала в Минск.",
+      "place": {
+        "label": "Станислав"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 31 мая 1948 года в г. Станислав (Ивано-Франковск)."
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Копаткевичах",
+      "long": "Окончила среднюю школу в Копаткевичах Гомельской области.",
+      "place": {
+        "label": "Копаткевичи"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году окончила среднюю школу в Копаткевичах Гомельской области."
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание журфака БГУ, начало работы в газете",
+      "long": "Окончила журналистский факультет Белорусского государственного университета и начала работать в районной газете в Берёзе Брестской области.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году окончила дневное отделение факультета журналистики Белорусского государственного университета, начала работу в «Маяке коммунизма»"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "to": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в «Сельской газете»",
+      "long": "Работала в белорусской «Сельской газете».",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973—1976 годах работала в белорусской «Сельской газете»"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "to": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство отделом в журнале «Нёман»",
+      "long": "Руководила отделом очерка и публицистики журнала «Нёман».",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1976—1984 годах — руководитель отдела очерка и публицистики журнала «Нёман»"
+      }
+    },
+    {
+      "key": "persecution-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Рассыпан набор первой книги",
+      "long": "Набор первой книги, собрания монологов жителей деревни, рассыпан по указанию отдела пропаганды ЦК за критику паспортного режима; позднее автор отказалась от публикации.",
+      "place": {
+        "label": "Минск"
+      },
+      "works": [
+        {
+          "ref": "ya-uehal-iz-derevni"
+        }
+      ],
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "была подготовлена к печати в 1976 году, однако набор книги был рассыпан по указанию отдела пропаганды ЦК Компартии Белоруссии"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приём в Союз писателей СССР",
+      "long": "Принята в Союз писателей СССР по рекомендации Адамовича, Брыля, Быкова и Витки.",
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году по рекомендации А. Адамовича, Я. Брыля, В. Быкова и В. Витки принята в Союз писателей СССР."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая публикация и цензурные правки",
+      "long": "Первая опубликованная книга вышла в журнале «Октябрь»; цензоры вычеркнули часть сведений, обвиняя автора в пацифизме и натурализме.",
+      "works": [
+        {
+          "ref": "war-does-not-have-a-womans-face"
+        }
+      ],
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "была впервые опубликована в журнале «Октябрь» в начале 1984 года (в журнальном варианте)"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Массовое признание первой книги",
+      "long": "Книга вышла отдельным изданием сразу в нескольких издательствах; общий тираж к концу 1980-х составил 2 млн экземпляров.",
+      "works": [
+        {
+          "ref": "war-does-not-have-a-womans-face"
+        }
+      ],
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году книга вышла отдельным изданием одновременно в нескольких издательствах, общий тираж к концу 1980-х 2 млн экземпляров."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ленинского комсомола",
+      "long": "Получила Премию Ленинского комсомола; ранее, в 1984–1985 годах, были награды Союза писателей СССР и орден «Знак Почёта».",
+      "works": [
+        {
+          "ref": "war-does-not-have-a-womans-face"
+        }
+      ],
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1986 — Премия Ленинского комсомола (СССР) — за книгу «У войны не женское лицо»"
+      }
+    },
+    {
+      "key": "persecution-1992",
+      "date": {
+        "from": "1992",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Судебные процессы из-за книги об Афганистане",
+      "long": "После выхода книги об Афганской войне писательницу обвиняли в клевете и оскорблении чести солдат; суды по искам четырёх героев книги шли с 1992 по 1996 год.",
+      "works": [
+        {
+          "ref": "zinky-boys"
+        }
+      ],
+      "chapter": "zinky-boys-and-trials",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Alexievich was tried a number of times between 1992 and 1996; she was sued by four interviewees."
+      }
+    },
+    {
+      "key": "persecution-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Прекращение изданий в государственных издательствах",
+      "long": "Белорусские государственные издательства перестали выпускать её книги.",
+      "chapter": "zinky-boys-and-trials",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her books were not published by Belarusian state-owned publishing houses after 1993"
+      }
+    },
+    {
+      "key": "relocation-2000",
+      "date": {
+        "from": "2000",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь за границей после преследований",
+      "long": "После преследований при Лукашенко уехала из Беларуси; жила в Париже, Гётеборге, Берлине, затем в Италии, Франции и Германии, в 2013 году вернулась.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After political persecution by the Lukashenko administration, she left Belarus in 2000."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия мира немецких книготорговцев",
+      "long": "Получила Премию мира немецких книготорговцев, а также премию Медичи за эссеистику за вышедшую в том же году книгу.",
+      "works": [
+        {
+          "ref": "secondhand-time"
+        }
+      ],
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году Алексиевич стала лауреатом Международной премии мира немецких книготорговцев"
+      }
+    },
+    {
+      "key": "relocation-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Беларусь",
+      "long": "Вернулась в Беларусь после более чем десяти лет за границей.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году вернулась в Беларусь."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Стала лауреатом Нобелевской премии по литературе — первым нобелевским лауреатом независимой Беларуси и первым профессиональным журналистом в этом качестве.",
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2015 году Алексиевич стала лауреатом Нобелевской премии по литературе с формулировкой"
+      }
+    },
+    {
+      "key": "persecution-2018",
+      "date": {
+        "from": "2018-08",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Отмена выступления в Одессе из-за угроз",
+      "long": "Отменила выступление в Одессе из-за угроз.",
+      "place": {
+        "label": "Одесса"
+      },
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 2018 года Алексиевич пришлось отменить выступление в Одессе из-за угроз."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-10-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Белорусского ПЕН-центра",
+      "long": "Избрана председателем Белорусского ПЕН-центра.",
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 26 октября 2019 года — председатель Белорусского ПЕН-центра"
+      }
+    },
+    {
+      "key": "other-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Членство в Координационном совете",
+      "long": "Вошла в Координационный совет оппозиции; против его членов возбудили уголовное дело, 26 августа её допросили.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время протестов 2020 года в Беларуси стала членом Координационного совета по организации процесса преодоления политического кризиса."
+      }
+    },
+    {
+      "key": "persecution-2020",
+      "date": {
+        "from": "2020-09-09",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Попытка проникновения в квартиру",
+      "long": "Сообщила, что люди в чёрных масках пытаются проникнуть в её квартиру; дипломаты нескольких стран установили круглосуточное дежурство у дома.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 9 September 2020, Alexievich alerted the press that \"men in black masks\" were trying to enter her apartment in central Minsk."
+      }
+    },
+    {
+      "key": "relocation-2020",
+      "date": {
+        "from": "2020-09-28",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в Германию",
+      "long": "Покинула Беларусь и уехала в Германию, будучи последним членом Координационного совета, не арестованным и не высланным.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 28 September 2020, Alexievich left Belarus for Germany, promising to return depending on political conditions in Belarus."
+      }
+    },
+    {
+      "key": "persecution-2021",
+      "date": {
+        "from": "2021-08",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Исключение книги из школьной программы",
+      "long": "Её книга исключена из школьной программы в Беларуси.",
+      "works": [
+        {
+          "ref": "last-witnesses"
+        }
+      ],
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 2021, her book The Last Witnesses was excluded from the school curriculum in Belarus"
+      }
+    },
+    {
+      "key": "persecution-2026",
+      "date": {
+        "from": "2026",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Сборник цитат признан экстремистским",
+      "long": "Белорусский суд внёс сборник её цитат в список экстремистских материалов.",
+      "chapter": "nobel-and-protest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2026 году белорусский суд внес сборник цитат Светланы Алексиевич в список экстремистских материалов."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ya-uehal-iz-derevni",
+      "title": "Я уехал из деревни",
+      "written": {
+        "from": 1975,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "war-does-not-have-a-womans-face",
+      "title": "У войны не женское лицо",
+      "qid": "Q21088242",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "last-witnesses",
+      "title": "Последние свидетели",
+      "qid": "Q21272184",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "zinky-boys",
+      "title": "Цинковые мальчики",
+      "qid": "Q21078219",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "enchanted-by-death",
+      "title": "Зачарованные смертью",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "chernobyl-prayer",
+      "title": "Чернобыльская молитва",
+      "qid": "Q7939693",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "secondhand-time",
+      "title": "Время секонд хэнд",
+      "qid": "Q18449383",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

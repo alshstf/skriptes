@@ -1,0 +1,919 @@
+{
+  "qid": "Q40826",
+  "name": "Кнут Гамсун",
+  "born": "1859-08-04",
+  "died": "1952-02-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B0%D0%BC%D1%81%D1%83%D0%BD%2C_%D0%9A%D0%BD%D1%83%D1%82",
+      "rev": 155511102
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Knut_Hamsun",
+      "rev": 1380283367
+    },
+    {
+      "id": "nowiki",
+      "url": "https://no.wikipedia.org/wiki/Knut_Hamsun",
+      "rev": 25972444
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-skitaniya",
+      "title": "Хутор дяди и годы скитаний",
+      "from": 1859,
+      "to": 1881
+    },
+    {
+      "key": "amerika",
+      "title": "Америка и возвращение",
+      "from": 1882,
+      "to": 1888
+    },
+    {
+      "key": "golod-i-slava",
+      "title": "«Голод», слава, первый брак",
+      "from": 1889,
+      "to": 1908
+    },
+    {
+      "key": "marie-i-norholm",
+      "title": "Мари, дети, Нёрхольм",
+      "from": 1909,
+      "to": 1939
+    },
+    {
+      "key": "voina-i-sud",
+      "title": "Оккупация, арест, суд",
+      "from": 1940,
+      "to": 1949
+    },
+    {
+      "key": "poslednie-gody",
+      "title": "Последние годы в Нёрхольме",
+      "from": 1950,
+      "to": 1952
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1859",
+      "date": {
+        "from": "1859-08-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в бедной семье портного",
+      "long": "Родился как Кнут Педерсен, четвёртый ребёнок в семье деревенского портного Педера Педерсена и Торы Гармутреет. Семья жила в бедности.",
+      "place": {
+        "label": "Лом"
+      },
+      "chapter": "detstvo-i-skitaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кнут Гамсун родился 4 августа 1859 года в городке Лом, в долине Гудбрандсдален."
+      }
+    },
+    {
+      "key": "relocation-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи на хутор Гамсунд",
+      "long": "Семья переехала на хутор Гамсунд по приглашению дяди Ханса Ольсена. Позже писатель взял имя по названию этого хутора.",
+      "place": {
+        "label": "Гамсунд"
+      },
+      "chapter": "detstvo-i-skitaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1862 году по приглашению брата Торы — Ханса Ольсена семья переезжает на хутор Гамсунд."
+      }
+    },
+    {
+      "key": "family-1873",
+      "date": {
+        "from": "1873",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Побег от жестокого дяди",
+      "long": "С девяти лет мальчик работал в доме дяди Ханса Ольсена, который избивал и морил его голодом. В 1873 году он сбежал к тёте в Лом.",
+      "place": {
+        "label": "Лом"
+      },
+      "chapter": "detstvo-i-skitaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В один из дней 1873 года терпение Кнута кончилось, и он сбежал из дома дяди в Лом к своей тёте Оли"
+      }
+    },
+    {
+      "key": "career-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа сапожником в Будё",
+      "long": "После работы в лавке в Харалё уехал в Будё, где работал сапожником и начал писать первые произведения.",
+      "place": {
+        "label": "Будё"
+      },
+      "chapter": "detstvo-i-skitaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Там он проработал вплоть до 1876 года, а закончив школу и получив аттестат зрелости, Гамсун оставляет место и отправляется на север Норвегии — в Будё."
+      }
+    },
+    {
+      "key": "career-1877",
+      "date": {
+        "from": "1877",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Учительство в Сортланне",
+      "long": "Осенью 1877 года поступил учителем в школу в Сортланне, но продержался там только год.",
+      "place": {
+        "label": "Сортланн"
+      },
+      "chapter": "detstvo-i-skitaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1877 году Гамсун пишет свою первую повесть… Осенью этого же года переезжает в Сортланн, где устраивается в среднюю школу учителем словесности и литературы"
+      }
+    },
+    {
+      "key": "illness-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлый бронхит после возвращения",
+      "long": "Вернулся из Америки тяжело больным бронхитом; после года в отеле в Вальдресе здоровье восстановилось.",
+      "place": {
+        "label": "Вальдрес"
+      },
+      "chapter": "amerika",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Da han i 1884 reiste hjem første gang var han alvorlig syk av bronkitt."
+      }
+    },
+    {
+      "key": "other-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Эссе о Твене и рождение псевдонима",
+      "long": "Эссе о Марке Твене вышло под псевдонимом Кнут Гамсунд; из-за опечатки в типографии имя превратилось в Гамсун.",
+      "place": {
+        "label": "Христиания"
+      },
+      "chapter": "amerika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рукопись была опубликована летом 1884 года под псевдонимом Кнут Гамсунд"
+      }
+    },
+    {
+      "key": "relocation-1886",
+      "date": {
+        "from": "1886",
+        "to": "1888",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Вторая поездка в Америку",
+      "long": "Работал матросом, кондуктором трамвая в Чикаго, сезонным рабочим в Северной Дакоте; читал лекции в Миннеаполисе.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "amerika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1886 года Гамсун решил вновь попытать удачу и вернуться в Америку… Летом 1888 года Гамсун возвращается в Христианию"
+      }
+    },
+    {
+      "key": "creation-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение и начало работы над романом",
+      "long": "После возвращения из США начал работу над романом о голоде и нищете писателя в столице.",
+      "place": {
+        "label": "Христиания"
+      },
+      "works": [
+        {
+          "ref": "hunger-1890"
+        }
+      ],
+      "chapter": "amerika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1888 года Гамсун возвращается в Христианию и начинает работу над романом «Голод»."
+      }
+    },
+    {
+      "key": "relocation-1889",
+      "date": {
+        "from": "1889",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Копенгаген",
+      "long": "Поселился в Копенгагене, где начался его успех как писателя.",
+      "place": {
+        "label": "Копенгаген"
+      },
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1889 г. перебирается в Копенгаген, где и обосновался."
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный прорыв",
+      "long": "Роман «Голод» принёс Гамсуну известность и литературное признание.",
+      "works": [
+        {
+          "ref": "hunger-1890"
+        }
+      ],
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1890 году выходит новаторский психологический роман «Голод» (норв. Sult), принёсший ему славу."
+      }
+    },
+    {
+      "key": "love-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с писательницей Мэри Данн",
+      "long": "Первые отношения с женщинами относятся примерно к 1890-м годам.",
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кнут заводит роман с английской писательницей Мэри Данн (1890 г.)"
+      }
+    },
+    {
+      "key": "career-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лекции против Ибсена и Бьёрнсона",
+      "long": "В лекциях критиковал Ибсена, Бьёрнсона, Ли и Хьелланна, требуя литературы о сложной душевной жизни. Те же взгляды высказывает герой «Мистерий».",
+      "place": {
+        "label": "Христиания"
+      },
+      "works": [
+        {
+          "ref": "mysteries-1892",
+          "note": "герой романа высказывается об Ибсене в духе этих лекций"
+        }
+      ],
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I 1891 la Hamsun ut på foredragsturné med de tre foredragene «Norsk Literatur», «Psykologisk Literatur» og «Modeliteratur». Han angrep sine eldre kolleger Henrik Ibsen"
+      }
+    },
+    {
+      "key": "love-1892",
+      "date": {
+        "from": "1892",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Неудачная помолвка с Лулли Льюис",
+      "long": "Помолвка с Лулли Льюис зимой 1892 года не состоялась.",
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем происходит неудачная помолвка с фрекен Лулли Льюис (зима 1892 г.)"
+      }
+    },
+    {
+      "key": "love-1898",
+      "date": {
+        "from": "1898-05-13",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Берглиот Бех",
+      "long": "Женился на Берглиот Бех; брак называют неудачным, супруги вскоре стали жить порознь. Роман «Виктория» возник, когда он был нововенчан.",
+      "works": [
+        {
+          "ref": "victoria-1898",
+          "note": "роман создан, когда Гамсун был нововенчан"
+        }
+      ],
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1898 году Гамсун женится на Берглиот Бех — этот брак продлился восемь лет."
+      }
+    },
+    {
+      "key": "other-1899",
+      "date": {
+        "from": "1899",
+        "to": "1900",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Путешествие на Восток",
+      "long": "Путешествовал по Финляндии, России, Грузии, Кавказу и Турции; поездка дала материал для драмы и путевых заметок.",
+      "works": [
+        {
+          "ref": "i-aeventyrland-1903",
+          "note": "книга основана на впечатлениях от этой поездки"
+        }
+      ],
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I 1899–1900 foretok Hamsun en reise østover."
+      }
+    },
+    {
+      "key": "child-1902",
+      "date": {
+        "from": "1902-08-15",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Виктории",
+      "long": "Родилась дочь Виктория от брака с Берглиот Бех.",
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Victoria Hamsun Charlesson 1902-08-15"
+      }
+    },
+    {
+      "key": "family-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Берглиот",
+      "long": "Первый брак закончился разводом.",
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Ekteskapet varte fra 1898 til 1906."
+      }
+    },
+    {
+      "key": "loss-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Педер Педерсен.",
+      "chapter": "golod-i-slava",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Ettersom faren hans først døde i 1907, og hans mor Tora Olsdatter i 1919"
+      }
+    },
+    {
+      "key": "love-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с актрисой Мари Андерсен",
+      "long": "Женился на актрисе Мари Андерсен, которая оставила сцену и была с ним до конца его дней.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Через пару лет после развода Кнут влюбляется в молодую драматическую актрису из Швеции Мари Андерсен, на которой женится в 1909 году."
+      }
+    },
+    {
+      "key": "relocation-1911",
+      "date": {
+        "from": "1911",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Хутор Скугхейм на Хамарёе",
+      "long": "Семья вела хозяйство на хуторе Скугхейм на Хамарёе, где родились трое детей.",
+      "place": {
+        "label": "Хамарёй"
+      },
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Der drev Knut og Marie gården Skogheim fra 1911 til 1917, og der ble tre av barna født."
+      }
+    },
+    {
+      "key": "child-1912",
+      "date": {
+        "from": "1912-03-06",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Туре",
+      "long": "Родился сын Туре.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Tore Hamsun 1912-03-06"
+      }
+    },
+    {
+      "key": "child-1914",
+      "date": {
+        "from": "1914-05-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Арилда",
+      "long": "Родился сын Арилд.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Arild Hamsun 1914-05-03"
+      }
+    },
+    {
+      "key": "child-1916",
+      "date": {
+        "from": "1916-10-23",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Эллинор",
+      "long": "Родилась дочь Эллинор.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Ellinor Hamsun 1916-10-23"
+      }
+    },
+    {
+      "key": "relocation-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Покупка усадьбы Нёрхольм",
+      "long": "Купил усадьбу Нёрхольм и сделал её образцовым хозяйством, убыточным, но покрываемым доходами от книг.",
+      "place": {
+        "label": "Нёрхольм, Гримстад"
+      },
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1918 году супруги покупают усадьбу Нёрхольм в Гримстаде, в которой Гамсун проведёт остаток жизни."
+      }
+    },
+    {
+      "key": "loss-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Тора Ольсдаттер.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Ettersom faren hans først døde i 1907, og hans mor Tora Olsdatter i 1919"
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Нобелевская премия по литературе присуждена за роман «Плоды земли».",
+      "works": [
+        {
+          "ref": "growth-of-the-soil-1917"
+        }
+      ],
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году Гамсуну присуждается Нобелевская премия по литературе за монументальный труд «Плоды земли»"
+      }
+    },
+    {
+      "key": "other-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Критика за защиту крестьянского уклада",
+      "long": "Критики упрекали Гамсуна в «традиционности» и защите крестьянского уклада вместо индустриализации.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ещё через три года появляется роман «Последняя глава» (1923). На писателя посыпался шквал критики"
+      }
+    },
+    {
+      "key": "other-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выступление против премии Осецкому",
+      "long": "Публично выступил против присуждения Нобелевской премии мира Карлу фон Осецкому; 33 писателя во главе с Сигрид Унсет возразили ему.",
+      "chapter": "marie-i-norholm",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I 1935 tok Hamsun, i likhet med større deler av den norske høyresiden for øvrig, offentlig avstand fra tildelingen av Nobels fredspris til den spiondømte tyske pasifisten Carl von Ossietzky."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Поддержка Германии при оккупации",
+      "long": "В оккупированной Норвегии писал статьи в поддержку Германии и призывал прекратить сопротивление. Ему было 80 лет, он почти оглох.",
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940 Hamsun wrote that \"the Germans are fighting for us\"."
+      }
+    },
+    {
+      "key": "illness-1942",
+      "date": {
+        "from": "1942-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Кровоизлияние в мозг",
+      "long": "Перенёс кровоизлияние в мозг; второе случилось весной 1944 года.",
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I april 1942 hadde han et tilfelle av hjerneblødning og et nytt våren 1944."
+      }
+    },
+    {
+      "key": "other-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Нобелевская медаль Геббельсу",
+      "long": "Отправил Геббельсу нобелевскую медаль в подарок.",
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году Гамсун передал свою медаль нобелевского лауреата министру пропаганды Третьего Рейха Геббельсу."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Встреча с Гитлером",
+      "long": "На встрече просил отстранить Тербовена и жаловался на положение в Норвегии; Гитлер прервал разговор раздражённым.",
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I juni 1943 fikk han møte Hitler."
+      }
+    },
+    {
+      "key": "other-1945",
+      "date": {
+        "from": "1945-05-07",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Некролог Гитлеру",
+      "long": "Опубликовал некролог, назвав Гитлера «борцом за человечество».",
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "Ved Hitlers død skrev Hamsun en nekrolog i Aftenposten 7. mai 1945"
+      }
+    },
+    {
+      "key": "persecution-1945",
+      "date": {
+        "from": "1945-06-13",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест по обвинению в измене",
+      "long": "Задержан по обвинению в государственной измене; затем содержался под домашним арестом, в больнице и доме престарелых.",
+      "place": {
+        "label": "Гримстад"
+      },
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 13 June 1945, after the war, he was detained by police for treason"
+      }
+    },
+    {
+      "key": "persecution-1945-2",
+      "date": {
+        "from": "1945-10",
+        "to": "1946-02",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Психиатрическая экспертиза в Осло",
+      "long": "Прошёл психиатрическую экспертизу; заключение — «стойко ослабленные душевные способности», уголовное дело прекращено.",
+      "place": {
+        "label": "Осло"
+      },
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "на период с октября 1945 г. по февраль 1946 г. был переведён в психиатрическую лечебницу профессора Габриеля Лангфельдта в Осло"
+      }
+    },
+    {
+      "key": "persecution-1947",
+      "date": {
+        "from": "1947-12-16",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Суд и разорительный штраф",
+      "long": "По гражданскому иску оштрафован на 425 тысяч крон, что привело к конфискации значительной части имущества. В 1948 году Верховный суд снизил сумму до 325 тысяч.",
+      "place": {
+        "label": "Гримстад"
+      },
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вплоть до самого суда, состоявшегося 16 декабря 1947 г."
+      }
+    },
+    {
+      "key": "creation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Последняя книга в доме престарелых",
+      "long": "Последнюю книгу писал в доме престарелых в Ландвике, почти глухим, с плохим зрением и дрожью в руках; в ней описал послевоенные события.",
+      "place": {
+        "label": "Ландвик"
+      },
+      "works": [
+        {
+          "ref": "on-overgrown-paths-1949",
+          "note": "книга написана в Ландвике, о послевоенном обращении с автором"
+        }
+      ],
+      "chapter": "voina-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote his last book Paa giengrodde Stier (On Overgrown Paths) in 1949."
+      }
+    },
+    {
+      "key": "relocation-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Нёрхольм",
+      "long": "Вернулся в Нёрхольм после лет в доме престарелых в Ландвике.",
+      "place": {
+        "label": "Нёрхольм"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Там же он проводит следующие три года после вынесения приговора и разоренный возвращается в Нёрхольм только весной 1950 года."
+      }
+    },
+    {
+      "key": "death-1952",
+      "date": {
+        "from": "1952-02-19",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нёрхольме",
+      "long": "Умер в Нёрхольме в возрасте 92 лет.",
+      "place": {
+        "label": "Нёрхольм, Гримстад"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кнут Гамсун скончался в ночь на вторник 19 февраля 1952 года в своей комнате в Нёрхольме в возрасте 92 лет."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hunger-1890",
+      "title": "Голод",
+      "qid": "Q1062365",
+      "written": {
+        "from": 1888,
+        "to": 1890
+      }
+    },
+    {
+      "ref": "mysteries-1892",
+      "title": "Мистерии",
+      "written": {
+        "from": 1892,
+        "to": 1892
+      }
+    },
+    {
+      "ref": "pan-1894",
+      "title": "Пан",
+      "written": {
+        "from": 1894,
+        "to": 1894
+      }
+    },
+    {
+      "ref": "victoria-1898",
+      "title": "Виктория",
+      "written": {
+        "from": 1898,
+        "to": 1898
+      }
+    },
+    {
+      "ref": "growth-of-the-soil-1917",
+      "title": "Плоды земли",
+      "qid": "Q2266122",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "on-overgrown-paths-1949",
+      "title": "На заросших тропинках",
+      "written": {
+        "from": 1948,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "i-aeventyrland-1903",
+      "title": "В сказочной стране",
+      "written": {
+        "from": 1900,
+        "to": 1903
+      }
+    },
+    {
+      "ref": "wild-choir-1904",
+      "title": "Дикий хор",
+      "written": {
+        "from": 1904,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "under-the-autumn-star-1906",
+      "title": "Под осенней звездой",
+      "written": {
+        "from": 1906,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "benoni-rosa-1908",
+      "title": "Бенони и Роза",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "children-of-the-age-1913",
+      "title": "Дети века",
+      "written": {
+        "from": 1913,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "women-at-the-well-1920",
+      "title": "Женщины у колодца",
+      "written": {
+        "from": 1920,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "the-last-chapter-1923",
+      "title": "Последняя глава",
+      "written": {
+        "from": 1923,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "vagabonds-1927",
+      "title": "Скитальцы",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    }
+  ]
+}

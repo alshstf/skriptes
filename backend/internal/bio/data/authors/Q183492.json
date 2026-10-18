@@ -1,0 +1,708 @@
+{
+  "qid": "Q183492",
+  "name": "Маргарет Этвуд",
+  "born": "1939-11-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D1%82%D0%B2%D1%83%D0%B4%2C_%D0%9C%D0%B0%D1%80%D0%B3%D0%B0%D1%80%D0%B5%D1%82",
+      "rev": 151108652
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Margaret_Atwood",
+      "rev": 1380294772
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-studies",
+      "title": "Оттава, Торонто, Гарвард",
+      "from": 1939,
+      "to": 1963
+    },
+    {
+      "key": "first-books",
+      "title": "Первые книги и первый брак",
+      "from": 1964,
+      "to": 1972
+    },
+    {
+      "key": "farm-years",
+      "title": "Ферма, Гибсон, возвращение в Торонто",
+      "from": 1973,
+      "to": 1984
+    },
+    {
+      "key": "handmaid-years",
+      "title": "Слава и общественный голос",
+      "from": 1985,
+      "to": 1999
+    },
+    {
+      "key": "booker-years",
+      "title": "Букер и спекулятивные миры",
+      "from": 2000,
+      "to": 2018
+    },
+    {
+      "key": "late-years",
+      "title": "Утрата и второй Букер",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1939",
+      "date": {
+        "from": "1939-11-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье энтомолога",
+      "long": "Родилась в Оттаве в семье энтомолога Карла Эдмунда Этвуда и диетолога Маргарет Дороти Килиам; из-за исследований отца детство прошло в разъездах между Оттавой, Торонто и Су-Сент-Мари.",
+      "place": {
+        "label": "Оттава"
+      },
+      "chapter": "childhood-studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась в Оттаве 18 ноября 1939 года, средняя из трёх дочерей энтомолога Карла Эдмунда Этвуда"
+      }
+    },
+    {
+      "key": "education-1957",
+      "date": {
+        "from": "1957",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Виктория-колледже Торонто",
+      "long": "Окончила школу в 1957 году и поступила в Виктория-колледж Университета Торонто, где печатала стихи и статьи в студенческом журнале; в 1961 году получила степень бакалавра английского языка с отличием.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "childhood-studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1957 году поступила в Виктория Колледж Университета Торонто"
+      }
+    },
+    {
+      "key": "creation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый сборник стихов и медаль Пратта",
+      "long": "Первый сборник стихов вышел в издательстве «Hawkshead Press» и был отмечен медалью Э. Дж. Пратта.",
+      "works": [
+        {
+          "ref": "double-persephone"
+        }
+      ],
+      "chapter": "childhood-studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году она получила медаль им. Эдвина Джона Пратта (EJ Pratt) за сборник стихов «Double Persephone»."
+      }
+    },
+    {
+      "key": "education-1961",
+      "date": {
+        "from": "1961",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Аспирантура в Рэдклиффе, Гарвард",
+      "long": "Получила степень магистра в Рэдклиффе в 1962 году и ещё два года занималась докторской работой, но диссертацию не закончила.",
+      "place": {
+        "label": "Кембридж, Массачусетс"
+      },
+      "chapter": "childhood-studies",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961, Atwood began graduate studies at Radcliffe College of Harvard University, with a Woodrow Wilson fellowship."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия генерал-губернатора за стихи",
+      "long": "Второй сборник стихов получил премию генерал-губернатора Канады — первое крупное признание.",
+      "works": [
+        {
+          "ref": "circle-game"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году вышел второй сборник, «The Circle Game» , который получил премию генерал-губернатора."
+      }
+    },
+    {
+      "key": "love-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джимом Полком",
+      "long": "Вышла замуж за американского писателя Джима Полка; брак распался в 1973 году.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Маргарет Этвуд вышла замуж за Джима Полка в 1968 году и развелась в 1973 году."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Утверждение в канадской литературе",
+      "long": "Роман и первая научная монография о канадской литературе утвердили Этвуд как заметный голос канадской словесности.",
+      "works": [
+        {
+          "ref": "surfacing"
+        },
+        {
+          "ref": "survival"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Surfacing, along with her first non-fiction monograph, Survival: A Thematic Guide to Canadian Literature (1972), helped establish Atwood as an important and emerging voice in Canadian literature."
+      }
+    },
+    {
+      "key": "love-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Союз с Грэмом Гибсоном, ферма в Онтарио",
+      "long": "После развода начались отношения с писателем Грэмом Гибсоном; вместе с ним и его двумя сыновьями Этвуд переехала на ферму близ Аллистона в Онтарио.",
+      "place": {
+        "label": "Аллистон"
+      },
+      "chapter": "farm-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "развелась в 1973 году. После у неё завязались отношения с романистом Грэмом Гибсоном."
+      }
+    },
+    {
+      "key": "child-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Элеоноры",
+      "long": "На ферме близ Аллистона родилась дочь Элеонора Джесс Этвуд Гибсон.",
+      "place": {
+        "label": "Аллистон"
+      },
+      "chapter": "farm-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году на ферме у них родился общий ребёнок Элеонора Джесс Этвуд Гибсон."
+      }
+    },
+    {
+      "key": "relocation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение семьи в Торонто",
+      "long": "Семья вернулась с фермы в Торонто.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "farm-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1980 году семья вернулась в Торонто."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981-06-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Компаньон ордена Канады",
+      "long": "Стала компаньоном ордена Канады.",
+      "chapter": "farm-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: компаньон ордена Канады 1981-06-22"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия генерал-губернатора за антиутопию",
+      "long": "Роман-антиутопия получил премию генерал-губернатора и стал самой известной книгой автора. По её словам, в книге нет ничего, чего кто-то где-то уже не делал.",
+      "works": [
+        {
+          "ref": "handmaids-tale",
+          "note": "автор об основе романа: в книге нет ничего, чего кто-то где-то уже не совершил (интервью)"
+        }
+      ],
+      "chapter": "handmaid-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году публикуется её роман «Рассказ служанки». Роман был удостоен Премии Генерал-губернатора 1985 года"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Артура Кларка",
+      "long": "Роман получил первую премию Артура Кларка.",
+      "works": [
+        {
+          "ref": "handmaids-tale"
+        }
+      ],
+      "chapter": "handmaid-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман был удостоен Премии Генерал-губернатора 1985 года и первой Премии Артура К. Кларка в 1987 году."
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выступление против торгового соглашения с США",
+      "long": "Во время споров о соглашении о свободной торговле между Канадой и США выступила против него и написала эссе.",
+      "chapter": "handmaid-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the debate in 1987 over a free-trade agreement between Canada and the United States, Atwood spoke out against the deal and wrote an essay opposing it."
+      }
+    },
+    {
+      "key": "loss-1993",
+      "date": {
+        "from": "1993-01-05",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, энтомолог Карл Эдмунд Этвуд (родился 19 июня 1906).",
+      "chapter": "handmaid-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Carl Edmund Atwood 1993-01-05"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Гиллера",
+      "long": "Исторический роман об убийстве 1843 года получил премию Гиллера и вошёл в финал Букеровской премии.",
+      "works": [
+        {
+          "ref": "alias-grace"
+        }
+      ],
+      "chapter": "handmaid-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Она же „Грейс“» (1996) стал лауреатом премии Гиллера"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая Букеровская премия",
+      "long": "Получила Букеровскую премию и премию Хаммета.",
+      "works": [
+        {
+          "ref": "blind-assassin"
+        }
+      ],
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году Этвуд получила Букеровскую премию и премию Хаммета за роман «Слепой убийца»."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Канадская Аллея славы",
+      "long": "Включена в Канадскую Аллею славы.",
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Atwood was inducted into Canada's Walk of Fame."
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Изобретение устройства LongPen",
+      "long": "Во время тура в Денвере придумала технологию дистанционной подписи книг LongPen и основала компанию для её разработки.",
+      "place": {
+        "label": "Денвер"
+      },
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early 2004, while on the paperback tour in Denver for her novel Oryx and Crake, Atwood conceived the concept of a remote robotic writing technology"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия принцессы Астурийской",
+      "long": "Получила премию принцессы Астурийской за литературу.",
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия принцессы Астурийской за литературу 2008-01-01"
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Дэна Дэвида вопреки призывам к бойкоту",
+      "long": "Приняла премию Дэна Дэвида в Тель-Авивском университете, несмотря на призывы к бойкоту.",
+      "place": {
+        "label": "Тель-Авив"
+      },
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Despite calls for a boycott by Gazan students, Atwood visited Israel and accepted the $1,000,000 Dan David Prize along with Indian author Amitav Ghosh at Tel Aviv University in May 2010."
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015-05-27",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Рукопись для «Библиотеки будущего»",
+      "long": "Первой передала рукопись проекту «Библиотека будущего»: текст будет храниться непрочитанным до 2114 года.",
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The work, completed in 2015, was ceremonially handed over to the project on May 27 of the same year."
+      }
+    },
+    {
+      "key": "persecution-2018",
+      "date": {
+        "from": "2018-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Критика за подпись под петицией",
+      "long": "Ответила статьёй на критику в соцсетях из-за подписи под петицией 2016 года о расследовании увольнения Стивена Гэллоуэя.",
+      "chapter": "booker-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2018, Atwood penned the op-ed \"Am I a Bad Feminist?\" for The Globe and Mail. The piece was in response to social media backlash related to Atwood's signature on a 2016 petition"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вторая Букеровская премия",
+      "long": "Продолжение «Рассказа служанки» разделило Букеровскую премию с другим романом.",
+      "works": [
+        {
+          "ref": "the-testaments"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The book was the joint winner of the 2019 Booker Prize."
+      }
+    },
+    {
+      "key": "loss-2019",
+      "date": {
+        "from": "2019-09-18",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Грэма Гибсона",
+      "long": "Умер Грэм Гибсон, с которым она прожила более сорока лет; позже она написала о нём стихотворение и эссе о горе.",
+      "works": [
+        {
+          "ref": "dearly",
+          "note": "о Гибсоне написаны стихотворение и эссе о горе (The Guardian, 2020)"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Atwood and Gibson were together until September 18, 2019, when Gibson died after suffering from dementia."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "double-persephone",
+      "title": "Double Persephone",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "circle-game",
+      "title": "The Circle Game",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "edible-woman",
+      "title": "Лакомый кусочек",
+      "qid": "Q7731579",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "surfacing",
+      "title": "Постижение",
+      "qid": "Q7646051",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "survival",
+      "title": "Survival: A Thematic Guide to Canadian Literature",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "lady-oracle",
+      "title": "Мадам Оракул",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "dancing-girls",
+      "title": "Dancing Girls \u0026 Other Stories",
+      "qid": "Q5215475",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "life-before-man",
+      "title": "Мужчина и женщина в эпоху динозавров",
+      "qid": "Q4886345",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "bodily-harm",
+      "title": "Телесные повреждения",
+      "qid": "Q4936612",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "handmaids-tale",
+      "title": "Рассказ служанки",
+      "qid": "Q1541914",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "cats-eye",
+      "title": "Кошачий глаз",
+      "qid": "Q1736876",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "robber-bride",
+      "title": "The Robber Bride",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "alias-grace",
+      "title": "Она же Грейс",
+      "qid": "Q3818322",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "blind-assassin",
+      "title": "Слепой убийца",
+      "qid": "Q1198405",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "oryx-and-crake",
+      "title": "Орикс и Коростель",
+      "qid": "Q2032398",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "year-of-the-flood",
+      "title": "Год потопа",
+      "qid": "Q4352956",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "maddaddam",
+      "title": "Беззумный Аддам",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "hag-seed",
+      "title": "Ведьмино отродье",
+      "qid": "Q26158076",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "the-testaments",
+      "title": "Заветы",
+      "qid": "Q60786692",
+      "written": {
+        "from": 2018,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "dearly",
+      "title": "Dearly",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    }
+  ]
+}

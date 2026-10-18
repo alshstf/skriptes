@@ -1,0 +1,609 @@
+{
+  "qid": "Q207640",
+  "name": "Роберт Ирвин Говард",
+  "born": "1906-01-22",
+  "died": "1936-06-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%BE%D0%B2%D0%B0%D1%80%D0%B4%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82_%D0%98%D1%80%D0%B2%D0%B8%D0%BD",
+      "rev": 155214579
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_E._Howard",
+      "rev": 1380130879
+    }
+  ],
+  "chapters": [
+    {
+      "key": "wandering-texas",
+      "title": "Кочевое детство в Техасе",
+      "from": 1906,
+      "to": 1922
+    },
+    {
+      "key": "pulp-apprentice",
+      "title": "Ученик журнальных pulp-изданий",
+      "from": 1923,
+      "to": 1929
+    },
+    {
+      "key": "lovecraft-circle",
+      "title": "Письма Лавкрафту и пикты",
+      "from": 1930,
+      "to": 1931
+    },
+    {
+      "key": "conan-years",
+      "title": "Конан и Хайборийская эра",
+      "from": 1932,
+      "to": 1934
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы и смерть",
+      "from": 1935,
+      "to": 1936
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1906",
+      "date": {
+        "from": "1906-01-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье сельского врача",
+      "long": "Родился в Пистере, Техас, единственным сыном сельского врача Айзека Говарда и Эстер Джейн Говард.",
+      "place": {
+        "label": "Пистер, Техас"
+      },
+      "chapter": "wandering-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Howard was born January 22, 1906, in Peaster, Texas"
+      }
+    },
+    {
+      "key": "relocation-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Кросс-Плейнс",
+      "long": "После десяти лет переездов по техасским городкам семья обосновалась в Кросс-Плейнсе, где Говард прожил до конца жизни.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "wandering-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1919, when Howard was thirteen, Dr. Howard moved his family to the Central Texas hamlet of Cross Plains, and there the family would stay for the rest of Howard's life."
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Нефтяной бум в Кросс-Плейнсе",
+      "long": "Нефтяной бум превратил Кросс-Плейнс в перенаселённый город; Говард ненавидел бум и приезжих, что повлияло на его взгляд на цивилизацию.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "wandering-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1920, the Vestal Well within the limits of Cross Plains struck oil causing the Cross Plains to become an oil boomtown."
+      }
+    },
+    {
+      "key": "education-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Последний школьный год в Браунвуде",
+      "long": "Последний год школы провёл в Браунвуде, где познакомился с ровесниками Тевисом Клайдом Смитом и Truett Vinson, разделявшими его интерес к литературе.",
+      "place": {
+        "label": "Браунвуд"
+      },
+      "chapter": "wandering-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the fall of 1922, when Howard was sixteen, he temporarily moved to a boarding house in the nearby city of Brownwood to complete his senior year of high school, accompanied by his mother."
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое напечатанное стихотворение",
+      "long": "Первая публикация — стихотворение, напечатанное в городской газете в 1923 году.",
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первой публикацией стало стихотворение «Море», напечатанное в одной из городских газет в 1923 году"
+      }
+    },
+    {
+      "key": "education-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Курс стенографии в колледже Говарда Пейна",
+      "long": "Поступил на курс стенографии в колледже Говарда Пейна; литературный курс, по версии биографа Марка Финна, отец оплачивать не стал.",
+      "place": {
+        "label": "Браунвуд"
+      },
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1924, Howard returned to Brownwood to take a stenography course at Howard Payne College"
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая продажа рассказа в Weird Tales",
+      "long": "После лет отказов продал журналу Weird Tales рассказ о пещерном человеке за 16 долларов; после этого оставил колледж и вернулся в Кросс-Плейнс.",
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published story was \"Spear and Fang\", sold in late November 1924"
+      }
+    },
+    {
+      "key": "education-1926",
+      "date": {
+        "from": "1926-08",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из аптеки, бухгалтерские курсы",
+      "long": "Бросил изнурительную работу в аптеке и вернулся в Браунвуд заканчивать бухгалтерские курсы; в те же недели начал рассказ, ставший первой историей о Куллле.",
+      "place": {
+        "label": "Браунвуд"
+      },
+      "works": [
+        {
+          "ref": "shadow-kingdom",
+          "note": "в августе 1926 начата работа над рассказом, переписанным в 1927"
+        }
+      ],
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1926, Howard quit his exhausting job at the drug store and, in September, returned to Brownwood to complete his bookkeeping course."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение домой ради писательства",
+      "long": "Вернулся в Кросс-Плейнс и посвятил себя писательству; позже, на рынках Fight Stories и Weird Tales, стал работать без постоянной службы.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1927 года Роберт вернулся в Кросс-Плейнс и начал основную свою деятельность на оставшуюся жизнь — писательство."
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Успех Соломона Кейна у читателей",
+      "long": "Рассказ «Red Shadows» открыл серию о пуританине Соломоне Кейне — первого героя Говарда, продержавшегося в печати дольше двух рассказов.",
+      "works": [
+        {
+          "ref": "solomon-kane-stories"
+        }
+      ],
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Appearing in the August 1928 issue of Weird Tales, the character was a big hit with readers"
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый настоящий успех: боксёрские рассказы",
+      "long": "Серия юмористических боксёрских рассказов о моряке Стиве Костигане стала первым настоящим успехом и дала второй стабильный рынок, кроме Weird Tales.",
+      "chapter": "pulp-apprentice",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Howard's first real success was the Sailor Steve Costigan series of humorous boxing stories, beginning with \"The Pit of the Serpent\" published in the July 1929 issue of the pulp magazine Fight Stories."
+      }
+    },
+    {
+      "key": "creation-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Кельтский период, вождь пиктов Бран Мак Морн",
+      "long": "На фоне интереса к кельтским темам и ирландским корням создал вождя пиктов Брана Мак Морна и написал о нём рассказы.",
+      "works": [
+        {
+          "ref": "kings-of-the-night"
+        },
+        {
+          "ref": "worms-of-the-earth"
+        }
+      ],
+      "chapter": "lovecraft-circle",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1930, with his interest in Solomon Kane dwindling and his Kull stories not catching on, Howard applied his new sword-and-sorcery and horror experience to one of his first loves: the Picts."
+      }
+    },
+    {
+      "key": "other-1930",
+      "date": {
+        "from": "1930-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Начало переписки с Лавкрафтом",
+      "long": "Письмо в Weird Tales переслали Лавкрафту; завязалась переписка, продолжавшаяся до смерти Говарда, и Говард вошёл в «круг Лавкрафта».",
+      "chapter": "lovecraft-circle",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1930 Howard wrote a letter to Weird Tales praising a recent reprint of H. P. Lovecraft's \"The Rats in the Walls\""
+      }
+    },
+    {
+      "key": "poverty-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Потеря сбережений при крахе банков",
+      "long": "Во время Великой депрессии сбережения Говарда пропали при банкротстве банка, затем и второго банка.",
+      "chapter": "lovecraft-circle",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Howard was further hit when his savings were wiped out in 1931 when the Farmer's National Bank failed"
+      }
+    },
+    {
+      "key": "creation-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Замысел Конана и Киммерии в поездке по Техасу",
+      "long": "Во время поездки по югу Техаса придумал страну Киммерию и замысел Конана; героя и мир Хайборийской эры он развивал последующие месяцы.",
+      "works": [
+        {
+          "ref": "conan-stories",
+          "note": "по письму К. Э. Смиту, Конан «вырос» в голове Говарда в пограничном городке на Рио-Гранде"
+        }
+      ],
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Early 1932 saw Howard taking one of his frequent trips around Texas…It was also during this trip that Howard first conceived of the character of Conan."
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое появление Конана в Weird Tales",
+      "long": "Конан впервые вышел к читателям в Weird Tales; к 1936 году журнал напечатал семнадцать конановских текстов.",
+      "works": [
+        {
+          "ref": "conan-stories"
+        }
+      ],
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Conan first appeared to the public in Weird Tales in December 1932 and was such a hit"
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературный агент Отис Клайн",
+      "long": "Литературный агент Отис Адельберт Клайн стал продавать его тексты на новые рынки и в других жанрах.",
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In spring 1933, Howard started to place work with Otis Adelbert Kline, a former pulp writer, as his agent."
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933-07",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Самая успешная при жизни серия: Брекенридж Элкинс",
+      "long": "Начата серия юмористических вестернов о Брекенридже Элкинсе — самая коммерчески успешная при жизни автора.",
+      "works": [
+        {
+          "ref": "breckinridge-elkins-stories"
+        }
+      ],
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The first of Howard's most commercially successful series (within his own lifetime) was started in July 1933."
+      }
+    },
+    {
+      "key": "poverty-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Долги Weird Tales, переход к вестернам",
+      "long": "Weird Tales задолжал ему более 1500 долларов; Говард перестал писать мистику и переключился на вестерны и другие жанры.",
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1934 some of the markets killed off by the Depression had come back, and Weird Tales was over $1500 behind on payments to Howard. The author therefore stopped writing weird fiction"
+      }
+    },
+    {
+      "key": "love-1934",
+      "date": {
+        "from": "1934",
+        "to": "1936",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с Новалин Прайс",
+      "long": "Отношения с учительницей Новалин Прайс, его единственной подругой; они то встречались, то расставались, обсуждая литературу и философию.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In late 1934, Price got a job as a schoolteacher in Cross Plains High School"
+      }
+    },
+    {
+      "key": "creation-1934",
+      "date": {
+        "from": "1934-03",
+        "to": "1934-05",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Два месяца над единственным романом о Конане",
+      "long": "Для британского издателя два месяца работал только над единственным конановским романом, около 5000 слов в день; издатель обанкротился, и книга вышла в журнале.",
+      "works": [
+        {
+          "ref": "hour-of-the-dragon",
+          "note": "черновик отправлен издателю Дениса Арчера 20 мая 1934, шесть-семь дней в неделю работы"
+        }
+      ],
+      "chapter": "conan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Howard sent his final draft to Denis Archer on May 20, 1934. He had worked exclusively on the novel for two months, writing approximately 5,000 words per day"
+      }
+    },
+    {
+      "key": "illness-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Последняя болезнь матери",
+      "long": "Мать, много лет болевшая туберкулёзом, умирала; уход и поездки по санаториям почти лишили Говарда возможности писать.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1936, almost all of Howard's fiction writing was being devoted to westerns…his mother was finally nearing death."
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936-05",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Отъезд Новалин Прайс",
+      "long": "Прайс уехала учиться в Луизианский университет; больше они не говорили и не писали друг другу.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until May 1936, when Price left Cross Plains to pursue a graduate degree at Louisiana State University."
+      }
+    },
+    {
+      "key": "death-1936",
+      "date": {
+        "from": "1936-06-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Самоубийство у постели умирающей матери",
+      "long": "Узнав от медсестры, что мать не придёт в сознание, вышел к машине и выстрелил себе в голову; умер через восемь часов.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On the morning of June 11, 1936, Howard asked one of his mother's nurses, a Mrs. Green, if his mother would ever regain consciousness."
+      }
+    },
+    {
+      "key": "loss-1936-2",
+      "date": {
+        "from": "1936-06-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери и общие похороны",
+      "long": "Эстер Говард умерла на следующий день; 14 июня 1936 года состоялись общие похороны матери и сына.",
+      "place": {
+        "label": "Кросс-Плейнс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his mother died the following day…On June 14, 1936, a double funeral service was held at Cross Plains First Baptist Church"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shadow-kingdom",
+      "title": "Королевство теней",
+      "written": {
+        "from": 1926,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "solomon-kane-stories",
+      "title": "Рассказы о Соломоне Кейне",
+      "written": {
+        "from": 1928,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "kings-of-the-night",
+      "title": "Короли ночи",
+      "qid": "Q130742212",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "worms-of-the-earth",
+      "title": "Черви земли",
+      "qid": "Q8036886",
+      "written": {
+        "from": 1930,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "conan-stories",
+      "title": "Цикл о Конане-киммерийце",
+      "written": {
+        "from": 1932,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "breckinridge-elkins-stories",
+      "title": "Рассказы о Брекенридже Элкинсе",
+      "written": {
+        "from": 1933,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "hour-of-the-dragon",
+      "title": "Час дракона",
+      "qid": "Q722594",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "pigeons-from-hell",
+      "title": "Голуби преисподней",
+      "qid": "Q7193357",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "red-nails",
+      "title": "Красные гвозди",
+      "written": {
+        "from": 1935,
+        "to": 1936
+      }
+    }
+  ]
+}

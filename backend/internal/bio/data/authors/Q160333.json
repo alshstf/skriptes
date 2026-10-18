@@ -1,0 +1,747 @@
+{
+  "qid": "Q160333",
+  "name": "Проспер Мериме",
+  "born": "1803-09-28",
+  "died": "1870-09-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%80%D0%B8%D0%BC%D0%B5%2C_%D0%9F%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D1%80",
+      "rev": 154144715
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Prosper_M%C3%A9rim%C3%A9e",
+      "rev": 1377406231
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Prosper_M%C3%A9rim%C3%A9e",
+      "rev": 239275678
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Лицей, право, салоны",
+      "from": 1803,
+      "to": 1824
+    },
+    {
+      "key": "mystifications",
+      "title": "Мистификации, новеллы и Испания",
+      "from": 1825,
+      "to": 1832
+    },
+    {
+      "key": "monuments",
+      "title": "Инспектор исторических памятников",
+      "from": 1833,
+      "to": 1851
+    },
+    {
+      "key": "court",
+      "title": "Сенатор и друг императрицы",
+      "from": 1852,
+      "to": 1860
+    },
+    {
+      "key": "last-years",
+      "title": "Кан и конец империи",
+      "from": 1861,
+      "to": 1870
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1803",
+      "date": {
+        "from": "1803-09-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье художников",
+      "long": "Родился в Париже в семье химика и живописца Жана Франсуа Леонора Мериме; мать, Анна-Луиза Моро, тоже была художницей.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Проспер Мериме родился 28 сентября 1803 в семье химика и живописца Жана Франсуа Леонора Мериме."
+      }
+    },
+    {
+      "key": "education-1820",
+      "date": {
+        "from": "1820",
+        "to": "1822",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Изучение права в Париже",
+      "long": "После лицея Генриха IV начал изучать право; в 1822 году сдал экзамены и получил право на практику, но главным его интересом оставалась литература.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He finished the Lycée with high marks in classical languages and in 1820 he began to study law, planning for a position in the royal administration."
+      }
+    },
+    {
+      "key": "love-1822",
+      "date": {
+        "from": "1822",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство со Стендалем",
+      "long": "В парижских салонах познакомился с Анри Бейлем (Стендалем), который был старше на двадцать лет и стал одним из его ближайших друзей.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1822, at the salons, he met Henri Beyle, twenty years older, who became one of his closest friends, and later became famous as a novelist under the pen name of Stendhal."
+      }
+    },
+    {
+      "key": "career-1825",
+      "date": {
+        "from": "1825-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех первой мистификации",
+      "long": "Прочёл новые сочинения в салоне Деклюза; сцены «Театра Клары Гасуль», выданные за пьесы испанской актрисы, имели успех и стали его первой публикацией.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "theatre-of-clara-gazul"
+        }
+      ],
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1825 he read his new works at the salon of Delécluze. The first two works were quickly forgotten, but the scenes of Clara Gazul had considerable success with his literary friends."
+      }
+    },
+    {
+      "key": "career-1827",
+      "date": {
+        "from": "1827-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Мистификация с балладами западных славян",
+      "long": "Опубликовал в журнале сборник мнимых иллирийских песен, приписанный вымышленному автору Гиацинту Маглановичу; книга не продавалась, но сделала его заметной фигурой в литературе.",
+      "works": [
+        {
+          "ref": "la-guzla"
+        }
+      ],
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1827 he published in a literary journal a new work, La Guzla."
+      }
+    },
+    {
+      "key": "other-1828",
+      "date": {
+        "from": "1828-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Ранение на дуэли с мужем любовницы",
+      "long": "В январе 1828 года был ранен на дуэли с Феликсом Лакостом, мужем своей тогдашней любовницы Эмили Лакост.",
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1828, during his youth, he was wounded in duel with Felix Lacoste, the husband of his mistress at the time, Émilie Lacoste."
+      }
+    },
+    {
+      "key": "creation-1829",
+      "date": {
+        "from": "1829",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Обращение к жанру новеллы",
+      "long": "После холодного приёма исторического романа обратился к новелле; в 1829–1834 годах написал тринадцать новелл, среди них «Маттео Фальконе» и «Таманго» с успехом в «Revue de Paris».",
+      "works": [
+        {
+          "ref": "mateo-falcone"
+        },
+        {
+          "ref": "tamango"
+        }
+      ],
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1829, Mérimée found a new literary genre that perfectly suited his talents; the nouvelle or novella, essentially a long short story or short novel."
+      }
+    },
+    {
+      "key": "relocation-1830",
+      "date": {
+        "from": "1830-06",
+        "to": "1831-01",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Путешествие по Испании, дружба с Монтихо",
+      "long": "Путешествие по Испании; в октябре 1830 года познакомился с графом и графиней де Монтихо и их дочерью Евгенией, будущей императрицей. Вернулся в Париж в январе 1831 года.",
+      "place": {
+        "label": "Испания"
+      },
+      "works": [
+        {
+          "ref": "carmen",
+          "note": "сюжет «Кармен» ему рассказала графиня де Монтихо (письма из Испании)"
+        }
+      ],
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1830 he traveled to Spain, which he explored at a leisurely pace, spending many hours in the Prado Museum in Madrid"
+      }
+    },
+    {
+      "key": "career-1832",
+      "date": {
+        "from": "1832",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Борьба с эпидемией холеры в Париже",
+      "long": "Служа в министерстве, руководил мерами против эпидемии холеры в Париже; в разгар эпидемии много времени проводил в больнице Отель-Дьё.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "mystifications",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "put in charge of organizing the response to the epidemic of cholera which struck Paris between 29 March and 1 October 1832"
+      }
+    },
+    {
+      "key": "love-1833",
+      "date": {
+        "from": "1833",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Короткая связь с Жорж Санд",
+      "long": "Недолгая связь с Жорж Санд закончилась ссорой; позднее они сотрудничали ради сохранения памятников, но отношения оставались натянутыми.",
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1833, he had a brief romantic liaison with the writer George Sand, which ended unhappily."
+      }
+    },
+    {
+      "key": "career-1833",
+      "date": {
+        "from": "1833-05-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Назначение главным инспектором памятников",
+      "long": "Тьер назначил его главным инспектором исторических памятников; на этом посту он пробыл двадцать семь лет и организовал охрану и реставрацию памятников по всей Франции.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 27 May 1833, Prime Minister Thiers named Mérimée inspector-general of historical monuments, with a salary of eight thousand francs a year, and all travel expenses paid."
+      }
+    },
+    {
+      "key": "career-1834",
+      "date": {
+        "from": "1834-07-31",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая инспекционная поездка",
+      "long": "Первая пятимесячная инспекционная поездка; тур в Руссильон дал побочный материал для новеллы о ожившей статуе Венеры.",
+      "works": [
+        {
+          "ref": "venus-of-ille",
+          "note": "новелла стала побочным продуктом инспекционной поездки 1834 года в Руссильон"
+        }
+      ],
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 31 July 1834, he set off on his first inspection tour of historic monuments, traveling for five months, describing and cataloging the monuments he saw."
+      }
+    },
+    {
+      "key": "love-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Роман с Валентиной Делессер",
+      "long": "Валентина Делессер, жена банкира и префекта, стала его возлюбленной; он называл её своей великой страстью. К 1846 году отношения охладели, примирение наступило в 1866-м.",
+      "place": {
+        "label": "Шартр"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she became his mistress in 1836, when he was visiting Chartres, where her husband had been named Prefect"
+      }
+    },
+    {
+      "key": "loss-1837",
+      "date": {
+        "from": "1837-09",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Жан Франсуа Леонор Мериме; с 1838 года писатель жил с матерью.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He lived with his mother and father in Paris until the death of his father in September 1837."
+      }
+    },
+    {
+      "key": "career-1840",
+      "date": {
+        "from": "1840",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый официальный список памятников",
+      "long": "Опубликовал первый официальный список исторических памятников Франции (934 позиции); к 1848 году он вырос до 2800.",
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1840 he published the first official List of Historic Monuments in France, with 934 entries."
+      }
+    },
+    {
+      "key": "relocation-1840",
+      "date": {
+        "from": "1840",
+        "to": "1841",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка по Италии, Греции и Малой Азии",
+      "long": "Длительная поездка по Италии, Греции и Малой Азии с осмотром археологических памятников.",
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1840–41, Mérimée made an extended tour of Italy, Greece and Asia Minor, visiting and writing about archaeological sites and ancient civilizations."
+      }
+    },
+    {
+      "key": "other-1841",
+      "date": {
+        "from": "1841",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Находка гобеленов «Дама и единорог»",
+      "long": "Вместе с Жорж Санд обнаружил в замке Буссак серию гобеленов «Дама и единорог» и добился их сохранения.",
+      "place": {
+        "label": "Буссак"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1841, during one of his inspection tours, he stayed at the Château of Boussac, Creuse in the Limousin district of central France, in the company of George Sand"
+      }
+    },
+    {
+      "key": "loss-1842",
+      "date": {
+        "from": "1842-03-23",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Стендаля",
+      "long": "Умер Стендаль, с которым Мериме связывала близкая дружба с 1822 года; смерть потрясла писателя.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The early death of Stendhal in Paris on 23 March 1842, shocked Mérimée."
+      }
+    },
+    {
+      "key": "career-1843",
+      "date": {
+        "from": "1843-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Академию надписей",
+      "long": "Избран в Академию надписей и изящной словесности за археологические труды.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He first campaigned methodically for election to the French Academy of Inscriptions and Belles-Lettres, the highest academic body, which he finally attained in November 1843."
+      }
+    },
+    {
+      "key": "career-1844",
+      "date": {
+        "from": "1844-03-14",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание во Французскую академию",
+      "long": "Избран во Французскую академию на семнадцатом туре голосования, после методичной кампании среди академиков.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was finally elected on 14 March 1844, on the seventeenth round of voting."
+      }
+    },
+    {
+      "key": "education-1849",
+      "date": {
+        "from": "1849",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Русский язык и переводы Пушкина",
+      "long": "Выучив русский язык, чтобы читать Пушкина и Гоголя в оригинале, перевёл «Пиковую даму»; затем переводил Гоголя и писал о русской истории и литературе.",
+      "chapter": "monuments",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он был большим почитателем Пушкина, в 1849 году перевёл его «Пиковую даму»."
+      }
+    },
+    {
+      "key": "other-1850",
+      "date": {
+        "from": "1850",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг брошюры о Стендале",
+      "long": "Брошюра о романтических похождениях Стендаля и автора вызвала скандал: друзья Стендаля обвинили Мериме в кощунстве.",
+      "chapter": "monuments",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1850, eight years after the death of Stendhal, Mérimée wrote a brief brochure of sixteen pages"
+      }
+    },
+    {
+      "key": "loss-1852",
+      "date": {
+        "from": "1852-04-30",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, жившая вместе с ним и очень близкая ему.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "court",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 30 April 1852, his mother, who lived with him and was very close to him, died."
+      }
+    },
+    {
+      "key": "persecution-1852",
+      "date": {
+        "from": "1852-07-04",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Тюремное заключение по делу Либри",
+      "long": "За защиту друга графа Либри, обвинённого в краже рукописей, приговорён к пятнадцати дням тюрьмы и штрафу в тысячу франков; отбывал наказание в Консьержери.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "court",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Ayant pris fait et cause pour son ami le comte Libri, inculpé pour vols d'ouvrages précieux appartenant à l'État, Mérimée est condamné à quinze jours de prison et à mille francs d’amende. Il est écroué le 4 juillet 1852 à la Conciergerie."
+      }
+    },
+    {
+      "key": "career-1853",
+      "date": {
+        "from": "1853",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание сенатора, близость ко двору",
+      "long": "После брака Евгении де Монтихо с Наполеоном III стал сенатором Второй империи и доверенным лицом императрицы при дворе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "court",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1853 г. Мериме был возведён в звание сенатора и пользовался полным доверием и личной дружбой Наполеона III."
+      }
+    },
+    {
+      "key": "other-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Знаменитый диктант для двора",
+      "long": "Для развлечения императорского двора составил знаменитый диктант.",
+      "chapter": "court",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "C'est pour distraire la cour impériale qu'il met au point en 1857 sa célèbre dictée."
+      }
+    },
+    {
+      "key": "career-1860",
+      "date": {
+        "from": "1860",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход с поста инспектора памятников",
+      "long": "Оставил пост главного инспектора, сохранив членство в Комиссии исторических памятников; преемником стал Эмиль Босвильвальд.",
+      "chapter": "court",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Prosper Mérimée quitte son poste d'inspecteur général en 1860, tout en demeurant membre de la Commission des monuments historiques."
+      }
+    },
+    {
+      "key": "career-1865",
+      "date": {
+        "from": "1865-03-10",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Книга о Цезаре под именем императора",
+      "long": "Задуманную им биографию Цезаря император взял на себя, получив все материалы Мериме; книга вышла под именем Наполеона III.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The History of Julius Caesar was published on 10 March 1865, under the name of Napoleon III, and sold one hundred forty thousand copies on the first day."
+      }
+    },
+    {
+      "key": "love-1866",
+      "date": {
+        "from": "1866",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Примирение с Валентиной Делессер",
+      "long": "Примирение с Валентиной Делессер после многих лет охлаждения.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "One consolation for Mérimée in his last years was a reconciliation with Delessert in 1866."
+      }
+    },
+    {
+      "key": "illness-1867",
+      "date": {
+        "from": "1867",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Болезнь дыхательных путей, жизнь в Каннах",
+      "long": "Устав от придворной жизни, перестал участвовать в поездках двора; из-за болезни дыхательных путей всё больше времени проводил в Каннах.",
+      "place": {
+        "label": "Канны"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1867, he was exhausted by the endless ceremonies and travels of the court, and thereafter he rarely participated in the imperial tours. He developed serious respiratory problems"
+      }
+    },
+    {
+      "key": "creation-1869",
+      "date": {
+        "from": "1869-07",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Чтение новеллы при дворе",
+      "long": "Прочёл при дворе новеллу, написанную для развлечения императрицы; сюжет шокировал публику.",
+      "works": [
+        {
+          "ref": "lokis",
+          "note": "новелла написана для развлечения императрицы Евгении"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he read it aloud to the court in July 1869, but the subject matter shocked the court, and the children were sent from the room."
+      }
+    },
+    {
+      "key": "death-1870",
+      "date": {
+        "from": "1870-09-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Каннах",
+      "long": "Умер в Каннах за пять дней до 67-летия, через три недели после падения империи; похоронен на кладбище Гран-Жа.",
+      "place": {
+        "label": "Канны"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died there on 23 September 1870, five days before his 67th birthday."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "theatre-of-clara-gazul",
+      "title": "Театр Клары Гасуль",
+      "written": {
+        "from": 1823,
+        "to": 1825
+      }
+    },
+    {
+      "ref": "la-guzla",
+      "title": "Гузла",
+      "written": {
+        "from": 1827,
+        "to": 1827
+      }
+    },
+    {
+      "ref": "la-jacquerie",
+      "title": "Жакерия",
+      "written": {
+        "from": 1828,
+        "to": 1828
+      }
+    },
+    {
+      "ref": "chronicle-of-the-reign-of-charles-ix",
+      "title": "Хроника царствования Карла IX",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "mateo-falcone",
+      "title": "Маттео Фальконе",
+      "qid": "Q653141",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "tamango",
+      "title": "Таманго",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "venus-of-ille",
+      "title": "Венера Илльская",
+      "qid": "Q3213955",
+      "written": {
+        "from": 1837,
+        "to": 1837
+      }
+    },
+    {
+      "ref": "colomba",
+      "title": "Коломба",
+      "written": {
+        "from": 1840,
+        "to": 1840
+      }
+    },
+    {
+      "ref": "carmen",
+      "title": "Кармен",
+      "qid": "Q674832",
+      "written": {
+        "from": 1845,
+        "to": 1845
+      }
+    },
+    {
+      "ref": "lokis",
+      "title": "Локис",
+      "written": {
+        "from": 1869,
+        "to": 1869
+      }
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "qid": "Q182870",
+  "name": "Марио Пьюзо",
+  "born": "1920-10-15",
+  "died": "1999-07-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%8C%D1%8E%D0%B7%D0%BE%2C_%D0%9C%D0%B0%D1%80%D0%B8%D0%BE",
+      "rev": 153280082
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mario_Puzo",
+      "rev": 1380041618
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-semya",
+      "title": "Нью-Йорк, война, семья",
+      "from": 1920,
+      "to": 1949
+    },
+    {
+      "key": "zhurnaly-i-dolgi",
+      "title": "Журналы, долги, первые книги",
+      "from": 1950,
+      "to": 1968
+    },
+    {
+      "key": "krestnyj-otec",
+      "title": "Успех и Голливуд",
+      "from": 1969,
+      "to": 1977
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Последние два десятилетия",
+      "from": 1978,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1920",
+      "date": {
+        "from": "1920-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье итальянских иммигрантов",
+      "long": "Родился в районе Адская кухня на Манхэттене в семье иммигрантов из провинции Авеллино.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mario Francis Puzo was born in the Hell's Kitchen neighborhood of Manhattan in New York City on October 15, 1920"
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эрикой Брозке",
+      "long": "Женился на немке Эрике Лине Брозке; в браке родились пятеро детей.",
+      "chapter": "detstvo-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Puzo married a German woman, Erika Lina Broske, in 1946, and they had five children."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "Первый рассказ вышел в журнале American Vanguard, в 1953 году был перепечатан в антологии.",
+      "chapter": "zhurnaly-i-dolgi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, Puzo's first short story, \"The Last Christmas,\" was published in American Vanguard"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Помощник редактора мужских журналов",
+      "long": "Брюс Джей Фридман нанял Пьюзо помощником редактора группы мужских pulp-журналов; под псевдонимом Марио Клери он писал военные истории.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "zhurnaly-i-dolgi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1960, Bruce Jay Friedman hired Puzo as an assistant editor of a group of men's pulp magazines"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональной литературной работе",
+      "long": "После двадцати лет службы в госучреждениях начал работать внештатным журналистом и стал профессиональным литератором.",
+      "chapter": "zhurnaly-i-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1963 года он начал работать внештатным журналистом и стал профессиональным литератором."
+      }
+    },
+    {
+      "key": "poverty-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Опцион Paramount при острой нужде в деньгах",
+      "long": "Paramount предложила опцион в 12 500 долларов на неоконченную рукопись; Пьюзо, нуждавшийся в деньгах, согласился (по версии Роберта Эванса, ради оплаты игорных долгов).",
+      "works": [
+        {
+          "ref": "the-godfather",
+          "note": "Опцион куплен на шестьдесят страниц неоконченной рукописи романа."
+        }
+      ],
+      "chapter": "zhurnaly-i-dolgi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Paramount Pictures originally found out about Puzo's novel in 1967… Puzo was desperate for money and accepted the deal."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех и статус бестселлера",
+      "long": "Роман продержался в списке бестселлеров New York Times 67 недель и разошёлся тиражом свыше девяти миллионов за два года.",
+      "works": [
+        {
+          "ref": "the-godfather"
+        }
+      ],
+      "chapter": "krestnyj-otec",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1969, Puzo's best-known work, The Godfather, was published."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973-03-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Оскар» за адаптированный сценарий",
+      "long": "Получил премию «Оскар» за лучший адаптированный сценарий первого фильма по собственному роману, поставленного Копполой.",
+      "works": [
+        {
+          "ref": "the-godfather"
+        }
+      ],
+      "chapter": "krestnyj-otec",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Оскар» за лучший адаптированный сценарий 1973-03-27"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975-04-08",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второй «Оскар» за сценарий продолжения",
+      "long": "Вторую премию «Оскар» за адаптированный сценарий получил за вторую часть саги.",
+      "chapter": "krestnyj-otec",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Оскар» за лучший адаптированный сценарий 1975-04-08"
+      }
+    },
+    {
+      "key": "loss-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Эрики от рака груди",
+      "long": "Эрика Брозке умерла от рака груди в возрасте 57 лет.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When Broske died of breast cancer at the age of 57 in 1978, her nurse, Carol Gino, became Puzo's companion."
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Кэрол Джино становится спутницей жизни",
+      "long": "Медсестра, ухаживавшая за женой, Кэрол Джино стала компаньонкой писателя; позднее она завершила его последний роман.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When Broske died of breast cancer at the age of 57 in 1978, her nurse, Carol Gino, became Puzo's companion."
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-07-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечной недостаточности",
+      "long": "Умер в собственном доме в Уэст-Бэй-Шоре на Лонг-Айленде.",
+      "place": {
+        "label": "Уэст-Бэй-Шор"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Puzo died of heart failure on July 2, 1999, at his home in West Bay Shore, New York"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-dark-arena",
+      "title": "Арена мрака",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "the-fortunate-pilgrim",
+      "title": "Счастливая странница",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "the-godfather",
+      "title": "Крёстный отец",
+      "qid": "Q243556",
+      "written": {
+        "from": 1967,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "six-graves-to-munich",
+      "title": "Шесть могил под Мюнхеном",
+      "written": {
+        "from": 1965,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-fourth-k",
+      "title": "Четвёртый К",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    }
+  ]
+}

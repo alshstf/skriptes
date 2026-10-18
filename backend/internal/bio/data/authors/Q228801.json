@@ -1,0 +1,346 @@
+{
+  "qid": "Q228801",
+  "name": "Колин Маккалоу",
+  "born": "1937-06-01",
+  "died": "2015-01-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D0%BA%D0%B0%D0%BB%D0%BE%D1%83%2C_%D0%9A%D0%BE%D0%BB%D0%B8%D0%BD",
+      "rev": 151438035
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Colleen_McCullough",
+      "rev": 1379856969
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-study",
+      "title": "Дорога к медицине",
+      "from": 1937,
+      "to": 1962
+    },
+    {
+      "key": "london-yale",
+      "title": "Лондон и Йель",
+      "from": 1963,
+      "to": 1976
+    },
+    {
+      "key": "fame-island",
+      "title": "Слава и остров",
+      "from": 1977,
+      "to": 1999
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 2000,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-06-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Веллингтоне, Новый Южный Уэльс",
+      "long": "Родилась в семье Джеймса и Лоры Маккалоу; мать была новозеландкой с предками-маори. Семья часто переезжала и осела в Сиднее.",
+      "place": {
+        "label": "Веллингтон"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Колин Маккалоу родилась 1 июня 1937 года в городе Веллингтон"
+      }
+    },
+    {
+      "key": "relocation-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Лондон",
+      "long": "В 1963 году переехала в Лондон; там работала в детской больнице на Грейт-Ормонд-стрит.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-yale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1963 году Колин Маккалоу переехала в Лондон."
+      }
+    },
+    {
+      "key": "loss-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель младшего брата Карла",
+      "long": "Брат Карл, с которым она была близка, утонул в 25 лет у берегов Крита, спасая купальщиков. Смерть признали несчастным случаем; Маккалоу считала её самоубийством.",
+      "chapter": "london-yale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carl drowned at the age of 25 in 1965 after rescuing a pair of swimmers off the coast of Crete"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в Йельской медицинской школе",
+      "long": "В 1967–1976 годах вела научную и преподавательскую работу в отделении нейробиологии Йеля. В этот период обратилась к литературе и решила посвятить себя писательству.",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "works": [
+        {
+          "ref": "tim",
+          "note": "первые романы написаны в этот период"
+        },
+        {
+          "ref": "thorn-birds",
+          "note": "первые романы написаны в этот период"
+        }
+      ],
+      "chapter": "london-yale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1967 по 1976 год Макаллоу занималась научной и преподавательской деятельностью в отделении нейробиологии Йельской медицинской школы"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех и рекордная сделка на права",
+      "long": "Права на издание «Поющих в терновнике» в мягкой обложке проданы на аукционе за рекордные 1,9 млн долларов; книга стала международным бестселлером.",
+      "works": [
+        {
+          "ref": "thorn-birds"
+        }
+      ],
+      "chapter": "fame-island",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The paperback rights to the novel were sold at auction to Avon Books for a record-setting US$1.9 million (equivalent to $10,090,000 in 2025) in 1977."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Телесериал по первому бестселлеру",
+      "long": "В 1983 году вышла телеэкранизация с Ричардом Чемберленом; Маккалоу резко отзывалась о ней и отказалась писать продолжение романа.",
+      "works": [
+        {
+          "ref": "thorn-birds"
+        }
+      ],
+      "chapter": "fame-island",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was adapted into a successful television miniseries starring Richard Chamberlain and Rachel Ward in 1983"
+      }
+    },
+    {
+      "key": "love-1984",
+      "date": {
+        "from": "1984-04-13",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Риком Робинсоном",
+      "long": "Вышла замуж за Рика Робинсона, потомка участников мятежа на «Баунти», 13 апреля 1984 года; жила на острове Норфолк.",
+      "place": {
+        "label": "Остров Норфолк"
+      },
+      "chapter": "fame-island",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She married Ric Robinson, who was descended from Bounty mutineers, on 13 April 1984."
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Обвинение в плагиате",
+      "long": "После выхода «Леди из Миссалонги» её обвинили в сходстве с романом Л. М. Монтгомери «Голубой замок»; она отрицала плагиат, объясняя сходство подсознательным воспоминанием.",
+      "works": [
+        {
+          "ref": "ladies-of-missalonghi"
+        }
+      ],
+      "chapter": "fame-island",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, McCullough published a short romance novel titled The Ladies of Missalonghi. McCullough was accused of plagiarism"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Живое национальное сокровище Австралии»",
+      "long": "В 1997 году включена в число 100 «Живых национальных сокровищ Австралии».",
+      "chapter": "fame-island",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was named one of Australia's 100 National Living Treasures in 1997"
+      }
+    },
+    {
+      "key": "other-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал из-за слов о суде над питкэрнцами",
+      "long": "В 2004 году вызвала споры, раскритиковав осуждение мужчин с острова Питкэрн за сексуальные преступления против детей.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She sparked controversy in 2004 after criticising the conviction of Pitcairn Islands men for child sexual abuse"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-06-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Офицер ордена Австралии",
+      "long": "В 2006 году назначена офицером ордена Австралии.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was appointed an Officer of the Order of Australia in 2006"
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-01-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть на острове Норфолк",
+      "long": "Умерла от почечной недостаточности после ряда инсультов; страдала также от макулярной дегенерации, диабета и других болезней.",
+      "place": {
+        "label": "Остров Норфолк"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Колин Маккалоу умерла 29 января 2015 года от почечной недостаточности"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tim",
+      "title": "Тим",
+      "written": {
+        "from": 1967,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "thorn-birds",
+      "title": "Поющие в терновнике",
+      "qid": "Q606465",
+      "written": {
+        "from": 1967,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "indecent-obsession",
+      "title": "Непристойная страсть",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "ladies-of-missalonghi",
+      "title": "Леди из Миссалонги",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "first-man-in-rome",
+      "title": "Первый человек в Риме",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "antony-and-cleopatra",
+      "title": "Антоний и Клеопатра",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "independence-of-miss-mary-bennet",
+      "title": "Независимость мисс Мэри Беннет",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "bittersweet",
+      "title": "Горькая радость",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

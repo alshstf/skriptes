@@ -1,0 +1,810 @@
+{
+  "qid": "Q6882",
+  "name": "Джеймс Джойс",
+  "born": "1882-02-02",
+  "died": "1941-01-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%BE%D0%B9%D1%81%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 154906404
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Joyce",
+      "rev": 1380723101
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dublin",
+      "title": "Дублин, иезуиты, нищета",
+      "from": 1882,
+      "to": 1903
+    },
+    {
+      "key": "exile-trieste",
+      "title": "Нора, Триест, Дублинцы",
+      "from": 1904,
+      "to": 1914
+    },
+    {
+      "key": "zurich",
+      "title": "Война и Цюрих",
+      "from": 1915,
+      "to": 1919
+    },
+    {
+      "key": "paris",
+      "title": "Париж, Улисс, Поминки",
+      "from": 1920,
+      "to": 1939
+    },
+    {
+      "key": "last-zurich",
+      "title": "Последнее возвращение в Цюрих",
+      "from": 1940,
+      "to": 1941
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1882",
+      "date": {
+        "from": "1882-02-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ратгаре, пригороде Дублина",
+      "long": "Старший из десяти выживших детей Джона Станисласа и Мэри Джейн Джойс.",
+      "place": {
+        "label": "Ратгар, Дублин"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce was born on 2 February 1882 at 41 Brighton Square, Rathgar, Dublin, Ireland"
+      }
+    },
+    {
+      "key": "education-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Иезуитский интернат Клонгоуз Вудс",
+      "long": "Начало учёбы в иезуитском интернате Клонгоуз Вудс в графстве Килдэр.",
+      "place": {
+        "label": "Клейн"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce began his education in 1888 at Clongowes Wood College, a Jesuit boarding school near Clane, County Kildare"
+      }
+    },
+    {
+      "key": "poverty-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение отца, уход из Клонгоуза",
+      "long": "Имя отца попало в список должников, семья начала беднеть; Джеймсу пришлось уйти из Клонгоуза, так как платить за учёбу стало нечем.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John Joyce's name was published in Stubbs' Gazette, a blacklist of debtors and bankrupts, in November 1891… but had to leave in 1891 when his father could no longer pay the fees"
+      }
+    },
+    {
+      "key": "education-1893",
+      "date": {
+        "from": "1893",
+        "to": "1898",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Колледж Бельведер на льготных условиях",
+      "long": "Священник Джон Конми устроил братьев Джойс в иезуитский колледж Бельведер без платы; Джеймс окончил его в 1898 году.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Conmee arranged for Joyce and his brother Stanislaus to attend the Jesuits' Dublin school, Belvedere College, without fees starting in 1893."
+      }
+    },
+    {
+      "key": "education-1898",
+      "date": {
+        "from": "1898",
+        "to": "1902",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Университетский колледж Дублина",
+      "long": "Изучал английский, французский и итальянский языки; окончил университет в 1902 году.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce enrolled at University College in 1898 to study English, French and Italian."
+      }
+    },
+    {
+      "key": "career-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация — рецензия на Ибсена",
+      "long": "В журнале The Fortnightly Review вышла его рецензия на пьесу Ибсена «Когда мы, мёртвые, пробуждаемся».",
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first publication—a laudatory review of Henrik Ibsen's When We Dead Awaken—was printed in The Fortnightly Review in 1900."
+      }
+    },
+    {
+      "key": "relocation-1902",
+      "date": {
+        "from": "1902",
+        "to": "1903",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Первая поездка в Париж, отказ от медицины",
+      "long": "После университета уехал в Париж изучать медицину, к концу января 1903 года оставил эти планы, но остался в городе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By the end of January 1903 he had given up plans to study medicine, but he stayed in Paris"
+      }
+    },
+    {
+      "key": "loss-1903",
+      "date": {
+        "from": "1903-08-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Вернувшись из Парижа, ухаживал за больной матерью; она отказалась исповедоваться вопреки настояниям. После её смерти семья начала распадаться.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "stephen-hero",
+          "note": "во время болезни матери читал ей вслух черновики, вошедшие в «Героя Стивена»"
+        }
+      ],
+      "chapter": "dublin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1903, Joyce learned his mother was dying and immediately returned to Ireland… She died on 13 August."
+      }
+    },
+    {
+      "key": "other-1904",
+      "date": {
+        "from": "1904-05-08",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Музыкальный конкурс Feis Ceoil",
+      "long": "Выступил на музыкальном конкурсе Feis Ceoil как тенор и получил медаль за третье место, но певческой карьеры не продолжил.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 8 May 1904, he was a contestant in the Feis Ceoil, an Irish music competition for promising composers, instrumentalists and singers."
+      }
+    },
+    {
+      "key": "love-1904",
+      "date": {
+        "from": "1904-06-10",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Норой Барнакл",
+      "long": "Познакомился с горничной Норой Барнакл; первая прогулка 16 июня 1904 года стала датой действия «Улисса». Отношения продолжались до смерти писателя.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "ulysses",
+          "note": "день первой прогулки, 16 июня 1904 года, выбран датой действия романа"
+        }
+      ],
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce's life began to change when he met Nora Barnacle on 10 June 1904."
+      }
+    },
+    {
+      "key": "other-1904-2",
+      "date": {
+        "from": "1904-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Неделя в башне Мартелло у Гогарти",
+      "long": "Поселился в башне Мартелло, которую снимал Оливер Сент-Джон Гогарти; через неделю съехал после ночной стрельбы из пистолета над его кроватью.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1904, Joyce was having difficulties finding a place to live and moved into a Martello tower near Dublin, which Gogarty was renting."
+      }
+    },
+    {
+      "key": "relocation-1904",
+      "date": {
+        "from": "1904-10",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Добровольное изгнание с Норой",
+      "long": "На деньги знакомых покинул Ирландию вместе с Норой; через Лондон и Париж добрались до Цюриха, затем Джойс получил место в школе Берлица в Поле.",
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1904, Joyce and Nora went into self-imposed exile."
+      }
+    },
+    {
+      "key": "relocation-1905",
+      "date": {
+        "from": "1905-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Триест, уроки английского",
+      "long": "Из Полы перебрался в Триест и преподавал английский в школе Берлица; Триест оставался главным местом жительства до 1920 года.",
+      "place": {
+        "label": "Триест"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce moved to Trieste in March 1905 aged 23. He taught English at the Berlitz school."
+      }
+    },
+    {
+      "key": "child-1905",
+      "date": {
+        "from": "1905-07-27",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джорджо",
+      "long": "Родился сын Джорджо; вскоре в Триест переехал брат Станислаус, чьё жалованье шло на содержание семьи.",
+      "place": {
+        "label": "Триест"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Nora gave birth to their first child, Giorgio, on 27 July 1905"
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906-07",
+        "to": "1907-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в римском банке",
+      "long": "Работал корреспондентом в римском банке; уехал спустя семь месяцев. Здесь возникли замыслы рассказа «Мёртвые» и «Улисса».",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "dubliners",
+          "note": "в Риме родилась идея «Мёртвых», заключительного рассказа сборника"
+        },
+        {
+          "ref": "ulysses",
+          "note": "в Риме «Улисс» был задуман как рассказ"
+        }
+      ],
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In late May 1906, the head of the Berlitz school ran away after embezzling its funds… He was hired for the position and went to Rome at the end of July."
+      }
+    },
+    {
+      "key": "illness-1907",
+      "date": {
+        "from": "1907-05",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Ревматическая лихорадка, проблемы со зрением",
+      "long": "Ревматическая лихорадка на недели лишила его работоспособности и обострила проблемы со зрением, преследовавшие его всю жизнь.",
+      "place": {
+        "label": "Триест"
+      },
+      "works": [
+        {
+          "ref": "dubliners",
+          "note": "во время выздоровления закончил «Мёртвых»"
+        }
+      ],
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce returned to Trieste in March 1907… In May, Joyce was struck by an attack of rheumatic fever, which left him incapacitated for weeks."
+      }
+    },
+    {
+      "key": "child-1907",
+      "date": {
+        "from": "1907-07-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Лючии",
+      "long": "Родилась дочь Лючия — в то время, когда отец ещё оправлялся от болезни.",
+      "place": {
+        "label": "Триест"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lucia was born on 26 July 1907."
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый кинотеатр Ирландии «Вольта»",
+      "long": "С поддержкой триестинских бизнесменов открыл в Дублине первый в Ирландии кинотеатр «Вольта»; после его отъезда дело распалось.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1909, Joyce received a year's advance payment from one of his students and returned to Ireland… returned to Dublin in October, launching Ireland's first cinema, the Volta Cinematograph."
+      }
+    },
+    {
+      "key": "persecution-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отказ дублинского издателя, уничтожение набора",
+      "long": "Издатель Робертс отказался печатать «Дублинцев» из-за риска иска о клевете и уничтожил набор. Больше Джойс в Дублин не возвращался.",
+      "place": {
+        "label": "Дублин"
+      },
+      "works": [
+        {
+          "ref": "dubliners"
+        }
+      ],
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In mid-1912, Joyce and his family returned to Dublin briefly. While there, his three-year struggle with Roberts over the publication of Dubliners ended as Roberts refused to publish it due to concerns of libel."
+      }
+    },
+    {
+      "key": "career-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Согласие Ричардса, поддержка Паунда",
+      "long": "Издатель Грант Ричардс согласился печатать «Дублинцев»; в те же годы Эзра Паунд стал продвигать сочинения Джойса.",
+      "works": [
+        {
+          "ref": "dubliners"
+        }
+      ],
+      "chapter": "exile-trieste",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce's fortunes changed for the better in 1913 when Richards agreed to publish Dubliners."
+      }
+    },
+    {
+      "key": "poverty-1915",
+      "date": {
+        "from": "1915",
+        "to": "1916",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Стипендии и пожертвования покровителей",
+      "long": "Паунд и Йейтс добились для него выплат от Королевского литературного фонда и гранта из гражданского списка; позже Харриет Шоу Уивер поддерживала его до конца жизни.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "chapter": "zurich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pound and Yeats worked with the British government to provide a stipend from the Royal Literary Fund in 1915 and a grant from the British civil list the following year."
+      }
+    },
+    {
+      "key": "war-1915",
+      "date": {
+        "from": "1915-06",
+        "to": "1919-10",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Военные годы в нейтральной Швейцарии",
+      "long": "Британский подданный в Австро-Венгрии, оставил в Триесте почти всё имущество. В Цюрихе жил на стипендии и пожертвования, работал над «Улиссом»; в октябре 1919 года семья вернулась в Триест.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "works": [
+        {
+          "ref": "ulysses",
+          "note": "основная часть работы над романом пришлась на цюрихские годы"
+        }
+      ],
+      "chapter": "zurich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1915, Italy declared war on Austria-Hungary, and less than a month later Joyce took his family to Zurich in neutral Switzerland."
+      }
+    },
+    {
+      "key": "relocation-1919",
+      "date": {
+        "from": "1919-10",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в послевоенный Триест",
+      "long": "После войны Цюрих стал дорог, выплаты прекратились; семья вернулась в Триест, ставший итальянским городом.",
+      "place": {
+        "label": "Триест"
+      },
+      "chapter": "zurich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1919, Joyce's family moved back to Trieste, but it had changed."
+      }
+    },
+    {
+      "key": "relocation-1920",
+      "date": {
+        "from": "1920-06",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж",
+      "long": "По договорённости с Паундом семья отправилась в Париж; задуманный как остановка по пути в Лондон, город стал их домом на двадцать лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce and his family packed their belongings and headed for Paris in June 1920."
+      }
+    },
+    {
+      "key": "persecution-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет романа в Великобритании",
+      "long": "Роман запретили в Великобритании; экземпляры контрабандой ввозили в страны, а в США легально книга вышла только после судебного решения 1934 года.",
+      "works": [
+        {
+          "ref": "ulysses"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the novel was banned for obscenity in the United Kingdom in 1922, where it was blacklisted until 1936."
+      }
+    },
+    {
+      "key": "creation-1923",
+      "date": {
+        "from": "1923-03-10",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало шестнадцатилетней работы над новым романом",
+      "long": "Начал экспериментальный роман, шестнадцать лет работал над ним в Париже, почти ослепнув.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "finnegans-wake"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "над которым полуослепший автор работал в Париже в течение 16 лет (начал работу 10 марта 1923 года)"
+      }
+    },
+    {
+      "key": "illness-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Почти полная потеря зрения",
+      "long": "После более чем десятка операций зрение резко упало; были также удалены все зубы из-за инфекции.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1930, he was practically blind in the left eye, and his right eye functioned poorly."
+      }
+    },
+    {
+      "key": "illness-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Психическая болезнь дочери Лючии",
+      "long": "Из Лондона вернулся в Париж, когда у дочери проявились признаки психического заболевания; позже ей поставили диагноз шизофрения, и после его смерти она осталась в клинике.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce and Nora married at the Register Office in Kensington on 4 July 1931… returned to Paris later in the year when Lucia showed signs of mental illness"
+      }
+    },
+    {
+      "key": "love-1931",
+      "date": {
+        "from": "1931-07-04",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Норой Барнакл",
+      "long": "После 27 лет совместной жизни обвенчались в гражданской церемонии в Лондоне — ради защиты прав наследования сына по британскому закону.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joyce and Nora married at the Register Office in Kensington on 4 July 1931."
+      }
+    },
+    {
+      "key": "loss-1931",
+      "date": {
+        "from": "1931-12-29",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Джон Станислаус Джойс.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: John Stanislaus Joyce 1849-07-04 — 1931-12-29"
+      }
+    },
+    {
+      "key": "child-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение внука",
+      "long": "Родился внук; к этому событию и недавней смерти отца Джойс написал стихотворение «Се, дитя».",
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"Ecce Puer\" (written in 1932 to mark the birth of his grandson and the recent death of his father)"
+      }
+    },
+    {
+      "key": "other-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Помощь евреям, бегущим от нацистов",
+      "long": "На фоне роста фашизма и антисемитизма помогал евреям бежать от нацистских преследований.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938, he helped Jews escape Nazi persecution."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Бегство от оккупации в Цюрих",
+      "long": "После поражения Франции бежал из оккупированной страны в Цюрих.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "chapter": "last-zurich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After the fall of France in 1940, Joyce and his family fled from Nazi occupation, returning to Zurich a final time."
+      }
+    },
+    {
+      "key": "death-1941",
+      "date": {
+        "from": "1941-01-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть после операции в Цюрихе",
+      "long": "11 января перенёс операцию по поводу прободной язвы двенадцатиперстной кишки, 13 января умер; похоронен на кладбище Флунтерн.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "chapter": "last-zurich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died there in 1941 after surgery for a perforated ulcer at age 58."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dubliners",
+      "title": "Дублинцы",
+      "qid": "Q459592",
+      "written": {
+        "from": 1904,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "stephen-hero",
+      "title": "Герой Стивен",
+      "qid": "Q2070762",
+      "written": {
+        "from": 1904,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "chamber-music",
+      "title": "Камерная музыка",
+      "written": {
+        "from": 1902,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "portrait-of-the-artist",
+      "title": "Портрет художника в юности",
+      "qid": "Q465360",
+      "written": {
+        "from": 1907,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "exiles",
+      "title": "Изгнанники",
+      "qid": "Q2297900",
+      "written": {
+        "from": 1914,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "ulysses",
+      "title": "Улисс",
+      "qid": "Q6511",
+      "written": {
+        "from": 1914,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "pomes-penyeach",
+      "title": "Пенни за штуку",
+      "qid": "Q1304943",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "finnegans-wake",
+      "title": "Поминки по Финнегану",
+      "qid": "Q6507",
+      "written": {
+        "from": 1923,
+        "to": 1939
+      }
+    }
+  ]
+}

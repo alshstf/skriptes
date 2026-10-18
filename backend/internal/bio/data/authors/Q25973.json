@@ -1,0 +1,926 @@
+{
+  "qid": "Q25973",
+  "name": "Герман Гессе",
+  "born": "1877-07-02",
+  "died": "1962-08-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D1%81%D1%81%D0%B5%2C_%D0%93%D0%B5%D1%80%D0%BC%D0%B0%D0%BD",
+      "rev": 155005310
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Hermann_Hesse",
+      "rev": 1380358033
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Hermann_Hesse",
+      "rev": 270382179
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kalw-maulbronn",
+      "title": "Кальв, Маульбронн, бегство из школ",
+      "from": 1877,
+      "to": 1894
+    },
+    {
+      "key": "bookseller",
+      "title": "Книжные лавки и первые книги",
+      "from": 1895,
+      "to": 1903
+    },
+    {
+      "key": "gaienhofen",
+      "title": "Гайенхофен: семья и дальние дороги",
+      "from": 1904,
+      "to": 1913
+    },
+    {
+      "key": "war-crisis",
+      "title": "Война, утраты, психоанализ",
+      "from": 1914,
+      "to": 1918
+    },
+    {
+      "key": "montagnola",
+      "title": "Новая жизнь в Монтаньоле",
+      "from": 1919,
+      "to": 1930
+    },
+    {
+      "key": "glass-bead",
+      "title": "Магистр Игры и Нобелевская премия",
+      "from": 1931,
+      "to": 1962
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1877",
+      "date": {
+        "from": "1877-07-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Кальве в миссионерской семье",
+      "long": "Родился в Кальве (Вюртемберг) в семье миссионеров, связанной с Индией; рос в атмосфере швабского пиетизма.",
+      "place": {
+        "label": "Кальв"
+      },
+      "chapter": "kalw-maulbronn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hermann Karl Hesse was born on 2 July 1877 in the Black Forest town of Calw"
+      }
+    },
+    {
+      "key": "education-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Поступление в семинарию Маульбронн",
+      "long": "После латинской школы в Гёппингене поступил в евангелическую семинарию в монастыре Маульбронн; здесь начался тяжёлый личный кризис.",
+      "place": {
+        "label": "Маульбронн"
+      },
+      "works": [
+        {
+          "ref": "beneath-the-wheel",
+          "note": "учёба в Маульбронне легла в основу повести"
+        },
+        {
+          "ref": "narcissus-and-goldmund",
+          "note": "Маульбронн — прототип монастыря Мариябронн"
+        }
+      ],
+      "chapter": "kalw-maulbronn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hesse entered the Evangelical Theological Seminary of Maulbronn Abbey in 1891"
+      }
+    },
+    {
+      "key": "education-1892",
+      "date": {
+        "from": "1892-03-07",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Побег из семинарии",
+      "long": "7 марта 1892 года Гессе скрылся из семинарии; на следующий день его нашли спящим в поле.",
+      "place": {
+        "label": "Маульбронн"
+      },
+      "chapter": "kalw-maulbronn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "7 марта 1892 года Гессе внезапно исчез. На следующий день его нашли в поле спящим в стогу."
+      }
+    },
+    {
+      "key": "illness-1892",
+      "date": {
+        "from": "1892-05",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Попытка самоубийства, лечебница в Штеттене",
+      "long": "В мае 1892 года в Бад-Болле Гессе предпринял попытку самоубийства; родители отправили его в психиатрическую лечебницу в Штеттене.",
+      "place": {
+        "label": "Бад-Болль"
+      },
+      "chapter": "kalw-maulbronn",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Mai 1892 versuchte der Jugendliche einen Suizid mit einem Revolver in der vom Theologen und Seelsorger Christoph Friedrich Blumhardt geleiteten Anstalt Bad Boll."
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894-06",
+        "to": "1895-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ученик механика на часовой фабрике",
+      "long": "После неудачной школы и ученичества в Эсслингене 14 месяцев работал механиком на фабрике башенных часов в Кальве.",
+      "place": {
+        "label": "Кальв"
+      },
+      "chapter": "kalw-maulbronn",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "begann Hesse im Frühsommer 1894 für 14 Monate eine Mechanikerlehre in der Turmuhrenfabrik Perrot in Calw"
+      }
+    },
+    {
+      "key": "career-1895",
+      "date": {
+        "from": "1895-10-17",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ученик в книжной лавке в Тюбингене",
+      "long": "Начал работать в книжной лавке Хекенхауэра в Тюбингене, много читал и занимался самообразованием.",
+      "place": {
+        "label": "Тюбинген"
+      },
+      "chapter": "bookseller",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 17 October 1895 Hesse began working in the bookshop in Tübingen"
+      }
+    },
+    {
+      "key": "career-1899",
+      "date": {
+        "from": "1899",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые книги без успеха",
+      "long": "Первая книга стихов и сборник рассказов вышли небольшим тиражом и плохо продавались.",
+      "chapter": "bookseller",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1899 году на сэкономленные деньги Герман публикует небольшую книжку под названием «Романтические песни»"
+      }
+    },
+    {
+      "key": "other-1901",
+      "date": {
+        "from": "1901-03",
+        "to": "1901-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое путешествие по Италии",
+      "long": "С марта по май побывал в Генуе, Флоренции, Равенне и Венеции.",
+      "place": {
+        "label": "Италия"
+      },
+      "chapter": "bookseller",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1901 года Гессе наконец удаётся воплотить свою давнюю мечту о путешествии по Италии."
+      }
+    },
+    {
+      "key": "loss-1902",
+      "date": {
+        "from": "1902-04-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Мать, Мария Гундерт, умерла после долгой болезни; на похороны Гессе не приехал.",
+      "chapter": "bookseller",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1902, his mother died after a long and painful illness."
+      }
+    },
+    {
+      "key": "career-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный прорыв и независимость",
+      "long": "Роман вышел в издательстве Фишера и принёс известность и возможность жить литературным трудом.",
+      "works": [
+        {
+          "ref": "peter-camenzind"
+        }
+      ],
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "with the novel Peter Camenzind, which appeared first as a pre-publication in 1903 and then as a regular printing by Fischer in 1904, came a breakthrough: from now on, Hesse could make a living as a writer"
+      }
+    },
+    {
+      "key": "relocation-1904",
+      "date": {
+        "from": "1904",
+        "to": "1912",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Гайенхофене на Боденском озере",
+      "long": "Семья поселилась в крестьянском доме на Боденском озере; позже Гессе построил здесь собственный дом.",
+      "place": {
+        "label": "Гайенхофен"
+      },
+      "works": [
+        {
+          "ref": "beneath-the-wheel",
+          "note": "роман написан в Гайенхофене"
+        }
+      ],
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1904 года Гессе вместе с женой переезжает в Гайенхофен, тогда ещё небольшую деревню на берегу Боденского озера."
+      }
+    },
+    {
+      "key": "love-1904",
+      "date": {
+        "from": "1904-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Марией Бернулли",
+      "long": "Женился на базельском фотографе Марии (Мии) Бернулли, старше его на девять лет.",
+      "place": {
+        "label": "Базель"
+      },
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im August 1904 heiratete Hesse die selbstständige Basler Fotografin Maria Bernoulli"
+      }
+    },
+    {
+      "key": "career-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Бауэрнфельда",
+      "long": "Первый роман получил премию Бауэрнфельда.",
+      "works": [
+        {
+          "ref": "peter-camenzind"
+        }
+      ],
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1905 роман был отмечен австрийской литературной премией Бауэрнфельда."
+      }
+    },
+    {
+      "key": "child-1905",
+      "date": {
+        "from": "1905-12-09",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Бруно",
+      "long": "Родился первый сын, Бруно, будущий художник.",
+      "place": {
+        "label": "Гайенхофен"
+      },
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1905 году рождается сын Бруно (1905—1999), через несколько лет появятся ещё двое"
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906",
+        "to": "1912",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соиздатель журнала «März»",
+      "long": "Был соиздателем культурного журнала «März» у Альберта Лангена.",
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1906 wurde er zum Mitherausgeber der bei Albert Langen erscheinenden Zeitschrift März, bei der er bis 1912 blieb."
+      }
+    },
+    {
+      "key": "child-1909",
+      "date": {
+        "from": "1909-03-01",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Хайнера",
+      "long": "Родился второй сын, Хайнер (Ганс Генрих), будущий книжный график.",
+      "place": {
+        "label": "Гайенхофен"
+      },
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Хайнер Гессе 1909-03-01"
+      }
+    },
+    {
+      "key": "other-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Путешествие на Цейлон и в Индонезию",
+      "long": "На фоне семейных разногласий отправился в большое путешествие по Азии; ожидаемого духовного вдохновения не нашёл, но поездка повлияла на его творчество.",
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1911 Hesse left for a long trip to Sri Lanka and Indonesia"
+      }
+    },
+    {
+      "key": "child-1911",
+      "date": {
+        "from": "1911-07-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Мартина",
+      "long": "Родился третий сын, Мартин, будущий фотограф.",
+      "place": {
+        "label": "Гайенхофен"
+      },
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Martin Hesse 1911-07-26"
+      }
+    },
+    {
+      "key": "relocation-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Берн",
+      "long": "Семья покинула Гайенхофен и переехала в Берн; смена обстановки не сняла семейного кризиса.",
+      "place": {
+        "label": "Берн"
+      },
+      "works": [
+        {
+          "ref": "rosshalde",
+          "note": "роман завершён в Берне и отражает семейный кризис"
+        }
+      ],
+      "chapter": "gaienhofen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1912 году Герман и Мария с детьми переезжают в Берн."
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914",
+        "to": "1919",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Помощь военнопленным вместо фронта",
+      "long": "Признан негодным к строю; при посольстве Германии в Берне организовал помощь военнопленным — книги и издания для лагерей.",
+      "place": {
+        "label": "Берн"
+      },
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zu Beginn des Ersten Weltkrieges 1914 meldete sich Hesse"
+      }
+    },
+    {
+      "key": "persecution-1914",
+      "date": {
+        "from": "1914-11-03",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Статья против национализма и травля в прессе",
+      "long": "Статья против национализма вызвала нападки немецкой прессы, письма с угрозами и разрыв со старыми друзьями.",
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 3. November 1914 veröffentlichte er in der Neuen Zürcher Zeitung den Aufsatz O Freunde, nicht diese Töne"
+      }
+    },
+    {
+      "key": "illness-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь сына Мартина",
+      "long": "Младший сын Мартин тяжело заболел (менингит).",
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "with the death of his father on 8 March 1916, the serious illness of his son Martin, and his wife's schizophrenia"
+      }
+    },
+    {
+      "key": "illness-1916-2",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Психическая болезнь жены",
+      "long": "У жены Мии диагностировали шизофрению; в 1918 году её поместили в лечебницу.",
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "страдала психическим расстройством (в 1916 году диагностированным как шизофрения)"
+      }
+    },
+    {
+      "key": "loss-1916",
+      "date": {
+        "from": "1916-03-08",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Смерть отца, наряду с болезнью сына и жены, привела к глубокому кризису.",
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "with the death of his father on 8 March 1916, the serious illness of his son Martin, and his wife's schizophrenia"
+      }
+    },
+    {
+      "key": "illness-1916-3",
+      "date": {
+        "from": "1916-06",
+        "to": "1917-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Психоанализ у Йозефа Ланга",
+      "long": "Доктор Йозеф Ланг провёл с Гессе 60 сеансов психоанализа; интерес к психоанализу остался на всю жизнь.",
+      "place": {
+        "label": "Люцерн"
+      },
+      "works": [
+        {
+          "ref": "demian",
+          "note": "Ланг изображён в образе Писториуса"
+        }
+      ],
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С июня 1916 по ноябрь 1917 года Ланг проводит с ним 60 сеансов психоанализа."
+      }
+    },
+    {
+      "key": "creation-1917",
+      "date": {
+        "from": "1917-09",
+        "to": "1917-10",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман, написанный за три недели",
+      "long": "Роман написан за три недели и вышел в 1919 году под псевдонимом Эмиль Синклер.",
+      "works": [
+        {
+          "ref": "demian"
+        }
+      ],
+      "chapter": "war-crisis",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During a three-week period in September and October 1917, Hesse penned his novel Demian"
+      }
+    },
+    {
+      "key": "family-1919",
+      "date": {
+        "from": "1919-02",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв с первой женой, уход из семьи",
+      "long": "Брак распался на фоне болезни жены; дом в Берне разделили, сыновей определили к родственникам и друзьям.",
+      "place": {
+        "label": "Берн"
+      },
+      "works": [
+        {
+          "ref": "klein-and-wagner",
+          "note": "тяжесть ухода из семьи отражена в рассказе"
+        }
+      ],
+      "chapter": "montagnola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1919 года Герман и Мария решают разойтись, и писатель покидает Берн."
+      }
+    },
+    {
+      "key": "relocation-1919",
+      "date": {
+        "from": "1919-05-11",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Монтаньолу, Casa Camuzzi",
+      "long": "Снял четыре комнаты в Casa Camuzzi в Монтаньоле близ Лугано, где жил до 1931 года.",
+      "place": {
+        "label": "Монтаньола"
+      },
+      "works": [
+        {
+          "ref": "klingsors-last-summer",
+          "note": "новая обстановка вдохновила на живопись и рассказ"
+        }
+      ],
+      "chapter": "montagnola",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "mietete er am 11. Mai 1919 in Montagnola"
+      }
+    },
+    {
+      "key": "family-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Марией Бернулли",
+      "long": "Официально оформлен развод с Марией Бернулли.",
+      "chapter": "montagnola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "(развод был оформлен в 1923 году)"
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924-01-11",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Рут Венгер",
+      "long": "Женился на певице Рут Венгер, дочери писательницы Лизы Венгер.",
+      "works": [
+        {
+          "ref": "siddhartha",
+          "note": "Рут Венгер вдохновила образ Камалы"
+        }
+      ],
+      "chapter": "montagnola",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "heiratete Hesse am 11. Januar 1924 schließlich Ruth Wenger"
+      }
+    },
+    {
+      "key": "family-1927",
+      "date": {
+        "from": "1927-04-24",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Рут Венгер",
+      "long": "Второй брак распался через три года.",
+      "chapter": "montagnola",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Ruth Wenger 1924-01-11 — 1927-04-24"
+      }
+    },
+    {
+      "key": "creation-1931",
+      "date": {
+        "from": "1931",
+        "to": "1942",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Одиннадцать лет работы над последним романом",
+      "long": "Одиннадцать лет, на годы нацизма и войны, заняла работа над последним большим романом; по словам Гессе, она помогла пережить это время.",
+      "place": {
+        "label": "Монтаньола"
+      },
+      "works": [
+        {
+          "ref": "glass-bead-game",
+          "note": "Гессе говорил, что пережил годы режима благодаря работе над романом"
+        }
+      ],
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1942 года, наконец, дописаны последние строки романа «Игра в бисер», над которым писатель работал одиннадцать лет."
+      }
+    },
+    {
+      "key": "love-1931",
+      "date": {
+        "from": "1931-11-14",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Нинон Дольбин",
+      "long": "Женился на искусствоведе Нинон Дольбин (урождённой Ауслендер); они переехали в дом Casa Rossa, построенный для Гессе Гансом Бодмером.",
+      "place": {
+        "label": "Монтаньола"
+      },
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "14 ноября 1931 года Гессе женится в третий раз."
+      }
+    },
+    {
+      "key": "persecution-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Требование подтвердить арийское происхождение",
+      "long": "Власти Германии потребовали подтвердить арийское происхождение; Гессе — гражданин Швейцарии и не был обязан этого делать.",
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "которые в 1935 году присылают писателю письмо с требованием о подтверждении арийского происхождения"
+      }
+    },
+    {
+      "key": "persecution-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет книг в Германии",
+      "long": "Часть книг запрещена в Германии, статьи в немецких газетах выходить перестали.",
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1942 года часть произведений Гессе запрещают на территории рейха, писатель больше не может публиковать свои статьи в немецких газетах."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Присуждена Нобелевская премия по литературе «за вдохновенное творчество, в котором проявляются классические идеалы гуманизма, а также за блестящий стиль».",
+      "works": [
+        {
+          "ref": "glass-bead-game"
+        }
+      ],
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1946 году Гессе присуждают Нобелевскую премию по литературе с формулировкой"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Разрыв с издательством Фишера",
+      "long": "Перешёл в издательство «Suhrkamp Verlag».",
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году Гессе прерывает почти пятидесятилетнее сотрудничество с издательством «S. Fischer Verlag»"
+      }
+    },
+    {
+      "key": "illness-1961",
+      "date": {
+        "from": "1961-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь, лейкемия",
+      "long": "Тяжело перенёс грипп; у Гессе уже давно была нераспознанная лейкемия, его лечили переливаниями крови.",
+      "place": {
+        "label": "Беллинцона"
+      },
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Dezember 1961 erkrankte Hesse an einer Grippe, von der er sich nur schwer erholte."
+      }
+    },
+    {
+      "key": "death-1962",
+      "date": {
+        "from": "1962-08-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Монтаньоле",
+      "long": "Умер во сне в Монтаньоле; похоронен 11 августа на кладбище Сант-Аббондио в Джентилино.",
+      "place": {
+        "label": "Монтаньола"
+      },
+      "chapter": "glass-bead",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died on 9 August 1962, aged 85, in Montagnola, Switzerland"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "peter-camenzind",
+      "title": "Петер Каменцинд",
+      "qid": "Q576493",
+      "written": {
+        "from": 1903,
+        "to": 1903
+      }
+    },
+    {
+      "ref": "beneath-the-wheel",
+      "title": "Под колесом",
+      "written": {
+        "from": 1905,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "gertrude",
+      "title": "Гертруда",
+      "written": {
+        "from": 1909,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "rosshalde",
+      "title": "Росхальде",
+      "written": {
+        "from": 1912,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "demian",
+      "title": "Демиан",
+      "qid": "Q860577",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "klein-and-wagner",
+      "title": "Клейн и Вагнер",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "klingsors-last-summer",
+      "title": "Последнее лето Клингзора",
+      "written": {
+        "from": 1919,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "siddhartha",
+      "title": "Сиддхартха",
+      "qid": "Q457289",
+      "written": {
+        "from": 1921,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "steppenwolf",
+      "title": "Степной волк",
+      "qid": "Q217073",
+      "written": {
+        "from": 1926,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "narcissus-and-goldmund",
+      "title": "Нарцисс и Златоуст",
+      "qid": "Q1502926",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "glass-bead-game",
+      "title": "Игра в бисер",
+      "qid": "Q836841",
+      "written": {
+        "from": 1931,
+        "to": 1942
+      }
+    }
+  ]
+}

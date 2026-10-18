@@ -1,0 +1,474 @@
+{
+  "qid": "Q38082",
+  "name": "Льюис Кэрролл",
+  "born": "1832-01-27",
+  "died": "1898-01-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D1%8C%D1%8E%D0%B8%D1%81_%D0%9A%D1%8D%D1%80%D1%80%D0%BE%D0%BB%D0%BB",
+      "rev": 155633058
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lewis_Carroll",
+      "rev": 1378819844
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-school",
+      "title": "Детство и школы",
+      "from": 1832,
+      "to": 1849
+    },
+    {
+      "key": "oxford-years",
+      "title": "Оксфорд, утрата матери, диаконство",
+      "from": 1850,
+      "to": 1863
+    },
+    {
+      "key": "alice-years",
+      "title": "Алиса, Россия, фотография",
+      "from": 1864,
+      "to": 1881
+    },
+    {
+      "key": "later-years",
+      "title": "Поздние годы в Крайст-Чёрч",
+      "from": 1882,
+      "to": 1898
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1832",
+      "date": {
+        "from": "1832-01-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дарсбери, графство Чешир",
+      "long": "Чарльз Лютвидж Доджсон родился в доме приходского священника в Дарсбери, в семье из одиннадцати детей.",
+      "place": {
+        "label": "Дарсбери"
+      },
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Льюис Кэрролл родился 27 января 1832 года в доме приходского священника в деревне Дарсбери, графство Чешир."
+      }
+    },
+    {
+      "key": "education-1844",
+      "date": {
+        "from": "1844",
+        "to": "1846",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Ричмондской школе",
+      "long": "В двенадцать лет Доджсон был отправлен в школу в Ричмонде, Северный Йоркшир.",
+      "place": {
+        "label": "Ричмонд"
+      },
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Ричмондская школа 1844-1846"
+      }
+    },
+    {
+      "key": "education-1846",
+      "date": {
+        "from": "1846",
+        "to": "1849",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Рагби, где ему было тяжело",
+      "long": "В Рагби Доджсон блестяще учился, но, по его позднейшим словам, был там несчастлив; школу он покинул в конце 1849 года.",
+      "place": {
+        "label": "Рагби"
+      },
+      "chapter": "childhood-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1846, Dodgson entered Rugby School, where he was evidently unhappy"
+      }
+    },
+    {
+      "key": "education-1850",
+      "date": {
+        "from": "1850-05",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Зачисление в Крайст-Чёрч, Оксфорд",
+      "long": "В мае 1850 года Доджсон зачислен в колледж отца; в Оксфорд переехал в январе 1851 года, и колледж остался его домом до конца жизни.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1850 года был зачислен в Крайст-Чёрч, один из наиболее аристократических колледжей при Оксфордском университете"
+      }
+    },
+    {
+      "key": "loss-1851",
+      "date": {
+        "from": "1851-01",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Через два дня после приезда в Оксфорд Доджсона вызвали домой: мать умерла в возрасте 47 лет.",
+      "place": {
+        "label": "Крофт-он-Ти"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he went into residence in January 1851. He had been at Oxford only two days when he received a summons home. His mother had died"
+      }
+    },
+    {
+      "key": "education-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра математики с отличием",
+      "long": "Доджсон занял первое место в списке выпускников по математике и получил степень бакалавра.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1854, he obtained first-class honours in the Final Honours School of Mathematics, standing first on the list, and thus graduated as Bachelor of Arts."
+      }
+    },
+    {
+      "key": "career-1855",
+      "date": {
+        "from": "1855",
+        "to": "1881",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Лектор математики в Крайст-Чёрч",
+      "long": "Математическая лекторская должность давала Доджсону заработок и финансовую независимость; он занимал её 26 лет.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his talent as a mathematician won him the Christ Church Mathematical Lectureship in 1855, which he continued to hold for the next 26 years"
+      }
+    },
+    {
+      "key": "other-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Новый декан Лидделл с детьми, среди них Алиса",
+      "long": "В колледже появился декан Генри Лидделл с женой и пятью детьми; одна из дочерей, Алиса, считается прототипом героини книг, хотя сам автор это отрицал.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "works": [
+        {
+          "ref": "alice-in-wonderland",
+          "note": "Алиса Лидделл традиционно считается прототипом героини; сам Кэрролл это всегда отрицал."
+        }
+      ],
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1856 году в колледже появился новый декан — Генри Лидделл (англ. Henry Liddell), вместе с которым приехали его жена и пятеро детей, среди которых была и четырёхлетняя Алиса."
+      }
+    },
+    {
+      "key": "creation-1856",
+      "date": {
+        "from": "1856",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Увлечение фотографией",
+      "long": "Доджсон освоил фотографию, стал известным фотографом-любителем, устроил студию на крыше колледжа и снял около 3000 кадров.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1856, Dodgson took up the new art form of photography"
+      }
+    },
+    {
+      "key": "faith-1861",
+      "date": {
+        "from": "1861-12-22",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Рукоположение в диаконы",
+      "long": "Доджсон стал диаконом англиканской церкви; год спустя он добился разрешения не принимать сан священника и остался в колледже.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dodgson was ordained a deacon in the Church of England on 22 December 1861"
+      }
+    },
+    {
+      "key": "other-1863",
+      "date": {
+        "from": "1863-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Разрыв отношений с семьёй Лидделл",
+      "long": "Летом 1863 года прекратились визиты Доджсона к Лидделлам; причины остаются предметом споров, документальных подтверждений нет.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the unexplained \"break\" with the family in June 1863"
+      }
+    },
+    {
+      "key": "relocation-1867",
+      "date": {
+        "from": "1867",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Поездка в Россию с Генри Лиддоном",
+      "long": "Единственная заграничная поездка Доджсона: вместе с богословом Генри Лиддоном он посетил Россию, встречался с митрополитом Филаретом.",
+      "works": [
+        {
+          "ref": "russian-journal-1867",
+          "note": "поездка описана самим Кэрроллом в дневнике путешествия, не предназначавшемся для печати"
+        }
+      ],
+      "chapter": "alice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The only known occasion on which he travelled abroad was a trip to Russia in 1867 as an ecclesiastic, together with the Reverend Henry Liddon."
+      }
+    },
+    {
+      "key": "loss-1868",
+      "date": {
+        "from": "1868-06-21",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, архидиакон Чарльз Доджсон.",
+      "chapter": "alice-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Чарльз Доджсон 1800-01-01 — 1868-06-21"
+      }
+    },
+    {
+      "key": "creation-1878",
+      "date": {
+        "from": "1878",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Изобретение головоломки «дублеты»",
+      "long": "Доджсон придумал игру, в которой одно слово превращается в другое заменой по одной букве; позже вёл колонку головоломок в Vanity Fair.",
+      "chapter": "alice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sometime in 1878, he invented the \"doublet\" (see word ladder)"
+      }
+    },
+    {
+      "key": "other-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от фотографии",
+      "long": "Доджсон оставил фотографию после 24 лет занятий, сочтя содержание студии слишком трудоёмким.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "alice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dodgson abruptly ceased photography (1880, after 24 years)"
+      }
+    },
+    {
+      "key": "illness-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Первый приступ мигрени с аурой",
+      "long": "В дневнике 1880 года Доджсон описал первый приступ мигрени с аурой.",
+      "chapter": "alice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In his diary from 1880, Dodgson recorded experiencing his first episode of migraine with aura"
+      }
+    },
+    {
+      "key": "career-1886",
+      "date": {
+        "from": "1886-12-30",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая крупная постановка сказки на сцене",
+      "long": "Доджсон побывал на мюзикле «Алиса в Стране чудес» в лондонском театре Принца Уэльского.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "alice-in-wonderland"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "attending the West End musical Alice in Wonderland (the first major live production of his Alice books) at the Prince of Wales Theatre on 30 December 1886"
+      }
+    },
+    {
+      "key": "career-1889",
+      "date": {
+        "from": "1889",
+        "to": "1893",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Прохладный приём последнего романа",
+      "long": "Два тома романа вышли в 1889 и 1893 годах; отзывы были сдержанными, продано 13 тысяч экземпляров — несравнимо с успехом «Алисы».",
+      "works": [
+        {
+          "ref": "sylvia-and-bruno"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The two volumes of his last novel, Sylvie and Bruno, were published in 1889 and 1893"
+      }
+    },
+    {
+      "key": "death-1898",
+      "date": {
+        "from": "1898-01-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от пневмонии в Гилфорде",
+      "long": "Доджсон умер от пневмонии после гриппа в доме сестёр «Каштаны»; похоронен на кладбище в Гилфорде.",
+      "place": {
+        "label": "Гилфорд"
+      },
+      "chapter": "later-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 14 января 1898 года от пневмонии в Гилфорде, графство Суррей."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "alice-in-wonderland",
+      "title": "Приключения Алисы в Стране чудес",
+      "qid": "Q92640",
+      "written": {
+        "from": 1862,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "through-the-looking-glass",
+      "title": "Алиса в Зазеркалье",
+      "qid": "Q220331",
+      "written": {
+        "from": 1871,
+        "to": 1871
+      }
+    },
+    {
+      "ref": "jabberwocky",
+      "title": "Бармаглот",
+      "qid": "Q250371",
+      "written": {
+        "from": 1871,
+        "to": 1871
+      }
+    },
+    {
+      "ref": "hunting-of-the-snark",
+      "title": "Охота на Снарка",
+      "qid": "Q1079681",
+      "written": {
+        "from": 1876,
+        "to": 1876
+      }
+    },
+    {
+      "ref": "sylvia-and-bruno",
+      "title": "Сильвия и Бруно",
+      "qid": "Q1632505",
+      "written": {
+        "from": 1889,
+        "to": 1893
+      }
+    },
+    {
+      "ref": "russian-journal-1867",
+      "title": "Дневник путешествия в Россию 1867 года",
+      "written": {
+        "from": 1867,
+        "to": 1867
+      }
+    }
+  ]
+}

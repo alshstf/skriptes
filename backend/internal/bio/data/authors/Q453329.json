@@ -1,0 +1,351 @@
+{
+  "qid": "Q453329",
+  "name": "Хол Клемент",
+  "born": "1922-05-30",
+  "died": "2003-10-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%BE%D0%BB_%D0%9A%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82",
+      "rev": 155630092
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Hal_Clement",
+      "rev": 1377304713
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-war",
+      "title": "Гарвард и бомбардировщик",
+      "from": 1922,
+      "to": 1945
+    },
+    {
+      "key": "teacher-writer",
+      "title": "Учитель и фантаст",
+      "from": 1946,
+      "to": 1986
+    },
+    {
+      "key": "late",
+      "title": "Признание и последние годы",
+      "from": 1987,
+      "to": 2003
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1922",
+      "date": {
+        "from": "1922-05-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сомервилле",
+      "long": "Гарри Клемент Стаббс родился в Сомервилле, штат Массачусетс.",
+      "place": {
+        "label": "Сомервилл"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Сомервилл 1922-05-30"
+      }
+    },
+    {
+      "key": "education-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание технического колледжа",
+      "long": "Окончил технический колледж Ринджа.",
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После школы окончил и технический колледж Ринджа в 1939 году"
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая публикация в «Astounding»",
+      "long": "Первый рассказ вышел в журнале «Astounding Science Fiction» Джона Кемпбелла, когда автор учился в Гарварде.",
+      "works": [
+        {
+          "ref": "proof"
+        }
+      ],
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый фантастический рассказ Хола Клемента появился в кемпбелловском журнале «Astounding Science Fiction» в июне 1942 года"
+      }
+    },
+    {
+      "key": "education-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр астрономии в Гарварде",
+      "long": "Получил степень бакалавра астрономии в Гарвардском университете.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1943 году получил степень бакалавра астрономии в Гарвардском университете"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Пилот бомбардировщика Б-24 на войне",
+      "long": "После Гарварда вступил в армейский воздушный корпус, пилот бомбардировщика Б-24, совершил 35 боевых вылетов над Европой.",
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1943 году получил степень бакалавра астрономии в Гарвардском университете… После окончания Гарварда вступил в армейский воздушный корпус и принимал участие в боевых действиях Второй Мировой войны в качестве пилота бомбардировщика Б-24, совершив 35 боевых вылетов."
+      }
+    },
+    {
+      "key": "education-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистр педагогики",
+      "long": "Получил степень магистра педагогики в Бостонском университете.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем и степень магистра педагогики в Бостонском университете (1946)"
+      }
+    },
+    {
+      "key": "love-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мэри Элизабет Майерс",
+      "long": "Женился на Мэри Элизабет Майерс; в семье родились два сына и дочь.",
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Женился Клемент в 1952 году на Мэри Элизабет Майерс."
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в военный резерв",
+      "long": "Перешёл в военный резерв.",
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году переходит в военный резерв"
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистр химии",
+      "long": "Получил степень магистра химии в Колледже Симмонса.",
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "впоследствии — степень магистра химии в Колледже Симмонса (1963)"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Увольнение в запас полковником",
+      "long": "Уволился в запас в звании полковника.",
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1976 году в звании полковника увольняется в запас"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Конец преподавательской работы",
+      "long": "До 1987 года преподавал в средней школе и в Милтонской академии.",
+      "place": {
+        "label": "Милтон"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вплоть до 1987 года работал преподавателем в средней школе и в Милтонской академии"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Ретро-Хьюго»",
+      "long": "Рассказ 1945 года удостоен премии «Ретро-Хьюго».",
+      "works": [
+        {
+          "ref": "uncommon-sense"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "за который ему впоследствии присвоят Ретро-Хьюго (1996)"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Зал славы научной фантастики",
+      "long": "Введён в Зал славы научной фантастики и фэнтези.",
+      "chapter": "late",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Зал славы научной фантастики и фэнтези 1998-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999-05-01",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание «Великий Мастер» фантастики",
+      "long": "В Питтсбурге получил звание «Великий Мастер» премии «Небьюла».",
+      "place": {
+        "label": "Питтсбург"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1 мая 1999 года в Питтсбурге ему было присвоено почётное звание «Великий Мастер» премии «Небьюла»."
+      }
+    },
+    {
+      "key": "death-2003",
+      "date": {
+        "from": "2003-10-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Милтоне",
+      "long": "Умер во сне в больнице Милтона.",
+      "place": {
+        "label": "Милтон"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хол Клемент умер во сне ранним утром 29 октября 2003 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "needle",
+      "title": "Игла",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "mission-of-gravity",
+      "title": "Экспедиция «Тяготение»",
+      "qid": "Q1769466",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "uncommon-sense",
+      "title": "Необыкновенное чувство",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "proof",
+      "title": "Доказательство",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "iceworld",
+      "title": "Ледяной мир",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    }
+  ]
+}

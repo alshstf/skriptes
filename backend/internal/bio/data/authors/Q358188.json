@@ -1,0 +1,254 @@
+{
+  "qid": "Q358188",
+  "name": "Джеффри Дивер",
+  "born": "1950-05-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D0%B2%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%B5%D1%84%D1%84%D1%80%D0%B8",
+      "rev": 151676393
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jeffery_Deaver",
+      "rev": 1375911901
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Журналист и юрист",
+      "from": 1950,
+      "to": 1998
+    },
+    {
+      "key": "rhyme-fame",
+      "title": "Линкольн Райм и признание",
+      "from": 1999,
+      "to": 2010
+    },
+    {
+      "key": "bond-and-after",
+      "title": "Джеймс Бонд и новые серии",
+      "from": 2011,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-05-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Глен-Эллине",
+      "long": "Родился 6 мая 1950 года в Глен-Эллине, штат Иллинойс, близ Чикаго. Мать была художницей, отец — автором рекламных текстов.",
+      "place": {
+        "label": "Глен-Эллин"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 6 мая 1950 в Глен-Эллине."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ниро",
+      "long": "Получил премию Ниро Вульфа — награду, присуждаемую обществом поклонников детективов о Ниро Вульфе.",
+      "chapter": "rhyme-fame",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Ниро 1999"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Британская премия «Стальной кинжал»",
+      "long": "Британская Ассоциация писателей-криминалистов присудила ему премию Яна Флеминга «Стальной кинжал» за роман; тогда же награда за сборник рассказов.",
+      "works": [
+        {
+          "ref": "garden-of-beasts"
+        },
+        {
+          "ref": "twisted"
+        }
+      ],
+      "chapter": "rhyme-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Яна Флеминга Ассоциации писателей-криминалистов «Стальной кинжал» за книгу «Зверинный сад» (англ. The Garden of Beasts) (2004)"
+      }
+    },
+    {
+      "key": "creation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Коллективный сериал-триллер с 14 соавторами",
+      "long": "Придумал героев и вместе с четырнадцатью другими писателями написал 17-серийный триллер, озвученный Альфредом Молиной; выходил на Audible с 25 сентября по 13 ноября 2007 года.",
+      "works": [
+        {
+          "ref": "chopin-manuscript"
+        }
+      ],
+      "chapter": "rhyme-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was broadcast on Audible.com from September 25 to November 13, 2007."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор антологии лучших детективных рассказов",
+      "long": "Был составителем и редактором сборника «The Best American Mystery Stories 2009».",
+      "chapter": "rhyme-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Deaver edited The Best American Mystery Stories 2009."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Роман о Джеймсе Бонде по заказу наследников Флеминга",
+      "long": "Выбран автором нового романа о Джеймсе Бонде — вторым американцем после Рэймонда Бенсона, писавшим о Бонде. Роман вышел 25 мая 2011 года.",
+      "works": [
+        {
+          "ref": "carte-blanche"
+        }
+      ],
+      "chapter": "bond-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carte Blanche is set in 2011 and was published on May 25, 2011. He is the second American author to write Bond novels"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание гроссмейстера премии Эдгара Аллана По",
+      "long": "Удостоен звания гроссмейстера премии Эдгара Аллана По.",
+      "chapter": "bond-and-after",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гроссмейстер премии Эдгара Аллана По 2021"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "manhattan-is-my-beat",
+      "title": "Manhattan Is My Beat",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "bone-collector",
+      "title": "The Bone Collector",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "coffin-dancer",
+      "title": "The Coffin Dancer",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "devils-teardrop",
+      "title": "The Devil's Teardrop",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "blue-nowhere",
+      "title": "The Blue Nowhere",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "garden-of-beasts",
+      "title": "Garden of Beasts",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "twisted",
+      "title": "Twisted",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "chopin-manuscript",
+      "title": "The Chopin Manuscript",
+      "written": {
+        "from": 2007,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "carte-blanche",
+      "title": "Carte Blanche",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "never-game",
+      "title": "The Never Game",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

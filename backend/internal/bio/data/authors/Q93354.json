@@ -1,0 +1,832 @@
+{
+  "qid": "Q93354",
+  "name": "Фрэнсис Скотт Фицджеральд",
+  "born": "1896-09-24",
+  "died": "1940-12-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%B8%D1%86%D0%B4%D0%B6%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%B4%2C_%D0%A4%D1%80%D1%8D%D0%BD%D1%81%D0%B8%D1%81_%D0%A1%D0%BA%D0%BE%D1%82%D1%82",
+      "rev": 155322218
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/F._Scott_Fitzgerald",
+      "rev": 1378921669
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-schools",
+      "title": "Детство и школы",
+      "from": 1896,
+      "to": 1912
+    },
+    {
+      "key": "princeton-army-zelda",
+      "title": "Принстон, армия, Зельда",
+      "from": 1913,
+      "to": 1919
+    },
+    {
+      "key": "jazz-age",
+      "title": "Слава и эпоха джаза",
+      "from": 1920,
+      "to": 1923
+    },
+    {
+      "key": "europe",
+      "title": "Европа, Гэтсби, болезнь Зельды",
+      "from": 1924,
+      "to": 1931
+    },
+    {
+      "key": "baltimore-decline",
+      "title": "Балтимор, долги, упадок",
+      "from": 1932,
+      "to": 1936
+    },
+    {
+      "key": "hollywood",
+      "title": "Голливуд и последний роман",
+      "from": 1937,
+      "to": 1940
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1896",
+      "date": {
+        "from": "1896-09-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сент-Поле",
+      "long": "Родился в католической ирландской семье в Сент-Поле, штат Миннесота; назван в честь дальнего родственника Фрэнсиса Скотта Ки, автора текста гимна США.",
+      "place": {
+        "label": "Сент-Пол"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фицджеральд родился 24 сентября 1896 года в городе Сент-Пол, штат Миннесота, в католической ирландской семье."
+      }
+    },
+    {
+      "key": "poverty-1908",
+      "date": {
+        "from": "1908-03",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Увольнение отца, возвращение в Сент-Пол",
+      "long": "Отца уволили из Procter \u0026 Gamble, семья вернулась из Буффало в Сент-Пол; доход семьи поддерживало наследство матери.",
+      "place": {
+        "label": "Сент-Пол"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Procter \u0026 Gamble fired his father in March 1908, and the family returned to Saint Paul."
+      }
+    },
+    {
+      "key": "education-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Ньюмена и наставник отец Фэй",
+      "long": "Родители отправили его в католическую школу Ньюмена в Нью-Джерси, где священник Сигурни Фэй разглядел его литературные способности и подбодрил стать писателем.",
+      "place": {
+        "label": "Хакенсак"
+      },
+      "chapter": "childhood-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1911, Fitzgerald's parents sent him to the Newman School, a Catholic prep school in Hackensack, New Jersey."
+      }
+    },
+    {
+      "key": "education-1913",
+      "date": {
+        "from": "1913",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в Принстонском университете",
+      "long": "Учился в Принстоне, писал для студенческих изданий и мюзиклов Triangle Club, подружился с Эдмундом Уилсоном; университет не окончил.",
+      "place": {
+        "label": "Принстон"
+      },
+      "works": [
+        {
+          "ref": "this-side-of-paradise",
+          "note": "роман — автобиографический рассказ о принстонских годах (статья о создании романа)"
+        }
+      ],
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from Newman in 1913, Fitzgerald enrolled at Princeton University and became one of the few Catholics in the student body."
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917-11",
+        "to": "1919-02",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Уход из университета и армейская служба",
+      "long": "Оставил Принстон и поступил в армию; получил звание второго лейтенанта, служил адъютантом командира бригады. Демобилизован 14 февраля 1919 года.",
+      "place": {
+        "label": "Форт-Ливенворт"
+      },
+      "works": [
+        {
+          "ref": "this-side-of-paradise",
+          "note": "первую версию рукописи он быстро написал во время службы в ожидании отправки на фронт"
+        }
+      ],
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1917 года, столкнувшись с академическими трудностями, он покинул университет и поступил на службу в армию."
+      }
+    },
+    {
+      "key": "love-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Зельдой Сейр",
+      "long": "Служа в лагере близ Монтгомери, штат Алабама, познакомился на вечере в клубе с 17-летней Зельдой Сейр; в сентябре признался ей в чувствах.",
+      "place": {
+        "label": "Монтгомери"
+      },
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1918, Fitzgerald was garrisoned with the 45th and 67th Infantry Regiments at Camp Sheridan near Montgomery, Alabama.… At a country club, Fitzgerald met Zelda Sayre, a 17-year-old Southern belle"
+      }
+    },
+    {
+      "key": "poverty-1919",
+      "date": {
+        "from": "1919-02",
+        "to": "1919-07",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Нищая работа в рекламном агентстве",
+      "long": "Жил в одной комнате, работал в рекламном агентстве; рассказы отвергали более 120 раз, продан был один.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале 1919 года Фицджеральд был демобилизован. Он переехал в Нью-Йорк, где устроился в рекламное агентство Barron Collier с зарплатой $90 в месяц, и пытался публиковать рассказы, но его рукописи возвращали."
+      }
+    },
+    {
+      "key": "love-1919",
+      "date": {
+        "from": "1919-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв помолвки с Зельдой",
+      "long": "Зельда разорвала помолвку, считая, что он не сможет её содержать; перед этим его уже отвергла Джиневра Кинг.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she broke off the engagement in June 1919."
+      }
+    },
+    {
+      "key": "creation-1919",
+      "date": {
+        "from": "1919-07",
+        "to": "1919-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение в Сент-Пол и переработка романа",
+      "long": "Бросив рекламу, вернулся в родительский дом и за лето переписал отвергнутый роман; в сентябре издательство Scribner's приняло его.",
+      "place": {
+        "label": "Сент-Пол"
+      },
+      "works": [
+        {
+          "ref": "this-side-of-paradise",
+          "note": "в эти месяцы «Романтический эгоист» переработан в роман, вышедший в 1920 году"
+        }
+      ],
+      "chapter": "princeton-army-zelda",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1919 года он уволился из агентства, вернулся в Сент-Пол и переработал рукопись романа «Романтический эгоист», которую ранее отвергло издательство Charles Scribner's Sons."
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920-03-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Громкий успех первого романа",
+      "long": "Дебютный роман принёс известность и позволил получать более высокие гонорары за рассказы в журналах.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "this-side-of-paradise"
+        }
+      ],
+      "chapter": "jazz-age",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман был опубликован 26 марта 1920 года под названием «По эту сторону рая» тиражом 3000 экземпляров. Первый тираж разошёлся за три дня."
+      }
+    },
+    {
+      "key": "love-1920",
+      "date": {
+        "from": "1920-04-03",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Венчание с Зельдой Сейр",
+      "long": "Зельда согласилась на брак только после успеха книги; чета вскоре стала символом «эпохи джаза».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "jazz-age",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "3 апреля 1920 года, ровно через неделю после публикации романа, Фицджеральд и Зельда Сейр поженились в соборе Святого Патрика в Нью-Йорке."
+      }
+    },
+    {
+      "key": "child-1921",
+      "date": {
+        "from": "1921-10-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Скотти",
+      "long": "Родилась единственная дочь Фрэнсис Скотт («Скотти»); роды прошли в Сент-Поле. Слова Зельды после наркоза он позже почти дословно использовал в речи Дэйзи.",
+      "place": {
+        "label": "Сент-Пол"
+      },
+      "works": [
+        {
+          "ref": "great-gatsby",
+          "note": "слова Зельды после родов использованы в диалоге Дэйзи Бьюкенен (по записи Фицджеральда)"
+        }
+      ],
+      "chapter": "jazz-age",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 26, 1921, Zelda gave birth to their daughter and only child Frances Scott \"Scottie\" Fitzgerald."
+      }
+    },
+    {
+      "key": "relocation-1922",
+      "date": {
+        "from": "1922-10",
+        "to": "1924-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Грейт-Неке на Лонг-Айленде",
+      "long": "Жили в Грейт-Неке, в окружении богатых соседей и вечеринок; здесь он приступил к работе над третьим романом.",
+      "place": {
+        "label": "Грейт-Нек"
+      },
+      "works": [
+        {
+          "ref": "great-gatsby",
+          "note": "работа над романом началась в этом доме; лонг-айлендские впечатления — материал книги"
+        }
+      ],
+      "chapter": "jazz-age",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В октябре 1922 года Фицджеральды переехали в арендованный дом в Грейт-Неке на Лонг-Айленде, недалеко от Нью-Йорка."
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал пьесы на Бродвее и долги",
+      "long": "Провал пьесы «Растение» оставил его в долгах; он вернулся к рассказам для журналов.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "jazz-age",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the play's November 1923 premiere was an unmitigated disaster."
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брачный кризис на Ривьере",
+      "long": "На Ривьере Зельда увлеклась французским лётчиком Эдуаром Жозаном и попросила развода; затем приняла снотворное. По оценке статьи, эпизод привёл к необратимому разладу в браке.",
+      "place": {
+        "label": "Сен-Рафаэль"
+      },
+      "chapter": "europe",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1924, Fitzgerald and his family moved abroad to Europe.… Zelda asked for a divorce."
+      }
+    },
+    {
+      "key": "relocation-1924",
+      "date": {
+        "from": "1924-05",
+        "to": "1926-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Два года в Европе",
+      "long": "Жили на Французской Ривьере, в Париже, Риме и на Капри; большая часть рукописи третьего романа была завершена во Франции.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "great-gatsby",
+          "note": "рукопись завершена во Франции к сентябрю 1924, правки в Риме"
+        }
+      ],
+      "chapter": "europe",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1924 года Фицджеральды отправились в Европу."
+      }
+    },
+    {
+      "key": "illness-1924",
+      "date": {
+        "from": "1924-12-01",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Пьяная драка в Риме",
+      "long": "Пьяная драка закончилась в римском полицейском участке, где его избили.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "europe",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On December 1, 1924, Fitzgerald was in a drunken brawl that ended in a Rome police station"
+      }
+    },
+    {
+      "key": "other-1925",
+      "date": {
+        "from": "1925-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Знакомство с Хемингуэем",
+      "long": "Знакомство с Хемингуэем в Париже положило начало дружбе, позже осложнённой разногласиями.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "europe",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Через две недели после публикации романа, в апреле 1925 года, Фицджеральд познакомился с Эрнестом Хемингуэем в парижском баре Dingo."
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925-04-10",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Умеренный приём главного романа",
+      "long": "Критики оценили роман неоднозначно, продажи оказались ниже, чем у прежних книг.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "great-gatsby"
+        }
+      ],
+      "chapter": "europe",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман был опубликован 10 апреля 1925 года издательством Charles Scribner’s Sons.… За первый год было продано около 20 000 экземпляров, что было значительно меньше, чем у его предыдущих романов."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927-01",
+        "to": "1927-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая работа в Голливуде, Лоис Моран",
+      "long": "Писал комедию для United Artists, познакомился с 17-летней актрисой Лоис Моран; через два месяца чета уехала в Делавэр.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "tender-is-the-night",
+          "note": "образ Розмари Хойт позже переписан по Лоис Моран (по биографическим данным)"
+        }
+      ],
+      "chapter": "europe",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He agreed and moved into a studio-owned bungalow with Zelda in January 1927."
+      }
+    },
+    {
+      "key": "illness-1930",
+      "date": {
+        "from": "1930-06",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз Зельды и лечение в клинике",
+      "long": "Зельде поставили диагноз «шизофрения» (позже оспоренный) и лечили в клинике в Швейцарии; болезнь жены стала основой следующего романа.",
+      "place": {
+        "label": "Швейцария"
+      },
+      "works": [
+        {
+          "ref": "tender-is-the-night",
+          "note": "медицинские записи Зельды из швейцарской клиники почти дословно вошли в роман (биографы)"
+        }
+      ],
+      "chapter": "europe",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "doctors diagnosed Zelda with schizophrenia in June 1930."
+      }
+    },
+    {
+      "key": "loss-1931",
+      "date": {
+        "from": "1931-01-26",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Эдвард Фицджеральд.",
+      "chapter": "europe",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Edward Fitzgerald 1853-04-13 — 1931-01-26"
+      }
+    },
+    {
+      "key": "relocation-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поместье «Ла-Пэ» рядом с клиникой жены",
+      "long": "Переезд был связан с лечением Зельды в клинике Шеперд-Пратт; он занимал деньги у агента и писал рассказы для журналов.",
+      "place": {
+        "label": "Таусон"
+      },
+      "works": [
+        {
+          "ref": "tender-is-the-night",
+          "note": "арендован, чтобы работать над романом"
+        }
+      ],
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1932 году Фицджеральд арендовал поместье «Ла-Пэ» (La Paix) в пригороде Балтимора, Таусоне, чтобы работать над романом «Ночь нежна»."
+      }
+    },
+    {
+      "key": "other-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Спор вокруг романа Зельды",
+      "long": "Он возражал против публикации романа Зельды, использовавшего тот же автобиографический материал, что и его собственный; роман вышел в октябре 1932 года.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "works": [
+        {
+          "ref": "tender-is-the-night",
+          "note": "письма Перкинсу: общий автобиографический материал"
+        }
+      ],
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Особенно их творческое соперничество проявилось в 1932 году, когда Зельда написала роман «Спаси меня, вальс».… Скотт настоял на том, чтобы Зельда переработала роман."
+      }
+    },
+    {
+      "key": "illness-1933",
+      "date": {
+        "from": "1933",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Восемь госпитализаций из-за алкоголизма",
+      "long": "Алкоголизм подорвал здоровье и работу; к концу 1930-х развились болезни сердца.",
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1933 to 1937, he was hospitalized for alcoholism eight times."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Холодный приём четвёртого романа",
+      "long": "Роман получил смешанные отзывы и продавался плохо: около 12 000 экземпляров за три месяца.",
+      "works": [
+        {
+          "ref": "tender-is-the-night"
+        }
+      ],
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fitzgerald's own novel debuted in April 1934 as Tender Is the Night and received mixed reviews."
+      }
+    },
+    {
+      "key": "poverty-1936",
+      "date": {
+        "from": "1936",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Почти банкротство, дешёвые отели",
+      "long": "Зельда находилась в больнице Хайленд в Эшвилле; доходы от книг в 1936 году составили около 80 долларов.",
+      "place": {
+        "label": "Эшвилл"
+      },
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Nearly bankrupt, Fitzgerald spent most of 1936 and 1937 living in cheap hotels near Asheville."
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Мэри Маккуиллан.",
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Mary McQuillan 1859-01-01 — 1936-01-01"
+      }
+    },
+    {
+      "key": "persecution-1936",
+      "date": {
+        "from": "1936-09",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Газетная статья о его алкоголизме и упадке",
+      "long": "Статья повредила репутации; прочитав её, он предпринял попытку самоубийства.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "baltimore-decline",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1936, journalist Michel Mok of the New York Post publicly reported Fitzgerald's alcoholism and career failure in a nationally syndicated article."
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "to": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа сценариста в Голливуде",
+      "long": "Работал сценаристом MGM; единственный кредит — за фильм «Три товарища». В 1939 году MGM расторгла контракт, дальше он работал внештатно.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "last-tycoon",
+          "note": "в Голливуде начата работа над последним, незавершённым романом"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1937 году Скотт переехал в Голливуд и заключил шестимесячный контракт с MGM на $1000 в неделю."
+      }
+    },
+    {
+      "key": "love-1937",
+      "date": {
+        "from": "1937-07",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство и роман с Шейлой Грэм",
+      "long": "Отношения с Шейлой Грэм продолжались до его смерти; он жил в её квартире.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вскоре после прибытия в Голливуд, в июле 1937 года, на вечеринке у Роберта Бенчли Фицджеральд познакомился с обозревательницей Шейлой Грэм."
+      }
+    },
+    {
+      "key": "love-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Неудачная встреча с Джиневрой Кинг",
+      "long": "Встреча с Джиневрой Кинг не удалась из-за его пьянства.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fitzgerald attempted to reunite with his first love Ginevra King when the wealthy Chicago heiress visited Hollywood in 1938."
+      }
+    },
+    {
+      "key": "love-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Последняя встреча с Зельдой",
+      "long": "Последняя встреча с Зельдой; в поездке его избили зрители петушиного боя, после возвращения он попал в нью-йоркскую больницу.",
+      "place": {
+        "label": "Куба"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He saw Zelda for the last time on a 1939 trip to Cuba."
+      }
+    },
+    {
+      "key": "death-1940",
+      "date": {
+        "from": "1940-12-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "Умер в Голливуде от сердечного приступа в возрасте 44 лет; последний роман остался незавершённым.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "last-tycoon"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 декабря 1940 года Фицджеральд умер от сердечного приступа в квартире Грэм."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "this-side-of-paradise",
+      "title": "По эту сторону рая",
+      "written": {
+        "from": 1917,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "beautiful-and-damned",
+      "title": "Прекрасные и проклятые",
+      "written": {
+        "from": 1921,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "great-gatsby",
+      "title": "Великий Гэтсби",
+      "qid": "Q214371",
+      "written": {
+        "from": 1923,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "tender-is-the-night",
+      "title": "Ночь нежна",
+      "qid": "Q247372",
+      "written": {
+        "from": 1932,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "last-tycoon",
+      "title": "Последний магнат",
+      "written": {
+        "from": 1939,
+        "to": 1940
+      }
+    }
+  ]
+}

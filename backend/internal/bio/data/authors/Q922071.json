@@ -1,0 +1,96 @@
+{
+  "qid": "Q922071",
+  "name": "Глен Кук",
+  "born": "1944-07-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%BA%2C_%D0%93%D0%BB%D0%B5%D0%BD",
+      "rev": 150435515
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Glen_Cook",
+      "rev": 1373974704
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-flot",
+      "title": "Нью-Йорк, Калифорния, флот",
+      "from": 1944,
+      "to": 1969
+    },
+    {
+      "key": "zavod-i-pero",
+      "title": "Завод и первые книги",
+      "from": 1970,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1944",
+      "date": {
+        "from": "1944-07-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Глен Чарльз Кук родился в Нью-Йорке, вырос в Калифорнии.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-flot",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Нью-Йорк 1944-07-09"
+      }
+    },
+    {
+      "key": "war-1962",
+      "date": {
+        "from": "1962",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в ВМС США, морская пехота",
+      "long": "С 1962 по 1972 год служил в ВМС США, некоторое время был прикомандирован к разведывательному подразделению 3-го батальона морской пехоты; демобилизовался за месяц до отправки части во Вьетнам.",
+      "chapter": "detstvo-flot",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served in the United States Navy from 1962 to 1972 and specifically was attached, for a time, to a Marine Force Recon unit, the 3rd Marine Battalion."
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Кларионовский семинар",
+      "long": "В 1970 году Кук прослушал курс Кларионовского семинара для писателей-фантастов.",
+      "chapter": "zavod-i-pero",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году он прослушал курс Кларионовского семинара."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "black-company",
+      "title": "Хроники Чёрного Отряда",
+      "qid": "Q2636351",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    }
+  ]
+}

@@ -1,0 +1,345 @@
+{
+  "qid": "Q333719",
+  "name": "Ли Чайлд",
+  "born": "1954-10-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8_%D0%A7%D0%B0%D0%B9%D0%BB%D0%B4",
+      "rev": 155491320
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lee_Child",
+      "rev": 1377561382
+    }
+  ],
+  "chapters": [
+    {
+      "key": "coventry-sheffield",
+      "title": "Ковентри, Бирмингем, Шеффилд",
+      "from": 1954,
+      "to": 1976
+    },
+    {
+      "key": "granada",
+      "title": "Телекомпания Granada",
+      "from": 1977,
+      "to": 1993
+    },
+    {
+      "key": "layoff-reacher",
+      "title": "Увольнение и Джек Ричер",
+      "from": 1994,
+      "to": 1998
+    },
+    {
+      "key": "america-fame",
+      "title": "Слава и Америка",
+      "from": 1999,
+      "to": 2019
+    },
+    {
+      "key": "handover",
+      "title": "Передача серии, возвращение в Британию",
+      "from": 2020,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-10-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ковентри",
+      "long": "Джеймс Довер Грант (будущий Ли Чайлд) родился в Ковентри; в четыре года семья переехала в Бирмингем.",
+      "place": {
+        "label": "Ковентри"
+      },
+      "chapter": "coventry-sheffield",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джим Грант родился в 1954 году в Ковентри, Англия."
+      }
+    },
+    {
+      "key": "education-1974",
+      "date": {
+        "from": "1974",
+        "to": "1977",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Юридический факультет в Шеффилде",
+      "long": "Учился на юридическом факультете Шеффилдского университета, хотя профессия юриста его не привлекала; в студенческие годы работал в театре. Степень бакалавра получил в 1977 году.",
+      "place": {
+        "label": "Шеффилд"
+      },
+      "chapter": "coventry-sheffield",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, at the age of 20, Grant studied law at the University of Sheffield, though he had no intention of entering the legal profession."
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейн",
+      "long": "Женился на Джейн; у них родилась дочь Рут, чьё имя связано с происхождением псевдонима.",
+      "chapter": "coventry-sheffield",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Grant married his wife Jane in 1975."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "to": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа на телекомпании Granada",
+      "long": "Работал на Granada Television, принял участие в выпуске более 40 000 часов эфира; последние два года был профсоюзным представителем.",
+      "place": {
+        "label": "Манчестер"
+      },
+      "chapter": "granada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году Джим начал работать в телекомпании Granada Television."
+      }
+    },
+    {
+      "key": "creation-1994",
+      "date": {
+        "from": "1994-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман в ожидании сокращения",
+      "long": "Узнав в августе о предстоящем сокращении, в сентябре 1994 года начал писать первый роман; новую книгу серии он с тех пор начинает в годовщину этого дня.",
+      "works": [
+        {
+          "ref": "killing-floor",
+          "note": "роман начат в сентябре 1994 года в ожидании потери работы"
+        }
+      ],
+      "chapter": "layoff-reacher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1994, Grant was informed that his job was due to be eliminated in a corporate restructuring, and in anticipation of the coming job loss (he was made redundant in June 1995), he decided to start writing a novel in September 1994."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из телекомпании",
+      "long": "Уволен из Granada в ходе корпоративной реструктуризации.",
+      "chapter": "layoff-reacher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in anticipation of the coming job loss (he was made redundant in June 1995)"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех первого романа о Ричере",
+      "long": "Вышла первая книга о Джеке Ричере, имевшая большой успех и давшая начало серии.",
+      "works": [
+        {
+          "ref": "killing-floor"
+        }
+      ],
+      "chapter": "layoff-reacher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1997, Killing Floor was published, and became a great success."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премии Энтони и Барри за дебют",
+      "long": "Дебютный роман получил премии Энтони и Барри за лучший первый роман.",
+      "works": [
+        {
+          "ref": "killing-floor"
+        }
+      ],
+      "chapter": "layoff-reacher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first novel, Killing Floor (1997), won the Anthony Award and the 1998 Barry Award for Best First Novel."
+      }
+    },
+    {
+      "key": "relocation-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в США",
+      "long": "Летом переехал в США; семья поселилась в штате Нью-Йорк.",
+      "place": {
+        "label": "штат Нью-Йорк"
+      },
+      "chapter": "layoff-reacher",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1998 года Ли Чайлд переехал в США."
+      }
+    },
+    {
+      "key": "creation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Коллективный триллер с 14 соавторами",
+      "long": "Участвовал в коллективном серийном триллере, который читал Альфред Молина на сайте Audible.com.",
+      "works": [
+        {
+          "ref": "chopin-manuscript"
+        }
+      ],
+      "chapter": "america-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году совместно с 14 другими писателями Ли Чайлд написал триллер The Chopin Manuscript."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендии в Шеффилде, пост главы детективных писателей США",
+      "long": "Учредил стипендии для студентов Шеффилдского университета (где с ноября 2008 года читал лекции) и возглавил Ассоциацию детективных писателей США.",
+      "chapter": "america-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Ли Чайлд учредил стипендию Джека Ричера (англ. Jack Reacher scholarship) для студентов этого университета и в том же году был избран председателем Ассоциации детективных писателей США."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бриллиантовый кинжал Картье",
+      "long": "Получил Бриллиантовый кинжал Картье — премию за вклад в детективный жанр.",
+      "chapter": "america-fame",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Бриллиантовый кинжал Картье 2013-01-01"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Жюри Букеровской премии",
+      "long": "Вошёл в состав жюри Букеровской премии.",
+      "chapter": "handover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2020, Child joined the Booker Prize judging panel"
+      }
+    },
+    {
+      "key": "career-2020-2",
+      "date": {
+        "from": "2020-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Передача серии брату Эндрю",
+      "long": "Объявил об уходе от серии о Ричере и передаче её брату Эндрю Гранту, с которым написал несколько переходных книг.",
+      "chapter": "handover",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2020 года Ли Чайлд, объявил, что устал от серии и намерен оставить её."
+      }
+    },
+    {
+      "key": "relocation-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Великобританию",
+      "long": "Вернулся с семьёй в Великобританию.",
+      "chapter": "handover",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, he moved back to the UK with his family."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "killing-floor",
+      "title": "Этаж смерти",
+      "qid": "Q911224",
+      "written": {
+        "from": 1994,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "chopin-manuscript",
+      "title": "The Chopin Manuscript",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "qid": "Q720933",
+  "name": "Александр Николаевич Громов",
+  "born": "1959-08-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%BE%D0%BC%D0%BE%D0%B2%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 150347058
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alexander_Gromov",
+      "rev": 1318837960
+    }
+  ],
+  "chapters": [
+    {
+      "key": "moskva-i-institut",
+      "title": "Москва и инженерная работа",
+      "from": 1959,
+      "to": 1985
+    },
+    {
+      "key": "pervye-teksty",
+      "title": "Первые тексты и дебют",
+      "from": 1986,
+      "to": 1994
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и премии",
+      "from": 1995,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1959",
+      "date": {
+        "from": "1959-08-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье служащих в Москве",
+      "long": "Родился в Москве в семье служащих.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-institut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Александр Николаевич Громов родился 17 августа 1959 года в семье служащих в Москве."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало писательской работы",
+      "long": "Начал писать фантастику в 1986 году; до этого работал инженером в области радиотехники и космического приборостроения.",
+      "chapter": "pervye-teksty",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начал писать в 1986 году, впервые опубликовался в начале 1990-х."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебют в фантастике в «Уральском следопыте»",
+      "long": "Дебютировал в фантастике рассказом в приложении к журналу «Уральский следопыт».",
+      "chapter": "pervye-teksty",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебют в фантастике — публикация в 1991 году рассказа «Текодонт» в приложении к журналу «Уральский следопыт»."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый сборник и жанровые премии",
+      "long": "В нижегородском издательстве «Параллель» вышел первый сборник с лучшими вещами за пять лет; книга получила жанровые премии и привлекла внимание критиков.",
+      "place": {
+        "label": "Нижний Новгород"
+      },
+      "works": [
+        {
+          "ref": "myagkaya-posadka"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 году в издательстве «Параллель» (Нижний Новгород) был напечатан сборник Громова «Мягкая посадка», включивший в себя лучшие произведения, написанные автором за пять лет."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Беляевская премия",
+      "long": "Получил Беляевскую премию (повторно — в 2010 году).",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Беляевской премии (1996, 2010)"
+      }
+    },
+    {
+      "key": "creation-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство с Владимиром Васильевым",
+      "long": "Совместно с Владимиром Васильевым написал роман, положивший начало «альтернативной географии» в фантастике.",
+      "works": [
+        {
+          "ref": "antarktida-online"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2004 году Александр Громов и Владимир Васильев написали в соавторстве роман"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка блокировки RuTracker",
+      "long": "Поддержал блокировку сайта RuTracker по иску о защите прав издательства «Эксмо».",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2015 году Громов поддержал блокировку сайта RuTracker, на котором нелегально распространялись его книги"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "myagkaya-posadka",
+      "title": "Мягкая посадка",
+      "written": {
+        "from": 1990,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "god-lemminga",
+      "title": "Год Лемминга",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "vlastelin-pustoty",
+      "title": "Властелин пустоты",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "menuet-svyatogo-vitta",
+      "title": "Менуэт святого Витта",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "antarktida-online",
+      "title": "Антарктида online",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

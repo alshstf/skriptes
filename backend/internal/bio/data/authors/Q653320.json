@@ -1,0 +1,328 @@
+{
+  "qid": "Q653320",
+  "name": "Николай Николаевич Носов",
+  "born": "1908-11-23",
+  "died": "1976-07-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%BE%D1%81%D0%BE%D0%B2%2C_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 155496670
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nikolay_Nosov",
+      "rev": 1375167496
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kiev-irpen",
+      "title": "Киев, Ирпень, поиски дела",
+      "from": 1908,
+      "to": 1928
+    },
+    {
+      "key": "institut-kino",
+      "title": "Московский институт кинематографии",
+      "from": 1929,
+      "to": 1937
+    },
+    {
+      "key": "kino-i-voyna",
+      "title": "Кино, война и первые рассказы",
+      "from": 1938,
+      "to": 1951
+    },
+    {
+      "key": "priznanie-neznayka",
+      "title": "Признание и Незнайка",
+      "from": 1952,
+      "to": 1976
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1908",
+      "date": {
+        "from": "1908-11-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье эстрадного артиста",
+      "long": "Родился в Киеве в семье эстрадного артиста; был вторым сыном, детство прошло в Ирпене под Киевом.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-irpen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Николай Николаевич Носов родился 10 (23 ноября) 1908 года в Киеве"
+      }
+    },
+    {
+      "key": "poverty-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Окончание семилетки, work чернорабочим на заводе",
+      "long": "Окончил школу-семилетку и начал работать чернорабочим на бетонном заводе, затем на кирпичном заводе под Ирпенем.",
+      "place": {
+        "label": "Ирпень"
+      },
+      "chapter": "kiev-irpen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончив её в 1924 году, он работал чернорабочим на бетонном заводе в Ирпене"
+      }
+    },
+    {
+      "key": "education-1927",
+      "date": {
+        "from": "1927",
+        "to": "1929",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Киевском художественном институте",
+      "long": "Вместо задуманной химии поступил в Киевский художественный институт; увлёкся фотографией, а затем кинематографом.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-irpen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1927 to 1929 he was a student of Kyiv Institute of Art"
+      }
+    },
+    {
+      "key": "education-1929",
+      "date": {
+        "from": "1929",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Переезд в Москву, учёба в институте кинематографии",
+      "long": "В 1929 году перевёлся в Московский институт кинематографии и окончил его в 1932 году.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "institut-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929 году он перевёлся в Московский институт кинематографии. В 1932 году он окончил его"
+      }
+    },
+    {
+      "key": "child-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Петра",
+      "long": "Родился сын Пётр, впоследствии фотожурналист, много лет работавший в Фотохронике ТАСС.",
+      "chapter": "institut-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын писателя Пётр Носов (1931—2002) стал фотожурналистом"
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932",
+        "to": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа режиссёром мультипликационных и учебных фильмов",
+      "long": "С 1932 по 1951 год работал постановщиком и режиссёром мультипликационных, научных и учебных фильмов.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "institut-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1932 году он окончил его и до 1951 года работал постановщиком и режиссёром мультипликационных, научных и учебных фильмов."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало литературной работы, первый рассказ",
+      "long": "Начал писать детские рассказы; первый рассказ напечатан в 1938 году, затем рассказы выходили в основном в журнале «Мурзилка».",
+      "works": [
+        {
+          "ref": "zatejniki"
+        }
+      ],
+      "chapter": "kino-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый рассказ Носова был опубликован в 1938 году, назывался он «Затейники»."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Учебные фильмы для армии, орден Красной Звезды",
+      "long": "В годы войны делал учебные военно-технические фильмы для РККА; в 1943 году награждён орденом Красной Звезды.",
+      "chapter": "kino-i-voyna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "having earned the Order of the Red Star in 1943"
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сталинская премия третьей степени",
+      "long": "Получил Сталинскую премию третьей степени за повесть о Вите Малееве.",
+      "works": [
+        {
+          "ref": "vitya-maleev-v-shkole-i-doma",
+          "note": "премия присуждена именно за эту повесть"
+        }
+      ],
+      "chapter": "priznanie-neznayka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1952 году Николай Носов получил Сталинскую премию третьей степени за написание повести «Витя Малеев в школе и дома»."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Государственная премия РСФСР имени Крупской",
+      "long": "Удостоен Государственной премии РСФСР имени Н. К. Крупской.",
+      "chapter": "priznanie-neznayka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Государственной премии РСФСР им. Н. К. Крупской (1969)"
+      }
+    },
+    {
+      "key": "death-1976",
+      "date": {
+        "from": "1976-07-26",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умер в Москве в возрасте 67 лет; похоронен на Кунцевском кладбище.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "priznanie-neznayka",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер в Москве 26 июля 1976 года в возрасте 67 лет."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "zatejniki",
+      "title": "Затейники",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "tuk-tuk-tuk",
+      "title": "Тук-тук-тук",
+      "written": {
+        "from": 1938,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "vesyolaya-semejka",
+      "title": "Весёлая семейка",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "dnevnik-koli-sinitsyna",
+      "title": "Дневник Коли Синицына",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "vitya-maleev-v-shkole-i-doma",
+      "title": "Витя Малеев в школе и дома",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "priklyucheniya-neznajki-i-ego-druzej",
+      "title": "Приключения Незнайки и его друзей",
+      "written": {
+        "from": 1953,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "neznajka-v-solnechnom-gorode",
+      "title": "Незнайка в Солнечном городе",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "neznajka-na-lune",
+      "title": "Незнайка на Луне",
+      "written": {
+        "from": 1964,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "povest-o-moem-druge-igore",
+      "title": "Повесть о моём друге Игоре",
+      "written": {
+        "from": 1971,
+        "to": 1972
+      }
+    }
+  ]
+}

@@ -1,0 +1,765 @@
+{
+  "qid": "Q34670",
+  "name": "Альбер Камю",
+  "born": "1913-11-07",
+  "died": "1960-01-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BC%D1%8E%2C_%D0%90%D0%BB%D1%8C%D0%B1%D0%B5%D1%80",
+      "rev": 155479235
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Albert_Camus",
+      "rev": 239996433
+    }
+  ],
+  "chapters": [
+    {
+      "key": "algiers-youth",
+      "title": "Алжир: бедность, болезнь, театр",
+      "from": 1913,
+      "to": 1939
+    },
+    {
+      "key": "war-years",
+      "title": "Париж, Оран, Сопротивление",
+      "from": 1940,
+      "to": 1944
+    },
+    {
+      "key": "fame-and-dispute",
+      "title": "Слава и разрыв с левыми",
+      "from": 1945,
+      "to": 1956
+    },
+    {
+      "key": "nobel-and-end",
+      "title": "Нобель и последние годы",
+      "from": 1957,
+      "to": 1960
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1913",
+      "date": {
+        "from": "1913-11-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мондови, Французский Алжир",
+      "long": "Родился в семье французских поселенцев в Мондови (ныне Дреан) на северо-востоке Алжира.",
+      "place": {
+        "label": "Мондови"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Альбер Камю родился 7 ноября 1913 года в небольшом городе Мондови на северо-востоке Алжира"
+      }
+    },
+    {
+      "key": "poverty-1914",
+      "date": {
+        "from": "1914-07",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Переезд семьи в бедный квартал Алжира",
+      "long": "Из-за угрозы малярии мать с двумя сыновьями уехала в Алжир, в дом своей матери в квартале Беркур; семья жила в бедности.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En juillet 1914, le paludisme menace la petite famille…Catherine Hélène quitte la région avec ses deux jeunes enfants"
+      }
+    },
+    {
+      "key": "loss-1914",
+      "date": {
+        "from": "1914-10-11",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца от ранения на войне",
+      "long": "Отец Люсьен Камю, мобилизованный на Первой мировой войне, умер от ранения в госпитале Сен-Брьё; сыновья стали «воспитанниками нации».",
+      "place": {
+        "label": "Сен-Брьё"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Blessé à la tête par un éclat d'obus, il meurt pour la France le 11 octobre 1914 à Saint-Brieuc à l'hôpital auxiliaire rue Saint-Benoît."
+      }
+    },
+    {
+      "key": "education-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Начальная школа и учитель Луи Жермен",
+      "long": "В начальной школе его учителем стал Луи Жермен, поддерживавший мальчика в учёбе.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Впервые Камю познакомился с книгами в школе, в которую поступил в 1918 году."
+      }
+    },
+    {
+      "key": "education-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в лицей со стипендией",
+      "long": "Благодаря бесплатным урокам Жермена поступил в лицей; бабушка была против стипендии, но неполную стипендию ему назначили.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "за чем следовало образование в лицее, в который Камю поступил после окончания школы в 1924 году"
+      }
+    },
+    {
+      "key": "illness-1930",
+      "date": {
+        "from": "1930-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз «туберкулёз»",
+      "long": "После кровохарканья у него диагностировали туберкулёз; он попал в больницу и переехал к тёте и дяде, оставил футбол.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Mais en décembre 1930, à la suite d'inquiétants crachements de sang, les médecins diagnostiquent une tuberculose"
+      }
+    },
+    {
+      "key": "education-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Алжирском университете",
+      "long": "Учился в Алжирском университете, изучал философию; подрабатывал репетитором.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В том же 1933 году Камю поступает в Алжирский университет"
+      }
+    },
+    {
+      "key": "love-1934",
+      "date": {
+        "from": "1934-06-16",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Симоной Хие",
+      "long": "Первая жена Симона Хие страдала наркотической зависимостью; брак быстро распался.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En juin 1934, il épouse Simone Hié (1914-1970), starlette algéroise enlevée à son ami Max-Pol Fouchet."
+      }
+    },
+    {
+      "key": "other-1935",
+      "date": {
+        "from": "1935",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Членство в Коммунистической партии Алжира",
+      "long": "Вступил в Коммунистическую партию Алжира по совету Жана Гренье; в 1937 году был исключён из-за разногласий о колониальной политике.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1935, il adhère au Parti communiste algérien (PCA) sur le conseil de Jean Grenier."
+      }
+    },
+    {
+      "key": "persecution-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет постановки коллективной пьесы",
+      "long": "Коллективную пьесу об астурийских шахтёрах мэр не разрешил ставить; она вышла книгой тиражом 500 экземпляров.",
+      "place": {
+        "label": "Алжир"
+      },
+      "works": [
+        {
+          "ref": "revolt-in-asturias"
+        }
+      ],
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Следующим его замыслом стала работа под названием «Восстание в Астурии» (фр. Révolte dans les Asturies), написанное в поездке в Европу летом 1936 года…Мэр Алжира с правыми взглядами не дал согласия на проведение мероприятия"
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936-01-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая постановка в «Театре рабочих»",
+      "long": "Руководил «Театром рабочих» и поставил спектакль по роману Мальро; в последующие годы продолжил заниматься театром.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Представление состоялось 25 января 1936 года в пляжном заведении"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортажи о нищете Кабилии",
+      "long": "Цикл из одиннадцати репортажей в «Республиканском Алжире» о голоде в Кабилии вызвал широкий резонанс.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "algiers-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En juin 1939, son enquête Misère de la Kabylie aura un écho retentissant"
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940-03-14",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Вынужденный отъезд из Алжира во Францию",
+      "long": "После закрытия газет, в которых он работал, остался без заработка и уехал во Францию, в Париж.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Из-за политических высказываний Камю был лишён заработка и за отсутствием денег вынужден был отправиться во Францию 14 марта 1940 года."
+      }
+    },
+    {
+      "key": "family-1940",
+      "date": {
+        "from": "1940-09",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Симоной Хие",
+      "long": "Брак с Симоной Хие был расторгнут в 1940 году.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1940, le Gouvernement général de l'Algérie interdit le journal Le Soir républicain. Cette même année, Camus divorce de Simone Hié pour épouser Francine Faure"
+      }
+    },
+    {
+      "key": "relocation-1940-2",
+      "date": {
+        "from": "1940-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Увольнение из «Пари-суар», возвращение в Оран",
+      "long": "Уволенный из «Пари-суар», не желая жить в оккупированной стране, вернулся в Оран и преподавал французский в частной школе.",
+      "place": {
+        "label": "Оран"
+      },
+      "works": [
+        {
+          "ref": "stranger-1942",
+          "note": "повесть закончена в мае 1940 года, до увольнения"
+        }
+      ],
+      "chapter": "war-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1940 года закончил повесть «Посторонний»…В декабре того же года оппозиционно настроенного Камю увольняют из «Пари-суар»"
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940-12-03",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак, с Франсиной Фор",
+      "long": "Женился на Франсине Фор; брак продлился до его смерти.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Francine Faure 1940-12-03"
+      }
+    },
+    {
+      "key": "illness-1942",
+      "date": {
+        "from": "1942",
+        "to": "1943",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лечение туберкулёза в Шамбон-сюр-Линьон",
+      "long": "Лечил туберкулёз в селе Шамбон-сюр-Линьон, где наблюдал ненасильственное сопротивление жителей; там же работал над романом.",
+      "place": {
+        "label": "Шамбон-сюр-Линьон"
+      },
+      "works": [
+        {
+          "ref": "plague-1947",
+          "note": "над романом он работал на месте"
+        }
+      ],
+      "chapter": "war-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Albert Camus, venu soigner sa tuberculose dans le village du Chambon-sur-Lignon en 1942-1943, a pu y observer la résistance non violente"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "to": "1947",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Сопротивление и руководство газетой «Комба»",
+      "long": "Вступил в Сопротивление, печатался в подпольной газете «Комба» и возглавил её; в 1947 году ушёл из газеты и из журналистики.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1943, il devient lecteur chez Gallimard, entre dans la Résistance et prend la direction de Combat."
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в издательстве «Галлимар»",
+      "long": "Работал в издательстве «Галлимар» и сотрудничал с ним до конца жизни.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С конца 1943 года начал работать в издательстве «Галлимар», с которым сотрудничал до конца жизни."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Встреча с Марией Казарес",
+      "long": "Началась его самая известная связь вне брака — с актрисой Марией Казарес, исполнительницей его пьес.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "la plus connue étant celle avec Maria Casarès, « l'unique », rencontrée en 1944"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Внезапная известность",
+      "long": "После публикации первых книг почти внезапно стал известен; в дневнике записал, что не жалеет об этом.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À l’automne 1945, il note dans ses Carnets : « À trente ans, presque du jour au lendemain, j’ai connu la renommée. Je ne le regrette pas."
+      }
+    },
+    {
+      "key": "career-1945-2",
+      "date": {
+        "from": "1945-08-08",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Статья против атомной бомбардировки",
+      "long": "В редакционной статье в «Комба» осудил применение атомной бомбы.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 8 août 1945, deux jours après que l'Enola Gay a largué la première bombe sur Hiroshima, il est l'un des seuls intellectuels occidentaux à dénoncer l'usage de la bombe atomique"
+      }
+    },
+    {
+      "key": "child-1945",
+      "date": {
+        "from": "1945-09-05",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение близнецов Жана и Катрин",
+      "long": "У него и Франсины родились близнецы — сын Жан и дочь Катрин.",
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Jean Camus 1945-09-05"
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Патрисией Блейк",
+      "long": "Познакомился в Нью-Йорке с Патрисией Блейк; между ними завязались отношения.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il a eu aussi une relation avec Patricia Blake (1925-2010), une jeune étudiante américaine, rencontrée à New York en 1946"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947-06-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Критический успех романа об эпидемии",
+      "long": "Роман быстро получил премию критиков и принёс автору успех.",
+      "works": [
+        {
+          "ref": "plague-1947"
+        }
+      ],
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 6 juin 1947 paraît La Peste, qui reçoit presque immédiatement le prix des critiques et lui apporte le succès."
+      }
+    },
+    {
+      "key": "other-1951",
+      "date": {
+        "from": "1951",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Полемика с левыми и разрыв с Сартром",
+      "long": "Критика насилия и антисоветская позиция вызвали враждебность левых интеллектуалов; в 1952 году произошёл разрыв с Сартром.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "rebel-1951"
+        }
+      ],
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La publication de L'Homme révolté en 1951, où il critique la légitimation de la violence et adopte une position antisoviétique, lui vaut l'hostilité d'intellectuels communistes et marque sa rupture avec Jean-Paul Sartre."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Разрыв с ЮНЕСКО в протест против Франко",
+      "long": "Прекратил сотрудничество с ЮНЕСКО в знак протеста против принятия франкистской Испании.",
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "после того, как в 1952 году членом этой организации становится Испания во главе с Франко, он прекращает свою работу там."
+      }
+    },
+    {
+      "key": "persecution-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Призыв к гражданскому перемирию в Алжире",
+      "long": "Выступил в Алжире с призывом к гражданскому перемирию; сторонники колониализма угрожали ему смертью, позже его позиция была критикована обеими сторонами.",
+      "place": {
+        "label": "Алжир"
+      },
+      "works": [
+        {
+          "ref": "fall-1956"
+        }
+      ],
+      "chapter": "fame-and-dispute",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1956, il lance à Alger son discours L'Appel pour une Trêve Civile, tandis qu'au dehors sont proférées à son encontre des menaces de mort."
+      }
+    },
+    {
+      "key": "other-1957",
+      "date": {
+        "from": "1957-10-16",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Получил Нобелевскую премию по литературе «за огромный вклад в литературу, высветивший значение человеческой совести».",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 16 octobre 1957, le prix Nobel de littérature lui est décerné"
+      }
+    },
+    {
+      "key": "relocation-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Дом в Лурмарене",
+      "long": "На деньги Нобелевской премии купил дом в Лурмарене в Любероне, который ему показал Рене Шар.",
+      "place": {
+        "label": "Лурмарен"
+      },
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le chèque afférent au prix Nobel lui permet de s'acheter en 1958 une ancienne magnanerie à Lourmarin dans le Vaucluse"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постановка «Бесов» на сцене",
+      "long": "Поставил как режиссёр свою инсценировку «Бесов» Достоевского в театре Антуан; спектакль имел успех у критиков.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Représentée à partir de janvier 1959 au théâtre Antoine, la pièce est un succès critique"
+      }
+    },
+    {
+      "key": "death-1960",
+      "date": {
+        "from": "1960-01-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в автомобильной катастрофе",
+      "long": "Погиб в автомобильной катастрофе близ Вильблевена; в его вещах нашли рукопись неоконченной повести. Похоронен в Лурмарене.",
+      "place": {
+        "label": "Вильблевен"
+      },
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Днём 4 января 1960 года автомобиль, в котором Альбер Камю вместе с семьёй своего друга Мишеля Галлимара, племянника издателя Гастона Галлимара, возвращался из Прованса в Париж, вылетел с дороги и врезался в платан неподалёку от городка Вильблёвен"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "envers-endroit",
+      "title": "Изнанка и лицо",
+      "written": {
+        "from": 1935,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "revolt-in-asturias",
+      "title": "Восстание в Астурии",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "happy-death",
+      "title": "Счастливая смерть",
+      "qid": "Q1198739",
+      "written": {
+        "from": 1936,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "caligula",
+      "title": "Калигула",
+      "qid": "Q2632077",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "stranger-1942",
+      "title": "Посторонний",
+      "qid": "Q163297",
+      "written": {
+        "from": 1937,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "myth-of-sisyphus",
+      "title": "Миф о Сизифе",
+      "qid": "Q1125903",
+      "written": {
+        "from": 1940,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "plague-1947",
+      "title": "Чума",
+      "qid": "Q320372",
+      "written": {
+        "from": 1942,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "rebel-1951",
+      "title": "Бунтующий человек",
+      "qid": "Q1195789",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "fall-1956",
+      "title": "Падение",
+      "qid": "Q690362",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "exile-and-kingdom",
+      "title": "Изгнание и царство",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    }
+  ]
+}

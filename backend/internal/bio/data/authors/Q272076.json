@@ -1,0 +1,264 @@
+{
+  "qid": "Q272076",
+  "name": "Дин Кунц",
+  "born": "1945-07-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%BD%D1%86%2C_%D0%94%D0%B8%D0%BD",
+      "rev": 152482201
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Dean_Koontz",
+      "rev": 1380155940
+    }
+  ],
+  "chapters": [
+    {
+      "key": "pensilvaniya",
+      "title": "Пенсильвания: детство и учёба",
+      "from": 1945,
+      "to": 1966
+    },
+    {
+      "key": "uchitel-i-pisatel",
+      "title": "Учитель, ставший писателем",
+      "from": 1967,
+      "to": 1979
+    },
+    {
+      "key": "proryv",
+      "title": "Прорыв и псевдонимы",
+      "from": 1980,
+      "to": 2006
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Трикси и новые издатели",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-07-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Эверетте, Пенсильвания",
+      "long": "Родился в Эверетте, Пенсильвания, в семье Флоренс (урождённой Логью) и Реймонда Кунц. Позже говорил, что отец-алкоголик регулярно избивал его.",
+      "place": {
+        "label": "Эверетт"
+      },
+      "chapter": "pensilvaniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Koontz was born on July 9, 1945, in Everett, Pennsylvania"
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Бедфорде",
+      "long": "Вырос в Бедфорде, Пенсильвания; в 1963 году окончил среднюю школу Бедфорда.",
+      "place": {
+        "label": "Бедфорд"
+      },
+      "chapter": "pensilvaniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was raised in Bedford, Pennsylvania and graduated from Bedford High School in 1963."
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Гердой Энн Керра",
+      "long": "Во время учёбы в колледже женился на школьной подруге Герде Энн Керра; они остались вместе.",
+      "chapter": "pensilvaniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Koontz married his high school girlfriend Gerda Ann Cerra in 1966."
+      }
+    },
+    {
+      "key": "education-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа, работа учителем",
+      "long": "После окончания колледжа в 1967 году стал учителем английского языка в школе в Мекениксберге, Пенсильвания; писал в свободное время.",
+      "place": {
+        "label": "Мекениксберг"
+      },
+      "works": [
+        {
+          "ref": "star-quest"
+        }
+      ],
+      "chapter": "uchitel-i-pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduation in 1967, he went to work as an English teacher at Mechanicsburg High School in Mechanicsburg, Pennsylvania."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый признанный бестселлер",
+      "long": "После более чем десяти лет профессионального писательства получил признание как автор бестселлера; прежде многое выходило под псевдонимами.",
+      "works": [
+        {
+          "ref": "whispers-1980"
+        }
+      ],
+      "chapter": "proryv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After writing full-time for more than 10 years, Koontz had his acknowledged breakthrough novel with Whispers, published in 1980."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия гроссмейстера Всемирной конвенции ужасов",
+      "long": "Получил премию гроссмейстера Всемирной конвенции ужасов.",
+      "chapter": "proryv",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия гроссмейстера Всемирной конвенции ужасов 1996-01-01"
+      }
+    },
+    {
+      "key": "other-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход биографии авторства Кэтрин Рамсленд",
+      "long": "Психолог Кэтрин Рамсленд опубликовала обширную биографию писателя, основанную на интервью с ним и его семьёй.",
+      "chapter": "proryv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, psychologist Katherine Ramsland published an extensive biography of Koontz based on interviews with his family and him."
+      }
+    },
+    {
+      "key": "loss-2007",
+      "date": {
+        "from": "2007-06-30",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть собаки Трикси",
+      "long": "Золотистая ретривер Трикси, подаренная фондом Canine Companions for Independence, заболела раком сердца; 30 июня её усыпили. Считается, что она вдохновила писателя на роман ноября 2007 года.",
+      "works": [
+        {
+          "ref": "darkest-evening-of-the-year-2007",
+          "note": "Трикси, как принято считать, вдохновила роман о женщине, спасающей золотистых ретриверов"
+        }
+      ],
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Trixie contracted terminal cancer that created a tumor in her heart. The Koontzes had her euthanized outside their family home on June 30."
+      }
+    },
+    {
+      "key": "loss-2016",
+      "date": {
+        "from": "2016-05-22",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть собаки Анны",
+      "long": "Умерла собака Анна, внучатая племянница Трикси, взятая в 2008 году; 11 июля 2016 года Кунц взял новую собаку Эльзу.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anna died on May 22, 2016."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в Amazon Publishing",
+      "long": "Начал издаваться в Amazon Publishing; на момент объявления был одним из самых заметных авторов компании.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019, Koontz began publishing with Amazon Publishing."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "star-quest",
+      "title": "Star Quest",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "whispers-1980",
+      "title": "Whispers",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "life-is-good-2004",
+      "title": "Life Is Good: Lessons in Joyful Living",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "darkest-evening-of-the-year-2007",
+      "title": "The Darkest Evening of the Year",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    }
+  ]
+}

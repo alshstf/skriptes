@@ -1,0 +1,158 @@
+{
+  "qid": "Q1038491",
+  "name": "Владимир Николаевич Васильев",
+  "born": "1967-08-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%B5%D0%B2%2C_%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154809419
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Vladimir_Vasilyev_%28writer%29",
+      "rev": 1371713383
+    }
+  ],
+  "chapters": [
+    {
+      "key": "nikolaev",
+      "title": "Николаев",
+      "from": 1967,
+      "to": 1989
+    },
+    {
+      "key": "years-of-moves",
+      "title": "Годы переездов",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "moscow-and-awards",
+      "title": "Москва и премии",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-08-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в русско-украинской семье в Николаеве",
+      "long": "Родился в Николаеве (Украинская ССР) в русско-украинской семье.",
+      "place": {
+        "label": "Николаев"
+      },
+      "chapter": "nikolaev",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 8 августа 1967 года в Николаеве (Украинская ССР) в русско-украинской семье."
+      }
+    },
+    {
+      "key": "relocation-1990",
+      "date": {
+        "from": "1990",
+        "to": "1997",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Семь лет жизни в разных городах",
+      "long": "С лета 1990 по осень 1997 года жил в разных городах — Николаеве, Киеве, Москве, Санкт-Петербурге, Риге, Ялте, Харькове, Новосибирске, Одессе, Минске и других.",
+      "chapter": "years-of-moves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С лета 1990 по осень 1997 года жил в разных городах, таких как Николаев, Киев, Москва, Санкт-Петербург"
+      }
+    },
+    {
+      "key": "relocation-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из Николаева в Москву",
+      "long": "В начале 2000-х годов переехал из Николаева в Москву (точный год в источнике не указан).",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 2000-х годов перебрался из Николаева в Москву."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премии «Большая Урания» и «Малая Урания»",
+      "long": "Получил премии «Большая Урания» и «Малая Урания» за произведения в области фантастики.",
+      "chapter": "moscow-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Большая Урания (2000)"
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичные заявления о будущем Украины",
+      "long": "В 2007 году публично заявил, что «никакой Украины нет», и высказался о возможном разделе страны.",
+      "chapter": "moscow-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году Васильев заявил, что «никакой Украины нет»"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Аэлита»",
+      "long": "Удостоен премии «Аэлита».",
+      "chapter": "moscow-and-awards",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Аэлита 2009-01-01"
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Заявление о необходимости покинуть Украину",
+      "long": "После Евромайдана заявил, что не видит для себя другого выхода, кроме как покинуть Украину.",
+      "chapter": "moscow-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После Евромайдана в 2014 году Васильев заявил, что не видит для себя другого выхода, кроме как покинуть Украину."
+      }
+    }
+  ]
+}

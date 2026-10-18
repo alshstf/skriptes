@@ -1,0 +1,957 @@
+{
+  "qid": "Q134798",
+  "name": "Харуки Мураками",
+  "born": "1949-01-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D1%83%D1%80%D0%B0%D0%BA%D0%B0%D0%BC%D0%B8%2C_%D0%A5%D0%B0%D1%80%D1%83%D0%BA%D0%B8",
+      "rev": 155510831
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Haruki_Murakami",
+      "rev": 1379570552
+    },
+    {
+      "id": "jawiki",
+      "url": "https://ja.wikipedia.org/wiki/%E6%9D%91%E4%B8%8A%E6%98%A5%E6%A8%B9",
+      "rev": 111202289
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-student",
+      "title": "Кансай и Васэда",
+      "from": 1949,
+      "to": 1973
+    },
+    {
+      "key": "peter-cat",
+      "title": "Джаз-бар и первая книга",
+      "from": 1974,
+      "to": 1981
+    },
+    {
+      "key": "writer-years",
+      "title": "Писатель на полную ставку",
+      "from": 1982,
+      "to": 1985
+    },
+    {
+      "key": "abroad",
+      "title": "Европа, США и «Норвежский лес»",
+      "from": 1986,
+      "to": 1995
+    },
+    {
+      "key": "return",
+      "title": "Возвращение и признание",
+      "from": 1996,
+      "to": 2008
+    },
+    {
+      "key": "recognition",
+      "title": "Иерусалим, Астурия и после",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1949",
+      "date": {
+        "from": "1949-01-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Киото",
+      "long": "Родился в Киото в семье учителей японской литературы; отец — сын буддийского священника.",
+      "place": {
+        "label": "Киото"
+      },
+      "chapter": "childhood-student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Харуки Мураками родился 12 января 1949 года в Киото."
+      }
+    },
+    {
+      "key": "relocation-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Асию близ Кобе",
+      "long": "Семья переехала в Асию близ Кобе, где прошло детство.",
+      "place": {
+        "label": "Асия"
+      },
+      "chapter": "childhood-student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году семья будущего писателя переехала в город Асия — пригород крупного порта Кобе (префектура Хёго)."
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Старшая школа в Кобе",
+      "long": "Поступил в старшую школу Кобе; в этот период читал зарубежную литературу и учил английский по детективным книгам в мягкой обложке.",
+      "place": {
+        "label": "Кобе"
+      },
+      "chapter": "childhood-student",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1964年に兵庫県立神戸高等学校に進学。"
+      }
+    },
+    {
+      "key": "education-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в университете Васэда",
+      "long": "Поступил в Васэда на театральное отделение; подрабатывал в магазине пластинок и часто бывал в джаз-кафе.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "childhood-student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Высшее образование Мураками получил в университете Васэда, где с 1968 года обучался по специальности «классическая драма» на отделении театральных искусств."
+      }
+    },
+    {
+      "key": "love-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Ёко Такахаси",
+      "long": "Студентом женился на Ёко Такахаси; пара решила не заводить детей.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "childhood-student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1971 году женился на однокласснице Ёко Такахаси, детей в браке нет."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "to": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Джаз-бар Peter Cat",
+      "long": "Вместе с женой открыл джаз-бар Peter Cat, в 1977 году перенесённый в Сэндагаю; в 1981 году бар был передан другим владельцам.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году открыл собственный джаз-бар Peter Cat в районе Кокубундзи (Токио)."
+      }
+    },
+    {
+      "key": "education-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Васэда",
+      "long": "Окончил Васэда после семи лет учёбы; дипломная работа — об идее «путешествия» в американском кино.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1975年、7年間在学した早稲田大学を卒業。"
+      }
+    },
+    {
+      "key": "relocation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд бара в Сэндагаю",
+      "long": "Бар Peter Cat переехал в район Сэндагая.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году заведение переехало в более спокойный столичный район Сэндагая."
+      }
+    },
+    {
+      "key": "creation-1978",
+      "date": {
+        "from": "1978-04",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Решение стать писателем на бейсбольном матче",
+      "long": "Во время бейсбольного матча решил писать книгу; после закрытия бара писал по ночам чернильной ручкой на простой бумаге.",
+      "place": {
+        "label": "Токио"
+      },
+      "works": [
+        {
+          "ref": "hear-the-wind-sing",
+          "note": "по воспоминаниям писателя, работу над первой книгой он начал в тот же вечер и вёл её урывками по ночам после работы в баре"
+        }
+      ],
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1978 года во время бейсбольного матча на стадионе «Дзингу» Мураками принял решение написать книгу"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и премия журнала «Гундзо»",
+      "long": "Дебютная повесть получила премию «Гундзо» для начинающих авторов и номинацию на премию Акутагавы.",
+      "works": [
+        {
+          "ref": "hear-the-wind-sing"
+        }
+      ],
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1979 году была опубликована дебютная повесть «Слушай песню ветра» — первая часть цикла «Трилогия Крысы». За это произведение Мураками удостоился литературной премии журнала «Гундзо» для начинающих авторов"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из бара ради профессиональной литературы",
+      "long": "Оставил бар, чтобы заниматься только литературой.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "peter-cat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1981 году Мураками продал лицензию на управление джаз-баром, решив полностью сосредоточиться на литературном труде."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Номы за первый полноформатный роман",
+      "long": "Завершил первый полноформатный роман, отмеченный премией Номы для начинающих писателей.",
+      "works": [
+        {
+          "ref": "wild-sheep-chase"
+        }
+      ],
+      "chapter": "writer-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1982 году он завершил свой первый полноформатный роман «Охота на овец» — заключительную часть «Трилогии Крысы», за которую получил премию Номы для начинающих писателей."
+      }
+    },
+    {
+      "key": "other-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало регулярного бега",
+      "long": "Осенью начал регулярно бегать; позднее бег стал постоянной частью его жизни и темой одной из книг.",
+      "works": [
+        {
+          "ref": "what-i-talk-about-running",
+          "note": "книга посвящена связи многолетнего бега и творчества"
+        }
+      ],
+      "chapter": "writer-years",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "走り始めたのは1982年の秋だという。"
+      }
+    },
+    {
+      "key": "other-1983",
+      "date": {
+        "from": "1983-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый марафон от Афин до Марафона",
+      "long": "Пробежал в одиночку маршрут от Афин до Марафона — первый в его жизни полный марафон.",
+      "place": {
+        "label": "Афины"
+      },
+      "chapter": "writer-years",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1983年7月、アテネからマラトンまでを一人で走る。"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Танидзаки",
+      "long": "Роман получил премию Танидзаки.",
+      "works": [
+        {
+          "ref": "hard-boiled-wonderland"
+        }
+      ],
+      "chapter": "writer-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году вышел роман «Страна Чудес без тормозов и Конец Света», принёсший Мураками премию имени Дзюнъитиро Танидзаки."
+      }
+    },
+    {
+      "key": "relocation-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Японии в Европу",
+      "long": "Уехал из Японии с женой: Италия, затем Греция и острова Эгейского моря.",
+      "place": {
+        "label": "Италия"
+      },
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1986 году Мураками вместе с женой уехал в Италию, а затем в Грецию, где путешествовал по островам Эгейского моря."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всеяпонская известность после романа",
+      "long": "Роман о потере и сексуальности разошёлся миллионами экземпляров среди молодёжи; писателя узнавали в аэропортах и других людных местах.",
+      "works": [
+        {
+          "ref": "norwegian-wood"
+        }
+      ],
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Murakami achieved a major breakthrough and national recognition in 1987 with the publication of Norwegian Wood"
+      }
+    },
+    {
+      "key": "relocation-1987",
+      "date": {
+        "from": "1987",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Лондоне",
+      "long": "Жил в Лондоне, где на следующий год завершил роман-продолжение «Трилогии Крысы».",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "dance-dance-dance",
+          "note": "роман завершён в Лондоне на следующий год"
+        }
+      ],
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году вышел один из самых известных романов писателя — «Норвежский лес», после чего Мураками переехал в Лондон."
+      }
+    },
+    {
+      "key": "relocation-1991",
+      "date": {
+        "from": "1991",
+        "to": "1995",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Годы в США: Принстон и Тафтс",
+      "long": "Жил в США: Принстон, затем Калифорния и Университет Тафтса; вдали от Японии начал писать о японцах и о Японии.",
+      "place": {
+        "label": "Принстон"
+      },
+      "works": [
+        {
+          "ref": "south-of-the-border"
+        },
+        {
+          "ref": "wind-up-bird-chronicle",
+          "note": "роман написан в период пребывания в США"
+        }
+      ],
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1991 году писатель переехал в США, где занял должность стажёра-исследователя в Принстонском университете."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Договор с «Нью-Йоркером»",
+      "long": "Заключил с журналом «Нью-Йоркер» договор о приоритетной публикации; это стало опорой его международной известности.",
+      "chapter": "abroad",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1993年には同誌と優先掲載の契約を結ぶ。"
+      }
+    },
+    {
+      "key": "career-1993-2",
+      "date": {
+        "from": "1993-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый писатель в Университете Тафтса",
+      "long": "Переехал в Калифорнию и стал приглашённым писателем Университета Тафтса, где читал лекции по послевоенной литературе.",
+      "place": {
+        "label": "Санта-Ана"
+      },
+      "chapter": "abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1993 года Мураками переехал в город Санта-Ана (штат Калифорния) и стал приглашённым писателем в Университете Тафтса"
+      }
+    },
+    {
+      "key": "creation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Переход от «отстранённости» к «вовлечённости»",
+      "long": "В разговоре с Хаяо Кавай писатель назвал переход от «отстранённости» к «вовлечённости» поворотом, отмеченным романом о заводной птице.",
+      "works": [
+        {
+          "ref": "wind-up-bird-chronicle",
+          "note": "сам писатель называл роман поворотным пунктом (беседа с Хаяо Кавай, 1996)"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, in a conversation with the psychologist Hayao Kawai, Murakami explained that he changed his position from one of \"detachment\" to one of \"commitment\" after staying in the United States in the 1990s."
+      }
+    },
+    {
+      "key": "relocation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Японию",
+      "long": "Окончательно вернулся на родину после почти пяти лет в США.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году Мураками выпустил сборник рассказов «Призраки Лексингтона» и окончательно вернулся в Японию, поселившись в Токио."
+      }
+    },
+    {
+      "key": "creation-1996-2",
+      "date": {
+        "from": "1996",
+        "to": "1997",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Интервью с жертвами атаки в метро и членами секты",
+      "long": "Взял интервью у пострадавших от атаки в токийском метро и у рядовых членов «Аум синрикё»; материал лёг в основу двух документальных книг.",
+      "place": {
+        "label": "Токио"
+      },
+      "works": [
+        {
+          "ref": "underground"
+        },
+        {
+          "ref": "all-gods-children-can-dance",
+          "note": "сборник написан под влиянием землетрясения в Кобе"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году Мураками выпустил сборник рассказов «Призраки Лексингтона» и окончательно вернулся в Японию…Под впечатлением от трагических событий на родине он провёл серию интервью с пострадавшими от зариновой атаки в токийском метро 1995 года"
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996-06-23",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый ультрамарафон на 100 км",
+      "long": "Пробежал свой первый ультрамарафон — 100 км вокруг озера Сароме на Хоккайдо.",
+      "place": {
+        "label": "Хоккайдо"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 23, 1996, he completed his first ultramarathon, a 100 km race around Lake Saroma in Hokkaido."
+      }
+    },
+    {
+      "key": "relocation-2001",
+      "date": {
+        "from": "2001-01",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Оисо",
+      "long": "Поселился в Оисо на побережье в префектуре Канагава.",
+      "place": {
+        "label": "Оисо"
+      },
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2001 года писатель переехал в прибрежный город Оисо (префектура Канагава)."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Франца Кафки",
+      "long": "Получил премию Кафки; в том же году — Всемирную премию фэнтези за роман о мальчике Кафке.",
+      "place": {
+        "label": "Прага"
+      },
+      "works": [
+        {
+          "ref": "kafka-on-the-shore"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2006 году за вклад в мировую литературу Мураками был удостоен литературной премии имени Франца Кафки, церемония вручения которой прошла в Праге."
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от премии Кириямы",
+      "long": "Отказался от премии Кириямы за сборник рассказов, сославшись на личные соображения.",
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2007: Премия Кириямы («Слепая ива и спящая девушка»; Мураками отказался от награды «по соображениям личного характера»)"
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над масштабным романом",
+      "long": "Объявил о работе над большим романом от третьего лица; источником вдохновения назвал «Братьев Карамазовых» Достоевского.",
+      "works": [
+        {
+          "ref": "1q84",
+          "note": "замысел связан с «Братьями Карамазовыми» (интервью агентству «Киодо»)"
+        }
+      ],
+      "chapter": "return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году в интервью информационному агентству «Киодо» писатель объявил о начале работы над масштабным произведением."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Иерусалимская премия и речь о «яйце и стене»",
+      "long": "Несмотря на призывы отказаться, приехал на вручение Иерусалимской премии и произнёс речь об «яйце и стене».",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Харуки Мураками осудил Израиль за операцию в секторе Газа. Об этом литератор сказал в Иерусалиме, воспользовавшись трибуной, предоставленной ему в связи с присуждением литературной Иерусалимской премии за 2009 год"
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Каталонии отдана пострадавшим от цунами",
+      "long": "Передал 80 тысяч евро премии пострадавшим от землетрясения и цунами; в речи критиковал атомную энергетику.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Murakami donated his €80,000 winnings from the International Catalunya Prize (from the Generalitat de Catalunya) to the victims of the 2011 Tōhoku earthquake and tsunami"
+      }
+    },
+    {
+      "key": "persecution-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Снятие книг с продажи в Китае",
+      "long": "После антияпонских демонстраций в Китае книги писателя, как и других японских авторов, сняли с продажи.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, after the 2012 anti-Japanese demonstrations in China, Murakami's books were removed from sale there, along with those of other Japanese authors."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Радиопрограмма Murakami Radio",
+      "long": "Начал вести собственную музыкальную радиопрограмму на Tokyo FM.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С августа 2018 года писатель ведёт авторскую музыкальную программу Murakami Radio на радиостанции Tokyo FM."
+      }
+    },
+    {
+      "key": "other-2021",
+      "date": {
+        "from": "2021-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Архив писателя в Международном доме литературы Васэда",
+      "long": "Передал Васэда личный архив — рукописи, книги, пластинки — для Международного дома литературы.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В октябре 2021 года при Университете Васэда был открыт Международный дом литературы"
+      }
+    },
+    {
+      "key": "other-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка Украины в радиоэфире",
+      "long": "Провёл спецвыпуск радиопрограммы с призывом к миру.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2022 году после начала российского вторжения поддержал Украину."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профессорская резиденция в колледже Уэллсли",
+      "long": "Стал почётным приглашённым профессором колледжа Уэллсли и провёл серию семинаров и публичную лекцию.",
+      "place": {
+        "label": "Уэллсли"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 2023 года Харуки Мураками занял пост почётного приглашённого профессора гуманитарных наук в Колледже Уэллсли (штат Массачусетс, США)."
+      }
+    },
+    {
+      "key": "career-2023-2",
+      "date": {
+        "from": "2023-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия принцессы Астурийской",
+      "long": "Получил премию принцессы Астурийской за литературу.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 2023 года Мураками был удостоен Премии принцессы Астурийской в области литературы"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "hear-the-wind-sing",
+      "title": "Слушай песню ветра",
+      "written": {
+        "from": 1978,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "pinball-1973",
+      "title": "Пинбол 1973",
+      "written": {
+        "from": 1979,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "wild-sheep-chase",
+      "title": "Охота на овец",
+      "qid": "Q2279794",
+      "written": {
+        "from": 1981,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "hard-boiled-wonderland",
+      "title": "Страна Чудес без тормозов и Конец Света",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "norwegian-wood",
+      "title": "Норвежский лес",
+      "qid": "Q751348",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "dance-dance-dance",
+      "title": "Дэнс, дэнс, дэнс",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "south-of-the-border",
+      "title": "К югу от границы, на запад от солнца",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "wind-up-bird-chronicle",
+      "title": "Хроники заводной птицы",
+      "qid": "Q976992",
+      "written": {
+        "from": 1991,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "underground",
+      "title": "Подземка",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "all-gods-children-can-dance",
+      "title": "Все божьи дети могут танцевать",
+      "written": {
+        "from": 1999,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "sputnik-sweetheart",
+      "title": "Мой любимый Sputnik",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "kafka-on-the-shore",
+      "title": "Кафка на пляже",
+      "qid": "Q579744",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "after-dark",
+      "title": "Послемрак",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "what-i-talk-about-running",
+      "title": "О чём я говорю, когда говорю о беге",
+      "qid": "Q1583509",
+      "written": {
+        "from": 2005,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "1q84",
+      "title": "1Q84",
+      "qid": "Q208971",
+      "written": {
+        "from": 2008,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "colorless-tsukuru-tazaki",
+      "title": "Бесцветный Цкуру Тадзаки и годы его странствий",
+      "qid": "Q10860215",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "killing-commendatore",
+      "title": "Убийство командора",
+      "qid": "Q28836534",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "city-and-its-uncertain-walls",
+      "title": "Город и его ненадёжные стены",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

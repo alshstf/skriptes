@@ -1,0 +1,219 @@
+{
+  "qid": "Q356357",
+  "name": "Марк Хэддон",
+  "born": "1962-09-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D0%B4%D0%B4%D0%BE%D0%BD%2C_%D0%9C%D0%B0%D1%80%D0%BA",
+      "rev": 137841178
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mark_Haddon",
+      "rev": 1378067530
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-oxford",
+      "title": "Нортгемптон и Оксфорд",
+      "from": 1962,
+      "to": 1986
+    },
+    {
+      "key": "children-books",
+      "title": "Детские книги и сценарии",
+      "from": 1987,
+      "to": 2002
+    },
+    {
+      "key": "recognition",
+      "title": "Уитбредовская премия и слава",
+      "from": 2003,
+      "to": 2018
+    },
+    {
+      "key": "illness-late",
+      "title": "Операция, болезнь, поздние рассказы",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-09-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нортгемптоне",
+      "long": "Родился в Нортгемптоне в семье архитектора; рос с сестрой.",
+      "place": {
+        "label": "Нортгемптон"
+      },
+      "chapter": "childhood-oxford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 26 сентября 1962 года в Нортгемптоне, Англия, Великобритания."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая детская книга",
+      "long": "Написал первую детскую книгу; позже выпустил много детских книг, часто сам их иллюстрировал.",
+      "chapter": "children-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году написал свою первую детскую книгу."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уитбредовская премия за первый взрослый роман",
+      "long": "Роман получил Уитбредовскую премию (премию Коста) и премию Содружества писателей за лучший первый роман; книга стала успешной у взрослых и детей.",
+      "works": [
+        {
+          "ref": "curious-incident"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году получил Уитбредовскую премию за роман «Загадочное ночное убийство собаки»."
+      }
+    },
+    {
+      "key": "career-2003-2",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия The Guardian за детскую прозу",
+      "long": "Роман, отнесённый к взрослым книгам, получил также детскую премию газеты The Guardian и вошёл в длинный список Букеровской премии 2003 года.",
+      "works": [
+        {
+          "ref": "curious-incident"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Haddon also won the Guardian Children's Fiction Prize in 2003 for the book."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий телеадаптации для BBC",
+      "long": "Написал сценарий телеадаптации BBC книги Рэймонда Бриггса «Грибок Страшилище», показанной на BBC One.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он также написал сценарий для телеадаптации BBC книги Рэймонда Бриггса «Грибок Страшилище» (англ. Fungus the Bogeyman), которую показывали на BBC One в 2004 году."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия О. Генри",
+      "long": "Получил премию О. Генри, присуждаемую за рассказы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия О. Генри 2014-01-01"
+      }
+    },
+    {
+      "key": "illness-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Операция на сердце — тройное шунтирование",
+      "long": "Перенёс тройное аортокоронарное шунтирование; роман «The Porpoise» вышел через три недели после операции.",
+      "works": [
+        {
+          "ref": "the-porpoise",
+          "note": "роман вышел через три недели после операции"
+        }
+      ],
+      "chapter": "illness-late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019, he had triple heart bypass surgery."
+      }
+    },
+    {
+      "key": "other-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от ордена OBE",
+      "long": "Отказался от ордена Британской империи (OBE), объяснив, что не хочет принимать награду, предполагающую некритичное отношение к Британской империи.",
+      "chapter": "illness-late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, he turned down an OBE for his services to literature"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "curious-incident",
+      "title": "Загадочное ночное убийство собаки",
+      "qid": "Q876848",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "the-porpoise",
+      "title": "Дельфин (The Porpoise)",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "dogs-and-monsters",
+      "title": "Dogs and Monsters",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

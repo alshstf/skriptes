@@ -1,0 +1,884 @@
+{
+  "qid": "Q79025",
+  "name": "Вальтер Скотт",
+  "born": "1771-08-15",
+  "died": "1832-09-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BA%D0%BE%D1%82%D1%82%2C_%D0%92%D0%B0%D0%BB%D1%8C%D1%82%D0%B5%D1%80",
+      "rev": 155137953
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Walter_Scott",
+      "rev": 1379806517
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-and-study",
+      "title": "Хромота, школа, университет",
+      "from": 1771,
+      "to": 1791
+    },
+    {
+      "key": "advocate-and-ballads",
+      "title": "Адвокат, брак, баллады",
+      "from": 1792,
+      "to": 1804
+    },
+    {
+      "key": "printer-and-poet",
+      "title": "Типография и слава поэта",
+      "from": 1805,
+      "to": 1813
+    },
+    {
+      "key": "waverley-and-abbotsford",
+      "title": "Автор «Уэверли», Эбботсфорд",
+      "from": 1814,
+      "to": 1825
+    },
+    {
+      "key": "debts-and-death",
+      "title": "Долги, болезни, смерть",
+      "from": 1826,
+      "to": 1832
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1771",
+      "date": {
+        "from": "1771-08-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Эдинбурге",
+      "long": "Родился в Эдинбурге, девятым ребёнком в семье юриста Уолтера Скотта и Энн Ратерфорд; из тринадцати детей выжило шестеро.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Walter Scott was born on 15 August 1771 in a third-floor apartment on College Wynd"
+      }
+    },
+    {
+      "key": "illness-1772",
+      "date": {
+        "from": "1772-01",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Детский паралич, пожизненная хромота",
+      "long": "В январе 1772 года заболел детским параличом, потерял подвижность правой ноги и остался хромым на всю жизнь.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1772 года Вальтер Скотт заболел детским параличом, потерял подвижность правой ноги и навсегда остался хромым."
+      }
+    },
+    {
+      "key": "relocation-1773",
+      "date": {
+        "from": "1773",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство на ферме в Сэндиноу",
+      "long": "Для лечения хромоты мальчика отправили на ферму деда и бабки в Сэндиноу; тётя Дженни научила его читать и рассказывала предания, позже отразившиеся в его книгах.",
+      "place": {
+        "label": "Сэндиноу"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he was sent in 1773 to live in the rural Scottish Borders, at his paternal grandparents' farm at Sandyknowe"
+      }
+    },
+    {
+      "key": "education-1779",
+      "date": {
+        "from": "1779",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в эдинбургскую школу",
+      "long": "Вернувшись в Эдинбург в 1778 году, в 1779-м поступил в эдинбургскую школу (Королевскую высшую школу).",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1778 году Скотт вернулся в Эдинбург, в 1779-м поступил в эдинбургскую школу"
+      }
+    },
+    {
+      "key": "education-1783",
+      "date": {
+        "from": "1783-11",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Начало учёбы в Эдинбургском университете",
+      "long": "В двенадцать лет, на год-два раньше большинства сверстников, начал изучать классические языки в Эдинбургском университете.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scott began studying classics at the University of Edinburgh in November 1783, at the age of 12"
+      }
+    },
+    {
+      "key": "other-1786",
+      "date": {
+        "from": "1786",
+        "to": "1787",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Единственная встреча с Робертом Бёрнсом",
+      "long": "Зимой 1786–1787 годов на литературном салоне в Эдинбурге пятнадцатилетний Скотт единственный раз встретил Роберта Бёрнса.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the winter of 1786–1787, the 15-year-old Scott met the Scots poet Robert Burns at one of these salons, their only meeting."
+      }
+    },
+    {
+      "key": "career-1786",
+      "date": {
+        "from": "1786-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ученичество в отцовской конторе",
+      "long": "В четырнадцать лет начал обучение в конторе отца, готовясь стать «писцом при печати» (юристом).",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1786, aged 14, he began an apprenticeship in his father's office to become a Writer to the Signet."
+      }
+    },
+    {
+      "key": "love-1791",
+      "date": {
+        "from": "1791",
+        "to": "1796",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Неразделённая любовь к Уильямине Белшес",
+      "long": "Пять лет добивался взаимности Уильямины Белшес; в 1796 году она вышла замуж за Уильяма Форбса. Неразделённая любовь стала для Скотта сильным ударом.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "childhood-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1791 году Скотт познакомился со своей первой любовью — Уильяминой Белшес, дочерью эдинбургского адвоката… в конце концов в 1796 году вышла замуж за Уильяма Форбса"
+      }
+    },
+    {
+      "key": "career-1792",
+      "date": {
+        "from": "1792",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание адвоката и начало практики",
+      "long": "Принят в Факультет адвокатов и начал юридическую практику; много ездил по стране, собирая народные легенды и баллады.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Важным для Скотта стал 1792 год, когда он выдержал экзамен на звание адвоката в Эдинбургском университете"
+      }
+    },
+    {
+      "key": "creation-1796",
+      "date": {
+        "from": "1796",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первые переводы баллад Бюргера",
+      "long": "Вышли английские переводы баллад Бюргера «Ленора» и «Дикий охотник» — первое литературное выступление Скотта.",
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1796 году выходят переводы двух баллад немецкого поэта Г. Бюргера «Ленора» и «Дикий охотник»"
+      }
+    },
+    {
+      "key": "war-1797",
+      "date": {
+        "from": "1797-02",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба в добровольческих драгунах",
+      "long": "Из-за угрозы французского вторжения вступил в добровольческий драгунский отряд, где служил до начала 1800-х годов квартирмейстером и секретарём.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1797, the threat of a French invasion persuaded Scott and many of his friends to join the Royal Edinburgh Volunteer Light Dragoons"
+      }
+    },
+    {
+      "key": "love-1797",
+      "date": {
+        "from": "1797-12-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Шарлотте Карпентер",
+      "long": "После трёхнедельного знакомства женился на Шарлотте Карпентер (Шарпантье), воспитаннице лорда Даунишира; венчание прошло в Карлайле.",
+      "place": {
+        "label": "Карлайл"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After three weeks' courtship, Scott proposed and they were married on Christmas Eve 1797 in St Mary's Church, Carlisle"
+      }
+    },
+    {
+      "key": "child-1799",
+      "date": {
+        "from": "1799",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Софии",
+      "long": "Родилась старшая дочь София, впоследствии жена Джона Гибсона Локхарта.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their eldest child, Sophia, was born in 1799, and later married John Gibson Lockhart."
+      }
+    },
+    {
+      "key": "loss-1799",
+      "date": {
+        "from": "1799",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, юрист Уолтер Скотт.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Walter Scott Senior (1729 – 1799)"
+      }
+    },
+    {
+      "key": "career-1799",
+      "date": {
+        "from": "1799-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Назначение шерифом Селкершира",
+      "long": "Назначен шерифом Селкершира (Этриккского леса); в этой местности нашёл много материала для сборника баллад.",
+      "place": {
+        "label": "Селкирк"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1799 году Скотт пишет Джеймсу Баллантайну… В декабре того же года его назначают на должность шерифа Селкершира"
+      }
+    },
+    {
+      "key": "child-1801",
+      "date": {
+        "from": "1801",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Уолтера",
+      "long": "Родился сын Уолтер; семья переехала в просторный дом на Норт-Касл-стрит в Эдинбурге, остававшийся городской резиденцией до 1826 года.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After the younger Walter was born in 1801, the Scotts moved to a spacious three-storey house at 39 North Castle Street"
+      }
+    },
+    {
+      "key": "child-1803",
+      "date": {
+        "from": "1803-02-02",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны",
+      "long": "Родилась дочь Анна.",
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Anne Scott 1803-02-02"
+      }
+    },
+    {
+      "key": "relocation-1804",
+      "date": {
+        "from": "1804",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Эштил на Туиде",
+      "long": "Оставил коттедж в Лесвейде и арендовал дом Эштил на реке Туид, ставший летней резиденцией.",
+      "place": {
+        "label": "Эштил"
+      },
+      "chapter": "advocate-and-ballads",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1804, he ended his use of the Lasswade cottage and leased the substantial house of Ashestiel"
+      }
+    },
+    {
+      "key": "career-1805",
+      "date": {
+        "from": "1805",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Партнёрство в типографии Баллантайна",
+      "long": "Стал партнёром Джеймса Баллантайна в типографии, печатавшей его книги до краха 1826 года.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1805, they became partners in the printing business, and from then until the financial crash of 1826, Scott's works were routinely printed by the firm."
+      }
+    },
+    {
+      "key": "child-1805",
+      "date": {
+        "from": "1805-12-24",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Чарльза",
+      "long": "Родился младший сын Чарльз.",
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Charles Scott 1805-12-24"
+      }
+    },
+    {
+      "key": "career-1806",
+      "date": {
+        "from": "1806",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретарь сессионного суда",
+      "long": "Занял должность секретаря сессионного суда, которую совмещал с литературной работой и службой шерифа.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Работал секретарём сессионного суда (с 1806 года), заместителем шерифа округа Селкерк."
+      }
+    },
+    {
+      "key": "career-1810",
+      "date": {
+        "from": "1810",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вершина славы поэта",
+      "long": "Поэма имела наибольший успех из его стихотворных повестей: за первый год разошлось 20 000 экземпляров, а в местах действия резко вырос туризм.",
+      "works": [
+        {
+          "ref": "lady-of-the-lake"
+        }
+      ],
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scott's meteoric poetic career peaked with his third long narrative, The Lady of the Lake (1810), which sold 20,000 copies in the first year."
+      }
+    },
+    {
+      "key": "relocation-1811",
+      "date": {
+        "from": "1811",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Покупка Эбботсфорда",
+      "long": "Купил ферму близ Мелроуза и переименовал её в Эбботсфорд; позже перестроил в замок в духе шотландских баронов, постепенно скупая землю.",
+      "place": {
+        "label": "Эбботсфорд"
+      },
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When his lease on this property expired in 1811, he bought Cartley Hole Farm, downstream on the Tweed nearer Melrose."
+      }
+    },
+    {
+      "key": "career-1812",
+      "date": {
+        "from": "1812",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соперничество с Байроном",
+      "long": "С выходом первых песен «Паломничества Чайльд-Гарольда» Байрона Скотт перестал быть самым популярным поэтом эпохи.",
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Scott was by far the most popular poet of the time until Lord Byron published the first two cantos of Childe Harold's Pilgrimage in 1812"
+      }
+    },
+    {
+      "key": "career-1813",
+      "date": {
+        "from": "1813",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от звания поэта-лауреата",
+      "long": "Отказался от должности поэта-лауреата, считая её «отравленной чашей»; место получил Роберт Саути.",
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1813 Scott was offered the position of Poet Laureate. He declined"
+      }
+    },
+    {
+      "key": "creation-1813",
+      "date": {
+        "from": "1813",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение к рукописи первого романа",
+      "long": "Начатую около 1805 года и оставленную из-за критики друга рукопись «Уэверли» вернул в работу в конце 1813 года; роман вышел анонимно.",
+      "works": [
+        {
+          "ref": "waverley",
+          "note": "в Общем предисловии к «Магнум-изданию» назвал побудительным мотивом желание сделать для Шотландии то же, что Эджуорт для Ирландии"
+        }
+      ],
+      "chapter": "printer-and-poet",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it was again laid by and not resumed until late 1813, then published in 1814"
+      }
+    },
+    {
+      "key": "other-1818",
+      "date": {
+        "from": "1818-02-04",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Обнаружение шотландских королевских регалий",
+      "long": "По его инициативе вскрыт ящик в Эдинбургском замке, где обнаружили шотландские королевские регалии, считавшиеся утраченными.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "waverley-and-abbotsford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 4 February 1818, Scott and a small military team opened the box and \"unearthed\" the honours from the Crown Room of Edinburgh Castle."
+      }
+    },
+    {
+      "key": "loss-1819",
+      "date": {
+        "from": "1819",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Энн Ратерфорд.",
+      "chapter": "waverley-and-abbotsford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Энн Ратерфорд (1739—1819)"
+      }
+    },
+    {
+      "key": "career-1820",
+      "date": {
+        "from": "1820",
+        "to": "1832",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентство в Эдинбургском королевском обществе",
+      "long": "Многие годы возглавлял Эдинбургское королевское общество.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "waverley-and-abbotsford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1820–1832 годах был Президентом Эдинбургского королевского общества"
+      }
+    },
+    {
+      "key": "career-1820-2",
+      "date": {
+        "from": "1820-04-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Титул баронета",
+      "long": "Получил титул баронета и стал сэром Вальтером Скоттом; в апреле принял его в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "waverley-and-abbotsford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He became a baronet of Abbotsford in the County of Roxburgh on 22 April 1820"
+      }
+    },
+    {
+      "key": "other-1822",
+      "date": {
+        "from": "1822",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Устройство визита Георга IV в Шотландию",
+      "long": "За три недели подготовил торжественную встречу Георга IV в Шотландии, где король появился в тартане.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "waverley-and-abbotsford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "invited Scott, at the sovereign's behest, to stage-manage the 1822 visit of George IV to Scotland"
+      }
+    },
+    {
+      "key": "poverty-1825",
+      "date": {
+        "from": "1825",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Банкротство типографии, долг в 130 000 фунтов",
+      "long": "После банковского кризиса обанкротилась типография Баллантайна; долги составили 130 000 фунтов, и Скотт принял ответственность за них на себя.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1825 a British banking crisis resulted in the collapse of the Ballantyne printing business, of which Scott was the only partner with a financial interest."
+      }
+    },
+    {
+      "key": "poverty-1826",
+      "date": {
+        "from": "1826",
+        "to": "1832",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Работа без передышки ради выплаты долгов",
+      "long": "Отказался объявить себя банкротом и принимать помощь, передал дом и доходы в доверительное управление кредиторов и писал, чтобы расплатиться; за эти годы вышли шесть романов и множество других работ.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "works": [
+        {
+          "ref": "woodstock"
+        },
+        {
+          "ref": "life-of-napoleon"
+        }
+      ],
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rather than declare himself bankrupt or accept any financial support from his many supporters and admirers (including the King himself), he placed his house and income in a trust belonging to his creditors and set out to write his way out of debt… Between 1826 and 1832 he produced six novels"
+      }
+    },
+    {
+      "key": "loss-1826",
+      "date": {
+        "from": "1826",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Шарлотты",
+      "long": "Умерла жена Шарлотта; похоронена в Драйбургском аббатстве.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "To add to his burdens, his wife Charlotte died in 1826."
+      }
+    },
+    {
+      "key": "illness-1830",
+      "date": {
+        "from": "1830",
+        "to": "1831",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Три инсульта",
+      "long": "В 1830 году перенёс первый инсульт с параличом правой руки, в 1830–1831 годах — ещё два.",
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1830 году Скотт перенёс первый инсульт с параличом правой руки. В 1830–1831 годах перенёс ещё два инсульта."
+      }
+    },
+    {
+      "key": "illness-1831",
+      "date": {
+        "from": "1831-10-29",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лечебное плавание на Мальту и в Неаполь",
+      "long": "Ради поправки здоровья отправился на фрегате «Барэм», предоставленном Адмиралтейством, на Мальту и в Неаполь.",
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 29 October 1831, in a vain search for improvement, he set off on a voyage to Malta and Naples aboard HMS Barham"
+      }
+    },
+    {
+      "key": "death-1832",
+      "date": {
+        "from": "1832-09-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Эбботсфорде",
+      "long": "Умер в Эбботсфорде; похоронен в Драйбургском аббатстве рядом с женой. Долги погасили вскоре после смерти за счёт продолжавшихся продаж его книг.",
+      "place": {
+        "label": "Эбботсфорд"
+      },
+      "chapter": "debts-and-death",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер от инфаркта 21 сентября 1832 года. Похоронен в Драйбургском аббатстве близ г. Мелроз."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "minstrelsy-of-the-scottish-border",
+      "title": "Песни шотландской границы",
+      "written": {
+        "from": 1802,
+        "to": 1803
+      }
+    },
+    {
+      "ref": "lay-of-the-last-minstrel",
+      "title": "Песня последнего менестреля",
+      "written": {
+        "from": 1805,
+        "to": 1805
+      }
+    },
+    {
+      "ref": "marmion",
+      "title": "Мармион",
+      "written": {
+        "from": 1807,
+        "to": 1808
+      }
+    },
+    {
+      "ref": "lady-of-the-lake",
+      "title": "Дева озера",
+      "qid": "Q2456670",
+      "written": {
+        "from": 1810,
+        "to": 1810
+      }
+    },
+    {
+      "ref": "waverley",
+      "title": "Уэверли, или Шестьдесят лет назад",
+      "qid": "Q678251",
+      "written": {
+        "from": 1805,
+        "to": 1814
+      }
+    },
+    {
+      "ref": "guy-mannering",
+      "title": "Гай Мэннеринг",
+      "written": {
+        "from": 1815,
+        "to": 1815
+      }
+    },
+    {
+      "ref": "old-mortality",
+      "title": "Пуритане",
+      "qid": "Q3234969",
+      "written": {
+        "from": 1816,
+        "to": 1816
+      }
+    },
+    {
+      "ref": "rob-roy",
+      "title": "Роб Рой",
+      "qid": "Q2156104",
+      "written": {
+        "from": 1817,
+        "to": 1817
+      }
+    },
+    {
+      "ref": "heart-of-midlothian",
+      "title": "Эдинбургская темница",
+      "written": {
+        "from": 1818,
+        "to": 1818
+      }
+    },
+    {
+      "ref": "bride-of-lammermoor",
+      "title": "Ламмермурская невеста",
+      "written": {
+        "from": 1819,
+        "to": 1819
+      }
+    },
+    {
+      "ref": "ivanhoe",
+      "title": "Айвенго",
+      "qid": "Q840974",
+      "written": {
+        "from": 1819,
+        "to": 1819
+      }
+    },
+    {
+      "ref": "kenilworth",
+      "title": "Кенилворт",
+      "written": {
+        "from": 1821,
+        "to": 1821
+      }
+    },
+    {
+      "ref": "quentin-durward",
+      "title": "Квентин Дорвард",
+      "written": {
+        "from": 1823,
+        "to": 1823
+      }
+    },
+    {
+      "ref": "talisman",
+      "title": "Талисман",
+      "written": {
+        "from": 1825,
+        "to": 1825
+      }
+    },
+    {
+      "ref": "woodstock",
+      "title": "Вудсток",
+      "written": {
+        "from": 1826,
+        "to": 1826
+      }
+    },
+    {
+      "ref": "life-of-napoleon",
+      "title": "Жизнь Наполеона Бонапарта",
+      "written": {
+        "from": 1827,
+        "to": 1827
+      }
+    }
+  ]
+}

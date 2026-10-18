@@ -1,0 +1,388 @@
+{
+  "qid": "Q228624",
+  "name": "Сьюзен Коллинз",
+  "born": "1962-08-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%BB%D0%B8%D0%BD%D0%B7%2C_%D0%A1%D1%8C%D1%8E%D0%B7%D0%B5%D0%BD",
+      "rev": 153869523
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Suzanne_Collins",
+      "rev": 1380085601
+    }
+  ],
+  "chapters": [
+    {
+      "key": "military-childhood",
+      "title": "Детство в военных переездах",
+      "from": 1962,
+      "to": 1986
+    },
+    {
+      "key": "new-york-television",
+      "title": "Нью-Йорк и детское телевидение",
+      "from": 1987,
+      "to": 2002
+    },
+    {
+      "key": "underland",
+      "title": "Подземье и первые книги",
+      "from": 2003,
+      "to": 2007
+    },
+    {
+      "key": "hunger-games",
+      "title": "Голодные игры и мировая известность",
+      "from": 2008,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-08-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье военного",
+      "long": "Родилась в Хартфорде, штат Коннектикут, младшей из четырёх детей офицера ВВС США.",
+      "place": {
+        "label": "Хартфорд"
+      },
+      "chapter": "military-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins was born on August 10, 1962, in Hartford, Connecticut"
+      }
+    },
+    {
+      "key": "education-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы изящных искусств",
+      "long": "Окончила Алабамскую школу изящных искусств в Бирмингеме по специальности «театральное искусство».",
+      "place": {
+        "label": "Бирмингем"
+      },
+      "chapter": "military-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins graduated from the Alabama School of Fine Arts in Birmingham in 1980 as a Theater Arts major."
+      }
+    },
+    {
+      "key": "education-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Индианском университете",
+      "long": "Получила степень бакалавра в Индианском университете в Блумингтоне по театру и телекоммуникациям.",
+      "place": {
+        "label": "Блумингтон"
+      },
+      "chapter": "military-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She completed her Bachelor of Arts degree from Indiana University Bloomington in 1985 with a double major in theater and telecommunications."
+      }
+    },
+    {
+      "key": "relocation-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Нью-Йорк",
+      "long": "Переехала в Нью-Йорк и жила там до 2003 года.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins moved to New York City in 1987 and lived there until 2003."
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура по драматургии в Нью-Йорке",
+      "long": "Получила степень магистра изящных искусств по драматургии в Тишской школе искусств Нью-Йоркского университета.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, Collins earned her Master of Fine Arts in dramatic writing from the New York University Tisch School of the Arts."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало карьеры телесценариста",
+      "long": "Начала карьеру сценаристом детских телепрограмм, работала над проектами «Никелодеона», включая «Клариссу» и «Медвежонка».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins began her career in 1991 as a writer for children's television shows."
+      }
+    },
+    {
+      "key": "love-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Чарльзом Прайором",
+      "long": "Вышла замуж за Чарльза Прайора, с которым познакомилась в 1991 году в Индианском университете.",
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, Collins met Charles \"Cap\" Pryor at Indiana University and they married in 1992."
+      }
+    },
+    {
+      "key": "child-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына",
+      "long": "Родился сын.",
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочерью 1999 года рождения и сыном 1994 года рождения"
+      }
+    },
+    {
+      "key": "child-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери",
+      "long": "Родилась дочь.",
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочерью 1999 года рождения и сыном 1994 года рождения"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация Гильдии сценаристов за анимацию",
+      "long": "Номинация Гильдии сценаристов США в категории анимации за соавторство в рождественском спецвыпуске «Санта, детка!».",
+      "chapter": "new-york-television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She received a Writers Guild of America nomination in animation for co-writing the critically acclaimed 2001 Christmas special, Santa, Baby!"
+      }
+    },
+    {
+      "key": "relocation-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Отъезд из Нью-Йорка",
+      "long": "Жизнь в Нью-Йорке закончилась; позже семья поселилась в Коннектикуте. В эти годы начался цикл о Подземье.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "underland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins moved to New York City in 1987 and lived there until 2003."
+      }
+    },
+    {
+      "key": "loss-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, подполковник ВВС США, участник войн в Корее и Вьетнаме.",
+      "chapter": "underland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Michael John Collins (1931–2003), a U.S. Air Force officer who served in the Korean and Vietnam War"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первой книги трилогии, успех",
+      "long": "Выход первой книги трилогии стал переломом карьеры; сюжет частично вдохновлён мифом о Тесее и воспоминаниями отца о нищете, голоде и последствиях войны.",
+      "works": [
+        {
+          "ref": "hunger-games",
+          "note": "Источником вдохновения были миф о Тесее и опыт отца, ветерана ВВС"
+        }
+      ],
+      "chapter": "hunger-games",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 2008, Scholastic Press released The Hunger Games, the first book of a series by Collins."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Включение в список влиятельных людей Time",
+      "long": "Журнал Time включил Коллинз в список ста самых влиятельных людей 2010 года.",
+      "chapter": "hunger-games",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Collins was named one of Time magazine's most influential people of 2010."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Самый продаваемый автор Kindle",
+      "long": "Amazon объявил Коллинз самым продаваемым автором в формате Kindle за всё время.",
+      "chapter": "hunger-games",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2012, Amazon announced that she had become the best-selling Kindle author of all time."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Геффена",
+      "long": "Получила премию Геффена.",
+      "chapter": "hunger-games",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Геффена 2021-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "gregor-the-overlander",
+      "title": "Грегор Надземный",
+      "qid": "Q1545217",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "underland-chronicles",
+      "title": "Хроники Подземья",
+      "written": {
+        "from": 2003,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "hunger-games",
+      "title": "Голодные игры",
+      "qid": "Q11679",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "catching-fire",
+      "title": "И вспыхнет пламя",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "mockingjay",
+      "title": "Сойка-пересмешница",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "ballad-of-songbirds-and-snakes",
+      "title": "Баллада о певчих птицах и змеях",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "sunrise-on-the-reaping",
+      "title": "Рассвет жатвы",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

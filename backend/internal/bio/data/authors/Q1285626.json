@@ -1,0 +1,380 @@
+{
+  "qid": "Q1285626",
+  "name": "Эдмонд Гамильтон",
+  "born": "1904-10-21",
+  "died": "1977-02-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B0%D0%BC%D0%B8%D0%BB%D1%8C%D1%82%D0%BE%D0%BD%2C_%D0%AD%D0%B4%D0%BC%D0%BE%D0%BD%D0%B4",
+      "rev": 154035410
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Edmond_Hamilton",
+      "rev": 1371544735
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youngstown-college",
+      "title": "Огайо, вундеркинд и колледж",
+      "from": 1904,
+      "to": 1925
+    },
+    {
+      "key": "weird-tales",
+      "title": "Weird Tales и рождение космооперы",
+      "from": 1926,
+      "to": 1938
+    },
+    {
+      "key": "captain-future",
+      "title": "Капитан Фьючер и комиксы",
+      "from": 1939,
+      "to": 1945
+    },
+    {
+      "key": "brackett-kinsman",
+      "title": "Ли Брэкетт и ферма в Кинсмене",
+      "from": 1946,
+      "to": 1966
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы",
+      "from": 1967,
+      "to": 1977
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1904",
+      "date": {
+        "from": "1904-10-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Янгстауне, Огайо",
+      "long": "Родился третьим ребёнком в семье газетного художника-карикатуриста и бывшей школьной учительницы.",
+      "place": {
+        "label": "Янгстаун"
+      },
+      "chapter": "youngstown-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эдмонд Мур Гамильтон родился 21 октября 1904 года в США в городе Янгстаун"
+      }
+    },
+    {
+      "key": "relocation-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Ньюкасл",
+      "long": "Отец получил работу в Ньюкасле, и вся семья переехала туда из Поланда, Огайо.",
+      "place": {
+        "label": "Ньюкасл"
+      },
+      "chapter": "youngstown-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911 году он получил работу в Ньюкасле, куда и переехала вся семья."
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постоянный автор Weird Tales",
+      "long": "С 1926 по 1948 год в журнале вышло 79 произведений Гамильтона; он вошёл в круг авторов, собранных редактором Фарнсуортом Райтом.",
+      "chapter": "weird-tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период с 1926 по 1948 год в журнале Weird Tales было опубликовано 79 произведений Гамильтона."
+      }
+    },
+    {
+      "key": "career-1926-2",
+      "date": {
+        "from": "1926-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в журнале Weird Tales",
+      "long": "Первый рассказ вышел в августовском номере Weird Tales; в том номере по рейтингу Гамильтон уступил только Мерриту и опередил Лавкрафта.",
+      "works": [
+        {
+          "ref": "monster-god-of-mamurth"
+        }
+      ],
+      "chapter": "weird-tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "его дебют начался с рассказа «Бог — чудовище Мамурта», который появился в 1926 году, в августовском выпуске журнала Weird Tales"
+      }
+    },
+    {
+      "key": "creation-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первые каноны космической оперы",
+      "long": "С 1928 года в Weird Tales печатается цикл из восьми повестей, заложивший каноны жанра: межзвёздные перелёты, космические пираты, звёздная федерация.",
+      "works": [
+        {
+          "ref": "interstellar-patrol"
+        }
+      ],
+      "chapter": "weird-tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начиная с 1928 года, на страницах Weird Tales Гамильтон публикует свой «Межзвёздный патруль» — цикл из 8 повестей"
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая премия читателей за НФ-рассказ года",
+      "long": "Рассказ из Wonder Stories (май 1933) получил премию Жюля Верна — первую НФ-премию по голосованию читателей.",
+      "works": [
+        {
+          "ref": "island-of-unreason"
+        }
+      ],
+      "chapter": "weird-tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рассказ Гамильтона «Остров безрассудства» (The Island of Unreason) (журнал Wonder Stories, май 1933) был награждён, как лучший научно-фантастический рассказ года, премией Жюля Верна"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Заказ на серию о капитане Фьючере",
+      "long": "Редактор Морт Вайзенгер пригласил Гамильтона в Нью-Йорк; тот убедил его изменить замысел и начал писать цикл, для которого работал «на заказ».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "captain-future",
+          "note": "по собственным словам Гамильтона, первые романы он отсылал в редакцию без правки"
+        }
+      ],
+      "chapter": "captain-future",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 1939 года он пригласил последнего на встречу, отправив ему письмо с примерным описанием сериала."
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Ли Брэкетт",
+      "long": "Летом 1940 года Гамильтон впервые встретил писательницу Ли Брэкетт, но в годы войны потерял с ней связь.",
+      "chapter": "captain-future",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hamilton met fellow science fiction author and screenwriter Leigh Brackett for the first time in the summer of 1940"
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа сценаристом комиксов DC",
+      "long": "С 1942 года писал для DC Comics о Супермене и Бэтмене; среди созданных персонажей — Бэтвумен и Тимбервулф. Оставил комиксы в 1966 году.",
+      "chapter": "captain-future",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1942 Hamilton began writing for DC Comics, specializing in stories for their characters Superman and Batman."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946-12-31",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Ли Брэкетт",
+      "long": "Венчание в Сан-Габриэле, Калифорния; затем пара поселилась в Кинсмене, Огайо. Они прожили вместе почти тридцать лет.",
+      "place": {
+        "label": "Сан-Габриэл"
+      },
+      "chapter": "brackett-kinsman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On December 31, 1946, Hamilton married her in San Gabriel, California, and moved with her to Kinsman, Ohio."
+      }
+    },
+    {
+      "key": "death-1977",
+      "date": {
+        "from": "1977-02-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Ланкастере, Калифорния",
+      "long": "Умер от осложнений после операции на почках, не дождавшись выхода последнего сборника, составленного женой.",
+      "place": {
+        "label": "Ланкастер"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hamilton died in February 1977 in Lancaster, California, of complications following kidney surgery."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "monster-god-of-mamurth",
+      "title": "Бог — чудовище Мамурта",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "interstellar-patrol",
+      "title": "Межзвёздный патруль",
+      "written": {
+        "from": 1928,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "kaldar-world-of-antares",
+      "title": "Калдар, мир Антареса",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "island-of-unreason",
+      "title": "Остров безрассудства",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "accursed-galaxy",
+      "title": "Проклятая галактика",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "horror-on-the-asteroid",
+      "title": "Ужас на астероиде",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "he-that-hath-wings",
+      "title": "Кто имеет крылья",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "captain-future",
+      "title": "Капитан Фьючер",
+      "written": {
+        "from": 1940,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "three-planeteers",
+      "title": "Три планетёра",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "star-kings",
+      "title": "Звёздные короли",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "city-at-worlds-end",
+      "title": "Город на краю света",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "whats-it-like-out-there",
+      "title": "Как там — извне?",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "haunted-stars",
+      "title": "Хранители звёзд",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "star-wolf",
+      "title": "Звёздный волк",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    }
+  ]
+}

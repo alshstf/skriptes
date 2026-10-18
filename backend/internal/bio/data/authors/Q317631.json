@@ -1,0 +1,405 @@
+{
+  "qid": "Q317631",
+  "name": "Айра Левин",
+  "born": "1929-08-27",
+  "died": "2007-11-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D0%B2%D0%B8%D0%BD%2C_%D0%90%D0%B9%D1%80%D0%B0",
+      "rev": 153658305
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ira_Levin",
+      "rev": 1377495492
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-study",
+      "title": "Нью-Йорк, учёба, телесценарии",
+      "from": 1929,
+      "to": 1952
+    },
+    {
+      "key": "army-debut",
+      "title": "Армия и первый роман",
+      "from": 1953,
+      "to": 1959
+    },
+    {
+      "key": "family-fame",
+      "title": "Семья и слава",
+      "from": 1960,
+      "to": 1979
+    },
+    {
+      "key": "recognition",
+      "title": "Признание жанра",
+      "from": 1980,
+      "to": 2005
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы",
+      "from": 2006,
+      "to": 2007
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1929",
+      "date": {
+        "from": "1929-08-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в еврейской семье в Нью-Йорке",
+      "long": "Родился в еврейской семье, ранние годы провёл на Манхэттене и в Бронксе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Айра Левин родился 27 августа 1929 года в Нью-Йорке в еврейской семье"
+      }
+    },
+    {
+      "key": "education-1946",
+      "date": {
+        "from": "1946",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Университете Дрейка",
+      "long": "В 1946–1948 годах учился в Университете Дрейка в Де-Мойне, штат Айова, затем перешёл в Нью-Йоркский университет.",
+      "place": {
+        "label": "Де-Мойн"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He attended Drake University in Des Moines, Iowa from 1946 to 1948"
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Нью-Йоркского университета",
+      "long": "В 1950 году окончил Нью-Йоркский университет, где изучал философию и английский язык.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году окончил Нью-Йоркский университет, где изучал философию и английский язык."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950-12-01",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый телесценарий на конкурсе CBS",
+      "long": "Сценарий, написанный студентом для конкурса телекомпании CBS, лёг в основу эпизода сериала «Часы», вышедшего 1 декабря 1950 года.",
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His script was the basis for \"The Old Woman\", an episode of the TV series The Clock (Dec. 1, 1950)."
+      }
+    },
+    {
+      "key": "war-1953",
+      "date": {
+        "from": "1953",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в Войсках связи армии США",
+      "long": "В 1953–1955 годах служил в Войсках связи армии США во время Корейской войны.",
+      "chapter": "army-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served in the U.S. Army Signal Corps during the Korean War, from 1953 to 1955."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Эдгара По за лучший дебютный роман",
+      "long": "Первый роман был хорошо принят, и в 1954 году Левин получил премию Эдгара Аллана По за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "a-kiss-before-dying"
+        }
+      ],
+      "chapter": "army-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was well received, and he won the 1954 Edgar Award for Best First Novel."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая пьеса на Бродвее",
+      "long": "Первая поставленная пьеса — адаптация романа Мака Хаймена — открылась на Бродвее в 1955 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "no-time-for-sergeants"
+        }
+      ],
+      "chapter": "army-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It opened on Broadway in 1955 and starred Andy Griffith, whose career it jumpstarted."
+      }
+    },
+    {
+      "key": "love-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Габриэль Аронсон",
+      "long": "Женился на Габриэль Аронсон; в браке родились трое сыновей — Адам, Джаред и Николас.",
+      "chapter": "family-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Levin was married twice, first to Gabrielle Aronsohn (from 1960 to 1968), with whom he had three sons"
+      }
+    },
+    {
+      "key": "family-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Окончание первого брака",
+      "long": "Брак с Габриэль Аронсон, длившийся с 1960 года, завершился в 1968 году.",
+      "chapter": "family-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Levin was married twice, first to Gabrielle Aronsohn (from 1960 to 1968), with whom he had three sons"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация самого известного романа Полански",
+      "long": "Роман был экранизирован Романом Полански; Рут Гордон получила «Оскар» за роль второго плана.",
+      "works": [
+        {
+          "ref": "rosemarys-baby"
+        }
+      ],
+      "chapter": "family-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968, it was adapted as a film written and directed by Roman Polanski."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Прометей»",
+      "long": "За научно-фантастический роман об антиутопии получил премию «Прометей» в 1992 году.",
+      "works": [
+        {
+          "ref": "this-perfect-day"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "for which he won a Prometheus Award in 1992."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за заслуги перед жанром",
+      "long": "В 1996 году получил премию Брэма Стокера за вклад в жанр.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996 he was given the Bram Stoker Award for Lifetime Achievement."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера премии Эдгара По",
+      "long": "В 2003 году удостоен звания гроссмейстера премии Эдгара Аллана По.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гроссмейстер премии Эдгара Аллана По 2003"
+      }
+    },
+    {
+      "key": "loss-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть второй жены Филлис Шугарман",
+      "long": "В 2006 году умерла вторая жена Левина, Филлис Шугарман.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "later to Phyllis Sugarman (died 2006)"
+      }
+    },
+    {
+      "key": "death-2007",
+      "date": {
+        "from": "2007-11-12",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа дома",
+      "long": "Умер от сердечного приступа в своём доме на Манхэттене.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Levin died of a heart attack at his home in Manhattan, New York City on November 12, 2007."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "a-kiss-before-dying",
+      "title": "Поцелуй перед смертью",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "no-time-for-sergeants",
+      "title": "Трудно быть сержантом",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "rosemarys-baby",
+      "title": "Ребёнок Розмари",
+      "qid": "Q1194339",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "this-perfect-day",
+      "title": "Этот совершенный день",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "stepford-wives",
+      "title": "Степфордские жёны",
+      "qid": "Q1212739",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "boys-from-brazil",
+      "title": "Мальчики из Бразилии",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "deathtrap",
+      "title": "Ловушка для одинокого мужчины",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "sliver",
+      "title": "Щель",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "son-of-rosemary",
+      "title": "Сын Розмари",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    }
+  ]
+}

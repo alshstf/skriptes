@@ -1,0 +1,588 @@
+{
+  "qid": "Q2908",
+  "name": "Антуан де Сент-Экзюпери",
+  "born": "1900-06-29",
+  "died": "1944-07-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BD%D1%82-%D0%AD%D0%BA%D0%B7%D1%8E%D0%BF%D0%B5%D1%80%D0%B8%2C_%D0%90%D0%BD%D1%82%D1%83%D0%B0%D0%BD_%D0%B4%D0%B5",
+      "rev": 154892714
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Antoine_de_Saint-Exup%C3%A9ry",
+      "rev": 1379807747
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Antoine_de_Saint-Exup%C3%A9ry",
+      "rev": 240170860
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство и потери",
+      "from": 1900,
+      "to": 1920
+    },
+    {
+      "key": "aviation-start",
+      "title": "Армия, поиски себя, Аэропосталь",
+      "from": 1921,
+      "to": 1930
+    },
+    {
+      "key": "writer-pilot",
+      "title": "Брак, романы, аварии",
+      "from": 1931,
+      "to": 1938
+    },
+    {
+      "key": "war-exile",
+      "title": "Война и Нью-Йорк",
+      "from": 1939,
+      "to": 1942
+    },
+    {
+      "key": "last-flight",
+      "title": "Возвращение в строй и последний вылет",
+      "from": 1943,
+      "to": 1944
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1900",
+      "date": {
+        "from": "1900-06-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лионе",
+      "long": "Родился в Лионе в семье страхового инспектора из старинного дворянского рода; третий из пятерых детей.",
+      "place": {
+        "label": "Лион"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Антуан де Сент-Экзюпери родился 29 июня 1900 года во французском городе Лион"
+      }
+    },
+    {
+      "key": "loss-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец умер от кровоизлияния в мозг, когда мальчику было четыре года; семья стала жить у родственниц в замках и в Лионе.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1904 году, когда Антуану было 4 года, его отец умер от внутримозгового кровоизлияния"
+      }
+    },
+    {
+      "key": "relocation-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Ле-Ман",
+      "long": "Летом 1909 года семья переехала в Ле-Ман, где Антуан учился в иезуитском колледже Сент-Круа.",
+      "place": {
+        "label": "Ле-Ман"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Так продолжалось до лета 1909 года, когда семья Сент-Экзюпери вместе с Антуаном переехала в Ле-Ман"
+      }
+    },
+    {
+      "key": "other-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый полёт на самолёте",
+      "long": "На аэродроме в Амберьё-ан-Бюже впервые поднялся в воздух на самолёте, которым управлял лётчик Габриэль Вроблевски.",
+      "place": {
+        "label": "Амберьё-ан-Бюже"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1912 году на авиационном поле в Амберьё-ан-Бюже Сент-Экзюпери впервые поднялся в воздух на самолёте."
+      }
+    },
+    {
+      "key": "education-1915",
+      "date": {
+        "from": "1915",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в колледже маристов во Фрибуре",
+      "long": "Вместе с братом Франсуа учился в колледже маристов во Фрибуре; в 1917 году сдал экзамен бакалавриата.",
+      "place": {
+        "label": "Фрибур"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1914—1915 годах братья учились в иезуитском колледже Нотр-Дам-де-Монгре в Вильфранш-сюр-Сон, после чего продолжили учёбу во Фрибуре (Швейцария) в колледже маристов Вилла-Сент-Жан — до 1917 года"
+      }
+    },
+    {
+      "key": "loss-1917",
+      "date": {
+        "from": "1917-07-10",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть младшего брата Франсуа",
+      "long": "Младший брат Франсуа умер от ревмокардита; его смерть потрясла Антуана.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 июля 1917 года от ревмокардита умер Франсуа, его смерть потрясла Антуана."
+      }
+    },
+    {
+      "key": "education-1919",
+      "date": {
+        "from": "1919-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Провал в Эколь Наваль, архитектура",
+      "long": "Провалил устный вступительный экзамен в Эколь Наваль; в октябре записался вольнослушателем на архитектурное отделение Школы изящных искусств.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в июне 1919 года провалился на устном вступительном экзамене в «Эколь Наваль». В октябре 1919 года он записался вольнослушателем в Национальную высшую школу изящных искусств на отделение архитектуры."
+      }
+    },
+    {
+      "key": "war-1921",
+      "date": {
+        "from": "1921",
+        "to": "1923",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Военная служба и обучение лётчика",
+      "long": "Призван в армию, записался в авиаполк в Страсбурге, сдал экзамен на гражданского лётчика; в Марокко получил права военного лётчика.",
+      "place": {
+        "label": "Страсбург"
+      },
+      "chapter": "aviation-start",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Поворотным в судьбе Антуана стал 1921 год, когда он был призван в армию."
+      }
+    },
+    {
+      "key": "illness-1923",
+      "date": {
+        "from": "1923-01",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первая авиакатастрофа, увольнение из армии",
+      "long": "Первая авиакатастрофа, черепно-мозговая травма; вскоре комиссован и переехал в Париж.",
+      "place": {
+        "label": "Ле-Бурже"
+      },
+      "chapter": "aviation-start",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1923 года с ним произошла первая авиакатастрофа, Экзюпери получил черепно-мозговую травму. В марте его комиссовали."
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пилот почтовой авиалинии «Аэропосталь»",
+      "long": "Стал пилотом «Аэропосталь» на линиях Тулуза — Касабланка — Дакар.",
+      "place": {
+        "label": "Тулуза"
+      },
+      "chapter": "aviation-start",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лишь в 1926 году Экзюпери нашёл своё призвание — стал пилотом компании «Аэропосталь», доставлявшей почту на северное побережье Африки."
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "to": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в Аргентине",
+      "long": "Технический директор «Аэропоста Аргентина», осваивал новые маршруты, жил в Буэнос-Айресе.",
+      "place": {
+        "label": "Буэнос-Айрес"
+      },
+      "works": [
+        {
+          "ref": "night-flight"
+        }
+      ],
+      "chapter": "aviation-start",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "отправился в Южную Америку в качестве технического директора «Аэропоста — Аргентина»"
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён орденом Почётного легиона за службу на Кап-Джуби и спасение экипажей.",
+      "chapter": "aviation-start",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1930 году Сент-Экзюпери был произведён в кавалеры ордена Почётного легиона за вклад в развитие гражданской авиации."
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Фемина», литературное признание",
+      "long": "Роман принёс ему известность и премию «Фемина».",
+      "works": [
+        {
+          "ref": "night-flight"
+        }
+      ],
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The 1931 publication of Night Flight established Saint-Exupéry as a rising star in the literary world. It was the first of his major works to gain widespread acclaim, and it won the prix Femina."
+      }
+    },
+    {
+      "key": "love-1931",
+      "date": {
+        "from": "1931-04-22",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Консуэло Сунсин",
+      "long": "Гражданский брак в Ницце с Консуэло Сунсин, на следующий день — венчание в Агае.",
+      "place": {
+        "label": "Ницца"
+      },
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 22 avril 1931, il se marie civilement à Nice, avant le mariage religieux à Agay le lendemain, avec Consuelo Suncin Sandoval de Gómez"
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командировка в СССР",
+      "long": "Поездка в СССР как корреспондент «Пари-Суар», пять очерков.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1935 года, в качестве корреспондента газеты «Пари-Суар», Сент-Экзюпери посетил СССР и описал этот визит в пяти очерках."
+      }
+    },
+    {
+      "key": "illness-1935",
+      "date": {
+        "from": "1935-12-30",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Катастрофа в Ливийской пустыне",
+      "long": "Самолёт разбился в Ливийской пустыне; на четвёртый день лётчиков спасли бедуины.",
+      "place": {
+        "label": "Ливийская пустыня"
+      },
+      "works": [
+        {
+          "ref": "wind-sand-and-stars",
+          "note": "опыт описан в книге (Википедия)"
+        },
+        {
+          "ref": "little-prince"
+        }
+      ],
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 30 décembre 1935, à 2 h 45, l'avion heurte un plateau rocheux du désert Libyque"
+      }
+    },
+    {
+      "key": "war-1936",
+      "date": {
+        "from": "1936-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Репортёр на гражданской войне в Испании",
+      "long": "Корреспондент на гражданской войне в Испании.",
+      "place": {
+        "label": "Испания"
+      },
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Затем Сент-Экзюпери в качестве корреспондента побывал в августе 1936 года на гражданской войне в Испании."
+      }
+    },
+    {
+      "key": "illness-1938",
+      "date": {
+        "from": "1938-02-15",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Авария в Гватемале",
+      "long": "Перегруженный самолёт разбился при взлёте в Гватемале; лётчики тяжело ранены, выздоравливал в Нью-Йорке.",
+      "place": {
+        "label": "Гватемала"
+      },
+      "works": [
+        {
+          "ref": "wind-sand-and-stars",
+          "note": "книга завершена в период выздоровления (Википедия)"
+        }
+      ],
+      "chapter": "writer-pilot",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 15 février 1938, Antoine et André tentent un nouveau périple en s'attaquant au raid de New York à Punta Arenas."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-05-23",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Разведывательный вылет над Аррасом",
+      "long": "Разведывательный вылет над Аррасом; награждён Военным крестом с пальмовой ветвью.",
+      "place": {
+        "label": "Аррас"
+      },
+      "works": [
+        {
+          "ref": "flight-to-arras",
+          "note": "эпизод дал название и сюжет книги (Википедия)"
+        }
+      ],
+      "chapter": "war-exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 23 mai 1940, il survole Arras alors que les chars allemands envahissent la ville"
+      }
+    },
+    {
+      "key": "persecution-1941",
+      "date": {
+        "from": "1941-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Отказ от членства в совете Виши, запреты книг",
+      "long": "Слух о назначении в совещательный совет Виши; публично отказался от членства. Позже его книги запрещены и в оккупированной Франции, и в Северной Африке.",
+      "chapter": "war-exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En janvier 1941, le maréchal Pétain l'aurait nommé sans le prévenir au Conseil national, l'assemblée consultative de Vichy. Saint-Exupéry publie alors deux communiqués, où il refuse cette appartenance."
+      }
+    },
+    {
+      "key": "creation-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над сказкой в Нью-Йорке",
+      "long": "Написал сказку в Нью-Йорке и Ашарокене; рукопись закончена в октябре 1942 года, в США издана в 1943-м.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "little-prince"
+        }
+      ],
+      "chapter": "war-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Жил в Нью-Йорке, где в 1942 году создал своё самое знаменитое произведение — «Маленький принц»"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-04",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Возвращение в боевую авиацию",
+      "long": "Покинул США и вернулся в боевую авиацию в Северной Африке, несмотря на возраст и последствия травм; осваивал P-38.",
+      "place": {
+        "label": "Алжир"
+      },
+      "works": [
+        {
+          "ref": "citadelle"
+        }
+      ],
+      "chapter": "last-flight",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1943 года он вступил в ВВС «Сражающейся Франции» и с большим трудом добился своего зачисления в боевую часть."
+      }
+    },
+    {
+      "key": "death-1944",
+      "date": {
+        "from": "1944-07-31",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Гибель в разведывательном полёте",
+      "long": "Не вернулся из разведывательного полёта с Корсики; обломки самолёта найдены у Марселя в 2000 году, причина неизвестна.",
+      "place": {
+        "label": "Средиземное море"
+      },
+      "chapter": "last-flight",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "31 июля 1944 года Антуан де Сент-Экзюпери отправился с аэродрома Борго на острове Корсика в разведывательный полёт, из которого не вернулся."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "southern-mail",
+      "title": "Южный почтовый",
+      "qid": "Q1115707",
+      "written": {
+        "from": 1926,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "night-flight",
+      "title": "Ночной полёт",
+      "qid": "Q1070729",
+      "written": {
+        "from": 1930,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "wind-sand-and-stars",
+      "title": "Планета людей",
+      "qid": "Q520146",
+      "written": {
+        "from": 1935,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "flight-to-arras",
+      "title": "Военный лётчик",
+      "qid": "Q1430624",
+      "written": {
+        "from": 1940,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "letter-to-a-hostage",
+      "title": "Письмо заложнику",
+      "qid": "Q3237012",
+      "written": {
+        "from": 1940,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "little-prince",
+      "title": "Маленький принц",
+      "qid": "Q25338",
+      "written": {
+        "from": 1942,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "citadelle",
+      "title": "Цитадель",
+      "qid": "Q2974375",
+      "written": {
+        "from": 1936,
+        "to": 1944
+      }
+    }
+  ]
+}

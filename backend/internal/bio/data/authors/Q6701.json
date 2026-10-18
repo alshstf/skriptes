@@ -1,0 +1,527 @@
+{
+  "qid": "Q6701",
+  "name": "Якоб Гримм",
+  "born": "1785-01-04",
+  "died": "1863-09-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B8%D0%BC%D0%BC%2C_%D0%AF%D0%BA%D0%BE%D0%B1",
+      "rev": 153447864
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jacob_Grimm",
+      "rev": 1379626662
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Jacob_Grimm",
+      "rev": 270040443
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Детство, Кассель, Марбург",
+      "from": 1785,
+      "to": 1807
+    },
+    {
+      "key": "biblioteka-diplomatiya",
+      "title": "Библиотекарь и дипломат",
+      "from": 1808,
+      "to": 1829
+    },
+    {
+      "key": "gettingen-izgnanie",
+      "title": "Гёттинген и изгнание",
+      "from": 1830,
+      "to": 1839
+    },
+    {
+      "key": "berlin",
+      "title": "Берлин и парламент",
+      "from": 1840,
+      "to": 1848
+    },
+    {
+      "key": "slovar",
+      "title": "Словарь до конца жизни",
+      "from": 1849,
+      "to": 1863
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1785",
+      "date": {
+        "from": "1785-01-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ханау",
+      "long": "Родился 4 января 1785 года в Ханау в семье адвоката Филиппа Гримма.",
+      "place": {
+        "label": "Ханау"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Якоб Людвиг Карл Гримм (нем. Jacob Ludwig Karl Grimm; 4 января 1785, Ханау — 20 сентября 1863, Берлин)"
+      }
+    },
+    {
+      "key": "loss-1796",
+      "date": {
+        "from": "1796-01-10",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Филиппа Гримма",
+      "long": "Отец, адвокат Филипп Вильгельм Гримм, умер 10 января 1796 года; мать осталась с малым доходом.",
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Филипп Вильгельм Гримм died 1796-01-10"
+      }
+    },
+    {
+      "key": "education-1798",
+      "date": {
+        "from": "1798",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в кассельской школе вместе с Вильгельмом",
+      "long": "В 1798 году был отправлен в публичную школу в Касселе вместе с младшим братом Вильгельмом.",
+      "place": {
+        "label": "Кассель"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jacob was sent to the public school at Kassel in 1798 with his younger brother Wilhelm."
+      }
+    },
+    {
+      "key": "education-1802",
+      "date": {
+        "from": "1802",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Изучение права в Марбурге у Савиньи",
+      "long": "В 1802 году поступил в Марбургский университет на юридический факультет; лекции Савиньи пробудили интерес к историческим исследованиям.",
+      "place": {
+        "label": "Марбург"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1802, he went to the University of Marburg, where he studied law"
+      }
+    },
+    {
+      "key": "relocation-1804",
+      "date": {
+        "from": "1804",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка в Париж к Савиньи",
+      "long": "Вместе с Савиньи выехал в Париж для поиска старинных рукописей.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вместе с Савиньи Якоб в 1804 году выехал в Париж для поиска старинных рукописей."
+      }
+    },
+    {
+      "key": "creation-1806",
+      "date": {
+        "from": "1806",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало сбора сказок вместе с братом",
+      "long": "С 1806 года вместе с Вильгельмом и кругом друзей собирал сказки, позже обработанные и изданные.",
+      "works": [
+        {
+          "ref": "kinder-und-hausmarchen",
+          "note": "сбор сказок, из которого выросло собрание"
+        }
+      ],
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seit 1806 hatte er gemeinsam mit seinem Bruder Wilhelm sowie dem Kreis um seinen in Westfalen ansässigen Freund Werner von Haxthausen Märchen gesammelt"
+      }
+    },
+    {
+      "key": "loss-1808",
+      "date": {
+        "from": "1808",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, забота о семье",
+      "long": "В 1808 году умерла мать; Якоб стал кормильцем семьи.",
+      "place": {
+        "label": "Кассель"
+      },
+      "chapter": "biblioteka-diplomatiya",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach dem Tod der Mutter 1808 musste Jacob Grimm die Familie ernähren."
+      }
+    },
+    {
+      "key": "career-1808",
+      "date": {
+        "from": "1808",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Библиотекарь короля Жерома Бонапарта",
+      "long": "В 1808 году назначен личным библиотекарем короля Вестфалии Жерома Бонапарта.",
+      "place": {
+        "label": "Кассель"
+      },
+      "chapter": "biblioteka-diplomatiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1808 году назначен личным библиотекарем короля Вестфалии Жерома Бонапарта."
+      }
+    },
+    {
+      "key": "career-1814",
+      "date": {
+        "from": "1814",
+        "to": "1815",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дипломатическая служба на Венском конгрессе",
+      "long": "После падения Жерома Бонапарта служил секретарём гессенской миссии, участвовал в Венском конгрессе и ездил в Париж за возвратом книг.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "biblioteka-diplomatiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he attended the Congress of Vienna as Secretary of Legation in 1814–1815"
+      }
+    },
+    {
+      "key": "career-1816",
+      "date": {
+        "from": "1816",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Второй библиотекарь в Касселе",
+      "long": "В 1816 году ушёл с государственной службы и стал вторым библиотекарем в Касселе, посвятив себя научной работе.",
+      "place": {
+        "label": "Кассель"
+      },
+      "works": [
+        {
+          "ref": "deutsche-sagen"
+        },
+        {
+          "ref": "deutsche-grammatik"
+        }
+      ],
+      "chapter": "biblioteka-diplomatiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jacob was made second librarian under Volkel in 1816."
+      }
+    },
+    {
+      "key": "creation-1822",
+      "date": {
+        "from": "1822",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Формулировка закона передвижения согласных",
+      "long": "В 1822 году во втором издании первой части «Грамматики» полностью сформулировал закон, названный его именем.",
+      "works": [
+        {
+          "ref": "deutsche-grammatik"
+        }
+      ],
+      "chapter": "biblioteka-diplomatiya",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Jacob Grimm formulierte, nachdem 1811 bereits Rasmus Rask Belege für Lautveränderungen in germanischen Sprachen veröffentlicht hatte, 1822 ein erstes Lautgesetz"
+      }
+    },
+    {
+      "key": "career-1830",
+      "date": {
+        "from": "1830",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессор и библиотекарь в Гёттингене",
+      "long": "В 1830 году получил профессуру в Гёттингенском университете и должность старшего библиотекаря; Вильгельм стал младшим библиотекарем.",
+      "place": {
+        "label": "Гёттинген"
+      },
+      "works": [
+        {
+          "ref": "deutsche-mythologie"
+        }
+      ],
+      "chapter": "gettingen-izgnanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1830 году приглашён в Гёттингенский университет профессором немецкой литературы и старшим библиотекарем университета"
+      }
+    },
+    {
+      "key": "persecution-1837",
+      "date": {
+        "from": "1837-12",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Увольнение и высылка за протест «Гёттингенской семёрки»",
+      "long": "В декабре 1837 года король Ганновера Эрнст Август отстранил Гримма от должности и выслал из страны за подписание протеста против отмены конституции.",
+      "place": {
+        "label": "Гёттинген"
+      },
+      "chapter": "gettingen-izgnanie",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Dezember 1837 wurde Grimm als Mitverfasser des Protestes der „Göttinger Sieben“ durch Ernst August, den König von Hannover, seines Amtes enthoben und des Landes verwiesen."
+      }
+    },
+    {
+      "key": "creation-1838",
+      "date": {
+        "from": "1838",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало работы над словарём немецкого языка",
+      "long": "Работа над словарём, задуманным братьями на десять лет, началась в 1838 году и растянулась на столетие после их смерти.",
+      "works": [
+        {
+          "ref": "deutsches-worterbuch"
+        }
+      ],
+      "chapter": "gettingen-izgnanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Grimm's monumental dictionary of the German Language, the Deutsches Wörterbuch, was started in 1838 and first published in 1854."
+      }
+    },
+    {
+      "key": "relocation-1840",
+      "date": {
+        "from": "1840",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Берлин по приглашению короля",
+      "long": "В 1840 году прусский король Фридрих Вильгельм IV пригласил братьев в Берлин; они стали членами Прусской академии наук и получили право преподавать в университете.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "weisthumer"
+        }
+      ],
+      "chapter": "berlin",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "но в 1840 году новый прусский король Фридрих-Вильгельм IV приглашает братьев в Берлин, где они избираются членами Прусской академии наук"
+      }
+    },
+    {
+      "key": "other-1848",
+      "date": {
+        "from": "1848",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Депутат Франкфуртского парламента",
+      "long": "В 1848 году избран в общегерманский парламент; разочаровавшись в его работе, сложил мандат 2 октября 1848 года.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "berlin",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1848 году Яков Гримм был избран депутатом в общегерманский парламент, но политическая его роль была незначительна."
+      }
+    },
+    {
+      "key": "other-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Избрание в Американскую академию искусств и наук",
+      "long": "В 1857 году избран иностранным почётным членом Американской академии искусств и наук.",
+      "chapter": "slovar",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was elected a Foreign Honorary Member of the American Academy of Arts and Sciences in 1857."
+      }
+    },
+    {
+      "key": "loss-1859",
+      "date": {
+        "from": "1859-12-16",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть брата Вильгельма",
+      "long": "16 декабря 1859 года от паралича лёгких скончался младший брат и соавтор Вильгельм.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "slovar",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "16 декабря 1859 года от паралича лёгких скончался его младший брат Вильгельм."
+      }
+    },
+    {
+      "key": "death-1863",
+      "date": {
+        "from": "1863-09-20",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Берлине за работой над словарём",
+      "long": "Умер 20 сентября 1863 года за работой над статьёй «Frucht» для словаря; похоронен рядом с братом.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "deutsches-worterbuch"
+        }
+      ],
+      "chapter": "slovar",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Bei der Arbeit an dem Artikel Frucht des Deutschen Wörterbuches starb Jacob Grimm am 20. September 1863."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "kinder-und-hausmarchen",
+      "title": "Детские и домашние сказки",
+      "qid": "Q163027",
+      "written": {
+        "from": 1806,
+        "to": 1815
+      }
+    },
+    {
+      "ref": "deutsche-sagen",
+      "title": "Немецкие предания",
+      "written": {
+        "from": 1816,
+        "to": 1818
+      }
+    },
+    {
+      "ref": "deutsche-grammatik",
+      "title": "Немецкая грамматика",
+      "written": {
+        "from": 1816,
+        "to": 1822
+      }
+    },
+    {
+      "ref": "deutsche-mythologie",
+      "title": "Немецкая мифология",
+      "qid": "Q1203584",
+      "written": {
+        "from": 1835,
+        "to": 1835
+      }
+    },
+    {
+      "ref": "deutsches-worterbuch",
+      "title": "Немецкий словарь",
+      "written": {
+        "from": 1838,
+        "to": 1863
+      }
+    },
+    {
+      "ref": "geschichte-der-deutschen-sprache",
+      "title": "История немецкого языка",
+      "written": {
+        "from": 1849,
+        "to": 1849
+      }
+    },
+    {
+      "ref": "deutsche-rechtsalterthumer",
+      "title": "Немецкие правовые древности",
+      "written": {
+        "from": 1828,
+        "to": 1828
+      }
+    },
+    {
+      "ref": "weisthumer",
+      "title": "Вайстюмер",
+      "written": {
+        "from": 1840,
+        "to": 1863
+      }
+    },
+    {
+      "ref": "reinhart-fuchs",
+      "title": "Рейнхарт Фукс",
+      "written": {
+        "from": 1834,
+        "to": 1834
+      }
+    },
+    {
+      "ref": "ueber-den-altdeutschen-meistergesang",
+      "title": "О древненемецком мейстерзанге",
+      "written": {
+        "from": 1811,
+        "to": 1811
+      }
+    }
+  ]
+}

@@ -1,0 +1,698 @@
+{
+  "qid": "Q83566",
+  "name": "Исабель Альенде",
+  "born": "1942-08-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D1%8C%D0%B5%D0%BD%D0%B4%D0%B5_%D0%9B%D1%8C%D0%BE%D0%BD%D0%B0%2C_%D0%98%D1%81%D0%B0%D0%B1%D0%B5%D0%BB%D1%8C",
+      "rev": 155670731
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Isabel_Allende",
+      "rev": 1380709844
+    },
+    {
+      "id": "eswiki",
+      "url": "https://es.wikipedia.org/wiki/Isabel_Allende",
+      "rev": 175859460
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Дипломатическое детство",
+      "from": 1942,
+      "to": 1958
+    },
+    {
+      "key": "journalism",
+      "title": "Брак, ООН и журналистика",
+      "from": 1959,
+      "to": 1973
+    },
+    {
+      "key": "exile",
+      "title": "Изгнание в Каракасе",
+      "from": 1974,
+      "to": 1987
+    },
+    {
+      "key": "california",
+      "title": "Калифорния и утрата Паулы",
+      "from": 1988,
+      "to": 2002
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и поздние годы",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1942",
+      "date": {
+        "from": "1942-08-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лиме в семье дипломата",
+      "long": "Родилась в Лиме в семье чилийского дипломата Томаса Альенде, двоюродного брата Сальвадора Альенде.",
+      "place": {
+        "label": "Лима"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 2 августа 1942, Лима, Перу"
+      }
+    },
+    {
+      "key": "family-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод родителей, возвращение в Чили",
+      "long": "После развода родителей мать вернулась с тремя детьми в Чили; детство Исабель прошло в доме деда.",
+      "place": {
+        "label": "Сантьяго"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году родители Исабель развелись, и мать Исабель вернулась в Чили с тремя детьми."
+      }
+    },
+    {
+      "key": "family-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Второй брак матери, жизнь в семье дипломата",
+      "long": "Мать вышла замуж за дипломата Рамона Уидобро; семья часто переезжала, жила в Ла-Пасе и Бейруте.",
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году, когда Исабель было одиннадцать лет, её мать вышла замуж второй раз за дипломата Рамона Уидобро."
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Бейруте",
+      "long": "С 1956 по 1958 год семья жила в Бейруте, затем вернулась в Сантьяго, где Исабель окончила школу.",
+      "place": {
+        "label": "Бейрут"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а с 1956 по 1958 годы — в Бейруте"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в ФАО и на телевидении",
+      "long": "Работала в информационной службе ООН по продовольствию и сельскому хозяйству (ФАО), вела телепередачу о программе борьбы с голодом.",
+      "place": {
+        "label": "Сантьяго"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959—1965 годах сделала успешную карьеру тележурналистки в информационной службе организации ООН по продовольствию и сельскому хозяйству."
+      }
+    },
+    {
+      "key": "love-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мигелем Фриасом",
+      "long": "Вышла замуж за инженера-строителя Мигеля Фриаса; брак продлился до развода в 1987 году.",
+      "place": {
+        "label": "Сантьяго"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "познакомилась со своим первым мужем — инженером-строителем Мигелем Фриасом. Они поженились в 1962 году."
+      }
+    },
+    {
+      "key": "child-1963",
+      "date": {
+        "from": "1963-10-22",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Паулы",
+      "long": "В семье Исабель и Мигеля Фриаса родилась дочь Паула.",
+      "chapter": "journalism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Paula Frías Allende 1963-10-22"
+      }
+    },
+    {
+      "key": "child-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Возвращение в Чили, рождение сына Николаса",
+      "long": "После лет в Европе (Брюссель, Женева) семья вернулась в Чили; родился сын Николас.",
+      "place": {
+        "label": "Чили"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году Исабель вместе с семьёй вернулась в Чили. Здесь у неё родился сын Николас."
+      }
+    },
+    {
+      "key": "creation-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Постановка первой пьесы",
+      "long": "В Сантьяго поставлена её пьеса «Посол».",
+      "place": {
+        "label": "Сантьяго"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973 году в Сантьяго была поставлена её пьеса «Посол»."
+      }
+    },
+    {
+      "key": "persecution-1973",
+      "date": {
+        "from": "1973-09-11",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Военный переворот в Чили, гибель дяди Сальвадора",
+      "long": "В Чили произошёл военный переворот под руководством Пиночета, дядя Сальвадор Альенде погиб. Исабель помогала людям из «списков разыскиваемых» покинуть страну, пока не стала получать угрозы.",
+      "place": {
+        "label": "Сантьяго"
+      },
+      "chapter": "journalism",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Debido al golpe de Estado del 11 de septiembre de 1973 contra Salvador Allende"
+      }
+    },
+    {
+      "key": "relocation-1975",
+      "date": {
+        "from": "1975",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Венесуэлу",
+      "long": "Эмигрировала в Венесуэлу, работала в каракасской газете «Эль Насиональ» и преподавала в школе; первый роман написан в Каракасе.",
+      "place": {
+        "label": "Каракас"
+      },
+      "works": [
+        {
+          "ref": "house-of-the-spirits",
+          "note": "роман написан в годы венесуэльской эмиграции"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году Исабель оказалась в эмиграции в Венесуэле."
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Временная разлука с мужем",
+      "long": "Начался временный разрыв с мужем: два месяца жила в Испании, затем вернулась в брак.",
+      "chapter": "exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1978, she began a temporary separation from Frías."
+      }
+    },
+    {
+      "key": "creation-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Письмо умирающему деду",
+      "long": "Узнав, что дед при смерти, начала писать ему письмо, из которого вырос первый роман.",
+      "place": {
+        "label": "Каракас"
+      },
+      "works": [
+        {
+          "ref": "house-of-the-spirits",
+          "note": "роман вырос из письма деду (воспоминания автора)"
+        }
+      ],
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1981 году, узнав, что её 99-летний дедушка при смерти, Исабель начала писать ему письмо, из которого вырос её первый роман «Дом духов»."
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Мигелем Фриасом",
+      "long": "Развод с Мигелем Фриасом.",
+      "chapter": "exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She divorced Frías in 1987."
+      }
+    },
+    {
+      "key": "relocation-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Калифорнию",
+      "long": "Поселилась в Калифорнии, в Сан-Рафаэле.",
+      "place": {
+        "label": "Сан-Рафаэль"
+      },
+      "chapter": "california",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Desde 1988 ha residido en San Rafael (California)"
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988-07-07",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Уилли Гордоном",
+      "long": "Познакомилась с калифорнийским адвокатом и писателем Уилли Гордоном во время турне с книгой и вышла за него замуж.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "california",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "se casó con el abogado Willie Gordon el 7 de julio de 1988 en San Francisco."
+      }
+    },
+    {
+      "key": "illness-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлая болезнь дочери Паулы",
+      "long": "У дочери Паулы развилась болезнь (порфирия), она впала в кому; Исабель месяцами находилась рядом.",
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991 an error in Paula's medication resulted in severe brain damage, leaving her in a persistent vegetative state."
+      }
+    },
+    {
+      "key": "loss-1992",
+      "date": {
+        "from": "1992-12-06",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Паулы",
+      "long": "Дочь Паула умерла в возрасте 29 лет. Книга о ней и о жизни автора написана в форме писем к дочери.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "works": [
+        {
+          "ref": "paula",
+          "note": "книга написана в форме писем к дочери в коме"
+        }
+      ],
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Allende had Paula moved to a hospital in California where she died on 6 December 1992."
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996-12-09",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание фонда в память о Пауле",
+      "long": "Основала фонд Исабель Альенде в память о дочери, поддерживающий права женщин и детей.",
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Allende started the Isabel Allende Foundation on 9 December 1996, in honor of her daughter"
+      }
+    },
+    {
+      "key": "relocation-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Американское гражданство",
+      "long": "Получила гражданство США.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году она получила американское гражданство."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Американскую академию искусств",
+      "long": "Принята в Американскую академию искусств и литературы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, Allende was inducted into the American Academy of Arts and Letters"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная премия Чили по литературе",
+      "long": "Получила Национальную премию Чили по литературе.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Национальной премии Чили по литературе (2010)."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентская медаль Свободы",
+      "long": "Президент Обама наградил её Президентской медалью Свободы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "President Barack Obama awarded her the 2014 Presidential Medal of Freedom."
+      }
+    },
+    {
+      "key": "love-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Уилли Гордоном",
+      "long": "Расставание и развод с Уилли Гордоном после 27 лет брака.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2015 году Исабель Альенде и Уилли Гордон развелись."
+      }
+    },
+    {
+      "key": "love-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак с Роджером Кукрасом",
+      "long": "Третий брак — с нью-йоркским адвокатом Роджером Кукрасом.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019, she married for the third time, to Roger Cukras, a lawyer from New York."
+      }
+    },
+    {
+      "key": "loss-2019",
+      "date": {
+        "from": "2019-03-17",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть бывшего мужа Уилли Гордона",
+      "long": "Умер бывший муж Уилли Гордон.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Gordon falleció el 17 de marzo de 2019 a los 82 años."
+      }
+    },
+    {
+      "key": "career-2026",
+      "date": {
+        "from": "2026-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Планета»",
+      "long": "Получила испанскую премию «Планета» (1 млн евро) за роман, продолжающий «Дом духов».",
+      "place": {
+        "label": "Барселона"
+      },
+      "works": [
+        {
+          "ref": "hour-before-dawn",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "En octubre de 2026 recibe en Barcelona el premio planeta por su novela \"La hora antes del alba\""
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "house-of-the-spirits",
+      "title": "Дом духов",
+      "qid": "Q1168267",
+      "written": {
+        "from": 1981,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "of-love-and-shadow",
+      "title": "Любовь и тьма",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "eva-luna",
+      "title": "Эва Луна",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "paula",
+      "title": "Паула",
+      "written": {
+        "from": 1992,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "daughter-of-fortune",
+      "title": "Дочь фортуны",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "city-of-the-beasts",
+      "title": "Город бестий",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "zorro",
+      "title": "Зорро",
+      "qid": "Q2157959",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "ines-of-my-soul",
+      "title": "Инес души моей",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "sum-of-days",
+      "title": "Сумма дней",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "island-beneath-the-sea",
+      "title": "Остров в глубинах моря",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "mayas-notebook",
+      "title": "Дневник Майи",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "ripper",
+      "title": "Игра в «Потрошителя»",
+      "written": {
+        "from": 2012,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "japanese-lover",
+      "title": "Японский любовник",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "long-petal-of-the-sea",
+      "title": "У кромки моря узкий лепесток",
+      "qid": "Q99315598",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "violeta",
+      "title": "Виолета",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "wind-knows-my-name",
+      "title": "Ветер знает мое имя",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    },
+    {
+      "ref": "hour-before-dawn",
+      "title": "Час перед рассветом",
+      "written": {
+        "from": 2026,
+        "to": 2026
+      }
+    }
+  ]
+}

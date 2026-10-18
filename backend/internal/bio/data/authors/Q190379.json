@@ -1,0 +1,551 @@
+{
+  "qid": "Q190379",
+  "name": "Иэн Макьюэн",
+  "born": "1948-06-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D1%8C%D1%8E%D1%8D%D0%BD%2C_%D0%98%D1%8D%D0%BD",
+      "rev": 153222582
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ian_McEwan",
+      "rev": 1372495590
+    }
+  ],
+  "chapters": [
+    {
+      "key": "voennye-bazy",
+      "title": "Военные базы и интернат",
+      "from": 1948,
+      "to": 1966
+    },
+    {
+      "key": "universitety",
+      "title": "Университеты и первые рассказы",
+      "from": 1967,
+      "to": 1977
+    },
+    {
+      "key": "ian-macabre",
+      "title": "«Иэн Макабр», скандалы и сценарии",
+      "from": 1978,
+      "to": 1996
+    },
+    {
+      "key": "buker",
+      "title": "Новый брак и Букер",
+      "from": 1997,
+      "to": 2009
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Признание и поздние романы",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-06-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в военном городке Олдершот",
+      "long": "Родился в военном городке Олдершот в семье кадрового офицера британской армии Дэвида Макьюэна и Розы Лиллиан Вайолет.",
+      "place": {
+        "label": "Олдершот"
+      },
+      "chapter": "voennye-bazy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Иэн Макьюэн родился 21 июня 1948 в военном городке Олдершот, Хэмпшир"
+      }
+    },
+    {
+      "key": "education-1959",
+      "date": {
+        "from": "1959",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа-интернат Вулверстоун",
+      "long": "Учился в школе-интернате Вулверстоун в Суффолке, где развился его интерес к английской романтической поэзии и современной фантастике.",
+      "place": {
+        "label": "Суффолк"
+      },
+      "chapter": "voennye-bazy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в котором он проучился с 1959 по 1966 год"
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Сассекского университета",
+      "long": "Окончил Сассекский университет с отличием, получив степень бакалавра по английской литературе; до этого некоторое время работал мусорщиком в Лондоне.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "universitety",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получил степень бакалавра по английской литературе в 1970 году"
+      }
+    },
+    {
+      "key": "education-1970-2",
+      "date": {
+        "from": "1970",
+        "to": "1971",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Курс творческого письма в Университете Восточной Англии",
+      "long": "Был принят в Университет Восточной Англии, одним из первых выпускников курса творческого письма у Малькольма Брэдбери и Энгуса Уилсона; в 1971 году получил степень магистра.",
+      "place": {
+        "label": "Норидж"
+      },
+      "works": [
+        {
+          "ref": "first-love-last-rites"
+        }
+      ],
+      "chapter": "universitety",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "там же получил степень магистра в 1971 году"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Сомерсета Моэма",
+      "long": "Первый сборник рассказов принёс автору Премию Сомерсета Моэма.",
+      "works": [
+        {
+          "ref": "first-love-last-rites"
+        }
+      ],
+      "chapter": "universitety",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сборник позднее принес автору Премию Сомерсета Моэма в 1976 году."
+      }
+    },
+    {
+      "key": "other-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Скандал вокруг обвинений в сходстве с романом Глоага",
+      "long": "После выхода первого романа критики отметили сходство с романом Юлиана Глоага 1963 года; Макьюэн отрицал, что читал его, обвинений в плагиате предъявлено не было.",
+      "works": [
+        {
+          "ref": "cement-garden"
+        }
+      ],
+      "chapter": "ian-macabre",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году он опубликовал свой второй сборник рассказов… в литературных кругах разразился скандал в связи с тем, что некоторые критики отметили сходство"
+      }
+    },
+    {
+      "key": "persecution-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отказ BBC от постановки пьесы",
+      "long": "BBC в последний момент отказалась ставить пьесу «Стереометрия» из-за её содержания.",
+      "chapter": "ian-macabre",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1980 году, когда телеканал BBC в последний момент отказался от постановки пьесы «Стереометрия»"
+      }
+    },
+    {
+      "key": "love-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Пенни Аллен",
+      "long": "Женился на Пенни Аллен; в браке родились два сына.",
+      "chapter": "ian-macabre",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый раз женился на Пенни Аллен (англ. Penny Allen) в 1982 году, развёлся в 1995 году"
+      }
+    },
+    {
+      "key": "family-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Пенни Аллен",
+      "long": "Брак с Пенни Аллен завершился разводом.",
+      "chapter": "ian-macabre",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый раз женился на Пенни Аллен (англ. Penny Allen) в 1982 году, развёлся в 1995 году"
+      }
+    },
+    {
+      "key": "love-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Анналеной Макафи",
+      "long": "Женился на журналистке и писательнице Анналене Макафи, в прошлом редакторе раздела Review газеты The Guardian.",
+      "chapter": "buker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Two years later in 1997, McEwan married Annalena McAfee"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Букеровская премия",
+      "long": "Получил Букеровскую премию за роман «Амстердам».",
+      "works": [
+        {
+          "ref": "amsterdam"
+        }
+      ],
+      "chapter": "buker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1998, he won the Booker Prize for Amsterdam."
+      }
+    },
+    {
+      "key": "family-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Похищение сына после решения об опеке",
+      "long": "После судебного решения об опеке над сыновьями в пользу отца первая жена увезла их 13-летнего сына.",
+      "chapter": "buker",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году его первая жена, Пенни Аллен, похитила их 13-летнего сына после вердикта суда"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Шекспира",
+      "long": "Награждён премией Шекспира фонда Альфреда Тепфера.",
+      "chapter": "buker",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он был награждён премией Шекспира фонда Альфреда Тепфера в 1999 году"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи",
+      "long": "Награждён орденом Британской империи.",
+      "chapter": "buker",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году был награждён орденом Британской Империи."
+      }
+    },
+    {
+      "key": "family-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Открытие существования старшего брата",
+      "long": "Узнал о старшем брате Дэвиде Шарпе, рождённом до брака родителей и отданном на усыновление; история стала публичной в 2007 году.",
+      "chapter": "buker",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 году Макьюэн обнаружил, что у него есть брат, который был отдан на усыновление во время Второй мировой войны; история стала достоянием общественности в 2007 году."
+      }
+    },
+    {
+      "key": "other-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Арктическая экспедиция Cape Farewell",
+      "long": "Участвовал в экспедиции Cape Farewell: художники и учёные несколько недель провели на судне близ Северного полюса, обсуждая экологические проблемы.",
+      "works": [
+        {
+          "ref": "solar",
+          "note": "экспедиция названа источником вдохновения для романа"
+        }
+      ],
+      "chapter": "buker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "inspiration for the novel coming from a Cape Farewell expedition McEwan made in 2005"
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Обвинение в плагиате",
+      "long": "Был обвинён в заимствовании фрагмента из мемуаров Люсиллы Эндрюс; Макьюэн сослался на её книгу как на источник, его защитили ряд писателей.",
+      "works": [
+        {
+          "ref": "atonement"
+        }
+      ],
+      "chapter": "buker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006, McEwan was accused of plagiarism; specifically that a passage in Atonement (2001) closely echoed a passage from a memoir"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Иерусалимская премия и спор вокруг неё",
+      "long": "Получил Иерусалимскую премию и отвечал на критику за её принятие; в речи выступил и в защиту Израиля, и против политики в Газе и поселений.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On winning the Jerusalem Prize in 2011, McEwan defended himself against criticism for accepting the prize"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Гёте",
+      "long": "Награждён медалью Гёте вместе с Эльвирой Эспехо-Айка и Зукисвой Ваннер.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2020 году Иэн Макьюэн был награждён медалью Гёте"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "first-love-last-rites",
+      "title": "Первая любовь, последние обряды",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "in-between-the-sheets",
+      "title": "Меж сбитых простыней",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "cement-garden",
+      "title": "Цементный сад",
+      "qid": "Q1198186",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "comfort-of-strangers",
+      "title": "Утешение странников",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "child-in-time",
+      "title": "Дитя во времени",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "innocent",
+      "title": "Невинный",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "black-dogs",
+      "title": "Чёрные псы",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "enduring-love",
+      "title": "Невыносимая любовь",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "amsterdam",
+      "title": "Амстердам",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "atonement",
+      "title": "Искупление",
+      "qid": "Q306619",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "saturday",
+      "title": "Суббота",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "on-chesil-beach",
+      "title": "На берегу",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "solar",
+      "title": "Солнечная",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "sweet-tooth",
+      "title": "Сластёна",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "children-act",
+      "title": "Закон о детях",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "nutshell",
+      "title": "Ореховая скорлупа",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "machines-like-me",
+      "title": "Машины как я",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "lessons",
+      "title": "Уроки",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

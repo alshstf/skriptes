@@ -1,0 +1,530 @@
+{
+  "qid": "Q35155",
+  "name": "Томас Пинчон",
+  "born": "1937-05-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B8%D0%BD%D1%87%D0%BE%D0%BD%2C_%D0%A2%D0%BE%D0%BC%D0%B0%D1%81",
+      "rev": 154828619
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Thomas_Pynchon",
+      "rev": 1373331597
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cornell-navy",
+      "title": "Лонг-Айленд, Корнелл, флот",
+      "from": 1937,
+      "to": 1959
+    },
+    {
+      "key": "boeing-california",
+      "title": "Боинг и калифорнийские годы",
+      "from": 1960,
+      "to": 1972
+    },
+    {
+      "key": "rainbow-recluse",
+      "title": "Радуга, премии и затворничество",
+      "from": 1973,
+      "to": 1989
+    },
+    {
+      "key": "family-late-novels",
+      "title": "Семья и поздние романы",
+      "from": 1990,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-05-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Глен-Ков, Лонг-Айленд",
+      "long": "Томас Рагглз Пинчон-младший родился 8 мая 1937 года в Глен-Ков на Лонг-Айленде, штат Нью-Йорк.",
+      "place": {
+        "label": "Глен-Ков"
+      },
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Томас Рагглз Пинчон-младший родился 8 мая 1937 года в небольшом городе Глен-Ков"
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Корнеллский университет",
+      "long": "После школы Пинчон поступил в Корнелл, где изучал прикладную физику (инженерную физику).",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По окончании школы в 1953 году Пинчон поступил в Корнеллский университет, где изучал прикладную физику."
+      }
+    },
+    {
+      "key": "war-1956",
+      "date": {
+        "from": "1956",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба во флоте США, Суэцкий кризис",
+      "long": "После второго курса Пинчон поступил на службу во флот США; в 1956 году находился на эсминце в Средиземном море во время Суэцкого кризиса. В 1957 году вернулся в Корнелл.",
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1956, he was aboard the destroyer USS Hank in the Mediterranean during the Suez Crisis. … In 1957, Pynchon returned to Cornell to pursue a degree in English."
+      }
+    },
+    {
+      "key": "education-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Возвращение в Корнелл, переход на английскую литературу",
+      "long": "В 1957 году Пинчон вернулся в Корнелл и перешёл на английскую литературу.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1957, Pynchon returned to Cornell to pursue a degree in English."
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959-03",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "Рассказ «Мелкий дождь» (The Small Rain) вышел в журнале Cornell Writer в марте 1959 года.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published story, \"The Small Rain\", appeared in the Cornell Writer in March 1959"
+      }
+    },
+    {
+      "key": "education-1959",
+      "date": {
+        "from": "1959-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра по английскому языку",
+      "long": "В июне 1959 года Пинчон получил степень бакалавра с отличием, член общества Phi Beta Kappa.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "cornell-navy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pynchon received his B.A. with distinction as a member of Phi Beta Kappa in June 1959."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960-02",
+        "to": "1962-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Технический автор в Boeing, Сиэтл",
+      "long": "С февраля 1960 по сентябрь 1962 года Пинчон работал в Boeing, составляя материалы для бюллетеня Bomarc Service News; параллельно писал первый роман.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "works": [
+        {
+          "ref": "v",
+          "note": "опыт работы в Boeing лёг в основу образа корпорации «Йойодайн» в романе"
+        },
+        {
+          "ref": "the-crying-of-lot-49",
+          "note": "корпорация «Йойодайн» в романе восходит к опыту работы в Boeing"
+        }
+      ],
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From February 1960 to September 1962, he was employed as a technical writer at Boeing in Seattle"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Фолкнеровская премия за лучший дебют",
+      "long": "Первый роман принёс Пинчону премию Фонда Уильяма Фолкнера за лучший дебют и известность.",
+      "works": [
+        {
+          "ref": "v"
+        }
+      ],
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вышедшая в 1963 году книга принесла Пинчону Фолкнеровскую премию за лучший дебют и принесла автору известность."
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Отказ в приёме в аспирантуру Беркли",
+      "long": "В 1964 году Пинчон подал заявление в аспирантуру Калифорнийского университета в Беркли (математика), но получил отказ.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1964 he applied to study mathematics as a graduate student at the University of California, Berkeley, but was turned down."
+      }
+    },
+    {
+      "key": "creation-1964",
+      "date": {
+        "from": "1964-04",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Четыре романа одновременно в работе",
+      "long": "В апреле 1964 года в письме агенту Кандиде Донадио Пинчон сообщил, что работает над четырьмя романами.",
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In an April 1964 letter to his agent, Candida Donadio, Pynchon wrote that he had four novels in progress"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от преподавания в Беннингтонском колледже",
+      "long": "В декабре 1965 года Пинчон отклонил приглашение Стэнли Эдгара Хаймана преподавать литературу, сославшись на решение писать три романа одновременно.",
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1965, Pynchon politely turned down an invitation from Stanley Edgar Hyman to teach literature at Bennington College"
+      }
+    },
+    {
+      "key": "persecution-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Подпись под протестом против военного налога",
+      "long": "В 1968 году Пинчон был среди 447 подписантов «Writers and Editors War Tax Protest» против участия США во Вьетнаме.",
+      "chapter": "boeing-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968, Pynchon was one of 447 signatories to the \"Writers and Editors War Tax Protest\"."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия",
+      "long": "В 1974 году «Радуга тяготения» разделила Национальную книжную премию с Исааком Башевисом Зингером.",
+      "works": [
+        {
+          "ref": "gravitys-rainbow"
+        }
+      ],
+      "chapter": "rainbow-recluse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gravity's Rainbow shared the 1974 National Book Award with A Crown of Feathers and Other Stories by Isaac Bashevis Singer (split award)."
+      }
+    },
+    {
+      "key": "other-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Комик Ирвин Кори вместо автора на церемонии",
+      "long": "На церемонии Национальной книжной премии 1974 года награду от имени Пинчона принимал комик Ирвин Кори; многие гости приняли его за самого писателя.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "gravitys-rainbow"
+        }
+      ],
+      "chapter": "rainbow-recluse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At the 1974 National Book Awards ceremony, the president of Viking Press, Tom Guinzberg, arranged for double-talking comedian \"Professor\" Irwin Corey to accept the prize on Pynchon's behalf."
+      }
+    },
+    {
+      "key": "persecution-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Вето Пулитцеровского совета",
+      "long": "В 1974 году жюри единогласно рекомендовало роман на Пулитцеровскую премию, но совет наложил вето, назвав его «нечитаемым» и в частях «непристойным»; премия не присуждалась.",
+      "works": [
+        {
+          "ref": "gravitys-rainbow"
+        }
+      ],
+      "chapter": "rainbow-recluse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gravity's Rainbow shared the 1974 National Book Award … the Pulitzer board vetoed the recommendation, calling the novel \"unreadable\""
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от медали Уильяма Дина Хауэллса",
+      "long": "В 1975 году Пинчон отказался от медали Уильяма Дина Хауэллса.",
+      "chapter": "rainbow-recluse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1975, Pynchon declined the William Dean Howells Medal."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Макартура",
+      "long": "В 1988 году Пинчон получил стипендию Макартура.",
+      "chapter": "rainbow-recluse",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1988, Pynchon received a MacArthur Fellowship"
+      }
+    },
+    {
+      "key": "love-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с литературным агентом Мелани Джексон",
+      "long": "В 1990 году Пинчон женился на своём литературном агенте Мелани Джексон, правнучке Теодора Рузвельта.",
+      "chapter": "family-late-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990, Pynchon married his literary agent, Melanie Jackson"
+      }
+    },
+    {
+      "key": "child-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Джексона",
+      "long": "В 1991 году у Пинчона родился сын Джексон.",
+      "chapter": "family-late-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "and fathered a son, Jackson, in 1991"
+      }
+    },
+    {
+      "key": "loss-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, Томаса Пинчона-старшего",
+      "long": "В 1995 году умер отец писателя, инженер и политик Томас Рагглз Пинчон-старший (1907–1995).",
+      "chapter": "family-late-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "engineer and politician Thomas Ruggles Pynchon Sr. (1907–1995)"
+      }
+    },
+    {
+      "key": "loss-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери, медсестры Кэтрин Беннетт",
+      "long": "В 1996 году умерла мать писателя, Кэтрин Фрэнсис Беннетт (1909–1996), медсестра.",
+      "chapter": "family-late-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Katherine Frances Bennett (1909–1996), a nurse"
+      }
+    },
+    {
+      "key": "other-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Съёмка CNN у дома в Манхэттене",
+      "long": "В 1997 году, незадолго до выхода романа, съёмочная группа CNN сняла Пинчона на улице Манхэттена; он просил не называть его в кадре.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "family-late-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shortly before the publication of Mason \u0026 Dixon in 1997, a CNN camera crew filmed him in Manhattan."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "v",
+      "title": "V.",
+      "qid": "Q1191071",
+      "written": {
+        "from": 1959,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "the-crying-of-lot-49",
+      "title": "Выкрикивается лот 49",
+      "qid": "Q2344707",
+      "written": {
+        "from": 1965,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "gravitys-rainbow",
+      "title": "Радуга тяготения",
+      "qid": "Q1212160",
+      "written": {
+        "from": 1960,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "vineland",
+      "title": "Вайнленд",
+      "qid": "Q2738674",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "mason-and-dixon",
+      "title": "Mason \u0026 Dixon",
+      "qid": "Q1536968",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "against-the-day",
+      "title": "На день погребения Моего",
+      "qid": "Q4691072",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "inherent-vice",
+      "title": "Внутренний порок",
+      "qid": "Q4127192",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "bleeding-edge",
+      "title": "Край навылет",
+      "qid": "Q15052477",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

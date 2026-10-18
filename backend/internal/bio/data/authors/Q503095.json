@@ -1,0 +1,468 @@
+{
+  "qid": "Q503095",
+  "name": "Тед Чан",
+  "born": "1967-10-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A7%D0%B0%D0%BD%2C_%D0%A2%D0%B5%D0%B4",
+      "rev": 155630114
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ted_Chiang",
+      "rev": 1379951637
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Лонг-Айленд",
+      "from": 1967,
+      "to": 1988
+    },
+    {
+      "key": "debut",
+      "title": "Брауновский университет, Кларион, дебют",
+      "from": 1989,
+      "to": 1997
+    },
+    {
+      "key": "recognition",
+      "title": "Белвью и признание",
+      "from": 1998,
+      "to": 2007
+    },
+    {
+      "key": "awards",
+      "title": "Новые премии и экран",
+      "from": 2008,
+      "to": 2019
+    },
+    {
+      "key": "ai",
+      "title": "Резиденции и разговор об ИИ",
+      "from": 2020,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-10-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Порт-Джефферсоне",
+      "long": "Родился в Порт-Джефферсоне, штат Нью-Йорк, в тайваньско-американской семье; отец — профессор машиностроения, мать — библиотекарь.",
+      "place": {
+        "label": "Порт-Джефферсон"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Chiang was born in 1967 to a Taiwanese American family in Port Jefferson, New York."
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом по информатике в Брауновском университете",
+      "long": "Окончил Брауновский университет со степенью бакалавра наук, выбрав информатику вместо физики.",
+      "place": {
+        "label": "Провиденс"
+      },
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, he graduated from Brown University with a Bachelor of Science after choosing to study computer science over physics."
+      }
+    },
+    {
+      "key": "education-1989-2",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Кларионский семинар молодых авторов",
+      "long": "Прошёл Кларионский семинар молодых авторов, после которого продал первый рассказ журналу «Omni».",
+      "works": [
+        {
+          "ref": "tower-of-babylon"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After attending and graduating from the Clarion Workshop in 1989 Chiang sold his first story"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и премия «Небьюла»",
+      "long": "Дебютная повесть, опубликованная в «Omni», принесла Чану премию «Небьюла».",
+      "works": [
+        {
+          "ref": "tower-of-babylon"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was awarded a Nebula Award for it in 1990"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "Получил премию Джона В. Кэмпбелла лучшему новому писателю-фантасту.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1992 год — Премия Джона В. Кэмпбелла лучшему новому писателю-фантасту (John W. Campbell Award)"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Небьюла» и премия Старджона за повесть",
+      "long": "Получил «Небьюлу» за повесть, а также премию Теодора Старджона.",
+      "works": [
+        {
+          "ref": "story-of-your-life"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1999 год — Премия «Небьюла», в номинации Повесть (Novella) за «История твоей жизни» (1998 год)"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии «Хьюго» и «Локус»",
+      "long": "Получил премии «Хьюго» и «Локус» за короткую повесть.",
+      "works": [
+        {
+          "ref": "hell-is-the-absence-of-god"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2002 год — Премия «Хьюго», в номинации Короткая повесть за «Ад — это отсутствие Бога» (2001 год)"
+      }
+    },
+    {
+      "key": "career-2002-2",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый сборник рассказов",
+      "long": "Первый сборник вышел в издательстве Tor Books и включил первые восемь рассказов автора; в 2003 году получил премию «Локус» как лучший сборник.",
+      "works": [
+        {
+          "ref": "stories-of-your-life-and-others"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stories of Your Life and Others (2002) was published in 2002 by Tor Books and comprises his first eight stories."
+      }
+    },
+    {
+      "key": "career-2002-3",
+      "date": {
+        "from": "2002-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа техписателем, жизнь в Белвью",
+      "long": "Работает техническим писателем в сфере программного обеспечения и живёт в Белвью близ Сиэтла.",
+      "place": {
+        "label": "Белвью"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As of July 2002, Chiang was working as a technical writer in the software industry and resided in Bellevue, Washington, near Seattle."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за короткую повесть",
+      "long": "Получил «Хьюго» за короткую повесть; годом ранее за неё же — «Небьюлу».",
+      "works": [
+        {
+          "ref": "merchant-and-the-alchemists-gate"
+        }
+      ],
+      "chapter": "awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2008 год — Премия «Хьюго», в номинации Короткая повесть за «Купец и волшебные врата» (2007 год)"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» и «Локус» за рассказ",
+      "long": "Получил премии «Хьюго» и «Локус» за рассказ.",
+      "works": [
+        {
+          "ref": "exhalation"
+        }
+      ],
+      "chapter": "awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2009 год — Премия «Хьюго», в номинации Рассказ за «Exhalation»"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание на Кларионском семинаре",
+      "long": "Преподавал на Кларионском семинаре в Калифорнийском университете в Сан-Диего (повторно — в 2016 году).",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was an instructor at the Clarion Workshop at UC San Diego in 2012 and 2016."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Фильм «Прибытие» по его повести",
+      "long": "По повести снят фильм «Прибытие»; сборник переиздан под названием «Arrival».",
+      "works": [
+        {
+          "ref": "story-of-your-life"
+        }
+      ],
+      "chapter": "awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His short story \"Story of Your Life\" was the basis of the film Arrival (2016)."
+      }
+    },
+    {
+      "key": "loss-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя, работавшая библиотекарем.",
+      "chapter": "awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His mother (d. 2019) was a librarian."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сборник в списке чтения Обамы",
+      "long": "Барак Обама включил второй сборник в свой список чтения, назвав его «лучшим видом научной фантастики».",
+      "chapter": "awards",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Former US president Barack Obama included Chiang's short story collection Exhalation in his 2019 reading list"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "to": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Резиденция в Университете Нотр-Дам",
+      "long": "Был приглашённым художником в Университете Нотр-Дам.",
+      "place": {
+        "label": "Нотр-Дам"
+      },
+      "chapter": "ai",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was an artist in residence at the University of Notre Dame from 2020 to 2021."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендиат Института Санта-Фе",
+      "long": "Стал Miller Scholar в Институте Санта-Фе.",
+      "place": {
+        "label": "Санта-Фе"
+      },
+      "chapter": "ai",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2022, Chiang became a Miller Scholar in the Santa Fe Institute."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Список Time: влиятельные люди в области ИИ",
+      "long": "Журнал Time включил Чана в число 100 самых влиятельных людей в области ИИ; он регулярно пишет об ИИ в The New Yorker.",
+      "chapter": "ai",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, Chiang was named one of Time's 100 most influential people in AI."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tower-of-babylon",
+      "title": "Вавилонская башня",
+      "qid": "Q4102150",
+      "written": {
+        "from": 1989,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "understand",
+      "title": "Понимай",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "story-of-your-life",
+      "title": "История твоей жизни",
+      "qid": "Q7620415",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "seventy-two-letters",
+      "title": "72 буквы",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "hell-is-the-absence-of-god",
+      "title": "Ад — это отсутствие Бога",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "stories-of-your-life-and-others",
+      "title": "История твоей жизни (сборник)",
+      "qid": "Q3045861",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "merchant-and-the-alchemists-gate",
+      "title": "Купец и волшебные врата",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "exhalation",
+      "title": "Exhalation",
+      "qid": "Q16747517",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    }
+  ]
+}
