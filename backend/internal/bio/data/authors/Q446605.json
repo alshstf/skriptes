@@ -1,0 +1,330 @@
+{
+  "qid": "Q446605",
+  "name": "Бернард Корнуэлл",
+  "born": "1944-02-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%80%D0%BD%D1%83%D1%8D%D0%BB%D0%BB%2C_%D0%91%D0%B5%D1%80%D0%BD%D0%B0%D1%80%D0%B4",
+      "rev": 153426233
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Bernard_Cornwell",
+      "rev": 1372765759
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Приёмная семья и университет",
+      "from": 1944,
+      "to": 1966
+    },
+    {
+      "key": "bi-bi-si",
+      "title": "Учитель и Би-Би-Си",
+      "from": 1967,
+      "to": 1978
+    },
+    {
+      "key": "amerika-sharp",
+      "title": "Америка и первые романы",
+      "from": 1979,
+      "to": 2003
+    },
+    {
+      "key": "saksonskie-hroniki",
+      "title": "Саксонские хроники и признание",
+      "from": 2004,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "faith-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Усыновление в семье секты «Особые люди»",
+      "long": "Усыновлён семьёй Уиггинс из Эссекса, принадлежавшей строгой пацифистской секте «Особые люди». Реакцией на фундаменталистское воспитание стал атеизм.",
+      "place": {
+        "label": "Тандерсли"
+      },
+      "works": [
+        {
+          "ref": "crowning-mercy",
+          "note": "Строгое протестантское воспитание Корнуэлла легло в основу фона романа."
+        }
+      ],
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cornwell was born in London in 1944.… He was adopted and brought up in Thundersley, Essex, by the Wiggins family"
+      }
+    },
+    {
+      "key": "birth-1944",
+      "date": {
+        "from": "1944-02-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился в Лондоне 23 февраля 1944 года; отец — канадский лётчик, мать — англичанка, служившая во вспомогательных частях ВВС.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Лондон 1944-02-23"
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Изучение истории в Университетском колледже Лондона",
+      "long": "С 1963 по 1966 год изучал историю в Университетском колледже Лондона, затем работал учителем.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He read history at University College London between 1963 and 1966"
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство со второй женой Джуди",
+      "long": "В 1978 году в Эдинбурге, работая на Би-Би-Си Северной Ирландии, встретил Джуди — американку, турагента и мать троих детей.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "bi-bi-si",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He met his second wife, Judy, in 1978 in Edinburgh"
+      }
+    },
+    {
+      "key": "relocation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в США после женитьбы",
+      "long": "В 1979 году после женитьбы на Джуди переехал в США; позже стал гражданином США.",
+      "chapter": "amerika-sharp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He relocated to the United States in 1979 after marrying her."
+      }
+    },
+    {
+      "key": "creation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало писательства из-за отсутствия грин-карты",
+      "long": "Не получив вид на жительство в США, начал писать романы, поскольку для этого не требовалось разрешения на работу.",
+      "works": [
+        {
+          "ref": "sharpe-eagle",
+          "note": "Цикл о Шарпе начат в том числе из необходимости зарабатывать писательством."
+        }
+      ],
+      "chapter": "amerika-sharp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He relocated to the United States in 1979 after marrying her. He was unable to get a United States Permanent Resident Card (green card), so he started writing novels"
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "to": "1986",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Романы с женой под псевдонимом Сусанна Келлс",
+      "long": "Вместе с женой Джуди написал три романа под псевдонимом «Сусанна Келлс» (1983–1986).",
+      "works": [
+        {
+          "ref": "crowning-mercy"
+        }
+      ],
+      "chapter": "amerika-sharp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cornwell and wife Judy co-wrote a series of novels published under the pseudonym… A Crowning Mercy published in 1983, Fallen Angels in 1984, and Coat of Arms (aka The Aristocrats) in 1986"
+      }
+    },
+    {
+      "key": "creation-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Предыстория цикла по заказу телекомпании",
+      "long": "По просьбе продюсеров будущего сериала написал вводный роман о Шарпе с заметной ролью испанских героев — для получения испанского финансирования.",
+      "works": [
+        {
+          "ref": "sharpe-rifles",
+          "note": "Роман написан по запросу продюсеров телеадаптации."
+        }
+      ],
+      "chapter": "amerika-sharp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The result was Sharpe's Rifles, published in 1987"
+      }
+    },
+    {
+      "key": "creation-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало цикла об англосаксах по семейной родословной",
+      "long": "После встречи с отцом и изучения родословной, восходящей к Утреду Беббанбургскому, начал цикл о становлении Англии; первая книга вышла в 2004 году.",
+      "works": [
+        {
+          "ref": "the-last-kingdom",
+          "note": "Герой Утред основан отчасти на предке автора, родословную которого он узнал после встречи с отцом."
+        }
+      ],
+      "chapter": "saksonskie-hroniki",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, he released The Last Kingdom, beginning the Saxon Stories"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Тридцать миллионов проданных книг",
+      "long": "К 2015 году тираж книг автора достиг 30 миллионов экземпляров.",
+      "chapter": "saksonskie-hroniki",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "selling 30 million books by 2015"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sharpe-eagle",
+      "title": "Орёл Шарпа",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "sharpe-gold",
+      "title": "Золото Шарпа",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "sharpe-company",
+      "title": "Рота Шарпа",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "crowning-mercy",
+      "title": "A Crowning Mercy",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "sharpe-rifles",
+      "title": "Стрелки Шарпа",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "redcoat",
+      "title": "Redcoat",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "the-last-kingdom",
+      "title": "Последнее королевство",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "azincourt",
+      "title": "Азенкур",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "the-fort",
+      "title": "The Fort",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "waterloo-history",
+      "title": "Ватерлоо: история четырёх дней, трёх армий и трёх сражений",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

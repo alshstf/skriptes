@@ -1,0 +1,156 @@
+{
+  "qid": "Q428755",
+  "name": "Стивен Эриксон",
+  "born": "1959-10-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D1%80%D0%B8%D0%BA%D1%81%D0%BE%D0%BD%2C_%D0%A1%D1%82%D0%B8%D0%B2%D0%B5%D0%BD",
+      "rev": 149869065
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Steven_Erikson",
+      "rev": 1371567094
+    }
+  ],
+  "chapters": [
+    {
+      "key": "toronto-winnipeg",
+      "title": "Торонто, Виннипег, археология",
+      "from": 1959,
+      "to": 1990
+    },
+    {
+      "key": "first-novel",
+      "title": "Первый роман и годы без издателя",
+      "from": 1991,
+      "to": 1998
+    },
+    {
+      "key": "malazan",
+      "title": "Малазанский цикл",
+      "from": 1999,
+      "to": 2011
+    },
+    {
+      "key": "after-malazan",
+      "title": "Предыстория и новые циклы",
+      "from": 2012,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1959",
+      "date": {
+        "from": "1959-10-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Торонто",
+      "long": "Родился в Торонто под именем Стив Руне Лундин; вырос в Виннипеге, провинция Манитоба.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto-winnipeg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Steve Rune Lundin (born October 7, 1959)"
+      }
+    },
+    {
+      "key": "creation-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершён первый роман малазанского цикла",
+      "long": "Сюжет, задуманный с Ианом Эсслемонтом для ролевой игры, затем переработан в киносценарий и в роман; роман закончен в 1991 году, но вышел только спустя восемь лет.",
+      "works": [
+        {
+          "ref": "malazan-book-of-the-fallen",
+          "note": "Роман, законченный в 1991 году, стал первой книгой цикла."
+        }
+      ],
+      "chapter": "first-novel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман, который был закончен ещё в 1991 году, но опубликован только в 1999"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт на девять книг серии",
+      "long": "После выхода первого романа Эриксон подписал контракт ещё на девять книг серии.",
+      "works": [
+        {
+          "ref": "malazan-book-of-the-fallen"
+        }
+      ],
+      "chapter": "malazan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "опубликован только в 1999. Тогда же Эриксон подписал контракт ещё на 9 книг."
+      }
+    },
+    {
+      "key": "career-1999-2",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шорт-лист Всемирной премии фэнтези",
+      "long": "Первый роман серии получил хорошие отзывы и вошёл в шорт-лист Всемирной премии фэнтези.",
+      "works": [
+        {
+          "ref": "malazan-book-of-the-fallen"
+        }
+      ],
+      "chapter": "malazan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gardens of the Moon (1999), was well received. It was short-listed for a World Fantasy Award."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "malazan-book-of-the-fallen",
+      "title": "Малазанская книга павших",
+      "qid": "Q458982",
+      "written": {
+        "from": 1991,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "forge-of-darkness",
+      "title": "Кузница тьмы",
+      "qid": "Q18788326",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "rejoice-a-knife-to-the-heart",
+      "title": "Радость, словно нож у сердца",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "qid": "Q178403",
+  "name": "Ирвин Уэлш",
+  "born": "1958-09-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D1%8D%D0%BB%D1%88%2C_%D0%98%D1%80%D0%B2%D0%B8%D0%BD",
+      "rev": 148974490
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Irvine_Welsh",
+      "rev": 1375786342
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leith-edinburgh",
+      "title": "Лит и Эдинбург",
+      "from": 1958,
+      "to": 1977
+    },
+    {
+      "key": "london-punk",
+      "title": "Лондон, панк и возвращение",
+      "from": 1978,
+      "to": 1992
+    },
+    {
+      "key": "trainspotting-fame",
+      "title": "«На игле» и слава",
+      "from": 1993,
+      "to": 2004
+    },
+    {
+      "key": "abroad",
+      "title": "Брак и жизнь за океаном",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1958",
+      "date": {
+        "from": "1958-09-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в портовом Лите",
+      "long": "Родился в Лите, портовом пригороде Эдинбурга.",
+      "place": {
+        "label": "Лит, Эдинбург"
+      },
+      "chapter": "leith-edinburgh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уэлш родился 27 сентября 1958 года в Лите, портовом пригороде Эдинбурга."
+      }
+    },
+    {
+      "key": "relocation-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лондон, панк-группы",
+      "long": "Уехал в Лондон, где играл на гитаре и пел в панк-группах The Pubic Lice и Stairway 13. Позднее его несколько раз арестовывали за мелкие нарушения порядка, после чего он сменил образ жизни.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-punk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году двадцатилетний Уэлш отправился в Лондон, где играл на гитаре и пел в панк-группах The Pubic Lice и Stairway 13."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман и начало известности",
+      "long": "Первый роман о молодых наркоманах Эдинбурга, во многом автобиографический, принёс Уэлшу известность.",
+      "works": [
+        {
+          "ref": "trainspotting"
+        }
+      ],
+      "chapter": "trainspotting-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первый роман «На игле» (1993) — проникнутое чёрным юмором повествование о буднях молодых наркоманов Эдинбурга конца 1980-х годов."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второй роман закрепляет известность",
+      "long": "Второй роман закрепил за Уэлшем известность талантливого писателя.",
+      "works": [
+        {
+          "ref": "marabou-stork-nightmares"
+        }
+      ],
+      "chapter": "trainspotting-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Второй роман Ирвина Уэлша «Кошмары аиста Марабу» (англ. Marabou Stork Nightmares, 1995) закрепил за ним известность талантливого писателя."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Фильм Денни Бойла по первому роману",
+      "long": "Денни Бойл снял по первому роману Уэлша одноимённый фильм; в нём писатель сыграл небольшую роль.",
+      "works": [
+        {
+          "ref": "trainspotting"
+        }
+      ],
+      "chapter": "trainspotting-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году Денни Бойл снял на основе романа одноимённый фильм."
+      }
+    },
+    {
+      "key": "love-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Бет Куинн",
+      "long": "Женился на Бет Куинн.",
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Welsh married Beth Quinn in 2005."
+      }
+    },
+    {
+      "key": "relocation-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Чикаго",
+      "long": "Жил с женой в чикагском районе Лейквью; до этого жил в Дублине.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had lived together in the Lakeview neighbourhood of Chicago, USA, since 2009."
+      }
+    },
+    {
+      "key": "family-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Бет Куинн",
+      "long": "Брак с Бет Куинн завершился разводом; в 2018 году Уэлш жил в Майами.",
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They were divorced in 2018."
+      }
+    },
+    {
+      "key": "love-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Эммой Карри",
+      "long": "Женился на актрисе Эмме Карри, сестре шотландского музыканта Момуса.",
+      "chapter": "abroad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2022, Welsh married Emma Currie, an actor and sister of Scottish musician Momus."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "trainspotting",
+      "title": "На игле",
+      "qid": "Q11279562",
+      "written": {
+        "from": 1990,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "acid-house",
+      "title": "Кислотный дом",
+      "written": {
+        "from": 1993,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "marabou-stork-nightmares",
+      "title": "Кошмары аиста Марабу",
+      "written": {
+        "from": 1993,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "ecstasy",
+      "title": "Экстази",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "filth",
+      "title": "Грязь",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "glue",
+      "title": "Клей",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "porno",
+      "title": "Порно",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "crime",
+      "title": "Преступление",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "skagboys",
+      "title": "Skagboys",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

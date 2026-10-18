@@ -1,0 +1,684 @@
+{
+  "qid": "Q9327",
+  "name": "Ги де Мопассан",
+  "born": "1850-08-05",
+  "died": "1893-07-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%BF%D0%B0%D1%81%D1%81%D0%B0%D0%BD%2C_%D0%93%D0%B8_%D0%B4%D0%B5",
+      "rev": 155573941
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Guy_de_Maupassant",
+      "rev": 1380549659
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Guy_de_Maupassant",
+      "rev": 240253466
+    }
+  ],
+  "chapters": [
+    {
+      "key": "normandy-and-flaubert",
+      "title": "Нормандия, школа, Флобер",
+      "from": 1850,
+      "to": 1869
+    },
+    {
+      "key": "war-and-ministry",
+      "title": "Война и министерская служба",
+      "from": 1870,
+      "to": 1879
+    },
+    {
+      "key": "fame",
+      "title": "Слава и достаток",
+      "from": 1880,
+      "to": 1887
+    },
+    {
+      "key": "illness",
+      "title": "Болезнь и утраты",
+      "from": 1888,
+      "to": 1891
+    },
+    {
+      "key": "asylum",
+      "title": "Клиника доктора Бланша",
+      "from": 1892,
+      "to": 1893
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1850",
+      "date": {
+        "from": "1850-08-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в усадьбе Миромениль",
+      "long": "Родился в усадьбе Миромениль близ Дьепа в Нормандии, в семье Гюстава де Мопассана и Лауры Ле Пуатвен.",
+      "place": {
+        "label": "Миромениль"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ги де Мопассан родился 5 августа 1850 года в старинной усадьбе Миромениль около Дьепа."
+      }
+    },
+    {
+      "key": "family-1860",
+      "date": {
+        "from": "1860-12",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв родителей, жизнь с матерью в Этрета",
+      "long": "Мать рассталась с неверным мужем и поселилась с двумя сыновьями в Этрета; мать стала главным человеком в жизни мальчика.",
+      "place": {
+        "label": "Этрета"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Séparée de son mari volage en décembre 1860, Laure s'installe avec ses deux fils à Étretat"
+      }
+    },
+    {
+      "key": "other-1867",
+      "date": {
+        "from": "1867",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Знакомство с Гюставом Флобером",
+      "long": "По настоянию матери познакомился с Флобером в Круассе; Флобер стал его литературным наставником.",
+      "place": {
+        "label": "Круассе"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1867, while he was in junior high school, Maupassant met Gustave Flaubert at Croisset on the insistence of his mother."
+      }
+    },
+    {
+      "key": "education-1868",
+      "date": {
+        "from": "1868",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Исключение из церковной школы",
+      "long": "Исключён из церковного пансиона за вольные стихи; затем учился в руанском лицее.",
+      "place": {
+        "label": "Ивето"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il finira par se faire renvoyer en 1868, ayant écrit des vers licencieux."
+      }
+    },
+    {
+      "key": "other-1868",
+      "date": {
+        "from": "1868-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Спасение поэта Суинберна на воде",
+      "long": "В Этрета спас из воды утопавшего английского поэта Алджернона Суинберна.",
+      "place": {
+        "label": "Этрета"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1868, at the age of 18, he saved the famous poet Algernon Swinburne from drowning off the coast of Étretat."
+      }
+    },
+    {
+      "key": "education-1869",
+      "date": {
+        "from": "1869",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание лицея, отъезд изучать право",
+      "long": "Окончил руанский лицей и по совету матери и Флобера отправился в Париж изучать право; планы нарушила война.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "normandy-and-flaubert",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончив лицей в 1869 году и посоветовавшись с матерью и Флобером, он отправился в Париж, чтобы приступить к изучению права."
+      }
+    },
+    {
+      "key": "war-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Франко-прусская война рядовым",
+      "long": "С началом войны вступил добровольцем в армию; служил рядовым. Позднее часто возвращался к событиям войны в рассказах.",
+      "works": [
+        {
+          "ref": "boule-de-suif",
+          "note": "война 1870 года — тема рассказа; автор возвращался к событиям, свидетелем которых стал"
+        }
+      ],
+      "chapter": "war-and-ministry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Franco-Prussian War broke out soon after his graduation from college in 1870 and Maupassant volunteered to serve in the French Army"
+      }
+    },
+    {
+      "key": "career-1871",
+      "date": {
+        "from": "1871",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Десять лет чиновником в Париже",
+      "long": "Переехал из Нормандии в Париж и служил чиновником в морском министерстве; единственным отдыхом была гребля на Сене.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-and-ministry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1871, he left Normandy and moved to Paris, where he spent ten years as a clerk in the Navy Department."
+      }
+    },
+    {
+      "key": "career-1878",
+      "date": {
+        "from": "1878",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Перевод в министерство народного просвещения",
+      "long": "Переведён в министерство народного просвещения; сотрудничал в крупных газетах.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "war-and-ministry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1878, he was transferred to the Ministry of Public Instruction and became a contributing editor to several leading newspapers"
+      }
+    },
+    {
+      "key": "career-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный успех в «Меданских вечерах»",
+      "long": "Рассказ вошёл в коллективный сборник натуралистов «Меданские вечера» и сразу принёс автору известность; Флобер назвал его шедевром.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "boule-de-suif",
+          "note": "рассказ вошёл в сборник «Меданские вечера»"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый рассказ Мопассана вышел в свет в 1880 году вместе с повестями Золя, Алексиса, Сеара, Энника и Гюисманса, в сборнике «Меданские вечера»."
+      }
+    },
+    {
+      "key": "career-1880-2",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход с чиновной службы, хроники в «Голуа»",
+      "long": "Оставил службу в министерстве и стал хроникёром газеты Le Gaulois.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В том же году Мопассан выпустил сборник поэзии («Стихотворения», 1880)… чиновную службу писатель в это время оставил"
+      }
+    },
+    {
+      "key": "illness-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Расстройство зрения",
+      "long": "Пожаловался Флоберу на потерю зрения правого глаза; зрительные проблемы сопровождали его до конца.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Guy de Maupassant évoque ses troubles oculaires en 1880."
+      }
+    },
+    {
+      "key": "loss-1880",
+      "date": {
+        "from": "1880-05-08",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Флобера",
+      "long": "Внезапная смерть Флобера оставила молодого писателя без наставника; весть пришла телеграммой.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La même année, la disparition subite de Flaubert, le 8 mai 1880, laisse le nouvel écrivain seul face à son destin"
+      }
+    },
+    {
+      "key": "relocation-1881",
+      "date": {
+        "from": "1881",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка в Алжир и Тунис для «Голуа»",
+      "long": "Летом три месяца ездил по Алжиру и Тунису как корреспондент газеты; опубликовал критические очерки о колониальной политике.",
+      "place": {
+        "label": "Алжир"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Durant l'été 1881, l'écrivain, alors âgé de 30 ans, se rend en Algérie et en Tunisie pour le compte du journal Le Gaulois."
+      }
+    },
+    {
+      "key": "creation-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый роман, шесть лет работы",
+      "long": "Завершил первый роман, над которым работал шесть лет; за год продано 25 тысяч экземпляров.",
+      "works": [
+        {
+          "ref": "une-vie"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1883, il termine son premier roman, Une vie, qui lui a coûté six années. Vingt-cinq mille exemplaires en sont vendus en moins d’un an"
+      }
+    },
+    {
+      "key": "child-1883",
+      "date": {
+        "from": "1883-02-27",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Люсьена, не признанного отцом",
+      "long": "Родился первый ребёнок от Жозефины Литцельман; Мопассан его не признал. Позднее родились ещё двое детей.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 30 janvier 1883, dans Gil Blas et sous le pseudonyme de Maufrigneuse, paraît la nouvelle Auprès d'un mort, hommage à Arthur Schopenhauer. Le 27 février de cette année naît son premier enfant, Lucien"
+      }
+    },
+    {
+      "key": "love-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с графиней Эммануэлой Потоцкой",
+      "long": "Жил в связи с графиней Потоцкой, хозяйкой кружка «Макабеев».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1884, il vit une liaison avec la comtesse Emmanuela Potocka"
+      }
+    },
+    {
+      "key": "illness-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Начало нервных припадков",
+      "long": "Нервные припадки, ипохондрия и поиски ответа на то, что ускользает от чувств, нашли отражение в новеллах.",
+      "works": [
+        {
+          "ref": "horla",
+          "note": "настроение этих лет нашло выражение в новеллах, в том числе в «Орля»"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1884 года писателя преследуют нервные припадки; по мере возрастания разочарованности и ипохондрии он впадает в беспокойный идеализм"
+      }
+    },
+    {
+      "key": "career-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Тридцать семь изданий за четыре месяца",
+      "long": "Второй роман вышел и выдержал тридцать семь тиражей за четыре месяца.",
+      "works": [
+        {
+          "ref": "bel-ami"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His second novel, Bel-Ami, which came out in 1885, had thirty-seven printings in four months."
+      }
+    },
+    {
+      "key": "other-1885",
+      "date": {
+        "from": "1885",
+        "to": "1886",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Лекции Шарко по психиатрии",
+      "long": "Интересовался психиатрией и посещал публичные лекции Жана-Мартена Шарко.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "attended the public lectures of Jean-Martin Charcot between 1885 and 1886."
+      }
+    },
+    {
+      "key": "child-1887",
+      "date": {
+        "from": "1887",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение третьего непризнанного ребёнка",
+      "long": "Родился третий ребёнок; как и двое других, не был признан отцом.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Une fille naîtra l'année suivante, puis un troisième enfant en 1887, non reconnus."
+      }
+    },
+    {
+      "key": "other-1887",
+      "date": {
+        "from": "1887-02-14",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Письмо против строительства Эйфелевой башни",
+      "long": "Вместе с другими деятелями культуры подписал письмо протеста министру общественных работ.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and forty-six other Parisian literary and artistic notables attached their names to an elaborately irate letter of protest against the tower's construction, written to the Minister of Public Works, and published on 14 February 1887."
+      }
+    },
+    {
+      "key": "illness-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Первое помещение брата Эрве в лечебницу",
+      "long": "Брата Эрве впервые поместили в лечебницу для душевнобольных.",
+      "chapter": "illness",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En janvier 1888, il s'arrête à Marseille et achète le côtre de course Le Zingara… La même année, son frère Hervé est interné une première fois"
+      }
+    },
+    {
+      "key": "loss-1889",
+      "date": {
+        "from": "1889-11-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть младшего брата Эрве",
+      "long": "Брат Эрве умер в лечебнице в возрасте 33 лет.",
+      "place": {
+        "label": "Лион"
+      },
+      "chapter": "illness",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le lendemain, Guy visite Hervé. Celui-ci meurt le 13 novembre 1889 à l'âge de 33 ans."
+      }
+    },
+    {
+      "key": "illness-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Почти полная потеря возможности пользоваться глазами",
+      "long": "Писал, что не может пользоваться глазами и страдает; зрение мешало работе.",
+      "chapter": "illness",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il écrit en 1890 : « Cette impossibilité de me servir de mes yeux… fait de moi un martyr…"
+      }
+    },
+    {
+      "key": "illness-1892",
+      "date": {
+        "from": "1892-01-02",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Попытка самоубийства",
+      "long": "Попытался перерезать себе горло; врачи сочли необходимым госпитализацию.",
+      "place": {
+        "label": "Канны"
+      },
+      "chapter": "asylum",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 2 January 1892, Maupassant tried to take his own life by cutting his throat"
+      }
+    },
+    {
+      "key": "illness-1892-2",
+      "date": {
+        "from": "1892-01-07",
+        "to": "1893-07-06",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Помещение в клинику доктора Бланша",
+      "long": "Помещён в частную клинику Бланша в Пасси; оставался там до смерти.",
+      "place": {
+        "label": "Пасси"
+      },
+      "chapter": "asylum",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "On l'interne à Paris, le 7 janvier 1892, dans la clinique du docteur Blanche, chambre 15"
+      }
+    },
+    {
+      "key": "career-1893",
+      "date": {
+        "from": "1893",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Витэ",
+      "long": "Отмечен премией Витэ.",
+      "chapter": "asylum",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Витэ 1893-01-01"
+      }
+    },
+    {
+      "key": "death-1893",
+      "date": {
+        "from": "1893-07-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от прогрессивного паралича",
+      "long": "Умер в клинике в Пасси от прогрессивного паралича; похоронен на кладбище Монпарнас.",
+      "place": {
+        "label": "Пасси"
+      },
+      "chapter": "asylum",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ги де Мопассан скончался 6 июля 1893 года от прогрессивного паралича, последней стадии сифилиса мозга"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "boule-de-suif",
+      "title": "Пышка",
+      "qid": "Q63971",
+      "written": {
+        "from": 1879,
+        "to": 1880
+      }
+    },
+    {
+      "ref": "la-maison-tellier",
+      "title": "Заведение Телье",
+      "written": {
+        "from": 1880,
+        "to": 1881
+      }
+    },
+    {
+      "ref": "une-vie",
+      "title": "Жизнь",
+      "qid": "Q249242",
+      "written": {
+        "from": 1877,
+        "to": 1883
+      }
+    },
+    {
+      "ref": "bel-ami",
+      "title": "Милый друг",
+      "qid": "Q339761",
+      "written": {
+        "from": 1884,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "mont-oriol",
+      "title": "Монт-Ориоль",
+      "written": {
+        "from": 1886,
+        "to": 1887
+      }
+    },
+    {
+      "ref": "horla",
+      "title": "Орля",
+      "qid": "Q2701030",
+      "written": {
+        "from": 1886,
+        "to": 1887
+      }
+    },
+    {
+      "ref": "pierre-et-jean",
+      "title": "Пьер и Жан",
+      "written": {
+        "from": 1887,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "fort-comme-la-mort",
+      "title": "Сильна как смерть",
+      "written": {
+        "from": 1888,
+        "to": 1889
+      }
+    },
+    {
+      "ref": "notre-coeur",
+      "title": "Наше сердце",
+      "written": {
+        "from": 1889,
+        "to": 1890
+      }
+    }
+  ]
+}

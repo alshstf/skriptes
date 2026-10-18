@@ -1,0 +1,1057 @@
+{
+  "qid": "Q5686",
+  "name": "Чарльз Диккенс",
+  "born": "1812-02-07",
+  "died": "1870-06-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D0%BA%D0%BA%D0%B5%D0%BD%D1%81%2C_%D0%A7%D0%B0%D1%80%D0%BB%D1%8C%D0%B7",
+      "rev": 154894479
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Charles_Dickens",
+      "rev": 1380234703
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-dolgi",
+      "title": "Детство, долги и ваксовая фабрика",
+      "from": 1812,
+      "to": 1827
+    },
+    {
+      "key": "reporter-boz",
+      "title": "Клерк, репортёр, Боз",
+      "from": 1828,
+      "to": 1836
+    },
+    {
+      "key": "slava",
+      "title": "Слава, Америка, Италия",
+      "from": 1837,
+      "to": 1850
+    },
+    {
+      "key": "tavistock-razryv",
+      "title": "Тависток-хаус, Эллен, разрыв",
+      "from": 1851,
+      "to": 1858
+    },
+    {
+      "key": "chteniya-final",
+      "title": "Чтения, катастрофа, последний роман",
+      "from": 1859,
+      "to": 1870
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1812",
+      "date": {
+        "from": "1812-02-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лэндпорте",
+      "long": "Родился в Лэндпорте, пригороде Портсмута, вторым из восьми детей Джона и Элизабет Диккенс. Отец служил чиновником на военно-морской базе.",
+      "place": {
+        "label": "Лэндпорт, Портсмут"
+      },
+      "chapter": "detstvo-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Чарльз Диккенс родился 7 февраля 1812 года в пригороде Портсмута — Лэндпорте."
+      }
+    },
+    {
+      "key": "relocation-1817",
+      "date": {
+        "from": "1817-04",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Чатем",
+      "long": "Семья переехала в Чатем, графство Кент, где прошли ранние детские годы писателя.",
+      "place": {
+        "label": "Чатем"
+      },
+      "chapter": "detstvo-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в апреле 1817 года семья переехала в Чатем"
+      }
+    },
+    {
+      "key": "poverty-1824",
+      "date": {
+        "from": "1824",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Заключение отца в долговую тюрьму",
+      "long": "Отец был заключён в долговую тюрьму Маршалси; к нему переехали мать и младшие дети. По воскресеньям Чарльз навещал семью.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "little-dorrit",
+          "note": "Диккенс использовал тюрьму Маршалси как место действия романа (по сведениям о его опыте)"
+        }
+      ],
+      "chapter": "detstvo-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Жизнь в столице оказалась Джону Диккенсу не по средствам и привела его в 1824 году в долговую тюрьму."
+      }
+    },
+    {
+      "key": "poverty-1824-2",
+      "date": {
+        "from": "1824-02-09",
+        "precision": "day"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Работа на фабрике ваксы",
+      "long": "В двенадцать лет оставил школу и стал наклеивать этикетки на банки с ваксой за шесть шиллингов в неделю. Мать не сразу поддержала его возвращение в школу.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "david-copperfield",
+          "note": "этот период юности отражён в наиболее автобиографическом романе писателя"
+        }
+      ],
+      "chapter": "detstvo-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 февраля 1824 года Чарльз пошёл работать на фабрику по производству ваксы"
+      }
+    },
+    {
+      "key": "education-1827",
+      "date": {
+        "from": "1827-03",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание учёбы в Wellington House Academy",
+      "long": "Окончил учёбу в Wellington House Academy в Камден-Тауне; позже школа отразилась в описании заведения мистера Крикла.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "david-copperfield",
+          "note": "атмосфера школы отражена в заведении мистера Крикла"
+        }
+      ],
+      "chapter": "detstvo-dolgi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Спустя некоторое время он был определён в Wellington House Academy, где учился до марта 1827 года."
+      }
+    },
+    {
+      "key": "career-1827",
+      "date": {
+        "from": "1827-05",
+        "to": "1828-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба клерком в адвокатской конторе",
+      "long": "Работал младшим клерком в адвокатской конторе, затем освоил стенографию и стал вольным репортёром.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "bleak-house",
+          "note": "опыт клерка и судебного репортёра отражён в судебных сценах романа"
+        }
+      ],
+      "chapter": "reporter-boz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1827 года Диккенс поступил в адвокатскую контору «Эллис и Блэкмор» младшим клерком на 13 шиллингов в неделю и трудился там до ноября 1828 года."
+      }
+    },
+    {
+      "key": "love-1830",
+      "date": {
+        "from": "1830",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первая любовь, Мэри Биднелл",
+      "long": "Начал работать в «Morning Chronicle» и встретил первую любовь, Мэри Биднелл; родители девушки были против, и отношения прекратились.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "david-copperfield",
+          "note": "Мэри Биднелл — прототип Доры"
+        }
+      ],
+      "chapter": "reporter-boz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1830 году Диккенса пригласили в «Morning Chronicle», и в этом же году он встретил свою первую любовь — Мэри Биднелл"
+      }
+    },
+    {
+      "key": "career-1833",
+      "date": {
+        "from": "1833",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация, псевдоним «Боз»",
+      "long": "Первый рассказ вышел в журнале; затем появились очерки за подписью «Боз», из которых составился первый сборник.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "sketches-by-boz"
+        }
+      ],
+      "chapter": "reporter-boz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Old Monthly Magazine» опубликовал в 1833 году его первый рассказ"
+      }
+    },
+    {
+      "key": "career-1836",
+      "date": {
+        "from": "1836-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый громкий успех и известность",
+      "long": "Ежемесячные выпуски романа с апреля 1836 года принесли автору широкую известность; тираж последнего выпуска достиг 40 тысяч.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "pickwick-papers"
+        }
+      ],
+      "chapter": "reporter-boz",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dickens's literary success began with the 1836 serial publication of The Pickwick Papers, a publishing phenomenon"
+      }
+    },
+    {
+      "key": "love-1836",
+      "date": {
+        "from": "1836-04-02",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кэтрин Хогарт",
+      "long": "Женился на Кэтрин Хогарт, дочери редактора газеты, где работал. В браке родилось десять детей.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "reporter-boz",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2 апреля 1836 года Чарльз Диккенс женился на Кэтрин Томсон Хогарт"
+      }
+    },
+    {
+      "key": "loss-1837",
+      "date": {
+        "from": "1837",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть свояченицы Мэри Хогарт",
+      "long": "Умерла семнадцатилетняя свояченица Мэри Хогарт, жившая в доме Диккенсов. Он на две недели прервал работу и не смог выпустить июньские выпуски двух романов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "oliver-twist",
+          "note": "июньский выпуск отменён; Роуз Мейли не была убита, как планировалось (биограф Экройд)"
+        },
+        {
+          "ref": "pickwick-papers",
+          "note": "июньский выпуск сорван из-за горя автора"
+        },
+        {
+          "ref": "old-curiosity-shop",
+          "note": "по Экройду, память о Мэри отразилась в образе Нелл"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dickens became very attached to Mary, and she died in his arms after a brief illness in 1837."
+      }
+    },
+    {
+      "key": "child-1837",
+      "date": {
+        "from": "1837-01-06",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение первого сына Чарльза",
+      "long": "Родился первый из десяти детей писателя — сын Чарльз.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Чарльз Каллифорд Боз Диккенс-младший (6 января 1837 — 20 июля 1896)"
+      }
+    },
+    {
+      "key": "career-1840",
+      "date": {
+        "from": "1840-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание еженедельного журнала",
+      "long": "Основал и редактировал еженедельник, в составе которого вышли два романа. Интерес читателей к журналу вскоре упал.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "old-curiosity-shop",
+          "note": "роман печатался в составе этого журнала"
+        },
+        {
+          "ref": "barnaby-rudge",
+          "note": "роман печатался в составе этого журнала"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1840 года стал издаваться еженедельный иллюстрированный журнал «Часы мистера Гумфри» («Master Humphrey's Clock»), основанный по идее и под редакцией Диккенса."
+      }
+    },
+    {
+      "key": "relocation-1842",
+      "date": {
+        "from": "1842-01",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Первая поездка в США",
+      "long": "Поездка в США и Канаду с женой; торжественные приёмы, борьба за авторские права, осуждение рабства. Американская пресса враждебно встретила его книгу путевых заметок.",
+      "place": {
+        "label": "Бостон"
+      },
+      "works": [
+        {
+          "ref": "martin-chuzzlewit",
+          "note": "американские главы романа сатирически возвращаются к впечатлениям от поездки"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1842 года Диккенс отправился в США; американцы встретили его с необыкновенными почестями."
+      }
+    },
+    {
+      "key": "family-1842",
+      "date": {
+        "from": "1842-01-22",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Джорджина Хогарт в доме Диккенсов",
+      "long": "Сестра жены Джорджина Хогарт поселилась в семье и оставалась домоправительницей и воспитательницей детей до смерти писателя в 1870 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 22 January 1842, Dickens and his wife arrived in Boston, Massachusetts, aboard the RMS Britannia during their first trip to the United States and Canada. At this time Georgina Hogarth, another sister of Catherine, joined the Dickens household"
+      }
+    },
+    {
+      "key": "creation-1843",
+      "date": {
+        "from": "1843",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над святочной повестью",
+      "long": "Замысел сложился после поездки в Манчестер и посещения школы для бедных; по его словам, он ночами проходил по улицам Лондона по пятнадцать-двадцать миль.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "christmas-carol",
+          "note": "поездка в Манчестер и сцены в школе Field Lane; ночные прогулки (слова Диккенса)"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dickens began work on the first of his Christmas stories, A Christmas Carol, written in 1843"
+      }
+    },
+    {
+      "key": "other-1844",
+      "date": {
+        "from": "1844",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск к издателям в Канцлерском суде",
+      "long": "Подал в Канцлерский суд иск к издателям о нарушении авторских прав и на себе испытал волокиту судебной процедуры.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "bleak-house",
+          "note": "опыт судебной волокиты отражён в сценах бесконечных тяжб"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his direct experience of the law's procedural delay during 1844 when he sued publishers in Chancery for breach of copyright"
+      }
+    },
+    {
+      "key": "relocation-1846",
+      "date": {
+        "from": "1846",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь с семьёй в Швейцарии и Париже",
+      "long": "Жил с семьёй в Лозанне, затем в Париже, где продолжил работу над романом.",
+      "place": {
+        "label": "Лозанна"
+      },
+      "works": [
+        {
+          "ref": "dombey-and-son",
+          "note": "роман начат в Лозанне, закончен в Париже"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1846 года Диккенс снова со всей семьей уехал за границу, в Швейцарию. В Лозанне он начал работу над новым романом, «Домби и сын»."
+      }
+    },
+    {
+      "key": "career-1846",
+      "date": {
+        "from": "1846-01",
+        "to": "1846-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Недолгое редакторство в газете",
+      "long": "Основал либеральную газету «Daily News» и в феврале того же года сложил с себя обязанности редактора.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С января 1846 года начала издаваться основанная Диккенсом газета «Daily News»"
+      }
+    },
+    {
+      "key": "other-1846",
+      "date": {
+        "from": "1846-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание приюта для бедных женщин",
+      "long": "По просьбе Анджелы Бердетт-Куттс основал приют Urania Cottage, которым руководил десять лет.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Angela Burdett Coutts, heir to the Coutts banking fortune, approached Dickens in May 1846 about setting up a home for the redemption of fallen women of the working class."
+      }
+    },
+    {
+      "key": "career-1850",
+      "date": {
+        "from": "1850",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание журнала «Домашнее чтение»",
+      "long": "Основал журнал, который редактировал около двадцати лет; позже он вышел под названием «All the Year Round».",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "hard-times",
+          "note": "роман печатался в журнале"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 1850 года Диккенс основал литературный журнал «Household Words» («Домашнее чтение»), с 1859 года получивший название «All the Year Round»"
+      }
+    },
+    {
+      "key": "child-1850",
+      "date": {
+        "from": "1850-08-16",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Доры",
+      "long": "Родилась дочь Дора Энни; прожила меньше года.",
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дора Энни (16 августа 1850 — 14 апреля 1851)"
+      }
+    },
+    {
+      "key": "relocation-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Тависток-хаус",
+      "long": "Переехал в Тависток-хаус, где работал над тремя романами 1850-х годов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "bleak-house"
+        },
+        {
+          "ref": "hard-times"
+        },
+        {
+          "ref": "little-dorrit"
+        }
+      ],
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In late 1851, Dickens moved into Tavistock House where he wrote Bleak House (1852–53), Hard Times (1854) and Little Dorrit (1855–57)."
+      }
+    },
+    {
+      "key": "loss-1851",
+      "date": {
+        "from": "1851-03-31",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец писателя Джон Диккенс.",
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Джон Диккенс 1785-08-21 — 1851-03-31"
+      }
+    },
+    {
+      "key": "loss-1851-2",
+      "date": {
+        "from": "1851-04-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть дочери Доры",
+      "long": "Умерла дочь Дора Энни, не дожив до года.",
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дора Энни (16 августа 1850 — 14 апреля 1851)"
+      }
+    },
+    {
+      "key": "love-1855",
+      "date": {
+        "from": "1855",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разочаровавшая встреча с первой любовью",
+      "long": "Встреча с давней возлюбленной Мэри Биднелл разочаровала писателя.",
+      "works": [
+        {
+          "ref": "little-dorrit",
+          "note": "эпизод отразился в образе Флоры"
+        }
+      ],
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Спустя много лет Мэри обратилась к Диккенсу с письмом, но встреча в 1855 году разочаровала писателя"
+      }
+    },
+    {
+      "key": "relocation-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Покупка усадьбы Гэдсхилл",
+      "long": "Купил усадьбу, мимо которой ребёнком проходил и в которой мечтал жить; в ней он прожил остаток жизни.",
+      "place": {
+        "label": "Гэдсхилл-Плейс, Хайэм"
+      },
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1856, his income from writing allowed him to buy Gads Hill Place in Higham, Kent. As a child Dickens had walked past the house and dreamt of living in it."
+      }
+    },
+    {
+      "key": "love-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с Эллен Тернан",
+      "long": "Встретил актрису Эллен Тернан, снял ей квартиру, обеспечивал её и включил в завещание. Они не поженились.",
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1857 году Диккенс встретил 18-летнюю актрису Эллен Тернан и сразу влюбился."
+      }
+    },
+    {
+      "key": "career-1858",
+      "date": {
+        "from": "1858",
+        "to": "1870",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Публичные чтения как второе дело жизни",
+      "long": "Стал выступать с платными публичными чтениями своих произведений и в течение последующих двенадцати лет ездил с ними по Великобритании.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первое платное чтение устроено было в Лондоне в 1858 году."
+      }
+    },
+    {
+      "key": "family-1858",
+      "date": {
+        "from": "1858-05",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв с женой Кэтрин",
+      "long": "Расстался с женой: назначил ей 600 фунтов в год, оставил с ней старшего сына, сам поселился с остальными детьми и Джорджиной Хогарт в Гэдсхилл-Плейс.",
+      "place": {
+        "label": "Гэдсхилл-Плейс"
+      },
+      "chapter": "tavistock-razryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Также ухудшались отношения Диккенса с женой; в мае 1858 года они разошлись."
+      }
+    },
+    {
+      "key": "other-1860",
+      "date": {
+        "from": "1860-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Костёр из личной переписки",
+      "long": "Сжёг в поле за усадьбой почти всю свою переписку, кроме деловых писем.",
+      "place": {
+        "label": "Гэдсхилл-Плейс"
+      },
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early September 1860, in a field behind Gads Hill, Dickens made a bonfire of most of his correspondence; he spared only letters on business matters."
+      }
+    },
+    {
+      "key": "loss-1863",
+      "date": {
+        "from": "1863-09-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя Элизабет Диккенс.",
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Элизабет Диккенс 1789-12-21 — 1863-09-13"
+      }
+    },
+    {
+      "key": "loss-1863-2",
+      "date": {
+        "from": "1863-12-31",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сына Уолтера",
+      "long": "Умер сын Уолтер, которому было двадцать два года.",
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уолтер Саведж Ландор (8 февраля 1841 — 31 декабря 1863)"
+      }
+    },
+    {
+      "key": "illness-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Болезнь и хромота",
+      "long": "Заболел; последствием осталась хромота до конца жизни.",
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1865 году Диккенс заболел; хромота, оставшаяся после этой болезни, продолжалась до конца его жизни."
+      }
+    },
+    {
+      "key": "other-1865",
+      "date": {
+        "from": "1865-06-09",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Железнодорожная катастрофа в Стэплхерсте",
+      "long": "Попал в крушение поезда у Стэплхерста, возвращаясь из Парижа с Эллен Тернан; помогал раненым и вернулся в вагон за рукописью. После катастрофы боялся ездить поездом.",
+      "place": {
+        "label": "Стэплхерст, Кент"
+      },
+      "works": [
+        {
+          "ref": "our-mutual-friend",
+          "note": "после катастрофы он вернулся в вагон за незаконченной рукописью романа"
+        }
+      ],
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он едва не погиб во время железнодорожной катастрофы 9 июня 1865 года."
+      }
+    },
+    {
+      "key": "career-1867",
+      "date": {
+        "from": "1867-11",
+        "to": "1868-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая поездка в США с чтениями",
+      "long": "Выступил с 76 чтениями в Бостоне, Нью-Йорке и других городах; тур принёс 19 тысяч фунтов, но подорвал здоровье.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 9 November 1867, over two years after the war, Dickens set sail from Liverpool for his second American reading tour."
+      }
+    },
+    {
+      "key": "career-1868",
+      "date": {
+        "from": "1868-10",
+        "to": "1870-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Прощальные чтения",
+      "long": "Дал серию прощальных чтений; из-за головокружений и приступов паралича тур прервали, а последние двенадцать лондонских чтений прошли в 1870 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1868–69 Dickens gave a series of \"farewell readings\" in England, Scotland and Ireland, beginning on 6 October."
+      }
+    },
+    {
+      "key": "illness-1869",
+      "date": {
+        "from": "1869-04-18",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первый удар, отмена гастролей",
+      "long": "Перенёс удар в Честере, через несколько дней потерял сознание в Престоне; по совету врачей гастроли отменили.",
+      "place": {
+        "label": "Честер"
+      },
+      "works": [
+        {
+          "ref": "edwin-drood",
+          "note": "после отмены выступлений он приступил к работе над последним романом"
+        }
+      ],
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He had a stroke on 18 April 1869 in Chester. He collapsed on 22 April 1869, in Preston, Lancashire; on doctor's advice, the tour was cancelled."
+      }
+    },
+    {
+      "key": "death-1870",
+      "date": {
+        "from": "1870-06-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Гэдсхилл-Плейс",
+      "long": "После инсульта, случившегося 8 июня за работой над неоконченным романом, умер в Гэдсхилл-Плейс. Похоронен в Вестминстерском аббатстве 14 июня.",
+      "place": {
+        "label": "Гэдсхилл-Плейс, Хайэм"
+      },
+      "works": [
+        {
+          "ref": "edwin-drood",
+          "note": "роман остался неоконченным: написана половина"
+        }
+      ],
+      "chapter": "chteniya-final",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "8 июня 1870 года в усадьбе Гэдсхилл у него случился инсульт. Утром следующего дня Диккенс скончался."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sketches-by-boz",
+      "title": "Очерки Боза",
+      "written": {
+        "from": 1833,
+        "to": 1836
+      }
+    },
+    {
+      "ref": "pickwick-papers",
+      "title": "Посмертные записки Пиквикского клуба",
+      "qid": "Q460583",
+      "written": {
+        "from": 1836,
+        "to": 1837
+      }
+    },
+    {
+      "ref": "oliver-twist",
+      "title": "Приключения Оливера Твиста",
+      "qid": "Q164974",
+      "written": {
+        "from": 1837,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "nicholas-nickleby",
+      "title": "Жизнь и приключения Николаса Никльби",
+      "qid": "Q847642",
+      "written": {
+        "from": 1838,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "old-curiosity-shop",
+      "title": "Лавка древностей",
+      "qid": "Q2700616",
+      "written": {
+        "from": 1840,
+        "to": 1841
+      }
+    },
+    {
+      "ref": "barnaby-rudge",
+      "title": "Барнеби Радж",
+      "qid": "Q2362527",
+      "written": {
+        "from": 1840,
+        "to": 1841
+      }
+    },
+    {
+      "ref": "martin-chuzzlewit",
+      "title": "Мартин Чезлвит",
+      "qid": "Q1903609",
+      "written": {
+        "from": 1843,
+        "to": 1844
+      }
+    },
+    {
+      "ref": "christmas-carol",
+      "title": "Рождественская песнь в прозе",
+      "qid": "Q62879",
+      "written": {
+        "from": 1843,
+        "to": 1843
+      }
+    },
+    {
+      "ref": "dombey-and-son",
+      "title": "Домби и сын",
+      "qid": "Q963659",
+      "written": {
+        "from": 1846,
+        "to": 1848
+      }
+    },
+    {
+      "ref": "david-copperfield",
+      "title": "Дэвид Копперфильд",
+      "qid": "Q189811",
+      "written": {
+        "from": 1849,
+        "to": 1850
+      }
+    },
+    {
+      "ref": "bleak-house",
+      "title": "Холодный дом",
+      "qid": "Q883305",
+      "written": {
+        "from": 1852,
+        "to": 1853
+      }
+    },
+    {
+      "ref": "hard-times",
+      "title": "Тяжёлые времена",
+      "qid": "Q1340493",
+      "written": {
+        "from": 1854,
+        "to": 1854
+      }
+    },
+    {
+      "ref": "little-dorrit",
+      "title": "Крошка Доррит",
+      "qid": "Q565638",
+      "written": {
+        "from": 1855,
+        "to": 1857
+      }
+    },
+    {
+      "ref": "tale-of-two-cities",
+      "title": "Повесть о двух городах",
+      "qid": "Q308918",
+      "written": {
+        "from": 1859,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "great-expectations",
+      "title": "Большие надежды",
+      "qid": "Q219552",
+      "written": {
+        "from": 1860,
+        "to": 1861
+      }
+    },
+    {
+      "ref": "our-mutual-friend",
+      "title": "Наш общий друг",
+      "qid": "Q1557935",
+      "written": {
+        "from": 1864,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "edwin-drood",
+      "title": "Тайна Эдвина Друда",
+      "qid": "Q1168105",
+      "written": {
+        "from": 1869,
+        "to": 1870
+      }
+    }
+  ]
+}

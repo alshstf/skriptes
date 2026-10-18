@@ -1,0 +1,463 @@
+{
+  "qid": "Q249544",
+  "name": "Артур Хейли",
+  "born": "1920-04-05",
+  "died": "2004-11-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B5%D0%B9%D0%BB%D0%B8%2C_%D0%90%D1%80%D1%82%D1%83%D1%80",
+      "rev": 149683407
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Arthur_Hailey",
+      "rev": 1374072871
+    }
+  ],
+  "chapters": [
+    {
+      "key": "luton-london",
+      "title": "Лутон и лондонская контора",
+      "from": 1920,
+      "to": 1939
+    },
+    {
+      "key": "raf-war",
+      "title": "Лётчик Королевских ВВС",
+      "from": 1940,
+      "to": 1946
+    },
+    {
+      "key": "canada",
+      "title": "Канада, семья, телевидение",
+      "from": 1947,
+      "to": 1964
+    },
+    {
+      "key": "fame",
+      "title": "Отель, Аэропорт, Багамы",
+      "from": 1965,
+      "to": 1978
+    },
+    {
+      "key": "bahamas",
+      "title": "Лайфорд-Кей: поздние годы",
+      "from": 1979,
+      "to": 2004
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1920",
+      "date": {
+        "from": "1920-04-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лутоне",
+      "long": "Родился в Лутоне в семье фабричного рабочего; мать хотела, чтобы сын стал уважаемым человеком.",
+      "place": {
+        "label": "Лутон"
+      },
+      "chapter": "luton-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Артур Хейли родился 5 апреля 1920 года в Лутоне, графство Бедфордшир (Англия)."
+      }
+    },
+    {
+      "key": "poverty-1934",
+      "date": {
+        "from": "1934",
+        "to": "1939",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Уход из школы, работа клерком в Лондоне",
+      "long": "В 14 лет не смог продолжить учёбу: стипендии он не получил, у родителей не было денег. Прошёл курсы машинописи и стенографии, пять лет работал клерком в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "luton-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1934 по 1939 гг. он работал клерком в Лондоне."
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939",
+        "to": "1947",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба пилотом в Королевских ВВС",
+      "long": "С начала Второй мировой войны служил пилотом в Королевских ВВС, дослужился до звания флайт-лейтенанта.",
+      "chapter": "luton-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Служил пилотом в Королевских военно-воздушных силах с начала Второй мировой войны в 1939—1947 годах, после чего переехал в Канаду."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Джоан Фишвик",
+      "long": "Первая жена — Джоан Фишвик; в браке родились трое сыновей.",
+      "chapter": "raf-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1944 году Хейли женился на Джоан Фишвик, в браке родились сыновья Роджер (1946), Марк (1949) и Джон (1948)."
+      }
+    },
+    {
+      "key": "child-1946",
+      "date": {
+        "from": "1946",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение трёх сыновей",
+      "long": "От первого брака родились сыновья Роджер (1946), Джон (1948) и Марк (1949).",
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в браке родились сыновья Роджер (1946), Марк (1949) и Джон (1948)"
+      }
+    },
+    {
+      "key": "relocation-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Канаду",
+      "long": "Недовольный послевоенным лейбористским правительством, эмигрировал в Канаду и получил двойное гражданство. Поселился в Торонто, работал в недвижимости, торговле и рекламе, продолжал писать.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "canada",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1947, unhappy with the post-war Labour government, he emigrated to Canada, becoming a dual citizen."
+      }
+    },
+    {
+      "key": "family-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Расставание с первой женой",
+      "long": "Первый брак распался.",
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брак продлился недолго, и в 1950 году пара рассталась."
+      }
+    },
+    {
+      "key": "love-1951",
+      "date": {
+        "from": "1951-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Шейлой Данлоп",
+      "long": "Женился на стенографистке Шейле Данлоп; брак продлился до смерти писателя.",
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 1951 года Артур Хейли женился на стенографистке Шейле Данлоп"
+      }
+    },
+    {
+      "key": "child-1954",
+      "date": {
+        "from": "1954",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение троих детей во втором браке",
+      "long": "От второго брака родились дочери Джейн (1954), Диана (1958) и сын Стивен (1959).",
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в браке родились дочери Джейн (1954) и Диана (1958), а также сын Стивен (1959)"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий для CBC, начало писательской карьеры",
+      "long": "Сценарий о самолёте с выбывшим из строя экипажем купила канадская корпорация CBC; с него началась профессиональная писательская карьера.",
+      "place": {
+        "label": "Торонто"
+      },
+      "works": [
+        {
+          "ref": "flight-into-danger"
+        }
+      ],
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1955 году Хейли написал сценарий «Опасный полёт» (в печати «Взлётная полоса 08»), который приобрела корпорация CBC."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956-04-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех телеспектакля",
+      "long": "Телеспектакль по сценарию имел огромный успех и шёл за рубежом; Хейли стал востребованным телесценаристом.",
+      "works": [
+        {
+          "ref": "flight-into-danger"
+        }
+      ],
+      "chapter": "canada",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hailey's professional writing career began in 1955 with a script called Flight into Danger, which was purchased by the Canadian Broadcasting Corporation and telecast on 3 April 1956."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Коммерческий прорыв",
+      "long": "Роман о пяти днях жизни сотрудников и постояльцев отеля продержался 48 недель в списке бестселлеров «Нью-Йорк таймс» и задал образец будущих книг.",
+      "works": [
+        {
+          "ref": "hotel"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hailey's commercial breakthrough came in 1965 with publication of Hotel (Doubleday)"
+      }
+    },
+    {
+      "key": "relocation-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Калифорнию",
+      "long": "После успеха книги переехал из Канады в Калифорнию.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После успеха романа «Отель» в 1965 году Хейли переехал в Калифорнию"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировая известность",
+      "long": "Роман стал самым продаваемым года; экранизация 1970 года получила десять номинаций на «Оскар».",
+      "works": [
+        {
+          "ref": "airport"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968 he achieved international fame with his fourth novel, Airport (Doubleday)"
+      }
+    },
+    {
+      "key": "relocation-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд на Багамы из-за налогов",
+      "long": "Поселился на острове Нью-Провиденс (Лайфорд-Кей), собираясь остаться на два года, но прожил там до конца жизни.",
+      "place": {
+        "label": "Лайфорд-Кей"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1969 году переехал на Багамы, чтобы уйти от канадских и американских налогов, на которые уходило до 90 % его доходов."
+      }
+    },
+    {
+      "key": "illness-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Объявление об уходе, операция на сердце",
+      "long": "Объявил об уходе от дел, но после четверного коронарного шунтирования вернулся к работе.",
+      "works": [
+        {
+          "ref": "overload"
+        }
+      ],
+      "chapter": "bahamas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1979, following publication of Overload, Hailey announced his retirement. After undergoing quadruple heart bypass surgery, however, he felt rejuvenated, and returned to work."
+      }
+    },
+    {
+      "key": "death-2004",
+      "date": {
+        "from": "2004-11-24",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть на Багамах",
+      "long": "Умер во сне дома в Лайфорд-Кее на Багамах в возрасте 84 лет; врачи предположили инсульт.",
+      "place": {
+        "label": "Лайфорд-Кей"
+      },
+      "chapter": "bahamas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Arthur Hailey died at age 84 in his sleep on 24 November 2004, at his home in Lyford Cay"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "flight-into-danger",
+      "title": "Опасный полёт",
+      "written": {
+        "from": 1955,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "final-diagnosis",
+      "title": "Окончательный диагноз",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "in-high-places",
+      "title": "В высших сферах",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "hotel",
+      "title": "Отель",
+      "qid": "Q1630805",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "airport",
+      "title": "Аэропорт",
+      "qid": "Q2604087",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "wheels",
+      "title": "Колёса",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "moneychangers",
+      "title": "Менялы",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "overload",
+      "title": "Перегрузка",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "strong-medicine",
+      "title": "Сильнодействующее лекарство",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "evening-news",
+      "title": "Вечерние новости",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "detective",
+      "title": "Детектив",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    }
+  ]
+}

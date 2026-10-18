@@ -1,0 +1,837 @@
+{
+  "qid": "Q209004",
+  "name": "Николай Семёнович Лесков",
+  "born": "1831-02-16",
+  "died": "1895-03-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D0%BA%D0%BE%D0%B2%2C_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9_%D0%A1%D0%B5%D0%BC%D1%91%D0%BD%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 155509877
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nikolai_Leskov",
+      "rev": 1380020081
+    }
+  ],
+  "chapters": [
+    {
+      "key": "orel-panino",
+      "title": "Орёл, Панино и первая служба",
+      "from": 1831,
+      "to": 1849
+    },
+    {
+      "key": "kiev-shkott",
+      "title": "Киев, семья и странствия по России",
+      "from": 1850,
+      "to": 1860
+    },
+    {
+      "key": "peterburg-stebnitsky",
+      "title": "Петербург, Стебницкий и репутация",
+      "from": 1861,
+      "to": 1869
+    },
+    {
+      "key": "zrelost",
+      "title": "Бубнова, соборяне и Учёный комитет",
+      "from": 1870,
+      "to": 1882
+    },
+    {
+      "key": "zapreti",
+      "title": "Отставка, цензура и Толстой",
+      "from": 1883,
+      "to": 1895
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1831",
+      "date": {
+        "from": "1831-02-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в селе Горохово",
+      "long": "Родился 4 (16) февраля 1831 года в селе Горохово Орловского уезда в семье чиновника Орловской уголовной палаты.",
+      "place": {
+        "label": "Горохово"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Николай Семёнович Лесков родился 4 [16] февраля 1831 года в селе Горохово Орловского уезда"
+      }
+    },
+    {
+      "key": "relocation-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в село Панино",
+      "long": "После ухода отца со службы семья переехала в Панин хутор близ Кром; здесь, по воспоминаниям писателя, началось его познание народа.",
+      "place": {
+        "label": "Панино"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После 1839 года, когда отец покинул службу (из-за ссоры с начальством, чем, по словам Лескова, навлёк на себя гнев губернатора), семья"
+      }
+    },
+    {
+      "key": "education-1841",
+      "date": {
+        "from": "1841-08",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Орловскую гимназию",
+      "long": "В десять лет поступил в первый класс гимназии; через пять лет получил свидетельство об окончании лишь двух классов.",
+      "place": {
+        "label": "Орёл"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1841 года в десятилетнем возрасте Лесков поступил в первый класс Орловской губернской гимназии"
+      }
+    },
+    {
+      "key": "career-1847",
+      "date": {
+        "from": "1847-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в Орловской палате уголовного суда",
+      "long": "Поступил канцелярским служителем в палату, где ранее служил отец.",
+      "place": {
+        "label": "Орёл"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 1847 года Лесков поступил на службу в Орловскую палату уголовного суда"
+      }
+    },
+    {
+      "key": "loss-1848",
+      "date": {
+        "from": "1848-07",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца от холеры",
+      "long": "В июле 1848 года в Панине от холеры умер отец, Семён Дмитриевич Лесков.",
+      "place": {
+        "label": "Панино"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1848 года в селе Панине от холеры умер отец Лескова."
+      }
+    },
+    {
+      "key": "relocation-1849",
+      "date": {
+        "from": "1849-09-19",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Отъезд в Киев, перевод в казённую палату",
+      "long": "Получил отпуск и уехал в Киев, где подал прошение о переводе в Киевскую казённую палату; жил у дяди С. П. Алферьева.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "orel-panino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Прослужив там год, 7 сентября 1849 года получает двухмесячный отпуск и уезжает в Киев"
+      }
+    },
+    {
+      "key": "education-1850",
+      "date": {
+        "from": "1850",
+        "to": "1857",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Киев: лекции в университете, иконопись, кружки",
+      "long": "В 1850–1857 годах посещал вольнослушателем университет, изучал польский язык, увлёкся иконописью, общался с паломниками, старообрядцами и сектантами.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Киеве (в 1850—1857 годах) Лесков посещал вольнослушателем лекции в университете"
+      }
+    },
+    {
+      "key": "love-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Ольге Смирновой",
+      "long": "В 1854 году женился на дочери киевского купца Ольге Васильевне Смирновой; брак сложился неудачно.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1854 году Лесков женился на дочери киевского купца Ольге Васильевне Смирновой"
+      }
+    },
+    {
+      "key": "loss-1855",
+      "date": {
+        "from": "1855",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть первенца Дмитрия",
+      "long": "Сын Дмитрий, родившийся 23 декабря 1854 года, умер в 1855 году.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their son Dmitry was born on 23 December 1854 but died in 1855."
+      }
+    },
+    {
+      "key": "child-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Веры",
+      "long": "В 1856 году родилась дочь Вера; жена с дочерью осталась в Киеве, а Лесков уехал в Москву заниматься журналистикой.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1856 году, когда родилась дочь, было принято решение, что Ольга Васильевна с дочерью остаётся в Киеве"
+      }
+    },
+    {
+      "key": "career-1857",
+      "date": {
+        "from": "1857",
+        "to": "1860",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба в коммерческой фирме «Шкотт и Вилькенс»",
+      "long": "Уволился из казённой палаты и пошёл в компанию мужа тётки; постоянные деловые разъезды по России дали знание языка и быта разных областей.",
+      "place": {
+        "label": "Николо-Райское"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1857 году Лесков уволился со службы и начал работать в компании мужа своей тётки А. Я. Шкотта (Скотта) «Шкотт и Вилькенс»."
+      }
+    },
+    {
+      "key": "creation-1859",
+      "date": {
+        "from": "1859",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый литературный опыт — очерк о винокурении",
+      "long": "Во время «питейных бунтов» 1859 года в Пензенской губернии написал очерки о винокурении; сам считал их началом литературной работы.",
+      "place": {
+        "label": "Пенза"
+      },
+      "works": [
+        {
+          "ref": "ocherki-vinokurennoy-promyshlennosti"
+        }
+      ],
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1859 году, когда по Пензенской губернии, как и по всей России, прокатилась волна «питейных бунтов», Лесков написал «Очерки винокуренной промышленности (Пензенская губерния)»"
+      }
+    },
+    {
+      "key": "career-1860",
+      "date": {
+        "from": "1860",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Журналистика в Киеве после закрытия фирмы",
+      "long": "Летом 1860 года вернулся в Киев и занялся журналистикой; через полгода переехал в Петербург.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kiev-shkott",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лесков летом 1860 года вернулся в Киев, где занялся журналистикой и литературной деятельностью."
+      }
+    },
+    {
+      "key": "love-1861",
+      "date": {
+        "from": "1861",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Окончательный разрыв с женой, переезд в Петербург",
+      "long": "В 1861 году окончательно расстался с Ольгой Васильевной и переехал в Петербург; жена с дочерью вернулась в Киев. Позже у неё обнаружилось психическое заболевание.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "oboydennye",
+          "note": "Ольгу Смирнову рассматривают как прототип жены героя романа (литературоведение)"
+        }
+      ],
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1861 году Н. С. Лесков окончательно расстался с женой, он переезжает в Санкт-Петербург"
+      }
+    },
+    {
+      "key": "relocation-1862",
+      "date": {
+        "from": "1862",
+        "to": "1863",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Заграничная поездка корреспондентом",
+      "long": "Через Вильно, Гродно и Белосток приехал в Прагу, затем в Париж; вернулся в Россию в 1863 году.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After visiting Wilno, Grodno and Belostok, in November 1862 Leskov arrived in Prague where he met a group of Czech writers"
+      }
+    },
+    {
+      "key": "creation-1862",
+      "date": {
+        "from": "1862-04-06",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Псевдоним М. Стебницкий",
+      "long": "Подпись «М. Стебницкий» впервые появилась в журнале «Век» в марте 1862 года и использовалась до августа 1869-го.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Впервые эта подпись появилась 25 марта 1862 года в журнале «Век» после рассказа «Погасшее дело»"
+      }
+    },
+    {
+      "key": "persecution-1862",
+      "date": {
+        "from": "1862-06-11",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Статья о пожарах: гнев властей и радикалов",
+      "long": "Статья в «Северной пчеле» о петербургских пожарах возмутила радикальную прессу и власти, включая Александра II; газета отправила автора корреспондентом за границу.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 30 May 1862, Severnaya Ptchela published an article by Nikolaj Leskov on the issue of the fires"
+      }
+    },
+    {
+      "key": "persecution-1864",
+      "date": {
+        "from": "1864-02",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Скандал вокруг первого романа, бойкот журналов",
+      "long": "Роман вызвал нападки радикальной критики и слухи о заказе III отделения; журналы бойкотировали автора, а его стали считать реакционером.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "nekuda"
+        }
+      ],
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1864 Biblioteka Dlya Chteniya magazine began serially publishing his debut novel No Way Out… What Leskov condemned as \"a vicious libel\" caused great harm to his career: popular journals boycotted him"
+      }
+    },
+    {
+      "key": "love-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Гражданский брак с Екатериной Бубновой",
+      "long": "В 1865 году начал жить с Е. С. Бубновой, имевшей четверых детей от первого брака; брак не был зарегистрирован и продлился до 1877 года.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1865 году Лесков вступил в незарегистрированный брак с киевлянкой Екатериной Степановной Бубновой"
+      }
+    },
+    {
+      "key": "child-1866",
+      "date": {
+        "from": "1866",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Андрея",
+      "long": "В 1866 году у Лескова и Бубновой родился сын Андрей, впоследствии автор книги об отце.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-stebnitsky",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1866 году у них родился сын Андрей (Дрон)."
+      }
+    },
+    {
+      "key": "relocation-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка на Валаам",
+      "long": "Летом 1872 года побывал в Карелии и на Валаамском монастыре на Ладоге; поездка дала цикл очерков.",
+      "place": {
+        "label": "Валаам"
+      },
+      "works": [
+        {
+          "ref": "ocharovanny-strannik",
+          "note": "повесть вдохновлена поездкой 1872 года на Ладогу"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1872 Leskov travelled to Karelia and visited the Valaam monastery in Lake Ladoga"
+      }
+    },
+    {
+      "key": "poverty-1874",
+      "date": {
+        "from": "1874-01",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разрыв с «Русским вестником», служба в Учёном комитете",
+      "long": "После разрыва с Катковым оказался в серьёзных денежных затруднениях; в январе 1874 года получил место в Учёном комитете Министерства народного просвещения с небольшим жалованьем.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Having severed ties with The Russian Messenger, Leskov found himself in serious financial trouble. This was relieved to an extent by his invitation in January 1874 to join the Scholarly Committee of the Ministry of Education"
+      }
+    },
+    {
+      "key": "love-1877",
+      "date": {
+        "from": "1877",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Расставание с Бубновой, сын остаётся с отцом",
+      "long": "В 1877 году расстался с Е. С. Бубновой; она с детьми вернулась в Киев, сын Андрей остался с Лесковым. Последние 17 лет он жил холостяком.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1877 году Лесков расстался с Екатериной Степановной, вместе с детьми от первого брака она вернулась в Киев. Сын Андрей остался с отцом в Санкт-Петербурге."
+      }
+    },
+    {
+      "key": "illness-1878",
+      "date": {
+        "from": "1878",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Помещение жены в психиатрическую больницу",
+      "long": "Ольга Васильевна, страдавшая психическим заболеванием, была помещена в петербургскую больницу Св. Николая.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1878 году она была помещена в петербургскую больницу Св. Николая, на реке Пряжке."
+      }
+    },
+    {
+      "key": "career-1883",
+      "date": {
+        "from": "1883-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из Министерства народного просвещения",
+      "long": "Очерк о выходках пьяных священника и дьякона вызвал скандал и стоил Лескову службы в министерстве; прошение об отставке подписывать он отказался.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1883 the essay \"Leap-frog in Church and Local Parish Whimsies\"… It caused a scandal and cost its author his job at the Ministry of Education."
+      }
+    },
+    {
+      "key": "family-1883",
+      "date": {
+        "from": "1883-11",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Приёмная дочь Варя Долина в доме",
+      "long": "В ноябре 1883 года в доме Лескова поселилась Варя Долина, дочь его служанки, ставшая приёмной дочерью.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1883 Varya Dolina (daughter of E.A. Cook, Leskov's maidservant and ethnic Finn) joined Leskov and his son"
+      }
+    },
+    {
+      "key": "persecution-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Цензурные запреты и изъятие книг из библиотек",
+      "long": "В 1884 году цензура останавливала публикацию его романов, а особым распоряжением предписала изъять из библиотек 125 книг, включая его сборник.",
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1884, while Leskov was on a trip through Warsaw, Dresden, Marienbad, Prague and Vienna, a special censorship order came out, demanding withdrawal of 125 books from Russian libraries"
+      }
+    },
+    {
+      "key": "faith-1887",
+      "date": {
+        "from": "1887-04",
+        "precision": "month"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Знакомство с Толстым, переход к вегетарианству",
+      "long": "В апреле 1887 года в Москве познакомился со Львом Толстым; влияние Толстого и вегетарианство стали заметны в его жизни и творчестве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с момента его знакомства с Львом Николаевичем Толстым в апреле 1887 года в Москве"
+      }
+    },
+    {
+      "key": "illness-1889",
+      "date": {
+        "from": "1889-08-28",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Задержка собрания сочинений и первый сердечный приступ",
+      "long": "Шестой том собрания сочинений остановила цензура; узнав об этом, Лесков перенёс первый тяжёлый сердечный приступ на лестнице дома Суворина.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By June 1889, the fourth and fifth volumes had been issued, but in August volume six, containing some anti-Eastern Orthodox satires was stopped. On 16 August, Leskov suffered his first major heart attack on the stairs of Suvorin's house"
+      }
+    },
+    {
+      "key": "persecution-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Скандал вокруг сатиры на церковных деятелей",
+      "long": "Повесть 1891 года, сатира на церковь и Иоанна Кронштадтского, вызвала шум в печати.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "works": [
+        {
+          "ref": "polunoshniki"
+        }
+      ],
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1891 Polunochniki (Night Owls), a thinly veiled satire on the Orthodox Church in general and Ioann Kronshtadsky in particular, was published in Severny vestnik and caused an uproar."
+      }
+    },
+    {
+      "key": "persecution-1892",
+      "date": {
+        "from": "1892-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Призыв к вегетарианской кухне и насмешки прессы",
+      "long": "В июне 1892 года опубликовал призыв издать русскую поваренную книгу для вегетарианцев; пресса ответила насмешками и пародиями.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Этот призыв писателя был опубликован в июне 1892 года в газете «Новое время»"
+      }
+    },
+    {
+      "key": "illness-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая простуда и ухудшение здоровья",
+      "long": "В последние годы страдал стенокардией и астмой; в начале 1894 года тяжело простудился, к концу года состояние ухудшилось.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early 1894 he caught a severe cold; by the end of the year his general condition had deteriorated."
+      }
+    },
+    {
+      "key": "death-1895",
+      "date": {
+        "from": "1895-03-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Петербурге",
+      "long": "Умер 5 марта 1895 года (21 февраля по старому стилю); похоронен на Литераторских мостках Волкова кладбища.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "zapreti",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 5 March 1895, Leskov died, aged 64."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ocherki-vinokurennoy-promyshlennosti",
+      "title": "Очерки винокуренной промышленности",
+      "written": {
+        "from": 1859,
+        "to": 1860
+      }
+    },
+    {
+      "ref": "nekuda",
+      "title": "Некуда",
+      "written": {
+        "from": 1864,
+        "to": 1864
+      }
+    },
+    {
+      "ref": "lady-macbeth-mtsenskogo-uezda",
+      "title": "Леди Макбет Мценского уезда",
+      "qid": "Q2985609",
+      "written": {
+        "from": 1864,
+        "to": 1864
+      }
+    },
+    {
+      "ref": "oboydennye",
+      "title": "Обойдённые",
+      "written": {
+        "from": 1865,
+        "to": 1865
+      }
+    },
+    {
+      "ref": "amazonka",
+      "title": "Воительница",
+      "written": {
+        "from": 1866,
+        "to": 1866
+      }
+    },
+    {
+      "ref": "ostrovityane",
+      "title": "Островитяне",
+      "written": {
+        "from": 1866,
+        "to": 1866
+      }
+    },
+    {
+      "ref": "starye-gody-v-plodomasovo",
+      "title": "Старые годы в селе Плодомасове",
+      "written": {
+        "from": 1869,
+        "to": 1869
+      }
+    },
+    {
+      "ref": "na-nozhah",
+      "title": "На ножах",
+      "written": {
+        "from": 1870,
+        "to": 1871
+      }
+    },
+    {
+      "ref": "smeh-i-gore",
+      "title": "Смех и горе",
+      "written": {
+        "from": 1871,
+        "to": 1871
+      }
+    },
+    {
+      "ref": "soboryane",
+      "title": "Соборяне",
+      "written": {
+        "from": 1872,
+        "to": 1872
+      }
+    },
+    {
+      "ref": "zapechatlenny-angel",
+      "title": "Запечатлённый ангел",
+      "written": {
+        "from": 1872,
+        "to": 1873
+      }
+    },
+    {
+      "ref": "ocharovanny-strannik",
+      "title": "Очарованный странник",
+      "written": {
+        "from": 1872,
+        "to": 1873
+      }
+    },
+    {
+      "ref": "zakhudalyy-rod",
+      "title": "Захудалый род",
+      "written": {
+        "from": 1873,
+        "to": 1873
+      }
+    },
+    {
+      "ref": "levsha",
+      "title": "Сказ о тульском косом Левше и о стальной блохе",
+      "written": {
+        "from": 1881,
+        "to": 1881
+      }
+    },
+    {
+      "ref": "polunoshniki",
+      "title": "Полунощники",
+      "written": {
+        "from": 1890,
+        "to": 1891
+      }
+    },
+    {
+      "ref": "zayachiy-remiz",
+      "title": "Заячий ремиз",
+      "written": {
+        "from": 1894,
+        "to": 1894
+      }
+    }
+  ]
+}

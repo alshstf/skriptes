@@ -1,0 +1,378 @@
+{
+  "qid": "Q130779",
+  "name": "Ким Стэнли Робинсон",
+  "born": "1952-03-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B1%D0%B8%D0%BD%D1%81%D0%BE%D0%BD%2C_%D0%9A%D0%B8%D0%BC_%D0%A1%D1%82%D1%8D%D0%BD%D0%BB%D0%B8",
+      "rev": 154441598
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Южная Калифорния и учёба",
+      "from": 1952,
+      "to": 1981
+    },
+    {
+      "key": "family-californias",
+      "title": "Диссертация, брак, Три Калифорнии",
+      "from": 1982,
+      "to": 1991
+    },
+    {
+      "key": "mars",
+      "title": "Марс и премии",
+      "from": 1992,
+      "to": 2001
+    },
+    {
+      "key": "climate",
+      "title": "Климат, история, будущее",
+      "from": 2002,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-03-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уокигане, детство в Южной Калифорнии",
+      "long": "Родился в Уокигане, штат Иллинойс; вырос в Южной Калифорнии.",
+      "place": {
+        "label": "Уокиган"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 1952, Уокиган, Иллинойс, США"
+      }
+    },
+    {
+      "key": "education-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Сан-Диего",
+      "long": "Получил степень бакалавра по литературе в Калифорнийском университете Сан-Диего. В студенческие годы оформились его левые взгляды; преподаватель Фредерик Джеймисон обратил его внимание на Филипа Дика.",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году получил степень Бакалавра по литературе в Калифорнийском университете Сан-Диего"
+      }
+    },
+    {
+      "key": "education-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура в Бостонском университете",
+      "long": "Получил степень магистра по английскому языку и литературе в Бостонском университете.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1975 году степень магистра по английскому языку и литературе в Бостонском университете"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые рассказы в антологии Orbit-18",
+      "long": "Первые два рассказа опубликованы в антологии Orbit-18.",
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первые два рассказа К. С. Робинсона были опубликованы в Orbit-18 в 1976 году."
+      }
+    },
+    {
+      "key": "education-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская диссертация о Филипе Дике",
+      "long": "Защитил в Калифорнийском университете Сан-Диего кандидатскую диссертацию о романах Филипа Дика; в 1984 году она была опубликована.",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "family-californias",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1982 году он защищает в Калифорнийском университете Сан-Диего кандидатскую диссертацию на тему «Романы Филипа Дика»"
+      }
+    },
+    {
+      "key": "love-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Лизой Хоуланд Новелл",
+      "long": "Женился на Лизе Хоуланд Новелл, учёном-химике по проблемам окружающей среды. У них двое сыновей.",
+      "chapter": "family-californias",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1982 году писатель женился на Лизе Хоуланд Новелл (Lisa Howland Nowell)"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за повесть",
+      "long": "Получил Всемирную премию фэнтези за повесть «Чёрный воздух».",
+      "chapter": "family-californias",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Черный воздух» — Black Air (1983)"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за дебютный роман",
+      "long": "Премия «Локус» за дебютный роман «Дикий берег», первую книгу Калифорнийской трилогии.",
+      "works": [
+        {
+          "ref": "californias-trilogy"
+        }
+      ],
+      "chapter": "family-californias",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Дикий берег» — The Wild Shore (1985)"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Небьюла» за первую книгу о Марсе",
+      "long": "Премия «Небьюла» за роман «Красный Марс», первую книгу Марсианской трилогии.",
+      "works": [
+        {
+          "ref": "mars-trilogy"
+        }
+      ],
+      "chapter": "mars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Красный Марс» — Red Mars (1993)"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» и «Локус» за второй том трилогии",
+      "long": "Премии «Хьюго» и «Локус» за роман «Зелёный Марс».",
+      "works": [
+        {
+          "ref": "mars-trilogy"
+        }
+      ],
+      "chapter": "mars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Зеленый Марс» — Green Mars (1994)"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» и «Локус» за завершение трилогии",
+      "long": "Премии «Хьюго» и «Локус» за роман «Голубой Марс», завершивший Марсианскую трилогию.",
+      "works": [
+        {
+          "ref": "mars-trilogy"
+        }
+      ],
+      "chapter": "mars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Голубой Марс» — Blue Mars (1997)"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Небьюла» за роман года",
+      "long": "Роман «2312» получил премию «Небьюла» за лучший роман года.",
+      "works": [
+        {
+          "ref": "2312"
+        }
+      ],
+      "chapter": "climate",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман «2312» (2012) получил премию «Небьюла» за лучший роман года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "californias-trilogy",
+      "title": "Калифорнийская трилогия",
+      "qid": "Q7797371",
+      "written": {
+        "from": 1984,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "mars-trilogy",
+      "title": "Марсианская трилогия",
+      "qid": "Q970160",
+      "written": {
+        "from": 1992,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "icehenge",
+      "title": "Айсхэндж",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "memory-of-whiteness",
+      "title": "Память белизны",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "antarctica",
+      "title": "Антарктида",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "martians",
+      "title": "Марсиане",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "years-of-rice-and-salt",
+      "title": "Годы риса и соли",
+      "qid": "Q963586",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "science-in-the-capital",
+      "title": "Столичная наука",
+      "written": {
+        "from": 2004,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "galileos-dream",
+      "title": "Сон Галилея",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "2312",
+      "title": "2312",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "shaman",
+      "title": "Шаман",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "aurora",
+      "title": "Аврора",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "new-york-2140",
+      "title": "Нью-Йорк 2140",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

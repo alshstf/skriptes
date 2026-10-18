@@ -1,0 +1,321 @@
+{
+  "qid": "Q233033",
+  "name": "Маргарет Уэйс",
+  "born": "1948-03-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D1%8D%D0%B9%D1%81%2C_%D0%9C%D0%B0%D1%80%D0%B3%D0%B0%D1%80%D0%B5%D1%82",
+      "rev": 149827250
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Margaret_Weis",
+      "rev": 1375100963
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Индепенденс и университет",
+      "from": 1948,
+      "to": 1971
+    },
+    {
+      "key": "izdatelskie-gody",
+      "title": "Издательская работа",
+      "from": 1972,
+      "to": 1982
+    },
+    {
+      "key": "tsr-i-dragonlance",
+      "title": "TSR и Dragonlance",
+      "from": 1983,
+      "to": 1992
+    },
+    {
+      "key": "bolezn-i-predprinimatelstvo",
+      "title": "Болезнь, второй брак, издательства",
+      "from": 1993,
+      "to": 2019
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Возвращение к Dragonlance",
+      "from": 2020,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-03-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Индепенденсе, штат Миссури",
+      "long": "Маргарет Уэйс родилась 16 марта 1948 года в Индепенденсе, штат Миссури, где и выросла.",
+      "place": {
+        "label": "Индепенденс"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Margaret Weis was born on March 16, 1948, in Independence, Missouri, where she was raised."
+      }
+    },
+    {
+      "key": "education-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Знакомство с Толкином в университете",
+      "long": "В 1966 году, на летних курсах Миссурийского университета, подруга дала ей книги Толкина; с тех пор она не читала другого фэнтези.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "I read Tolkien when it made its first big sweep in the colleges back in 1966."
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Миссурийского университета",
+      "long": "В 1970 году получила степень бакалавра по специальности «творческое письмо и литература».",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She graduated from the University of Missouri in 1970 with a Bachelor of Arts in creative writing and literature."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "to": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Директор рекламы в издательстве Herald",
+      "long": "С 1972 по 1983 год работала в Herald Publishing House директором отдела рекламы, а затем директором Independence Press.",
+      "place": {
+        "label": "Индепенденс"
+      },
+      "chapter": "izdatelskie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1972 to 1983 she worked for Herald Publishing House as advertising director"
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лейк-Джинива ради работы в TSR",
+      "long": "В 1983 году переехала в Лейк-Джинива, штат Висконсин, для работы в TSR, где её приняли редактором книжного подразделения.",
+      "place": {
+        "label": "Лейк-Джинива"
+      },
+      "chapter": "tsr-i-dragonlance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, she moved to the resort city of Lake Geneva, Wisconsin, to work for TSR"
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Проект Overlord и создание Dragonlance с Хикменом",
+      "long": "Вместе с Трейси Хикменом взяла на себя написание романа проекта Overlord, ставшего Dragonlance. Модуль вышел в марте 1984 года, роман — в ноябре 1984.",
+      "place": {
+        "label": "Лейк-Джинива"
+      },
+      "works": [
+        {
+          "ref": "dragons-of-autumn-twilight",
+          "note": "роман написан Уэйс и Хикменом в рамках проекта Overlord"
+        }
+      ],
+      "chapter": "tsr-i-dragonlance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After two years of development, TSR released the game module Dragons of Despair in March 1984 and the novel Dragons of Autumn Twilight in November 1984."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из TSR к писательской работе",
+      "long": "В 1986 году, после успеха книг, Уэйс и Хикмен оставили TSR и стали писать профессионально.",
+      "chapter": "tsr-i-dragonlance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Several successful books afforded them to quit TSR and begin writing full-time in 1986."
+      }
+    },
+    {
+      "key": "illness-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз «рак груди» и химиотерапия",
+      "long": "В 1993 году у Уэйс диагностировали рак груди, лечение химиотерапией прошло успешно; во время лечения она продолжала писать.",
+      "chapter": "bolezn-i-predprinimatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1993, Weis was diagnosed with breast cancer and underwent successful chemotherapy."
+      }
+    },
+    {
+      "key": "love-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Доном Перрином",
+      "long": "В 1996 году вышла замуж за писателя и разработчика игр Дона Перрина; позднее они развелись.",
+      "chapter": "bolezn-i-predprinimatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, Weis married writer/game designer Don Perrin; the two later divorced."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Sovereign Press",
+      "long": "Основала Sovereign Press и стала её директором, чтобы издавать ролевую игру Sovereign Stone.",
+      "chapter": "bolezn-i-predprinimatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sovereign Press, with herself as CEO, to publish the Sovereign Stone role-playing game written by her husband Don Perrin with Lester Smith… published in Dragon #264 (October 1999)."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в Зал славы Origins",
+      "long": "В 2002 году Уэйс введена в Зал славы Origins, в том числе за Dragonlance.",
+      "chapter": "bolezn-i-predprinimatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Weis was inducted into the Origins Hall of Fame in 2002"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Margaret Weis Productions",
+      "long": "В 2004 году, после ухода Перрина из Sovereign Press, основала компанию Margaret Weis Productions, выпускающую ролевые игры по лицензиям.",
+      "chapter": "bolezn-i-predprinimatelstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Perrin left Sovereign Press in 2004 and Weis founded Margaret Weis Productions."
+      }
+    },
+    {
+      "key": "other-2020",
+      "date": {
+        "from": "2020-10",
+        "to": "2020-12",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск к Wizards of the Coast",
+      "long": "В октябре 2020 года Уэйс и Хикмен подали иск к Wizards of the Coast из-за нарушения лицензии на новую трилогию; в декабре иск добровольно отозвали.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2020, Weis and Tracy Hickman filed suit against Wizards of the Coast for breaching a license for a new Dragonlance novel trilogy."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dragons-of-autumn-twilight",
+      "title": "Dragons of Autumn Twilight",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "dragonlance-legends",
+      "title": "Dragonlance Legends",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "darksword-trilogy",
+      "title": "Darksword",
+      "written": {
+        "from": 1986,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "deathgate-cycle",
+      "title": "Deathgate Cycle",
+      "written": {
+        "from": 1988,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "dragons-of-summer-flame",
+      "title": "Dragons of Summer Flame",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    }
+  ]
+}

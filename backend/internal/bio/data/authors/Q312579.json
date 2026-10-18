@@ -1,0 +1,527 @@
+{
+  "qid": "Q312579",
+  "name": "Иэн Бэнкс",
+  "born": "1954-02-16",
+  "died": "2013-06-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%8D%D0%BD%D0%BA%D1%81%2C_%D0%98%D1%8D%D0%BD",
+      "rev": 151116838
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Iain_Banks",
+      "rev": 1379037732
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-stirling",
+      "title": "Детство и Стирлинг",
+      "from": 1954,
+      "to": 1975
+    },
+    {
+      "key": "odd-jobs",
+      "title": "Случайные работы и ненапечатанные рукописи",
+      "from": 1976,
+      "to": 1983
+    },
+    {
+      "key": "wasp-and-culture",
+      "title": "Оса, Культура и разрыв с Лондоном",
+      "from": 1984,
+      "to": 1991
+    },
+    {
+      "key": "marriage-years",
+      "title": "Брак, авария, протест",
+      "from": 1992,
+      "to": 2006
+    },
+    {
+      "key": "last-years",
+      "title": "Развод, болезнь, последний роман",
+      "from": 2007,
+      "to": 2013
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-02-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Данфермлине",
+      "long": "Родился в Данфермлине, Файф, в семье профессиональной фигуристки и офицера Адмиралтейства; единственный ребёнок.",
+      "place": {
+        "label": "Данфермлин"
+      },
+      "chapter": "childhood-stirling",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "16 февраля 1954, Данфермлин — 9 июня 2013, Керколди"
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Стирлингском университете",
+      "long": "Изучал английский язык, философию и психологию в Стирлинге; в первый год учёбы завершил вторую рукопись, TTR.",
+      "place": {
+        "label": "Стирлинг"
+      },
+      "chapter": "childhood-stirling",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1972 to 1975, Banks studied English, philosophy, and psychology at the University of Stirling."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и переход к писательству на полный день",
+      "long": "После успеха дебютного романа в тридцать лет стал профессиональным писателем; редактор в Macmillan посоветовал писать по книге в год.",
+      "works": [
+        {
+          "ref": "wasp-factory"
+        }
+      ],
+      "chapter": "wasp-and-culture",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published novel, The Wasp Factory, appeared in 1984, when he was thirty. After the success of The Wasp Factory, Banks began to write full time."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая фантастика и второе имя — Iain M. Banks",
+      "long": "Первая опубликованная научно-фантастическая книга открыла цикл о Культуре; фантастику Бэнкс стал подписывать «Iain M. Banks», остальную прозу — «Iain Banks».",
+      "works": [
+        {
+          "ref": "consider-phlebas"
+        }
+      ],
+      "chapter": "wasp-and-culture",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first published science-fiction book, Consider Phlebas, emerged in 1987 and was the first of several in the acclaimed Culture series."
+      }
+    },
+    {
+      "key": "relocation-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Разрыв с Энни, возвращение в Шотландию",
+      "long": "Расстался с Энни и вернулся в Эдинбург; позднее пара помирилась и переехала в Файф.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "wasp-and-culture",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They lived in Faversham in the south of England, then split up in 1988. Banks returned to Edinburgh"
+      }
+    },
+    {
+      "key": "relocation-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поселение в Норт-Куинсферри",
+      "long": "С 1991 года жил в Норт-Куинсферри на северном берегу залива Ферт-оф-Форт.",
+      "place": {
+        "label": "Норт-Куинсферри"
+      },
+      "chapter": "wasp-and-culture",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1991, Banks lived in North Queensferry on the north side of the Firth of Forth"
+      }
+    },
+    {
+      "key": "love-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Энни на Гавайях",
+      "long": "Бэнкс и Энни поженились на Гавайях.",
+      "place": {
+        "label": "Гавайи"
+      },
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in Hawaii in 1992, but in 2005, after 15 years of marriage, they separated."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия BSFA за лучший роман",
+      "long": "Получил премию Британской ассоциации научной фантастики за лучший роман; повторно — в 1996 году.",
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Британской ассоциации научной фантастики за лучший роман 1994-01-01"
+      }
+    },
+    {
+      "key": "illness-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Автомобильная авария на грани гибели",
+      "long": "Попал в аварию, едва не стоившую жизни: машина съехала с дороги.",
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1998, Banks was in a near-fatal accident when his car rolled off the road."
+      }
+    },
+    {
+      "key": "other-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Порванный паспорт — протест против войны в Ираке",
+      "long": "Протестуя против вторжения в Ирак, порвал паспорт и отправил обрывки премьер-министру Блэру. Тревоги из-за войны отражены в книге об шотландском виски.",
+      "works": [
+        {
+          "ref": "raw-spirit",
+          "note": "в статье указано, что автор изложил свои опасения по поводу вторжения в Ирак в этой книге"
+        }
+      ],
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году он совершил эксцентричный поступок: порвал свой паспорт и послал обрывки Блэру в знак протеста против ввода британских войск в Ирак."
+      }
+    },
+    {
+      "key": "family-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Расставание с женой",
+      "long": "После пятнадцати лет брака Бэнкс и Энни расстались.",
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in Hawaii in 1992, but in 2005, after 15 years of marriage, they separated."
+      }
+    },
+    {
+      "key": "family-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Энни",
+      "long": "Брак с Энни, заключённый в 1992 году, завершился официальным разводом.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "брак с которой продлился до 2006 года и закончился разводом в 2007 году"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в список лучших британских писателей",
+      "long": "Газета The Times включила Бэнкса в список пятидесяти лучших британских писателей с 1945 года.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, The Times named Banks in their list of the 50 greatest British writers since 1945."
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Призыв к бойкоту Израиля",
+      "long": "После инцидента с флотилией у Газы призвал к культурному и образовательному бойкоту Израиля и отказался от переводов на иврит.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Banks called for a cultural and educational boycott of Israel after the Gaza flotilla raid incident."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-05-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание почётного доктора",
+      "long": "Удостоен звания почётного доктора.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: почётный доктор 2010-05-29"
+      }
+    },
+    {
+      "key": "love-2013",
+      "date": {
+        "from": "2013-03-29",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Адель Хартли",
+      "long": "Женился на Адель Хартли, с которой был знаком с 1989 года; отношения начались в начале 2000-х.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the early 2000s they began a relationship and married on 29 March 2013 after he asked her to"
+      }
+    },
+    {
+      "key": "illness-2013",
+      "date": {
+        "from": "2013-04-03",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз — неизлечимый рак желчного пузыря",
+      "long": "Объявил о неизлечимом раке желчного пузыря, отказался от публичных выступлений; выход последнего романа по его просьбе приблизили к 20 июня 2013 года.",
+      "works": [
+        {
+          "ref": "the-quarry",
+          "note": "публикацию романа по просьбе автора перенесли на более ранний срок"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 3 April 2013, Banks revealed that he had been diagnosed with terminal gallbladder cancer and was unlikely to live beyond a year."
+      }
+    },
+    {
+      "key": "death-2013",
+      "date": {
+        "from": "2013-06-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Керколди",
+      "long": "Умер в Керколди в возрасте 59 лет от рака желчного пузыря.",
+      "place": {
+        "label": "Керколди"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died on 9 June 2013, at the age of 59."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "wasp-factory",
+      "title": "Осиная фабрика",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "walking-on-glass",
+      "title": "Хождение по стеклу",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "the-bridge",
+      "title": "Мост",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "espedair-street",
+      "title": "Эспедар-стрит",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "consider-phlebas",
+      "title": "Вспомни о Флебе",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "the-player-of-games",
+      "title": "Игрок",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "use-of-weapons",
+      "title": "Последнее слово техники",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "the-crow-road",
+      "title": "Вороний путь",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "complicity",
+      "title": "Соучастие",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "excession",
+      "title": "Эксцессия",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "inversions",
+      "title": "Инверсии",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "look-to-windward",
+      "title": "Look to Windward",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "raw-spirit",
+      "title": "Raw Spirit",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "the-algebraist",
+      "title": "Алгебраист",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "matter",
+      "title": "Matter",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "surface-detail",
+      "title": "Surface Detail",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-hydrogen-sonata",
+      "title": "The Hydrogen Sonata",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "the-quarry",
+      "title": "The Quarry",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

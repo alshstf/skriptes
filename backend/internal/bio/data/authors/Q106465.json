@@ -1,0 +1,442 @@
+{
+  "qid": "Q106465",
+  "name": "Джон Гришэм",
+  "born": "1955-02-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B8%D1%88%D1%8D%D0%BC%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 155114765
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Grisham",
+      "rev": 1380257298
+    }
+  ],
+  "chapters": [
+    {
+      "key": "south-and-college",
+      "title": "Юг, бейсбол и колледжи",
+      "from": 1955,
+      "to": 1980
+    },
+    {
+      "key": "lawyer-and-legislator",
+      "title": "Адвокат и депутат",
+      "from": 1981,
+      "to": 1990
+    },
+    {
+      "key": "bestsellers",
+      "title": "Бестселлеры и Голливуд",
+      "from": 1991,
+      "to": 2000
+    },
+    {
+      "key": "wider-range",
+      "title": "Новые жанры и общественная позиция",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1955",
+      "date": {
+        "from": "1955-02-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Джонсборо, Арканзас",
+      "long": "Родился в Джонсборо, Арканзас, вторым из пяти братьев, в семье строителя и домохозяйки.",
+      "place": {
+        "label": "Джонсборо"
+      },
+      "chapter": "south-and-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Гришэм родился 8 февраля 1955 года в городе Джонсборо, штат Арканзас"
+      }
+    },
+    {
+      "key": "education-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Перевод в среднюю школу Саутхейвена",
+      "long": "Перевёлся из переполненной школы Хорн-Лейк в школу Саутхейвена, где играл в футбол, баскетбол и бейсбол.",
+      "place": {
+        "label": "Саутхейвен"
+      },
+      "chapter": "south-and-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1971, he transferred to Southaven High School, where he played football, basketball, and baseball."
+      }
+    },
+    {
+      "key": "education-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом бакалавра по бухгалтерскому учёту",
+      "long": "После нескольких смен учебных заведений получил степень бакалавра по бухгалтерскому учёту в Университете штата Миссисипи.",
+      "chapter": "south-and-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гришэм окончил Университет штата Миссисипи в 1977 году, получив степень бакалавра по специальности «бухгалтерский учёт»"
+      }
+    },
+    {
+      "key": "education-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание школы права, степень доктора права",
+      "long": "Окончил школу права Миссисипского университета, получив степень доктора права; собирался стать налоговым юристом, но увлёкся гражданскими процессами.",
+      "chapter": "lawyer-and-legislator",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончив юридическую школу в университете штата Миссисипи в 1981 году"
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981-05-08",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Рене Джонс",
+      "long": "Женился на Рене Джонс 8 мая 1981 года; у пары двое детей, Шиа и Тай.",
+      "chapter": "lawyer-and-legislator",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Гришэм женился на Рене Джонс 8 мая 1981 года."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Депутат Палаты представителей Миссисипи",
+      "long": "Избран от Демократической партии в Палату представителей Миссисипи, представлял седьмой округ (Десото-Каунти); работал в законодательном собрании до 1990 года.",
+      "chapter": "lawyer-and-legislator",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году он был избран депутатом Палаты представителей, представляя седьмой округ, в который вошёл Десото-Каунти, и служил до 1990 года."
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Судебный процесс, давший замысел первого романа",
+      "long": "В суде графства Сото услышал показания двенадцатилетней жертвы изнасилования; по его словам для New York Times, идея первого романа родилась сразу.",
+      "works": [
+        {
+          "ref": "a-time-to-kill",
+          "note": "замысел романа, по рассказу автора в New York Times"
+        }
+      ],
+      "chapter": "lawyer-and-legislator",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В один из дней 1984 года в здании суда графства Сото Гришэм услышал душераздирающие показания двенадцатилетней девочки, которая оказалась жертвой изнасилования."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отход от большой политики, время для романа",
+      "long": "После выборов нового спикера оказался в немилости у руководства палаты и получил второстепенные комитетские роли; освободившееся время, по его словам, отдал роману.",
+      "works": [
+        {
+          "ref": "the-firm",
+          "note": "по позднейшим словам автора, свободное время ушло на работу над романом"
+        }
+      ],
+      "chapter": "lawyer-and-legislator",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With a different speaker elected at the beginning of the 1988 legislative session, Grisham was out of favor with the new legislative leaders"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Неожиданный бестселлер и права на экранизацию",
+      "long": "Второй роман стал неожиданным бестселлером; права на экранизацию купила Paramount, после чего издатели начали борьбу за автора.",
+      "works": [
+        {
+          "ref": "the-firm"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Фирма», вышедший в 1991 году, стал неожиданным бестселлером, продержавшись в списке бестселлеров New York Times 47 недель."
+      }
+    },
+    {
+      "key": "faith-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Благотворительный фонд для баптистских миссий",
+      "long": "Вместе с женой основал фонд на средства от гонораров, помогающий баптистским миссионерам в Бразилии.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1993, he created with his wife a foundation, entirely financed by his royalties, which contributes to Baptist missionaries in Brazil"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рекордная продажа прав на экранизацию дебюта",
+      "long": "Студия New Regency заплатила рекордные 6 миллионов долларов за права на экранизацию дебютного романа.",
+      "works": [
+        {
+          "ref": "a-time-to-kill"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1994, New Regency paid a record $6 million for the rights to A Time to Kill"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение в суд ради семьи железнодорожника",
+      "long": "Ненадолго вернулся к адвокатской практике ради семьи погибшего железнодорожника и выиграл дело с вердиктом в 683 500 долларов.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returning briefly in 1996 to represent the family of a railroad worker who was killed on the job"
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Детский бейсбольный комплекс",
+      "long": "Построил детский бейсбольный комплекс стоимостью 3,8 млн долларов; поддерживает детские лиги в Оксфорде и Шарлотсвилле.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, Grisham built a $3.8 million youth baseball complex."
+      }
+    },
+    {
+      "key": "creation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Выход за пределы юридического триллера",
+      "long": "Начал писать вне формата юридического триллера: роман о детстве на ферме в Арканзасе и ироничная рождественская сказка.",
+      "works": [
+        {
+          "ref": "a-painted-house"
+        },
+        {
+          "ref": "skipping-christmas"
+        }
+      ],
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начиная с 2001 года Гришэм пробует себя в других жанрах."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Хелмерих",
+      "long": "Получил премию Пегги Хелмерих за выдающийся вклад в литературу от Tulsa Library Trust.",
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2005 — Peggy V. Helmerich Distinguished Author Award."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Библиотеки Конгресса",
+      "long": "Удостоен премии Библиотеки Конгресса за достижения в художественной литературе.",
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2009 — Library of Congress Creative Achievement Award for Fiction."
+      }
+    },
+    {
+      "key": "creation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Серия детских детективов о Теодоре Буне",
+      "long": "Начал серию юридических детективов о тринадцатилетнем Теодоре Буне; к ней, по словам автора, его подтолкнула дочь Шиа.",
+      "works": [
+        {
+          "ref": "theodore-boone",
+          "note": "по словам автора, серию вдохновила дочь Шиа"
+        }
+      ],
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Grisham started writing a series of legal thrillers for children."
+      }
+    },
+    {
+      "key": "other-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Юридическая библиотека названа его именем",
+      "long": "Юридическая библиотека школы права Миссисипского университета получила его имя.",
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2012, the Law Library at the University of Mississippi School of Law was renamed in his honor."
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Письмо против конфедератской символики на флаге",
+      "long": "Вместе с примерно шестьюдесятью другими подписал письмо с требованием убрать конфедератский флаг с флага Миссисипи; составил письмо с писателем Грегом Айлзом.",
+      "chapter": "wider-range",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015, Grisham, along with about 60 others, signed a letter published in the Clarion-Ledger urging that an inset within the flag of Mississippi containing a Confederate flag be removed."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "a-time-to-kill",
+      "title": "Пора убивать",
+      "written": {
+        "from": 1984,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "the-firm",
+      "title": "Фирма",
+      "written": {
+        "from": 1987,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "a-painted-house",
+      "title": "Покрашенный дом",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "skipping-christmas",
+      "title": "Рождество с неудачниками",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "ford-county",
+      "title": "Округ Форд",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "theodore-boone",
+      "title": "Теодор Бун",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

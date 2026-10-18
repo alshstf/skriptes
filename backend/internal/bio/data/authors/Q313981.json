@@ -1,0 +1,443 @@
+{
+  "qid": "Q313981",
+  "name": "Роберт Харрис",
+  "born": "1957-03-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D1%80%D1%80%D0%B8%D1%81%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82",
+      "rev": 155526343
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Harris_%28novelist%29",
+      "rev": 1379990212
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Ноттингем и Кембридж",
+      "from": 1957,
+      "to": 1981
+    },
+    {
+      "key": "zhurnalistika",
+      "title": "Журналистика и первые книги",
+      "from": 1982,
+      "to": 1991
+    },
+    {
+      "key": "fatherland-i-proza",
+      "title": "«Фатерланд» и жизнь романиста",
+      "from": 1992,
+      "to": 2006
+    },
+    {
+      "key": "blair-i-polanski",
+      "title": "Блэр, Полански и экранизации",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-03-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ноттингеме",
+      "long": "Родился в Ноттингеме; детство прошло в небольшом съёмном доме в муниципальном квартале. Отец работал на местной типографии.",
+      "place": {
+        "label": "Ноттингем"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Robert Dennis Harris CBE (born 7 March 1957) is a British novelist"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая книга в соавторстве с Джереми Паксманом",
+      "long": "Вместе с коллегой по BBC Джереми Паксманом написал исследование о химической и биологической войне; затем последовали другие научно-публицистические книги.",
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Harris co-wrote his first book, A Higher Form of Killing (1982), with fellow BBC journalist Jeremy Paxman"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Политический редактор «The Observer»",
+      "long": "В 30 лет стал политическим редактором газеты The Observer; позже вёл колонки в The Sunday Times и The Daily Telegraph.",
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, at the age of 30, he became political editor of The Observer."
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джилл Хорнби",
+      "long": "Женился на писательнице Джилл Хорнби, сестре романиста Ника Хорнби; у пары четверо детей.",
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Gill Hornby 1988-01-01"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер, позволивший стать профессиональным романистом",
+      "long": "Успех первого романа дал возможность стать писателем на постоянной основе. На вырученные деньги Харрис купил бывший дом приходского священника в Беркшире.",
+      "works": [
+        {
+          "ref": "fatherland",
+          "note": "доходы от книги позволили уйти в профессиональную прозу (слова самого Харриса)"
+        }
+      ],
+      "chapter": "fatherland-i-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fatherland (1992)… Publication enabled Harris to become a full-time novelist."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание членом Королевского литературного общества",
+      "long": "Избран членом Королевского литературного общества.",
+      "chapter": "fatherland-i-proza",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Член Королевского литературного общества 1996-01-01"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из колумнистов «The Sunday Times»",
+      "long": "Отказался от колонки в The Sunday Times; в журналистику вернулся в 2001 году, начав писать для The Daily Telegraph.",
+      "chapter": "fatherland-i-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Harris was a columnist for The Sunday Times, but gave it up in 1997."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Колумнист года»",
+      "long": "На British Press Awards 2003 года назван «Колумнистом года».",
+      "chapter": "fatherland-i-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was named \"Columnist of the Year\" at the 2003 British Press Awards."
+      }
+    },
+    {
+      "key": "creation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Разрыв с Блэром и роман о бывшем премьере",
+      "long": "Давний сторонник Тони Блэра и донор лейбористов, Харрис охладел к нему из-за вторжения в Ирак. После отставки Блэра в 2007 году отложил другую работу ради нового романа.",
+      "works": [
+        {
+          "ref": "the-ghost",
+          "note": "по словам Харриса, роман связан с его разочарованием в Блэре после вторжения в Ирак"
+        }
+      ],
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, after Blair resigned, Harris dropped his other work to write The Ghost."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы с Романом Полански",
+      "long": "Написал для Полански сценарий по «Помпеям»; проект отменили в сентябре 2007 года из-за возможной забастовки актёров. Затем они вместе адаптировали «Призрака».",
+      "works": [
+        {
+          "ref": "pompeii"
+        }
+      ],
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Harris wrote a screenplay of his novel Pompeii for director Roman Polanski."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Яна Флеминга «Стальной кинжал»",
+      "long": "Получил премию CWA Ian Fleming Steel Dagger.",
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: CWA Ian Fleming Steel Dagger 2014-01-01"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Съёмки фильма о деле Дрейфуса",
+      "long": "После многолетних трудностей фильм по сценарию Харриса и Полански снят в 2018 году; вышел в прокат в 2019-м. Харрис писал роман под влиянием интереса Полански к делу Дрейфуса.",
+      "works": [
+        {
+          "ref": "officer-and-a-spy",
+          "note": "Харрис написал роман, вдохновлённый давним интересом друга Полански к делу Дрейфуса"
+        }
+      ],
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After many years of production difficulties, it was filmed in 2018, starring Jean Dujardin."
+      }
+    },
+    {
+      "key": "other-2018",
+      "date": {
+        "from": "2018-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичная поддержка Полански",
+      "long": "В июне 2018 года вновь публично поддержал Полански, назвав критику в его адрес вопросом культуры и моды.",
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2018 Harris reiterated his support for Polanski"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Сезар» за адаптированный сценарий",
+      "long": "Получил премию «Сезар» за лучший адаптированный сценарий.",
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Сезар» за лучший адаптированный сценарий 2020-01-01"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание командора ордена Британской империи",
+      "long": "Удостоен звания командора ордена Британской империи (CBE).",
+      "chapter": "blair-i-polanski",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: командор ордена Британской империи 2024-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fatherland",
+      "title": "Фатерланд",
+      "qid": "Q845167",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "enigma",
+      "title": "Энигма",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "archangel",
+      "title": "Архангел",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "pompeii",
+      "title": "Помпеи",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "imperium",
+      "title": "Империй",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-ghost",
+      "title": "Призрак",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "lustrum",
+      "title": "Люструм",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "fear-index",
+      "title": "Индекс страха",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "officer-and-a-spy",
+      "title": "Офицер и шпион",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "dictator",
+      "title": "Диктатор",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "conclave",
+      "title": "Конклав",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "munich",
+      "title": "Мюнхен",
+      "qid": "Q45282812",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "the-second-sleep",
+      "title": "Второй сон",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "v2",
+      "title": "V2",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "act-of-oblivion",
+      "title": "Акт забвения",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "precipice",
+      "title": "Пропасть",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

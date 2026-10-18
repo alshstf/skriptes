@@ -53,6 +53,9 @@ func TestOrigLang(t *testing.T) {
 		{[]string{"en"}, []string{"pl"}, ""},   // Конрад: пишет по-английски
 		{[]string{"fr", "cs"}, nil, "cs"},      // Кундера: первый по алфавиту
 		{[]string{"nb"}, nil, "no"},            // букмол → no.wikipedia.org
+		{[]string{"en-gb"}, nil, ""},           // британский английский — en берётся и так (Диккенс)
+		{[]string{"pt-br"}, nil, "pt"},         // регион → основной раздел
+		{[]string{"be-tarask"}, nil, "be-tarask"},
 		{nil, nil, ""},
 	} {
 		if got := origLang(c.written, c.native); got != c.want {

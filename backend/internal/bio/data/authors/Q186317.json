@@ -1,0 +1,472 @@
+{
+  "qid": "Q186317",
+  "name": "Стиг Ларссон",
+  "born": "1954-08-15",
+  "died": "2004-11-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D1%80%D1%81%D1%81%D0%BE%D0%BD%2C_%D0%A1%D1%82%D0%B8%D0%B3",
+      "rev": 152971138
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Stieg_Larsson",
+      "rev": 1380639362
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/Stieg_Larsson",
+      "rev": 59655815
+    }
+  ],
+  "chapters": [
+    {
+      "key": "north-childhood",
+      "title": "Детство на севере",
+      "from": 1954,
+      "to": 1971
+    },
+    {
+      "key": "activism-years",
+      "title": "Армия, Эритрея, Эва",
+      "from": 1972,
+      "to": 1981
+    },
+    {
+      "key": "fighting-extremism",
+      "title": "Борьба с ультраправыми",
+      "from": 1982,
+      "to": 1998
+    },
+    {
+      "key": "millennium-end",
+      "title": "Миллениум и последние годы",
+      "from": 1999,
+      "to": 2004
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-08-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился в Шелефтехамне, лен Вестерботтен, в семье Эрланда и Вивианн Ларссон; родителям было по 19 лет.",
+      "place": {
+        "label": "Шелефтехамн"
+      },
+      "chapter": "north-childhood",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Skelleftehamn 1954-08-15"
+      }
+    },
+    {
+      "key": "other-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Свидетель изнасилования на кемпинге",
+      "long": "В 1969 году 15-летний Ларссон увидел, как трое его друзей изнасиловали ровесницу, и не вмешался. По рассказам Курдо Баксы и Эвы Габриэльссон, воспоминание осталось с ним на всю жизнь.",
+      "place": {
+        "label": "Умео"
+      },
+      "works": [
+        {
+          "ref": "men-who-hate-women",
+          "note": "Баксы и Габриэльссон связывают с этим эпизодом тему насилия над женщинами в его книгах"
+        }
+      ],
+      "chapter": "north-childhood",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1969 såg den 15-årige Larsson tre vänner våldta en flicka i hans egen ålder på en campingplats i Umeå."
+      }
+    },
+    {
+      "key": "creation-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый фэнзин и фантастический фэндом",
+      "long": "Вместе с Руне Форсгреном издал первый научно-фантастический фэнзин «Сфэрен»; в 1970-е выпустил ещё около 30 номеров фэнзинов.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he co-edited, with Rune Forsgren, his first fanzine, Sfären, in 1972"
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Провал на вступительных в школу журналистики",
+      "long": "Получил школьный диплом по общественным наукам; поступить в стокгольмский колледж журналистики не удалось — экзамен он не сдал.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Larsson earned a secondary diploma in social sciences in 1972. He applied to the Joint Colleges of Journalism in Stockholm, but he failed the entrance examination."
+      }
+    },
+    {
+      "key": "other-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Смена написания имени на Stieg",
+      "long": "В начале 20-х годов сменил написание имени со Stig на Stieg, чтобы его не путали с писателем и фотографом Стигом Ларссоном; написание «Stieg» встречается в текстах с 1972 года.",
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Stavningen Stieg Larsson har återfunnits i skrifter från 1972."
+      }
+    },
+    {
+      "key": "love-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Союз с Эвой Габриэльссон",
+      "long": "С 1974 года до смерти жил с архитектором Эвой Габриэльссон, с которой познакомился в 18 лет; брак они не оформляли, опасаясь за её безопасность.",
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1974 года до своей смерти Ларссон жил с Эвой Габриэльссон"
+      }
+    },
+    {
+      "key": "war-1974",
+      "date": {
+        "from": "1974",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Обязательная армейская служба",
+      "long": "Призван в шведскую армию; 16 месяцев служил миномётчиком в пехотной части в лене Калмар.",
+      "place": {
+        "label": "Калмар"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, Larsson was drafted into the Swedish Army under the conscription law. He spent 16 months in compulsory military service"
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Обучение эритрейских партизанок, болезнь почек",
+      "long": "Обучал женские отряды Народного фронта освобождения Эритреи обращению с миномётом; из-за болезни почек вынужден был оставить эту работу и вернуться в Швецию.",
+      "place": {
+        "label": "Эритрея"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году он участвовал в подготовке женских партизанских отрядов Народного фронта освобождения Эритреи — учил, как обращаться с гранатомётом. Но был вынужден оставить эту деятельность из-за болезни почек."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа графиком в агентстве TT",
+      "long": "Больше двадцати лет работал графиком в крупнейшем шведском информационном агентстве TT, параллельно занимаясь независимыми исследованиями ультраправых.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "работал графическим дизайнером в крупнейшем шведском новостном агентстве Tidningarnas Telegrambyrå (с 1977 по 1999)"
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Незаверенное завещание в пользу партии",
+      "long": "Составил завещание в пользу отделения Коммунистической рабочей лиги; документ не был заверен свидетелями и после его смерти оказался недействительным.",
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "содержание завещания Ларссона 1977 года, в котором он завещал свои сбережения отделению Коммунистической рабочей лиги"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство клубом любителей фантастики",
+      "long": "Входил в правление Скандинавского общества научной фантастики, крупнейшего шведского клуба любителей жанра, и возглавлял его.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1978–79, he was president of the largest Swedish science-fiction fan club, Skandinavisk Förening för Science Fiction"
+      }
+    },
+    {
+      "key": "other-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка на революционную Гренаду",
+      "long": "Вместе с Эвой Габриэльссон изучал на Гренаде развитие революции, встречался с членами правительства, в том числе с Морисом Бишопом; по возвращении участвовал в создании организации солидарности.",
+      "place": {
+        "label": "Гренада"
+      },
+      "chapter": "activism-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1981 году вместе с Эвой Габриэльссон прибыл на освободившуюся Гренаду"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Корреспондент антифашистской газеты Searchlight",
+      "long": "Стал скандинавским корреспондентом британской антифашистской газеты Searchlight и занялся противодействием ультраправым и расистским движениям.",
+      "chapter": "fighting-extremism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1982 года Стиг Ларссон работал скандинавским представителем британской антифашистской газеты Searchlight"
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход из Социалистической партии",
+      "long": "Вышел из Социалистической партии, не желая защищать социалистические режимы с сомнительной демократичностью.",
+      "chapter": "fighting-extremism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вышел из партии в 1987 году, когда не захотел защищать социалистические режимы сомнительного демократического содержания."
+      }
+    },
+    {
+      "key": "creation-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая книга о правом экстремизме",
+      "long": "Вышла первая книга, написанная вместе с Анной-Леной Лодениус, — результат его исследований ультраправых организаций Швеции.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "works": [
+        {
+          "ref": "extremhogern"
+        }
+      ],
+      "chapter": "fighting-extremism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, his research resulted in his first book, Extremhögern (The Extreme Right)."
+      }
+    },
+    {
+      "key": "loss-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Мать Вивианн умерла от осложнений рака груди и аневризмы.",
+      "chapter": "fighting-extremism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His mother Vivianne also died early, in 1991, from complications of breast cancer and an aneurysm."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Фонд «Экспо»",
+      "long": "Был одним из основателей фонда, переименованного в 1995 году в фонд «Экспо», созданного для противодействия ультраправым и расистским идеям среди молодёжи.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "fighting-extremism",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Stieg Larsson var en av dem som grundade Hill-stiftelsen, som 1995 omdöptes till stiftelsen Expo"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главный редактор журнала «Экспо»",
+      "long": "Стал главным редактором журнала «Экспо».",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "millennium-end",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "arbetade som chefredaktör för tidskriften Expo från 1999"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Договор на издание трёх романов",
+      "long": "Три готовых романа сначала безуспешно предлагались другому издателю; затем по рекомендации Роберта Ашберга издательство «Нурстедтс» решило их выпустить. Ларссон называл эти книги «своей пенсионной страховкой».",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "works": [
+        {
+          "ref": "men-who-hate-women"
+        },
+        {
+          "ref": "girl-who-played-with-fire"
+        },
+        {
+          "ref": "air-castle-blown-up"
+        }
+      ],
+      "chapter": "millennium-end",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Norstedts beslutade 2004 att ge ut serien."
+      }
+    },
+    {
+      "key": "death-2004",
+      "date": {
+        "from": "2004-11-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от инфаркта",
+      "long": "Умер в Стокгольме от инфаркта, поднявшись пешком на седьмой этаж в свой офис из-за неработающего лифта; романы вышли уже после его смерти.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "millennium-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 ноября 2004 года 50-летний Ларссон умер от обширного инфаркта"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "extremhogern",
+      "title": "Правый экстремизм",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "men-who-hate-women",
+      "title": "Девушка с татуировкой дракона",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "girl-who-played-with-fire",
+      "title": "Девушка, которая играла с огнём",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "air-castle-blown-up",
+      "title": "Девушка, которая взрывала воздушные замки",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

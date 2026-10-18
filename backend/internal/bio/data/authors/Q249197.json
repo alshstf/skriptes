@@ -1,0 +1,432 @@
+{
+  "qid": "Q249197",
+  "name": "Фредерик Форсайт",
+  "born": "1938-08-25",
+  "died": "2025-06-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%BE%D1%80%D1%81%D0%B0%D0%B9%D1%82%2C_%D0%A4%D1%80%D0%B5%D0%B4%D0%B5%D1%80%D0%B8%D0%BA",
+      "rev": 154892591
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Frederick_Forsyth",
+      "rev": 1380759415
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kent-school-raf",
+      "title": "Кент, школа и авиация",
+      "from": 1938,
+      "to": 1960
+    },
+    {
+      "key": "reporter-biafra",
+      "title": "Репортёр: Рейтер, Би-би-си, Биафра",
+      "from": 1961,
+      "to": 1970
+    },
+    {
+      "key": "jackal-and-fame",
+      "title": "«Шакал» и мировой успех",
+      "from": 1971,
+      "to": 1987
+    },
+    {
+      "key": "divorce-second-marriage",
+      "title": "Развод, второй брак, награды",
+      "from": 1988,
+      "to": 2009
+    },
+    {
+      "key": "buckinghamshire",
+      "title": "Бакингемшир и последние годы",
+      "from": 2010,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1938",
+      "date": {
+        "from": "1938-08-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ашфорде, Кент",
+      "long": "Родился в Ашфорде, графство Кент, на юго-востоке Англии.",
+      "place": {
+        "label": "Ашфорд"
+      },
+      "chapter": "kent-school-raf",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Forsyth was born in Ashford, Kent, on 25 August 1938"
+      }
+    },
+    {
+      "key": "war-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба лётчиком в королевских ВВС",
+      "long": "Служил в королевских ВВС; по английской статье — лётчиком на реактивном «Вампире».",
+      "chapter": "kent-school-raf",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956—1958 годах служил в королевских ВВС."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало журналистской работы в «Рейтер»",
+      "long": "Начал работать журналистом в агентстве «Рейтер»; позднее освещал французские дела, включая покушение на де Голля.",
+      "chapter": "reporter-biafra",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He joined Reuters in 1961 and in 1965 the BBC"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход на Би-би-си",
+      "long": "Перешёл на Би-би-си, где стал помощником дипломатического корреспондента.",
+      "chapter": "reporter-biafra",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He joined Reuters in 1961 and in 1965 the BBC, for which he served as an assistant diplomatic correspondent."
+      }
+    },
+    {
+      "key": "war-1967",
+      "date": {
+        "from": "1967",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Гражданская война в Нигерии, репортажи из Биафры",
+      "long": "Освещал гражданскую войну в Нигерии из Биафры; по английской статье, после ухода с Би-би-си остался там как независимый репортёр.",
+      "place": {
+        "label": "Биафра"
+      },
+      "works": [
+        {
+          "ref": "biafra-story",
+          "note": "первая книга автора посвящена этой войне"
+        }
+      ],
+      "chapter": "reporter-biafra",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1967—1968 годах освещал гражданскую войну в Нигерии — в самопровозглашённой республике Биафра."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало сотрудничества с МИ-6",
+      "long": "В Биафре началось сотрудничество с МИ-6, продлившееся около двадцати лет; разведка читала его рукописи на предмет секретных сведений.",
+      "place": {
+        "label": "Биафра"
+      },
+      "chapter": "reporter-biafra",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1967—1968 годах освещал гражданскую войну в Нигерии — в самопровозглашённой республике Биафра.\nИменно тогда началось его сотрудничество с британской разведкой, продлившееся двадцати лет."
+      }
+    },
+    {
+      "key": "creation-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман, написанный из-за безденежья",
+      "long": "По словам автора, первый полноформатный роман он написал из-за безденежья; книга вышла в 1971 году и стала международным бестселлером.",
+      "works": [
+        {
+          "ref": "day-of-the-jackal",
+          "note": "по признанию автора, написан из-за нужды в деньгах"
+        }
+      ],
+      "chapter": "jackal-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "because he was \"skint, stony broke.\" He applied similar research techniques to those used in journalism. Published in 1971, the book became an international bestseller"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Эдгара По за лучший роман",
+      "long": "Дебютный роман принёс автору премию Эдгара Аллана По за лучший роман.",
+      "works": [
+        {
+          "ref": "day-of-the-jackal"
+        }
+      ],
+      "chapter": "jackal-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "gained its author the Edgar Allan Poe Award for Best Novel in 1972"
+      }
+    },
+    {
+      "key": "love-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кэрол Каннингем",
+      "long": "Женился на бывшей модели Кэрол Каннингем; в браке родились двое детей.",
+      "chapter": "jackal-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Forsyth married former model Carole Cunningham in 1973."
+      }
+    },
+    {
+      "key": "family-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Кэрол Каннингем",
+      "long": "Брак с Кэрол Каннингем закончился разводом.",
+      "chapter": "divorce-second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The marriage, which produced two children, ended in divorce in 1988."
+      }
+    },
+    {
+      "key": "love-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Сэнди Моллой",
+      "long": "Женился на Сэнди Моллой.",
+      "chapter": "divorce-second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He married Sandy Molloy in 1994."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи (CBE)",
+      "long": "Назначен командором ордена Британской империи за заслуги перед литературой.",
+      "chapter": "divorce-second-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "appointed a Commander of the Order of the British Empire (CBE) in the 1997 New Year Honours list"
+      }
+    },
+    {
+      "key": "relocation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Бакингемшир",
+      "long": "Переехал из особняка в Хартфордшире в Бакингемшир.",
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before moving to Buckinghamshire in 2010."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-02-16",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Бриллиантовый кинжал Картье»",
+      "long": "Ассоциация детективных писателей объявила о присуждении ему «Бриллиантового кинжала Картье» за совокупность работ.",
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 16 February 2012 the Crime Writers' Association announced that Forsyth had won its Cartier Diamond Dagger"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Признание в сотрудничестве с МИ-6",
+      "long": "Признал, что в Биафре был информатором МИ-6, а связь продолжалась двадцать лет; по его словам, платы он не получал.",
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 2015, Forsyth revealed that in Biafra he was an informant for MI6"
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от написания триллеров",
+      "long": "Заявил, что оставляет триллеры: жена сказала, что он слишком стар для поездок в опасные места.",
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2016, he said he was giving up writing thrillers because his wife had told him he was too old"
+      }
+    },
+    {
+      "key": "loss-2024",
+      "date": {
+        "from": "2024-10",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Сэнди",
+      "long": "Умерла жена, Сэнди Моллой.",
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Molloy died in October 2024."
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-06-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Бакингемшире",
+      "long": "Скончался у себя дома в Джорданс, Бакингемшир, после непродолжительной болезни.",
+      "place": {
+        "label": "Джорданс"
+      },
+      "chapter": "buckinghamshire",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Forsyth died aged 86, at his home in Jordans, Buckinghamshire, on 9 June 2025"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "biafra-story",
+      "title": "История Биафры",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "day-of-the-jackal",
+      "title": "День Шакала",
+      "qid": "Q26085",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "odessa-file",
+      "title": "Досье ОДЕССА",
+      "qid": "Q1211006",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "dogs-of-war",
+      "title": "Псы войны",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "devils-alternative",
+      "title": "Дьявольская альтернатива",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "fourth-protocol",
+      "title": "Четвёртый протокол",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "outsider",
+      "title": "Аутсайдер. Моя жизнь как интрига",
+      "qid": "Q60476945",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

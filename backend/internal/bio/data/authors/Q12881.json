@@ -1,0 +1,591 @@
+{
+  "qid": "Q12881",
+  "name": "Пауло Коэльо",
+  "born": "1947-08-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%8D%D0%BB%D1%8C%D0%BE%2C_%D0%9F%D0%B0%D1%83%D0%BB%D0%BE",
+      "rev": 155511741
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Paulo_Coelho",
+      "rev": 1379857875
+    },
+    {
+      "id": "ptwiki",
+      "url": "https://pt.wikipedia.org/wiki/Paulo_Coelho",
+      "rev": 72911217
+    }
+  ],
+  "chapters": [
+    {
+      "key": "school-and-clinics",
+      "title": "Школа иезуитов и клиники",
+      "from": 1947,
+      "to": 1969
+    },
+    {
+      "key": "travel-songs-prison",
+      "title": "Странствия, песни, тюрьма",
+      "from": 1970,
+      "to": 1979
+    },
+    {
+      "key": "marriage-and-camino",
+      "title": "Брак и Дорога Сантьяго",
+      "from": 1980,
+      "to": 1987
+    },
+    {
+      "key": "alchemist-fame",
+      "title": "«Алхимик» и мировая слава",
+      "from": 1988,
+      "to": 2001
+    },
+    {
+      "key": "academy-and-geneva",
+      "title": "Академия и Женева",
+      "from": 2002,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-08-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье инженера",
+      "long": "Родился в Рио-де-Жанейро в благополучной семье инженера Педру и Лижии Коэльо.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "school-and-clinics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пауло Коэльо родился в Рио-де-Жанейро 24 августа 1947 года в благополучной семье инженера Педру и Лижии Коэльо."
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Юридический факультет вопреки желанию писать",
+      "long": "Под давлением семьи, не принимавшей желания стать писателем, поступил на юридический факультет, но вскоре бросил учёбу ради журналистики.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "school-and-clinics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "под их давлением он поступает в 1963 году на юридический факультет университета Рио-де-Жанейро"
+      }
+    },
+    {
+      "key": "illness-1964",
+      "date": {
+        "from": "1964-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Принудительное помещение в психиатрическую клинику",
+      "long": "Из-за разногласий с семьёй семнадцатилетний Коэльо в ноябре 1964 года был принудительно помещён в частную психиатрическую клинику на два года, лечение включало электрошок.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "school-and-clinics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "семнадцатилетний Пауло в ноябре 1964 года был принудительно помещён в частную психиатрическую клинику на 2 года для курса лечения"
+      }
+    },
+    {
+      "key": "illness-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Побег из клиники",
+      "long": "Сбежал из клиники, некоторое время скитался и вернулся домой.",
+      "chapter": "school-and-clinics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1966 году он сбежал из клиники, скитался некоторое время, в итоге вернулся домой"
+      }
+    },
+    {
+      "key": "illness-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Повторное лечение в клинике",
+      "long": "После увлечения любительским театром оказался в лечебнице вновь, снова сбежал, но из-за безденежья вернулся домой.",
+      "chapter": "school-and-clinics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Театрально-протестная активность для Коэльо закончилась снова в лечебнице в 1968 году, откуда он снова сбежал"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Странствия по Америке, Европе и Африке",
+      "long": "Путешествовал по Латинской Америке, Европе и Северной Африке, затем вернулся в Бразилию.",
+      "chapter": "travel-songs-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году Коэльо начал путешествовать по Мексике, Перу, Боливии, Чили, Европе и Северной Африке."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Знакомство и союз с Раулем Сейшасом",
+      "long": "Познакомился с Раулем Сейшасом; они стали соавторами песен, повлиявших на бразильский рок.",
+      "chapter": "travel-songs-prison",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "quando, em 1972, conhece Raul Seixas, então executivo da gravadora CBS"
+      }
+    },
+    {
+      "key": "faith-1974",
+      "date": {
+        "from": "1974-05-19",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Присяга в ордене Astrum Argentum",
+      "long": "Подписал присягу степени пробациониста в Astrum Argentum; вскоре вышел из ордена.",
+      "chapter": "travel-songs-prison",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "no dia 19 de maio de 1974, assina o juramento do grau de Probacionista da Astrum Argentum"
+      }
+    },
+    {
+      "key": "persecution-1974",
+      "date": {
+        "from": "1974-10",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест по делу «Альтернативного общества»",
+      "long": "Военные власти сочли проект «Альтернативного общества» подрывной деятельностью и арестовали его предполагаемых участников; Коэльо приговорён условно к двум годам.",
+      "chapter": "travel-songs-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "заключили всех предполагаемых членов группы под стражу в октябре 1974 года"
+      }
+    },
+    {
+      "key": "persecution-1976",
+      "date": {
+        "from": "1976-12",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Освобождение из тюрьмы",
+      "long": "Признан невменяемым и выпущен из заключения.",
+      "chapter": "travel-songs-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "его признали невменяемым и отпустили в декабре 1976 года"
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с художницей Кристиной Оитисикой",
+      "long": "Женился на художнице Кристине Оитисике, с которой живёт до сих пор.",
+      "chapter": "marriage-and-camino",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Coelho married the artist Christina Oiticica in 1980."
+      }
+    },
+    {
+      "key": "faith-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Вступление в католическую группу RAM",
+      "long": "Вступил в католическую группу RAM, где «Джей» был его Учителем.",
+      "chapter": "marriage-and-camino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году он стал членом католической группы, известной как RAM (Regnus Agnus Mundi)"
+      }
+    },
+    {
+      "key": "faith-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Паломничество по Дороге Сантьяго",
+      "long": "Прошёл паломническим путём Сантьяго, что описал в книге; позднее назвал этот опыт духовным поворотом.",
+      "place": {
+        "label": "Путь Сантьяго"
+      },
+      "works": [
+        {
+          "ref": "diary-of-a-magus",
+          "note": "паломничество описано в книге самим автором"
+        }
+      ],
+      "chapter": "marriage-and-camino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1986 году он прошёл Дорогой Сантьяго, старинным испанским путём паломников, и описал позднее всё произошедшее в книге «Дневник Мага»."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Медленный старт и уход первого издателя",
+      "long": "Первый издатель отказался от книги из-за медленных продаж; позднее она стала самой продаваемой в истории Бразилии.",
+      "works": [
+        {
+          "ref": "the-alchemist"
+        }
+      ],
+      "chapter": "alchemist-fame",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "No ano seguinte, 1988, publicou O Alquimista, que - apesar de sua lenta vendagem inicial, o que provocou a desistência do seu primeiro editor - se transformaria no livro brasileiro mais vendido em todos os tempos."
+      }
+    },
+    {
+      "key": "faith-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Сорок дней в пустыне Мохаве",
+      "long": "По указанию «Джея» вместе с женой провёл 40 дней в пустыне Мохаве в США; события описаны в книге.",
+      "place": {
+        "label": "пустыня Мохаве"
+      },
+      "works": [
+        {
+          "ref": "the-valkyries",
+          "note": "автор описал эти события в книге"
+        }
+      ],
+      "chapter": "alchemist-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1988 году, сразу после выхода книги «Алхимик», «Джей» отправляет Пауло вместе с женой Кристиной в паломничество на 40 дней в пустыню Мохаве"
+      }
+    },
+    {
+      "key": "relocation-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь между Рио-де-Жанейро и Тарбом",
+      "long": "Стал жить с женой на два дома: в Рио-де-Жанейро и в Тарбе во Франции.",
+      "place": {
+        "label": "Тарб"
+      },
+      "chapter": "alchemist-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1989 года он живёт со своей женой Кристиной в Рио-де-Жанейро (Бразилия) и в Тарбе (Франция)."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход в международном издательстве",
+      "long": "Издание в HarperCollins открыло книге путь к международному бестселлеру.",
+      "works": [
+        {
+          "ref": "the-alchemist"
+        }
+      ],
+      "chapter": "alchemist-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "HarperCollins published the book in 1994."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён французским орденом Почётного легиона степени кавалера.",
+      "chapter": "alchemist-fame",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "2000 - Cavaleiro da Ordem Nacional da Legião de Honra"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002-07-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Бразильскую академию литературы",
+      "long": "Избран в Бразильскую академию литературы, занял кресло № 21, несмотря на критику «массовых» авторов.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "academy-and-geneva",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "Em 25 de julho de 2002, Coelho foi eleito para a academia."
+      }
+    },
+    {
+      "key": "relocation-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Женеву",
+      "long": "Поселился в Женеве.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "academy-and-geneva",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "Paulo Coelho vive em Genebra, na Suíça, desde 2007."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Назначение Посланником мира ООН",
+      "long": "Назначен «Посланником мира» ООН.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "academy-and-geneva",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "Em setembro de 2007, a ONU nomeou o escritor Paulo Coelho seu novo"
+      }
+    },
+    {
+      "key": "persecution-2011",
+      "date": {
+        "from": "2011-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет книг в Иране",
+      "long": "Власти Ирана запретили печатать и продавать его книги, не объяснив причин.",
+      "chapter": "academy-and-geneva",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2011 года правительство Ирана запретило печатать и продавать любые книги Пауло Коэльо."
+      }
+    },
+    {
+      "key": "creation-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Совместный проект с Кобе Брайантом",
+      "long": "С ним связался Кобе Брайант с идеей детской книги; работа прекратилась после гибели Брайанта в 2020 году.",
+      "chapter": "academy-and-geneva",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2016, he was contacted by basketball player Kobe Bryant, who wanted to discuss a children's book project with him."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "diary-of-a-magus",
+      "title": "Дневник мага",
+      "written": {
+        "from": 1986,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "the-alchemist",
+      "title": "Алхимик",
+      "qid": "Q179021",
+      "written": {
+        "from": 1987,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "brida",
+      "title": "Брида",
+      "qid": "Q1341424",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "the-valkyries",
+      "title": "Валькирии",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "by-the-river-piedra",
+      "title": "На берегу Рио-Пьедра села я и заплакала",
+      "qid": "Q2019791",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "the-fifth-mountain",
+      "title": "Пятая гора",
+      "qid": "Q1198638",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "veronika-decides-to-die",
+      "title": "Вероника решает умереть",
+      "qid": "Q1139322",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "the-devil-and-miss-prym",
+      "title": "Дьявол и сеньорита Прим",
+      "qid": "Q1997592",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "eleven-minutes",
+      "title": "Одиннадцать минут",
+      "qid": "Q247379",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "the-zahir",
+      "title": "Заир",
+      "qid": "Q1474612",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-witch-of-portobello",
+      "title": "Ведьма из Портобелло",
+      "qid": "Q2010009",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "aleph",
+      "title": "Алеф",
+      "qid": "Q4062141",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-spy",
+      "title": "Мата Хари. Шпионка",
+      "qid": "Q30907404",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

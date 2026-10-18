@@ -1,0 +1,278 @@
+{
+  "qid": "Q315069",
+  "name": "Дэвид Брин",
+  "born": "1950-10-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%80%D0%B8%D0%BD%2C_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4",
+      "rev": 149822495
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/David_Brin",
+      "rev": 1372567692
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-kaltekh",
+      "title": "Глендейл и Калтех",
+      "from": 1950,
+      "to": 1977
+    },
+    {
+      "key": "san-diego",
+      "title": "Сан-Диего: наука и первые романы",
+      "from": 1978,
+      "to": 1982
+    },
+    {
+      "key": "premii",
+      "title": "Премии и признание",
+      "from": 1983,
+      "to": 1988
+    },
+    {
+      "key": "futurolog",
+      "title": "Футуролог и консультант",
+      "from": 1989,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-10-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Глендейле",
+      "long": "Родился в Глендейле, Калифорния, в еврейской семье Селмы и Херба Бринов. Предки отца — польские евреи из окрестностей Конина.",
+      "place": {
+        "label": "Глендейл"
+      },
+      "chapter": "detstvo-i-kaltekh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1950 году в городе Глендэйл (Калифорния, США)."
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр астрономии в Калтехе",
+      "long": "Окончил Калифорнийский технологический институт со степенью бакалавра по астрономии.",
+      "chapter": "detstvo-i-kaltekh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated from the California Institute of Technology with a Bachelor of Science in astronomy, in 1973."
+      }
+    },
+    {
+      "key": "education-1978",
+      "date": {
+        "from": "1978",
+        "to": "1981",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура и докторантура в Сан-Диего",
+      "long": "Учился в Калифорнийском университете в Сан-Диего: в 1978 году получил степень магистра, в 1981-м — докторскую степень.",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "san-diego",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1978 году получил степень магистра по направлению «прикладная физика» в Калифорнийском университете в Сан-Диего, а в 1981-м там же — степень кандидата наук"
+      }
+    },
+    {
+      "key": "education-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень по астрономии",
+      "long": "Получил степень доктора философии в Калифорнийском университете в Сан-Диего (по астрономии, по английской статье).",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "san-diego",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1981-м там же — степень кандидата наук (Ph.D) по направлению «космос»"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постдок в Калифорнийском космическом институте",
+      "long": "Работал научным сотрудником после докторантуры в Калифорнийском космическом институте Калифорнийского университета в кампусе Ла-Хойя.",
+      "place": {
+        "label": "Ла-Хойя"
+      },
+      "chapter": "premii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1983 to 1986, he was a postdoctoral research fellow at the California Space Institute"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Три главные премии фантастики за роман",
+      "long": "Роман получил «Хьюго», «Небьюлу» и «Локус», что принесло автору известность.",
+      "works": [
+        {
+          "ref": "startide-rising"
+        }
+      ],
+      "chapter": "premii",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший роман 1984-01-01"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за постапокалиптический роман",
+      "long": "Роман номинировался на все три главные премии США, но получил только «Локус»; в 1986 году также получил премию Кэмпбелла.",
+      "works": [
+        {
+          "ref": "the-postman"
+        }
+      ],
+      "chapter": "premii",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "однако получил в 1986 году только премию «Локус»"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за третий роман цикла",
+      "long": "Третий роман цикла о Возвышении получил премию «Хьюго».",
+      "works": [
+        {
+          "ref": "uplift-war"
+        }
+      ],
+      "chapter": "premii",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший роман 1988-01-01"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Фелло Института этики и новых технологий",
+      "long": "Стал членом-сотрудником Института этики и новых технологий; позже помогал создать Центр человеческого воображения имени Артура Кларка в Калифорнийском университете в Сан-Диего.",
+      "chapter": "futurolog",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2010, Brin became a fellow of the Institute for Ethics and Emerging Technologies."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sundiver",
+      "title": "Прыжок в Солнце",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "startide-rising",
+      "title": "Звёздный прилив",
+      "qid": "Q2363504",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "the-postman",
+      "title": "Почтальон",
+      "qid": "Q467225",
+      "written": {
+        "from": 1982,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "uplift-war",
+      "title": "Война за Возвышение",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "brightness-reef",
+      "title": "Риф яркости",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "infinitys-shore",
+      "title": "Берег бесконечности",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "heavens-reach",
+      "title": "Небесные просторы",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    }
+  ]
+}

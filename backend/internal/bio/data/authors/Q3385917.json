@@ -1,0 +1,370 @@
+{
+  "qid": "Q3385917",
+  "name": "Пьер Леметр",
+  "born": "1951-04-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BC%D0%B5%D1%82%D1%80%2C_%D0%9F%D1%8C%D0%B5%D1%80",
+      "rev": 151705560
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Pierre_Lemaitre",
+      "rev": 1372413429
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Pierre_Lemaitre",
+      "rev": 239914725
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-prepodavanie",
+      "title": "Париж, учёба и преподавание",
+      "from": 1951,
+      "to": 1999
+    },
+    {
+      "key": "pascaline-i-pervye-romany",
+      "title": "Паскалин и первые романы",
+      "from": 2000,
+      "to": 2012
+    },
+    {
+      "key": "gonkur-i-bolshie-cikly",
+      "title": "Гонкур и большие циклы",
+      "from": 2013,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1951",
+      "date": {
+        "from": "1951-04-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился в Париже; юность провёл между Обервилье и Дранси в семье служащих.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-i-prepodavanie",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Pierre Lemaitre, né le 19 avril 1951 à Paris"
+      }
+    },
+    {
+      "key": "creation-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый роман, оставшийся в рукописи",
+      "long": "Написан первый роман, который автор не публиковал до 2021 года.",
+      "works": [
+        {
+          "ref": "serpent-majuscule"
+        }
+      ],
+      "chapter": "detstvo-i-prepodavanie",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2021, il publie Le Serpent Majuscule, son premier roman écrit en 1985"
+      }
+    },
+    {
+      "key": "love-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с будущей женой Паскалин",
+      "long": "Познакомился с Паскалин, будущей женой; говорит, что она изменила его жизнь, и посвящает ей все романы.",
+      "chapter": "pascaline-i-pervye-romany",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2000, il rencontre Pascaline, sa future épouse"
+      }
+    },
+    {
+      "key": "creation-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Реальный случай, вдохновивший социальный триллер",
+      "long": "Происшествие во время акции France Télévisions Publicité легло в основу социального триллера.",
+      "works": [
+        {
+          "ref": "cadres-noirs"
+        }
+      ],
+      "chapter": "pascaline-i-pervye-romany",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le livre est inspiré d'un fait divers réel survenu en 2005 à France Télévisions Publicité."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к жизни литературным трудом",
+      "long": "С 2006 года живёт писательским трудом; в тот же год дебютный роман получил приз за первый роман фестиваля в Коньяке.",
+      "works": [
+        {
+          "ref": "travail-soigne"
+        }
+      ],
+      "chapter": "pascaline-i-pervye-romany",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "vivant de sa plume à partir de 2006"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Обществе литераторов",
+      "long": "В 2011–2013 годах — член совета Общества литераторов.",
+      "chapter": "pascaline-i-pervye-romany",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "De 2011 à 2013, il est administrateur de la Société des gens de lettres."
+      }
+    },
+    {
+      "key": "creation-2013",
+      "date": {
+        "from": "2013-08",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Поворот от детектива к историческому роману",
+      "long": "Выходит роман о Первой мировой — заметный поворот от детектива к плутовскому роману.",
+      "works": [
+        {
+          "ref": "au-revoir-la-haut"
+        }
+      ],
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En août 2013, Au revoir là-haut, marque, dans son œuvre, un important changement"
+      }
+    },
+    {
+      "key": "career-2013-2",
+      "date": {
+        "from": "2013-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гонкуровская премия",
+      "long": "Получил Гонкуровскую премию; книга возглавила список бестселлеров года.",
+      "works": [
+        {
+          "ref": "au-revoir-la-haut"
+        }
+      ],
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En novembre 2013, le roman reçoit le prix Goncourt."
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Посол Народной помощи",
+      "long": "Стал послом организации Secours populaire français и поддержал борьбу за права заключённых.",
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2015, il devient ambassadeur du Secours populaire français."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Сезар» за адаптацию",
+      "long": "Получил «Сезар» за адаптированный сценарий фильма Альбера Дюпонтеля.",
+      "works": [
+        {
+          "ref": "au-revoir-la-haut"
+        }
+      ],
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il reçoit le prix Goncourt en 2013 pour Au revoir là-haut et un César en 2018 pour son adaptation au cinéma."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Публикация первого романа, ставшего последним нуаром",
+      "long": "Опубликован первый роман, написанный в 1985 году; автор заявил, что это его последний роман нуар.",
+      "works": [
+        {
+          "ref": "serpent-majuscule"
+        }
+      ],
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 2021, il publie Le Serpent Majuscule, son premier roman écrit en 1985 et qu'il n'avait jamais fait publier."
+      }
+    },
+    {
+      "key": "relocation-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Фонвьея в Перигё",
+      "long": "Покинув окрестности Арля, поселился в Шанпсвинеле возле Перигё.",
+      "place": {
+        "label": "Шанпсвинель"
+      },
+      "chapter": "gonkur-i-bolshie-cikly",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il réside depuis 2023 dans l'agglomération de Périgueux, à Champcevinel."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "travail-soigne",
+      "title": "Кропотливая работа",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "robe-de-marie",
+      "title": "Свадебное платье жениха",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "cadres-noirs",
+      "title": "Тёмные кадры",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "alex",
+      "title": "Алекс",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "sacrifices",
+      "title": "Жертвы",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "au-revoir-la-haut",
+      "title": "До свидания там, наверху",
+      "qid": "Q15133510",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "trois-jours-et-une-vie",
+      "title": "Три дня и целая жизнь",
+      "qid": "Q30166294",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "couleurs-de-lincendie",
+      "title": "Цвета пожара",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "miroir-de-nos-peines",
+      "title": "Зеркало наших печалей",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "serpent-majuscule",
+      "title": "Заглавная змея",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "le-grand-monde",
+      "title": "Большой мир",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

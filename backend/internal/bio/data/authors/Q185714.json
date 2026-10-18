@@ -1,0 +1,359 @@
+{
+  "qid": "Q185714",
+  "name": "Дэниел Киз",
+  "born": "1927-08-09",
+  "died": "2014-06-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B8%D0%B7%2C_%D0%94%D1%8D%D0%BD%D0%B8%D0%B5%D0%BB",
+      "rev": 154218990
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Daniel_Keyes",
+      "rev": 1378577084
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-youth",
+      "title": "Бруклин и учёба",
+      "from": 1927,
+      "to": 1949
+    },
+    {
+      "key": "magazine-years",
+      "title": "Редактор и комиксы",
+      "from": 1950,
+      "to": 1958
+    },
+    {
+      "key": "algernon-years",
+      "title": "Элджернон и признание",
+      "from": 1959,
+      "to": 1965
+    },
+    {
+      "key": "ohio-professor",
+      "title": "Профессор в Огайо",
+      "from": 1966,
+      "to": 1999
+    },
+    {
+      "key": "late-years",
+      "title": "Почётные звания и последние годы",
+      "from": 2000,
+      "to": 2014
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1927",
+      "date": {
+        "from": "1927-08-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в семье еврейских эмигрантов из Российской империи Уильяма Киза и Бетти Алицки. Отец держал магазин подержанных вещей, мать работала косметологом.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 августа 1927 года, Нью-Йорк, США — 15 июня 2014 года, Бока-Ратон, США"
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Бруклинского колледжа",
+      "long": "Окончил Бруклинский колледж со степенью бакалавра психологии.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "magazine-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году Киз окончил Бруклинский колледж, получив степень бакалавра психологии"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в издательстве, редактор журнала",
+      "long": "Через месяц после выпуска пришёл в издательскую компанию «Magazine Management» и со временем стал редактором журнала «Marvel Science Stories».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "magazine-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году Киз окончил Бруклинский колледж, получив степень бакалавра психологии. Спустя месяц он устроился на работу в издательскую компанию «Magazine Management»"
+      }
+    },
+    {
+      "key": "love-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ори Васкес",
+      "long": "Женился на Ори Васкес (Aurea Georgina Vazquez); в браке родились две дочери.",
+      "chapter": "magazine-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "whom he married in 1952"
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация собственного рассказа",
+      "long": "В майском номере журнала «Marvel Science Stories» за 1952 год вышел первый собственный рассказ Киза.",
+      "chapter": "magazine-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая публикация собственного рассказа — рассказа «Прецедент» — состоялась в майском номере журнала «Marvel Science Stories» за 1952 год."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над текстами для комиксов",
+      "long": "После закрытия «Marvel Science Stories» работал помощником редактора в «Atlas Comics»; в 1955–1956 годах писал тексты для студий комиксов под своим именем и псевдонимами.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "magazine-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1955—1956 годы сочинял тексты для студий комиксов «Shock Illustrated» и «Confessions Illustrated»"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Хьюго»",
+      "long": "Рассказ получил премию «Хьюго».",
+      "works": [
+        {
+          "ref": "flowers-for-algernon"
+        }
+      ],
+      "chapter": "algernon-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году премии «Хьюго» был удостоен рассказ «Цветы для Элджернона»"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Небьюла» за роман",
+      "long": "Расширенный роман получил премию «Небьюла», разделив её с «Вавилоном-17» Сэмюеля Дилэни.",
+      "works": [
+        {
+          "ref": "flowers-for-algernon"
+        }
+      ],
+      "chapter": "ohio-professor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1966 году премию «Небьюла» получил одноимённый роман, написанный на его основе"
+      }
+    },
+    {
+      "key": "career-1966-2",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессорство в Университете Огайо",
+      "long": "Получил должность профессора художественной литературы в Университете Огайо (Атенс), до этого преподавал в Университете Уэйна.",
+      "place": {
+        "label": "Атенс"
+      },
+      "chapter": "ohio-professor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году он получил должность профессора художественной литературы в Университете Огайо"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Эдгар»",
+      "long": "Получил премию «Эдгар».",
+      "chapter": "ohio-professor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году Киз получил премию «Эдгар» за роман «Открывающий Клаудию»."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль «Заслуженный выпускник»",
+      "long": "Бруклинский колледж наградил его медалью «Заслуженный выпускник».",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "ohio-professor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1988 году писатель был удостоен почётной медали «Заслуженный выпускник» от Бруклинского колледжа"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Author Emeritus",
+      "long": "Ассоциация писателей-фантастов присвоила звание Author Emeritus; в том же году Киз стал почётным профессором Университета Огайо.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году Американская ассоциация писателей-фантастов присвоила Кизу почётное звание Author Emeritus"
+      }
+    },
+    {
+      "key": "loss-2013",
+      "date": {
+        "from": "2013-05-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены",
+      "long": "Умерла жена писателя, Ори Васкес, с которой он прожил с 1952 года.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "had died on May 14, 2013"
+      }
+    },
+    {
+      "key": "death-2014",
+      "date": {
+        "from": "2014-06-15",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Бока-Ратоне",
+      "long": "Скончался дома в Бока-Ратоне от осложнений после пневмонии.",
+      "place": {
+        "label": "Бока-Ратон"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Киз скончался в своём доме в Бока-Ратон (Флорида) 15 июня 2014 от осложнений после перенесённой пневмонии"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "flowers-for-algernon",
+      "title": "Цветы для Элджернона",
+      "qid": "Q837934",
+      "written": {
+        "from": 1959,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "the-touch",
+      "title": "Прикосновение",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "the-fifth-sally",
+      "title": "Пятая Салли",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "the-minds-of-billy-milligan",
+      "title": "Множественные умы Билли Миллигана",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "the-milligan-wars",
+      "title": "Войны Миллигана",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "until-death",
+      "title": "До самой смерти",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    }
+  ]
+}

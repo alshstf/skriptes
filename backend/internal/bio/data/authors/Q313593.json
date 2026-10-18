@@ -1,0 +1,510 @@
+{
+  "qid": "Q313593",
+  "name": "Майкл Ондатже",
+  "born": "1943-09-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D0%BD%D0%B4%D0%B0%D1%82%D0%B6%D0%B5%2C_%D0%9C%D0%B0%D0%B9%D0%BA%D0%BB",
+      "rev": 150631264
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michael_Ondaatje",
+      "rev": 1373438132
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ceylon",
+      "title": "Цейлон",
+      "from": 1943,
+      "to": 1953
+    },
+    {
+      "key": "england",
+      "title": "Мать и Англия",
+      "from": 1954,
+      "to": 1961
+    },
+    {
+      "key": "canada-study",
+      "title": "Канада и учёба",
+      "from": 1962,
+      "to": 1969
+    },
+    {
+      "key": "toronto-years",
+      "title": "Торонто, кафедра и Coach House",
+      "from": 1970,
+      "to": 1991
+    },
+    {
+      "key": "booker-and-after",
+      "title": "Букер и признание",
+      "from": 1992,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-09-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Коломбо",
+      "long": "Родился в Коломбо на Цейлоне (ныне Шри-Ланка) в семье Мервина Ондатже и Дорис Гратьяен; родители позже расстались.",
+      "place": {
+        "label": "Коломбо"
+      },
+      "chapter": "ceylon",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 12 сентября 1943, Коломбо, Шри-Ланка"
+      }
+    },
+    {
+      "key": "relocation-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд к матери в Англию",
+      "long": "В 1954 году переехал в Англию к матери Дорис Гратьяен; учился в Даличском колледже.",
+      "works": [
+        {
+          "ref": "running-in-the-family"
+        }
+      ],
+      "chapter": "england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году юный Ондатже переехал со своей матерью Дорис Гратьяен в Англию"
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Даличском колледже",
+      "long": "В Англии учился в Даличском колледже.",
+      "chapter": "england",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1954, he re-joined his mother in England. where he attended Dulwich College."
+      }
+    },
+    {
+      "key": "relocation-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Канаду",
+      "long": "В 1962 году переселился в Канаду и стал её гражданином; поселился в Монреале, провинция Квебек.",
+      "place": {
+        "label": "Монреаль"
+      },
+      "chapter": "canada-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1962 году переселился в Канаду и стал её гражданином"
+      }
+    },
+    {
+      "key": "education-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в университете Бишопс",
+      "long": "Три года учился в школе Бишопс-колледж и университете Бишопс в Ленноксвилле, Квебек.",
+      "place": {
+        "label": "Ленноксвилл"
+      },
+      "chapter": "canada-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He emigrated to Montreal, Quebec, in 1962… and Bishop's University in Lennoxville, Quebec, for three years"
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Торонто",
+      "long": "Получил степень бакалавра в Университете Торонто, затем стал магистром в Университете Куинс в Кингстоне.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "canada-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "receiving a Bachelor of Arts degree in 1965"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Торонто",
+      "long": "В 1970 году переехал в Торонто, где позднее преподавал английскую литературу.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году переехал в Торонто"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор в Coach House Press",
+      "long": "Около двух десятилетий связан с издательством Coach House Press, где редактировал, в частности, ранние стихи Дафны Марлатт.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Coach House Press (ca. 1970–1990), where he edited"
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Йоркском университете",
+      "long": "С 1971 по 1988 год преподавал английскую литературу в Йоркском университете и Глендон-Колледже.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 1971 по 1988 год преподавал английскую литературу в Йоркском университете и Глендон-Колледже"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за первый роман",
+      "long": "Первый роман получил премию Books in Canada за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "coming-through-slaughter"
+        }
+      ],
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "winner of the 1976 Books in Canada First Novel Award"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Получил стипендию Гуггенхайма.",
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: стипендия Гуггенхайма 1984"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Торонтская книжная премия",
+      "long": "Роман об иммигрантах в Торонто получил Торонтскую книжную премию.",
+      "place": {
+        "label": "Торонто"
+      },
+      "works": [
+        {
+          "ref": "in-the-skin-of-a-lion"
+        }
+      ],
+      "chapter": "toronto-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "winner of the 1988 City of Toronto Book Award"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Букеровская премия",
+      "long": "Роман получил Букеровскую премию, а также канадскую премию генерал-губернатора; в 1996 году по нему снят фильм.",
+      "works": [
+        {
+          "ref": "the-english-patient"
+        }
+      ],
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "received the Booker Prize in 1992"
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Учреждение Премии Гратьяен",
+      "long": "Основал Gratiaen Trust и премию Гратьяен за лучшее произведение на английском языке, написанное резидентом Шри-Ланки.",
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 году учредил ежегодную литературную Премию Гратьяен"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии Гиллер и Медичи",
+      "long": "Роман о Шри-Ланке получил премию Гиллер, премию Медичи и премию генерал-губернатора Канады.",
+      "works": [
+        {
+          "ref": "anils-ghost"
+        }
+      ],
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anil's Ghost (2000) was the winner of the 2000 Giller Prize, the Prix Médicis"
+      }
+    },
+    {
+      "key": "career-2000-2",
+      "date": {
+        "from": "2000",
+        "to": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Попечитель Griffin Trust",
+      "long": "С 2000 по 2018 год входил в совет попечителей Griffin Trust for Excellence in Poetry как один из основателей.",
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "founding member of the board of trustees of the Griffin Trust for Excellence in Poetry from 2000 to 2018"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия генерал-губернатора",
+      "long": "Роман получил премию генерал-губернатора Канады.",
+      "works": [
+        {
+          "ref": "divisadero"
+        }
+      ],
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Divisadero won the 2007 Governor General's Award"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Членство в Королевском литературном обществе",
+      "long": "Избран членом Королевского литературного общества.",
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Член Королевского литературного общества 2012"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ участвовать в церемонии PEN",
+      "long": "Вместе с другими авторами отказался быть литературным хозяином церемонии PEN, наградившей Charlie Hebdo премией за мужество.",
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2015, Ondaatje was one of several members of PEN American Center who withdrew as literary host"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Специальный «Золотой Букер»",
+      "long": "К 50-летию Букеровской премии читатели признали «Английского пациента» лучшим романом из букеровского списка.",
+      "works": [
+        {
+          "ref": "the-english-patient"
+        }
+      ],
+      "chapter": "booker-and-after",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2018 году роман «Английский пациент» удостоился специальной премии «Золотой Букер»"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "collected-works-of-billy-the-kid",
+      "title": "Собрание сочинений Билли Кида",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "coming-through-slaughter",
+      "title": "Coming Through Slaughter",
+      "qid": "Q2985217",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "running-in-the-family",
+      "title": "Бегущий в семье",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "in-the-skin-of-a-lion",
+      "title": "В шкуре льва",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "the-english-patient",
+      "title": "Английский пациент",
+      "qid": "Q1292533",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "anils-ghost",
+      "title": "Призрак Анил",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "divisadero",
+      "title": "Divisadero",
+      "qid": "Q5284410",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "the-cats-table",
+      "title": "Кошачий стол",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "warlight",
+      "title": "Военный свет",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

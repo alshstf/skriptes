@@ -1,0 +1,380 @@
+{
+  "qid": "Q313377",
+  "name": "Томас Харрис",
+  "born": "1940-04-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D1%80%D1%80%D0%B8%D1%81%2C_%D0%A2%D0%BE%D0%BC%D0%B0%D1%81",
+      "rev": 150432924
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Thomas_Harris",
+      "rev": 1372375616
+    }
+  ],
+  "chapters": [
+    {
+      "key": "south-and-baylor",
+      "title": "Юг и Бэйлорский университет",
+      "from": 1940,
+      "to": 1967
+    },
+    {
+      "key": "ap-new-york",
+      "title": "Репортёр в Нью-Йорке",
+      "from": 1968,
+      "to": 1974
+    },
+    {
+      "key": "writing-lecter",
+      "title": "Писательство и доктор Лектер",
+      "from": 1975,
+      "to": 1998
+    },
+    {
+      "key": "later-years",
+      "title": "Поздние годы, Майами",
+      "from": 1999,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1940",
+      "date": {
+        "from": "1940-04-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Джэксоне, Теннесси",
+      "long": "Родился в Джэксоне, штат Теннесси; детство провёл в Миссисипи, в городах Рич, Кливленд и Кларксдэйл.",
+      "place": {
+        "label": "Джэксон"
+      },
+      "chapter": "south-and-baylor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 11 апреля 1940[…], Джэксон, Теннесси"
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Гарриет Хейли",
+      "long": "В Бэйлорском университете познакомился с однокурсницей Гарриет Энн Хейли; в июне 1961 года они поженились. Позже родилась дочь Элизабет Энн.",
+      "place": {
+        "label": "Уэйко"
+      },
+      "chapter": "south-and-baylor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At Baylor University, he met fellow student Harriet Anne Haley and they married in June 1961."
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Бэйлорского университета",
+      "long": "Окончил Бэйлорский университет по специальности «английский язык»; во время учёбы работал репортёром в местной газете, освещал полицейскую хронику.",
+      "place": {
+        "label": "Уэйко"
+      },
+      "chapter": "south-and-baylor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году окончил Бэйлорский университет в городе Уэйко, штат Техас, с профилирующим предметом английский язык."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в Ассошиэйтед Пресс в Нью-Йорке",
+      "long": "Переехал в Нью-Йорк и работал в Ассошиэйтед Пресс до 1974 года; эта работа дала опыт общения с миром преступности.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "ap-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1968 году переехал в Нью-Йорк для работы в Ассошиэйтед Пресс, где прослужил до 1974 года."
+      }
+    },
+    {
+      "key": "family-1968",
+      "date": {
+        "from": "1968-08",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Гарриет",
+      "long": "Брак с Гарриет Хейли, от которого родилась дочь Элизабет Энн, закончился разводом в августе 1968 года.",
+      "chapter": "ap-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had one daughter, Elizabeth Anne, and divorced in August 1968."
+      }
+    },
+    {
+      "key": "creation-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Мюнхенская Олимпиада как повод для романа",
+      "long": "Гибель израильских атлетов на Олимпийских играх в Мюнхене подтолкнула Харриса к написанию первого романа.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "works": [
+        {
+          "ref": "black-sunday",
+          "note": "роман о теракте на Суперкубке написан под впечатлением от событий в Мюнхене"
+        }
+      ],
+      "chapter": "ap-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Смерть одиннадцати израильских атлетов в Мюнхене на Олимпийских играх 1972 года подтолкнула Харриса написать роман"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер и переход к писательству целиком",
+      "long": "Первый роман стал бестселлером, и успех позволил Харрису целиком посвятить себя писательству.",
+      "works": [
+        {
+          "ref": "black-sunday"
+        }
+      ],
+      "chapter": "writing-lecter",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "ставший бестселлером в 1975 году … Успех книги позволил Харрису посвятить себя писательству целиком."
+      }
+    },
+    {
+      "key": "creation-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Долгая работа над книгой с первым Лектером",
+      "long": "Из-за тщательности Харриса к деталям второй роман вышел лишь в 1981 году; в нём впервые появился доктор Ганнибал Лектер.",
+      "works": [
+        {
+          "ref": "red-dragon"
+        }
+      ],
+      "chapter": "writing-lecter",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Из-за любви писателя к деталям роман увидел свет лишь в 1981 году."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировая известность",
+      "long": "Вторая книга о докторе Лектере принесла Харрису наибольший успех и широчайшую известность; в 1988 году он получил премию Брэма Стокера за лучший роман.",
+      "works": [
+        {
+          "ref": "silence-of-the-lambs"
+        }
+      ],
+      "chapter": "writing-lecter",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наибольший успех и широчайшую известность Томасу Харрису принесла его вторая книга про доктора Лектера «Молчание ягнят», вышедшая в 1988 году"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация романа Джонатаном Демми",
+      "long": "Роман экранизировал Джонатан Демми; в том же году Харрис получил Гран-при полицейской литературы.",
+      "works": [
+        {
+          "ref": "silence-of-the-lambs"
+        }
+      ],
+      "chapter": "writing-lecter",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "экранизированная режиссёром Джонатаном Демми в 1991 году"
+      }
+    },
+    {
+      "key": "creation-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Третья книга о Лектере после долгой паузы",
+      "long": "Из-за той же тяги к деталям третья книга о докторе Лектере вышла лишь в 1999 году; её экранизировал Ридли Скотт в 2001 году.",
+      "works": [
+        {
+          "ref": "hannibal"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "третья книга о докторе Лектере «Ганнибал» была опубликована в 1999 году"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт с «Бэнтем Букс» на две книги",
+      "long": "Харрис подписал с «Бэнтем Букс» контракт на две книги; первой стала книга о юных годах Ганнибала Лектера.",
+      "works": [
+        {
+          "ref": "hannibal-rising"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2004 году Харрис подписал контракт с «Бэнтем Букс» на две книги."
+      }
+    },
+    {
+      "key": "loss-2011",
+      "date": {
+        "from": "2011-12-31",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Полли",
+      "long": "Умерла мать Харриса, Полли; он оставался с ней близок, звонил ей каждый вечер и обсуждал с ней сцены из своих романов.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Harris remained close to his mother, Polly, and called her every night no matter where he was. He often discussed particular scenes from his novels with her. Polly died on December 31, 2011."
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое интервью за 43 года",
+      "long": "Харрис, избегавший публичности с середины 1970-х, дал первое за 43 года интервью газете The New York Times перед выходом нового романа.",
+      "works": [
+        {
+          "ref": "cari-mora"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первое интервью за 43 года Харрис дал лишь в 2019 году газете The New York Times для продвижения своего нового романа"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "black-sunday",
+      "title": "Чёрное воскресенье",
+      "written": {
+        "from": 1974,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "red-dragon",
+      "title": "Красный дракон",
+      "qid": "Q9144808",
+      "written": {
+        "from": 1975,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "silence-of-the-lambs",
+      "title": "Молчание ягнят",
+      "qid": "Q897685",
+      "written": {
+        "from": 1981,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "hannibal",
+      "title": "Ганнибал",
+      "qid": "Q929184",
+      "written": {
+        "from": 1988,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "hannibal-rising",
+      "title": "Ганнибал: Восхождение",
+      "qid": "Q291087",
+      "written": {
+        "from": 2004,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "cari-mora",
+      "title": "Кари Мора",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

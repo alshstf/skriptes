@@ -1,0 +1,169 @@
+{
+  "qid": "Q2362873",
+  "name": "Ольга Николаевна Громыко",
+  "born": "1978-09-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%BE%D0%BC%D1%8B%D0%BA%D0%BE%2C_%D0%9E%D0%BB%D1%8C%D0%B3%D0%B0_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%BD%D0%B0",
+      "rev": 153962810
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Винница, Минск, университет",
+      "from": 1978,
+      "to": 2002
+    },
+    {
+      "key": "pisatelskiy-put",
+      "title": "Ведьма, дебют и семья",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1978",
+      "date": {
+        "from": "1978-09-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Виннице",
+      "long": "Родилась в Виннице (УССР); по статье — в полночь с 13 на 14 сентября 1978 года.",
+      "place": {
+        "label": "Винница"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "О́льга Никола́евна Громы́ко (13 сентября 1978, Винница, УССР)"
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание БГУ, микробиология",
+      "long": "Окончила Белорусский государственный университет по специальности «микробиология»; затем работала в НИИ эпидемиологии и микробиологии в Минске.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончила Белорусский государственный университет по специальности микробиология (2001)."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало публикаций",
+      "long": "Начало публикаций: первые книги вышли в жанре юмористического фэнтези.",
+      "works": [
+        {
+          "ref": "professiya-vedma"
+        }
+      ],
+      "chapter": "pisatelskiy-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Издаётся с 2003 года."
+      }
+    },
+    {
+      "key": "career-2003-2",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приз «Меч Без Имени» за дебютный роман",
+      "long": "На фестивале «Звёздный мост» в Харькове дебютный роман получил приз «Меч Без Имени» за лучший дебютный роман в жанре юмористической и остросюжетной фантастики.",
+      "place": {
+        "label": "Харьков"
+      },
+      "works": [
+        {
+          "ref": "professiya-vedma"
+        }
+      ],
+      "chapter": "pisatelskiy-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "на международном фестивале «Звёздный мост-2003» (г. Харьков) получил приз «Издательства Альфа-книга» («Армада») «Меч Без Имени» за лучший дебютный роман"
+      }
+    },
+    {
+      "key": "child-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына",
+      "long": "В 2004 году родился сын.",
+      "chapter": "pisatelskiy-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Замужем, в 2004 году родила сына."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "professiya-vedma",
+      "title": "Профессия: ведьма",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "vedma-hranitelnitsa",
+      "title": "Ведьма-хранительница",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "verhovnaya-vedma",
+      "title": "Верховная ведьма",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "vedminy-bayki",
+      "title": "Ведьмины байки",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "vernye-vragi",
+      "title": "Верные враги",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    }
+  ]
+}

@@ -1,0 +1,694 @@
+{
+  "qid": "Q79904",
+  "name": "Джером Дэвид Сэлинджер",
+  "born": "1919-01-01",
+  "died": "2010-01-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%8D%D0%BB%D0%B8%D0%BD%D0%B4%D0%B6%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%B5%D1%80%D0%BE%D0%BC_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4",
+      "rev": 155603798
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/J._D._Salinger",
+      "rev": 1378967921
+    }
+  ],
+  "chapters": [
+    {
+      "key": "manhattan-and-academy",
+      "title": "Манхэттен, академия, первые рассказы",
+      "from": 1919,
+      "to": 1941
+    },
+    {
+      "key": "war-years",
+      "title": "Война: от Нормандии до Германии",
+      "from": 1942,
+      "to": 1946
+    },
+    {
+      "key": "bananafish-and-catcher",
+      "title": "Рыбка-бананка и Холден",
+      "from": 1947,
+      "to": 1954
+    },
+    {
+      "key": "cornish-family",
+      "title": "Корниш, семья, последняя повесть",
+      "from": 1955,
+      "to": 1967
+    },
+    {
+      "key": "recluse-years",
+      "title": "Затворничество",
+      "from": 1968,
+      "to": 2010
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1919",
+      "date": {
+        "from": "1919-01-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Манхэттене",
+      "long": "Родился в Манхэттене в семье торговца копчёностями и сырами Соломона Сэлинджера и Мириам, до замужества Мэри Джиллик.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 1 января 1919 года в Нью-Йорке."
+      }
+    },
+    {
+      "key": "relocation-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд на Парк-авеню и школа Макберни",
+      "long": "Семья переехала на Парк-авеню, Сэлинджер поступил в частную школу Макберни, где писал для школьной газеты и играл в спектаклях.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1932, the family moved to Park Avenue, and Salinger enrolled at the McBurney School, a nearby private school."
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Военное училище Вэлли-Фордж",
+      "long": "Отец, не поддерживавший мысль о карьере актёра, отправил сына в военное училище; там Сэлинджер написал три строфы школьного гимна.",
+      "place": {
+        "label": "Уэйн, Пенсильвания"
+      },
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1936 году Джером окончил военное училище Вэлли-Фордж в Уэйне, штат Пенсильвания."
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937",
+        "to": "1938",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка в Австрию и Польшу по воле отца",
+      "long": "По настоянию отца изучал мясоторговое дело в Вене и Быдгоще; бойни вызвали у него отвращение, и он выбрал другой путь.",
+      "place": {
+        "label": "Быдгощ"
+      },
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1937—1938 годах едет в Австрию и Польшу (здесь в Быдгоще он по указанию отца изучает производство колбас)"
+      }
+    },
+    {
+      "key": "education-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Курс Бёрнетта в Колумбийском университете",
+      "long": "На курсе Уита Бёрнетта, редактора журнала Story, Сэлинджер написал три рассказа; Бёрнетт стал его наставником. Высшего образования он так и не окончил.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 году поступает в Колумбийский университет, где слушает курс лекций о коротком рассказе, который читал редактор журнала «Стори» У. Бернетт."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературный дебют в журнале Story",
+      "long": "Дебютный рассказ вышел в журнале Story; с 1941 года Сэлинджер начал публиковаться в The New Yorker.",
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первый рассказ «Молодые люди» (The Young Folks) был опубликован в 1940 году в журнале Story, основанном Уитом Бёрнеттом."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Принятый, но не вышедший рассказ о Холдене",
+      "long": "The New Yorker принял рассказ о Холдене Колфилде, но после нападения на Перл-Харбор в том же месяце публикацию сочли неуместной; рассказ вышел в 1946 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "catcher-in-the-rye",
+          "note": "в этом рассказе впервые появился Холден Колфилд, герой будущего романа"
+        }
+      ],
+      "chapter": "manhattan-and-academy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "But in December 1941, it accepted \"Slight Rebellion off Madison,\" a Manhattan-set story about a disaffected teenager named Holden Caulfield with \"pre-war jitters\"."
+      }
+    },
+    {
+      "key": "love-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с Уной О'Нил",
+      "long": "Сэлинджер встречался с Уной О'Нил, дочерью драматурга Юджина О'Нила; отношения закончились, когда она сошлась с Чарли Чаплином, за которого вышла замуж.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1942, Salinger started dating Oona O'Neill, daughter of the playwright Eugene O'Neill."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Армейская служба в контрразведке",
+      "long": "Призван в армию, служил агентом контрразведки в 12-м пехотном полку 4-й дивизии; дослужился до штаб-сержанта, после победы занимался денацификацией Германии.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early 1942, several months after the U.S. entered World War II, Salinger was drafted into the army, where he saw combat as a counterintelligence agent with the 12th Infantry Regiment, 4th Infantry Division."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944-06-06",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Высадка в Нормандии и бои в Европе",
+      "long": "Участвовал в высадке в Нормандии, затем в боях в Арденнах и Хюртгенском лесу; работал с военнопленными. Многие его рассказы отразили травмирующие переживания войны.",
+      "place": {
+        "label": "Нормандия"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "6 июня 1944 года сержант Сэлинджер в составе отдела контрразведки 12-го пехотного полка 4-й пехотной дивизии участвовал в высадке десанта в Нормандии"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945-04",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Вход в концлагерь Кауферинг IV",
+      "long": "В составе контрразведки вошёл в лагерь Кауферинг IV, филиал Дахау. После капитуляции Германии несколько недель лечился от боевого стресса.",
+      "place": {
+        "label": "Кауферинг"
+      },
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1945 he entered Kaufering IV concentration camp, a subcamp of Dachau."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак, распавшийся за считанные месяцы",
+      "long": "Женился в Германии на Сильвии Вельтер; в апреле 1946 года привёз её в США, но через восемь месяцев брак распался.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Германии Сэлинджер женился, брак оказался коротким, весной 1946 года брак был расторгнут по инициативе Сэлинджера."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ издательства в первом сборнике, разрыв с Бёрнеттом",
+      "long": "Сборник «Молодые люди» из двадцати рассказов издательство Lippincott отвергло; Сэлинджер винил в этом Бёрнетта, и они расстались.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, Whit Burnett agreed to help Salinger publish a collection of his short stories through Story Press's Lippincott Imprint."
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948-01-31",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое признание и контракт с The New Yorker",
+      "long": "После года правки с редакторами The New Yorker рассказ вышел и принёс признание; журнал предложил Сэлинджеру контракт на право первого отказа, и он стал печататься почти только там.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "nine-stories",
+          "note": "рассказ вошёл в сборник 1953 года"
+        }
+      ],
+      "chapter": "bananafish-and-catcher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the magazine published it, now titled \"A Perfect Day for Bananafish\", in the January 31, 1948, issue."
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Неудачная экранизация и запрет на экранизации",
+      "long": "Экранизация рассказа «Дядюшка Виггили в Коннектикуте» (фильм «Моё глупое сердце») была раскритикована; после этого Сэлинджер больше не разрешал экранизировать свои произведения.",
+      "chapter": "bananafish-and-catcher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Though Salinger sold the story with the hope—in the words of his agent Dorothy Olding—that it \"would make a good movie\", critics lambasted the film upon its release in 1949."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951-07-16",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход романа и оглушительный успех",
+      "long": "Роман вышел 16 июля 1951 года и имел огромный успех; позднее он был запрещён в ряде стран и штатов США.",
+      "works": [
+        {
+          "ref": "catcher-in-the-rye",
+          "note": "над романом Сэлинджер работал с 1941 года"
+        }
+      ],
+      "chapter": "bananafish-and-catcher",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Спустя одиннадцать лет после первой публикации, 16 июля 1951 года, вышел из печати единственный роман Сэлинджера «Над пропастью во ржи»… Роман встретил дружное одобрение критики, имел оглушительный успех"
+      }
+    },
+    {
+      "key": "faith-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Обращение к веданте Рамакришны",
+      "long": "После нескольких лет занятий дзэн-буддизмом Сэлинджер увлёкся ведантой Рамакришны; религиозные поиски отразились в его прозе.",
+      "works": [
+        {
+          "ref": "nine-stories",
+          "note": "ведантические идеи звучат в рассказе «Тедди» (1953)"
+        }
+      ],
+      "chapter": "bananafish-and-catcher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Salinger wrote friends of a momentous change in his life in 1952, after several years of practicing Zen Buddhism, while reading The Gospel of Sri Ramakrishna about Hindu religious teacher Sri Ramakrishna."
+      }
+    },
+    {
+      "key": "relocation-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Корниш",
+      "long": "Отдалившись от публичной жизни после успеха романа, переехал из Нью-Йорка в Корниш, где жил до конца жизни.",
+      "place": {
+        "label": "Корниш, Нью-Гэмпшир"
+      },
+      "chapter": "bananafish-and-catcher",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953, he moved from an apartment at 300 East 57th Street, New York, to Cornish, New Hampshire."
+      }
+    },
+    {
+      "key": "faith-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Посвящение в крийя-йогу",
+      "long": "Супруги были посвящены в крийя-йогу; позднее Сэлинджер обращался к дианетике, христианской науке, гомеопатии, макробиотике и другим учениям.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Salinger and Claire were initiated into the path of Kriya Yoga in a small store-front Hindu temple in Washington, D.C., during the summer of 1955."
+      }
+    },
+    {
+      "key": "love-1955",
+      "date": {
+        "from": "1955-02",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Клэр Дуглас",
+      "long": "Женился на студентке Рэдклиффа Клэр Дуглас; она по его настоянию оставила учёбу за четыре месяца до выпуска и переехала к нему.",
+      "works": [
+        {
+          "ref": "franny-and-zooey",
+          "note": "элементы рассказа «Фрэнни» основаны на отношениях с Клэр"
+        }
+      ],
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1955, at age 36, Salinger married Claire Douglas (b. 1933), a student at Radcliffe and daughter of art critic Robert Langton Douglas."
+      }
+    },
+    {
+      "key": "child-1955",
+      "date": {
+        "from": "1955-12-10",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Маргарет",
+      "long": "Родилась дочь Маргарет, впоследствии автор мемуаров «Ловец снов».",
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had two children, Margaret Salinger (also known as Peggy – born December 10, 1955)"
+      }
+    },
+    {
+      "key": "child-1960",
+      "date": {
+        "from": "1960-02-13",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Мэтью",
+      "long": "Родился сын Мэтью (Мэтт), впоследствии наследник и душеприказчик писателя.",
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Matthew \"Matt\" Salinger (born February 13, 1960)"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961-09-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Обложка журнала Time",
+      "long": "Журнал Time посвятил Сэлинджеру обложку и статью о его жизни затворника.",
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 15, 1961, Time magazine devoted its cover to Salinger."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965-06-19",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Последняя публикация и разгромные отзывы",
+      "long": "Повесть заняла почти весь номер The New Yorker и была единодушно раскритикована; она стала последней публикацией Сэлинджера при жизни.",
+      "works": [
+        {
+          "ref": "hapworth-16-1924"
+        }
+      ],
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first new work in six years, the novella took up most of the June 19, 1965, issue of The New Yorker, and was universally panned by critics."
+      }
+    },
+    {
+      "key": "love-1967",
+      "date": {
+        "from": "1967-10-03",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Клэр Дуглас",
+      "long": "Клэр ушла от Сэлинджера в сентябре 1966 года; развод оформлен 3 октября 1967 года, дети остались с матерью.",
+      "chapter": "cornish-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Claire separated from him in September 1966; their divorce was finalized on October 3, 1967."
+      }
+    },
+    {
+      "key": "love-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с Джойс Мейнард",
+      "long": "Писательница Джойс Мейнард переехала к нему, оставив учёбу в Йеле; позднее она описала эти отношения в мемуарах.",
+      "place": {
+        "label": "Корниш, Нью-Гэмпшир"
+      },
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1972, at age 53, Salinger had a relationship with 18-year-old Joyce Maynard that lasted for nine months."
+      }
+    },
+    {
+      "key": "other-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Последнее интервью",
+      "long": "Последнее интервью Сэлинджера; после этого он жил почти без контактов с внешним миром.",
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Своё последнее интервью он дал в 1980 году."
+      }
+    },
+    {
+      "key": "other-1986",
+      "date": {
+        "from": "1986-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Суд против биографа Яна Гамильтона",
+      "long": "Сэлинджер подал в суд, и суд признал использование писем недопустимым; процесс сделал достоянием публики многие детали его частной жизни.",
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1986 Salinger learned that the British writer Ian Hamilton intended to publish a biography that made extensive use of letters Salinger had written to other authors and friends."
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак с Колин О'Нил",
+      "long": "Женился на Колин О'Нил, медсестре и мастерице лоскутного шитья, младше его на 40 лет; детей у них не было.",
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The relationship ended when he met Colleen O'Neill, a nurse and quiltmaker, whom he married around 1988."
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пожар в доме",
+      "long": "Пожар уничтожил не менее половины дома Сэлинджера в Корнише.",
+      "place": {
+        "label": "Корниш, Нью-Гэмпшир"
+      },
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 23, 1992, The New York Times reported, \"Not even a fire that consumed at least half his home on Tuesday could smoke out the reclusive J. D. Salinger"
+      }
+    },
+    {
+      "key": "other-2009",
+      "date": {
+        "from": "2009-06",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Иск против неавторизованного продолжения романа",
+      "long": "Обратился к юристам из-за неавторизованного продолжения романа; суд запретил выпуск книги в США.",
+      "works": [
+        {
+          "ref": "catcher-in-the-rye"
+        }
+      ],
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 2009, Salinger consulted lawyers about the forthcoming U.S. publication of an unauthorized sequel to The Catcher in the Rye"
+      }
+    },
+    {
+      "key": "death-2010",
+      "date": {
+        "from": "2010-01-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Корнише",
+      "long": "Умер естественной смертью в своём доме в Корнише в возрасте 91 года.",
+      "place": {
+        "label": "Корниш, Нью-Гэмпшир"
+      },
+      "chapter": "recluse-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On January 27, 2010, Salinger died of natural causes at his home in Cornish, New Hampshire, aged 91."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "catcher-in-the-rye",
+      "title": "Над пропастью во ржи",
+      "qid": "Q183883",
+      "written": {
+        "from": 1941,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "nine-stories",
+      "title": "Девять рассказов",
+      "qid": "Q795062",
+      "written": {
+        "from": 1948,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "franny-and-zooey",
+      "title": "Фрэнни и Зуи",
+      "qid": "Q1445395",
+      "written": {
+        "from": 1955,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "raise-high-the-roof-beam-carpenters",
+      "title": "Выше стропила, плотники",
+      "qid": "Q2291663",
+      "written": {
+        "from": 1955,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "hapworth-16-1924",
+      "title": "Хэпворт, 16-й, 1924-й",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    }
+  ]
+}

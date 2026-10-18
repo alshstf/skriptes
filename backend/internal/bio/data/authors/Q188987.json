@@ -1,0 +1,512 @@
+{
+  "qid": "Q188987",
+  "name": "Уильям Гибсон",
+  "born": "1948-03-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%B8%D0%B1%D1%81%D0%BE%D0%BD%2C_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC",
+      "rev": 154958556
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Gibson",
+      "rev": 1375305179
+    }
+  ],
+  "chapters": [
+    {
+      "key": "south-childhood",
+      "title": "Юг, школа и уход из дома",
+      "from": 1948,
+      "to": 1966
+    },
+    {
+      "key": "canada",
+      "title": "Канада, Ванкувер, университет",
+      "from": 1967,
+      "to": 1980
+    },
+    {
+      "key": "cyberpunk",
+      "title": "Киберпанк и «Нейромант»",
+      "from": 1981,
+      "to": 1989
+    },
+    {
+      "key": "bridge-years",
+      "title": "Соавторство, арт-проекты, кино",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "realism",
+      "title": "Новый век и признание",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-03-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Конуэе, Южная Каролина",
+      "long": "Родился в Конуэе, Южная Каролина; детство прошло главным образом в Уайтвилле, штат Виргиния.",
+      "place": {
+        "label": "Конуэй"
+      },
+      "chapter": "south-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 17 марта 1948 года в городе Конуэй (штат Южная Каролина)."
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Канаду, Торонто",
+      "long": "Переехал из США в Торонто; по его словам, чтобы избежать призыва во Вьетнам, хотя призван он не был. Работал управляющим торговой точкой в Торонто.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году он переезжает в канадский город Торонто — по его словам, он уехал из США, чтобы избежать призыва на вьетнамскую войну."
+      }
+    },
+    {
+      "key": "love-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Путешествие по Европе с будущей женой",
+      "long": "Вместе с Деборой Томпсон путешествовал по Европе, в частности жил на греческих островах и в Стамбуле.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "chapter": "canada",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "including spending time on a Greek archipelago and in Istanbul in 1970"
+      }
+    },
+    {
+      "key": "family-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Женитьба и поселение в Ванкувере",
+      "long": "Женился на Деборе Томпсон и поселился в Ванкувере; семья жила на её учительскую зарплату, у пары родился первый ребёнок.",
+      "place": {
+        "label": "Ванкувер"
+      },
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году он женился и обосновался в Ванкувере (тихоокеанское побережье Канады), где и начал писать фантастику."
+      }
+    },
+    {
+      "key": "education-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в университете Британской Колумбии",
+      "long": "Окончил университет Британской Колумбии со степенью бакалавра английской литературы; на курсе по фантастике написал первый рассказ.",
+      "place": {
+        "label": "Ванкувер"
+      },
+      "chapter": "canada",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "поступает в университет Британской Колумбии, и в 1977 году получает степень бакалавра английской литературы."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Знакомство со Стерлингом, рождение круга киберпанка",
+      "long": "На конвенции в Денвере познакомился с Брюсом Стерлингом и прочёл ему рассказ о киберпространстве; Стерлинг, по его словам, «полностью понял».",
+      "place": {
+        "label": "Денвер"
+      },
+      "works": [
+        {
+          "ref": "burning-chrome"
+        }
+      ],
+      "chapter": "cyberpunk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Gibson met Sterling at a science fiction convention in Denver, Colorado, in the autumn of 1981"
+      }
+    },
+    {
+      "key": "creation-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Страх провала из-за «Бегущего по лезвию»",
+      "long": "Когда была написана треть романа, вышел «Бегущий по лезвию»; Гибсон решил, что книга пропала, и переписал первые две трети двенадцать раз.",
+      "works": [
+        {
+          "ref": "neuromancer",
+          "note": "воспоминания Гибсона о работе над первым романом"
+        }
+      ],
+      "chapter": "cyberpunk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After viewing the first 20 minutes of landmark cyberpunk film Blade Runner (1982) which was released when Gibson had written a third of the novel"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "ArmadilloCon и оформление движения киберпанка",
+      "long": "На конвенции ArmadilloCon в Остине выступил на панели о панк-фантастике вместе с Шёрли, Стерлингом и Шайнером; там оформилось ядро движения киберпанк.",
+      "place": {
+        "label": "Остин"
+      },
+      "chapter": "cyberpunk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1982, Gibson traveled to Austin, Texas, for ArmadilloCon"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Неожиданный успех дебютного романа",
+      "long": "Дебютный роман стал культовым по рекомендациям читателей и разошёлся тиражом более 6,5 млн экземпляров; автор вышел из безвестности.",
+      "works": [
+        {
+          "ref": "neuromancer"
+        }
+      ],
+      "chapter": "cyberpunk",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The publication of Neuromancer (1984) hit a cultural nerve"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Тройная корона» научной фантастики",
+      "long": "Первый роман получил «Хьюго», «Небьюлу» и премию Филипа К. Дика — «тройную корону» научной фантастики.",
+      "works": [
+        {
+          "ref": "neuromancer"
+        }
+      ],
+      "chapter": "cyberpunk",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший роман 1985-01-01"
+      }
+    },
+    {
+      "key": "creation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман в соавторстве со Стерлингом",
+      "long": "Написал со Стерлингом роман в жанре альтернативной истории о викторианской Британии, ставший самым известным произведением стимпанка.",
+      "works": [
+        {
+          "ref": "difference-engine"
+        }
+      ],
+      "chapter": "bridge-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Sprawl trilogy was followed by the 1990 novel The Difference Engine, an alternative history novel Gibson wrote in collaboration with Bruce Sterling."
+      }
+    },
+    {
+      "key": "creation-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Электронная поэма как арт-проект",
+      "long": "Выпустил поэму на дискете в составе арт-книги с гравюрами Деннниса Эшбо; текст был устроен так, чтобы показываться один раз.",
+      "works": [
+        {
+          "ref": "agrippa"
+        }
+      ],
+      "chapter": "bridge-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Agrippa (a book of the dead) (1992), a 300-line semi-autobiographical electronic poem"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выступление перед Национальной академией наук США",
+      "long": "Вместе со Стерлингом выступил перед Национальной академией наук США, предложив подключить все школы к сети.",
+      "chapter": "bridge-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in a joint address to the U.S. National Academy of Sciences Convocation on Technology and Education in 1993"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация раннего рассказа по его сценарию",
+      "long": "По рассказу Гибсона снят фильм «Джонни-мнемоник» по его сценарию.",
+      "chapter": "bridge-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Johnny Mnemonic (1995) with screenplay by Gibson and starring Keanu Reeves"
+      }
+    },
+    {
+      "key": "creation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Переработка романа после терактов 11 сентября",
+      "long": "Примерно на сотой странице Гибсон переписал предысторию главной героини, ставшую неправдоподобной после терактов 11 сентября; он называл это самым странным опытом в работе над прозой.",
+      "works": [
+        {
+          "ref": "pattern-recognition",
+          "note": "рассказ Гибсона об этой работе"
+        }
+      ],
+      "chapter": "realism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which had been suddenly rendered implausible by the September 11, 2001, attacks"
+      }
+    },
+    {
+      "key": "other-2003",
+      "date": {
+        "from": "2003-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало ведения блога",
+      "long": "Начал вести блог, но в сентябре того же года остановился, опасаясь повредить творческому процессу; вернулся к нему в октябре 2004 года.",
+      "chapter": "realism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He commenced writing a blog in January 2003"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Зал славы научной фантастики и почётные докторские степени",
+      "long": "Получил почётные докторские степени двух университетов и был введён в Зал славы научной фантастики и фэнтези.",
+      "chapter": "realism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008 he received honorary doctorates from Simon Fraser University and Coastal Carolina University. He was inducted by Science Fiction Hall of Fame that same year"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Гроссмейстер фантастики»",
+      "long": "Удостоен звания «Гроссмейстер фантастики» (Wikidata указывает также 2019 год).",
+      "chapter": "realism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Мемориальная премия имени Деймона Найта «Гроссмейстер фантастики» 2018-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "neuromancer",
+      "title": "Нейромант",
+      "qid": "Q662029",
+      "written": {
+        "from": 1982,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "burning-chrome",
+      "title": "Сожжение Хром",
+      "written": {
+        "from": 1981,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "count-zero",
+      "title": "Граф Ноль",
+      "written": {
+        "from": 1984,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "mona-lisa-overdrive",
+      "title": "Мона Лиза Овердрайв",
+      "written": {
+        "from": 1986,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "difference-engine",
+      "title": "Разностная машина",
+      "written": {
+        "from": 1988,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "agrippa",
+      "title": "Агриппа (Книга мёртвых)",
+      "written": {
+        "from": 1991,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "virtual-light",
+      "title": "Виртуальный свет",
+      "written": {
+        "from": 1991,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "idoru",
+      "title": "Идору",
+      "written": {
+        "from": 1994,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "all-tomorrows-parties",
+      "title": "Все вечеринки завтрашнего дня",
+      "written": {
+        "from": 1997,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "pattern-recognition",
+      "title": "Распознавание образов",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "spook-country",
+      "title": "Страна призраков",
+      "written": {
+        "from": 2004,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "zero-history",
+      "title": "Нулевая история",
+      "written": {
+        "from": 2008,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "the-peripheral",
+      "title": "Периферийные устройства",
+      "written": {
+        "from": 2012,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "agency",
+      "title": "Агентство",
+      "written": {
+        "from": 2015,
+        "to": 2020
+      }
+    }
+  ]
+}

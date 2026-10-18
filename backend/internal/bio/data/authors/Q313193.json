@@ -1,0 +1,446 @@
+{
+  "qid": "Q313193",
+  "name": "Майкл Коннелли",
+  "born": "1956-07-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D0%BD%D0%B5%D0%BB%D0%BB%D0%B8%2C_%D0%9C%D0%B0%D0%B9%D0%BA%D0%BB",
+      "rev": 155559897
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michael_Connelly",
+      "rev": 1380640087
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Филадельфия, Флорида, университет",
+      "from": 1956,
+      "to": 1979
+    },
+    {
+      "key": "reporter",
+      "title": "Криминальный репортёр",
+      "from": 1980,
+      "to": 1991
+    },
+    {
+      "key": "bosh",
+      "title": "Гарри Босх и первые успехи",
+      "from": 1992,
+      "to": 2000
+    },
+    {
+      "key": "tampa",
+      "title": "Тампа-Бей и новые герои",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956-07-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Филадельфии",
+      "long": "Родился в Филадельфии, штат Пенсильвания, вторым по старшинству ребёнком в семье застройщика и домохозяйки.",
+      "place": {
+        "label": "Филадельфия"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Филадельфия 1956-07-21"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Окончание университета, первая работа репортёром",
+      "long": "Окончил Флоридский университет и стал криминальным репортёром в газете Daytona Beach News-Journal.",
+      "place": {
+        "label": "Дейтона-Бич"
+      },
+      "chapter": "reporter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from the University of Florida in 1980, Connelly got a job as a crime beat writer at the Daytona Beach News-Journal"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Криминальная хроника в Форт-Лодердейле",
+      "long": "Перешёл в Fort Lauderdale News и Sun-Sentinel, где освещал криминальную хронику времён «кокаиновых войн» на юге Флориды.",
+      "place": {
+        "label": "Форт-Лодердейл"
+      },
+      "chapter": "reporter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until he went to the Fort Lauderdale News and Sun-Sentinel in 1981. There, he covered the crime beat during the South Florida cocaine wars."
+      }
+    },
+    {
+      "key": "love-1984",
+      "date": {
+        "from": "1984-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Линдой Маккалеб",
+      "long": "Женился на Линде Маккалеб, с которой познакомился в университете.",
+      "chapter": "reporter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his wife, Linda McCaleb, whom he had met while in college and married in April 1984"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Финалист Пулитцера за репортаж о катастрофе",
+      "long": "Вместе с двумя коллегами несколько месяцев опрашивал выживших в катастрофе рейса Delta 191; материал сделал его финалистом Пулитцеровской премии.",
+      "chapter": "reporter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1986 he and two other reporters spent several months interviewing survivors of the 1985 Delta Flight 191 plane crash, which story earned Connelly a place as a finalist for the Pulitzer Prize"
+      }
+    },
+    {
+      "key": "relocation-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лос-Анджелес, Los Angeles Times",
+      "long": "Переехал с женой в Калифорнию, получив работу криминального репортёра в Los Angeles Times.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "reporter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He moved to California in 1987 with his wife, Linda McCaleb"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Эдгара По за дебютный роман",
+      "long": "Первый роман о Гарри Босхе получил премию Эдгара По за лучший дебютный роман и начал серию.",
+      "works": [
+        {
+          "ref": "black-echo"
+        }
+      ],
+      "chapter": "bosh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first novel, The Black Echo, won the Mystery Writers of America Edgar Award for Best First Novel in 1992."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Известность после появления с книгой Клинтона",
+      "long": "Президент Клинтон вышел из книжного магазина с экземпляром книги перед камерами; была организована их встреча в аэропорту Лос-Анджелеса.",
+      "works": [
+        {
+          "ref": "concrete-blonde"
+        }
+      ],
+      "chapter": "bosh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Connelly received a good deal of publicity in 1994 when President Bill Clinton came out of a bookstore carrying a copy of The Concrete Blonde"
+      }
+    },
+    {
+      "key": "creation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый роман вне серии о Босхе",
+      "long": "Написал первую книгу без Босха — с журналистом Джеком Макэвоем; книга имела успех.",
+      "works": [
+        {
+          "ref": "poet"
+        }
+      ],
+      "chapter": "bosh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, Connelly wrote The Poet, his first book not to feature Bosch."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Энтони за лучший роман",
+      "long": "Получил премию Энтони за лучший роман.",
+      "chapter": "bosh",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Anthony Award for Best Novel 1999-01-01"
+      }
+    },
+    {
+      "key": "relocation-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение во Флориду с семьёй",
+      "long": "Переехал с женой и дочерью из Калифорнии в район Тампа-Бей, чтобы жить ближе к родным; действие романов осталось в Лос-Анджелесе.",
+      "place": {
+        "label": "Тампа-Бей"
+      },
+      "works": [
+        {
+          "ref": "city-of-bones",
+          "note": "роман писался в период переезда, жизнь Босха изменилась вместе с авторской"
+        }
+      ],
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Connelly left California for Tampa Bay, Florida, together with his wife and daughter, so that both he and his wife could be closer to their families."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация романа Клинтом Иствудом",
+      "long": "Клинт Иствуд снял и сыграл главную роль в экранизации романа.",
+      "works": [
+        {
+          "ref": "blood-work"
+        }
+      ],
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2002, Clint Eastwood directed and starred in the movie adaptation of Connelly's 1997 novel, Blood Work."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "to": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Ассоциации детективных писателей",
+      "long": "Возглавлял Ассоциацию детективных писателей США; по статье, был первым, кого переизбрали на второй срок.",
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Connelly was the president of the Mystery Writers of America from 2003 to 2004."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация о Микки Холлере",
+      "long": "Вышла экранизация романа об адвокате Микки Холлере с Мэттью Макконахи.",
+      "works": [
+        {
+          "ref": "lincoln-lawyer"
+        }
+      ],
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2011, the movie adaptation of Connelly's novel The Lincoln Lawyer starred Matthew McConaughey as Mickey Haller."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сериал «Босх» на Amazon",
+      "long": "Как продюсер запустил сериал «Босх» по своим романам; он шёл семь сезонов.",
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It began streaming on Amazon Prime in early 2014, and ran for seven seasons on Amazon, concluding in 2021."
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Новая героиня — детектив Рене Баллард",
+      "long": "Начал серию о детективе Рене Баллард, которая позже появляется вместе с Босхом.",
+      "works": [
+        {
+          "ref": "late-show"
+        }
+      ],
+      "chapter": "tampa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2017, Connelly's first novel featuring Detective Renée Ballard, The Late Show, was published."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Бриллиантовый кинжал Картье»",
+      "long": "Получил премию «Бриллиантовый кинжал Картье».",
+      "chapter": "tampa",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Бриллиантовый кинжал Картье 2018-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "black-echo",
+      "title": "Чёрное эхо",
+      "qid": "Q1081911",
+      "written": {
+        "from": 1990,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "black-ice",
+      "title": "Чёрный лёд",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "concrete-blonde",
+      "title": "Бетонная блондинка",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "last-coyote",
+      "title": "Последний койот",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "poet",
+      "title": "Поэт",
+      "qid": "Q3795179",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "blood-work",
+      "title": "Кровавая работа",
+      "qid": "Q1088165",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "city-of-bones",
+      "title": "Город костей",
+      "written": {
+        "from": 2001,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "lincoln-lawyer",
+      "title": "Адвокат из Линкольна",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "late-show",
+      "title": "Поздняя смена",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

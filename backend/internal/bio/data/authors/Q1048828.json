@@ -1,0 +1,68 @@
+{
+  "qid": "Q1048828",
+  "name": "Андрей Белянин",
+  "born": "1967-01-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BB%D1%8F%D0%BD%D0%B8%D0%BD%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9_%D0%9E%D0%BB%D0%B5%D0%B3%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 153376925
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Andrei_Belyanin",
+      "rev": 1375460333
+    }
+  ],
+  "chapters": [
+    {
+      "key": "astrakhan-youth",
+      "title": "Астрахань, училище и граница",
+      "from": 1967,
+      "to": 1993
+    },
+    {
+      "key": "writer-start",
+      "title": "Союз писателей и первые книги",
+      "from": 1994,
+      "to": 2003
+    },
+    {
+      "key": "loss-and-after",
+      "title": "Утрата и годы признания",
+      "from": 2004,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-01-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Астрахани",
+      "long": "Родился в Астрахани в семье рабочего и медсестры; в детстве увлекался рисованием.",
+      "place": {
+        "label": "Астрахань"
+      },
+      "chapter": "astrakhan-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 24 января 1967 года в Астрахани."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dzhek-sumasshedshiy-korol",
+      "title": "Джек Сумасшедший король",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    }
+  ]
+}

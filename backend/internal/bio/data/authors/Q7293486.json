@@ -1,0 +1,128 @@
+{
+  "qid": "Q7293486",
+  "name": "Ренсом Риггз",
+  "born": "1979-02-03",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%B8%D0%B3%D0%B3%D0%B7%2C_%D0%A0%D0%B5%D0%BD%D1%81%D0%BE%D0%BC",
+      "rev": 152554870
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ransom_Riggs",
+      "rev": 1372581610
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Ферма, Флорида, кино",
+      "from": 1979,
+      "to": 2008
+    },
+    {
+      "key": "fotografii-i-dom",
+      "title": "Старые фотографии и странные дети",
+      "from": 2009,
+      "to": 2016
+    },
+    {
+      "key": "semya-i-prodolzhenie",
+      "title": "Семья и новые трилогии",
+      "from": 2017,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Детство во Флориде, школа для одарённых",
+      "long": "Детство прошло во Флориде, где он учился в Pine View School для одарённых детей; в школе увлёкся кинематографом.",
+      "place": {
+        "label": "Флорида"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Riggs was born in Maryland in 1979 on a 200-year-old farm, and grew up in Florida, where he attended Pine View School for the Gifted."
+      }
+    },
+    {
+      "key": "birth-1979",
+      "date": {
+        "from": "1979-02-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мэриленде",
+      "long": "Родился в штате Мэриленд, на двухсотлетней ферме.",
+      "place": {
+        "label": "Мэриленд"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 3 февраля 1979 года в штате Мэриленд, США, в семье фермера."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "miss-peregrines-home",
+      "title": "Дом странных детей",
+      "qid": "Q6877267",
+      "written": {
+        "from": 2010,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "hollow-city",
+      "title": "Город пустых",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "library-of-souls",
+      "title": "Библиотека душ",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "map-of-days",
+      "title": "Карта дней",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "conference-of-the-birds",
+      "title": "Собрание птиц",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "desolations-of-devils-acre",
+      "title": "Казни Дьявольского Акра",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

@@ -1,0 +1,994 @@
+{
+  "qid": "Q5879",
+  "name": "Иоганн Вольфганг фон Гёте",
+  "born": "1749-08-28",
+  "died": "1832-03-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%91%D1%82%D0%B5%2C_%D0%98%D0%BE%D0%B3%D0%B0%D0%BD%D0%BD_%D0%92%D0%BE%D0%BB%D1%8C%D1%84%D0%B3%D0%B0%D0%BD%D0%B3_%D1%84%D0%BE%D0%BD",
+      "rev": 155502865
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Johann_Wolfgang_von_Goethe",
+      "rev": 270326350
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Франкфурт, Лейпциг, Страсбург",
+      "from": 1749,
+      "to": 1771
+    },
+    {
+      "key": "storm",
+      "title": "Вецлар, Вертер, Лили",
+      "from": 1772,
+      "to": 1775
+    },
+    {
+      "key": "minister",
+      "title": "Министр при веймарском дворе",
+      "from": 1776,
+      "to": 1785
+    },
+    {
+      "key": "italy",
+      "title": "Бегство в Италию",
+      "from": 1786,
+      "to": 1788
+    },
+    {
+      "key": "classic",
+      "title": "Кристиана, Шиллер, классицизм",
+      "from": 1789,
+      "to": 1805
+    },
+    {
+      "key": "late",
+      "title": "Брак, утраты, Фауст",
+      "from": 1806,
+      "to": 1832
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1749",
+      "date": {
+        "from": "1749-08-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Франкфурте-на-Майне",
+      "long": "Родился во Франкфурте-на-Майне в семье юриста и имперского советника Иоганна Каспара Гёте и Катарины Элизабет, урождённой Текстор.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родился 28 августа 1749 года в немецком торговом городе Франкфурте-на-Майне"
+      }
+    },
+    {
+      "key": "education-1765",
+      "date": {
+        "from": "1765",
+        "to": "1768",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Лейпцигском университете",
+      "long": "По настоянию отца изучает право в Лейпциге; предпочитает лекции Геллерта и уроки рисования у Эзера, ведёт вольную студенческую жизнь.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По настоянию отца Иоганн отправился осенью 1765 года изучать юриспруденцию в Лейпцигский университет."
+      }
+    },
+    {
+      "key": "love-1767",
+      "date": {
+        "from": "1767",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Любовь к Кэтхен Шёнкопф",
+      "long": "Первое серьёзное увлечение — дочь трактирщика Анна Катарина Шёнкопф; ей посвящён рукописный сборник анакреонтических стихов.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Лейпциге Гёте влюбляется в дочь трактирщика Анну Катарину Шёнкопф, которой посвящает сборник из девятнадцати анакреонтических стихотворений «Аннете» (1767)"
+      }
+    },
+    {
+      "key": "illness-1768",
+      "date": {
+        "from": "1768-07",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь и возвращение домой",
+      "long": "Тяжёлое кровотечение прерывает учёбу; в августе Гёте возвращается во Франкфурт без степени, долгое выздоровление обращает его к мистике и религии.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1768 года у Гёте открылось кровотечение из-за обострения туберкулёза, и потому в августе он вернулся домой во Франкфурт без учёной степени на горе отцу."
+      }
+    },
+    {
+      "key": "love-1770",
+      "date": {
+        "from": "1770",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Любовь к Фридерике Брион",
+      "long": "Влюбляется в дочь пастора из Зезенгейма; разрыв наступает с отъездом из Страсбурга, о нём Фридерика узнаёт из письма. Ей посвящены стихи страсбургского периода.",
+      "place": {
+        "label": "Зезенгейм"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1770 году, во время одной из поездок со своим сокурсником по Эльзасу, Гёте знакомится в семье провинциального пастора Иоганна Якоба Бриона с его младшей дочерью Фридерикой Брион и влюбляется в неё."
+      }
+    },
+    {
+      "key": "education-1770",
+      "date": {
+        "from": "1770-04",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Страсбурге, знакомство с Гердером",
+      "long": "Продолжает изучать право в Страсбурге, где знакомится с Гердером, открывшим ему народную поэзию, и находит себя как поэт.",
+      "place": {
+        "label": "Страсбург"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1770 года он возвращается к учёбе, теперь уже в Страсбургском университете."
+      }
+    },
+    {
+      "key": "education-1771",
+      "date": {
+        "from": "1771",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Скандал вокруг диссертации",
+      "long": "Богословы сочли диссертацию оскорбительной; вместо докторской степени Гёте получает степень лиценциата, защитив 56 тезисов.",
+      "place": {
+        "label": "Страсбург"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1771 года Гёте представил к защите свою диссертационную работу (не сохранилась), где осветил вопрос взаимодействия государства и церкви."
+      }
+    },
+    {
+      "key": "other-1772",
+      "date": {
+        "from": "1772-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Казнь детоубийцы, свидетелем которой стал Гёте",
+      "long": "Присутствует на публичной казни детоубийцы Сусанны Маргареты Брандт; по мнению Сафрански, это личный фон «трагедии Гретхен».",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "works": [
+        {
+          "ref": "faust",
+          "note": "по Сафрански, личный фон «трагедии Гретхен»"
+        }
+      ],
+      "chapter": "storm",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Januar 1772 erlebte Goethe in Frankfurt die „düstere Zeremonie“ der öffentlichen Hinrichtung der Kindsmörderin Susanna Margaretha Brandt durch das Schwert."
+      }
+    },
+    {
+      "key": "love-1772",
+      "date": {
+        "from": "1772-05",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Безответная любовь к Шарлотте Буфф",
+      "long": "На практике в Вецларе влюбляется в Шарлотту Буфф, невесту знакомого; получив отказ, бежит из города. Этот опыт ляжет в основу романа.",
+      "place": {
+        "label": "Вецлар"
+      },
+      "works": [
+        {
+          "ref": "werther",
+          "note": "Гёте сам связывал роман с вецларским опытом; статья: написан через 18 месяцев на этом материале"
+        }
+      ],
+      "chapter": "storm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1772 года Гёте по настоянию отца отправился в город Вецлар для прохождения юридической практики. Невеста его знакомого Шарлотта Буфф не ответила на чувства Гёте, и тот покинул город."
+      }
+    },
+    {
+      "key": "career-1773",
+      "date": {
+        "from": "1773",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый литературный успех",
+      "long": "Драма приносит первый литературный успех и ставит Гёте во главе писателей «Бури и натиска».",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "works": [
+        {
+          "ref": "goetz"
+        }
+      ],
+      "chapter": "storm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его пьеса «Гёц фон Берлихинген» (1773) приносит ему первый литературный успех"
+      }
+    },
+    {
+      "key": "creation-1774",
+      "date": {
+        "from": "1774",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман за четыре недели и европейская слава",
+      "long": "Роман написан за четыре недели и вскоре приносит автору славу по всей Европе. Гёте писал, что работа вернула ему чувство свободы после кризиса.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "works": [
+        {
+          "ref": "werther",
+          "note": "признание Гёте о работе как о «генеральной исповеди»"
+        }
+      ],
+      "chapter": "storm",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "in dem Briefroman Die Leiden des jungen Werthers, den er Anfang 1774 innerhalb von nur vier Wochen niederschrieb"
+      }
+    },
+    {
+      "key": "love-1775",
+      "date": {
+        "from": "1775",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Помолвка с Лили Шёнеман и её расторжение",
+      "long": "Помолвка с Лили Шёнеман расторгнута в октябре по инициативе её матери из-за религиозных и других различий.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "storm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На Пасху 1775 года состоялась помолвка Гёте с дочерью Франкфуртского банкира Лили Шёнеман."
+      }
+    },
+    {
+      "key": "relocation-1775",
+      "date": {
+        "from": "1775-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Веймар по приглашению герцога",
+      "long": "По приглашению 18-летнего герцога Карла Августа переезжает ко двору в Веймаре, где остаётся до конца жизни.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "storm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гёте поселился в Веймаре в ноябре 1775 года после успеха своего первого романа"
+      }
+    },
+    {
+      "key": "career-1776",
+      "date": {
+        "from": "1776-06-11",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Тайный советник при герцоге",
+      "long": "Становится тайным легационным советником и членом совета при герцоге с жалованьем в 1200 талеров; членом совета остаётся до его роспуска в 1815 году.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "minister",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Goethe wurde am 11. Juni 1776 Geheimer Legationsrat und Mitglied des Geheimen Consiliums"
+      }
+    },
+    {
+      "key": "loss-1777",
+      "date": {
+        "from": "1777-06-08",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры Корнелии",
+      "long": "Умирает младшая сестра Корнелия, с которой Гёте был близок всю жизнь.",
+      "chapter": "minister",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P3373: Корнелия Шлоссер, died 1777-06-08"
+      }
+    },
+    {
+      "key": "other-1780",
+      "date": {
+        "from": "1780-06-23",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в масонскую ложу",
+      "long": "Принят в веймарскую масонскую ложу «Амалия»; в 1781 году становится подмастерьем, в 1782-м мастером.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "minister",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "am 23. Juni 1780 trat er der Loge bei."
+      }
+    },
+    {
+      "key": "loss-1782",
+      "date": {
+        "from": "1782-05-25",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умирает отец, Иоганн Каспар Гёте.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "minister",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Иоганн Каспар Гёте, died 1782-05-25"
+      }
+    },
+    {
+      "key": "career-1782",
+      "date": {
+        "from": "1782-06-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возведение в дворянство",
+      "long": "По ходатайству герцога император Иосиф II жалует Гёте дворянский диплом, что облегчало его службу при дворе.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "minister",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Auf Antrag des Herzogs erhielt er am 3. Juni 1782 von Kaiser Joseph II. das Adelsdiplom."
+      }
+    },
+    {
+      "key": "relocation-1786",
+      "date": {
+        "from": "1786-09-03",
+        "to": "1788-06-18",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Тайное бегство в Италию",
+      "long": "После кризиса в веймарской жизни тайно уезжает в Италию под именем Иоганна Филиппа Мёллера; с ноября в Риме. Возвращается в Веймар 18 июня 1788 года. Сам называл поездку «возрождением».",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "iphigenia",
+          "note": "в Италии переработана в стихи (статья о поездке)"
+        },
+        {
+          "ref": "egmont",
+          "note": "завершён в Италии"
+        },
+        {
+          "ref": "tasso",
+          "note": "работа продолжалась в Италии"
+        },
+        {
+          "ref": "italian-journey",
+          "note": "написана позже на основе дневников поездки"
+        }
+      ],
+      "chapter": "italy",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 3. September 1786 brach er ohne Abschied von einer Kur in Karlsbad auf."
+      }
+    },
+    {
+      "key": "love-1788",
+      "date": {
+        "from": "1788-07-12",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Кристианой Вульпиус",
+      "long": "Знакомится с Кристианой Вульпиус; она становится его возлюбленной и спутницей жизни, но остаётся закрыта для веймарского света.",
+      "place": {
+        "label": "Веймар"
+      },
+      "works": [
+        {
+          "ref": "roman-elegies",
+          "note": "образ римской возлюбленной слился с образом Кристианы (Зигрид Дамм)"
+        }
+      ],
+      "chapter": "classic",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "machte Goethe am 12. Juli 1788 Bekanntschaft mit der 23-jährigen Putzmacherin Christiane Vulpius"
+      }
+    },
+    {
+      "key": "child-1789",
+      "date": {
+        "from": "1789-12-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Августа",
+      "long": "Рождение сына Августа, единственного ребёнка Гёте и Кристианы, достигшего зрелого возраста.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "classic",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 25. Dezember 1789 gebar sie den Sohn August Walter."
+      }
+    },
+    {
+      "key": "loss-1791",
+      "date": {
+        "from": "1791",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть новорождённых детей",
+      "long": "Остальные дети Гёте и Кристианы мертворождённый сын в 1791 году и трое, прожившие лишь несколько дней, не выжили.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "classic",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ein Junge wurde 1791 tot geboren. Drei weitere gemeinsame Kinder überlebten die Geburt nur wenige Tage."
+      }
+    },
+    {
+      "key": "career-1791",
+      "date": {
+        "from": "1791",
+        "to": "1817",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство Веймарским театром",
+      "long": "Руководит Веймарским придворным театром, где ставятся его пьесы и пьесы Шиллера; в 1817 году уходит после конфликта с певицей Каролиной Ягеман.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "classic",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1791 году он стал директором-распорядителем театра в Веймаре"
+      }
+    },
+    {
+      "key": "war-1792",
+      "date": {
+        "from": "1792",
+        "to": "1793",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Поход против революционной Франции",
+      "long": "Сопровождает герцога в походе против революционной Франции, затем в 1793 году участвует в осаде Майнца; позднее описывает увиденное в автобиографической прозе.",
+      "chapter": "classic",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1792 году Гёте сопровождал герцога Карла Августа, командовавшего полком в прусской армии, во время австро-прусского похода против революционной Франции."
+      }
+    },
+    {
+      "key": "other-1794",
+      "date": {
+        "from": "1794",
+        "to": "1805",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Дружба и сотрудничество с Шиллером",
+      "long": "Сближение с Шиллером, начавшееся с совместной работы над журналом «Оры», даёт десятилетие тесного сотрудничества и становится основой веймарского классицизма.",
+      "place": {
+        "label": "Йена"
+      },
+      "works": [
+        {
+          "ref": "wilhelm-meister-apprenticeship",
+          "note": "Шиллер критически сопровождал работу, переписка 1795–1796"
+        },
+        {
+          "ref": "hermann-dorothea"
+        }
+      ],
+      "chapter": "classic",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1794 году завязал дружбу с драматургом, историком и философом Фридрихом Шиллером"
+      }
+    },
+    {
+      "key": "loss-1805",
+      "date": {
+        "from": "1805-05-09",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Шиллера",
+      "long": "Гёте не пошёл на похороны; в письме Цельтеру написал, что потерял друга и «половину своего существования».",
+      "place": {
+        "label": "Веймар"
+      },
+      "works": [
+        {
+          "ref": "faust",
+          "note": "по Сафрански, после смерти Шиллера Гёте возобновил работу над «Фаустом»"
+        }
+      ],
+      "chapter": "classic",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Die Nachricht von Schillers Tod am 9. Mai 1805 stürzte Goethe in einen Zustand der Betäubung."
+      }
+    },
+    {
+      "key": "love-1806",
+      "date": {
+        "from": "1806-10-14",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кристианой Вульпиус",
+      "long": "Венчание с Кристианой Вульпиус после спасения Гёте от французских мародёров в день битвы при Йене. На кольцах выгравирована дата.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Официальные отношения с Кристианой будут оформлены лишь спустя 18 лет — 14 октября 1806 года."
+      }
+    },
+    {
+      "key": "loss-1808",
+      "date": {
+        "from": "1808-09-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умирает мать, Катарина Элизабет Гёте.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Катарина Элизабет Гёте, died 1808-09-13"
+      }
+    },
+    {
+      "key": "other-1808",
+      "date": {
+        "from": "1808-10-02",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Встреча с Наполеоном в Эрфурте",
+      "long": "Принят Наполеоном на Эрфуртском конгрессе; 14 октября получает орден Почётного легиона, а от Александра I — орден Святой Анны.",
+      "place": {
+        "label": "Эрфурт"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с Наполеоном он свиделся 2 октября 1808 год в Эрфурте"
+      }
+    },
+    {
+      "key": "career-1810",
+      "date": {
+        "from": "1810",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Холодный приём учения о цвете",
+      "long": "Итог двадцати лет занятий оптикой получает слабый отклик: научный мир почти не заметил книгу, а Гёте остался недоволен.",
+      "place": {
+        "label": "Веймар"
+      },
+      "works": [
+        {
+          "ref": "theory-of-colours"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1810 veröffentlichte Goethe die aufwendig ausgestattete Farbenlehre in zwei Bänden und einem Band mit Bildtafeln. … Die Resonanz auf die Veröffentlichung war gering und erfüllte Goethe mit Unmut."
+      }
+    },
+    {
+      "key": "love-1814",
+      "date": {
+        "from": "1814",
+        "to": "1815",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Любовь к Марианне Виллемер",
+      "long": "Во Франкфурте и на мельнице Гербермюле знакомится с Марианной Юнг, будущей женой Виллемера; она становится его музой и соавтором стихов цикла.",
+      "place": {
+        "label": "Висбаден"
+      },
+      "works": [
+        {
+          "ref": "west-eastern-divan",
+          "note": "Марианна — муза и партнёр по сборнику; часть стихов Зулейки её"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Sommer 1814 reiste Goethe in die Rhein- und Maingegend. … Der fünfundsechzigjährige Goethe verliebte sich in Marianne."
+      }
+    },
+    {
+      "key": "loss-1816",
+      "date": {
+        "from": "1816-06",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Кристианы",
+      "long": "Умирает жена после долгой болезни; Гёте не присутствовал ни у её постели, ни на похоронах.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Goethes Frau Christiane starb im Juni 1816 nach langer Krankheit."
+      }
+    },
+    {
+      "key": "love-1821",
+      "date": {
+        "from": "1821",
+        "to": "1823",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Любовь к Ульрике фон Левецов",
+      "long": "Влюбляется в Ульрику фон Левецов в Мариенбаде; летом 1823 года просит её руки через великого герцога, получает вежливый отказ.",
+      "place": {
+        "label": "Мариенбад"
+      },
+      "works": [
+        {
+          "ref": "marienbad-elegy",
+          "note": "написана в карете на обратном пути в Веймар"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1821 году, в 72 года, Гёте влюбился в 17-летнюю Ульрику Левецов."
+      }
+    },
+    {
+      "key": "illness-1823",
+      "date": {
+        "from": "1823-02",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь сердца",
+      "long": "Тяжёлая болезнь, предположительно инфаркт; после выздоровления окружающим казалось, что он стал духовно активнее прежнего.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Februar 1823 erkrankte Goethe lebensbedrohlich, wahrscheinlich an einem Herzinfarkt."
+      }
+    },
+    {
+      "key": "loss-1830",
+      "date": {
+        "from": "1830-10-27",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Августа",
+      "long": "Единственный выживший сын Август умирает в Риме, за два года до смерти отца.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Август фон Гёте, died 1830-10-27"
+      }
+    },
+    {
+      "key": "creation-1831",
+      "date": {
+        "from": "1831",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершение «главного дела» жизни",
+      "long": "Завершена вторая часть трагедии, над которой Гёте работал почти шестьдесят лет; рукопись запечатана до публикации после его смерти.",
+      "place": {
+        "label": "Веймар"
+      },
+      "works": [
+        {
+          "ref": "faust",
+          "note": "запись в дневнике: «главное дело» жизни завершено"
+        }
+      ],
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 1831 года вторая часть «Фауста» была закончена."
+      }
+    },
+    {
+      "key": "death-1832",
+      "date": {
+        "from": "1832-03-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Веймаре",
+      "long": "Простудился в начале марта во время прогулки в открытой карете; умер в Веймаре в возрасте 82 лет.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гёте скончался 22 марта 1832 года в Веймаре."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "faust",
+      "title": "Фауст",
+      "qid": "Q29478",
+      "written": {
+        "from": 1773,
+        "to": 1831
+      }
+    },
+    {
+      "ref": "werther",
+      "title": "Страдания юного Вертера",
+      "qid": "Q151883",
+      "written": {
+        "from": 1774,
+        "to": 1774
+      }
+    },
+    {
+      "ref": "goetz",
+      "title": "Гёц фон Берлихинген",
+      "written": {
+        "from": 1771,
+        "to": 1773
+      }
+    },
+    {
+      "ref": "iphigenia",
+      "title": "Ифигения в Тавриде",
+      "written": {
+        "from": 1779,
+        "to": 1787
+      }
+    },
+    {
+      "ref": "egmont",
+      "title": "Эгмонт",
+      "qid": "Q1298242",
+      "written": {
+        "from": 1775,
+        "to": 1787
+      }
+    },
+    {
+      "ref": "tasso",
+      "title": "Торквато Тассо",
+      "written": {
+        "from": 1780,
+        "to": 1789
+      }
+    },
+    {
+      "ref": "roman-elegies",
+      "title": "Римские элегии",
+      "written": {
+        "from": 1788,
+        "to": 1790
+      }
+    },
+    {
+      "ref": "hermann-dorothea",
+      "title": "Герман и Доротея",
+      "written": {
+        "from": 1796,
+        "to": 1797
+      }
+    },
+    {
+      "ref": "wilhelm-meister-apprenticeship",
+      "title": "Годы учения Вильгельма Мейстера",
+      "qid": "Q1194031",
+      "written": {
+        "from": 1777,
+        "to": 1796
+      }
+    },
+    {
+      "ref": "elective-affinities",
+      "title": "Избирательное сродство",
+      "qid": "Q951198",
+      "written": {
+        "from": 1809,
+        "to": 1809
+      }
+    },
+    {
+      "ref": "west-eastern-divan",
+      "title": "Западно-восточный диван",
+      "qid": "Q1229968",
+      "written": {
+        "from": 1814,
+        "to": 1819
+      }
+    },
+    {
+      "ref": "theory-of-colours",
+      "title": "К учению о цвете",
+      "qid": "Q112667736",
+      "written": {
+        "from": 1790,
+        "to": 1810
+      }
+    },
+    {
+      "ref": "metamorphosis-plants",
+      "title": "Опыт о метаморфозе растений",
+      "written": {
+        "from": 1790,
+        "to": 1790
+      }
+    },
+    {
+      "ref": "italian-journey",
+      "title": "Итальянское путешествие",
+      "qid": "Q455305",
+      "written": {
+        "from": 1813,
+        "to": 1817
+      }
+    },
+    {
+      "ref": "poetry-and-truth",
+      "title": "Поэзия и правда",
+      "written": {
+        "from": 1811,
+        "to": 1831
+      }
+    },
+    {
+      "ref": "erlkonig",
+      "title": "Лесной царь",
+      "qid": "Q684469",
+      "written": {
+        "from": 1782,
+        "to": 1782
+      }
+    },
+    {
+      "ref": "marienbad-elegy",
+      "title": "Мариенбадская элегия",
+      "written": {
+        "from": 1823,
+        "to": 1823
+      }
+    }
+  ]
+}

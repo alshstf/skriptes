@@ -1,0 +1,183 @@
+{
+  "qid": "Q1959490",
+  "name": "Александр Александрович Бушков",
+  "born": "1956-04-05",
+  "died": "2025-09-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%88%D0%BA%D0%BE%D0%B2%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 155273174
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Aleksandr_Bushkov",
+      "rev": 1316289223
+    }
+  ],
+  "chapters": [
+    {
+      "key": "minusinsk-abakan",
+      "title": "Минусинск и Абакан",
+      "from": 1956,
+      "to": 1980
+    },
+    {
+      "key": "krasnoyarsk-pisatel",
+      "title": "Красноярск, первые публикации",
+      "from": 1981,
+      "to": 2002
+    },
+    {
+      "key": "uedinenie",
+      "title": "Годы известности и уединения",
+      "from": 2003,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956-04-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Минусинске",
+      "long": "Родился в Минусинске Красноярского края.",
+      "place": {
+        "label": "Минусинск"
+      },
+      "chapter": "minusinsk-abakan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в Минусинске 5 апреля 1956 года."
+      }
+    },
+    {
+      "key": "relocation-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Абакан",
+      "long": "Семья переехала из Минусинска в соседний Абакан. После школы Бушков отказался от дальнейшего образования.",
+      "place": {
+        "label": "Абакан"
+      },
+      "chapter": "minusinsk-abakan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году семья Бушкова переехала в соседний Абакан."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая опубликованная повесть",
+      "long": "Первая повесть опубликована в 1981 году; первая книга вышла в 1986 году. До этого он работал почтальоном, грузчиком, страховым агентом, рабочим геофизической экспедиции.",
+      "chapter": "krasnoyarsk-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая повесть была опубликована в 1981 году, первая книга — в 1986 году."
+      }
+    },
+    {
+      "key": "loss-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель губернатора Лебедя, конец службы советником",
+      "long": "После гибели губернатора Красноярского края Александра Лебедя в 2002 году Бушков перестал совмещать писательство с работой его советника.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "krasnoyarsk-pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Prior to the death in a helicopter crash of the former governor of Krasnoyarsk Krai, Alexander Lebed in 2002, Bushkov had held office as an advisor and aide to the governor."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Антиприз «Антизилант» на Зиланткон",
+      "long": "На конвенте «Зиланткон-2005» в Казани ему присуждён антиприз «Антизилант» за серию романов «О Сварóге».",
+      "place": {
+        "label": "Казань"
+      },
+      "chapter": "uedinenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На конвенте Зиланткон-2005 в Казани писателю был присуждён антиприз «Антизилант»"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011-04-04",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль ордена «За заслуги перед Отечеством»",
+      "long": "Награждён медалью ордена «За заслуги перед Отечеством» II степени за заслуги в области культуры, печати и телерадиовещания.",
+      "chapter": "uedinenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Медаль ордена «За заслуги перед Отечеством» II степени (4 апреля 2011 года)"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главный приз премии имени Ефремова",
+      "long": "Получил главный приз литературной премии имени И. А. Ефремова.",
+      "chapter": "uedinenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат главного приза литературной премии имени И. А. Ефремова 2021 года."
+      }
+    },
+    {
+      "key": "death-2025",
+      "date": {
+        "from": "2025-09-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Красноярске",
+      "long": "Умер от остановки сердца в больнице, куда был госпитализирован с пневмонией. Похоронен на Аллее Славы Бадалыкского кладбища в Красноярске.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "uedinenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 29 сентября 2025 года от остановки сердца в больнице, куда был госпитализирован в связи с пневмонией."
+      }
+    }
+  ]
+}

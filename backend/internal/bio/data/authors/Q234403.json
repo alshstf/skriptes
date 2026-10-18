@@ -1,0 +1,325 @@
+{
+  "qid": "Q234403",
+  "name": "Робин Хобб",
+  "born": "1952-03-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B1%D0%B8%D0%BD_%D0%A5%D0%BE%D0%B1%D0%B1",
+      "rev": 155059324
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robin_Hobb",
+      "rev": 1375038988
+    }
+  ],
+  "chapters": [
+    {
+      "key": "california-alaska",
+      "title": "Калифорния и Аляска",
+      "from": 1952,
+      "to": 1969
+    },
+    {
+      "key": "kodiak-lindholm",
+      "title": "Кадьяк, дети и Меган Линдхольм",
+      "from": 1970,
+      "to": 1994
+    },
+    {
+      "key": "hobb-elderlings",
+      "title": "Робин Хобб и Элдерлинги",
+      "from": 1995,
+      "to": 2017
+    },
+    {
+      "key": "late-years",
+      "title": "Признание и поздние годы",
+      "from": 2018,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-03-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Беркли, Калифорния",
+      "long": "Маргарет Астрид Линдхольм родилась 5 марта 1952 года в Беркли, штат Калифорния.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "california-alaska",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Margaret Astrid Lindholm was born in Berkeley, California, in 1952"
+      }
+    },
+    {
+      "key": "relocation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи на Аляску, в Фэрбанкс",
+      "long": "В 1961 году семья переехала на Аляску в город Фэрбанкс, где будущая писательница выросла.",
+      "place": {
+        "label": "Фэрбанкс"
+      },
+      "chapter": "california-alaska",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году её семья переехала на Аляску в город Фэрбанкс."
+      }
+    },
+    {
+      "key": "love-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с рыбаком Фредом Огденом, жизнь на Кадьяке",
+      "long": "В 1970 году вышла замуж за Фреда Огдена, моряка и рыбака, и переехала к нему на остров Кадьяк у берегов Аляски.",
+      "place": {
+        "label": "Кадьяк"
+      },
+      "chapter": "kodiak-lindholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году Мэган вышла замуж за местного рыбака и переехала к нему на остров Кадьяк, у берегов Аляски."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый гонорар за опубликованный рассказ",
+      "long": "В 1979 году получила первый гонорар за публикацию рассказа, вышедшего под именем Меган Линдхольм.",
+      "chapter": "kodiak-lindholm",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый гонорар за публикацию она получила в 1979 году за рассказ «Кости Дулата»."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое признание как Меган Линдхольм",
+      "long": "Роман 1986 года принёс ей более широкое внимание, хотя книги Линдхольм продавались плохо.",
+      "works": [
+        {
+          "ref": "wizard-of-the-pigeons"
+        }
+      ],
+      "chapter": "kodiak-lindholm",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her 1986 novel Wizard of the Pigeons was one of the precursors of the urban fantasy genre, and was the first work to bring her wider attention."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Псевдоним Робин Хобб и коммерческий успех",
+      "long": "В 1995 году взяла псевдоним Робин Хобб для эпического фэнтези; цикл о Фитце принёс успех и признание.",
+      "works": [
+        {
+          "ref": "assassins-apprentice"
+        }
+      ],
+      "chapter": "hobb-elderlings",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 году она взяла псевдоним Робин Хобб для фэнтези-романа «Ученик убийцы», первого в цикле «Элдерлингов»."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Миллион проданных экземпляров девяти романов",
+      "long": "К 2003 году девять первых романов о мире Элдерлингов разошлись тиражом более миллиона экземпляров.",
+      "chapter": "hobb-elderlings",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As of 2003, Robin Hobb had sold over one million copies of her first nine novels"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отзыв The Times: один из великих авторов фэнтези",
+      "long": "В 2005 году The Times назвала Хобб одним из великих современных авторов фэнтези.",
+      "chapter": "hobb-elderlings",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 2005 The Times described her as \"one of the great modern fantasy writers\""
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётная гостья Всемирного конвента фантастики",
+      "long": "В 2014 году была почётной гостьей 72-го Всемирного конвента научной фантастики в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "hobb-elderlings",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, Hobb was a Guest of Honor at the 72nd World Science Fiction Convention in London."
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Завершение цикла об Элдерлингах",
+      "long": "В 2017 году последним романом закончен цикл о мире Элдерлингов.",
+      "works": [
+        {
+          "ref": "fitz-and-fool"
+        }
+      ],
+      "chapter": "hobb-elderlings",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She concluded the Elderlings series in 2017"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всемирная премия фэнтези за заслуги перед жанром",
+      "long": "В 2021 году получила Всемирную премию фэнтези за заслуги перед жанром.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the World Fantasy Award—Life Achievement in 2021"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "wizard-of-the-pigeons",
+      "title": "Волшебник голубей",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "assassins-apprentice",
+      "title": "Ученик убийцы",
+      "qid": "Q2498822",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "royal-assassin",
+      "title": "Королевский убийца",
+      "qid": "Q926345",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "assassins-quest",
+      "title": "Странствия убийцы",
+      "qid": "Q2500981",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "liveship-traders",
+      "title": "Сага о живых кораблях",
+      "written": {
+        "from": 1998,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "tawny-man",
+      "title": "Сага о Шуте и убийце",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "soldier-son",
+      "title": "Сын солдата",
+      "written": {
+        "from": 2005,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "rain-wild-chronicles",
+      "title": "Хроники Дождевых чащоб",
+      "written": {
+        "from": 2009,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "fitz-and-fool",
+      "title": "Фитц и Шут",
+      "written": {
+        "from": 2014,
+        "to": 2017
+      }
+    }
+  ]
+}

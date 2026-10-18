@@ -1,0 +1,427 @@
+{
+  "qid": "Q314553",
+  "name": "Роберт Силверберг",
+  "born": "1935-01-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BB%D0%B2%D0%B5%D1%80%D0%B1%D0%B5%D1%80%D0%B3%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82",
+      "rev": 151895546
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robert_Silverberg",
+      "rev": 1372616167
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-columbia",
+      "title": "Бруклин и Колумбийский университет",
+      "from": 1935,
+      "to": 1956
+    },
+    {
+      "key": "million-words",
+      "title": "Миллион слов в год",
+      "from": 1957,
+      "to": 1964
+    },
+    {
+      "key": "new-silverberg",
+      "title": "«Новый Силверберг»",
+      "from": 1965,
+      "to": 1974
+    },
+    {
+      "key": "retirement-return",
+      "title": "Уход и возвращение в Маджипур",
+      "from": 1975,
+      "to": 1986
+    },
+    {
+      "key": "late-years",
+      "title": "Признание и поздние годы",
+      "from": 1987,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1935",
+      "date": {
+        "from": "1935-01-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в еврейской семье, единственный ребёнок.",
+      "place": {
+        "label": "Бруклин, Нью-Йорк"
+      },
+      "chapter": "brooklyn-columbia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роберт Силверберг (англ. Robert Silverberg, род. 15 января 1935, Бруклин, Нью-Йорк, США)"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Колумбийского университета",
+      "long": "Окончил Колумбийский университет со степенью бакалавра английской литературы; именно там изучил модернистскую литературу.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "brooklyn-columbia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил Колумбийский университет, получив степень бакалавра английской литературы в 1956 году"
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Барбарой Браун",
+      "long": "Женился на Барбаре Браун; в 1976 году они расстались, около 1986 года развелись.",
+      "chapter": "brooklyn-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and Barbara Brown married in 1956, separated in 1976 and divorced a decade later."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия «Хьюго» как лучшему начинающему автору",
+      "long": "Получил первую премию «Хьюго» как лучший начинающий автор.",
+      "chapter": "million-words",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а уже в следующем году он получил свою первую премию «Хьюго», как «лучший начинающий автор»"
+      }
+    },
+    {
+      "key": "career-1957-2",
+      "date": {
+        "from": "1957",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Миллион слов в год для журналов",
+      "long": "По собственным подсчётам, писал по миллиону слов в год для журналов и книжных серий под своим именем и псевдонимами.",
+      "chapter": "million-words",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В следующие четыре года Силверберг по его собственным подсчётам написал по миллиону слов за год для различных журналов."
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Крах рынка фантастики, работа в других жанрах",
+      "long": "Рынок фантастики рухнул; Силверберг перешёл к историческим книгам, детективам и эротике, часть под псевдонимами. Позже объяснял это долгом за купленный дом.",
+      "chapter": "million-words",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959 году рынок научной фантастики потерпел крах, и Силверберг направил свой писательский талант в другие направления"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за лучшую повесть",
+      "long": "«Ночные крылья» получили «Хьюго» за лучшую повесть.",
+      "works": [
+        {
+          "ref": "nightwings"
+        }
+      ],
+      "chapter": "new-silverberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1969 году его «Ночные крылья» получили премию «Хьюго» за лучшую повесть"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный гость Мирокона",
+      "long": "Почётный гость Всемирного конвента научной фантастики; в этом году также получил «Небьюлу» за рассказ.",
+      "chapter": "new-silverberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году он был почётным гостем на Мировом Съезде Научной Фантастики (Мирконе)."
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Две премии «Небьюла»",
+      "long": "Две премии «Небьюла»: за роман и за рассказ.",
+      "works": [
+        {
+          "ref": "a-time-of-changes"
+        },
+        {
+          "ref": "good-news-from-the-vatican"
+        }
+      ],
+      "chapter": "new-silverberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1971 году — за роман «Время перемен» и рассказ «Добрые вести из Ватикана» он получает две премии «Небьюла»."
+      }
+    },
+    {
+      "key": "relocation-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Пожар в доме, болезнь и переезд на Западное побережье",
+      "long": "После сильного пожара в доме и нарушения работы щитовидной железы переехал из Нью-Йорка на Западное побережье.",
+      "place": {
+        "label": "Западное побережье США"
+      },
+      "chapter": "new-silverberg",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After suffering through the stresses of a major house fire and a thyroid malfunction, Silverberg moved from his native New York City to the West Coast in 1972"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Объявленный уход из фантастики",
+      "long": "Объявил об уходе из литературы, сославшись на усталость.",
+      "chapter": "retirement-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году Силверберг отошёл от фантастики, мотивировав это усталостью после лет тяжёлой и плодотворной работы."
+      }
+    },
+    {
+      "key": "family-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Расставание с Барбарой",
+      "long": "Расстался с Барбарой Браун; развод оформлен спустя десять лет.",
+      "chapter": "retirement-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and Barbara Brown married in 1956, separated in 1976 and divorced a decade later."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение в литературу",
+      "long": "Вернулся к писательству романом, положившим начало циклу о Маджипуре.",
+      "works": [
+        {
+          "ref": "lord-valentines-castle"
+        }
+      ],
+      "chapter": "retirement-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Но в 1980 году он вернулся со своим романом «Замок лорда Валентина», действие в котором происходит на планете Маджипур"
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Карен Хабер",
+      "long": "Женился на писательнице-фантасте Карен Хабер.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Silverberg and science fiction writer Karen Haber married in 1987."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Великого Мастера",
+      "long": "Назван Великим Мастером американской фантастики.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 2004 году Американская Ассоциация Фантастов назвала его Великим Мастером (Grand Master)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "revolt-on-alpha-c",
+      "title": "Восстание на Альфе-С",
+      "written": {
+        "from": 1955,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "hawksbill-station",
+      "title": "Станция Хоксбилл",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "to-open-the-sky",
+      "title": "Открытое небо",
+      "written": {
+        "from": 1965,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "downward-to-the-earth",
+      "title": "Вниз на Землю",
+      "written": {
+        "from": 1969,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "to-live-again",
+      "title": "Прожить заново",
+      "written": {
+        "from": 1968,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "the-world-inside",
+      "title": "Вертикальный мир",
+      "written": {
+        "from": 1970,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "dying-inside",
+      "title": "Умирая в себе",
+      "qid": "Q2916242",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "nightwings",
+      "title": "Ночные крылья",
+      "written": {
+        "from": 1968,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "a-time-of-changes",
+      "title": "Время перемен",
+      "written": {
+        "from": 1970,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "good-news-from-the-vatican",
+      "title": "Добрые вести из Ватикана",
+      "qid": "Q4163834",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "born-with-the-dead",
+      "title": "Рождённый с мёртвым",
+      "written": {
+        "from": 1974,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "lord-valentines-castle",
+      "title": "Замок лорда Валентина",
+      "written": {
+        "from": 1979,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "sailing-to-byzantium",
+      "title": "Плаванье в Византию",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    }
+  ]
+}

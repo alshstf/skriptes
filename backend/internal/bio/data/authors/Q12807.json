@@ -1,0 +1,650 @@
+{
+  "qid": "Q12807",
+  "name": "Умберто Эко",
+  "born": "1932-01-05",
+  "died": "2016-02-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%BA%D0%BE%2C_%D0%A3%D0%BC%D0%B1%D0%B5%D1%80%D1%82%D0%BE",
+      "rev": 155280255
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Umberto_Eco",
+      "rev": 1379803411
+    },
+    {
+      "id": "itwiki",
+      "url": "https://it.wikipedia.org/wiki/Umberto_Eco",
+      "rev": 152926137
+    }
+  ],
+  "chapters": [
+    {
+      "key": "alessandria-turin",
+      "title": "Алессандрия и Турин",
+      "from": 1932,
+      "to": 1954
+    },
+    {
+      "key": "rai-bompiani",
+      "title": "РАИ, Бомпиани, «Открытое произведение»",
+      "from": 1955,
+      "to": 1968
+    },
+    {
+      "key": "semiotics-chair",
+      "title": "Кафедра семиотики",
+      "from": 1969,
+      "to": 1979
+    },
+    {
+      "key": "rose-pendulum",
+      "title": "Роза и Маятник",
+      "from": 1980,
+      "to": 1993
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние романы и уход",
+      "from": 1994,
+      "to": 2016
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1932",
+      "date": {
+        "from": "1932-01-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Алессандрии",
+      "long": "Родился в Алессандрии, Пьемонт, в семье бухгалтера Джулио Эко и Джованны Бизио.",
+      "place": {
+        "label": "Алессандрия"
+      },
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Eco was born on 5 January 1932 in the city of Alessandria, in Piedmont in northern Italy."
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Освобождение горной деревни, где он жил с матерью",
+      "long": "Во время войны Эко с матерью жил в деревне в горах Пьемонта; в 1945 году деревню освободили.",
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His village was liberated in 1945, and he was exposed to American comic books, the European Resistance, and the Holocaust."
+      }
+    },
+    {
+      "key": "faith-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Уход из студенческого движения Католического действия",
+      "long": "Ушёл с поста в студенческом движении Католического действия, поспорив с Луиджи Гедда.",
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1954 lasciò l'incarico (così come avevano fatto Carlo Carretto e Mario Rossi) in polemica con Luigi Gedda."
+      }
+    },
+    {
+      "key": "faith-1954-2",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Утрата веры, уход из Католической церкви",
+      "long": "Во время учёбы в Туринском университете, занимаясь Фомой Аквинским, перестал верить в Бога и покинул католическую церковь.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "и в 1954 году его окончил (бакалавр философии). Во время обучения Умберто стал атеистом и покинул Католическую Церковь."
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом по эстетике Фомы Аквинского",
+      "long": "Окончил Туринский университет, защитив диплом по эстетике Фомы Аквинского у Луиджи Пареизона.",
+      "place": {
+        "label": "Турин"
+      },
+      "works": [
+        {
+          "ref": "il-problema-estetico"
+        }
+      ],
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "writing his thesis on the aesthetics of medieval philosopher and theologian Thomas Aquinas under the supervision of Luigi Pareyson, for which he earned his Laurea degree in philosophy in 1954."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа на государственном телевидении РАИ",
+      "long": "Выиграл конкурс РАИ и работал в Милане, готовя культурные программы; в 1958 году оставил РАИ.",
+      "place": {
+        "label": "Милан"
+      },
+      "chapter": "alessandria-turin",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1954 partecipò e vinse un concorso della Rai per l'assunzione di telecronisti e nuovi funzionari"
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая книга по мотивам диплома",
+      "long": "Вышла первая книга — расширенный вариант дипломной работы; после неё Эко стал ассистентом в Турине.",
+      "works": [
+        {
+          "ref": "il-problema-estetico"
+        }
+      ],
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1956 pubblicò il suo primo libro, un'estensione della sua tesi di laurea dal titolo Il problema estetico in San Tommaso."
+      }
+    },
+    {
+      "key": "war-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Обязательная военная служба",
+      "long": "Оставил РАИ и Туринский университет ради 18 месяцев обязательной службы в итальянской армии.",
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1958, Eco left RAI and the University of Turin to complete 18 months of compulsory military service in the Italian Army."
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор издательства Бомпьяни",
+      "long": "Редактировал серию «Новые идеи» и был одним из редакторов издательства Бомпьяни в Милане.",
+      "place": {
+        "label": "Милан"
+      },
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Dal 1959 al 1975 fu condirettore editoriale di importanza fondamentale, della casa editrice Bompiani."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Право преподавать эстетику в университете",
+      "long": "Получил право преподавания (libera docenza) по эстетике; началась университетская карьера.",
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Приват-доцент эстетики (1961)."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Международный успех первой теоретической книги",
+      "long": "Эссе принесло Эко международную известность и дало теоретическую базу авангардной «Группе 63».",
+      "works": [
+        {
+          "ref": "opera-aperta"
+        }
+      ],
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1962 pubblicò il saggio Opera aperta che, con sorpresa dello stesso autore, ebbe notevole risonanza a livello internazionale"
+      }
+    },
+    {
+      "key": "love-1962",
+      "date": {
+        "from": "1962-09-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ренате Рамге",
+      "long": "Женился на немке Ренате Рамге, преподавательнице искусств; у пары родились сын Стефано и дочь Карлотта.",
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In September 1962 he married Renate Ramge, a German graphic designer and art teacher with whom he had a son and a daughter."
+      }
+    },
+    {
+      "key": "other-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Семинар о «семиологической герилье» в Нью-Йорке",
+      "long": "Провёл в Нью-Йорке семинар о семиологической герилье; позже текст вошёл в сборник эссе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "rai-bompiani",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "nel 1967 svolse a New York il seminario \"Per una guerriglia semiologica\""
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание семиотического журнала Versus",
+      "long": "Стал одним из основателей журнала по семиотике Versus и оставался в его руководстве до смерти.",
+      "chapter": "semiotics-chair",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1971, Eco co-founded Versus: Quaderni di studi semiotici"
+      }
+    },
+    {
+      "key": "other-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подпись под письмом по делу Пинелли",
+      "long": "Подписал открытое письмо в «Эспрессо» по делу Пинелли и последующее заявление в поддержку «Лотта континуа».",
+      "chapter": "semiotics-chair",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1971 fu tra i 757 firmatari della lettera aperta a L'Espresso sul caso Pinelli"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Кафедра семиотики в Болонье",
+      "long": "Получил кафедру семиотики в Болонском университете, где преподавал до выхода на пенсию.",
+      "place": {
+        "label": "Болонья"
+      },
+      "works": [
+        {
+          "ref": "trattato-di-semiotica-generale"
+        }
+      ],
+      "chapter": "semiotics-chair",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Профессор семиотики Болонского университета (с 1975 года)."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в прозе и мировой успех",
+      "long": "Первый роман стал международным бестселлером и принёс писателю мировую известность.",
+      "works": [
+        {
+          "ref": "name-of-the-rose"
+        }
+      ],
+      "chapter": "rose-pendulum",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1980 Eco esordì nella narrativa. Il suo primo romanzo, Il nome della rosa, riscontrò un grande successo sia presso la critica sia presso il pubblico"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Стрега",
+      "long": "Получил итальянскую премию Стрега.",
+      "works": [
+        {
+          "ref": "name-of-the-rose"
+        }
+      ],
+      "chapter": "rose-pendulum",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Стрега 1981-01-01"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "to": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка «Бустина ди Минерва» в «Эспрессо»",
+      "long": "Вёл в журнале «Эспрессо» колонку «Бустина ди Минерва»; последняя вышла 27 января 2016 года.",
+      "chapter": "rose-pendulum",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a twice-monthly newspaper column \"La Bustina di Minerva\" (Minerva's Matchbook) in the magazine L'Espresso beginning in 1985"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание отделения коммуникации в Сан-Марино",
+      "long": "Основал кафедру медиаисследований в Университете Сан-Марино.",
+      "place": {
+        "label": "Сан-Марино"
+      },
+      "works": [
+        {
+          "ref": "foucault-pendulum"
+        }
+      ],
+      "chapter": "rose-pendulum",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1988, Eco founded the Department of Media Studies at the University of the Republic of San Marino"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "to": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Нортоновские лекции в Гарварде",
+      "long": "Приглашённый профессор Гарварда (Нортоновская кафедра поэзии); лекции вышли отдельной книгой.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "rose-pendulum",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1992 to 1993, Eco was a visitor at Harvard, as the Charles Eliot Norton Professor of Poetry."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия принцессы Астурийской",
+      "long": "Награждён премией принцессы Астурийской в области связи и гуманитарной деятельности.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия принцессы Астурийской в области связи и гуманитарной деятельности 2000-01-01"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из преподавания по возрасту",
+      "long": "Вышел на пенсию по возрасту; с 2008 года — почётный профессор Болонского университета.",
+      "place": {
+        "label": "Болонья"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nell'ottobre 2007 si è ritirato dall'insegnamento per limiti di età."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый куратор Лувра",
+      "long": "Как приглашённый куратор Лувра организовал серию культурных мероприятий.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "nel mese di novembre 2009 organizzò una serie di eventi e manifestazioni culturali"
+      }
+    },
+    {
+      "key": "death-2016",
+      "date": {
+        "from": "2016-02-19",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака поджелудочной железы",
+      "long": "Умер у себя дома в Милане от рака поджелудочной железы; прощание прошло 23 февраля в замке Сфорца.",
+      "place": {
+        "label": "Милан"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Eco died at his Milanese home of pancreatic cancer, from which he had been suffering for two years, on the night of 19 February 2016."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "il-problema-estetico",
+      "title": "Проблема эстетики у Фомы Аквинского",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "opera-aperta",
+      "title": "Открытое произведение",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "diario-minimo",
+      "title": "Diario minimo",
+      "qid": "Q16549491",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "apocalittici-e-integrati",
+      "title": "Апокалиптики и интегрированные",
+      "qid": "Q3620661",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "la-struttura-assente",
+      "title": "Отсутствующая структура",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "trattato-di-semiotica-generale",
+      "title": "Трактат по общей семиотике",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "name-of-the-rose",
+      "title": "Имя розы",
+      "qid": "Q172850",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "foucault-pendulum",
+      "title": "Маятник Фуко",
+      "qid": "Q437791",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "island-of-the-day-before",
+      "title": "Остров накануне",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "kant-and-the-platypus",
+      "title": "Кант и утконос",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "baudolino",
+      "title": "Баудолино",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "mysterious-flame-of-queen-loana",
+      "title": "Таинственное пламя царицы Лоаны",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "prague-cemetery",
+      "title": "Пражское кладбище",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "numero-zero",
+      "title": "Нулевой номер",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

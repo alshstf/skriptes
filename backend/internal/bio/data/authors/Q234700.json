@@ -1,0 +1,329 @@
+{
+  "qid": "Q234700",
+  "name": "Конни Уиллис",
+  "born": "1945-12-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D0%BB%D0%B8%D1%81%2C_%D0%9A%D0%BE%D0%BD%D0%BD%D0%B8",
+      "rev": 152092393
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Connie_Willis",
+      "rev": 1375780859
+    }
+  ],
+  "chapters": [
+    {
+      "key": "denver-university",
+      "title": "Денвер и университет",
+      "from": 1945,
+      "to": 1967
+    },
+    {
+      "key": "teacher-years",
+      "title": "Школа и первые рассказы",
+      "from": 1968,
+      "to": 1981
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Профессия писателя",
+      "from": 1982,
+      "to": 1991
+    },
+    {
+      "key": "oxford-time-travel",
+      "title": "Оксфордские путешественники во времени",
+      "from": 1992,
+      "to": 2008
+    },
+    {
+      "key": "grand-master",
+      "title": "Зал славы и Грандмастер",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-12-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Денвере",
+      "long": "Констанс Илейн Триммер родилась 31 декабря 1945 года в Денвере, штат Колорадо.",
+      "place": {
+        "label": "Денвер"
+      },
+      "chapter": "denver-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Конни Уиллис родилась 31 декабря 1945 года в Денвере (штат Колорадо)."
+      }
+    },
+    {
+      "key": "education-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Северного Колорадо",
+      "long": "Окончила Колорадский государственный колледж (ныне Университет Северного Колорадо) со степенями по английскому языку и начальному образованию.",
+      "chapter": "denver-university",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Willis is a 1967 graduate of Colorado State College, now the University of Northern Colorado, where she completed degrees in English and Elementary Education."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая публикация фантастического рассказа",
+      "long": "Первый опубликованный рассказ «The Secret of Santa Titicaca» вышел в журнале Worlds of Fantasy в декабре 1970 года.",
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Willis's first published story was \"The Secret of Santa Titicaca\" in Worlds of Fantasy, Winter 1970 (December)."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Грант NEA и уход из школы ради писательства",
+      "long": "В 1982 году, после получения гранта Национального фонда искусств, оставила работу учителя и стала профессиональным писателем; в тот же год вышел дебютный роман в соавторстве с Синтией Фелис.",
+      "works": [
+        {
+          "ref": "water-witch"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "published by Ace Books in 1982. After receiving a National Endowment for the Arts grant that year, she left her teaching job and became a full-time writer."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое признание: «Хьюго» и «Небьюла»",
+      "long": "В 1983 году за повесть о студенте-историке в Лондоне времён бомбардировок получила премии «Хьюго» и «Небьюла»; тогда же отмечен рассказ «Письмо от Клири».",
+      "works": [
+        {
+          "ref": "fire-watch"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Хьюго за лучшую короткую повесть 1983-01-01"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кэмпбелла",
+      "long": "В 1988 году получила Мемориальную премию Джона Кэмпбелла за роман о неразделённой любви.",
+      "works": [
+        {
+          "ref": "lincolns-dreams"
+        }
+      ],
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1988 году «Мечты Линкольна» (англ. Lincoln’s Dreams) — повествование о неразделённой женской любви — приносит ей Мемориальную премию Дж. Кемпбелла"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Хьюго» и «Небьюла» за роман о чуме",
+      "long": "В 1993 году роман о путешествии в XIV век в разгар чумы получил премии «Хьюго», «Небьюла» и «Локус»; в тот же год отмечен рассказ «Даже у королевы».",
+      "works": [
+        {
+          "ref": "doomsday-book"
+        }
+      ],
+      "chapter": "oxford-time-travel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший роман 1993-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» за роман о путешествии во времени",
+      "long": "В 1999 году вторая книга оксфордского цикла получила премии «Хьюго» и «Локус».",
+      "works": [
+        {
+          "ref": "to-say-nothing-of-the-dog"
+        }
+      ],
+      "chapter": "oxford-time-travel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Хьюго» за лучший роман 1999-01-01"
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Инцидент с Харланом Эллисоном на церемонии",
+      "long": "На церемонии «Хьюго» 2006 года, вручая награду Харлану Эллисону, оказалась в центре скандала с его жестом на сцене.",
+      "chapter": "oxford-time-travel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At the 2006 Hugo Awards ceremony, Willis presented writer Harlan Ellison with a special committee award."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Включение в Зал славы НФ и фэнтези",
+      "long": "В 2009 году введена в Зал славы научной фантастики и фэнтези.",
+      "chapter": "grand-master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was inducted by the Science Fiction Hall of Fame in 2009"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Грандмастера SFWA",
+      "long": "В 2011 году Ассоциация писателей-фантастов Америки присвоила ей звание 28-го Грандмастера; в тот же год роман получил «Хьюго», «Небьюлу» и «Локус».",
+      "works": [
+        {
+          "ref": "blackout-all-clear"
+        }
+      ],
+      "chapter": "grand-master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the Science Fiction Writers of America named her its 28th SFWA Grand Master in 2011."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "water-witch",
+      "title": "Water Witch",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "fire-watch",
+      "title": "Пожарная охрана",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "lincolns-dreams",
+      "title": "Мечты Линкольна",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "doomsday-book",
+      "title": "Книга Страшного суда",
+      "qid": "Q2603313",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "bellwether",
+      "title": "Bellwether",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "to-say-nothing-of-the-dog",
+      "title": "Не считая собаки",
+      "qid": "Q2719299",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "passage",
+      "title": "Passage",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "blackout-all-clear",
+      "title": "Blackout/All Clear",
+      "qid": "Q2905261",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

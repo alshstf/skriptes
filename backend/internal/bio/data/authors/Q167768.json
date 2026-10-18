@@ -1,0 +1,547 @@
+{
+  "qid": "Q167768",
+  "name": "Уильям Мейкпис Теккерей",
+  "born": "1811-07-18",
+  "died": "1863-12-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BA%D0%BA%D0%B5%D1%80%D0%B5%D0%B9%2C_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC_%D0%9C%D0%B5%D0%B9%D0%BA%D0%BF%D0%B8%D1%81",
+      "rev": 154631053
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Makepeace_Thackeray",
+      "rev": 1380561861
+    }
+  ],
+  "chapters": [
+    {
+      "key": "calcutta-cambridge",
+      "title": "Калькутта, Чартерхаус, Кембридж",
+      "from": 1811,
+      "to": 1830
+    },
+    {
+      "key": "inheritance",
+      "title": "Наследство и неудачи",
+      "from": 1831,
+      "to": 1835
+    },
+    {
+      "key": "marriage-journalism",
+      "title": "Брак, болезнь жены, журналистика",
+      "from": 1836,
+      "to": 1846
+    },
+    {
+      "key": "fame",
+      "title": "Слава и лекции",
+      "from": 1847,
+      "to": 1856
+    },
+    {
+      "key": "last-years",
+      "title": "Выборы, «Корнхилл», последние годы",
+      "from": 1857,
+      "to": 1863
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1811",
+      "date": {
+        "from": "1811-07-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Калькутте",
+      "long": "Родился в Калькутте в семье чиновника Ост-Индской компании, единственный ребёнок.",
+      "place": {
+        "label": "Калькутта"
+      },
+      "chapter": "calcutta-cambridge",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уильям Теккерей родился 18 июля 1811 года в Калькутте (Британская Индия)"
+      }
+    },
+    {
+      "key": "relocation-1815",
+      "date": {
+        "from": "1815",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отправка в Англию, разлука с матерью",
+      "long": "После смерти отца мать отправила мальчика в Англию, сама осталась в Индии. Разлука с матерью, по его позднему признанию, тяжело на него повлияла.",
+      "chapter": "calcutta-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Richmond died in 1815, which caused Anne to send her son to England that same year, while she remained in India."
+      }
+    },
+    {
+      "key": "loss-1815",
+      "date": {
+        "from": "1815-09-13",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, Ричмонд Теккерей, умер от лихорадки 13 сентября 1815 года.",
+      "place": {
+        "label": "Калькутта"
+      },
+      "chapter": "calcutta-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "after Richmond had died of a fever on 13 September 1815"
+      }
+    },
+    {
+      "key": "relocation-1830",
+      "date": {
+        "from": "1830",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Путешествие по Европе, Веймар и Париж",
+      "long": "Жил в Веймаре и Париже, где учился рисованию у Ричарда Бонингтона.",
+      "place": {
+        "label": "Веймар"
+      },
+      "chapter": "calcutta-cambridge",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Оставив Кембридж в 1830 году, Теккерей отправился в путешествие по Европе: он жил в Веймаре и затем в Париже"
+      }
+    },
+    {
+      "key": "poverty-1832",
+      "date": {
+        "from": "1832",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Наследство, растраченное на карты и газеты",
+      "long": "Быстро растратил наследство: проигрыш в карты, две обанкротившиеся газеты, которые он финансировал, и крах индийских банков.",
+      "chapter": "inheritance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1832 году, достигнув совершеннолетия, Теккерей получил наследство — доход примерно в 500 фунтов в год."
+      }
+    },
+    {
+      "key": "love-1836",
+      "date": {
+        "from": "1836-08-20",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Изабелле Шоу",
+      "long": "Женился на Изабелле Гетин Шоу, дочери полковника; после этого перешёл на постоянную журналистскую работу ради содержания семьи.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thackeray's years of semi-idleness ended on 20 August 1836, when he married Isabella Gethin Shawe"
+      }
+    },
+    {
+      "key": "career-1837",
+      "date": {
+        "from": "1837",
+        "to": "1840",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рецензент в газете The Times",
+      "long": "Писал рецензии на книги для газеты The Times, а также сотрудничал с Fraser's Magazine.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1837 and 1840, he also reviewed books for The Times."
+      }
+    },
+    {
+      "key": "child-1837",
+      "date": {
+        "from": "1837-06-09",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны Изабеллы",
+      "long": "Родилась старшая дочь Анна Изабелла, впоследствии писательница.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Анна Изабелла Теккерей Ритчи 1837-06-09"
+      }
+    },
+    {
+      "key": "loss-1839",
+      "date": {
+        "from": "1839-03-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть младшей дочери Джейн",
+      "long": "Умерла в младенчестве вторая дочь Джейн, родившаяся в 1838 году.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Jane Thackeray 1839-03-14"
+      }
+    },
+    {
+      "key": "illness-1840",
+      "date": {
+        "from": "1840",
+        "to": "1845",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Психическая болезнь жены",
+      "long": "Депрессия жены после рождения третьего ребёнка перешла в стойкое психическое расстройство; в сентябре 1840 года при поездке в Ирландию она пыталась покончить с собой. До 1845 года она лечилась в клиниках.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his wife Isabella succumbed to depression after the birth of their third child in 1840."
+      }
+    },
+    {
+      "key": "child-1840",
+      "date": {
+        "from": "1840-05-27",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Гарриет",
+      "long": "Родилась третья дочь Гарриет Мариан, позднее жена Лесли Стивена.",
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Harriet Stephen 1840-05-27"
+      }
+    },
+    {
+      "key": "career-1843",
+      "date": {
+        "from": "1843",
+        "to": "1854",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постоянное сотрудничество с «Панчем»",
+      "long": "Постоянно сотрудничал с сатирическим журналом «Панч».",
+      "works": [
+        {
+          "ref": "book-of-snobs"
+        }
+      ],
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thackeray was a regular contributor to Punch between 1843 and 1854."
+      }
+    },
+    {
+      "key": "family-1845",
+      "date": {
+        "from": "1845",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Возвращение больной жены в Англию",
+      "long": "Вернул жену в Англию и поместил её на попечение в Кембервелле; сам остался с дочерьми и больше не вступал в постоянные отношения.",
+      "place": {
+        "label": "Кембервелл"
+      },
+      "chapter": "marriage-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she ended up in two different asylums in or near Paris until 1845, after which Thackeray took her back to England"
+      }
+    },
+    {
+      "key": "career-1847",
+      "date": {
+        "from": "1847-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всеобщая известность после выхода романа выпусками",
+      "long": "Роман выходил выпусками с января 1847 года; ещё до завершения публикации автор стал знаменитостью, его сравнивали с Диккенсом.",
+      "works": [
+        {
+          "ref": "vanity-fair"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the work that really established his fame was the novel Vanity Fair, which first appeared in serialised instalments beginning in January 1847"
+      }
+    },
+    {
+      "key": "illness-1849",
+      "date": {
+        "from": "1849",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлая болезнь, едва не ставшая смертельной",
+      "long": "В 1849 году перенёс болезнь, едва не закончившуюся смертью, в разгар работы над романом.",
+      "works": [
+        {
+          "ref": "pendennis",
+          "note": "болезнь пришлась на середину работы над романом"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a near-fatal one that struck him in 1849 in the middle of writing Pendennis"
+      }
+    },
+    {
+      "key": "love-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Запрет на встречи с Джейн Брукфилд",
+      "long": "Муж Джейн Брукфилд, к которой был привязан писатель, запретил ему визиты и переписку с ней.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1851, Mr. Brookfield barred Thackeray from further visits or correspondence with Jane."
+      }
+    },
+    {
+      "key": "career-1852",
+      "date": {
+        "from": "1852",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лекционное турне по Америке",
+      "long": "Лекционное турне по США; в Нью-Йорке познакомился с Салли Бакстер, которая в 1855 году вышла замуж за другого.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "english-humorists"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baxter, an American twenty years Thackeray's junior whom he met during a lecture tour in New York City in 1852, married another man in 1855."
+      }
+    },
+    {
+      "key": "career-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от сотрудничества с «Панчем»",
+      "long": "Прекратил сотрудничество с журналом «Панч».",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1854 году Теккерей отказался от сотрудничества с «Панчем»."
+      }
+    },
+    {
+      "key": "career-1857",
+      "date": {
+        "from": "1857-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поражение на парламентских выборах",
+      "long": "Баллотировался в парламент от либералов в Оксфорде и проиграл: 1070 голосов у Кардвелла против 1005 у Теккерея.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1857, Thackeray stood unsuccessfully as a Liberal for the city of Oxford in Parliament."
+      }
+    },
+    {
+      "key": "career-1860",
+      "date": {
+        "from": "1860",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор журнала «Корнхилл»",
+      "long": "Стал редактором нового журнала «Корнхилл», но тяготился этой ролью и предпочитал писать для него колонку.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1860, Thackeray became editor of the newly established Cornhill Magazine"
+      }
+    },
+    {
+      "key": "death-1863",
+      "date": {
+        "from": "1863-12-24",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от инсульта",
+      "long": "Умер от инсульта; похоронен на кладбище Кенсал Грин. Последний роман остался незаконченным.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "denis-duval",
+          "note": "роман остался незаконченным"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уильям Теккерей умер 24 декабря 1863 года от инсульта и был похоронен на лондонском кладбище Кенсал Грин."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "vanity-fair",
+      "title": "Ярмарка тщеславия",
+      "qid": "Q612836",
+      "written": {
+        "from": 1847,
+        "to": 1848
+      }
+    },
+    {
+      "ref": "barry-lyndon",
+      "title": "Записки Барри Линдона, эсквайра, писанные им самим",
+      "qid": "Q2124771",
+      "written": {
+        "from": 1844,
+        "to": 1844
+      }
+    },
+    {
+      "ref": "catherine",
+      "title": "Кэтрин",
+      "written": {
+        "from": 1839,
+        "to": 1840
+      }
+    },
+    {
+      "ref": "paris-sketch-book",
+      "title": "Книга парижских зарисовок",
+      "written": {
+        "from": 1840,
+        "to": 1840
+      }
+    },
+    {
+      "ref": "irish-sketch-book",
+      "title": "Книга ирландских зарисовок",
+      "written": {
+        "from": 1843,
+        "to": 1843
+      }
+    },
+    {
+      "ref": "book-of-snobs",
+      "title": "Записки сноба",
+      "written": {
+        "from": 1846,
+        "to": 1848
+      }
+    },
+    {
+      "ref": "pendennis",
+      "title": "Пенденнис",
+      "written": {
+        "from": 1848,
+        "to": 1850
+      }
+    },
+    {
+      "ref": "henry-esmond",
+      "title": "История Генри Эсмонда",
+      "written": {
+        "from": 1852,
+        "to": 1852
+      }
+    },
+    {
+      "ref": "english-humorists",
+      "title": "Английские юмористы XVIII века",
+      "written": {
+        "from": 1853,
+        "to": 1853
+      }
+    },
+    {
+      "ref": "the-newcomes",
+      "title": "Ньюкомы",
+      "written": {
+        "from": 1854,
+        "to": 1855
+      }
+    },
+    {
+      "ref": "the-virginians",
+      "title": "Вирджинцы",
+      "written": {
+        "from": 1857,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "four-georges",
+      "title": "Четыре Георга",
+      "written": {
+        "from": 1860,
+        "to": 1861
+      }
+    },
+    {
+      "ref": "denis-duval",
+      "title": "Дени Дюваль",
+      "written": {
+        "from": 1863,
+        "to": 1863
+      }
+    }
+  ]
+}
