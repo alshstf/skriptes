@@ -1,0 +1,174 @@
+{
+  "qid": "Q729301",
+  "name": "Ричард Лаймон",
+  "born": "1947-01-14",
+  "died": "2001-02-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D0%B9%D0%BC%D0%BE%D0%BD%2C_%D0%A0%D0%B8%D1%87%D0%B0%D1%80%D0%B4",
+      "rev": 154698294
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Richard_Laymon",
+      "rev": 1371545932
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Детство и учёба",
+      "from": 1947,
+      "to": 1969
+    },
+    {
+      "key": "rasskazy-i-redaktorstvo",
+      "title": "Рассказы, редакторство, семья",
+      "from": 1970,
+      "to": 1998
+    },
+    {
+      "key": "pozdnee-priznanie",
+      "title": "Поздняя слава",
+      "from": 1999,
+      "to": 2001
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-01-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго",
+      "long": "Родился 14 января 1947 года в Чикаго; вырос в окрестностях города.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 14 января 1947 года, Чикаго"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация рассказа в детективном журнале",
+      "long": "Первый рассказ вышел в 1970 году в «Ellery Queen’s Mystery Magazine».",
+      "chapter": "rasskazy-i-redaktorstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "был опубликован в 1970 году в журнале «Ellery Queen’s Mystery Magazine»"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Энн Мари Маршалл",
+      "long": "В августе 1976 года женился на Энн Мари Маршалл; у пары родилась дочь Келли.",
+      "chapter": "rasskazy-i-redaktorstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Laymon married Ann Marie Marshall in August 1976."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание: лучший роман ужасов года",
+      "long": "Science Fiction Chronicle назвал роман лучшим романом ужасов 1988 года.",
+      "works": [
+        {
+          "ref": "flesh"
+        }
+      ],
+      "chapter": "rasskazy-i-redaktorstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His novel Flesh was named Best Horror Novel of 1988 by the Science Fiction Chronicle"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Запоздалое признание в США",
+      "long": "С 1999 года, в сотрудничестве с издательством Leisure Books, получил запоздалое признание в США.",
+      "chapter": "pozdnee-priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Starting in 1999 and in association with Leisure Books, Laymon found delayed recognition in his homeland."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "to": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентство в Ассоциации писателей ужасов",
+      "long": "В 2000–2001 годах был президентом Ассоциации писателей ужасов (HWA).",
+      "chapter": "pozdnee-priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Laymon was president of the Horror Writers Association (2000–2001)."
+      }
+    },
+    {
+      "key": "death-2001",
+      "date": {
+        "from": "2001-02-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "Умер 14 февраля 2001 года в Лос-Анджелесе от сердечного приступа в возрасте 54 лет.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "pozdnee-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ричард Лаймон скончался 14 февраля 2001 года от сердечного приступа."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "flesh",
+      "title": "Плоть",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    }
+  ]
+}

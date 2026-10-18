@@ -1,0 +1,221 @@
+{
+  "qid": "Q1060636",
+  "name": "Дэниел Хэндлер",
+  "born": "1970-02-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D0%BD%D0%B4%D0%BB%D0%B5%D1%80%2C_%D0%94%D1%8D%D0%BD%D0%B8%D0%B5%D0%BB",
+      "rev": 153176138
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Daniel_Handler",
+      "rev": 1378424990
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Сан-Франциско и университет",
+      "from": 1970,
+      "to": 1991
+    },
+    {
+      "key": "pervye-knigi",
+      "title": "Музыка, отказы и Лемони Сникет",
+      "from": 1992,
+      "to": 2002
+    },
+    {
+      "key": "slava-i-semya",
+      "title": "Слава, семья, скандалы",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1970",
+      "date": {
+        "from": "1970-02-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сан-Франциско",
+      "long": "Родился в Сан-Франциско в семье Сандры Хэндлер, декана городского колледжа, и Луиса Хэндлера, бухгалтера; отец — еврейский беженец из Германии.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Handler was born in San Francisco, California, the son of Sandra Handler (née Walpole)"
+      }
+    },
+    {
+      "key": "education-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Уэслианского университета",
+      "long": "Окончил Уэслианский университет, где учился с 1988 года; там же познакомился с будущей женой.",
+      "place": {
+        "label": "Миддлтаун"
+      },
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated from Wesleyan University in 1992."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Студенческая поэтическая премия Коннектикута",
+      "long": "Получил премию Коннектикута для студентов-поэтов.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was awarded the 1992 Connecticut Student Poet Prize"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "37 отказов издателей дебютному роману",
+      "long": "Дебютный роман отвергли 37 раз из-за мрачной темы и тона, прежде чем он вышел в 1999 году.",
+      "works": [
+        {
+          "ref": "basic-eight"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Handler has said the novel was rejected 37 times before being published in 1999."
+      }
+    },
+    {
+      "key": "child-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына",
+      "long": "В семье Хэндлера и иллюстратора Лизы Браун родился сын.",
+      "chapter": "slava-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They have a child, born in 2003."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отстранение от сценария экранизации",
+      "long": "Написав восемь черновиков сценария экранизации, был отстранён от проекта; позже отказался от сценарного кредита.",
+      "works": [
+        {
+          "ref": "series-of-unfortunate-events"
+        }
+      ],
+      "chapter": "slava-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After writing eight drafts of the script for Sonnenfeld, he was replaced by Robert Gordon in May 2003."
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Скандал из-за шутки на церемонии книжной премии",
+      "long": "На церемонии National Book Award неудачно пошутил в адрес Жаклин Вудсон; извинился и пожертвовал $10 000 фонду We Need Diverse Books.",
+      "chapter": "slava-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At the November 2014 National Book Award ceremony, Handler made a controversial remark"
+      }
+    },
+    {
+      "key": "other-2018",
+      "date": {
+        "from": "2018-02",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Обвинения в неуместных замечаниях на конференциях",
+      "long": "После публичных обвинений в неуместных комментариях принёс извинения; в марте 2018 отказался от речи на выпуске Уэслианского университета.",
+      "chapter": "slava-i-semya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 2018, Handler signed an online pledge to boycott conferences that do not have and enforce harassment policies."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "series-of-unfortunate-events",
+      "title": "33 несчастья",
+      "qid": "Q213841",
+      "written": {
+        "from": 1999,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "basic-eight",
+      "title": "The Basic Eight",
+      "qid": "Q7715755",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "watch-your-mouth",
+      "title": "Watch Your Mouth",
+      "qid": "Q7973085",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "adverbs",
+      "title": "Наречия",
+      "qid": "Q4686689",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    }
+  ]
+}

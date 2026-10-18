@@ -1,0 +1,438 @@
+{
+  "qid": "Q681012",
+  "name": "Уолтер Айзексон",
+  "born": "1952-05-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B9%D0%B7%D0%B5%D0%BA%D1%81%D0%BE%D0%BD%2C_%D0%A3%D0%BE%D0%BB%D1%82%D0%B5%D1%80",
+      "rev": 153686761
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Walter_Isaacson",
+      "rev": 1372553118
+    }
+  ],
+  "chapters": [
+    {
+      "key": "new-orleans-harvard-oxford",
+      "title": "Новый Орлеан, Гарвард, Оксфорд",
+      "from": 1952,
+      "to": 1977
+    },
+    {
+      "key": "time-years",
+      "title": "Годы в Time",
+      "from": 1978,
+      "to": 2000
+    },
+    {
+      "key": "cnn",
+      "title": "Во главе CNN",
+      "from": 2001,
+      "to": 2002
+    },
+    {
+      "key": "aspen-and-public-service",
+      "title": "Аспенский институт и государственная служба",
+      "from": 2003,
+      "to": 2017
+    },
+    {
+      "key": "tulane",
+      "title": "Тулейн и эфир",
+      "from": 2018,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-05-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Новом Орлеане",
+      "long": "Родился в Новом Орлеане в семье инженера Ирвина Айзексона и Бетти Ли Сефф, агента по недвижимости.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "new-orleans-harvard-oxford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Walter Seff Isaacson was born on May 20, 1952, in New Orleans, Louisiana"
+      }
+    },
+    {
+      "key": "education-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Гарвардского университета",
+      "long": "Окончил Гарвардский университет по специальности «история и литература»; в Гарварде был президентом общества Сигнет и членом «Гарвардского памфлета».",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "new-orleans-harvard-oxford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Isaacson studied at Harvard University, where he majored in history and literature and graduated in 1974."
+      }
+    },
+    {
+      "key": "education-1974-2",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Стипендия Родса и учёба в Оксфорде",
+      "long": "Получил стипендию Родса и учился в Пембрук-колледже Оксфорда (философия, политика и экономика), окончил с отличием первой степени.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "new-orleans-harvard-oxford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Стипендия Родса 1974"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в журнале Time",
+      "long": "Пришёл в журнал Time, где работал политическим корреспондентом, национальным редактором и редактором новых медиа.",
+      "chapter": "time-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He joined Time magazine in 1978"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пост главного редактора Time",
+      "long": "Стал четырнадцатым главным редактором журнала Time.",
+      "chapter": "time-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "serving as the magazine's political correspondent, national editor, and editor of new media before becoming the magazine's 14th editor in 1996."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Руководство телекомпанией CNN",
+      "long": "Возглавил телекомпанию CNN в должности председателя и исполнительного директора, сменив Тома Джонсона.",
+      "chapter": "cnn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Isaacson became chairman and CEO of CNN in July 2001, replacing Tom Johnson"
+      }
+    },
+    {
+      "key": "career-2001-2",
+      "date": {
+        "from": "2001-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "CNN в день 11 сентября",
+      "long": "Через два месяца после назначения руководил работой CNN во время событий 11 сентября.",
+      "chapter": "cnn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Isaacson became chairman and CEO of CNN in July 2001, replacing Tom Johnson, and only two months later, guided CNN through the events of 9/11."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "to": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Президент Аспенского института",
+      "long": "Возглавлял Аспенский институт, оставив пост на CNN.",
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Isaacson served as the president and CEO of the Aspen Institute from 2003 until 2018"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Восстановление Луизианы после «Катрины»",
+      "long": "Назначен вице-председателем Управления восстановления Луизианы, курировавшего расходы на восстановление после урагана «Катрина».",
+      "place": {
+        "label": "Луизиана"
+      },
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2005, the Governor of Louisiana, Kathleen Blanco, appointed Isaacson vice chairman of the Louisiana Recovery Authority"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Американо-палестинского партнёрства",
+      "long": "Назначен председателем Американо-палестинского партнёрства, развивающего экономические и образовательные проекты.",
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 2007, he was appointed by President George W. Bush to the chairman of the U.S.-Palestinian Partnership"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "to": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Совет управляющих по вопросам вещания",
+      "long": "Возглавлял Совет управляющих по вопросам вещания, которому подчинены «Голос Америки» и «Радио Свобода»; оставил пост в январе 2012 года.",
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2009, he was appointed by President Obama to be chairman of the Broadcasting Board of Governors"
+      }
+    },
+    {
+      "key": "creation-2011",
+      "date": {
+        "from": "2011-10",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Биография Джобса по интервью с ним самим",
+      "long": "Авторизованная биография Джобса вышла через несколько недель после его смерти; она основана на более чем сорока интервью с Джобсом за два года.",
+      "works": [
+        {
+          "ref": "steve-jobs",
+          "note": "книга основана на интервью с Джобсом и беседах с его близкими и соперниками"
+        }
+      ],
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On October 24, 2011, Steve Jobs, Isaacson's authorized biography of Apple Inc.'s Jobs, was published by Simon \u0026 Schuster, only a few weeks after Jobs's death."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентство в Обществе американских историков",
+      "long": "Был президентом Общества американских историков.",
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the Society of American Historians, of which he served as president in 2012"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Джефферсоновская лекция",
+      "long": "Прочитал Джефферсоновскую лекцию по гуманитарным наукам.",
+      "chapter": "aspen-and-public-service",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "чтец Джефферсонской лекции (2014)"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессорство в Тулейнском университете",
+      "long": "Покинул Аспенский институт и стал профессором истории Тулейнского университета.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "tulane",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "from 2003 until 2018, when he stepped down to become a professor of history at Tulane University"
+      }
+    },
+    {
+      "key": "career-2018-2",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Интервьюер в Amanpour \u0026 Company",
+      "long": "Стал ведущим интервью в программе Amanpour \u0026 Company на PBS и CNN.",
+      "chapter": "tulane",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2018, Isaacson was named as a contributor for the Amanpour \u0026 Company"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная гуманитарная медаль США",
+      "long": "Награждён Национальной гуманитарной медалью США.",
+      "chapter": "tulane",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная гуманитарная медаль США 2021"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "pro-and-con",
+      "title": "Pro and Con",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "the-wise-men",
+      "title": "The Wise Men: Six Friends and the World They Made",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "kissinger",
+      "title": "Kissinger: A Biography",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "benjamin-franklin",
+      "title": "Benjamin Franklin: An American Life",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "einstein",
+      "title": "Einstein: His Life and Universe",
+      "qid": "Q93612752",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "american-sketches",
+      "title": "American Sketches",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "steve-jobs",
+      "title": "Steve Jobs",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-innovators",
+      "title": "The Innovators",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "leonardo-da-vinci",
+      "title": "Leonardo da Vinci",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "the-code-breaker",
+      "title": "The Code Breaker",
+      "qid": "Q106008008",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "elon-musk",
+      "title": "Elon Musk",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

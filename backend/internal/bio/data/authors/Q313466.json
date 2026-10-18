@@ -1,0 +1,364 @@
+{
+  "qid": "Q313466",
+  "name": "Майкл Шейбон",
+  "born": "1963-05-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B9%D0%B1%D0%BE%D0%BD%2C_%D0%9C%D0%B0%D0%B9%D0%BA%D0%BB",
+      "rev": 154386749
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Michael_Chabon",
+      "rev": 1373530348
+    }
+  ],
+  "chapters": [
+    {
+      "key": "pittsburgh-and-study",
+      "title": "Питтсбург и учёба",
+      "from": 1963,
+      "to": 1986
+    },
+    {
+      "key": "debut-and-divorce",
+      "title": "Дебют, первый брак и развод",
+      "from": 1987,
+      "to": 1992
+    },
+    {
+      "key": "waldman-and-pulitzer",
+      "title": "Эйлет, «Вундеркинды», Пулитцер",
+      "from": 1993,
+      "to": 2006
+    },
+    {
+      "key": "genres-and-screen",
+      "title": "Жанры, кино и телевидение",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1963",
+      "date": {
+        "from": "1963-05-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вашингтоне",
+      "long": "Родился в Вашингтоне в еврейской семье; вырос в Питтсбурге и в Колумбии (штат Мэриленд).",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "pittsburgh-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Майкл Шейбон (англ. Michael Chabon; 24 мая 1963, Вашингтон)"
+      }
+    },
+    {
+      "key": "education-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Питтсбургского университета",
+      "long": "Окончил Питтсбургский университет со степенью бакалавра, проучившись до этого год в Университете Карнеги — Меллона; затем поступил в магистратуру Калифорнийского университета в Ирвайне.",
+      "place": {
+        "label": "Питтсбург"
+      },
+      "chapter": "pittsburgh-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he studied under Chuck Kinder and received a Bachelor of Arts in 1984"
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с поэтессой Лолли Грот",
+      "long": "Женился на поэтессе Лолли Грот; позже говорил, что успех первого романа создал в их писательских карьерах перекос.",
+      "chapter": "debut-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, Chabon married the poet Lollie Groth."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер-дебют и ранняя слава",
+      "long": "Роман, написанный как магистерская диссертация, вышел бестселлером после аванса в 155 000 долларов и сразу принёс автору известность.",
+      "works": [
+        {
+          "ref": "mysteries-of-pittsburgh",
+          "note": "роман написан как магистерская диссертация в Ирвайне"
+        }
+      ],
+      "chapter": "debut-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Mysteries of Pittsburgh appeared in 1988 and was a bestseller, instantly catapulting Chabon to literary celebrity."
+      }
+    },
+    {
+      "key": "family-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Лолли Грот",
+      "long": "Брак с Лолли Грот распался через четыре года после заключения.",
+      "chapter": "debut-and-divorce",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He and Groth divorced in 1991."
+      }
+    },
+    {
+      "key": "love-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Эйлет Уолдман",
+      "long": "Женился на писательнице Эйлет Уолдман; у пары четверо детей, живут в Беркли.",
+      "works": [
+        {
+          "ref": "kavalier-and-clay",
+          "note": "по словам автора, творческий обмен с Уолдман вдохновил линию Сэмми Клея и Розы Сакс"
+        }
+      ],
+      "chapter": "waldman-and-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He married the Israeli-born writer Ayelet Waldman in 1993."
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Отказ от неудачной рукописи и успех второго романа",
+      "long": "После нескольких лет работы над неоконченным романом «Фонтан-Сити» объёмом около 1500 страниц отказался от него и за семь месяцев написал новую книгу, имевшую успех.",
+      "works": [
+        {
+          "ref": "wonder-boys",
+          "note": "роман написан за семь месяцев после отказа от «Фонтан-Сити» (интервью автора)"
+        }
+      ],
+      "chapter": "waldman-and-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote Wonder Boys in a dizzy seven-month streak, without telling his agent or publisher he'd abandoned Fountain City. The book, published in 1995, was a commercial and critical success."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Роман о двух двоюродных братьях, создавших комиксы, получил Пулитцеровскую премию и стал бестселлером «Нью-Йорк таймс».",
+      "works": [
+        {
+          "ref": "kavalier-and-clay"
+        }
+      ],
+      "chapter": "waldman-and-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "awarded the Pulitzer Prize for Fiction in 2001"
+      }
+    },
+    {
+      "key": "career-2001-2",
+      "date": {
+        "from": "2001",
+        "to": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над сценарием экранизации",
+      "long": "Шестнадцать месяцев работал над сценарием экранизации романа; проект остался в стадии подготовки.",
+      "chapter": "waldman-and-pulitzer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Although Chabon spent 16 months in 2001 and 2002 working on the novel's film adaptation"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Жанровые премии «Хьюго» и «Небьюла»",
+      "long": "Роман-альтернативная история получил премии «Хьюго» и «Небьюла»; всего в 2007–2008 годах он собрал пять жанровых наград.",
+      "works": [
+        {
+          "ref": "yiddish-policemens-union"
+        }
+      ],
+      "chapter": "genres-and-screen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премий «Хьюго» и «Небьюла» (2008) за роман «Союз еврейских полисменов»."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Тексты песен для альбома Марка Ронсона",
+      "long": "Написал тексты для альбома Марка Ронсона, соавтор девяти из одиннадцати песен.",
+      "chapter": "genres-and-screen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, Chabon was involved in writing lyrics for Mark Ronson's album Uptown Special."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шоураннер сериала «Звёздный путь: Пикар»",
+      "long": "Назначен шоураннером сериала «Звёздный путь: Пикар»; после первого сезона остался исполнительным продюсером.",
+      "chapter": "genres-and-screen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was named showrunner in July 2019"
+      }
+    },
+    {
+      "key": "other-2021",
+      "date": {
+        "from": "2021-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичное извинение по делу Скотта Рудина",
+      "long": "После публикации об оскорблениях со стороны продюсера Скотта Рудина публично извинился за то, что молча наблюдал за этим двадцать лет сотрудничества.",
+      "chapter": "genres-and-screen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2021, following an article in The Hollywood Reporter which alleged numerous instances of physical and emotional abuse from Rudin towards his employees, Chabon wrote a public apology"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mysteries-of-pittsburgh",
+      "title": "Тайны Питтсбурга",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "wonder-boys",
+      "title": "Вундеркинды",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "kavalier-and-clay",
+      "title": "Приключения Кавалера и Клея",
+      "qid": "Q2705230",
+      "written": {
+        "from": 1995,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "summerland",
+      "title": "Саммерленд",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "final-solution",
+      "title": "Окончательное решение",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "gentlemen-of-the-road",
+      "title": "Джентльмены с большой дороги",
+      "written": {
+        "from": 2006,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "yiddish-policemens-union",
+      "title": "Союз еврейских полисменов",
+      "qid": "Q603645",
+      "written": {
+        "from": 2002,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "telegraph-avenue",
+      "title": "Телеграф-авеню",
+      "written": {
+        "from": 2007,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "moonglow",
+      "title": "Лунный свет",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

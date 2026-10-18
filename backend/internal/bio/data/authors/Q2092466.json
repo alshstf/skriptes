@@ -1,0 +1,277 @@
+{
+  "qid": "Q2092466",
+  "name": "Скотт Линч",
+  "born": "1978-04-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D0%BD%D1%87%2C_%D0%A1%D0%BA%D0%BE%D1%82%D1%82",
+      "rev": 149889226
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Scott_Lynch",
+      "rev": 1373722127
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Детство и случайные заработки",
+      "from": 1978,
+      "to": 2003
+    },
+    {
+      "key": "debut",
+      "title": "Пожарный и дебютант",
+      "from": 2004,
+      "to": 2009
+    },
+    {
+      "key": "later-years",
+      "title": "Новый брак и переезд на восток",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1978",
+      "date": {
+        "from": "1978-04-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сент-Поле, Миннесота",
+      "long": "Родился в Сент-Поле, Миннесота, старший из трёх братьев. Раннюю жизнь провёл в районе Миннеаполиса и Сент-Пола.",
+      "place": {
+        "label": "Сент-Пол"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lynch was born in Saint Paul, Minnesota, on April 2, 1978, and is the eldest of three brothers."
+      }
+    },
+    {
+      "key": "relocation-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Нью-Ричмонд, Висконсин",
+      "long": "Переехал в Нью-Ричмонд, Висконсин, где прожил до 2016 года.",
+      "place": {
+        "label": "Нью-Ричмонд"
+      },
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, he moved to New Richmond, Wisconsin, and in 2016 he moved to Massachusetts."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Продажа дебютного романа издательству Orion",
+      "long": "Первый роман купило издательство Orion Books в лице Саймона Спэнтона; до этого Линч работал посудомойщиком, официантом, веб-дизайнером, поваром и фрилансером.",
+      "works": [
+        {
+          "ref": "lies-of-locke-lamora"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was bought by Simon Spanton at Orion Books in August, 2004 and published in June, 2006"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "to": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба добровольным пожарным",
+      "long": "Обучился и получил сертификат пожарного в Anoka Technical College, затем с 2005 по 2016 год служил внештатным пожарным в Нью-Ричмонде.",
+      "place": {
+        "label": "Нью-Ричмонд"
+      },
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was initially trained and certified as a firefighter at Anoka Technical College in Minnesota in 2005, and from 2005 to 2016 he was a paid-on-call firefighter for the city of New Richmond, Wisconsin."
+      }
+    },
+    {
+      "key": "love-2006",
+      "date": {
+        "from": "2006-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Дженни",
+      "long": "Женился на Дженни; брак продлился до развода в апреле 2010 года.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lynch married his first wife, Jenny, in August 2006; they divorced in April 2010."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание дебюта, номинации на премии",
+      "long": "Дебютный роман вышел в финал Всемирной премии фэнтези; Линч номинировался на премию Кэмпбелла лучшему новому автору в 2007 и 2008 годах.",
+      "works": [
+        {
+          "ref": "lies-of-locke-lamora"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lynch's debut novel, The Lies of Locke Lamora, was a World Fantasy Award finalist in 2007. In 2007 and 2008 Lynch was nominated for the John W. Campbell Award for Best New Writer."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Баундса лучшему дебютанту",
+      "long": "Получил премию Сидни Баундса лучшему дебютанту от Британского общества фэнтези.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lynch received the Sydney J. Bounds Best Newcomer Award from the British Fantasy Society in 2008."
+      }
+    },
+    {
+      "key": "creation-2009",
+      "date": {
+        "from": "2009-08",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Онлайн-публикация романа в сериальном формате",
+      "long": "Начал публиковать онлайн-роман в стиле марсианских романов Берроуза; публикация шла с перерывами до 2012 года.",
+      "works": [
+        {
+          "ref": "queen-of-the-iron-sands"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 2009 Lynch began to publish the online novel Queen of the Iron Sands"
+      }
+    },
+    {
+      "key": "family-2010",
+      "date": {
+        "from": "2010-04",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Дженни",
+      "long": "Развод с первой женой Дженни.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lynch married his first wife, Jenny, in August 2006; they divorced in April 2010."
+      }
+    },
+    {
+      "key": "relocation-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Массачусетс",
+      "long": "Переехал в Массачусетс, оставив службу пожарным в Нью-Ричмонде.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, he moved to New Richmond, Wisconsin, and in 2016 he moved to Massachusetts."
+      }
+    },
+    {
+      "key": "love-2016",
+      "date": {
+        "from": "2016-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Элизабет Бир",
+      "long": "Женился на писательнице-фантасте Элизабет Бир.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 2016 he married Elizabeth Bear, another fantasy writer."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "lies-of-locke-lamora",
+      "title": "Обманы Локки Ламоры",
+      "qid": "Q1608505",
+      "written": {
+        "from": 2004,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "red-seas-under-red-skies",
+      "title": "Красные моря под красными небесами",
+      "qid": "Q7305012",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "republic-of-thieves",
+      "title": "Республика воров",
+      "qid": "Q3988978",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "queen-of-the-iron-sands",
+      "title": "Queen of the Iron Sands",
+      "written": {
+        "from": 2009,
+        "to": 2012
+      }
+    }
+  ]
+}

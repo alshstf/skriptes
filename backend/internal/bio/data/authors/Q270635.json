@@ -1,0 +1,1013 @@
+{
+  "qid": "Q270635",
+  "name": "Патриция Хайсмит",
+  "born": "1921-01-19",
+  "died": "1995-02-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D0%B9%D1%81%D0%BC%D0%B8%D1%82%2C_%D0%9F%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B8%D1%8F",
+      "rev": 155507790
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Patricia_Highsmith",
+      "rev": 1379933688
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-college",
+      "title": "Техас, Нью-Йорк, колледж",
+      "from": 1921,
+      "to": 1941
+    },
+    {
+      "key": "comics-first-novel",
+      "title": "Комиксы и первый роман",
+      "from": 1942,
+      "to": 1950
+    },
+    {
+      "key": "ripley-years",
+      "title": "Рипли и странствия",
+      "from": 1951,
+      "to": 1962
+    },
+    {
+      "key": "england-france",
+      "title": "Англия и Франция",
+      "from": 1963,
+      "to": 1981
+    },
+    {
+      "key": "switzerland",
+      "title": "Швейцария и последние годы",
+      "from": 1982,
+      "to": 1995
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1921",
+      "date": {
+        "from": "1921-01-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Форт-Уэрте",
+      "long": "Родилась в Форт-Уэрте, штат Техас, под именем Мэри Патриция Плэнгман. Родители развелись за девять дней до её рождения.",
+      "place": {
+        "label": "Форт-Уэрт"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith was born Mary Patricia Plangman in Fort Worth, Texas on January 19, 1921."
+      }
+    },
+    {
+      "key": "relocation-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд к матери и отчиму в Нью-Йорк",
+      "long": "В шесть лет её привезли в Нью-Йорк к матери и отчиму Стэнли Хайсмиту; до этого она росла главным образом у бабушки.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1927 Highsmith moved to New York City to live with her mother and her stepfather, commercial artist Stanley Highsmith"
+      }
+    },
+    {
+      "key": "family-1933",
+      "date": {
+        "from": "1933",
+        "to": "1934",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Год у бабушки, ощущение брошенности",
+      "long": "После лагеря её на год отправили к бабушке в Форт-Уэрт; этот год она называла самым печальным в жизни и чувствовала себя брошенной матерью.",
+      "place": {
+        "label": "Форт-Уэрт"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1933, Highsmith attended a girls' camp"
+      }
+    },
+    {
+      "key": "education-1938",
+      "date": {
+        "from": "1938",
+        "to": "1942",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Барнард-колледже",
+      "long": "Изучала английскую литературу, драматургию и сочинение рассказов; опубликовала девять рассказов в студенческом журнале и на последнем курсе стала его редактором. Окончила колледж в 1942 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938 Highsmith entered Barnard College where her studies included English literature, playwriting and short story composition."
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Членство в Молодёжной коммунистической лиге",
+      "long": "Под влиянием гражданской войны в Испании вступила в Молодёжную коммунистическую лигу; вышла из партии в ноябре 1941 года.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith became a member of the Young Communist League while at Barnard in 1939"
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Влюблённость в Розалинд Констебл",
+      "long": "Влюбилась в Розалинд Констебл, но отношения не были интимными; Констебл помогала её карьере и позже рекомендовала её колонии Яддо.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941 Highsmith met Rosalind Constable, a 34-year-old British journalist and literary consultant."
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарист комиксов",
+      "long": "С декабря 1942 года писала сценарии комиксов, затем работала фрилансером до 1949 года. Считала это поденщиной; другой постоянной работы у неё не было.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1942 Highsmith found employment with comic book publisher Sangor–Pines where she earned up to $50 per week."
+      }
+    },
+    {
+      "key": "love-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с художницей Аллелой Корнелл",
+      "long": "Короткий роман с художницей Аллелой Корнелл, которая покончила с собой в 1946 году; Хайсмит чувствовала вину и повсюду держала её портрет.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "ripley-under-ground",
+          "note": "Корнелл стала прототипом художника Дервента в романе"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1943 Highsmith had a brief affair with artist Allela Cornell, who killed herself three years later over another failed relationship."
+      }
+    },
+    {
+      "key": "relocation-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Пять месяцев в Мексике",
+      "long": "Пять месяцев в Мексике, где работала над незавершённым романом.",
+      "place": {
+        "label": "Мексика"
+      },
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944 she spent five months in Mexico where she worked on an unfinished novel \"The Click of the Shutting\"."
+      }
+    },
+    {
+      "key": "creation-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Знакомство с прозой Камю",
+      "long": "Прочитав Камю, была поражена его абсурдистским взглядом; в следующем году начала писать свой первый роман.",
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, Highsmith read Albert Camus' The Stranger and was impressed by his absurdist vision."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с Вирджинией Кент Кэтервуд",
+      "long": "Годичный роман со светской дамой Вирджинией Кент Кэтервуд, одним из прототипов героини романа о двух женщинах.",
+      "works": [
+        {
+          "ref": "price-of-salt",
+          "note": "Кэтервуд — одна из моделей Кэрол Эрд"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith began a year-long affair with the rich socialite Virginia Kent Catherwood in June 1946."
+      }
+    },
+    {
+      "key": "creation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Лето в творческой колонии Яддо",
+      "long": "По рекомендации Трумена Капоте принята в колонию Яддо, где летом работала над первым романом. Яддо она позже завещала своё состояние.",
+      "place": {
+        "label": "Саратога-Спрингс"
+      },
+      "works": [
+        {
+          "ref": "strangers-on-a-train",
+          "note": "в Яддо она работала над романом"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith was accepted by the Yaddo artist's retreat during the summer of 1948, where she worked on the novel."
+      }
+    },
+    {
+      "key": "love-1948",
+      "date": {
+        "from": "1948",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Помолвка с писателем Марком Брандлом",
+      "long": "Несмотря на признание в гомосексуальности, начала отношения с писателем Марком Брандлом; прошла психоанализ, чтобы выйти за него. Помолвка в мае 1949 года, разрыв осенью 1950-го.",
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During her stay at Yaddo in 1948, Highsmith met writer Marc Brandel"
+      }
+    },
+    {
+      "key": "creation-1948-2",
+      "date": {
+        "from": "1948-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа в Bloomingdale's, встреча с Кэтлин Сенн",
+      "long": "Встреча с покупательницей Кэтлин Сенн побудила её начать роман о любви двух женщин; она дважды тайно приходила к дому Сенн.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "price-of-salt",
+          "note": "встреча с Сенн вдохновила её начать роман"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "To help pay for her therapy sessions, in December 1948 Highsmith took a sales job in the toy section of Bloomingdale's department store."
+      }
+    },
+    {
+      "key": "relocation-1949",
+      "date": {
+        "from": "1949-06",
+        "to": "1949-09",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Первая поездка в Европу",
+      "long": "После принятия первого романа к печати впервые поехала в Европу — Англия, Франция, Италия. В Позитано, позже ставшем главным местом действия романа о Рипли.",
+      "place": {
+        "label": "Позитано"
+      },
+      "works": [
+        {
+          "ref": "talented-mr-ripley",
+          "note": "Позитано стал главным местом действия романа"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Strangers on a Train was accepted for publication by Harper \u0026 Brothers in May 1949.… In Italy, she visited Positano which would later become the major setting for her novel The Talented Mr. Ripley."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный прорыв, права купил Хичкок",
+      "long": "Дебютный роман получил добрые отзывы; Альфред Хичкок купил права на экранизацию за 6000 долларов, фильм вышел в 1951 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "strangers-on-a-train"
+        }
+      ],
+      "chapter": "comics-first-novel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Strangers on a Train was published in March 1950 and received favorable reviews in The New Yorker, New York Herald Tribune and New York Times."
+      }
+    },
+    {
+      "key": "relocation-1951",
+      "date": {
+        "from": "1951-02",
+        "to": "1953-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Два года в Европе",
+      "long": "Два года путешествовала по Европе, работала над незавершённым романом и писала подруге, что могла бы жить в Европе большую часть оставшейся жизни.",
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1951, she left for Europe for the publication of the novel in England and France.… Highsmith was back in New York in May 1953."
+      }
+    },
+    {
+      "key": "love-1951",
+      "date": {
+        "from": "1951-09",
+        "to": "1955-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с Эллен Хилл",
+      "long": "Отношения с социологом Эллен Хилл, по оценке биографа Шенкар, самые сильные после матери. В июле 1953 года Хилл попыталась покончить с собой; пара воссоединилась в 1954-м, расстались в декабре 1955-го.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While in Munich In September 1951, Highsmith met the German sociologist Ellen Hill"
+      }
+    },
+    {
+      "key": "creation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман о любви двух женщин под псевдонимом",
+      "long": "Роман о любви двух женщин с благополучным концом вышел под псевдонимом Клэр Морган. Авторство она признала лишь в 1990 году.",
+      "works": [
+        {
+          "ref": "price-of-salt"
+        }
+      ],
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith's second novel, The Price of Salt, was published in 1952 under the pen name Claire Morgan."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание: первый роман о Томе Рипли",
+      "long": "Роман с психопатом Томом Рипли принят критикой США и Европы, получил премию Скролл Ассоциации детективных писателей Америки и положил начало репутации автора.",
+      "works": [
+        {
+          "ref": "talented-mr-ripley"
+        }
+      ],
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Talented Mr. Ripley was published in December 1955 to favorable reviews in the New York Times Book Review and The New Yorker"
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956-03",
+        "to": "1958-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с Дорис Сандерс",
+      "long": "Жили вместе в Палисейдсе, ездили в Мексику. Хайсмит ушла от Сандерс в декабре 1958 года, начав роман с другой женщиной.",
+      "place": {
+        "label": "Палисейдс"
+      },
+      "works": [
+        {
+          "ref": "game-for-the-living",
+          "note": "поездка в Мексику, где Хайсмит поместила действие романа"
+        }
+      ],
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1956, Highsmith began a relationship with Doris Sanders, an advertising illustrator and copywriter."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при полицейской литературы",
+      "long": "Награждена Гран-при полицейской литературы.",
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Гран-при полицейской литературы 1957-01-01"
+      }
+    },
+    {
+      "key": "love-1959",
+      "date": {
+        "from": "1959",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с писательницей Мэриджейн Микер",
+      "long": "Бурный роман с писательницей Мэриджейн Микер; жили вместе близ Нью-Хоупа. После разрыва обе вывели друг друга в романах.",
+      "place": {
+        "label": "Нью-Хоуп"
+      },
+      "works": [
+        {
+          "ref": "cry-of-the-owl",
+          "note": "Хайсмит вывела в романе персонаж, основанный на Микер"
+        }
+      ],
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the spring of 1959, Highsmith met writer Marijane Meaker.… When their relationship collapsed in 1961"
+      }
+    },
+    {
+      "key": "love-1962",
+      "date": {
+        "from": "1962",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Любовь к замужней англичанке и её разрыв",
+      "long": "Влюбилась в замужнюю англичанку, которую швейцарский редактор называла «любовью всей её жизни». Разрыв в октябре 1966 года Хайсмит назвала худшим временем жизни.",
+      "chapter": "ripley-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While in Europe in the summer of 1962, Highsmith met an Englishwoman who was married to a wealthy businessman and who had a child.… The affair ended in October 1966"
+      }
+    },
+    {
+      "key": "relocation-1963",
+      "date": {
+        "from": "1963-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Окончательный отъезд из США в Европу",
+      "long": "Переехала в Европу, чтобы жить ближе к возлюбленной; сначала Позитано, затем Англия.",
+      "place": {
+        "label": "Позитано"
+      },
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1963, she moved permanently to Europe."
+      }
+    },
+    {
+      "key": "relocation-1963-2",
+      "date": {
+        "from": "1963-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Саффолке",
+      "long": "Поселилась в Олдборо, потом купила дом в Эрл-Сохэме, где прожила три года. В Британии её репутация росла.",
+      "place": {
+        "label": "Эрл-Сохэм"
+      },
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1963 she moved to the festival town of Aldeburgh, Suffolk, and the following year she bought a home in the nearby village of Earl Soham where she lived for three years."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Серебряный кинжал британских детективщиков",
+      "long": "Роман получил Серебряный кинжал Ассоциации британских детективных писателей как лучший иностранный роман года.",
+      "works": [
+        {
+          "ref": "two-faces-of-january"
+        }
+      ],
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel won the Silver Dagger Award of the British Crime Writers' Association for best foreign novel of 1964."
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд во Францию",
+      "long": "После разрыва с возлюбленной решила начать жизнь заново во Франции; с апреля 1968 года жила в Монмашу.",
+      "place": {
+        "label": "Монмашу"
+      },
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After a brief visit to Tunisia, Highsmith moved to the Île-de-France in 1967 and eventually settled at Montmachoux in April 1968."
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Монкур, Мозель",
+      "long": "Поселилась в деревне Монкур в Мозеле, где написала несколько романов, в том числе продолжения о Рипли.",
+      "place": {
+        "label": "Монкур"
+      },
+      "works": [
+        {
+          "ref": "ripleys-game",
+          "note": "написан в Монкуре"
+        },
+        {
+          "ref": "ediths-diary",
+          "note": "написан в Монкуре"
+        },
+        {
+          "ref": "boy-who-followed-ripley",
+          "note": "написан в Монкуре"
+        }
+      ],
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1970, she moved to the village of Moncourt, in the Moselle region of France."
+      }
+    },
+    {
+      "key": "illness-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Предупреждение врача о здоровье",
+      "long": "Врач предупредил, что при прежнем образе жизни (алкоголь, сорок сигарет в день) она может не дожить до 55 лет.",
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1973 her doctor advised her that if she did not change her lifestyle she might not live past 55."
+      }
+    },
+    {
+      "key": "family-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Разрыв отношений с матерью",
+      "long": "Мать письмом прекратила отношения с дочерью; до смерти матери они не общались.",
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her mother broke off relations with Highsmith by letter in 1974, and lived in a nursing home from 1975 until her death in 1991."
+      }
+    },
+    {
+      "key": "illness-1980",
+      "date": {
+        "from": "1980-05",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция на артериях",
+      "long": "Операция по поводу закупорки артерий правой ноги; вскоре французские власти оштрафовали её за налоговые нарушения, и она разочаровалась во Франции.",
+      "chapter": "england-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith underwent surgery in May 1980 for blockages in two arteries of her right leg"
+      }
+    },
+    {
+      "key": "relocation-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Швейцарию",
+      "long": "Купила дом в Аурихено и окончательно перебралась в Швейцарию.",
+      "place": {
+        "label": "Аурихено"
+      },
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Disillusioned with France, she bought a house in Aurigeno, Switzerland, and in 1982 moved there permanently."
+      }
+    },
+    {
+      "key": "relocation-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Постройка дома-«бункера» в Теньи",
+      "long": "Заказала новый дом в брутальном стиле, прозванный друзьями «бункером»; в нём закончила последние романы.",
+      "place": {
+        "label": "Тенья"
+      },
+      "works": [
+        {
+          "ref": "ripley-under-water",
+          "note": "завершён в Теньи"
+        },
+        {
+          "ref": "small-g",
+          "note": "завершён в Теньи"
+        }
+      ],
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1986, Highsmith had a successful operation for lung cancer. Shortly thereafter, she commissioned a new home in Tegna, Switzerland."
+      }
+    },
+    {
+      "key": "illness-1986",
+      "date": {
+        "from": "1986-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Операция по поводу рака лёгкого",
+      "long": "Успешная операция по поводу рака лёгкого.",
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in April 1986 she had successful surgery for lung cancer"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание авторства романа о лесбийской любви",
+      "long": "Через 38 лет согласилась переиздать роман под своим именем; в послесловии объяснила выбор псевдонима. Тогда же стала офицером французского ордена Искусств и литературы.",
+      "works": [
+        {
+          "ref": "price-of-salt"
+        }
+      ],
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith acknowledged authorship of the novel publicly when she agreed, in 1990, to its republication by Bloomsbury under the title Carol."
+      }
+    },
+    {
+      "key": "loss-1991",
+      "date": {
+        "from": "1991-03-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Смерть матери, с которой Хайсмит не общалась с 1974 года.",
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mary Plangman (née Coates; September 13, 1895 – March 12, 1991)"
+      }
+    },
+    {
+      "key": "illness-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: апластическая анемия и рак лёгкого",
+      "long": "Здоровье ухудшилось, понадобилась помощь сиделки; поставлен диагноз — апластическая анемия и рак лёгкого.",
+      "place": {
+        "label": "Тенья"
+      },
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Later in 1993 she was diagnosed with the aplastic anemia and lung cancer that would kill her."
+      }
+    },
+    {
+      "key": "death-1995",
+      "date": {
+        "from": "1995-02-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Локарно",
+      "long": "Умерла в больнице Карита в Локарно в 74 года; прах захоронен в колумбарии церкви в Теньи. Состояние завещала колонии Яддо.",
+      "place": {
+        "label": "Локарно"
+      },
+      "chapter": "switzerland",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Highsmith died on February 4, 1995, at 74, from aplastic anemia and lung cancer at Carita Hospital in Locarno, Switzerland, near Tegna."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "strangers-on-a-train",
+      "title": "Случайные попутчики",
+      "qid": "Q3204109",
+      "written": {
+        "from": 1947,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "price-of-salt",
+      "title": "Цена соли",
+      "qid": "Q2939820",
+      "written": {
+        "from": 1949,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "blunderer",
+      "title": "Бестолочь",
+      "qid": "Q7718911",
+      "written": {
+        "from": 1953,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "talented-mr-ripley",
+      "title": "Талантливый мистер Рипли",
+      "qid": "Q472026",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "deep-water",
+      "title": "Глубокие воды",
+      "qid": "Q5250353",
+      "written": {
+        "from": 1956,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "game-for-the-living",
+      "title": "A Game for the Living",
+      "qid": "Q4656917",
+      "written": {
+        "from": 1956,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "this-sweet-sickness",
+      "title": "This Sweet Sickness",
+      "qid": "Q7786276",
+      "written": {
+        "from": 1958,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "cry-of-the-owl",
+      "title": "Крик совы",
+      "qid": "Q1196742",
+      "written": {
+        "from": 1960,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "two-faces-of-january",
+      "title": "Два лика января",
+      "qid": "Q15052515",
+      "written": {
+        "from": 1962,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "glass-cell",
+      "title": "The Glass Cell",
+      "qid": "Q7736705",
+      "written": {
+        "from": 1963,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "tremor-of-forgery",
+      "title": "The Tremor of Forgery",
+      "qid": "Q7770113",
+      "written": {
+        "from": 1968,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "ripley-under-ground",
+      "title": "Мистер Рипли под землёй",
+      "qid": "Q384033",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "dogs-ransom",
+      "title": "A Dog's Ransom",
+      "qid": "Q4656530",
+      "written": {
+        "from": 1970,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "ripleys-game",
+      "title": "Игра Рипли",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "ediths-diary",
+      "title": "Edith's Diary",
+      "qid": "Q5338476",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "boy-who-followed-ripley",
+      "title": "Тот, кто следовал за мистером Рипли",
+      "qid": "Q2902781",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "ripley-under-water",
+      "title": "Мистер Рипли под водой",
+      "qid": "Q2903074",
+      "written": {
+        "from": 1986,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "small-g",
+      "title": "Small g: a Summer Idyll",
+      "qid": "Q7543061",
+      "written": {
+        "from": 1986,
+        "to": 1995
+      }
+    }
+  ]
+}

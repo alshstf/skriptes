@@ -1,0 +1,110 @@
+{
+  "qid": "Q4191183",
+  "name": "Андрей Борисович Земляной",
+  "born": "1964-07-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%D0%BD%D0%BE%D0%B9%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9_%D0%91%D0%BE%D1%80%D0%B8%D1%81%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 155275064
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-kazan",
+      "title": "Донецк и Казань",
+      "from": 1964,
+      "to": 2007
+    },
+    {
+      "key": "pisatel",
+      "title": "Годы в фантастике",
+      "from": 2008,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-07-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Донецке",
+      "long": "Андрей Земляной родился в Донецке, УССР, в семье писателя и журналиста Бориса Земляного и режиссёра Рени Каримовой.",
+      "place": {
+        "label": "Донецк"
+      },
+      "chapter": "detstvo-kazan",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Донецк 1964-07-17"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первой книги",
+      "long": "В 2008 году вышла первая книга писателя — роман, с которого начался цикл «Странник».",
+      "works": [
+        {
+          "ref": "proekt-oboroten"
+        }
+      ],
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая книга — роман «Проект „Оборотень“» была издана в 2008 году."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "proekt-oboroten",
+      "title": "Проект «Оборотень»",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "odin-na-million",
+      "title": "Один на миллион",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "plamya-i-stal",
+      "title": "Пламя и Сталь",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "drakony-sarda",
+      "title": "Драконы Сарда",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "lyubimchik-bogov",
+      "title": "Любимчик богов",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

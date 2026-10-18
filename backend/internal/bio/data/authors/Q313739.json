@@ -1,0 +1,448 @@
+{
+  "qid": "Q313739",
+  "name": "Джон Кеннеди Тул",
+  "born": "1937-12-17",
+  "died": "1969-03-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D1%83%D0%BB%2C_%D0%94%D0%B6%D0%BE%D0%BD_%D0%9A%D0%B5%D0%BD%D0%BD%D0%B5%D0%B4%D0%B8",
+      "rev": 140643192
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Kennedy_Toole",
+      "rev": 1380344493
+    }
+  ],
+  "chapters": [
+    {
+      "key": "new-orleans-tulane",
+      "title": "Новый Орлеан и Тулейн",
+      "from": 1937,
+      "to": 1957
+    },
+    {
+      "key": "columbia-professor",
+      "title": "Колумбия и первые кафедры",
+      "from": 1958,
+      "to": 1960
+    },
+    {
+      "key": "army-puerto-rico",
+      "title": "Армия и роман в Пуэрто-Рико",
+      "from": 1961,
+      "to": 1963
+    },
+    {
+      "key": "gottlieb-rejection",
+      "title": "Рукопись и отказ издательства",
+      "from": 1964,
+      "to": 1966
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы и дорога в Билокси",
+      "from": 1967,
+      "to": 1969
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-12-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Новом Орлеане",
+      "long": "Родился в Новом Орлеане в семье Джона и Тельмы (Дюкуан) Тул.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "new-orleans-tulane",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "17 декабря 1937, Новый Орлеан"
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Тулейнском университете",
+      "long": "Поступил в Тулейнский университет в 16 лет, окончил его в 1958 году.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "new-orleans-tulane",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 г. в возрасте 16 лет поступил в Тулейнский университет."
+      }
+    },
+    {
+      "key": "love-1958",
+      "date": {
+        "from": "1958",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с Рут Катманн",
+      "long": "Во время учёбы в Колумбийском университете встречался с Рут Катманн; по одним свидетельствам, они были помолвлены, по словам самой Катманн, он лишь делал ей предложение, и она отказала.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "columbia-professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1958, Toole graduated from Tulane with honors…In his free time he dated Ruth Kathmann"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Год преподавания в Луизиане",
+      "long": "Год преподавал английский в Юго-Западном университете Луизианы; этот год считают одним из самых счастливых в его жизни. Там он познакомился с Бобом Бирном, одним из прототипов Игнациуса Рейли.",
+      "place": {
+        "label": "Лафейетт"
+      },
+      "chapter": "columbia-professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Toole returned home in 1959 to spend a year as assistant professor of English at the University of Southwestern Louisiana"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Хантер-колледже",
+      "long": "Отказался от стипендии для докторантуры в Университете Вашингтона и выбрал место преподавателя в Хантер-колледже в Нью-Йорке; в 22 года стал самым молодым профессором в его истории.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "columbia-professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1960, Toole accepted a three-year fellowship…when he was offered a teaching position at Hunter College in New York"
+      }
+    },
+    {
+      "key": "war-1961",
+      "date": {
+        "from": "1961",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в армии США в Пуэрто-Рико",
+      "long": "Призван в армию США; служил в Пуэрто-Рико, где преподавал английский испаноязычным новобранцам и дослужился до сержанта. В личном кабинете начал писать роман.",
+      "place": {
+        "label": "Форт-Бьюкенен, Пуэрто-Рико"
+      },
+      "works": [
+        {
+          "ref": "confederacy-of-dunces",
+          "note": "роман начат в армейском кабинете; позже Тул говорил, что стал «говорить и вести себя как Игнациус»"
+        }
+      ],
+      "chapter": "army-puerto-rico",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Toole's studies were interrupted by his being drafted into the United States Army in 1961."
+      }
+    },
+    {
+      "key": "relocation-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение домой, Доминиканский колледж",
+      "long": "Получил досрочную демобилизацию из-за трудного положения родителей и вернулся в Новый Орлеан, в Доминиканский колледж Святой Марии.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "army-puerto-rico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1963 г. вернулся на должность преподавателя в Доминиканский колледж."
+      }
+    },
+    {
+      "key": "illness-1963",
+      "date": {
+        "from": "1963-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая депрессия после убийства Кеннеди",
+      "long": "После убийства Джона Кеннеди впал в тяжёлую депрессию, прекратил писать и много пил.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "army-puerto-rico",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The November 1963 assassination of John F. Kennedy caused Toole to fall into severe depression."
+      }
+    },
+    {
+      "key": "creation-1964",
+      "date": {
+        "from": "1964-02",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Рукопись отправлена в «Саймон энд Шустер»",
+      "long": "Вернулся к работе, дописал концовку и отправил рукопись в издательство «Саймон энд Шустер»; она попала к редактору Роберту Готлибу.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "works": [
+        {
+          "ref": "confederacy-of-dunces",
+          "note": "завершение романа и отправка издателю"
+        }
+      ],
+      "chapter": "gottlieb-rejection",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 1964 he resumed writing, at which point he added an ending and sent the manuscript to Simon \u0026 Schuster."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Письмо Готлиба с критикой романа",
+      "long": "Готлиб написал, что роман очень смешной, но «ни о чём» и не имеет цели, и предложил вернуть рукопись.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "works": [
+        {
+          "ref": "confederacy-of-dunces",
+          "note": "письмо Готлиба о замысле романа"
+        }
+      ],
+      "chapter": "gottlieb-rejection",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shortly before Christmas break in 1964, Toole received a letter from Gottlieb."
+      }
+    },
+    {
+      "key": "creation-1965",
+      "date": {
+        "from": "1965-03",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Решение не бросать роман",
+      "long": "В письме Готлибу Тул объяснил, что не может отказаться от романа и будет над ним работать.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "works": [
+        {
+          "ref": "confederacy-of-dunces",
+          "note": "письмо Готлибу, март 1965"
+        }
+      ],
+      "chapter": "gottlieb-rejection",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a long, partially autobiographical letter he sent to Gottlieb in March 1965, Toole explained that he could not give up on the book"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Окончательный отказ издательства",
+      "long": "Издательство окончательно отказалось публиковать роман. Тул воспринял это как тяжёлый удар и оставил работу над рукописью.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "works": [
+        {
+          "ref": "confederacy-of-dunces",
+          "note": "отказ в публикации романа"
+        }
+      ],
+      "chapter": "gottlieb-rejection",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1966 г. получил окончательный отказ от издательства."
+      }
+    },
+    {
+      "key": "illness-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Нарастающая паранойя, головные боли",
+      "long": "Друг Дэвид Кубах заметил у Тула нарастающую паранойю; позже появились сильные головные боли, он много пил и набрал вес.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the winter of 1967, Kubach, who had come down to visit Toole, noticed an increased sense of paranoia on Toole's part"
+      }
+    },
+    {
+      "key": "education-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторантура в Тулейне",
+      "long": "Осенью поступил в Тулейн в докторантуру, но учёбу не закончил.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Toole tried to maintain a sense of normality and enrolled in Tulane in the fall of 1968 with the hopes of acquiring a Ph.D."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вынужденный отпуск в колледже",
+      "long": "Из-за жалоб студентов на его поведение был вынужден взять отпуск в Доминиканском колледже и перестал посещать занятия в Тулейне.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Toward the end of the 1968 fall semester, he was forced to take a leave of absence and stopped attending classes at Tulane"
+      }
+    },
+    {
+      "key": "illness-1968",
+      "date": {
+        "from": "1968-08",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Разговор с Бобом Бирном о преследовании",
+      "long": "Рассказал Бирну, что за ним следят и против него плетут заговор, и вновь говорил о горечи из-за неизданной книги.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Toole went to see his friend Bob Byrne at his home in August 1968, where he again expressed sadness and humiliation that his book would not be published."
+      }
+    },
+    {
+      "key": "relocation-1969",
+      "date": {
+        "from": "1969-01-19",
+        "to": "1969-03-26",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Ссора с матерью, последняя поездка",
+      "long": "Не смог вернуться в колледж, поссорился с матерью, ушёл из дома и снял со счёта 1500 долларов; поездка по стране привела его в Миссисипи.",
+      "place": {
+        "label": "Новый Орлеан"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "This upset his mother and on January 19, 1969, they had an argument."
+      }
+    },
+    {
+      "key": "death-1969",
+      "date": {
+        "from": "1969-03-26",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть близ Билокси",
+      "long": "Покончил с собой близ Билокси в возрасте 31 года. Похоронен на кладбище Гринвуд в Новом Орлеане.",
+      "place": {
+        "label": "Билокси"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was during this trip that he stopped outside Biloxi, Mississippi, and died by suicide by running a garden hose from the exhaust pipe in through the window of his car on March 26, 1969."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "confederacy-of-dunces",
+      "title": "Сговор остолопов",
+      "qid": "Q627749",
+      "written": {
+        "from": 1962,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "neon-bible",
+      "title": "Неоновая библия",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    }
+  ]
+}

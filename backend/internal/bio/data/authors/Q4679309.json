@@ -1,0 +1,225 @@
+{
+  "qid": "Q4679309",
+  "name": "Адам Джонсон",
+  "born": "1967-07-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%BE%D0%BD%D1%81%D0%BE%D0%BD%2C_%D0%90%D0%B4%D0%B0%D0%BC_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 155087333
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Adam_Johnson_%28writer%29",
+      "rev": 1370286695
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-v-arizone",
+      "title": "Южная Дакота и Аризона",
+      "from": 1967,
+      "to": 1991
+    },
+    {
+      "key": "uchyoba",
+      "title": "Годы учёбы",
+      "from": 1992,
+      "to": 2001
+    },
+    {
+      "key": "priznanie",
+      "title": "Книги и премии",
+      "from": 2002,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-07-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Южной Дакоте",
+      "long": "Родился в Южной Дакоте, состоит в племени чейенн-ривер-сиу; вырос в Темпи, штат Аризона.",
+      "place": {
+        "label": "Южная Дакота"
+      },
+      "chapter": "detstvo-v-arizone",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Южная Дакота 1967-07-12"
+      }
+    },
+    {
+      "key": "education-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр журналистики в Аризоне",
+      "long": "Получил степень бакалавра журналистики в Университете штата Аризона, где учился прозе у писателя Рона Карлсона.",
+      "place": {
+        "label": "Темпи"
+      },
+      "chapter": "uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Johnson earned a BA in Journalism from Arizona State University in 1992"
+      }
+    },
+    {
+      "key": "education-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура по писательскому мастерству",
+      "long": "Окончил магистратуру по писательскому мастерству в Университете штата Макниз, учился у Роберта Олена Батлера и Джона Вуда.",
+      "chapter": "uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He earned an MFA from the writing program at McNeese State University in 1996"
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень во Флориде",
+      "long": "Получил степень доктора философии по английскому языку в Университете штата Флорида; диссертацией руководила Джанет Бурроуэй.",
+      "chapter": "uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, he earned a PhD in English from Florida State University."
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Калифорнийская книжная премия",
+      "long": "Роман удостоен Калифорнийской книжной премии.",
+      "works": [
+        {
+          "ref": "parasites-like-us"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Parasites Like Us, which won a California Book Award in 2003"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию за роман о Северной Корее.",
+      "works": [
+        {
+          "ref": "orphan-masters-son"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году Адам Джонсон получил Пулитцеровскую премию за роман"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия",
+      "long": "Получил Национальную книжную премию за сборник рассказов.",
+      "works": [
+        {
+          "ref": "fortune-smiles"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия за лучшее художественное  произведение 2015-01-01"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Берлинская премия",
+      "long": "Удостоен Берлинской премии Американской академии в Берлине.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Берлинская премия 2017-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "emporium",
+      "title": "Emporium",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "parasites-like-us",
+      "title": "Parasites Like Us",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "orphan-masters-son",
+      "title": "Сын повелителя сирот",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "fortune-smiles",
+      "title": "Fortune Smiles",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

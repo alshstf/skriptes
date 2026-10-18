@@ -1,0 +1,108 @@
+{
+  "qid": "Q1606880",
+  "name": "Мелисса Марр",
+  "born": "1972-07-25",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Melissa_Marr",
+      "rev": 1371371585
+    }
+  ],
+  "chapters": [
+    {
+      "key": "before-books",
+      "title": "До первой книги",
+      "from": 1972,
+      "to": 2006
+    },
+    {
+      "key": "writer",
+      "title": "Писательница и бестселлеры",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-07-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родилась 25 июля 1972 года в Пенсильвании.",
+      "place": {
+        "label": "Пенсильвания"
+      },
+      "chapter": "before-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Melissa Marr (born July 25, 1972)"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман-бестселлер",
+      "long": "Бывшая преподавательница английского в университете выпустила первый роман, ставший бестселлером «Нью-Йорк таймс».",
+      "works": [
+        {
+          "ref": "wicked-lovely"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her first novel was published in 2007, the New York Times bestseller Wicked Lovely."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия читателей Goodreads",
+      "long": "Взрослый роман получил премию читателей Goodreads в категории «Лучший хоррор».",
+      "works": [
+        {
+          "ref": "graveminder"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which won the 2011 Goodreads Readers Choice Award for \"Best Horror\""
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "wicked-lovely",
+      "title": "Коварная красота",
+      "qid": "Q1498216",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "graveminder",
+      "title": "Graveminder",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

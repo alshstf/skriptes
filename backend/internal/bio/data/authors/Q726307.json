@@ -1,0 +1,294 @@
+{
+  "qid": "Q726307",
+  "name": "Юн Айвиде Линдквист",
+  "born": "1968-12-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D0%BD%D0%B4%D0%BA%D0%B2%D0%B8%D1%81%D1%82%2C_%D0%AE%D0%BD_%D0%90%D0%B9%D0%B2%D0%B8%D0%B4%D0%B5",
+      "rev": 151459889
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Ajvide_Lindqvist",
+      "rev": 1377493155
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/John_Ajvide_Lindqvist",
+      "rev": 59739517
+    }
+  ],
+  "chapters": [
+    {
+      "key": "blackeberg",
+      "title": "Блакеберг, фокусы и сцена",
+      "from": 1968,
+      "to": 1997
+    },
+    {
+      "key": "loss-and-comedy",
+      "title": "Утрата и юмор для чужих сцен",
+      "from": 1998,
+      "to": 2003
+    },
+    {
+      "key": "vampires-and-fame",
+      "title": "Вампиры, зомби, признание",
+      "from": 2004,
+      "to": 2010
+    },
+    {
+      "key": "places-trilogy",
+      "title": "Продолжения и «Трилогия места»",
+      "from": 2011,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1968",
+      "date": {
+        "from": "1968-12-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Стокгольме",
+      "long": "Родился 2 декабря 1968 года в рабочей семье в Блакеберге, пригороде Стокгольма, где и вырос.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "blackeberg",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "född 2 december 1968 i Blackeberg i Stockholm"
+      }
+    },
+    {
+      "key": "loss-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель отца на воде",
+      "long": "В 1998 году отец утонул, выйдя на лодке в море; для Линдквиста это стало тяжёлой утратой. Море в его книгах выступает мрачной силой.",
+      "works": [
+        {
+          "ref": "handling-the-undead",
+          "note": "в статье отмечено: море как зловещая сила появляется в этом романе и в рассказе из «Бумажных стен»"
+        },
+        {
+          "ref": "paper-walls"
+        }
+      ],
+      "chapter": "loss-and-comedy",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Lindqvists far drunknade 1998 när han var ute på sjön, en förlust som drabbade Lindqvist hårt."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарист телесериала Reuter \u0026 Skoog",
+      "long": "После двенадцати лет на сцене в жанре стендап писал материал для других комиков; в 1999 году — сценарист сериала Reuter \u0026 Skoog.",
+      "chapter": "loss-and-comedy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lindqvist was also a writer for the television series Reuter \u0026 Skoog (1999)"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и прорыв в литературе",
+      "long": "Дебютный роман о вампирах принёс Линдквисту известность в Швеции и за её пределами; книга продана более чем в тридцать стран.",
+      "works": [
+        {
+          "ref": "let-the-right-one-in"
+        }
+      ],
+      "chapter": "vampires-and-fame",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Lindqvist debuterade som författare och fick sitt genombrott 2004 med vampyrromanen Låt den rätte komma in"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий для сериала «Комиссия»",
+      "long": "Написал сценарий для драматического сериала Шведского телевидения Kommissionen.",
+      "chapter": "vampires-and-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "wrote the screenplays for Sveriges Television's drama series Kommissionen (2005)"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Летняя программа на радио Sveriges Radio P1",
+      "long": "В 2006 году Линдквист выступил ведущим радиопрограммы «Sommarpratare» на канале P1 Шведского радио.",
+      "chapter": "vampires-and-fame",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2006 var Lindqvist sommarpratare i Sveriges Radio P1."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Экранизация дебютного романа и «Золотой жук»",
+      "long": "Вышел фильм по первому роману, сценарий к которому написал сам автор; за него он получил премию «Золотой жук» за лучший сценарий.",
+      "works": [
+        {
+          "ref": "let-the-right-one-in"
+        }
+      ],
+      "chapter": "vampires-and-fame",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2008 – Guldbagge för bästa manus till filmatiseringen av Låt den rätte komma in"
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Литературные премии Сельмы Лагерлёф и «Гётеборгс-Постен»",
+      "long": "В 2008 году получил литературную премию фонда Сельмы Лагерлёф и литературную премию газеты Göteborgs-Posten.",
+      "chapter": "vampires-and-fame",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2008 – Göteborgs-Postens litteraturpris\n2008 – Stiftelsen Selma Lagerlöfs litteraturpris"
+      }
+    },
+    {
+      "key": "creation-2014",
+      "date": {
+        "from": "2014",
+        "to": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над новым циклом из трёх книг",
+      "long": "В 2014–2017 годах написал трилогию «Платсерна» («Места»), действие которой связано со Стокгольмом и шведской глубинкой.",
+      "works": [
+        {
+          "ref": "himmelstrand"
+        },
+        {
+          "ref": "the-movement"
+        },
+        {
+          "ref": "locus-x"
+        }
+      ],
+      "chapter": "places-trilogy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2014—2017 годах написал «Трилогию места»"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "let-the-right-one-in",
+      "title": "Впусти меня",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "handling-the-undead",
+      "title": "Блаженны мёртвые",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "paper-walls",
+      "title": "Бумажные стены",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "harbour",
+      "title": "Человеческая гавань",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "little-star",
+      "title": "Звёздочка",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "himmelstrand",
+      "title": "Химмельстранд. Место первое",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-movement",
+      "title": "Движение. Место второе",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "locus-x",
+      "title": "Локус Икс. Место последнее",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

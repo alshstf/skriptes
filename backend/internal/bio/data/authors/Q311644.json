@@ -1,0 +1,731 @@
+{
+  "qid": "Q311644",
+  "name": "Наполеон Хилл",
+  "born": "1883-10-26",
+  "died": "1970-11-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B8%D0%BB%D0%BB%2C_%D0%9D%D0%B0%D0%BF%D0%BE%D0%BB%D0%B5%D0%BE%D0%BD",
+      "rev": 154441287
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Napoleon_Hill",
+      "rev": 1378684423
+    }
+  ],
+  "chapters": [
+    {
+      "key": "virginia-youth",
+      "title": "Виргиния, школа бизнеса, первый брак",
+      "from": 1883,
+      "to": 1904
+    },
+    {
+      "key": "alabama-washington",
+      "title": "Лесоторговля, бегство и автоколледж",
+      "from": 1905,
+      "to": 1914
+    },
+    {
+      "key": "chicago-institute",
+      "title": "Чикаго: институт, журналы, обвинения",
+      "from": 1915,
+      "to": 1927
+    },
+    {
+      "key": "law-of-success",
+      "title": "Взлёт и крах 1929 года",
+      "from": 1928,
+      "to": 1936
+    },
+    {
+      "key": "think-and-grow-rich",
+      "title": "Бестселлер и третий брак",
+      "from": 1937,
+      "to": 1951
+    },
+    {
+      "key": "school-of-success",
+      "title": "Курсы успеха и фонд",
+      "from": 1952,
+      "to": 1970
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1883",
+      "date": {
+        "from": "1883-10-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в горах Виргинии",
+      "long": "Родился в округе Уайз на юго-западе Виргинии, близ городка Паунд. Мать умерла, когда ему было девять, отец женился вторично.",
+      "place": {
+        "label": "Pound, Виргиния"
+      },
+      "chapter": "virginia-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Оливер Наполеон Хилл родился в 1883 году в округе Уайз, Виргиния."
+      }
+    },
+    {
+      "key": "career-1901",
+      "date": {
+        "from": "1901",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа у угольного магната Айерса",
+      "long": "После школы бизнеса в Тазуэлле поступил на работу к угольному магнату и юристу Руфусу Айерсу; позже стал управляющим шахтой.",
+      "place": {
+        "label": "Тазуэлл"
+      },
+      "chapter": "virginia-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1901 году пошёл на работу к Руфусу Айерсу, юристу, угольному магнату и бывшему генеральному прокурору штата Виргиния"
+      }
+    },
+    {
+      "key": "love-1903",
+      "date": {
+        "from": "1903-06-17",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эдит Уитман",
+      "long": "Первый зарегистрированный брак с Эдит Уитман; в 1905 году родилась дочь. Брак описывают как неблагополучный.",
+      "place": {
+        "label": "Виргиния"
+      },
+      "chapter": "virginia-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "17 июня 1903 года Хилл женился на женщине по имени Эдит Уитман"
+      }
+    },
+    {
+      "key": "child-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Эдит",
+      "long": "В браке с Эдит Уитман родилась дочь Эдит Уитман Хилл.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1903, Hill married for the second time to Edith Whitman; in 1905 their child Edith Whitman Hill was born."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907-06-28",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лесоторговая компания в Мобиле",
+      "long": "Переехав в Мобил, штат Алабама, занялся торговлей пиломатериалами и зарегистрировал лесоторговую компанию.",
+      "place": {
+        "label": "Мобил"
+      },
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 июня 1907 года он зарегистрировал компанию Acree-Hill Lumber Company"
+      }
+    },
+    {
+      "key": "family-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Иск о разводе от первой жены",
+      "long": "Эдит подала на развод; на слушаниях друзья и партнёры Хилла свидетельствовали о его связях с проститутками.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His wife Edith filed for divorce in 1908"
+      }
+    },
+    {
+      "key": "other-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Смена имени на Наполеон Хилл",
+      "long": "Отказался от имени Оливер и стал называть себя Наполеоном Хиллом.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хилл лишь в 1908 году перестал использовать своё первое имя «Оливер» и начал представляться как «Наполеон Хилл»"
+      }
+    },
+    {
+      "key": "persecution-1908",
+      "date": {
+        "from": "1908-05",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест за поддержку чека",
+      "long": "Арестован за поддержку чека; его лесной бизнес в это время столкнулся с подозрениями в мошенничестве.",
+      "place": {
+        "label": "Мобил"
+      },
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1908 года Хилл был арестован за поддержку чека"
+      }
+    },
+    {
+      "key": "relocation-1908",
+      "date": {
+        "from": "1908-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Бегство из Алабамы в Вашингтон",
+      "long": "Осенью 1908 года покинул Алабаму, избегая кредиторов и судебного преследования, в декабре перебрался в Вашингтон.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В декабре 1908 года он перебрался в Вашингтон, где составлял рассказы об успешных людях для мотивационного журнала."
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вашингтонский автомобильный колледж",
+      "long": "Основал Вашингтонский автомобильный колледж, студенты которого собирали машины для компании Carter Motor Corporation.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1909 he founded the Automobile College of Washington."
+      }
+    },
+    {
+      "key": "love-1910",
+      "date": {
+        "from": "1910-06",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Флоренс Хорнер",
+      "long": "Женился на Флоренс Элизабет Хорнер из состоятельной семьи Западной Виргинии; в браке родились три сына.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1910, Hill married Florence Elizabeth Horner, with whom he had three sons"
+      }
+    },
+    {
+      "key": "child-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джеймса",
+      "long": "Родился первый сын Джеймс.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "James, born in 1911"
+      }
+    },
+    {
+      "key": "child-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Блэра",
+      "long": "Родился сын Наполеон Блэр. Позднее Хилл писал, что сын родился без ушей, но научился слышать и говорить почти нормально.",
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Napoleon Blair, born in 1912"
+      }
+    },
+    {
+      "key": "poverty-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Закрытие автомобильного колледжа",
+      "long": "Колледж закрылся, несмотря на вложения семьи жены; Хилл перебрался в Ламберпорт к её родным и работал в газовой компании.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "alabama-washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Despite investment from her family, the Automobile College of Washington closed in 1912."
+      }
+    },
+    {
+      "key": "career-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кондитерский магазин и вытеснение из бизнеса",
+      "long": "Оставил Ласальский университет, купил в Чикаго кондитерский магазин, но партнёры вытеснили его из бизнеса.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К 1915 году Хилл покинул университет и вместе с тем же Эрнестом Хантом купил в Чикаго кондитерский магазин"
+      }
+    },
+    {
+      "key": "career-1915-2",
+      "date": {
+        "from": "1915-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Институт Джорджа Вашингтона",
+      "long": "Учредил в Чикаго образовательную организацию, обещавшую обучать «принципам успеха».",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В сентябре 1915 года Хилл учредил «Институт Джорджа Вашингтона»"
+      }
+    },
+    {
+      "key": "child-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Дэвида",
+      "long": "Родился младший сын Дэвид; семья жила у родных жены в Западной Виргинии.",
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "and David, born in 1918"
+      }
+    },
+    {
+      "key": "persecution-1918",
+      "date": {
+        "from": "1918-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Ордера на арест за продажу акций",
+      "long": "Ордера выданы за нарушение законов о защите инвесторов при продаже акций института; Хилл внёс залог 2000 долларов и осуждён не был.",
+      "place": {
+        "label": "Иллинойс"
+      },
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 1918 года в штате Иллинойс были выданы два ордера на арест Хилла"
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918-11-11",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственный журнал об успехе",
+      "long": "Начал издавать журнал об успехе; позднее лишился прав на него из-за конфликтов с сотрудниками.",
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Однако с 11 ноября 1918 года, праздничного для США дня перемирия, Хилл начал издавать журнал об успехе Hill’s Golden Rule («Золотое правило Хилла»)"
+      }
+    },
+    {
+      "key": "persecution-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Обвинения Федеральной торговой комиссии",
+      "long": "Федеральная торговая комиссия выдвинула обвинения в мошеннической рекламе против Хилла и его журнала.",
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1919 the Federal Trade Commission brought charges against Hill and Hill's Golden Rule for fraudulent advertising"
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Фонд заочного обучения заключённых",
+      "long": "Фонд предлагал заключённым курсы по переписке; в 1923 году местные газеты назвали его мошеннической затеей.",
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1922 году Хилл вместе с тюремным капелланом по фамилии Тид основал благотворительный фонд Intra-Wall Correspondence School"
+      }
+    },
+    {
+      "key": "other-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Убийство журналиста Меллетта и рассказы Хилла",
+      "long": "После убийства журналиста Дона Меллетта Хилл утверждал о дружбе с ним и о том, что сам едва не стал жертвой тех же убийц.",
+      "place": {
+        "label": "Кантон"
+      },
+      "chapter": "chicago-institute",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После громкого убийства мафией в 1926 году кантонского журналиста Дона Меллетта Хилл утверждал, что близко дружил с погибшим"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый крупный успех и роскошная жизнь",
+      "long": "Переехал в Филадельфию; восьмитомный курс стал первым крупным успехом. К 1929 году Хилл купил «Роллс-Ройс» и участок в 600 акров в Катскилле.",
+      "place": {
+        "label": "Филадельфия"
+      },
+      "works": [
+        {
+          "ref": "law-of-success"
+        }
+      ],
+      "chapter": "law-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1928, Hill relocated to Philadelphia and persuaded a Connecticut-based publisher to publish his eight-volume work… The book was Hill's first major success, allowing Hill to adopt an opulent lifestyle."
+      }
+    },
+    {
+      "key": "poverty-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение в начале Великой депрессии",
+      "long": "Начало Великой депрессии ударило по финансам: имение в Катскилле заложено, расходы жены и детей оплатила её семья.",
+      "place": {
+        "label": "Катскилл"
+      },
+      "chapter": "law-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The beginning of the Great Depression, however, affected Hill's finances adversely, forcing his Catskills property into foreclosure before the end of 1929."
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Коммерческий провал следующей книги",
+      "long": "Следующая книга не имела коммерческого успеха; Хилл разъезжал по стране, начиная недолговечные предприятия.",
+      "works": [
+        {
+          "ref": "magic-ladder-to-success"
+        }
+      ],
+      "chapter": "law-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hill's next published work, The Magic Ladder to Success (1930), proved to be a commercial failure."
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер и возвращение богатства",
+      "long": "Книга стала главным произведением Хилла и вернула ему богатство; новая жена Роза Ли внесла существенный вклад в авторскую и редакторскую работу.",
+      "works": [
+        {
+          "ref": "think-and-grow-rich"
+        }
+      ],
+      "chapter": "think-and-grow-rich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1937, Hill published the bestselling book Think and Grow Rich, which became Hill's best-known work."
+      }
+    },
+    {
+      "key": "family-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Розой Ли",
+      "long": "Развод со второй женой Розой Ли; большая часть доходов от книги досталась ей.",
+      "chapter": "think-and-grow-rich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple divorced around 1940."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Очередной коммерческий провал",
+      "long": "Новая книга не имела коммерческого успеха.",
+      "works": [
+        {
+          "ref": "mental-dynamite"
+        }
+      ],
+      "chapter": "think-and-grow-rich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941 Hill published Mental Dynamite, but it was a commercial failure."
+      }
+    },
+    {
+      "key": "love-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Энни Лу Норман, переезд в Калифорнию",
+      "long": "Женился на Энни Лу Норман, у которой снимал комнату, и переехал с ней в Калифорнию, вернувшись к лекционной деятельности.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "chapter": "think-and-grow-rich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1943 and relocated to California."
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Радиопередача в Лос-Анджелесе",
+      "long": "Недолго вёл передачу на радио KFWB в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "think-and-grow-rich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1947 he briefly hosted a show on KFWB Radio in Los Angeles."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Совместные курсы успеха с Клементом Стоуном",
+      "long": "Десять лет читал лекции о «науке успеха» совместно с предпринимателем У. Клементом Стоуном; в 1960-х они разошлись.",
+      "chapter": "school-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1952 to 1962, Hill taught his Philosophy of Personal Achievement—Lectures on Science of Success in association with W. Clement Stone."
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Соавторство со Стоуном",
+      "long": "Вместе со Стоуном написал книгу о позитивном настрое.",
+      "works": [
+        {
+          "ref": "success-through-positive-mental-attitude"
+        }
+      ],
+      "chapter": "school-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1960, Hill and Stone co-authored the book Success Through A Positive Mental Attitude."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Фонда Наполеона Хилла",
+      "long": "Основал Фонд Наполеона Хилла.",
+      "chapter": "school-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1963 he founded the Napoleon Hill Foundation."
+      }
+    },
+    {
+      "key": "death-1970",
+      "date": {
+        "from": "1970-11-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Гринвилле",
+      "long": "Умер в возрасте 87 лет; состояние на момент смерти оценивалось примерно в миллион долларов.",
+      "place": {
+        "label": "Гринвилл, Южная Каролина"
+      },
+      "chapter": "school-of-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Napoleon Hill died aged 87 on November 8, 1970."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "law-of-success",
+      "title": "Законы успеха",
+      "qid": "Q6830070",
+      "written": {
+        "from": 1925,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "magic-ladder-to-success",
+      "title": "Волшебная лестница к успеху",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "think-and-grow-rich",
+      "title": "Думай и богатей",
+      "qid": "Q1187907",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "mental-dynamite",
+      "title": "Ментальная динамит",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "success-through-positive-mental-attitude",
+      "title": "Успех через позитивный мысленный настрой",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "grow-rich-with-peace-of-mind",
+      "title": "Богатей с душевным покоем",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    }
+  ]
+}

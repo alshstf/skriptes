@@ -1,0 +1,480 @@
+{
+  "qid": "Q333251",
+  "name": "Питер Бенчли",
+  "born": "1940-05-08",
+  "died": "2006-02-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BD%D1%87%D0%BB%D0%B8%2C_%D0%9F%D0%B8%D1%82%D0%B5%D1%80",
+      "rev": 149035139
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Peter_Benchley",
+      "rev": 1372768540
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth",
+      "title": "Семья и учёба",
+      "from": 1940,
+      "to": 1960
+    },
+    {
+      "key": "washington",
+      "title": "Путешествие, журналистика, Белый дом",
+      "from": 1961,
+      "to": 1969
+    },
+    {
+      "key": "jaws",
+      "title": "Челюсти и слава",
+      "from": 1970,
+      "to": 1979
+    },
+    {
+      "key": "sea",
+      "title": "Море и защита акул",
+      "from": 1980,
+      "to": 2006
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1940",
+      "date": {
+        "from": "1940-05-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в литературной семье",
+      "long": "Родился в Нью-Йорке в семье писателя Натаниэля Бенчли; внук Роберта Бенчли, основателя Algonquin Round Table.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Peter Bradford Benchley (May 8, 1940 – February 11, 2006)"
+      }
+    },
+    {
+      "key": "other-1961",
+      "date": {
+        "from": "1961",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Кругосветное путешествие после Гарварда",
+      "long": "После окончания Гарварда в 1961 году Бенчли год путешествовал по миру.",
+      "works": [
+        {
+          "ref": "time-and-a-ticket",
+          "note": "впечатления от поездки легли в основу первой книги, travel memoir"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from college in 1961, Benchley travelled around the world for a year."
+      }
+    },
+    {
+      "key": "love-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Венди Уэссон",
+      "long": "На Нантакете Бенчли познакомился с Уинифред (Венди) Уэссон, будущей женой.",
+      "place": {
+        "label": "Нантакет"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1963, Benchley was dining at an inn in Nantucket when he met Winifred \"Wendy\" Wesson"
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Венди Уэссон",
+      "long": "В 1964 году Бенчли женился на Венди Уэссон.",
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "whom he dated and then married the next year, 1964"
+      }
+    },
+    {
+      "key": "creation-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Газетная заметка о гигантской акуле",
+      "long": "Заметка о рыбаке, поймавшем у берегов Лонг-Айленда большую белую акулу весом 4550 фунтов, дала Бенчли идею романа об акуле-людоеде.",
+      "works": [
+        {
+          "ref": "jaws",
+          "note": "замысел романа о акуле-людоеде развивался с момента этой заметки"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "since he had read a news report of a fisherman catching a 4,550-pound  (2,060 kg) great white shark off the coast of Long Island in 1964"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Автор речей президента Джонсона",
+      "long": "Бенчли работал автором речей президента Линдона Джонсона до конца его президентского срока.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "works": [
+        {
+          "ref": "q-clearance",
+          "note": "роман написан по опыту работы в Белом доме при Джонсоне"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967 he became a speechwriter in the White House for President Lyndon B. Johnson until Johnson's term ended in 1969."
+      }
+    },
+    {
+      "key": "child-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Трейси",
+      "long": "В 1967 году родилась дочь Трейси.",
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967, his daughter Tracy was born."
+      }
+    },
+    {
+      "key": "child-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Клейтона",
+      "long": "В 1969 году в Стонингтоне, штат Коннектикут, родился сын Клейтон.",
+      "place": {
+        "label": "Стонингтон"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where son Clayton was born in 1969"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Пеннингтон, Нью-Джерси",
+      "long": "Семья поселилась в Пеннингтоне, Нью-Джерси; из-за нехватки места Бенчли снял под кабинет комнату над компанией по продаже печного оборудования.",
+      "place": {
+        "label": "Пеннингтон"
+      },
+      "works": [
+        {
+          "ref": "jaws",
+          "note": "зимой роман писался в этом кабинете над отопительной компанией"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the family eventually got a house at Pennington, New Jersey, in 1970"
+      }
+    },
+    {
+      "key": "poverty-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Случайные заработки, последняя попытка в литературе",
+      "long": "К 1971 году Бенчли перебивался разовой работой, чтобы содержать семью; позже он называл это последней попыткой остаться писателем.",
+      "works": [
+        {
+          "ref": "jaws",
+          "note": "агент организовал встречи с издателями, на которых Бенчли предлагал идею романа об акуле"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1971, Benchley was doing various freelance jobs to support himself and his family."
+      }
+    },
+    {
+      "key": "creation-1971",
+      "date": {
+        "from": "1971",
+        "to": "1973",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над романом за скромный аванс",
+      "long": "Редактор Doubleday Томас Конгдон предложил аванс в тысячу долларов; после первых 100 страниц значительную часть текста пришлось переписать. Работа шла в Пеннингтоне и в Стонингтоне.",
+      "place": {
+        "label": "Стонингтон"
+      },
+      "works": [
+        {
+          "ref": "jaws",
+          "note": "аванс издательства Doubleday и переписывание первых глав"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1971, Benchley was doing various freelance jobs to support himself and his family. During this period"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер на 44 недели",
+      "long": "Роман имел большой успех и 44 недели держался в списке бестселлеров, несмотря на критику характеров и стиля.",
+      "works": [
+        {
+          "ref": "jaws"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jaws was published in 1974 and became a great success, a bestseller for 44 weeks."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход фильма Спилберга, мировой успех",
+      "long": "Бенчли написал ранние варианты сценария, окончательный текст в основном написал Карл Готлиб; сам Бенчли появился в фильме в эпизоде репортёра. Фильм собрал более 470 млн долларов.",
+      "works": [
+        {
+          "ref": "jaws"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "wrote the majority of the final script for the Spielberg movie released in June 1975"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соавторство сценария второго фильма",
+      "long": "Бенчли стал соавтором сценария экранизации второго романа; фильм вошёл в десятку самых кассовых в США за год.",
+      "works": [
+        {
+          "ref": "the-deep"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Benchley co-wrote the screenplay for the 1977 movie release, along with Tracy Keenan Wynn"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кассовый провал экранизации",
+      "long": "Экранизация «Острова» по сценарию Бенчли вышла в 1980 году и провалилась в прокате.",
+      "works": [
+        {
+          "ref": "the-island"
+        }
+      ],
+      "chapter": "jaws",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "But the movie version of The Island, featuring Michael Caine and co-featuring David Warner, failed financially when released in 1980."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый ведущий Shark Week",
+      "long": "Бенчли стал первым ведущим Shark Week на Discovery Channel; позднее он выступал за защиту акул и морской среды.",
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Also in 1994, Benchley became the first person to host Discovery Channel's Shark Week."
+      }
+    },
+    {
+      "key": "death-2006",
+      "date": {
+        "from": "2006-02-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от лёгочного фиброза",
+      "long": "Умер дома в Принстоне, Нью-Джерси, от лёгочного фиброза в возрасте 65 лет.",
+      "place": {
+        "label": "Принстон"
+      },
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006, Benchley died of pulmonary fibrosis at his home in Princeton, New Jersey, at the age of 65."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "time-and-a-ticket",
+      "title": "Time and a Ticket",
+      "written": {
+        "from": 1962,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "jaws",
+      "title": "Челюсти",
+      "written": {
+        "from": 1971,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "the-deep",
+      "title": "Бездна",
+      "written": {
+        "from": 1975,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "the-island",
+      "title": "Остров",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "girl-of-the-sea-of-cortez",
+      "title": "Девушка из Моря Кортеса",
+      "written": {
+        "from": 1980,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "q-clearance",
+      "title": "Q Clearance",
+      "written": {
+        "from": 1985,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "rummies",
+      "title": "Rummies",
+      "written": {
+        "from": 1988,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "beast",
+      "title": "Тварь",
+      "written": {
+        "from": 1990,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "white-shark",
+      "title": "Белая акула",
+      "written": {
+        "from": 1993,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "shark-trouble",
+      "title": "Shark Trouble",
+      "written": {
+        "from": 2000,
+        "to": 2001
+      }
+    }
+  ]
+}

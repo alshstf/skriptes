@@ -1,0 +1,227 @@
+{
+  "qid": "Q4101316",
+  "name": "Елена Бычкова",
+  "born": "1976-08-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%8B%D1%87%D0%BA%D0%BE%D0%B2%D0%B0%2C_%D0%95%D0%BB%D0%B5%D0%BD%D0%B0_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 147552181
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-and-study",
+      "title": "Москва, журналистика",
+      "from": 1976,
+      "to": 2003
+    },
+    {
+      "key": "debut-and-marriage",
+      "title": "Дебют, брак и соавторство",
+      "from": 2004,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1976",
+      "date": {
+        "from": "1976-08-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Родилась в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Елена Александровна Бычкова (род. 21 августа 1976, г. Москва)"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая литературная публикация",
+      "long": "Первая литературная публикация — рассказ в интернет-журнале молодых российских писателей «Пролог» при министерстве культуры РФ.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая литературная публикация состоялась в 2000 году в интернет-журнале молодых российских писателей «Пролог»"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман и первые премии",
+      "long": "В феврале 2004 года в издательстве «Альфа-книга» вышел дебютный роман, написанный с Натальей Турчаниновой; он получил премии «Серебряный кадуцей» и «Кинжал без имени».",
+      "works": [
+        {
+          "ref": "ruby-karashehra"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебютный роман — «Рубин Карашэхра» — вышел в феврале 2004 года в издательстве «Альфа-книга»."
+      }
+    },
+    {
+      "key": "love-2004",
+      "date": {
+        "from": "2004-09",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Алексеем Пеховым",
+      "long": "Брак с писателем Алексеем Пеховым, с которым с тех пор работает в постоянном соавторстве.",
+      "works": [
+        {
+          "ref": "kindret-blood-brothers"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Замужем за писателем Алексеем Пеховым с сентября 2004 года."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Странник» за городское фэнтези",
+      "long": "Первая книга цикла «Киндрэт» получила премию «Странник» как лучшее городское фэнтези 2001—2005 гг.",
+      "works": [
+        {
+          "ref": "kindret-blood-brothers"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получила литературную премию «Странник» в 2006 году как лучшее городское фэнтези"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Книга года» по версии «Мира Фантастики»",
+      "long": "Роман признан «Книгой года» журналом «Мир Фантастики» как лучшее продолжение отечественного цикла.",
+      "works": [
+        {
+          "ref": "luchezarny"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман «Лучезарный» был назван «Книгой года» журналом «Мир Фантастики» в 2007 году"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход книги в США",
+      "long": "Роман «Кровные братья» вышел в США в издательстве TOR; с 2008 года Бычкова представляет книги за рубежом под псевдонимом Lena Meydan.",
+      "works": [
+        {
+          "ref": "kindret-blood-brothers"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "выпущен в сентябре 2010 года в США издательством TOR"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Эверест-трек и премия «Странник»",
+      "long": "Роман, основанный на впечатлениях авторов от Эверест-трека (подъём на 5550 м), получил премию «Странник».",
+      "place": {
+        "label": "Гималаи"
+      },
+      "works": [
+        {
+          "ref": "sometimes-they-die",
+          "note": "роман написан по личным впечатлениям авторов от Эверест-трека"
+        }
+      ],
+      "chapter": "debut-and-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2013 году профессиональную литературную премию «Странник» получил роман «Иногда они умирают», написанный по личным впечатлениям авторов от Эверест-трека"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ruby-karashehra",
+      "title": "Рубин Карашэхра",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "kindret-blood-brothers",
+      "title": "Киндрэт. Кровные братья",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "luchezarny",
+      "title": "Лучезарный",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "sometimes-they-die",
+      "title": "Иногда они умирают",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

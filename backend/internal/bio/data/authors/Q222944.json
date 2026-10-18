@@ -1,0 +1,699 @@
+{
+  "qid": "Q222944",
+  "name": "Патрик Модиано",
+  "born": "1945-07-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D0%B0%D0%BD%D0%BE%2C_%D0%9F%D0%B0%D1%82%D1%80%D0%B8%D0%BA",
+      "rev": 154248060
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Patrick_Modiano",
+      "rev": 1371872504
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Patrick_Modiano",
+      "rev": 240158294
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-with-strangers",
+      "title": "Детство у чужих людей",
+      "from": 1945,
+      "to": 1956
+    },
+    {
+      "key": "brother-boarding-schools",
+      "title": "Брат, пансионы, разрыв с отцом",
+      "from": 1957,
+      "to": 1966
+    },
+    {
+      "key": "first-novels-goncourt",
+      "title": "Первые романы и Гонкур",
+      "from": 1967,
+      "to": 1978
+    },
+    {
+      "key": "chronicler-of-paris",
+      "title": "Летописец Парижа",
+      "from": 1979,
+      "to": 2013
+    },
+    {
+      "key": "nobel-years",
+      "title": "Нобелевские годы",
+      "from": 2014,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-07-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Булонь-Бийанкуре",
+      "long": "Родился в Булонь-Бийанкуре под Парижем в семье коммерсанта Альбера Модиано и фламандской актрисы Луизы Колпейн.",
+      "place": {
+        "label": "Булонь-Бийанкур"
+      },
+      "chapter": "childhood-with-strangers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jean Patrick Modiano was born in Boulogne-Billancourt, a commune in the western suburbs of Paris on July 30, 1945."
+      }
+    },
+    {
+      "key": "family-1949",
+      "date": {
+        "from": "1949-09",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Два года у кормилицы в Биаррице",
+      "long": "Мать вернулась с каникул в Биарице без сына и оставила его на два года у кормилицы брата Руди; там его крестили.",
+      "place": {
+        "label": "Биарриц"
+      },
+      "chapter": "childhood-with-strangers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En septembre 1949, sa mère rentre de vacances à Biarritz sans lui, l'y laissant pour deux ans à la nourrice de son frère Rudy"
+      }
+    },
+    {
+      "key": "relocation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь с братом в Жуи-ан-Жозас",
+      "long": "Мать, занятая гастролями, поселила обоих братьев в Жуи-ан-Жозас у своей знакомой; в 1953 году после ареста этой женщины Патрик на три года попал в приют.",
+      "place": {
+        "label": "Жуи-ан-Жозас"
+      },
+      "chapter": "childhood-with-strangers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Début 1952, sa mère, rejetant ses enfants, qui souhaite assurer ses tournées en province, installe les deux frères à Jouy-en-Josas"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956-10",
+        "to": "1960-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Пансион школы Монсель",
+      "long": "Учился в пансионе школы Монсель в Жуи-ан-Жозас с военной дисциплиной; неоднократно убегал.",
+      "place": {
+        "label": "Жуи-ан-Жозас"
+      },
+      "chapter": "childhood-with-strangers",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "D'octobre 1956 à juin 1960, il est placé en pensionnat, avec d'autres adolescents de parents fortunés, à l'école du Montcel à Jouy-en-Josas"
+      }
+    },
+    {
+      "key": "loss-1957",
+      "date": {
+        "from": "1957-02",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть младшего брата Руди",
+      "long": "Младший брат Руди умер от лейкемии в десятилетнем возрасте; до 1982 года Модиано посвящал ему свои книги.",
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La mort de celui-ci à la suite d'une leucémie à l'âge de dix ans, en février 1957, sonne la fin de l'enfance."
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Знакомство с Раймоном Кено",
+      "long": "Знакомство с Раймоном Кено, другом матери, который давал ему уроки геометрии, поддерживал его и позднее ввёл в литературный круг издательства Галлимар.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Soutenu depuis l'âge de quinze ans par Raymond Queneau, ami de sa mère rencontré en 1960, qui lui donne des leçons particulières de géométrie"
+      }
+    },
+    {
+      "key": "education-1960",
+      "date": {
+        "from": "1960-09",
+        "to": "1962-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Коллеж Сен-Жозеф в Тонне",
+      "long": "Учился в католическом коллеже-лицее Сен-Жозеф в Тонне (Верхняя Савойя).",
+      "place": {
+        "label": "Тонн"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "De septembre 1960 à juin 1962, on l'éloigne un peu plus en le confiant aux pères du collège-lycée Saint-Joseph de Thônes, en Haute-Savoie"
+      }
+    },
+    {
+      "key": "education-1962",
+      "date": {
+        "from": "1962-06",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавриат в Анси",
+      "long": "Сдал экзамены на степень бакалавра в Анси на год раньше срока.",
+      "place": {
+        "label": "Анси"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il décroche son baccalauréat à Annecy en juin 1962, avec un an d'avance"
+      }
+    },
+    {
+      "key": "education-1962-2",
+      "date": {
+        "from": "1962-11",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из лицея Генриха IV",
+      "long": "Окончательно оставил учёбу, сбежав из интерната парижского лицея Генриха IV, и поселился у матери.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il abandonne définitivement les études à la rentrée suivante, en novembre 1962, en désertant l'internat du lycée Henri-IV à Paris"
+      }
+    },
+    {
+      "key": "poverty-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Продажа краденых книг ради заработка",
+      "long": "Чтобы помогать небогатой матери, продавал букинистам редкие издания, украденные у частных лиц и в библиотеках.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À partir de l'été 1963, toujours pour pallier l'impécuniosité de sa mère, il revend à des libraires des éditions remarquables volées chez des particuliers ou dans des bibliothèques."
+      }
+    },
+    {
+      "key": "family-1964",
+      "date": {
+        "from": "1964-09",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Побег из Бордо и разрыв с отцом",
+      "long": "Против воли записанный отцом в подготовительный класс лицея Монтеня в Бордо, он снова сбежал; последовал разрыв с отцом почти на два года.",
+      "place": {
+        "label": "Бордо"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En septembre 1964, une inscription contre son gré en hypokhâgne au lycée Michel-Montaigne à Bordeaux… une rupture avec son père qui durera près de deux ans."
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Сорбонна ради отсрочки от армии",
+      "long": "Поступил на филологический факультет Сорбонны ради отсрочки от армии, занятия не посещал и степени не получил.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À la rentrée 1965, il s'inscrit à la Sorbonne en faculté de lettres pour prolonger son sursis militaire."
+      }
+    },
+    {
+      "key": "persecution-1965",
+      "date": {
+        "from": "1965-04-08",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Задержание полицией в квартире отца",
+      "long": "Посланный матерью за деньгами к отцу, был задержан полицией, вызванной мачехой; отец назвал его «хулиганом».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le soir du 8 avril 1965, envoyé par sa mère chercher auprès de celui-ci un secours financier, il est emmené par la maréchaussée abusivement alertée par cette belle-mère."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в журнале",
+      "long": "Журнал «Крапуйо» заказал ему статью для специального выпуска; это первый опубликованный текст Модиано.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brother-boarding-schools",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "C'est donc à un connaisseur qu'en 1966 Le Crapouillot commande pour son « spécial LSD » un article évoquant la génération Michel Polnareff, premier texte publié de Patrick Modiano."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман, премии Фенеона и Роже Нимье",
+      "long": "В двадцать два года выпустил первый роман в Галлимаре, прочитав рукопись Кено; книга получила премии Фенеона и Роже Нимье. Отцу роман настолько не понравился, что он пытался скупить тираж.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "place-de-l-etoile"
+        }
+      ],
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968 at the age of 22, Modiano published his first book La Place de l'Étoile, a wartime novel about a Jewish collaborator, after having read the manuscript to Queneau."
+      }
+    },
+    {
+      "key": "love-1970",
+      "date": {
+        "from": "1970-09-12",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Доминик Зерфюс",
+      "long": "Женился на Доминик Зерфюс, дочери архитектора Бернара Зерфюса; свидетелями были Кено и Мальро.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 12 septembre 1970, il épouse Dominique Zehrfuss, fille de l'architecte du CNIT, Bernard Zehrfuss."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гран-при романа Французской академии",
+      "long": "За третий роман получил Гран-при романа Французской академии.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "boulevards-de-ceinture"
+        }
+      ],
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Dès son troisième roman, Les Boulevards de ceinture, le grand prix du roman de l'Académie française de l'année 1972 l'inscrit définitivement comme une figure de la littérature française contemporaine."
+      }
+    },
+    {
+      "key": "creation-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Сценарий фильма с Луи Малем",
+      "long": "Вместе с режиссёром Луи Малем написал сценарий фильма о юноше, оказавшемся в рядах милиции времён оккупации.",
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1973, Modiano co-wrote the screenplay of Lacombe, Lucien with Louis Malle who directed the film."
+      }
+    },
+    {
+      "key": "child-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Зины",
+      "long": "Родилась дочь Зина, впоследствии кинорежиссёр.",
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "De cette union naissent deux filles, Zina Modiano (1974), future réalisatrice, et Marie Modiano (1978), chanteuse et écrivain."
+      }
+    },
+    {
+      "key": "other-1974",
+      "date": {
+        "from": "1974-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Полемика вокруг фильма «Лакомб Люсьен»",
+      "long": "Выход фильма по сценарию Модиано и Маля вызвал полемику из-за отсутствия оправдания пути главного героя.",
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La sortie du film en janvier 1974 déclenche une polémique au sujet de l'absence de justification du parcours du personnage"
+      }
+    },
+    {
+      "key": "loss-1977",
+      "date": {
+        "from": "1977-08-30",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Альбера Модиано",
+      "long": "Отец Альбер Модиано умер в Париже; после разрыва в юности сын больше не виделся с ним.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Patrick Modiano ne reverra jamais son père qui meurt en 1977."
+      }
+    },
+    {
+      "key": "child-1978",
+      "date": {
+        "from": "1978-09-01",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Мари",
+      "long": "Родилась вторая дочь Мари, впоследствии писательница и певица.",
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Мари Модиано 1978-09-01"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гонкуровская премия",
+      "long": "Шестой роман получил Гонкуровскую премию и принёс автору всемирную известность.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "rue-des-boutiques-obscures"
+        }
+      ],
+      "chapter": "first-novels-goncourt",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En novembre 1978, il parvient à la consécration avec son sixième roman, Rue des Boutiques obscures, qui reçoit le prix Goncourt."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996-04-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён орденом Почётного легиона степени кавалера.",
+      "chapter": "chronicler-of-paris",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: кавалер ордена Почётного легиона 1996-04-03"
+      }
+    },
+    {
+      "key": "other-1997",
+      "date": {
+        "from": "1997-04-03",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Упрёк Кларсфельда за книгу о Доре",
+      "long": "Серж Кларсфельд в письме выразил огорчение тем, что Модиано не упомянул его вклад в подготовку книги.",
+      "works": [
+        {
+          "ref": "dora-bruder",
+          "note": "документы о Доре Брюдер Модиано передал адвокат Серж Кларсфельд"
+        }
+      ],
+      "chapter": "chronicler-of-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Klarsfeld en est dépité et lui en fait part dans un courrier du 3 avril 1997."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Член жюри Каннского фестиваля",
+      "long": "Входил в жюри Каннского кинофестиваля.",
+      "place": {
+        "label": "Канны"
+      },
+      "chapter": "chronicler-of-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году Модиано был членом жюри Каннского кинофестиваля."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Чино дель Дука",
+      "long": "Получил Международную премию Чино дель Дука.",
+      "chapter": "chronicler-of-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2010 — Международная премия Чино дель Дука"
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Спор из-за романа Мари Лебе",
+      "long": "Роман Мари Лебе, переработавший эпизоды его жизни, в том числе смерть брата, вызвал спор: писатель не принял такой трактовки.",
+      "chapter": "chronicler-of-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le roman Oublier Modiano de Marie Lebey (2011) crée une polémique avec l'écrivain qui n'admet pas de voir certains épisodes de sa vie romancée, en particulier la mort de son frère."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014-10-09",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Шведская академия присудила Нобелевскую премию по литературе «за искусство памяти, с помощью которого он раскрыл самые неуловимые человеческие судьбы».",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 9 October 2014, the Swedish Academy announced that that year's Nobel Prize in Literature was awarded to Patrick Modiano"
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командор ордена Почётного легиона",
+      "long": "Произведён в командоры ордена Почётного легиона (офицер с 2014 года).",
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "2022 :  Commandeur de la Légion d'honneur (officier en 2014, chevalier en 1996)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "place-de-l-etoile",
+      "title": "Площадь Звезды",
+      "qid": "Q3211685",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "la-ronde-de-nuit",
+      "title": "Ночной дозор",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "boulevards-de-ceinture",
+      "title": "Бульварное кольцо",
+      "qid": "Q3231122",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "villa-triste",
+      "title": "Villa Triste",
+      "qid": "Q3558927",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "rue-des-boutiques-obscures",
+      "title": "Улица тёмных лавок",
+      "qid": "Q3452094",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "dora-bruder",
+      "title": "Дора Брюдер",
+      "qid": "Q3036950",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "un-pedigree",
+      "title": "Родословная",
+      "qid": "Q3548905",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "dans-le-cafe-de-la-jeunesse-perdue",
+      "title": "В кафе утраченной молодости",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "l-horizon",
+      "title": "Горизонт",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

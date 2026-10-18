@@ -1,0 +1,511 @@
+{
+  "qid": "Q105756",
+  "name": "Джон Апдайк",
+  "born": "1932-03-18",
+  "died": "2009-01-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BF%D0%B4%D0%B0%D0%B9%D0%BA%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 149823069
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Updike",
+      "rev": 1377795881
+    }
+  ],
+  "chapters": [
+    {
+      "key": "pennsylvania-harvard",
+      "title": "Пенсильвания и Гарвард",
+      "from": 1932,
+      "to": 1954
+    },
+    {
+      "key": "oxford-new-yorker",
+      "title": "Оксфорд, The New Yorker, первые книги",
+      "from": 1955,
+      "to": 1959
+    },
+    {
+      "key": "ipswich-years",
+      "title": "Ипсуич и слава",
+      "from": 1960,
+      "to": 1973
+    },
+    {
+      "key": "divorce-new-marriage",
+      "title": "Развод и второй брак",
+      "from": 1974,
+      "to": 1979
+    },
+    {
+      "key": "pulitzer-years",
+      "title": "Пулитцеры и поздние романы",
+      "from": 1980,
+      "to": 1999
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы",
+      "from": 2000,
+      "to": 2009
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1932",
+      "date": {
+        "from": "1932-03-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Рединге, Пенсильвания",
+      "long": "Родился в Рединге, штат Пенсильвания, в семье школьного учителя и женщины, писавшей рассказы; до 13 лет жил в Шиллингтоне.",
+      "place": {
+        "label": "Рединг"
+      },
+      "chapter": "pennsylvania-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 18 марта 1932 года в Рединге, до 13 лет жил в Шиллингтоне, в том же штате Пенсильвания."
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы, стипендия в Гарварде",
+      "long": "Окончил школу в Шиллингтоне одним из лучших учеников и получил полную стипендию для учёбы в Гарварде.",
+      "place": {
+        "label": "Шиллингтон"
+      },
+      "chapter": "pennsylvania-harvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Updike graduated from Shillington High School as co-valedictorian and class president in 1950 and received a full scholarship to Harvard University"
+      }
+    },
+    {
+      "key": "love-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мэри Пеннингтон",
+      "long": "Ещё студентом Гарварда женился на Мэри Пеннингтон, студентке художественной школы; в этом браке родились четверо детей.",
+      "chapter": "pennsylvania-harvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953, while a student at Harvard, Updike married Mary Entwistle Pennington"
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Гарварда с отличием",
+      "long": "Окончил Гарвард с отличием, изучал английскую литературу; в студенческие годы редактировал сатирический журнал «Гарвардский пасквилянт».",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "pennsylvania-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году окончил с отличием Гарвардский университет, где изучал английскую литературу"
+      }
+    },
+    {
+      "key": "education-1954-2",
+      "date": {
+        "from": "1954",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Год в Художественной школе Рёскина, Оксфорд",
+      "long": "После Гарварда год учился в Художественной школе Рёскина в Оксфорде; жена жила с ним в Англии.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "pennsylvania-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году окончил с отличием Гарвардский университет, где изучал английскую литературу, а также одногодичные курсы живописи в Художественной школе Рёскина Оксфордского университета"
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало сотрудничества с The New Yorker",
+      "long": "С 1954 года в The New Yorker выходили его рассказы, рецензии и стихи; позднее он два года работал в штате журнала.",
+      "chapter": "oxford-new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hundreds of his stories, reviews, and poems appeared in The New Yorker starting in 1954."
+      }
+    },
+    {
+      "key": "child-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Элизабет",
+      "long": "В Оксфорде родилась первая дочь, Элизабет.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "their first child, Elizabeth, was born in 1955"
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение троих детей: Дэвида, Майкла, Миранды",
+      "long": "Родились сын Дэвид (1957), сын Майкл (1959) и дочь Миранда (1960).",
+      "chapter": "oxford-new-yorker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple had three more children together: David (born 1957), Michael (born 1959), and Miranda (born 1960)."
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над романом на стипендию Гуггенхайма",
+      "long": "Живя в Ипсуиче, написал первый роман о Кролике на стипендию Гуггенхайма.",
+      "place": {
+        "label": "Ипсуич"
+      },
+      "works": [
+        {
+          "ref": "rabbit-run"
+        }
+      ],
+      "chapter": "ipswich-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In Ipswich, Updike wrote Rabbit, Run (1960), on a Guggenheim Fellowship"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия",
+      "long": "Получил Национальную книжную премию за лучшее художественное произведение.",
+      "works": [
+        {
+          "ref": "the-centaur",
+          "note": "статья связывает премию с романом, написанным в Ипсуиче"
+        }
+      ],
+      "chapter": "ipswich-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия за лучшее художественное произведение 1964-01-01"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Обложка Time и споры вокруг романа",
+      "long": "Роман об адюльтере в городке Новой Англии принёс Апдайку обложку Time и вызвал общенациональные споры о сексуальных нравах.",
+      "works": [
+        {
+          "ref": "couples"
+        }
+      ],
+      "chapter": "ipswich-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Couples (1968), about adultery in a fictional Massachusetts town. It garnered Updike an appearance on the cover of Time magazine"
+      }
+    },
+    {
+      "key": "love-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Мэри Пеннингтон",
+      "long": "Апдайк ушёл из семьи к Марте Бернард; развод завершил 21-летний брак с Мэри Пеннингтон.",
+      "works": [
+        {
+          "ref": "too-far-to-go",
+          "note": "сборник о распаде брака Мэйплов отражает опыт развода"
+        }
+      ],
+      "chapter": "divorce-new-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они развелись в 1974 году после 21 года брака."
+      }
+    },
+    {
+      "key": "love-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мартой Бернард",
+      "long": "Женился на Марте Бернард; у неё было трое сыновей от предыдущего брака.",
+      "chapter": "divorce-new-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1977, Updike and Bernhard married."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая Пулитцеровская премия",
+      "long": "Получил первую Пулитцеровскую премию; роман также отмечен Национальной книжной премией и премией Круга критиков.",
+      "works": [
+        {
+          "ref": "rabbit-is-rich"
+        }
+      ],
+      "chapter": "pulitzer-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Пулитцеровская премия за художественную книгу 1982-01-01"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная медаль США в области искусств",
+      "long": "Награждён Национальной медалью США в области искусств.",
+      "chapter": "pulitzer-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the 1989 National Medal of Arts"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая Пулитцеровская премия",
+      "long": "Вторая Пулитцеровская премия, за заключительный роман о Кролике.",
+      "works": [
+        {
+          "ref": "rabbit-at-rest"
+        }
+      ],
+      "chapter": "pulitzer-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Пулитцеровская премия за художественную книгу 1991-01-01"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор Гарварда",
+      "long": "Гарвард присвоил степень почётного доктора.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "pulitzer-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: почётный доктор Гарвардского университета 1992-01-01"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Джефферсоновская лекция",
+      "long": "Прочёл Джефферсоновскую лекцию «Ясность вещей: что американского в американском искусстве».",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Джефферсоновская лекция 2008-01-01"
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Антипремия Literary Review за пожизненные достижения",
+      "long": "Британский Literary Review присудил ему антипремию за пожизненные достижения в изображении секса в прозе.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2008, the editors of the UK's Literary Review magazine awarded Updike their Bad Sex in Fiction Lifetime Achievement Award"
+      }
+    },
+    {
+      "key": "death-2009",
+      "date": {
+        "from": "2009-01-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгких",
+      "long": "Умер от рака лёгких в хосписе в Данверсе, штат Массачусетс, в возрасте 76 лет.",
+      "place": {
+        "label": "Данверс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Updike died of lung cancer at a hospice in Danvers, Massachusetts, on January 27, 2009, at age 76."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "rabbit-run",
+      "title": "Кролик, беги",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "the-centaur",
+      "title": "Кентавр",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "couples",
+      "title": "Супружеские пары",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "rabbit-redux",
+      "title": "Кролик вернулся",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "too-far-to-go",
+      "title": "Too Far to Go",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "rabbit-is-rich",
+      "title": "Кролик разбогател",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "witches-of-eastwick",
+      "title": "Иствикские ведьмы",
+      "qid": "Q1213440",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "rabbit-at-rest",
+      "title": "Кролик успокоился",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "widows-of-eastwick",
+      "title": "Иствикские вдовы",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    }
+  ]
+}

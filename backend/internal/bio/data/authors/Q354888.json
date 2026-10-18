@@ -1,0 +1,416 @@
+{
+  "qid": "Q354888",
+  "name": "Дэвид Эддингс",
+  "born": "1931-07-07",
+  "died": "2009-06-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%B4%D0%B4%D0%B8%D0%BD%D0%B3%D1%81%2C_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4",
+      "rev": 149822990
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/David_Eddings",
+      "rev": 1380698314
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-armiya",
+      "title": "Снохомиш, Рид-колледж, армия",
+      "from": 1931,
+      "to": 1956
+    },
+    {
+      "key": "magistratura-brak",
+      "title": "Магистратура, брак, преподавание",
+      "from": 1957,
+      "to": 1969
+    },
+    {
+      "key": "sud-tyurma",
+      "title": "Суд, тюрьма, неудачные романы",
+      "from": 1970,
+      "to": 1981
+    },
+    {
+      "key": "belgariad",
+      "title": "Белгариад и успех",
+      "from": 1982,
+      "to": 1994
+    },
+    {
+      "key": "soavtor-utraty",
+      "title": "Соавторство, утраты, последние годы",
+      "from": 1995,
+      "to": 2009
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-07-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Спокане",
+      "long": "Родился в Спокане, штат Вашингтон, в семье Джорджа Уэйна и Теоне (Берге) Эддингс.",
+      "place": {
+        "label": "Спокан"
+      },
+      "chapter": "detstvo-armiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Eddings was born in Spokane, Washington, to George Wayne Eddings and Theone (Berge) Eddings, in 1931."
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Снохомише",
+      "long": "Вырос в Снохомише близ Пьюджет-Саунда; окончил Снохомишскую школу в 1949 году.",
+      "place": {
+        "label": "Снохомиш"
+      },
+      "chapter": "detstvo-armiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduating from Snohomish High School in 1949"
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом бакалавра Рид-колледжа",
+      "long": "Окончил Рид-колледж; дипломной работой стал первый роман.",
+      "place": {
+        "label": "Портленд"
+      },
+      "works": [
+        {
+          "ref": "how-lonely-are-the-dead",
+          "note": "роман написан как выпускная работа в Рид-колледже"
+        }
+      ],
+      "chapter": "detstvo-armiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated with a BA from Reed College in 1954, writing his first novel, How Lonely Are The Dead, as his senior thesis."
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура Вашингтонского университета",
+      "long": "Четыре года учился в аспирантуре в Сиэтле; степень магистра получил в 1961 году, представив незаконченный роман.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "magistratura-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After being discharged in 1956, Eddings attended the graduate school of the University of Washington in Seattle for four years, graduating with an MA in 1961"
+      }
+    },
+    {
+      "key": "love-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джудит Ли Шалль",
+      "long": "Познакомился с будущей женой во время работы в «Боинге»; в 1962 году они поженились, Джудит стала зваться Ли Эддингс.",
+      "chapter": "magistratura-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1962, with Judith taking the name Leigh Eddings."
+      }
+    },
+    {
+      "key": "child-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Усыновление сына Скотта",
+      "long": "Супруги усыновили двухмесячного мальчика Скотта Дэвида; между 1966 и 1969 годами усыновили также девочку.",
+      "chapter": "magistratura-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They adopted one boy in 1966, Scott David, a two months old"
+      }
+    },
+    {
+      "key": "persecution-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Лишение родительских прав, суд",
+      "long": "Супруги лишены опеки над приёмными детьми; признали вину по 11 пунктам обвинения в физическом насилии над детьми.",
+      "chapter": "sud-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1970, the couple lost custody of both children."
+      }
+    },
+    {
+      "key": "persecution-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Год в тюрьме по делу о насилии над детьми",
+      "long": "Каждый из супругов был приговорён в отдельном процессе к году тюрьмы. Первый черновик первого опубликованного романа завершён в заключении в марте 1971 года.",
+      "works": [
+        {
+          "ref": "high-hunt",
+          "note": "черновик завершён в заключении (по словам автора и его бумагам)"
+        }
+      ],
+      "chapter": "sud-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Eddings had completed the first draft of his first published novel, High Hunt, in March 1971 while serving his jail term."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый изданный роман",
+      "long": "После тюрьмы не вернулся в академическую среду, жил в Спокане, работал в продуктовом магазине. Роман вышел в «Патнэм» в начале 1972 года.",
+      "place": {
+        "label": "Спокан"
+      },
+      "works": [
+        {
+          "ref": "high-hunt"
+        }
+      ],
+      "chapter": "sud-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "High Hunt was published in early 1972 by G. P. Putnam's Sons to modestly positive reviews."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало успеха в фэнтези",
+      "long": "Вышел первый том пятитомного «Белгариада» (по совету редактора Лестера дель Рея вместо задуманной трилогии); серия стала популярной.",
+      "works": [
+        {
+          "ref": "belgariad"
+        }
+      ],
+      "chapter": "belgariad",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pawn of Prophecy, the first volume in the series, was issued in April 1982."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Французские премии за фэнтези",
+      "long": "Получил премию Жюли Верланже и премию «Космос-2000».",
+      "chapter": "belgariad",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Жюли Верланже 1991-01-01"
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Ли Эддингс — официальный соавтор",
+      "long": "С 1995 года романы указывались как совместные; в предисловии Эддингс объяснил, что так работали с самого начала.",
+      "chapter": "soavtor-utraty",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1995 onwards, the novels were credited jointly to Leigh Eddings"
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007-01-26",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пожар в рабочем кабинете",
+      "long": "При промывке бензобака автомобиля случайно сгорела около четверти кабинета рядом с домом и спортивный автомобиль.",
+      "chapter": "soavtor-utraty",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On January 26, 2007, Eddings accidentally burned about a quarter of his office"
+      }
+    },
+    {
+      "key": "loss-2007",
+      "date": {
+        "from": "2007-02-28",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Ли",
+      "long": "Ли Эддингс умерла в возрасте 69 лет после серии инсультов; после первого инсульта муж ухаживал за ней дома.",
+      "chapter": "soavtor-utraty",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On February 28, 2007, David Eddings' wife Leigh died following a series of strokes"
+      }
+    },
+    {
+      "key": "illness-2008",
+      "date": {
+        "from": "2008-09",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Быстрое развитие деменции",
+      "long": "По словам брата Денниса, деменция давно беспокоила писателя, с сентября 2008 года болезнь быстро прогрессировала, требовался круглосуточный уход.",
+      "chapter": "soavtor-utraty",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the disease had progressed rapidly since September 2008"
+      }
+    },
+    {
+      "key": "death-2009",
+      "date": {
+        "from": "2009-06-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Карсон-Сити",
+      "long": "Скончался дома в Карсон-Сити, штат Невада. Рукописи и $18 млн завещал Рид-колледжу.",
+      "place": {
+        "label": "Карсон-Сити"
+      },
+      "chapter": "soavtor-utraty",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2 июня 2009 года писатель скончался в своём доме в Карсон-Сити (штат Невада)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "how-lonely-are-the-dead",
+      "title": "How Lonely Are The Dead",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "high-hunt",
+      "title": "Жаркая погоня",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "the-losers",
+      "title": "The Losers",
+      "written": {
+        "from": 1970,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "belgariad",
+      "title": "Летописи Белгариада",
+      "qid": "Q2287605",
+      "written": {
+        "from": 1982,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "malloreon",
+      "title": "Маллореон",
+      "written": {
+        "from": 1987,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "elenium",
+      "title": "Эления",
+      "written": {
+        "from": 1989,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "tamuli",
+      "title": "Тамули",
+      "written": {
+        "from": 1992,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "dreamers",
+      "title": "Мечтатели",
+      "written": {
+        "from": 2003,
+        "to": 2006
+      }
+    }
+  ]
+}

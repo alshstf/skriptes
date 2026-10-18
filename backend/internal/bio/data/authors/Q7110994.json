@@ -1,0 +1,286 @@
+{
+  "qid": "Q7110994",
+  "name": "Джон Коннолли",
+  "born": "1968-05-31",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Connolly_%28author%29",
+      "rev": 1369135532
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dublin-journalism",
+      "title": "Дублин и журналистика",
+      "from": 1968,
+      "to": 1998
+    },
+    {
+      "key": "charlie-parker",
+      "title": "Чарли Паркер и признание",
+      "from": 1999,
+      "to": 2012
+    },
+    {
+      "key": "new-genres",
+      "title": "Новые жанры и награды",
+      "from": 2013,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1968",
+      "date": {
+        "from": "1968-05-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дублине",
+      "long": "Родился в Дублине, Ирландия.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "dublin-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John Connolly (born 31 May 1968) is an Irish writer"
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Шеймус» за дебютный роман",
+      "long": "Первый роман получил премию «Шеймус» за лучший дебютный детективный роман; Коннолли стал первым автором вне США, выигравшим её.",
+      "works": [
+        {
+          "ref": "every-dead-thing"
+        }
+      ],
+      "chapter": "charlie-parker",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "went on to win the 2000 Shamus Award for Best First Private Eye Novel, making Connolly the first author outside of the US to win"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Барри за британский детектив",
+      "long": "Получил премию Барри за лучший британский детективный роман.",
+      "chapter": "charlie-parker",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший британский детективный роман 2003"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Агаты за научно-популярную книгу",
+      "long": "Премия Агаты Кристи за лучшую научно-популярную книгу; награда присуждена антологии Books to Die For, составленной Коннолли и Декланом Бёрком.",
+      "works": [
+        {
+          "ref": "books-to-die-for"
+        }
+      ],
+      "chapter": "charlie-parker",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Agatha Award for Best Non-Fiction 2012"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Энтони за антологию",
+      "long": "Антология Books to Die For получила премию Энтони за лучшую критическую нон-фикшн работу.",
+      "works": [
+        {
+          "ref": "books-to-die-for"
+        }
+      ],
+      "chapter": "new-genres",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Энтони 2013"
+      }
+    },
+    {
+      "key": "creation-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман о последних годах Стэна Лорела",
+      "long": "Многолетний интерес к комику Стэну Лорелу воплотился в романе о последних годах его жизни.",
+      "works": [
+        {
+          "ref": "he-a-novel"
+        }
+      ],
+      "chapter": "new-genres",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2017, Connolly turned a decades-long fascination with the comedian Stan Laurel into the novel he, a fictional exploration of the comedian's last years."
+      }
+    },
+    {
+      "key": "career-2026",
+      "date": {
+        "from": "2026",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётное членство в Тринити-колледже",
+      "long": "Избран почётным членом Тринити-колледжа Дублина, где учился.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "new-genres",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2026, he was made an Honorary Fellow of Trinity College Dublin."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "every-dead-thing",
+      "title": "Every Dead Thing",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "dark-hollow",
+      "title": "Dark Hollow",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "the-killing-kind",
+      "title": "The Killing Kind",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "the-white-road",
+      "title": "The White Road",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "bad-men",
+      "title": "Bad Men",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "nocturnes",
+      "title": "Nocturnes",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "the-black-angel",
+      "title": "The Black Angel",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-book-of-lost-things",
+      "title": "The Book of Lost Things",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "the-unquiet",
+      "title": "The Unquiet",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "the-reapers",
+      "title": "The Reapers",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "the-gates",
+      "title": "The Gates",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "books-to-die-for",
+      "title": "Books to Die For",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "he-a-novel",
+      "title": "He: A Novel",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "the-land-of-lost-things",
+      "title": "The Land of Lost Things",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

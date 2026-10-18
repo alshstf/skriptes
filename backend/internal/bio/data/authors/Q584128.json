@@ -1,0 +1,435 @@
+{
+  "qid": "Q584128",
+  "name": "Ф. Пол Уилсон",
+  "born": "1946-05-17",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/F._Paul_Wilson",
+      "rev": 1371556201
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-medicina",
+      "title": "Детство и медицинская школа",
+      "from": 1946,
+      "to": 1975
+    },
+    {
+      "key": "fantastika-i-uzhasy",
+      "title": "Фантастика и ужасы",
+      "from": 1976,
+      "to": 1991
+    },
+    {
+      "key": "trillery-i-ripmen",
+      "title": "Триллеры и Рипмен Джек",
+      "from": 1992,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1946",
+      "date": {
+        "from": "1946-05-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Джерси-Сити",
+      "long": "Фрэнсис Пол Уилсон родился 17 мая 1946 года в Джерси-Сити, Нью-Джерси.",
+      "place": {
+        "label": "Джерси-Сити"
+      },
+      "chapter": "detstvo-i-medicina",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Francis Paul Wilson (born May 17, 1946)"
+      }
+    },
+    {
+      "key": "other-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое знакомство с Лавкрафтом",
+      "long": "В 1959 году, в тринадцать лет, Уилсон прочёл антологию «The Macabre Reader» и увлёкся Лавкрафтом; позже стал известным поклонником писателя.",
+      "chapter": "detstvo-i-medicina",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was 1959. I was just a kid, a mere thirteen years old when he slipped me my first fix."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первые продажи рассказов в журнал Analog",
+      "long": "В 1970 году, ещё учась в медицинской школе, Уилсон сделал первые продажи в журнал Analog.",
+      "chapter": "detstvo-i-medicina",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wilson made his first sales in 1970 to Analog while still in medical school"
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание медицинской школы",
+      "long": "Уилсон окончил медицинскую школу в 1973 году и стал практикующим врачом-остеопатом.",
+      "chapter": "detstvo-i-medicina",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "while still in medical school (graduating in 1973)"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебютный роман",
+      "long": "В 1976 году вышел дебютный роман Уилсона; в течение 1970-х он продолжал писать научную фантастику.",
+      "works": [
+        {
+          "ref": "healer"
+        }
+      ],
+      "chapter": "fantastika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His debut novel was Healer (1976)."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая премия «Прометей»",
+      "long": "В 1979 году Уилсон получил первую в истории премию «Прометей» за роман, отражающий либертарианские взгляды.",
+      "works": [
+        {
+          "ref": "wheels-within-wheels"
+        }
+      ],
+      "chapter": "fantastika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the first Prometheus Award in 1979 for his novel Wheels Within Wheels"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приход в жанр ужасов, международный бестселлер",
+      "long": "В 1981 году Уилсон обратился к жанру ужасов; роман стал международным бестселлером, а в 1983 году по нему был снят фильм.",
+      "works": [
+        {
+          "ref": "the-keep"
+        }
+      ],
+      "chapter": "fantastika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981, he ventured into the horror genre with the international bestseller The Keep"
+      }
+    },
+    {
+      "key": "creation-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Появление Рипмена Джека",
+      "long": "В 1984 году вышел роман, ставший бестселлером New York Times, где впервые появился антигерой Рипмен Джек.",
+      "works": [
+        {
+          "ref": "the-tomb"
+        }
+      ],
+      "chapter": "fantastika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Repairman Jack, an urban mercenary introduced in the 1984 New York Times bestseller The Tomb"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Награда Зала славы за ранний роман",
+      "long": "В 1990 году Либертарианское футуристическое общество наградило роман призом Зала славы.",
+      "works": [
+        {
+          "ref": "healer"
+        }
+      ],
+      "chapter": "fantastika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hall of Fame Award for Healer (in 1990)"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поворот к медицинским триллерам и мультимедиа",
+      "long": "В 1990-е Уилсон перешёл от фантастики и ужасов к медицинским триллерам и интерактивным сценариям для Disney Interactive; с 1992 по 1996 год вместе с Мэттью Костелло вёл «FTL Newsfeed» на Sci-Fi Channel.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "FTL Newsfeed, which ran daily on the Sci-Fi Channel from 1992 to 1996."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение к Рипмену Джеку",
+      "long": "В 1998 году вышел второй роман о Рипмене Джеке; после этого Уилсон писал по роману в год.",
+      "works": [
+        {
+          "ref": "legacies"
+        }
+      ],
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "refused to write a second Repairman Jack novel until Legacies in 1998"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за рассказ",
+      "long": "В 1999 году Уилсон получил премию Брэма Стокера за лучший рассказ.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Брэма Стокера за лучший рассказ 1999-01-01"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия «Прометей»",
+      "long": "В 2004 году Уилсон получил вторую премию «Прометей», за роман «Sims».",
+      "works": [
+        {
+          "ref": "sims"
+        }
+      ],
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "another in 2004 for Sims"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия гроссмейстера конвенции ужасов",
+      "long": "В 2005 году Уилсон получил Премию гроссмейстера Всемирной конвенции ужасов.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия гроссмейстера Всемирной конвенции ужасов 2005-01-01"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "В 2007 году Уилсон получил премию «Инкпот» Comic-Con в Сан-Диего.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Инкпот» 2007-01-01"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Брэма Стокера за заслуги перед жанром",
+      "long": "В 2008 году Уилсон получил премию Брэма Стокера за заслуги перед жанром.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Брэма Стокера за заслуги перед жанром 2008-01-01"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонки на сайте Byte",
+      "long": "С января 2012 года Уилсон писал для технологического сайта Byte, в основном от лица Рипмена Джека.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2012, Wilson began writing for the tech website Byte"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Специальная премия «Прометей» за достижения",
+      "long": "В 2015 году Уилсон получил третью специальную премию «Прометей» за вклад в литературу.",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015 he received the third special Prometheus Award for Lifetime Achievement"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приз Зала славы «Прометей» за рассказ",
+      "long": "В 2021 году рассказ «Lipidleggin'» получил приз Зала славы «Прометей».",
+      "chapter": "trillery-i-ripmen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, his \"Lipidleggin'\" won the Prometheus Hall of Fame Award."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "healer",
+      "title": "Целитель",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "wheels-within-wheels",
+      "title": "Wheels Within Wheels",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "an-enemy-of-the-state",
+      "title": "An Enemy of the State",
+      "written": {
+        "from": 1970,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "the-keep",
+      "title": "Крепость",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "the-tomb",
+      "title": "Гробница",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "legacies",
+      "title": "Legacies",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "sims",
+      "title": "Sims",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    }
+  ]
+}

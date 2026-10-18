@@ -1,0 +1,226 @@
+{
+  "qid": "Q856014",
+  "name": "Кристофер Джон Сэнсом",
+  "born": "1952-12-09",
+  "died": "2024-04-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%8D%D0%BD%D1%81%D0%BE%D0%BC%2C_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 155590881
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/C._J._Sansom",
+      "rev": 1379606851
+    }
+  ],
+  "chapters": [
+    {
+      "key": "edinburgh-and-law",
+      "title": "Эдинбург, история и право",
+      "from": 1952,
+      "to": 2002
+    },
+    {
+      "key": "shardlake-years",
+      "title": "Мэтью Шардлейк и признание",
+      "from": 2003,
+      "to": 2011
+    },
+    {
+      "key": "illness-and-last-years",
+      "title": "Болезнь и поздние годы",
+      "from": 2012,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-12-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Эдинбурге",
+      "long": "Родился в Эдинбурге, Шотландия, единственный сын Тревора и Энн Сэнсом.",
+      "place": {
+        "label": "Эдинбург"
+      },
+      "chapter": "edinburgh-and-law",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К. Дж. Сэнсом родился в 1952 году в Эдинбурге, Шотландия."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Historical Dagger",
+      "long": "Ассоциация писателей-криминалистов Великобритании присудила премию Historical Dagger за роман «Тёмный огонь».",
+      "works": [
+        {
+          "ref": "dark-fire"
+        }
+      ],
+      "chapter": "shardlake-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2005 — премия Ellis Peters Historical Dagger за роман «Темный огонь»"
+      }
+    },
+    {
+      "key": "illness-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: множественная миелома",
+      "long": "В 2012 году у писателя диагностировали множественную миелому — рак клеток костного мозга.",
+      "chapter": "illness-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2012 году у него была диагностирована множественная миелома (рак клеток костного мозга)."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Сайдвайз",
+      "long": "Премия Sidewise за произведение в жанре альтернативной истории присуждена за роман «Доминион».",
+      "works": [
+        {
+          "ref": "dominion"
+        }
+      ],
+      "chapter": "illness-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2012 — премия Sidewise Award for Alternate History за роман «Доминион»"
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бриллиантовый кинжал Картье",
+      "long": "Ассоциация писателей-криминалистов Великобритании вручила Бриллиантовый кинжал Картье за вклад в развитие детективной прозы.",
+      "chapter": "illness-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2022 — Бриллиантовый кинжал Картье за вклад в развитие детективной прозы"
+      }
+    },
+    {
+      "key": "death-2024",
+      "date": {
+        "from": "2024-04-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в хосписе в Брайтоне",
+      "long": "Умер от рака в хосписе рядом со своим домом в Брайтоне в возрасте 71 года.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "illness-and-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он умер от рака в хосписе недалеко от своего дома в Брайтоне 27 апреля 2024 года в возрасте 71 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dissolution",
+      "title": "Горбун лорда Кромвеля",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "dark-fire",
+      "title": "Тёмный огонь",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "sovereign",
+      "title": "Суверен",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "winter-in-madrid",
+      "title": "Зима в Мадриде",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "revelation",
+      "title": "Седьмая чаша",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "heartstone",
+      "title": "Каменное сердце",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "dominion",
+      "title": "Доминион",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "lamentation",
+      "title": "Стенание",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "tombland",
+      "title": "Мёртвая земля",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

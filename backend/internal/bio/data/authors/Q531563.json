@@ -1,0 +1,345 @@
+{
+  "qid": "Q531563",
+  "name": "Гарольд Роббинс",
+  "born": "1916-05-21",
+  "died": "1997-10-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B1%D0%B1%D0%B8%D0%BD%D1%81%2C_%D0%93%D0%B0%D1%80%D0%BE%D0%BB%D1%8C%D0%B4",
+      "rev": 149603288
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Harold_Robbins",
+      "rev": 1378678780
+    }
+  ],
+  "chapters": [
+    {
+      "key": "new-york",
+      "title": "Нью-Йорк, детство и первые работы",
+      "from": 1916,
+      "to": 1936
+    },
+    {
+      "key": "hollywood",
+      "title": "Голливуд и первая книга",
+      "from": 1937,
+      "to": 1956
+    },
+    {
+      "key": "professional",
+      "title": "Профессиональный писатель",
+      "from": 1957,
+      "to": 1981
+    },
+    {
+      "key": "last-years",
+      "title": "Коляска и последние годы",
+      "from": 1982,
+      "to": 1997
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1916",
+      "date": {
+        "from": "1916-05-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в еврейской семье в Нью-Йорке",
+      "long": "Родился в Нью-Йорке старшим из четырёх детей в еврейской семье; отец — фармацевт, родители — выходцы из Российской империи.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 21 мая 1916 года в Нью-Йорке, старшим из четырёх детей в образованной еврейской семье"
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Голливуд, работа в Universal Pictures",
+      "long": "Оставшись без средств, переехал в Голливуд и устроился экспедитором в Universal Pictures.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1937 году оказался без средств к существованию и, переехав в Голливуд, поступил работать в кинокомпанию Universal Pictures экспедитором."
+      }
+    },
+    {
+      "key": "love-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с подругой детства",
+      "long": "Первый брак с подругой детства, чей отец помог ему получить работу в Голливуде; брак был бездетным.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1937 году оказался без средств к существованию… В этом же году женился в первый раз, брак оказался бездетным"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в Universal Pictures: от клерка до руководителя",
+      "long": "Работал в Universal Pictures с 1940 по 1957 год — от клерка до руководителя.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was employed by Universal Pictures from 1940 to 1957, starting off as a clerk and rising to an executive."
+      }
+    },
+    {
+      "key": "persecution-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет первой книги в ряде штатов и судебные споры",
+      "long": "Первый роман был запрещён в ряде штатов, включая Пенсильванию, из-за сцен насилия и секса; судебные споры принесли автору известность.",
+      "works": [
+        {
+          "ref": "never-love-a-stranger"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая книга «Никогда не люби странника» (Never Love A Stranger) была опубликована в 1948 году… Эта книга из-за сцен насилия и секса была запрещена в некоторых американских штатах"
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "Стал профессиональным писателем; писал обычно по 5000 слов в день.",
+      "chapter": "professional",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1957 года становится профессиональным писателем и пишет обычно 5000 слов в день."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Миллион долларов за права на ещё ненаписанную книгу",
+      "long": "Продюсер Джозеф Левин заплатил писателю миллион долларов за права на будущую книгу до её выхода.",
+      "works": [
+        {
+          "ref": "the-adventurers"
+        }
+      ],
+      "chapter": "professional",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1963, Levine paid Robbins $1 million for pre-publication and film rights for Robbins's upcoming book The Adventurers."
+      }
+    },
+    {
+      "key": "love-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Грейс Палермо",
+      "long": "Женился на Грейс Палермо — второй брак писателя.",
+      "chapter": "professional",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1965 he wed Grace Palermo, who went on to pen an account of her life with Robbins in 2013."
+      }
+    },
+    {
+      "key": "illness-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт и инвалидная коляска",
+      "long": "После инсульта, связанного со злоупотреблением наркотиками, оказался прикован к инвалидной коляске, но продолжал писать.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После инсульта, спровоцированного злоупотреблением наркотиками, с 1982 года был прикован к инвалидной коляске, но продолжал писать."
+      }
+    },
+    {
+      "key": "other-1989",
+      "date": {
+        "from": "1989-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг заимствований у Роббинса в книге Кэти Акер",
+      "long": "Publishers Weekly сообщил, что около четырёх страниц романа были без разрешения вставлены в книгу Кэти Акер; Роббинс задним числом разрешил заимствование, и иск не последовал.",
+      "works": [
+        {
+          "ref": "the-pirate"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1989, Robbins was involved in a literary controversy when the trade periodical Publishers Weekly revealed"
+      }
+    },
+    {
+      "key": "love-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Янн Стапп",
+      "long": "Женился на Янн Стапп (третий брак); они были вместе до его смерти.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Robbins married Jann Stapp in 1992; they remained together until his death."
+      }
+    },
+    {
+      "key": "death-1997",
+      "date": {
+        "from": "1997-10-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечной и дыхательной недостаточности",
+      "long": "Умер от сердечной и дыхательной недостаточности в Палм-Спрингсе, Калифорния.",
+      "place": {
+        "label": "Палм-Спрингс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 14 октября 1997 года от приступа сердечной и дыхательной недостаточности и был похоронен в Мавзолее в Палм-Спрингс в Калифорнии."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "never-love-a-stranger",
+      "title": "Никогда не люби странника",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "the-dream-merchants",
+      "title": "Торговцы грезами",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "a-stone-for-danny-fisher",
+      "title": "Камень для Дэнни Фишера",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "the-carpetbaggers",
+      "title": "Стервятники",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "where-love-has-gone",
+      "title": "Куда ушла любовь",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "the-adventurers",
+      "title": "Искатели приключений",
+      "written": {
+        "from": 1963,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "the-inheritors",
+      "title": "Наследники",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "the-pirate",
+      "title": "Пират",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "the-lonely-lady",
+      "title": "Одинокая леди",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "the-raiders",
+      "title": "Налётчики",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    }
+  ]
+}

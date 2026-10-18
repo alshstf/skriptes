@@ -1,0 +1,163 @@
+{
+  "qid": "Q318845",
+  "name": "Терри Брукс",
+  "born": "1944-01-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%80%D1%83%D0%BA%D1%81%2C_%D0%A2%D0%B5%D1%80%D1%80%D0%B5%D0%BD%D1%81_%D0%94%D0%B8%D0%BD",
+      "rev": 152705854
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Terry_Brooks",
+      "rev": 1371701347
+    }
+  ],
+  "chapters": [
+    {
+      "key": "illinois-and-law",
+      "title": "Стерлинг, колледж, юриспруденция",
+      "from": 1944,
+      "to": 1976
+    },
+    {
+      "key": "shannara",
+      "title": "Меч Шаннары и уход из права",
+      "from": 1977,
+      "to": 1996
+    },
+    {
+      "key": "later-years",
+      "title": "Сиэтл, признание, частичный уход",
+      "from": 1997,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1944",
+      "date": {
+        "from": "1944-01-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Стерлинге, Иллинойс",
+      "long": "Родился 8 января 1944 года в небольшом городке Стерлинг, штат Иллинойс, где провёл детство и юность.",
+      "place": {
+        "label": "Стерлинг"
+      },
+      "chapter": "illinois-and-law",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Терри Брукс родился 8 января 1944 года в небольшом городке Стерлинг в Иллинойсе"
+      }
+    },
+    {
+      "key": "education-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Гамильтонского колледжа",
+      "long": "Получил степень бакалавра по английской литературе в Гамильтонском колледже, затем получил степень доктора юриспруденции в Школе права Университета Вашингтона и Ли. Писать начал ещё в колледже.",
+      "chapter": "illinois-and-law",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1966 году он получил степень бакалавра в области английской литературы, окончив Гамильтонский колледж"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый фэнтези-бестселлер, уход из юриспруденции",
+      "long": "Дебютный фэнтези-роман, вдохновлённый книгами Толкина, стал первой книгой жанра в списке бестселлеров The New York Times. После успеха Брукс оставил юридическую карьеру ради профессионального писательства.",
+      "works": [
+        {
+          "ref": "shannara-original-trilogy",
+          "note": "по признанию автора, роман вдохновлён книгами Толкина"
+        }
+      ],
+      "chapter": "shannara",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году он написал и опубликовал роман в жанре фэнтези — «Меч Шаннары»… «Меч Шаннары» стал первой книгой в этом жанре, попавшей в рейтинг бестселлеров The New York Times"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "Получил премию «Инкпот».",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won an Inkpot Award in 1997."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за вклад в жанр",
+      "long": "Удостоен Всемирной премии фэнтези за вклад в жанр.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brooks received a World Fantasy Award for Life Achievement in 2017."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shannara-original-trilogy",
+      "title": "Трилогия Шаннары",
+      "qid": "Q16862645",
+      "written": {
+        "from": 1977,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "magic-kingdom-for-sale",
+      "title": "Продается волшебное королевство — ПРОДАНО!",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "heritage-of-shannara",
+      "title": "Наследие Шаннары",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "first-king-of-shannara",
+      "title": "First King of Shannara",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    }
+  ]
+}

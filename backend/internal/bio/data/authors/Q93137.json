@@ -1,0 +1,655 @@
+{
+  "qid": "Q93137",
+  "name": "Пер Лагерквист",
+  "born": "1891-05-23",
+  "died": "1974-07-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D0%B3%D0%B5%D1%80%D0%BA%D0%B2%D0%B8%D1%81%D1%82%2C_%D0%9F%D0%B5%D1%80",
+      "rev": 155601699
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/P%C3%A4r_Lagerkvist",
+      "rev": 59394573
+    }
+  ],
+  "chapters": [
+    {
+      "key": "smaland-uppsala",
+      "title": "Смоланд и Уппсала",
+      "from": 1891,
+      "to": 1912
+    },
+    {
+      "key": "cubism-wanderings",
+      "title": "Париж, кубизм, кочевая жизнь",
+      "from": 1913,
+      "to": 1924
+    },
+    {
+      "key": "elaine-home",
+      "title": "Элен и собственный дом",
+      "from": 1925,
+      "to": 1932
+    },
+    {
+      "key": "against-violence",
+      "title": "Против насилия",
+      "from": 1933,
+      "to": 1949
+    },
+    {
+      "key": "nobel-years",
+      "title": "Варавва и Нобелевская премия",
+      "from": 1950,
+      "to": 1966
+    },
+    {
+      "key": "last-years",
+      "title": "Одиночество",
+      "from": 1967,
+      "to": 1974
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1891",
+      "date": {
+        "from": "1891-05-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье железнодорожника в Векшё",
+      "long": "Родился в Векшё, в Смоланде, младшим из семи детей в семье начальника железнодорожной станции; семья была набожной, почти пуританской.",
+      "place": {
+        "label": "Векшё"
+      },
+      "chapter": "smaland-uppsala",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель родился 23 мая 1891 года в городе Векшё, провинция Смоланд, Швеция, в семье начальника местной железнодорожной станции."
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906-11-19",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в местной газете",
+      "long": "В пятнадцать лет напечатал в местной газете рассказ «Материнская любовь» — первую публикацию.",
+      "place": {
+        "label": "Векшё"
+      },
+      "chapter": "smaland-uppsala",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебютом литературной деятельности писателя стал рассказ «Материнская любовь», напечатанный в местной газете «Смоландспостен» 19 ноября 1906 года."
+      }
+    },
+    {
+      "key": "other-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Радикальный социализм и первые стихи в журналах",
+      "long": "Увлечённый Стриндбергом и неоромантиками, стал радикальным социалистом и печатался в социалистических изданиях; в 1910 году вышло стихотворение «Мы, сильные».",
+      "chapter": "smaland-uppsala",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "публикует «боевое» стихотворение «Мы, сильные» в молодёжном социал-демократическом журнале «Фрам» в 1910 году"
+      }
+    },
+    {
+      "key": "education-1911",
+      "date": {
+        "from": "1911",
+        "to": "1912",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Уппсальском университете",
+      "long": "При помощи старшего брата Гуннара и семьи уехал в Уппсальский университет изучать историю литературы и искусства.",
+      "place": {
+        "label": "Уппсала"
+      },
+      "chapter": "smaland-uppsala",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пер продолжил образование в Уппсале, куда он в 1911 году отправился изучать историю литературы и искусства."
+      }
+    },
+    {
+      "key": "other-1913",
+      "date": {
+        "from": "1913",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Поездка в Париж и увлечение кубизмом",
+      "long": "Весной 1913 года в Париже познакомился с современной французской живописью; кубизм оказал сильное влияние на его эстетику. Осенью вышел манифест о литературе и живописи.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "ordkonst-och-bildkonst",
+          "note": "эстетический манифест вышел осенью того же года"
+        }
+      ],
+      "chapter": "cubism-wanderings",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время путешествия в Париж, которое Лагерквист предпринимает весной 1913 года, он знакомится с группой художников из Скандинавии и обращает внимание на современную французскую живопись."
+      }
+    },
+    {
+      "key": "love-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Карен Сёренсен",
+      "long": "Женился на датчанке Карен Сёренсен; отношения с ней, по статье, сильно влияли на его душевное состояние и обстоятельства жизни, разрывы сменялись примирениями.",
+      "chapter": "cubism-wanderings",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брак между Сёренсен и Лагерквистом состоялся в 1918 году."
+      }
+    },
+    {
+      "key": "child-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Элин",
+      "long": "В первом браке родилась дочь Элин.",
+      "chapter": "cubism-wanderings",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "De fick dottern Elin Lagerkvist (1918–2009)."
+      }
+    },
+    {
+      "key": "loss-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя, Юханна Магнусдоттер Блад.",
+      "chapter": "cubism-wanderings",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Pär Lagerkvist föddes som yngste son till Anders Johan Lagerquist (1853–1947), järnvägsanställd, och Johanna Magnusdotter Blad (1854–1923)."
+      }
+    },
+    {
+      "key": "love-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод и второй брак с Элен Сандельс",
+      "long": "После развода с Карен Сёренсен женился на Элен Сандельс, вдове художника; началась более спокойная жизнь, появился собственный дом.",
+      "works": [
+        {
+          "ref": "hjartats-sanger",
+          "note": "значительная часть стихов сборника посвящена Элен"
+        }
+      ],
+      "chapter": "elaine-home",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Значительная перемена в жизни Лагерквиста произошла в 1925 году. Начало более спокойного и упорядоченного образа жизни, обретение собственного дома — несомненно, связаны с новым браком писателя."
+      }
+    },
+    {
+      "key": "child-1926",
+      "date": {
+        "from": "1926-08-04",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сыновей Бенгта и Ульфа",
+      "long": "Во втором браке родились сыновья Бенгт и Ульф.",
+      "chapter": "elaine-home",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Bengt Lagerkvist 1926-08-04, Ulf Lagerkvist 1926-08-04"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главная премия Общества Девяти",
+      "long": "Получил Главную премию Общества Девяти.",
+      "chapter": "elaine-home",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1928 – De Nios Stora Pris"
+      }
+    },
+    {
+      "key": "other-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Путешествие в Грецию и Палестину",
+      "long": "Побывал в Афинах, Иерусалиме и Александрии; возвращаясь через Германию, увидел Берлин с нацистскими флагами через неделю после прихода Гитлера к власти.",
+      "place": {
+        "label": "Афины"
+      },
+      "works": [
+        {
+          "ref": "den-knutna-naven",
+          "note": "путевые очерки о встрече с Афинами и Иерусалимом и призыв против фашизма"
+        }
+      ],
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1933 году он отправился в путешествие в Грецию и на Ближний Восток, что было своего рода паломничеством к истокам и святыням европейской культуры."
+      }
+    },
+    {
+      "key": "persecution-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Нападки нацистской Германии, сожжение книги",
+      "long": "Книга «Палач» оказалась среди сожжённых нацистами в 1933 году; в газете «Штюрмер» писателя назвали «слугой евреев».",
+      "works": [
+        {
+          "ref": "bodeln",
+          "note": "повесть написана под впечатлением нацистского переворота в Германии"
+        }
+      ],
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Boken var också en av de skrifter som brändes av de tyska nazisterna 1933; i Der Stürmer kallades Lagerkvist en \"judenknecht\""
+      }
+    },
+    {
+      "key": "war-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Список гестапо и антинацистская позиция",
+      "long": "С началом войны оказался в списках гестапо на случай германского вторжения в Швецию; в войну был активным антинацистом.",
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "När kriget kom 1939 stod Lagerkvist på Gestapos dödslistor inför en eventuell tysk invasion av Sverige."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Шведскую академию",
+      "long": "Избран членом Шведской академии.",
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940 году он был избран в Шведскую академию"
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор Гётеборгского университета",
+      "long": "Стал почётным доктором философии Гётеборгского университета.",
+      "place": {
+        "label": "Гётеборг"
+      },
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Lagerkvist blev ledamot av Svenska Akademien 1940, filosofie hedersdoktor i Göteborg 1941 och erhöll Nobelpriset i litteratur 1951."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Бельмана",
+      "long": "Удостоен премии Бельмана.",
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1945 – Bellmanpriset"
+      }
+    },
+    {
+      "key": "loss-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец писателя, Андерс Юхан Лагерквист.",
+      "chapter": "against-violence",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Pär Lagerkvist föddes som yngste son till Anders Johan Lagerquist (1853–1947), järnvägsanställd, och Johanna Magnusdotter Blad (1854–1923)."
+      }
+    },
+    {
+      "key": "creation-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Средиземноморское путешествие",
+      "long": "Осенью 1950 года, закончив роман, отправился в путешествие по Средиземноморью; впечатления легли в основу цикла о изгоях позднеантичной эпохи.",
+      "works": [
+        {
+          "ref": "barabbas",
+          "note": "роман завершён перед поездкой"
+        },
+        {
+          "ref": "sibyllan",
+          "note": "впечатления поездки названы основой мифологического цикла"
+        },
+        {
+          "ref": "ahasverus-dod",
+          "note": "впечатления поездки названы основой мифологического цикла"
+        }
+      ],
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "осенью 1950 года после завершения романа «Варавва», отправился в путешествие по Средиземноморью."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Получил Нобелевскую премию по литературе; решающим аргументом, по статье, стал роман «Варавва», принёсший мировую славу.",
+      "works": [
+        {
+          "ref": "barabbas",
+          "note": "роман назван решающим аргументом в пользу премии"
+        }
+      ],
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "лауреат Нобелевской премии по литературе (1951)"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большая литературная премия города Парижа",
+      "long": "Награждён Большой литературной премией города Парижа.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "nobel-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Большая литературная премия города Парижа 1956-01-01"
+      }
+    },
+    {
+      "key": "loss-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Элен",
+      "long": "Летом 1967 года умерла жена Элен, с которой он прожил более сорока лет.",
+      "works": [
+        {
+          "ref": "mariamne",
+          "note": "написание повести связано с этой утратой"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Написание повести связано с личной трагедией Лагерквиста, который летом 1967 года потерял любимую жену, прожив с ней более сорока лет."
+      }
+    },
+    {
+      "key": "death-1974",
+      "date": {
+        "from": "1974-07-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Дандерюде",
+      "long": "Умер в Дандерюде близ Стокгольма.",
+      "place": {
+        "label": "Дандерюд"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Дандерюд 1974-07-11"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "manniskor",
+      "title": "Люди",
+      "written": {
+        "from": 1912,
+        "to": 1912
+      }
+    },
+    {
+      "ref": "ordkonst-och-bildkonst",
+      "title": "Словесное искусство и изобразительное искусство",
+      "written": {
+        "from": 1913,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "jarn-och-manniskor",
+      "title": "Железо и люди",
+      "written": {
+        "from": 1915,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "angest",
+      "title": "Страх",
+      "written": {
+        "from": 1916,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "sista-manniskan",
+      "title": "Последний человек",
+      "written": {
+        "from": 1917,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "det-eviga-leendet",
+      "title": "Улыбка вечности",
+      "written": {
+        "from": 1920,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "gast-hos-verkligheten",
+      "title": "В мире гость",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "hjartats-sanger",
+      "title": "Песни сердца",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "det-besegrade-livet",
+      "title": "Преодоление жизни",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "bodeln",
+      "title": "Палач",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "den-knutna-naven",
+      "title": "Сжатый кулак",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "dvargen",
+      "title": "Карлик",
+      "written": {
+        "from": 1944,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "barabbas",
+      "title": "Варавва",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "aftonland",
+      "title": "Вечерний край",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "sibyllan",
+      "title": "Сивилла",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "ahasverus-dod",
+      "title": "Смерть Агасфера",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "pilgrim-pa-havet",
+      "title": "Пилигрим в море",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "det-heliga-landet",
+      "title": "Святая Земля",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "mariamne",
+      "title": "Мариамна",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    }
+  ]
+}

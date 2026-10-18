@@ -1,0 +1,94 @@
+{
+  "qid": "Q454920",
+  "name": "Карен Мари Монинг",
+  "born": "1964-11-01",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Karen_Marie_Moning",
+      "rev": 1371899099
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Цинциннати и Пердью",
+      "from": 1964,
+      "to": 1998
+    },
+    {
+      "key": "writing-career",
+      "title": "Горцы, феи и Дублин",
+      "from": 1999,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-11-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Цинциннати",
+      "long": "Родилась 1 ноября 1964 года в Цинциннати, штат Огайо, в семье Энтони Р. и Джанет Л. Монинг.",
+      "place": {
+        "label": "Цинциннати"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Karen Marie Moning (born November 1, 1964) is an American author."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия RITA за паранормальный роман",
+      "long": "Получила премию RITA Ассоциации авторов любовного романа Америки за роман о горце, написанный в рамках цикла о горцах.",
+      "works": [
+        {
+          "ref": "highlanders-touch"
+        }
+      ],
+      "chapter": "writing-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "received the RITA Award in 2001 for The Highlander's Touch"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "beyond-the-highland-mist",
+      "title": "Beyond the Highland Mist",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "highlanders-touch",
+      "title": "The Highlander's Touch",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "shadowfever",
+      "title": "Shadowfever",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

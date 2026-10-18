@@ -1,0 +1,475 @@
+{
+  "qid": "Q365664",
+  "name": "Джон Диксон Карр",
+  "born": "1906-11-30",
+  "died": "1977-02-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%80%D1%80%2C_%D0%94%D0%B6%D0%BE%D0%BD_%D0%94%D0%B8%D0%BA%D1%81%D0%BE%D0%BD",
+      "rev": 153479810
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Dickson_Carr",
+      "rev": 1378064812
+    }
+  ],
+  "chapters": [
+    {
+      "key": "pennsylvania-paris",
+      "title": "Пенсильвания, школа, Париж",
+      "from": 1906,
+      "to": 1930
+    },
+    {
+      "key": "england",
+      "title": "Англия: Фелл и Мерривейл",
+      "from": 1931,
+      "to": 1947
+    },
+    {
+      "key": "return-to-usa",
+      "title": "Возвращение в Америку",
+      "from": 1948,
+      "to": 1962
+    },
+    {
+      "key": "late-years",
+      "title": "Болезнь и последние годы",
+      "from": 1963,
+      "to": 1977
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1906",
+      "date": {
+        "from": "1906-11-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье юриста и политика",
+      "long": "Родился в Юнионтауне, Пенсильвания, в семье юриста и политического деятеля Вуда Николаса Карра, имевшего шотландские корни.",
+      "place": {
+        "label": "Юнионтаун"
+      },
+      "chapter": "pennsylvania-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Диксон Карр родился 30 ноября 1906 года в Юнионтауне, штат Пенсильвания (США)"
+      }
+    },
+    {
+      "key": "education-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы-интерната Хилл",
+      "long": "Окончил The Hill School в Поттстауне; в школе считался довольно заурядным учеником.",
+      "place": {
+        "label": "Поттстаун"
+      },
+      "chapter": "pennsylvania-paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr graduated from The Hill School in Pottstown in 1925 and Haverford College in 1929."
+      }
+    },
+    {
+      "key": "education-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Хаверфорд",
+      "long": "Окончил Хаверфорд-колледж. По русской статье, также учился в Париже в Сорбонне.",
+      "place": {
+        "label": "Хаверфорд"
+      },
+      "chapter": "pennsylvania-paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr graduated from The Hill School in Pottstown in 1925 and Haverford College in 1929."
+      }
+    },
+    {
+      "key": "love-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на англичанке Клариссе Клевис",
+      "long": "В 1931 году женился на англичанке Клариссе Клевис.",
+      "chapter": "england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1931 году он женился на англичанке Клариссе Клевис и обосновался в Англии."
+      }
+    },
+    {
+      "key": "relocation-1931",
+      "date": {
+        "from": "1931",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в Англии",
+      "long": "После женитьбы обосновался в Англии, где началась его карьера детективного писателя; в США вернулся в 1948 году.",
+      "place": {
+        "label": "Англия"
+      },
+      "chapter": "england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1931 году он женился на англичанке Клариссе Клевис и обосновался в Англии."
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Появление доктора Гидеона Фелла",
+      "long": "Представил самого знаменитого героя — профессора-лексикографа доктора Фелла, внешность которого списана с Честертона.",
+      "works": [
+        {
+          "ref": "hags-nook",
+          "note": "роман написан в 1933 году; в нём впервые появился доктор Фелл"
+        }
+      ],
+      "chapter": "england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1933 году Карр написал роман «Ведьмино логово», в котором представил читателям своего самого знаменитого героя профессора-лексикографа доктора Гидеона Фелла."
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Детективный клуб",
+      "long": "Принят в Детективный клуб; был одним из двух американцев, когда-либо допущенных в него.",
+      "chapter": "england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1936 году Карр вступил в Детективный клуб."
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в США",
+      "long": "Вернулся в США, но прожил там лишь несколько лет и снова уехал в Англию.",
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948 году Джон Диксон Карр вернулся в США, но прожил там всего несколько лет"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Радиосериал для CBS из двадцати трёх сценариев",
+      "long": "Расширил радиопьесу «Каюта B-13» до сериала на CBS и написал для него все 23 сценария.",
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "expanded into a series on CBS during 1948–49 for which Carr wrote all 23 scripts"
+      }
+    },
+    {
+      "key": "creation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Поручение написать биографию Конан Дойля",
+      "long": "Ему была предоставлена честь написать биографию Артура Конан Дойля; книга вышла в 1949 году.",
+      "works": [
+        {
+          "ref": "life-of-conan-doyle"
+        }
+      ],
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писателю была предоставлена честь написать биографию Артура Конан Дойля, которая увидела свет в 1949 году."
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Ассоциации детективных писателей США",
+      "long": "Избран председателем Ассоциации детективных писателей США.",
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В том же 1949 году Карр был избран председателем Ассоциации детективных писателей США."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая специальная премия Эдгара По",
+      "long": "Биография Конан Дойля принесла первую из двух специальных премий Эдгара От Ассоциации детективных писателей Америки.",
+      "works": [
+        {
+          "ref": "life-of-conan-doyle"
+        }
+      ],
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, his biography of Sir Arthur Conan Doyle earned Carr the first of his two Special Edgar Awards"
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Марокко, затем снова в США",
+      "long": "В 1960-е годы жил в Марокко, затем вновь в США.",
+      "place": {
+        "label": "Марокко"
+      },
+      "chapter": "return-to-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960-е годы Карр жил в Марокко, затем опять в США."
+      }
+    },
+    {
+      "key": "illness-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт с параличом левой стороны",
+      "long": "Ранней весной 1963 года в Мамаронеке перенёс инсульт, парализовавший левую сторону тела; продолжал писать одной рукой.",
+      "place": {
+        "label": "Мамаронек"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early spring 1963, while living in Mamaroneck, New York, Carr suffered a stroke, which paralyzed his left side."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание гроссмейстера Ассоциации детективных писателей",
+      "long": "Получил награду Grand Master от Mystery Writers of America.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was also presented the MWA's Grand Master award in 1963."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при полицейской литературы",
+      "long": "Награждён Гран-при полицейской литературы.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Гран-при полицейской литературы 1969-01-01"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая специальная премия Эдгара По",
+      "long": "Вторая специальная премия Эдгара — за сорок лет работы в детективном жанре.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the second was awarded in 1970, in recognition of his 40-year career as a mystery writer"
+      }
+    },
+    {
+      "key": "death-1977",
+      "date": {
+        "from": "1977-02-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгких в Гринвилле",
+      "long": "Умер от рака лёгких в Гринвилле, Южная Каролина, куда переехал в последние годы.",
+      "place": {
+        "label": "Гринвилл"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель скончался от рака легких 27 февраля 1977 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "it-walks-by-night",
+      "title": "Бродящее по ночам",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "hags-nook",
+      "title": "Ведьмино логово",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "plague-court-murders",
+      "title": "The Plague Court Murders",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "white-priory-murders",
+      "title": "The White Priory Murders",
+      "qid": "Q7774549",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "hollow-man",
+      "title": "Человек-призрак",
+      "qid": "Q2700566",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "burning-court",
+      "title": "The Burning Court",
+      "qid": "Q2362600",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "judas-window",
+      "title": "Окно Иуды",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "crooked-hinge",
+      "title": "The Crooked Hinge",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "life-of-conan-doyle",
+      "title": "Жизнь Артура Конан Дойля",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "bride-of-newgate",
+      "title": "The Bride of Newgate",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "devil-in-velvet",
+      "title": "Дьявол в бархате",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "exploits-of-sherlock-holmes",
+      "title": "Подвиги Шерлока Холмса",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    }
+  ]
+}

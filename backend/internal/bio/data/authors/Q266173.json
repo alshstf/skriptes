@@ -1,0 +1,371 @@
+{
+  "qid": "Q266173",
+  "name": "Холли Блэк",
+  "born": "1971-11-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D1%8D%D0%BA%2C_%D0%A5%D0%BE%D0%BB%D0%BB%D0%B8",
+      "rev": 149977615
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Holly_Black",
+      "rev": 1378217937
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Нью-Джерси, учёба и журналы",
+      "from": 1971,
+      "to": 1998
+    },
+    {
+      "key": "pervye-knigi",
+      "title": "Брак, Спайдервик, признание",
+      "from": 1999,
+      "to": 2011
+    },
+    {
+      "key": "zrelost",
+      "title": "Новые циклы и награды",
+      "from": 2012,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1971",
+      "date": {
+        "from": "1971-11-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Джерси",
+      "long": "Родилась в Уэст-Лонг-Бранче, Нью-Джерси; детство провела в «ветхом викторианском доме».",
+      "place": {
+        "label": "Уэст-Лонг-Бранч"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Холли Блэк (англ. Holly Black; род. 10 ноября 1971)"
+      }
+    },
+    {
+      "key": "education-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Shore Regional",
+      "long": "Окончила школу Shore Regional High School.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She graduated from Shore Regional High School in 1990."
+      }
+    },
+    {
+      "key": "education-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр английской словесности",
+      "long": "Окончила колледж Нью-Джерси со степенью бакалавра английской словесности; работала выпускающим редактором медицинских журналов.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1994 году окончила колледж Нью-Джерси со степенью бакалавра английской словесности."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в журнале о ролевых играх",
+      "long": "Писала для журнала о ролевых играх d8 и редактировала его.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She edited and contributed to the role-playing culture magazine d8 in 1996."
+      }
+    },
+    {
+      "key": "love-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Тео Блэком",
+      "long": "Вышла замуж за школьного друга Тео Блэка, художника-иллюстратора и веб-дизайнера.",
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1999, she married her high school sweetheart, Theo Black, an illustrator and web designer."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке бестселлеров NYT",
+      "long": "Заключительная книга «Хроник Спайдервика», созданных вместе с Тони ДиТерлицци, возглавила список бестселлеров New York Times.",
+      "works": [
+        {
+          "ref": "spiderwick-chronicles"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The fifth and last book in the series reached the top of the New York Times Bestseller List in 2004."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Андре Нортон",
+      "long": "Роман «Отважная» получил первую премию Андре Нортон за молодёжную фантастику и фэнтези.",
+      "works": [
+        {
+          "ref": "valiant"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия имени Андре Нортон 2006-01-01"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация Спайдервика, работа сопродюсером",
+      "long": "Вышла экранизация «Хроник Спайдервика», Блэк выступила сопродюсером.",
+      "works": [
+        {
+          "ref": "spiderwick-chronicles"
+        }
+      ],
+      "chapter": "pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A film adaptation of the series was released in 2008, of which Black was co-executive producer."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соавторство с Кассандрой Клэр",
+      "long": "Издательство Scholastic приобрело пятикнижный цикл «Магистериум», написанный Блэк совместно с Кассандрой Клэр.",
+      "works": [
+        {
+          "ref": "iron-trial"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2012, Scholastic acquired a five-book series written by Black and Cassandra Clare to be called Magisterium."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Mythopoeic и медаль Ньюбери",
+      "long": "Роман «Кукольные кости» отмечен Ньюбери и премией Mythopoeic.",
+      "works": [
+        {
+          "ref": "doll-bones"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия «Мифопоэтическая фэнтези» за детскую литературу 2014-01-01"
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Dragon Award за первый взрослый роман",
+      "long": "Первый роман для взрослых получил Dragon Award.",
+      "works": [
+        {
+          "ref": "book-of-night"
+        }
+      ],
+      "chapter": "zrelost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Book of Night, published by Tor Books in 2022, was Black's first foray into adult fantasy… the novel won a Dragon Award the same year."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tithe",
+      "title": "Зачарованная",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "spiderwick-chronicles",
+      "title": "Спайдервик. Хроники",
+      "qid": "Q914239",
+      "written": {
+        "from": 2003,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "valiant",
+      "title": "Отважная",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "ironside",
+      "title": "Решительная",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "white-cat",
+      "title": "Белая кошка",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "red-glove",
+      "title": "Красная перчатка",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "black-heart",
+      "title": "Чёрное сердце",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "doll-bones",
+      "title": "Кукольные кости",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "coldest-girl-in-coldtown",
+      "title": "Самая холодная девочка в Колдтауне",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "iron-trial",
+      "title": "Железное испытание",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "darkest-part-of-the-forest",
+      "title": "Самая тёмная часть леса",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "cruel-prince",
+      "title": "Жестокий принц",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "wicked-king",
+      "title": "Злой король",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "queen-of-nothing",
+      "title": "Королева ничего",
+      "written": {
+        "from": 2018,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "book-of-night",
+      "title": "Книга ночи",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

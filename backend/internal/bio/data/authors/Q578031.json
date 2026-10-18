@@ -1,0 +1,487 @@
+{
+  "qid": "Q578031",
+  "name": "Джерри Пурнель",
+  "born": "1933-08-07",
+  "died": "2017-09-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%83%D1%80%D0%BD%D0%B5%D0%BB%D1%8C%2C_%D0%94%D0%B6%D0%B5%D1%80%D1%80%D0%B8",
+      "rev": 149590741
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jerry_Pournelle",
+      "rev": 1378103600
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-and-study",
+      "title": "Детство, армия, университет",
+      "from": 1933,
+      "to": 1963
+    },
+    {
+      "key": "aerospace",
+      "title": "Авиакосмическая индустрия и первые рассказы",
+      "from": 1964,
+      "to": 1973
+    },
+    {
+      "key": "niven-and-chaos-manor",
+      "title": "Соавторство с Нивеном и Хаос-Мэнор",
+      "from": 1974,
+      "to": 2007
+    },
+    {
+      "key": "late-years",
+      "title": "Болезнь и последние годы",
+      "from": 2008,
+      "to": 2017
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1933",
+      "date": {
+        "from": "1933-08-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Шривпорте",
+      "long": "Джерри Юджин Пурнель родился 7 августа 1933 года в Шривпорте, штат Луизиана; позже семья жила в Кейплвилле близ Мемфиса.",
+      "place": {
+        "label": "Шривпорт"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle was born in Shreveport, Louisiana"
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в армии США в годы Корейской войны",
+      "long": "Пурнель служил в армии США во время Корейской войны, затем поступил в университет.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953–54, after his military service, Pournelle attended the University of Iowa in Iowa City."
+      }
+    },
+    {
+      "key": "education-1953",
+      "date": {
+        "from": "1953",
+        "to": "1954",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в университете Айовы",
+      "long": "В 1953–1954 годах после службы учился в университете Айовы в Айова-Сити.",
+      "place": {
+        "label": "Айова-Сити"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953–54, after his military service, Pournelle attended the University of Iowa in Iowa City."
+      }
+    },
+    {
+      "key": "education-1955",
+      "date": {
+        "from": "1955-06-11",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра психологии",
+      "long": "11 июня 1955 года получил степень бакалавра по психологии в Вашингтонском университете.",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he received a B.S. in psychology on June 11, 1955"
+      }
+    },
+    {
+      "key": "love-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Робертой Джейн Исдел",
+      "long": "В 1959 году Пурнель женился на Роберте Джейн Исдел; у пары было пятеро детей, в том числе дочь Дженнифер, археолог.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle married Roberta Jane Isdell in 1959; the couple had five children."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход в Aerospace Corporation",
+      "long": "В 1964 году поступил в Aerospace Corporation в Калифорнии, где редактировал исследование «Проект 75» по баллистическим ракетам для ВВС США.",
+      "place": {
+        "label": "Сан-Бернардино"
+      },
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1964, Pournelle joined the Aerospace Corporation in San Bernardino, California where he was Editor of Project 75"
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964-03",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень по политологии",
+      "long": "В марте 1964 года получил степень доктора философии по политологии в Вашингтонском университете; в диссертации предложил двухосевую схему политических идеологий — «диаграмму Пурнеля».",
+      "place": {
+        "label": "Сиэтл"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "and a Ph.D. in political science in March 1964."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969-05",
+        "to": "1969-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа исследователем в кампании мэра Йорти",
+      "long": "В 1969 году был директором по исследованиям кампании Сэма Йорти на выборах мэра Лос-Анджелеса; в сентябре назначен помощником мэра, но через две недели ушёл в отставку.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle served as campaign research director for the mayoral campaign of 1969 for Los Angeles Mayor Sam Yorty"
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Публикация книги о военно-технической стратегии",
+      "long": "В 1970 году вышла книга «The Strategy of Technology», написанная совместно со Стефаном Посони; её использовали как учебник в военных академиях США.",
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle wrote numerous publications with Possony, including The Strategy of Technology (1970)."
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая научно-фантастическая публикация у Кэмпбелла",
+      "long": "Кэмпбелл годами отклонял рассказы Пурнеля и принял повесть «Peace with Honor» незадолго до своей смерти в 1971 году.",
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Campbell did not accept any of Pournelle's submissions until shortly before Campbell's death in 1971, when he accepted for publication Pournelle's novelette \"Peace with Honor.\""
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Президентство в Ассоциации американских писателей-фантастов",
+      "long": "В 1973 году Пурнель был президентом Science Fiction and Fantasy Writers of America.",
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle served as President of the Science Fiction and Fantasy Writers of America in 1973."
+      }
+    },
+    {
+      "key": "career-1973-2",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "В 1973 году получил премию Джона В. Кэмпбелла лучшему новому писателю-фантасту.",
+      "chapter": "aerospace",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Джона В. Кэмпбелла лучшему новому писателю-фантасту 1973-01-01"
+      }
+    },
+    {
+      "key": "creation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый текст на компьютере",
+      "long": "В 1977 году Пурнель начал писать на компьютере по совету друга Дэна Маклина и заявлял, что первым применил текстовый процессор для опубликованного текста.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle began using a computer to write in 1977 on the advice of his \"mad\" friend Dan MacLean."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "В 1979 году получил премию «Инкпот».",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Инкпот» 1979-01-01"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Совет по национальной космической политике",
+      "long": "Пурнель стал одним из основателей Гражданского консультативного совета по национальной космической политике; первый доклад 1980 года лёг в основу космической политики администрации Рейгана.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The council's first report in 1980 became the transition team policy paper on space for the incoming Reagan administration."
+      }
+    },
+    {
+      "key": "career-1980-2",
+      "date": {
+        "from": "1980-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Колонка «Хаос-Мэнор» в журнале Byte",
+      "long": "В июле 1980 года начал колонку о домашних компьютерах в журнале Byte, которую вёл до 2006 года.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it began as \"The User's Column\" in July 1980."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Презентация проекта ракеты DC-X вице-президенту",
+      "long": "В 1989 году вместе с Максом Хантером и генералом Дэниелом Грэмом представил вице-президенту Дэну Куэйлу проект ракеты DC-X.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, Pournelle, Max Hunter, and retired Army Lieutenant General Daniel O. Graham made a presentation to then Vice President Dan Quayle promoting development of the DC-X rocket."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Блог «View from Chaos Manor»",
+      "long": "После 1998 года вёл сайт с ежедневным онлайн-дневником «View from Chaos Manor», одним из первых блогов.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After 1998, Pournelle maintained a website with a daily online journal, \"View from Chaos Manor,\""
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из Byte и собственный сайт",
+      "long": "В июле 2006 года Пурнель и Byte не продлили контракт, и он перенёс колонку на собственный сайт Chaos Manor Reviews.",
+      "chapter": "niven-and-chaos-manor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 2006, Pournelle and Byte declined to renew their contract and Pournelle moved the column to his own web site, Chaos Manor Reviews."
+      }
+    },
+    {
+      "key": "illness-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Опухоль мозга и лучевая терапия",
+      "long": "В 2008 году Пурнель боролся с опухолью мозга; радиотерапия дала хороший результат, и 28 августа 2008 года он сообщил, что рака больше нет.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, Pournelle battled a brain tumor, which appeared to respond favorably to radiation treatment."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Запуск сайта aNewDomain.net",
+      "long": "В 2011 году вместе с Джиной Смит, Джоном Двораком и другими журналистами основал независимый сайт о технологиях и политике aNewDomain.net и до смерти оставался его директором.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Pournelle joined journalist Gina Smith, pundit John C. Dvorak, political cartoonist Ted Rall, and several other Byte.com staff reporters to launch an independent tech and political news site, aNewDomain.net"
+      }
+    },
+    {
+      "key": "illness-2014",
+      "date": {
+        "from": "2014-12-16",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт",
+      "long": "16 декабря 2014 года перенёс инсульт и был госпитализирован; к июню 2015 года снова писал, хотя печатал медленнее.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle suffered a stroke on December 16, 2014, for which he was hospitalized for a time."
+      }
+    },
+    {
+      "key": "death-2017",
+      "date": {
+        "from": "2017-09-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечной недостаточности",
+      "long": "Пурнель умер во сне от сердечной недостаточности 8 сентября 2017 года у себя дома в Студио-Сити, Калифорния.",
+      "place": {
+        "label": "Студио-Сити"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pournelle died in his sleep of heart failure at his home in Studio City, California, on September 8, 2017."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mote-in-gods-eye",
+      "title": "Мошка в зенице Господней",
+      "written": {
+        "from": 1970,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "inferno-1975",
+      "title": "Инферно",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "lucifers-hammer",
+      "title": "Молот Люцифера",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "oath-of-fealty",
+      "title": "Клятва верности",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "footfall",
+      "title": "Поступь",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "gripping-hand",
+      "title": "Хватательная рука",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    }
+  ]
+}

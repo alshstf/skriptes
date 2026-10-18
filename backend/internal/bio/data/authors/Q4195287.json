@@ -1,0 +1,253 @@
+{
+  "qid": "Q4195287",
+  "name": "Иар Эльтеррус",
+  "born": "1966-03-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%98%D0%B0%D1%80_%D0%AD%D0%BB%D1%8C%D1%82%D0%B5%D1%80%D1%80%D1%83%D1%81",
+      "rev": 155285224
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ukraina",
+      "title": "Кубань и Днепропетровщина",
+      "from": 1966,
+      "to": 1985
+    },
+    {
+      "key": "universitet-izdatelstvo",
+      "title": "Университет и издательство",
+      "from": 1986,
+      "to": 1994
+    },
+    {
+      "key": "izrail",
+      "title": "Годы в Израиле",
+      "from": 1995,
+      "to": 2008
+    },
+    {
+      "key": "peterburg",
+      "title": "Санкт-Петербург",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-03-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в станице Кужорская",
+      "long": "Игорь Тертышный (литературный псевдоним — Иар Эльтеррус) родился 4 марта 1966 года в станице Кужорская Майкопского района. Мать — поэтесса Раиса Гладун.",
+      "place": {
+        "label": "станица Кужорская"
+      },
+      "chapter": "detstvo-ukraina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Иар Эльтеррус (род. 4 марта 1966), настоящее имя — Игорь Тертышный"
+      }
+    },
+    {
+      "key": "education-1986",
+      "date": {
+        "from": "1986",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на радиофизическом факультете",
+      "long": "С 1986 по 1990 год учился на радиофизическом факультете Днепропетровского государственного университета.",
+      "place": {
+        "label": "Днепропетровск"
+      },
+      "chapter": "universitet-izdatelstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1986 по 1990 годы учился на радиофизическом факультете Днепропетровского Государственного Университета."
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство издательством «Даймон»",
+      "long": "С 1992 по 1994 год возглавлял издательство «Даймон»; после его банкротства перебрался на Урал, в Орск.",
+      "chapter": "universitet-izdatelstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1992 по 1994 год возглавлял издательство «Даймон»."
+      }
+    },
+    {
+      "key": "relocation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Репатриация в Израиль",
+      "long": "В 1995 году после жизни в Орске репатриировался в Израиль.",
+      "place": {
+        "label": "Израиль"
+      },
+      "chapter": "izrail",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 репатриировался в Израиль."
+      }
+    },
+    {
+      "key": "creation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало литературной работы",
+      "long": "С 1997 года начал писать прозу.",
+      "chapter": "izrail",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писать начал с 1997 года."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало издания книг",
+      "long": "С 2006 года его книги выходят в печати: первые издания — в «Лениздате» и в «Армаде».",
+      "works": [
+        {
+          "ref": "otzvuki-serebryanogo-vetra"
+        }
+      ],
+      "chapter": "izrail",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Издается с 2006 года."
+      }
+    },
+    {
+      "key": "relocation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Россию, переезд в Петербург",
+      "long": "В конце 2008 года вернулся в Россию и поселился в Санкт-Петербурге.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "izrail",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце 2008 года вернулся в Россию и поселился в Санкт-Петербурге."
+      }
+    },
+    {
+      "key": "other-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подпись под письмом в поддержку вторжения",
+      "long": "В 2022 году подписал письмо в поддержку российского военного вторжения на Украину.",
+      "chapter": "peterburg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2022 году подписал письмо в поддержку российского военного вторжения на Украину."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "otzvuki-serebryanogo-vetra",
+      "title": "Отзвуки серебряного ветра",
+      "written": {
+        "from": 2006,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "bremya-imperatora",
+      "title": "Бремя императора",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "zamok-na-krayu-bezdny",
+      "title": "Замок на краю бездны",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "bezumie-bardov",
+      "title": "Безумие бардов",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "vera-izgoev",
+      "title": "Вера изгоев",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "vitoy-posoh",
+      "title": "Витой посох",
+      "written": {
+        "from": 2011,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "vremya-chernyh-zvezd",
+      "title": "Время чёрных звёзд",
+      "written": {
+        "from": 2011,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "russkiy-sonm",
+      "title": "Русский Сонм",
+      "written": {
+        "from": 2013,
+        "to": 2014
+      }
+    }
+  ]
+}

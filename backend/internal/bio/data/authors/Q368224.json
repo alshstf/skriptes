@@ -1,0 +1,136 @@
+{
+  "qid": "Q368224",
+  "name": "Тэд Уильямс",
+  "born": "1957-03-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC%D1%81%2C_%D0%A2%D1%8D%D0%B4",
+      "rev": 148369153
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tad_Williams",
+      "rev": 1372804605
+    }
+  ],
+  "chapters": [
+    {
+      "key": "palo-alto-and-odd-jobs",
+      "title": "Пало-Альто и разные занятия",
+      "from": 1957,
+      "to": 1986
+    },
+    {
+      "key": "apple-years",
+      "title": "Годы в Apple",
+      "from": 1987,
+      "to": 1990
+    },
+    {
+      "key": "full-time-writer",
+      "title": "Профессиональный писатель",
+      "from": 1991,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1957",
+      "date": {
+        "from": "1957-03-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сан-Хосе",
+      "long": "Роберт Пол Уильямс родился в Сан-Хосе, Калифорния; вырос в Пало-Альто, городке вокруг Стэнфордского университета.",
+      "place": {
+        "label": "Сан-Хосе"
+      },
+      "chapter": "palo-alto-and-odd-jobs",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Robert Paul \"Tad\" Williams was born in San Jose, California, on March 14, 1957."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Технический писатель в Apple",
+      "long": "С 1987 по 1990 год работал техническим писателем в отделе инженерии знаний Apple Computer, перерабатывал материалы инженеров в исследовательские статьи; после этого сделал писательство основной профессией.",
+      "works": [
+        {
+          "ref": "otherland",
+          "note": "работа в Apple, по словам Уильямса, отчасти привела к книгам цикла «Иноземье»"
+        }
+      ],
+      "chapter": "apple-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "including three years from 1987 to 1990 as a technical writer at Apple Computer's Knowledge Engineering Department"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "to": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Телепроект компании Telemorphix",
+      "long": "Вместе с коллегой Эндрю Харрисом основал компанию Telemorphix для интерактивных мультимедиа; её телепроект выходил на местном телевидении района залива Сан-Франциско в 1992 и 1993 годах.",
+      "chapter": "full-time-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was broadcast on San Francisco Bay Area local TV in 1992 and 1993."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tailchasers-song",
+      "title": "Хвосттрубой, или Приключения молодого кота",
+      "qid": "Q7676093",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "memory-sorrow-and-thorn",
+      "title": "Память, Скорбь и Тёрн",
+      "qid": "Q1167968",
+      "written": {
+        "from": 1988,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "otherland",
+      "title": "Иноземье",
+      "qid": "Q958873",
+      "written": {
+        "from": 1996,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "shadowmarch",
+      "title": "Марш теней",
+      "qid": "Q2276286",
+      "written": {
+        "from": 2004,
+        "to": 2010
+      }
+    }
+  ]
+}

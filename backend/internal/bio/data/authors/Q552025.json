@@ -1,0 +1,357 @@
+{
+  "qid": "Q552025",
+  "name": "Джон Кристофер (Сэмюэл Йоуд)",
+  "born": "1922-04-16",
+  "died": "2012-02-03",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%BE%D0%BD_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80",
+      "rev": 147511238
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Christopher",
+      "rev": 1372273306
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Детство и школа",
+      "from": 1922,
+      "to": 1940
+    },
+    {
+      "key": "war-years",
+      "title": "Война и первые рассказы",
+      "from": 1941,
+      "to": 1948
+    },
+    {
+      "key": "writer-career",
+      "title": "Путь в фантастику",
+      "from": 1949,
+      "to": 1965
+    },
+    {
+      "key": "tripods-era",
+      "title": "Подростковая фантастика и признание",
+      "from": 1966,
+      "to": 2012
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1922",
+      "date": {
+        "from": "1922-04-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ланкашире",
+      "long": "Сэмюэл Йоуд родился 16 апреля 1922 года в Хайтоне (по русской статье — Ноусли), графство Ланкашир.",
+      "place": {
+        "label": "Хайтон"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sam Youd (16 April 1922 – 3 February 2012)"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в Королевском корпусе связи",
+      "long": "С 1941 по 1946 год служил в Королевском корпусе связи во время Второй мировой войны.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "then served in the Royal Corps of Signals from 1941 to 1946"
+      }
+    },
+    {
+      "key": "creation-1941",
+      "date": {
+        "from": "1941-03",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "Первый рассказ «Dreamer» вышел в журнале Weird Tales под именем C.S. Youd.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Youd's first published story was \"Dreamer\" in the March 1941 Weird Tales, as C.S. Youd."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джойс Фэйрберн",
+      "long": "В 1946 году женился на Джойс Фэйрберн; в браке родились пятеро детей — сын и четыре дочери.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946 he married Joyce Fairbairn, with whom he had five children (one son and four daughters)."
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Стипендия Фонда Рокфеллера и начало писательской карьеры",
+      "long": "Стипендия Фонда Рокфеллера позволила ему заняться литературным трудом; в 1949 году вышел первый роман под именем Кристофер Йоуд.",
+      "works": [
+        {
+          "ref": "winter-swan"
+        }
+      ],
+      "chapter": "writer-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A scholarship from the Rockefeller Foundation made it possible for him to pursue a writing career, beginning with The Winter Swan (Dennis Dobson, 1949)"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые научно-фантастические рассказы под псевдонимом",
+      "long": "С 1951 года начал публиковать научно-фантастические рассказы под именем Джон Кристофер.",
+      "chapter": "writer-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He wrote science fiction short stories as John Christopher from 1951"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех: роман о глобальной катастрофе",
+      "long": "Второй роман под псевдонимом Кристофер, изданный в 1956 году, стал первым крупным успехом писателя.",
+      "works": [
+        {
+          "ref": "death-of-grass"
+        }
+      ],
+      "chapter": "writer-career",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His second novel under the Christopher pseudonym, The Death of Grass (Michael Joseph, 1956) was Youd's first major success as a writer."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поворот к фантастике для подростков",
+      "long": "В 1966 году начал писать научную фантастику для подростков, всегда под именем Джон Кристофер.",
+      "works": [
+        {
+          "ref": "tripods"
+        }
+      ],
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966 Youd started writing science fiction for adolescents, using the name John Christopher in every case."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Коммерческий успех трилогии о треножниках",
+      "long": "Трилогия 1967–1968 годов принесла автору наибольший коммерческий успех.",
+      "works": [
+        {
+          "ref": "tripods"
+        }
+      ],
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наибольший коммерческих успех автору принесла выпущенная в 1967—1968 годах трилогия «Триподы»"
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Guardian за детскую литературу",
+      "long": "Получил премию газеты Guardian за детскую художественную литературу за роман «Стражи».",
+      "works": [
+        {
+          "ref": "guardians"
+        }
+      ],
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the Guardian Children's Fiction Prize in 1971"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая премия за юношескую литературу",
+      "long": "В 1976 году получил премию Deutscher Jugendliteraturpreis за немецкий перевод романа «Стражи».",
+      "works": [
+        {
+          "ref": "guardians"
+        }
+      ],
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976 he won the Deutscher Jugendliteraturpreis, youth fiction category"
+      }
+    },
+    {
+      "key": "family-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод и брак с Джессикой Болл",
+      "long": "В 1978 году развёлся с Джойс Фэйрберн и женился на Джессике Болл.",
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He divorced in 1978, marrying Jessica Ball."
+      }
+    },
+    {
+      "key": "creation-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Приквел к трилогии о треножниках",
+      "long": "В 1988 году вышел приквел, дополнивший трилогию до тетралогии.",
+      "works": [
+        {
+          "ref": "tripods"
+        }
+      ],
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "позднее дополненная до тетралогии опубликованным в 1988 году приквелом"
+      }
+    },
+    {
+      "key": "death-2012",
+      "date": {
+        "from": "2012-02-03",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Бате",
+      "long": "Умер 3 февраля 2012 года в Бате от осложнений рака мочевого пузыря.",
+      "place": {
+        "label": "Бат"
+      },
+      "chapter": "tripods-era",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died in Bath, Somerset, on 3 February 2012, of complications from bladder cancer"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "winter-swan",
+      "title": "Зимний лебедь",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "year-of-the-comet",
+      "title": "Год кометы",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "death-of-grass",
+      "title": "Смерть травы",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "tripods",
+      "title": "Триподы",
+      "qid": "Q606804",
+      "written": {
+        "from": 1967,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "guardians",
+      "title": "Стражи",
+      "qid": "Q576737",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    }
+  ]
+}

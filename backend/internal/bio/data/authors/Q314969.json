@@ -1,0 +1,344 @@
+{
+  "qid": "Q314969",
+  "name": "Джонатан Литтел",
+  "born": "1967-10-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%82%D1%82%D0%B5%D0%BB%D0%BB%2C_%D0%94%D0%B6%D0%BE%D0%BD%D0%B0%D1%82%D0%B0%D0%BD",
+      "rev": 151624200
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jonathan_Littell",
+      "rev": 1380893693
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Нью-Йорк, Франция, Йель",
+      "from": 1967,
+      "to": 1993
+    },
+    {
+      "key": "gumanitarnaya-rabota",
+      "title": "Годы в гуманитарной организации",
+      "from": 1994,
+      "to": 2001
+    },
+    {
+      "key": "blagovolitelnicy",
+      "title": "Роман об офицере СС и признание",
+      "from": 2002,
+      "to": 2011
+    },
+    {
+      "key": "reportazhi",
+      "title": "Репортажи с войн и кино",
+      "from": 2012,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-10-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Родился в Нью-Йорке в семье американского журналиста и писателя Роберта Литтела.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 10 октября 1967[…], Нью-Йорк, Нью-Йорк"
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Йельского университета",
+      "long": "Окончил Йельский университет со степенью бакалавра; тогда же опубликовал первый роман, позже назвав его неудачей.",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "works": [
+        {
+          "ref": "bad-voltage"
+        }
+      ],
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1989 году он закончил Йельский университет. Тогда же Литтелл опубликовал научно-фантастический роман Bad Voltage"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "to": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в гуманитарной организации",
+      "long": "Работал в организации «Действие против голода» в Боснии и Герцеговине, России, ДР Конго, Сьерра-Леоне и Афганистане.",
+      "chapter": "gumanitarnaya-rabota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1994 по 2001 год Литтелл работал в международной гуманитарной организации «Action Against Hunger»"
+      }
+    },
+    {
+      "key": "child-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Эмира",
+      "long": "В браке с бельгийкой родился сын Эмир.",
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jonathan Littell married a Belgian woman and had two children with her, Émir (b. 2000) and Alma Littell (b. 2002)."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из гуманитарной организации ради литературы",
+      "long": "Оставил работу ради романа о Второй мировой войне и Холокосте; полтора года изучал литературу и ездил по Германии и России.",
+      "works": [
+        {
+          "ref": "blagovolitelnicy"
+        }
+      ],
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году Литтелл уволился из Action Against Hunger, чтобы работать над романом о Второй мировой войне и Холокосте."
+      }
+    },
+    {
+      "key": "illness-2001",
+      "date": {
+        "from": "2001-01",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Лёгкое ранение при нападении в Чечне",
+      "long": "В январе 2001 года в Чечне попал в засаду и был легко ранен.",
+      "place": {
+        "label": "Чечня"
+      },
+      "chapter": "gumanitarnaya-rabota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2001 he was victim of an ambush in Chechnya, during which he was slightly wounded."
+      }
+    },
+    {
+      "key": "child-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Альмы",
+      "long": "В браке с бельгийкой родилась дочь Альма.",
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jonathan Littell married a Belgian woman and had two children with her, Émir (b. 2000) and Alma Littell (b. 2002)."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Гонкуровская премия и признание",
+      "long": "Роман получил Гонкуровскую премию и Большую премию Французской академии, стал бестселлером; до конца 2007 года продан тиражом 700 тысяч экземпляров.",
+      "works": [
+        {
+          "ref": "blagovolitelnicy"
+        }
+      ],
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Благоволительницы», в 2006 году получил две крупные французские премии — Гонкуровскую премию и Большую премию Французской академии."
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Французское гражданство",
+      "long": "Получил французское гражданство, сохранив американское.",
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Littell obtained French citizenship (while being able to keep his American citizenship) in March 2007"
+      }
+    },
+    {
+      "key": "war-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Поездка в Чечню и ранение",
+      "long": "Поездка в Чечню, где автор исследовал режим Рамзана Кадырова; был легко ранен при нападении.",
+      "place": {
+        "label": "Чечня"
+      },
+      "works": [
+        {
+          "ref": "chechnya-god-tretiy"
+        }
+      ],
+      "chapter": "blagovolitelnicy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году писатель совершил поездку в Чечню, по результатам которой была написана книга «Чечня. Год третий». … В Чечне Литтелл был легко ранен при нападении."
+      }
+    },
+    {
+      "key": "war-2012",
+      "date": {
+        "from": "2012-01",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Нелегальная поездка в осаждённый Хомс",
+      "long": "Нелегально побывал в Хомсе, где шли бои; вёл дневник, изданный в том же году.",
+      "place": {
+        "label": "Хомс"
+      },
+      "works": [
+        {
+          "ref": "homs-notebooks",
+          "note": "во время поездки велись дневниковые записи"
+        }
+      ],
+      "chapter": "reportazhi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2012 года Литтелл нелегально посетил сирийский город Хомс, в котором шли бои между армейскими силами и повстанцами."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебют в кино как режиссёр",
+      "long": "Снял документальный фильм об Армии сопротивления Господа в Уганде; премьера прошла в Каннах.",
+      "chapter": "reportazhi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2016 году Литтелл стал режиссёром документального фильма «Неправильные элементы»"
+      }
+    },
+    {
+      "key": "creation-2022",
+      "date": {
+        "from": "2022-02",
+        "to": "2023-10",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Книга о Бабьем Яре и войне в Украине",
+      "long": "Закончил рукопись о Бабьем Яре перед началом вторжения России на Украину, в ноябре 2022 года переписал её; книга вышла в октябре 2023 года.",
+      "works": [
+        {
+          "ref": "neudobnoe-mesto"
+        }
+      ],
+      "chapter": "reportazhi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "За два дня до начала вторжения России на Украину закончил рукопись книги о Бабьем Яре. В ноябре 2022 года Литтелл вернулся к тексту"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "bad-voltage",
+      "title": "Bad Voltage",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "blagovolitelnicy",
+      "title": "Благоволительницы",
+      "qid": "Q634288",
+      "written": {
+        "from": 2001,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "chechnya-god-tretiy",
+      "title": "Чечня. Год третий",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "homs-notebooks",
+      "title": "Хомские тетради",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "neudobnoe-mesto",
+      "title": "Неудобное место",
+      "written": {
+        "from": 2022,
+        "to": 2023
+      }
+    }
+  ]
+}

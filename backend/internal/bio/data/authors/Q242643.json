@@ -1,0 +1,251 @@
+{
+  "qid": "Q242643",
+  "name": "Наоми Новик",
+  "born": "1973-04-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%BE%D0%B2%D0%B8%D0%BA%2C_%D0%9D%D0%B0%D0%BE%D0%BC%D0%B8",
+      "rev": 154433994
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Naomi_Novik",
+      "rev": 1380338366
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-study",
+      "title": "Детство и учёба",
+      "from": 1973,
+      "to": 2005
+    },
+    {
+      "key": "dragon-and-awards",
+      "title": "Дракон и первые премии",
+      "from": 2006,
+      "to": 2009
+    },
+    {
+      "key": "family",
+      "title": "Семья и фан-сообщество",
+      "from": 2010,
+      "to": 2014
+    },
+    {
+      "key": "folk-tales",
+      "title": "Сказки, Шоломанс и признание",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-04-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье эмигрантов из Восточной Европы",
+      "long": "Родилась в Нью-Йорке, выросла в Розлин-Хайтс. Отец еврейского происхождения, мать полька; оба эмигрировали из Восточной Европы до её рождения.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 30 марта 1973 года в Нью-Йорке, США"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Опцион Питера Джексона на экранизацию серии",
+      "long": "В сентябре 2006 года Питер Джексон получил опцион на экранизацию серии о Темерере; позже права вернулись к Новик.",
+      "chapter": "dragon-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В сентябре 2006 года Питер Джексон рассматривал возможность экранизации книжной серии"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Комптона Крука за дебютный роман",
+      "long": "Дебютный роман получил премию Комптона Крука и был номинирован на «Хьюго»; в 2007 году также получена премия «Локус» за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "his-majestys-dragon"
+        }
+      ],
+      "chapter": "dragon-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году роман получил премию Комптона Крука, а также номинировался на премию «Хьюго» за лучший роман."
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание Организации трансформационных произведений",
+      "long": "Среди учредителей «Организации трансформационных произведений», некоммерческой организации в поддержку фан-медиа и фанфикшена; в 2007 году участвовала в запуске Archive of Our Own.",
+      "chapter": "dragon-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "учредителей в 2007 году «Организации трансформационных произведений»"
+      }
+    },
+    {
+      "key": "career-2007-2",
+      "date": {
+        "from": "2007-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "В сентябре 2007 года получила премию Джона В. Кэмпбелла лучшему новому писателю-фантасту 2006 года.",
+      "chapter": "dragon-and-awards",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В сентябре 2007 года Новик награждена премией Джона В. Кэмпбелла"
+      }
+    },
+    {
+      "key": "child-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Эвиденс",
+      "long": "В браке с писателем и предпринимателем Чарльзом Ардаем родилась дочь Эвиденс.",
+      "chapter": "family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2010 году у них родилась дочь Эвиденс Новик Ардай."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Небьюла» за лучший роман",
+      "long": "Роман, действие которого происходит в мире, вдохновлённом Королевством Польским, получил премию «Небьюла», а также «Локус» за фэнтези.",
+      "works": [
+        {
+          "ref": "uprooted"
+        }
+      ],
+      "chapter": "folk-tales",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2016 году роман «Выкорчеванная» (англ. Uprooted) получил премию «Небьюла» за лучший роман."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» для Archive of Our Own",
+      "long": "На церемонии «Хьюго» 2019 года Новик получила награду за лучшую сопутствующую работу от имени создателей и читателей Archive of Our Own.",
+      "chapter": "folk-tales",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "At the 2019 Hugo Award ceremony, AO3 won the award for Best Related Work; Novik accepted the prize on behalf of all AO3's creators and readers."
+      }
+    },
+    {
+      "key": "other-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Критика за пассаж о дредах и извинения",
+      "long": "После выхода романа критиковали за пассаж о дредах; Новик извинилась, исправила текст для переизданий и пообещала дополнительную проверку продолжений.",
+      "works": [
+        {
+          "ref": "a-deadly-education"
+        }
+      ],
+      "chapter": "folk-tales",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2020, Novik published A Deadly Education, the first in a trilogy set in the Scholomance… Novik later apologized for \"evok[ing] a racist stereotype\" about Afro-textured hair."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "his-majestys-dragon",
+      "title": "Дракон Его Величества",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "black-powder-war",
+      "title": "Black Powder War",
+      "qid": "Q2954362",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "uprooted",
+      "title": "Выкорчеванная",
+      "qid": "Q20992497",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "spinning-silver",
+      "title": "Spinning Silver",
+      "written": {
+        "from": 2016,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "a-deadly-education",
+      "title": "A Deadly Education",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    }
+  ]
+}

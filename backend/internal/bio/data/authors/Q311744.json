@@ -1,0 +1,428 @@
+{
+  "qid": "Q311744",
+  "name": "Деннис Лихейн",
+  "born": "1965-08-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%85%D0%B5%D0%B9%D0%BD%2C_%D0%94%D0%B5%D0%BD%D0%BD%D0%B8%D1%81",
+      "rev": 155241209
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Dennis_Lehane",
+      "rev": 1380899921
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dorchester-and-study",
+      "title": "Дорчестер и учёба",
+      "from": 1965,
+      "to": 1993
+    },
+    {
+      "key": "kenzie-novels",
+      "title": "Кензи и первые награды",
+      "from": 1994,
+      "to": 2002
+    },
+    {
+      "key": "screen-and-stage",
+      "title": "Кино, сериалы и сцена",
+      "from": 2003,
+      "to": 2009
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и новые жанры",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1965",
+      "date": {
+        "from": "1965-08-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дорчестере, Бостон",
+      "long": "Родился в Дорчестере, районе Бостона, в семье ирландских эмигрантов; младший ребёнок в многодетной семье.",
+      "place": {
+        "label": "Дорчестер, Бостон"
+      },
+      "chapter": "dorchester-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 4 августа 1965, Бостон, Массачусетс, США"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые опыты в прозе",
+      "long": "Начал писать рассказы; до этого сменил ряд профессий: продавец в книжном магазине, парковщик, водитель лимузина, консультант по работе с проблемными детьми.",
+      "chapter": "dorchester-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году начал писать рассказы."
+      }
+    },
+    {
+      "key": "creation-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Дебютный роман, написанный студентом",
+      "long": "Дебютный роман о частном сыщике написан ещё в студенческие годы и вышел лишь тремя годами позже.",
+      "works": [
+        {
+          "ref": "a-drink-before-the-war"
+        }
+      ],
+      "chapter": "dorchester-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Однако этот роман был написан раньше, ещё в 1991 году, когда Деннис был студентом колледжа."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Шеймус» за дебютный роман",
+      "long": "Первый роман, представивший сыщиков Патрика Кензи и Энджи Дженнаро, получил премию «Шеймус» за лучший дебютный роман о частном детективе.",
+      "works": [
+        {
+          "ref": "a-drink-before-the-war"
+        }
+      ],
+      "chapter": "kenzie-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the 1995 Shamus Award for Best First P.I. Novel"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый независимый фильм о Бостоне",
+      "long": "Написал и поставил независимый фильм о рабочих районах Бостона — Саут-Бостоне и Дорчестере.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "kenzie-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Its production ended in 1996, more than a year before the better-known Good Will Hunting."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премии Барри и Энтони за роман",
+      "long": "Премия Барри за лучший роман; роман также получил премию Энтони.",
+      "works": [
+        {
+          "ref": "mystic-river"
+        }
+      ],
+      "chapter": "kenzie-novels",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший роман 2002-01-01"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Экранизация романа Клинтом Иствудом",
+      "long": "Экранизация Клинта Иствуда принесла писателю широкую известность за пределами жанра.",
+      "works": [
+        {
+          "ref": "mystic-river"
+        }
+      ],
+      "chapter": "screen-and-stage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Внесерийный роман «Таинственная река» в 2003 году был экранизирован Клинтом Иствудом."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа сценаристом в «Прослушке»",
+      "long": "Вошёл в сценарную группу сериала HBO «Прослушка» и написал эпизоды третьего, четвёртого и пятого сезонов.",
+      "chapter": "screen-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lehane joined the writing staff of the HBO drama series The Wire for the third season in 2004."
+      }
+    },
+    {
+      "key": "education-2005",
+      "date": {
+        "from": "2005-05",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Почётная степень Eckerd College",
+      "long": "Eckerd College, где он учился, присвоил ему почётную степень доктора гуманитарных наук; позже он вошёл в попечительский совет колледжа.",
+      "place": {
+        "label": "Сент-Питерсберг"
+      },
+      "chapter": "screen-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 2005, Lehane was presented with an honorary Doctor of Humane Letters degree from Eckerd College"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая пьеса на нью-йоркской сцене",
+      "long": "Первая пьеса по его рассказу прошла в Нью-Йорке в постановке театральной компании Invisible City.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "screen-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lehane's first play, Coronado, debuted in New York in December 2005"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Гильдии сценаристов за сериал",
+      "long": "Сценарная группа «Прослушки» получила премию Гильдии сценаристов США за лучший драматический сериал.",
+      "chapter": "screen-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lehane and the writing staff won the Writers Guild of America (WGA) Award for Best Dramatic Series at the February 2008 ceremony"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация романа Мартином Скорсезе",
+      "long": "Фильм Мартина Скорсезе по роману вышел в 2010 году; Лихейн был одним из исполнительных продюсеров.",
+      "works": [
+        {
+          "ref": "shutter-island"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фильм «Остров проклятых» по роману Лихейна (реж. Мартин Скорсезе) с Леонардо Ди Каприо в главной роли вышел в 2010 году."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Попечитель Бостонской публичной библиотеки",
+      "long": "Мэр Томас Меньино назначил его в попечительский совет Бостонской публичной библиотеки.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lehane was appointed to the board of trustees of the Boston Public Library by Mayor Thomas Menino in December 2011."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-11-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарист сериала «Подпольная империя»",
+      "long": "Присоединился к сценарной группе сериала HBO «Подпольная империя» как сценарист и творческий консультант.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On November 27, 2012, The Boston Herald reported that Lehane would join the writing staff of HBO's Boardwalk Empire as a writer and a creative consultant."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Эдгара По за лучший роман",
+      "long": "Роман получил премию Эдгара Аллана По за лучший роман.",
+      "works": [
+        {
+          "ref": "live-by-night"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман писателя Live by Night получил в 2013 году премию Эдгара По."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014-09-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый киносценарий",
+      "long": "Первый полнометражный киносценарий по его рассказу; фильм был последней ролью Джеймса Гандольфини.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Released September 12, 2014, the movie received positive reviews, particularly for its \"smartly written script.\""
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при полицейской литературы",
+      "long": "Получил Гран-при полицейской литературы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Гран-при полицейской литературы 2023-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "a-drink-before-the-war",
+      "title": "Глоток перед битвой",
+      "written": {
+        "from": 1991,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "gone-baby-gone",
+      "title": "Прощай, детка, прощай",
+      "written": {
+        "from": 1997,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "mystic-river",
+      "title": "Таинственная река",
+      "written": {
+        "from": 1999,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "shutter-island",
+      "title": "Остров проклятых",
+      "written": {
+        "from": 2002,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "the-given-day",
+      "title": "Закон улиц",
+      "written": {
+        "from": 2003,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "moonlight-mile",
+      "title": "Лунная миля",
+      "written": {
+        "from": 2009,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "live-by-night",
+      "title": "Ночной мир",
+      "written": {
+        "from": 2011,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "world-gone-by",
+      "title": "Мир, которого больше нет",
+      "written": {
+        "from": 2014,
+        "to": 2015
+      }
+    }
+  ]
+}

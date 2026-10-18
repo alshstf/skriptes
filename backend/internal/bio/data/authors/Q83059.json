@@ -1,0 +1,525 @@
+{
+  "qid": "Q83059",
+  "name": "Сол Беллоу",
+  "born": "1915-06-10",
+  "died": "2005-04-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BB%D0%BB%D0%BE%D1%83%2C_%D0%A1%D0%BE%D0%BB",
+      "rev": 154918554
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Saul_Bellow",
+      "rev": 1380444709
+    }
+  ],
+  "chapters": [
+    {
+      "key": "lashin-i-chicago",
+      "title": "Лашин, Чикаго, учёба",
+      "from": 1915,
+      "to": 1940
+    },
+    {
+      "key": "voina-i-minnesota",
+      "title": "Гражданство, война, Миннесота",
+      "from": 1941,
+      "to": 1947
+    },
+    {
+      "key": "parizh-i-augie-march",
+      "title": "Париж и слава",
+      "from": 1948,
+      "to": 1961
+    },
+    {
+      "key": "vozvrashchenie-v-chicago",
+      "title": "Возвращение в Чикаго",
+      "from": 1962,
+      "to": 1975
+    },
+    {
+      "key": "nobel-i-pozdnie-gody",
+      "title": "Нобель и поздние годы",
+      "from": 1976,
+      "to": 2005
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1915",
+      "date": {
+        "from": "1915-06-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье эмигрантов из Петербурга",
+      "long": "Родился как Соломон Беллоус в Лашине, Квебек, через два года после эмиграции родителей из Санкт-Петербурга. По документам дата рождения — 10 июля.",
+      "place": {
+        "label": "Лашин"
+      },
+      "chapter": "lashin-i-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Saul Bellow (born Solomon Bellows; June 10, 1915 – April 5, 2005)"
+      }
+    },
+    {
+      "key": "education-1933",
+      "date": {
+        "from": "1933",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Чикагском и Северо-Западном университетах",
+      "long": "Поступил в Чикагский университет, затем перевёлся в Северо-Западный и окончил его в 1937 году бакалавром антропологии и социологии.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "lashin-i-chicago",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1933 году окончил школу и поступил в Чикагский университет, спустя два года перевёлся в Северо-западный университет, который и окончил в 1937 году"
+      }
+    },
+    {
+      "key": "love-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак, с Анитой Гошкин",
+      "long": "Первый брак, с Анитой Гошкин, продлился до 1956 года; в этом браке родился сын Грег.",
+      "chapter": "lashin-i-chicago",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Анита Гошкин 1937-01-01 — 1956-01-01"
+      }
+    },
+    {
+      "key": "other-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Получение американского гражданства",
+      "long": "При попытке пойти в армию выяснил, что в детстве был ввезён в США нелегально; в 1941 году получил американское гражданство.",
+      "chapter": "voina-i-minnesota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941, Bellow became a naturalized United States citizen, after discovering, on attempting to enlist in the armed forces, that he had immigrated to the United States illegally as a child."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в торговом флоте",
+      "long": "Во время Второй мировой войны служил в торговом флоте; в годы службы завершил первый роман.",
+      "works": [
+        {
+          "ref": "dangling-man"
+        }
+      ],
+      "chapter": "voina-i-minnesota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During World War II, Bellow joined the merchant marine and during his service he completed his first novel, Dangling Man (1944)"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Миннесотском университете",
+      "long": "Преподавал в Миннесотском университете; осенью 1947 года поселился в Миннеаполисе после рекламного турне романа «Жертва».",
+      "place": {
+        "label": "Миннеаполис"
+      },
+      "works": [
+        {
+          "ref": "the-victim"
+        }
+      ],
+      "chapter": "voina-i-minnesota",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1946 through 1948 Bellow taught at the University of Minnesota."
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Стипендия Гуггенхайма и переезд в Париж",
+      "long": "Стипендия Гуггенхайма позволила переехать в Париж, где он начал работу над романом об Оги Марче.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "adventures-of-augie-march",
+          "note": "работа над романом начата в Париже"
+        }
+      ],
+      "chapter": "parizh-i-augie-march",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1948, Bellow was awarded a Guggenheim Fellowship that allowed him to move to Paris, where he began writing The Adventures of Augie March (1953)."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая Национальная книжная премия",
+      "long": "Роман об Оги Марче получил Национальную книжную премию и утвердил репутацию Беллоу как крупного автора.",
+      "works": [
+        {
+          "ref": "adventures-of-augie-march"
+        }
+      ],
+      "chapter": "parizh-i-augie-march",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия за лучшее художественное произведение 1954"
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак, с Сондрой Цачбасовой",
+      "long": "Второй брак, с Александрой (Сондрой) Цачбасовой, продлился до 1959 года; в нём родился сын Адам.",
+      "chapter": "parizh-i-augie-march",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Александра Цачбасова 1956-01-01 — 1959-01-01"
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Адама",
+      "long": "Родился сын Адам от второго брака.",
+      "chapter": "parizh-i-augie-march",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Адам Беллоу 1957"
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Третий брак, с Сьюзен Глассман",
+      "long": "Третий брак, с Сьюзен Глассман, продлился до 1964 года; в нём родился сын Дэниел.",
+      "chapter": "parizh-i-augie-march",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Сьюзен Глассман 1961-01-01 — 1964-01-01"
+      }
+    },
+    {
+      "key": "relocation-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Чикаго, Комитет по социальной мысли",
+      "long": "Вернулся в Чикаго профессором Комитета по социальной мысли Чикагского университета и преподавал там более тридцати лет.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "vozvrashchenie-v-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returned to Chicago in 1962 as a professor at the Committee on Social Thought at the University of Chicago."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый коммерческий успех",
+      "long": "Роман вышел в список бестселлеров, хотя прежние книги продавались скромно.",
+      "works": [
+        {
+          "ref": "herzog"
+        }
+      ],
+      "chapter": "vozvrashchenie-v-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bellow hit the bestseller list in 1964 with his novel Herzog."
+      }
+    },
+    {
+      "key": "creation-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Образ Делмора Шварца в романе",
+      "long": "Прототипом героя романа стал покойный друг и соперник Беллоу, поэт Делмор Шварц.",
+      "works": [
+        {
+          "ref": "humboldts-gift",
+          "note": "Шварц — прототип героя Фон Гумбольдта Флейшера"
+        }
+      ],
+      "chapter": "vozvrashchenie-v-chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in his 1975 novel Humboldt's Gift. Bellow used his late friend and rival, the brilliant but self-destructive poet Delmore Schwartz, as his model"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Премия присуждена «за гуманистическую проникновенность и тонкий анализ современной культуры».",
+      "works": [
+        {
+          "ref": "humboldts-gift"
+        }
+      ],
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году Беллоу получил Нобелевскую премию по литературе"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Президент Франции наградил Беллоу орденом Почётного легиона.",
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году президент Франции наградил Беллоу орденом Почётного легиона."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная медаль США в области искусств",
+      "long": "Удостоен Национальной медали США в области искусств.",
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1988 году был удостоен Национальной медали США в области искусств."
+      }
+    },
+    {
+      "key": "love-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Пятый брак, с Дженис Фридман",
+      "long": "Пятый брак, с Дженис Фридман, продлился до смерти писателя.",
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Дженис Фридман 1989-01-01 — 2005-04-05"
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Чикаго в Бруклайн",
+      "long": "Переехал из Чикаго в Бруклайн, чтобы преподавать в Бостонском университете.",
+      "place": {
+        "label": "Бруклайн"
+      },
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bellow moved from Chicago to Brookline, Massachusetts, in 1993"
+      }
+    },
+    {
+      "key": "illness-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлое отравление рыбой",
+      "long": "Тяжело отравился рыбой.",
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 году очень сильно отравился рыбой."
+      }
+    },
+    {
+      "key": "child-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери в 84 года",
+      "long": "В 84 года стал отцом: родилась первая дочь, четвёртый ребёнок, от Дженис Фридман.",
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1999, when he was 84, Bellow had his fourth child and first daughter, with Freedman."
+      }
+    },
+    {
+      "key": "death-2005",
+      "date": {
+        "from": "2005-04-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Бруклайне",
+      "long": "Умер в Бруклайне в возрасте 89 лет; похоронен в Братлборо, Вермонт.",
+      "place": {
+        "label": "Бруклайн"
+      },
+      "chapter": "nobel-i-pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he died there on April 5, 2005, at age 89"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dangling-man",
+      "title": "Between Heaven and Earth (Dangling Man)",
+      "written": {
+        "from": 1944,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "the-victim",
+      "title": "The Victim",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "adventures-of-augie-march",
+      "title": "Приключения Оги Марча",
+      "qid": "Q1771746",
+      "written": {
+        "from": 1948,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "henderson-the-rain-king",
+      "title": "Хендерсон, король дождя",
+      "qid": "Q3795484",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "herzog",
+      "title": "Герцог",
+      "qid": "Q1424503",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "humboldts-gift",
+      "title": "Подарок Гумбольдта",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "ravelstein",
+      "title": "Равельштейн",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    }
+  ]
+}

@@ -1,0 +1,462 @@
+{
+  "qid": "Q309786",
+  "name": "Эмилио Сальгари",
+  "born": "1862-08-21",
+  "died": "1911-04-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B0%D0%BB%D1%8C%D0%B3%D0%B0%D1%80%D0%B8%2C_%D0%AD%D0%BC%D0%B8%D0%BB%D0%B8%D0%BE",
+      "rev": 154905786
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Emilio_Salgari",
+      "rev": 1379794644
+    },
+    {
+      "id": "itwiki",
+      "url": "https://it.wikipedia.org/wiki/Emilio_Salgari",
+      "rev": 152583301
+    }
+  ],
+  "chapters": [
+    {
+      "key": "verona-sea-newspaper",
+      "title": "Верона, море и газета",
+      "from": 1862,
+      "to": 1891
+    },
+    {
+      "key": "marriage-moves",
+      "title": "Брак, дети, переезды",
+      "from": 1892,
+      "to": 1899
+    },
+    {
+      "key": "turin-debts",
+      "title": "Турин, долги и болезнь Иды",
+      "from": 1900,
+      "to": 1909
+    },
+    {
+      "key": "last-years",
+      "title": "Лечебница и конец",
+      "from": 1910,
+      "to": 1911
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1862",
+      "date": {
+        "from": "1862-08-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вероне",
+      "long": "Родился в Вероне в семье торговца тканями Луиджи Сальгари и венецианки Луиджии Градары.",
+      "place": {
+        "label": "Верона"
+      },
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 августа 1862, Верона, Ломбардо-Венецианское королевство"
+      }
+    },
+    {
+      "key": "education-1878",
+      "date": {
+        "from": "1878",
+        "to": "1881",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в мореходном училище в Венеции",
+      "long": "Учился в техническом и мореходном институте «Паоло Сарпи» в Венеции, мечтая стать капитаном, но бросил учёбу на втором курсе и капитаном не стал.",
+      "place": {
+        "label": "Венеция"
+      },
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "A partire dal 1878 studiò poi al Regio Istituto Tecnico e Nautico"
+      }
+    },
+    {
+      "key": "career-1881",
+      "date": {
+        "from": "1881",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение в Верону, начало журналистики",
+      "long": "После недолгой службы матросом на Адриатике вернулся в Верону и стал журналистом; позже работал в газете La Nuova Arena.",
+      "place": {
+        "label": "Верона"
+      },
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1881 году он вернулся домой и устроился журналистом"
+      }
+    },
+    {
+      "key": "career-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор газеты La Nuova Arena",
+      "long": "После выхода романа в газете La Nuova Arena стал её редактором и писал под псевдонимами.",
+      "place": {
+        "label": "Верона"
+      },
+      "works": [
+        {
+          "ref": "tigers-of-mompracem"
+        }
+      ],
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Sempre nel 1883 divenne redattore del giornale stesso."
+      }
+    },
+    {
+      "key": "other-1885",
+      "date": {
+        "from": "1885-09-25",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вызов на дуэль журналиста конкурирующей газеты",
+      "long": "Вызвал на дуэль журналиста конкурирующей газеты l'Adige, усомнившегося в его морском опыте.",
+      "place": {
+        "label": "Верона"
+      },
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il 25 settembre 1885 arrivò a sfidare a duello un collega del quotidiano rivale l'Adige."
+      }
+    },
+    {
+      "key": "loss-1887",
+      "date": {
+        "from": "1887",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя Луиджия Градара.",
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1887 morì la madre"
+      }
+    },
+    {
+      "key": "loss-1889",
+      "date": {
+        "from": "1889-11-27",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Самоубийство отца",
+      "long": "Отец, считавший себя неизлечимо больным, покончил с собой, выбросившись из окна дома.",
+      "place": {
+        "label": "Верона"
+      },
+      "chapter": "verona-sea-newspaper",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "il 27 novembre 1889 vi fu il suicidio del padre che, credendosi malato di una malattia incurabile, si gettò dalla finestra di casa"
+      }
+    },
+    {
+      "key": "love-1892",
+      "date": {
+        "from": "1892-01-30",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с актрисой Идой Перруцци",
+      "long": "Женился на театральной актрисе Иде Перруцци.",
+      "chapter": "marriage-moves",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "il 30 gennaio 1892, Emilio sposò Ida Peruzzi (1866-1922), un'attrice di teatro"
+      }
+    },
+    {
+      "key": "child-1893",
+      "date": {
+        "from": "1893",
+        "to": "1900",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение четверых детей",
+      "long": "В браке родились четверо детей: Фатима, Надир, Ромеро и Омар; Омар позднее стал автором приключенческих книг.",
+      "chapter": "marriage-moves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочь Фатима (1893) и сыновья Надир (1894), Ромеро (1898) и Омар (1900)"
+      }
+    },
+    {
+      "key": "poverty-1894",
+      "date": {
+        "from": "1894",
+        "to": "1896",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Шестнадцать книг за три года из-за долгов",
+      "long": "За 1892–1898 годы вышло около тридцати книг, шестнадцать из них — за три года; причиной названы накапливавшиеся долги.",
+      "works": [
+        {
+          "ref": "pirates-of-malaysia"
+        }
+      ],
+      "chapter": "marriage-moves",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "di cui 16 nel solo triennio 1894-1896... Il motivo di tutto questo lavoro erano i debiti che Salgari continuava ad accumulare"
+      }
+    },
+    {
+      "key": "relocation-1897",
+      "date": {
+        "from": "1897",
+        "to": "1900",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Геную по настоянию издателя",
+      "long": "По настоянию издателя Донато семья переехала в Геную; там был написан «Чёрный корсар», опубликованный в 1898 году.",
+      "place": {
+        "label": "Генуя"
+      },
+      "works": [
+        {
+          "ref": "black-corsair",
+          "note": "написан во время жизни в Лигурии"
+        }
+      ],
+      "chapter": "marriage-moves",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Verso la fine del 1897, l'editore Anton Donath, con cui aveva iniziato a collaborare, lo convinse a trasferirsi a Genova"
+      }
+    },
+    {
+      "key": "career-1897",
+      "date": {
+        "from": "1897-04-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рыцарский орден Короны Италии",
+      "long": "По предложению королевы Маргариты получил титул кавалера ордена Короны Италии и небольшую пенсию; положение не улучшилось.",
+      "chapter": "marriage-moves",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il 3 aprile 1897, su proposta della regina d'Italia Margherita di Savoia, Salgari venne insignito dalla Real Casa del titolo di"
+      }
+    },
+    {
+      "key": "relocation-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Окончательный переезд в Турин",
+      "long": "По приглашению издателя Спейрани окончательно переехал с семьёй в Турин; там работал в городской библиотеке над картами и описаниями путешествий.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "turin-debts",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1900, richiamato dall'editore Speirani, Salgari si trasferì, con moglie e figli, definitivamente a Torino"
+      }
+    },
+    {
+      "key": "illness-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Душевная болезнь жены",
+      "long": "У жены Иды проявились признаки душевной болезни; расходы на лечение умножили долги.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "turin-debts",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "его жена страдала от душевного заболевания с 1903 года"
+      }
+    },
+    {
+      "key": "illness-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первая попытка самоубийства",
+      "long": "Первая попытка самоубийства; его спасла дочь Фатима.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "turin-debts",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "nel 1909 tentò per la prima volta il suicidio, gettandosi sopra una spada, ma venne salvato in tempo dalla figlia Fatima"
+      }
+    },
+    {
+      "key": "illness-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Помещение жены в психиатрическую лечебницу",
+      "long": "Жена Ида была помещена в психиатрическую лечебницу; писатель остался с детьми.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "попала в психиатрическую лечебницу в 1910 году"
+      }
+    },
+    {
+      "key": "death-1911",
+      "date": {
+        "from": "1911-04-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Самоубийство в лесу под Турином",
+      "long": "Оставив письма детям, издателям и редакторам, ушёл из дома и покончил с собой в лесу близ Турина; похороны почти не были замечены из-за юбилейных торжеств.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "покончил с собой 25 апреля 1911 года в лесу под Турином"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tigers-of-mompracem",
+      "title": "Тигры Момпрачена",
+      "qid": "Q1248151",
+      "written": {
+        "from": 1883,
+        "to": 1884
+      }
+    },
+    {
+      "ref": "mysteries-of-black-jungle",
+      "title": "Тайны чёрных джунглей",
+      "qid": "Q3791032",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "pirates-of-malaysia",
+      "title": "Пираты Малайзии",
+      "qid": "Q635918",
+      "written": {
+        "from": 1895,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "black-corsair",
+      "title": "Чёрный корсар",
+      "qid": "Q7718288",
+      "written": {
+        "from": 1897,
+        "to": 1898
+      }
+    },
+    {
+      "ref": "horrors-of-siberia",
+      "title": "Ужасы Сибири",
+      "qid": "Q3772160",
+      "written": {
+        "from": 1900,
+        "to": 1900
+      }
+    },
+    {
+      "ref": "queen-of-the-caribbean",
+      "title": "Королева Карибов",
+      "qid": "Q3823857",
+      "written": {
+        "from": 1901,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "mountain-of-light",
+      "title": "Гора Света",
+      "qid": "Q3823224",
+      "written": {
+        "from": 1902,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "wonders-of-the-year-2000",
+      "title": "Чудеса XXI века",
+      "qid": "Q3828828",
+      "written": {
+        "from": 1907,
+        "to": 1907
+      }
+    },
+    {
+      "ref": "carthage-in-flames",
+      "title": "Гибель Карфагена",
+      "qid": "Q635050",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    }
+  ]
+}

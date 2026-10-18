@@ -1,0 +1,697 @@
+{
+  "qid": "Q271824",
+  "name": "Эдгар Уоллес",
+  "born": "1875-04-01",
+  "died": "1932-02-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%BE%D0%BB%D0%BB%D0%B5%D1%81%2C_%D0%AD%D0%B4%D0%B3%D0%B0%D1%80",
+      "rev": 148976940
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Edgar_Wallace",
+      "rev": 1380317393
+    }
+  ],
+  "chapters": [
+    {
+      "key": "foster-childhood",
+      "title": "Приёмная семья и первые заработки",
+      "from": 1875,
+      "to": 1893
+    },
+    {
+      "key": "army-and-africa",
+      "title": "Армия, Африка, война",
+      "from": 1894,
+      "to": 1902
+    },
+    {
+      "key": "debts-and-congo",
+      "title": "Долги, увольнение, Конго",
+      "from": 1903,
+      "to": 1917
+    },
+    {
+      "key": "king-of-thrillers",
+      "title": "Король триллеров",
+      "from": 1918,
+      "to": 1930
+    },
+    {
+      "key": "hollywood",
+      "title": "Долги и Голливуд",
+      "from": 1931,
+      "to": 1932
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1875",
+      "date": {
+        "from": "1875-04-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гринвиче",
+      "long": "Родился в Гринвиче в семье актёров; отец не знал о его существовании. Мать скрывала беременность и заранее искала приёмную семью.",
+      "place": {
+        "label": "Гринвич"
+      },
+      "chapter": "foster-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эдгар Уоллес родился в Гринвиче, пригороде Лондона 1 апреля 1875 года."
+      }
+    },
+    {
+      "key": "family-1875",
+      "date": {
+        "from": "1875-04-09",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Передача в приёмную семью Фриманов",
+      "long": "Девятидневного ребёнка мать отдала на воспитание в семью лондонского торговца рыбой Джорджа Фримана, где было десять детей.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "foster-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 9 April 1875, his mother took Wallace to the semi-literate Freeman family, and made arrangements to visit often."
+      }
+    },
+    {
+      "key": "family-1878",
+      "date": {
+        "from": "1878",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Усыновление семьёй Фриманов",
+      "long": "Мать перестала платить за содержание сына, и вместо работного дома Фриманы усыновили его. Больше мать его в детстве не навещала.",
+      "chapter": "foster-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1878, his mother could no longer afford the small sum she had been paying the Freemans to care for her son and, instead of placing the boy in the workhouse, the Freemans adopted him."
+      }
+    },
+    {
+      "key": "love-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Разрыв помолвки и уход в армию",
+      "long": "В 1894 году был недолго обручён с Эдит Энстри, но разорвал помолвку и вступил в пехоту.",
+      "place": {
+        "label": "Дептфорд"
+      },
+      "chapter": "army-and-africa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1894, he became engaged to a local Deptford girl, Edith Anstree, but broke the engagement and enlisted in the infantry."
+      }
+    },
+    {
+      "key": "war-1894",
+      "date": {
+        "from": "1894",
+        "to": "1899",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Армейская служба, новое имя",
+      "long": "Записался в пехоту под именем Эдгар Уоллес, служил в Южной Африке, перешёл в медицинский корпус, затем в военную прессу. В 1899 году выкупил своё увольнение из армии.",
+      "place": {
+        "label": "Южная Африка"
+      },
+      "chapter": "army-and-africa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1894 году Эдгар записался в пехотные войска, готовящиеся к отправке в Южную Африку, под именем Эдгар Уоллес, взяв фамилию автора «Бен-Гура» Льюиса Уоллеса."
+      }
+    },
+    {
+      "key": "creation-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Знакомство с Киплингом, первые стихи",
+      "long": "Начал печатать песни и стихи под влиянием Киплинга, с которым познакомился в Кейптауне; в том же году вышел первый сборник баллад.",
+      "place": {
+        "label": "Кейптаун"
+      },
+      "works": [
+        {
+          "ref": "the-mission-that-failed"
+        }
+      ],
+      "chapter": "army-and-africa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace began publishing songs and poetry, much inspired by Rudyard Kipling, whom he met in Cape Town in 1898."
+      }
+    },
+    {
+      "key": "career-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Военный корреспондент на англо-бурской войне",
+      "long": "Оставшись в Африке, стал военным корреспондентом агентства «Рейтер», затем «Дейли мейл» во время англо-бурской войны.",
+      "place": {
+        "label": "Южная Африка"
+      },
+      "chapter": "army-and-africa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Remaining in Africa, he became a war correspondent, first for Reuters and then the Daily Mail (1900) and other periodicals during the Boer War."
+      }
+    },
+    {
+      "key": "love-1901",
+      "date": {
+        "from": "1901",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Айви Колдекот",
+      "long": "Женился в Южной Африке на Айви Мод Колдекот вопреки возражениям её отца, методистского миссионера.",
+      "place": {
+        "label": "Южная Африка"
+      },
+      "chapter": "army-and-africa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1901, while in South Africa, Wallace married Ivy Maude Caldecott (1879–1926), even though her father Reverend William Shaw Caldecott, a Wesleyan missionary, was strongly opposed to the marriage."
+      }
+    },
+    {
+      "key": "loss-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть первой дочери Элеоноры",
+      "long": "Первая дочь, Элеонора, внезапно умерла от менингита.",
+      "place": {
+        "label": "Южная Африка"
+      },
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple's first child, Eleanor Clare Hellier Wallace, died suddenly from meningitis in 1903, and the couple returned to London soon afterwards, deeply in debt."
+      }
+    },
+    {
+      "key": "relocation-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Лондон, долги",
+      "long": "После смерти дочери семья вернулась в Лондон, обременённая долгами; Уоллес работал в «Мейл» и начал писать детективы ради заработка.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple's first child, Eleanor Clare Hellier Wallace, died suddenly from meningitis in 1903, and the couple returned to London soon afterwards, deeply in debt."
+      }
+    },
+    {
+      "key": "loss-1903-2",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Встреча с родной матерью и её смерть",
+      "long": "Впервые встретился с родной матерью, тяжело больной и нуждающейся; она просила денег, и ей отказали. Позже в том же году она умерла в больнице Брадфорда.",
+      "place": {
+        "label": "Брадфорд"
+      },
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1903, Wallace met his birth mother Polly, whom he had never known.… Polly died in the Bradford Infirmary later that year."
+      }
+    },
+    {
+      "key": "child-1904",
+      "date": {
+        "from": "1904-04-28",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Брайана",
+      "long": "Родился сын Брайан Эдгар Уоллес, впоследствии писатель.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A son, Bryan Edgar Wallace, was born in 1904 followed by a daughter, Patricia, in 1908."
+      }
+    },
+    {
+      "key": "creation-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Собственное издательство и финансовый провал",
+      "long": "Не найдя издателя, основал собственное издательство Tallis Press. Несмотря на рекламу и хорошие продажи, затея обернулась финансовым провалом, и Уоллеса выручал владелец «Мейл».",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "four-just-men"
+        }
+      ],
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Unable to find any backer for his first book, Wallace set up his own publishing company, Tallis Press, which issued the sensational thriller The Four Just Men (1905)."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из «Дейли мейл»",
+      "long": "После исков о клевете из-за неточностей в репортажах уволен из «Дейли мейл»; другие газеты его не брали. Семья жила на грани банкротства.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace was fired in 1907, the first reporter ever to be fired from the paper, and he found no other paper would employ him, given his reputation."
+      }
+    },
+    {
+      "key": "career-1907-2",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поездка в Конго",
+      "long": "Ездил в Свободное государство Конго освещать зверства бельгийских каучуковых компаний; по приглашению редактора журнала сделал из этих впечатлений рассказы.",
+      "place": {
+        "label": "Конго"
+      },
+      "works": [
+        {
+          "ref": "sanders-of-the-river",
+          "note": "рассказы публиковались в журнале по приглашению редактора на основе впечатлений от поездки"
+        }
+      ],
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1907, Edgar travelled to the Congo Free State, to report on atrocities committed against the Congolese under King Leopold II of Belgium and the Belgian rubber companies"
+      }
+    },
+    {
+      "key": "child-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Патрисии",
+      "long": "Родилась дочь Патрисия.",
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A son, Bryan Edgar Wallace, was born in 1904 followed by a daughter, Patricia, in 1908."
+      }
+    },
+    {
+      "key": "poverty-1908",
+      "date": {
+        "from": "1908",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Писательство ради кредиторов, скачки",
+      "long": "Самый плодотворный период жизни; поначалу писал главным образом ради расплаты с кредиторами. Много проигрывал на скачках и жил не по средствам.",
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The period from 1908 to 1932 was the most prolific of Wallace's life. Initially, he wrote mainly in order to satisfy creditors in the UK and South Africa."
+      }
+    },
+    {
+      "key": "child-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Майкла",
+      "long": "Родился третий ребёнок, сын Майкл Блэр Уоллес.",
+      "chapter": "debts-and-congo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916, Ivy had her third and last child by Edgar, Michael Blair Wallace, and filed for divorce in 1918."
+      }
+    },
+    {
+      "key": "love-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Айви",
+      "long": "Айви подала на развод; она уехала с детьми в Танбридж-Уэллс, а Уоллес сблизился со своим секретарём Этель Вайолет Кинг.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916, Ivy had her third and last child by Edgar, Michael Blair Wallace, and filed for divorce in 1918."
+      }
+    },
+    {
+      "key": "love-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак, с Вайолет Кинг",
+      "long": "Женился на своём секретаре Этель Вайолет Кинг, дочери банкира.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1921; their daughter Margaret Penelope June (known as Penny Wallace) was born in 1923."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт с издательством «Ходдер и Стоутон»",
+      "long": "Подписал договор с «Ходдер и Стоутон» вместо продажи прав по частям: получил авансы, роялти и рекламные кампании, стал рекламироваться как «король триллеров».",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace began to take his fiction writing career more seriously and signed with publishers Hodder and Stoughton in 1921"
+      }
+    },
+    {
+      "key": "child-1923",
+      "date": {
+        "from": "1923-05-30",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Пенелопы",
+      "long": "Родилась дочь Пенелопа (Пенни) Уоллес.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1921; their daughter Margaret Penelope June (known as Penny Wallace) was born in 1923."
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923-06-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый британский радиорепортаж со скачек",
+      "long": "Первым в Британии выступил радиорепортёром на спортивном событии, сделав репортаж о скачках «Дерби».",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 6 June 1923, Edgar Wallace became the first British radio sports reporter, when he made a report on The Derby for the British Broadcasting Company"
+      }
+    },
+    {
+      "key": "creation-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Опыты в научной фантастике",
+      "long": "Опубликовал фантастический рассказ о зеркальной Земле; фантастика не приносила ему достаточного дохода, и он возвращался к обычной прозе.",
+      "works": [
+        {
+          "ref": "planetoid-127"
+        }
+      ],
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Planetoid 127, first published in 1924 but reprinted as late as 2011, is a short story about an Earth scientist"
+      }
+    },
+    {
+      "key": "loss-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть бывшей жены Айви",
+      "long": "Бывшая жена Айви умерла от рака груди, диагностированного в 1923 году.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it returned terminally by 1925, and she died in 1926."
+      }
+    },
+    {
+      "key": "other-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандальная статья в «Дейли мейл»",
+      "long": "Статья в «Дейли мейл» связала педофилию с гомосексуальностью и возмутила коллег, издателей и деловых знакомых, включая Джеральда дю Морье.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace wrote a controversial article in the Daily Mail in 1926 entitled \"The Canker In Our Midst\" about paedophilia and the show business world."
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пик популярности",
+      "long": "По оценкам, каждая четвёртая книга, которую читали в Британии, была написана Уоллесом.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1928, it was estimated that one in four books being read in the UK had come from Wallace's pen."
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Доход около 50 тысяч фунтов в год",
+      "long": "Годовой доход составил почти 50 тысяч фунтов; он возглавлял кинокомпанию British Lion по контракту с правами на свои произведения.",
+      "chapter": "king-of-thrillers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1929, Wallace's earnings were almost £50,000 per annum (equivalent to about £2 million in current terms)."
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Неудачная попытка избрания в парламент",
+      "long": "Баллотировался в парламент от Блэкпула как независимый либерал и проиграл с отрывом более чем в 33 тысячи голосов; также редактировал «Санди ньюс» до её закрытия.",
+      "place": {
+        "label": "Блэкпул"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace became active in the Liberal Party and contested Blackpool in the 1931 general election as one of a handful of Independent Liberals"
+      }
+    },
+    {
+      "key": "relocation-1931",
+      "date": {
+        "from": "1931-11",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в США, работа на RKO",
+      "long": "Уехал в США, обременённый долгами, и стал работать в Голливуде сценаристом студии RKO.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He went to America, burdened by debt, in November 1931."
+      }
+    },
+    {
+      "key": "creation-1931",
+      "date": {
+        "from": "1931-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Сценарий фильма об обезьяне для RKO",
+      "long": "Получил от продюсера Купера задание писать сценарий «обезьяньего фильма». Первый черновик в 110 страниц писал пять недель по идеям Купера.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "works": [
+        {
+          "ref": "king-kong-screenplay",
+          "note": "процесс работы описан в дневнике Уоллеса"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1931, Wallace was assigned work on the RKO \"gorilla picture\" (King Kong, 1933) for producer Merian C. Cooper."
+      }
+    },
+    {
+      "key": "death-1932",
+      "date": {
+        "from": "1932-02-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от диабета в Беверли-Хиллз",
+      "long": "Умер в коме от диабета и двусторонней пневмонии; тело отправили в Англию и похоронили в Литтл-Марлоу.",
+      "place": {
+        "label": "Беверли-Хиллз"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died of the disease, combined with double pneumonia, on 10 February 1932 in North Maple Drive, Beverly Hills."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-mission-that-failed",
+      "title": "Миссия, которая провалилась",
+      "written": {
+        "from": 1898,
+        "to": 1898
+      }
+    },
+    {
+      "ref": "four-just-men",
+      "title": "Четверо справедливых",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "sanders-of-the-river",
+      "title": "Сандерс с реки",
+      "written": {
+        "from": 1907,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "planetoid-127",
+      "title": "Планетоид 127",
+      "written": {
+        "from": 1924,
+        "to": 1924
+      }
+    },
+    {
+      "ref": "green-rust",
+      "title": "Зелёная ржавчина",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "king-kong-screenplay",
+      "title": "Сценарий «Кинг-Конга»",
+      "written": {
+        "from": 1931,
+        "to": 1932
+      }
+    }
+  ]
+}
