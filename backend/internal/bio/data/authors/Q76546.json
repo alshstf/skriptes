@@ -1,0 +1,864 @@
+{
+  "qid": "Q76546",
+  "name": "Эрих Кестнер",
+  "born": "1899-02-23",
+  "died": "1974-07-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D1%81%D1%82%D0%BD%D0%B5%D1%80%2C_%D0%AD%D0%BC%D0%B8%D0%BB%D1%8C_%D0%AD%D1%80%D0%B8%D1%85",
+      "rev": 153759719
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Erich_K%C3%A4stner",
+      "rev": 1380586193
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Erich_K%C3%A4stner",
+      "rev": 271292041
+    }
+  ],
+  "chapters": [
+    {
+      "key": "dresden-seminary-army",
+      "title": "Дрезден, семинария, артиллерия",
+      "from": 1899,
+      "to": 1918
+    },
+    {
+      "key": "leipzig",
+      "title": "Лейпциг: учёба и газета",
+      "from": 1919,
+      "to": 1926
+    },
+    {
+      "key": "berlin-years",
+      "title": "Берлин: стихи, Эмиль, успех",
+      "from": 1927,
+      "to": 1932
+    },
+    {
+      "key": "third-reich",
+      "title": "Остаться в Рейхе",
+      "from": 1933,
+      "to": 1944
+    },
+    {
+      "key": "tyrol-munich",
+      "title": "Тироль и Мюнхен",
+      "from": 1945,
+      "to": 1974
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1899",
+      "date": {
+        "from": "1899-02-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дрездене",
+      "long": "Родился в Дрездене в мелкобуржуазной семье; отец — седельник, мать Ида — домработница, затем парикмахер. Единственный ребёнок, с матерью его связывала очень тесная близость.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "dresden-seminary-army",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Дрезден 1899-02-23"
+      }
+    },
+    {
+      "key": "education-1913",
+      "date": {
+        "from": "1913",
+        "to": "1916",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учительская семинария в Дрездене",
+      "long": "Поступил на дрезденские учительские курсы, готовясь стать учителем народной школы; за год до окончания прервал обучение из-за призыва в армию.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "works": [
+        {
+          "ref": "das-fliegende-klassenzimmer",
+          "note": "позднее Кестнер описал в книге многое из своих школьных воспоминаний"
+        }
+      ],
+      "chapter": "dresden-seminary-army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1913 году Эрих поступил на дрезденские учительские курсы"
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в тяжёлой артиллерии",
+      "long": "Призван в армию, год прослужил в роте тяжёлой артиллерии. Суровая муштра сформировала его антимилитаризм и, по его словам, вызвала хроническую болезнь сердца.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "dresden-seminary-army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1917 году он был призван на военную службу, и «заканчивать обучение» ему пришлось в роте тяжёлой артиллерии, где он прослужил один год."
+      }
+    },
+    {
+      "key": "education-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Лейпцигский университет",
+      "long": "Осенью поступил в Лейпцигский университет (история, философия, германистика, театроведение); подрабатывал, продавая духи и работая на биржевого маклера.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "leipzig",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1919 года Кестнер поступил в Лейпцигский университет, где изучал историю, философию, германистику и театроведение."
+      }
+    },
+    {
+      "key": "love-1919",
+      "date": {
+        "from": "1919",
+        "to": "1926",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с Ильзе Юлиус",
+      "long": "Летом 1919 года познакомился с Ильзе Юлиус; отношения, ставшие на расстоянии кризисными, закончились в 1926 году.",
+      "chapter": "leipzig",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "im Sommer 1919 die drei Jahre jüngere Ilse Julius kennengelernt… 1926 endete die Beziehung, was für beide Teile traumatisch war"
+      }
+    },
+    {
+      "key": "other-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало дружбы с Эрихом Озером",
+      "long": "Познакомился с Эрихом Озером, будущим иллюстратором его стихов; началась многолетняя дружба.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "leipzig",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Bereits 1923 lernte er Erich Ohser kennen, und ihre langjährige Freundschaft begann."
+      }
+    },
+    {
+      "key": "education-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская диссертация",
+      "long": "Защитил диссертацию «Фридрих Великий и немецкая литература»; учёбу оплачивал журналистикой и театральной критикой в Neue Leipziger Zeitung.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "leipzig",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1925 году Кестнер защитил диссертацию на тему «Фридрих Великий и немецкая литература»."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение из лейпцигской газеты",
+      "long": "Уволен из Neue Leipziger Zeitung после выхода эротической поэмы с иллюстрациями Озера; продолжил писать для газеты из Берлина под псевдонимом Бертольд Бюргер.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "berlin-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году всё более критически настроенного Кестнера уволили после выхода эротической поэмы «Ночная песнь камерного виртуоза» с фривольными иллюстрациями Эриха Озера."
+      }
+    },
+    {
+      "key": "love-1927",
+      "date": {
+        "from": "1927-03",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Луизелоттой Эндерле",
+      "long": "После конфликта с редакцией познакомился с журналисткой Луизелоттой Эндерле; она стала его многолетней спутницей, с 1944 года они жили вместе.",
+      "place": {
+        "label": "Лейпциг"
+      },
+      "chapter": "berlin-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im März 1927 gab es Auseinandersetzungen zwischen Kästner und der Chefredaktion der Neuen Leipziger Zeitung, die in beiderseitigen Kündigungen endeten… lernte er die Redakteurin Luise Babette (Luiselotte) Enderle kennen"
+      }
+    },
+    {
+      "key": "relocation-1927",
+      "date": {
+        "from": "1927-07-01",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Берлин",
+      "long": "Переехал в Берлин; годы до 1933-го стали самым продуктивным периодом его жизни.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 1. Juli 1927 zog Kästner nach Berlin um"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая книга стихов",
+      "long": "Вышла первая книга — сборник сатирических стихов лейпцигских лет; до 1933 года последовали ещё три поэтических сборника.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "herz-auf-taille"
+        }
+      ],
+      "chapter": "berlin-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году в свет вышла первая книга Эриха Кестнера из серии сборников сатирических стихов лейпцигского периода под названием «Сердце на талии»"
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация и начало работы в кино",
+      "long": "Недовольство сценарием экранизации первой детской книги привело к тому, что он начал сам писать сценарии для студий Бабельсберга.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Экранизация «Эмиля и сыщиков» (1931 год, режиссёр Герхард Лампрехт) пользовалась большим успехом. Кестнер, однако, остался недоволен сценарием"
+      }
+    },
+    {
+      "key": "other-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Решение не эмигрировать",
+      "long": "Остался в Германии, ненадолго съездив в Италию и Швейцарию; объяснял это желанием быть очевидцем и нежеланием оставлять мать.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После прихода нацистов к власти в 1933 году Кестнер, в отличие от большинства своих коллег, критиковавших национал-социализм, остался в стране."
+      }
+    },
+    {
+      "key": "persecution-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Допросы в гестапо, исключение из союза писателей",
+      "long": "Несколько раз допрашивался в гестапо и был исключён из союза писателей.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После прихода нацистов к власти в 1933 году Кестнер, в отличие от большинства своих коллег, критиковавших национал-социализм, остался в стране… Кестнер несколько раз допрашивался в гестапо и был исключён из союза писателей."
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933",
+        "to": "1939",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Отношения с актрисой Герти Кирхнер",
+      "long": "Состоял в отношениях с актрисой Герти Кирхнер до её гибели в 1939 году.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ab 1933 war Kästner bis zu ihrem Tod mit der anfangs 20-jährigen Schauspielerin Herti Kirchner („Nauke“) liiert."
+      }
+    },
+    {
+      "key": "persecution-1933-2",
+      "date": {
+        "from": "1933-05-10",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Сожжение книг на Опернплац",
+      "long": "Его книги сожжены на Опернплац как «противоречащие немецкому духу»; сам Кестнер наблюдал за этим из толпы. Публикация его книг в Рейхе была запрещена.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его произведения были среди тех, что попали в огонь на Опернплац в Берлине в 1933 году как «противоречащие немецкому духу»."
+      }
+    },
+    {
+      "key": "creation-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Публикация за границей при запрете в Рейхе",
+      "long": "При запрете публикаций в Рейхе роман вышел в Швейцарии.",
+      "place": {
+        "label": "Швейцария"
+      },
+      "works": [
+        {
+          "ref": "drei-manner-im-schnee"
+        }
+      ],
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Швейцарии Кестнеру удалось опубликовать безобидный развлекательный роман «Трое в снегу» (нем. Drei Männer im Schnee, 1934)."
+      }
+    },
+    {
+      "key": "loss-1939",
+      "date": {
+        "from": "1939-05-01",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть возлюбленной Герти Кирхнер",
+      "long": "Герти Кирхнер погибла в автомобильной аварии; Кестнеру пришлось опознавать тело, после этого он сам больше не садился за руль.",
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Sie war auch schriftstellerisch tätig und starb bei einem Autounfall am 1. Mai 1939."
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий «Мюнхгаузена» по особому разрешению",
+      "long": "По особому разрешению написал под псевдонимом Бертольд Бюргер сценарий юбилейного фильма «Мюнхгаузен» студии UFA.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Mit einer Ausnahmegenehmigung lieferte Kästner, angeblich auf Wunsch von Goebbels, 1942 unter dem Pseudonym Berthold Bürger auch das Drehbuch zu Münchhausen"
+      }
+    },
+    {
+      "key": "other-1942",
+      "date": {
+        "from": "1942-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Ложное сообщение о смерти в прессе",
+      "long": "В иностранной прессе прошло ошибочное сообщение о смерти Кестнера.",
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Mai 1942 ging die Fehlmeldung „Erich Kästner gestorben“ durch die ausländische Presse."
+      }
+    },
+    {
+      "key": "persecution-1943",
+      "date": {
+        "from": "1943-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет на сценарии и зарубежные публикации",
+      "long": "Президент Имперской палаты письменности запретил ему писать сценарии и публиковаться за границей.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Januar 1943 wurde ihm nach Fertigstellung des Drehbuches zu Münchhausen auch das Schreiben von Drehbüchern sowie das Veröffentlichen im Ausland durch den Präsidenten der Reichsschrifttumskammer verboten."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944-02",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Разрушение квартиры при бомбардировке",
+      "long": "Квартира в Шарлоттенбурге разрушена бомбой, многие рукописи сгорели; Кестнер переехал к Луизелотте Эндерле.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "third-reich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Als Kästners Wohnung in Charlottenburg, Roscherstraße 16, im Februar 1944 durch Bomben zerstört wurde, zog er zu seiner Lebensgefährtin Luiselotte Enderle in die Sybelstraße."
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Мюнхен",
+      "long": "После войны переехал в Мюнхен, где жил до конца жизни.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После Второй мировой войны Кестнер переехал в Мюнхен… сочинял для «Ди Шаубуде» (нем. Die Schaubude, 1945—1948)"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор фельетонов «Нойе Цайтунг»",
+      "long": "Руководил отделом фельетонов газеты «Нойе Цайтунг» и издавал детский и юношеский журнал «Пингвин».",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "In den Jahren von 1945 bis 1953 schrieb er etwa 90 Beiträge für das Feuilleton der Neuen Zeitung… wo er bis 1948 das Feuilleton der Neuen Zeitung leitete"
+      }
+    },
+    {
+      "key": "career-1945-2",
+      "date": {
+        "from": "1945",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа для литературного кабаре",
+      "long": "Писал тексты для литературного кабаре «Ди Шаубуде», затем для «Ди Кляйне Фрайхайт»; темы — нацизм, война, разрушенная Германия.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сочинял для «Ди Шаубуде» (нем. Die Schaubude, 1945—1948)"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945-03-07",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Бегство из Берлина в Тироль",
+      "long": "С киногруппой под предлогом съёмок уехал из Берлина в Майрхофен в Тироле и дожидался там конца войны.",
+      "place": {
+        "label": "Майрхофен"
+      },
+      "works": [
+        {
+          "ref": "notabene-45",
+          "note": "это время описано в дневнике, опубликованном в 1961 году"
+        }
+      ],
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "So gelang es ihm am 7. März 1945, mit einem 60-köpfigen Filmteam als Filmautor zu angeblichen Dreharbeiten für den Film Das verlorene Gesicht ins Zillertal nach Mayrhofen in Tirol zu reisen und dort das Kriegsende abzuwarten."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Фридель Зиберт",
+      "long": "Познакомился с Фридельхильдой Зиберт, будущей матерью своего сына.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1949 lernte Kästner in München die Schauspielschülerin Friedhilde (Friedel) Siebert"
+      }
+    },
+    {
+      "key": "loss-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать Ида, с которой его связывала самая тесная близость.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seine Mutter starb 1951 in Dresden, der Vater sechs Jahre später im Jahr 1957."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президент западногерманского ПЕН-центра",
+      "long": "Президент западногермантского ПЕН-центра; в 1965 году избран почётным председателем.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1951 wurde er Präsident des westdeutschen PEN Deutschland und hatte dieses Amt bis 1962 inne"
+      }
+    },
+    {
+      "key": "loss-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец Эмиль Кестнер.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Seine Mutter starb 1951 in Dresden, der Vater sechs Jahre später im Jahr 1957."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Георга Бюхнера",
+      "long": "Получил премию Георга Бюхнера.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the literary prize of the city of Munich in 1956, and the Georg Büchner Prize in 1957"
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957-09-13",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Томаса",
+      "long": "У Кестнера и Фридель Зиберт родился сын Томас; для него Кестнер написал две последние детские книги.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 13. September 1957 wurde ihr gemeinsamer Sohn Thomas geboren"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Х. К. Андерсена",
+      "long": "Награждён международной премией имени Х. К. Андерсена; по англоязычной статье — за автобиографическую книгу о детстве.",
+      "works": [
+        {
+          "ref": "als-ich-ein-kleiner-junge-war",
+          "note": "премия присуждена за эту автобиографическую книгу"
+        }
+      ],
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году Эрих Кестнер был награждён премией имени Ханса Кристиана Андерсена."
+      }
+    },
+    {
+      "key": "family-1964",
+      "date": {
+        "from": "1964",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Жизнь на два дома, Берлин и Мюнхен",
+      "long": "Жил на вилле в Берлине с Фридель Зиберт и сыном, разъезжая между ней и Луизелоттой Эндерле в Мюнхене; в 1969 году Зиберт с сыном уехала в Цюрих.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Von 1964 bis 1969 bewohnte Kästner mit Friedel Siebert und dem gemeinsamen Sohn eine Villa in der Parkstraße 3a in Berlin-Hermsdorf"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из литературной жизни",
+      "long": "Почти полностью отошёл от литературной жизни.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ab 1965 zog Kästner sich fast ganz aus dem Literaturbetrieb zurück."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кольцо Лессинга",
+      "long": "Получил Кольцо Лессинга и литературную премию немецких масонов.",
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968 he received the Lessing-Ring together with the literary prize of the German Masonic Order."
+      }
+    },
+    {
+      "key": "death-1974",
+      "date": {
+        "from": "1974-07-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Мюнхене",
+      "long": "Умер от рака пищевода в клинике Нойперлах; похоронен на кладбище в Богенхаузене.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "tyrol-munich",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kästner died of esophageal cancer on 29 July 1974 in the Neuperlach Hospital in Munich."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "herz-auf-taille",
+      "title": "Сердце на талии",
+      "written": {
+        "from": 1928,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "emil-und-die-detektive",
+      "title": "Эмиль и сыщики",
+      "qid": "Q19746010",
+      "written": {
+        "from": 1928,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "fabian",
+      "title": "Фабиан. История одного моралиста",
+      "written": {
+        "from": 1931,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "punktchen-und-anton",
+      "title": "Кнопка и Антон",
+      "qid": "Q380377",
+      "written": {
+        "from": 1931,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "der-35-mai",
+      "title": "35 мая, или Конрад скачет верхом в Океанию",
+      "qid": "Q1192045",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "das-fliegende-klassenzimmer",
+      "title": "Летающий класс",
+      "qid": "Q788513",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "emil-und-die-drei-zwillinge",
+      "title": "Эмиль и трое близнецов",
+      "qid": "Q1299884",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "drei-manner-im-schnee",
+      "title": "Трое в снегу",
+      "qid": "Q1257102",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "notabene-45",
+      "title": "Нотабене 45",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "das-doppelte-lottchen",
+      "title": "Двойная Лоттхен",
+      "qid": "Q468100",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "als-ich-ein-kleiner-junge-war",
+      "title": "Когда я был маленьким",
+      "qid": "Q2651401",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    }
+  ]
+}

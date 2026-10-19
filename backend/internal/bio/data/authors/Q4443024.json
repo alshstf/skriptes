@@ -1,0 +1,181 @@
+{
+  "qid": "Q4443024",
+  "name": "Андрей Михайлович Столяров",
+  "born": "1950-10-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%BE%D0%BB%D1%8F%D1%80%D0%BE%D0%B2%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 154903716
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leningrad-science",
+      "title": "Ленинград и наука",
+      "from": 1950,
+      "to": 1979
+    },
+    {
+      "key": "fantasy-fame",
+      "title": "Проза и известность",
+      "from": 1980,
+      "to": 1993
+    },
+    {
+      "key": "literary-war",
+      "title": "Литературная война и публицистика",
+      "from": 1994,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-10-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ленинграде",
+      "long": "Родился 20 октября 1950 года в Ленинграде.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "leningrad-science",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 20 октября 1950, Ленинград"
+      }
+    },
+    {
+      "key": "creation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над художественной прозой",
+      "long": "Начал писать художественную прозу, оставаясь по основной специальности биологом-эмбриологом.",
+      "chapter": "fantasy-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Художественную прозу пишет с 1980 года."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация фантастического рассказа",
+      "long": "Вышла первая публикация — фантастический рассказ. Участвовал в семинарах молодых писателей-фантастов, в том числе у Бориса Стругацкого.",
+      "works": [
+        {
+          "ref": "surki"
+        }
+      ],
+      "chapter": "fantasy-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая публикация — фантастический рассказ «Сурки» (1984)."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "to": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первые крупные вещи и известность в фантастике",
+      "long": "Первые крупные произведения принесли известность; особенно заметным стал сборник 1989 года.",
+      "works": [
+        {
+          "ref": "mechta-pandory"
+        },
+        {
+          "ref": "tretiy-vavilon"
+        },
+        {
+          "ref": "izgnanie-besa"
+        }
+      ],
+      "chapter": "fantasy-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "повести «Мечта Пандоры» (1986), «Третий Вавилон» (1988) и в особенности сборник «Изгнание беса» (1989)"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Публикация романа в журнале «Знамя»",
+      "long": "Роман напечатан в журнале «Знамя»; четыре года спустя вышел в серии научно-фантастических романов «Звёздный лабиринт».",
+      "works": [
+        {
+          "ref": "zhavoronok"
+        }
+      ],
+      "chapter": "literary-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Жаворонок», напечатанный в очень авторитетном «толстом» журнале «Знамя» в 1999 году"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "surki",
+      "title": "Сурки",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "mechta-pandory",
+      "title": "Мечта Пандоры",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "tretiy-vavilon",
+      "title": "Третий Вавилон",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "izgnanie-besa",
+      "title": "Изгнание беса",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "zhavoronok",
+      "title": "Жаворонок",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    }
+  ]
+}

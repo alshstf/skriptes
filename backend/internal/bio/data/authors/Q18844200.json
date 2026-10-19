@@ -1,0 +1,188 @@
+{
+  "qid": "Q18844200",
+  "name": "Яна Вагнер",
+  "born": "1973-10-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D0%B3%D0%BD%D0%B5%D1%80%2C_%D0%AF%D0%BD%D0%B0_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 155015981
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Yana_Vagner",
+      "rev": 1375714645
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Москва, Чехия и университет",
+      "from": 1973,
+      "to": 1994
+    },
+    {
+      "key": "perevody-i-logistika",
+      "title": "Переводы и логистика",
+      "from": 1995,
+      "to": 2010
+    },
+    {
+      "key": "pisatelskaya-izvestnost",
+      "title": "Подмосковье и известность",
+      "from": 2011,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-10-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве в двуязычной семье",
+      "long": "Родилась в Москве в семье с русским и чешским языками; мать приехала в СССР из Чехословакии изучать русский язык и литературу.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родилась 8 октября 1973 года в Москве в двуязычной семье"
+      }
+    },
+    {
+      "key": "education-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание РГГУ",
+      "long": "Окончила Российский государственный гуманитарный университет; затем работала переводчиком с чешского и английского.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1994 году закончила Российский государственный гуманитарный университет (РГГУ)"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая публикация в сборнике издательства АСТ",
+      "long": "Первая публикация вышла в сборнике издательства АСТ «Лисья честность» вместе с Мартой Кетро, Дмитрием Воденниковым и другими авторами.",
+      "chapter": "pisatelskaya-izvestnost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая публикация состоялась в 2010 году в сборнике издательства АСТ «Лисья честность»"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Известность после дебютного романа-антиутопии",
+      "long": "Дебютный роман-антиутопия, изданный ЭКСМО, принёс известность; он вошёл в списки номинантов премий «НОС» и «Национальный бестселлер».",
+      "works": [
+        {
+          "ref": "vongozero"
+        }
+      ],
+      "chapter": "pisatelskaya-izvestnost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Известность ей принёс дебютный роман-антиутопия «Вонгозеро», опубликованный в 2011 году в издательстве ЭКСМО."
+      }
+    },
+    {
+      "key": "relocation-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Подмосковье, под Звенигород",
+      "long": "С 2011 года живёт в Подмосковье недалеко от Звенигорода; замужем, есть сын.",
+      "place": {
+        "label": "Звенигород"
+      },
+      "chapter": "pisatelskaya-izvestnost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2011 года живёт в Подмосковье недалеко от Звенигорода."
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выход сериала по дебютному роману",
+      "long": "На платформе Premier вышел телесериал «Эпидемия» режиссёра Павла Костомарова по её роману; в апреле сериал вошёл в конкурс Canneseries.",
+      "works": [
+        {
+          "ref": "vongozero"
+        }
+      ],
+      "chapter": "pisatelskaya-izvestnost",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 2019 года на платформе Premier вышел телесериал «Эпидемия», снятый на основе романа режиссёром Павлом Костомаровым."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "vongozero",
+      "title": "Вонгозеро",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "zhivye-lyudi",
+      "title": "Живые люди",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "kto-ne-spryatalsya",
+      "title": "Кто не спрятался",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "tonnel",
+      "title": "Тоннель",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

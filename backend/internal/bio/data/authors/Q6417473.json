@@ -1,0 +1,201 @@
+{
+  "qid": "Q6417473",
+  "name": "Кит Педлер",
+  "born": "1927-06-11",
+  "died": "1981-05-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D0%B4%D0%BB%D0%B5%D1%80%2C_%D0%9A%D0%B8%D1%82",
+      "rev": 151705394
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kit_Pedler",
+      "rev": 1370702917
+    }
+  ],
+  "chapters": [
+    {
+      "key": "medicine-science",
+      "title": "Врач и исследователь",
+      "from": 1927,
+      "to": 1963
+    },
+    {
+      "key": "doctor-who-doomwatch",
+      "title": "Киберлюди и «Тревога»",
+      "from": 1964,
+      "to": 1972
+    },
+    {
+      "key": "gaia-paranormal",
+      "title": "Гея и парапсихология",
+      "from": 1973,
+      "to": 1981
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1927",
+      "date": {
+        "from": "1927-06-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Хампстеде",
+      "long": "Родился 11 июня 1927 года в Лондоне (Хампстед).",
+      "place": {
+        "label": "Хампстед"
+      },
+      "chapter": "medicine-science",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Хампстед 1927-06-11"
+      }
+    },
+    {
+      "key": "career-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало медицинской практики",
+      "long": "Окончив Лондонский университет и медицинскую школу в Вестминстере, с 1953 года работал врачом-офтальмологом.",
+      "chapter": "medicine-science",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1953 года занимался медицинской практикой."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1972",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Создание телесериала «Тревога»",
+      "long": "Вместе с Джерри Дэвисом придумал телесериал «Тревога» («Вахта конца света») о научных открытиях, несущих угрозу; шёл три сезона на BBC One.",
+      "works": [
+        {
+          "ref": "mutant-59",
+          "note": "роман 1971 года использует сюжет первого эпизода сериала"
+        }
+      ],
+      "chapter": "doctor-who-doomwatch",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "показывалась на канале BBC One в течение трех сезонов с 1970 по 1972 год."
+      }
+    },
+    {
+      "key": "creation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Обращение к гипотезе Геи",
+      "long": "Выпустил книгу с практическими советами по экологически устойчивому образу жизни на основе гипотезы Геи Джеймса Лавлока.",
+      "works": [
+        {
+          "ref": "quest-for-gaia"
+        }
+      ],
+      "chapter": "gaia-paranormal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "The Quest for Gaia: A Book of Changes (1979)"
+      }
+    },
+    {
+      "key": "creation-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над сериалом о паранормальном",
+      "long": "Написал книгу о паранормальных явлениях, связанную с телесериалом Thames Television, который вёл вместе с Тони Бастейблом.",
+      "works": [
+        {
+          "ref": "mind-over-matter"
+        }
+      ],
+      "chapter": "gaia-paranormal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1981 написал книгу «Разум над материей» (Mind Over Matter: A Scientist’s View of the Paranormal)"
+      }
+    },
+    {
+      "key": "death-1981",
+      "date": {
+        "from": "1981-05-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "Умер 27 мая 1981 года от сердечного приступа дома в Доддингтоне (Кент), в разгар работы над сериалом.",
+      "place": {
+        "label": "Доддингтон"
+      },
+      "chapter": "gaia-paranormal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер от сердечного приступа в своем доме в графстве Кент."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mutant-59",
+      "title": "Мутант-59",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "brainrack",
+      "title": "Brainrack",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "doomwatch-world-in-danger",
+      "title": "Вахта конца света",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "quest-for-gaia",
+      "title": "The Quest for Gaia",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "mind-over-matter",
+      "title": "Разум над материей",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    }
+  ]
+}

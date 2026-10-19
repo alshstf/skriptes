@@ -1,0 +1,296 @@
+{
+  "qid": "Q529399",
+  "name": "Дик Кинг-Смит",
+  "born": "1922-03-27",
+  "died": "2011-01-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B8%D0%BD%D0%B3-%D0%A1%D0%BC%D0%B8%D1%82%2C_%D0%94%D0%B8%D0%BA",
+      "rev": 130987684
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Dick_King-Smith",
+      "rev": 1371539136
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-war",
+      "title": "Ферма, учёба и война",
+      "from": 1922,
+      "to": 1946
+    },
+    {
+      "key": "farm-teaching",
+      "title": "Фермер и учитель",
+      "from": 1947,
+      "to": 1972
+    },
+    {
+      "key": "writer",
+      "title": "Писатель «фантазий с фермы»",
+      "from": 1973,
+      "to": 2011
+    }
+  ],
+  "events": [
+    {
+      "key": "education-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в колледже Мальборо",
+      "long": "Учился в школе Босдесер-Парк и в колледже Мальборо.",
+      "place": {
+        "label": "Мальборо"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Колледж Марлборо"
+      }
+    },
+    {
+      "key": "birth-1922",
+      "date": {
+        "from": "1922-03-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Биттоне",
+      "long": "Рональд Гордон Кинг-Smith родился 27 марта 1922 года в Биттоне, Глостершир; вырос на ферме в Западной Англии.",
+      "place": {
+        "label": "Биттон"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "King-Smith was born on 27 March 1922 in Bitton, Gloucestershire"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в гренадерской гвардии",
+      "long": "В 1941 году в 19 лет вступил в Гренадерскую гвардию; в декабре 1942 года получил офицерское звание.",
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941, at the age of 19, King-Smith enlisted as a recruit in the Grenadier Guards"
+      }
+    },
+    {
+      "key": "love-1943",
+      "date": {
+        "from": "1943-02-06",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мирл",
+      "long": "Венчание с Мирл в церкви Св. Марии в Биттоне 6 февраля 1943 года; у них родилось трое детей.",
+      "place": {
+        "label": "Биттон"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They were married at St. Mary's Church, Bitton, on 6 February 1943."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943-09",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Высадка в Салерно",
+      "long": "В сентябре 1943 года командиром взвода участвовал в высадке в Салерно, затем несколько месяцев прорывался с боями по Италии.",
+      "place": {
+        "label": "Салерно"
+      },
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As a young platoon commander in September 1943, he took part in the Salerno Landings in Italy."
+      }
+    },
+    {
+      "key": "illness-1944",
+      "date": {
+        "from": "1944-07-12",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлое ранение гранатой",
+      "long": "12 июля 1944 года тяжело ранен брошенной немецким солдатом британской гранатой; позже в Англии перенёс церебральную эмболию.",
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 12 July 1944, King-Smith was seriously injured by a British hand grenade thrown by a German soldier."
+      }
+    },
+    {
+      "key": "war-1946",
+      "date": {
+        "from": "1946-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Увольнение из армии по инвалидности",
+      "long": "В июне 1946 года сложил офицерское звание по причине инвалидности и вернулся к фермерству.",
+      "chapter": "youth-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He relinquished his commission in June 1946, \"on account of disability\", and returned to farming."
+      }
+    },
+    {
+      "key": "creation-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало писательской карьеры после пятидесяти",
+      "long": "Начал писать, когда ему было уже за 50; называл свои книги «фантазиями с фермы». Первая книга вышла в 1973 году (по английской статье — в 1978).",
+      "place": {
+        "label": "Фармборо"
+      },
+      "works": [
+        {
+          "ref": "fox-busters"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первая книга «The Fox Busters» была опубликована в 1973 году."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Guardian за детскую книгу",
+      "long": "Получил премию Guardian за детскую художественную литературу.",
+      "works": [
+        {
+          "ref": "sheep-pig"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Guardian за детскую художественную литературу 1984-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётная степень магистра образования",
+      "long": "Университет Западной Англии присвоил почётную степень магистра образования.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was awarded an Honorary Master of Education degree by the University of the West of England in 1999"
+      }
+    },
+    {
+      "key": "loss-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мирл",
+      "long": "Жена Мирл умерла в 2000 году; позднее писатель женился на Зоне Беддинг.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель овдовел в 2000 году, затем женился во второй раз."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи (OBE)",
+      "long": "В новогоднем списке наград 2010 года назначен офицером ордена Британской империи.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "appointed Officer of the Order of the British Empire (OBE) in the 2010 New Year Honours"
+      }
+    },
+    {
+      "key": "death-2011",
+      "date": {
+        "from": "2011-01-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Сомерсете",
+      "long": "Умер 4 января 2011 года у себя дома близ Бата в возрасте 88 лет после продолжительной болезни.",
+      "place": {
+        "label": "Бат"
+      },
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "King-Smith died on 4 January 2011 at his home near Bath, Somerset at the age of 88."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fox-busters",
+      "title": "The Fox Busters",
+      "written": {
+        "from": 1973,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "sheep-pig",
+      "title": "Поросёнок Бейб",
+      "qid": "Q2877798",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    }
+  ]
+}

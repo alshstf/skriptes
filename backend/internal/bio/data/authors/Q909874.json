@@ -1,0 +1,110 @@
+{
+  "qid": "Q909874",
+  "name": "Брент Уикс",
+  "born": "1977-03-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BA%D1%81%2C_%D0%91%D1%80%D0%B5%D0%BD%D1%82",
+      "rev": 149517768
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Brent_Weeks",
+      "rev": 1375481190
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Монтана и колледж",
+      "from": 1977,
+      "to": 2000
+    },
+    {
+      "key": "pisatel",
+      "title": "Путь в писательство",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1977",
+      "date": {
+        "from": "1977-03-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уайтфише, Монтана",
+      "long": "Родился в Уайтфише, штат Монтана.",
+      "place": {
+        "label": "Уайтфиш"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Weeks was born in Whitefish, Montana, on (1977-03-07)March 7, 1977."
+      }
+    },
+    {
+      "key": "education-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Хилсдейлского колледжа",
+      "long": "Окончил Хилсдейлский колледж со степенью по английскому языку. Решение писать романы принял во время семестра за границей в Оксфорде.",
+      "place": {
+        "label": "Хилсдейл"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "graduated from Hillsdale College in 2000 with a degree in English"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в издательстве Orbit Books",
+      "long": "Дебютная трилогия вышла в издательстве Orbit Books; первая книга попала в список бестселлеров «Нью-Йорк Таймс» в апреле 2009 года.",
+      "works": [
+        {
+          "ref": "night-angel"
+        }
+      ],
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая его работа, трилогия «Ночной Ангел» («The Night Angel»), была опубликована издательством «Orbit Books» в 2008."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "night-angel",
+      "title": "Ночной Ангел",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "lightbringer",
+      "title": "Светоносный",
+      "written": {
+        "from": 2010,
+        "to": 2019
+      }
+    }
+  ]
+}

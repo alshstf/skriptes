@@ -1,0 +1,293 @@
+{
+  "qid": "Q5043027",
+  "name": "Карлтон Д. Х. Хейс",
+  "born": "1882-05-16",
+  "died": "1964-09-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B5%D0%B9%D1%81%2C_%D0%9A%D0%B0%D1%80%D0%BB%D1%82%D0%BE%D0%BD_%D0%94._%D0%A5.",
+      "rev": 153439899
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Carlton_J._H._Hayes",
+      "rev": 1374715477
+    }
+  ],
+  "chapters": [
+    {
+      "key": "afton-columbia",
+      "title": "Афтон, Колумбия, обращение",
+      "from": 1882,
+      "to": 1906
+    },
+    {
+      "key": "professor",
+      "title": "Профессор и историк национализма",
+      "from": 1907,
+      "to": 1941
+    },
+    {
+      "key": "ambassador",
+      "title": "Посол в Испании",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "late-years",
+      "title": "Награды и последние годы",
+      "from": 1946,
+      "to": 1964
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1882",
+      "date": {
+        "from": "1882-05-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в баптистской семье в Афтоне",
+      "long": "Родился в Афтоне, штат Нью-Йорк, в баптистской семье Пермелии Мэри (урождённой Хантли) и Филетуса Артура Хейса.",
+      "place": {
+        "label": "Афтон"
+      },
+      "chapter": "afton-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carlton Joseph Huntley Hayes (May 16, 1882 – September 2, 1964)"
+      }
+    },
+    {
+      "key": "education-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Колумбийского колледжа",
+      "long": "Окончил Колумбийский колледж (бакалавриат); в 1903 году стал активным членом студенческого братства Alpha Chi Rho.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "afton-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated from Columbia College in 1904."
+      }
+    },
+    {
+      "key": "faith-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Переход из баптизма в католичество",
+      "long": "Выросший в баптистской семье, принял католичество; позднее стал первым католиком на посту сопредседателя Национальной конференции христиан и иудеев.",
+      "chapter": "afton-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1904 he converted to Catholicism"
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало преподавания в Колумбийском университете",
+      "long": "Начал преподавать европейскую историю в Колумбийском университете; позднее стал доцентом (1910), адъюнкт-профессором (1915).",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He became lecturer at Columbia in European History in 1907, then was promoted subsequently to assistant professor (1910)"
+      }
+    },
+    {
+      "key": "education-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень по германскому вторжению в Рим",
+      "long": "Получил степень доктора философии в Колумбийском университете; диссертацию, написанную под руководством Джеймса Харви Робинсона, издало издательство университета.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "germanic-invasion-sources-1909"
+        }
+      ],
+      "chapter": "professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He earned his Ph.D. degree at Columbia in 1909 with a thesis on the Germanic invasion of the Roman Empire."
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918",
+        "to": "1919",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба капитаном в военной разведке",
+      "long": "Служил капитаном в Отделе военной разведки Генерального штаба США.",
+      "chapter": "professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he served at the rank of captain in the United States Military Intelligence Division of the General Staff from 1918 to 1919"
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание полного профессора Колумбийского университета",
+      "long": "Стал полным профессором Колумбийского университета; несколько раз возглавлял его историческую кафедру.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "then was promoted subsequently to assistant professor (1910), associate professor (1915), and full professor (1919)"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сопредседатель Национальной конференции христиан и иудеев",
+      "long": "Первый католик на посту сопредседателя Национальной конференции христиан и иудеев, несмотря на папскую энциклику 1928 года, запрещавшую такое сотрудничество.",
+      "chapter": "professor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "serving as co-chairman 1928 to 1946 despite a 1928 papal encyclical which explicitly prohibited such ecumenical interactions"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Доклад о природе тоталитаризма на симпозиуме",
+      "long": "На первом симпозиуме о природе тоталитарного государства назвал тоталитаризм феноменом буржуазной цивилизации; к тоталитарным режимам отнёс Италию и Германию, но не СССР.",
+      "chapter": "professor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1939 года, на первом научном симпозиуме, посвящённом природе тоталитарного государства"
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Посол США в Испании",
+      "long": "Назначен президентом Рузвельтом послом США в Испании; считается, что способствовал сохранению её нейтралитета, подвергался критике слева за дружественность к Франко.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "chapter": "ambassador",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1942 to 1945, Hayes served as US ambassador to Spain."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Президент Американской исторической ассоциации",
+      "long": "Избран президентом Американской исторической ассоциации; в президентском докладе предложил видеть США как западную границу Европы.",
+      "chapter": "ambassador",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served a term as president of the American Historical Association in 1945"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль «Laetare» Университета Нотр-Дам",
+      "long": "Награждён медалью «Laetare» Университета Нотр-Дам.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hayes was awarded the Laetare Medal from Notre Dame in 1946"
+      }
+    },
+    {
+      "key": "death-1964",
+      "date": {
+        "from": "1964-09-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного заболевания",
+      "long": "Умер от болезни сердца в больнице Сидни, штат Нью-Йорк; похоронен на кладбище Гленвуд в Афтоне.",
+      "place": {
+        "label": "Сидни"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died of a heart ailment, at Sidney Hospital, Sidney, New York on September 2, 1964, aged 82"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "germanic-invasion-sources-1909",
+      "title": "Введение в источники по германскому вторжению",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    }
+  ]
+}

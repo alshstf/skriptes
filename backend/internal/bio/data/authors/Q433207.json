@@ -1,0 +1,244 @@
+{
+  "qid": "Q433207",
+  "name": "Фэнни Флэгг",
+  "born": "1944-09-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D1%8D%D0%BD%D0%BD%D0%B8_%D0%A4%D0%BB%D1%8D%D0%B3%D0%B3",
+      "rev": 149174396
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Fannie_Flagg",
+      "rev": 1365327872
+    }
+  ],
+  "chapters": [
+    {
+      "key": "birmingham",
+      "title": "Детство в Бирмингеме",
+      "from": 1944,
+      "to": 1959
+    },
+    {
+      "key": "new-york-tv",
+      "title": "Нью-Йорк, эстрада и телевидение",
+      "from": 1960,
+      "to": 1977
+    },
+    {
+      "key": "first-novel-film",
+      "title": "От рассказа к роману и Оскару",
+      "from": 1978,
+      "to": 1991
+    },
+    {
+      "key": "later-books",
+      "title": "Поздние книги Вистл-Стоп",
+      "from": 1992,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1944",
+      "date": {
+        "from": "1944-09-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бирмингеме, Алабама",
+      "long": "Родилась в Бирмингеме, штат Алабама, под именем Патрисия Нил; единственный ребёнок в семье.",
+      "place": {
+        "label": "Бирмингем"
+      },
+      "chapter": "birmingham",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fannie Flagg (born Patricia Neal; September 21, 1944)"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Участие в телеигре Match Game",
+      "long": "Была частой участницей игрового шоу Match Game в версиях 1973–1982 годов.",
+      "chapter": "new-york-tv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She is most notable as a frequent panelist on the 1973–1982 versions of the game show Match Game"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место на писательской конференции",
+      "long": "В 1978 году получила первое место в номинации «проза» на конференции писателей в Санта-Барбаре; рассказ лёг в основу первого романа.",
+      "place": {
+        "label": "Санта-Барбара"
+      },
+      "works": [
+        {
+          "ref": "daisy-fay-and-the-miracle-man",
+          "note": "рассказ с конференции стал основой романа"
+        }
+      ],
+      "chapter": "first-novel-film",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1978, Flagg won first place in fiction for a short story that she had written at the Santa Barbara Writer's Conference."
+      }
+    },
+    {
+      "key": "career-1978-2",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бродвейская постановка мюзикла про Техас",
+      "long": "Играла в оригинальной бродвейской постановке «The Best Little Whorehouse in Texas», сменив Карлин Глинн.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "first-novel-film",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the original 1978 Broadway production of The Best Little Whorehouse in Texas (succeeding Carlin Glynn)"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Номинация на «Оскар» за сценарий",
+      "long": "Совместно написала сценарий фильма по своему роману; картина принесла ей номинацию на премию «Оскар».",
+      "works": [
+        {
+          "ref": "fried-green-tomatoes"
+        }
+      ],
+      "chapter": "first-novel-film",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Flagg subsequently co-wrote the screenplay based on that book, which became the 1991 film Fried Green Tomatoes. The movie garnered her a nomination for an Academy Award."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Харпер Ли",
+      "long": "Получила награду Harper Lee Award.",
+      "chapter": "later-books",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Harper Lee Award 2012-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "daisy-fay-and-the-miracle-man",
+      "title": "Дейзи Фэй и чудотворец",
+      "written": {
+        "from": 1978,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "fried-green-tomatoes",
+      "title": "Жареные зелёные помидоры в кафе «Полустанок»",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "welcome-to-the-world-baby-girl",
+      "title": "Добро пожаловать в мир, малышка!",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "standing-in-the-rainbow",
+      "title": "Стоя под радугой",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "a-redbird-christmas",
+      "title": "Рождество в Красной Птице",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "cant-wait-to-get-to-heaven",
+      "title": "Не могу дождаться, когда попаду на небеса",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "i-still-dream-about-you",
+      "title": "Я всё ещё вижу тебя во сне",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "all-girl-filling-station",
+      "title": "Последняя встреча женской бензоколонки",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "whole-towns-talking",
+      "title": "Весь город говорит",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "wonder-boy-of-whistle-stop",
+      "title": "Чудо-мальчик из Вистл-Стоп",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    }
+  ]
+}

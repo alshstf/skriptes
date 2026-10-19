@@ -1,0 +1,973 @@
+{
+  "qid": "Q154756",
+  "name": "Итало Кальвино",
+  "born": "1923-10-15",
+  "died": "1985-09-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BB%D1%8C%D0%B2%D0%B8%D0%BD%D0%BE%2C_%D0%98%D1%82%D0%B0%D0%BB%D0%BE",
+      "rev": 154876881
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Italo_Calvino",
+      "rev": 1380784166
+    },
+    {
+      "id": "itwiki",
+      "url": "https://it.wikipedia.org/wiki/Italo_Calvino",
+      "rev": 152504308
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cuba-sanremo",
+      "title": "Куба и Сан-Ремо",
+      "from": 1923,
+      "to": 1940
+    },
+    {
+      "key": "war-resistance",
+      "title": "Война и Сопротивление",
+      "from": 1941,
+      "to": 1945
+    },
+    {
+      "key": "turin-einaudi",
+      "title": "Турин, Эйнауди, партия",
+      "from": 1946,
+      "to": 1956
+    },
+    {
+      "key": "after-party",
+      "title": "После разрыва с партией",
+      "from": 1957,
+      "to": 1966
+    },
+    {
+      "key": "paris",
+      "title": "Париж и Улипо",
+      "from": 1967,
+      "to": 1979
+    },
+    {
+      "key": "rome-last",
+      "title": "Рим и последние годы",
+      "from": 1980,
+      "to": 1985
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1923",
+      "date": {
+        "from": "1923-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на Кубе в семье итальянских агрономов",
+      "long": "Родился в пригороде Гаваны, где отец-агроном руководил опытной станцией; мать — ботаник. Имя Итало дано, чтобы напоминать об Италии.",
+      "place": {
+        "label": "Сантьяго-де-лас-Вегас"
+      },
+      "chapter": "cuba-sanremo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "15 октября 1923 года — 19 сентября 1985 года"
+      }
+    },
+    {
+      "key": "relocation-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение семьи в Италию, Сан-Ремо",
+      "long": "Семья вернулась в Италию и поселилась в Сан-Ремо; детство прошло на вилле «Меридиана» и в отцовском имении в холмах.",
+      "place": {
+        "label": "Сан-Ремо"
+      },
+      "chapter": "cuba-sanremo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1925, less than two years after Calvino's birth, the family returned to Italy and settled permanently in Sanremo on the Ligurian coast."
+      }
+    },
+    {
+      "key": "child-1927",
+      "date": {
+        "from": "1927-05-20",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение брата Флориано",
+      "long": "Родился брат Флориано, впоследствии известный геолог.",
+      "place": {
+        "label": "Сан-Ремо"
+      },
+      "chapter": "cuba-sanremo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Calvino's brother Floriano, who became a distinguished geologist, was born in 1927."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-06",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Участие в итальянском вторжении на Ривьеру",
+      "long": "Как обязательный член фашистской молодёжной организации «авангардистов» был вынужден участвовать во вторжении Италии на французскую Ривьеру.",
+      "chapter": "cuba-sanremo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was forced to participate in the Italian invasion of the French Riviera in June 1940."
+      }
+    },
+    {
+      "key": "education-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на агрономическом факультете в Турине",
+      "long": "Поступил на агрономический факультет Туринского университета, скрывая от семьи литературные устремления.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "war-resistance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941, Calvino enrolled at the University of Turin, choosing the Agriculture Faculty where his father had previously taught courses in agronomy."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Отказ от призыва и укрытие",
+      "long": "Перевёлся во Флорентийский университет; после оккупации Лигурии немцами отказался от службы в армии Республики Сало и несколько месяцев скрывался.",
+      "place": {
+        "label": "Сан-Ремо"
+      },
+      "chapter": "war-resistance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Calvino transferred to the University of Florence in 1943… Now twenty years old, Calvino refused military service and went into hiding."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Партизан в гарибальдийских бригадах",
+      "long": "Вместе с братом вступил в гарибальдийские бригады под псевдонимом «Сантьяго» и двадцать месяцев воевал в Приморских Альпах; родителей нацисты держали заложниками.",
+      "place": {
+        "label": "Лигурия"
+      },
+      "works": [
+        {
+          "ref": "path-to-the-nest-of-spiders",
+          "note": "Повесть основана на собственном партизанском опыте автора"
+        },
+        {
+          "ref": "ultimo-viene-il-corvo",
+          "note": "Партизанский опыт лёг в основу сборника (литературоведение)"
+        }
+      ],
+      "chapter": "war-resistance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In spring 1944, Eva encouraged her sons to enter the Italian Resistance… until 1945 and the Liberation"
+      }
+    },
+    {
+      "key": "other-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в Итальянскую компартию",
+      "long": "Вступил в Итальянскую коммунистическую партию, считая коммунистов самой организованной силой Сопротивления.",
+      "chapter": "war-resistance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1944 году становится членом Итальянской коммунистической партии."
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Турин",
+      "long": "Поселился в Турине, вернулся в университет, перешёл на филологический факультет.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "war-resistance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году переезжает в Турин, где сотрудничает с разными газетами."
+      }
+    },
+    {
+      "key": "education-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университета, диплом о Конраде",
+      "long": "Окончил университет с дипломом о Джозефе Конраде и начал работать в издательстве «Эйнауди» и газете «Униту».",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1947 году окончил университет, защитив дипломную работу по творчеству Джозефа Конрада"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех и премия Риккьоне",
+      "long": "Первая книга, написанная при участии Чезаре Павезе, получила премию Риккьоне и неожиданно хорошо продавалась.",
+      "works": [
+        {
+          "ref": "path-to-the-nest-of-spiders"
+        }
+      ],
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the Premio Riccione on publication in 1947. With sales topping 5000 copies, a surprise success in postwar Italy"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Интервью с Хемингуэем",
+      "long": "Вместе с Наталией Гинзбург поехал в Стрезу и взял интервью у Эрнеста Хемингуэя.",
+      "place": {
+        "label": "Стреза"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1948, he interviewed one of his literary idols, Ernest Hemingway"
+      }
+    },
+    {
+      "key": "persecution-1949",
+      "date": {
+        "from": "1949-04",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет на въезд во Францию",
+      "long": "После участия в парижском конгрессе Сторонников мира в апреле 1949 года ему на много лет запретили въезд во Францию.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1949 viene pubblicato Ultimo viene il corvo ma resta inedito Il bianco Veliero."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение в «Эйнауди», редакторская работа",
+      "long": "Вернулся в «Эйнауди» ответственным за художественную серию, позже стал консультантом издательства; работа там продолжалась и в последующие десятилетия.",
+      "place": {
+        "label": "Турин"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He returned to Einaudi in 1950, responsible this time for the literary volumes."
+      }
+    },
+    {
+      "key": "loss-1950",
+      "date": {
+        "from": "1950-08",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Чезаре Павезе",
+      "long": "Самоубийство Чезаре Павезе, друга и наставника, первого читателя его текстов.",
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel mese di agosto del 1950 Cesare Pavese si uccide e Calvino perde così un amico e un maestro."
+      }
+    },
+    {
+      "key": "creation-1951",
+      "date": {
+        "from": "1951-07",
+        "to": "1951-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Повесть, написанная за тридцать дней",
+      "long": "Отложив реалистический роман, написал повесть почти за 30 дней — первую вещь в фантастико-аллегорической манере.",
+      "works": [
+        {
+          "ref": "cloven-viscount"
+        }
+      ],
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Il visconte dimezzato (1952; The Cloven Viscount) composed in 30 days between July and September 1951"
+      }
+    },
+    {
+      "key": "other-1951",
+      "date": {
+        "from": "1951-10",
+        "to": "1951-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в СССР корреспондентом «Униту»",
+      "long": "Поездка в СССР; путевые заметки принесли премию Сен-Венсан за журналистику.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "fra ottobre (in cui il 25 muore il padre per una bronchite) e novembre 1951 visita l'Unione Sovietica"
+      }
+    },
+    {
+      "key": "loss-1951",
+      "date": {
+        "from": "1951-10-25",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Марио",
+      "long": "В Москве, куда поехал корреспондентом «Униту», узнал о смерти отца Марио.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In late 1951, presumably to advance in the Communist Party, he spent two months in the Soviet Union as a correspondent for l'Unità. While in Moscow, he learned of his father's death on 25 October."
+      }
+    },
+    {
+      "key": "creation-1954",
+      "date": {
+        "from": "1954",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над сборником итальянских сказок",
+      "long": "По заказу Джулио Эйнауди два года собирал фольклорные сказки из региональных сборников и перевёл двести лучших с диалектов на итальянский.",
+      "works": [
+        {
+          "ref": "italian-folktales"
+        }
+      ],
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1954, Giulio Einaudi commissioned his Fiabe italiane (1956; Italian Folktales)"
+      }
+    },
+    {
+      "key": "love-1955",
+      "date": {
+        "from": "1955",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с актрисой Эльзой Де Джорджи",
+      "long": "Роман с актрисой Эльзой Де Джорджи; его письма к ней напечатаны в 2004 году.",
+      "chapter": "turin-einaudi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1955 to 1958 Calvino had an affair with Italian actress Elsa De Giorgi, a married, older woman."
+      }
+    },
+    {
+      "key": "other-1957",
+      "date": {
+        "from": "1957-08-07",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Выход из Компартии после Венгрии",
+      "long": "Вышел из компартии, опубликовав открытое письмо в «Униту» 7 августа; после этого его критиковали сторонники Тольятти.",
+      "works": [
+        {
+          "ref": "baron-in-the-trees",
+          "note": "Роман начат после травли со стороны руководства ПКИ"
+        }
+      ],
+      "chapter": "after-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1957 году покинул Компартию из-за несогласия с подавлением восстания в Венгрии советскими войсками"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соредактор журнала «Менабо»",
+      "long": "Вместе с Элио Витторини редактировал журнал «Менабо» о литературе индустриальной эпохи.",
+      "chapter": "after-party",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With Vittorini in 1959, he became co-editor of Il Menabò, a cultural journal devoted to literature in the modern industrial age, a position he held until 1966."
+      }
+    },
+    {
+      "key": "relocation-1959",
+      "date": {
+        "from": "1959",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Полгода в США по приглашению фонда Форда",
+      "long": "По приглашению фонда Форда провёл полгода в США, из них четыре месяца в Нью-Йорке.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "after-party",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he stayed six months from 1959 to 1960 (four of which he spent in New York), after an invitation by the Ford Foundation"
+      }
+    },
+    {
+      "key": "love-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Эстер Юдит Зингер",
+      "long": "Познакомился с переводчицей Эстер Юдит Зингер, аргентинкой, работавшей в международных организациях.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "after-party",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1962 Calvino met Argentinian translator Esther Judith Singer"
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964-02",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эстер Юдит Зингер",
+      "long": "Женился на Эстер Юдит Зингер в Гаване, где побывал на месте рождения и встретился с Че Геварой; поселился в Риме с женой и её сыном Марчелло.",
+      "place": {
+        "label": "Гавана"
+      },
+      "chapter": "after-party",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel febbraio 1964 lo scrittore torna a L'Avana per sposarsi con Chichita"
+      }
+    },
+    {
+      "key": "child-1965",
+      "date": {
+        "from": "1965-04-18",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Джованны",
+      "long": "Родилась дочь Джованна.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "after-party",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il 18 aprile 1965 nasce a Roma la figlia Giovanna Calvino"
+      }
+    },
+    {
+      "key": "loss-1966",
+      "date": {
+        "from": "1966-02-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть друга Элио Витторини",
+      "long": "Смерть Витторини, редактора и друга; Кальвино назвал последовавший период «интеллектуальной депрессией» и концом молодости.",
+      "chapter": "after-party",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il 12 febbraio 1966 muore l'amico Elio Vittorini"
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Тринадцать лет в Париже",
+      "long": "Переехал с семьёй в Париж, планируя пробыть пять лет, но остался на тринадцать; жил уединённо, общался с французскими интеллектуалами.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he and his family moved to Paris in 1967, taking up residence in a villa in the Square de Châtillon"
+      }
+    },
+    {
+      "key": "loss-1967",
+      "date": {
+        "from": "1967-10-09",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Гибель Че Гевары",
+      "long": "Погиб Че Гевара, с которым он познакомился на Кубе; Кальвино написал о нём статью.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Mentre Calvino è a Parigi il suo amico Che Guevara viene ucciso il 9 ottobre 1967 in Bolivia."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в группу «Улипо»",
+      "long": "Приглашён Раймоном Кено в группу «Улипо»; встретил Ролана Барта и Жоржа Перека.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Calvino was invited by Raymond Queneau in 1968 to join the Oulipo"
+      }
+    },
+    {
+      "key": "career-1968-2",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от премии Виареджо",
+      "long": "Отказался от премии Виареджо, считая такие премии выражением опустевших институций.",
+      "works": [
+        {
+          "ref": "time-and-the-hunter"
+        }
+      ],
+      "chapter": "paris",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Ti con zero, quest'ultimo vincitore del Premio Viareggio 1968: premio che però Calvino rifiuta"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Фельтринелли",
+      "long": "Получил премию Фельтринелли Национальной академии деи Линчеи.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1972 vince il Premio Feltrinelli conferito dall'Accademia nazionale dei Lincei"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976-01-08",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Австрийская государственная премия",
+      "long": "Получил Австрийскую государственную премию по европейской литературе; затем побывал в Мексике, Японии и США.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "A Vienna, l'8 gennaio 1976, viene insignito d'un importante premio letterario europeo"
+      }
+    },
+    {
+      "key": "other-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Продажа родительской виллы в Сан-Ремо",
+      "long": "Продал виллу «Меридиана» — родительский дом в Сан-Ремо.",
+      "place": {
+        "label": "Сан-Ремо"
+      },
+      "chapter": "paris",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After his mother died in 1978 at the age of 92, Calvino sold Villa Meridiana, the family home in San Remo."
+      }
+    },
+    {
+      "key": "loss-1978",
+      "date": {
+        "from": "1978-03-31",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Эвы Мамели",
+      "long": "Умерла мать Эва Мамели, ботаник; позднее проданная вилла «Меридиана» была семейным домом в Сан-Ремо.",
+      "chapter": "paris",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "un anno dopo la morte della madre, avvenuta il 31 marzo 1978 a 92 anni"
+      }
+    },
+    {
+      "key": "relocation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Рим",
+      "long": "Вернулся с семьёй в Рим, поселился возле Пантеона.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1980 Calvino, ritornato a Roma con la famiglia in una casa con terrazza ad un passo dal Pantheon sita in Piazza Campo Marzio"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён орденом Почётного легиона; в том же году возглавил жюри Венецианского кинофестиваля.",
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Awarded the French Légion d'honneur in 1981"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кризис «Эйнауди», переход к «Гарцанти»",
+      "long": "Из-за серьёзного кризиса «Эйнауди» вынужден был издавать новые книги в «Гарцанти».",
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "A causa della seria crisi in cui versa l'Einaudi, nel 1984 è costretto a pubblicare presso Garzanti"
+      }
+    },
+    {
+      "key": "creation-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Подготовка лекций для Гарварда",
+      "long": "Летом готовил цикл лекций для Гарвардского университета; опубликованы после смерти.",
+      "place": {
+        "label": "Роккамаре"
+      },
+      "works": [
+        {
+          "ref": "six-memos"
+        }
+      ],
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1985, durante l'estate, Calvino lavora ad una serie di conferenze (Lezioni americane, pubblicate postume)"
+      }
+    },
+    {
+      "key": "illness-1985",
+      "date": {
+        "from": "1985-09-06",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт на вилле в Роккамаре",
+      "long": "Инсульт на вилле в Роккамаре; госпитализирован в Гроссето, затем в Сиене.",
+      "place": {
+        "label": "Роккамаре"
+      },
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 6 September 1985, Calvino suffered a stroke in his villa in Roccamare"
+      }
+    },
+    {
+      "key": "death-1985",
+      "date": {
+        "from": "1985-09-19",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Сиене",
+      "long": "Умер от кровоизлияния в мозг в больнице Санта-Мария-делла-Скала; похоронен в Кастильоне-делла-Пеская.",
+      "place": {
+        "label": "Сиена"
+      },
+      "chapter": "rome-last",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "15 октября 1923 года — 19 сентября 1985 года"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "path-to-the-nest-of-spiders",
+      "title": "Тропа паучьих гнёзд",
+      "qid": "Q1135521",
+      "written": {
+        "from": 1946,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "ultimo-viene-il-corvo",
+      "title": "Последним прилетает ворон",
+      "written": {
+        "from": 1946,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "youth-in-turin",
+      "title": "Юноши с берегов По",
+      "written": {
+        "from": 1950,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "cloven-viscount",
+      "title": "Раздвоенный виконт",
+      "qid": "Q389380",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "italian-folktales",
+      "title": "Итальянские сказки",
+      "written": {
+        "from": 1954,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "baron-in-the-trees",
+      "title": "Барон на дереве",
+      "qid": "Q2450161",
+      "written": {
+        "from": 1956,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "nonexistent-knight",
+      "title": "Несуществующий рыцарь",
+      "qid": "Q2571696",
+      "written": {
+        "from": 1957,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "marcovaldo",
+      "title": "Марковальдо, или Времена года в городе",
+      "qid": "Q1638837",
+      "written": {
+        "from": 1952,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "cosmicomics",
+      "title": "Космикомические истории",
+      "written": {
+        "from": 1963,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "time-and-the-hunter",
+      "title": "Ti con zero",
+      "written": {
+        "from": 1967,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "castle-of-crossed-destinies",
+      "title": "Замок скрестившихся судеб",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "invisible-cities",
+      "title": "Невидимые города",
+      "qid": "Q1219705",
+      "written": {
+        "from": 1970,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "if-on-a-winters-night",
+      "title": "Если однажды зимней ночью путник",
+      "qid": "Q1032190",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "palomar",
+      "title": "Паломар",
+      "written": {
+        "from": 1975,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "six-memos",
+      "title": "Американские лекции",
+      "qid": "Q877418",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    }
+  ]
+}

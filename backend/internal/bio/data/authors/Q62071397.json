@@ -1,0 +1,193 @@
+{
+  "qid": "Q62071397",
+  "name": "Алекс Михаэлидес",
+  "born": "1977-09-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B8%D1%85%D0%B0%D1%8D%D0%BB%D0%B8%D0%B4%D0%B5%D1%81%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81",
+      "rev": 149186385
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alex_Michaelides",
+      "rev": 1371064340
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cyprus-and-training",
+      "title": "Кипр и учёба",
+      "from": 1977,
+      "to": 2012
+    },
+    {
+      "key": "screenwriting",
+      "title": "Годы в кино",
+      "from": 2013,
+      "to": 2018
+    },
+    {
+      "key": "novels",
+      "title": "Романы-триллеры",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1977",
+      "date": {
+        "from": "1977-09-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на Кипре",
+      "long": "Родился на Кипре в семье отца-грека и матери-англичанки.",
+      "place": {
+        "label": "Кипр"
+      },
+      "chapter": "cyprus-and-training",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Кипр 1977-09-04"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый фильм по сценарию",
+      "long": "Выходит фильм «Дьявол, которого вы знаете» по его сценарию, с Леной Олин, Розамунд Пайк и Дженнифер Лоуренс в главных ролях; критики оценили фильм в основном негативно.",
+      "chapter": "screenwriting",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Также является автором сценария фильма «Дьявол, которого вы знаете» 2013 года"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Соавторство сценария комедии",
+      "long": "Выходит фильм «Аферисты поневоле», в котором он соавтор сценария; оценки критиков в основном негативные.",
+      "chapter": "screenwriting",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "соавтором сценария «Аферисты поневоле» 2018 года"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех дебютного романа",
+      "long": "Дебютный роман стал бестселлером №1 по версии New York Times в твёрдой обложке за первую неделю и самым продаваемым дебютом в твёрдом переплёте в США за год.",
+      "works": [
+        {
+          "ref": "silent-patient"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "стал самым продаваемым дебютом в твердом переплете в США в 2019 году"
+      }
+    },
+    {
+      "key": "career-2019-2",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Goodreads Choice Award",
+      "long": "Дебютный роман получил читательскую премию Goodreads Choice Award как лучший детектив и триллер года.",
+      "works": [
+        {
+          "ref": "silent-patient"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он также получил награду Goodreads Choice Award за лучший детектив и триллер 2019 года."
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второй роман на 2-м месте бестселлеров",
+      "long": "Второй роман дебютировал на втором месте списка бестселлеров художественной прозы New York Times за неделю, завершившуюся 19 июня 2021 года.",
+      "works": [
+        {
+          "ref": "maidens"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel debuted at number two on The New York Times fiction best-seller list for the week ending 19 June 2021."
+      }
+    },
+    {
+      "key": "creation-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение в Кембридж как место действия",
+      "long": "Выход второго романа — психологического детектива о серии убийств в Кембриджском колледже.",
+      "works": [
+        {
+          "ref": "maidens"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Michaelides' second novel, The Maidens, was published on 10 June 2021 by Orion Publishing (UK)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "silent-patient",
+      "title": "Безмолвный пациент",
+      "qid": "Q97516163",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "maidens",
+      "title": "Девы",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

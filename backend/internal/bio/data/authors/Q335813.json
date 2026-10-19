@@ -1,0 +1,590 @@
+{
+  "qid": "Q335813",
+  "name": "Джеймс Хэрриот",
+  "born": "1916-10-03",
+  "died": "1995-02-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D1%80%D1%80%D0%B8%D0%BE%D1%82%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 149830079
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Herriot",
+      "rev": 1378246646
+    }
+  ],
+  "chapters": [
+    {
+      "key": "sunderland-glasgow",
+      "title": "Сандерленд, Глазго, ветеринарный колледж",
+      "from": 1916,
+      "to": 1939
+    },
+    {
+      "key": "thirsk-war",
+      "title": "Тирск, война и семья",
+      "from": 1940,
+      "to": 1952
+    },
+    {
+      "key": "practice-years",
+      "title": "Практика и годы без книг",
+      "from": 1953,
+      "to": 1965
+    },
+    {
+      "key": "herriot-success",
+      "title": "Псевдоним Хэрриот и успех",
+      "from": 1966,
+      "to": 1979
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1980,
+      "to": 1995
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1916",
+      "date": {
+        "from": "1916-10-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сандерленде",
+      "long": "Родился в Сандерленде в семье дирижёра оркестра, игравшего сопровождение для немого кино. Настоящее имя — Джеймс Альфред (Альф) Уайт.",
+      "place": {
+        "label": "Сандерленд"
+      },
+      "chapter": "sunderland-glasgow",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джеймс Альфред Уайт родился 3 октября 1916 года в промышленном северо-западном городке Сандерленд"
+      }
+    },
+    {
+      "key": "education-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Решение стать ветеринаром",
+      "long": "После лекции директора Глазговского ветеринарного колледжа в его школе решил стать ветеринаром.",
+      "place": {
+        "label": "Глазго"
+      },
+      "chapter": "sunderland-glasgow",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Two years later, in 1930, he decided to become a vet after the principal of Glasgow Veterinary College gave a lecture at his high school"
+      }
+    },
+    {
+      "key": "education-1939",
+      "date": {
+        "from": "1939-12-14",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание ветеринарного колледжа",
+      "long": "Окончил Глазговский ветеринарный колледж за шесть лет вместо пяти: часть экзаменов пересдавал, мешала и повторявшаяся болезнь желудка.",
+      "place": {
+        "label": "Глазго"
+      },
+      "chapter": "sunderland-glasgow",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated on 14 December 1939."
+      }
+    },
+    {
+      "key": "love-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Джоан Данбери",
+      "long": "В Тирске познакомился с Джоан Данбери, дочерью местного инженера, работавшей секретарём в конторе.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940, Wight met 21 year old Joan Danbury, the daughter of the local borough engineer"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое место в ветеринарной практике",
+      "long": "Начал работать в ветеринарной практике в Сандерленде у Дж. Дж. Макдауэлла, затем решил искать сельскую практику.",
+      "place": {
+        "label": "Сандерленд"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1940, Wight joined a veterinary practice in Sunderland, working for J. J. McDowall."
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Тирск, практика у Синклера",
+      "long": "В июле принял место в практике Дональда Синклера на Киркгейт, 23 в Тирске, где остался работать до конца жизни.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "until leaving for Sunderland, and then Thirsk in North Yorkshire, England, in 1940."
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941-04",
+        "to": "1943-11",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в британских ВВС",
+      "long": "Служил в британских ВВС: учебные части в Лондоне, Скарборо и других местах, лётная подготовка. В боевых действиях не участвовал; уволен в звании рядового первого класса.",
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wight enlisted in the RAF in April 1941"
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941-11-05",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джоан Данбери",
+      "long": "Женился на Джоан Данбери в церкви Св. Марии в Тирске, получив отпуск во время службы в Скарборо.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "married 6 months later on 5 November 1941 at St Mary's Church, Thirsk"
+      }
+    },
+    {
+      "key": "child-1943",
+      "date": {
+        "from": "1943-02",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Джеймса",
+      "long": "Родился первый ребёнок, сын Джеймс Александр; Джоан с ребёнком жила у своих родителей в Соуэрби, пока муж был на службе.",
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in November 1943, with Joan plus the couple's first child James Alexander (known to his parents as \"Jimmy\" or \"Seamus\"), born February that year"
+      }
+    },
+    {
+      "key": "illness-1943",
+      "date": {
+        "from": "1943-07",
+        "to": "1943-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция и увольнение из ВВС",
+      "long": "После операции в июле признан негодным к полётам на боевых самолётах и в ноябре уволен из ВВС.",
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "after undergoing surgery on an anal fistula in July 1943, he was deemed unfit to fly combat aircraft and was discharged as a leading aircraftman the following November"
+      }
+    },
+    {
+      "key": "child-1947",
+      "date": {
+        "from": "1947-05-09",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Розмари",
+      "long": "Родилась дочь Розмари Беатрис (Рози).",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a second child Rosemary Beatrice (\"Rosie\"), born 9 May 1947"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Полноправное партнёрство в практике",
+      "long": "Стал полноправным партнёром в тирской практике.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "thirsk-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wight became a full partner in the Thirsk practice in 1949"
+      }
+    },
+    {
+      "key": "relocation-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в дом на Топклифф-роуд",
+      "long": "Семья переехала в дом на Топклифф-роуд в Тирске.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "practice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1953, the family moved to a house on Topcliffe Road, Thirsk."
+      }
+    },
+    {
+      "key": "illness-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Нервный срыв и электросудорожная терапия",
+      "long": "По отзыву на книгу сына, сдержанность в выражении чувств привела к нервному срыву и электросудорожной терапии.",
+      "chapter": "practice-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "bottled up his emotions, which led to a nervous breakdown and electroshock therapy in 1960"
+      }
+    },
+    {
+      "key": "creation-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало писательства по настоянию Джоан",
+      "long": "По настоянию жены в 50 лет начал писать; после неудач с рассказами о футболе обратился к теме ветеринарной практики.",
+      "chapter": "herriot-success",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наконец, благодаря усилиям Джоан в 1966 году в возрасте 50 лет он начал писать."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Скромный приём первой книги под псевдонимом",
+      "long": "Первый сборник вышел под псевдонимом Джеймс Хэрриот: правила не позволяли ветеринарам рекламировать услуги. Успеха книга сразу не имела.",
+      "works": [
+        {
+          "ref": "if-only-they-could-talk"
+        }
+      ],
+      "chapter": "herriot-success",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Если бы они только могли говорить» увидела свет в 1970 году, но особого успеха не имела"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех в США",
+      "long": "Нью-йоркский издатель Томас Маккормак выпустил первые две книги одним томом; в США он стал бестселлером и принёс автору мировую известность.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "all-creatures-great-and-small"
+        }
+      ],
+      "chapter": "herriot-success",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1972 году он опубликовал первые две книги Хэрриота в одном томе под названием «О всех созданиях — больших и малых» (All Creatures Great and Small). Книга имела огромный успех"
+      }
+    },
+    {
+      "key": "relocation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Тирлби ради уединения",
+      "long": "Ради уединения на фоне растущей славы переехал с женой в деревню Тирлби, в нескольких милях от Тирска.",
+      "place": {
+        "label": "Тирлби"
+      },
+      "chapter": "herriot-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1977 Wight and his wife moved again, to the smaller village of Thirlby"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи",
+      "long": "Награждён орденом Британской империи степени офицера.",
+      "chapter": "herriot-success",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was made an Officer of the Order of the British Empire (OBE) in the 1979 New Year Honours"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход с полной занятости в практике",
+      "long": "Оставил полную занятость в ветеринарной практике, но продолжал работать неполный день.",
+      "place": {
+        "label": "Тирск"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "and retired from full-time practice in 1980 but continued to work part time"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётное членство в ветеринарном колледже",
+      "long": "Получил почётное звание члена Королевского ветеринарно-хирургического колледжа.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1982 году ему присвоено почетное звание члена Королевского ветеринарно-хирургического колледжа"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Окончательный уход из практики",
+      "long": "Полностью оставил практику, проработав по специальности около 50 лет.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He fully retired in 1989 (or 1990 according to some sources)"
+      }
+    },
+    {
+      "key": "illness-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз — рак простаты",
+      "long": "Диагностирован рак простаты; лечился в больнице Фрайариджа в Норталлертоне.",
+      "place": {
+        "label": "Норталлертон"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Alf Wight had been diagnosed with prostate cancer in 1991"
+      }
+    },
+    {
+      "key": "other-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Почётное президентство в клубе «Сандерленд»",
+      "long": "Давний болельщик «Сандерленда», стал почётным президентом клуба.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was made an honorary president of the club in 1991"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Библиотека колледжа его имени",
+      "long": "Библиотека Глазговского ветеринарного колледжа названа его именем; он назвал это высшей честью в своей жизни.",
+      "place": {
+        "label": "Глазго"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994, the library at Glasgow Veterinary College was named the 'James Herriot Library'"
+      }
+    },
+    {
+      "key": "death-1995",
+      "date": {
+        "from": "1995-02-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Умер дома в Тирлби от рака; прах развеян на Саттон-Бэнк.",
+      "place": {
+        "label": "Тирлби"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 23 February 1995, he died at his home in Thirlby as a result of the cancer"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "if-only-they-could-talk",
+      "title": "Если бы они только могли говорить",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "it-shouldnt-happen-to-a-vet",
+      "title": "С ветеринаром такого не должно случиться",
+      "written": {
+        "from": 1970,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "all-creatures-great-and-small",
+      "title": "О всех созданиях — больших и малых",
+      "qid": "Q21189980",
+      "written": {
+        "from": 1969,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "all-things-bright-and-beautiful",
+      "title": "Все существа — прекрасные и удивительные",
+      "qid": "Q30896584",
+      "written": {
+        "from": 1973,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "all-things-wise-and-wonderful",
+      "title": "Все существа — мудрые и дивные",
+      "qid": "Q56085633",
+      "written": {
+        "from": 1976,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "lord-god-made-them-all",
+      "title": "Всех их создал Господь",
+      "qid": "Q56085643",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "every-living-thing",
+      "title": "Всё живое",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    }
+  ]
+}

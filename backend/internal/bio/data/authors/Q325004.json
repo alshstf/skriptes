@@ -1,0 +1,325 @@
+{
+  "qid": "Q325004",
+  "name": "Александр Николаевич Афанасьев",
+  "born": "1826-07-23",
+  "died": "1871-10-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D1%84%D0%B0%D0%BD%D0%B0%D1%81%D1%8C%D0%B5%D0%B2%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 154744739
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alexander_Afanasyev",
+      "rev": 1375168257
+    }
+  ],
+  "chapters": [
+    {
+      "key": "boguchar-bobrov-gimnaziya",
+      "title": "Богучар, Бобров, гимназия",
+      "from": 1826,
+      "to": 1843
+    },
+    {
+      "key": "moskovskiy-universitet",
+      "title": "Московский университет",
+      "from": 1844,
+      "to": 1848
+    },
+    {
+      "key": "arhiv-i-skazki",
+      "title": "Архив, статьи и сказки",
+      "from": 1849,
+      "to": 1861
+    },
+    {
+      "key": "obysk-i-uvolnenie",
+      "title": "Обыск и увольнение",
+      "from": 1862,
+      "to": 1864
+    },
+    {
+      "key": "poslednie-gody",
+      "title": "Труд о славянских воззрениях и последние годы",
+      "from": 1865,
+      "to": 1871
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1826",
+      "date": {
+        "from": "1826-07-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Богучаре",
+      "long": "Родился в Богучаре Воронежской губернии в семье чиновника, титулярного советника Николая Афанасьева.",
+      "place": {
+        "label": "Богучар"
+      },
+      "chapter": "boguchar-bobrov-gimnaziya",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Богучар 1826-07-23"
+      }
+    },
+    {
+      "key": "relocation-1828",
+      "date": {
+        "from": "1828-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Бобров",
+      "long": "Отец получил должность уездного стряпчего в Боброве, где прошли детство и юность Афанасьева.",
+      "place": {
+        "label": "Бобров"
+      },
+      "chapter": "boguchar-bobrov-gimnaziya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в декабре 1828 года получил должность уездного стряпчего в Боброве"
+      }
+    },
+    {
+      "key": "career-1849",
+      "date": {
+        "from": "1849-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба в Московском главном архиве МИД",
+      "long": "Поступил на службу в Московский главный архив Министерства иностранных дел и работал там до 1862 года; архивная работа дала материал для исследований.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "arhiv-i-skazki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1849 года поступил на службу в Московский главный архив Министерства иностранных дел"
+      }
+    },
+    {
+      "key": "career-1856",
+      "date": {
+        "from": "1856",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Должность начальника отделения архива",
+      "long": "В 1856 году стал начальником отделения, вскоре — правителем дел комиссии печатания государственных грамот и договоров.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "arhiv-i-skazki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1856 году стал начальником отделения"
+      }
+    },
+    {
+      "key": "career-1858",
+      "date": {
+        "from": "1858",
+        "to": "1859",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание журнала «Библиографические записки»",
+      "long": "Издавал журнал, не нашедший достаточной поддержки.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "arhiv-i-skazki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1858—1859 годах он издавал не нашедший достаточной поддержки журнал «Библиографические записки»"
+      }
+    },
+    {
+      "key": "persecution-1860",
+      "date": {
+        "from": "1860",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет сборника легенд цензурой",
+      "long": "Сборник из 33 рассказов о святых и Христе изъят из продажи цензурой по настоянию Синода из-за расхождений с церковными оценками.",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "russkie-narodnye-legendy",
+          "note": "запрещённый сборник"
+        }
+      ],
+      "chapter": "arhiv-i-skazki",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1860 году Афанасьев издал сборник «Русские народные легенды», который однако был изъят из продажи цензурой."
+      }
+    },
+    {
+      "key": "persecution-1862",
+      "date": {
+        "from": "1862",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Обыск и увольнение со службы по делу о связях с Герценом",
+      "long": "После встречи с Кельсиевым в квартире Афанасьева провели обыск, он был привлечён по делу о сношениях с лондонскими пропагандистами и уволен.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "obysk-i-uvolnenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После встречи (1862) с нелегально приехавшим в Россию В. И. Кельсиевым в квартире Афанасьева был произведён обыск"
+      }
+    },
+    {
+      "key": "persecution-1864",
+      "date": {
+        "from": "1864",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Освобождение от суда с запретом государственной службы",
+      "long": "Сенат освободил его от суда, но запретил служить в государственных учреждениях.",
+      "chapter": "obysk-i-uvolnenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1864 году был освобождён от суда Сенатом с запрещением служить в государственных учреждениях."
+      }
+    },
+    {
+      "key": "career-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Помощник секретаря Московской городской думы",
+      "long": "С 1865 года работал помощником секретаря Московской городской думы, с 1867 — секретарём съезда мировых судей.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Работал помощником секретаря Московской городской думы (с 1865)"
+      }
+    },
+    {
+      "key": "career-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба чиновником Коммерческого банка",
+      "long": "С 1870 года служил чиновником Коммерческого банка.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "чиновником Коммерческого банка (с 1870)"
+      }
+    },
+    {
+      "key": "death-1871",
+      "date": {
+        "from": "1871-10-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от чахотки в Москве",
+      "long": "Умер от чахотки в возрасте 45 лет, похоронен на Пятницком кладбище в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "poslednie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер от чахотки 23 сентября (5 октября) 1871 года, в возрасте 45 лет."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "narodnye-russkie-skazki",
+      "title": "Народные русские сказки",
+      "qid": "Q2370698",
+      "written": {
+        "from": 1855,
+        "to": 1863
+      }
+    },
+    {
+      "ref": "poeticheskie-vozzreniya-slavyan-na-prirodu",
+      "title": "Поэтические воззрения славян на природу",
+      "qid": "Q21644051",
+      "written": {
+        "from": 1865,
+        "to": 1869
+      }
+    },
+    {
+      "ref": "russkie-narodnye-legendy",
+      "title": "Народные русские легенды",
+      "written": {
+        "from": 1859,
+        "to": 1860
+      }
+    },
+    {
+      "ref": "russkie-satiricheskie-zhurnaly",
+      "title": "Русские сатирические журналы 1769—1774 годов",
+      "written": {
+        "from": 1855,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "russkie-detskie-skazki",
+      "title": "Русские детские сказки",
+      "written": {
+        "from": 1870,
+        "to": 1870
+      }
+    },
+    {
+      "ref": "zavetnye-skazki",
+      "title": "Заветные сказки",
+      "written": {
+        "from": 1857,
+        "to": 1862
+      }
+    },
+    {
+      "ref": "vedun-i-vedma",
+      "title": "Ведун и ведьма",
+      "written": {
+        "from": 1851,
+        "to": 1851
+      }
+    }
+  ]
+}

@@ -1,0 +1,453 @@
+{
+  "qid": "Q254240",
+  "name": "Розамунда Пилчер",
+  "born": "1924-09-22",
+  "died": "2019-02-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B8%D0%BB%D1%87%D0%B5%D1%80%2C_%D0%A0%D0%BE%D0%B7%D0%B0%D0%BC%D1%83%D0%BD%D0%B4%D0%B0",
+      "rev": 147534637
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Rosamunde_Pilcher",
+      "rev": 1371552398
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cornwall-schools",
+      "title": "Корнуолл и школьные годы",
+      "from": 1924,
+      "to": 1942
+    },
+    {
+      "key": "navy-india",
+      "title": "Флот и Индия",
+      "from": 1943,
+      "to": 1946
+    },
+    {
+      "key": "scotland-pseudonym",
+      "title": "Шотландия, семья и псевдоним",
+      "from": 1947,
+      "to": 1986
+    },
+    {
+      "key": "shell-seekers-fame",
+      "title": "Слава «Собирателей ракушек»",
+      "from": 1987,
+      "to": 2000
+    },
+    {
+      "key": "longforgan-years",
+      "title": "Последние годы в Лонгфоргане",
+      "from": 2001,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1924",
+      "date": {
+        "from": "1924-09-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Леланте, Корнуолл",
+      "long": "Родилась в Леланте, Корнуолл, в семье флотского офицера; урождённая Скотт.",
+      "place": {
+        "label": "Лелант"
+      },
+      "chapter": "cornwall-schools",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 сентября 1924, Лелант, Корнуолл, Англия"
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба во флоте в годы войны",
+      "long": "В 1942 году добровольцем записалась во флот и прослужила в нём с 1943 по 1946 год.",
+      "chapter": "navy-india",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время Второй мировой войны, в 1942 году девушка добровольцем записалась во флот, где прослужила с 1943 по 1946 годы."
+      }
+    },
+    {
+      "key": "relocation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Служебная командировка в Индию",
+      "long": "Во время флотской службы отправлена в Индию, где оставалась до конца войны.",
+      "place": {
+        "label": "Индия"
+      },
+      "chapter": "navy-india",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году была отправлена по службе в Индию, где и находилась до окончания войны."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946-12-07",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Грэхамом Пилчером, переезд в Шотландию",
+      "long": "Вышла замуж за Грэхама Пилчера, текстильного предпринимателя, и уехала с ним в Шотландию.",
+      "chapter": "navy-india",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "7 декабря 1946 года Розамунда вышла замуж за текстильного предпринимателя Грэхама Пилчера"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало публикаций под псевдонимом Джейн Фрэзер",
+      "long": "Первая книга, любовный роман, вышла в издательстве Mills \u0026 Boon под псевдонимом Джейн Фрэзер; под этим именем она выпустила около десяти книг.",
+      "chapter": "scotland-pseudonym",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949, Pilcher's first book, a romance novel, was published by Mills and Boon, under the pseudonym Jane Fraser."
+      }
+    },
+    {
+      "key": "child-1950",
+      "date": {
+        "from": "1950-08-10",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Робина",
+      "long": "Родился сын Робин, впоследствии тоже писатель. Всего у Пилчеров было четверо детей.",
+      "chapter": "scotland-pseudonym",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Robin Pilcher 1950-08-10"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от псевдонима",
+      "long": "Отказалась от псевдонима и стала публиковаться только под собственным именем.",
+      "chapter": "scotland-pseudonym",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1965 года Розамунда публикуется исключительно как Розамунда Пилчер."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв и мировой успех",
+      "long": "Настоящий успех пришёл с семейной сагой; с тех пор книги выходят огромными тиражами, в мире продано более 60 миллионов экземпляров.",
+      "works": [
+        {
+          "ref": "the-shell-seekers"
+        }
+      ],
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "настоящий успех ждал её лишь в 1987 году после выхода в свет семейной саги"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало телеэкранизаций ZDF",
+      "long": "Немецкий телеканал ZDF начал экранизировать её истории; впоследствии снято более ста телефильмов, особенно популярных в Германии.",
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "has produced more than a hundred of her stories as TV movies, starting with The Day of the Storm in 1993"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ассоциации любовных романистов",
+      "long": "Роман получил премию «Романтический роман года» Ассоциации любовных романистов.",
+      "works": [
+        {
+          "ref": "coming-home"
+        }
+      ],
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Coming Home won the Romantic Novel of the Year Award by Romantic Novelists' Association in 1996."
+      }
+    },
+    {
+      "key": "family-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Золотая свадьба",
+      "long": "Вместе с мужем отметила золотую свадьбу.",
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году Розамунда и её муж Грэхам отметили пятидесятилетнюю (золотую) годовщину свадьбы."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Бэмби",
+      "long": "Удостоена премии Бэмби.",
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году писательница была удостоена премии Бэмби."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из литературы",
+      "long": "После последнего романа оставила литературную деятельность.",
+      "works": [
+        {
+          "ref": "winter-solstice"
+        }
+      ],
+      "chapter": "shell-seekers-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году опубликован последний роман — «Зимнее солнцестояние»"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Офицер Ордена Британской империи",
+      "long": "Присвоено звание офицера Ордена Британской империи за заслуги перед литературой.",
+      "chapter": "longforgan-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 году ей было присвоено звание офицера Ордена Британской империи."
+      }
+    },
+    {
+      "key": "loss-2009",
+      "date": {
+        "from": "2009-03",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Грэхама",
+      "long": "В марте 2009 года умер муж, Грэхам Пилчер, с которым она прожила более 60 лет.",
+      "chapter": "longforgan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a war hero and jute industry executive who died in March 2009"
+      }
+    },
+    {
+      "key": "illness-2018",
+      "date": {
+        "from": "2018-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Бронхит",
+      "long": "В конце декабря заболела бронхитом.",
+      "chapter": "longforgan-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пилчер заболела бронхитом в конце декабря 2018 года."
+      }
+    },
+    {
+      "key": "illness-2019",
+      "date": {
+        "from": "2019-02-03",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Инсульт",
+      "long": "Перенесла инсульт и не приходила в сознание до смерти.",
+      "place": {
+        "label": "Лонгфорган"
+      },
+      "chapter": "longforgan-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Она перенесла инсульт 3 февраля 2019 года"
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-02-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лонгфоргане",
+      "long": "Умерла в Лонгфоргане, Шотландия, в возрасте 94 лет.",
+      "place": {
+        "label": "Лонгфорган"
+      },
+      "chapter": "longforgan-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Pilcher died on 6 February 2019, at the age of 94, following a stroke."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sleeping-tiger",
+      "title": "Спящий тигр",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "end-of-summer",
+      "title": "Конец лета",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "snow-in-april",
+      "title": "Метель в апреле",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "wild-mountain-thyme",
+      "title": "Дикий горный тимьян",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-carousel",
+      "title": "Карусель",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "voices-in-summer",
+      "title": "Голоса лета",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "the-shell-seekers",
+      "title": "Собиратели ракушек",
+      "qid": "Q7763755",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "september",
+      "title": "Сентябрь",
+      "qid": "Q7452062",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "coming-home",
+      "title": "Возвращение домой",
+      "qid": "Q1595795",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "winter-solstice",
+      "title": "В канун Рождества",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    }
+  ]
+}

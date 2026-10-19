@@ -1,0 +1,509 @@
+{
+  "qid": "Q545375",
+  "name": "Робертсон Дэвис",
+  "born": "1913-08-28",
+  "died": "1995-12-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D1%8D%D0%B2%D0%B8%D1%81%2C_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82%D1%81%D0%BE%D0%BD",
+      "rev": 148696165
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Robertson_Davies",
+      "rev": 1372859775
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Онтарио, Торонто, Оксфорд",
+      "from": 1913,
+      "to": 1939
+    },
+    {
+      "key": "redaktor",
+      "title": "Редактор и драматург",
+      "from": 1940,
+      "to": 1959
+    },
+    {
+      "key": "master",
+      "title": "Профессор и мастер Мэсси-колледжа",
+      "from": 1960,
+      "to": 1980
+    },
+    {
+      "key": "pozdnie",
+      "title": "Корнишская трилогия и последние годы",
+      "from": 1981,
+      "to": 1995
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1913",
+      "date": {
+        "from": "1913-08-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Темсвилле, Онтарио",
+      "long": "Родился в Темсвилле, Онтарио, третий сын газетчика Уильяма Рупера Дэвиса и Флоренс Шеппард Маккей.",
+      "place": {
+        "label": "Темсвилл"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Thamesville 1913-08-28"
+      }
+    },
+    {
+      "key": "education-1926",
+      "date": {
+        "from": "1926",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Upper Canada College",
+      "long": "Учился в частной школе-пансионе Upper Canada College в Торонто. Позднее ушёл из пресвитерианской церкви в англиканство из-за возражений против кальвинистского богословия.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He attended Upper Canada College in Toronto from 1926 to 1932"
+      }
+    },
+    {
+      "key": "education-1932",
+      "date": {
+        "from": "1932",
+        "to": "1935",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Университете Куинс",
+      "long": "Учился в Университете Куинс в Кингстоне как вольнослушатель, не сдав экзамен по математике; писал литературную колонку в студенческой газете.",
+      "place": {
+        "label": "Кингстон"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Davies studied at Queen's University at Kingston, Ontario, from 1932 until 1935"
+      }
+    },
+    {
+      "key": "education-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Оксфорд, Баллиол-колледж",
+      "long": "Учился в Баллиол-колледже Оксфорда, получил степень бакалавра литературы.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Davies left Canada to study at Balliol College, Oxford, where he received a BLitt degree in 1938."
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Канаду, журнал «Saturday Night»",
+      "long": "Вернулся в Канаду и стал литературным редактором журнала «Saturday Night».",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Davies and his new bride returned to Canada in 1940, where he took the position of literary editor at Saturday Night magazine."
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор «Peterborough Examiner»",
+      "long": "Редактировал газету «Peterborough Examiner» в Питерборо, затем был её издателем (1955–1965); писал юморески под псевдонимом Сэмюэл Марчбэнкс.",
+      "place": {
+        "label": "Питерборо"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During his tenure as editor of the Examiner, which lasted from 1942 to 1955"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Участие в создании Стратфордского фестиваля",
+      "long": "Сыграл заметную роль в создании Стратфордского шекспировского фестиваля, входил в его совет управляющих.",
+      "place": {
+        "label": "Стратфорд"
+      },
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the 1950s, Davies played a major role in launching the Stratford Shakespearean Festival of Canada."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход к прозе",
+      "long": "Выход первого романа открыл «Солтертонскую трилогию»; он принёс успех в прозе при первой любви к драме.",
+      "works": [
+        {
+          "ref": "tempest-tost"
+        }
+      ],
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1951 году — первый крупный роман — «Tempest-Tost»."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ликока за юмор",
+      "long": "Роман «Закваска злобы» получил премию Стивена Ликока за юмор.",
+      "works": [
+        {
+          "ref": "leaven-of-malice"
+        }
+      ],
+      "chapter": "redaktor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leaven of Malice (1954, also the basis of the unsuccessful play Love and Libel) which won the Stephen Leacock Award for Humour"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "to": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание в Тринити-колледже",
+      "long": "Преподавал литературу в Тринити-колледже Университета Торонто.",
+      "place": {
+        "label": "Торонто"
+      },
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1960, Davies joined Trinity College at the University of Toronto, where he would teach literature until 1981."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Лорна Пирса",
+      "long": "Награждён медалью Лорна Пирса за литературные заслуги.",
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was awarded the Lorne Pierce Medal for his literary achievements."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Ректор Мэсси-колледжа",
+      "long": "Стал первым ректором Мэсси-колледжа; завёл традицию рассказывать на рождественских вечерах истории о привидениях.",
+      "place": {
+        "label": "Торонто"
+      },
+      "works": [
+        {
+          "ref": "high-spirits",
+          "note": "истории о привидениях, сочинявшиеся к рождественским вечерам колледжа, вошли в сборник"
+        }
+      ],
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1963, he became the Master of Massey College, the University of Toronto's new graduate college."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Успех первой трилогии",
+      "long": "Роман опирается на интерес к юнгианской психологии и личный опыт автора; начало Дептфордской трилогии, принёсшей ему известность.",
+      "works": [
+        {
+          "ref": "fifth-business"
+        },
+        {
+          "ref": "the-manticore"
+        },
+        {
+          "ref": "world-of-wonders"
+        }
+      ],
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Davies drew on his interest in Jungian psychology to create Fifth Business (1970), a novel that relies heavily on Davies's own experiences"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия генерал-губернатора",
+      "long": "Получил премию генерал-губернатора за «Мантикору».",
+      "works": [
+        {
+          "ref": "the-manticore"
+        }
+      ],
+      "chapter": "master",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "for which he received that year's Governor General's Literary Award"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из университета",
+      "long": "Ушёл из университета; вышел «Мятежные ангелы» — начало Корнишской трилогии.",
+      "works": [
+        {
+          "ref": "the-rebel-angels"
+        }
+      ],
+      "chapter": "pozdnie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When Davies retired from his position at the university, his seventh novel, a satire of academic life, The Rebel Angels (1981), was published."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Букеровский шорт-лист",
+      "long": "Роман «Что в костях заложено» вошёл в шорт-лист Букеровской премии.",
+      "works": [
+        {
+          "ref": "whats-bred-in-the-bone"
+        }
+      ],
+      "chapter": "pozdnie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "What's Bred in the Bone (1985) which was short-listed for the Booker Prize for fiction in 1986."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Молсона",
+      "long": "Получил премию Молсона.",
+      "chapter": "pozdnie",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Молсона 1988-01-01"
+      }
+    },
+    {
+      "key": "death-1995",
+      "date": {
+        "from": "1995-12-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Оринджвилле",
+      "long": "Умер в больнице Оринджвилла после инфаркта, оставив незаконченной третью трилогию.",
+      "place": {
+        "label": "Оринджвилл"
+      },
+      "chapter": "pozdnie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Робертсон Дэвис умер 2 декабря 1995 года в больнице Оранжвиля после перенесённого инфаркта."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tempest-tost",
+      "title": "Бурей гонимые",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "leaven-of-malice",
+      "title": "Закваска злобы",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "mixture-of-frailties",
+      "title": "Смесь слабостей",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "fifth-business",
+      "title": "Пятый персонаж",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "the-manticore",
+      "title": "Мантикора",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "world-of-wonders",
+      "title": "Мир чудес",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "the-rebel-angels",
+      "title": "Мятежные ангелы",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "whats-bred-in-the-bone",
+      "title": "Что в костях заложено",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "the-lyre-of-orpheus",
+      "title": "Лира Орфея",
+      "written": {
+        "from": 1988,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "murther-and-walking-spirits",
+      "title": "Murther and Walking Spirits",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "the-cunning-man",
+      "title": "The Cunning Man",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "high-spirits",
+      "title": "High Spirits",
+      "written": {
+        "from": 1963,
+        "to": 1982
+      }
+    }
+  ]
+}

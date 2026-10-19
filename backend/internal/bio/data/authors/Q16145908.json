@@ -1,0 +1,254 @@
+{
+  "qid": "Q16145908",
+  "name": "Дженнифер Арментроут",
+  "born": "1980-06-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D1%80%D0%BC%D0%B5%D0%BD%D1%82%D1%80%D0%BE%D1%83%D1%82%2C_%D0%94%D0%B6%D0%B5%D0%BD%D0%BD%D0%B8%D1%84%D0%B5%D1%80",
+      "rev": 146709653
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jennifer_L._Armentrout",
+      "rev": 1379627479
+    }
+  ],
+  "chapters": [
+    {
+      "key": "west-virginia",
+      "title": "Западная Виргиния и первые рукописи",
+      "from": 1980,
+      "to": 2010
+    },
+    {
+      "key": "first-books",
+      "title": "Первые книги и экранные планы",
+      "from": 2011,
+      "to": 2014
+    },
+    {
+      "key": "apollycon",
+      "title": "ApollyCon",
+      "from": 2015,
+      "to": 2019
+    },
+    {
+      "key": "blood-and-ash",
+      "title": "Из крови и пепла",
+      "from": 2020,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1980",
+      "date": {
+        "from": "1980-06-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Западной Виргинии",
+      "long": "Родилась 11 июня 1980 года в Западной Виргинии, США.",
+      "place": {
+        "label": "Мартинсберг"
+      },
+      "chapter": "west-virginia",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: 1980-06-11"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первой книги после череды отказов",
+      "long": "После множества отказов издателей в 2011 году вышла первая книга Арментроут.",
+      "works": [
+        {
+          "ref": "half-blood"
+        },
+        {
+          "ref": "obsidian"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Armentrout's first book was published in 2011"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Опцион Sierra Pictures на экранизацию",
+      "long": "Права на экранизацию романа выкупила студия Sierra Pictures, позднее они вернулись к автору.",
+      "works": [
+        {
+          "ref": "obsidian"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, her young adult novel Obsidian was optioned by Sierra Pictures, but the rights were later returned to the author."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Создание книжного события ApollyCon",
+      "long": "После предложения коллеги устроить автограф-сессию к выходу первой книги серии «Титаны» она пригласила других авторов и создала ApollyCon.",
+      "works": [
+        {
+          "ref": "the-return"
+        }
+      ],
+      "chapter": "apollycon",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2015, Armentrout's colleague suggested that she do a book signing for the first release in her Titan series."
+      }
+    },
+    {
+      "key": "illness-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз «пигментный ретинит»",
+      "long": "В 2015 году у писательницы диагностировали пигментный ретинит; она рассказывает о болезни читателям.",
+      "chapter": "apollycon",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Armentrout was diagnosed with retinitis pigmentosa in 2015."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выбор читателей Goodreads",
+      "long": "Первая книга серии «Из крови и пепла» признана читателями Goodreads лучшей романтической книгой года.",
+      "works": [
+        {
+          "ref": "from-blood-and-ash"
+        }
+      ],
+      "chapter": "blood-and-ash",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая книга (\"Из крови и пепла\") была выбрана лучшей романтической книгой 2020 года читателями Goodreads."
+      }
+    },
+    {
+      "key": "persecution-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запреты и жалобы на роман в США",
+      "long": "Роман оказался на восьмом месте среди самых часто запрещаемых и оспариваемых книг в США.",
+      "works": [
+        {
+          "ref": "storm-and-fury"
+        }
+      ],
+      "chapter": "blood-and-ash",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, her novel Storm and Fury tied for the eighth most banned and challenged book in the United States."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "half-blood",
+      "title": "Half-Blood",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "obsidian",
+      "title": "Obsidian",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "wait-for-you",
+      "title": "Wait for You",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "white-hot-kiss",
+      "title": "White Hot Kiss",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "the-return",
+      "title": "The Return",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "the-problem-with-forever",
+      "title": "The Problem with Forever",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "storm-and-fury",
+      "title": "Storm and Fury",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "from-blood-and-ash",
+      "title": "From Blood and Ash",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    }
+  ]
+}

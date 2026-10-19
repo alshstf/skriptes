@@ -1,0 +1,162 @@
+{
+  "qid": "Q16204768",
+  "name": "Брайан Макклеллан",
+  "born": "1986-01-25",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Brian_McClellan",
+      "rev": 1376860862
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-and-study",
+      "title": "Юность и учёба",
+      "from": 1986,
+      "to": 2007
+    },
+    {
+      "key": "road-to-debut",
+      "title": "Путь к дебюту",
+      "from": 2008,
+      "to": 2013
+    },
+    {
+      "key": "powder-mage",
+      "title": "Пороховые маги и признание",
+      "from": 2014,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1986",
+      "date": {
+        "from": "1986-01-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился 25 января 1986 года в Кливленде.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brian McClellan (born January 25, 1986) is an American author of epic fantasy."
+      }
+    },
+    {
+      "key": "education-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Литературный буткемп Орсона Скотта Карда",
+      "long": "В 2006 году посещал литературный буткемп Орсона Скотта Карда.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006 he attended Orson Scott Card's Literary Bootcamp."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный отзыв конкурса Writers of the Future",
+      "long": "В 2008 году получил почётный отзыв на конкурсе Writers of the Future.",
+      "chapter": "road-to-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008 he received honorable mention in the Writers of the Future Contest."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в большой прозе",
+      "long": "В 2013 году вышла его первая книга — начало трилогии «Пороховой маг».",
+      "works": [
+        {
+          "ref": "promise-of-blood"
+        }
+      ],
+      "chapter": "powder-mage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "McClellan published his first book, Promise of Blood, in 2013."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Morningstar лучшему новичку",
+      "long": "Дебютный роман получил премию Morningstar как лучший новичок в фэнтези.",
+      "works": [
+        {
+          "ref": "promise-of-blood"
+        }
+      ],
+      "chapter": "powder-mage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, his debut novel, Promise of Blood, won the Morningstar Award for Best Fantasy Newcomer."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Договор с Tor Books на новую серию",
+      "long": "В 2019 году Tor Books объявило о публикации его новой серии «Стеклянные бессмертные».",
+      "chapter": "powder-mage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2019 Tor Books announced that they would be working with him to publish his new series, The Glass Immortals."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "powder-mage",
+      "title": "Пороховой маг",
+      "qid": "Q18393657",
+      "written": {
+        "from": 2013,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "promise-of-blood",
+      "title": "Promise of Blood",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

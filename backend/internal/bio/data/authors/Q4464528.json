@@ -1,0 +1,236 @@
+{
+  "qid": "Q4464528",
+  "name": "Далия Трускиновская",
+  "born": "1951-06-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D1%80%D1%83%D1%81%D0%BA%D0%B8%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%2C_%D0%94%D0%B0%D0%BB%D0%B8%D1%8F_%D0%9C%D0%B5%D0%B5%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 153669368
+    }
+  ],
+  "chapters": [
+    {
+      "key": "riga-university",
+      "title": "Рига и университет",
+      "from": 1951,
+      "to": 1973
+    },
+    {
+      "key": "journalism-first-books",
+      "title": "Журналистика и первые публикации",
+      "from": 1974,
+      "to": 1989
+    },
+    {
+      "key": "fantasy-era",
+      "title": "Фэнтези и исторические циклы",
+      "from": 1990,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1951",
+      "date": {
+        "from": "1951-06-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Риге",
+      "long": "Родилась в Риге.",
+      "place": {
+        "label": "Рига"
+      },
+      "chapter": "riga-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 13 июня 1951, Рига"
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание филологического факультета университета",
+      "long": "Окончила филологический факультет Латвийского университета имени Петра Стучки.",
+      "place": {
+        "label": "Рига"
+      },
+      "chapter": "riga-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973 году окончила филологический факультет Латвийского университета имени Петра Стучки."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Год в школе, затем переход в журналистику",
+      "long": "После университета год преподавала в школе, затем стала журналисткой в газете «Советская молодёжь»; журналистика осталась её основной профессией.",
+      "place": {
+        "label": "Рига"
+      },
+      "chapter": "riga-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1973 году окончила филологический факультет Латвийского университета имени Петра Стучки. Год преподавала в школе, затем стала работать как журналист в газете «Советская молодёжь»."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые публикации стихов",
+      "long": "Начались публикации её стихов.",
+      "chapter": "journalism-first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году начала публиковаться поэзия Далии Трускиновской."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебют в фантастике",
+      "long": "Участвовала в семинарах ВТО МПФ и в 1983 году дебютировала в фантастике.",
+      "works": [
+        {
+          "ref": "bessmertnyj-dim"
+        }
+      ],
+      "chapter": "journalism-first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дебютировала в фантастике в 1983 году, опубликовав повесть «Бессмертный Дим»"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Широкая известность и поворот к фантастике",
+      "long": "Повесть принесла ей широкую известность; после неё она стала работать преимущественно в фантастике, предпочитая историческое фэнтези и городскую сказку.",
+      "works": [
+        {
+          "ref": "dverinda"
+        }
+      ],
+      "chapter": "fantasy-era",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Широко известной Трускиновскую сделала фэнтезийная повесть «Дверинда» (1990), после публикации которой писательница стала работать преимущественно в области фантастики"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шорт-лист премии «Большая книга»",
+      "long": "Полная версия романа вошла в шорт-лист премии «Большая книга».",
+      "works": [
+        {
+          "ref": "shajtan-zvezda"
+        }
+      ],
+      "chapter": "fantasy-era",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Опубликованная в 2006 году полная версия романа «Шайтан-звезда» вошла в шорт-лист премии «Большая книга»."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Карамзинский крест",
+      "long": "Получила Карамзинский крест (повторно отмечена в 2015 году).",
+      "chapter": "fantasy-era",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Карамзинский крест 2007"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "zapah-yantarya",
+      "title": "Запах янтаря",
+      "written": {
+        "from": 1981,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "bessmertnyj-dim",
+      "title": "Бессмертный Дим",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "obnazhennaya-v-shlyape",
+      "title": "Обнажённая в шляпе",
+      "written": {
+        "from": 1988,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "dverinda",
+      "title": "Дверинда",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "shajtan-zvezda",
+      "title": "Шайтан-звезда",
+      "written": {
+        "from": 1998,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "archarovtsy",
+      "title": "Цикл «Архаровцы»",
+      "written": {
+        "from": 2006,
+        "to": 2018
+      }
+    }
+  ]
+}

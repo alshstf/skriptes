@@ -1,0 +1,209 @@
+{
+  "qid": "Q273677",
+  "name": "Джоанна Линдсей",
+  "born": "1952-03-10",
+  "died": "2019-10-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D0%BD%D0%B4%D1%81%D0%B5%D0%B9%2C_%D0%94%D0%B6%D0%BE%D0%B0%D0%BD%D0%BD%D0%B0",
+      "rev": 153782944
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Johanna_Lindsey",
+      "rev": 1371739033
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-v-garnizonah",
+      "title": "Детство в гарнизонах и Гавайи",
+      "from": 1952,
+      "to": 1969
+    },
+    {
+      "key": "brak-i-semya",
+      "title": "Брак и домашняя жизнь",
+      "from": 1970,
+      "to": 1976
+    },
+    {
+      "key": "romany-i-bestsellery",
+      "title": "Романы и списки бестселлеров",
+      "from": 1977,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-03-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Франкфурте-на-Майне",
+      "long": "Джоанна Ховард родилась в семье американского офицера, служившего в Германии. В детстве много путешествовала с семьёй.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "detstvo-v-garnizonah",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джоанна Ховард родилась 10 марта 1952 года в семье американского офицера, проходившего службу в Германии."
+      }
+    },
+    {
+      "key": "loss-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, военный, мечтавший выйти в отставку на Гавайях, умер в 1964 году.",
+      "chapter": "detstvo-v-garnizonah",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца в 1964 году Джоанна Линдсей вместе с матерью переехала на Гавайи."
+      }
+    },
+    {
+      "key": "relocation-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд с матерью на Гавайи",
+      "long": "После смерти отца Джоанна с матерью переехала на Гавайи.",
+      "place": {
+        "label": "Гавайи"
+      },
+      "chapter": "detstvo-v-garnizonah",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца в 1964 году Джоанна Линдсей вместе с матерью переехала на Гавайи."
+      }
+    },
+    {
+      "key": "love-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Замужество за Ральфа Линдсея",
+      "long": "Вскоре после школы вышла замуж за Ральфа Линдсея и стала домохозяйкой. В браке родилось трое детей: Альфред, Джозеф и Гаррет.",
+      "chapter": "brak-i-semya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году, вскоре после окончания средней школы, Джоанна вышла замуж за Ральфа Линдсея и стала домохозяйкой."
+      }
+    },
+    {
+      "key": "creation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первая книга, написанная «на удачу»",
+      "long": "В 1977 году Линдсей написала свою первую книгу «на удачу»; книга имела успех, как и последовавшие за ней сорок девять романов.",
+      "works": [
+        {
+          "ref": "captive-bride"
+        }
+      ],
+      "chapter": "romany-i-bestsellery",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lindsey wrote her first book, Captive Bride, in 1977 \"on a whim\"."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "to": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Награда Romantic Times за карьеру",
+      "long": "В 1991–1992 годах получила Romantic Times Career Achievement Award как лучший автор в категории «Sensual Historical Romance».",
+      "chapter": "romany-i-bestsellery",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лучший автор (Romantic Times Career Achievement Award)… в 1991-1992 годах в категории «Sensual Historical Romance»."
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-10-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нашуа",
+      "long": "Джоанна Линдсей умерла 27 октября 2019 года в Нашуа, Нью-Гэмпшир.",
+      "place": {
+        "label": "Нашуа"
+      },
+      "chapter": "romany-i-bestsellery",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 марта 1952, Франкфурт-на-Майне, Гессен — 27 октября 2019, Нашуа, Нью-Гэмпшир"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "captive-bride",
+      "title": "Captive Bride",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "love-me-forever",
+      "title": "Love Me Forever",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "say-you-love-me",
+      "title": "Say You Love Me",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "the-present",
+      "title": "The Present",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "no-choice-but-seduction",
+      "title": "No Choice But Seduction",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    }
+  ]
+}

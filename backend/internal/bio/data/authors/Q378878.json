@@ -1,0 +1,593 @@
+{
+  "qid": "Q378878",
+  "name": "Митч Элбом",
+  "born": "1958-05-23",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Mitch_Albom",
+      "rev": 1380441283
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-and-study",
+      "title": "Нью-Джерси, музыка, учёба",
+      "from": 1958,
+      "to": 1982
+    },
+    {
+      "key": "sports-columnist",
+      "title": "Спортивная колонка в Детройте",
+      "from": 1983,
+      "to": 1996
+    },
+    {
+      "key": "tuesdays",
+      "title": "Вторники с Морри",
+      "from": 1997,
+      "to": 2004
+    },
+    {
+      "key": "novels-and-charity",
+      "title": "Романы и благотворительность",
+      "from": 2005,
+      "to": 2014
+    },
+    {
+      "key": "haiti-and-losses",
+      "title": "Утраты и Гаити",
+      "from": 2015,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1958",
+      "date": {
+        "from": "1958-05-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Пассейике, Нью-Джерси",
+      "long": "Родился в Пассейике, штат Нью-Джерси, в еврейской семье; семья жила недолго в Буффало, затем поселилась в Оклине под Филадельфией.",
+      "place": {
+        "label": "Пассейик"
+      },
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Albom was born on May 23, 1958, in Passaic, New Jersey"
+      }
+    },
+    {
+      "key": "education-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Haddon Township",
+      "long": "Окончил среднюю школу Haddon Township High School.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated from Haddon Township High School in 1976."
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом социолога в Брандейсе",
+      "long": "Получил степень бакалавра по социологии в Брандейском университете, где учился у Морри Шварца. Позже получил магистерские степени по журналистике и бизнесу в Колумбийском университете.",
+      "chapter": "youth-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Albom earned a bachelor's degree in sociology in 1979 from Brandeis University."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Штатный автор во Форт-Лодердейле",
+      "long": "Принят штатным автором в Fort Lauderdale News и Sun Sentinel, позднее стал колумнистом.",
+      "place": {
+        "label": "Форт-Лодердейл"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, he was hired as a full-time feature writer for The Fort Lauderdale News and Sun Sentinel"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Ведущий спортивный колумнист Detroit Free Press",
+      "long": "После премии Associated Press Sports Editors за лучший спортивный репортаж приглашён на место ведущего спортивного колумниста Detroit Free Press.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1985, having won that year's Associated Press Sports Editors award for best Sports News Story, Albom was hired as lead sports columnist for the Detroit Free Press"
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Джанин Сабино",
+      "long": "Познакомился с будущей женой Джанин Сабино в детройтском ресторане.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "after meeting her at a Detroit restaurant in 1988"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Еженедельная колонка об американской жизни",
+      "long": "После слияния выходных изданий двух детройтских газет добавил к спортивной колонке еженедельную колонку о жизни и ценностях; позже она стала syndicated по стране.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, when the Detroit Free Press and the Detroit News merged weekend publications, Albom was asked to add a weekly non-sports column to his duties."
+      }
+    },
+    {
+      "key": "other-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание Dream Fund",
+      "long": "Основан фонд Dream Fund, дающий стипендии на обучение искусству детям из неблагополучных семей.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"The Dream Fund\", established in 1989, provides a scholarship for disadvantaged children to study the arts."
+      }
+    },
+    {
+      "key": "other-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Телеинтервью Морри Шварца",
+      "long": "Увидел по телевидению интервью своего бывшего профессора Морри Шварца, больного БАС; возобновил общение и стал навещать его по вторникам.",
+      "works": [
+        {
+          "ref": "tuesdays-with-morrie",
+          "note": "встречи с Шварцем по вторникам стали основой книги"
+        }
+      ],
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "viewed Morrie Schwartz's interview with Ted Koppel on ABC News Nightline in 1995"
+      }
+    },
+    {
+      "key": "love-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джанин Сабино",
+      "long": "Женился на Джанин Сабино.",
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Albom married Janine Sabino in 1995"
+      }
+    },
+    {
+      "key": "other-1995-2",
+      "date": {
+        "from": "1995",
+        "to": "1997",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Возвращение на работу во время забастовки",
+      "long": "Во время детройтской газетной забастовки пересёк линию пикета и вернулся к работе.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "sports-columnist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the Detroit newspaper strike of 1995–1997, Albom crossed the picket line and returned to work."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всемирный успех книги о профессоре",
+      "long": "Тираж в 20 тысяч экземпляров вырос благодаря молве; в октябре 1997 года книга вошла в список бестселлеров New York Times, позже заняла первое место.",
+      "works": [
+        {
+          "ref": "tuesdays-with-morrie"
+        }
+      ],
+      "chapter": "tuesdays",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "nudging the book onto the New York Times Best Seller list in October 1997"
+      }
+    },
+    {
+      "key": "other-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание волонтёрской группы A Time to Help",
+      "long": "Начала работу детройтская волонтёрская группа A Time to Help.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "tuesdays",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"A Time to Help\" which started in 1998, is a Detroit volunteer group."
+      }
+    },
+    {
+      "key": "other-2003",
+      "date": {
+        "from": "2003-02",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Показания на суде над Крисом Уэббером",
+      "long": "Вызван свидетелем на процесс по делу о лжесвидетельстве баскетболиста Криса Уэббера, героя его книги о «Fab Five».",
+      "chapter": "tuesdays",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In February 2003, Albom was called to testify at the perjury trial of Chris Webber"
+      }
+    },
+    {
+      "key": "persecution-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Скандал с неверной колонкой и отстранение",
+      "long": "Написал, что два баскетболиста присутствуют на матче, хотя они не пришли; Albom и четыре редактора Detroit Free Press были ненадолго отстранены.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "novels-and-charity",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Albom and four editors were briefly suspended from the Detroit Free Press"
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание благотворительной организации S.A.Y. Detroit",
+      "long": "Основал S.A.Y. Detroit, помогающую бездомным и нуждающимся семьям, пожилым и ветеранам.",
+      "place": {
+        "label": "Детройт"
+      },
+      "chapter": "novels-and-charity",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006, he founded S.A.Y. Detroit (Super All Year)"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Рэда Смита",
+      "long": "Удостоен Red Smith Award.",
+      "chapter": "novels-and-charity",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Red Smith Award 2010-01-01"
+      }
+    },
+    {
+      "key": "relocation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Приют на Гаити",
+      "long": "С женой начал руководить приютом Have Faith Haiti Mission \u0026 Orphanage в Порт-о-Пренсе.",
+      "place": {
+        "label": "Порт-о-Пренс"
+      },
+      "chapter": "novels-and-charity",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which he and his wife have operated since 2010"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в издательство HarperCollins",
+      "long": "Перешёл в издательство HarperCollins.",
+      "chapter": "novels-and-charity",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, Albom moved to a new publisher, HarperCollins"
+      }
+    },
+    {
+      "key": "loss-2015",
+      "date": {
+        "from": "2015-01",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Роды",
+      "long": "Умерла мать, Рода Албом.",
+      "chapter": "haiti-and-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His mother Rhoda died in January 2015"
+      }
+    },
+    {
+      "key": "loss-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть приёмной дочери Чики",
+      "long": "Приёмная дочь Чика Жён, взятая из гаитянского приюта, умерла в семь лет после двухлетней болезни — опухоли мозга.",
+      "works": [
+        {
+          "ref": "finding-chika",
+          "note": "книга посвящена жизни и болезни Чики"
+        }
+      ],
+      "chapter": "haiti-and-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died after a two-year battle, at age seven, in 2017"
+      }
+    },
+    {
+      "key": "loss-2017-2",
+      "date": {
+        "from": "2017-12",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Айры",
+      "long": "Умер отец, Айра Албом, после 64 лет брака.",
+      "chapter": "haiti-and-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his father Ira died in December 2017"
+      }
+    },
+    {
+      "key": "family-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Взятый из приюта младенец Нади",
+      "long": "Супруги взяли из своего приюта тяжело истощённого шестимесячного младенца Нади; в Мичигане её здоровье значительно улучшилось.",
+      "chapter": "haiti-and-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2022, the couple took in another child from their orphanage, an infant named Nadie"
+      }
+    },
+    {
+      "key": "other-2024",
+      "date": {
+        "from": "2024-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Эвакуация вертолётом с Гаити",
+      "long": "Вместе с девятью другими американскими волонтёрами был эвакуирован вертолётом из Гаити во время политических беспорядков.",
+      "place": {
+        "label": "Гаити"
+      },
+      "chapter": "haiti-and-losses",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2024, Albom was one of ten American volunteers rescued by helicopter from Haiti"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "bo",
+      "title": "Бо",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "fab-five",
+      "title": "Fab Five",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "tuesdays-with-morrie",
+      "title": "Вторники с Морри",
+      "qid": "Q1154340",
+      "written": {
+        "from": 1995,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "five-people-you-meet-in-heaven",
+      "title": "Пять человек, которых ты встретишь на небесах",
+      "qid": "Q2481893",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "for-one-more-day",
+      "title": "Ещё один день",
+      "qid": "Q5466834",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "have-a-little-faith",
+      "title": "Have a Little Faith",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "time-keeper",
+      "title": "The Time Keeper",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "first-phone-call-from-heaven",
+      "title": "The First Phone Call from Heaven",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "magic-strings-of-frankie-presto",
+      "title": "The Magic Strings of Frankie Presto",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "next-person-you-meet-in-heaven",
+      "title": "The Next Person You Meet in Heaven",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "finding-chika",
+      "title": "Finding Chika",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "stranger-in-the-lifeboat",
+      "title": "The Stranger in the Lifeboat",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "little-liar",
+      "title": "The Little Liar",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

@@ -1,0 +1,484 @@
+{
+  "qid": "Q28147",
+  "name": "Джеймс Крюс",
+  "born": "1926-05-31",
+  "died": "1997-08-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%80%D1%8E%D1%81%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 146266176
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Kr%C3%BCss",
+      "rev": 1372393089
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/James_Kr%C3%BCss",
+      "rev": 270288822
+    }
+  ],
+  "chapters": [
+    {
+      "key": "helgoland-childhood",
+      "title": "Гельголанд и эвакуация",
+      "from": 1926,
+      "to": 1943
+    },
+    {
+      "key": "war-and-aftermath",
+      "title": "Люфтваффе и утраченный остров",
+      "from": 1944,
+      "to": 1947
+    },
+    {
+      "key": "first-books",
+      "title": "Первые книги и совет Кестнера",
+      "from": 1948,
+      "to": 1959
+    },
+    {
+      "key": "fame",
+      "title": "Слава и дом в Баварии",
+      "from": 1960,
+      "to": 1965
+    },
+    {
+      "key": "gran-canaria",
+      "title": "Гран-Канария",
+      "from": 1966,
+      "to": 1997
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1926",
+      "date": {
+        "from": "1926-05-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на острове Гельголанд",
+      "long": "Родился на острове Гельголанд в семье электрика Людвига Крюса и Маргареты Фридерикс; родным языком был гельголандский фризский.",
+      "place": {
+        "label": "Гельголанд"
+      },
+      "chapter": "helgoland-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "James Krüss (31 May 1926 – 2 August 1997)"
+      }
+    },
+    {
+      "key": "relocation-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эвакуация с Гельголанда в Арнштадт",
+      "long": "Жителей Гельголанда вывезли на материк; Крюс вместе с другими детьми оказался в Арнштадте, позднее — в Саксонии.",
+      "place": {
+        "label": "Арнштадт"
+      },
+      "chapter": "helgoland-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1941 году из-за начавшейся войны родители вынуждены были эвакуироваться на материк. Крюс в числе других детей был эвакуирован в Арнштадт."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в люфтваффе",
+      "long": "В августе 1944 года добровольно вступил в люфтваффе; конец войны застал его в Усти-над-Лабем.",
+      "place": {
+        "label": "Усти-над-Лабем"
+      },
+      "works": [
+        {
+          "ref": "der-harmlos",
+          "note": "автобиографическая повесть о войне и пересмотре взглядов после поражения"
+        }
+      ],
+      "chapter": "war-and-aftermath",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1944 года добровольно вступил в ряды люфтваффе, конец войны застал его в Усти-над-Лабем."
+      }
+    },
+    {
+      "key": "other-1944",
+      "date": {
+        "from": "1944-04-20",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Приём в НСДАП",
+      "long": "Подал заявление о приёме в НСДАП 15 января 1944 года, принят 20 апреля.",
+      "works": [
+        {
+          "ref": "der-harmlos",
+          "note": "в автобиографической повести описан как убеждённый национал-социалист, изменивший взгляды после войны"
+        }
+      ],
+      "chapter": "war-and-aftermath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 15. Januar 1944 beantragte Krüss die Aufnahme in die NSDAP und wurde zum 20. April desselben Jahres aufgenommen"
+      }
+    },
+    {
+      "key": "loss-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Невозможность вернуться на Гельголанд",
+      "long": "После войны Крюс добрался до родителей в Куксхафене, но вернуться на Гельголанд было нельзя: остров использовала британская авиация.",
+      "place": {
+        "label": "Куксхафен"
+      },
+      "chapter": "war-and-aftermath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Eine Rückkehr nach Helgoland war 1945 nicht möglich, da die Insel der britischen Luftwaffe als Bombenübungsziel diente."
+      }
+    },
+    {
+      "key": "education-1946",
+      "date": {
+        "from": "1946",
+        "to": "1948",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в педагогическом институте Люнебурга",
+      "long": "С 1946 года учился в педагогическом институте в Люнебурге; в 1948 году сдал экзамен, но учителем не работал.",
+      "place": {
+        "label": "Люнебург"
+      },
+      "works": [
+        {
+          "ref": "golden-thread"
+        }
+      ],
+      "chapter": "war-and-aftermath",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Krüss veröffentlichte 1946 im Parus-Verlag sein erstes Buch Der goldene Faden und begann im selben Jahr ein Studium an der Pädagogischen Hochschule in Lüneburg."
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Журнал для изгнанных гельголандцев",
+      "long": "Переехал в Райнбек под Гамбургом и основал журнал «Гельголанд» для изгнанных с острова жителей; журнал выходил до 1956 года.",
+      "place": {
+        "label": "Райнбек"
+      },
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1948, he received his teaching license, but never worked as a teacher. In the same year, he moved to Reinbek, near Hamburg, and founded the magazine Helgoland"
+      }
+    },
+    {
+      "key": "relocation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд под Мюнхен, знакомство с Кестнером",
+      "long": "Переехал в Лохам близ Мюнхена, где познакомился с Эрихом Кестнером и другими писателями.",
+      "place": {
+        "label": "Лохам"
+      },
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949, he moved to Lochham, near Munich, where he got to know the author Erich Kästner, among others."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Решение писать для детей по совету Кестнера",
+      "long": "По совету Эриха Кестнера решил писать для детей; первая книжка с картинками вышла в 1953 году.",
+      "works": [
+        {
+          "ref": "hanselmann"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году по совету прозаика Эриха Кестнера решил писать для детей."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Совместная работа с Петером Хаксом",
+      "long": "С 1956 года писал вместе с Петером Хаксом радиопьесы и стихи для детей.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1956, he wrote audio dramas for children and children's poems together with Peter Hacks."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Внезапная известность после премии и «Тагесшау»",
+      "long": "После чтения книги «Мой прадед и я» в «Тагесшау» и получения немецкой юношеской литературной премии Крюс сразу стал широко известен.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After a reading of My Great Grandfather and I (which won the Deutscher Jugendliteraturpreis in 1960) in the Tagesschau in 1960, he suddenly became very famous."
+      }
+    },
+    {
+      "key": "relocation-1960",
+      "date": {
+        "from": "1960",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Дом с садом в Гильхинге",
+      "long": "Купил дом с садом в баварском Гильхинге, где жил до 1966 года.",
+      "place": {
+        "label": "Гильхинг"
+      },
+      "works": [
+        {
+          "ref": "timm-thaler"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году Крюс купил себе дом с садом в Гильхинге, где прожил до 1966 года."
+      }
+    },
+    {
+      "key": "relocation-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд на Гран-Канарию",
+      "long": "С 1966 года и до конца жизни жил на Гран-Канарии, где поселился в доме в Ла-Кальсаде.",
+      "place": {
+        "label": "Ла-Кальсада"
+      },
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1966 года и вплоть до смерти Крюс прожил там со своим любовником-испанцем Дарио Франсиско Пересом"
+      }
+    },
+    {
+      "key": "love-1966",
+      "date": {
+        "from": "1966",
+        "to": "1997",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Жизнь с партнёром Дарио Пересом",
+      "long": "На Гран-Канарии жил с партнёром, испанцем Дарио Франсиско Пересом; гомосексуальные связи у Крюса начались ещё на Гельголанде.",
+      "place": {
+        "label": "Ла-Кальсада"
+      },
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1966 года и вплоть до смерти Крюс прожил там со своим любовником-испанцем Дарио Франсиско Пересом"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Детский телесериал на ARD",
+      "long": "В 1966–1969 годах в ARD шёл детский сериал «Тиры Джеймса», который Крюс также вёл.",
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zwischen 1966 und 1969 wurde die Kinderserie James"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Медаль Ханса Кристиана Андерсена",
+      "long": "Награждён медалью Ханса Кристиана Андерсена — высшей международной наградой детским писателям.",
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель награждён медалью Ханса Кристиана Андерсена — Нобелевской премией для детских писателей (1968)."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературная премия города Марбург",
+      "long": "Получил литературную премию города Марбург и района Марбург-Биденкопф.",
+      "place": {
+        "label": "Марбург"
+      },
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: литературная премия университетского города Марбург и района Марбург-Биденкопф 1988-01-01"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при академии детской литературы",
+      "long": "Получил гран-при Немецкой академии детской и юношеской литературы в Фолькахе.",
+      "place": {
+        "label": "Фольках"
+      },
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гран-при Немецкой академии детской и юношеской литературы в Фолькахе 1996-01-01"
+      }
+    },
+    {
+      "key": "death-1997",
+      "date": {
+        "from": "1997-08-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть на Гран-Канарии",
+      "long": "Умер на Гран-Канарии в возрасте 71 года; 27 сентября похоронен в море близ Гельголанда.",
+      "place": {
+        "label": "Гран-Канария"
+      },
+      "chapter": "gran-canaria",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 2. August 1997 starb James Krüss im Alter von 71 Jahren auf Gran Canaria."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "golden-thread",
+      "title": "Золотая нить",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "hanselmann",
+      "title": "Ханзельман путешествует вокруг света",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "lighthouse-lobster-cliffs",
+      "title": "Маяк на Омарных скалах",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "henriette",
+      "title": "Генриетта",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "timm-thaler",
+      "title": "Тим Талер, или Проданный смех",
+      "qid": "Q125628",
+      "written": {
+        "from": 1962,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "der-harmlos",
+      "title": "Der Harmlos",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    }
+  ]
+}

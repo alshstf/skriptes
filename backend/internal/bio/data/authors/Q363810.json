@@ -1,0 +1,269 @@
+{
+  "qid": "Q363810",
+  "name": "Тим Пауэрс",
+  "born": "1952-02-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%83%D1%8D%D1%80%D1%81%2C_%D0%A2%D0%B8%D0%BC",
+      "rev": 154637485
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Tim_Powers",
+      "rev": 1379244769
+    }
+  ],
+  "chapters": [
+    {
+      "key": "buffalo-california",
+      "title": "Буффало и Калифорния",
+      "from": 1952,
+      "to": 1975
+    },
+    {
+      "key": "fullerton-first-novels",
+      "title": "Фуллертон и первые романы",
+      "from": 1976,
+      "to": 1983
+    },
+    {
+      "key": "recognition",
+      "title": "Премии и признание",
+      "from": 1984,
+      "to": 2000
+    },
+    {
+      "key": "later-years",
+      "title": "Поздние годы",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-02-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Буффало",
+      "long": "Тимоти Томас Пауэрс родился 29 февраля 1952 года в Буффало, штат Нью-Йорк.",
+      "place": {
+        "label": "Буффало"
+      },
+      "chapter": "buffalo-california",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 29 февраля 1952 года, Буффало, штат Нью-Йорк"
+      }
+    },
+    {
+      "key": "relocation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Калифорнию",
+      "long": "Родился в Буффало, но с 1959 года живёт в Калифорнии.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "chapter": "buffalo-california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Powers was born in Buffalo, New York, but has lived in California since 1959."
+      }
+    },
+    {
+      "key": "education-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университета в Фуллертоне",
+      "long": "Изучал английскую литературу в Калифорнийском государственном университете в Фуллертоне, где подружился с Блэйлоком и Джетером; в 1976 году получил степень бакалавра.",
+      "place": {
+        "label": "Фуллертон"
+      },
+      "chapter": "fullerton-first-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He studied English Literature at Cal State Fullerton, and earned his B.A. in 1976."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Филипа Дика и широкая известность",
+      "long": "Роман «Врата Анубиса» получил премию Филипа К. Дика в 1984 году и принёс автору широкую известность.",
+      "works": [
+        {
+          "ref": "anubis-gates"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Врата Анубиса», который в 1984 году удостоился премии Филипа Киндреда Дика"
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези",
+      "long": "В 1993 году получил Всемирную премию фэнтези за лучший роман.",
+      "works": [
+        {
+          "ref": "last-call"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший роман 1993-01-01"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая Всемирная премия фэнтези",
+      "long": "В 2001 году вторично получил Всемирную премию фэнтези за лучший роман.",
+      "works": [
+        {
+          "ref": "declare"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший роман 2001-01-01"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Инкпот»",
+      "long": "В 2024 году получил премию «Инкпот» на ежегодном Comic-Con в Сан-Диего.",
+      "place": {
+        "label": "Сан-Диего"
+      },
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2024, Powers would be a recipient of the Inkpot Award at the annual San Diego Comic Con."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "drawing-of-the-dark",
+      "title": "Чёрным по чёрному",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "anubis-gates",
+      "title": "Врата Анубиса",
+      "qid": "Q128324",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "dinner-at-deviants-palace",
+      "title": "Ужин во дворце извращений",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "on-stranger-tides",
+      "title": "На странных волнах",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "stress-of-her-regard",
+      "title": "Сила её уважения",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "last-call",
+      "title": "Последняя ставка",
+      "qid": "Q610680",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "expiration-date",
+      "title": "Срок годности",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "earthquake-weather",
+      "title": "Сезон землетрясений",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "declare",
+      "title": "Провозглашение",
+      "qid": "Q5249488",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "three-days-to-never",
+      "title": "Три дня до небытия",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    }
+  ]
+}

@@ -1,0 +1,594 @@
+{
+  "qid": "Q238090",
+  "name": "Шолом-Алейхем",
+  "born": "1859-03-02",
+  "died": "1916-05-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%BE%D0%BB%D0%BE%D0%BC-%D0%90%D0%BB%D0%B5%D0%B9%D1%85%D0%B5%D0%BC",
+      "rev": 154419127
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sholem_Aleichem",
+      "rev": 1378972522
+    },
+    {
+      "id": "hewiki",
+      "url": "https://he.wikipedia.org/wiki/%D7%A9%D7%9C%D7%95%D7%9D_%D7%A2%D7%9C%D7%99%D7%9B%D7%9D",
+      "rev": 43944185
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo",
+      "title": "Детство в Переяславе",
+      "from": 1859,
+      "to": 1875
+    },
+    {
+      "key": "uchitel-i-nasledstvo",
+      "title": "Учитель, раввин, наследник",
+      "from": 1876,
+      "to": 1890
+    },
+    {
+      "key": "odessa-kiev",
+      "title": "Одесса и Киев",
+      "from": 1891,
+      "to": 1904
+    },
+    {
+      "key": "pogromy-i-bolezn",
+      "title": "Погромы, скитания, болезнь",
+      "from": 1905,
+      "to": 1913
+    },
+    {
+      "key": "voina-i-new-york",
+      "title": "Война и Нью-Йорк",
+      "from": 1914,
+      "to": 1916
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1859",
+      "date": {
+        "from": "1859-03-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в небогатой еврейской семье",
+      "long": "Родился в небогатой еврейской семье в Переяславе; раннее детство провёл в селе Воронькове, ставшем прототипом Касриловки.",
+      "place": {
+        "label": "Переяслав"
+      },
+      "chapter": "detstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 2 марта 1859 года в небогатой еврейской семье"
+      }
+    },
+    {
+      "key": "love-1876",
+      "date": {
+        "from": "1876",
+        "to": "1879",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Работа домашним учителем, роман с ученицей",
+      "long": "После школы три года был домашним учителем Гудл (Ольги) Лоевой; между учителем и ученицей возникло чувство, он лишился места в доме Лоева.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания школы в 1876 году три года в Киеве обучал дочь каневского купца второй гильдии Мейлаха Шаевича Лоева Гудл (Ольгу)"
+      }
+    },
+    {
+      "key": "career-1880",
+      "date": {
+        "from": "1880",
+        "to": "1883",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба лубенским уездным раввином",
+      "long": "В 1880–1883 годах занимал должность казённого (уездного) раввина в Лубнах.",
+      "place": {
+        "label": "Лубны"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "будучи к тому времени (1880—1883) лубенским уездным раввином"
+      }
+    },
+    {
+      "key": "career-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход к литературе на идише",
+      "long": "С 1883 года писал почти исключительно на идише, поставив целью просвещение простого народа; тогда же впервые подписался псевдонимом Шолом-Алейхем.",
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1883 года писал почти исключительно на идише"
+      }
+    },
+    {
+      "key": "love-1883",
+      "date": {
+        "from": "1883-05-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ольгой Лоевой",
+      "long": "Женился на Ольге (Гудл) Лоевой вопреки воле её отца; в браке родилось шестеро детей.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Через шесть лет, 12 мая 1883 года в Киеве, уже после неудачного первого брака"
+      }
+    },
+    {
+      "key": "child-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение первой дочери Эрнестины",
+      "long": "Родилась первая дочь Эрнестина (Тиси) — первая из шестерых детей.",
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дочь Эрнестина (Эстер, Тиси) (1884—1938)"
+      }
+    },
+    {
+      "key": "loss-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть тестя и большое наследство",
+      "long": "После смерти тестя стал наследником большого состояния; получил разрешение поселиться с семьёй в Киеве.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти тестя (1885) Шолом-Алейхем стал наследником большого состояния"
+      }
+    },
+    {
+      "key": "child-1887",
+      "date": {
+        "from": "1887-05-13",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сарры",
+      "long": "Родилась дочь Сарра (Леля), в будущем литератор.",
+      "place": {
+        "label": "Белая Церковь"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дочь Сарра (Леля, Ляля) (1 мая 1887, Белая Церковь — 1964)"
+      }
+    },
+    {
+      "key": "other-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в «Ховевей Цион»",
+      "long": "Вступил в палестинофильскую организацию «Ховевей Цион»; с симпатией относился к сионизму, не разделяя его идеалов полностью.",
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1888 году он вступил в палестинофильскую организацию «Ховевей Цион»"
+      }
+    },
+    {
+      "key": "career-1888",
+      "date": {
+        "from": "1888",
+        "to": "1889",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Издание альманаха «Еврейская народная библиотека»",
+      "long": "На собственные средства выпустил два номера альманаха «Ди йидише фолкс-библиотек», где печатались молодые авторы на идише.",
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1888–89, he put out two issues of an almanac"
+      }
+    },
+    {
+      "key": "child-1889",
+      "date": {
+        "from": "1889-11-05",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Михаила",
+      "long": "Родился сын Михаил (Миша), позднее заболевший туберкулёзом.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын Михаил (24 октября 1889, Киев)"
+      }
+    },
+    {
+      "key": "poverty-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение на бирже, бегство от кредиторов",
+      "long": "Потерял всё состояние в биржевых спекуляциях и скрывался от кредиторов; третий выпуск альманаха напечатать уже не смог.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "uchitel-i-nasledstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1890, Sholem Aleichem lost their entire fortune in stock speculation and fled from his creditors."
+      }
+    },
+    {
+      "key": "relocation-1891",
+      "date": {
+        "from": "1891",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Одессе",
+      "long": "После разорения поселился в Одессе; в 1891 году начал цикл рассказов о Менахем-Мендле (по ивритской статье).",
+      "place": {
+        "label": "Одесса"
+      },
+      "works": [
+        {
+          "ref": "menahem-mendl",
+          "note": "начало серии о Менахем-Мендле относят к 1891 году"
+        }
+      ],
+      "chapter": "odessa-kiev",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После 1891 года жил в Одессе."
+      }
+    },
+    {
+      "key": "child-1901",
+      "date": {
+        "from": "1901",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение младшего сына Нюмы",
+      "long": "Родился младший сын Нюма (Нохум), впоследствии художник Норман Рэбен.",
+      "chapter": "odessa-kiev",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын Нюма (1901—1978), художник, псевдоним — Norman Raeben."
+      }
+    },
+    {
+      "key": "career-1904",
+      "date": {
+        "from": "1904-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сборник в помощь жертвам Кишинёвского погрома",
+      "long": "Составил сборник «Помощь» в пользу пострадавших от Кишинёвского погрома, перевёл три рассказа Льва Толстого и привлёк других русских писателей.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "odessa-kiev",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1904, Sholem Aleichem edited \"Help: An Anthology for Literature and Art\""
+      }
+    },
+    {
+      "key": "persecution-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Отъезд из России после погромов",
+      "long": "После погромов 1905 года, затронувших и Киев, покинул Россию; семья поселилась в Женеве.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После погромов в 1905 уехал с семьёй в Швейцарию, поселившись в Женеве."
+      }
+    },
+    {
+      "key": "relocation-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Нью-Йорк без семьи",
+      "long": "Один отправился через океан ради литературной карьеры, семья осталась в Женеве; содержать два дома он не смог.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "эмигрировав в Нью-Йорк в 1906 году, в то время как его семья осталась в Женеве"
+      }
+    },
+    {
+      "key": "other-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Делегат Сионистского конгресса",
+      "long": "Участвовал в VIII Сионистском конгрессе в Гааге как делегат от США.",
+      "place": {
+        "label": "Гаага"
+      },
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1907 году был делегатом от США на VIII Сионистском конгрессе в Гааге"
+      }
+    },
+    {
+      "key": "relocation-1908",
+      "date": {
+        "from": "1908",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение к семье в Женеву",
+      "long": "Вернулся к семье в Женеву; чтобы сводить концы с концами, постоянно выступал с лекциями и чтением произведений.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "писатель вернулся в Швейцарию в 1908 году, соединившись с семьей в Женеве"
+      }
+    },
+    {
+      "key": "illness-1908",
+      "date": {
+        "from": "1908-07",
+        "to": "1908-09",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлый приступ туберкулёза в дороге",
+      "long": "Диагностирован рецидив острого геморрагического туберкулёза, два месяца лечился в городской больнице. Эту встречу с «Ангелом Смерти» он называл толчком к написанию автобиографии.",
+      "place": {
+        "label": "Барановичи"
+      },
+      "works": [
+        {
+          "ref": "funem-yarid",
+          "note": "сам писатель называл болезнь катализатором написания автобиографии"
+        }
+      ],
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1908 года, во время поездки по России с чтением лекций, потерял сознание в поезде, следовавшем через Барановичи."
+      }
+    },
+    {
+      "key": "poverty-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Выкуп прав на книги друзьями, юбилей",
+      "long": "К 25-летию литературной деятельности друзья выкупили у издателей права на его книги, обеспечив больному писателю постоянный доход.",
+      "chapter": "pogromy-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1909, in celebration of his 25th Jubilee as a writer, his friend and colleague Jacob Dinezon spearheaded a committee"
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Интернирование и высылка из Германии",
+      "long": "Лечился с семьёй на курорте в Германии; с началом войны как российский подданный был интернирован и выслан в Данию.",
+      "chapter": "voina-i-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С началом Первой мировой войны в 1914 году, как российский подданный, был интернирован и выслан из Германии в нейтральную Данию."
+      }
+    },
+    {
+      "key": "relocation-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Нью-Йорк, разлука с сыном",
+      "long": "Семья поселилась сначала в Гарлеме, затем в Бронксе; больному сыну Мише отказали во въезде, он остался в Швейцарии с сестрой Эммой.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "voina-i-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Из Копенгагена писатель вместе с семьёй вернулся в 1914 году в Нью-Йорк."
+      }
+    },
+    {
+      "key": "loss-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына",
+      "long": "Здоровье ухудшилось ещё сильнее после смерти сына в 1915 году.",
+      "chapter": "voina-i-new-york",
+      "evidence": {
+        "source": "hewiki",
+        "quote": "ובריאותו הידרדרה עוד יותר לאחר מות בנו ב-1915"
+      }
+    },
+    {
+      "key": "death-1916",
+      "date": {
+        "from": "1916-05-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от туберкулёза в Нью-Йорке",
+      "long": "Умер в Нью-Йорке, работая над романом о Мотле; похоронен 15 мая на кладбище Маунт-Кармель в Куинсе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "motl",
+          "note": "по английской статье, умер за работой над романом о Мотле"
+        }
+      ],
+      "chapter": "voina-i-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался от туберкулёза 13 мая 1916 года в Нью-Йорке"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tevye-molochnik",
+      "title": "Тевье-молочник",
+      "qid": "Q11695618",
+      "written": {
+        "from": 1894,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "menahem-mendl",
+      "title": "Менахем-Мендл",
+      "qid": "Q7216637",
+      "written": {
+        "from": 1892,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "motl",
+      "title": "Мальчик Мотл",
+      "qid": "Q2910330",
+      "written": {
+        "from": 1907,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "stempenyu",
+      "title": "Стемпеню",
+      "qid": "Q7607366",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "wandering-stars",
+      "title": "Блуждающие звёзды",
+      "qid": "Q7967216",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "funem-yarid",
+      "title": "С ярмарки",
+      "written": {
+        "from": 1909,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "hard-to-be-a-jew",
+      "title": "Трудно быть евреем",
+      "qid": "Q48734561",
+      "written": {
+        "from": 1914,
+        "to": 1914
+      }
+    }
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "qid": "Q432945",
+  "name": "Джулия Куинн",
+  "born": "1970-01-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%B8%D0%BD%2C_%D0%94%D0%B6%D1%83%D0%BB%D0%B8%D1%8F",
+      "rev": 155036616
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Julia_Quinn",
+      "rev": 1380129996
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Детство, Гарвард, первые романы",
+      "from": 1970,
+      "to": 1999
+    },
+    {
+      "key": "bridgertons",
+      "title": "Бриджертоны и признание",
+      "from": 2000,
+      "to": 2009
+    },
+    {
+      "key": "hall-of-fame",
+      "title": "Зал славы",
+      "from": 2010,
+      "to": 2020
+    },
+    {
+      "key": "loss",
+      "title": "Утрата и сериал",
+      "from": 2021,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1970",
+      "date": {
+        "from": "1970-01-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вашингтоне",
+      "long": "Родилась в Вашингтоне как Джули Котлер в еврейской семье, одна из четырёх сестёр. Росла в Новой Англии и Калифорнии.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родилась 12 января 1970, Вашингтон"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая номинация на премию",
+      "long": "Роман «Все и луна» номинирован журналом Romantic Times как лучший исторический роман о Регентстве.",
+      "works": [
+        {
+          "ref": "everything-and-the-moon"
+        }
+      ],
+      "chapter": "early-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1997 — Роман «Все и луна» был номинирован на премию «Лучший исторический фильм о регентстве» по версии журнала Romantic Times"
+      }
+    },
+    {
+      "key": "other-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Выигрыш в телевикторине",
+      "long": "В 2001 году выиграла 79 000 долларов в телеигре The Weakest Link.",
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2001, Quinn won $79,000 on The Weakest Link."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание членов RWA",
+      "long": "Роман признан одной из десяти лучших книг года по версии членов RWA и стал финалистом премии RITA.",
+      "works": [
+        {
+          "ref": "romancing-mister-bridgerton"
+        }
+      ],
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2002 — «Роман с мистером Бриджертоном» признан одной из десяти лучших книг года по версии членов RWA"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профиль в журнале Time",
+      "long": "Профиль писательницы вышел в журнале Time — редкий случай для автора любовных романов.",
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2003, she was profiled in Time Magazine"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая премия RITA",
+      "long": "Получила премию RITA от Романтических писателей Америки за лучший исторический роман.",
+      "works": [
+        {
+          "ref": "on-the-way-to-the-wedding"
+        }
+      ],
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2007 — Премия писателей-романтиков Америки RITA Award за лучший исторический роман («По дороге на свадьбу»)."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия RITA",
+      "long": "Вторая премия RITA подряд.",
+      "works": [
+        {
+          "ref": "secret-diaries-of-miranda-cheever"
+        }
+      ],
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2008 — Премия писателей-романтиков Америки RITA Award за лучший исторический роман («Секретные дневники мисс Миранды Чивер»)."
+      }
+    },
+    {
+      "key": "career-2008-2",
+      "date": {
+        "from": "2008-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке бестселлеров NYT",
+      "long": "Роман «Мистер Кавендиш, я полагаю» занял первое место в списке бестселлеров New York Times.",
+      "works": [
+        {
+          "ref": "mr-cavendish-i-presume"
+        }
+      ],
+      "chapter": "bridgertons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mr. Cavendish, I Presume hitting number one in October 2008"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Третья премия RITA",
+      "long": "Третья премия RITA; в этот момент стала самым молодым членом RWA.",
+      "works": [
+        {
+          "ref": "what-happens-in-london"
+        }
+      ],
+      "chapter": "hall-of-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2010 — Премия Romance Writers of America RITA Award за лучший исторический роман («Что происходит в Лондоне»)."
+      }
+    },
+    {
+      "key": "career-2010-2",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Зал славы писателей-романтиков",
+      "long": "Введена в Зал славы Романтических писателей Америки — одна из 16 авторов.",
+      "chapter": "hall-of-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2010 — Имя Куин появилось в Зале славы писателей-романтиков Америки."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Курс по любовному роману в Йеле",
+      "long": "Вела первый курс по написанию любовного романа на летней писательской конференции Йеля.",
+      "chapter": "hall-of-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "2016 – Quinn taught the inaugural romance writing course at the Yale Summer Writers Conference"
+      }
+    },
+    {
+      "key": "loss-2021",
+      "date": {
+        "from": "2021-06-29",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сестры и отца",
+      "long": "Сестра Ариана и отец Стивен Льюис Котлер погибли в Кейсвиле (Юта), их сбил пьяный водитель.",
+      "place": {
+        "label": "Кейсвилл"
+      },
+      "chapter": "loss",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 29, 2021, Quinn's sister and father, Ariana Elise Cotler and Stephen Lewis Cotler, were killed by a drunk driver in Kaysville, Utah."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "splendid",
+      "title": "Великолепно",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "dancing-at-midnight",
+      "title": "Танцы в полночь",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "everything-and-the-moon",
+      "title": "Все и луна",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "bridgertons",
+      "title": "Бриджертоны",
+      "qid": "Q85748936",
+      "written": {
+        "from": 2000,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "romancing-mister-bridgerton",
+      "title": "Роман с мистером Бриджертоном",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "to-sir-phillip-with-love",
+      "title": "Сэру Филиппу, с любовью",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "on-the-way-to-the-wedding",
+      "title": "На пути к свадьбе",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "secret-diaries-of-miranda-cheever",
+      "title": "Секретные дневники мисс Миранды Чивер",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "mr-cavendish-i-presume",
+      "title": "Мистер Кавендиш, я полагаю",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "what-happens-in-london",
+      "title": "Что происходит в Лондоне",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

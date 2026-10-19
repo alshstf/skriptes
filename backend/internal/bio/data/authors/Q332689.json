@@ -1,0 +1,464 @@
+{
+  "qid": "Q332689",
+  "name": "Даниэль Пеннак",
+  "born": "1944-12-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D0%BD%D0%BD%D0%B0%D0%BA%2C_%D0%94%D0%B0%D0%BD%D0%B8%D1%8D%D0%BB%D1%8C",
+      "rev": 149654673
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Daniel_Pennac",
+      "rev": 1376322777
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Daniel_Pennac",
+      "rev": 240389959
+    }
+  ],
+  "chapters": [
+    {
+      "key": "garnizony-i-shkola",
+      "title": "Гарнизоны и школа",
+      "from": 1944,
+      "to": 1969
+    },
+    {
+      "key": "uchitel-v-suassone",
+      "title": "Учитель литературы",
+      "from": 1970,
+      "to": 1977
+    },
+    {
+      "key": "braziliya",
+      "title": "Бразилия и первые детские книги",
+      "from": 1978,
+      "to": 1984
+    },
+    {
+      "key": "malossen-i-belvil",
+      "title": "Малоссены и Бельвиль",
+      "from": 1985,
+      "to": 1994
+    },
+    {
+      "key": "pisatel",
+      "title": "Только литература",
+      "from": 1995,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1944",
+      "date": {
+        "from": "1944-12-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье военного в Касабланке",
+      "long": "Родился 1 декабря 1944 года в Касабланке (Марокко) в корсиканской семье военного; детство прошло в гарнизонах в Африке и Юго-Восточной Азии.",
+      "place": {
+        "label": "Касабланка"
+      },
+      "chapter": "garnizony-i-shkola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 1 декабря 1944, Касабланка, Марокко"
+      }
+    },
+    {
+      "key": "education-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Лицензиат по французскому языку и литературе",
+      "long": "В 1969 году, после плохой школьной успеваемости, получил лицензиат, дававший право преподавать в колледжах.",
+      "chapter": "garnizony-i-shkola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лицензиат Пеннак получил в 1969 году, сразу после студенческой революции."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы школьным учителем литературы",
+      "long": "В 1970 году стал учителем литературы в Суассоне; преподавал около 25 лет, затем в Нице и Париже.",
+      "place": {
+        "label": "Суассон"
+      },
+      "works": [
+        {
+          "ref": "chagrin-d-ecole"
+        },
+        {
+          "ref": "comme-un-roman"
+        }
+      ],
+      "chapter": "uchitel-v-suassone",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году стал школьным учителем литературы в Суассоне, недалеко от Парижа."
+      }
+    },
+    {
+      "key": "creation-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первая публикация под сокращённой фамилией",
+      "long": "Памфлет о военной службе вышел в 1973 году; фамилию Пеннакиони сократил до Пеннак, чтобы не навредить отцу-военному.",
+      "chapter": "uchitel-v-suassone",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il coupa son patronyme (Pennacchioni) en Pennac par peur d'embarrasser son père pour sa première publication en 1973 Le service militaire au service de qui ?"
+      }
+    },
+    {
+      "key": "relocation-1978",
+      "date": {
+        "from": "1978",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в Бразилии, первые детские книги",
+      "long": "В 1978–1980 годах жил в Бразилии; там начал писать для детей. Французская статья называет этот период источником романа о диктаторе.",
+      "place": {
+        "label": "Бразилия"
+      },
+      "works": [
+        {
+          "ref": "cabot-caboche",
+          "note": "книга отнесена к бразильскому периоду"
+        },
+        {
+          "ref": "l-oeil-du-loup",
+          "note": "книга отнесена к бразильскому периоду"
+        },
+        {
+          "ref": "le-dictateur-et-le-hamac",
+          "note": "бразильский период назван источником романа"
+        }
+      ],
+      "chapter": "braziliya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пеннак начал сочинять книги для детей во время пребывания в Бразилии c 1978 по 1980 год."
+      }
+    },
+    {
+      "key": "creation-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Вызов Пужи и первый роман о Малоссенах",
+      "long": "После возвращения из Бразилии Жан-Бернар Пужи предложил ему написать роман в духе «Чёрной серии»; в 1985 году вышел первый роман о Бенжамене Малоссене.",
+      "works": [
+        {
+          "ref": "au-bonheur-des-ogres",
+          "note": "роман написан в ответ на вызов Пужи"
+        }
+      ],
+      "chapter": "malossen-i-belvil",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Et à son retour, Jean-Bernard Pouy le met au défi d'écrire un roman dans cette veine : ce sera Au Bonheur des Ogres publié en 1985 à la Série noire."
+      }
+    },
+    {
+      "key": "other-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Мишеля Лебрена",
+      "long": "В 1987 году получил Michel-Lebrun prize.",
+      "chapter": "malossen-i-belvil",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Michel-Lebrun prize 1987"
+      }
+    },
+    {
+      "key": "other-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Mystère de la Critique",
+      "long": "В 1988 году получил Prix Mystère de la Critique.",
+      "chapter": "malossen-i-belvil",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Prix Mystère de la Critique 1988"
+      }
+    },
+    {
+      "key": "other-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Книжная премия «Inter»",
+      "long": "В 1990 году получил премию «Livre Inter» за роман «Маленькая торговка прозой».",
+      "works": [
+        {
+          "ref": "la-petite-marchande-de-prose"
+        }
+      ],
+      "chapter": "malossen-i-belvil",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990 Pennac won the \"Prix du Livre Inter\" for La petite marchande de prose."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из преподавания ради литературы",
+      "long": "В 1995 году оставил профессию учителя, чтобы полностью посвятить себя литературе.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1995, il arrête son métier de professeur pour se consacrer entièrement à la littérature."
+      }
+    },
+    {
+      "key": "other-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Член теневого кабинета на выборах",
+      "long": "Во время президентских выборов во Франции в 2002 году входил в теневой кабинет.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время президентских выборов во Франции в 2002 году был членом теневого кабинета."
+      }
+    },
+    {
+      "key": "loss-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть старшего брата Бернара",
+      "long": "В 2007 году умер старший брат Бернар Пеннакиони; позднее Пеннак написал о нём книгу.",
+      "works": [
+        {
+          "ref": "mon-frere",
+          "note": "книга посвящена отношениям с братом"
+        }
+      ],
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il raconte dans Mon frère, paru en 2018, ses relations fortes avec son frère aîné, Bernard Pennacchioni, disparu prématurément en 2007."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Ренодо за эссе о школе",
+      "long": "В 2007 году получил премию Ренодо за эссе о школьных трудностях; книга не входила в шорт-лист и была выдвинута на десятом туре.",
+      "works": [
+        {
+          "ref": "chagrin-d-ecole"
+        }
+      ],
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2007 году Пеннак получил литературную премию Ренодо за эссе «Школьная тоска» (Chagrin d'école)."
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Гран-при Metropolis bleu за творчество",
+      "long": "В 2008 году получил Grand Prix Metropolis bleu за всё творчество.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the \"Grand Prix Metropolis bleu\" in 2008 for his complete work."
+      }
+    },
+    {
+      "key": "other-2013",
+      "date": {
+        "from": "2013-03-23",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия «Сезар» за мультфильм по его сценарию",
+      "long": "23 марта 2013 года мультфильм по сценарию Пеннака получил премию «Сезар».",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 2013 года, мультфильм, снятый по сценарию Даниэля Пеннака на основе серии книг про Эрнеста и Селестину бельгийской писательницы и иллюстратора Габриэль Винсан, получил премию Сезар."
+      }
+    },
+    {
+      "key": "other-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Премия Рэймонда Чандлера",
+      "long": "В 2023 году получил Raymond Chandler Award.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023 Pennac was the recipient of the Raymond Chandler Award."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "cabot-caboche",
+      "title": "Собака Пёс",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "l-oeil-du-loup",
+      "title": "Глаз волка",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "au-bonheur-des-ogres",
+      "title": "Людоедское счастье",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "la-fee-carabine",
+      "title": "Фея Карабина",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "la-petite-marchande-de-prose",
+      "title": "Маленькая торговка прозой",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "comme-un-roman",
+      "title": "Как роман",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "monsieur-malaussene",
+      "title": "Господин Малоссен",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "aux-fruits-de-la-passion",
+      "title": "Плоды страсти",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "le-dictateur-et-le-hamac",
+      "title": "Диктатор и гамак",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "chagrin-d-ecole",
+      "title": "Школьная тоска",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "journal-d-un-corps",
+      "title": "Дневник тела",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "mon-frere",
+      "title": "Мой брат",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

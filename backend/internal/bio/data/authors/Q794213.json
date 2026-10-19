@@ -1,0 +1,197 @@
+{
+  "qid": "Q794213",
+  "name": "Нельсон ДеМиль",
+  "born": "1943-08-23",
+  "died": "2024-09-17",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nelson_DeMille",
+      "rev": 1374733262
+    }
+  ],
+  "chapters": [
+    {
+      "key": "elmont-childhood",
+      "title": "Элмонт и Хофстра",
+      "from": 1943,
+      "to": 1965
+    },
+    {
+      "key": "vietnam",
+      "title": "Армия и Вьетнам",
+      "from": 1966,
+      "to": 1969
+    },
+    {
+      "key": "early-writing",
+      "title": "Детективы и первый большой роман",
+      "from": 1970,
+      "to": 1987
+    },
+    {
+      "key": "bestsellers",
+      "title": "Признание и поздние годы",
+      "from": 1988,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "relocation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство в Элмонте на Лонг-Айленде",
+      "long": "В детстве семья переехала в Элмонт на Лонг-Айленде; там он вырос с братьями и учился в старшей школе Элмонт Мемориал, где играл в футбол и бегал.",
+      "place": {
+        "label": "Элмонт, Лонг-Айленд"
+      },
+      "chapter": "elmont-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Nelson moved as a child with his family to Elmont, Long Island, where he and his brothers were raised. He attended Elmont Memorial High School"
+      }
+    },
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-08-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился в Джамейке (Нью-Йорк) в семье Хурона ДеМилля, строителя, и Антонии (Молли) Панцера.",
+      "place": {
+        "label": "Джамейка, Нью-Йорк"
+      },
+      "chapter": "elmont-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "DeMille was born in Jamaica, NY on August 23, 1943"
+      }
+    },
+    {
+      "key": "war-1966",
+      "date": {
+        "from": "1966",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба взводным командиром во Вьетнаме",
+      "long": "После трёх лет в Хофстре пошёл в армию, окончил школу офицеров; в 1966–1969 годах лейтенант, командир пехотного взвода 1-й кавалерийской дивизии во Вьетнаме. Награждён Воздушной медалью, Бронзовой звездой и Вьетнамским крестом доблести.",
+      "place": {
+        "label": "Вьетнам"
+      },
+      "chapter": "vietnam",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was a first lieutenant in the United States Army (1966–1969) and saw action as an infantry platoon leader with the First Cavalry Division in Vietnam."
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый крупный роман после полицейских детективов",
+      "long": "Выход первого крупного романа после ранних детективов о нью-йоркской полиции.",
+      "works": [
+        {
+          "ref": "by-the-rivers-of-babylon"
+        }
+      ],
+      "chapter": "early-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first major novel was By the Rivers of Babylon, published in 1978"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «ThrillerMaster» года",
+      "long": "Международная ассоциация авторов триллеров назвала его мастером триллера года.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "who honored him as 2015 ThrillerMaster of the Year"
+      }
+    },
+    {
+      "key": "death-2024",
+      "date": {
+        "from": "2024-09-17",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака пищевода",
+      "long": "Умер от рака пищевода в больнице NYU Langone на Лонг-Айленде в возрасте 81 года.",
+      "place": {
+        "label": "Минеола"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "DeMille died of esophageal cancer at NYU Langone Hospital – Long Island on September 17, 2024, at the age of 81."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "by-the-rivers-of-babylon",
+      "title": "На реках Вавилонских",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "the-charm-school",
+      "title": "Школа обаяния",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "the-generals-daughter",
+      "title": "Дочь генерала",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "plum-island",
+      "title": "Остров Плам",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "the-gold-coast",
+      "title": "Золотой берег",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    }
+  ]
+}

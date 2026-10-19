@@ -1,0 +1,485 @@
+{
+  "qid": "Q131333",
+  "name": "Джордж Элиот",
+  "born": "1819-11-22",
+  "died": "1880-12-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%BE%D1%80%D0%B4%D0%B6_%D0%AD%D0%BB%D0%B8%D0%BE%D1%82",
+      "rev": 152020273
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/George_Eliot",
+      "rev": 1380682008
+    }
+  ],
+  "chapters": [
+    {
+      "key": "warwickshire",
+      "title": "Уорикшир и пансионы",
+      "from": 1819,
+      "to": 1840
+    },
+    {
+      "key": "foleshill",
+      "title": "Фоулсхилл, сомнения, переводы",
+      "from": 1841,
+      "to": 1849
+    },
+    {
+      "key": "london-review",
+      "title": "Лондон и «Вестминстер ривью»",
+      "from": 1850,
+      "to": 1853
+    },
+    {
+      "key": "lewes-novels",
+      "title": "Льюис, псевдоним, романы",
+      "from": 1854,
+      "to": 1877
+    },
+    {
+      "key": "last-years",
+      "title": "Вдовство и второй брак",
+      "from": 1878,
+      "to": 1880
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1819",
+      "date": {
+        "from": "1819-11-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в имении Арбери",
+      "long": "Мэри Энн Эванс родилась в имении Арбери в Уорикшире, третьим ребёнком в семье управляющего имением Роберта Эванса.",
+      "place": {
+        "label": "Арбери, Уорикшир"
+      },
+      "chapter": "warwickshire",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 ноября 1819, имение Арбери в графстве Уорикшир — 22 декабря 1880, Лондон"
+      }
+    },
+    {
+      "key": "loss-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Кристиана Эванс. Шестнадцатилетняя Мэри Энн вернулась домой вести хозяйство.",
+      "chapter": "warwickshire",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1836 году её мать умерла, и Эванс (ей было 16 лет) вернулась домой, чтобы работать в сфере экономики"
+      }
+    },
+    {
+      "key": "relocation-1841",
+      "date": {
+        "from": "1841",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Фоулсхилл, круг свободомыслящих",
+      "long": "После женитьбы брата Исаака она с отцом переехала близ Ковентри; в кругу Брэев познакомилась с либеральными и агностическими теологиями, Штраусом и Фейербахом.",
+      "place": {
+        "label": "Фоулсхилл, Ковентри"
+      },
+      "chapter": "foleshill",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1841 году… её брат Исаак женился и перенял семейный дом, поэтому она и её отец переехали в Фоулсхилл"
+      }
+    },
+    {
+      "key": "career-1846",
+      "date": {
+        "from": "1846",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Анонимный перевод Штрауса",
+      "long": "Анонимно опубликовала английский перевод «Жизни Иисуса» Д. Ф. Штрауса.",
+      "chapter": "foleshill",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1846 году Мэри Энн анонимно опубликовала перевод «Жизни Иисуса» Д. Ф. Штрауса."
+      }
+    },
+    {
+      "key": "loss-1849",
+      "date": {
+        "from": "1849",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Роберт Эванс; после его смерти она перешла к самостоятельной жизни и литературной работе.",
+      "chapter": "foleshill",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца (1849) не без колебаний приняла должность помощника редактора в «Вестминстер ривью», а в 1850 году переехала в Лондон."
+      }
+    },
+    {
+      "key": "relocation-1850",
+      "date": {
+        "from": "1850",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лондон",
+      "long": "Поселилась в Лондоне у издателя Джона Чепмена с намерением стать писательницей.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-review",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца (1849) не без колебаний приняла должность помощника редактора в «Вестминстер ривью», а в 1850 году переехала в Лондон."
+      }
+    },
+    {
+      "key": "education-1850",
+      "date": {
+        "from": "1850",
+        "to": "1851",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Занятия математикой в Бедфорд-колледже",
+      "long": "В 1850–1851 годах посещала занятия по математике в Ladies College на Бедфорд-сквер, позднее Бедфорд-колледж.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-review",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1850–51, Evans attended classes in mathematics at the Ladies College in Bedford Square"
+      }
+    },
+    {
+      "key": "career-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Помощник редактора «Вестминстер ривью»",
+      "long": "Стала помощником редактора журнала Чепмена; фактически делала основную работу по выпуску номеров и писала статьи до 1854 года.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-review",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Evans became its assistant editor in 1851 after joining just a year earlier."
+      }
+    },
+    {
+      "key": "love-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Джорджем Генри Льюисом",
+      "long": "Философ и критик Льюис познакомился с ней в 1851 году; к 1854 году они решили жить вместе.",
+      "chapter": "london-review",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The philosopher and critic George Henry Lewes (1817–1878) met Evans in 1851, and by 1854 they had decided to live together."
+      }
+    },
+    {
+      "key": "love-1854",
+      "date": {
+        "from": "1854",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Гражданский брак с Льюисом",
+      "long": "Начался союз с женатым Льюисом, которого она называла мужем; отказ скрывать отношения вызвал широкое осуждение.",
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1854 вышел её перевод «Сущности христианства» Людвига Фейербаха. Тогда же начался её гражданский брак с Дж. Г. Льюисом"
+      }
+    },
+    {
+      "key": "other-1854",
+      "date": {
+        "from": "1854-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка с Льюисом в Веймар и Берлин",
+      "long": "Поездка в Германию ради исследований стала для пары свадебным путешествием.",
+      "place": {
+        "label": "Веймар, Берлин"
+      },
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1854, Lewes and Evans travelled to Weimar and Berlin together for the purpose of research."
+      }
+    },
+    {
+      "key": "creation-1856",
+      "date": {
+        "from": "1856-09",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Обращение к художественной прозе",
+      "long": "Закончив перевод «Этики» Спинозы, в сентябре 1856 года начала писать художественную прозу.",
+      "works": [
+        {
+          "ref": "scenes-of-clerical-life",
+          "note": "первая художественная работа после обращения к прозе"
+        }
+      ],
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мэри Энн закончила перевод «Этики» Спинозы и в сентябре 1856 обратилась к художественной прозе."
+      }
+    },
+    {
+      "key": "career-1857",
+      "date": {
+        "from": "1857",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют под псевдонимом Джордж Элиот",
+      "long": "Цикл повестей вышел в «Блэквудз мэгэзин» под мужским псевдонимом, чтобы к текстам отнеслись серьёзно и чтобы защитить личную жизнь.",
+      "works": [
+        {
+          "ref": "scenes-of-clerical-life"
+        }
+      ],
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "появившийся в журнале «Блэквудз мэгэзин» в 1857 году под общим заголовком «Сцены из жизни духовенства»"
+      }
+    },
+    {
+      "key": "career-1859",
+      "date": {
+        "from": "1859",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание в первом ряду викторианских романистов",
+      "long": "Первый роман имел мгновенный успех и вызвал интерес к личности автора, после чего Элиот признала авторство псевдонима.",
+      "works": [
+        {
+          "ref": "adam-bede"
+        }
+      ],
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вышедший в 1859 году роман «Адам Бид», необыкновенно популярный и, возможно, лучший пасторальный роман в английской литературе, вывел Элиот в первый ряд викторианских романистов."
+      }
+    },
+    {
+      "key": "relocation-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд с Льюисом в Уитли",
+      "long": "После выхода последнего романа Элиот и Льюис переехали в Уитли, графство Суррей.",
+      "place": {
+        "label": "Уитли, Суррей"
+      },
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her last novel was Daniel Deronda, published in 1876, after which she and Lewes moved to Witley, Surrey."
+      }
+    },
+    {
+      "key": "career-1877",
+      "date": {
+        "from": "1877",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Принятие в обществе, знакомство с принцессой Луизой",
+      "long": "Пара, долго не принимаемая в светском обществе, была представлена принцессе Луизе, дочери королевы Виктории.",
+      "chapter": "lewes-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Acceptance was finally confirmed in 1877 when they were introduced to Princess Louise, the daughter of Queen Victoria."
+      }
+    },
+    {
+      "key": "loss-1878",
+      "date": {
+        "from": "1878-11-30",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Джорджа Генри Льюиса",
+      "long": "Умер Льюис, с которым она прожила почти 25 лет. Следующие полгода Элиот готовила к печати его последнюю работу; опорой ей стал друг Джон Кросс.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By this time Lewes's health was failing, and he died two years later, on 30 November 1878."
+      }
+    },
+    {
+      "key": "love-1880",
+      "date": {
+        "from": "1880-05",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джоном Уолтером Кроссом",
+      "long": "Вышла замуж за друга семьи Джона Кросса, моложе её на двадцать лет. Во время свадебного путешествия в Венеции Кросс выпрыгнул с балкона в канал, но выжил.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1880 года она вышла замуж за старинного друга семьи Д. У. Кросса."
+      }
+    },
+    {
+      "key": "death-1880",
+      "date": {
+        "from": "1880-12-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Заболев простудой в новом доме в Челси, на фоне обострения болезни почек умерла. Похоронена на Хайгейтском кладбище.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "и 22 декабря 1880 года она умерла."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "scenes-of-clerical-life",
+      "title": "Сцены из жизни духовенства",
+      "written": {
+        "from": 1856,
+        "to": 1857
+      }
+    },
+    {
+      "ref": "adam-bede",
+      "title": "Адам Бид",
+      "qid": "Q2611046",
+      "written": {
+        "from": 1859,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "mill-on-the-floss",
+      "title": "Мельница на Флоссе",
+      "qid": "Q1215018",
+      "written": {
+        "from": 1859,
+        "to": 1860
+      }
+    },
+    {
+      "ref": "silas-marner",
+      "title": "Сайлес Марнер",
+      "qid": "Q638327",
+      "written": {
+        "from": 1861,
+        "to": 1861
+      }
+    },
+    {
+      "ref": "romola",
+      "title": "Ромола",
+      "qid": "Q7363279",
+      "written": {
+        "from": 1862,
+        "to": 1863
+      }
+    },
+    {
+      "ref": "felix-holt",
+      "title": "Феликс Холт, радикал",
+      "written": {
+        "from": 1866,
+        "to": 1866
+      }
+    },
+    {
+      "ref": "spanish-gypsy",
+      "title": "Испанская цыганка",
+      "written": {
+        "from": 1868,
+        "to": 1868
+      }
+    },
+    {
+      "ref": "middlemarch",
+      "title": "Мидлмарч",
+      "qid": "Q313129",
+      "written": {
+        "from": 1871,
+        "to": 1872
+      }
+    },
+    {
+      "ref": "daniel-deronda",
+      "title": "Даниэль Деронда",
+      "qid": "Q552238",
+      "written": {
+        "from": 1876,
+        "to": 1876
+      }
+    },
+    {
+      "ref": "theophrastus-such",
+      "title": "Впечатления Теофраста Такого-то",
+      "written": {
+        "from": 1879,
+        "to": 1879
+      }
+    }
+  ]
+}

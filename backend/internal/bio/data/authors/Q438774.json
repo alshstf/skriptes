@@ -1,0 +1,490 @@
+{
+  "qid": "Q438774",
+  "name": "Альфред Шклярский",
+  "born": "1912-01-21",
+  "died": "1992-04-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%BA%D0%BB%D1%8F%D1%80%D1%81%D0%BA%D0%B8%D0%B9%2C_%D0%90%D0%BB%D1%8C%D1%84%D1%80%D0%B5%D0%B4",
+      "rev": 151847155
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alfred_Szklarski",
+      "rev": 1375969459
+    },
+    {
+      "id": "plwiki",
+      "url": "https://pl.wikipedia.org/wiki/Alfred_Szklarski",
+      "rev": 79612566
+    }
+  ],
+  "chapters": [
+    {
+      "key": "chicago-wloclawek",
+      "title": "Чикаго и Влоцлавек",
+      "from": 1912,
+      "to": 1931
+    },
+    {
+      "key": "warsaw-occupation",
+      "title": "Варшава, оккупация, восстание",
+      "from": 1932,
+      "to": 1945
+    },
+    {
+      "key": "trial-prison",
+      "title": "Процесс и тюрьма",
+      "from": 1946,
+      "to": 1953
+    },
+    {
+      "key": "katowice-tomek",
+      "title": "Катовице и Томек",
+      "from": 1954,
+      "to": 1992
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-01-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго в семье политэмигранта",
+      "long": "Родился в Чикаго в семье Анджея Шклярского, деятеля Боевой организации ППС и журналиста, и Марии, урождённой Маркосик.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-wloclawek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 21 января 1912 года в Чикаго в семье политэмигранта"
+      }
+    },
+    {
+      "key": "relocation-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из США в Польшу",
+      "long": "В 1926 году вместе с отцом переехал из США в Польшу; жил во Влоцлавке.",
+      "place": {
+        "label": "Влоцлавек"
+      },
+      "chapter": "chicago-wloclawek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1926 году вместе с отцом переехал из Соединённых Штатов в Польшу."
+      }
+    },
+    {
+      "key": "education-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание гимназии во Влоцлавке",
+      "long": "Окончил гимназию во Влоцлавке в 1931 году.",
+      "place": {
+        "label": "Влоцлавек"
+      },
+      "chapter": "chicago-wloclawek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сначала жил с родителями во Влоцлавке, где в 1931 году и окончил гимназию."
+      }
+    },
+    {
+      "key": "loss-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, переезд в Варшаву",
+      "long": "После смерти матери в 1932 году переехал в Варшаву.",
+      "place": {
+        "label": "Влоцлавек"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Po śmierci matki w 1932 przeniósł się do Warszawy"
+      }
+    },
+    {
+      "key": "education-1932",
+      "date": {
+        "from": "1932",
+        "to": "1938",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Школе политических наук",
+      "long": "В 1932–1938 годах учился в Варшаве на консульско-дипломатическом отделении Школы политических наук.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1932 по 1938 год учился в Варшаве в Академии политических наук при Департаменте консульской и дипломатической службы"
+      }
+    },
+    {
+      "key": "love-1939",
+      "date": {
+        "from": "1939-10-01",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Кристине",
+      "long": "Женился на Кристине, с которой познакомился во время учёбы; в браке родились дочь Божена и сын Анджей.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "którą poślubił 1 października 1939 w Warszawie"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в «Новом варшавском курьере» при оккупации",
+      "long": "В декабре 1939 года стал журналистом издания, выходившего под немецким контролем; позже его имя попало в списки коллаборантов в подпольной прессе.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Pod okupacją niemiecką w grudniu 1939 podjął pracę dziennikarza w gadzinowym „Nowym Kurierze Warszawskim”"
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Участие в Варшавском восстании в рядах АК",
+      "long": "С августа 1944 года солдатом Армии Крайовой сражался в Варшавском восстании в батальоне «Piorun» в Средместье.",
+      "place": {
+        "label": "Варшава"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Od sierpnia 1944 jako żołnierz Armii Krajowej pod pseudonimem Szklarz walczył w powstaniu warszawskim"
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Катовице",
+      "long": "После нескольких месяцев в Кракове с февраля 1945 года жил в Катовице до конца жизни.",
+      "place": {
+        "label": "Катовице"
+      },
+      "chapter": "warsaw-occupation",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Przez kilka miesięcy mieszkał w Krakowie, a od lutego 1945 aż do śmierci w Katowicach"
+      }
+    },
+    {
+      "key": "persecution-1948",
+      "date": {
+        "from": "1948-07",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Явка в прокуратуру и арест",
+      "long": "В июле 1948 года явился в прокуратуру в связи со следствием против авторов коллаборационистской прессы и был взят под стражу.",
+      "chapter": "trial-prison",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "W lipcu 1948 zgłosił się do prokuratury w związku ze śledztwem przeciw autorom prasy gadzinowej i został osadzony w areszcie."
+      }
+    },
+    {
+      "key": "persecution-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Приговор к восьми годам тюрьмы",
+      "long": "В 1949 году осуждён на 8 лет тюрьмы за публикации в газете при немецкой оккупации.",
+      "chapter": "trial-prison",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году был приговорён к 8 годам тюремного заключения"
+      }
+    },
+    {
+      "key": "persecution-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Изъятие книг Броновского из библиотек, цензура",
+      "long": "В 1951 году произведения под псевдонимом Альфред Броновский были изъяты из польских библиотек и подвергнуты цензуре.",
+      "chapter": "trial-prison",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "W 1951 jego utwory pisane pod pseudonimem Alfred Bronowski zostały wycofane z polskich bibliotek oraz objęte cenzurą."
+      }
+    },
+    {
+      "key": "persecution-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Освобождение по амнистии",
+      "long": "Освобождён в 1953 году по амнистии 1952 года.",
+      "chapter": "trial-prison",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "Został zwolniony w 1953 na mocy amnestii z 1952."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "to": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор издательства «Śląsk» в Катовице",
+      "long": "В 1954–1977 годах работал редактором в катовицком издательстве «Śląsk», где выходили романы о Томеке Вильмовском.",
+      "place": {
+        "label": "Катовице"
+      },
+      "chapter": "katowice-tomek",
+      "evidence": {
+        "source": "plwiki",
+        "quote": "a w latach 1954–1977 jako redaktor w katowickim Wydawnictwie „Śląsk”"
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Награда «Орлиное перо»",
+      "long": "В 1968 году получил премию «Orle Pióro».",
+      "chapter": "katowice-tomek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Orle Pióro» (1968), «Орден Улыбки» (1971)"
+      }
+    },
+    {
+      "key": "other-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Орден Улыбки",
+      "long": "В 1971 году награждён Орденом Улыбки — единственной наградой, присуждаемой детьми.",
+      "chapter": "katowice-tomek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Орден Улыбки» (1971) — единственная награда, присуждаемая детьми"
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Трилогия, написанная совместно с женой",
+      "long": "В 1974–1979 годах вместе с женой Кристиной написал трилогию об индейцах санти из дакотов.",
+      "place": {
+        "label": "Катовице"
+      },
+      "works": [
+        {
+          "ref": "orle-pioro",
+          "note": "написана совместно с женой Кристиной Шклярской"
+        },
+        {
+          "ref": "przeklenstwo-zlota",
+          "note": "написана совместно с женой Кристиной Шклярской"
+        },
+        {
+          "ref": "ostatnia-walka-dakotow",
+          "note": "написана совместно с женой Кристиной Шклярской"
+        }
+      ],
+      "chapter": "katowice-tomek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "трилогия «Золото черных гор» (1974—1979)"
+      }
+    },
+    {
+      "key": "death-1992",
+      "date": {
+        "from": "1992-04-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Катовице",
+      "long": "Умер 9 апреля 1992 года в Катовице.",
+      "place": {
+        "label": "Катовице"
+      },
+      "chapter": "katowice-tomek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писатель умер 9 апреля 1992 года в Катовице."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "tomek-w-tarapatach",
+      "title": "Tomek w tarapatach",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "tomek-w-krainie-kangurow",
+      "title": "Томек в стране кенгуру",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "tomek-na-czarnym-ladzie",
+      "title": "Томек на чёрном континенте",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "tomek-na-wojennej-sciezce",
+      "title": "Томек на тропе войны",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "tomek-na-tropach-yeti",
+      "title": "Томек на следах Йети",
+      "written": {
+        "from": 1961,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "tajemnicza-wyprawa-tomka",
+      "title": "Таинственная экспедиция Томека",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "tomek-wsrod-lowcow-glow",
+      "title": "Томек среди охотников за головами",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "tomek-u-zrodel-amazonki",
+      "title": "Томек у истоков Амазонки",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "tomek-w-gran-chaco",
+      "title": "Томек в Гран-Чако",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "orle-pioro",
+      "title": "Орлиные перья (Золото Чёрных гор, т. 1)",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "przeklenstwo-zlota",
+      "title": "Проклятие золота (Золото Чёрных гор, т. 2)",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "ostatnia-walka-dakotow",
+      "title": "Последний бой дакотов (Золото Чёрных гор, т. 3)",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    }
+  ]
+}

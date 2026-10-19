@@ -1,0 +1,523 @@
+{
+  "qid": "Q257261",
+  "name": "Мадлен Л’Энгл",
+  "born": "1918-11-29",
+  "died": "2007-09-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%E2%80%99%D0%AD%D0%BD%D0%B3%D0%BB%2C_%D0%9C%D0%B0%D0%B4%D0%BB%D0%B5%D0%BD",
+      "rev": 149588289
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Madeleine_L%27Engle",
+      "rev": 1375051980
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-boarding-schools",
+      "title": "Детство в пансионах",
+      "from": 1918,
+      "to": 1936
+    },
+    {
+      "key": "college-new-york-marriage",
+      "title": "Колледж, Нью-Йорк, замужество",
+      "from": 1937,
+      "to": 1951
+    },
+    {
+      "key": "connecticut-farm",
+      "title": "Ферма в Коннектикуте",
+      "from": 1952,
+      "to": 1958
+    },
+    {
+      "key": "return-to-new-york",
+      "title": "Возвращение в Нью-Йорк и признание",
+      "from": 1959,
+      "to": 1985
+    },
+    {
+      "key": "widowhood-last-years",
+      "title": "Вдовство и последние годы",
+      "from": 1986,
+      "to": 2007
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1918",
+      "date": {
+        "from": "1918-11-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Родилась в семье писателя и иностранного корреспондента Чарльза Уодсворта Кэмпа и пианистки Мадлен Холл Барнетт.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "childhood-boarding-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Madeleine L'Engle Camp was born in New York City on November 29, 1918."
+      }
+    },
+    {
+      "key": "relocation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи к больной бабушке во Флориду",
+      "long": "Бабушка заболела, и семья переехала поближе к Джэксонвиллю; Мадлен училась в пансионе в Чарлстоне.",
+      "place": {
+        "label": "Джэксонвилл"
+      },
+      "chapter": "childhood-boarding-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1933, L'Engle's grandmother fell ill, so the Camps moved near Jacksonville, Florida, to be close to her."
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936-10",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец умер в октябре 1936 года; Мадлен приехала домой слишком поздно, чтобы проститься с ним.",
+      "chapter": "childhood-boarding-schools",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When her father died in October 1936, L'Engle arrived home too late to say goodbye."
+      }
+    },
+    {
+      "key": "education-1937",
+      "date": {
+        "from": "1937",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в колледже Смит",
+      "long": "Училась в колледже Смит с 1937 по 1941 год, окончила с отличием.",
+      "chapter": "college-new-york-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "L'Engle attended Smith College from 1937 to 1941 and graduated cum laude."
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946-01-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с актёром Хью Франклином",
+      "long": "Познакомилась с Хью Франклином во время постановки «Вишнёвого сада» Чехова; обвенчались 26 января 1946 года.",
+      "chapter": "college-new-york-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she married him on January 26, 1946."
+      }
+    },
+    {
+      "key": "child-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Жозефины",
+      "long": "Первая дочь супругов, Жозефина, родилась в 1947 году.",
+      "chapter": "college-new-york-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple's first daughter, Josephine, was born in 1947."
+      }
+    },
+    {
+      "key": "relocation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд на ферму Кросswicks в Коннектикуте",
+      "long": "Семья поселилась в старом фермерском доме в Гошене и, чтобы возместить потерянный актёрский заработок мужа, открыла небольшой универсальный магазин.",
+      "place": {
+        "label": "Гошен"
+      },
+      "chapter": "connecticut-farm",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The family moved to a 200-year-old farmhouse called Crosswicks in the small town of Goshen, Connecticut, in 1952. To replace Franklin's lost acting income, they purchased and operated a small general store."
+      }
+    },
+    {
+      "key": "child-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Биона",
+      "long": "В том же 1952 году у Франклинов родился сын Бион.",
+      "place": {
+        "label": "Гошен"
+      },
+      "chapter": "connecticut-farm",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in the small town of Goshen, Connecticut, in 1952…Their son Bion was born that same year."
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Решение оставить литературу после очередного отказа",
+      "long": "В сороковой день рождения получила очередной отказ издателя и решила бросить писать, но вскоре поняла, что не может этого сделать.",
+      "chapter": "connecticut-farm",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she later said that she had decided to give up writing on her 40th birthday (November 1958) when she received yet another rejection notice."
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Десятинедельный поход, давший замысел романа",
+      "long": "Перед переездом в Нью-Йорк семья отправилась в десятинедельный поход с палатками, во время которого возник замысел самой известной книги писательницы.",
+      "works": [
+        {
+          "ref": "a-wrinkle-in-time",
+          "note": "идея романа возникла в этом походе"
+        }
+      ],
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959 году Мадлен с семьей решили переехать обратно в Нью-Йорк…Перед переездом семья отправилась в десятинедельный поход с палатками, во время которого писательница придумала идею своей самой популярной книги"
+      }
+    },
+    {
+      "key": "relocation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение семьи в Нью-Йорк",
+      "long": "Семья вернулась в Нью-Йорк, чтобы муж мог продолжить актёрскую карьеру; в 1960 году поселились на Вест-Энд-авеню.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The family returned to New York City in 1959 so that Franklin could resume his acting career."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Публикация после более чем тридцати отказов",
+      "long": "Роман был отвергнут более тридцати раз, пока рукопись не попала к Джону Фаррару; опубликован издательством Farrar, Straus and Giroux.",
+      "works": [
+        {
+          "ref": "a-wrinkle-in-time"
+        }
+      ],
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was rejected more than thirty times before she handed it to John C. Farrar; it was finally published by Farrar, Straus and Giroux in 1962."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Медаль Ньюбери",
+      "long": "Получила медаль Джона Ньюбери за детскую книгу 1962 года.",
+      "works": [
+        {
+          "ref": "a-wrinkle-in-time"
+        }
+      ],
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: медаль Джона Ньюбери 1963-01-01"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в библиотеке собора Иоанна Богослова",
+      "long": "Начала работать добровольцем в библиотеке собора Св. Иоанна Богослова в Нью-Йорке, позже долго преподавала там литературу.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1965 году она работала добровольцем в библиотеке Собора Иоанна Богослова там же в Нью-Йорке."
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная книжная премия",
+      "long": "Получила Национальную книжную премию США.",
+      "chapter": "return-to-new-york",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная книжная премия 1980-01-01"
+      }
+    },
+    {
+      "key": "loss-1986",
+      "date": {
+        "from": "1986-09-26",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Хью Франклина",
+      "long": "Муж умер от рака; воспоминания о совместной жизни легли в основу мемуарной книги о браке.",
+      "works": [
+        {
+          "ref": "two-part-invention",
+          "note": "мемуары о браке завершены после смерти мужа"
+        }
+      ],
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Franklin died of cancer on September 26, 1986."
+      }
+    },
+    {
+      "key": "illness-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая автомобильная авария",
+      "long": "Получила серьёзные травмы в аварии, но к 1992 году оправилась настолько, что побывала в Антарктиде.",
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "L'Engle was seriously injured in an automobile accident in 1991, but recovered well enough to visit Antarctica in 1992."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Маргарет Эдвардс",
+      "long": "Получила премию Маргарет Эдвардс Американской библиотечной ассоциации.",
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She also received the Margaret A. Edwards Award from the American Library Association in 1998."
+      }
+    },
+    {
+      "key": "loss-1999",
+      "date": {
+        "from": "1999-12-17",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Биона",
+      "long": "Сын Бион умер в возрасте 47 лет.",
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "L'Engle's son, Bion Franklin, died on December 17, 1999, from the effects of prolonged alcoholism."
+      }
+    },
+    {
+      "key": "illness-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Кровоизлияние в мозг",
+      "long": "После кровоизлияния обострился остеопороз; писательница больше не могла путешествовать и преподавать.",
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "остеопороза, который обострился после кровоизлияния в мозг, перенесённого ею в 2002 году"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная гуманитарная медаль США",
+      "long": "Награждена Национальной гуманитарной медалью США.",
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Национальная гуманитарная медаль США 2004-01-01"
+      }
+    },
+    {
+      "key": "death-2007",
+      "date": {
+        "from": "2007-09-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Литчфилде",
+      "long": "Умерла в доме престарелых близ своего дома в Литчфилде; похоронена в соборе Иоанна Богослова в Нью-Йорке.",
+      "place": {
+        "label": "Литчфилд"
+      },
+      "chapter": "widowhood-last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "L'Engle died of natural causes at Rose Haven, a nursing facility close to her home in Litchfield, Connecticut, on September 6, 2007"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-small-rain",
+      "title": "Дождик",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "ilsa",
+      "title": "Ильза",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "and-both-were-young",
+      "title": "И оба были молоды",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "camilla-dickinson",
+      "title": "Камилла Дикинсон",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "a-winters-love",
+      "title": "Зимняя любовь",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "meet-the-austins",
+      "title": "Знакомьтесь: Остины",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "a-wrinkle-in-time",
+      "title": "Излом времени",
+      "qid": "Q2268391",
+      "written": {
+        "from": 1959,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "summer-of-the-great-grandmother",
+      "title": "Лето прабабушки",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "two-part-invention",
+      "title": "Двухголосная инвенция",
+      "written": {
+        "from": 1986,
+        "to": 1988
+      }
+    }
+  ]
+}

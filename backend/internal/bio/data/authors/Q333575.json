@@ -1,0 +1,628 @@
+{
+  "qid": "Q333575",
+  "name": "Чарльз Перси Сноу",
+  "born": "1905-10-15",
+  "died": "1980-07-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BD%D0%BE%D1%83%2C_%D0%A7%D0%B0%D1%80%D0%BB%D1%8C%D0%B7",
+      "rev": 154920998
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/C._P._Snow",
+      "rev": 1380519219
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leicester-cambridge",
+      "title": "Лестер и Кембридж",
+      "from": 1905,
+      "to": 1939
+    },
+    {
+      "key": "war-service",
+      "title": "Война и государственная служба",
+      "from": 1940,
+      "to": 1956
+    },
+    {
+      "key": "two-cultures",
+      "title": "Рыцарь и «Две культуры»",
+      "from": 1957,
+      "to": 1963
+    },
+    {
+      "key": "peer-and-late",
+      "title": "Пэр, министерство и поздние годы",
+      "from": 1964,
+      "to": 1980
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1905",
+      "date": {
+        "from": "1905-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лестере",
+      "long": "Родился в Лестере в семье церковного органиста и хормейстера Уильяма Сноу, второй из четырёх сыновей.",
+      "place": {
+        "label": "Лестер"
+      },
+      "chapter": "leicester-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Charles Percy Snow, Baron Snow (15 October 1905 – 1 July 1980)"
+      }
+    },
+    {
+      "key": "education-1925",
+      "date": {
+        "from": "1925",
+        "to": "1928",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Лестере, степень по химии",
+      "long": "С 1925 года учился на внешней программе Лондонского университета в Лестере; в 1927 году окончил с отличием по химии, в 1928 получил магистерскую степень.",
+      "place": {
+        "label": "Лестер"
+      },
+      "chapter": "leicester-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1925 he began a University of London external degree in science at University College, Leicester, graduating with a first in chemistry in 1927 and an MSc the following year."
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендиат Колледжа Христа",
+      "long": "В 1930 году стал членом совета (Fellow) Колледжа Христа в Кембридже.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "leicester-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1930 he became a Fellow of Christ's College."
+      }
+    },
+    {
+      "key": "career-1930-2",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ от научных исследований",
+      "long": "После того как статья в Nature о синтезе витамина А оказалась ошибочной, Сноу отошёл от научной работы.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "leicester-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1930 he became a Fellow of Christ's College. After a Nature paper on a new method of synthesising Vitamin A turned out to be incorrect, he withdrew from further scientific research."
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "to": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Технический директор министерства труда",
+      "long": "В 1940–1944 годах технический директор министерства труда; занимался подготовкой специалистов по радарам и подбором британских учёных для Манхэттенского проекта.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "as technical director of the Ministry of Labour from 1940 to 1944"
+      }
+    },
+    {
+      "key": "other-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Орден Британской империи (CBE)",
+      "long": "В 1943 году удостоен звания командора ордена Британской империи.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году был удостоен звания командора ордена Британской Империи (CBE)."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Директор по научному персоналу English Electric",
+      "long": "Назначен директором по научному персоналу компании English Electric.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году был назначен директором по научному персоналу компании English Electric"
+      }
+    },
+    {
+      "key": "career-1945-2",
+      "date": {
+        "from": "1945",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Комиссар гражданской службы",
+      "long": "В 1945–1960 годах комиссар гражданской службы Великобритании.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1945—1960 — комиссаром гражданской службы"
+      }
+    },
+    {
+      "key": "love-1950",
+      "date": {
+        "from": "1950-07-14",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Памелой Хансфорд Джонсон",
+      "long": "14 июля 1950 года женился на писательнице Памеле Хансфорд Джонсон.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Памела Джонсон 1950-07-14"
+      }
+    },
+    {
+      "key": "child-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Филипа",
+      "long": "В браке с Памелой Джонсон родился сын Филип.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1950 года был женат на писательнице Памеле Хенсфорд Джонсон и имел сына Филипа (род. в 1952)."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Джеймса Тейта Блэка",
+      "long": "Два романа цикла «Чужаки и братья» совместно удостоены мемориальной премии Джеймса Тейта Блэка.",
+      "works": [
+        {
+          "ref": "the-masters"
+        },
+        {
+          "ref": "the-new-men"
+        }
+      ],
+      "chapter": "war-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Masters and The New Men were jointly awarded the James Tait Black Memorial Prize in 1954."
+      }
+    },
+    {
+      "key": "other-1957",
+      "date": {
+        "from": "1957-02-12",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Посвящение в рыцари",
+      "long": "12 февраля 1957 года королева Елизавета II посвятила Сноу в рыцари.",
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "12 февраля 1957 года за заслуги в драматургии был посвящен в рыцари-бакалавры."
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959-05-07",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Ридовская лекция о науке и гуманитариях",
+      "long": "7 мая 1959 года прочёл Ридовскую лекцию о разрыве между естественными науками и гуманитарной культурой; она вызвала широкую полемику.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "works": [
+        {
+          "ref": "the-two-cultures"
+        }
+      ],
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 7 May 1959, Snow delivered a Rede Lecture called The Two Cultures, which provoked \"widespread and heated debate\"."
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Лекции Годкина в Гарварде",
+      "long": "В 1960 году прочёл Годкинские лекции о столкновении Тизарда и Линдемана, позже изданные как книга.",
+      "place": {
+        "label": "Гарвард"
+      },
+      "works": [
+        {
+          "ref": "science-and-government"
+        }
+      ],
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1960, Snow gave the Godkin Lectures at Harvard University, about the clashes between Henry Tizard and F. Lindemann"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "to": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ректор Университета Сент-Эндрюса",
+      "long": "В 1961–1964 годах занимал выборный пост ректора Университета Сент-Эндрюса.",
+      "place": {
+        "label": "Сент-Эндрюс"
+      },
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961—1964 годах Сноу занимал выборный пост ректора Университета Сент-Эндрюса."
+      }
+    },
+    {
+      "key": "career-1961-2",
+      "date": {
+        "from": "1961",
+        "to": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинации на Нобелевскую премию",
+      "long": "Неоднократно выдвигался на Нобелевскую премию по литературе, в том числе в 1961–1971 годах.",
+      "chapter": "peer-and-late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Snow was nominated for the Nobel Prize in Literature multiple times in 1961, 1963, 1964, 1965, 1967, 1970 and 1971."
+      }
+    },
+    {
+      "key": "persecution-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Нападки Ф. Р. Ливиса",
+      "long": "В Ричмондской лекции 1962 года Ф. Р. Ливис резко раскритиковал «Две культуры»; спор известен как «полемика о двух культурах».",
+      "works": [
+        {
+          "ref": "the-two-cultures"
+        }
+      ],
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Snow was attacked by F. R. Leavis in his Richmond Lecture of 1962 whose subject was \"The Two Cultures\""
+      }
+    },
+    {
+      "key": "other-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Почётная степень Ростовского университета",
+      "long": "В 1963 году Ростовский университет проголосовал за присвоение Сноу почётной степени; позже он с женой побывал на Дону и у Шолохова в Вешенской.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "two-cultures",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1963 году уже в Ростовском государственном университете проголосовали за присвоение почетной ученой степени Чарлзу Спенсеру Сноу"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Парламентский секретарь министерства технологии",
+      "long": "В 1964–1966 годах парламентский секретарь в Палате лордов министерства технологии в лейбористском кабинете Гарольда Вильсона.",
+      "works": [
+        {
+          "ref": "corridors-of-power"
+        }
+      ],
+      "chapter": "peer-and-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964—1966 был парламентским секретарём в Палате лордов министерства технологии лейбористского кабинета Гарольда Вильсона"
+      }
+    },
+    {
+      "key": "career-1964-2",
+      "date": {
+        "from": "1964-10-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пожизненное пэрство, барон Сноу",
+      "long": "29 октября 1964 года получил пожизненное пэрство как барон Сноу Лестерский.",
+      "chapter": "peer-and-late",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сноу получил пожизненное пэрство как барон Сноу Лестерский (англ. Baron Snow, City of Leicester) 29 октября 1964 года"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Роман в шорт-листе Букеровской премии",
+      "long": "Роман «В их мудрости» вошёл в шорт-лист Букеровской премии.",
+      "works": [
+        {
+          "ref": "in-their-wisdom"
+        }
+      ],
+      "chapter": "peer-and-late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, Snow's novel In Their Wisdom was shortlisted for the Booker Prize."
+      }
+    },
+    {
+      "key": "death-1980",
+      "date": {
+        "from": "1980-07-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Умер 1 июля 1980 года в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "peer-and-late",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Charles Percy Snow, Baron Snow (15 October 1905 – 1 July 1980)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "george-passant",
+      "title": "Джордж Пассант",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "the-light-and-the-dark",
+      "title": "Свет и тьма",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "time-of-hope",
+      "title": "Пора надежд",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "the-masters",
+      "title": "Наставники",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "the-new-men",
+      "title": "Новые люди",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "homecomings",
+      "title": "Возвращения домой",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "the-conscience-of-the-rich",
+      "title": "Сознание богачей",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "the-affair",
+      "title": "Дело",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "corridors-of-power",
+      "title": "Коридоры власти",
+      "qid": "Q5172945",
+      "written": {
+        "from": 1963,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "the-sleep-of-reason",
+      "title": "Сон разума",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "last-things",
+      "title": "Последние вещи",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "death-under-sail",
+      "title": "Смерть под парусом",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "the-search",
+      "title": "Поиски",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "the-malcontents",
+      "title": "Недовольные",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "in-their-wisdom",
+      "title": "В их мудрости",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "a-coat-of-varnish",
+      "title": "Слой лака",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "the-two-cultures",
+      "title": "Две культуры и научная революция",
+      "qid": "Q232061",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "science-and-government",
+      "title": "Наука и правительство",
+      "written": {
+        "from": 1960,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "trollope",
+      "title": "Троллоп",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "the-realists",
+      "title": "Реалисты",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "qid": "Q2481988",
+  "name": "Джозеф Дилейни",
+  "born": "1945-07-25",
+  "died": "2022-08-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D0%BB%D0%B5%D0%B9%D0%BD%D0%B8%2C_%D0%94%D0%B6%D0%BE%D0%B7%D0%B5%D1%84",
+      "rev": 153999513
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Joseph_Delaney",
+      "rev": 1372306039
+    }
+  ],
+  "chapters": [
+    {
+      "key": "preston-and-study",
+      "title": "Престон, инженерия и университет",
+      "from": 1945,
+      "to": 1972
+    },
+    {
+      "key": "teacher-years",
+      "title": "Учитель и первые книги",
+      "from": 1973,
+      "to": 2003
+    },
+    {
+      "key": "spook-fame",
+      "title": "Ученик Ведьмака",
+      "from": 2004,
+      "to": 2022
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-07-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Престоне в семье рабочего",
+      "long": "Родился в Престоне, Ланкашир, в семье рабочего; старший из четверых детей.",
+      "place": {
+        "label": "Престон"
+      },
+      "chapter": "preston-and-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Joseph Henry Delaney was born on 25 July 1945 in Preston, Lancashire, the son of a labourer."
+      }
+    },
+    {
+      "key": "love-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мари Смит",
+      "long": "Женился на Мари Смит; у пары было трое детей.",
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Delaney married Marie Smith in 1968."
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в деревню Сталмайн",
+      "long": "Переехал в деревню Сталмайн, где узнал местную историю о священнике, встретившем боггарта; она легла в основу романа.",
+      "place": {
+        "label": "Сталмайн"
+      },
+      "works": [
+        {
+          "ref": "spooks-apprentice",
+          "note": "история о боггарте из Сталмайна использована в романе"
+        }
+      ],
+      "chapter": "teacher-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983, he moved to the village of Stalmine, where he learned that a priest was said to have once encountered a boggart in the area."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к детской фантастике и успех",
+      "long": "После скромного успеха книг для взрослых под псевдонимом начал писать для детей под своим именем; первая книга серии получила несколько премий.",
+      "works": [
+        {
+          "ref": "spooks-apprentice"
+        }
+      ],
+      "chapter": "spook-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2004, it was published as The Spook's Apprentice under his own name, becoming the first book of the dark fantasy Spook's series."
+      }
+    },
+    {
+      "key": "loss-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мари",
+      "long": "Жена Мари умерла от рака.",
+      "chapter": "spook-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died of cancer in 2007."
+      }
+    },
+    {
+      "key": "love-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Рани Ваниттамби",
+      "long": "Второй брак — с Рани Кунчер Ваниттамби.",
+      "chapter": "spook-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, he married Rani Kuncher Vannithamby."
+      }
+    },
+    {
+      "key": "death-2022",
+      "date": {
+        "from": "2022-08-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Манчестере после болезни",
+      "long": "Умер в Манчестере в возрасте 77 лет после болезни.",
+      "place": {
+        "label": "Манчестер"
+      },
+      "chapter": "spook-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Delaney, who was living in Manchester, died on 16 August 2022, aged 77, after a period of illness."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "spooks-apprentice",
+      "title": "Ученик Ведьмака",
+      "qid": "Q1375442",
+      "written": {
+        "from": 1993,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "arena-13",
+      "title": "Arena 13",
+      "written": {
+        "from": 2015,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "aberrations",
+      "title": "Aberrations",
+      "written": {
+        "from": 2018,
+        "to": 2019
+      }
+    }
+  ]
+}

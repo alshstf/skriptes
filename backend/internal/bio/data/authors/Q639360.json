@@ -1,0 +1,414 @@
+{
+  "qid": "Q639360",
+  "name": "Карл Эдвард Вагнер",
+  "born": "1945-12-12",
+  "died": "1994-10-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B0%D0%B3%D0%BD%D0%B5%D1%80%2C_%D0%9A%D0%B0%D1%80%D0%BB_%D0%AD%D0%B4%D0%B2%D0%B0%D1%80%D0%B4",
+      "rev": 154944751
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Karl_Edward_Wagner",
+      "rev": 1378498416
+    }
+  ],
+  "chapters": [
+    {
+      "key": "knoxville-kenyon",
+      "title": "Ноксвилл и Кеньон",
+      "from": 1945,
+      "to": 1967
+    },
+    {
+      "key": "medicine-first-books",
+      "title": "Медицина и первые книги",
+      "from": 1968,
+      "to": 1974
+    },
+    {
+      "key": "kane-carcosa-editor",
+      "title": "Кейн, Каркоза, антологии",
+      "from": 1975,
+      "to": 1985
+    },
+    {
+      "key": "last-years",
+      "title": "Распад брака и последние годы",
+      "from": 1986,
+      "to": 1994
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-12-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ноксвилле",
+      "long": "Родился в Ноксвилле, штат Теннесси, младшим из четырёх детей в семье Обри Джозефа Вагнера и Доротеи Хьюбер.",
+      "place": {
+        "label": "Ноксвилл"
+      },
+      "chapter": "knoxville-kenyon",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Карл Эдвард Вагнер (англ. Karl Edward Wagner, 12 декабря 1945, Ноксвилл"
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над циклом о Кейне",
+      "long": "Ещё школьником Вагнер начал писать цикл о бессмертном антигерое Кейне; первым был начат роман, позднее изданный как «Кровавый камень».",
+      "place": {
+        "label": "Ноксвилл"
+      },
+      "works": [
+        {
+          "ref": "bloodstone",
+          "note": "роман начат в школьные годы, в 1960 году"
+        }
+      ],
+      "chapter": "knoxville-kenyon",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вагнер начал работу над ним ещё в средней школе, в 1960 году."
+      }
+    },
+    {
+      "key": "education-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы с отличием",
+      "long": "Окончил школу с отличием, что дало ему стипендию для обучения в Кеньон-колледже.",
+      "place": {
+        "label": "Ноксвилл"
+      },
+      "chapter": "knoxville-kenyon",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1963 Карл Вагнер с отличием окончил среднюю школу (Central High School) в Ноксвилле"
+      }
+    },
+    {
+      "key": "education-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Кеньон-колледжа",
+      "long": "Окончил Кеньон-колледж со степенью бакалавра по истории; затем поступил на медицинский факультет Университета Северной Каролины.",
+      "chapter": "knoxville-kenyon",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "который он окончил в 1967 году со степенью бакалавра по истории"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый роман в искажённом издании",
+      "long": "Первый роман Вагнера вышел в 1970 году в сокращённом и изменённом виде, пока он учился на медицинском факультете.",
+      "works": [
+        {
+          "ref": "darkness-weaves"
+        }
+      ],
+      "chapter": "medicine-first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Паутина тьмы» в 1970 году (в сокращенном и изменённом виде)"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание издательства «Каркоза»",
+      "long": "Вместе с Дэвидом Дрейком и Джимом Гросом основал издательство «Каркоза», выпускавшее в твёрдой обложке избранную прозу авторов «Weird Tales»; до 1981 года вышло четыре тома.",
+      "chapter": "medicine-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "formed the Carcosa publishing house in North Carolina during 1973 to preserve the work of their favorite pulp magazine horror writers in hardcovers"
+      }
+    },
+    {
+      "key": "education-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом врача в Чапел-Хилле",
+      "long": "Окончил Университет Северной Каролины в Чапел-Хилле со степенью доктора медицины.",
+      "place": {
+        "label": "Чапел-Хилл"
+      },
+      "chapter": "medicine-first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Карл Вагнер окончил университет в 1974 году со степенью доктора медицины по нейробиологии."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ от медицины ради литературы",
+      "long": "После выхода «Кровавого камня» с обложкой Фрэнка Фразетты началась активная писательская карьера; Вагнер отказался от медицинской практики и посвятил время литературе и конвентам.",
+      "works": [
+        {
+          "ref": "bloodstone"
+        }
+      ],
+      "chapter": "kane-carcosa-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Кровавый камень» был издан в 1975 году Warner Paperback.… Окончательно отказавшись от медицинской практики, он полностью посвящает все своё время"
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор книг о Конане",
+      "long": "Благодаря знакомствам на конвентах стал редактором трёх книг о Конане Роберта Говарда и заключил контракт на романы по мотивам Говарда.",
+      "chapter": "kane-carcosa-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1977 году он становится редактором трёх книг о герое Роберта Говарда"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Составитель антологии лучших рассказов ужасов",
+      "long": "Четырнадцать лет составлял ежегодную антологию «The Year's Best Horror Stories» (DAW Books); серия прекратилась после его смерти.",
+      "chapter": "kane-carcosa-editor",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which he edited for fourteen years from volume VIII (1980) until volume XXII (1994)"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Закрытие убыточной «Каркозы»",
+      "long": "Убыточная «Каркоза» закрылась после четвёртой книги: по словам Вагнера, читатели не хотели платить за дорогие издания.",
+      "chapter": "kane-carcosa-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Manly Wade Wellman, Lonely Vigils (1981… Издательство оказалось убыточным и после выхода четвёртой книги прекратило свою деятельность."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези",
+      "long": "Получил Всемирную премию фэнтези за повесть.",
+      "works": [
+        {
+          "ref": "beyond-any-measure"
+        }
+      ],
+      "chapter": "kane-carcosa-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1983 — World Fantasy Award (Повесть): «Сверх всякой меры» (Beyond Any Measure, 1982)"
+      }
+    },
+    {
+      "key": "family-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Распад брака с Барбарой Мотт",
+      "long": "Брак с Барбарой Мотт Вагнер, единственной законной женой писателя, распался приблизительно в 1986 или 1987 году на фоне усугублявшихся проблем с алкоголем.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Этот брак распался приблизительно в 1986 (или 1987) году из-за все усугублявшихся проблем Вагнера с алкоголем"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Антологии «Echoes of Valor»",
+      "long": "Составил три антологии классических палповых рассказов «Echoes of Valor» в жанрах «sword and sorcery» и «sword and planet».",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в период с 1987 по 1991 в издательстве Tor Books выходят три антологии классических «палповых» рассказов"
+      }
+    },
+    {
+      "key": "loss-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Обри Вагнер; к этому времени у матери были проблемы со здоровьем после серии инсультов.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "отца (страдавшего болезнью Паркинсона) — его смерть в 1990 году стала тяжёлым потрясением для Вагнера"
+      }
+    },
+    {
+      "key": "death-1994",
+      "date": {
+        "from": "1994-10-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Чапел-Хилле",
+      "long": "Умер дома в Чапел-Хилле; причинами называют отказ сердца и печени вследствие многолетнего алкоголизма. Дата смерти указывается и как 13 октября.",
+      "place": {
+        "label": "Чапел-Хилл"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wagner died in his home in Chapel Hill, North Carolina, on October 14, 1994"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "darkness-weaves",
+      "title": "Паутина тьмы",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "death-angels-shadow",
+      "title": "Тень Ангела Смерти",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "bloodstone",
+      "title": "Кровавый камень",
+      "written": {
+        "from": 1960,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "dark-crusade",
+      "title": "Поход чёрного креста",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "legion-of-shadows",
+      "title": "Легион из Теней",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "road-of-kings",
+      "title": "Дорога Королей",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "beyond-any-measure",
+      "title": "Сверх всякой меры",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "in-a-lonely-place",
+      "title": "In a Lonely Place",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "why-not-you-and-i",
+      "title": "Why Not You and I?",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    }
+  ]
+}

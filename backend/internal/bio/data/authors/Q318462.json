@@ -1,0 +1,630 @@
+{
+  "qid": "Q318462",
+  "name": "Эдвард Бульвер-Литтон",
+  "born": "1803-05-25",
+  "died": "1873-01-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D0%BB%D0%B2%D0%B5%D1%80-%D0%9B%D0%B8%D1%82%D1%82%D0%BE%D0%BD%2C_%D0%AD%D0%B4%D1%83%D0%B0%D1%80%D0%B4",
+      "rev": 155345826
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Edward_Bulwer-Lytton",
+      "rev": 1378290945
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-cambridge",
+      "title": "Детство и Кембридж",
+      "from": 1803,
+      "to": 1826
+    },
+    {
+      "key": "marriage-fame",
+      "title": "Брак, слава, парламент",
+      "from": 1827,
+      "to": 1832
+    },
+    {
+      "key": "separation-years",
+      "title": "Разрыв с женой и расцвет",
+      "from": 1833,
+      "to": 1843
+    },
+    {
+      "key": "losses-and-torys",
+      "title": "Утраты и поворот к тори",
+      "from": 1844,
+      "to": 1857
+    },
+    {
+      "key": "colonial-secretary",
+      "title": "Министр колоний",
+      "from": 1858,
+      "to": 1866
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы",
+      "from": 1867,
+      "to": 1873
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1803",
+      "date": {
+        "from": "1803-05-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне в семье генерала",
+      "long": "Младший из трёх сыновей генерала Вильяма Эрла Бульвера и Элизабет Литтон. Домашнее образование получил под руководством матери.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 25 мая 1803 года на улице Бейкер-стрит в Лондоне."
+      }
+    },
+    {
+      "key": "loss-1807",
+      "date": {
+        "from": "1807",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, переезд матери в Лондон",
+      "long": "Отец, генерал Вильям Эрл Бульвер, умер 7 июля 1807 года. Мать переехала с детьми в Лондон, когда мальчику было четыре года.",
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Вильям Эрл Бульвер 1757-03-22 — 1807-07-07"
+      }
+    },
+    {
+      "key": "loss-1822",
+      "date": {
+        "from": "1822",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть возлюбленной, выданной за другого",
+      "long": "Девушка, в которую он был влюблён, по настоянию отца вышла за другого и умерла примерно ко времени его поступления в Кембридж. Бульвер говорил, что эта потеря сказалась на всей его дальнейшей жизни.",
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died about the time that Bulwer went to Cambridge and he stated that her loss affected all his subsequent life.…In 1822 Bulwer-Lytton entered Trinity College, Cambridge"
+      }
+    },
+    {
+      "key": "education-1822",
+      "date": {
+        "from": "1822",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Кембриджском университете",
+      "long": "Поступил в Тринити-колледж Кембриджского университета, вскоре перевёлся в Тринити-холл. Закончил курс со степенью бакалавра в 1826 году.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1822 Bulwer-Lytton entered Trinity College, Cambridge, where he met John Auldjo, but soon moved to Trinity Hall."
+      }
+    },
+    {
+      "key": "career-1825",
+      "date": {
+        "from": "1825",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Золотая медаль канцлера за стихи",
+      "long": "Получил Золотую медаль канцлера Кембриджского университета за английские стихи (поэма «Sculpture»).",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1825 he won the Chancellor's Gold Medal for English verse."
+      }
+    },
+    {
+      "key": "other-1826",
+      "date": {
+        "from": "1826",
+        "to": "1829",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Купленный офицерский патент без службы",
+      "long": "Купил офицерский патент в 1826 году и продал его в 1829-м, так и не прослужив.",
+      "chapter": "childhood-cambridge",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He purchased an army commission in 1826, but sold it in 1829 without serving."
+      }
+    },
+    {
+      "key": "love-1827",
+      "date": {
+        "from": "1827-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Розиной Уилер вопреки воле матери",
+      "long": "Женился на ирландской красавице Розине Дойл Уилер вопреки воле матери, лишившей его содержания. Это вынудило его зарабатывать литературным трудом.",
+      "chapter": "marriage-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1827, he married Rosina Doyle Wheeler (1802–1882), a noted Irish beauty, but against the wishes of his mother, who withdrew his allowance, forcing him to work for a living."
+      }
+    },
+    {
+      "key": "child-1828",
+      "date": {
+        "from": "1828",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Эмили",
+      "long": "В браке с Розиной родилась дочь Эмили Элизабет.",
+      "chapter": "marriage-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Emily Elizabeth Bulwer-Lytton (1828–1848)"
+      }
+    },
+    {
+      "key": "career-1828",
+      "date": {
+        "from": "1828",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое широкое признание",
+      "long": "Роман принёс ему известность и репутацию остроумца и денди; читатели гадали, с кого списаны персонажи. Пушкин позднее задумывал по его образцу «Русского Пелама».",
+      "works": [
+        {
+          "ref": "pelham",
+          "note": "роман, принёсший известность"
+        }
+      ],
+      "chapter": "marriage-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "But Pelham brought him public acclaim in 1828 and established his reputation as a wit and dandy."
+      }
+    },
+    {
+      "key": "career-1831",
+      "date": {
+        "from": "1831",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в парламент",
+      "long": "Избран в палату общин от Сент-Айвса, затем в 1832 году от Линкольна; в парламенте провёл девять лет как виг, поддерживал Билль о реформе.",
+      "chapter": "marriage-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1831 he was elected member for St Ives, Cornwall"
+      }
+    },
+    {
+      "key": "child-1831",
+      "date": {
+        "from": "1831-11-08",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Роберта",
+      "long": "Родился сын Роберт, впоследствии вице-король Британской Индии.",
+      "chapter": "marriage-fame",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Роберт Бульвер-Литтон 1831-11-08"
+      }
+    },
+    {
+      "key": "family-1833",
+      "date": {
+        "from": "1833",
+        "to": "1836",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв с женой, раздельное проживание",
+      "long": "Супруги расстались со скандалом в 1833 году; в 1836-м раздельное проживание было оформлено юридически. Жена упрекала его в неверности.",
+      "chapter": "separation-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1833, they separated acrimoniously and in 1836 the separation became legal."
+      }
+    },
+    {
+      "key": "career-1838",
+      "date": {
+        "from": "1838",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Титул баронета",
+      "long": "Получил титул баронета.",
+      "chapter": "separation-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bulwer was created a baronet, of Knebworth House in the County of Hertford, in the Baronetage of the United Kingdom, in 1838."
+      }
+    },
+    {
+      "key": "other-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Сатира жены на писателя",
+      "long": "Жена Розина выпустила роман, высмеивавший лицемерие мужа.",
+      "chapter": "separation-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rosina published Cheveley, or the Man of Honour (1839), satirising her husband's hypocrisy."
+      }
+    },
+    {
+      "key": "career-1841",
+      "date": {
+        "from": "1841",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из парламента, годы путешествий",
+      "long": "Покинул парламент и значительную часть времени проводил в путешествиях.",
+      "chapter": "separation-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1841, he left Parliament and spent much of his time in travel."
+      }
+    },
+    {
+      "key": "loss-1843",
+      "date": {
+        "from": "1843",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Элизабет Литтон. Он унаследовал Небуорт-хаус и сохранил её комнату в прежнем виде.",
+      "chapter": "separation-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The death of Bulwer's mother in 1843 meant his \"exhaustion of toil and study had been completed by great anxiety and grief\""
+      }
+    },
+    {
+      "key": "illness-1844",
+      "date": {
+        "from": "1844",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Нервное и физическое истощение, водолечение",
+      "long": "По его словам, к январю 1844 года он был совершенно разбит переутомлением и горем. Позднее лечился водолечением в Малверне, Питерсхеме и Боппарде.",
+      "chapter": "losses-and-torys",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "by \"about the January of 1844, I was thoroughly shattered\""
+      }
+    },
+    {
+      "key": "family-1844",
+      "date": {
+        "from": "1844-02-20",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Смена фамилии по завещанию матери",
+      "long": "Согласно завещанию матери сменил фамилию на Бульвер-Литтон и принял герб Литтонов.",
+      "chapter": "losses-and-torys",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 20 February 1844, in accordance with his mother's will, he changed his surname from Bulwer to Bulwer-Lytton"
+      }
+    },
+    {
+      "key": "loss-1848",
+      "date": {
+        "from": "1848-04-29",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Эмили",
+      "long": "Умерла дочь Эмили Элизабет (1828—1848).",
+      "chapter": "losses-and-torys",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Emily Bulwer-Lytton died 1848-04-29"
+      }
+    },
+    {
+      "key": "career-1852",
+      "date": {
+        "from": "1852",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение в политику в рядах тори",
+      "long": "Вернулся в политику, разойдясь с Дж. Расселлом по вопросу о хлебных законах, и баллотировался от консерваторов в Хартфордшире.",
+      "chapter": "losses-and-torys",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He did not return to politics until 1852, when, having differed from Lord John Russell over the Corn Laws, he stood for Hertfordshire as a Conservative."
+      }
+    },
+    {
+      "key": "persecution-1858",
+      "date": {
+        "from": "1858-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Скандал с Розиной, её помещение в лечебницу",
+      "long": "Розина публично обличила мужа на выборах; он поместил её в психиатрическую лечебницу, откуда её выпустили через несколько недель после общественного возмущения.",
+      "chapter": "colonial-secretary",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1858, when her husband was standing as parliamentary candidate for Hertfordshire, she denounced him at the hustings.…Finally he had her committed to a mental asylum, but she was released a few weeks later after a public outcry."
+      }
+    },
+    {
+      "key": "career-1858",
+      "date": {
+        "from": "1858-06",
+        "to": "1859-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Министр колоний в правительстве Дерби",
+      "long": "Государственный секретарь по делам колоний в правительстве Дерби; выбрал Ричарда Муди для основания Британской Колумбии.",
+      "chapter": "colonial-secretary",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was Secretary of State for the Colonies from June 1858 to June 1859"
+      }
+    },
+    {
+      "key": "career-1866",
+      "date": {
+        "from": "1866",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возведение в пэры, палата лордов",
+      "long": "Возведён в пэры как барон Литтон из Небуорта и перешёл в палату лордов.",
+      "chapter": "colonial-secretary",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bulwer-Lytton held that seat until 1866, when he was raised to the peerage as Baron Lytton of Knebworth"
+      }
+    },
+    {
+      "key": "death-1873",
+      "date": {
+        "from": "1873-01-18",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Торки после операции на ухе",
+      "long": "Умер в Торки после операции от глухоты: в ухе образовался абсцесс. Вопреки его желанию, похоронен в Вестминстерском аббатстве.",
+      "place": {
+        "label": "Торки"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died at 2 am on 18 January 1873, just short of his 70th birthday"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "falkland",
+      "title": "Falkland",
+      "written": {
+        "from": 1827,
+        "to": 1827
+      }
+    },
+    {
+      "ref": "pelham",
+      "title": "Пелэм, или Приключения джентльмена",
+      "qid": "Q350056",
+      "written": {
+        "from": 1828,
+        "to": 1828
+      }
+    },
+    {
+      "ref": "the-disowned",
+      "title": "The Disowned",
+      "written": {
+        "from": 1828,
+        "to": 1828
+      }
+    },
+    {
+      "ref": "paul-clifford",
+      "title": "Пол Клиффорд",
+      "qid": "Q7149872",
+      "written": {
+        "from": 1830,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "eugene-aram",
+      "title": "Eugene Aram",
+      "qid": "Q16385636",
+      "written": {
+        "from": 1832,
+        "to": 1832
+      }
+    },
+    {
+      "ref": "godolphin",
+      "title": "Godolphin",
+      "qid": "Q17103798",
+      "written": {
+        "from": 1833,
+        "to": 1833
+      }
+    },
+    {
+      "ref": "last-days-of-pompeii",
+      "title": "Последние дни Помпеи",
+      "qid": "Q1218985",
+      "written": {
+        "from": 1833,
+        "to": 1834
+      }
+    },
+    {
+      "ref": "rienzi",
+      "title": "Rienzi, Last of the Roman Tribunes",
+      "qid": "Q357513",
+      "written": {
+        "from": 1835,
+        "to": 1835
+      }
+    },
+    {
+      "ref": "ernest-maltravers",
+      "title": "Ernest Maltravers",
+      "qid": "Q5393508",
+      "written": {
+        "from": 1837,
+        "to": 1837
+      }
+    },
+    {
+      "ref": "leila",
+      "title": "Лейла, или осада Гренады",
+      "qid": "Q16386651",
+      "written": {
+        "from": 1838,
+        "to": 1838
+      }
+    },
+    {
+      "ref": "lady-of-lyons",
+      "title": "The Lady of Lyons",
+      "qid": "Q7745183",
+      "written": {
+        "from": 1838,
+        "to": 1838
+      }
+    },
+    {
+      "ref": "richelieu",
+      "title": "Richelieu",
+      "qid": "Q7330394",
+      "written": {
+        "from": 1839,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "money",
+      "title": "Money",
+      "qid": "Q6899101",
+      "written": {
+        "from": 1840,
+        "to": 1840
+      }
+    },
+    {
+      "ref": "zanoni",
+      "title": "Занони",
+      "written": {
+        "from": 1842,
+        "to": 1842
+      }
+    },
+    {
+      "ref": "last-of-the-barons",
+      "title": "Последний барон",
+      "qid": "Q7746222",
+      "written": {
+        "from": 1843,
+        "to": 1843
+      }
+    },
+    {
+      "ref": "harold",
+      "title": "Harold: The Last of the Saxon Kings",
+      "written": {
+        "from": 1848,
+        "to": 1848
+      }
+    },
+    {
+      "ref": "haunted-and-the-haunters",
+      "title": "The Haunted and the Haunters",
+      "written": {
+        "from": 1859,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "a-strange-story",
+      "title": "A Strange Story",
+      "written": {
+        "from": 1862,
+        "to": 1862
+      }
+    },
+    {
+      "ref": "the-coming-race",
+      "title": "Грядущая раса",
+      "qid": "Q510699",
+      "written": {
+        "from": 1871,
+        "to": 1871
+      }
+    }
+  ]
+}

@@ -1,0 +1,858 @@
+{
+  "qid": "Q207515",
+  "name": "Пелем Гренвилл Вудхауз",
+  "born": "1881-10-15",
+  "died": "1975-02-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D1%83%D0%B4%D1%85%D0%B0%D1%83%D1%81%2C_%D0%9F%D0%B5%D0%BB%D0%B0%D0%BC_%D0%93%D1%80%D0%B5%D0%BD%D0%B2%D0%B8%D0%BB%D0%BB",
+      "rev": 154425855
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/P._G._Wodehouse",
+      "rev": 1377314043
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-and-school",
+      "title": "Школы, тётушки, Далидж",
+      "from": 1881,
+      "to": 1899
+    },
+    {
+      "key": "bank-and-pen",
+      "title": "Банк и перо",
+      "from": 1900,
+      "to": 1913
+    },
+    {
+      "key": "broadway-and-jeeves",
+      "title": "Нью-Йорк, Бродвей, Дживс",
+      "from": 1914,
+      "to": 1929
+    },
+    {
+      "key": "hollywood-and-france",
+      "title": "Голливуд и Ле Туке",
+      "from": 1930,
+      "to": 1939
+    },
+    {
+      "key": "internment-and-disgrace",
+      "title": "Лагерь, эфир, травля",
+      "from": 1940,
+      "to": 1946
+    },
+    {
+      "key": "american-exile",
+      "title": "Ремзенбург: американские годы",
+      "from": 1947,
+      "to": 1975
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1881",
+      "date": {
+        "from": "1881-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гилфорде",
+      "long": "Родился в Гилфорде, графство Суррей, третьим сыном судьи, работавшего в Гонконге.",
+      "place": {
+        "label": "Гилфорд"
+      },
+      "chapter": "childhood-and-school",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Гилфорд 1881-10-15"
+      }
+    },
+    {
+      "key": "loss-1892",
+      "date": {
+        "from": "1892",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть бабушки, воспитание тётушками",
+      "long": "Родители жили в Гонконге; после смерти бабушки в 1892 году мальчика воспитывали в основном тётушки, среди них писательница Мэри Батерст Дин.",
+      "chapter": "childhood-and-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His grandmother died in 1892, after which he was largely brought up by his aunts"
+      }
+    },
+    {
+      "key": "education-1894",
+      "date": {
+        "from": "1894",
+        "to": "1900",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Далидж-колледже",
+      "long": "Шесть лет в Далидж-колледже: регби, крикет, пение, редактирование школьного журнала The Alleynian. Позже называл эти годы одними из самых счастливых.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "childhood-and-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1894 году Вудхаус поступил в колледж Далидж"
+      }
+    },
+    {
+      "key": "career-1900",
+      "date": {
+        "from": "1900-09",
+        "to": "1902-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вместо Оксфорда — работа в банке",
+      "long": "Из-за ухудшения семейных финансов вместо Оксфорда поступил клерком в лондонский офис банка; вечерами писал для журналов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "psmith-in-the-city",
+          "note": "банковская работа дала материал для романа, во многом автобиографического"
+        }
+      ],
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in September 1900 Wodehouse was engaged in a junior position in the London office of the Hongkong and Shanghai Bank"
+      }
+    },
+    {
+      "key": "career-1901",
+      "date": {
+        "from": "1901",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонка в газете The Globe",
+      "long": "Получил место автора колонки «By the Way» в газете The Globe, сначала временное, затем постоянное; оставался на нём до 1909 года.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1901, with the help of a former Dulwich master, William Beach Thomas, Wodehouse secured an appointment"
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из банка ради литературы",
+      "long": "В сентябре 1902 года ушёл из банка, чтобы заниматься только литературой.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "the-pothunters"
+        }
+      ],
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "serialised incomplete in Public School Magazine in early 1902, and issued in full in hardback in September. He resigned from the bank that month to devote himself to writing full-time."
+      }
+    },
+    {
+      "key": "relocation-1904",
+      "date": {
+        "from": "1904-04",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Первая поездка в Нью-Йорк",
+      "long": "Первая поездка в США: Вудхаус давно интересовался Америкой и американским боксом; статьи о Нью-Йорке принесли ему повышенные гонорары.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "by 1904 he had earned enough to do so. In April he sailed to New York"
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Штатный лирик театра Олдвич",
+      "long": "Приглашён штатным автором стихов в театр Олдвич; здесь начал сотрудничество с композитором Джеромом Керном.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In early 1906 the actor-manager Seymour Hicks invited Wodehouse to become resident lyricist at the Aldwych Theatre"
+      }
+    },
+    {
+      "key": "relocation-1909",
+      "date": {
+        "from": "1909",
+        "to": "1910",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Почти год в Нью-Йорке",
+      "long": "Второй приезд в Нью-Йорк: оставил работу в The Globe, продал рассказы американским журналам, вернулся в Англию к концу 1910 года.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "psmith-journalist",
+          "note": "роман написан под впечатлением от визита в Нью-Йорк"
+        }
+      ],
+      "chapter": "bank-and-pen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1909 году Вудхаус несколько месяцев провел в Нью-Йорке"
+      }
+    },
+    {
+      "key": "love-1914",
+      "date": {
+        "from": "1914-09-30",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Этель Ньютон",
+      "long": "Женился на вдове Этель Ньютон, с которой познакомился в Нью-Йорке за полтора месяца до свадьбы; усыновил её дочь Леонору. Брак длился до его смерти.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "30 сентября 1914 Вудхаус женился на Этель Ньютон, вдове-англичанке"
+      }
+    },
+    {
+      "key": "career-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый всемирный успех",
+      "long": "Роман, печатавшийся в Saturday Evening Post, принёс Вудхаусу первый всемирный успех; с него начался цикл о Бландингском замке.",
+      "works": [
+        {
+          "ref": "something-new"
+        }
+      ],
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Something New» (1915; английский вариант — «Something Fresh»)"
+      }
+    },
+    {
+      "key": "career-1915-2",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Знакомство с Гаем Болтоном, мюзиклы",
+      "long": "Керн познакомил его с Гаем Болтоном, ставшим ближайшим другом и постоянным соавтором; вместе они создали серию бродвейских мюзиклов.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A third milestone in Wodehouse's life came towards the end of 1915: his old songwriting partner Jerome Kern introduced him to the writer Guy Bolton"
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пять пьес одновременно на Бродвее",
+      "long": "Пик театрального успеха: на Бродвее одновременно шли пять его постановок.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Был момент в 1917 году, когда на Бродвее шли сразу 5 пьес Вудхауза"
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный член Королевского литературного общества",
+      "long": "Избран почётным членом Королевского литературного общества.",
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1926 году Вудхауса избрали почётным членом Королевского литературного общества"
+      }
+    },
+    {
+      "key": "poverty-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Потери при крахе на Уолл-стрит",
+      "long": "Супруги потеряли значительные суммы при крахе на Уолл-стрит.",
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple had lost considerable sums in the Wall Street crash of 1929"
+      }
+    },
+    {
+      "key": "loss-1929",
+      "date": {
+        "from": "1929-05-27",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, судья Генри Эрнест Вудхауз.",
+      "chapter": "broadway-and-jeeves",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Генри Эрнста Вудхауза (1845—1929)"
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "to": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт с MGM в Голливуде",
+      "long": "Контракт с MGM на 2000 долларов в неделю; студия мало загружала его работой, контракт не продлили. Интервью 1931 года вызвало скандал.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The contract started in May 1930"
+      }
+    },
+    {
+      "key": "other-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандал вокруг интервью о Голливуде",
+      "long": "В интервью Los Angeles Times заявил, что ему платят слишком много за слишком малую работу; это вызвало шум вокруг студийной системы.",
+      "place": {
+        "label": "Голливуд"
+      },
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a 1931 interview, his naive revelations of incompetence and extravagance in the studios caused a furore."
+      }
+    },
+    {
+      "key": "relocation-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд во Францию из-за налогов",
+      "long": "Из-за налоговых споров в Британии и США поселился во Франции близ Ле Туке, где жил до начала войны.",
+      "place": {
+        "label": "Ле Туке"
+      },
+      "works": [
+        {
+          "ref": "right-ho-jeeves"
+        }
+      ],
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году, чтобы избежать двойного налогообложения своих литературных произведений в Британии и США, Вудхауз поселился во Франции, в Ле Туке"
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата Армина",
+      "long": "Умер старший брат Армин, с которым Вудхаус учился в Далидж-колледже.",
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ernest Armine (1879–1936)"
+      }
+    },
+    {
+      "key": "loss-1938",
+      "date": {
+        "from": "1938-05-06",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Элинор Вудхауз.",
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Eleanor Deane 1851-01-01 – 1938-05-06"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётная докторская степень Оксфорда",
+      "long": "Оксфорд присвоил почётную степень доктора литературы; поездка на церемонию стала последним его пребыванием в Англии.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "hollywood-and-france",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "conferred an honorary doctorate of letters on him in June 1939"
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-07-21",
+        "to": "1941-06-21",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Немецкий лагерь для интернированных",
+      "long": "После занятия Ле Туке немцы интернировали его; он прошёл тюрьмы и крепость в Бельгии и лагерь в Тосте. В июне 1941 года его забрало гестапо и отвезло в Берлин.",
+      "place": {
+        "label": "Тост, Верхняя Силезия"
+      },
+      "works": [
+        {
+          "ref": "money-in-the-bank",
+          "note": "написан в лагере на выданной пишущей машинке"
+        }
+      ],
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 июля 1940 года Вудхаус оказался в лагере для перемещённых лиц в Верхней Силезии"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941-06",
+        "to": "1941-08",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Пять радиопередач из Берлина",
+      "long": "Освобождённый в Берлине, записал пять юмористических передач об интернировании для американских слушателей; немецкое министерство пропаганды передало их и в Британию.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 21 June 1941, while he was in the middle of playing a game of cricket, Wodehouse received a visit from two members of the Gestapo … \"cleverly trapped\" into making five broadcasts to the US via German radio"
+      }
+    },
+    {
+      "key": "persecution-1941",
+      "date": {
+        "from": "1941-07-15",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Травля в Британии за берлинские передачи",
+      "long": "В Британии передачи вызвали враждебную реакцию; Уильям Коннор выступил по радио с резким осуждением, писателя обвинили в коллаборационизме. Позже обвинения сняли.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 21 June 1941, while he was in the middle of playing a game of cricket … On 15 July the journalist William Connor, under his pen name Cassandra, broadcast a postscript"
+      }
+    },
+    {
+      "key": "relocation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Париж",
+      "long": "После двух лет в Германии супругам разрешили вернуться в Париж.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году супружеской паре было разрешено вернуться в Париж"
+      }
+    },
+    {
+      "key": "persecution-1944",
+      "date": {
+        "from": "1944",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Превентивный арест во Франции",
+      "long": "Супругов арестовала французская полиция и взяла под превентивный арест без предъявления обвинений; Вудхауса перевели в больницу, где он работал над романом. Освобождён 15 января 1945 года.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "uncle-dynamite",
+          "note": "над романом работал в больнице во время задержания"
+        }
+      ],
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1944 Duff Cooper was appointed British ambassador to France … The Wodehouses were subsequently arrested by French police and placed under preventive detention"
+      }
+    },
+    {
+      "key": "loss-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть падчерицы Леоноры",
+      "long": "Внезапно умерла падчерица Леонора, удочерённая Вудхаусом.",
+      "chapter": "internment-and-disgrace",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leonora had predeceased him, dying suddenly in 1944"
+      }
+    },
+    {
+      "key": "relocation-1947",
+      "date": {
+        "from": "1947-04",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в США, жизнь в изгнании",
+      "long": "Супруги переехали в США; в Англию Вудхаус больше не возвращался.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "the-mating-season"
+        }
+      ],
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1947 года они вылетели в США"
+      }
+    },
+    {
+      "key": "relocation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Дом в Ремзенбурге",
+      "long": "Купили дом в Ремзенбурге на Лонг-Айленде, где прожили до конца жизни.",
+      "place": {
+        "label": "Ремзенбург"
+      },
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1952 году приобрели дом в Ремзенбурге"
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение читательского признания",
+      "long": "После лет травли общественное мнение по обе стороны океана вновь обратилось к Вудхаусу.",
+      "works": [
+        {
+          "ref": "pigs-have-wings"
+        }
+      ],
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Выход в 1952 году романа «Pigs Have Wings» («Перелетные свиньи»), считающегося одним из лучших в Блэндингском цикле, стал поворотным пунктом"
+      }
+    },
+    {
+      "key": "other-1955",
+      "date": {
+        "from": "1955-12-16",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Американское гражданство",
+      "long": "Принял гражданство США, сохранив британское подданство.",
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "16 декабря 1955 года Вудхауз принял американское гражданство"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Рыцарское звание KBE",
+      "long": "В новогоднем списке наград получил рыцарское звание; с него официально сняли обвинения в коллаборационизме.",
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "к Новому 1975 году (в компании с Чарли Чаплином) 93-летний писатель стал рыцарем-командором ордена Британской империи (KBE)"
+      }
+    },
+    {
+      "key": "death-1975",
+      "date": {
+        "from": "1975-02-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Саутгемптоне, Лонг-Айленд",
+      "long": "Умер в больнице Саутгемптона на Лонг-Айленде в 93 года; последний роман остался незавершённым.",
+      "place": {
+        "label": "Саутгемптон, Нью-Йорк"
+      },
+      "chapter": "american-exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "heart attack and died on 14 February 1975 at the age of 93"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-pothunters",
+      "title": "The Pothunters",
+      "written": {
+        "from": 1902,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "love-among-the-chickens",
+      "title": "Любовь среди кур",
+      "written": {
+        "from": 1906,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "mike",
+      "title": "Mike",
+      "written": {
+        "from": 1908,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "psmith-in-the-city",
+      "title": "Psmith in the City",
+      "written": {
+        "from": 1910,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "psmith-journalist",
+      "title": "Psmith, Journalist",
+      "written": {
+        "from": 1909,
+        "to": 1909
+      }
+    },
+    {
+      "ref": "something-new",
+      "title": "Something New",
+      "written": {
+        "from": 1915,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "my-man-jeeves",
+      "title": "My Man Jeeves",
+      "written": {
+        "from": 1919,
+        "to": 1919
+      }
+    },
+    {
+      "ref": "leave-it-to-psmith",
+      "title": "Leave It to Psmith",
+      "written": {
+        "from": 1923,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "right-ho-jeeves",
+      "title": "Right Ho, Jeeves",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "quick-service",
+      "title": "Раз — и готово",
+      "written": {
+        "from": 1939,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "money-in-the-bank",
+      "title": "Деньги в банке",
+      "written": {
+        "from": 1941,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "joy-in-the-morning",
+      "title": "Радость поутру",
+      "written": {
+        "from": 1940,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "uncle-dynamite",
+      "title": "Uncle Dynamite",
+      "written": {
+        "from": 1944,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "the-mating-season",
+      "title": "The Mating Season",
+      "written": {
+        "from": 1946,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "pigs-have-wings",
+      "title": "Перелётные свиньи",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "performing-flea",
+      "title": "Дрессированная блоха",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    }
+  ]
+}

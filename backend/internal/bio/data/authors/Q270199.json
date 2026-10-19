@@ -1,0 +1,246 @@
+{
+  "qid": "Q270199",
+  "name": "Лорен Кейт",
+  "born": "1981-03-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D0%B9%D1%82%2C_%D0%9B%D0%BE%D1%80%D0%B5%D0%BD",
+      "rev": 147561371
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lauren_Kate",
+      "rev": 1375325306
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ohio-texas-atlanta",
+      "title": "Огайо, Техас, Атланта",
+      "from": 1981,
+      "to": 2008
+    },
+    {
+      "key": "fallen-years",
+      "title": "Свадьба и «Падшие»",
+      "from": 2009,
+      "to": 2012
+    },
+    {
+      "key": "family-and-new-books",
+      "title": "Семья и новые книги",
+      "from": 2013,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1981",
+      "date": {
+        "from": "1981-03-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дейтоне, штат Огайо",
+      "long": "Лорен Кейт родилась в Дейтоне, штат Огайо; выросла в Далласе, штат Техас.",
+      "place": {
+        "label": "Дейтон"
+      },
+      "chapter": "ohio-texas-atlanta",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 21 марта 1981, Дейтон, Огайо"
+      }
+    },
+    {
+      "key": "love-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джейсоном Морфью",
+      "long": "Венчание с поэтом и автором-исполнителем Джейсоном Морфью на винодельне, где он работал, в Эспарто (Калифорния). Церемонию провёл поэт Джо Венderот.",
+      "place": {
+        "label": "Эспарто"
+      },
+      "chapter": "fallen-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kate married Jason Morphew, a poet and singer-songwriter, at the winery where Morphew worked in Esparto, CA, in 2009."
+      }
+    },
+    {
+      "key": "career-2010-2",
+      "date": {
+        "from": "2010-09-28",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке NYT с продолжением серии",
+      "long": "Продолжение «Падших» сразу возглавило список бестселлеров «Нью-Йорк Таймс» и оставалось на первом месте и через неделю, 17 октября.",
+      "works": [
+        {
+          "ref": "torment-2010"
+        }
+      ],
+      "chapter": "fallen-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Роман «Обреченные», продолжение книги «Падшие», вышел 28 сентября 2010 года. Он сразу попал на первое место в списке бестселлеров"
+      }
+    },
+    {
+      "key": "child-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери",
+      "long": "Рождение дочери.",
+      "chapter": "family-and-new-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вместе с дочкой 2013 года рождения и сыном 2014 года рождения"
+      }
+    },
+    {
+      "key": "child-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына",
+      "long": "Рождение сына.",
+      "chapter": "family-and-new-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вместе с дочкой 2013 года рождения и сыном 2014 года рождения"
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Съёмки фильма по первой книге серии",
+      "long": "Права на экранизацию серии «Падшие» приобрела студия Disney; в 2016 году прошли съёмки фильма по первой книге.",
+      "works": [
+        {
+          "ref": "fallen-2009"
+        }
+      ],
+      "chapter": "family-and-new-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2016 году были съемки фильма по первой книге, права на экранизацию всей серии книг приобрела студия Disney."
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025-05-02",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт на новую фэнтези-трилогию",
+      "long": "Кейт объявила о контракте на новую фэнтези-трилогию «Белые огни», возвращающую к теме любви ангелов и смертных.",
+      "works": [
+        {
+          "ref": "white-lights-2026"
+        }
+      ],
+      "chapter": "family-and-new-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 2, 2025, Kate announced that she'd been contracted to write a new trilogy of fantasy novels called White Lights."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fallen-2009",
+      "title": "Падшие",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "natalie-hargrove-2009",
+      "title": "Предательство Натали Харгров",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "torment-2010",
+      "title": "Обречённые",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "passion-2011",
+      "title": "Страсть",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "fallen-in-love-2012",
+      "title": "Влюблённые",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "rapture-2012",
+      "title": "Вознесение",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "teardrop-2013",
+      "title": "Слеза",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "unforgiven-2015",
+      "title": "Непрощённый",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "white-lights-2026",
+      "title": "Белые огни",
+      "written": {
+        "from": 2025,
+        "to": 2026
+      }
+    }
+  ]
+}

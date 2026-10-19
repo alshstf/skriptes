@@ -1,0 +1,787 @@
+{
+  "qid": "Q132695",
+  "name": "Харри Мартинсон",
+  "born": "1904-05-06",
+  "died": "1978-02-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D1%81%D0%BE%D0%BD%2C_%D0%A5%D0%B0%D1%80%D1%80%D0%B8",
+      "rev": 148306781
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Harry_Martinson",
+      "rev": 1379883143
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/Harry_Martinson",
+      "rev": 59723721
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Сирота на попечении общины",
+      "from": 1904,
+      "to": 1919
+    },
+    {
+      "key": "sea",
+      "title": "Море и бродяжничество",
+      "from": 1920,
+      "to": 1928
+    },
+    {
+      "key": "debut",
+      "title": "Поэт, Муа и прорыв",
+      "from": 1929,
+      "to": 1939
+    },
+    {
+      "key": "war-academy",
+      "title": "Финская война и Академия",
+      "from": 1940,
+      "to": 1955
+    },
+    {
+      "key": "aniara",
+      "title": "Аниара и охлаждение критики",
+      "from": 1956,
+      "to": 1973
+    },
+    {
+      "key": "nobel",
+      "title": "Нобелевская премия и конец",
+      "from": 1974,
+      "to": 1978
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1904",
+      "date": {
+        "from": "1904-05-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Йемсхёге, Блекинге",
+      "long": "Харри Эдмунд Мартинсон (урождённый Олофссон) родился в Йемсхёге в Блекинге, пятым ребёнком в семье лавочников.",
+      "place": {
+        "label": "Йемсхёг"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Harry Edmund Martinson, född 6 maj 1904 i Jämshög i Blekinge"
+      }
+    },
+    {
+      "key": "loss-1910",
+      "date": {
+        "from": "1910",
+        "to": "1911",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца и отъезд матери в Америку",
+      "long": "Отец умер от туберкулёза в 1910 году, год спустя мать уехала в Портленд (Орегон), оставив детей. Харри отдали на воспитание в приёмные семьи.",
+      "works": [
+        {
+          "ref": "flowering-nettle",
+          "note": "детство автора показано в романе (статья о романе и его продолжении)"
+        }
+      ],
+      "chapter": "childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his father died of tuberculosis in 1910 and a year later his mother emigrated to Portland, Oregon leaving behind her children"
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "to": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Годы на море и в бродяжничестве",
+      "long": "С 1920 года матрос и разнорабочий, ходил в Индию и Бразилию; между рейсами бродяжничал по Швеции и Норвегии.",
+      "place": {
+        "label": "Гётеборг"
+      },
+      "works": [
+        {
+          "ref": "cape-farewell",
+          "note": "морские годы описаны в книге"
+        }
+      ],
+      "chapter": "sea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году он устраивается моряком и разнорабочим и совершает несколько долгих путешествий, в том числе в Индию и Бразилию."
+      }
+    },
+    {
+      "key": "persecution-1921",
+      "date": {
+        "from": "1921-06",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест за бродяжничество в Лунде",
+      "long": "В июне 1921 года арестован за бродяжничество в парке Лундагорд в Лунде.",
+      "place": {
+        "label": "Лунд"
+      },
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1921 he was arrested for vagrancy in Lundagård park, Lund."
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рейс кочегаром в Норвегию и Исландию",
+      "long": "В марте 1922 года нанялся кочегаром на пароход, через два месяца сбежал в Бельгии.",
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1922 he signed on as a stoker on a steam ship that sailed to Norway and Iceland"
+      }
+    },
+    {
+      "key": "education-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Знакомство с Артуром Лундквистом",
+      "long": "Около 1927 года познакомился с Артуром Лундквистом, который ввёл его в круг модернистской поэзии.",
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Around 1927, Martinson began his literary career and had several poems published in different publications. The same year he met Artur Lundkvist, who introduced him to modernist poets"
+      }
+    },
+    {
+      "key": "illness-1927",
+      "date": {
+        "from": "1927-05-06",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Уход с моря из-за болезни лёгких",
+      "long": "В день 23-летия, в мае 1927 года, сошёл на берег в Швеции из-за проблем с лёгкими.",
+      "chapter": "sea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Troubled by lung problems Martinson set ashore in Sweden on his 23rd birthday in May 1927."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927-08-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое стихотворение в газете",
+      "long": "27 августа 1927 года в газете «Арбетарен» напечатано его стихотворение «Sanningssökare».",
+      "chapter": "sea",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Martinson debuterade den 27 augusti 1927 med dikten \"Sanningssökare\" i tidningen Arbetaren."
+      }
+    },
+    {
+      "key": "love-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писательницей Муей Мартинсон",
+      "long": "В 1929 году женился на писательнице Муе Мартинсон, с которой познакомился в стокгольмской анархистской газете.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929 году женился на писательнице Муе Мартинсон (швед. Moa Martinson)."
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Участие в антологии «Пятеро молодых»",
+      "long": "Вошёл в антологию «Fem unga», представившую модернизм в шведской литературе.",
+      "works": [
+        {
+          "ref": "spokskepp",
+          "note": "первая книга стихов вышла в том же году"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Martinson medverkade i antologin Fem unga 1929"
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Литературный прорыв в поэзии",
+      "long": "Сборник 1931 года принёс ему признание критиков и считается литературным прорывом.",
+      "works": [
+        {
+          "ref": "nomad"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Han fick sitt genombrott med diktsamlingen Nomad 1931."
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Прорыв в прозе: книги о морских годах",
+      "long": "Путевые книги о годах на море принесли ему славу и как прозаику.",
+      "works": [
+        {
+          "ref": "resor-utan-mal"
+        },
+        {
+          "ref": "cape-farewell"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Med reseskildringarna Resor utan mål (1932) och Kap Farväl! (1933) fick han sitt stora genombrott även som prosaförfattare."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Холодный приём сборника стихов",
+      "long": "Сборник 1934 года встретили прохладно, и одиннадцать лет Мартинсон издавал только прозу.",
+      "works": [
+        {
+          "ref": "natur"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Natur (1934) fick emellertid ett kyligt mottagande, vilket gjorde att Martinson under elva år övergick till att enbart publicera prosaböcker."
+      }
+    },
+    {
+      "key": "other-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в Москву на съезд писателей",
+      "long": "В 1934 году участвовал в Первом съезде советских писателей в Москве; впечатления от Советского Союза стали для него разочарованием.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году Мартинсон посетил Москву, где принял участие в работе Первого съезда советских писателей."
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех автобиографического романа о детстве",
+      "long": "Полуавтобиографический роман о детстве стал критическим и читательским успехом и переведён более чем на тридцать языков.",
+      "works": [
+        {
+          "ref": "flowering-nettle"
+        },
+        {
+          "ref": "the-way-out",
+          "note": "продолжение романа вышло в 1936 году"
+        }
+      ],
+      "chapter": "debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Martinson found great success as a novelist with the semi-autobiographical Nässlorna blomma (Flowering Nettle) in 1935, in which he depicted his childhood."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главная премия Общества Девяти",
+      "long": "Первая из множества литературных наград, полученных до Нобелевской премии.",
+      "chapter": "debut",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1938 – De Nios Stora Pris"
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Доброволец в советско-финской войне",
+      "long": "Разочаровавшись в сталинском СССР, в 1940 году ушёл добровольцем на финскую сторону; в марте провёл девять дней курьером на фронте у Салла.",
+      "place": {
+        "label": "Салла"
+      },
+      "works": [
+        {
+          "ref": "reality-to-death",
+          "note": "книга описывает его опыт добровольца в финской войне"
+        }
+      ],
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "что в 1940 году ушёл добровольцем на советско-финскую войну 1939—1940 г."
+      }
+    },
+    {
+      "key": "family-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Муей Мартинсон",
+      "long": "Брак с Муей Мартинсон продлился до 1941 года.",
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они прожили в браке вплоть до 1941 года, после чего в 1942 году Харри Мартинсон женился на Ингрид Линдкранц"
+      }
+    },
+    {
+      "key": "love-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Ингрид Линдкранц",
+      "long": "В 1942 году женился на Ингрид Линдкранц.",
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они прожили в браке вплоть до 1941 года, после чего в 1942 году Харри Мартинсон женился на Ингрид Линдкранц"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение к поэзии после одиннадцати лет",
+      "long": "Первый за одиннадцать лет сборник стихов, отмеченный влиянием китайской поэзии, имел критический и коммерческий успех.",
+      "works": [
+        {
+          "ref": "passad"
+        }
+      ],
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Passad (1945), influenced by Chinese poetry, was Martinson's first collection of poems in eleven years, became a critical and commercial success"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большой успех романа-странствия",
+      "long": "Роман о бродяге получил большой успех у читателей и критики.",
+      "works": [
+        {
+          "ref": "road-to-klockrike"
+        }
+      ],
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel Vägen till Klockrike (The Road to Klockrike, 1948) was another huge success"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Шведскую академию",
+      "long": "В 1949 году избран членом Шведской академии, став первым писателем-пролетарием среди её членов.",
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году был избран членом Шведской Академии."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор Гётеборгского университета",
+      "long": "В 1954 году получил степень почётного доктора Гётеборгского университета.",
+      "place": {
+        "label": "Гётеборг"
+      },
+      "chapter": "war-academy",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1954 – Hedersdoktor vid Göteborgs universitet"
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Единодушное признание космической поэмы",
+      "long": "В октябре 1956 года вышла поэма о потерявшем курс космическом корабле; её встретили единодушными похвалами критики и интересом публики.",
+      "works": [
+        {
+          "ref": "aniara"
+        }
+      ],
+      "chapter": "aniara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Aniara was published in October 1956 to unanimous critical acclaim and much public interest."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Неудача сборника и отказ от публикации стихов",
+      "long": "Сборник 1960 года критика приняла плохо; чувствительный к критике Мартинсон объявил, что при жизни стихов больше не издаст.",
+      "works": [
+        {
+          "ref": "vagnen"
+        }
+      ],
+      "chapter": "aniara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His next book Vagnen (\"The Wagon\", 1960), a collection of poems which largely was a criticism of the modern society and its technology, was however not well received by contemporary critics."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постановка пьесы Ингмаром Бергманом",
+      "long": "Пьеса о Китае VII века поставлена Ингмаром Бергманом в Королевском драматическом театре в Стокгольме.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "works": [
+        {
+          "ref": "tre-knivar-fran-wei"
+        }
+      ],
+      "chapter": "aniara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the play Tre knivar från Wei (\"Three Knives from Wei\", 1964) set in 7th century China, which was staged by Ingmar Bergman in the Royal Dramatic Theatre in Stockholm in 1964"
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение к изданию стихов",
+      "long": "В 1971 году вышел сборник стихов, за ним в 1973 году — сборник стихов о природе.",
+      "works": [
+        {
+          "ref": "dikter-om-ljus-och-morker"
+        },
+        {
+          "ref": "tuvor"
+        }
+      ],
+      "chapter": "aniara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1971 Martinson returned as a poet with Dikter om ljus och mörker (Poems About Light and Darkness)"
+      }
+    },
+    {
+      "key": "persecution-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Критика в прессе после Нобелевской премии",
+      "long": "Шведская пресса резко критиковала академию за награждение двух своих членов; Мартинсон принял критику на свой счёт и не мог радоваться признанию.",
+      "chapter": "nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 3 October 1974 the Swedish Academy announced that the Nobel Prize in Literature that year should be awarded jointly to Harry Martinson and Eyvind Johnson. ... The prize decision sparked heavy criticism in the Swedish press against the Swedish Academy for awarding the Nobel Prize to two of its own members."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974-10-03",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "3 октября 1974 года Шведская академия объявила о присуждении премии Мартинсону и Эйвинду Юнсону совместно.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 3 October 1974 the Swedish Academy announced that the Nobel Prize in Literature that year should be awarded jointly to Harry Martinson and Eyvind Johnson."
+      }
+    },
+    {
+      "key": "death-1978",
+      "date": {
+        "from": "1978-02-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в больнице Каролинска",
+      "long": "11 февраля 1978 года покончил с собой в больнице Каролинска в Стокгольме.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "nobel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died by suicide on 11 February 1978 at the Karolinska University Hospital in Stockholm"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "spokskepp",
+      "title": "Корабль-призрак",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "nomad",
+      "title": "Кочевник",
+      "written": {
+        "from": 1931,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "resor-utan-mal",
+      "title": "Путешествия без цели",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "cape-farewell",
+      "title": "Прощай, мыс!",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "natur",
+      "title": "Природа",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "flowering-nettle",
+      "title": "Крапива цветёт",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "the-way-out",
+      "title": "Дорога прочь",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "reality-to-death",
+      "title": "Действительность до смерти",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "passad",
+      "title": "Пассат",
+      "written": {
+        "from": 1945,
+        "to": 1945
+      }
+    },
+    {
+      "ref": "road-to-klockrike",
+      "title": "Дорога в царство колоколов",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "cikada",
+      "title": "Цикада",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "aniara",
+      "title": "Аниара",
+      "qid": "Q1054290",
+      "written": {
+        "from": 1953,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "vagnen",
+      "title": "Повозка",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "tre-knivar-fran-wei",
+      "title": "Три ножа из Вэй",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "dikter-om-ljus-och-morker",
+      "title": "Стихи о свете и тьме",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "tuvor",
+      "title": "Кочки",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "qid": "Q28524412",
+  "name": "Джейн Харпер",
+  "born": "1980",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jane_Harper",
+      "rev": 1366625483
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Манчестер, Австралия, Кент",
+      "from": 1980,
+      "to": 2002
+    },
+    {
+      "key": "zhurnalistika",
+      "title": "Годы в газетах",
+      "from": 2003,
+      "to": 2015
+    },
+    {
+      "key": "romanistka",
+      "title": "Брак и детективы",
+      "from": 2016,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Манчестере",
+      "long": "Родилась в Манчестере, Англия.",
+      "place": {
+        "label": "Манчестер"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jane Harper (born 1980) is a British Australian author"
+      }
+    },
+    {
+      "key": "relocation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Австралию",
+      "long": "Вернулась в Австралию, где стала репортёром газеты Geelong Advertiser.",
+      "place": {
+        "label": "Джилонг"
+      },
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, she returned to Australia to take up a reporting job at the Geelong Advertiser."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Herald Sun",
+      "long": "Перешла в штат газеты Herald Sun в Мельбурне.",
+      "place": {
+        "label": "Мельбурн"
+      },
+      "chapter": "zhurnalistika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, she joined the staff of the Herald Sun in Melbourne."
+      }
+    },
+    {
+      "key": "love-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Питером Страчаном",
+      "long": "Вышла замуж за бывшего журналиста и веб-разработчика Питера Страчана; у пары две дочери.",
+      "chapter": "romanistka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Harper married ex-journalist and web developer Peter Strachan in 2015."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход от журналистики к прозе",
+      "long": "После 13 лет в печатной журналистике вышел первый роман, определивший её путь как автора детективов.",
+      "works": [
+        {
+          "ref": "the-dry"
+        }
+      ],
+      "chapter": "romanistka",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After working as a print journalist for 13 years, her first novel, The Dry, was published in 2016."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Золотой кинжал»",
+      "long": "Получила премию «Золотой кинжал»; в том же году — Ned Kelly Award.",
+      "works": [
+        {
+          "ref": "the-dry"
+        }
+      ],
+      "chapter": "romanistka",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Золотой Кинжал 2017"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Барри за дебютный роман",
+      "long": "Получила премию Барри за лучший дебютный роман, а также приз фестиваля Поляр дю Коньяк.",
+      "works": [
+        {
+          "ref": "the-dry"
+        }
+      ],
+      "chapter": "romanistka",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший дебютный роман 2018"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-dry",
+      "title": "Засуха",
+      "qid": "Q28524515",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "force-of-nature",
+      "title": "Force of Nature",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "the-lost-man",
+      "title": "The Lost Man",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "the-survivors",
+      "title": "The Survivors",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "exiles",
+      "title": "Exiles",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    },
+    {
+      "ref": "last-one-out",
+      "title": "Last One Out",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

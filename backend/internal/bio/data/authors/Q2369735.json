@@ -1,0 +1,212 @@
+{
+  "qid": "Q2369735",
+  "name": "Жерар Клейн",
+  "born": "1937-05-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D0%B5%D0%B9%D0%BD%2C_%D0%96%D0%B5%D1%80%D0%B0%D1%80",
+      "rev": 132557538
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/G%C3%A9rard_Klein",
+      "rev": 1341515627
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Детство и учёба",
+      "from": 1937,
+      "to": 1954
+    },
+    {
+      "key": "fantastika-i-ekonomika",
+      "title": "Фантастика и экономика",
+      "from": 1955,
+      "to": 1986
+    },
+    {
+      "key": "pisatel-i-redaktor",
+      "title": "Писатель и редактор",
+      "from": 1987,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-05-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился 27 мая 1937 года в Нёйи-сюр-Сен.",
+      "place": {
+        "label": "Нёйи-сюр-Сен"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Жерар Клейн (фр. Gérard Klein; род. 27 мая 1937)"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первые фантастические рассказы в печати",
+      "long": "Начал публиковать фантастические рассказы, в том числе под псевдонимами Жиль д’Аржир и Франсуа Пажери.",
+      "chapter": "fantastika-i-ekonomika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начал публиковать фантастические рассказы в 1955 году"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Редактор серии «Ailleurs et Demain»",
+      "long": "С 1969 года редактор влиятельной фантастической серии «Ailleurs et Demain» издательства Робера Лаффона.",
+      "chapter": "fantastika-i-ekonomika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Since 1969, Klein has been the editor of the influential science fiction series Ailleurs et Demain published by Robert Laffont"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Монография по экономике сбережений",
+      "long": "Работая экономистом, опубликовал монографию о семейных сбережениях совместно с Луи Фортраном.",
+      "chapter": "fantastika-i-ekonomika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "опубликовал монографию «Семейные сбережения» (фр. L'épargne des ménages; 1970, совместно с Луи Фортраном)"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Жака Шамбона за перевод",
+      "long": "Получил премию Жака Шамбона за лучший перевод.",
+      "chapter": "fantastika-i-ekonomika",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Жака Шамбона за лучший перевод 1974-01-01"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство фантастикой в Le Livre de Poche",
+      "long": "С 1986 года курирует фантастическую серию издательства Le Livre de Poche.",
+      "chapter": "fantastika-i-ekonomika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in addition to overseeing the Le Livre de Poche science fiction imprint since 1986"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из экономики ради литературы",
+      "long": "Оставил работу экономиста и полностью сосредоточился на писательстве.",
+      "chapter": "pisatel-i-redaktor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 г. отошёл от профессиональной деятельности, полностью сосредоточившись на писательской."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Пилигрим»",
+      "long": "Получил премию «Пилигрим».",
+      "chapter": "pisatel-i-redaktor",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Пилигрим» 2005-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "starmasters-gambit",
+      "title": "Звёздный гамбит",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "time-has-no-scent",
+      "title": "Время не пахнет",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "time-killers",
+      "title": "Убийцы времён",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "scepter-of-chance",
+      "title": "Власть случая",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "overlords-of-war",
+      "title": "Боги войны",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    }
+  ]
+}
