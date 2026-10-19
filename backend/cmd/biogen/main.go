@@ -187,6 +187,17 @@ func engineFlags(fs *flag.FlagSet) (engine, binary, model, effort *string) {
 	return
 }
 
+// errNoEvents — модель вернула ответ без вех жизни.
+var errNoEvents = errors.New("модель вернула ответ без вех")
+
+// skip — автор отложен навсегда (нет даты рождения, модель дважды не нашла
+// вех): отметка в <out>/skipped/<QID>.txt, следующие раунды его не трогают.
+func skip(out, q, reason string) {
+	fmt.Printf("%s: пропуск — %s\n", q, reason)
+	_ = os.MkdirAll(filepath.Join(out, "skipped"), 0o750)
+	_ = os.WriteFile(filepath.Join(out, "skipped", q+".txt"), []byte(reason+"\n"), 0o600)
+}
+
 func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
 	var src gen.Sources
 	if err := readJSON(filepath.Join(out, "sources", q+".json"), &src); err != nil {
@@ -210,8 +221,10 @@ func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
 		return fmt.Errorf("%s: %w", q, err)
 	}
 	if gen.NoEvents(a) {
-		// Разовый сбой модели (главы и работы есть, вех нет) — ошибка, run повторит.
-		return fmt.Errorf("%s: модель вернула ответ без вех", q)
+		// Главы и работы есть, вех нет: бывает разовым сбоем (Перумов, Павлов —
+		// повтор дал 11 и 13 вех), а у тонких источников — честным «вех нет».
+		// run повторяет один раз сразу, потом откладывает автора (skipped/).
+		return fmt.Errorf("%s: %w", q, errNoEvents)
 	}
 	p := filepath.Join(out, "draft", q+".json")
 	if err := writeJSON(p, a); err != nil {
@@ -316,6 +329,10 @@ func cmdRun(ctx context.Context, args []string) error {
 			fmt.Printf("%s: уже есть verified, пропуск\n", q)
 			continue
 		}
+		if _, err := os.Stat(filepath.Join(*out, "skipped", q+".txt")); err == nil {
+			fmt.Printf("%s: отложен (skipped/), пропуск\n", q)
+			continue
+		}
 		err := runOne(ctx, f, x, *out, q, *retries, *retryWait)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "biogen: %s: %v\n", q, err)
@@ -343,11 +360,22 @@ func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, re
 	}
 	if !gen.HasBirthDate(src) {
 		// Не ошибка: повтор раунда ничего не изменит, а модель стоит денег.
-		fmt.Printf("%s: пропуск — в Wikidata нет даты рождения (%q), таймлайн не строится\n", q, src.Born)
+		skip(out, q, fmt.Sprintf("в Wikidata нет даты рождения (%q), таймлайн не строится", src.Born))
 		return nil
 	}
+	emptyRetried := false
 	for attempt := 0; ; attempt++ {
 		err = extractOne(ctx, x, out, q)
+		if errors.Is(err, errNoEvents) {
+			if !emptyRetried {
+				emptyRetried = true
+				fmt.Fprintf(os.Stderr, "biogen: %s: extract: %v — повтор сразу\n", q, err)
+				attempt--
+				continue
+			}
+			skip(out, q, "модель дважды вернула ответ без вех (источники тонкие)")
+			return nil
+		}
 		if err == nil || attempt >= retries || ctx.Err() != nil {
 			break
 		}
