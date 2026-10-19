@@ -1,0 +1,201 @@
+{
+  "qid": "Q241714",
+  "name": "Рейчел Кейн",
+  "born": "1962-04-27",
+  "died": "2020-11-01",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Rachel_Caine",
+      "rev": 1371539946
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Западный Техас и учёба",
+      "from": 1962,
+      "to": 1985
+    },
+    {
+      "key": "muzyka-i-pervye-knigi",
+      "title": "Музыка, бухгалтерия, первые книги",
+      "from": 1986,
+      "to": 2009
+    },
+    {
+      "key": "pisatelstvo-i-bolezn",
+      "title": "Писательство, болезнь, уход",
+      "from": 2010,
+      "to": 2020
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-04-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение Роксанны Лонгстрит Конрад",
+      "long": "Родилась Роксанна Лонгстрит Конрад, будущая писательница, известная под псевдонимом Рейчел Кейн. Выросла в Западном Техасе.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Roxanne Longstreet Conrad (April 27, 1962 – November 1, 2020), known by her pen name Rachel Caine"
+      }
+    },
+    {
+      "key": "education-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы Сокорро в Эль-Пасо",
+      "long": "Окончила среднюю школу Сокорро в Эль-Пасо, штат Техас.",
+      "place": {
+        "label": "Эль-Пасо"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "graduated from Socorro High School in El Paso, Texas, in 1980"
+      }
+    },
+    {
+      "key": "education-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом бухгалтера в Техасском технологическом университете",
+      "long": "Получила степень бакалавра по бухгалтерскому учёту в Техасском технологическом университете, с музыкой как дополнительной специальностью.",
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She earned a bachelor's degree in accounting from the Rawls College of Business at Texas Tech University in 1985"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало публикации романов и рассказов",
+      "long": "С 1990 года писала и публиковала романы и рассказы.",
+      "chapter": "muzyka-i-pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Caine wrote and published novels and short stories starting in 1990."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в корпоративных коммуникациях",
+      "long": "С 1999 года работала в корпоративных коммуникациях: веб-дизайнером, редактором, менеджером, затем директором по корпоративным коммуникациям крупной компании.",
+      "chapter": "muzyka-i-pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1999, Caine was employed in corporate communications as a web designer, editor, corporate communications manager"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Восьмимесячный перерыв ради сроков книг",
+      "long": "Взяла восьмимесячный перерыв на работе почти на весь 2008 год, чтобы уложиться в сроки сдачи книг.",
+      "chapter": "muzyka-i-pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She took an eight-month hiatus for most of 2008 to meet pressing deadlines"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с работы ради писательства",
+      "long": "В 2010 году оставила должность и стала писать на постоянной основе.",
+      "chapter": "pisatelstvo-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "retired from her position to write full-time in 2010"
+      }
+    },
+    {
+      "key": "illness-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: саркома мягких тканей",
+      "long": "В 2018 году у писательницы диагностировали саркому мягких тканей.",
+      "chapter": "pisatelstvo-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2018, Caine was diagnosed with soft tissue sarcoma."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Кейт Вильгельм Solstice от SFWA",
+      "long": "Получила премию Кейт Вильгельм Solstice от SFWA за наставничество и сбор средств для сообщества.",
+      "chapter": "pisatelstvo-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was awarded with the Kate Wilhem Solstice Award by the SFWA in 2020"
+      }
+    },
+    {
+      "key": "death-2020",
+      "date": {
+        "from": "2020-11-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Техасе",
+      "long": "Умерла 1 ноября 2020 года в Техасе.",
+      "place": {
+        "label": "Техас"
+      },
+      "chapter": "pisatelstvo-i-bolezn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died on November 1, 2020."
+      }
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "qid": "Q258431",
+  "name": "Кэролайн Грэм",
+  "born": "1931-07-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D1%8D%D0%BC%2C_%D0%9A%D1%8D%D1%80%D0%BE%D0%BB%D0%B0%D0%B9%D0%BD",
+      "rev": 147510023
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Caroline_Graham_%28writer%29",
+      "rev": 1371372250
+    }
+  ],
+  "chapters": [
+    {
+      "key": "nuneaton-mill",
+      "title": "Нанитон и мельница",
+      "from": 1931,
+      "to": 1952
+    },
+    {
+      "key": "service-france-london",
+      "title": "Служба, Франция, Лондон",
+      "from": 1953,
+      "to": 1981
+    },
+    {
+      "key": "barnaby",
+      "title": "Инспектор Барнаби",
+      "from": 1982,
+      "to": 1990
+    },
+    {
+      "key": "university-later",
+      "title": "Университет и поздние годы",
+      "from": 1991,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-07-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нанитоне",
+      "long": "Родилась в Нанитоне, Уorwickшир, в семье рабочего класса.",
+      "place": {
+        "label": "Нанитон"
+      },
+      "chapter": "nuneaton-mill",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Caroline Graham (born 17 July 1931) is an English playwright, screenwriter and novelist from Nuneaton, Warwickshire."
+      }
+    },
+    {
+      "key": "war-1953",
+      "date": {
+        "from": "1953",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в женском корпусе ВМС",
+      "long": "Служила в Женской вспомогательной службе ВМС в 1953–1955 годах.",
+      "chapter": "service-france-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She served in the Women's Royal Naval Service from 1953 to 1955"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Макавити за дебютный роман",
+      "long": "Первый роман о инспекторе Барнаби получил премию Макавити за лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "killings-at-badgers-drift"
+        }
+      ],
+      "chapter": "barnaby",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It also won the 1989 Macavity Award for \"Best First Novel\""
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Роман в списке лучших детективов всех времён",
+      "long": "Британская Ассоциация писателей-криминалистов включила первый роман о Барнаби в число лучших детективных романов всех времён.",
+      "works": [
+        {
+          "ref": "killings-at-badgers-drift"
+        }
+      ],
+      "chapter": "barnaby",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1990 году британской Ассоциацией писателей-криминалистов была названа одним из лучших детективных романов всех времён"
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Степень магистра в Бирмингемском университете",
+      "long": "В 60 лет получила степень магистра театрального искусства в Бирмингемском университете, ранее училась в Открытом университете.",
+      "place": {
+        "label": "Бирмингем"
+      },
+      "chapter": "university-later",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1991 received a master's degree in theatre studies from the University of Birmingham at the age of 60"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fire-dance",
+      "title": "Fire Dance",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "killings-at-badgers-drift",
+      "title": "Убийства в Бэджерс-Дрифте",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "a-ghost-in-the-machine",
+      "title": "A Ghost in the Machine",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

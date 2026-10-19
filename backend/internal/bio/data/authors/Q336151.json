@@ -1,0 +1,714 @@
+{
+  "qid": "Q336151",
+  "name": "Джон Чивер",
+  "born": "1912-05-27",
+  "died": "1982-06-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A7%D0%B8%D0%B2%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 150822955
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Cheever",
+      "rev": 1377111771
+    }
+  ],
+  "chapters": [
+    {
+      "key": "boyhood-and-crash",
+      "title": "Куинси, разорение отца, Яддо",
+      "from": 1912,
+      "to": 1934
+    },
+    {
+      "key": "new-yorker-and-war",
+      "title": "The New Yorker, брак, армия",
+      "from": 1935,
+      "to": 1950
+    },
+    {
+      "key": "scarborough-italy",
+      "title": "Скарборо, Италия, первый роман",
+      "from": 1951,
+      "to": 1963
+    },
+    {
+      "key": "ossining-and-drink",
+      "title": "Оссининг, слава и алкоголь",
+      "from": 1964,
+      "to": 1975
+    },
+    {
+      "key": "sobriety-and-end",
+      "title": "Трезвость, признание, болезнь",
+      "from": 1976,
+      "to": 1982
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-05-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Куинси",
+      "long": "Родился в Куинси, штат Массачусетс, вторым ребёнком Фредерика Линкольна и Мэри Лили Чивер.",
+      "place": {
+        "label": "Куинси"
+      },
+      "chapter": "boyhood-and-crash",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John William Cheever (May 27, 1912 – June 18, 1982)"
+      }
+    },
+    {
+      "key": "education-1930",
+      "date": {
+        "from": "1930-03",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из Thayer Academy",
+      "long": "Покинул частную школу Thayer Academy; позже написал об этом сатирический рассказ «Исключённый», напечатанный в The New Republic.",
+      "place": {
+        "label": "Куинси"
+      },
+      "chapter": "boyhood-and-crash",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in March 1930, he was either expelled for smoking or (more likely) departed of his own accord"
+      }
+    },
+    {
+      "key": "poverty-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Потеря семейного дома, разрыв родителей",
+      "long": "После краха Kreuger \u0026 Toll, куда отец вложил остатки капитала, семья потеряла дом. Родители расстались, Джон с братом Фредом поселился в Бостоне.",
+      "place": {
+        "label": "Куинси"
+      },
+      "chapter": "boyhood-and-crash",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After the 1932 crash of Kreuger \u0026 Toll, in which Frederick Cheever had invested what was left of his money, the Cheever house on Winthrop Avenue was lost to foreclosure."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое лето в колонии Яддо",
+      "long": "Лето провёл в творческой колонии Яддо в Саратога-Спрингс, ставшей на многие годы его вторым домом.",
+      "place": {
+        "label": "Саратога-Спрингс"
+      },
+      "chapter": "boyhood-and-crash",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever spent the summer of 1934 at Yaddo, which would serve as a second home for much of his life."
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало сотрудничества с The New Yorker",
+      "long": "The New Yorker купил рассказ «Буффало» — начало многолетнего сотрудничества с журналом.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1935, Katharine White of The New Yorker bought Cheever's story \"Buffalo\" for $45—the first of many that Cheever would publish in the magazine."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Федеральном писательском проекте",
+      "long": "Работал редактором в Федеральном писательском проекте в Вашингтоне, через менее чем год ушёл.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938, he began work for the Federal Writers' Project in Washington, D.C., which he considered an embarrassing boondoggle."
+      }
+    },
+    {
+      "key": "love-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мэри Винтерниц",
+      "long": "Женился на Мэри Винтерниц, дочери декана медицинской школы Йеля Милтона Винтерница.",
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1941."
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942-05-07",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Призыв в армию США",
+      "long": "Поступил рядовым пехоты в армию США, позднее переведён в войска связи.",
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever enlisted as an infantryman in the U.S. Army on May 7, 1942."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Перевод из пехоты на киностудию",
+      "long": "Книга попала к майору Леонарду Спигельгассу, и Чивера перевели на киностудию в Астории. Большая часть его прежней роты погибла в Нормандии.",
+      "place": {
+        "label": "Астория"
+      },
+      "works": [
+        {
+          "ref": "way-some-people-live",
+          "note": "первый сборник привлёк внимание Спигельгасса"
+        }
+      ],
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Way Some People Live, was published in 1943 to mixed reviews… Early that summer, Cheever was transferred to the former Paramount studio in Astoria"
+      }
+    },
+    {
+      "key": "child-1943",
+      "date": {
+        "from": "1943-07-31",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сьюзен",
+      "long": "Родилась дочь Сьюзен, впоследствии писательница.",
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever's daughter Susan was born on July 31, 1943."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Аванс Random House на роман",
+      "long": "Взял аванс у Random House на роман, начатый до войны; издательство позже потребовало либо книгу, либо возврат денег.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946, he accepted a $4,800 advance from Random House to resume work on his novel"
+      }
+    },
+    {
+      "key": "child-1948",
+      "date": {
+        "from": "1948-05-04",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Бенджамина",
+      "long": "Родился сын Бенджамин, впоследствии писатель.",
+      "chapter": "new-yorker-and-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever's son Benjamin was born on May 4, 1948."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Стипендия присуждена главным образом по двум рассказам, ещё не опубликованным.",
+      "works": [
+        {
+          "ref": "goodbye-my-brother",
+          "note": "стипендия присуждена в том числе за этот рассказ в рукописи"
+        }
+      ],
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1951, Cheever wrote \"Goodbye, My Brother\"… Cheever was awarded a Guggenheim Fellowship."
+      }
+    },
+    {
+      "key": "relocation-1951",
+      "date": {
+        "from": "1951-05-28",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в пригород Скарборо",
+      "long": "Переехал в коттедж в имении Бичвуд в Скарборо-он-Гудзон, Уэстчестер.",
+      "place": {
+        "label": "Скарборо-он-Гудзон"
+      },
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 28, 1951, Cheever moved to Beechwood, the suburban estate of Frank A. Vanderlip"
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Завершение первого романа",
+      "long": "Закончил первый роман летом в штате Мэн, после того как Random House потребовал книгу или возврат аванса, а Harper \u0026 Brothers выкупил контракт.",
+      "place": {
+        "label": "Френдшип"
+      },
+      "works": [
+        {
+          "ref": "wapshot-chronicle",
+          "note": "роман закончен летом 1956 года"
+        }
+      ],
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1956, Cheever finished The Wapshot Chronicle while vacationing in Friendship, Maine"
+      }
+    },
+    {
+      "key": "relocation-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Год семьи в Италии",
+      "long": "На деньги от продажи прав на экранизацию рассказа семья провела год в Италии.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever and his family spent the following year in Italy, where his son Federico was born on March 9, 1957"
+      }
+    },
+    {
+      "key": "child-1957",
+      "date": {
+        "from": "1957-03-09",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Федерико",
+      "long": "В Италии родился сын Федерико.",
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever and his family spent the following year in Italy, where his son Federico was born on March 9, 1957"
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная книжная премия за первый роман",
+      "long": "Первый роман отмечен Национальной книжной премией.",
+      "works": [
+        {
+          "ref": "wapshot-chronicle"
+        }
+      ],
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Wapshot Chronicle (National Book Award, 1958)"
+      }
+    },
+    {
+      "key": "relocation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Оссининг",
+      "long": "Поселился в доме голландской колониальной постройки в Оссининге на берегу Гудзона, где прожил до конца жизни.",
+      "place": {
+        "label": "Оссининг"
+      },
+      "chapter": "scarborough-italy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961, Cheever had moved to a stately, stone-ended Dutch Colonial farmhouse in Ossining"
+      }
+    },
+    {
+      "key": "other-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первая поездка в СССР",
+      "long": "Впервые побывал в СССР; второй раз — в 1971 году.",
+      "place": {
+        "label": "СССР"
+      },
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году был опубликован роман-продолжение «Скандал в семействе Уопшотов», получивший отличные оценки критиков. В том же году писатель впервые побывал в СССР"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964-03-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Обложка журнала Time",
+      "long": "Попал на обложку Time с благожелательным очерком «Овидий в Оссининге»; новый роман получил лучшие отзывы в его карьере к тому времени.",
+      "works": [
+        {
+          "ref": "wapshot-scandal"
+        }
+      ],
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Wapshot Scandal was published in 1964… Cheever appeared on the cover of Time magazine's March 27 issue"
+      }
+    },
+    {
+      "key": "illness-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлый алкоголизм и кризис брака",
+      "long": "Алкоголизм стал тяжёлым, брак ухудшался; вместе с женой обратился к психиатру, но вскоре прекратил терапию.",
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Cheever's alcoholism had become severe… in 1966 he consulted a psychiatrist, David C. Hays"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Разгромная критика нового романа",
+      "long": "Разгромная рецензия Бенджамина ДеMотта на первой полосе New York Times Book Review; депрессия усилилась, в мае возобновил лечение у психиатра.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "bullet-park"
+        }
+      ],
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bullet Park was published in 1969, and received a devastating review from Benjamin DeMott"
+      }
+    },
+    {
+      "key": "illness-1973",
+      "date": {
+        "from": "1973-05-12",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Отёк лёгких, едва не смерть",
+      "long": "Чуть не умер от отёка лёгких; месяц провёл в больнице, дал зарок не пить, но в августе вновь начал.",
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On May 12, 1973, Cheever awoke coughing uncontrollably and learned at the hospital that he had almost died from pulmonary edema caused by alcoholism."
+      }
+    },
+    {
+      "key": "illness-1975",
+      "date": {
+        "from": "1975-04-09",
+        "to": "1975-05-07",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Лечение от алкоголизма в клинике Smithers",
+      "long": "Брат Фред отвёз его домой в Оссининг; затем лечение в реабилитационном центре Smithers. После возвращения 7 мая больше не пил.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "ossining-and-drink",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in March 1975, his brother Fred… On April 9, Cheever was admitted to the Smithers Alcoholic Rehabilitation Unit in New York… Driven home by his wife on May 7, Cheever never drank alcohol again."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех романа и обложка Newsweek",
+      "long": "Роман возглавил список бестселлеров New York Times на три недели; Чивер на обложке Newsweek.",
+      "works": [
+        {
+          "ref": "falconer"
+        }
+      ],
+      "chapter": "sobriety-and-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1977, Cheever appeared on the cover of Newsweek with the caption, \"A Great American Novel: John Cheever's Falconer.\""
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Сборник, вышедший в октябре 1978 года тиражом 125 тысяч в твёрдой обложке, получил Пулитцеровскую премию и премию Национального круга литературных критиков.",
+      "works": [
+        {
+          "ref": "stories-of-john-cheever"
+        }
+      ],
+      "chapter": "sobriety-and-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Stories of John Cheever, won the 1979 Pulitzer Prize for Fiction"
+      }
+    },
+    {
+      "key": "illness-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: рак лёгкого",
+      "long": "Обнаружена опухоль правого лёгкого; в ноябре выяснилось, что рак распространился на бедро, таз и мочевой пузырь.",
+      "works": [
+        {
+          "ref": "oh-what-a-paradise-it-seems"
+        }
+      ],
+      "chapter": "sobriety-and-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1981, a tumor was discovered in Cheever's right lung, and, in late November, he returned to the hospital"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982-04-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная медаль за вклад в литературу",
+      "long": "Получил Национальную медаль за вклад в литературу в Карнеги-холле, уже будучи тяжело больным.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "sobriety-and-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On April 27, 1982, six weeks before his death, Cheever was awarded the National Medal for Literature"
+      }
+    },
+    {
+      "key": "death-1982",
+      "date": {
+        "from": "1982-06-18",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Умер от рака в Оссининге; похоронен на кладбище First Parish в Норуэлле, Массачусетс.",
+      "place": {
+        "label": "Оссининг"
+      },
+      "chapter": "sobriety-and-end",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "When Cheever died on June 18, 1982, flags in Ossining were lowered to half staff for ten days."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "way-some-people-live",
+      "title": "Как живут некоторые люди",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "enormous-radio",
+      "title": "Исполинское радио",
+      "written": {
+        "from": 1947,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "goodbye-my-brother",
+      "title": "Прощай, брат",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "wapshot-chronicle",
+      "title": "Хроники семейства Уопшотов",
+      "written": {
+        "from": 1956,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "wapshot-scandal",
+      "title": "Скандал в семействе Уопшотов",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "the-swimmer",
+      "title": "Пловец",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "bullet-park",
+      "title": "Буллет-Парк",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "falconer",
+      "title": "Фальконер",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "stories-of-john-cheever",
+      "title": "Рассказы Джона Чивера",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "oh-what-a-paradise-it-seems",
+      "title": "Какая райская картина",
+      "written": {
+        "from": 1981,
+        "to": 1982
+      }
+    }
+  ]
+}

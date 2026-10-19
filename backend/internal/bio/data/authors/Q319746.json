@@ -1,0 +1,357 @@
+{
+  "qid": "Q319746",
+  "name": "Джон Фанте",
+  "born": "1909-04-08",
+  "died": "1983-05-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%BD%D1%82%D0%B5%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 153702465
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Fante",
+      "rev": 1372806949
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kolorado",
+      "title": "Колорадо и иезуиты",
+      "from": 1909,
+      "to": 1928
+    },
+    {
+      "key": "los-andzheles-ch",
+      "title": "Чердак, Лонг-Бич, первые рассказы",
+      "from": 1929,
+      "to": 1936
+    },
+    {
+      "key": "brak-i-bandini",
+      "title": "Джойс, Менкен и Бандини",
+      "from": 1937,
+      "to": 1949
+    },
+    {
+      "key": "scenarist",
+      "title": "Хлеб сценариста и болезнь",
+      "from": 1950,
+      "to": 1977
+    },
+    {
+      "key": "slepota",
+      "title": "Слепота и диктовка",
+      "from": 1978,
+      "to": 1983
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1909",
+      "date": {
+        "from": "1909-04-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в итало-американской семье",
+      "long": "Родился в Денвере, штат Колорадо, в семье каменщика Николы Фанте и Мэри Каполунго, католички.",
+      "place": {
+        "label": "Денвер"
+      },
+      "chapter": "kolorado",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fante was born in Denver, Colorado, on April 8, 1909, to an Italian-American family."
+      }
+    },
+    {
+      "key": "education-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Уход из Колорадского университета",
+      "long": "Бросил университет и отправился в Лос-Анджелес, чтобы заниматься писательством.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "los-andzheles-ch",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He dropped out of college in 1929 and “hitchhiked to Los Angeles at age 24” to focus on his writing."
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый рассказ в «The American Mercury»",
+      "long": "В журнале «The American Mercury» опубликован первый рассказ Фанте; позднее его рассказы печатались во многих журналах.",
+      "chapter": "los-andzheles-ch",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1932-м его первый рассказ опубликовал журнал «The American Mercury»"
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Чердак в Лонг-Бите и контракт на первый роман",
+      "long": "Жил на чердаке в Лонг-Биче; по контракту с «Knopf» получил задаток и семь месяцев (450 долларов), но за этот срок роман не закончил.",
+      "place": {
+        "label": "Лонг-Бич"
+      },
+      "works": [
+        {
+          "ref": "road-to-los-angeles",
+          "note": "письмо Кэри Мак-Уильямс от 23 февраля 1933 года о сроке и гонораре за роман"
+        }
+      ],
+      "chapter": "los-andzheles-ch",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1933 году он жил на чердаке Лонг-Бича и работал над своим первым романом «Дорога на Лос-Анджелес»."
+      }
+    },
+    {
+      "key": "creation-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Завершение неопубликованного романа",
+      "long": "Переработал первые сто страниц и закончил книгу; роман не был опубликован при жизни автора, вероятно из-за провокационной темы.",
+      "works": [
+        {
+          "ref": "road-to-los-angeles",
+          "note": "письмо Мак-Уильямс около 1936 года: «Дорога на Лос-Анджелес» окончена"
+        }
+      ],
+      "chapter": "los-andzheles-ch",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Где-то в 1936 году он переработал первые сто страниц, несколько сократив книгу, и закончил её."
+      }
+    },
+    {
+      "key": "love-1937",
+      "date": {
+        "from": "1937-01-30",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Джойс Смарт",
+      "long": "Фанте познакомился с Джойс Смарт 30 января 1937 года.",
+      "chapter": "brak-i-bandini",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fante and Joyce Smart met on January 30, 1937, and were married on July 31 of that same year in Reno, Nevada."
+      }
+    },
+    {
+      "key": "love-1937-2",
+      "date": {
+        "from": "1937-07-31",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Джойс Смарт",
+      "long": "Обвенчался с Джойс Смарт в Рино, штат Невада; в браке было четверо детей.",
+      "place": {
+        "label": "Рино"
+      },
+      "chapter": "brak-i-bandini",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fante and Joyce Smart met on January 30, 1937, and were married on July 31 of that same year in Reno, Nevada."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поддержка Менкена и дебютный роман",
+      "long": "Редактор «The American Mercury» Г. Л. Менкен принял рассказ Фанте условно и помог с публикацией первого романа.",
+      "works": [
+        {
+          "ref": "wait-until-spring-bandini"
+        }
+      ],
+      "chapter": "brak-i-bandini",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With Mencken's help, in 1938 Fante published his first novel, Wait Until Spring, Bandini."
+      }
+    },
+    {
+      "key": "child-1944",
+      "date": {
+        "from": "1944-02-19",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Дэна",
+      "long": "Родился сын Дэн Фанте, впоследствии писатель и драматург.",
+      "chapter": "brak-i-bandini",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Dan Fante 1944-02-19"
+      }
+    },
+    {
+      "key": "illness-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз «диабет»",
+      "long": "В 1955 году заболел диабетом; осложнения болезни впоследствии привели к слепоте.",
+      "chapter": "scenarist",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1955 году Джон Фанте заболел диабетом, и осложнения недуга в 1978 году привели его к слепоте."
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Ампутация пальцев и стоп",
+      "long": "Из-за осложнений диабета ампутированы пальцы ног и стопы, позднее — ноги.",
+      "chapter": "scenarist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fante was diagnosed with diabetes in 1955, which ultimately cost him his eyesight and led to the 1977 amputation of his toes and feet, and later legs."
+      }
+    },
+    {
+      "key": "illness-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Потеря зрения",
+      "long": "Осложнения диабета привели к слепоте.",
+      "chapter": "slepota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1955 году Джон Фанте заболел диабетом, и осложнения недуга в 1978 году привели его к слепоте."
+      }
+    },
+    {
+      "key": "death-1983",
+      "date": {
+        "from": "1983-05-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в 74 года",
+      "long": "Умер 8 мая 1983 года.",
+      "place": {
+        "label": "Вудленд-Хиллз"
+      },
+      "chapter": "slepota",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался Джон Фанте в возрасте 74 лет 8 мая 1983 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "road-to-los-angeles",
+      "title": "Дорога на Лос-Анджелес",
+      "qid": "Q2252396",
+      "written": {
+        "from": 1933,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "wait-until-spring-bandini",
+      "title": "Подожди до весны, Бандини",
+      "qid": "Q632047",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "ask-the-dust",
+      "title": "Спроси у пыли",
+      "qid": "Q2629554",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "dago-red",
+      "title": "Итальянское красное",
+      "qid": "Q3700850",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "full-of-life",
+      "title": "Полнота жизни",
+      "qid": "Q4004484",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "brotherhood-of-the-grape",
+      "title": "The Brotherhood of the Grape",
+      "qid": "Q3821879",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "dreams-from-bunker-hill",
+      "title": "Мечты на Банкер-Хилле",
+      "qid": "Q3964069",
+      "written": {
+        "from": 1978,
+        "to": 1982
+      }
+    }
+  ]
+}

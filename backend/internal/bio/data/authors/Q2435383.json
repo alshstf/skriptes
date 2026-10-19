@@ -1,0 +1,90 @@
+{
+  "qid": "Q2435383",
+  "name": "Тимур Вермеш",
+  "born": "1967",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D1%80%D0%BC%D0%B5%D1%88%2C_%D0%A2%D0%B8%D0%BC%D1%83%D1%80",
+      "rev": 149444589
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Timur_Vermes",
+      "rev": 1370637346
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Нюрнберг и университет",
+      "from": 1967,
+      "to": 2006
+    },
+    {
+      "key": "ghostwriter-and-novel",
+      "title": "Литературный негр и бестселлер",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нюрнберге",
+      "long": "Родился в Нюрнберге в семье немки и венгра, бежавшего в Германию после восстания 1956 года.",
+      "place": {
+        "label": "Нюрнберг"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Timur Vermes was born in Nuremberg in 1967 to a German mother and Hungarian father."
+      }
+    },
+    {
+      "key": "education-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Эрлангенском университете",
+      "long": "После аттестата зрелости изучал историю и политику в Университете Эрлангена — Нюрнберга. Точные годы учёбы в источниках не указаны.",
+      "place": {
+        "label": "Эрланген"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Университет Эрлангена — Нюрнберга"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "er-ist-wieder-da",
+      "title": "Он снова здесь",
+      "qid": "Q13220357",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "die-hungrigen-und-die-satten",
+      "title": "Голодные и сытые",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    }
+  ]
+}

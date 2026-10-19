@@ -1,0 +1,242 @@
+{
+  "qid": "Q1077057",
+  "name": "Кристофер Банч",
+  "born": "1943-12-22",
+  "died": "2005-07-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%BD%D1%87%2C_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80",
+      "rev": 147533536
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Chris_Bunch",
+      "rev": 1378512837
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-vietnam",
+      "title": "Калифорния и Вьетнам",
+      "from": 1943,
+      "to": 1969
+    },
+    {
+      "key": "television",
+      "title": "Телевидение и дуэт с Коулом",
+      "from": 1970,
+      "to": 1992
+    },
+    {
+      "key": "washington",
+      "title": "Вашингтон, выстрел и одиночное письмо",
+      "from": 1993,
+      "to": 2005
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-12-22",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Фресно",
+      "long": "Кристофер Банч родился во Фресно, Калифорния.",
+      "place": {
+        "label": "Фресно"
+      },
+      "chapter": "youth-vietnam",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Фресно 1943-12-22"
+      }
+    },
+    {
+      "key": "war-1965",
+      "date": {
+        "from": "1965",
+        "to": "1966",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба во Вьетнаме командиром патруля",
+      "long": "Вступил в армию США и 14 месяцев служил во Вьетнаме командиром патруля.",
+      "place": {
+        "label": "Вьетнам"
+      },
+      "works": [
+        {
+          "ref": "reckoning-for-kings"
+        }
+      ],
+      "chapter": "youth-vietnam",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "served 14 months in Vietnam during the Vietnam War in 1965–66, serving as a patrol commander"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация романа на Пулитцеровскую премию",
+      "long": "Роман, написанный с Коулом и действие которого происходит во время тетского наступления, был номинирован на Пулитцеровскую премию.",
+      "works": [
+        {
+          "ref": "reckoning-for-kings"
+        }
+      ],
+      "chapter": "television",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their 1987 novel A Reckoning for Kings, set during the Tet Offensive of the Vietnam War, was nominated for the Pulitzer Prize"
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд на полуостров Лонг-Бич в Вашингтоне",
+      "long": "К 1993 году Банч и Коул переехали из Южной Калифорнии в штат Вашингтон; Банч поселился в Чинуке.",
+      "place": {
+        "label": "Чинук"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1993, Bunch and Cole had relocated from Southern California to the Long Beach Peninsula in Washington state"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Окончание соавторства с Коулом",
+      "long": "Творческое партнёрство Банча и Коула завершилось; дальше Банч писал романы самостоятельно.",
+      "works": [
+        {
+          "ref": "shadow-warrior"
+        }
+      ],
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bunch and Cole's writing partnership ended in 1995."
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996-06",
+        "to": "1996-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Убийство соседа при самообороне",
+      "long": "В июне 1996 года Банч застрелил соседа Майкла Мауха, заявив о самообороне; в августе присяжные вынесли вердикт об оправданном убийстве, обвинений не предъявили.",
+      "place": {
+        "label": "Чинук"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1996, Bunch shot and killed Michael G. Mauch, 26, a neighbor at the rural-vehicle park in Chinook"
+      }
+    },
+    {
+      "key": "death-2005",
+      "date": {
+        "from": "2005-07-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Илвако после болезни лёгких",
+      "long": "Умер в Илвако, штат Вашингтон, после долгой болезни лёгких.",
+      "place": {
+        "label": "Илвако"
+      },
+      "chapter": "washington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where he died on July 4, 2005, after a long battle with a lung ailment"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sten",
+      "title": "Стэн",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "reckoning-for-kings",
+      "title": "A Reckoning for Kings",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "shadow-warrior",
+      "title": "Shadow Warrior",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "seer-king",
+      "title": "The Seer King",
+      "written": {
+        "from": 1997,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "last-legion",
+      "title": "The Last Legion",
+      "written": {
+        "from": 1999,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "star-risk",
+      "title": "Star Risk, Ltd.",
+      "written": {
+        "from": 2002,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "dragonmaster",
+      "title": "Dragonmaster",
+      "written": {
+        "from": 2002,
+        "to": 2004
+      }
+    }
+  ]
+}

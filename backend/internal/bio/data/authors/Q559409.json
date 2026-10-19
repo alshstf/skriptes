@@ -1,0 +1,389 @@
+{
+  "qid": "Q559409",
+  "name": "Пирс Энтони",
+  "born": "1934-08-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%BD%D1%82%D0%BE%D0%BD%D0%B8%2C_%D0%9F%D0%B8%D1%80%D1%81",
+      "rev": 154712639
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Piers_Anthony",
+      "rev": 1371698410
+    }
+  ],
+  "chapters": [
+    {
+      "key": "oxford-spain-america",
+      "title": "Оксфорд, Испания, Америка",
+      "from": 1934,
+      "to": 1955
+    },
+    {
+      "key": "marriage-and-army",
+      "title": "Брак, армия, гражданство",
+      "from": 1956,
+      "to": 1962
+    },
+    {
+      "key": "first-books",
+      "title": "Первые рассказы и романы",
+      "from": 1963,
+      "to": 1976
+    },
+    {
+      "key": "xanth-years",
+      "title": "Годы Ксанфа",
+      "from": 1977,
+      "to": 2008
+    },
+    {
+      "key": "losses-and-late-years",
+      "title": "Утраты и поздние годы",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1934",
+      "date": {
+        "from": "1934-08-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Оксфорде в семье квакеров",
+      "long": "Родился в Оксфорде в семье квакеров; отец был американцем по рождению.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "oxford-spain-america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 6 августа 1934 года в Оксфорде, Великобритания"
+      }
+    },
+    {
+      "key": "family-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Родители-квакеры уезжают в Барселону",
+      "long": "Родители прервали учёбу ради помощи квакеров в Гражданской войне в Испании; детей оставили в Англии с дедом и бабкой по матери и няней.",
+      "place": {
+        "label": "Барселона"
+      },
+      "chapter": "oxford-spain-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "interrupted their studies in 1936 to undertake relief work on behalf of the Quakers during the Spanish Civil War"
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в США после высылки из Испании",
+      "long": "В 1940 году семья, вынужденно покинувшая Испанию, отплыла в США.",
+      "chapter": "oxford-spain-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1940, after being forced out of Spain and with the situation in Britain deteriorating, the family sailed to the United States"
+      }
+    },
+    {
+      "key": "relocation-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в общине в Вермонте, знакомство со Скоттом Нирингом",
+      "long": "Семья поселилась в общине «возвращения к земле» близ Уинхолла, где мальчик познакомился с соседом, писателем Скоттом Нирингом.",
+      "place": {
+        "label": "Уинхолл"
+      },
+      "chapter": "oxford-spain-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1941 the family settled in a rustic \"back to the land\" utopian community near Winhall, Vermont"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Годдард",
+      "long": "После смены нескольких школ окончил колледж Годдард в Вермонте.",
+      "chapter": "marriage-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "eventually enrolling in Goddard College in Vermont where he graduated in 1956"
+      }
+    },
+    {
+      "key": "love-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Кэрол Энн Мэрбл",
+      "long": "Женился на однокурснице Кэрол Энн Мэрбл в год окончания колледжа.",
+      "chapter": "marriage-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They were married in 1956, the same year he graduated from Goddard College"
+      }
+    },
+    {
+      "key": "war-1957",
+      "date": {
+        "from": "1957",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в армии США",
+      "long": "Пошёл в армию ради медицинской страховки и стабильного дохода — жена была беременна; служил до 1959 года, редактировал батальонную газету.",
+      "chapter": "marriage-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1957, Anthony decided to join the United States Army, as his wife was pregnant and they needed both medical coverage and a steady source of income."
+      }
+    },
+    {
+      "key": "other-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Получение американского гражданства",
+      "long": "Во время службы в армии стал гражданином США.",
+      "chapter": "marriage-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he became a naturalized U.S. citizen in 1958"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый напечатанный рассказ",
+      "long": "Опубликован первый рассказ — по уговору с женой, которая обеспечивала семью, пока он пробовал стать писателем.",
+      "chapter": "first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1963: первый напечатанный рассказ (Possible to Rue)."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход первого романа",
+      "long": "Опубликован первый роман; в тот же год повесть писателя получила первый приз на литературном конкурсе.",
+      "works": [
+        {
+          "ref": "chthon"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1967: опубликован первый роман («Хтон»)."
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Спор с редактором из-за правки романа",
+      "long": "Редактор Роджер Элвуд заказал роман для серии Laser Books и внёс в текст изменения; книга вышла в сосоавторстве с Робертом Коулсоном, права вернулись автору под угрозой иска.",
+      "works": [
+        {
+          "ref": "but-what-of-earth",
+          "note": "в авторских предисловии и примечаниях к изданию 1989 года описана история правок"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "there was a dispute surrounding the original publication (1976) of But What of Earth?"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Британского общества фэнтези",
+      "long": "Первый роман о Ксанфе отмечен премией Британского общества фэнтези.",
+      "works": [
+        {
+          "ref": "xanth"
+        }
+      ],
+      "chapter": "xanth-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1978 — премия «British Fantasy Society» за роман «Заклинание для хамелеона»"
+      }
+    },
+    {
+      "key": "loss-2009",
+      "date": {
+        "from": "2009-09-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Пенни",
+      "long": "3 сентября 2009 года умерла старшая дочь Пенни (от осложнений рака кожи); осталась дочь Логан.",
+      "chapter": "losses-and-late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "3 сентября 2009 года Пенни (Пенелопа Кэролайн Джейкоб) умерла"
+      }
+    },
+    {
+      "key": "loss-2019",
+      "date": {
+        "from": "2019-10-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Кэрол Энн",
+      "long": "Кэрол Энн умерла дома 3 октября 2019 года после пятнадцати лет болезни (CIDP).",
+      "chapter": "losses-and-late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carol Ann died at home on October 3, 2019, from what is believed to have been heart-related complications"
+      }
+    },
+    {
+      "key": "love-2020",
+      "date": {
+        "from": "2020-04-22",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Мэри Ли Бойэнс",
+      "long": "22 апреля 2020 года женился на Мэри Ли Бойэнс.",
+      "chapter": "losses-and-late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On April 22, 2020, he married MaryLee Boyance."
+      }
+    },
+    {
+      "key": "relocation-2023",
+      "date": {
+        "from": "2023-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Продажа фермы и переезд в Калифорнию",
+      "long": "Продал ферму во Флориде, где жил много лет, и переехал в Калифорнию.",
+      "place": {
+        "label": "Редондо-Бич"
+      },
+      "chapter": "losses-and-late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Anthony lived on a tree farm in Florida until March 2023, when he sold the farm and moved to California."
+      }
+    },
+    {
+      "key": "loss-2026",
+      "date": {
+        "from": "2026-01-08",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мэри Ли",
+      "long": "8 января 2026 года умерла вторая жена Мэри Ли.",
+      "chapter": "losses-and-late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "MaryLee died on January 8, 2026."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "chthon",
+      "title": "Хтон",
+      "qid": "Q4501974",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "macroscope",
+      "title": "Макроскоп",
+      "qid": "Q6725637",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "but-what-of-earth",
+      "title": "But What of Earth?",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "xanth",
+      "title": "Ксанф",
+      "qid": "Q182099",
+      "written": {
+        "from": 1977,
+        "to": 2026
+      }
+    }
+  ]
+}

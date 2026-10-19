@@ -1,0 +1,354 @@
+{
+  "qid": "Q261521",
+  "name": "Джозефина Тэй",
+  "born": "1896-07-25",
+  "died": "1952-02-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%BE%D0%B7%D0%B5%D1%84%D0%B8%D0%BD%D0%B0_%D0%A2%D1%8D%D0%B9",
+      "rev": 146593869
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Josephine_Tey",
+      "rev": 1371935982
+    }
+  ],
+  "chapters": [
+    {
+      "key": "inverness-and-teaching",
+      "title": "Инвернесс и физкультура",
+      "from": 1896,
+      "to": 1922
+    },
+    {
+      "key": "return-to-inverness",
+      "title": "Возвращение к отцу и первые тексты",
+      "from": 1923,
+      "to": 1930
+    },
+    {
+      "key": "theatre-and-novels",
+      "title": "Сцена и детективы",
+      "from": 1931,
+      "to": 1950
+    },
+    {
+      "key": "last-years",
+      "title": "Лондон и последний год",
+      "from": 1951,
+      "to": 1952
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1896",
+      "date": {
+        "from": "1896-07-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Инвернессе",
+      "long": "Элизабет Макинтош родилась в Инвернессе в семье бакалейщика Колина Макинтоша и Джозефины, урождённой Хорн; старшая из трёх сестёр.",
+      "place": {
+        "label": "Инвернесс"
+      },
+      "chapter": "inverness-and-teaching",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Элизабет Макинтош родилась 25 июля 1896 года в городе Инвернессе"
+      }
+    },
+    {
+      "key": "education-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в колледже физкультуры Энсти",
+      "long": "После Королевской академии Инвернесса в 1914 году поступила в Энсти — колледж физической культуры в Эрдингтоне близ Бирмингема.",
+      "place": {
+        "label": "Эрдингтон"
+      },
+      "works": [
+        {
+          "ref": "miss-pym-disposes",
+          "note": "школьный опыт использован при описании предметов и травм в колледже"
+        }
+      ],
+      "chapter": "inverness-and-teaching",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "then, in 1914, Anstey Physical Training College in Erdington, a suburb of Birmingham"
+      }
+    },
+    {
+      "key": "relocation-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Инвернесс ухаживать за матерью",
+      "long": "В 1923 году вернулась в Инвернесс насовсем ухаживать за больной матерью; после её смерти в том же году осталась вести хозяйство отца.",
+      "place": {
+        "label": "Инвернесс"
+      },
+      "chapter": "return-to-inverness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1923, she returned to Inverness permanently to care for her invalid mother"
+      }
+    },
+    {
+      "key": "creation-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первая публикация под псевдонимом Гордон Давиот",
+      "long": "Первая опубликованная работа вышла в «Вестминстер газетт» под именем Гордон Давиот; затем печатала стихи и рассказы в газетах и журналах.",
+      "chapter": "return-to-inverness",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her first published work was in The Westminster Gazette in 1925, under the name Gordon Daviot."
+      }
+    },
+    {
+      "key": "career-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех пьесы в Вест-Энде и дружба с Гилгудом",
+      "long": "Пьеса в 1932 году поставлена в Арts Theatre, в 1933 перенесена в New Theatre на год; исполнитель Джон Гилгуд стал другом на всю жизнь.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "richard-of-bordeaux"
+        }
+      ],
+      "chapter": "theatre-and-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her play about King Richard II, Richard of Bordeaux,  was produced in 1932 at the Arts Theatre, under the Daviot pseudonym."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Две пьесы на лондонской сцене",
+      "long": "В 1934 году в New Theatre поставлены ещё две её пьесы; вторая написана в соавторстве с Гилгудом.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "theatre-and-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Two more of her plays were produced at the New Theatre, The Laughing Woman (1934) and Queen of Scots (1934, written in collaboration with Gielgud)."
+      }
+    },
+    {
+      "key": "creation-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Биография виконта Данди",
+      "long": "Единственная документальная книга написана в защиту Джона Грэма Клаверхауса, которого она считала оклеветанным героем.",
+      "works": [
+        {
+          "ref": "claverhouse"
+        }
+      ],
+      "chapter": "theatre-and-novels",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Claverhouse (1937) [as Gordon Daviot] (a life of the 17th-century cavalry leader John Graham of Claverhouse, 1st Viscount Dundee)"
+      }
+    },
+    {
+      "key": "relocation-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лондон после смерти отца",
+      "long": "После смерти отца в 1951 году писательница перебралась в Лондон.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца в 1951 году писательница перебралась в Лондон"
+      }
+    },
+    {
+      "key": "loss-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "В 1951 году умер отец, за которым она ухаживала многие годы.",
+      "place": {
+        "label": "Инвернесс"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца в 1951 году писательница перебралась в Лондон"
+      }
+    },
+    {
+      "key": "illness-1951",
+      "date": {
+        "from": "1951",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлая болезнь, скрытая от друзей",
+      "long": "В последний год, зная о неизлечимой болезни, избегала друзей и скрывала диагноз; большинство, включая Гилгуда, не знали о нём.",
+      "works": [
+        {
+          "ref": "privateer"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During her last year, when she knew that she was terminally ill, she resolutely avoided all her friends as well."
+      }
+    },
+    {
+      "key": "death-1952",
+      "date": {
+        "from": "1952-02-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака печени в Лондоне",
+      "long": "Умерла в доме сестры Мэри в Лондоне; состояние передано Национальному трасту.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She died of liver cancer at her sister Mary's home in London on 13 February 1952."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "man-in-the-queue",
+      "title": "Человек в очереди",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "kif",
+      "title": "Киф",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "richard-of-bordeaux",
+      "title": "Ричард Бордо",
+      "qid": "Q7330230",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "claverhouse",
+      "title": "Клаверхаус",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "shilling-for-candles",
+      "title": "Шиллинг за свечи",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "miss-pym-disposes",
+      "title": "Мисс Пим расставляет точки",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "franchise-affair",
+      "title": "Загадочные события во Франчесе",
+      "qid": "Q7735138",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "brat-farrar",
+      "title": "Мистификация",
+      "qid": "Q899532",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "daughter-of-time",
+      "title": "Дочь времени",
+      "qid": "Q3231843",
+      "written": {
+        "from": 1951,
+        "to": 1951
+      }
+    },
+    {
+      "ref": "privateer",
+      "title": "Джентльмен Удачи",
+      "written": {
+        "from": 1950,
+        "to": 1952
+      }
+    }
+  ]
+}

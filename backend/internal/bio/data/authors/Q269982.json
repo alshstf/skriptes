@@ -1,0 +1,394 @@
+{
+  "qid": "Q269982",
+  "name": "Сьюзен Хилл",
+  "born": "1942-02-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B8%D0%BB%D0%BB%2C_%D0%A1%D1%8C%D1%8E%D0%B7%D0%B5%D0%BD",
+      "rev": 152874749
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Susan_Hill",
+      "rev": 1372386145
+    }
+  ],
+  "chapters": [
+    {
+      "key": "scarborough-coventry",
+      "title": "Скарборо и Ковентри",
+      "from": 1942,
+      "to": 1964
+    },
+    {
+      "key": "early-recognition",
+      "title": "Первые романы и премии",
+      "from": 1965,
+      "to": 1974
+    },
+    {
+      "key": "stratford",
+      "title": "Брак и Стратфорд",
+      "from": 1975,
+      "to": 1999
+    },
+    {
+      "key": "later-years",
+      "title": "Призраки, детективы, звания",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1942",
+      "date": {
+        "from": "1942-02-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Скарборо",
+      "long": "Сьюзен Хилл родилась в Скарборо, графство Северный Йоркшир.",
+      "place": {
+        "label": "Скарборо"
+      },
+      "chapter": "scarborough-coventry",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сьюзен Хилл родилась 5 февраля 1942 года в Скарборо."
+      }
+    },
+    {
+      "key": "relocation-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Ковентри",
+      "long": "Семья покинула Скарборо и переехала в Ковентри, где отец работал на автомобильных и авиационных заводах.",
+      "place": {
+        "label": "Ковентри"
+      },
+      "chapter": "scarborough-coventry",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her family left Scarborough in 1958 and moved to Coventry where her father worked in car and aircraft factories."
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Раннее признание: две премии",
+      "long": "Хилл получила премию Совета искусств за сборник рассказов, а за роман — премию Сомерсета Моэма (по Wikidata — 1971).",
+      "works": [
+        {
+          "ref": "im-the-king-of-the-castle"
+        },
+        {
+          "ref": "the-albatross"
+        }
+      ],
+      "chapter": "early-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1970 г. в возрасте двадцати восьми лет молодая писательница, на счету которой было уже три романа, стала лауреатом одновременно двух видных литературных премий Великобритании"
+      }
+    },
+    {
+      "key": "loss-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жениха Дэвида Лепина",
+      "long": "Жених Хилл Дэвид Лепин, органист собора в Ковентри, умер от сердечного приступа.",
+      "place": {
+        "label": "Ковентри"
+      },
+      "works": [
+        {
+          "ref": "the-bird-of-night"
+        }
+      ],
+      "chapter": "early-recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hill was engaged to David Lepine, organist at Coventry Cathedral, but he died of a heart attack in 1972."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Уайтбреда",
+      "long": "Роман удостоен премии Уайтбреда (ныне премия Коста); также входил в шорт-лист Букеровской премии.",
+      "works": [
+        {
+          "ref": "the-bird-of-night"
+        }
+      ],
+      "chapter": "early-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Ночная птица» (1972) был удостоен премии Уайтбреда"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Ллевеллина Райса",
+      "long": "Второй сборник рассказов отмечен премией Ллевеллина Райса.",
+      "works": [
+        {
+          "ref": "a-bit-of-singing-and-dancing"
+        }
+      ],
+      "chapter": "early-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а второй сборник рассказов, «Когда поют и танцуют» (1973), — премии Ллеввелина Райса"
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак со Стэнли Уэллсом, переезд в Стратфорд",
+      "long": "Хилл вышла замуж за шекспироведа Стэнли Уэллса; пара поселилась в Стратфорде-на-Эйвоне.",
+      "place": {
+        "label": "Стратфорд-на-Эйвоне"
+      },
+      "chapter": "stratford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1975, she married Shakespeare scholar and professor Stanley Wells, and they moved to Stratford-upon-Avon."
+      }
+    },
+    {
+      "key": "child-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Джессики",
+      "long": "Родилась первая дочь, будущая писательница Джессика Рустон.",
+      "chapter": "stratford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Their first daughter, author Jessica Ruston, was born in 1977"
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Обращение к традиционной истории с привидениями",
+      "long": "Готическая повесть о привидениях, продолжающая традицию М. Р. Джеймса и Дафны дю Морье; позже адаптирована для сцены и экрана.",
+      "works": [
+        {
+          "ref": "the-woman-in-black"
+        }
+      ],
+      "chapter": "stratford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "especially her ghost story The Woman in Black, published in 1983"
+      }
+    },
+    {
+      "key": "child-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Клеменси",
+      "long": "Родилась третья дочь Клемеschy. Средняя дочь Имоджен родилась преждевременно и умерла в возрасте пяти недель.",
+      "chapter": "stratford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "their third daughter, Clemency, was born in 1985"
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Детская книжная премия «Нестле»",
+      "long": "Хилл получила Детскую книжную премию «Нестле».",
+      "chapter": "stratford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1988 — Детская книжная премия «Нестле»"
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало детективного цикла о Серрайере",
+      "long": "Хилл начала цикл детективных романов о Саймоне Серрайере.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, Hill began a series of crime novels featuring detective Simon Serrailler."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командор ордена Британской империи",
+      "long": "Хилл назначена командором ордена Британской империи за заслуги перед литературой.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was appointed Commander of the Order of the British Empire (CBE) in the 2012 Birthday Honours"
+      }
+    },
+    {
+      "key": "family-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Уход от мужа, жизнь с Барбарой Мэчин",
+      "long": "Сообщалось, что Хилл ушла от мужа и поселилась с Барбарой Мэчин; в 2015 году она заявила, что всё ещё замужем за Уэллсом.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, it was reported that Hill had left her husband and moved in with Barbara Machin"
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дама-командор ордена Британской империи",
+      "long": "Хилл получила титул дамы-командора ордена Британской империи за заслуги перед литературой.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dame Commander of the Order of the British Empire (DBE) in the 2020 Birthday Honours"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "enclosure",
+      "title": "The Enclosure",
+      "written": {
+        "from": 1960,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "im-the-king-of-the-castle",
+      "title": "Я — в замке король",
+      "qid": "Q5967133",
+      "written": {
+        "from": 1968,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "the-albatross",
+      "title": "Альбатрос",
+      "written": {
+        "from": 1970,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "the-bird-of-night",
+      "title": "Ночная птица",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "a-bit-of-singing-and-dancing",
+      "title": "Когда поют и танцуют",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "the-woman-in-black",
+      "title": "Женщина в чёрном",
+      "qid": "Q3822155",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "the-mist-in-the-mirror",
+      "title": "The Mist in the Mirror",
+      "qid": "Q7751779",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "mrs-de-winter",
+      "title": "Mrs de Winter",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    }
+  ]
+}

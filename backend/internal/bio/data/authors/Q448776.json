@@ -1,0 +1,233 @@
+{
+  "qid": "Q448776",
+  "name": "Лиза Си",
+  "born": "1955-02-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%2C_%D0%9B%D0%B8%D0%B7%D0%B0",
+      "rev": 148425561
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lisa_See",
+      "rev": 1374591566
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-los-andzheles",
+      "title": "Париж и Лос-Анджелес",
+      "from": 1955,
+      "to": 1979
+    },
+    {
+      "key": "zhurnalistika-i-pervye-knigi",
+      "title": "Корреспондент и соавтор",
+      "from": 1980,
+      "to": 1996
+    },
+    {
+      "key": "priznanie",
+      "title": "Романы и признание",
+      "from": 1997,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1955",
+      "date": {
+        "from": "1955-02-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Лиза Си родилась в Париже 18 февраля 1955 года в семье писательницы Каролин Си и антрополога Ричарда Си. Большую часть жизни прожила в Лос-Анджелесе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-los-andzheles",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лиза Си родилась в Париже 18 февраля 1955 года, но большую часть жизни прожила в Лос-Анджелесе"
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университета Лойола Мэримаунт",
+      "long": "Лиза Си получила степень бакалавра в Университете Лойола Мэримаунт.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "detstvo-los-andzheles",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лиза окончила Университет Лойола Мэримаунт в 1979 году."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Корреспондент Publishers Weekly",
+      "long": "В 1983–1996 годах работала корреспондентом газеты «Publishers Weekly» и писала статьи для журналов «Vogue», «Self» и «More».",
+      "chapter": "zhurnalistika-i-pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983—1996 гг. Лиза Си работала корреспондентом газеты «Publishers Weekly»"
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Романы в соавторстве под псевдонимом",
+      "long": "Первые романы написаны вместе с матерью Каролин Си и Джоном Эспи под псевдонимом «Моника Хайлэнд»; вышли три книги, 1983–1988.",
+      "chapter": "zhurnalistika-i-pervye-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первые романы Лизы Си были написаны в соавторстве с матерью, Каролин Си, и Джоном Эспи под псевдонимом «Моника Хайлэнд». В данную серию вошли три книги: «Земля лотоса» (1983)"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «женщина года»",
+      "long": "Организация американцев китайского происхождения назвала её «женщиной года».",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году организация американцев китайского происхождения назвала её «женщиной года»"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Награда «Созидатель истории»",
+      "long": "Китайско-американский музей присвоил ей награду «Созидатель истории».",
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 2003 году Китайско-американский музей присвоил ей награду «Созидатель истории»"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бестселлер New York Times",
+      "long": "Роман «Девушки из Шанхая» вошёл в список бестселлеров газеты New York Times.",
+      "works": [
+        {
+          "ref": "shanghai-girls"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2010 г. роман Лизы Си «Девушки из Шанхая» вошёл в список бестселлеров газеты New York Times."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный маршал парада в китайском квартале",
+      "long": "Была почётным маршалом парада Golden Dragon в китайском квартале Лос-Анджелеса.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the 2012 Golden Dragon Chinese New Year Parade in Los Angeles Chinatown, See served as the Grand Marshal."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "on-gold-mountain",
+      "title": "На холодной горе",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "flower-net",
+      "title": "Цветочная сеть",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "snow-flower-and-the-secret-fan",
+      "title": "Снежный цветок и заветный веер",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "peony-in-love",
+      "title": "Влюблённая Пион",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "shanghai-girls",
+      "title": "Девушки из Шанхая",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "china-dolls",
+      "title": "Китайские куколки",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

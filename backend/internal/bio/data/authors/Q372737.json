@@ -1,0 +1,206 @@
+{
+  "qid": "Q372737",
+  "name": "Патриция Бриггс",
+  "born": "1965",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Patricia_Briggs",
+      "rev": 1376729527
+    }
+  ],
+  "chapters": [
+    {
+      "key": "montana",
+      "title": "Монтана и начало пути",
+      "from": 1965,
+      "to": 1989
+    },
+    {
+      "key": "first-books",
+      "title": "Первые романы",
+      "from": 1990,
+      "to": 2005
+    },
+    {
+      "key": "mercy",
+      "title": "Мёрси Томпсон",
+      "from": 2006,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бьютте, штат Монтана",
+      "long": "Родилась в Бьютте, штат Монтана, США. Точная дата рождения в источниках расходится, поэтому указан только год.",
+      "place": {
+        "label": "Бьютт"
+      },
+      "chapter": "montana",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Patricia Briggs was born in 1965 in Butte, Montana, United States."
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало литературной работы",
+      "long": "Начала писать в 1990 году; позже работала преимущественно в жанрах фэнтези и городского фэнтези.",
+      "works": [
+        {
+          "ref": "masques"
+        }
+      ],
+      "chapter": "first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Briggs began writing in 1990"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало серии о Мёрси Томпсон и первый бестселлер",
+      "long": "Первая книга серии о Мёрси Томпсон вышла в 2006 году и попала в списки бестселлеров USA Today.",
+      "works": [
+        {
+          "ref": "moon-called"
+        }
+      ],
+      "chapter": "mercy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Moon Called, was published in 2006, and was the first in the Mercy Thompson series… The book made it to the USA Today bestseller lists."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое место в списке New York Times",
+      "long": "Пятая книга серии о Мёрси Томпсон дебютировала на первом месте списка бестселлеров в твёрдой обложке The New York Times на неделе 18 апреля 2010 года.",
+      "works": [
+        {
+          "ref": "silver-borne"
+        }
+      ],
+      "chapter": "mercy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "debuted at No. 1 on The New York Times' Hardcover Fiction list for the week of April 18, 2010"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "masques",
+      "title": "Masques",
+      "written": {
+        "from": 1990,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "steal-the-dragon",
+      "title": "Steal the Dragon",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "when-demons-walk",
+      "title": "When Demons Walk",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "hobs-bargain",
+      "title": "The Hob's Bargain",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "dragon-bones",
+      "title": "Dragon Bones",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "dragon-blood",
+      "title": "Dragon Blood",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "ravens-shadow",
+      "title": "Raven's Shadow",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "ravens-strike",
+      "title": "Raven's Strike",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "moon-called",
+      "title": "Moon Called",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "blood-bound",
+      "title": "Blood Bound",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "silver-borne",
+      "title": "Silver Borne",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+{
+  "qid": "Q4428710",
+  "name": "Орест Михайлович Сомов",
+  "born": "1793-12-21",
+  "died": "1833-06-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%BC%D0%BE%D0%B2%2C_%D0%9E%D1%80%D0%B5%D1%81%D1%82_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 154714172
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Orest_Somov",
+      "rev": 1375170553
+    }
+  ],
+  "chapters": [
+    {
+      "key": "kharkov-years",
+      "title": "Харьковское детство и университет",
+      "from": 1793,
+      "to": 1816
+    },
+    {
+      "key": "petersburg-journalism",
+      "title": "Петербург, служба и критика",
+      "from": 1817,
+      "to": 1826
+    },
+    {
+      "key": "late-years",
+      "title": "Проза и последние годы",
+      "from": 1827,
+      "to": 1833
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1793",
+      "date": {
+        "from": "1793-12-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в обедневшей дворянской семье",
+      "long": "Родился в Волчанске Харьковского наместничества в обедневшей дворянской семье.",
+      "place": {
+        "label": "Волчанск"
+      },
+      "chapter": "kharkov-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Оре́ст Миха́йлович Со́мов (10 [21] декабря 1793, Волчанск, Харьковское наместничество"
+      }
+    },
+    {
+      "key": "education-1810",
+      "date": {
+        "from": "1810",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Харьковском университете",
+      "long": "С 1810 года учился в Харьковском университете, из которого вышел, по-видимому, без экзамена. Начал печататься в «Харьковском Демокрите».",
+      "place": {
+        "label": "Харьков"
+      },
+      "chapter": "kharkov-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 1810 года ― в Харьковском университете, из которого вышел, по-видимому, без экзамена"
+      }
+    },
+    {
+      "key": "relocation-1817",
+      "date": {
+        "from": "1817",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Петербург",
+      "long": "С 1817 или 1818 года жил в Санкт-Петербурге, где продолжил литературную карьеру.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1817 he moved to Saint Petersburg where he continued his literary career."
+      }
+    },
+    {
+      "key": "career-1818",
+      "date": {
+        "from": "1818-05",
+        "to": "1820-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вольное общество любителей российской словесности",
+      "long": "Сотрудник Вольного общества любителей российской словесности с мая 1818 года, действительный член с мая 1820 года.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сотрудник с мая 1818 года, действительный член с мая 1820 года"
+      }
+    },
+    {
+      "key": "career-1824",
+      "date": {
+        "from": "1824",
+        "to": "1826",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба в Российско-Американской компании",
+      "long": "Столоначальник в правлении Российско-Американской компании, где правителем канцелярии был К. Ф. Рылеев.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1824—1826 годах занимал должность столоначальника в правлении Российско-Американской компании"
+      }
+    },
+    {
+      "key": "creation-1825",
+      "date": {
+        "from": "1825",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Полемические статьи об эстетике",
+      "long": "В 1825 году Сомов опубликовал ряд полемических статей, где отстаивал свои эстетические тезисы.",
+      "chapter": "petersburg-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Тезисы, близкие материалистической эстетике, Сомов положил в основу ряда полемических статей 1825 г."
+      }
+    },
+    {
+      "key": "creation-1827",
+      "date": {
+        "from": "1827",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Перевод разбора трагедий Шекспира из Гизо",
+      "long": "В 1827 году выступил переводчиком части «Жизни Шекспира» Гизо, посвящённой шекспировским трагедиям.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Они же побудили его в 1827 г. выступить в роли переводчика той части «Жизни Шекспира» Гизо"
+      }
+    },
+    {
+      "key": "death-1833",
+      "date": {
+        "from": "1833-06-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Санкт-Петербурге",
+      "long": "Умер в Санкт-Петербурге 27 мая (8 июня) 1833 года.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "27 мая [8 июня] 1833, Санкт-Петербург"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "haidamaka",
+      "title": "Гайдамак",
+      "written": {
+        "from": 1825,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "yurodivyi",
+      "title": "Юродивый",
+      "written": {
+        "from": 1827,
+        "to": 1827
+      }
+    },
+    {
+      "ref": "prikaz-s-toho-sveta",
+      "title": "Приказ с того света",
+      "written": {
+        "from": 1827,
+        "to": 1827
+      }
+    },
+    {
+      "ref": "kikimora",
+      "title": "Кикимора",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "rusalka",
+      "title": "Русалка",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "oboroten",
+      "title": "Оборотень",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "skazki-o-kladakh",
+      "title": "Сказки о кладах",
+      "written": {
+        "from": 1830,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "strannyi-poedinok",
+      "title": "Странный поединок",
+      "written": {
+        "from": 1830,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "samoubiytsa",
+      "title": "Самоубийца",
+      "written": {
+        "from": 1830,
+        "to": 1830
+      }
+    },
+    {
+      "ref": "kupalov-vecher",
+      "title": "Купальский вечер",
+      "written": {
+        "from": 1831,
+        "to": 1831
+      }
+    },
+    {
+      "ref": "brodiashchiy-ogon",
+      "title": "Блуждающий огонь",
+      "written": {
+        "from": 1832,
+        "to": 1832
+      }
+    },
+    {
+      "ref": "kievskie-vedmy",
+      "title": "Киевские ведьмы",
+      "written": {
+        "from": 1833,
+        "to": 1833
+      }
+    },
+    {
+      "ref": "nedobryi-glaz",
+      "title": "Недобрый глаз",
+      "written": {
+        "from": 1833,
+        "to": 1833
+      }
+    },
+    {
+      "ref": "matushka-i-synok",
+      "title": "Матушка и сынок",
+      "written": {
+        "from": 1833,
+        "to": 1833
+      }
+    }
+  ]
+}

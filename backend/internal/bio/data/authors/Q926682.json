@@ -1,0 +1,238 @@
+{
+  "qid": "Q926682",
+  "name": "Мэтт Хейг",
+  "born": "1975-07-03",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B5%D0%B9%D0%B3%2C_%D0%9C%D1%8D%D1%82%D1%82",
+      "rev": 154326938
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Matt_Haig",
+      "rev": 1380285364
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Шеффилд, Ньюарк, Халл",
+      "from": 1975,
+      "to": 1998
+    },
+    {
+      "key": "ibitsa-i-sryv",
+      "title": "Ибица и срыв",
+      "from": 1999,
+      "to": 2003
+    },
+    {
+      "key": "pisatel",
+      "title": "Первые романы и детские книги",
+      "from": 2004,
+      "to": 2014
+    },
+    {
+      "key": "priznanie",
+      "title": "Признание и бестселлеры",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1975",
+      "date": {
+        "from": "1975-07-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Шеффилде",
+      "long": "Родился в Шеффилде в семье директора начальной школы и архитектора; вырос в городке Ньюарк в Ноттингемшире.",
+      "place": {
+        "label": "Шеффилд"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Matt Haig was born on 3 July 1975 in Sheffield."
+      }
+    },
+    {
+      "key": "illness-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Срыв и диагноз клинической депрессии",
+      "long": "Во время управления ночным клубом на Ибице у Хейга произошёл срыв (ему было 24 года), после которого диагностирована клиническая депрессия.",
+      "place": {
+        "label": "Ибица"
+      },
+      "works": [
+        {
+          "ref": "reasons-to-stay-alive",
+          "note": "Об этом опыте автор написал книгу"
+        },
+        {
+          "ref": "the-life-impossible"
+        }
+      ],
+      "chapter": "ibitsa-i-sryv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Именно здесь в 1999 году у писателя произошел срыв, после которого ему был поставлен диагноз клинической депрессии."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Детская книжная премия Nestlé",
+      "long": "Детский роман получил Детскую книжную премию Nestlé.",
+      "works": [
+        {
+          "ref": "shadow-forest"
+        }
+      ],
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It won the Nestlé Children's Book Prize in 2007."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех книги о борьбе с депрессией",
+      "long": "Книга о депрессии стала самым большим коммерческим успехом автора и получила высокую оценку критиков, хотя автора обвиняли в тривиализации болезни.",
+      "works": [
+        {
+          "ref": "reasons-to-stay-alive"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он написал о своём опыте борьбы с болезнью и возвращении к жизни в книге «Влюбиться в жизнь. Как научиться жить снова, когда ты почти уничтожен депрессией», опубликованной в 2015 году. Книга стала его самым большим коммерческим успехом"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех романа о параллельных жизнях",
+      "long": "Роман имел большой международный успех и возглавил список бестселлеров The New York Times.",
+      "works": [
+        {
+          "ref": "midnight-library"
+        }
+      ],
+      "chapter": "priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "За роман «Полночная библиотека» (2021) он получил от издателя аванс в размере 600 000 фунтов стерлингов."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "last-family-in-england",
+      "title": "Последнее семейство в Англии",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "dead-fathers-club",
+      "title": "Клуб призрачных отцов",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "possession-of-mr-cave",
+      "title": "Собственность мистера Кейва",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "shadow-forest",
+      "title": "Лес теней",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "the-radleys",
+      "title": "Рэдли",
+      "written": {
+        "from": 2010,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-humans",
+      "title": "Люди и я",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "reasons-to-stay-alive",
+      "title": "Влюбиться в жизнь",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "how-to-stop-time",
+      "title": "Как остановить время",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "midnight-library",
+      "title": "Полночная библиотека",
+      "qid": "Q106814534",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    },
+    {
+      "ref": "the-life-impossible",
+      "title": "Такая невозможная жизнь",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    }
+  ]
+}

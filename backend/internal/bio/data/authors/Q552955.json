@@ -1,0 +1,160 @@
+{
+  "qid": "Q552955",
+  "name": "Уильям Хьёртсберг",
+  "born": "1941-02-23",
+  "died": "2017-04-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8C%D1%91%D1%80%D1%82%D1%81%D0%B1%D0%B5%D1%80%D0%B3%2C_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC",
+      "rev": 150525012
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Hjortsberg",
+      "rev": 1370282904
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-kolledzh",
+      "title": "Нью-Йорк и Дартмут",
+      "from": 1941,
+      "to": 1962
+    },
+    {
+      "key": "uchyoba-i-knigi",
+      "title": "Театральная школа, Стэнфорд, проза и сценарии",
+      "from": 1963,
+      "to": 1994
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Поздние книги и болезнь",
+      "from": 1995,
+      "to": 2017
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1941",
+      "date": {
+        "from": "1941-02-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Родился в Нью-Йорке в семье шведского владельца ресторана и швейцарки; единственный ребёнок.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-i-kolledzh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "William Reinhold \"Gatz\" Hjortsberg (February 23, 1941 – April 22, 2017)"
+      }
+    },
+    {
+      "key": "education-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Дартмутского колледжа",
+      "long": "Окончил Дартмутский колледж в 1962 году; позже учился в Йельской школе драмы и в Стэнфордском университете.",
+      "chapter": "detstvo-i-kolledzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил в 1962 году Дартмутский колледж."
+      }
+    },
+    {
+      "key": "death-2017",
+      "date": {
+        "from": "2017-04-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака поджелудочной железы",
+      "long": "Умер 22 апреля 2017 года в Ливингстоне от рака поджелудочной железы в возрасте 76 лет.",
+      "place": {
+        "label": "Ливингстон"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died of pancreatic cancer on April 22, 2017, at the age of 76."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "alp",
+      "title": "Алп",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "gray-matters",
+      "title": "Серое вещество мозга",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "symbiography",
+      "title": "Симбиография",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "toro-toro-toro",
+      "title": "Toro! Toro! Toro!",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "falling-angel",
+      "title": "Грешный ангел",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "nevermore",
+      "title": "Более никогда",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "jubilee-hitchhiker",
+      "title": "Юбилей автостопом: Жизнь и время Ричарда Бротигана",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "manana",
+      "title": "Завтра",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

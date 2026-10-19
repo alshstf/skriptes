@@ -1,0 +1,832 @@
+{
+  "qid": "Q448",
+  "name": "Дени Дидро",
+  "born": "1713-10-05",
+  "died": "1784-07-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D0%B4%D1%80%D0%BE%2C_%D0%94%D0%B5%D0%BD%D0%B8",
+      "rev": 155579934
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Denis_Diderot",
+      "rev": 1378695198
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Denis_Diderot",
+      "rev": 239997131
+    }
+  ],
+  "chapters": [
+    {
+      "key": "langres-paris",
+      "title": "Лангр, Париж, богема",
+      "from": 1713,
+      "to": 1742
+    },
+    {
+      "key": "brak-vincennes",
+      "title": "Тайный брак, переводы, Венсен",
+      "from": 1743,
+      "to": 1749
+    },
+    {
+      "key": "entsiklopediya",
+      "title": "Энциклопедия и Софи Воллан",
+      "from": 1750,
+      "to": 1764
+    },
+    {
+      "key": "biblioteka-imperatritsy",
+      "title": "Библиотека для императрицы",
+      "from": 1765,
+      "to": 1772
+    },
+    {
+      "key": "peterburg-final",
+      "title": "Петербург и последние годы",
+      "from": 1773,
+      "to": 1784
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1713",
+      "date": {
+        "from": "1713-10-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье ножовщика",
+      "long": "Родился в Лангре (Шампань) в семье мастера-ножовщика Дидье Дидро и Анжелики Виньерон; старший из выживших детей.",
+      "place": {
+        "label": "Лангр"
+      },
+      "chapter": "langres-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Denis Diderot, né le 5 octobre 1713 à Langres et mort le 31 juillet 1784 à Paris"
+      }
+    },
+    {
+      "key": "faith-1726",
+      "date": {
+        "from": "1726-08-22",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Постриг: путь в духовенство",
+      "long": "Родители прочили ему духовную карьеру: епископ Лангра совершил над ним постриг, мальчик принял титул аббата.",
+      "place": {
+        "label": "Лангр"
+      },
+      "chapter": "langres-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il reçoit la tonsure de l’évêque de Langres le 22 août 1726 et prend le titre d’abbé"
+      }
+    },
+    {
+      "key": "education-1732",
+      "date": {
+        "from": "1732",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень магистра философии",
+      "long": "Завершил образование в Лангре и получил степень магистра гуманитарных наук по философии, затем учился в Парижском университете.",
+      "chapter": "langres-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получив степень магистра гуманитарных наук в области философии в 1732 году"
+      }
+    },
+    {
+      "key": "faith-1735",
+      "date": {
+        "from": "1735",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Отказ от духовной карьеры",
+      "long": "Отказался от духовной карьеры и поступил на юридический факультет; занятия правом были недолгими, позже он выбрал путь писателя и переводчика.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "langres-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Отказался от карьеры в духовенстве в 1735 году и вместо этого решил учиться на Парижском юридическом факультете"
+      }
+    },
+    {
+      "key": "other-1742",
+      "date": {
+        "from": "1742",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Дружба с Жан-Жаком Руссо",
+      "long": "Подружился с Руссо, с которым познакомился в парижском Café de la Régence; позднее дружба закончилась разрывом.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "langres-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1742 году подружился с Жан-Жаком Руссо, с которым познакомился, наблюдая за играми в шахматы"
+      }
+    },
+    {
+      "key": "love-1743",
+      "date": {
+        "from": "1743-11-06",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Тайный брак с Анной-Антуанеттой Шампьон",
+      "long": "Тайно женился на Анне-Антуанетте Шампьон вопреки воле отца, считавшего брак неравным; отец до этого пытался помешать женитьбе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Les deux amoureux se marient alors secrètement en l’église Saint-Pierre-aux-Bœufs le 6 novembre 1743"
+      }
+    },
+    {
+      "key": "love-1746",
+      "date": {
+        "from": "1746",
+        "to": "1751",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с Мадлен де Пюизьё",
+      "long": "Вне брака состоял в связи с писательницей и переводчицей Мадлен де Пюизьё.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "entretient, de 1746 à 1751, une liaison avec Madeleine de Puisieux"
+      }
+    },
+    {
+      "key": "persecution-1746",
+      "date": {
+        "from": "1746-07-07",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Приговор парламента: книгу сжечь",
+      "long": "Парижский парламент приговорил анонимно изданную книгу к разрыву и сожжению как оскорбительную для религии; позже к ней вернулись ещё шесть тайных изданий.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "pensees-philosophiques",
+          "note": "приговорён к сожжению именно этот текст"
+        }
+      ],
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "le 7 juillet 1746, il est condamné par le Parlement de Paris à « être lacéré et brûlé"
+      }
+    },
+    {
+      "key": "career-1747",
+      "date": {
+        "from": "1747-10-16",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Соредактор «Энциклопедии»",
+      "long": "Вместе с Даламбером стал соредактором «Энциклопедии»; работа над ней заняла около двадцати пяти лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "encyclopedie"
+        }
+      ],
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 16 octobre 1747, à l’âge de 34 ans, il devient officiellement codirecteur"
+      }
+    },
+    {
+      "key": "creation-1748",
+      "date": {
+        "from": "1748",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман за две недели ради денег",
+      "long": "Роман написан за пятнадцать дней ради денег для любовницы, по её вызову сочинить вольный роман не хуже Кребийона.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "bijoux-indiscrets",
+          "note": "написан в обстоятельствах денежной нужды, по свидетельству дочери"
+        }
+      ],
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1748, Diderot publie, toujours de façon anonyme, Les Bijoux indiscrets… Cet ouvrage rédigé en quinze jours, pour donner de l’argent à sa maîtresse"
+      }
+    },
+    {
+      "key": "loss-1748",
+      "date": {
+        "from": "1748",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать Анжелика Виньерон.",
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "семье ножовщика и метрдотеля Дидье Дидро (1685—1759) и Анжелики Виньерон (1677—1748)"
+      }
+    },
+    {
+      "key": "loss-1749",
+      "date": {
+        "from": "1749",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть сестры-монахини",
+      "long": "Умерла сестра Анжелика, монахиня-урсулинка, заболевшая безумием годом раньше; её судьба отчасти вдохновила роман о монахине.",
+      "place": {
+        "label": "Лангр"
+      },
+      "works": [
+        {
+          "ref": "la-religieuse",
+          "note": "судьба сестры, по статье, отчасти вдохновила роман"
+        }
+      ],
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Sa sœur Angélique (1720-1749), est entrée chez les Ursulines à l’âge de 19 ans et est devenue folle en 1748, avant de mourir un an plus tard."
+      }
+    },
+    {
+      "key": "persecution-1749",
+      "date": {
+        "from": "1749-07-24",
+        "to": "1749-11-03",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Заключение в Венсенском замке",
+      "long": "Арестован за материалистические сочинения и заключён в Венсенский замок; через месяц переведён в комфортную камеру, 3 ноября 1749 освобождён, дав обязательство не публиковать подобного.",
+      "place": {
+        "label": "Венсенский замок"
+      },
+      "works": [
+        {
+          "ref": "letter-on-the-blind",
+          "note": "арест последовал за выходом этой книги"
+        }
+      ],
+      "chapter": "brak-vincennes",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 23 July 1749, the governor of the Vincennes fortress instructed the police to incarcerate Diderot… the next day he was arrested and placed in solitary confinement at Vincennes"
+      }
+    },
+    {
+      "key": "child-1753",
+      "date": {
+        "from": "1753",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Мари-Анжелики",
+      "long": "Родилась дочь Мария-Анжелика — единственный из четырёх детей, дожившая до взрослых лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1753 naît Marie-Angélique, le seul de ses enfants qui lui survivra."
+      }
+    },
+    {
+      "key": "love-1755",
+      "date": {
+        "from": "1755",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с Софи Воллан",
+      "long": "Началась тайная связь с Софи Воллан и многолетняя переписка, ставшая важным источником сведений о нём.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1755, Diderot rencontre Sophie Volland, peut-être par l’intermédiaire de Rousseau."
+      }
+    },
+    {
+      "key": "relocation-1755",
+      "date": {
+        "from": "1755-05",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд на улицу Таранн",
+      "long": "Семья переехала на улицу Таранн и больше не меняла жилья.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "en mai 1755, la famille Diderot s’installe au 4e étage d’un logis de six pièces dans la rue Taranne"
+      }
+    },
+    {
+      "key": "persecution-1759",
+      "date": {
+        "from": "1759",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет «Энциклопедии»",
+      "long": "Издание формально запретили; работа продолжалась тайно, Даламбер вышел из дела.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "encyclopedie"
+        }
+      ],
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1759, the Encyclopédie was formally suppressed."
+      }
+    },
+    {
+      "key": "career-1759",
+      "date": {
+        "from": "1759",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Критик живописных Салонов",
+      "long": "По просьбе Гримма начал писать отчёты о Салонах для «Литературной корреспонденции» — они принесли ему славу критика.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "salons"
+        }
+      ],
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1759, Grimm asked Diderot to report on the biennial art exhibitions in the Louvre for the Correspondance."
+      }
+    },
+    {
+      "key": "loss-1759",
+      "date": {
+        "from": "1759",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец Дидье Дидро; поездка в Лангр из-за наследства вдохновила несколько позднейших текстов.",
+      "place": {
+        "label": "Лангр"
+      },
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le décès de son père, en 1759, impose à Diderot un voyage à Langres pour régler la succession."
+      }
+    },
+    {
+      "key": "career-1764",
+      "date": {
+        "from": "1764",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Тайная цензура издателя в «Энциклопедии»",
+      "long": "Узнал, что издатель Лебретон тайно вычеркнул из вёрстки опасные места и убрал статьи; Дидро порвал с ним.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "encyclopedie"
+        }
+      ],
+      "chapter": "entsiklopediya",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Vers la fin de l’année 1764, Diderot éprouve un choc en découvrant que Le Breton a modifié les épreuves à son insu"
+      }
+    },
+    {
+      "key": "poverty-1765",
+      "date": {
+        "from": "1765-01",
+        "precision": "month"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Продажа библиотеки Екатерине II",
+      "long": "Желая обеспечить приданое дочери, предложил продать библиотеку; Екатерина II купила её за 15 000 ливров, оставив ему пожизненное пользование и жалованье библиотекаря.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "biblioteka-imperatritsy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En janvier 1765, Diderot laisse entendre à ses amis qu’il serait prêt à vendre sa bibliothèque pour doter correctement sa fille"
+      }
+    },
+    {
+      "key": "love-1769",
+      "date": {
+        "from": "1769-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с мадам де Мо",
+      "long": "Начались отношения с Жанной-Катрин Кино, мадам де Мо.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "biblioteka-imperatritsy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Au printemps 1769, Diderot devient l’amant de Jeanne-Catherine Quinault"
+      }
+    },
+    {
+      "key": "loss-1770",
+      "date": {
+        "from": "1770",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Окончательный разрыв с Руссо",
+      "long": "Многолетние расхождения закончились полным разрывом с Руссо; оба переживали его с горечью.",
+      "chapter": "biblioteka-imperatritsy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La rupture est totale en 1770 et Rousseau considère dès lors Diderot comme un ennemi."
+      }
+    },
+    {
+      "key": "career-1772",
+      "date": {
+        "from": "1772-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Завершение «Энциклопедии»",
+      "long": "Завершил двадцатипятилетнюю работу над «Энциклопедией», испытывая горечь из-за недостатка признания и поведения издателей.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "encyclopedie"
+        }
+      ],
+      "chapter": "biblioteka-imperatritsy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Au total, Diderot consacrera 25 ans de sa vie à ce projet qu’il n’achève qu’en juillet 1772"
+      }
+    },
+    {
+      "key": "family-1772",
+      "date": {
+        "from": "1772-09-09",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Свадьба дочери",
+      "long": "Дочь вышла замуж за Абеля Франсуа Николя Карюайона де Вандёля из Лангра.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "biblioteka-imperatritsy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 9 septembre 1772, sa fille unique se marie avec Abel François Nicolas Caroillon de Vandeul"
+      }
+    },
+    {
+      "key": "career-1773",
+      "date": {
+        "from": "1773",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Член Петербургской академии наук",
+      "long": "Избран иностранным почётным членом Петербургской академии наук.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Иностранный почётный член Петербургской академии наук (1773)."
+      }
+    },
+    {
+      "key": "relocation-1773",
+      "date": {
+        "from": "1773-06-11",
+        "to": "1774-10-21",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Поездка к Екатерине II в Россию",
+      "long": "Единственная поездка за пределы Франции: пять месяцев в Петербурге у Екатерины II и два пребывания в Гааге; вернулся сильно ослабевшим.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Diderot effectue ainsi l’unique voyage de sa vie hors de France, du 11 juin 1773 au 21 octobre 1774."
+      }
+    },
+    {
+      "key": "other-1778",
+      "date": {
+        "from": "1778",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Встреча с Вольтером",
+      "long": "Впервые встретился с Вольтером, с которым переписывался около тридцати лет; спорили о Шекспире и Расине.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1778, Diderot rencontre finalement Voltaire avec qui il avait échangé"
+      }
+    },
+    {
+      "key": "illness-1784",
+      "date": {
+        "from": "1784-02-19",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт",
+      "long": "Перенёс инсульт; затем два месяца жил в Севре, спасаясь от попыток духовенства вернуть его к вере.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 19 février 1784, Diderot fait un accident vasculaire cérébral qui entraîne quatre jours de délire."
+      }
+    },
+    {
+      "key": "loss-1784",
+      "date": {
+        "from": "1784-02-22",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Софи Воллан",
+      "long": "Умерла Софи Воллан, с которой его связывали почти три десятилетия отношений и переписка.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Sophie Volland meurt le 22 février 1784."
+      }
+    },
+    {
+      "key": "loss-1784-2",
+      "date": {
+        "from": "1784-03-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть внучки",
+      "long": "Умерла внучка; возможно, это скрыли от него, чтобы пощадить.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 15 mars 1784, le décès prématuré de sa petite-fille lui est peut-être caché pour le ménager."
+      }
+    },
+    {
+      "key": "death-1784",
+      "date": {
+        "from": "1784-07-31",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже",
+      "long": "Умер в Париже через две недели после переезда в новую квартиру на улице Ришельё; похоронен в церкви Сен-Рок.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "peterburg-final",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Denis Diderot, né le 5 octobre 1713 à Langres et mort le 31 juillet 1784 à Paris"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "encyclopedie",
+      "title": "Энциклопедия, или Толковый словарь наук, искусств и ремёсел",
+      "qid": "Q447",
+      "written": {
+        "from": 1747,
+        "to": 1772
+      }
+    },
+    {
+      "ref": "pensees-philosophiques",
+      "title": "Философские мысли",
+      "written": {
+        "from": 1746,
+        "to": 1746
+      }
+    },
+    {
+      "ref": "promenade-du-sceptique",
+      "title": "Прогулка скептика",
+      "written": {
+        "from": 1747,
+        "to": 1747
+      }
+    },
+    {
+      "ref": "bijoux-indiscrets",
+      "title": "Нескромные сокровища",
+      "written": {
+        "from": 1748,
+        "to": 1748
+      }
+    },
+    {
+      "ref": "letter-on-the-blind",
+      "title": "Письмо о слепых в назидание зрячим",
+      "written": {
+        "from": 1749,
+        "to": 1749
+      }
+    },
+    {
+      "ref": "fils-naturel",
+      "title": "Внебрачный сын",
+      "written": {
+        "from": 1757,
+        "to": 1757
+      }
+    },
+    {
+      "ref": "pere-de-famille",
+      "title": "Отец семейства",
+      "written": {
+        "from": 1758,
+        "to": 1758
+      }
+    },
+    {
+      "ref": "salons",
+      "title": "Салоны",
+      "written": {
+        "from": 1759,
+        "to": 1781
+      }
+    },
+    {
+      "ref": "neveu-de-rameau",
+      "title": "Племянник Рамо",
+      "written": {
+        "from": 1761,
+        "to": 1774
+      }
+    },
+    {
+      "ref": "jacques-le-fataliste",
+      "title": "Жак-фаталист и его хозяин",
+      "qid": "Q945216",
+      "written": {
+        "from": 1765,
+        "to": 1780
+      }
+    },
+    {
+      "ref": "reve-de-dalembert",
+      "title": "Сон Даламбера",
+      "written": {
+        "from": 1769,
+        "to": 1769
+      }
+    },
+    {
+      "ref": "paradoxe-sur-le-comedien",
+      "title": "Парадокс об актёре",
+      "written": {
+        "from": 1769,
+        "to": 1778
+      }
+    },
+    {
+      "ref": "elements-de-physiologie",
+      "title": "Элементы физиологии",
+      "written": {
+        "from": 1774,
+        "to": 1780
+      }
+    },
+    {
+      "ref": "essai-sur-seneque",
+      "title": "Опыт о жизни Сенеки",
+      "written": {
+        "from": 1775,
+        "to": 1778
+      }
+    },
+    {
+      "ref": "la-religieuse",
+      "title": "Монахиня",
+      "written": {
+        "from": 1780,
+        "to": 1780
+      }
+    }
+  ]
+}

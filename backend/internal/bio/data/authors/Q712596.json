@@ -1,0 +1,153 @@
+{
+  "qid": "Q712596",
+  "name": "Даниэль Силва",
+  "born": "1960-12-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BB%D0%B2%D0%B0%2C_%D0%94%D1%8D%D0%BD%D0%B8%D0%B5%D0%BB",
+      "rev": 155094512
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Daniel_Silva_%28novelist%29",
+      "rev": 1372615889
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Мичиган, Калифорния, университет",
+      "from": 1960,
+      "to": 1983
+    },
+    {
+      "key": "zhurnalist",
+      "title": "Репортёр UPI и CNN",
+      "from": 1984,
+      "to": 1996
+    },
+    {
+      "key": "pisatel",
+      "title": "Писатель и Габриэль Аллон",
+      "from": 1997,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1960",
+      "date": {
+        "from": "1960-12-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Каламазу, Мичиган",
+      "long": "Родился в Каламазу, штат Мичиган, 19 декабря 1960 года.",
+      "place": {
+        "label": "Каламазу"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Мичиган 1960-12-19"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы журналистом в UPI",
+      "long": "Бросил аспирантуру по международным отношениям ради работы журналиста в UPI; начал с временной должности, освещал Демократический национальный съезд.",
+      "chapter": "zhurnalist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Silva began his writing career as a journalist with a temporary position at UPI in 1984."
+      }
+    },
+    {
+      "key": "creation-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало работы над первым романом",
+      "long": "Работая на CNN, приступил к первому роману.",
+      "works": [
+        {
+          "ref": "unlikely-spy"
+        }
+      ],
+      "chapter": "zhurnalist",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994, he began work on his first novel, The Unlikely Spy (1996)."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с CNN ради писательства",
+      "long": "После попадания дебютного романа в список бестселлеров The New York Times оставил CNN, чтобы заниматься только литературой.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, Silva left CNN to pursue writing full-time."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Барри за лучший триллер",
+      "long": "Получил премию Барри за лучший триллер.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший триллер 2007-01-01"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия Барри",
+      "long": "Во второй раз получил премию Барри за лучший триллер.",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Барри за лучший триллер 2013-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "unlikely-spy",
+      "title": "Невероятный шпион",
+      "written": {
+        "from": 1994,
+        "to": 1996
+      }
+    }
+  ]
+}

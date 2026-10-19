@@ -1,0 +1,435 @@
+{
+  "qid": "Q337373",
+  "name": "Олаф Стэплдон",
+  "born": "1886-05-10",
+  "died": "1950-09-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%8D%D0%BF%D0%BB%D0%B4%D0%BE%D0%BD%2C_%D0%9E%D0%BB%D0%B0%D1%84",
+      "rev": 150179249
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Olaf_Stapledon",
+      "rev": 1371380609
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-oxford",
+      "title": "Порт-Саид, школа и Оксфорд",
+      "from": 1886,
+      "to": 1909
+    },
+    {
+      "key": "war-ambulance",
+      "title": "Службы, Ассоциация и фронт",
+      "from": 1910,
+      "to": 1919
+    },
+    {
+      "key": "philosophy-family",
+      "title": "Семья и философская диссертация",
+      "from": 1920,
+      "to": 1929
+    },
+    {
+      "key": "fiction-years",
+      "title": "Писатель-фантаст",
+      "from": 1930,
+      "to": 1944
+    },
+    {
+      "key": "peace-activism",
+      "title": "Лекции, конгрессы мира, смерть",
+      "from": 1945,
+      "to": 1950
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1886",
+      "date": {
+        "from": "1886-05-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сикомбе на Уиррале",
+      "long": "Родился в Сикомбе близ Уолласи на полуострове Уиррал, графство Чешир, в семье Уильяма Клибберта Стэплдона и Эммелайн Миллер.",
+      "place": {
+        "label": "Сикомб"
+      },
+      "chapter": "childhood-oxford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уильям Олаф Стэплдон (англ. William Olaf Stapledon, 10 мая 1886, Сикомб близ Уолласи на полуострове Уиррал"
+      }
+    },
+    {
+      "key": "relocation-1887",
+      "date": {
+        "from": "1887",
+        "to": "1893",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство в Порт-Саиде, Египет",
+      "long": "С 1887 по 1893 год жил в Порт-Саиде, где отец работал экспедитором.",
+      "place": {
+        "label": "Порт-Саид"
+      },
+      "chapter": "childhood-oxford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1887 по 1893 годы жил в Египте, в Порт-Саиде, где его отец работал экспедитором."
+      }
+    },
+    {
+      "key": "education-1898",
+      "date": {
+        "from": "1898",
+        "to": "1905",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в школе «Эбботсхольм»",
+      "long": "Учился в школе «Эбботсхольм» в 1898–1905 годах.",
+      "place": {
+        "label": "Эбботсхольм"
+      },
+      "chapter": "childhood-oxford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Учился в школе «Эбботсхольм» (1898—1905)"
+      }
+    },
+    {
+      "key": "education-1905",
+      "date": {
+        "from": "1905",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в колледже «Баллиол», Оксфорд",
+      "long": "Учился в колледже «Баллиол» в Оксфорде, получил степень бакалавра новейшей истории; в 1913 году стал магистром.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "childhood-oxford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "колледже «Баллиол» в Оксфорде (1905—1909), по окончании которого получил степень бакалавра новейшей истории"
+      }
+    },
+    {
+      "key": "career-1910",
+      "date": {
+        "from": "1910",
+        "to": "1911",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Школа в Манчестере, затем работа экспедитором",
+      "long": "Заместитель директора начальной школы в Манчестере, затем экспедитор в Ливерпуле и Порт-Саиде.",
+      "place": {
+        "label": "Манчестер"
+      },
+      "chapter": "war-ambulance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1910—1911 годах — заместитель директора манчестерской начальной школы, затем работал экспедитором сначала в Ливерпуле, затем в Порт-Саиде."
+      }
+    },
+    {
+      "key": "career-1912",
+      "date": {
+        "from": "1912",
+        "to": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Образовательной ассоциации работников",
+      "long": "Состоял в ливерпульском отделении Образовательной ассоциации работников, обучавшей рабочих.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "chapter": "war-ambulance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1912—1915 годах также состоял в ливерпульской ячейке Образовательной ассоциации работников"
+      }
+    },
+    {
+      "key": "war-1915",
+      "date": {
+        "from": "1915-07",
+        "to": "1919-01",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Санитарный водитель-пацифист на фронте",
+      "long": "Пацифист, отказавшийся воевать, служил водителем в квакерском санитарном подразделении во Франции и Бельгии; награждён французским Военным крестом.",
+      "place": {
+        "label": "Франция, Бельгия"
+      },
+      "chapter": "war-ambulance",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Как отказник совести с июля 1915 по январь 1919 года служил водителем в квакерском санитарном подразделении во Франции и Бельгии"
+      }
+    },
+    {
+      "key": "love-1919",
+      "date": {
+        "from": "1919-07-16",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Агнес Зене Миллер",
+      "long": "Женился на двоюродной сестре из Австралии Агнес Зене Миллер; они познакомились в 1903 году и переписывались всю войну.",
+      "chapter": "war-ambulance",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 16 July 1919 he married Agnes Zena Miller (1894–1984), an Australian cousin."
+      }
+    },
+    {
+      "key": "child-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джона Дэвида",
+      "long": "Родился сын Джон Дэвид.",
+      "chapter": "philosophy-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "a son, John David Stapledon (1923–2014)"
+      }
+    },
+    {
+      "key": "education-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень по философии",
+      "long": "Получил степень доктора философии в Ливерпульском университете; диссертация легла в основу первой книги.",
+      "place": {
+        "label": "Ливерпуль"
+      },
+      "works": [
+        {
+          "ref": "a-modern-theory-of-ethics"
+        }
+      ],
+      "chapter": "philosophy-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1925 году получил степень доктора философии в Ливерпульском университете."
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "После успеха первого фантастического романа оставил преподавание и стал профессиональным писателем, живя на отцовское наследство.",
+      "works": [
+        {
+          "ref": "last-and-first-men"
+        }
+      ],
+      "chapter": "fiction-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С этого момента Стэплдон прекратил преподавательскую деятельность и полностью посвятил себя литературе."
+      }
+    },
+    {
+      "key": "creation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Прекращение работы над космологическим романом",
+      "long": "Прекратил работу над романом «Создатель туманностей», на основе которого позже создан «Создатель звёзд».",
+      "works": [
+        {
+          "ref": "star-maker",
+          "note": "недописанный роман стал основой «Создателя звёзд»"
+        }
+      ],
+      "chapter": "fiction-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "работу над которым Стэплдон прекратил в 1933 году (опубликован посмертно, в 1976 году)"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пацифистская деятельность накануне войны",
+      "long": "Как пацифист участвовал в миротворческих организациях, в августе 1939 года выступил на собрании Женской международной лиги за мир и свободу.",
+      "chapter": "fiction-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1939 he addressed a meeting of the Women's International League for Peace and Freedom."
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в новый дом в Кэлди",
+      "long": "Семья построила дом Саймонс-Филд в Кэлди и переехала в него.",
+      "place": {
+        "label": "Кэлди"
+      },
+      "chapter": "fiction-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940 the Stapledon family built and moved into a new house nearby, on Simon's Field in Caldy."
+      }
+    },
+    {
+      "key": "other-1948",
+      "date": {
+        "from": "1948-09",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Конгресс сторонников мира во Вроцлаве",
+      "long": "Принял участие во Всемирном конгрессе интеллектуалов в защиту мира во Вроцлаве.",
+      "place": {
+        "label": "Вроцлав"
+      },
+      "chapter": "peace-activism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в сентябре 1948 года принял участие в Конгрессе сторонников мира во Вроцлаве"
+      }
+    },
+    {
+      "key": "other-1949",
+      "date": {
+        "from": "1949-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Конференция за мир в Нью-Йорке",
+      "long": "Единственный британец, получивший визу для участия в нью-йоркской конференции за мир.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "peace-activism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 1949 года участвовал в Нью-Йоркской конференции работников науки и культуры за мир во всем мире (единственный британец, получивший визу для участия в ней)."
+      }
+    },
+    {
+      "key": "death-1950",
+      "date": {
+        "from": "1950-09-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа в Кэлди",
+      "long": "Внезапно умер от сердечного приступа дома в Кэлди, вернувшись из Франции; кремирован в Лэндиканском крематории.",
+      "place": {
+        "label": "Кэлди"
+      },
+      "chapter": "peace-activism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скоропостижно скончался 6 сентября 1950 года в своём доме в Кэлди от внезапного сердечного приступа"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "last-and-first-men",
+      "title": "Последние и первые люди",
+      "qid": "Q2707204",
+      "written": {
+        "from": 1929,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "star-maker",
+      "title": "Создатель звёзд",
+      "qid": "Q3006092",
+      "written": {
+        "from": 1933,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "odd-john",
+      "title": "Странный Джон",
+      "qid": "Q7077400",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "last-men-in-london",
+      "title": "Последние люди в Лондоне",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "sirius",
+      "title": "Сириус",
+      "written": {
+        "from": 1944,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "a-modern-theory-of-ethics",
+      "title": "Современная теория этики",
+      "written": {
+        "from": 1925,
+        "to": 1929
+      }
+    }
+  ]
+}

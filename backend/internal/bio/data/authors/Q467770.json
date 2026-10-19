@@ -1,0 +1,438 @@
+{
+  "qid": "Q467770",
+  "name": "Фредерик Марриет",
+  "born": "1792-07-10",
+  "died": "1848-08-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D1%80%D0%B8%D0%B5%D1%82%2C_%D0%A4%D1%80%D0%B5%D0%B4%D0%B5%D1%80%D0%B8%D0%BA",
+      "rev": 147487075
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Frederick_Marryat",
+      "rev": 1372613656
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Детство и побеги к морю",
+      "from": 1792,
+      "to": 1805
+    },
+    {
+      "key": "war-navy",
+      "title": "Фрегаты и войны",
+      "from": 1806,
+      "to": 1815
+    },
+    {
+      "key": "captain",
+      "title": "Шлюпка, семья, Бирма",
+      "from": 1816,
+      "to": 1830
+    },
+    {
+      "key": "writer",
+      "title": "Отставка и литература",
+      "from": 1831,
+      "to": 1842
+    },
+    {
+      "key": "norfolk",
+      "title": "Ферма в Норфолке",
+      "from": 1843,
+      "to": 1848
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1792",
+      "date": {
+        "from": "1792-07-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне в семье коммерсанта",
+      "long": "Родился в Лондоне в семье коммерсанта и члена парламента Джозефа Марриета.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фредерик Марриет (англ. Frederick Joseph Marryat; 10 июля 1792, Лондон — 9 августа 1848, Ленгем, графство Норфолк)"
+      }
+    },
+    {
+      "key": "career-1806",
+      "date": {
+        "from": "1806",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Поступление в Королевский флот мичманом",
+      "long": "После нескольких попыток убежать в море родители позволили ему поступить на фрегат HMS Imperieuse под командованием лорда Кохрейна.",
+      "chapter": "war-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родители позволили ему поступить в Королевский флот в 1806 году, в качестве мичмана на фрегат HMS Imperieuse"
+      }
+    },
+    {
+      "key": "illness-1809",
+      "date": {
+        "from": "1809",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Малярия в ходе операций на Шельде",
+      "long": "В 1809 году, во время действий фрегата в реке Шельда, заболел малярией и вернулся в Англию.",
+      "chapter": "war-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда фрегат был направлен для действий в реке Шельда (1809), Марриет подхватил малярию"
+      }
+    },
+    {
+      "key": "career-1812",
+      "date": {
+        "from": "1812-12-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Производство в лейтенанты",
+      "long": "Участвовал в захвате американских кораблей в начале Англо-американской войны; 26 декабря 1812 года произведён в лейтенанты.",
+      "chapter": "war-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 декабря 1812 года был произведен в лейтенанты"
+      }
+    },
+    {
+      "key": "career-1815",
+      "date": {
+        "from": "1815-06-13",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Чин коммандера к концу войны",
+      "long": "13 июня 1815 года произведён в коммандеры, к окончанию Англо-американской войны.",
+      "chapter": "war-navy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "был произведён в чин коммандера 13 июня 1815 года, как раз ко времени окончания войны"
+      }
+    },
+    {
+      "key": "love-1819",
+      "date": {
+        "from": "1819-01-21",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Катериной Шарп",
+      "long": "Женился на Катерине Шарп, дочери сэра Стивена Шарпа; в браке родились четыре сына и семь дочерей.",
+      "chapter": "captain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1819 году женился на Катерине Шарп, дочери бывшего генерального консула в России сэра Стивена Шарпа"
+      }
+    },
+    {
+      "key": "career-1820",
+      "date": {
+        "from": "1820",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Донесение о смерти Наполеона и его эскиз",
+      "long": "Командовал шлюпами Beaver и Rosario, доставившими в Англию весть о смерти Наполеона; на Святой Елене сделал эскиз тела на смертном одре.",
+      "place": {
+        "label": "остров Святой Елены"
+      },
+      "chapter": "captain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1820 году капитан шлюпа HMS Beaver, а также временно командовал шлюпом HMS Rosario для возвращения в Англию с донесением о смерти Наполеона"
+      }
+    },
+    {
+      "key": "war-1824",
+      "date": {
+        "from": "1824",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Бирманская экспедиция, чин капитана",
+      "long": "Участвовал в походе против Бирмы, завершившемся большими потерями от болезней; получил командование HMS Tees и чин капитана.",
+      "place": {
+        "label": "Бирма"
+      },
+      "chapter": "captain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "принял участие в походе 1824 года против Бирмы. Во время этой экспедиции, которая закончилась большими людскими потерями из-за болезней"
+      }
+    },
+    {
+      "key": "loss-1824",
+      "date": {
+        "from": "1824-01-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца Джозефа Марриета",
+      "long": "Умер отец, коммерсант и член парламента Джозеф Марриет.",
+      "chapter": "captain",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Joseph Marryat 1757-10-08 — 1824-01-12"
+      }
+    },
+    {
+      "key": "career-1826",
+      "date": {
+        "from": "1826-12-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кавалер ордена Бани",
+      "long": "Награждён орденом Бани.",
+      "chapter": "captain",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: кавалер ордена Бани 1826-12-26"
+      }
+    },
+    {
+      "key": "career-1830",
+      "date": {
+        "from": "1830-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отставка с флота ради литературы",
+      "long": "После скучного задания у Мадейры и Канарских островов и выхода первого романа ушёл в отставку, чтобы полностью посвятить себя литературе.",
+      "works": [
+        {
+          "ref": "naval-officer"
+        }
+      ],
+      "chapter": "captain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в ноябре 1830 года решил уйти в отставку и посвятить себя литературе полностью"
+      }
+    },
+    {
+      "key": "career-1832",
+      "date": {
+        "from": "1832",
+        "to": "1835",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор журнала «Метрополитен»",
+      "long": "С 1832 по 1835 год редактировал The Metropolitan Magazine.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1832 to 1835, Marryat edited The Metropolitan Magazine."
+      }
+    },
+    {
+      "key": "child-1833",
+      "date": {
+        "from": "1833-07-09",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Флоренс, будущей писательницы",
+      "long": "Родилась дочь Флоренс, позже ставшая писательницей и актрисой.",
+      "chapter": "writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Флоренс Марриет 1833-07-09"
+      }
+    },
+    {
+      "key": "career-1836",
+      "date": {
+        "from": "1836",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Главный литературный успех",
+      "long": "Наибольший успех принёс роман «Мичман Тихоня».",
+      "works": [
+        {
+          "ref": "mr-midshipman-easy"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "наибольший успех принес ему «Мичман Тихоня» (1836)"
+      }
+    },
+    {
+      "key": "war-1837",
+      "date": {
+        "from": "1837",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Подавление восстания в Нижней Канаде",
+      "long": "Находясь в Северной Америке, участвовал в составе британских войск в подавлении восстания в Нижней Канаде.",
+      "place": {
+        "label": "Нижняя Канада"
+      },
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1837 году, когда вспыхнуло восстание в Нижней Канаде (ныне южная часть провинции Квебек), Марриет был в Северной Америке"
+      }
+    },
+    {
+      "key": "persecution-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Сожжение книги и чучела автора в Америке",
+      "long": "Вышедший путевой дневник с критикой американского общества вызвал насилие: публично сожгли книгу и чучело Марриета.",
+      "works": [
+        {
+          "ref": "diary-in-america"
+        }
+      ],
+      "chapter": "writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1839, Marryat also published his Diary in America… The book and Marryat's effigy were each burned in public."
+      }
+    },
+    {
+      "key": "relocation-1839",
+      "date": {
+        "from": "1839",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Лондон, круг Диккенса",
+      "long": "После года в Брюсселе и поездки по Канаде и США поселился в Лондоне, где общался в литературном кругу Диккенса.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем в 1839 году обосновался в Лондоне, где общался в литературном кругу Чарльза Диккенса"
+      }
+    },
+    {
+      "key": "relocation-1843",
+      "date": {
+        "from": "1843",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд на ферму в Лэнгхеме, Норфолк",
+      "long": "Переехал на небольшую ферму Лэнгхем Манор в Норфолке, где прожил до конца жизни.",
+      "place": {
+        "label": "Лэнгхем, Норфолк"
+      },
+      "chapter": "norfolk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1843 году Марриет переехал на маленькую ферму Лэнгхем Манор в Норфолке"
+      }
+    },
+    {
+      "key": "death-1848",
+      "date": {
+        "from": "1848-08-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лэнгхеме",
+      "long": "Умер в Лэнгхеме, графство Норфолк; последний роман завершил сын Фрэнсис.",
+      "place": {
+        "label": "Ленгем, Норфолк"
+      },
+      "chapter": "norfolk",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 июля 1792, Лондон — 9 августа 1848, Ленгем, графство Норфолк"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "naval-officer",
+      "title": "Морской офицер",
+      "written": {
+        "from": 1829,
+        "to": 1829
+      }
+    },
+    {
+      "ref": "mr-midshipman-easy",
+      "title": "Мичман Тихоня",
+      "qid": "Q1936382",
+      "written": {
+        "from": 1836,
+        "to": 1836
+      }
+    },
+    {
+      "ref": "phantom-ship",
+      "title": "Корабль-призрак",
+      "qid": "Q919581",
+      "written": {
+        "from": 1839,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "diary-in-america",
+      "title": "Дневник в Америке",
+      "written": {
+        "from": 1839,
+        "to": 1839
+      }
+    },
+    {
+      "ref": "children-of-the-new-forest",
+      "title": "Дети Нового леса",
+      "qid": "Q7722508",
+      "written": {
+        "from": 1847,
+        "to": 1847
+      }
+    }
+  ]
+}

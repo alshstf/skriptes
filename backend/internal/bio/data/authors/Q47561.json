@@ -1,0 +1,731 @@
+{
+  "qid": "Q47561",
+  "name": "Иво Андрич",
+  "born": "1892-10-09",
+  "died": "1975-03-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B8%D1%87%2C_%D0%98%D0%B2%D0%BE",
+      "rev": 153794483
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ivo_Andri%C4%87",
+      "rev": 1370417940
+    },
+    {
+      "id": "shwiki",
+      "url": "https://sh.wikipedia.org/wiki/Ivo_Andri%C4%87",
+      "rev": 42419818
+    }
+  ],
+  "chapters": [
+    {
+      "key": "vishegrad-i-sarayevo",
+      "title": "Вишеград и Сараево",
+      "from": 1892,
+      "to": 1911
+    },
+    {
+      "key": "mlada-bosna-i-tyurma",
+      "title": "Млада Босна, тюрьма, ссылка",
+      "from": 1912,
+      "to": 1918
+    },
+    {
+      "key": "diplomat-mezhdu-voynami",
+      "title": "Дипломат между войнами",
+      "from": 1919,
+      "to": 1938
+    },
+    {
+      "key": "posol-i-okkupatsiya",
+      "title": "Посол и оккупация",
+      "from": 1939,
+      "to": 1945
+    },
+    {
+      "key": "pisatel-novoy-yugoslavii",
+      "title": "Писатель новой Югославии",
+      "from": 1946,
+      "to": 1960
+    },
+    {
+      "key": "nobel-i-poslednie-gody",
+      "title": "Нобель и последние годы",
+      "from": 1961,
+      "to": 1975
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1892",
+      "date": {
+        "from": "1892-10-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Долаце близ Травника",
+      "long": "Родился в деревне Долац близ Травника в семье Антуна Андрича и Катарины Пейич; единственный ребёнок. Отец умер, когда мальчику было два года, и он вырос в Вишеграде у тёти и дяди.",
+      "place": {
+        "label": "Долац"
+      },
+      "chapter": "vishegrad-i-sarayevo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ivan Andrić was born in the village of Dolac, near Travnik, on 9 October 1892"
+      }
+    },
+    {
+      "key": "education-1902",
+      "date": {
+        "from": "1902",
+        "to": "1912",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Сараевская гимназия",
+      "long": "После начальной школы в Вишеграде учился в Великой сараевской гимназии. Увлёкся литературой, в гимназические годы примкнул к югославянскому молодёжному движению.",
+      "place": {
+        "label": "Сараево"
+      },
+      "chapter": "vishegrad-i-sarayevo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а уже в 1902 году поступил в гимназию в Сараево, где учился до 1912 года"
+      }
+    },
+    {
+      "key": "other-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Председатель сербско-хорватской молодёжной организации",
+      "long": "В конце 1911 года избран первым председателем сараевского тайного общества сербско-хорватской молодёжи, выступавшего против австро-венгерской оккупации.",
+      "place": {
+        "label": "Сараево"
+      },
+      "chapter": "vishegrad-i-sarayevo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In late 1911, Andrić was elected the first president of the Serbo-Croat Progressive Movement"
+      }
+    },
+    {
+      "key": "education-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Университеты Загреба, Вены и Кракова",
+      "long": "Поступил в Загребский университет, в 1913 году перевёлся в Венский, затем в Ягеллонский университет в Кракове; в Вене заболел туберкулёзом.",
+      "place": {
+        "label": "Загреб"
+      },
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1912, Andrić registered at the University of Zagreb, having received a scholarship from an educational foundation in Sarajevo."
+      }
+    },
+    {
+      "key": "persecution-1914",
+      "date": {
+        "from": "1914-08",
+        "to": "1915-03",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест и заключение в тюрьмах Сплита, Шибеника, Марибора",
+      "long": "После убийства эрцгерцога Франца Фердинанда арестован австро-венгерской полицией. В заключении обострилась болезнь лёгких.",
+      "place": {
+        "label": "Сплит"
+      },
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После Сараевского убийства арестован как сторонник национально-революционного движения; в августе 1914 – марте 1915 года отбывал заключение в тюрьмах Сплита, Шибеника и Марибора"
+      }
+    },
+    {
+      "key": "persecution-1915",
+      "date": {
+        "from": "1915-03",
+        "to": "1917-07",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Ссылка в село Овчарево под надзором францисканцев",
+      "long": "Освобождён из тюрьмы 20 марта 1915 года и сослан в село Овчарево под надзор францисканцев; работал с монастырскими хрониками, изучая историю Боснии под османским владычеством.",
+      "place": {
+        "label": "Овчарево"
+      },
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he was released from prison on 20 March 1915. The authorities exiled him to the village of Ovčarevo, near Travnik."
+      }
+    },
+    {
+      "key": "persecution-1917",
+      "date": {
+        "from": "1917-07-02",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Амнистия и освобождение",
+      "long": "Амнистия политзаключённых вернула свободу передвижения; из-за болезни Андрич избежал мобилизации и лечился в больницах Сараева, Зеницы и Загреба.",
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 2 July 1917, Emperor Charles declared a general amnesty for all of Austria-Hungary's political prisoners."
+      }
+    },
+    {
+      "key": "illness-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь, выздоровление в Крапине",
+      "long": "Весной 1918 года здоровье ухудшилось настолько, что друзья опасались за его жизнь; оправившись, он написал в Крапине первую книгу.",
+      "place": {
+        "label": "Крапина"
+      },
+      "works": [
+        {
+          "ref": "ex-ponto",
+          "note": "книга написана в Крапине весной 1918 года после выздоровления"
+        }
+      ],
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Over the course of several months in early 1918, Andrić's health began to deteriorate, and his friends believed he was nearing death. … However, he recovered and spent the spring of 1918 in Krapina writing Ex ponto"
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в редакции журнала «Литературный юг»",
+      "long": "Вошёл в редакцию югославянского журнала «Литературный юг», где печатал рецензии, стихи и переводы.",
+      "place": {
+        "label": "Загреб"
+      },
+      "chapter": "mlada-bosna-i-tyurma",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 1918, Andrić joined several South Slav nationalists in editing a short-lived pan-Yugoslav periodical called Književni jug (Literary South)."
+      }
+    },
+    {
+      "key": "illness-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Болезнь и полгода лечения в Сплите",
+      "long": "Снова заболел и лечился в Сплите около полугода; к отъезду почти выздоровел. Постоянно нуждался в деньгах и содержал стареющих мать, тётю и дядю.",
+      "place": {
+        "label": "Сплит"
+      },
+      "works": [
+        {
+          "ref": "nemiri",
+          "note": "второй сборник стихотворений в прозе завершён в Сплите во время лечения"
+        }
+      ],
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By January 1919, he fell ill again and was back in the hospital."
+      }
+    },
+    {
+      "key": "career-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало дипломатической службы",
+      "long": "После службы секретарём в Министерстве по вопросам религии перешёл в МИД; затем служил в Бухаресте, Триесте и Граце.",
+      "place": {
+        "label": "Ватикан"
+      },
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1920 году переведён на дипломатическую службу и направлен в посольство в Ватикане"
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Угроза увольнения из-за отсутствия диплома",
+      "long": "Вице-консулу в Граце сообщили об увольнении из-за отсутствия докторской степени; друзья добились оставления на службе поденным сотрудником.",
+      "place": {
+        "label": "Грац"
+      },
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In August 1923, Andrić experienced an unexpected career setback. A law had been passed stipulating that all civil servants had to have a doctoral degree."
+      }
+    },
+    {
+      "key": "education-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень Грацского университета",
+      "long": "Защитил диссертацию на немецком языке и вернулся на дипломатическую службу.",
+      "place": {
+        "label": "Грац"
+      },
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свою докторскую диссертацию на тему «Развитие духовной жизни в Боснии под влиянием турецкого владычества» он защитил в университете Граца в 1924 году."
+      }
+    },
+    {
+      "key": "loss-1924",
+      "date": {
+        "from": "1924",
+        "to": "1926",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дяди, матери и тёти",
+      "long": "В 1924 году умер дядя, в 1925-м мать, а по прибытии во Францию в 1926 году Андрич узнал о смерти тёти, вырастившей его.",
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His uncle had died in 1924, his mother the following year, and upon arriving in France, he was informed that his aunt had died as well. … On 9 December 1926, he was transferred to the Yugoslav embassy in Paris."
+      }
+    },
+    {
+      "key": "relocation-1926",
+      "date": {
+        "from": "1926-12-09",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Перевод в посольство в Париже",
+      "long": "Службу в Париже сопровождали одиночество и изоляция; в парижских архивах он изучал донесения французского консульства в Травнике за 1809–1814 годы.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "travnik-chronicle",
+          "note": "материалы парижских архивов о французском консульстве в Травнике (по биографии Хоксворт)"
+        }
+      ],
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 9 December 1926, he was transferred to the Yugoslav embassy in Paris."
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вице-консул в Мадриде",
+      "long": "Назначен вице-консулом в Мадриде; написал эссе о Боливаре и Гойе и начал работу над повестью.",
+      "place": {
+        "label": "Мадрид"
+      },
+      "works": [
+        {
+          "ref": "damned-yard",
+          "note": "работа над повестью начата в Мадриде"
+        }
+      ],
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1928, Andrić was posted to Madrid as vice-consul. While there, he wrote essays on Simón Bolívar and Francisco Goya, and began work on the novel Prokleta avlija"
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "to": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретарь делегации при Лиге Наций",
+      "long": "Представлял Югославию при Лиге Наций; в 1931 году назначен заместителем делегата.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "diplomat-mezhdu-voynami",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1930 по 1933 годы был секретарем постоянной делегации Королевства Югославии при Лиге Наций в Женеве"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Посол Югославии в Германии",
+      "long": "Назначен послом Югославии в Германии; должность занимал до вторжения в апреле 1941 года.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Помощник министра иностранных дел (1937), полномочный министр и чрезвычайный посланник Королевства Югославия в Берлине (1939)."
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Хлопоты об арестованных поляках",
+      "long": "Попытался помочь арестованным немцами польским учёным и деятелям культуры, но безуспешно.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1939 года ходатайствовал об освобождении польских учёных и деятелей культуры из Кракова, арестованных немцами."
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "to": "1944",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Три года в квартире друга под надзором",
+      "long": "Жил под надзором немцев в квартире друга, не сотрудничал с оккупационной властью и писал главные романы.",
+      "place": {
+        "label": "Белград"
+      },
+      "works": [
+        {
+          "ref": "bridge-on-the-drina",
+          "note": "роман написан в годы оккупации"
+        },
+        {
+          "ref": "travnik-chronicle",
+          "note": "роман завершён в годы оккупации"
+        }
+      ],
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 6 April 1941, the Germans and their allies invaded Yugoslavia. … Andrić spent the following three years in a friend's Belgrade apartment in conditions that some biographers liken to house arrest."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941-02",
+        "to": "1941-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Протест против переговоров с Германией, отставка не принята",
+      "long": "Резко критиковал присоединение Югославии к Тройственному пакту; 17 марта просил освободить его от должности.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале и марте 1941 года выступил против тайных переговоров с Германией, ведущихся за его спиной. Подал в отставку, которая не была принята."
+      }
+    },
+    {
+      "key": "war-1941-2",
+      "date": {
+        "from": "1941-04",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Высылка из Берлина в оккупированный Белград",
+      "long": "После вторжения Германии в Югославию вместе с сотрудниками посольства возвращён в оккупированный Белград.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1941 года после объявления Германией войны Югославии Андрич вместе с подчинёнными был выслан в Белград"
+      }
+    },
+    {
+      "key": "career-1941-2",
+      "date": {
+        "from": "1941-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отставка, отказ от пенсии и от «Обращения»",
+      "long": "Уволен в отставку, отказался от пенсии и не подписал «Обращение к сербскому народу», осуждавшее сопротивление оккупантам.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1941 года после объявления Германией войны Югославии Андрич вместе с подчинёнными был выслан в Белград. … В ноябре того же года отправлен на пенсию, но отказался её получать"
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Бегство из Белграда во время бомбардировок",
+      "long": "Во время бомбардировок Белграда союзной авиацией покинул квартиру и уехал из города с колонной беженцев.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "posol-i-okkupatsiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, Andrić was forced to leave his friend's apartment during the Allied bombing of Belgrade and evacuate the city."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Союза писателей Югославии",
+      "long": "Вернулся к общественной жизни при новой власти: заместитель председателя общества югославско-советской дружбы и председатель Союза писателей Югославии.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "pisatel-novoy-yugoslavii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1946, Andrić was elected vice-president of the Society for the Cultural Cooperation of Yugoslavia with the Soviet Union. The same month, he was named president of the Yugoslav Writers' Union."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз коммунистов",
+      "long": "Вступил в Союз коммунистов Югославии; по оценке биографа Хоксворт, скорее ради служения стране, чем по убеждению.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "pisatel-novoy-yugoslavii",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член Союза коммунистов Югославии (1954)."
+      }
+    },
+    {
+      "key": "love-1958",
+      "date": {
+        "from": "1958-09-27",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Милицей Бабич",
+      "long": "В 66 лет женился на Милице Бабич, костюмере Национального театра в Белграде, почти на двадцать лет моложе его.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "pisatel-novoy-yugoslavii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 27 September 1958, the 66-year-old Andrić married Milica Babić, a costume designer at the National Theatre of Serbia"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961-10-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Нобелевская премия «за силу эпического дарования». Всю сумму Андрич передал на покупку книг для библиотек Боснии и Герцеговины.",
+      "chapter": "nobel-i-poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 26 October 1961, he was awarded the Nobel Prize in Literature by the Swedish Academy."
+      }
+    },
+    {
+      "key": "loss-1968",
+      "date": {
+        "from": "1968-03-16",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены",
+      "long": "Умерла жена, Милица Бабич; здоровье писателя после этого постепенно ухудшалось, он почти не путешествовал.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "nobel-i-poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Andrić's wife died on 16 March 1968."
+      }
+    },
+    {
+      "key": "illness-1974",
+      "date": {
+        "from": "1974-12",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Госпитализация в Белграде",
+      "long": "Писал до 1974 года, затем состояние резко ухудшилось; в декабре был госпитализирован в Белграде.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "nobel-i-poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1974, he was admitted to a Belgrade hospital."
+      }
+    },
+    {
+      "key": "death-1975",
+      "date": {
+        "from": "1975-03-13",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Белграде",
+      "long": "Умер в Военно-медицинской академии в Белграде в возрасте 82 лет; прах захоронен на Новом кладбище.",
+      "place": {
+        "label": "Белград"
+      },
+      "chapter": "nobel-i-poslednie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died in the Military Medical Academy at 1:15 a.m. on 13 March 1975, aged 82"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "bridge-on-the-drina",
+      "title": "Мост на Дрине",
+      "qid": "Q1247865",
+      "written": {
+        "from": 1942,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "travnik-chronicle",
+      "title": "Травницкая хроника",
+      "qid": "Q824338",
+      "written": {
+        "from": 1942,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "damned-yard",
+      "title": "Проклятый двор",
+      "qid": "Q1249456",
+      "written": {
+        "from": 1928,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "ex-ponto",
+      "title": "Ex Ponto",
+      "qid": "Q16098237",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "nemiri",
+      "title": "Тревоги",
+      "written": {
+        "from": 1919,
+        "to": 1920
+      }
+    }
+  ]
+}

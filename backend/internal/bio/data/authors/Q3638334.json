@@ -1,0 +1,158 @@
+{
+  "qid": "Q3638334",
+  "name": "Бентли Литтл",
+  "born": "1960-12-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%82%D1%82%D0%BB%2C_%D0%91%D0%B5%D0%BD%D1%82%D0%BB%D0%B8",
+      "rev": 150524993
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Bentley_Little",
+      "rev": 1371368523
+    }
+  ],
+  "chapters": [
+    {
+      "key": "arizona-youth",
+      "title": "Аризона и множество профессий",
+      "from": 1960,
+      "to": 1989
+    },
+    {
+      "key": "first-novel",
+      "title": "«Откровение» и первая слава",
+      "from": 1990,
+      "to": 1995
+    },
+    {
+      "key": "mature-years",
+      "title": "Роман за романом",
+      "from": 1996,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1960",
+      "date": {
+        "from": "1960-12-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Месе, Аризона",
+      "long": "Родился в Месе, штат Аризона, в небогатой семье.",
+      "place": {
+        "label": "Меса"
+      },
+      "chapter": "arizona-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 21 декабря 1960, Меса, Аризона, США"
+      }
+    },
+    {
+      "key": "creation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Дипломная работа, ставшая первым романом",
+      "long": "Роман «Откровение» стал дипломной работой магистра, затем был опубликован.",
+      "works": [
+        {
+          "ref": "the-revelation"
+        }
+      ],
+      "chapter": "first-novel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его дипломной работой был роман «Откровение» (The Revelation, 1990), который впоследствии был опубликован."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Брэма Стокера за дебютный роман",
+      "long": "Дебютный роман «Откровение» получил премию Брэма Стокера как лучший дебютный роман.",
+      "works": [
+        {
+          "ref": "the-revelation"
+        }
+      ],
+      "chapter": "first-novel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1991 году этот роман получил премию Брэма Стокера."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-revelation",
+      "title": "Откровение",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "the-mailman",
+      "title": "Почтальон",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "the-summoning",
+      "title": "Созыв",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "university",
+      "title": "Университет",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "the-store",
+      "title": "Склад",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "the-house",
+      "title": "Дом",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "the-ignored",
+      "title": "Незаметные",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    }
+  ]
+}

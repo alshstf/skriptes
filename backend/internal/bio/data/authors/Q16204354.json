@@ -1,0 +1,291 @@
+{
+  "qid": "Q16204354",
+  "name": "Энн Леки",
+  "born": "1966-03-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BA%D0%B8%2C_%D0%AD%D0%BD%D0%BD",
+      "rev": 149589242
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ann_Leckie",
+      "rev": 1379360740
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Сент-Луис, музыка и первые попытки",
+      "from": 1966,
+      "to": 1999
+    },
+    {
+      "key": "dom-i-roman",
+      "title": "Дети и черновик романа",
+      "from": 2000,
+      "to": 2011
+    },
+    {
+      "key": "slava",
+      "title": "Империя Радч и награды",
+      "from": 2012,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-03-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Толидо",
+      "long": "Родилась в Толидо, штат Огайо, США; выросла в Сент-Луисе, штат Миссури.",
+      "place": {
+        "label": "Толидо"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Толидо 1966-03-02"
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень по музыке в Вашингтонском университете",
+      "long": "Окончила Вашингтонский университет в Сент-Луисе со степенью по музыке.",
+      "place": {
+        "label": "Сент-Луис"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Училась музыке в Вашингтонском университете, получив степень в 1989 году."
+      }
+    },
+    {
+      "key": "child-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение первого ребёнка",
+      "long": "Родился первый ребёнок; позднее у Леки родились сын и дочь.",
+      "chapter": "dom-i-roman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After giving birth to her children in 1996 and 2000"
+      }
+    },
+    {
+      "key": "child-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение второго ребёнка",
+      "long": "Родила второго ребёнка; в годы домашней жизни с детьми начала писать роман.",
+      "chapter": "dom-i-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После того, как Леки родила второго ребёнка в 2000 году"
+      }
+    },
+    {
+      "key": "creation-2002",
+      "date": {
+        "from": "2002-11",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый черновик романа в месячнике NaNoWriMo",
+      "long": "Из-за скуки в декрете набросала первый вариант будущего романа во время Национального месячника написания романов.",
+      "works": [
+        {
+          "ref": "ancillary-justice"
+        }
+      ],
+      "chapter": "dom-i-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "скука побудила её набросать первый вариант «Слуг правосудия» во время Национального месячника написания романов в 2002 году"
+      }
+    },
+    {
+      "key": "education-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Семинар Clarion West у Октавии Батлер",
+      "long": "Шесть недель занималась на семинаре Clarion West у Октавии Батлер; затем шесть лет писала роман.",
+      "works": [
+        {
+          "ref": "ancillary-justice"
+        }
+      ],
+      "chapter": "dom-i-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году Леки посетила шестинедельный семинар для начинающих писателей-фантастов Clarion West Writers Workshop, где занималась у Октавии Батлер."
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор журнала Giganotosaurus",
+      "long": "Редактировала онлайн-журнал фантастики и фэнтези Giganotosaurus.",
+      "chapter": "dom-i-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "редактировала онлайн-журнал научной фантастики и фэнтези Giganotosaurus с 2010 по 2013 год"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт с издательством Orbit",
+      "long": "Издательство Orbit Books выбрало дебютный роман для публикации.",
+      "works": [
+        {
+          "ref": "ancillary-justice"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2012 году издательство Orbit Books выбрала книгу Леки для опубликования."
+      }
+    },
+    {
+      "key": "career-2012-2",
+      "date": {
+        "from": "2012",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретарь ассоциации писателей-фантастов",
+      "long": "Была секретарём Американской ассоциации писателей-фантастов.",
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2012—2013 годах она была секретарём Американской ассоциации писателей-фантастов."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание критиков и дебют в большой фантастике",
+      "long": "Дебютный роман вышел в октябре 2013 года и был хорошо принят критиками, получив все основные награды англоязычной фантастики.",
+      "works": [
+        {
+          "ref": "ancillary-justice"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В октябре 2013 года вышел дебютный роман Леки «Слуги правосудия»... Роман был хорошо принят критиками и получил все основные награды"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за продолжение",
+      "long": "Получила премию «Локус» за продолжение романа; в том же году Orbit Books приобрели у неё ещё два романа.",
+      "works": [
+        {
+          "ref": "ancillary-sword"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2015 году за продолжение романа Леки получила премию «Локус»."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ancillary-justice",
+      "title": "Слуги правосудия",
+      "qid": "Q17001721",
+      "written": {
+        "from": 2002,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "ancillary-sword",
+      "title": "Слуги меча",
+      "written": {
+        "from": 2013,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "ancillary-mercy",
+      "title": "Слуги милосердия",
+      "written": {
+        "from": 2014,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "provenance",
+      "title": "Происхождение",
+      "written": {
+        "from": 2015,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "raven-tower",
+      "title": "Башня Ворона",
+      "written": {
+        "from": 2015,
+        "to": 2019
+      }
+    }
+  ]
+}

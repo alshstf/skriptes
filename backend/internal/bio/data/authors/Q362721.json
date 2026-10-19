@@ -1,0 +1,345 @@
+{
+  "qid": "Q362721",
+  "name": "Ирвин Ялом",
+  "born": "1931-06-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AF%D0%BB%D0%BE%D0%BC%2C_%D0%98%D1%80%D0%B2%D0%B8%D0%BD_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4",
+      "rev": 153913814
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Irvin_D._Yalom",
+      "rev": 1378896265
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo",
+      "title": "Детство над продуктовым магазином",
+      "from": 1931,
+      "to": 1951
+    },
+    {
+      "key": "medicina",
+      "title": "Университет и медицина",
+      "from": 1952,
+      "to": 1962
+    },
+    {
+      "key": "stenford",
+      "title": "Стэнфорд, терапия и книги",
+      "from": 1963,
+      "to": 2018
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Утрата и поздние годы",
+      "from": 2019,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-06-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье еврейских эмигрантов",
+      "long": "Родился в Вашингтоне в еврейской семье выходцев из Белоруссии, владевших продуктовым магазином.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "detstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ирвин Дэвид Ялом (англ. Irvin David Yalom; 13 июня 1931, Вашингтон, США)"
+      }
+    },
+    {
+      "key": "education-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Университета Джорджа Вашингтона",
+      "long": "Окончил Университет Джорджа Вашингтона.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "medicina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "посещал Университет Джорджа Вашингтона (окончил в 1952 году)"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Степень доктора медицины",
+      "long": "Получил степень доктора медицины в Школе медицины Бостонского университета; затем интернатура в госпитале «Маунт-Синай» в Нью-Йорке.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "medicina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Школу медицины Бостонского университета (доктор медицины, 1956)"
+      }
+    },
+    {
+      "key": "education-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание ординатуры в клинике Фипса",
+      "long": "Завершил ординатуру в клинике Фипса госпиталя Джонса Хопкинса в Балтиморе; затем два года служил в армии в госпитале «Триплер» в Гонолулу.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "medicina",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his residency at the Phipps Clinic of Johns Hopkins Hospital in Baltimore, where he completed his training in 1960"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в Стэнфордском университете",
+      "long": "Начал академическую карьеру на факультете Стэнфордского университета.",
+      "place": {
+        "label": "Стэнфорд"
+      },
+      "chapter": "stenford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was appointed to the faculty in 1963"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Постоянная должность в Стэнфорде",
+      "long": "Получил постоянную должность в Стэнфорде; вскоре после этого оформились его взгляды на групповую и экзистенциальную психотерапию.",
+      "place": {
+        "label": "Стэнфорд"
+      },
+      "chapter": "stenford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "being granted tenure in 1968"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Стрекера",
+      "long": "Получил премию Стрекера.",
+      "chapter": "stenford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Стрекера 1974-01-01"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Оскара Пфистера",
+      "long": "Получил премию Оскара Пфистера.",
+      "chapter": "stenford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Оскара Пфистера 2001-01-01"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Зигмунда Фрейда по психотерапии",
+      "long": "Получил Международную премию Зигмунда Фрейда по психотерапии.",
+      "chapter": "stenford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Международная премия Зигмунда Фрейда по психотерапии 2009-01-01"
+      }
+    },
+    {
+      "key": "loss-2019",
+      "date": {
+        "from": "2019-11-20",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Мэрилин",
+      "long": "Умерла жена, писательница и историк Мэрилин Ялом; они были женаты более шестидесяти лет, у них четверо детей.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Marilyn Yalom, who died on November 20, 2019"
+      }
+    },
+    {
+      "key": "love-2024",
+      "date": {
+        "from": "2024-01-11",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Сакин Штернберг",
+      "long": "Женился на Сакин Штернберг, клиническом психологе из Берлина.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On January 11, 2024, he married Sakino Sternberg, a clinical psychologist in Berlin."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "theory-and-practice-of-group-psychotherapy",
+      "title": "Теория и практика групповой психотерапии",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "every-day-gets-a-little-closer",
+      "title": "С каждым днём всё ближе",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "existential-psychotherapy",
+      "title": "Экзистенциальная психотерапия",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "loves-executioner",
+      "title": "Палач любви",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "when-nietzsche-wept",
+      "title": "Когда Ницше плакал",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "lying-on-the-couch",
+      "title": "Лжец на кушетке",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "momma-and-the-meaning-of-life",
+      "title": "Мамочка и смысл жизни",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "gift-of-therapy",
+      "title": "Дар психотерапии",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "schopenhauer-cure",
+      "title": "Лечение от Шопенгауэра",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "staring-at-the-sun",
+      "title": "Вглядываясь в солнце",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "spinoza-problem",
+      "title": "Проблема Спинозы",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "creatures-of-a-day",
+      "title": "Однодневные существа",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "becoming-myself",
+      "title": "Становясь собой",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    }
+  ]
+}

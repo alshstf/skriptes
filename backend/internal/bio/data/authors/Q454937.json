@@ -1,0 +1,116 @@
+{
+  "qid": "Q454937",
+  "name": "Ким Харрисон",
+  "born": "1966-09-30",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Kim_Harrison",
+      "rev": 1375065860
+    }
+  ],
+  "chapters": [
+    {
+      "key": "midwest-and-apprenticeship",
+      "title": "Средний Запад и годы ученичества",
+      "from": 1966,
+      "to": 2003
+    },
+    {
+      "key": "the-hollows-breakthrough",
+      "title": "Успех и уход со службы",
+      "from": 2004,
+      "to": 2008
+    },
+    {
+      "key": "two-names-one-author",
+      "title": "Раскрытие псевдонима",
+      "from": 2009,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1966",
+      "date": {
+        "from": "1966-09-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на Среднем Западе США",
+      "long": "Родилась 30 сентября 1966 года, выросла на Среднем Западе США, единственной девочкой в семье с братьями. Ким Харрисон — псевдоним писательницы Дон Кук.",
+      "place": {
+        "label": "Средний Запад, США"
+      },
+      "chapter": "midwest-and-apprenticeship",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kim Harrison (born September 30, 1966) is a pen name of American author Dawn Cook."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход с основной работы ради письма",
+      "long": "После успеха первого романа, вышедшего в 2004 году, Харрисон смогла уволиться с основной работы и полностью посвятить себя литературе. До этого около десяти лет она безуспешно пыталась стать писателем.",
+      "works": [
+        {
+          "ref": "dead-witch-walking"
+        }
+      ],
+      "chapter": "the-hollows-breakthrough",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "her first book was published in paperback by HarperTorch in 2004... After the success of her first novel, Harrison was able to resign from her day job, devoting herself to writing full-time."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание Amazon как популярного автора жанра",
+      "long": "В 2007 году Amazon.com назвал Харрисон одной из самых востребованных авторов популярного жанра «сексуальной сверхъестественной» прозы.",
+      "chapter": "the-hollows-breakthrough",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Amazon.com noted that Harrison had become \"one of the hottest authors in the incredibly popular genre of sexy supernaturalism.\""
+      }
+    },
+    {
+      "key": "other-2009",
+      "date": {
+        "from": "2009-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Раскрытие связи псевдонимов Кук и Харрисон",
+      "long": "В статье журнала Locus в мае 2009 года стало известно, что Дон Кук и Ким Харрисон — один человек.",
+      "chapter": "two-names-one-author",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "that Cook was Harrison, was disclosed in a May 2009 Locus magazine article."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dead-witch-walking",
+      "title": "Dead Witch Walking",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "qid": "Q464700",
+  "name": "Уинстон Грум",
+  "born": "1943-03-23",
+  "died": "2020-09-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D1%80%D1%83%D0%BC%2C_%D0%A3%D0%B8%D0%BD%D1%81%D1%82%D0%BE%D0%BD",
+      "rev": 154442091
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Winston_Groom",
+      "rev": 1379907407
+    }
+  ],
+  "chapters": [
+    {
+      "key": "mobile-i-universitet",
+      "title": "Мобил и университет",
+      "from": 1943,
+      "to": 1965
+    },
+    {
+      "key": "vietnam-i-pervye-knigi",
+      "title": "Вьетнам и первые книги",
+      "from": 1966,
+      "to": 1984
+    },
+    {
+      "key": "forrest-gamp",
+      "title": "Форрест Гамп и Голливуд",
+      "from": 1985,
+      "to": 1995
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Поздние годы",
+      "from": 1996,
+      "to": 2020
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-03-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Вашингтоне",
+      "long": "Родился в Вашингтоне в семье учительницы английского и юриста из Пентагона; вырос в Мобиле, штат Алабама.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "mobile-i-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 1943, Вашингтон — 16 сентября 2020) — американский романист"
+      }
+    },
+    {
+      "key": "education-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Алабамского университета",
+      "long": "Окончил Алабамский университет, где был членом братства Delta Tau Delta и Army ROTC; работа литературным редактором в студенческие годы определила решение стать писателем.",
+      "place": {
+        "label": "Таскалуса"
+      },
+      "chapter": "mobile-i-universitet",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он посещал университет Алабамы, где был членом Delta Tau Delta и Army ROTC, и окончил университет в 1965."
+      }
+    },
+    {
+      "key": "war-1966",
+      "date": {
+        "from": "1966",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба во Вьетнаме",
+      "long": "Служил в армии США с 1965 года, в 1966–1967 годах находился во Вьетнаме, большей частью в составе 4-й пехотной дивизии.",
+      "place": {
+        "label": "Вьетнам"
+      },
+      "chapter": "vietnam-i-pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Groom served in the U.S. Army from 1965 to 1967, including a tour of duty in the Vietnam War (from 1966 to 1967)."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Финалист Пулитцеровской премии",
+      "long": "Документальная книга о вьетнамской войне вошла в число финалистов Пулитцеровской премии в категории общей документальной литературы.",
+      "works": [
+        {
+          "ref": "conversations-with-the-enemy"
+        }
+      ],
+      "chapter": "vietnam-i-pervye-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Conversations with the Enemy was a 1984 finalist for the Pulitzer Prize for General Nonfiction."
+      }
+    },
+    {
+      "key": "creation-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение в Мобил, роман за шесть недель",
+      "long": "Вернулся в Мобил и начал работу над романом; идея восходила к рассказу отца о знакомом в детстве умственно отсталом мальчике. Роман был написан за шесть недель.",
+      "place": {
+        "label": "Мобил"
+      },
+      "works": [
+        {
+          "ref": "forrest-gump",
+          "note": "рассказ отца автора о мальчике, которого он знал в детстве, стал отправной точкой романа"
+        }
+      ],
+      "chapter": "forrest-gamp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1985, Groom moved back to Mobile, Alabama, where he began to work on the novel Forrest Gump."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Экранизация и мировой успех романа",
+      "long": "Фильм с Томом Хэнксом получил шесть «Оскаров»; роман стал бестселлером и разошёлся тиражом 1,7 млн экземпляров. За права на экранизацию автор получил 350 тысяч долларов.",
+      "works": [
+        {
+          "ref": "forrest-gump"
+        }
+      ],
+      "chapter": "forrest-gamp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Several years later, it was adapted by screenwriter Eric Roth as a 1994 film of the same name, starring Tom Hanks in the title role of Forrest Gump."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Спор с Paramount о доходах от фильма",
+      "long": "Оспаривал бухгалтерию Paramount, из-за которой не получил доли прибыли от фильма; в 1995 году урегулировал спор, получив семизначную сумму за права на экранизацию продолжения.",
+      "works": [
+        {
+          "ref": "gump-and-co"
+        }
+      ],
+      "chapter": "forrest-gamp",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He eventually settled with Paramount in 1995 in an agreement that included a seven-figure sum for the film rights to Gump and Co."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Харпер Ли",
+      "long": "Получил премию имени Харпер Ли.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Harper Lee Award 2011-01-01"
+      }
+    },
+    {
+      "key": "death-2020",
+      "date": {
+        "from": "2020-09-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Фэрхопе",
+      "long": "Умер у себя дома в Фэрхопе, штат Алабама, в возрасте 77 лет, предположительно от сердечного приступа.",
+      "place": {
+        "label": "Фэрхоп"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 1943, Вашингтон — 16 сентября 2020) — американский романист"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "better-times-than-these",
+      "title": "Времена лучше этих",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "as-summers-die",
+      "title": "Как только умирают лета",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "conversations-with-the-enemy",
+      "title": "Разговоры с врагом",
+      "written": {
+        "from": 1982,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "forrest-gump",
+      "title": "Форрест Гамп",
+      "written": {
+        "from": 1985,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "gump-and-co",
+      "title": "Гамп и компания",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "1942-year-that-tried-mens-souls",
+      "title": "1942: Год, испытывавший души людей",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "vicksburg-1863",
+      "title": "Виксбург, 1863",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "kearnys-march",
+      "title": "Марш Карни: Эпическое создание американского Запада",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "el-paso",
+      "title": "Эль-Пасо",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

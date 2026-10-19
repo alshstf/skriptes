@@ -1,0 +1,114 @@
+{
+  "qid": "Q4093888",
+  "name": "Олег Николаевич Борисов",
+  "born": "1970-06-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D1%80%D0%B8%D1%81%D0%BE%D0%B2%2C_%D0%9E%D0%BB%D0%B5%D0%B3_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 149432089
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Дороги СССР и медицинский институт",
+      "from": 1970,
+      "to": 1993
+    },
+    {
+      "key": "inzhener-i-pisatel",
+      "title": "Инженер и писатель",
+      "from": 1994,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1988",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство в разъездах по СССР",
+      "long": "До окончания школы семья Борисова объездила весь СССР.",
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1970 году в Западной Сибири. До завершения школы с семьей объездил весь СССР."
+      }
+    },
+    {
+      "key": "birth-1970",
+      "date": {
+        "from": "1970-06-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Западной Сибири",
+      "long": "Родился 15 июня 1970 года в Западной Сибири.",
+      "place": {
+        "label": "Западная Сибирь"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Олег Николаевич Борисов (род.15 июня 1970, Западная Сибирь)"
+      }
+    },
+    {
+      "key": "education-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Тюменского медицинского института",
+      "long": "Окончил Тюменский медицинский институт, защитив диплом на стыке медицины и информационных технологий.",
+      "place": {
+        "label": "Тюмень"
+      },
+      "chapter": "inzhener-i-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1994 окончил Тюменский медицинский институт, защитив диплом на стыке медицины и информационных технологий."
+      }
+    },
+    {
+      "key": "creation-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Начало литературной работы",
+      "long": "Начал писать первую книгу; к 2009 году закончена трилогия «Глэд».",
+      "works": [
+        {
+          "ref": "glad"
+        }
+      ],
+      "chapter": "inzhener-i-pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первую книгу начал писать в 2004 году."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "glad",
+      "title": "Глэд",
+      "written": {
+        "from": 2004,
+        "to": 2009
+      }
+    }
+  ]
+}

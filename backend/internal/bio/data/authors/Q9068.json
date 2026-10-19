@@ -1,0 +1,944 @@
+{
+  "qid": "Q9068",
+  "name": "Вольтер",
+  "born": "1694-11-21",
+  "died": "1778-05-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%BE%D0%BB%D1%8C%D1%82%D0%B5%D1%80",
+      "rev": 155362619
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Voltaire",
+      "rev": 1380907788
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Voltaire",
+      "rev": 240396371
+    }
+  ],
+  "chapters": [
+    {
+      "key": "paris-youth",
+      "title": "Париж, иезуиты и первые стихи",
+      "from": 1694,
+      "to": 1716
+    },
+    {
+      "key": "bastille-england",
+      "title": "Бастилия, сцена и Англия",
+      "from": 1717,
+      "to": 1732
+    },
+    {
+      "key": "cirey",
+      "title": "Сире и маркиза дю Шатле",
+      "from": 1733,
+      "to": 1749
+    },
+    {
+      "key": "prussia",
+      "title": "Пруссия и опала",
+      "from": 1750,
+      "to": 1754
+    },
+    {
+      "key": "ferney",
+      "title": "Ферне и борьба с несправедливостью",
+      "from": 1755,
+      "to": 1777
+    },
+    {
+      "key": "return-paris",
+      "title": "Возвращение в Париж",
+      "from": 1778,
+      "to": 1778
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1694",
+      "date": {
+        "from": "1694-11-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье парижского нотариуса",
+      "long": "Франсуа-Мари Аруэ родился в Париже в семье нотариуса Франсуа Аруэ. Сам он называл датой рождения 20 февраля 1694 года.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 ноября 1694, Париж, Королевство Франция — 30 мая 1778, там же"
+      }
+    },
+    {
+      "key": "loss-1701",
+      "date": {
+        "from": "1701",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Мать, Мария Маргарита д’Омар, умерла в 1701 году, когда мальчику было семь лет.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын нотариуса Франсуа Аруэ (1649—1722) и его жены Марии Маргариты д’Омар (1661—1701)"
+      }
+    },
+    {
+      "key": "education-1704",
+      "date": {
+        "from": "1704",
+        "to": "1711",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба у иезуитов в коллеже Людовика Великого",
+      "long": "В иезуитском коллеже изучал латынь, теологию и риторику; там же завязал дружбы, оказавшиеся полезными всю жизнь.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was educated by the Jesuits at the Collège Louis-le-Grand (1704–1711)"
+      }
+    },
+    {
+      "key": "love-1713",
+      "date": {
+        "from": "1713",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман в Гааге и высылка из Нидерландов",
+      "long": "Отец устроил его секретарём посла в Нидерландах; из-за скандальной связи с Олимпией Дюнуайе Аруэ был отправлен назад во Францию.",
+      "place": {
+        "label": "Гаага"
+      },
+      "chapter": "paris-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1713, his father obtained a job for him as a secretary to the new French ambassador in the Netherlands … Their affair, considered scandalous, was discovered by de Châteauneuf and Voltaire was forced to return to France by the end of the year"
+      }
+    },
+    {
+      "key": "persecution-1716",
+      "date": {
+        "from": "1716-05-04",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Ссылка в Тюль, затем в Сюлли",
+      "long": "За язвительные стихи о Регенте и его дочери Аруэ выслан из Парижа; по ходатайству отца место ссылки заменили на Сюлли-сюр-Луар.",
+      "place": {
+        "label": "Тюль"
+      },
+      "chapter": "paris-youth",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 4 mai 1716, il est exilé à Tulle."
+      }
+    },
+    {
+      "key": "persecution-1717",
+      "date": {
+        "from": "1717-05",
+        "to": "1718-04",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Одиннадцать месяцев в Бастилии",
+      "long": "16 мая 1717 года заключён в Бастилию по тайному приказу за сатирические стихи против Регента и его дочери; провёл там одиннадцать месяцев.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 16 mai 1717, il est envoyé à la Bastille par lettre de cachet. Arouet a alors 23 ans et il restera embastillé durant onze mois."
+      }
+    },
+    {
+      "key": "other-1718",
+      "date": {
+        "from": "1718",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Принятие имени Вольтер",
+      "long": "После Бастилии отказался от фамилии Аруэ и взял псевдоним Вольтер, происхождение которого неясно.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Arouet adopted the name Voltaire in 1718, following his incarceration at the Bastille."
+      }
+    },
+    {
+      "key": "career-1718",
+      "date": {
+        "from": "1718-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый театральный успех",
+      "long": "Первая пьеса, поставленная в ноябре 1718 года, имела немедленный успех и утвердила репутацию автора.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "oedipe"
+        }
+      ],
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it opened in mid-November 1718, seven months after his release. Its immediate critical and financial success established his reputation."
+      }
+    },
+    {
+      "key": "illness-1723",
+      "date": {
+        "from": "1723-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Месячная оспа",
+      "long": "В ноябре 1723 года перенёс оспу; после выздоровления в Париж тайно ввезли первые экземпляры поэмы о Генрихе IV.",
+      "works": [
+        {
+          "ref": "la-henriade",
+          "note": "первые экземпляры поэмы тайно разошлись в Париже после выздоровления"
+        }
+      ],
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Voltaire's recovery from a month-long smallpox infection in November 1723"
+      }
+    },
+    {
+      "key": "persecution-1726",
+      "date": {
+        "from": "1726-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Избиение слугами шевалье де Рогана",
+      "long": "В январе 1726 года Вольтера избили лакеи шевалье де Рогана, которого он осмеял; вызвать обидчика на дуэль ему не позволили.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1726 был избит лакеями шевалье де Рогана, которого осмеял."
+      }
+    },
+    {
+      "key": "relocation-1726",
+      "date": {
+        "from": "1726-05",
+        "to": "1728-10",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Изгнание в Англию",
+      "long": "После новой Бастилии (17 апреля 1726) выслан в Англию, где прожил около двух с половиной лет, знакомился с английской литературой, наукой и политическим строем.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "letters-philosophiques",
+          "note": "книгу об английских впечатлениях начал писать по-английски ещё в Англии"
+        }
+      ],
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "arrested and imprisoned without trial in the Bastille on 17 April 1726 … On 2 May, he was escorted from the Bastille to Calais and embarked for England"
+      }
+    },
+    {
+      "key": "loss-1730",
+      "date": {
+        "from": "1730",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Отказ в погребении актрисе Адриенне Лекуврёр",
+      "long": "Умерла актриса, с которой Вольтер был близок; приходской священник отказал ей в погребении, и это возмутило его.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1730, un incident, dont il se souviendra à l’heure de sa mort, le bouleverse et le scandalise. … Il est auprès d’Adrienne Lecouvreur, une actrice qui a joué dans ses pièces et avec laquelle il a eu une liaison, lorsqu’elle meurt."
+      }
+    },
+    {
+      "key": "career-1732",
+      "date": {
+        "from": "1732",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Триумф трагедии, ставшей успехом по всей Европе",
+      "long": "Пьеса 1732 года имела успех, сравнимый с первой, и шла по всей Европе.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "zaire"
+        }
+      ],
+      "chapter": "bastille-england",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Mais Zaïre en 1732 remporte un triomphe comparable à celui d’Œdipe et est joué dans toute l’Europe"
+      }
+    },
+    {
+      "key": "love-1733",
+      "date": {
+        "from": "1733",
+        "to": "1749",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Союз с маркизой Эмили дю Шатле",
+      "long": "В 1733 году стал возлюбленным Эмили дю Шатле; они прожили вместе около шестнадцати лет, вместе занимались науками.",
+      "place": {
+        "label": "Сире"
+      },
+      "works": [
+        {
+          "ref": "elements-newton",
+          "note": "книгу о Ньютоне Вольтер писал в Сире при содействии маркизы"
+        }
+      ],
+      "chapter": "cirey",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1733, il devient l’amant de Mme du Châtelet."
+      }
+    },
+    {
+      "key": "persecution-1734",
+      "date": {
+        "from": "1734",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет книги об Англии и бегство в Сире",
+      "long": "Книга об английских порядках осуждена парламентом, конфискована и публично сожжена; на Вольтера выдан приказ об аресте, он укрылся в замке Сире маркизы дю Шатле.",
+      "place": {
+        "label": "Сире"
+      },
+      "works": [
+        {
+          "ref": "letters-philosophiques",
+          "note": "запрещённая книга — сама «Философские письма»"
+        }
+      ],
+      "chapter": "cirey",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "книга была конфискована (1734), издатель поплатился Бастилией, а Вольтер бежал в Лотарингию"
+      }
+    },
+    {
+      "key": "other-1736",
+      "date": {
+        "from": "1736",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало переписки с Фридрихом II",
+      "long": "Будущий прусский король обратился к Вольтеру с первым письмом; переписка продолжалась с перерывами до смерти Вольтера.",
+      "chapter": "cirey",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с которым давно (с 1736) находился в переписке"
+      }
+    },
+    {
+      "key": "love-1745",
+      "date": {
+        "from": "1745",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Роман с племянницей, мадам Дени",
+      "long": "В конце 1745 года племянница Мари-Луиза Миньо стала возлюбленной Вольтера; позже она вела его дом и жила с ним до его смерти.",
+      "chapter": "cirey",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "(la nièce de Voltaire, Mme Denis, devient sa maîtresse fin 1745, secret bien gardé de son vivant"
+      }
+    },
+    {
+      "key": "career-1746",
+      "date": {
+        "from": "1746",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Назначение придворным историографом",
+      "long": "Получил должность придворного поэта и историографа Франции.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "cirey",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1746 году Вольтер был назначен придворным поэтом и историографом"
+      }
+    },
+    {
+      "key": "career-1746-2",
+      "date": {
+        "from": "1746-05-02",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание во Французскую академию",
+      "long": "После двух неудачных попыток избран в Академию на кресло № 33.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "cirey",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il réussit à se faire élire le 2 mai 1746, au fauteuil numéro 33."
+      }
+    },
+    {
+      "key": "loss-1749",
+      "date": {
+        "from": "1749-09",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Эмили дю Шатле после родов",
+      "long": "В сентябре 1749 года маркиза умерла через несколько дней после рождения ребёнка от Сен-Ламбера. Вольтер был подавлен и покинул Париж.",
+      "place": {
+        "label": "Люневиль"
+      },
+      "chapter": "cirey",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En septembre 1749, Mme du Châtelet, enceinte de Saint-Lambert, officier de la cour du roi Stanislas et poète, meurt dans les jours qui suivent son accouchement."
+      }
+    },
+    {
+      "key": "relocation-1750",
+      "date": {
+        "from": "1750-06",
+        "to": "1753-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Служба у Фридриха II в Пруссии",
+      "long": "В 1750 году по приглашению короля поселился в Потсдаме и Берлине, получил звание камергера и орден; отношения с королём постепенно испортились.",
+      "place": {
+        "label": "Потсдам"
+      },
+      "works": [
+        {
+          "ref": "micromegas",
+          "note": "повесть написана в Пруссии"
+        },
+        {
+          "ref": "siecle-de-louis-xiv",
+          "note": "книга завершена в Пруссии"
+        }
+      ],
+      "chapter": "prussia",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il part en juin 1750 pour la cour de Prusse. Le 27 juillet, il est à Berlin. … Il quitte la Prusse le 26 mars 1753"
+      }
+    },
+    {
+      "key": "persecution-1752",
+      "date": {
+        "from": "1752-01-01",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Разрыв с королём из-за памфлета о Мопертюи",
+      "long": "Памфлет против президента Берлинской академии Мопертюи был сожжён по приказу Фридриха; 1 января 1752 года Вольтер предложил вернуть знаки ордена и отказаться от должности камергера.",
+      "place": {
+        "label": "Потсдам"
+      },
+      "works": [
+        {
+          "ref": "diatribe-akakia",
+          "note": "памфлет вызвал гнев короля и стал причиной разрыва"
+        }
+      ],
+      "chapter": "prussia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 1 January 1752, Voltaire offered to resign as chamberlain and return his insignia of the Order of Merit"
+      }
+    },
+    {
+      "key": "persecution-1753",
+      "date": {
+        "from": "1753-05-31",
+        "to": "1753-07-08",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Задержание во Франкфурте агентами короля",
+      "long": "Покинув Пруссию, Вольтер был задержан во Франкфурте из-за книги стихов Фридриха; около пяти недель его держали под стражей и обыскивали багаж.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "prussia",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il quitte la Prusse le 26 mars 1753 … Frédéric le fait arrêter le 31 mai par son résident le baron von Freytag"
+      }
+    },
+    {
+      "key": "persecution-1754",
+      "date": {
+        "from": "1754-01-27",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет жить в Париже",
+      "long": "В январе 1754 года Вольтеру сообщили о запрете приближаться к Парижу; запрет не отменяли до конца его жизни. Он направился в Женеву.",
+      "place": {
+        "label": "Кольмар"
+      },
+      "chapter": "prussia",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "le 27 janvier 1754, l'interdiction d'approcher de la capitale lui est notifiée"
+      }
+    },
+    {
+      "key": "relocation-1755",
+      "date": {
+        "from": "1755",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поместье «Отрадное» близ Женевы",
+      "long": "Поселился возле Женевы, где купил имение Les Délices; отношения с кальвинистскими женевцами вскоре испортились.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "ferney",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he turned for Geneva, near which he bought a large estate (Les Délices) in early 1755"
+      }
+    },
+    {
+      "key": "relocation-1758",
+      "date": {
+        "from": "1758-10",
+        "to": "1778-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Двадцать лет в имении Ферне",
+      "long": "Купил Ферне на французской стороне границы с Женевой и поселился там в октябре 1758 года; превратил деревню в процветающий городок и принимал гостей со всей Европы.",
+      "place": {
+        "label": "Ферне"
+      },
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Voltaire achète le château de Ferney … et s’y installe en octobre 1758"
+      }
+    },
+    {
+      "key": "other-1762",
+      "date": {
+        "from": "1762",
+        "to": "1765",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Кампания за пересмотр дела Каласа",
+      "long": "В 1762 году начал кампанию за отмену приговора протестанту Жану Каласу; добился отмены приговора и компенсации семье.",
+      "place": {
+        "label": "Ферне"
+      },
+      "works": [
+        {
+          "ref": "traite-sur-la-tolerance",
+          "note": "трактат вышел как отклик на дело Каласа"
+        }
+      ],
+      "chapter": "ferney",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1762 году Вольтер начал кампанию по отмене приговора протестанту Жану Каласу"
+      }
+    },
+    {
+      "key": "persecution-1765",
+      "date": {
+        "from": "1765-03-19",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Осуждение его словаря-памфлета парламентом",
+      "long": "Книга признана нечестивой и осуждена во Франции; в Женеве и Берне её сожгли.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "dictionnaire-philosophique"
+        }
+      ],
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il est condamné en France par le Parlement le 19 mars 1765"
+      }
+    },
+    {
+      "key": "other-1766",
+      "date": {
+        "from": "1766-07-01",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Казнь шевалье де Ла Барра",
+      "long": "Юноша казнён за кощунство; вместе с его телом сожгли «Философский словарь». Вольтер подробно описал дело и добился пересмотра.",
+      "place": {
+        "label": "Аббевиль"
+      },
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "L’exécution a lieu le 1er juillet 1766."
+      }
+    },
+    {
+      "key": "career-1770",
+      "date": {
+        "from": "1770",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приют женевских беженцев в Ферне",
+      "long": "После провала восстания в Женеве сотни ремесленников нашли убежище на землях Вольтера; он построил им дома и основал часовое и шёлковое производство.",
+      "place": {
+        "label": "Ферне"
+      },
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1770, l'échec de la révolte des natifs genevois en amène plusieurs centaines à se réfugier sur les terres de Voltaire"
+      }
+    },
+    {
+      "key": "loss-1771",
+      "date": {
+        "from": "1771-05",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть племянницы Мари-Элизабет",
+      "long": "В мае 1771 года Вольтер потерял младшую племянницу, умершую от туберкулёза.",
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En mai 1771, il perd sa plus jeune nièce de tuberculose"
+      }
+    },
+    {
+      "key": "illness-1773",
+      "date": {
+        "from": "1773-02",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь мочевыводящих путей",
+      "long": "С февраля 1773 года страдал от мучительной болезни, которую долго считали раком простаты; сам он писал, что видит смерть.",
+      "place": {
+        "label": "Ферне"
+      },
+      "chapter": "ferney",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Depuis le début de février 1773, Voltaire souffre de ce que les historiens ont longtemps cru être un cancer de la prostate"
+      }
+    },
+    {
+      "key": "relocation-1778",
+      "date": {
+        "from": "1778-02-10",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Париж после 28 лет",
+      "long": "В феврале 1778 года приехал в Париж на постановку своей последней трагедии и поселился в особняке маркиза де Виллета.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "irene",
+          "note": "приехал на постановку трагедии"
+        }
+      ],
+      "chapter": "return-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il décide de rallier la capitale en février 1778 à l’occasion de la création d'Irène à la Comédie-Française. Il arrive le 10 février"
+      }
+    },
+    {
+      "key": "career-1778",
+      "date": {
+        "from": "1778-03-30",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Триумфальный приём в Академии и театре",
+      "long": "30 марта 1778 года его встречали толпы на улицах, в Академии и в Комеди Франсез; на сцене установили его бюст.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "irene"
+        }
+      ],
+      "chapter": "return-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 30 mars 1778 est le jour de son triomphe à l’Académie, à la Comédie-Française et dans les rues de Paris."
+      }
+    },
+    {
+      "key": "faith-1778",
+      "date": {
+        "from": "1778-04-07",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Вступление в масонскую ложу «Девять сестёр»",
+      "long": "Незадолго до смерти принят в парижскую ложу Великого Востока Франции.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "return-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Незадолго до своей смерти, 7 апреля 1778 года, Вольтер вступил в парижскую масонскую ложу Великого Востока Франции — «Девять сестёр»."
+      }
+    },
+    {
+      "key": "death-1778",
+      "date": {
+        "from": "1778-05-30",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже, тайное погребение",
+      "long": "Вольтер умер 30 мая 1778 года; тело тайно вывезли и похоронили в аббатстве Сельер, так как церковь отказывала в христианском погребении в Париже.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "return-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "30 мая 1778 года Вольтер скончался во сне в Париже."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "oedipe",
+      "title": "Эдип",
+      "written": {
+        "from": 1717,
+        "to": 1718
+      }
+    },
+    {
+      "ref": "la-henriade",
+      "title": "Генриада",
+      "written": {
+        "from": 1717,
+        "to": 1723
+      }
+    },
+    {
+      "ref": "letters-philosophiques",
+      "title": "Философские письма",
+      "qid": "Q2551373",
+      "written": {
+        "from": 1726,
+        "to": 1734
+      }
+    },
+    {
+      "ref": "zaire",
+      "title": "Заира",
+      "qid": "Q377950",
+      "written": {
+        "from": 1732,
+        "to": 1732
+      }
+    },
+    {
+      "ref": "elements-newton",
+      "title": "Основы философии Ньютона",
+      "written": {
+        "from": 1735,
+        "to": 1737
+      }
+    },
+    {
+      "ref": "mahomet",
+      "title": "Магомет",
+      "qid": "Q1431518",
+      "written": {
+        "from": 1736,
+        "to": 1741
+      }
+    },
+    {
+      "ref": "zadig",
+      "title": "Задиг",
+      "qid": "Q140057",
+      "written": {
+        "from": 1747,
+        "to": 1747
+      }
+    },
+    {
+      "ref": "micromegas",
+      "title": "Микромегас",
+      "written": {
+        "from": 1750,
+        "to": 1751
+      }
+    },
+    {
+      "ref": "siecle-de-louis-xiv",
+      "title": "Век Людовика XIV",
+      "written": {
+        "from": 1735,
+        "to": 1751
+      }
+    },
+    {
+      "ref": "diatribe-akakia",
+      "title": "Диатриба доктора Акакия",
+      "written": {
+        "from": 1752,
+        "to": 1752
+      }
+    },
+    {
+      "ref": "candide",
+      "title": "Кандид, или Оптимизм",
+      "qid": "Q215894",
+      "written": {
+        "from": 1758,
+        "to": 1759
+      }
+    },
+    {
+      "ref": "traite-sur-la-tolerance",
+      "title": "Трактат о терпимости",
+      "written": {
+        "from": 1763,
+        "to": 1763
+      }
+    },
+    {
+      "ref": "dictionnaire-philosophique",
+      "title": "Философский словарь",
+      "qid": "Q656976",
+      "written": {
+        "from": 1750,
+        "to": 1764
+      }
+    },
+    {
+      "ref": "l-ingenu",
+      "title": "Простодушный",
+      "qid": "Q1985932",
+      "written": {
+        "from": 1767,
+        "to": 1767
+      }
+    },
+    {
+      "ref": "irene",
+      "title": "Ирена",
+      "written": {
+        "from": 1778,
+        "to": 1778
+      }
+    }
+  ]
+}

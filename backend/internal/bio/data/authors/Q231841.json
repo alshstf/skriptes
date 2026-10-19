@@ -1,0 +1,104 @@
+{
+  "qid": "Q231841",
+  "name": "Мэг Кэбот",
+  "born": "1967-02-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%8D%D0%B1%D0%BE%D1%82%2C_%D0%9C%D1%8D%D0%B3",
+      "rev": 154947376
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Meg_Cabot",
+      "rev": 1380670817
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Индиана и учёба",
+      "from": 1967,
+      "to": 1992
+    },
+    {
+      "key": "brak-i-nyu-york",
+      "title": "Брак и Нью-Йорк",
+      "from": 1993,
+      "to": 2000
+    },
+    {
+      "key": "izvestnost",
+      "title": "Годы известности",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1967",
+      "date": {
+        "from": "1967-02-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Блумингтоне, Индиана",
+      "long": "Меггин Патриция Кэбот родилась 1 февраля 1967 года в Блумингтоне, штат Индиана.",
+      "place": {
+        "label": "Блумингтон"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Meggin Patricia Cabot was born on February 1, 1967, in Bloomington, Indiana."
+      }
+    },
+    {
+      "key": "love-1993",
+      "date": {
+        "from": "1993-04-01",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Бенджамином Эгнатцем, побег в Италию",
+      "long": "1 апреля 1993 года Кэбот вышла замуж за финансового автора и поэта Бенджамина Эгнатца; венчание-побег состоялось в Италии.",
+      "place": {
+        "label": "Италия"
+      },
+      "chapter": "brak-i-nyu-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Meg Cabot married financial writer and poet Benjamin D. Egnatz on April 1, 1993."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "princess-diaries",
+      "title": "Дневники принцессы",
+      "qid": "Q1768890",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "missing-you",
+      "title": "Missing You",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "insatiable",
+      "title": "Insatiable",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

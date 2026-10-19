@@ -1,0 +1,435 @@
+{
+  "qid": "Q298242",
+  "name": "Ли Брэкетт",
+  "born": "1915-12-07",
+  "died": "1978-03-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D1%80%D1%8D%D0%BA%D0%B5%D1%82%D1%82%2C_%D0%9B%D0%B8",
+      "rev": 154366414
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Leigh_Brackett",
+      "rev": 1375716532
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-la",
+      "title": "Детство и юность в Калифорнии",
+      "from": 1915,
+      "to": 1938
+    },
+    {
+      "key": "fandom-debut",
+      "title": "Фэндом и первые рассказы",
+      "from": 1939,
+      "to": 1945
+    },
+    {
+      "key": "hollywood",
+      "title": "Голливуд и брак с Гамильтоном",
+      "from": 1946,
+      "to": 1955
+    },
+    {
+      "key": "cinema-return",
+      "title": "Кино, телевидение и возвращение к Старку",
+      "from": 1956,
+      "to": 1978
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1915",
+      "date": {
+        "from": "1915-12-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лос-Анджелесе",
+      "long": "Ли Дуглас Брэкетт родилась в Лос-Анджелесе, Калифорния, в семье бухгалтера и начинающего писателя Уильяма Брэкетта и Маргарет Дуглас Брэкетт.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "childhood-la",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 7 декабря 1915 года в Лос-Анджелесе, штат Калифорния"
+      }
+    },
+    {
+      "key": "loss-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца во время пандемии гриппа",
+      "long": "Отец Уильям Брэкетт умер во время пандемии гриппа; мать не вышла замуж вторично, Ли с матерью поселились у её родителей в Санта-Монике.",
+      "place": {
+        "label": "Санта-Моника"
+      },
+      "chapter": "childhood-la",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1918 году, во время пандемии гриппа, умер её отец."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вступление в Лос-Анджелесское общество НФ",
+      "long": "Познакомилась с Брэдбери, Хайнлайном, Леем; после этого решила стать профессиональным писателем.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "fandom-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1939 году вступила в Лос-Анджелесское общество научной фантастики, где познакомилась с Рэем Брэдбери, Робертом Хайнлайном"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в «Astounding Science Fiction»",
+      "long": "Первая публикация — рассказ «Марсианский поиск» в февральском номере журнала «Astounding Science Fiction».",
+      "works": [
+        {
+          "ref": "martian-quest"
+        }
+      ],
+      "chapter": "fandom-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the science fiction story \"Martian Quest\" appeared in the February 1940 issue of Astounding Science Fiction"
+      }
+    },
+    {
+      "key": "creation-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Детективный роман привёл к работе в кино",
+      "long": "Первый роман так впечатлил режиссёра Говарда Хоукса, что он пригласил её помочь Фолкнеру со сценарием.",
+      "works": [
+        {
+          "ref": "no-good-from-a-corpse"
+        }
+      ],
+      "chapter": "fandom-debut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brackett's first novel, No Good from a Corpse (1944), was a hard-boiled mystery novel in the tradition of Raymond Chandler. The book led to her first big screenwriting assignment."
+      }
+    },
+    {
+      "key": "creation-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Создание героя Эрика Джона Старка",
+      "long": "Придуманный в 1945 году герой Эрик Джон Старк принёс ей наибольшую известность.",
+      "chapter": "fandom-debut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наибольшую известность ей принесли произведения с придуманным в 1945 году героем Эриком Джоном Старком"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарий «Глубокого сна» с Фолкнером",
+      "long": "Написала сценарий фильма «Глубокий сон» в соавторстве с Уильямом Фолкнером по приглашению Говарда Хоукса.",
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Написала сценарии для фильмов: «Глубокий сон» (1946) (в соавторстве с Уильямом Фолкнером)"
+      }
+    },
+    {
+      "key": "love-1946",
+      "date": {
+        "from": "1946-12-31",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Эдмондом Гамильтоном",
+      "long": "Вышла замуж за писателя-фантаста Эдмонда Гамильтона в Сан-Габриэле; шафером был Рэй Брэдбери. Переехала с мужем в Кинсман, Огайо.",
+      "place": {
+        "label": "Сан-Габриэль"
+      },
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On December 31, 1946, at age 31, Brackett married another science fiction writer, Edmond Hamilton, in San Gabriel, California."
+      }
+    },
+    {
+      "key": "creation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение к фантастике, рождение Старка",
+      "long": "После работы в кино вернулась к фантастике в 1948 году; в 1949 году создала Эрика Джона Старка в «Королеве марсианских катакомб».",
+      "works": [
+        {
+          "ref": "queen-of-the-martian-catacombs"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In \"Queen of the Martian Catacombs\" (1949), Brackett created the character of Eric John Stark."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Закрытие журнального рынка",
+      "long": "После закрытия Planet Stories, Startling Stories и Thrilling Wonder Stories она потеряла журнальный рынок; первый этап карьеры в фантастике завершился.",
+      "works": [
+        {
+          "ref": "the-long-tomorrow"
+        }
+      ],
+      "chapter": "hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"Last Call\" was published in the final issue (Summer 1955) of Planet Stories… After Planet Stories folded, and then Startling Stories and Thrilling Wonder Stories, Brackett lost her magazine market."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Номинация на «Хьюго» за лучший роман",
+      "long": "Роман «Долгое завтра» сделал её первой женщиной, вошедшей в шорт-лист премии «Хьюго» за лучший роман.",
+      "works": [
+        {
+          "ref": "the-long-tomorrow"
+        }
+      ],
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1956, her book The Long Tomorrow made her the first woman ever shortlisted for the Hugo Award for Best Novel"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарий «Рио Браво» и работа с Хоуксом",
+      "long": "Со второй половины 1950-х писала для телевидения и кино; Хоукс нанял её для нескольких фильмов с Джоном Уэйном, включая «Рио Браво».",
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Howard Hawks hired her to write or co-write several John Wayne pictures, including Rio Bravo (1959)"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный гость Всемирного конвента НФ",
+      "long": "Вместе с мужем была почётным гостем 22-го Всемирного конвента научной фантастики Pacificon II в Окленде.",
+      "place": {
+        "label": "Окленд"
+      },
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brackett and her husband shared Guest of Honor duties at the 22nd World Science Fiction Convention, Pacificon II, in 1964 in Oakland, California."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий «Долгого прощания»",
+      "long": "Адаптировала для экрана роман Раймонда Чандлера «Долгое прощание».",
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Долгое прощание» (1973)"
+      }
+    },
+    {
+      "key": "creation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Возвращение к фантастике и Старку",
+      "long": "После десятилетнего перерыва вернулась к научной фантастике трилогией о Скейте, где вновь действует Эрик Джон Старк.",
+      "works": [
+        {
+          "ref": "the-ginger-star"
+        }
+      ],
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brackett returned to science fiction in the 1970s with the publication of The Ginger Star (1974)"
+      }
+    },
+    {
+      "key": "loss-1977",
+      "date": {
+        "from": "1977-02",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Эдмонда Гамильтона",
+      "long": "Эдмонд Гамильтон умер в Ланкастере от осложнений после операции на почках в возрасте 72 лет.",
+      "place": {
+        "label": "Ланкастер"
+      },
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Edmond Hamilton died in February 1977 in Lancaster, California, of complications following kidney surgery"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарий продолжения «Звёздных войн»",
+      "long": "Написала первый вариант сценария «Империя наносит ответный удар» по заказу Лукаса и передала его незадолго до смерти; версия была отвергнута, но Брэкетт указана в титрах.",
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brackett wrote a finished first draft, titled \"Star Wars sequel\", that was delivered to Lucas shortly before her death from cancer on March 18, 1978"
+      }
+    },
+    {
+      "key": "death-1978",
+      "date": {
+        "from": "1978-03-17",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака в Ланкастере",
+      "long": "Ли Брэкетт умерла от рака в Ланкастере, Калифорния, в возрасте 62 лет.",
+      "place": {
+        "label": "Ланкастер"
+      },
+      "chapter": "cinema-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Brackett died there in March 1978, of cancer, at age 62."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "martian-quest",
+      "title": "Марсианский поиск",
+      "written": {
+        "from": 1939,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "no-good-from-a-corpse",
+      "title": "No Good from a Corpse",
+      "written": {
+        "from": 1943,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "shadow-over-mars",
+      "title": "Пути Немезиды (Тень над Марсом)",
+      "written": {
+        "from": 1944,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "queen-of-the-martian-catacombs",
+      "title": "Королева марсианских катакомб",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "the-long-tomorrow",
+      "title": "Долгое завтра",
+      "written": {
+        "from": 1954,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "the-ginger-star",
+      "title": "Имбирная звезда",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    }
+  ]
+}

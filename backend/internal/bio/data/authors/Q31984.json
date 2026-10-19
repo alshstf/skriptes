@@ -1,0 +1,395 @@
+{
+  "qid": "Q31984",
+  "name": "Уильям Кеннеди",
+  "born": "1928-01-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D0%BD%D0%BD%D0%B5%D0%B4%D0%B8%2C_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 155041726
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Kennedy_%28author%29",
+      "rev": 1373283253
+    }
+  ],
+  "chapters": [
+    {
+      "key": "albany-youth",
+      "title": "Олбани и колледж",
+      "from": 1928,
+      "to": 1949
+    },
+    {
+      "key": "army-journalism",
+      "title": "Армия и газеты",
+      "from": 1950,
+      "to": 1962
+    },
+    {
+      "key": "return-albany",
+      "title": "Возвращение в Олбани",
+      "from": 1963,
+      "to": 1974
+    },
+    {
+      "key": "hard-years",
+      "title": "Романы без читателей",
+      "from": 1975,
+      "to": 1982
+    },
+    {
+      "key": "recognition",
+      "title": "Железный бурьян и признание",
+      "from": 1983,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1928",
+      "date": {
+        "from": "1928-01-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Олбани",
+      "long": "Родился в Олбани, штат Нью-Йорк, единственный ребёнок в семье ирландско-американских рабочих.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "albany-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "William Joseph Kennedy was born January 16, 1928, in Albany, New York to William and Mary Kennedy."
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Сиенского колледжа",
+      "long": "Окончил Сиенский колледж в Лаудонвилле, получив степень бакалавра искусств; ранее учился в Christian Brothers Academy.",
+      "place": {
+        "label": "Лаудонвилл"
+      },
+      "chapter": "albany-youth",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kennedy studied at Siena College in Loudonville, New York, from which he graduated in 1949."
+      }
+    },
+    {
+      "key": "war-1950",
+      "date": {
+        "from": "1950",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба в армии США",
+      "long": "Призван в 1950 году, служил в армии США до 1952 года, работал в армейской газете в Европе.",
+      "chapter": "army-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was drafted in 1950 and served in the U.S. Army, where he worked for an Army newspaper in Europe."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "to": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Репортёр Albany Times-Union",
+      "long": "После армии работал репортёром в Albany Times-Union.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "army-journalism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "репортером в Albany Times-Union с 1952 по 1956 год"
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Годы в Пуэрто-Рико",
+      "long": "Переехал в Пуэрто-Рико, работал корреспондентом и редактором, в том числе в новой газете San Juan Star; подружился с Хантером Томпсоном.",
+      "place": {
+        "label": "Сан-Хуан"
+      },
+      "chapter": "army-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He then relocated to Puerto Rico in 1956 and became managing editor of the San Juan Star"
+      }
+    },
+    {
+      "key": "love-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Дейзи Соса",
+      "long": "В Пуэрто-Рико женился на танцовщице Дейзи (Дане) Сосе; у них трое детей.",
+      "place": {
+        "label": "Пуэрто-Рико"
+      },
+      "chapter": "army-journalism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1957 and had three children."
+      }
+    },
+    {
+      "key": "relocation-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Олбани",
+      "long": "Вернулся в родной город с семьёй, поселился в Эверилл-Парке; работал в Times Union журналистом-расследователем.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "return-albany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kennedy, who had been eager to leave Albany, returned to his hometown in 1963."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на Пулитцера за журналистику",
+      "long": "Номинирован на Пулитцеровскую премию за серию статей о гетто.",
+      "chapter": "return-albany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was nominated for a Pulitzer Prize in 1965 for a series of articles on ghettos."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Университете Олбани",
+      "long": "Преподавал писательское мастерство и журналистику в Университете штата Нью-Йорк в Олбани.",
+      "place": {
+        "label": "Олбани"
+      },
+      "chapter": "return-albany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kennedy lectured in creative writing and journalism from 1974 to 1982 at the University at Albany"
+      }
+    },
+    {
+      "key": "poverty-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Финансовые трудности семьи",
+      "long": "Два романа были хорошо приняты критикой, но плохо продавались; семья испытывала финансовые трудности.",
+      "works": [
+        {
+          "ref": "legs"
+        },
+        {
+          "ref": "billy-phelans-greatest-game"
+        }
+      ],
+      "chapter": "hard-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Billy Phelan’s Greatest Game (about a fictional Albany hustler) in 1978. While both novels were well received by critics, they did not sell well. Kennedy and his family experienced financial difficulties."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Тринадцать отказов и помощь Сола Беллоу",
+      "long": "Роман отвергли тринадцать издателей; Сол Беллоу убедил Viking Press пересмотреть решение.",
+      "works": [
+        {
+          "ref": "ironweed"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ironweed (1983), was rejected by publishers 13 times. However, author Saul Bellow urged Viking Press to reconsider."
+      }
+    },
+    {
+      "key": "career-1983-2",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Макартуров",
+      "long": "Получил стипендию Фонда Макартуров; в 1983 году стал также профессором английского языка в Университете штата Нью-Йорк.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "стипендию Фонда Джона и Кэтрин Макартуров в 1983 году"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию за художественную книгу; роман также отмечен Премией Национального круга книжных критиков.",
+      "works": [
+        {
+          "ref": "ironweed"
+        }
+      ],
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пулитцеровскую премию за художественную книгу в 1984 году"
+      }
+    },
+    {
+      "key": "career-1984-2",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над сценарием для Копполы",
+      "long": "Стал соавтором сценария фильма Копполы «Клуб „Коттон“».",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Кеннеди стал соавтором сценария художественного фильма Фрэнсиса Форда Копполы «Клуб „Коттон“» 1984 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ink-truck",
+      "title": "Чернильный грузовик",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "legs",
+      "title": "Ноги",
+      "qid": "Q6518683",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "billy-phelans-greatest-game",
+      "title": "Величайшая игра Билли Фелана",
+      "qid": "Q4913161",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "ironweed",
+      "title": "Железный бурьян",
+      "qid": "Q6073321",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "o-albany",
+      "title": "О Олбани!",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "quinns-book",
+      "title": "Книга Куинна",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "very-old-bones",
+      "title": "Очень старые кости",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "flaming-corsage",
+      "title": "Пламенный корсаж",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "roscoe",
+      "title": "Роско",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    }
+  ]
+}

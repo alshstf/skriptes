@@ -1,0 +1,386 @@
+{
+  "qid": "Q315343",
+  "name": "Эрик Сигал",
+  "born": "1937-06-16",
+  "died": "2010-01-17",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%B3%D0%B0%D0%BB%2C_%D0%AD%D1%80%D0%B8%D0%BA",
+      "rev": 148946231
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Erich_Segal",
+      "rev": 1374598841
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-garvard",
+      "title": "Бруклин и Гарвард",
+      "from": 1937,
+      "to": 1966
+    },
+    {
+      "key": "kino-i-slava",
+      "title": "Сценарий, повесть, слава",
+      "from": 1967,
+      "to": 1974
+    },
+    {
+      "key": "london-i-romany",
+      "title": "Брак, Лондон, романы",
+      "from": 1975,
+      "to": 1999
+    },
+    {
+      "key": "bolezn",
+      "title": "Болезнь и последние годы",
+      "from": 2000,
+      "to": 2010
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-06-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в семье раввина реформистской общины; старший из трёх братьев.",
+      "place": {
+        "label": "Бруклин, Нью-Йорк"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эрик Вольф Сигал (англ. Erich Wolf Segal, 16 июня 1937, Бруклин, Нью-Йорк — 17 января 2010, Лондон)"
+      }
+    },
+    {
+      "key": "education-1955",
+      "date": {
+        "from": "1955",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бостонские марафоны",
+      "long": "Почти каждый год с 1955 по 1975 год участвовал в Бостонском марафоне; лучший результат — 63-е место в 1964 году.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Почти каждый год в период с 1955 по 1975 год участвовал в Бостонском марафоне"
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Замужество Джанет Суссман с другим",
+      "long": "Одноклассница Джанет Суссман, за которой ухаживал Сигал, вышла замуж за Гидеона Гартнера; по словам Сигала, эта потеря побудила его написать «Историю любви».",
+      "works": [
+        {
+          "ref": "love-story",
+          "note": "сам Сигал связывал замысел с этой потерей (интервью журналу Oggi)"
+        }
+      ],
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961 Sussman married Gartner, and as Segal told the Italian news magazine Oggi,  it was his heartbreak over losing her that eventually led him to write Love Story."
+      }
+    },
+    {
+      "key": "loss-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца, раввина Сэмюэла Сигала",
+      "long": "Отец, видный раввин реформистского движения, умер; годы его жизни — 1904–1961.",
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His father, Samuel Segal (1904–1961), was a prominent rabbi in the Reform Judaism movement"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа над сценарием фильма о «Битлз»",
+      "long": "Через знакомства на Бродвее получил возможность участвовать в написании сценария мультфильма «Жёлтая подводная лодка».",
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году написал для группы «Битлз» сценарий анимационного фильма «Жёлтая подводная лодка» (1968)."
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Получил стипендию Гуггенхайма; в том же году вышла первая научная книга о комедиях Плавта.",
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: стипендия Гуггенхайма 1968-01-01"
+      }
+    },
+    {
+      "key": "creation-1969",
+      "date": {
+        "from": "1969",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Сценарий, не нашедший покупателя, становится повестью",
+      "long": "Сценарий о гарвардском студенте и студентке Рэдклиффа не удалось продать; по совету литературного агента Сигал переделал его в повесть.",
+      "works": [
+        {
+          "ref": "love-story"
+        }
+      ],
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце 1960-х годов Эрик Сигал написал сценарий о романтической любви гарвардского студента и студентки Рэдклиффа, но не смог его опубликовать. По предложению Луиса Уоллеса, литературного агента агентства Уильяма Морриса, он превратил сценарий в повесть. В 1970 году повесть «История любви» стала бестселлером"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой бестселлер",
+      "long": "Повесть стала бестселлером, переведена на 33 языка, тираж превысил 21 млн экземпляров; одноимённый фильм возглавил прокат.",
+      "works": [
+        {
+          "ref": "love-story"
+        }
+      ],
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1970 году повесть «История любви» стала бестселлером и была переведена на 33 языка и издана тиражом более 21 млн по всему миру."
+      }
+    },
+    {
+      "key": "persecution-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Награда «Золотой глобус» за сценарий",
+      "long": "Удостоен премии «Золотой глобус» за сценарий фильма «История любви».",
+      "works": [
+        {
+          "ref": "love-story"
+        }
+      ],
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "За сценарий фильма «История любви» был удостоен премии «Золотой глобус» (1971)."
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Комментатор Олимпийского марафона",
+      "long": "Комментировал марафон на Олимпиаде 1972 года для ABC; запомнился эмоциональной реакцией на самозванца на стадионе. Комментировал и в 1976 году.",
+      "place": {
+        "label": "Мюнхен"
+      },
+      "chapter": "kino-i-slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Как спортивный комментатор комментировал марафон на Летних Олимпийских играх 1972 и 1976 годов для телекомпании Эй-Би-Си."
+      }
+    },
+    {
+      "key": "family-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Брак с Керен Джеймс",
+      "long": "Женился на Керен Марианне Джеймс; позднее семья поселилась в Лондоне, родились две дочери.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "london-i-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1975 года был женат на Керен Марианне Джеймс, имел двух дочерей."
+      }
+    },
+    {
+      "key": "creation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Продолжение главного романа",
+      "long": "Опубликовал продолжение своего бестселлера.",
+      "works": [
+        {
+          "ref": "olivers-story"
+        }
+      ],
+      "chapter": "london-i-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году опубликовал книгу «Историю Оливера», продолжение «Истории любви»."
+      }
+    },
+    {
+      "key": "child-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Франчески",
+      "long": "Родилась дочь Франческа, впоследствии журналистка и писательница.",
+      "chapter": "london-i-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Francesca, born in 1980, is a freelance journalist, literary critic, and columnist."
+      }
+    },
+    {
+      "key": "illness-1985",
+      "date": {
+        "from": "1985",
+        "to": "2010",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Болезнь Паркинсона",
+      "long": "Последние 25 лет жизни страдал от болезни Паркинсона.",
+      "chapter": "london-i-romany",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Последние 25 лет жизни страдал от болезни Паркинсона."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературная премия Люсьена Барьера",
+      "long": "Роман о выпуске Гарварда 1958 года стал бестселлером и получил литературные награды во Франции и Италии.",
+      "works": [
+        {
+          "ref": "the-class"
+        }
+      ],
+      "chapter": "london-i-romany",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: литературная премия Люсьена Барьера 1986-01-01"
+      }
+    },
+    {
+      "key": "death-2010",
+      "date": {
+        "from": "2010-01-17",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от инфаркта в Лондоне",
+      "long": "Умер от инфаркта, похоронен в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эрик Вольф Сигал (англ. Erich Wolf Segal, 16 июня 1937, Бруклин, Нью-Йорк — 17 января 2010, Лондон)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "love-story",
+      "title": "История любви",
+      "qid": "Q1373645",
+      "written": {
+        "from": 1969,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "olivers-story",
+      "title": "История Оливера",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "the-class",
+      "title": "Класс",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "doctors",
+      "title": "Доктора",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    }
+  ]
+}

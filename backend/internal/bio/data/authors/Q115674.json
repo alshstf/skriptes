@@ -1,0 +1,258 @@
+{
+  "qid": "Q115674",
+  "name": "Джек Финней",
+  "born": "1911-10-02",
+  "died": "1995-11-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%B8%D0%BD%D0%BD%D0%B5%D0%B9%2C_%D0%94%D0%B6%D0%B5%D0%BA",
+      "rev": 152646340
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jack_Finney",
+      "rev": 1379280548
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Милуоки и колледж",
+      "from": 1911,
+      "to": 1934
+    },
+    {
+      "key": "reklama-proza",
+      "title": "Нью-Йорк, реклама и рассказы",
+      "from": 1935,
+      "to": 1949
+    },
+    {
+      "key": "kaliforniya",
+      "title": "Калифорния и признание",
+      "from": 1950,
+      "to": 1995
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1911",
+      "date": {
+        "from": "1911-10-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Милуоки",
+      "long": "Родился в Милуоки, штат Висконсин, при рождении получил имя Джон (Джек) Финней.",
+      "place": {
+        "label": "Милуоки"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Милуоки 1911-10-02"
+      }
+    },
+    {
+      "key": "education-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Нокс-колледжа",
+      "long": "В 1934 году окончил Нокс-колледж в Гейлсбурге, штат Иллинойс.",
+      "place": {
+        "label": "Гейлсбург"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году закончил Knox College в Гейлсбурге (Иллинойс), женился на Маргарите Гэст."
+      }
+    },
+    {
+      "key": "love-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Маргарите Гэст",
+      "long": "В 1934 году женился на Маргарите Гэст; в семье родилось двое детей — Кеннет и Маргарита.",
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1934 году закончил Knox College в Гейлсбурге (Иллинойс), женился на Маргарите Гэст."
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Победа в конкурсе журнала Эллери Куина",
+      "long": "Рассказ «Вдовья дорожка» победил в конкурсе журнала Ellery Queen's Mystery Magazine.",
+      "chapter": "reklama-proza",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His story \"The Widow's Walk\" won a contest sponsored by Ellery Queen's Mystery Magazine in 1946."
+      }
+    },
+    {
+      "key": "relocation-1950",
+      "date": {
+        "from": "1950",
+        "to": "1953",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Калифорнию",
+      "long": "В начале 1950-х переехал с семьёй из Нью-Йорка в Калифорнию, поселился в Милл-Вэлли.",
+      "place": {
+        "label": "Милл-Вэлли"
+      },
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в начале 1950-х годов Финней вместе с семьёй переехал в Калифорнию. Жил в Милл Веллей"
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый роман",
+      "long": "Вышел первый роман автора, «Пятеро против казино»; в следующем году по нему сняли фильм.",
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first novel, 5 Against the House, was published in 1954."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв: большой успех",
+      "long": "Роман «Похитители тел» принёс автору первый большой успех; по нему снят фильм 1956 года и несколько ремейков.",
+      "works": [
+        {
+          "ref": "body-snatchers"
+        }
+      ],
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Finney's breakout success came in 1955 with The Body Snatchers"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Наибольший успех",
+      "long": "Научно-фантастический роман о путешествии в Нью-Йорк 1882 года стал величайшим успехом писателя.",
+      "works": [
+        {
+          "ref": "time-and-again"
+        }
+      ],
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Finney's greatest success came with his science fiction novel Time and Again (1970)."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за заслуги",
+      "long": "Получил Всемирную премию фэнтези за заслуги перед жанром.",
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за заслуги перед жанром 1987-01-01"
+      }
+    },
+    {
+      "key": "death-1995",
+      "date": {
+        "from": "1995-11-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Гринбро",
+      "long": "Скончался в возрасте 84 лет от пневмонии и эмфиземы лёгких в Гринбро, Калифорния.",
+      "place": {
+        "label": "Гринбро"
+      },
+      "chapter": "kaliforniya",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Greenbrae 1995-11-14"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "body-snatchers",
+      "title": "Похитители тел",
+      "qid": "Q963466",
+      "written": {
+        "from": 1954,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "time-and-again",
+      "title": "Меж двух времён",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "good-neighbor-sam",
+      "title": "Добрый сосед Сэм",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "from-time-to-time",
+      "title": "Из времени во время",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    }
+  ]
+}

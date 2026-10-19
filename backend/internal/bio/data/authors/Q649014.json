@@ -1,0 +1,345 @@
+{
+  "qid": "Q649014",
+  "name": "Боб Шоу",
+  "born": "1931-12-31",
+  "died": "1996-02-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D0%BE%D1%83%2C_%D0%91%D0%BE%D0%B1",
+      "rev": 147513313
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Bob_Shaw",
+      "rev": 1371369733
+    }
+  ],
+  "chapters": [
+    {
+      "key": "belfast-fandom",
+      "title": "Белфаст и фэндом",
+      "from": 1931,
+      "to": 1955
+    },
+    {
+      "key": "canada-and-engineering",
+      "title": "Канада и инженерная работа",
+      "from": 1956,
+      "to": 1972
+    },
+    {
+      "key": "england-writer",
+      "title": "Переезд в Англию, профессия писателя",
+      "from": 1973,
+      "to": 1990
+    },
+    {
+      "key": "last-years",
+      "title": "Вдовство и последние годы",
+      "from": 1991,
+      "to": 1996
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-12-31",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Белфасте",
+      "long": "Родился в Белфасте в семье полицейского, старший из трёх сыновей.",
+      "place": {
+        "label": "Белфаст"
+      },
+      "chapter": "belfast-fandom",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Белфаст 1931-12-31"
+      }
+    },
+    {
+      "key": "faith-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Вступление в Ирландский фэндом",
+      "long": "Вступил в группу Irish Fandom, куда входил и Джеймс Уайт; участвовал в фэнзинах Hyphen и Slant, получил прозвище «BoSh».",
+      "place": {
+        "label": "Белфаст"
+      },
+      "chapter": "belfast-fandom",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950 he joined the group Irish Fandom, which also included another Northern Irish science fiction writer James White"
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый профессиональный рассказ",
+      "long": "Первый рассказ «Аспект» вышел в журнале «Nebula Science Fiction».",
+      "chapter": "belfast-fandom",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый опубликованный рассказ — «Аспект» (1954, «Nebula Science Fiction»)."
+      }
+    },
+    {
+      "key": "relocation-1956",
+      "date": {
+        "from": "1956",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Два года в Канаде",
+      "long": "Бросил писать и с женой Сэди и тремя детьми жил в Канаде; Альберта стала местом действия одного из романов.",
+      "place": {
+        "label": "Альберта"
+      },
+      "works": [
+        {
+          "ref": "vertigo",
+          "note": "роман действие которого происходит в Альберте"
+        }
+      ],
+      "chapter": "canada-and-engineering",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He gave up writing and went with his first wife Sadie (née Sarah Gourley) and their son and two daughters to live in Canada from 1956 to 1958."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Научный корреспондент Belfast Telegraph",
+      "long": "Работал научным корреспондентом газеты The Belfast Telegraph.",
+      "place": {
+        "label": "Белфаст"
+      },
+      "chapter": "canada-and-engineering",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "science correspondent to The Belfast Telegraph from 1966 to 1969"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пресс-атташе Vickers Shipbuilding",
+      "long": "Работал офицером по связям с общественностью в Vickers Shipbuilding до перехода на писательский труд.",
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "publicity officer for Vickers Shipbuilding (1973–1975)"
+      }
+    },
+    {
+      "key": "relocation-1973",
+      "date": {
+        "from": "1973-04",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из Северной Ирландии в Англию",
+      "long": "В апреле 1973 года, в период «Смуты», семья переехала в Англию: сначала в Алверстон, затем в Греппенхолл близ Уоррингтона.",
+      "place": {
+        "label": "Алверстон"
+      },
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 1973, during the Troubles, Shaw and his family moved from Northern Ireland to England"
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход к профессиональному писательству",
+      "long": "С 1975 года — профессиональный писатель.",
+      "works": [
+        {
+          "ref": "orbitsville"
+        }
+      ],
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 1975 года — профессиональный писатель"
+      }
+    },
+    {
+      "key": "career-1975-2",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия BSFA за лучший роман",
+      "long": "Получил премию Британской ассоциации научной фантастики за лучший роман.",
+      "works": [
+        {
+          "ref": "orbitsville"
+        }
+      ],
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Британской ассоциации научной фантастики за лучший роман 1975-01-01"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Хьюго» лучшему автору-любителю",
+      "long": "Получил премию «Хьюго» лучшему автору-любителю в 1979 и 1980 годах.",
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the Hugo Award for Best Fan Writer in 1979 and 1980."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая премия BSFA за лучший роман",
+      "long": "Повторно получил премию BSFA за лучший роман.",
+      "chapter": "england-writer",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Британской ассоциации научной фантастики за лучший роман 1986-01-01"
+      }
+    },
+    {
+      "key": "loss-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Внезапная смерть жены Сэди",
+      "long": "В 1991 году внезапно умерла первая жена Сэди; после этого Шоу несколько лет жил один.",
+      "place": {
+        "label": "Греппенхолл"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After Sadie died suddenly in 1991, Shaw lived alone there for some years."
+      }
+    },
+    {
+      "key": "love-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с американкой Нэнси Такер",
+      "long": "Женился на американке Нэнси Такер и уехал жить в США, в последние месяцы жизни вернулся в Англию.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He married American Nancy Tucker in 1995 and went to the US to live with her"
+      }
+    },
+    {
+      "key": "death-1996",
+      "date": {
+        "from": "1996-02-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Умер от рака.",
+      "place": {
+        "label": "Манчестер"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shaw died of cancer on 11 February 1996."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "light-of-other-days",
+      "title": "Свет иных дней",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "orbitsville",
+      "title": "Орбитсвилль",
+      "written": {
+        "from": 1974,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "vertigo",
+      "title": "Вертиго",
+      "written": {
+        "from": 1970,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "the-ragged-astronauts",
+      "title": "Астронавты в лохмотьях",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    }
+  ]
+}

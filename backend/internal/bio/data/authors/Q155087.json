@@ -1,0 +1,604 @@
+{
+  "qid": "Q155087",
+  "name": "Торнтон Уайлдер",
+  "born": "1897-04-17",
+  "died": "1975-12-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B0%D0%B9%D0%BB%D0%B4%D0%B5%D1%80%2C_%D0%A2%D0%BE%D1%80%D0%BD%D1%82%D0%BE%D0%BD",
+      "rev": 153752437
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Thornton_Wilder",
+      "rev": 1378503034
+    }
+  ],
+  "chapters": [
+    {
+      "key": "madison-china-yale",
+      "title": "Мэдисон, Китай, Йель",
+      "from": 1897,
+      "to": 1920
+    },
+    {
+      "key": "rome-and-lawrenceville",
+      "title": "Рим, школа и первый успех",
+      "from": 1921,
+      "to": 1929
+    },
+    {
+      "key": "chicago-and-stage",
+      "title": "Чикаго и театр",
+      "from": 1930,
+      "to": 1941
+    },
+    {
+      "key": "war-years",
+      "title": "Военная разведка",
+      "from": 1942,
+      "to": 1945
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние романы и признание",
+      "from": 1946,
+      "to": 1975
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1897",
+      "date": {
+        "from": "1897-04-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье издателя",
+      "long": "Родился в Мэдисоне, штат Висконсин, в семье издателя и будущего дипломата Амоса Паркера Уайлдера и Изабеллы Найвен Уайлдер.",
+      "place": {
+        "label": "Мэдисон"
+      },
+      "chapter": "madison-china-yale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Торнтон Уайлдер родился 17 апреля 1897 года в Мэдисоне (штат Висконсин)"
+      }
+    },
+    {
+      "key": "relocation-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение из Китая в Калифорнию",
+      "long": "Учился в школе Чефу в Яньтае, но в 1912 году вернулся с матерью и братьями и сёстрами в Калифорнию из-за нестабильной политической обстановки в Китае.",
+      "place": {
+        "label": "Калифорния"
+      },
+      "chapter": "madison-china-yale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returned with his mother and siblings to California in 1912 because of the unstable political conditions in China at the time"
+      }
+    },
+    {
+      "key": "education-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Беркли",
+      "long": "В 1915 году окончил старшую школу Беркли.",
+      "place": {
+        "label": "Беркли"
+      },
+      "chapter": "madison-china-yale",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Thornton graduated from Berkeley High School in 1915."
+      }
+    },
+    {
+      "key": "education-1920",
+      "date": {
+        "from": "1920",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра в Йеле",
+      "long": "Учился в Оберлинском колледже, затем в Йельском университете, где в 1920 году получил степень бакалавра.",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "chapter": "madison-china-yale",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1920 году получил там диплом бакалавра"
+      }
+    },
+    {
+      "key": "education-1920-2",
+      "date": {
+        "from": "1920",
+        "to": "1921",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Археология и итальянский в Американской академии в Риме",
+      "long": "После Йеля уехал в Италию и в течение восьми месяцев изучал археологию и итальянский язык в Американской академии в Риме.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "rome-and-lawrenceville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "studied archaeology and Italian (1920–21) as part of an eight-month residency at The American Academy in Rome"
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "to": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание французского в школе Лоуренсвилл",
+      "long": "С 1921 года преподавал французский язык в школе Лоуренсвилл в Нью-Джерси, оставил её в 1928 году.",
+      "place": {
+        "label": "Лоуренсвилл"
+      },
+      "chapter": "rome-and-lawrenceville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "taught French at the Lawrenceville School in Lawrenceville, New Jersey, beginning in 1921"
+      }
+    },
+    {
+      "key": "education-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистерская степень в Принстоне",
+      "long": "В 1926 году получил в Принстонском университете степень магистра по французской литературе (по русской статье — в 1925 году).",
+      "place": {
+        "label": "Принстон"
+      },
+      "chapter": "rome-and-lawrenceville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He earned his Master of Arts degree in French literature from Princeton University in 1926."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927",
+        "to": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Коммерческий успех и первая Пулитцеровская премия",
+      "long": "Роман принёс Уайлдеру коммерческий успех в 1927 году и Пулитцеровскую премию в 1928 году.",
+      "works": [
+        {
+          "ref": "bridge-of-san-luis-rey"
+        }
+      ],
+      "chapter": "rome-and-lawrenceville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1927, The Bridge of San Luis Rey brought him commercial success and his first Pulitzer Prize (1928)."
+      }
+    },
+    {
+      "key": "other-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Дом в Хамдене для семьи",
+      "long": "На доходы от романа в 1930 году построил дом для семьи в Хамдене, штат Коннектикут; он стал его основным пристанищем.",
+      "place": {
+        "label": "Хамден"
+      },
+      "works": [
+        {
+          "ref": "bridge-of-san-luis-rey"
+        }
+      ],
+      "chapter": "chicago-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From the earnings of The Bridge of San Luis Rey, in 1930 Wilder had a house built for his family in Hamden, Connecticut"
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание в Чикагском университете",
+      "long": "Преподавал в Чикагском университете, где стал известен как лектор и попадал в светскую хронику.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1930 to 1937, he taught at the University of Chicago"
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936-07-02",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Амос Паркер Уайлдер.",
+      "chapter": "chicago-and-stage",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Amos Parker Wilder 1862-02-15 – 1936-07-02"
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия за драму",
+      "long": "Пьеса принесла Уайлдеру Пулитцеровскую премию 1938 года; над последним актом он работал с трудом, позже сам играл Режиссёра на Бродвее.",
+      "works": [
+        {
+          "ref": "our-town"
+        }
+      ],
+      "chapter": "chicago-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The play won the 1938 Pulitzer Prize."
+      }
+    },
+    {
+      "key": "career-1938-2",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Провал бродвейской постановки у Рейнхардта",
+      "long": "Бродвейская постановка адаптации пьесы Нестроя в режиссуре Макса Рейнхардта закрылась после 39 представлений.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "merchant-of-yonkers"
+        }
+      ],
+      "chapter": "chicago-and-stage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938, Max Reinhardt directed a Broadway production of The Merchant of Yonkers… It was a failure, closing after 39 performances."
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вторая Пулитцеровская премия за драму",
+      "long": "В 1943 году получил Пулитцеровскую премию за пьесу, премьера которой состоялась в Нью-Йорке 18 ноября 1942 года.",
+      "works": [
+        {
+          "ref": "skin-of-our-teeth"
+        }
+      ],
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he won the prize again in 1943 for his play The Skin of Our Teeth"
+      }
+    },
+    {
+      "key": "war-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба в разведке ВВС в Африке и Италии",
+      "long": "Во Вторую мировую войну дослужился до подполковника в разведке ВВС США, сначала в Африке, затем в Италии, до 1945 года; получил несколько наград.",
+      "chapter": "war-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "World War II saw Wilder rise to the rank of lieutenant colonel in the U.S. Army Air Force Intelligence, first in Africa, then in Italy until 1945."
+      }
+    },
+    {
+      "key": "creation-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Переработка пьесы по совету Гатри",
+      "long": "В 1954 году по совету Тайрона Гатри переработал провалившуюся пьесу; в 1955 году «Сваха» выдержала 486 представлений на Бродвее.",
+      "works": [
+        {
+          "ref": "matchmaker"
+        },
+        {
+          "ref": "merchant-of-yonkers"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1954, Tyrone Guthrie encouraged Wilder to rework The Merchant of Yonkers into The Matchmaker."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957-10-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия мира немецких книготорговцев",
+      "long": "Получил премию мира Союза немецких книготорговцев.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Мира немецких книготорговцев 1957-10-06"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая медаль Эдварда Макдауэлла",
+      "long": "Колония Макдауэлла наградила Уайлдера первой в истории медалью Эдварда Макдауэлла за вклад в американскую культуру.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1960, Wilder was awarded the first ever Edward MacDowell Medal"
+      }
+    },
+    {
+      "key": "creation-1962",
+      "date": {
+        "from": "1962",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Двадцать месяцев в Дугласе, вдали от семьи и друзей",
+      "long": "Жил в маленьком городке Дуглас в Аризоне, вдали от семьи и друзей, и начал там самый длинный свой роман.",
+      "place": {
+        "label": "Дуглас"
+      },
+      "works": [
+        {
+          "ref": "eighth-day",
+          "note": "роман начат в Дугласе"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1962 and 1963, Wilder lived for 20 months in the small town of Douglas, Arizona, apart from family and friends."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентская медаль Свободы",
+      "long": "В 1963 году награждён Президентской медалью Свободы.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "receiving the Peace Prize of the German Book Trade in 1957 and the Presidential Medal of Freedom in 1963"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная книжная премия",
+      "long": "Получил Национальную книжную премию за роман (по русской статье — в 1967 году).",
+      "works": [
+        {
+          "ref": "eighth-day"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968 he won the National Book Award for his novel The Eighth Day."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Джеймса Мэдисона",
+      "long": "В 1974 году награждён медалью Джеймса Мэдисона.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1974 — Медаль Джеймса Мэдисона"
+      }
+    },
+    {
+      "key": "death-1975",
+      "date": {
+        "from": "1975-12-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Хамдене",
+      "long": "Умер от сердечной недостаточности в своём доме в Хамдене, штат Коннектикут, в возрасте 78 лет; похоронен на кладбище Маунт-Кармел.",
+      "place": {
+        "label": "Хамден"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wilder died of heart failure in his Hamden, Connecticut, house on December 7, 1975, at age 78."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "cabala",
+      "title": "Каббала",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "bridge-of-san-luis-rey",
+      "title": "Мост короля Людовика Святого",
+      "qid": "Q941462",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "woman-of-andros",
+      "title": "Женщина с Андроса",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "heavens-my-destination",
+      "title": "К небу мой путь",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "our-town",
+      "title": "Наш городок",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "merchant-of-yonkers",
+      "title": "Купец из Йонкерса",
+      "written": {
+        "from": 1938,
+        "to": 1938
+      }
+    },
+    {
+      "ref": "skin-of-our-teeth",
+      "title": "На волосок от гибели",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "ides-of-march",
+      "title": "Мартовские иды",
+      "written": {
+        "from": 1948,
+        "to": 1948
+      }
+    },
+    {
+      "ref": "matchmaker",
+      "title": "Сваха",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "alcestiad",
+      "title": "Алкестиада, или Жизнь в солнечном свете",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "eighth-day",
+      "title": "День восьмой",
+      "written": {
+        "from": 1962,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "theophilus-north",
+      "title": "Теофил Норт",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+{
+  "qid": "Q4195970",
+  "name": "Иванов, Анатолий Степанович",
+  "born": "1928-05-05",
+  "died": "1999-05-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%2C_%D0%90%D0%BD%D0%B0%D1%82%D0%BE%D0%BB%D0%B8%D0%B9_%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 153698722
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Anatoli_Ivanov_%28writer%29",
+      "rev": 1372402285
+    }
+  ],
+  "chapters": [
+    {
+      "key": "shemonaikha-childhood",
+      "title": "Шемонаиха",
+      "from": 1928,
+      "to": 1945
+    },
+    {
+      "key": "university-and-newspapers",
+      "title": "Университет и районные газеты",
+      "from": 1946,
+      "to": 1957
+    },
+    {
+      "key": "povitel-siberia",
+      "title": "«Повитель» и «Сибирские огни»",
+      "from": 1958,
+      "to": 1971
+    },
+    {
+      "key": "moscow-editor",
+      "title": "Москва и «Молодая гвардия»",
+      "from": 1972,
+      "to": 1989
+    },
+    {
+      "key": "last-decade",
+      "title": "Последнее десятилетие",
+      "from": 1990,
+      "to": 1999
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1928",
+      "date": {
+        "from": "1928-05-05",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Шемонаихе",
+      "long": "Родился в селе Шемонаиха (ныне Восточно-Казахстанская область) в семье крестьян по происхождению; отец заведовал районным отделом «Союзпечати».",
+      "place": {
+        "label": "Шемонаиха"
+      },
+      "chapter": "shemonaikha-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "А. С. Иванов родился 5 мая 1928 года в селе Шемонаиха"
+      }
+    },
+    {
+      "key": "education-1946",
+      "date": {
+        "from": "1946",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на факультете журналистики",
+      "long": "Учился на факультете журналистики Казахского государственного университета имени С. М. Кирова.",
+      "chapter": "university-and-newspapers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1946 по 1950 год Анатолий Иванов учился на факультете журналистики Казахского государственного университета имени С. М. Кирова."
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы журналистом",
+      "long": "Начал работать журналистом в семипалатинской газете «Прииртышская правда»; затем служил в армии и редактировал районную газету «Ленинское знамя» в Новосибирской области.",
+      "place": {
+        "label": "Семипалатинск"
+      },
+      "chapter": "university-and-newspapers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Творческую деятельность начал в 1948 году как журналист в газете «Прииртышская правда» (Семипалатинск)."
+      }
+    },
+    {
+      "key": "other-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в КПСС",
+      "long": "Вступил в КПСС.",
+      "chapter": "university-and-newspapers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член КПСС с 1952 года."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в журнале",
+      "long": "В журнале «Крестьянка» опубликован первый рассказ; затем рассказ напечатали «Сибирские огни».",
+      "chapter": "university-and-newspapers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1954 году в журнале «Крестьянка» был опубликован его первый рассказ «Дождь»."
+      }
+    },
+    {
+      "key": "career-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всесоюзная известность после первого романа",
+      "long": "Первый роман принёс автору всесоюзную известность и был замечен за рубежом; переведён на ряд языков.",
+      "works": [
+        {
+          "ref": "povitel"
+        }
+      ],
+      "chapter": "povitel-siberia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958 году был опубликован его первый роман «Повитель», который принёс автору всесоюзную известность и был замечен за рубежом."
+      }
+    },
+    {
+      "key": "career-1958-2",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз писателей СССР",
+      "long": "Принят в Союз писателей СССР.",
+      "chapter": "povitel-siberia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Союз писателей СССР А. С. Иванов вступил в 1958 году."
+      }
+    },
+    {
+      "key": "career-1958-3",
+      "date": {
+        "from": "1958",
+        "to": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Заместитель главного редактора «Сибирских огней»",
+      "long": "Семь лет был заместителем главного редактора журнала «Сибирские огни».",
+      "chapter": "povitel-siberia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958—1964 годах Анатолий Иванов был заместителем главного редактора журнала «Сибирские огни»."
+      }
+    },
+    {
+      "key": "other-1969",
+      "date": {
+        "from": "1969-07",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подпись под «письмом одиннадцати»",
+      "long": "Подписал «письмо одиннадцати», опубликованное в «Огоньке» под заголовком «Против чего выступает „Нового мира“?».",
+      "chapter": "povitel-siberia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1969 году подписал «письмо одиннадцати» в журнале «Огонёк» под заголовком «Против чего выступает „Новый мир“?»"
+      }
+    },
+    {
+      "key": "career-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Главный редактор журнала «Молодая гвардия»",
+      "long": "Стал главным редактором журнала «Молодая гвардия» и одним из идейных руководителей писателей «патриотического направления».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1972 года Иванов работал главным редактором журнала «Молодая гвардия»."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Государственная премия СССР",
+      "long": "Удостоен Государственной премии СССР.",
+      "chapter": "moscow-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Государственной премии СССР (1979)."
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание Героя Социалистического Труда",
+      "long": "Присвоено звание Героя Социалистического Труда.",
+      "chapter": "moscow-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Герой Социалистического Труда (1984)."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Депутат Верховного Совета СССР",
+      "long": "Стал депутатом Верховного Совета СССР 11-го созыва.",
+      "chapter": "moscow-editor",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "был депутатом ВС СССР 11-го созыва (с 1985 года)"
+      }
+    },
+    {
+      "key": "other-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Подпись под «Письмом 74-х»",
+      "long": "Подписал «Письмо 74-х».",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году подписал «Письмо 74-х»."
+      }
+    },
+    {
+      "key": "death-1999",
+      "date": {
+        "from": "1999-05-31",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умер в Москве; похоронен на Новодевичьем кладбище.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 31 мая 1999 года. Похоронен в Москве на Новодевичьем кладбище."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "alkiny-pesni",
+      "title": "Алкины песни",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "povitel",
+      "title": "Повитель",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    }
+  ]
+}
