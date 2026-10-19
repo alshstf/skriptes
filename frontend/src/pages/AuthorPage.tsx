@@ -9,6 +9,7 @@ import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { CardToolbar } from '@/components/EditModeToggle';
 import { useCanEdit } from '@/lib/editMode';
+import { InstanceHideControl } from '@/components/InstanceHideControl';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
@@ -60,6 +61,7 @@ export function AuthorPage() {
   return (
     <article className="space-y-6">
       <CardToolbar />
+      <InstanceHideControl kind="author" id={a.id} name={[a.last_name, a.first_name].filter(Boolean).join(' ')} />
 
       {/* Шапка с двухуровневой структурой как у BookDetailPage:
             1. flex-row с фото слева + meta (имя/счётчик/жанры/кнопка) справа.

@@ -23,6 +23,7 @@ import { ExpandableText } from '@/components/ExpandableText';
 import { InlineEditableField } from '@/components/InlineEditableField';
 import { useOverrides } from '@/lib/admin';
 import { RegroupWorkButton } from '@/components/RegroupWorkButton';
+import { InstanceHideControl } from '@/components/InstanceHideControl';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
@@ -92,6 +93,7 @@ export function BookDetailPage({ mode = 'book' }: { mode?: 'book' | 'work' }) {
     // колонка, без огромной пустоты справа от обложки (была до редизайна).
     <article className="mx-auto max-w-4xl space-y-4">
       <CardToolbar />
+      <InstanceHideControl kind="work" id={book.work_id ?? undefined} name={book.title} bookId={book.id} />
       <Card>
         {/*
           Двухуровневая структура:

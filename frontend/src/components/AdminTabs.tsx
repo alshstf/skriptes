@@ -11,6 +11,7 @@ const tabs = [
   { to: '/admin/users', label: 'Пользователи' },
   { to: '/admin/content', label: 'Контент' },
   { to: '/admin/authors', label: 'Дубли авторов' },
+  { to: '/admin/hidden', label: 'Скрытое' },
   { to: '/admin/background', label: 'Фоновые операции' },
 ] as const;
 
