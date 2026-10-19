@@ -75,13 +75,6 @@ func run() error {
 
 	logger := newLogger(cfg.LogLevel, cfg.LogFormat)
 
-	// Встроенный датасет био-таймлайна: битый файл — не стартуем (до открытия
-	// пула, чтобы os.Exit не обходил defer pool.Close()).
-	bioDataset, err := bio.Load()
-	if err != nil {
-		logger.Error("bio: dataset invalid", "err", err)
-		os.Exit(1)
-	}
 	slog.SetDefault(logger)
 
 	dbCtx, dbCancel := context.WithTimeout(context.Background(), cfg.DatabaseTimeout)
@@ -695,14 +688,18 @@ func run() error {
 
 	// Лимит скачиваний на пользователя — общий для веба и OPDS (#389, B1).
 	downloadLimiter := dlimit.NewDefault()
-	// Био-таймлайн (план v3): датасет проверен выше (до пула), сев в фоне при
-	// смене версии; ручки читают то, что уже посеяно.
-	bioTimeline := timeline.New(pool, bioDataset, logger)
-	metadata.Go(func(ctx context.Context) {
-		if err := bioTimeline.Seed(ctx); err != nil {
-			logger.Warn("bio: seed failed", "err", err)
-		}
-	})
+	// Био-таймлайн (план v3): пакет датасета лежит в образе (собран из
+	// alshstf/skriptes-bio); нет пакета или он не читается — ручки не
+	// монтируются, остальное работает. Сев — в фоне при смене версии, ручки
+	// читают то, что уже посеяно.
+	bioTimeline := newBioTimeline(pool, cfg.BioPack, logger)
+	if bioTimeline != nil {
+		metadata.Go(func(ctx context.Context) {
+			if err := bioTimeline.Seed(ctx); err != nil {
+				logger.Warn("bio: seed failed", "err", err)
+			}
+		})
+	}
 
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
@@ -2200,4 +2197,24 @@ func parseNets(s string, logger *slog.Logger) []netip.Prefix {
 		logger.Warn("SKRIPTES_LAN_CIDRS: skip unparsable entry", "entry", f)
 	}
 	return out
+}
+
+// newBioTimeline — сервис био-таймлайна или nil (пакета нет / не читается).
+func newBioTimeline(pool *pgxpool.Pool, path string, logger *slog.Logger) *timeline.Service {
+	pack, err := bio.OpenPack(path)
+	if errors.Is(err, os.ErrNotExist) {
+		logger.Warn("bio: пакета датасета нет — таймлайн выключен", "path", path)
+		return nil
+	}
+	if err != nil {
+		logger.Error("bio: пакет датасета не читается — таймлайн выключен", "path", path, "err", err)
+		return nil
+	}
+	svc, err := timeline.New(pool, pack, logger)
+	if err != nil {
+		logger.Error("bio: пакет датасета невалиден — таймлайн выключен", "path", path, "err", err)
+		return nil
+	}
+	logger.Info("bio: пакет датасета", "path", path, "version", pack.Version)
+	return svc
 }

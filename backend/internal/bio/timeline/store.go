@@ -19,34 +19,30 @@ const versionKey = "bio_dataset_version"
 // ErrNotFound — у автора/работы нет таймлайна (нет QID или QID нет в датасете).
 var ErrNotFound = errors.New("bio timeline: not found")
 
-// Service — чтение таймлайна и сев датасета.
+// Service — чтение таймлайна и сев датасета. Авторы в памяти не держатся:
+// читаются из пакета только для сева (при смене версии), дальше всё из PG; в
+// памяти — версия и регионы исторического фона (их немного).
 type Service struct {
-	pool   *pgxpool.Pool
-	ds     *bio.Dataset
-	logger *slog.Logger
+	pool    *pgxpool.Pool
+	pack    *bio.PackFile
+	context map[string]*bio.ContextRegion
+	logger  *slog.Logger
 }
 
-// New — сервис поверх пула и загруженного датасета (bio.Load()).
-func New(pool *pgxpool.Pool, ds *bio.Dataset, logger *slog.Logger) *Service {
+// New — сервис поверх пула и пакета датасета; читает из пакета только фон.
+func New(pool *pgxpool.Pool, pack *bio.PackFile, logger *slog.Logger) (*Service, error) {
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &Service{pool: pool, ds: ds, logger: logger}
-}
-
-// Version — версия встроенного датасета.
-func (s *Service) Version() string { return s.ds.Version }
-
-// stripEvidence — в PG и наружу основания не отдаём (служебное поле генератора).
-func stripEvidence(a *bio.Author) *bio.Author {
-	c := *a
-	c.Events = make([]bio.Event, len(a.Events))
-	for i, e := range a.Events {
-		e.Evidence = nil
-		c.Events[i] = e
+	ds, err := pack.Read(false)
+	if err != nil {
+		return nil, err
 	}
-	return &c
+	return &Service{pool: pool, pack: pack, context: ds.Context, logger: logger}, nil
 }
+
+// Version — версия пакета датасета.
+func (s *Service) Version() string { return s.pack.Version }
 
 // Seed — идемпотентный сев: если app_settings.bio_dataset_version уже равна
 // версии встроенного датасета — no-op; иначе в транзакции upsert всех авторов,
@@ -58,17 +54,21 @@ func (s *Service) Seed(ctx context.Context) error {
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return fmt.Errorf("bio seed: read version: %w", err)
 	}
-	if current == quoted(s.ds.Version) {
+	if current == quoted(s.pack.Version) {
 		return nil
+	}
+	ds, err := s.pack.Read(true)
+	if err != nil {
+		return fmt.Errorf("bio seed: %w", err)
 	}
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("bio seed: begin: %w", err)
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
-	qids := make([]string, 0, len(s.ds.Authors))
-	for qid, a := range s.ds.Authors {
-		data, err := json.Marshal(stripEvidence(a))
+	qids := make([]string, 0, len(ds.Authors))
+	for qid, a := range ds.Authors {
+		data, err := json.Marshal(bio.StripEvidence(a))
 		if err != nil {
 			return fmt.Errorf("bio seed: marshal %s: %w", qid, err)
 		}
@@ -77,7 +77,7 @@ func (s *Service) Seed(ctx context.Context) error {
 			VALUES ($1, $2, $3, $4, now())
 			ON CONFLICT (qid) DO UPDATE SET name = EXCLUDED.name, data = EXCLUDED.data,
 			    version = EXCLUDED.version, updated_at = now()`,
-			qid, a.Name, data, s.ds.Version); err != nil {
+			qid, a.Name, data, ds.Version); err != nil {
 			return fmt.Errorf("bio seed: upsert %s: %w", qid, err)
 		}
 		qids = append(qids, qid)
@@ -88,13 +88,13 @@ func (s *Service) Seed(ctx context.Context) error {
 	if _, err := tx.Exec(ctx, `
 		INSERT INTO app_settings (key, value, updated_at) VALUES ($1, to_jsonb($2::text), now())
 		ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`,
-		versionKey, s.ds.Version); err != nil {
+		versionKey, ds.Version); err != nil {
 		return fmt.Errorf("bio seed: write version: %w", err)
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return fmt.Errorf("bio seed: commit: %w", err)
 	}
-	s.logger.Info("bio: dataset seeded", "version", s.ds.Version, "authors", len(qids))
+	s.logger.Info("bio: dataset seeded", "version", ds.Version, "authors", len(qids))
 	return nil
 }
 
@@ -133,18 +133,14 @@ func (s *Service) loadAuthor(ctx context.Context, qid string) (*bio.Author, map[
 	return &a, hidden, rows.Err()
 }
 
-// SetHidden — скрыть/вернуть веху (админ). Ключ должен существовать в датасете.
+// SetHidden — скрыть/вернуть веху (админ). Ключ должен существовать в
+// посеянном датасете.
 func (s *Service) SetHidden(ctx context.Context, qid, key string, hidden bool, by int64) error {
-	a, ok := s.ds.Authors[qid]
-	if !ok {
-		return ErrNotFound
-	}
-	found := false
-	for _, e := range a.Events {
-		if e.Key == key {
-			found = true
-			break
-		}
+	var found bool
+	if err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS (SELECT 1 FROM author_bio b, jsonb_array_elements(b.data->'events') e
+		               WHERE b.qid = $1 AND e->>'key' = $2)`, qid, key).Scan(&found); err != nil {
+		return fmt.Errorf("bio: event %s/%s: %w", qid, key, err)
 	}
 	if !found {
 		return ErrNotFound
@@ -172,15 +168,16 @@ type Stats struct {
 
 // Stats — покрытие: авторов каталога с QID, из них с таймлайном.
 func (s *Service) Stats(ctx context.Context) (Stats, error) {
-	st := Stats{DatasetVersion: s.ds.Version, AuthorsInDataset: len(s.ds.Authors)}
+	st := Stats{DatasetVersion: s.pack.Version}
 	err := s.pool.QueryRow(ctx, `
 		SELECT
+		  (SELECT count(*) FROM author_bio),
 		  (SELECT count(*) FROM authors WHERE ext_ids ? 'wd_qid'),
 		  (SELECT count(*) FROM authors a JOIN author_bio b ON b.qid = a.ext_ids->>'wd_qid'),
 		  (SELECT count(*) FROM author_event_hides),
 		  COALESCE((SELECT value #>> '{}' FROM app_settings WHERE key = $1), ''),
 		  COALESCE((SELECT max(updated_at) FROM author_bio), to_timestamp(0))`, versionKey).
-		Scan(&st.AuthorsWithQID, &st.AuthorsWithTimeline, &st.HiddenEvents, &st.SeededVersion, &st.SeededAt)
+		Scan(&st.AuthorsInDataset, &st.AuthorsWithQID, &st.AuthorsWithTimeline, &st.HiddenEvents, &st.SeededVersion, &st.SeededAt)
 	if err != nil {
 		return st, fmt.Errorf("bio stats: %w", err)
 	}

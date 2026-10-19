@@ -2,7 +2,6 @@ package bio
 
 import (
 	"crypto/sha256"
-	"embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -12,30 +11,22 @@ import (
 	"strings"
 )
 
-// Файлы датасета встраиваются в бинарник: authors/<QID>.json и context/<region>.json.
-//
-//go:embed data/authors/*.json data/context/*.json
-var dataFS embed.FS
-
 // Dataset — загруженный и провалидированный датасет.
 type Dataset struct {
 	// Authors — по QID.
 	Authors map[string]*Author
 	// Context — по региону.
 	Context map[string]*ContextRegion
-	// Version — sha256 содержимого всех файлов (hex); меняется при любой
-	// правке датасета → триггер пересева в PG.
+	// Version — у исходников sha256 всех файлов, у пакета — sha256 пакета
+	// (16 hex); меняется при любой правке датасета → триггер пересева в PG.
 	Version string
 }
 
-// Load — датасет из встроенных файлов. Ошибка валидации любого файла —
-// ошибка загрузки: битый датасет не должен попасть в релиз (тест в пакете
-// гоняет Load на каждом CI).
-func Load() (*Dataset, error) {
-	return LoadFS(dataFS, "data")
-}
-
-// LoadFS — то же из произвольной ФС (тесты, генератор с outdir).
+// LoadFS — датасет из исходников: <root>/authors/<QID>.json и
+// <root>/context/<region>.json (чекаут alshstf/skriptes-bio, testdata).
+// Ошибка валидации любого файла — ошибка загрузки: `biogen check` и
+// `biogen pack` не пропускают битый датасет в образ. Рантайм читает не
+// исходники, а пакет (pack.go).
 func LoadFS(fsys fs.FS, root string) (*Dataset, error) {
 	ds := &Dataset{Authors: map[string]*Author{}, Context: map[string]*ContextRegion{}}
 	h := sha256.New()

@@ -23,6 +23,26 @@ RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
     go build -trimpath -ldflags="-s -w" \
     -o /out/skriptes-explain ./cmd/skriptes-explain
 
+# ── bio dataset ─────────────────────────────────────────────────
+# Датасет био-таймлайна — отдельный репо alshstf/skriptes-bio; коммит закреплён
+# в internal/bio/dataset.ref (BIO_DATA_REF переопределяет). biogen под платформу
+# сборки проверяет исходники и пакует их без evidence; стадия не зависит от
+# TARGETARCH — при multi-arch собирается один раз. В бинарник данные не входят.
+FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-alpine AS biodata
+WORKDIR /src
+RUN apk add --no-cache curl ca-certificates
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+ARG BIO_DATA_REF=
+RUN REF="${BIO_DATA_REF:-$(tr -d '[:space:]' < internal/bio/dataset.ref)}" && \
+    mkdir -p /tmp/bio /out && \
+    curl -fsSL --retry 5 --retry-all-errors --retry-delay 3 \
+         --connect-timeout 30 --max-time 300 -o /tmp/bio.tar.gz \
+         "https://codeload.github.com/alshstf/skriptes-bio/tar.gz/${REF}" && \
+    tar -xzf /tmp/bio.tar.gz -C /tmp/bio --strip-components=1 && \
+    go run ./cmd/biogen pack -dir /tmp/bio -out /out/bio.pack.gz
+
 # ── fb2cng fetcher ──────────────────────────────────────────────
 # Скачиваем готовый релиз fb2cng (бинарь называется `fbc`).
 FROM alpine:${ALPINE_VERSION} AS fb2cng
@@ -65,6 +85,7 @@ COPY --from=builder /out/skriptes      /usr/local/bin/skriptes
 COPY --from=builder /out/skriptes-seed /usr/local/bin/skriptes-seed
 COPY --from=builder /out/skriptes-explain /usr/local/bin/skriptes-explain
 COPY --from=fb2cng  /opt/fb2cng/fbc    /usr/local/bin/fbc
+COPY --from=biodata /out/bio.pack.gz   /usr/share/skriptes/bio.pack.gz
 # Smoke-test: бинарь должен запускаться в финальном образе. Если
 # линковка снова рассинхронится (новая версия fb2cng / новый gcompat-gap
 # / переезд base), docker build упадёт сразу, не доезжая до релиза.

@@ -9,12 +9,19 @@
 //	                                           (нужен ANTHROPIC_API_KEY).
 //	verify  -qid Q991 [-out work/]          → work/verified/Q991.json + work/review/Q991.md
 //	run     -qid Q991[,Q7243] [-out work/]  → fetch + extract + verify подряд
-//	eval    -generated work/verified [-golden internal/bio/data/authors]
-//	check   [-dir internal/bio/data]        → валидация датасета (то же, что делает загрузчик)
+//	eval    -generated work/verified [-dataset ../skriptes-bio]
+//	check   [-dir ../skriptes-bio]          → валидация датасета
+//	pack    [-dir ../skriptes-bio] -out bio.pack.gz → пакет для рантайма (проверка + без evidence; шаг сборки образа)
+//
+// Датасет (исходники) — отдельный репо alshstf/skriptes-bio: authors/<QID>.json,
+// context/<region>.json; путь к его чекауту — флаг -dir/-dataset или
+// SKRIPTES_BIO_DATA. extract с -dataset подаёт модели прежний файл автора
+// (регенерация с сохранением ключей вех); без него — извлечение с нуля.
 //
 // Приложение внешних вызовов не делает и ключей не требует: извлечение —
 // офлайн, через Claude Code по подписке или (опционально) через API. Принятый
-// файл кладут в internal/bio/data/authors/<QID>.json руками после ревью.
+// файл кладут в skriptes-bio/authors/<QID>.json после ревью (PR туда, затем
+// бамп internal/bio/dataset.ref).
 package main
 
 import (
@@ -64,6 +71,8 @@ func run() int {
 		err = cmdEval(os.Args[2:])
 	case "check":
 		err = cmdCheck(os.Args[2:])
+	case "pack":
+		err = cmdPack(os.Args[2:])
 	case "-h", "--help", "help":
 		usage()
 	default:
@@ -78,7 +87,25 @@ func run() int {
 }
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: biogen <fetch|extract|verify|run|eval|check> [flags]")
+	fmt.Fprintln(os.Stderr, "usage: biogen <fetch|extract|verify|run|eval|check|pack> [flags]")
+}
+
+// datasetFlag — путь к чекауту alshstf/skriptes-bio (по умолчанию из
+// SKRIPTES_BIO_DATA; пусто — не задан).
+func datasetFlag(fs *flag.FlagSet, name string) *string {
+	return fs.String(name, os.Getenv("SKRIPTES_BIO_DATA"), "чекаут alshstf/skriptes-bio (по умолчанию $SKRIPTES_BIO_DATA)")
+}
+
+// loadDataset — исходники датасета из чекаута: <dir>/authors, <dir>/context.
+func loadDataset(dir string) (*bio.Dataset, error) {
+	if dir == "" {
+		return nil, errors.New("нужен -dir (чекаут alshstf/skriptes-bio) или SKRIPTES_BIO_DATA")
+	}
+	abs, err := filepath.Abs(dir)
+	if err != nil {
+		return nil, err
+	}
+	return bio.LoadFS(os.DirFS(filepath.Dir(abs)), filepath.Base(abs))
 }
 
 // qids — список через запятую или @файл (QID в начале каждой строки, остальное
@@ -198,17 +225,18 @@ func skip(out, q, reason string) {
 	_ = os.WriteFile(filepath.Join(out, "skipped", q+".txt"), []byte(reason+"\n"), 0o600)
 }
 
-func extractOne(ctx context.Context, x gen.Engine, out, q string) error {
+func extractOne(ctx context.Context, x gen.Engine, out, dataset, q string) error {
 	var src gen.Sources
 	if err := readJSON(filepath.Join(out, "sources", q+".json"), &src); err != nil {
 		return fmt.Errorf("%s: сначала fetch: %w", q, err)
 	}
 	var prev *bio.Author
 	var pa bio.Author
-	// Путь относительный: из backend/ автор датасета извлекается как регенерация
-	// (модели подаётся прежний файл), из папки прогона — с нуля. Для сравнения
-	// моделей запускать не из backend/ — иначе модель повторит готовый файл.
-	if pp := filepath.Join("internal", "bio", "data", "authors", q+".json"); readJSON(pp, &pa) == nil {
+	// Прежний файл — только из явно заданного датасета (-dataset): раньше путь
+	// был относительным, и запуск из backend/ молча превращал извлечение в
+	// регенерацию — сравнение моделей 2026-10-17 дало «99 %», модель повторила
+	// эталон.
+	if pp := filepath.Join(dataset, "authors", q+".json"); dataset != "" && readJSON(pp, &pa) == nil {
 		prev = &pa
 		fmt.Printf("%s: регенерация — модели подан прежний файл %s\n", q, pp)
 	}
@@ -238,6 +266,7 @@ func cmdExtract(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("extract", flag.ExitOnError)
 	qid := fs.String("qid", "", "QID автора (или список)")
 	out := fs.String("out", "work", "рабочая папка")
+	dataset := fs.String("dataset", "", "чекаут alshstf/skriptes-bio: регенерация — модели подаётся прежний файл автора; пусто — с нуля")
 	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
@@ -248,7 +277,7 @@ func cmdExtract(ctx context.Context, args []string) error {
 		return err
 	}
 	for _, q := range qids(*qid) {
-		if err := extractOne(ctx, x, *out, q); err != nil {
+		if err := extractOne(ctx, x, *out, *dataset, q); err != nil {
 			return err
 		}
 	}
@@ -308,6 +337,7 @@ func cmdRun(ctx context.Context, args []string) error {
 	langs := fs.String("langs", "", "языки статей через запятую (ru,en,de); пусто — ru, en при короткой ru, язык оригинала (не ru/en) из Wikidata")
 	retries := fs.Int("retries", 2, "повторов извлечения после сбоя (лимит подписки, сеть)")
 	retryWait := fs.Duration("retry-wait", 10*time.Minute, "пауза перед повтором")
+	dataset := fs.String("dataset", "", "чекаут alshstf/skriptes-bio: регенерация — модели подаётся прежний файл автора; пусто — с нуля")
 	engine, binary, model, effort := engineFlags(fs)
 	_ = fs.Parse(args)
 	if *qid == "" {
@@ -333,7 +363,7 @@ func cmdRun(ctx context.Context, args []string) error {
 			fmt.Printf("%s: отложен (skipped/), пропуск\n", q)
 			continue
 		}
-		err := runOne(ctx, f, x, *out, q, *retries, *retryWait)
+		err := runOne(ctx, f, x, *out, *dataset, q, *retries, *retryWait)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "biogen: %s: %v\n", q, err)
 			failed = append(failed, q+"\t"+err.Error())
@@ -350,7 +380,7 @@ func cmdRun(ctx context.Context, args []string) error {
 	return nil
 }
 
-func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, retries int, wait time.Duration) error {
+func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, dataset, q string, retries int, wait time.Duration) error {
 	src, err := f.Fetch(ctx, q)
 	if err != nil {
 		return fmt.Errorf("fetch: %w", err)
@@ -365,7 +395,7 @@ func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, re
 	}
 	emptyRetried := false
 	for attempt := 0; ; attempt++ {
-		err = extractOne(ctx, x, out, q)
+		err = extractOne(ctx, x, out, dataset, q)
 		if errors.Is(err, errNoEvents) {
 			if !emptyRetried {
 				emptyRetried = true
@@ -395,8 +425,12 @@ func runOne(ctx context.Context, f *gen.Fetcher, x gen.Engine, out, q string, re
 func cmdEval(args []string) error {
 	fs := flag.NewFlagSet("eval", flag.ExitOnError)
 	generated := fs.String("generated", filepath.Join("work", "verified"), "папка сгенерированных файлов")
-	golden := fs.String("golden", filepath.Join("internal", "bio", "data", "authors"), "папка золотого набора")
+	dataset := datasetFlag(fs, "dataset")
 	_ = fs.Parse(args)
+	if *dataset == "" {
+		return errors.New("нужен -dataset (чекаут alshstf/skriptes-bio) или SKRIPTES_BIO_DATA")
+	}
+	golden := filepath.Join(*dataset, "authors")
 	entries, err := os.ReadDir(*generated)
 	if err != nil {
 		return err
@@ -410,7 +444,7 @@ func cmdEval(args []string) error {
 		if err := readJSON(filepath.Join(*generated, e.Name()), &g); err != nil {
 			return err
 		}
-		if err := readJSON(filepath.Join(*golden, e.Name()), &gold); err != nil {
+		if err := readJSON(filepath.Join(golden, e.Name()), &gold); err != nil {
 			fmt.Printf("%s: нет золотого файла, пропуск\n", e.Name())
 			continue
 		}
@@ -422,9 +456,9 @@ func cmdEval(args []string) error {
 
 func cmdCheck(args []string) error {
 	fs := flag.NewFlagSet("check", flag.ExitOnError)
-	dir := fs.String("dir", filepath.Join("internal", "bio", "data"), "папка датасета")
+	dir := datasetFlag(fs, "dir")
 	_ = fs.Parse(args)
-	ds, err := bio.LoadFS(os.DirFS(filepath.Dir(*dir)), filepath.Base(*dir))
+	ds, err := loadDataset(*dir)
 	if err != nil {
 		return err
 	}
@@ -438,5 +472,45 @@ func cmdCheck(args []string) error {
 		}
 	}
 	fmt.Printf("ок: авторов %d, регионов фона %d, версия %s, предупреждений %d\n", len(ds.Authors), len(ds.Context), ds.Version, warns)
+	return nil
+}
+
+// cmdPack — исходники датасета → пакет для рантайма (шаг сборки образа):
+// LoadFS проверяет каждый файл, WritePack вырезает evidence и сжимает.
+func cmdPack(args []string) error {
+	fs := flag.NewFlagSet("pack", flag.ExitOnError)
+	dir := datasetFlag(fs, "dir")
+	out := fs.String("out", "", "файл пакета (bio.pack.gz)")
+	_ = fs.Parse(args)
+	if *out == "" {
+		return errors.New("нужен -out")
+	}
+	ds, err := loadDataset(*dir)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(*out), 0o750); err != nil {
+		return err
+	}
+	f, err := os.Create(*out) //nolint:gosec // путь из флага CLI
+	if err != nil {
+		return err
+	}
+	if err := bio.WritePack(f, ds); err != nil {
+		_ = f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	pack, err := bio.OpenPack(*out)
+	if err != nil {
+		return err
+	}
+	st, err := os.Stat(*out)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("пакет %s: авторов %d, регионов фона %d, %d КБ, версия %s\n", *out, len(ds.Authors), len(ds.Context), st.Size()/1024, pack.Version)
 	return nil
 }

@@ -75,6 +75,6 @@ TTL not_found/error из настроек, found — 180 дней); год — �
 ## 0058_bio_timeline
 
 Био-таймлайн (план v3): `author_bio(qid PK, name, data JSONB, version, updated_at)` — кэш встроенного датасета
-`internal/bio/data` (bio.Author без evidence; сев на старте при смене версии датасета, ключ `app_settings.bio_dataset_version`)
+пакета датасета (`alshstf/skriptes-bio`, до 1.55.0 — `internal/bio/data`; bio.Author без evidence; сев на старте при смене версии датасета, ключ `app_settings.bio_dataset_version`)
 и `author_event_hides(qid, key, hidden_at, hidden_by)` — админское «скрыть веху», переживает пересев. Связь с `authors` —
 только через `authors.ext_ids->>'wd_qid'` на чтении.
