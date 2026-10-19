@@ -1,0 +1,355 @@
+{
+  "qid": "Q230586",
+  "name": "Лаура Эскивель",
+  "born": "1950-09-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D1%81%D0%BA%D0%B8%D0%B2%D0%B5%D0%BB%D1%8C%2C_%D0%9B%D0%B0%D1%83%D1%80%D0%B0",
+      "rev": 155497068
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Laura_Esquivel",
+      "rev": 1378862983
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-study",
+      "title": "Детство и учёба",
+      "from": 1950,
+      "to": 1969
+    },
+    {
+      "key": "tv-and-marriage",
+      "title": "Телевидение, театр, брак с Арау",
+      "from": 1970,
+      "to": 1988
+    },
+    {
+      "key": "chocolate-fame",
+      "title": "Роман, фильм и мировая известность",
+      "from": 1989,
+      "to": 1994
+    },
+    {
+      "key": "split-and-loss",
+      "title": "Разрыв, суд, смерть отца",
+      "from": 1995,
+      "to": 2007
+    },
+    {
+      "key": "politics",
+      "title": "Культура и политика",
+      "from": 2008,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-09-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Мехико",
+      "long": "Родилась в Мехико третьим из четырёх детей в семье телеграфиста Хулио Сесара Эскивеля и Хосефы Вальдес.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 30 сентября 1950, Мехико"
+      }
+    },
+    {
+      "key": "education-1966",
+      "date": {
+        "from": "1966",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Подготовка в области дошкольного образования",
+      "long": "Получила квалификацию в области дошкольного образования; позже училась театральному искусству, специализируясь на детском театре.",
+      "chapter": "childhood-study",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She is qualified in Pre-School Education (1966–1968)"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарии детских телепрограмм",
+      "long": "В 1970–1980 годах писала сценарии детских программ для мексиканского телевидения; работа на телевидении привела её к сценариям для кино.",
+      "chapter": "tv-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1970 and 1980 she wrote the script for children's programmes for Mexican television"
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с режиссёром Альфонсо Арау",
+      "long": "В 1975 году вышла замуж за актёра, продюсера и режиссёра Альфонсо Арау, с которым работала над несколькими фильмами.",
+      "chapter": "tv-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1975 she  married actor, producer, and director Alfonso Arau, with whom she collaborated on several films."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Центра постоянного изобретения",
+      "long": "Основала Центр постоянного изобретения (Centro de Invención Permanente) и возглавила его техническое руководство.",
+      "chapter": "tv-and-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1983, she founded the Centro de Invención Permanente, and took on its technical direction"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер в Мексике",
+      "long": "Первый роман стал бестселлером в Мексике и вызвал небывалый для мексиканской литературы коммерческий успех, хотя критика в стране приняла его сдержанно.",
+      "place": {
+        "label": "Мексика"
+      },
+      "works": [
+        {
+          "ref": "like-water-for-chocolate"
+        }
+      ],
+      "chapter": "chocolate-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "became Mexico’s 'bestseller' in 1990"
+      }
+    },
+    {
+      "key": "creation-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Экранизация романа по её сценарию",
+      "long": "Фильм по роману, сценарий к которому написала сама Эскивель, поставил её бывший муж Альфонсо Арау; он получил ряд кинопремий.",
+      "works": [
+        {
+          "ref": "like-water-for-chocolate",
+          "note": "сценарий фильма написала сама Эскивель"
+        }
+      ],
+      "chapter": "chocolate-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 году роман был экранизирован"
+      }
+    },
+    {
+      "key": "love-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Расставание с Альфонсо Арау",
+      "long": "В 1993 году Эскивель и Альфонсо Арау расстались.",
+      "chapter": "chocolate-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They separated in 1993."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия американских книготорговцев",
+      "long": "Получила приз Американской ассоциации книготорговцев (ABBY) — первой среди авторов не из США.",
+      "works": [
+        {
+          "ref": "like-water-for-chocolate"
+        }
+      ],
+      "chapter": "chocolate-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994 Esquivel won American Booksellers Book of the Year (ABBY) Award"
+      }
+    },
+    {
+      "key": "other-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Судебный спор с Арау о правах",
+      "long": "В 1995 году подала на Арау в суд из-за прав на «Шоколад на крутом кипятке»; вскоре он подал встречный иск.",
+      "chapter": "split-and-loss",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She sued Arau over the rights of Como agua para chocolate in 1995."
+      }
+    },
+    {
+      "key": "loss-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, телеграфист Хулио Сесар Эскивель; его смерть стала источником замысла одного из последующих романов.",
+      "works": [
+        {
+          "ref": "swift-as-desire",
+          "note": "смерть отца названа вдохновением романа"
+        }
+      ],
+      "chapter": "split-and-loss",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her father's death in 1999 was the inspiration for Tan veloz como el deseo."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "to": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Директор по культуре округа Койоакан",
+      "long": "С 2008 по 2011 год занимала должность генерального директора по культуре муниципального образования Койоакан в Мехико.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2008 по 2011 год Лаура Эскивель занимала должность генерального директора по культуре муниципального образования Койоакан, Мехико."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выдвижение кандидатом в совет округа",
+      "long": "В марте 2009 года выдвинулась предварительным кандидатом в местный совет XXVII округа Мехико от Партии демократической революции.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "politics",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2009 Laura Esquivel ran as preliminary candidate of the Local Council in District XXVII of Mexico City"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание федеральным депутатом",
+      "long": "Избрана федеральным депутатом от партии Морена; работала в комитетах по науке и технике, культуре и кинематографии, окружающей среде.",
+      "chapter": "politics",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2015 году писательница была избрана федеральным депутатом от правящей левой партии Движение национального возрождения (Морена)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "like-water-for-chocolate",
+      "title": "Шоколад на крутом кипятке",
+      "qid": "Q1777072",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "law-of-love",
+      "title": "Закон любви",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "swift-as-desire",
+      "title": "Быстрая как желание",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "malinche",
+      "title": "Малинче",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "pierced-by-the-sun",
+      "title": "Лупите нравится гладить",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "qid": "Q211893",
+  "name": "Оуэн Колфер",
+  "born": "1965-05-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D1%84%D0%B5%D1%80%2C_%D0%9E%D1%83%D1%8D%D0%BD",
+      "rev": 151365335
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Eoin_Colfer",
+      "rev": 1377006391
+    }
+  ],
+  "chapters": [
+    {
+      "key": "wexford-dublin",
+      "title": "Уэксфорд и Дублин",
+      "from": 1965,
+      "to": 1986
+    },
+    {
+      "key": "teacher-writer",
+      "title": "Учитель, ставший писателем",
+      "from": 1987,
+      "to": 2007
+    },
+    {
+      "key": "other-worlds",
+      "title": "Чужие миры и звание лауреата",
+      "from": 2008,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1965",
+      "date": {
+        "from": "1965-05-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уэксфорде",
+      "long": "Родился в Уэксфорде, Ирландия.",
+      "place": {
+        "label": "Уэксфорд"
+      },
+      "chapter": "wexford-dublin",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Уэксфорд 1965-05-14"
+      }
+    },
+    {
+      "key": "education-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание университета в Дублине",
+      "long": "Окончил университет в Дублине в 1986 году.",
+      "place": {
+        "label": "Дублин"
+      },
+      "chapter": "wexford-dublin",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил университет в Дублине в 1986 году"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение домой, работа школьным учителем",
+      "long": "После университета вернулся в родной город и стал преподавать в начальной школе, как и отец.",
+      "place": {
+        "label": "Уэксфорд"
+      },
+      "chapter": "wexford-dublin",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончил университет в Дублине в 1986 году и вернулся в родной город преподавать в начальной школе, как и отец."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех первого романа об Артемисе Фауле",
+      "long": "Первый роман об Артемисе Фауле вышел в издательстве O’Brien Press и сразу стал бестселлером в Ирландии; позже Колфер оставил преподавание ради писательства.",
+      "works": [
+        {
+          "ref": "artemis-fowl"
+        }
+      ],
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первый роман этой серии вышел в 2001 году, выпущенный издательством O’Brien Press, и сразу же стал бестселлером в Ирландии."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая премия Deutscher Phantastik Preis",
+      "long": "Получил немецкую премию Deutscher Phantastik Preis в номинации «Лучшая переводная книга».",
+      "works": [
+        {
+          "ref": "artemis-fowl"
+        }
+      ],
+      "chapter": "teacher-writer",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 году получил немецкую премию Deutscher Phantastik Preis в номинации «Лучшая переводная книга»"
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Заказ на шестую книгу «Автостопом по галактике»",
+      "long": "Наследники Дугласа Адамса попросили Колфера написать шестую, завершающую книгу серии «Автостопом по галактике».",
+      "works": [
+        {
+          "ref": "and-another-thing"
+        }
+      ],
+      "chapter": "other-worlds",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2008 году, незадолго до юбилея публикации серии романов Дугласа Адамса «Автостопом по галактике», наследники писателя обратились к Колферу с просьбой написать шестую"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "to": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание детского лауреата Ирландии",
+      "long": "Занимал пост лауреата Laureate na nÓg, детского лауреата Ирландии.",
+      "chapter": "other-worlds",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He served as Laureate na nÓg (Ireland's Children's Laureate) between 2014 and 2016."
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт с Marvel Comics",
+      "long": "Совместно с Marvel Comics выпустил роман для взрослых о Железном Человеке.",
+      "works": [
+        {
+          "ref": "iron-man-gauntlet"
+        }
+      ],
+      "chapter": "other-worlds",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В октябре 2016 года, совместно с компанией Marvel Comics, Колфер выпустил роман для взрослых"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "artemis-fowl",
+      "title": "Артемис Фаул",
+      "qid": "Q325283",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "airman",
+      "title": "Эйрмен",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "and-another-thing",
+      "title": "А вот ещё...",
+      "written": {
+        "from": 2008,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "iron-man-gauntlet",
+      "title": "Железный Человек. Латная перчатка",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

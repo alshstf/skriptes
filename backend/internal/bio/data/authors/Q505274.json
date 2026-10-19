@@ -1,0 +1,668 @@
+{
+  "qid": "Q505274",
+  "name": "Лен Дейтон",
+  "born": "1929-02-18",
+  "died": "2026-03-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B5%D0%B9%D1%82%D0%BE%D0%BD%2C_%D0%9B%D0%B5%D0%BD",
+      "rev": 154945676
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Len_Deighton",
+      "rev": 1374148932
+    }
+  ],
+  "chapters": [
+    {
+      "key": "marylebone-war",
+      "title": "Марилебон и война",
+      "from": 1929,
+      "to": 1946
+    },
+    {
+      "key": "raf-art-school",
+      "title": "Служба, студия, иллюстрации",
+      "from": 1947,
+      "to": 1959
+    },
+    {
+      "key": "ipcress-years",
+      "title": "Шпион без имени и кулинарные комиксы",
+      "from": 1960,
+      "to": 1968
+    },
+    {
+      "key": "abroad-history",
+      "title": "Жизнь за границей и военная история",
+      "from": 1969,
+      "to": 1982
+    },
+    {
+      "key": "trilogies-retirement",
+      "title": "Трилогии и тишина",
+      "from": 1983,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1929",
+      "date": {
+        "from": "1929-02-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Марилебоне, Лондон",
+      "long": "Родился 18 февраля 1929 года в лазарете работного дома, поскольку местная больница была переполнена. Отец — шофёр и механик, мать — повар.",
+      "place": {
+        "label": "Марилебон, Лондон"
+      },
+      "chapter": "marylebone-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лен Дейтон родился в Марилебоне 18 февраля 1929 года."
+      }
+    },
+    {
+      "key": "other-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Арест соседки-шпионки Анны Волкофф",
+      "long": "В 1940 году одиннадцатилетний Дейтон наблюдал арест Анны Волкофф, для которой готовила его мать. Он называл это важным фактором решения написать шпионский роман.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "ipcress-file",
+          "note": "сам Дейтон называл арест важным фактором решения написать шпионскую историю в первой же попытке"
+        }
+      ],
+      "chapter": "marylebone-war",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1940, during the Second World War, the eleven-year-old Deighton witnessed the arrest of Anna Wolkoff"
+      }
+    },
+    {
+      "key": "education-1949",
+      "date": {
+        "from": "1949",
+        "to": "1955",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Святого Мартина и Королевский колледж искусств",
+      "long": "С 1949 года учился в лондонской школе искусств Святого Мартина, в 1952 году получил стипендию в Королевском колледже искусств, который окончил в 1955 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "raf-art-school",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "он учился в Лондонской школе искусств Святого Мартина в 1949 году, а в 1952 году получил стипендию в Королевском колледже искусств, который окончил в 1955 году"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа кондитером в Королевском фестивальном зале",
+      "long": "Во время учёбы подрабатывал кондитером; зарисовки приготовления блюд позже развились в «кукстрипы» — рецепты в виде комиксов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "action-cook-book",
+          "note": "зарисовки шагов приготовления блюд на этой работе развились в идею кукстрипа"
+        }
+      ],
+      "chapter": "raf-art-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While studying he held a temporary job in 1951 as a pastry chef at the Royal Festival Hall."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стюард авиакомпании BOAC",
+      "long": "В 1956–1957 годах работал бортпроводником BOAC, затем стал профессиональным иллюстратором.",
+      "chapter": "raf-art-school",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He worked as a flight attendant for British Overseas Airways Corporation (BOAC) between 1956 and 1957"
+      }
+    },
+    {
+      "key": "love-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с иллюстратором Ширли Томпсон",
+      "long": "В 1960 году женился на иллюстраторе Ширли Томпсон; пара развелась в 1976 году.",
+      "chapter": "ipcress-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Deighton married the illustrator Shirley Thompson in 1960"
+      }
+    },
+    {
+      "key": "creation-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман, написанный в отпуске во Франции",
+      "long": "Первый роман был написан в 1960 году во время длительного отпуска в Дордони, на юго-западе Франции.",
+      "place": {
+        "label": "Дордонь"
+      },
+      "works": [
+        {
+          "ref": "ipcress-file"
+        }
+      ],
+      "chapter": "ipcress-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "it had been written in 1960 while he was staying in the Dordogne, south west France"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Бестселлер в Британии, Франции и США",
+      "long": "Дебютный роман вышел в 1962 году и за три года разошёлся тиражом более 2,5 млн экземпляров.",
+      "works": [
+        {
+          "ref": "ipcress-file"
+        }
+      ],
+      "chapter": "ipcress-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1962 Deighton's first novel, The IPCRESS File, was published; it had been written in 1960"
+      }
+    },
+    {
+      "key": "career-1962-2",
+      "date": {
+        "from": "1962-03",
+        "to": "1966-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кулинарный обозреватель The Observer",
+      "long": "С марта 1962 по август 1966 года вёл еженедельную серию «кукстрипов» в журнале The Observer; подборка вышла отдельной книгой в 1965 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "action-cook-book"
+        }
+      ],
+      "chapter": "ipcress-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which he did between March 1962 and August 1966"
+      }
+    },
+    {
+      "key": "persecution-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Иск о клевете из-за путеводителя по Лондону",
+      "long": "В 1967 году Дейтон и издательство Jonathan Cape были привлечены к суду за клевету из-за утверждений о ночлежках Rowton Houses; принесли извинения и выплатили компенсацию.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "ipcress-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1967 he also edited and contributed to Len Deighton's London Dossier… He and the publishers Jonathan Cape were sued for libel"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Опыт в кино и разрыв с титрами фильма",
+      "long": "В 1969 году был автором сценария и сопродюсером фильма «Ох, что за прекрасная война», но кинопроизводство ему не понравилось, и он снял своё имя с титров.",
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was the writer and co-producer of Oh! What a Lovely War in 1969, but did not enjoy the process of making films, and had his name removed from the film's credits."
+      }
+    },
+    {
+      "key": "relocation-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Британии и жизнь за границей",
+      "long": "В 1969 году покинул Британию и жил в Ирландии, Австрии, Франции, США и Португалии.",
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He left Britain in 1969, and lived abroad from then on, including in Ireland, Austria, France, the US and Portugal."
+      }
+    },
+    {
+      "key": "creation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман, набранный на текстовом процессоре IBM",
+      "long": "В 1970 году для романа использовал IBM MT/ST; возможно, это был первый роман, написанный на текстовом процессоре.",
+      "works": [
+        {
+          "ref": "bomber"
+        }
+      ],
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1970 Deighton wrote Bomber, a fictional account of an RAF Bomber Command raid that goes wrong. To produce the novel he used an IBM MT/ST"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Развод с Ширли Томпсон",
+      "long": "Брак распался в 1976 году; супруги не жили вместе более пяти лет.",
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple were divorced in 1976, having not lived together for more than five years"
+      }
+    },
+    {
+      "key": "creation-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Книга о битве за Британию по совету Тейлора",
+      "long": "Книга вышла в 1977 году после совета историка А. Дж. П. Тейлора, который написал к ней введение.",
+      "works": [
+        {
+          "ref": "fighter"
+        }
+      ],
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Deighton wrote Fighter: The True Story of the Battle of Britain, published in 1977, after being advised to do so by the historian A. J. P. Taylor."
+      }
+    },
+    {
+      "key": "creation-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Замысел альтернативной истории от друга Хоки",
+      "long": "Идея романа о победе Германии во Второй мировой войне возникла в разговоре с другом по художественной школе Реем Хоки.",
+      "works": [
+        {
+          "ref": "ss-gb",
+          "note": "идея романа возникла в разговоре с Реем Хоки"
+        }
+      ],
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fighter was followed in 1978 by another novel, SS-GB, the idea for which came from Ray Hawkey"
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980-02",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Изабель де Раниц",
+      "long": "В феврале 1980 года в Блэкроке женился на Изабель де Раниц, дочери голландского дипломата; в браке родились два сына.",
+      "place": {
+        "label": "Блэкрок, графство Лаут"
+      },
+      "chapter": "abroad-history",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where in February 1980 he married Ysabele née de Ranitz, the daughter of a Dutch diplomat. The couple had two sons."
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Три связанные трилогии о Бернарде Сэмсоне",
+      "long": "С 1983 года писал три связанные трилогии о разведчике МИ-6 Бернарде Сэмсоне, завершив цикл в 1996 году.",
+      "works": [
+        {
+          "ref": "berlin-game"
+        },
+        {
+          "ref": "mexico-set"
+        },
+        {
+          "ref": "london-match"
+        },
+        {
+          "ref": "spy-hook"
+        },
+        {
+          "ref": "spy-line"
+        },
+        {
+          "ref": "spy-sinker"
+        },
+        {
+          "ref": "faith"
+        },
+        {
+          "ref": "hope"
+        },
+        {
+          "ref": "charity"
+        }
+      ],
+      "chapter": "trilogies-retirement",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Beginning in 1983 Deighton wrote three connected trilogies"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая премия за криминальную литературу",
+      "long": "В 1986 году получил German Crime Fiction Award.",
+      "chapter": "trilogies-retirement",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: German Crime Fiction Award 1986"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Годовой перерыв в писательстве",
+      "long": "Закончив третью трилогию в 1996 году, решил взять год перерыва, после которого счёл писательство занятием, которое ему не нужно; к 2016 году был в отставке.",
+      "works": [
+        {
+          "ref": "charity"
+        }
+      ],
+      "chapter": "trilogies-retirement",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After completing Faith, Hope and Charity in 1996, he decided to take a year off writing"
+      }
+    },
+    {
+      "key": "death-2026",
+      "date": {
+        "from": "2026-03-15",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть дома на Гернси",
+      "long": "Умер у себя дома на Гернси 15 марта 2026 года в возрасте 97 лет.",
+      "place": {
+        "label": "Гернси"
+      },
+      "chapter": "trilogies-retirement",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Deighton died at his home in Guernsey on 15 March 2026, aged 97."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ipcress-file",
+      "title": "Досье «Ипкресс»",
+      "qid": "Q1893973",
+      "written": {
+        "from": 1960,
+        "to": 1962
+      }
+    },
+    {
+      "ref": "horse-under-water",
+      "title": "Конь под водой",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "funeral-in-berlin",
+      "title": "Берлинские похороны",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "action-cook-book",
+      "title": "Len Deighton's Action Cook Book",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "billion-dollar-brain",
+      "title": "Мозг стоимостью в миллиард долларов",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "expensive-place-to-die",
+      "title": "An Expensive Place to Die",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "bomber",
+      "title": "Бомбардировщик",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "fighter",
+      "title": "Fighter: The True Story of the Battle of Britain",
+      "qid": "Q5447833",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "ss-gb",
+      "title": "SS-GB",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "blitzkrieg",
+      "title": "Blitzkrieg",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "berlin-game",
+      "title": "Берлинская игра",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "mexico-set",
+      "title": "Мексиканский сет",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "london-match",
+      "title": "Лондонский матч",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "winter",
+      "title": "Зима",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "spy-hook",
+      "title": "Spy Hook",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "spy-line",
+      "title": "Spy Line",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "spy-sinker",
+      "title": "Spy Sinker",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "blood-tears-and-folly",
+      "title": "Blood, Tears and Folly",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "faith",
+      "title": "Faith",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "hope",
+      "title": "Hope",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "charity",
+      "title": "Charity",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    }
+  ]
+}

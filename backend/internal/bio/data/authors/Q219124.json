@@ -1,0 +1,440 @@
+{
+  "qid": "Q219124",
+  "name": "Гильермо дель Торо",
+  "born": "1964-10-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B5%D0%BB%D1%8C_%D0%A2%D0%BE%D1%80%D0%BE%2C_%D0%93%D0%B8%D0%BB%D1%8C%D0%B5%D1%80%D0%BC%D0%BE",
+      "rev": 152607953
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Guillermo_del_Toro",
+      "rev": 1380092144
+    },
+    {
+      "id": "eswiki",
+      "url": "https://es.wikipedia.org/wiki/Guillermo_del_Toro",
+      "rev": 175738239
+    }
+  ],
+  "chapters": [
+    {
+      "key": "guadalajara",
+      "title": "Гвадалахара, грим и монстры",
+      "from": 1964,
+      "to": 1992
+    },
+    {
+      "key": "cronos-hollywood",
+      "title": "Первый успех и первый Голливуд",
+      "from": 1993,
+      "to": 2000
+    },
+    {
+      "key": "spain-franchises",
+      "title": "Испания, франшизы, «Хоббит»",
+      "from": 2001,
+      "to": 2008
+    },
+    {
+      "key": "novels-projects",
+      "title": "Романы и нереализованные замыслы",
+      "from": 2009,
+      "to": 2016
+    },
+    {
+      "key": "oscars",
+      "title": "Оскар и перемены в жизни",
+      "from": 2017,
+      "to": 2021
+    },
+    {
+      "key": "animation",
+      "title": "Анимация и новые проекты",
+      "from": 2022,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-10-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гвадалахаре",
+      "long": "Родился в Гвадалахаре, штат Халиско, в строго католической семье; воспитывался бабушкой.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "guadalajara",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Гильермо Дель Торо родился 9 октября 1964 года в Гвадалахаре (штат Халиско, Мексика)."
+      }
+    },
+    {
+      "key": "family-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Выигрыш отца в лотерею",
+      "long": "Отец выиграл в лотерею 6 миллионов долларов; это позволило растить сына среди книг и экзотических животных. Дом он сам называл «заколдованным замком».",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "guadalajara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1969, his father won a lottery worth $6 million, enabling del Toro to be raised among books and exotic animals"
+      }
+    },
+    {
+      "key": "love-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Лоренсой Ньютон",
+      "long": "Женился на Лоренсе Ньютон, с которой познакомился во время учёбы в Институте наук в Гвадалахаре. В браке родились две дочери.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "guadalajara",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They were married in 1986 and had two daughters together before divorcing in September 2017."
+      }
+    },
+    {
+      "key": "career-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый успех: дебютный полнометражный фильм",
+      "long": "Дебютный полнометражный фильм принёс девять наград мексиканской киноакадемии; успех открыл дорогу в Голливуд.",
+      "chapter": "cronos-hollywood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первого успеха дель Торо добился, получив девять наград мексиканской киноакадемии за дебютный полнометражный фильм «Хронос» (1993)."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый голливудский фильм, конфликт со студией",
+      "long": "Снял первый голливудский фильм с бюджетом 30 миллионов долларов; остался недоволен отношением студии Miramax во время съёмок.",
+      "chapter": "cronos-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, at the age of 33, Guillermo was given a $30 million budget from Miramax (then owned by Disney) to shoot another film, Mimic."
+      }
+    },
+    {
+      "key": "relocation-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Похищение отца и отъезд семьи из Мексики",
+      "long": "Отца похитили в Гвадалахаре; через 72 дня семья выплатила выкуп, вдвое больше первоначально запрошенного. После этого дель Торо, родители и братья с сёстрами уехали за границу.",
+      "place": {
+        "label": "Гвадалахара"
+      },
+      "chapter": "cronos-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Del Toro's father, Federico del Toro Torres, was kidnapped in Guadalajara around 1997."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Международное признание фильма о войне в Испании",
+      "long": "Фильм о Гражданской войне в Испании получил номинации на «Оскар», премию BAFTA и «Гойю»; позже сценарий отмечен премией «Небьюла».",
+      "chapter": "spain-franchises",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2007 — номинация на премию «Оскар» в категории «Лучший оригинальный сценарий», «Лучший фильм на иностранном языке» («Лабиринт фавна»)."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-04",
+        "to": "2010-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа над экранизацией «Хоббита» и уход из проекта",
+      "long": "Был нанят Питером Джексоном режиссёром экранизации «Хоббита», но в мае 2010 года ушёл из проекта из-за задержек, связанных с финансовыми проблемами MGM. Остался соавтором сценария.",
+      "chapter": "spain-franchises",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2008, del Toro was hired by Peter Jackson to direct the live-action film adaptation of J. R. R. Tolkien's The Hobbit… On 30 May 2010, del Toro left the project"
+      }
+    },
+    {
+      "key": "creation-2009",
+      "date": {
+        "from": "2009-06-02",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Дебют как романист в соавторстве с Чаком Хоганом",
+      "long": "Вышел первый роман, начало вампирской трилогии, написанной с Чаком Хоганом; продолжения появились в 2010 и 2011 годах.",
+      "works": [
+        {
+          "ref": "strain-2009"
+        },
+        {
+          "ref": "strain-fall-2010"
+        },
+        {
+          "ref": "strain-night-eternal-2011"
+        }
+      ],
+      "chapter": "novels-projects",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 2 June 2009, del Toro's first novel, The Strain, was released."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отмена экранизации Лавкрафта",
+      "long": "Студия Universal закрыла проект экранизации «Хребтов безумия» Лавкрафта из-за бюджета в 150 миллионов долларов и настояния режиссёра на возрастном рейтинге R.",
+      "chapter": "novels-projects",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "la productora Universal decidió cancelarlo en 2011 porque requería de un costoso presupuesto de $150 millones de dólares"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Игровой проект с Хидэо Кодзимой, позже отменённый",
+      "long": "Совместно с Хидэо Кодзимой представил демоверсию P.T. к игре Silent Hills; проект позднее был отменён.",
+      "chapter": "novels-projects",
+      "evidence": {
+        "source": "eswiki",
+        "quote": "Durante la Gamescom 2014 se dio a conocer al público una demostración titulada «P. T.»"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017-08-31",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Золотой лев» Венецианского фестиваля",
+      "long": "Фильм получил «Золотого льва» Венецианского фестиваля; дель Торо стал первым мексиканским режиссёром, удостоенным этой награды.",
+      "place": {
+        "label": "Венеция"
+      },
+      "chapter": "oscars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 31 August 2017, the film premiered in the main competition section of the 74th Venice International Film Festival, where it was awarded the Golden Lion for best film"
+      }
+    },
+    {
+      "key": "family-2017",
+      "date": {
+        "from": "2017-09",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Лоренсой Ньютон",
+      "long": "Супруги расстались в начале 2017 года и развелись в сентябре.",
+      "chapter": "oscars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дель Торо и Ньютон расстались в начале 2017 года и развелись в сентябре того же года."
+      }
+    },
+    {
+      "key": "career-2017-2",
+      "date": {
+        "from": "2017-11",
+        "to": "2018-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отмена и возрождение проекта о Пиноккио",
+      "long": "Проект «Пиноккио» отменили из-за отсутствия финансирования, а в октябре 2018 года возобновили при поддержке Netflix.",
+      "chapter": "oscars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2017, it was reported that del Toro had cancelled the project because no studios were willing to finance it. In October 2018, it was announced that the film had been revived, with Netflix backing the project."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018-03-04",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Оскар» за режиссуру",
+      "long": "Получил «Оскар» за режиссуру; фильм «Форма воды» также удостоен «Оскара» как лучший фильм.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "oscars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2018 — премия «Оскар» в категории «Лучшая режиссёрская работа» («Форма воды»)."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звезда на «Аллее славы»",
+      "long": "Удостоен звезды на голливудской «Аллее славы».",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "oscars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "received a motion picture star on the Hollywood Walk of Fame in 2019."
+      }
+    },
+    {
+      "key": "love-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ким Морган",
+      "long": "Женился на Ким Морган, американском историке кино; она соавтор сценария «Аллеи кошмаров».",
+      "chapter": "oscars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2021, he married Kim Morgan, an American film historian"
+      }
+    },
+    {
+      "key": "education-2022",
+      "date": {
+        "from": "2022-11",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Почётный доктор Национального университета Мексики",
+      "long": "Национальный автономный университет Мексики присвоил степень почётного доктора за вклад в культуру и поддержку молодёжи.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "animation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2022, UNAM awarded him the Honoris Causa Doctorate for his \"contributions to culture and his support for the youth\"."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023-03-12",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Оскар» за анимационный фильм",
+      "long": "Анимационный «Пиноккио», над которым он работал с 2008 года, получил «Оскар» как лучший анимационный фильм.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "animation",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2023 — премия «Оскар» в категории «Лучший анимационный полнометражный фильм» («Пиноккио Гильермо дель Торо»)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "strain-2009",
+      "title": "Штамм. Начало",
+      "written": {
+        "from": 2008,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "strain-fall-2010",
+      "title": "Штамм. Закат",
+      "written": {
+        "from": 2009,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "strain-night-eternal-2011",
+      "title": "Штамм. Вечная ночь",
+      "written": {
+        "from": 2010,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "trollhunters-2015",
+      "title": "Охотники на троллей",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

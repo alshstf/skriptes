@@ -1,0 +1,156 @@
+{
+  "qid": "Q4338525",
+  "name": "Юлия Остапенко",
+  "born": "1980-12-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D1%81%D1%82%D0%B0%D0%BF%D0%B5%D0%BD%D0%BA%D0%BE%2C_%D0%AE%D0%BB%D0%B8%D1%8F_%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 146126966
+    }
+  ],
+  "chapters": [
+    {
+      "key": "lvov-youth",
+      "title": "Львов, школа и университет",
+      "from": 1980,
+      "to": 2001
+    },
+    {
+      "key": "first-publications",
+      "title": "Первые публикации и «Дебют»",
+      "from": 2002,
+      "to": 2004
+    },
+    {
+      "key": "novels",
+      "title": "Романы и признание",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1980",
+      "date": {
+        "from": "1980-12-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Львове",
+      "long": "Юлия Остапенко родилась во Львове, где живёт и сейчас.",
+      "place": {
+        "label": "Львов"
+      },
+      "chapter": "lvov-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 20 декабря 1980 года, Львов"
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало публикаций в журналах",
+      "long": "В журнале «Порог» напечатан рассказ «На дне»; с этого времени Остапенко публикуется в журналах и сборниках России и Украины.",
+      "works": [
+        {
+          "ref": "na-dne"
+        }
+      ],
+      "chapter": "first-publications",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начиная с 2002 года, когда в журнале «Порог» был напечатан рассказ «На дне»"
+      }
+    },
+    {
+      "key": "career-2003",
+      "date": {
+        "from": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Шорт-лист премии «Дебют»",
+      "long": "Фэнтези-произведения Остапенко вошли в шорт-лист российской премии «Дебют».",
+      "chapter": "first-publications",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2003 году её произведения в жанре фэнтези вошли в шорт-лист национальной российской премии «Дебют»"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первых романов",
+      "long": "Вышли первые романы Остапенко; позднее появились ещё несколько романов и два сборника рассказов.",
+      "works": [
+        {
+          "ref": "nenavist"
+        },
+        {
+          "ref": "igry-ryadom"
+        }
+      ],
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году вышли романы Остапенко «Ненависть» и «Игры рядом»"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Серебряная стрела»",
+      "long": "Получила премию «Серебряная стрела» в номинации «Лучший мужской образ» за роман о Борджиа.",
+      "chapter": "novels",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии «Серебряная стрела-2013» в номинации «Лучший мужской образ»"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "na-dne",
+      "title": "На дне",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "nenavist",
+      "title": "Ненависть",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "igry-ryadom",
+      "title": "Игры рядом",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    }
+  ]
+}

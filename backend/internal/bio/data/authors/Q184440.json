@@ -1,0 +1,749 @@
+{
+  "qid": "Q184440",
+  "name": "Жоржи Амаду",
+  "born": "1912-08-10",
+  "died": "2001-08-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BC%D0%B0%D0%B4%D1%83%2C_%D0%96%D0%BE%D1%80%D0%B6%D0%B8",
+      "rev": 154234897
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jorge_Amado",
+      "rev": 1371894503
+    },
+    {
+      "id": "ptwiki",
+      "url": "https://pt.wikipedia.org/wiki/Jorge_Amado",
+      "rev": 73210310
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-bahia",
+      "title": "Какао и море: детство в Баие",
+      "from": 1912,
+      "to": 1930
+    },
+    {
+      "key": "rio-and-party",
+      "title": "Право, партия, костры из книг",
+      "from": 1931,
+      "to": 1940
+    },
+    {
+      "key": "exile-and-congress",
+      "title": "Изгнание, Зелия, Конгресс",
+      "from": 1941,
+      "to": 1947
+    },
+    {
+      "key": "europe-years",
+      "title": "Париж, Прага, Москва",
+      "from": 1948,
+      "to": 1955
+    },
+    {
+      "key": "gabriela-years",
+      "title": "Габриэла и слава",
+      "from": 1956,
+      "to": 1990
+    },
+    {
+      "key": "last-decade",
+      "title": "Последние годы",
+      "from": 1991,
+      "to": 2001
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1912",
+      "date": {
+        "from": "1912-08-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье плантатора какао",
+      "long": "Родился в семье полковника Жуана Амаду, выходца из Сержипи, приехавшего в Баию выращивать какао; место рождения у биографов спорно.",
+      "place": {
+        "label": "Итабуна"
+      },
+      "chapter": "childhood-bahia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Жоржи Амаду, сын Жуана Амаду ди Фария и Эулалии Леал, родился 10 августа 1912 года"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Организатор «Академии бунтарей»",
+      "long": "Стал одним из организаторов литературного объединения «Академия бунтарей», издававшего журналы Meridiano и Momento.",
+      "place": {
+        "label": "Салвадор"
+      },
+      "works": [
+        {
+          "ref": "country-of-carnival",
+          "note": "первый роман создавался под влиянием этого объединения (по словам Амаду)"
+        }
+      ],
+      "chapter": "childhood-bahia",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году стал одним из организаторов литературного объединения писателей и поэтов штата Баия «Академия бунтарей»"
+      }
+    },
+    {
+      "key": "other-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Вступление в компартию Бразилии",
+      "long": "Вступил в Бразильскую коммунистическую партию, с которой был связан до 1956 года.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1932 году стал членом Бразильской коммунистической партии."
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "to": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая известность",
+      "long": "После романов о плантациях и бедноте Салвадора Амаду стал известным писателем.",
+      "works": [
+        {
+          "ref": "cacau"
+        },
+        {
+          "ref": "suor"
+        }
+      ],
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С выходом в свет романов «Какао» (1933) и «Пот» (1934) писатель обрёл известность."
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Матилдой Гарсиа Розой",
+      "long": "Первый брак с Матилдой Гарсиа Розой продлился 11 лет.",
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В декабре 1933 года Жоржи Амаду женился на Матилде Гарсиа Розе"
+      }
+    },
+    {
+      "key": "child-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Лилы",
+      "long": "В браке с Матилдой родилась дочь Эулалия Далила (Лила).",
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "У них родилась дочь Лила (1935—1949)."
+      }
+    },
+    {
+      "key": "education-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание юридического факультета",
+      "long": "Окончил юридический факультет университета Рио-де-Жанейро, но по специальности не работал, избрав литературу.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1935 году Амаду окончил юридический факультет университета, но никогда не работал по этой специальности"
+      }
+    },
+    {
+      "key": "relocation-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Освобождение и переезд в Сан-Паулу",
+      "long": "После освобождения переехал в Сан-Паулу, затем вернулся в Рио.",
+      "place": {
+        "label": "Сан-Паулу"
+      },
+      "chapter": "rio-and-party",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После освобождения в 1938 году переехал жить в Сан-Паулу"
+      }
+    },
+    {
+      "key": "persecution-1941",
+      "date": {
+        "from": "1941",
+        "to": "1942",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Изгнание в Уругвай и Аргентину",
+      "long": "Как коммунист был вынужден уехать в Уругвай, затем в Аргентину; по возвращении в Баию снова был выслан.",
+      "chapter": "exile-and-congress",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "вынужден был отправиться в изгнание сначала в Уругвай, а затем в Аргентину, где пробыл с 1941 по 1942 год"
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945-01",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Встреча с Зелией Гаттаи",
+      "long": "Встреча с Зелией Гаттаи, ставшей спутницей на всю жизнь; брак оформлен только в 1978 году.",
+      "chapter": "exile-and-congress",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1945 года на Первом конгрессе бразильских писателей Жоржи Амаду встретился с Зелией Гаттаи"
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945-12",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание депутатом Национального конгресса",
+      "long": "Избран депутатом от компартии; внёс закон о свободе вероисповедания.",
+      "place": {
+        "label": "Сан-Паулу"
+      },
+      "chapter": "exile-and-congress",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После легализации компартии в декабре 1945 года писателя избрали её депутатом от Сан-Паулу в Национальный конгресс"
+      }
+    },
+    {
+      "key": "child-1947",
+      "date": {
+        "from": "1947-11-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Жуана Жоржи",
+      "long": "Родился сын Жуан Жоржи, первый ребёнок от Зелии Гаттаи.",
+      "place": {
+        "label": "Рио-де-Жанейро"
+      },
+      "chapter": "exile-and-congress",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "João Jorge (nascido em 25 de novembro de 1947)"
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь во Франции, дружба с Пикассо и Сартром",
+      "long": "Жил во Франции, где подружился с Пикассо и Сартром.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948—1950 годах жил во Франции, где познакомился и подружился с Пикассо и Сартром"
+      }
+    },
+    {
+      "key": "persecution-1948",
+      "date": {
+        "from": "1948-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Лишение депутатского мандата",
+      "long": "После исключения компартии из избирательного списка лишён депутатского мандата и уехал в изгнание в Париж.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1948 года после исключения коммунистической партии из избирательного списка Жоржи Амаду был лишён депутатского мандата и отправился в изгнание в Париж."
+      }
+    },
+    {
+      "key": "loss-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Лилы",
+      "long": "Умерла дочь Лила от первого брака, ей было 14 лет.",
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "У них родилась дочь Лила (1935—1949)."
+      }
+    },
+    {
+      "key": "relocation-1951",
+      "date": {
+        "from": "1951",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Праге и поездки в СССР",
+      "long": "Жил в Праге, путешествовал по Восточной Европе и неоднократно бывал в СССР.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем в Праге (1951—1952)"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Международная Сталинская премия мира",
+      "long": "Получил Международную Сталинскую премию «За укрепление мира между народами».",
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Международная Сталинская премия «За укрепление мира между народами» (1951)"
+      }
+    },
+    {
+      "key": "child-1951",
+      "date": {
+        "from": "1951-08-19",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Паломы",
+      "long": "В Праге родилась дочь Палома, позже помогавшая отцу готовить тексты.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ptwiki",
+        "quote": "Paloma Jorge (nascida em 19 de agosto de 1951)"
+      }
+    },
+    {
+      "key": "relocation-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Бразилию",
+      "long": "Вернулся в Бразилию и всерьёз занялся литературой.",
+      "chapter": "europe-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1952 году вернулся на родину и стал активно заниматься литературным творчеством."
+      }
+    },
+    {
+      "key": "other-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Выход из компартии",
+      "long": "Вышел из компартии; по португальской статье — после разоблачений Хрущёвым Сталина на XX съезде КПСС.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956 году Амаду покинул ряды компартии Бразилии."
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961-04-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Бразильскую академию литературы",
+      "long": "Избран в Бразильскую академию литературы.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 6 April 1961, he was elected to the Brazilian Academy of Letters."
+      }
+    },
+    {
+      "key": "persecution-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Снятие с чёрного списка во Франции",
+      "long": "Снят с чёрного списка французского правительства после вмешательства министра культуры Андре Мальро.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was finally removed from the French Government blacklist in 1965 following the intervention of the then Minister of Culture, André Malraux."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от выдвижения на Нобелевскую премию",
+      "long": "Отказался от выдвижения на Нобелевскую премию.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1967 году писатель отказался от выдвижения своей кандидатуры на соискание Нобелевской премии."
+      }
+    },
+    {
+      "key": "love-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Официальный брак с Зелией Гаттаи",
+      "long": "Брак с Зелией Гаттаи официально оформлен через три десятилетия совместной жизни.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Брак был официально оформлен только в 1978 году, когда у четы уже появились внуки."
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Полгода в году в Париже",
+      "long": "Супруги стали проводить по полгода в Париже.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1983 года Жоржи и Зелия проводили по полгода в Париже"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён французским орденом Почётного легиона.",
+      "chapter": "gabriela-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Орден Почётного легиона (1984)"
+      }
+    },
+    {
+      "key": "creation-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Заказ книги к 500-летию открытия Америки",
+      "long": "Итальянская компания предложила написать произведение к 500-летию открытия Америки.",
+      "works": [
+        {
+          "ref": "descoberta-da-america",
+          "note": "роман возник по предложению итальянской компании"
+        }
+      ],
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 году итальянская компания предложила Амаду написать произведение к 500-летию открытия Америки, в результате чего возник роман"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Камоэнса",
+      "long": "Получил премию Камоэнса, высшую награду литературы на португальском языке.",
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Камоэнса (1994)"
+      }
+    },
+    {
+      "key": "death-2001",
+      "date": {
+        "from": "2001-08-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Салвадоре",
+      "long": "Умер в Салвадоре за четыре дня до 89-летия; прах развеян у мангового дерева возле дома в Риу-Вермелью.",
+      "place": {
+        "label": "Салвадор"
+      },
+      "chapter": "last-decade",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Жоржи Амаду скончался 6 августа 2001 года в Салвадоре от сердечного приступа"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "country-of-carnival",
+      "title": "Страна карнавала",
+      "written": {
+        "from": 1930,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "cacau",
+      "title": "Какао",
+      "written": {
+        "from": 1933,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "suor",
+      "title": "Пот",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "jubiaba",
+      "title": "Жубиаба",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "mar-morto",
+      "title": "Мёртвое море",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "captains-of-sand",
+      "title": "Капитаны песка",
+      "qid": "Q154766",
+      "written": {
+        "from": 1936,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "cavaleiro-da-esperanca",
+      "title": "Рыцарь надежды",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "terras-do-sem-fim",
+      "title": "Бескрайние земли",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "seara-vermelha",
+      "title": "Красные всходы",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "subterraneos-da-liberdade",
+      "title": "Подполье свободы",
+      "written": {
+        "from": 1952,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "gabriela-cravo-e-canela",
+      "title": "Габриэла, гвоздика и корица",
+      "qid": "Q140050",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "quincas-berro-dagua",
+      "title": "Необычайная кончина Кинкаса Сгинь Вода",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "pastores-da-noite",
+      "title": "Пастыри ночи",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "dona-flor",
+      "title": "Дона Флор и два её мужа",
+      "qid": "Q139879",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "tenda-dos-milagres",
+      "title": "Лавка чудес",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "tereza-batista",
+      "title": "Тереза Батиста, уставшая воевать",
+      "qid": "Q154767",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "tieta-do-agreste",
+      "title": "Тиета из Агресте",
+      "qid": "Q154763",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "cabotagem",
+      "title": "Каботажное плаванье",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "descoberta-da-america",
+      "title": "Открытие Америки турками",
+      "written": {
+        "from": 1992,
+        "to": 1994
+      }
+    }
+  ]
+}

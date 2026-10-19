@@ -1,0 +1,426 @@
+{
+  "qid": "Q232260",
+  "name": "Рут Ренделл",
+  "born": "1930-02-17",
+  "died": "2015-05-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D0%BD%D0%B4%D0%B5%D0%BB%D0%BB%2C_%D0%A0%D1%83%D1%82",
+      "rev": 147577783
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ruth_Rendell",
+      "rev": 1380155565
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-london",
+      "title": "Детство между Англией и Скандинавией",
+      "from": 1930,
+      "to": 1947
+    },
+    {
+      "key": "gazeta-i-brak",
+      "title": "Газета, замужество, сын",
+      "from": 1948,
+      "to": 1962
+    },
+    {
+      "key": "inspektor-veksford",
+      "title": "Инспектор Вексфорд",
+      "from": 1963,
+      "to": 1985
+    },
+    {
+      "key": "barbara-vain",
+      "title": "Барбара Вайн и титулы",
+      "from": 1986,
+      "to": 1999
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Последние годы",
+      "from": 2000,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1930",
+      "date": {
+        "from": "1930-02-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье учителей в Саут-Вудфорде",
+      "long": "Рут Грейзманн родилась в Саут-Вудфорде (Лондон) в семье учителей. Мать родилась в Швеции и выросла в Дании, отец был англичанином.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "detstvo-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "родилась 17 февраля 1930 года в Саут-Вудфорде (Лондон) в семье учителей"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "to": "1952",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа репортёром и младшим редактором в газете",
+      "long": "С 1948 по 1952 год работала газетным репортёром и младшим редактором в газете Восточного Эссекса.",
+      "chapter": "gazeta-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с 1948 года по 1952 год работала газетным репортёром и младшим редактором в газете Восточном Эссексе"
+      }
+    },
+    {
+      "key": "love-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с журналистом Дональдом Ренделлом",
+      "long": "В 1950 году Рут вышла замуж за журналиста Дональда Ренделла. Молодые супруги жили в маленьком съёмном коттедже без ванной.",
+      "chapter": "gazeta-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году Рут вышла замуж за журналиста Дональда Ренделла."
+      }
+    },
+    {
+      "key": "child-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение единственного сына Саймона",
+      "long": "В 1953 году у Рут и Дональда Ренделл родился сын Саймон, их единственный ребёнок.",
+      "chapter": "gazeta-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1953 году родился их единственный сын Саймон."
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Развод с Дональдом Ренделлом",
+      "long": "В 1975 году супруги развелись.",
+      "chapter": "inspektor-veksford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году пара развелась, но Рут снова вышла за Дональда замуж в 1977 году."
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый «Золотой кинжал»",
+      "long": "В 1976 году получила премию «Золотой кинжал» Ассоциации писателей-криминалистов Великобритании.",
+      "chapter": "inspektor-veksford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1976 — Премия «Золотой кинжал» Ассоциации писателей-криминалистов Великобритании"
+      }
+    },
+    {
+      "key": "love-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Повторный брак с Дональдом Ренделлом",
+      "long": "В 1977 году Рут снова вышла замуж за Дональда Ренделла.",
+      "chapter": "inspektor-veksford",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году пара развелась, но Рут снова вышла за Дональда замуж в 1977 году."
+      }
+    },
+    {
+      "key": "creation-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Третья линия творчества под именем Барбары Вайн",
+      "long": "В 1986 году вышел роман под псевдонимом Барбара Вайн, составленным из второго имени писательницы и фамилии прабабушки.",
+      "works": [
+        {
+          "ref": "a-dark-adapted-eye",
+          "note": "первый роман под псевдонимом Барбара Вайн"
+        }
+      ],
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rendell created a third strand of writing with the publication in 1986 of A Dark-Adapted Eye under her pseudonym Barbara Vine"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Эдгара По за лучший роман",
+      "long": "В 1987 году получила премию Эдгара По за лучший роман.",
+      "works": [
+        {
+          "ref": "a-dark-adapted-eye",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1987 — Премия Эдгара По за лучший роман («Пятьдесят оттенков темноты» / A Dark Adapted Eye)"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Бриллиантовый кинжал Картье» за достижения",
+      "long": "В 1991 году получила премию «Бриллиантовый кинжал Картье» за достижения всей жизни.",
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1991 — Премия «Бриллиантовый Кинжал Картье» за достижения всей жизни"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Британской империи",
+      "long": "В 1996 году получила титул командора ордена Британской империи.",
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году за весомый вклад в искусство Рут Ренделл получила титул Командора Ордена Британской империи"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Титул баронессы и место в Палате лордов",
+      "long": "В 1997 году получила пожизненный титул баронессы и стала членом Палаты лордов от лейбористов.",
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1997 году получила титул баронессы и являлась членом палаты лордов от лейбористов"
+      }
+    },
+    {
+      "key": "loss-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Дональда Ренделла от рака",
+      "long": "В 1999 году Дональд Ренделл умер от рака.",
+      "chapter": "barbara-vain",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году Дональд Ренделл умер от рака."
+      }
+    },
+    {
+      "key": "illness-2015",
+      "date": {
+        "from": "2015-01-07",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт",
+      "long": "7 января 2015 года перенесла инсульт.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "7 января 2015 года Рут Ренделл перенесла инсульт."
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-05-02",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Скончалась 2 мая 2015 года в Лондоне.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончалась 2 мая 2015 года в Лондоне."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "from-doon-with-death",
+      "title": "С любовью насмерть, Дун",
+      "qid": "Q5505397",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "a-sleeping-life",
+      "title": "Дремлющая жизнь",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "a-judgement-in-stone",
+      "title": "Каменное наказание",
+      "written": {
+        "from": 1977,
+        "to": 1977
+      }
+    },
+    {
+      "ref": "live-flesh",
+      "title": "Живая плоть",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "a-dark-adapted-eye",
+      "title": "Пятьдесят оттенков темноты",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "a-fatal-inversion",
+      "title": "Роковая инверсия",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "going-wrong",
+      "title": "Всё идёт не так",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "king-solomons-carpet",
+      "title": "Ковёр царя Соломона",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "astas-book",
+      "title": "Книга Асты",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "the-crocodile-bird",
+      "title": "Птичка Тари",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "the-chimney-sweepers-boy",
+      "title": "Чёрный мотылёк",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "a-sight-for-sore-eyes",
+      "title": "Солнце для мёртвых глаз",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "the-vault",
+      "title": "The Vault",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "the-girl-next-door",
+      "title": "The Girl Next Door",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

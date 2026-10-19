@@ -1,0 +1,299 @@
+{
+  "qid": "Q3699923",
+  "name": "Сирил Хэйр",
+  "born": "1900-09-04",
+  "died": "1958-08-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D1%80%D0%B8%D0%BB_%D0%A5%D0%B5%D0%B9%D1%80",
+      "rev": 149873451
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Cyril_Hare",
+      "rev": 1371377582
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-oksford",
+      "title": "Детство и Оксфорд",
+      "from": 1900,
+      "to": 1923
+    },
+    {
+      "key": "advokat-i-brak",
+      "title": "Адвокатура и женитьба",
+      "from": 1924,
+      "to": 1935
+    },
+    {
+      "key": "semya-i-voyna",
+      "title": "Семья, псевдоним и война",
+      "from": 1936,
+      "to": 1945
+    },
+    {
+      "key": "sudya-i-bolezn",
+      "title": "Судья и болезнь",
+      "from": 1946,
+      "to": 1958
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1900",
+      "date": {
+        "from": "1900-09-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Миклхеме",
+      "long": "Альфред Александр Гордон Кларк родился в Миклхеме, графство Суррей, третьим из пятерых детей в семье.",
+      "place": {
+        "label": "Миклхем, Суррей"
+      },
+      "chapter": "detstvo-oksford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Суррей 1900-09-04"
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало адвокатской практики",
+      "long": "После учёбы в Оксфорде изучал юриспруденцию и в 1924 году стал барристером в Миддл Темпл.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "advokat-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1924 году стал барристером в ассоциации адвокатов Миддл Темпл"
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Мэри Барбаре Лоуренс",
+      "long": "Разорвав помолвку со шведской оперной певицей, женился на Мэри Барбаре Лоуренс; поселились в Баттерси. Бывшей невесте он выплатил 750 фунтов.",
+      "place": {
+        "label": "Баттерси, Лондон"
+      },
+      "chapter": "advokat-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "женился на Мэри Барбаре Лоуренс (дочь сэра Уильяма Лоуренса, 3-го баронета; 26.2.1909 — 17.9.1975) в 1933 году"
+      }
+    },
+    {
+      "key": "child-1936",
+      "date": {
+        "from": "1936-05-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Чарльза",
+      "long": "Родился сын Чарльз Филип, впоследствии священник.",
+      "chapter": "semya-i-voyna",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Charles Philip Gordon Clark 1936-05-25"
+      }
+    },
+    {
+      "key": "relocation-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд на Альберт-Бридж-Роуд",
+      "long": "Семья переехала в дом на Альберт-Бридж-Роуд в Лондоне, по свидетельству сына писателя.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "semya-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1938 году семья переехала в дом на Альберт-Бридж-Роуд"
+      }
+    },
+    {
+      "key": "child-1938",
+      "date": {
+        "from": "1938-07-30",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Александры",
+      "long": "Родилась дочь Александра Мэри.",
+      "chapter": "semya-i-voyna",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Alexandra Wedgwood 1938-07-30"
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в канцелярии генерального прокурора",
+      "long": "Работал в канцелярии генерального прокурора; в начале войны некоторое время служил в Министерстве экономической войны.",
+      "chapter": "semya-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период с 1942 по 1945 год работал в канцелярии генерального прокурора"
+      }
+    },
+    {
+      "key": "child-1944",
+      "date": {
+        "from": "1944-03-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сесилии",
+      "long": "Родилась дочь Сесилия Мэри, впоследствии музыкант.",
+      "chapter": "semya-i-voyna",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Cecilia Mary Gordon Clark 1944-03-26"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Детективный клуб",
+      "long": "Принят в Детективный клуб.",
+      "chapter": "sudya-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Стал членом Детективного клуба в 1946 году."
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Назначение окружным судьёй",
+      "long": "Назначен окружным судьёй в графстве Суррей.",
+      "place": {
+        "label": "Суррей"
+      },
+      "chapter": "sudya-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году был назначен окружным судьёй в Суррее."
+      }
+    },
+    {
+      "key": "loss-1951",
+      "date": {
+        "from": "1951-07-09",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Генри Герберт Гордон Кларк.",
+      "chapter": "sudya-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Генри Герберт Гордон Кларк (англ. Henry Herbert Gordon Clark; 24.3.1861 — 9.7.1951)"
+      }
+    },
+    {
+      "key": "loss-1952",
+      "date": {
+        "from": "1952-04-30",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Хелен Джоанна Лоуренс.",
+      "chapter": "sudya-i-bolezn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хелен Джоанна Лоуренс (англ. Helen Johanna Lawrence; 11.3.1865 — 30.4.1952)"
+      }
+    },
+    {
+      "key": "death-1958",
+      "date": {
+        "from": "1958-08-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть близ Бокс Хилла",
+      "long": "Умер в своём доме около Бокс Хилла в Суррее в возрасте 57 лет; после войны страдал туберкулёзом и не восстановил здоровье.",
+      "place": {
+        "label": "Бокс Хилл, Суррей"
+      },
+      "chapter": "sudya-i-bolezn",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Box Hill 1958-08-25"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "suicide-excepted",
+      "title": "Самоубийство исключается",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "tragedy-at-law",
+      "title": "Трагедия закона",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "with-a-bare-bodkin",
+      "title": "С голым кинжалом",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    }
+  ]
+}

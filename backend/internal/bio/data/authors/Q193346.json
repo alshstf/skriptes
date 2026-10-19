@@ -1,0 +1,517 @@
+{
+  "qid": "Q193346",
+  "name": "Хеннинг Манкель",
+  "born": "1948-02-03",
+  "died": "2015-10-05",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BD%D0%BA%D0%B5%D0%BB%D1%8C%2C_%D0%A5%D0%B5%D0%BD%D0%BD%D0%B8%D0%BD%D0%B3",
+      "rev": 154521348
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Henning_Mankell",
+      "rev": 1373593711
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/Henning_Mankell",
+      "rev": 59759639
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Свег, Бурос, Париж",
+      "from": 1948,
+      "to": 1965
+    },
+    {
+      "key": "paris-theatre",
+      "title": "Париж, море и театр",
+      "from": 1966,
+      "to": 1969
+    },
+    {
+      "key": "norway-africa",
+      "title": "Норвегия и первая Африка",
+      "from": 1970,
+      "to": 1983
+    },
+    {
+      "key": "theatres",
+      "title": "Театры в Векшё и Мапуто",
+      "from": 1984,
+      "to": 1990
+    },
+    {
+      "key": "wallander",
+      "title": "Валландер и мировая слава",
+      "from": 1991,
+      "to": 2009
+    },
+    {
+      "key": "last-years",
+      "title": "Флотилия и болезнь",
+      "from": 2010,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1948",
+      "date": {
+        "from": "1948-02-03",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Стокгольме",
+      "long": "Родился в Стокгольме. Дед по отцу — композитор Хеннинг Манкель, в его честь назван внук.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1948 году в Стокгольме."
+      }
+    },
+    {
+      "key": "family-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод родителей, детство с отцом в Свеге",
+      "long": "Родители развелись, когда ему был год; он с сестрой вырос с отцом-судьёй — сначала в Свеге на севере Швеции, затем в Бурусе.",
+      "place": {
+        "label": "Свег"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился в 1948 году в Стокгольме… Через год после его рождения родители развелись, и Хеннинг переехал вместе с отцом, работавшим судьёй, и старшей сестрой в Свег на север Швеции"
+      }
+    },
+    {
+      "key": "relocation-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Париж ради писательства",
+      "long": "Бросив школу, он ещё подростком уезжал в Париж и служил в торговом флоте; в 1966 году вернулся в Париж, чтобы стать писателем.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-theatre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966, he returned to Paris to become a writer."
+      }
+    },
+    {
+      "key": "other-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Участие в студенческих протестах",
+      "long": "Участвовал в студенческих выступлениях 1968 года; позднее в Швеции протестовал против войны во Вьетнаме, колониальной войны Португалии в Африке и апартеида.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-theatre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He took part in the student uprising of 1968."
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая профессиональная постановка",
+      "long": "Осуществил первую профессиональную театральную постановку.",
+      "chapter": "paris-theatre",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Han gjorde sin första professionella teateruppsättning 1969"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1979",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в Норвегии",
+      "long": "После знакомства с норвежкой переехал в Норвегию и прожил там большую часть 1970-х; участвовал в деятельности маоистской партии, не вступая в неё.",
+      "place": {
+        "label": "Норвегия"
+      },
+      "chapter": "norway-africa",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "flyttade han till Norge, där han bodde under större delen av 1970-talet"
+      }
+    },
+    {
+      "key": "relocation-1972",
+      "date": {
+        "from": "1972",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Два года в Замбии",
+      "long": "Давно мечтавший об Африке, он поехал в Замбию и провёл там два года; Африка стала его второй родиной.",
+      "place": {
+        "label": "Замбия"
+      },
+      "chapter": "norway-africa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1972 году он совершил определившее всю его дальнейшую жизнь путешествие в Замбию, где провёл два года"
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак",
+      "long": "Первый брак с Уллой Блом Иварссон, продлился до 1981 года.",
+      "chapter": "norway-africa",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Henning Mankell var gift första gången 1980–1981 med Ulla Blom Ivarsson"
+      }
+    },
+    {
+      "key": "child-1980",
+      "date": {
+        "from": "1980-09-28",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Йона",
+      "long": "Родился сын Йон, будущий кинопродюсер.",
+      "chapter": "norway-africa",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Jon Mankell 1980-09-28"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Руководство театром в Векшё, перерыв в прозе",
+      "long": "Возглавил театр Кронуберг в Векшё; из-за работы в театре с 1984 по 1990 год не публиковал романов.",
+      "place": {
+        "label": "Векшё"
+      },
+      "chapter": "theatres",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а с 1984 года — театра Kronoborg в городе Векшё. Из-за работы в театре в период с 1984 по 1990 он ничего не публиковал."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Театр «Авенида» в Мапуто",
+      "long": "Возглавил театр «Авенида» в Мапуто; с тех пор проводил по полгода в Швеции и в Африке.",
+      "place": {
+        "label": "Мапуто"
+      },
+      "chapter": "theatres",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1986 году он возглавил театр Avenida, единственный профессиональный театр Мозамбика."
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак",
+      "long": "Второй брак с норвежской акушеркой Кари Эйдсвольд-Манкель, продлился до 1997 года.",
+      "chapter": "theatres",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Andra gången var han gift 1987–1997 med norska barnmorskan Kari Eidsvold-Mankell"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех первого романа о Валландере",
+      "long": "Первый роман о комиссаре Валландере имел большой успех в Швеции и получил несколько наград; начался цикл, принёсший автору известность.",
+      "works": [
+        {
+          "ref": "faceless-killers"
+        }
+      ],
+      "chapter": "wallander",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Безликие убийцы» — первый роман из серии о детективе Курте Валландере — вышел в свет в 1991 году. Книга имела большой успех в Швеции и получила несколько наград."
+      }
+    },
+    {
+      "key": "love-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Евой Бергман",
+      "long": "Женился на режиссёре Еве Бергман, дочери Ингмара Бергмана; брак длился до его смерти.",
+      "chapter": "wallander",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "och tredje gången 1998 till sin död med regissören Eva Bergman"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание издательства Leopard Förlag",
+      "long": "Основал издательство Leopard Förlag для поддержки молодых авторов из Африки и Швеции.",
+      "chapter": "wallander",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2001 году он создал свой собственный издательский дом Leopard Förlag с целью поддержки молодых талантов из Африки и Швеции."
+      }
+    },
+    {
+      "key": "career-2001-2",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Gold Dagger",
+      "long": "Британская премия Gold Dagger за детектив о Валландере.",
+      "chapter": "wallander",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2001 – Gold Dagger (Crime Writers' Association) för Sidetracked (Villospår)"
+      }
+    },
+    {
+      "key": "other-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Пожертвование на детскую деревню в Мозамбике",
+      "long": "Пожертвовал 15 миллионов крон на детскую деревню SOS в Шимойо в Мозамбике.",
+      "chapter": "wallander",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2007, Henning Mankell donated 15 million Swedish crowns (about 1.5 million euros) to SOS Children's Villages"
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008-06",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётный доктор Сент-Эндрюса",
+      "long": "Получил почётную степень доктора Университета Сент-Эндрюса.",
+      "place": {
+        "label": "Сент-Эндрюс"
+      },
+      "chapter": "wallander",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июне 2008 года Манкель получил почётную степень доктора Университета Сент-Эндрюса в Шотландии."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия мира имени Ремарка",
+      "long": "Получил премию мира имени Ремарка; часть суммы передал на проект Кристофа Шлингензифа в Буркина-Фасо.",
+      "place": {
+        "label": "Оснабрюк"
+      },
+      "chapter": "wallander",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Манкель получил Премию мира имени Э. М. Ремарка города Оснабрюк за свою работу в Африке."
+      }
+    },
+    {
+      "key": "other-2010",
+      "date": {
+        "from": "2010-05-31",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Задержание на флотилии к Газе",
+      "long": "Находился на борту судна флотилии, шедшей к Газе; после захвата флотилии израильскими военными был депортирован в Швецию.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following the Israel Defense Forces' boarding of the flotilla on the morning of 31 May 2010, Mankell was deported to Sweden."
+      }
+    },
+    {
+      "key": "illness-2014",
+      "date": {
+        "from": "2014-01",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: рак лёгкого и горла",
+      "long": "Сообщил о диагнозе — рак лёгкого и горла; в мае сообщал, что лечение идёт успешно.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In January 2014, Mankell announced that he had been diagnosed with lung cancer and throat cancer."
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-10-05",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Умер в возрасте 67 лет, спустя почти два года после постановки диагноза.",
+      "place": {
+        "label": "Гётеборг"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 5 October 2015, Mankell died at the age of 67, almost two years after having been diagnosed."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "stone-blaster",
+      "title": "Взрыватель гор",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "faceless-killers",
+      "title": "Безликие убийцы",
+      "qid": "Q1958087",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "chronicler-of-the-winds",
+      "title": "Хроникёр ветров",
+      "qid": "Q182739",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "riddle-of-fire",
+      "title": "Загадка огня",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "boy-who-slept-on-snow",
+      "title": "Мальчик, спящий на заснеженной кровати",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "red-antelope",
+      "title": "Красная антилопа",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "man-from-beijing",
+      "title": "Китаец",
+      "qid": "Q2005927",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    }
+  ]
+}

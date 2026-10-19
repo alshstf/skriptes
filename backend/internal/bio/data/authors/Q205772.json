@@ -1,0 +1,359 @@
+{
+  "qid": "Q205772",
+  "name": "Джаред Даймонд",
+  "born": "1937-09-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B0%D0%B9%D0%BC%D0%BE%D0%BD%D0%B4%2C_%D0%94%D0%B6%D0%B0%D1%80%D0%B5%D0%B4",
+      "rev": 155034077
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jared_Diamond",
+      "rev": 1380695735
+    }
+  ],
+  "chapters": [
+    {
+      "key": "formation",
+      "title": "Бостон, Гарвард, Кембридж",
+      "from": 1937,
+      "to": 1961
+    },
+    {
+      "key": "physiology-guinea",
+      "title": "Физиология и Новая Гвинея",
+      "from": 1962,
+      "to": 1984
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и семья",
+      "from": 1985,
+      "to": 1996
+    },
+    {
+      "key": "bestsellers",
+      "title": "Книги о судьбах обществ",
+      "from": 1997,
+      "to": 2025
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1937",
+      "date": {
+        "from": "1937-09-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бостоне",
+      "long": "Родился в Бостоне в семье еврейских иммигрантов из Восточной Европы: отец — врач Луис Даймонд, мать — Флора Каплан.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Jared Diamond was born on September 10, 1937 in Boston, Massachusetts"
+      }
+    },
+    {
+      "key": "education-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Гарвард-колледжа",
+      "long": "Окончил Гарвард-колледж со степенью бакалавра; с детства увлекался наблюдением за птицами.",
+      "place": {
+        "label": "Кембридж (Массачусетс)"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "studied biochemical sciences at Harvard College, graduating in 1958"
+      }
+    },
+    {
+      "key": "education-1958-2",
+      "date": {
+        "from": "1958",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в Кембридже, докторская степень",
+      "long": "Учился в Тринити-колледже Кембриджского университета; в 1961 году защитил докторскую диссертацию по физиологии и биофизике мембран жёлчного пузыря.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He later studied at Trinity College, Cambridge, and graduated from Cambridge with a Ph.D. in 1961"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "to": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Младший научный сотрудник Гарварда",
+      "long": "После Кембриджа вернулся в Гарвард младшим научным сотрудником.",
+      "place": {
+        "label": "Кембридж (Массачусетс)"
+      },
+      "chapter": "physiology-guinea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After graduation from Cambridge, Diamond returned to Harvard as a Junior Fellow until 1965"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первые экспедиции на Новую Гвинею",
+      "long": "Начал посещать Новую Гвинею и соседние острова; вторая карьера — в орнитологии и экологии.",
+      "place": {
+        "label": "Новая Гвинея"
+      },
+      "chapter": "physiology-guinea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "specialising in New Guinea and nearby islands, which he began visiting from 1964"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессор физиологии в Лос-Анджелесе",
+      "long": "Стал профессором физиологии Медицинской школы Калифорнийского университета в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "physiology-guinea",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1968, became a professor of physiology at UCLA Medical School"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Национальную академию наук",
+      "long": "Избран членом Национальной академии наук США.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член Национальной АН США (1979)"
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Макартура",
+      "long": "Получил стипендию Макартура.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1985, he received a MacArthur Genius Grant"
+      }
+    },
+    {
+      "key": "child-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сыновей-близнецов",
+      "long": "У Даймонда и его жены Мари Коэн родились сыновья-близнецы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They have twin sons, born in 1987."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Пулитцеровская премия",
+      "long": "Получил Пулитцеровскую премию за нехудожественную книгу; она стала международным бестселлером.",
+      "works": [
+        {
+          "ref": "guns-germs-steel"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1998 году получил Пулитцеровскую премию за книгу «Ружья, микробы и сталь»"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Национальная научная медаль США",
+      "long": "Награждён Национальной научной медалью США.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the National Medal of Science in 1999."
+      }
+    },
+    {
+      "key": "other-2003",
+      "date": {
+        "from": "2003-11",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Критика книги в журнале Antipode",
+      "long": "Журнал Antipode опубликовал критические рецензии географов на его книгу; Даймонд ответил, что качество критики его разочаровало.",
+      "works": [
+        {
+          "ref": "guns-germs-steel"
+        }
+      ],
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 2003, the human geography journal Antipode published a review symposium on Guns, Germs, and Steel"
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Судебный иск за статью в The New Yorker",
+      "long": "Двое упомянутых в статье о мести в Папуа — Новой Гвинее подали иск о клевете против Даймонда и The New Yorker; в 2013 году иск был отозван.",
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2008, Diamond published an article in The New Yorker entitled \"Vengeance Is Ours\"… A year later, two indigenous people mentioned in the article filed a lawsuit against Diamond"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Выход на пенсию из UCLA",
+      "long": "Ушёл в отставку с должности профессора географии Калифорнийского университета в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "bestsellers",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was a professor of geography at UCLA until his retirement in 2024."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "third-chimpanzee",
+      "title": "Третий шимпанзе",
+      "qid": "Q440914",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "guns-germs-steel",
+      "title": "Ружья, микробы и сталь",
+      "qid": "Q279022",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "why-is-sex-fun",
+      "title": "Почему нам так нравится секс",
+      "qid": "Q853906",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "collapse",
+      "title": "Коллапс",
+      "qid": "Q1069122",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "world-until-yesterday",
+      "title": "Мир позавчера",
+      "qid": "Q7776075",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "upheaval",
+      "title": "Кризис",
+      "qid": "Q65049328",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

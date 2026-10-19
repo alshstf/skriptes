@@ -1,0 +1,197 @@
+{
+  "qid": "Q1349245",
+  "name": "Джонатан Келлерман",
+  "born": "1949-08-09",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jonathan_Kellerman",
+      "rev": 1371894193
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-psihologiya",
+      "title": "Нью-Йорк, Лос-Анджелес, психология",
+      "from": 1949,
+      "to": 1974
+    },
+    {
+      "key": "praktika-i-debyut",
+      "title": "Клиника и первые романы",
+      "from": 1975,
+      "to": 1989
+    },
+    {
+      "key": "professionalnyy-pisatel",
+      "title": "Писатель на полной ставке",
+      "from": 1990,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1949",
+      "date": {
+        "from": "1949-08-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на Нижнем Ист-Сайде",
+      "long": "Родился на Нижнем Ист-Сайде Нью-Йорка. В девять лет семья переехала в Лос-Анджелес.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-i-psihologiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jonathan Seth Kellerman (born August 9, 1949)"
+      }
+    },
+    {
+      "key": "education-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень бакалавра по психологии в UCLA",
+      "long": "Получил степень бакалавра по психологии в Калифорнийском университете в Лос-Анджелесе; учился, подрабатывая карикатуристом, редактором и учителем игры на гитаре.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "detstvo-i-psihologiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He received a Bachelor of Arts in psychology at UCLA in 1971."
+      }
+    },
+    {
+      "key": "education-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень по клинической психологии",
+      "long": "Защитил докторскую диссертацию по клинической психологии в Университете Южной Калифорнии; исследование касалось приписывания вины за детскую психопатологию.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "detstvo-i-psihologiya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kellerman graduated from the University of Southern California (USC) with a PhD degree in clinical psychology in 1974."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премии Эдгара По и Энтони за дебютный роман",
+      "long": "Получил премию Эдгара Аллана По и премию Энтони за лучший дебютный роман.",
+      "chapter": "praktika-i-debyut",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Эдгара Аллана По 1986-01-01"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из частной практики ради писательства",
+      "long": "Оставил частную психологическую практику, которую вёл с начала 1980-х, и стал писать на постоянной основе.",
+      "chapter": "professionalnyy-pisatel",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1990, he quit his private practice to write full-time."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия АПА за вклад в психологию",
+      "long": "Награждён премией Американской психологической ассоциации за выдающийся пожизненный вклад в психологию.",
+      "chapter": "professionalnyy-pisatel",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: APA Award for Outstanding Lifetime Contributions to Psychology 2015-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "when-the-bough-breaks",
+      "title": "Когда ломается ветка",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "blood-test",
+      "title": "Анализ крови",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "over-the-edge",
+      "title": "Через край",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "private-eyes",
+      "title": "Частные сыщики",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "monster",
+      "title": "Монстр",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "billy-straight",
+      "title": "Билли Стрейт",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "the-murderers-daughter",
+      "title": "Дочь убийцы",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}

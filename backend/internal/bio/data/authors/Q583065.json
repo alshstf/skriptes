@@ -1,0 +1,206 @@
+{
+  "qid": "Q583065",
+  "name": "Лео Таксиль",
+  "born": "1854-03-21",
+  "died": "1907-03-31",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE_%D0%A2%D0%B0%D0%BA%D1%81%D0%B8%D0%BB%D1%8C",
+      "rev": 149819206
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/L%C3%A9o_Taxil",
+      "rev": 1371737263
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/L%C3%A9o_Taxil",
+      "rev": 237291136
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-bunt",
+      "title": "Иезуиты и бунт",
+      "from": 1854,
+      "to": 1874
+    },
+    {
+      "key": "antiklerikal",
+      "title": "Антиклерикальный публицист",
+      "from": 1875,
+      "to": 1884
+    },
+    {
+      "key": "obrashchenie",
+      "title": "Обращение и масонская мистификация",
+      "from": 1885,
+      "to": 1897
+    },
+    {
+      "key": "zabvenie",
+      "title": "Разоблачение и забвение",
+      "from": 1898,
+      "to": 1907
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1854",
+      "date": {
+        "from": "1854-03-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Марселе",
+      "long": "Родился в Марселе в семье торговца скобяными изделиями Шарля Жогана.",
+      "place": {
+        "label": "Марсель"
+      },
+      "chapter": "detstvo-i-bunt",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "21 марта 1854, Марсель"
+      }
+    },
+    {
+      "key": "career-1879",
+      "date": {
+        "from": "1879",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Суд присяжных за оскорбление религии",
+      "long": "В 1879 году предстал перед судом присяжных Сены за оскорбление религии и общественной морали, но был оправдан.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "skufya-i-skufeyniki"
+        }
+      ],
+      "chapter": "antiklerikal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1879 году предстал перед судом присяжных Сены за «оскорбление религии, признанной государством, и оскорбление общественной морали», но был оправдан."
+      }
+    },
+    {
+      "key": "faith-1885",
+      "date": {
+        "from": "1885",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Мнимое обращение в католицизм",
+      "long": "Заявил о переходе в католицизм, отрёкся от прежних работ; три месяца спустя исключён из Антиклерикального союза.",
+      "chapter": "obrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1885 году Лео Таксиль заявил о своём переходе в католицизм, был принят в лоно католической церкви и отрёкся от своих прежних работ"
+      }
+    },
+    {
+      "key": "career-1896",
+      "date": {
+        "from": "1896",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Антимасонский конгресс в Тренто",
+      "long": "Стал одним из организаторов антимасонского церковного конгресса в Тренто; часть делегатов усомнилась в существовании Дианы Воган.",
+      "place": {
+        "label": "Тренто"
+      },
+      "works": [
+        {
+          "ref": "dyavol-v-xix-veke"
+        }
+      ],
+      "chapter": "obrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1896 году он стал одним из организаторов антимасонского церковного конгресса в Тренто."
+      }
+    },
+    {
+      "key": "relocation-1899",
+      "date": {
+        "from": "1899",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в предместье Со",
+      "long": "Поселился около 1899 года в парижском предместье Со; позже работал корректором в типографии.",
+      "place": {
+        "label": "Со"
+      },
+      "chapter": "zabvenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он поселился около 1899 года в парижском предместье Со."
+      }
+    },
+    {
+      "key": "death-1907",
+      "date": {
+        "from": "1907-03-31",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Со практически забытым",
+      "long": "Умер 31 марта 1907 года в Со, практически забытым.",
+      "place": {
+        "label": "Со"
+      },
+      "chapter": "zabvenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он умер 31 марта 1907 года практически забытым."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "skufya-i-skufeyniki",
+      "title": "Скуфья и скуфейники",
+      "written": {
+        "from": 1879,
+        "to": 1879
+      }
+    },
+    {
+      "ref": "zabavnaya-bibliya",
+      "title": "Забавная Библия",
+      "written": {
+        "from": 1882,
+        "to": 1882
+      }
+    },
+    {
+      "ref": "zabavnoe-evangelie",
+      "title": "Забавное Евангелие",
+      "written": {
+        "from": 1884,
+        "to": 1884
+      }
+    },
+    {
+      "ref": "dyavol-v-xix-veke",
+      "title": "Дьявол в XIX веке",
+      "written": {
+        "from": 1892,
+        "to": 1895
+      }
+    }
+  ]
+}

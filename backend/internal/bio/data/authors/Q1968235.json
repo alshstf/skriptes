@@ -1,0 +1,515 @@
+{
+  "qid": "Q1968235",
+  "name": "Юрий Витальевич Мамлеев",
+  "born": "1931-12-11",
+  "died": "2015-10-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BC%D0%BB%D0%B5%D0%B5%D0%B2%2C_%D0%AE%D1%80%D0%B8%D0%B9_%D0%92%D0%B8%D1%82%D0%B0%D0%BB%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 154916643
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Yuri_Mamleev",
+      "rev": 1379988247
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-poteri",
+      "title": "Москва, отец и война",
+      "from": 1931,
+      "to": 1955
+    },
+    {
+      "key": "neofitsialnaya-moskva",
+      "title": "Школа, самиздат, Южинский кружок",
+      "from": 1956,
+      "to": 1973
+    },
+    {
+      "key": "emigratsiya",
+      "title": "Эмиграция: Америка и Париж",
+      "from": 1974,
+      "to": 1992
+    },
+    {
+      "key": "vozvrashchenie",
+      "title": "Возвращение в Россию",
+      "from": 1993,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-12-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье профессора психиатрии",
+      "long": "Родился в Москве в семье профессора психиатрии Виталия Ивановича Мамлеева.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-poteri",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "11 декабря 1931, Москва — 25 октября 2015, там же"
+      }
+    },
+    {
+      "key": "persecution-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Репрессия и гибель отца в лагерях",
+      "long": "Отец, профессор психиатрии Виталий Иванович Мамлеев, был репрессирован и погиб в лагерях.",
+      "chapter": "detstvo-poteri",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940 году тот был репрессирован и погиб в лагерях"
+      }
+    },
+    {
+      "key": "loss-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Известие о смерти отца",
+      "long": "Мать, Зинаида Петровна, получила сообщение о смерти мужа.",
+      "chapter": "detstvo-poteri",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сообщение о смерти мужа Зинаида Петровна Мамлеева (ум. в 1955) получила в 1943 году"
+      }
+    },
+    {
+      "key": "illness-1950",
+      "date": {
+        "from": "1950",
+        "to": "1959",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Хронический нефрит",
+      "long": "В 1950-х врачи установили у писателя хронический нефрит; позднее он сосредоточился на творчестве, сведя остальное к минимуму.",
+      "chapter": "detstvo-poteri",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Ещё в 1950-х врачи констатировали у писателя хронический нефрит — болезнь почек."
+      }
+    },
+    {
+      "key": "loss-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери Зинаиды Петровны",
+      "long": "Умерла мать писателя Зинаида Петровна Мамлеева.",
+      "chapter": "detstvo-poteri",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Зинаида Петровна Мамлеева (ум. в 1955)"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Лесотехнического института",
+      "long": "Окончил Московский лесотехнический институт и получил диплом инженера.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "neofitsialnaya-moskva",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1956 году окончил Московский лесотехнический институт, получил диплом инженера."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "to": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Учитель математики в вечерних школах",
+      "long": "Преподавал математику в вечерних школах; основной сферой деятельности оставалась литература, тексты ходили в самиздате.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "neofitsialnaya-moskva",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1957 по 1974 год преподавал математику в вечерних школах."
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "to": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Южинский кружок неофициальной культуры",
+      "long": "В квартире писателя в Южинском переулке собирались деятели неофициальной культуры: Евгений Головин, Леонид Губанов, Генрих Сапгир, позднее Венедикт Ерофеев, Гейдар Джемаль, Александр Дугин.",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "shatuny"
+        }
+      ],
+      "chapter": "neofitsialnaya-moskva",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На его квартире в Южинском переулке собирались в 1960-е годы многие деятели «неофициальной культуры» того времени."
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в США с женой",
+      "long": "Вместе с женой Марией Александровной эмигрировал в США, преподавал в Корнеллском университете и выступал в других университетах.",
+      "place": {
+        "label": "США"
+      },
+      "chapter": "emigratsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году вместе с женой Марией Александровной (1935—2025) эмигрировал в США"
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Париж",
+      "long": "Переехал в Париж, где начал публиковаться: в США, как и в СССР, издатели отвергали его книги. Преподавал в Медонском институте русской культуры и Институте восточных цивилизаций.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "emigratsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а позже, в 1983 году, переехал в Париж (Франция), где начал, наконец, публиковаться"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание на Западе",
+      "long": "Достоевед Жак Катто в Парижском литературном журнале назвал Мамлеева достойным наследником Гоголя и Достоевского.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "emigratsiya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в Парижском литературном журнале в 1986 году достоевед Жак Катто писал о Мамлееве как о достойном наследнике Гоголя и Достоевского"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Андрея Белого",
+      "long": "Получил премию Андрея Белого.",
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии Андрея Белого (1991)."
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Москву",
+      "long": "Вернулся в Москву после десяти лет в Париже; с начала 1990-х его книги стали широко издаваться в России.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1993, he returned to Moscow where he continued to live and write until his death in 2015."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "to": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание индийской философии в МГУ",
+      "long": "Преподавал индийскую философию на философском факультете МГУ.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1994 г. по 1999 г. как индолог преподавал индийскую философию на философском факультете МГУ."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Пушкинская премия",
+      "long": "Получил Пушкинскую премию (Германия).",
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2000 году он получил Пушкинскую премию (Германия)"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-05-21",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Дружбы",
+      "long": "Награждён орденом Дружбы за заслуги в области культуры и искусства.",
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Орден Дружбы (21 мая 2007 года) — за заслуги в области культуры и искусства"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Правительства РФ",
+      "long": "Получил премию Правительства России в области культуры и искусства.",
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия Правительства Российской Федерации в области культуры и искусства (2012 год)."
+      }
+    },
+    {
+      "key": "illness-2015",
+      "date": {
+        "from": "2015-08",
+        "to": "2015-09",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Тяжёлая болезнь и операция",
+      "long": "С конца августа в тяжёлом состоянии находился в больнице; в начале сентября прооперирован.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С конца августа 2015 года писатель в тяжелом состоянии находился в больнице, а в начале сентября литератора прооперировали."
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-10-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умер в Москве; отпевание состоялось 28 октября, похоронен на Троекуровском кладбище.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался на 84-м году жизни 25 октября 2015 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "shatuny",
+      "title": "Шатуны",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "moskovsky-gambit",
+      "title": "Московский гамбит",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "poslednyaya-komediya",
+      "title": "Последняя комедия",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "krylya-uzhasa",
+      "title": "Крылья ужаса",
+      "written": {
+        "from": 1991,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "sudba-bytiya",
+      "title": "Судьба бытия",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "rossiya-vechnaya",
+      "title": "Россия Вечная",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "bluzhdayushchee-vremya",
+      "title": "Блуждающее время",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "mir-i-khokhot",
+      "title": "Мир и хохот",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "o-chudesnom",
+      "title": "О чудесном",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "drugoy",
+      "title": "Другой",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "naedine-s-rossiey",
+      "title": "Наедине с Россией",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "imperiya-dukha",
+      "title": "Империя Духа",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "posle-kontsa",
+      "title": "После конца",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "vselenskie-istorii",
+      "title": "Вселенские истории",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "nevidannaya-byl",
+      "title": "Невиданная Быль",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    }
+  ]
+}

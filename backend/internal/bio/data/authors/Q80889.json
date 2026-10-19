@@ -1,0 +1,603 @@
+{
+  "qid": "Q80889",
+  "name": "Сигрид Унсет",
+  "born": "1882-05-20",
+  "died": "1949-06-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%BD%D1%81%D0%B5%D1%82%2C_%D0%A1%D0%B8%D0%B3%D1%80%D0%B8%D0%B4",
+      "rev": 153857963
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sigrid_Undset",
+      "rev": 1380280732
+    },
+    {
+      "id": "nowiki",
+      "url": "https://no.wikipedia.org/wiki/Sigrid_Undset",
+      "rev": 25970296
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-kontora",
+      "title": "Детство и контора",
+      "from": 1882,
+      "to": 1908
+    },
+    {
+      "key": "rim-i-brak",
+      "title": "Рим, брак, дети",
+      "from": 1909,
+      "to": 1918
+    },
+    {
+      "key": "bjerkebek",
+      "title": "Бьёркебек и «Кристин»",
+      "from": 1919,
+      "to": 1939
+    },
+    {
+      "key": "voyna-i-izgnanie",
+      "title": "Война и изгнание",
+      "from": 1940,
+      "to": 1944
+    },
+    {
+      "key": "vozvrashchenie",
+      "title": "Возвращение и последние годы",
+      "from": 1945,
+      "to": 1949
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1882",
+      "date": {
+        "from": "1882-05-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Калуннборге",
+      "long": "Родилась в Калуннборге (Дания) в семье норвежского археолога Ингвалла Унсета и датчанки Шарлотты Гют-Унсет.",
+      "place": {
+        "label": "Калуннборг"
+      },
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Калуннборг 1882-05-20"
+      }
+    },
+    {
+      "key": "relocation-1884",
+      "date": {
+        "from": "1884-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Христианию",
+      "long": "Когда Сигрид было два года, семья переехала в Норвегию; в июле 1884 года поселились в Христиании.",
+      "place": {
+        "label": "Христиания"
+      },
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the family moved in July 1884"
+      }
+    },
+    {
+      "key": "loss-1893",
+      "date": {
+        "from": "1893-12-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца после долгой болезни",
+      "long": "Отец, археолог Ингвалл Унсет, умер после тяжёлой болезни; вдова с тремя детьми жила на скудную пенсию.",
+      "place": {
+        "label": "Христиания"
+      },
+      "works": [
+        {
+          "ref": "eleven-years-old",
+          "note": "детство до смерти отца описано в автобиографическом романе"
+        }
+      ],
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1893 году после тяжёлой болезни Ингвалл Унсет умер."
+      }
+    },
+    {
+      "key": "career-1898",
+      "date": {
+        "from": "1898",
+        "to": "1908",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Десять лет клерком в электрической компании",
+      "long": "Вместо университета окончила коммерческое училище и с 1898 по 1908 год служила клерком, работа ей была не по душе; писала в свободное время.",
+      "place": {
+        "label": "Христиания"
+      },
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свыше 10 лет (1898—1908) она служила в отделении «Всеобщей компании электричества» в Осло клерком"
+      }
+    },
+    {
+      "key": "creation-1905",
+      "date": {
+        "from": "1905",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Отказ издательства в рукописи исторического романа",
+      "long": "В 1905 году отправила в копенгагенское издательство «Гюльдендаль» исторический роман о средневековой Дании; издатель его не принял.",
+      "place": {
+        "label": "Копенгаген"
+      },
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I 1905 leverte hun denne fortellingen, Aage Nielssøn til Ulvholm, til Gyldendal forlag i København."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и первая известность",
+      "long": "Дебютировала романом о супружеской измене на современном материале; книга вызвала шум, Унсет сочли многообещающей писательницей.",
+      "place": {
+        "label": "Христиания"
+      },
+      "works": [
+        {
+          "ref": "fru-marta-oulie"
+        }
+      ],
+      "chapter": "detstvo-i-kontora",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Фру Марта Оули» (1907), принесший Унсет первую известность"
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход со службы благодаря писательской стипендии",
+      "long": "После успеха первых книг получила государственную стипендию и в 1909 году оставила службу.",
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Унсет получила государственную стипендию, которая позволила ей в 1909 году оставить надоевшую службу."
+      }
+    },
+    {
+      "key": "relocation-1909",
+      "date": {
+        "from": "1909-12",
+        "to": "1910-09",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Девять месяцев в Риме",
+      "long": "Со стипендией отправилась в Европу и в декабре 1909 года приехала в Рим, где провела девять месяцев; здесь познакомилась со Сварстадом.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "jenny"
+        }
+      ],
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "arriving in Rome in December 1909, where she remained for nine months"
+      }
+    },
+    {
+      "key": "career-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Громкий успех романа о художнице",
+      "long": "Роман о художнице Йенни имел большой успех, его откровенное изображение отношений вызвало споры.",
+      "works": [
+        {
+          "ref": "jenny"
+        }
+      ],
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "роман «Йенни» (1911), имевший громадный успех"
+      }
+    },
+    {
+      "key": "love-1912",
+      "date": {
+        "from": "1912-06-29",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с художником Андерсом Сварстадом",
+      "long": "Вышла замуж за норвежского художника Андерса Кастуса Сварстада, который был старше на 13 лет и до этого состоял в браке; затем полгода жили в Лондоне.",
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1912 году Унсет выходит замуж за художника Андерса Сварстада."
+      }
+    },
+    {
+      "key": "child-1913",
+      "date": {
+        "from": "1913-01",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Андерса Кастуса",
+      "long": "В Риме родился первый ребёнок — сын Андерс Кастус; позднее родились сын Ханс Бенедикт и дочь Марен Шарлотта.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "var-1914"
+        }
+      ],
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returned to Rome, where their first child was born in January 1913"
+      }
+    },
+    {
+      "key": "faith-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Кризис веры в годы Первой мировой войны",
+      "long": "Из агностицизма через кризис веры в военные годы пришла к христианству; около 1917 года увлеклась сочинениями Роберта Хью Бенсона.",
+      "chapter": "rim-i-brak",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Beginning around 1917, Undset developed a passionate interest in the writings of Monsignor Robert Hugh Benson"
+      }
+    },
+    {
+      "key": "relocation-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лиллехаммер, разрыв с мужем",
+      "long": "В 1919 году с детьми поселилась в Лиллехаммере, будучи беременной третьим ребёнком; брак распался. В августе родился третий ребёнок, вскоре построен дом Бьёркебек.",
+      "place": {
+        "label": "Лиллехаммер"
+      },
+      "works": [
+        {
+          "ref": "kristin-lavransdatter",
+          "note": "работа над трилогией началась после переезда и рождения третьего ребёнка"
+        }
+      ],
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1919 году Унсет с семьёй поселяется в Лиллехаммере"
+      }
+    },
+    {
+      "key": "faith-1924",
+      "date": {
+        "from": "1924-11-01",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Переход в католичество",
+      "long": "В ноябре 1924 года принята в Католическую церковь; в Норвегии это сочли скандальным. Позднее стала терциарием-доминиканкой.",
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was received into the Catholic Church in November 1924"
+      }
+    },
+    {
+      "key": "family-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод со Сварстадом",
+      "long": "Брак с Андерсом Сварстадом распался; в статье развод отнесён к 1925 году.",
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с мужем Сигрид разошлась в 1925 году"
+      }
+    },
+    {
+      "key": "career-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Удостоена Нобелевской премии «за совершенное описание норвежского средневековья»; деньги потратила на благотворительность.",
+      "works": [
+        {
+          "ref": "kristin-lavransdatter"
+        },
+        {
+          "ref": "olav-audunssn"
+        }
+      ],
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году Унсет удостоена Нобелевской премии по литературе"
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председательство в Союзе писателей",
+      "long": "В 1935 году возглавила Союз норвежских писателей и вела кампанию против нацизма, в частности за присуждение Нобелевской премии мира Карлу фон Осецкому.",
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1935 году Унсет возглавила Союз норвежских писателей."
+      }
+    },
+    {
+      "key": "loss-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Марен Шарлотты",
+      "long": "Тяжелобольная дочь умерла незадолго до начала войны.",
+      "chapter": "bjerkebek",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Undset's sick daughter had died shortly before the outbreak of the war."
+      }
+    },
+    {
+      "key": "other-1940",
+      "date": {
+        "from": "1940-01-25",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Передача Нобелевской медали в помощь Финляндии",
+      "long": "В ходе советско-финской войны пожертвовала Нобелевскую медаль на помощь финским детям.",
+      "chapter": "voyna-i-izgnanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Undset supported the Finnish war effort by donating her Nobel Prize on 25 January 1940."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-04",
+        "to": "1940-05",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Бегство из оккупированной Норвегии в Швецию",
+      "long": "После вторжения Германии бежала от возможного ареста; 8 мая перешла границу в Швецию.",
+      "place": {
+        "label": "Лиллехаммер"
+      },
+      "chapter": "voyna-i-izgnanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1940 года нацисты оккупировали Норвегию. Спасаясь от них, Унсет на лыжах уходит в нейтральную Швецию"
+      }
+    },
+    {
+      "key": "loss-1940",
+      "date": {
+        "from": "1940-04-27",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель старшего сына в бою",
+      "long": "Старший сын, лейтенант Андерс Кастус Сварстад, погиб в бою с немцами у моста Сегалстад в Гаусдале.",
+      "place": {
+        "label": "Гаусдаль"
+      },
+      "chapter": "voyna-i-izgnanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was killed in action at the age of 27, on 27 April 1940, while defending Segalstad Bridge in Gausdal from German troops."
+      }
+    },
+    {
+      "key": "relocation-1945",
+      "date": {
+        "from": "1945-07-21",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Норвегию",
+      "long": "Вернулась на родину после освобождения; поселилась в Бьёркебеке, который был разорён оккупантами.",
+      "place": {
+        "label": "Лиллехаммер"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1945 году Унсет возвратилась на родину."
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большой крест ордена Святого Олафа",
+      "long": "Получила Большой крест ордена Святого Олафа; во многом за вклад в годы войны.",
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "nowiki",
+        "quote": "I 1947 ble hun forfremmet og tildelt storkorset av St Olavs Orden"
+      }
+    },
+    {
+      "key": "illness-1948",
+      "date": {
+        "from": "1948-05",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Психологический срыв в Калуннборге",
+      "long": "Во время поездки в родной Калуннборг пережила психологический срыв.",
+      "place": {
+        "label": "Калуннборг"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1948 she had a psychological breakdown, while on visit to her birth town Kalundborg."
+      }
+    },
+    {
+      "key": "death-1949",
+      "date": {
+        "from": "1949-06-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лиллехаммере",
+      "long": "Умерла в больнице Лиллехаммера, куда её положили с воспалением почек; похоронена в Месналии.",
+      "place": {
+        "label": "Лиллехаммер"
+      },
+      "chapter": "vozvrashchenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1949 she was admitted to Lillehammer hospital with kidney inflammation. Undset died shortly after at 67"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fru-marta-oulie",
+      "title": "Фру Марта Оули",
+      "written": {
+        "from": 1907,
+        "to": 1907
+      }
+    },
+    {
+      "ref": "jenny",
+      "title": "Йенни",
+      "qid": "Q11978379",
+      "written": {
+        "from": 1910,
+        "to": 1911
+      }
+    },
+    {
+      "ref": "var-1914",
+      "title": "Весна",
+      "written": {
+        "from": 1913,
+        "to": 1914
+      }
+    },
+    {
+      "ref": "kristin-lavransdatter",
+      "title": "Кристин, дочь Лавранса",
+      "qid": "Q1755757",
+      "written": {
+        "from": 1919,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "olav-audunssn",
+      "title": "Улав, сын Аудуна из Хествикена",
+      "qid": "Q7750617",
+      "written": {
+        "from": 1922,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "eleven-years-old",
+      "title": "Одиннадцать лет",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "madame-dorthea",
+      "title": "Мадам Дортея",
+      "written": {
+        "from": 1938,
+        "to": 1939
+      }
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "qid": "Q382786",
+  "name": "Альфред Эдвард Вудли Мейсон",
+  "born": "1865-05-07",
+  "died": "1948-11-22",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D0%B9%D1%81%D0%BE%D0%BD%2C_%D0%90%D0%BB%D1%8C%D1%84%D1%80%D0%B5%D0%B4_%D0%AD%D0%B4%D0%B2%D0%B0%D1%80%D0%B4_%D0%92%D1%83%D0%B4%D0%BB%D0%B8",
+      "rev": 152159380
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/A._E._W._Mason",
+      "rev": 1370662962
+    }
+  ],
+  "chapters": [
+    {
+      "key": "youth-and-oxford",
+      "title": "Дулвич и Оксфорд",
+      "from": 1865,
+      "to": 1893
+    },
+    {
+      "key": "stage-and-first-books",
+      "title": "Сцена и первые книги",
+      "from": 1894,
+      "to": 1905
+    },
+    {
+      "key": "parliament-and-theatre",
+      "title": "Парламент, детектив, театр",
+      "from": 1906,
+      "to": 1913
+    },
+    {
+      "key": "war-service",
+      "title": "Война и разведка",
+      "from": 1914,
+      "to": 1918
+    },
+    {
+      "key": "late-years",
+      "title": "Поздние годы",
+      "from": 1919,
+      "to": 1948
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1865",
+      "date": {
+        "from": "1865-05-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лондоне",
+      "long": "Родился 7 мая 1865 года в Лондоне (Камберуэлл/Далвич).",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "youth-and-oxford",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Далвич 1865-05-07"
+      }
+    },
+    {
+      "key": "education-1888",
+      "date": {
+        "from": "1888",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Тринити-колледжа в Оксфорде",
+      "long": "Учился в Далвичском колледже, в 1888 году окончил Тринити-колледж Оксфорда.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "youth-and-oxford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He studied at Dulwich College and graduated from Trinity College, Oxford, in 1888."
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Актёрская работа, роль в пьесе Шоу",
+      "long": "Был актёром; в 1894 году сыграл майора Плешанова в премьере пьесы Шоу «Оружие и человек».",
+      "chapter": "stage-and-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "took the role of Major Plechanoff in the premiere of George Bernard Shaw's Arms and the Man in 1894"
+      }
+    },
+    {
+      "key": "career-1895",
+      "date": {
+        "from": "1895",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман, поддержка Уайльда",
+      "long": "Ободрённый Квиллер-Кouts и Уайльдом, начал писать; первый роман вышел в 1895 году.",
+      "works": [
+        {
+          "ref": "a-romance-of-wastdale"
+        }
+      ],
+      "chapter": "stage-and-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his first novel, A Romance of Wastdale, was published in 1895"
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906",
+        "to": "1910",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Депутат парламента от либералов",
+      "long": "Избран в парламент от Ковентри как либерал на выборах 1906 года; отслужил один срок и в январе 1910 года не стал переизбираться.",
+      "place": {
+        "label": "Ковентри"
+      },
+      "chapter": "parliament-and-theatre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Mason was elected as a Liberal Member of Parliament for Coventry in the 1906 general election. He served only a single term in Parliament, retiring at the next general election in January 1910."
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "to": "1913",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Три постановки в театре Сент-Джеймс",
+      "long": "Три его пьесы поставил Джордж Александер в театре Сент-Джеймс: «Полковник Смит» (1909), «Свидетель защиты» (1911), «Открытые окна» (1913).",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "parliament-and-theatre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The light farce Colonel Smith opened on 23 April 1909."
+      }
+    },
+    {
+      "key": "creation-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Создание сыщика инспектора Ано",
+      "long": "В 1910 году создал французского сыщика инспектора Ано, намеренно непохожего на Шерлока Холмса.",
+      "works": [
+        {
+          "ref": "at-the-villa-rose"
+        }
+      ],
+      "chapter": "parliament-and-theatre",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1910, Mason undertook to create a fictional detective as different as possible from Sherlock Holmes"
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914-12",
+        "to": "1917-10",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба капитаном Манчестерского полка",
+      "long": "В декабре 1914 года получил чин капитана в 21-м батальоне Манчестерского полка; в 1915 году перешёл в 22-й батальон, затем в резерв; в марте 1917 года получил временный чин майора.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "being commissioned captain in the 21st Battalion in December 1914"
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917-10",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Морская пехота и контрразведка в Испании и Мексике",
+      "long": "В октябре 1917 года оставил армию и вступил в Королевскую морскую пехоту майором; занимался военно-морской разведкой, создавал сети контрразведки в Испании и Мексике.",
+      "chapter": "war-service",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1917 he was granted the temporary rank of major and in October he relinquished his Army commission and joined the Royal Marine Light Infantry with the rank of major."
+      }
+    },
+    {
+      "key": "death-1948",
+      "date": {
+        "from": "1948-11-22",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Умер 22 ноября 1948 года в Лондоне во время работы над книгой об адмирале Роберте Блейке.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was working on a non-fiction book about Admiral Robert Blake when he died in 1948."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "a-romance-of-wastdale",
+      "title": "Романс Уастдейла",
+      "written": {
+        "from": 1895,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "four-feathers",
+      "title": "Четыре пера",
+      "written": {
+        "from": 1902,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "at-the-villa-rose",
+      "title": "На вилле «Роза»",
+      "written": {
+        "from": 1910,
+        "to": 1910
+      }
+    },
+    {
+      "ref": "house-of-the-arrow",
+      "title": "Дом со стрелой",
+      "written": {
+        "from": 1924,
+        "to": 1924
+      }
+    },
+    {
+      "ref": "no-other-tiger",
+      "title": "Другого тигра нет",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "prisoner-in-the-opal",
+      "title": "Узник в опале",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "fire-over-england",
+      "title": "Пламя над Англией",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    }
+  ]
+}

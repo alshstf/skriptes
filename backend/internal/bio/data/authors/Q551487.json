@@ -1,0 +1,368 @@
+{
+  "qid": "Q551487",
+  "name": "Хьюберт Селби",
+  "born": "1928-07-23",
+  "died": "2004-04-26",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BB%D0%B1%D0%B8%2C_%D0%A5%D1%8C%D1%8E%D0%B1%D0%B5%D1%80%D1%82",
+      "rev": 154637502
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Hubert_Selby_Jr.",
+      "rev": 1371941981
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-sea",
+      "title": "Бруклин и торговый флот",
+      "from": 1928,
+      "to": 1946
+    },
+    {
+      "key": "illness",
+      "title": "Туберкулёз и госпитали",
+      "from": 1947,
+      "to": 1957
+    },
+    {
+      "key": "first-book",
+      "title": "Ночное писательство",
+      "from": 1958,
+      "to": 1966
+    },
+    {
+      "key": "trial-heroin",
+      "title": "Суд, героин, Калифорния",
+      "from": 1967,
+      "to": 1982
+    },
+    {
+      "key": "la-years",
+      "title": "Лос-Анджелес",
+      "from": 1983,
+      "to": 2004
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1928",
+      "date": {
+        "from": "1928-07-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в семье моряка торгового флота и бывшего шахтёра из Кентукки.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-sea",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Бруклин 1928-07-23"
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из школы в торговый флот в 15 лет",
+      "long": "В 15 лет бросил школу и ушёл в торговый флот; ранее учился во многих школах штата Нью-Йорк, включая школу Стайвесант.",
+      "chapter": "brooklyn-sea",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году Селби Старший снова стал моряком торгового флота… Селби Младший бросил школу и в возрасте 15 лет подался в торговый флот."
+      }
+    },
+    {
+      "key": "illness-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Туберкулёз, списание с судна в Бремене",
+      "long": "Во время плавания диагностирован туберкулёз; врачи предсказывали, что он не проживёт и года. Его сняли с судна в Бремене и отправили в США.",
+      "place": {
+        "label": "Бремен"
+      },
+      "chapter": "illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1947 году во время плавания у Селби был диагностирован туберкулёз."
+      }
+    },
+    {
+      "key": "illness-1947-2",
+      "date": {
+        "from": "1947",
+        "to": "1950",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Госпиталь, операции на лёгких",
+      "long": "Три с половиной года лечился в госпитале в Нью-Йорке; экспериментальное лечение стрептомицином дало тяжёлые осложнения, при операции удалили рёбра, одно лёгкое разрушено, у другого удалена часть.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1947 году во время плавания у Селби был диагностирован туберкулёз… Следующие три с половиной года Селби находился в госпитале Морской пехоты в Нью-Йорке."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак, рождение дочери",
+      "long": "Первый брак; из-за слабого здоровья и отсутствия опыта не мог найти работу и сидел дома с дочерью, пока жена работала в универмаге.",
+      "chapter": "illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1949 году Селби первый раз женился, но из-за отсутствия квалификации"
+      }
+    },
+    {
+      "key": "creation-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Ночная работа над первым романом",
+      "long": "Начал рассказ The Queen Is Dead, позже вошедший в первый роман. Днём работал секретарём, заправщиком, рекламным агентом, писал по ночам.",
+      "works": [
+        {
+          "ref": "last-exit-to-brooklyn"
+        }
+      ],
+      "chapter": "first-book",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1958 году Селби начал работу над первой частью этого произведения, назвав её The Queen Is Dead."
+      }
+    },
+    {
+      "key": "persecution-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Скандал вокруг рассказа, арест редактора журнала",
+      "long": "Рассказ Tralala вышел в журналах; редактора арестовали за продажу порнографии несовершеннолетнему, журнал был использован как улика, дело позже закрыто по апелляции.",
+      "works": [
+        {
+          "ref": "last-exit-to-brooklyn",
+          "note": "рассказ вошёл в состав первого романа"
+        }
+      ],
+      "chapter": "first-book",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961, his short story \"Tralala\" was published in the literary journal The Provincetown Review… The journal editor was arrested for selling pornographic literature to a minor."
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964-10-24",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак с Джудит Лумино",
+      "long": "Женился на Джудит Лумино; брак вскоре распался.",
+      "chapter": "first-book",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 24 October 1964, Selby married Judith Lumino, but the marriage soon fell apart."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рецензия в New York Times",
+      "long": "Первая рецензия в New York Times назвала роман жестокой книгой; книгу также хвалил Аллен Гинзберг.",
+      "works": [
+        {
+          "ref": "last-exit-to-brooklyn"
+        }
+      ],
+      "chapter": "first-book",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In November 1964, The New York Times literary critic Eliot Fremont-Smith described the novel as \"a brutal book,\""
+      }
+    },
+    {
+      "key": "persecution-1967",
+      "date": {
+        "from": "1967",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Суд за непристойность и запрет в Британии",
+      "long": "В 1967 году издателей судили в Олд-Бейли за непристойность, книгу запретили; в 1968 году приговор отменён по апелляции. В Италии роман тоже был запрещён.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "last-exit-to-brooklyn"
+        }
+      ],
+      "chapter": "trial-heroin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967, the publishers were tried at the Old Bailey and the jury verdict resulted in the book being banned in Britain."
+      }
+    },
+    {
+      "key": "persecution-1967-2",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест за героин, два месяца тюрьмы",
+      "long": "Арестован за хранение героина, два месяца провёл в тюрьме округа Лос-Анджелес; борьба с зависимостью продолжалась.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "trial-heroin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967 he was arrested for heroin possession and served two months in the Los Angeles County jail."
+      }
+    },
+    {
+      "key": "relocation-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из Нью-Йорка в Лос-Анджелес",
+      "long": "После освобождения переехал из Нью-Йорка в Лос-Анджелес, чтобы избавиться от зависимости, и бросил наркотики; с алкоголем боролся ещё два года.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "trial-heroin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967 he was arrested for heroin possession and served two months in the Los Angeles County jail… After his release, he moved from New York to Los Angeles to try to escape his addictions"
+      }
+    },
+    {
+      "key": "love-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Сюзанн Шоу",
+      "long": "Женился на Сюзанн Виктории Шоу, с которой познакомился в 1967 году в баре в Западном Голливуде. В браке родились дочь Рэйчел и сын Уильям.",
+      "chapter": "trial-heroin",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1969, after Selby and his second wife, Judith, had finalized their divorce."
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Постоянное жильё в Лос-Анджелесе",
+      "long": "После десяти лет разъездов между Калифорнией и Восточным побережьем окончательно поселился в Лос-Анджелесе.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "la-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "settling permanently in the Los Angeles area in 1983"
+      }
+    },
+    {
+      "key": "death-2004",
+      "date": {
+        "from": "2004-04-26",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от болезни лёгких",
+      "long": "Умер дома от хронической обструктивной болезни лёгких, последний месяц жизни часто лежал в больнице; от морфия отказался.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "chapter": "la-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "died at his home in Highland Park, Los Angeles, on April 26, 2004, of chronic obstructive pulmonary disease."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "last-exit-to-brooklyn",
+      "title": "Последний поворот на Бруклин",
+      "qid": "Q1400274",
+      "written": {
+        "from": 1958,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "the-room",
+      "title": "The Room",
+      "qid": "Q7761477",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    },
+    {
+      "ref": "requiem-for-a-dream",
+      "title": "Реквием по мечте",
+      "qid": "Q3428183",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    }
+  ]
+}

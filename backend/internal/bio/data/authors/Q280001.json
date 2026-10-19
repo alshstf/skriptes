@@ -1,0 +1,149 @@
+{
+  "qid": "Q280001",
+  "name": "Джон Стикли",
+  "born": "1951-07-26",
+  "died": "2010-11-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B8%D0%BA%D0%BB%D0%B8%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 152022802
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Steakley",
+      "rev": 1371893374
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Техас и учёба",
+      "from": 1951,
+      "to": 1979
+    },
+    {
+      "key": "gollivud-fantastika",
+      "title": "Голливуд и возвращение к фантастике",
+      "from": 1980,
+      "to": 1999
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Последние годы и болезнь",
+      "from": 2000,
+      "to": 2010
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1951",
+      "date": {
+        "from": "1951-07-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Клиберне, Техас",
+      "long": "Джон Стикли родился 26 июля 1951 года в Клиберне, штат Техас.",
+      "place": {
+        "label": "Клиберн"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 26 июля 1951 года в Клиберне штата Техас"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый профессиональный рассказ в Amazing Stories",
+      "long": "В мартовском номере журнала Amazing Stories напечатан его первый короткий рассказ. В 1982 году там же вышел второй.",
+      "chapter": "gollivud-fantastika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1981 году в мартовском номере журнала Amazing Stories был напечатал его первый короткий рассказ The Bluenose Limit"
+      }
+    },
+    {
+      "key": "love-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с фотографом Лори Джонс",
+      "long": "Женился на фотографе Лори Джонс; свадебная церемония прошла в выставочном зале местного представительства Subaru.",
+      "chapter": "gollivud-fantastika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1988 году женился на фотографе Лори Джонс"
+      }
+    },
+    {
+      "key": "creation-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Экранизация романа режиссёром Джоном Карпентером",
+      "long": "Джон Карпентер снял по роману одноимённый фильм «Вампиры».",
+      "works": [
+        {
+          "ref": "vampires"
+        }
+      ],
+      "chapter": "gollivud-fantastika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По мотивам последнего режиссёром Джоном Карпентером в 1998 году был снят одноимённый фильм."
+      }
+    },
+    {
+      "key": "death-2010",
+      "date": {
+        "from": "2010-11-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Мак-Кинни, Техас",
+      "long": "Умер 27 ноября 2010 года в Мак-Кинни.",
+      "place": {
+        "label": "Мак-Кинни"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 27 ноября 2010 года после пятилетней борьбы с заболеванием печени."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "armor",
+      "title": "Броня",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "vampires",
+      "title": "Вампиры",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    }
+  ]
+}

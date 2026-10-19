@@ -1,0 +1,559 @@
+{
+  "qid": "Q224029",
+  "name": "Андре Моруа",
+  "born": "1885-07-26",
+  "died": "1967-10-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B5_%D0%9C%D0%BE%D1%80%D1%83%D0%B0",
+      "rev": 155676641
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Andr%C3%A9_Maurois",
+      "rev": 1377646536
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Andr%C3%A9_Maurois",
+      "rev": 239782345
+    }
+  ],
+  "chapters": [
+    {
+      "key": "elbef-i-fabrika",
+      "title": "Нормандия и отцовская фабрика",
+      "from": 1885,
+      "to": 1913
+    },
+    {
+      "key": "voina-i-pervyi-uspekh",
+      "title": "Война и первая книга",
+      "from": 1914,
+      "to": 1923
+    },
+    {
+      "key": "utrata-i-vtoroi-brak",
+      "title": "Утрата и второй брак",
+      "from": 1924,
+      "to": 1937
+    },
+    {
+      "key": "akademiya-i-izgnanie",
+      "title": "Академия и годы в Америке",
+      "from": 1938,
+      "to": 1946
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Признание и последние годы",
+      "from": 1947,
+      "to": 1967
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1885",
+      "date": {
+        "from": "1885-07-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье эльзасских суконщиков",
+      "long": "Родился как Эмиль Эрзог в семье эльзасских владельцев суконной фабрики, переселившихся в Нормандию после франко-прусской войны.",
+      "place": {
+        "label": "Эльбёф"
+      },
+      "chapter": "elbef-i-fabrika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эмиль Эрзог родился в 1885 году в состоятельной семье обратившихся в католицизм евреев из Эльзаса"
+      }
+    },
+    {
+      "key": "education-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Руанский лицей",
+      "long": "Поступил в лицей в Руане; там его учителем был философ Ален, оказавший сильное влияние на его взгляды.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "elbef-i-fabrika",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1897 году он поступил в Руанский лицей."
+      }
+    },
+    {
+      "key": "education-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень лиценциата, уход на фабрику",
+      "long": "Получил степень лиценциата по литературе; по совету учителя отказался от продолжения учёбы и пошёл работать на отцовскую суконную фабрику.",
+      "place": {
+        "label": "Руан"
+      },
+      "chapter": "elbef-i-fabrika",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Titulaire des baccalauréats littéraire et scientifique, il passe sa licence ès lettres en 1903."
+      }
+    },
+    {
+      "key": "love-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Вандой Шимкевич",
+      "long": "В Женеве познакомился с Жанной-Вандой Шимкевич, дочерью польского графа, будущей первой женой.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "elbef-i-fabrika",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il rencontre Jane-Wanda de Szymkiewicz, dite « Janine » (1892-1924) à Genève en 1909"
+      }
+    },
+    {
+      "key": "love-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Вандой Шимкевич",
+      "long": "Женился на Жанне-Мари Ванде Шимкевич; в браке родились трое детей.",
+      "chapter": "elbef-i-fabrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1912, Maurois married Jeanne-Marie Wanda de Szymkiewicz, a young Polish-Russian aristocrat who had studied at Oxford University."
+      }
+    },
+    {
+      "key": "child-1914",
+      "date": {
+        "from": "1914-05",
+        "precision": "month"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Мишель",
+      "long": "Родилась дочь Мишель, впоследствии писательница.",
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le couple a d’abord une fille née en mai 1914 puis, après la guerre, deux garçons."
+      }
+    },
+    {
+      "key": "war-1914",
+      "date": {
+        "from": "1914-08",
+        "to": "1919-03",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Военный переводчик и офицер связи при британцах",
+      "long": "С августа 1914 года служил военным переводчиком при британских войсках, затем офицером связи; демобилизован в марте 1919 года.",
+      "place": {
+        "label": "Руан"
+      },
+      "works": [
+        {
+          "ref": "silences-colonel-bramble",
+          "note": "роман основан на встречах и впечатлениях военных лет"
+        }
+      ],
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "D’août 1914 à septembre 1915, il assiste les officiers britanniques … il est démobilisé en mars 1919"
+      }
+    },
+    {
+      "key": "war-1915",
+      "date": {
+        "from": "1915-09",
+        "precision": "month"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Британская медаль за службу связным при Лоосе",
+      "long": "За работу связным в битве при Лоосе получил британскую медаль «За выдающиеся заслуги».",
+      "place": {
+        "label": "Луз"
+      },
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Son rôle d'agent de liaison à l'occasion de la bataille de Loos (25-26-27 septembre 1915) lui vaut de recevoir la « Distinguished Conduct Medal »"
+      }
+    },
+    {
+      "key": "illness-1916",
+      "date": {
+        "from": "1916-02",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Болезнь и возвращение с фронта",
+      "long": "Заболев, был отправлен с фронта в Гавр и некоторое время служил при штабе британской базы.",
+      "place": {
+        "label": "Гавр"
+      },
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Malade, il est rapatrié au Havre en février 1916."
+      }
+    },
+    {
+      "key": "other-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Псевдоним Андре Моруа",
+      "long": "По требованию начальства взял псевдоним Андре Моруа; в 1947 году он стал его официальным именем.",
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il a dû prendre un pseudonyme, André Maurois (André en hommage à un jeune cousin tué au début de la guerre et Maurois, nom d'un village du nord de la France.) pour publier son premier ouvrage en 1918"
+      }
+    },
+    {
+      "key": "career-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый литературный успех во Франции и за рубежом",
+      "long": "Первый роман, основанный на опыте службы при британской армии, принёс успех во Франции, Великобритании и США.",
+      "works": [
+        {
+          "ref": "silences-colonel-bramble",
+          "note": "первый роман, опирающийся на опыт службы при британцах"
+        }
+      ],
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1918 году Моруа опубликовал роман «Молчаливый полковник Брамбл» (фр. Les Silences du colonel Bramble), который имел успех как во Франции, так и в Великобритании и США."
+      }
+    },
+    {
+      "key": "illness-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Нервный срыв жены",
+      "long": "У жены Ванды случился нервный срыв.",
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She had a nervous breakdown in 1918 and in 1924 she died of sepsis."
+      }
+    },
+    {
+      "key": "child-1920",
+      "date": {
+        "from": "1920-09-08",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Жеральда",
+      "long": "Родился сын Жеральд.",
+      "chapter": "voina-i-pervyi-uspekh",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Gérald Maurois 1920-09-08"
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Уход из семейного дела ради литературы",
+      "long": "После смерти жены оставил текстильное дело ради литературы.",
+      "works": [
+        {
+          "ref": "bernard-quesnay",
+          "note": "в романе описана альтернативная жизнь автора, ставшего промышленником"
+        }
+      ],
+      "chapter": "utrata-i-vtoroi-brak",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Maurois perd sa femme Janine le 26 février 1924 … après la mort de sa femme, il délaisse l’entreprise pour donner libre cours à sa passion d’écrivain"
+      }
+    },
+    {
+      "key": "love-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Симоной де Кайяве",
+      "long": "Познакомился с Симоной де Кайяве, внучкой Леонтины Арман де Кайяве, возлюбленной Анатоля Франса.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "utrata-i-vtoroi-brak",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À Paris, en 1924, il fait la connaissance de Simone de Caillavet"
+      }
+    },
+    {
+      "key": "loss-1924",
+      "date": {
+        "from": "1924-02-26",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть первой жены",
+      "long": "Первая жена Ванда умерла от сепсиса.",
+      "chapter": "utrata-i-vtoroi-brak",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Maurois perd sa femme Janine le 26 février 1924."
+      }
+    },
+    {
+      "key": "love-1926",
+      "date": {
+        "from": "1926-09",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Симоной де Кайяве",
+      "long": "Женился на Симоне де Кайяве; в браке родился один ребёнок.",
+      "place": {
+        "label": "Эссандьера"
+      },
+      "chapter": "utrata-i-vtoroi-brak",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le mariage a lieu en septembre 1926 à Essendiéras"
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938-06-23",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание во Французскую академию",
+      "long": "Избран в Академию на кресло № 26; кандидатуру поддержал маршал Петен.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "akademiya-i-izgnanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 июня 1938 года был избран во Французскую академию."
+      }
+    },
+    {
+      "key": "war-1940",
+      "date": {
+        "from": "1940-06-10",
+        "precision": "day"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Миссия в Лондон в дни краха Франции",
+      "long": "В начале войны служил официальным наблюдателем при британском штабе; в июне 1940 года был послан с миссией в Лондон.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "akademiya-i-izgnanie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 10 June 1940 he was sent on a mission to London."
+      }
+    },
+    {
+      "key": "other-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Возвращение домой, пропавшая библиотека",
+      "long": "Вернувшись в дом в Нёйи, не нашёл своей библиотеки: по его словам, её забрало гестапо.",
+      "place": {
+        "label": "Нёйи-сюр-Сен"
+      },
+      "chapter": "akademiya-i-izgnanie",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Quand il rentre en France en 1946, dans sa maison de Neuilly-sur-Seine, ses livres ont disparu"
+      }
+    },
+    {
+      "key": "other-1947",
+      "date": {
+        "from": "1947-06-27",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Псевдоним становится официальным именем",
+      "long": "Указом президента получил право сменить фамилию Эрзог на Моруа.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Par un décret du président de la République du 27 juin 1947, il est autorisé à changer de patronyme de Herzog en André-Maurois."
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председатель Ассоциации «Франция — США»",
+      "long": "Возглавлял Ассоциацию «Франция — США».",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "De 1955 à 1967, il préside l'Association France États-Unis."
+      }
+    },
+    {
+      "key": "other-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Большой крест ордена Почётного легиона",
+      "long": "Награждён Большим крестом ордена Почётного легиона.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: кавалер Большого креста ордена Почётного легиона 1965-01-01"
+      }
+    },
+    {
+      "key": "death-1967",
+      "date": {
+        "from": "1967-10-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нёйи-сюр-Сен",
+      "long": "Умер в Нёйи-сюр-Сен; похоронен на старом кладбище города.",
+      "place": {
+        "label": "Нёйи-сюр-Сен"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le 9 octobre 1967, il meurt à Neuilly-sur-Seine."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "silences-colonel-bramble",
+      "title": "Молчаливый полковник Брэмбл",
+      "qid": "Q19213609",
+      "written": {
+        "from": 1918,
+        "to": 1918
+      }
+    },
+    {
+      "ref": "discours-docteur-ogrady",
+      "title": "Речи доктора О’Грэди",
+      "written": {
+        "from": 1921,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "bernard-quesnay",
+      "title": "Бернар Кене",
+      "written": {
+        "from": 1926,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "climats-1928",
+      "title": "Превратности любви",
+      "written": {
+        "from": 1928,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "cercle-de-famille",
+      "title": "Семейный круг",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "chopin-1942",
+      "title": "Шопен",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "lettres-a-l-inconnue",
+      "title": "Письма незнакомке",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    }
+  ]
+}

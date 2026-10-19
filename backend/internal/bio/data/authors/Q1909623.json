@@ -1,0 +1,122 @@
+{
+  "qid": "Q1909623",
+  "name": "Мэтью Стовер",
+  "born": "1962-01-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%BE%D0%B2%D0%B5%D1%80%2C_%D0%9C%D1%8D%D1%82%D1%8C%D1%8E",
+      "rev": 154637553
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Matthew_Stover",
+      "rev": 1380169197
+    }
+  ],
+  "chapters": [
+    {
+      "key": "danville",
+      "title": "Данвилл и школа",
+      "from": 1962,
+      "to": 1979
+    },
+    {
+      "key": "drake",
+      "title": "Университет Дрейка",
+      "from": 1980,
+      "to": 1983
+    },
+    {
+      "key": "chicago",
+      "title": "Чикаго, театр и книги",
+      "from": 1984,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-01-29",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Данвилле",
+      "long": "Родился в Данвилле, штат Иллинойс.",
+      "place": {
+        "label": "Данвилл"
+      },
+      "chapter": "danville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Matthew Woodring Stover (born January 29, 1962)"
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Данвилле",
+      "long": "Окончил среднюю школу Данвилла в штате Иллинойс.",
+      "place": {
+        "label": "Данвилл"
+      },
+      "chapter": "danville",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stover attended Danville High School in Danville, Illinois, and graduated in 1979."
+      }
+    },
+    {
+      "key": "education-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание Университета Дрейка",
+      "long": "Окончил Университет Дрейка.",
+      "chapter": "drake",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He then graduated in 1983 from Drake University, and settled in Chicago for many years"
+      }
+    },
+    {
+      "key": "relocation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Чикаго",
+      "long": "После университета поселился в Чикаго, где прожил много лет; позже переехал в Санкт-Петербург, штат Флорида.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He then graduated in 1983 from Drake University, and settled in Chicago for many years"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "caines-law",
+      "title": "Caine's Law",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

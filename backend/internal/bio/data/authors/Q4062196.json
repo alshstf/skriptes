@@ -1,0 +1,554 @@
+{
+  "qid": "Q4062196",
+  "name": "Юз Алешковский",
+  "born": "1929-09-21",
+  "died": "2022-03-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B5%D1%88%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%2C_%D0%AE%D0%B7",
+      "rev": 155620368
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Yuz_Aleshkovsky",
+      "rev": 1372064585
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-war",
+      "title": "Детство, Москва, эвакуация",
+      "from": 1929,
+      "to": 1946
+    },
+    {
+      "key": "navy-camp",
+      "title": "Флот и лагерь",
+      "from": 1947,
+      "to": 1953
+    },
+    {
+      "key": "moscow-songs",
+      "title": "Аварийка, песни, первые книги",
+      "from": 1954,
+      "to": 1977
+    },
+    {
+      "key": "metropol-exile",
+      "title": "Метрополь и отъезд",
+      "from": 1978,
+      "to": 1982
+    },
+    {
+      "key": "america",
+      "title": "Радио, Америка, поздние книги",
+      "from": 1983,
+      "to": 2022
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1929",
+      "date": {
+        "from": "1929-09-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Красноярске",
+      "long": "Иосиф Ефимович Алешковский (детское имя — Юз) родился в Красноярске в семье военного интенданта и бухгалтера.",
+      "place": {
+        "label": "Красноярск"
+      },
+      "chapter": "childhood-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 21 сентября 1929 года в Красноярске."
+      }
+    },
+    {
+      "key": "relocation-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Латвии при части отца",
+      "long": "В 1940 году жил в Латвии при воинской части отца, перед войной вернулся в Москву.",
+      "place": {
+        "label": "Латвия"
+      },
+      "chapter": "childhood-war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940 году вместе с воинской частью отца находился в Латвии, перед войной вернулся в Москву."
+      }
+    },
+    {
+      "key": "war-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Призыв и служба на флоте на Дальнем Востоке",
+      "long": "В 1947 году призван в военно-морской флот, служил на Дальнем Востоке.",
+      "chapter": "navy-camp",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1947 году был призван на службу в военно-морской флот, служил на Дальнем Востоке"
+      }
+    },
+    {
+      "key": "persecution-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Приговор к четырём годам за угон машины",
+      "long": "За угон машины секретаря Приморского крайкома ВКП(б) приговорён к четырём годам заключения.",
+      "chapter": "navy-camp",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "за угон машины секретаря Приморского крайкома ВКП(б) в 1949 году был приговорён к четырём годам заключения"
+      }
+    },
+    {
+      "key": "persecution-1950",
+      "date": {
+        "from": "1950",
+        "to": "1953",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Лагерное заключение",
+      "long": "С 1950 по 1953 год отбывал срок в лагере.",
+      "chapter": "navy-camp",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Срок с 1950 по 1953 год отбывал в лагере."
+      }
+    },
+    {
+      "key": "loss-1953",
+      "date": {
+        "from": "1953-09-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, майор Хаим Иосифович Алешковский, умер в Москве 12 сентября 1953 года.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "navy-camp",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Хаим Иосифович Алешковский (1899, Мозырь — 12 сентября 1953, Москва)"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа на «аварийке» в «Мосводопроводе»",
+      "long": "После освобождения работал на стройке и шофёром на целине, с 1955 года — на «аварийке» в тресте «Мосводопровод».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "работал на стройке, шофёром на целине и с 1955 года на «аварийке» в тресте «Мосводопровод»"
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало песенного творчества",
+      "long": "С 1959 года (по другим данным, уже в 1953) начал писать песни на собственные стихи.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1959 года начал писать песни на свои стихи"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход на литературный заработок",
+      "long": "С 1965 года жил литературным трудом; официально считался автором детских книг и сценариев, а песни исполнял неофициально.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1965 года стал зарабатывать себе на жизнь литературным трудом."
+      }
+    },
+    {
+      "key": "loss-1966",
+      "date": {
+        "from": "1966-09-02",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Мать, Вера Абрамовна Алешковская, умерла 2 сентября 1966 года.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мать — Вера Абрамовна Алешковская (1902 — 2 сентября 1966), бухгалтер."
+      }
+    },
+    {
+      "key": "child-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Алексея",
+      "long": "Родился сын Алексей от первого брака с Ириной Никифоровой, впоследствии телепродюсер и режиссёр.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын — Алексей Иосифович Алешковский (род. 1967)"
+      }
+    },
+    {
+      "key": "family-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Рождение пасынка Даниэля",
+      "long": "Родился Даниэль, сын второй жены Ирины, впоследствии пасынок писателя.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пасынок — Даниэль (род. 1972)."
+      }
+    },
+    {
+      "key": "loss-1974",
+      "date": {
+        "from": "1974-07-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата Марка",
+      "long": "Умер младший брат, историк-медиевист и археолог Марк Хаимович Алешковский.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P3373: Алешковский Марк Хаимович 1933-03-24 — 1974-07-14"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Ириной Дектор",
+      "long": "С 1976 года женат на Ирине Феликсовне Дектор, впоследствии профессоре славистики Уэслианского университета.",
+      "chapter": "moscow-songs",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вторая жена (с 1976 года) — Ирина Феликсовна Алешковская"
+      }
+    },
+    {
+      "key": "persecution-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Песни в альманахе «Метрополь»",
+      "long": "Тексты «лагерных» песен Алешковского вышли в неподцензурном альманахе «Метрополь»; после этого он вынужден был эмигрировать.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "metropol-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После публикации текстов «лагерных» песен Алешковского в альманахе «Метрополь» (1978) писатель был вынужден эмигрировать"
+      }
+    },
+    {
+      "key": "relocation-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в США",
+      "long": "Вместе с женой и пасынком уехал через Австрию в США; поселился в Коннектикуте.",
+      "chapter": "metropol-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1979 году он вместе с женой и пасынком уехал через Австрию в США, где жил (Хаддам, Коннектикут)"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа на Радио «Свобода»",
+      "long": "Постоянный участник программ Радио «Свобода», читал там рассказы и очерки; выступления были популярны в СССР и России.",
+      "chapter": "america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983—1995 годах был постоянным участником передач Радио «Свобода»"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "В 1987 году получил стипендию Гуггенхайма в области прозы.",
+      "chapter": "america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987 he was awarded a Guggenheim fellowship for fiction."
+      }
+    },
+    {
+      "key": "creation-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Запись диска с Макаревичем",
+      "long": "В США записал с Андреем Макаревичем диск «Окурочек».",
+      "chapter": "america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1995 году в США записал с Андреем Макаревичем диск «Окурочек»."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Немецкая Пушкинская премия",
+      "long": "Присуждена Немецкая Пушкинская премия за творчество в целом.",
+      "chapter": "america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Немецкой Пушкинской премии, присуждённой в 2001 году по совокупности"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Русская премия» за крупную прозу",
+      "long": "Роман занял первое место в номинации «Крупная проза» «Русской премии».",
+      "works": [
+        {
+          "ref": "malenkiy-tyuremnyy-roman"
+        }
+      ],
+      "chapter": "america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2011 году «Маленький тюремный роман» Юза Алешковского занял первое место в номинации «крупная проза» «Русской премии»"
+      }
+    },
+    {
+      "key": "death-2022",
+      "date": {
+        "from": "2022-03-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Тампе",
+      "long": "Умер в возрасте 92 лет в Тампе, Флорида.",
+      "place": {
+        "label": "Тампа"
+      },
+      "chapter": "america",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался в возрасте 92 лет 21 марта 2022 года в Тампе (Флорида, США)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dva-bileta-na-elektrichku",
+      "title": "Два билета на электричку",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "chorno-buraya-lisa",
+      "title": "Чёрно-бурая лиса",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "nikolay-nikolaevich",
+      "title": "Николай Николаевич",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "kysh-dvaportfelya",
+      "title": "Кыш, Двапортфеля и целая неделя",
+      "written": {
+        "from": 1970,
+        "to": 1970
+      }
+    },
+    {
+      "ref": "kenguru",
+      "title": "Кенгуру",
+      "written": {
+        "from": 1974,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "maskirovka",
+      "title": "Маскировка",
+      "written": {
+        "from": 1978,
+        "to": 1978
+      }
+    },
+    {
+      "ref": "ruka",
+      "title": "Рука",
+      "written": {
+        "from": 1977,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "karusel",
+      "title": "Карусель",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "sinenkiy-skromnyy-platochek",
+      "title": "Синенький скромный платочек",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "smert-v-moskve",
+      "title": "Смерть в Москве",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "bloshinoe-tango",
+      "title": "Блошиное танго",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "ruru",
+      "title": "Руру",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "persten-v-futlyare",
+      "title": "Перстень в футляре",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    },
+    {
+      "ref": "predposlednyaya-zhizn",
+      "title": "Предпоследняя жизнь. Записки везунчика",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "malenkiy-tyuremnyy-roman",
+      "title": "Маленький тюремный роман",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

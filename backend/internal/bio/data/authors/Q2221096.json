@@ -1,0 +1,163 @@
+{
+  "qid": "Q2221096",
+  "name": "Крис Вудинг",
+  "born": "1977-02-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D1%83%D0%B4%D0%B8%D0%BD%D0%B3%2C_%D0%9A%D1%80%D0%B8%D1%81",
+      "rev": 149427119
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Chris_Wooding",
+      "rev": 1261798800
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Лестер и первая книга",
+      "from": 1977,
+      "to": 1997
+    },
+    {
+      "key": "debut-and-recognition",
+      "title": "Дебют и первые премии",
+      "from": 1998,
+      "to": 2004
+    },
+    {
+      "key": "london-years",
+      "title": "Лондон и фантастические циклы",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1977",
+      "date": {
+        "from": "1977-02-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лестере",
+      "long": "Крис Вудинг родился 28 февраля 1977 года в Лестере, Великобритания.",
+      "place": {
+        "label": "Лестер"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 28 февраля 1977 года в городе Лестер, Великобритания."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Выход первой книги спустя два года после написания",
+      "long": "Первая книга, написанная в 19 лет, вышла только в 1998 году.",
+      "works": [
+        {
+          "ref": "crashing"
+        }
+      ],
+      "chapter": "debut-and-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Свою первую книгу Crashing написал в возрасте 19 лет, однако опубликовал только в 1998 году."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Серебряная награда Nestlé Smarties Book Prize",
+      "long": "Книга получила серебряную награду Nestlé Smarties Book Prize.",
+      "works": [
+        {
+          "ref": "haunting-of-alaizabel-cray"
+        }
+      ],
+      "chapter": "debut-and-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2001: «Элайзабел Крэй и Темное Братство» выиграла Nestlé Smarties Book Prize Silver Award"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Lancashire Children's Book of the Year",
+      "long": "Книга признана Lancashire Children's Book of the Year; в том же году номинирована на Медаль Карнеги.",
+      "works": [
+        {
+          "ref": "poison"
+        }
+      ],
+      "chapter": "debut-and-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2004: «Отрава» стала Lancashire Children’s Book of the Year"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "crashing",
+      "title": "Crashing",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "haunting-of-alaizabel-cray",
+      "title": "Элайзабел Крэй и Темное Братство",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "poison",
+      "title": "Отрава",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "storm-thief",
+      "title": "Шторм-вор",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "retribution-falls",
+      "title": "Водопады возмездия",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

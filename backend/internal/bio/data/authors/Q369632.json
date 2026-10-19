@@ -1,0 +1,442 @@
+{
+  "qid": "Q369632",
+  "name": "Эван Хантер",
+  "born": "1926-10-15",
+  "died": "2005-07-06",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B0%D0%BD%D1%82%D0%B5%D1%80%2C_%D0%AD%D0%B2%D0%B0%D0%BD",
+      "rev": 152623045
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Evan_Hunter",
+      "rev": 1371555599
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-flot-kolledzh",
+      "title": "Нью-Йорк, флот, колледж",
+      "from": 1926,
+      "to": 1950
+    },
+    {
+      "key": "novye-imena",
+      "title": "Агент, писатель, новые имена",
+      "from": 1951,
+      "to": 1959
+    },
+    {
+      "key": "hitchcock-i-87-uchastok",
+      "title": "Хичкок и 87-й участок",
+      "from": 1960,
+      "to": 1986
+    },
+    {
+      "key": "bolezni-i-pozdnie-knigi",
+      "title": "Болезни и поздние годы",
+      "from": 1987,
+      "to": 2005
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1926",
+      "date": {
+        "from": "1926-10-15",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье итальянских эмигрантов",
+      "long": "Родился в Нью-Йорке в семье итальянских эмигрантов под именем Сальваторе Альберт Ломбино.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-flot-kolledzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эван Хантер (англ. Evan Hunter; 15 октября 1926, Нью-Йорк — 6 июля 2005, Уэстон)"
+      }
+    },
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Хантер-колледжа",
+      "long": "После войны вернулся в Нью-Йорк и учился в Хантер-колледже (английский язык и психология); окончил его в 1950 году.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-flot-kolledzh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "graduated Phi Beta Kappa in 1950"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950-09",
+        "to": "1950-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Семнадцать дней работы школьным учителем",
+      "long": "Семнадцать дней в сентябре 1950 года проработал учителем в школе; этот опыт позже лёг в основу романа о школе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "blackboard-jungle",
+          "note": "опыт учительства использован при написании романа"
+        }
+      ],
+      "chapter": "detstvo-flot-kolledzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Семнадцать дней в сентябре 1950 года был учителем в школе и позднее использовал этот опыт при написании романа «Школьные джунгли»."
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа литературным агентом",
+      "long": "В 1951 году стал литературным агентом; среди его авторов были Артур Кларк, Пол Андерсон и П. Г. Вудхауз.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1951 году стал литературным агентом, работал с такими авторами, как Артур Кларк"
+      }
+    },
+    {
+      "key": "career-1951-2",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация, научно-фантастический рассказ",
+      "long": "Дебютировал научно-фантастическим рассказом, подписанным С. А. Ломбино.",
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1951 году стал литературным агентом… В том же году впервые напечатался, дебютом стал научно-фантастический рассказ «Добро пожаловать, марсиане»."
+      }
+    },
+    {
+      "key": "other-1952",
+      "date": {
+        "from": "1952-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Официальная смена имени на Эван Хантер",
+      "long": "В мае 1952 года официально сменил имя на Эван Хантер после совета редактора: с итальянским именем книги продавались бы хуже.",
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1952 года он официально сменил имя и стал Эваном Хантером"
+      }
+    },
+    {
+      "key": "career-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Успешная экранизация романа о школе",
+      "long": "Роман о школе был экранизирован в 1955 году; фильм имел успех.",
+      "works": [
+        {
+          "ref": "blackboard-jungle"
+        }
+      ],
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The film adaptation followed in 1955."
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Псевдоним Эд Макбейн и цикл о 87-м участке",
+      "long": "Под псевдонимом Эд Макбейн вышел первый роман цикла о 87-м полицейском участке, ставшего главным делом его жизни.",
+      "works": [
+        {
+          "ref": "cop-hater"
+        }
+      ],
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его самый известный псевдоним Эд Макбейн появился в 1956 году, когда вышел роман «Ненавидящий полицейских»."
+      }
+    },
+    {
+      "key": "other-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Признание авторства псевдонима Макбейн",
+      "long": "В 1958 году раскрыл, что Эд Макбейн — это он, но продолжил выпускать под этим именем детективы.",
+      "chapter": "novye-imena",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уже в 1958 году Хантер признался, что Макбейн — это он"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сценарий для фильма Хичкока",
+      "long": "Написал сценарий фильма Альфреда Хичкока; позже работа над следующим фильмом, «Марни», была прервана из-за разногласий.",
+      "works": [
+        {
+          "ref": "the-birds-1963"
+        },
+        {
+          "ref": "me-and-hitch",
+          "note": "воспоминания о совместной работе с режиссёром"
+        }
+      ],
+      "chapter": "hitchcock-i-87-uchastok",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сценарий для фильма Альфреда Хичкока «Птицы» (1963)"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Зал славы Хантер-колледжа",
+      "long": "В 1981 году введён в Зал славы Хантер-колледжа за профессиональные достижения.",
+      "chapter": "hitchcock-i-87-uchastok",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981, Lombino was inducted into the Hunter College Hall of Fame"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "to": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Десять лет без прозы под именем Хантера",
+      "long": "С 1984 по 1994 год не публиковал прозы под именем Эван Хантер.",
+      "chapter": "hitchcock-i-87-uchastok",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "For about a decade, from 1984 to 1994, Hunter published no fiction under his own name."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Грандмастера премии Эдгара По",
+      "long": "Получил звание Грандмастера премии Эдгара Аллана По.",
+      "chapter": "hitchcock-i-87-uchastok",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: гроссмейстер премии Эдгара Аллана По 1986-01-01"
+      }
+    },
+    {
+      "key": "illness-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Первый инфаркт",
+      "long": "Первый из трёх инфарктов случился в 1987 году; впоследствии потребовалась операция на сердце.",
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hunter had three heart attacks over a number of years (his first in 1987)"
+      }
+    },
+    {
+      "key": "illness-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Предраковое образование на гортани",
+      "long": "В 1992 году на гортани обнаружили предраковое образование; его удалили, но позже рак вернулся.",
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "A precancerous lesion was found on his larynx in 1992."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётная премия Ривертона",
+      "long": "Получил Международную почётную премию Ривертона.",
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Международная почётная премия Ривертона 1997-01-01"
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Бриллиантовый кинжал Картье",
+      "long": "Награждён Бриллиантовым кинжалом Картье.",
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Бриллиантовый кинжал Картье 1998-01-01"
+      }
+    },
+    {
+      "key": "illness-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: рак горла",
+      "long": "В 2002 году у писателя обнаружили рак горла; он продолжал писать до последних дней.",
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 году у писателя был обнаружен рак горла."
+      }
+    },
+    {
+      "key": "death-2005",
+      "date": {
+        "from": "2005-07-06",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака гортани",
+      "long": "Умер от рака гортани в Уэстоне, штат Коннектикут, в возрасте 78 лет.",
+      "place": {
+        "label": "Уэстон"
+      },
+      "chapter": "bolezni-i-pozdnie-knigi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Эван Хантер умер в 2005 году в Уэстоне (штат Коннектикут)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "blackboard-jungle",
+      "title": "Школьные джунгли",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "cop-hater",
+      "title": "Ненавидящий полицейских",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "the-birds-1963",
+      "title": "Птицы (сценарий)",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "come-winter",
+      "title": "Наступает зима",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "me-and-hitch",
+      "title": "Я и Хич",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "candyland",
+      "title": "Кэндиленд",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    }
+  ]
+}

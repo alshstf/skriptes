@@ -1,0 +1,795 @@
+{
+  "qid": "Q9215",
+  "name": "Зигмунд Фрейд",
+  "born": "1856-05-06",
+  "died": "1939-09-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D1%80%D0%B5%D0%B9%D0%B4%2C_%D0%97%D0%B8%D0%B3%D0%BC%D1%83%D0%BD%D0%B4",
+      "rev": 155530002
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Sigmund_Freud",
+      "rev": 268133225
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Фрайберг, Лейпциг, Вена",
+      "from": 1856,
+      "to": 1872
+    },
+    {
+      "key": "student",
+      "title": "Медицина, лаборатория, Париж",
+      "from": 1873,
+      "to": 1885
+    },
+    {
+      "key": "practice",
+      "title": "Брак, практика, самоанализ",
+      "from": 1886,
+      "to": 1899
+    },
+    {
+      "key": "movement",
+      "title": "Кружок, слава и расколы",
+      "from": 1900,
+      "to": 1913
+    },
+    {
+      "key": "war-illness",
+      "title": "Война, утраты, рак",
+      "from": 1914,
+      "to": 1929
+    },
+    {
+      "key": "exile",
+      "title": "Запрет книг и лондонское изгнание",
+      "from": 1930,
+      "to": 1939
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1856",
+      "date": {
+        "from": "1856-05-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Фрайберге в Моравии",
+      "long": "Родился в еврейской семье во Фрайберге (ныне Пршибор) в Моравии, тогда части Австрийской империи.",
+      "place": {
+        "label": "Пршибор"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Зигмунд Фрейд родился 6 мая 1856 года в еврейской семье"
+      }
+    },
+    {
+      "key": "relocation-1859",
+      "date": {
+        "from": "1859",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Разорение отца, переезд семьи в Вену",
+      "long": "Дело отца-торговца тканями почти разорилось; семья переехала сначала в Лейпциг, затем в Вену и поселилась в бедном районе Леопольдштадт.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во Фрайберге Зигмунд прожил первые три года жизни, пока в 1859 году последствия индустриальной революции в Центральной Европе не нанесли сокрушительный удар по небольшому бизнесу его отца"
+      }
+    },
+    {
+      "key": "education-1873",
+      "date": {
+        "from": "1873",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление на медицинский факультет",
+      "long": "Осенью 1873 года, в семнадцать лет, поступил на медицинский факультет Венского университета; сталкивался с антисемитскими выпадами однокурсников.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1873 года семнадцатилетний Зигмунд Фрейд поступил на медицинский факультет Венского университета."
+      }
+    },
+    {
+      "key": "career-1876",
+      "date": {
+        "from": "1876",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая научная работа в Триесте",
+      "long": "Под руководством зоолога Карла Клауса в Триесте провёл первое исследование (половые различия у речных угрей), затем перешёл в лабораторию Брюкке.",
+      "place": {
+        "label": "Триест"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1876 году он получил возможность осуществить первую исследовательскую работу в Институте зоологических исследований Триеста"
+      }
+    },
+    {
+      "key": "war-1879",
+      "date": {
+        "from": "1879",
+        "to": "1880",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Год армейской службы лекарем",
+      "long": "Около года служил военным лекарем в Вене.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1879—1880 годах в течение года служил в армии в качестве лекаря."
+      }
+    },
+    {
+      "key": "education-1881",
+      "date": {
+        "from": "1881",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень доктора медицины",
+      "long": "Получил степень доктора медицины; из-за скудных средств Брюкке посоветовал ему оставить научную карьеру ради практики.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1881 году Фрейд сдал на отлично выпускные экзамены и получил учёную степень доктора"
+      }
+    },
+    {
+      "key": "love-1882",
+      "date": {
+        "from": "1882-04",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Мартой Бернайс",
+      "long": "Познакомился с Мартой Бернайс и захотел жениться; ради заработка отказался от лабораторной карьеры в пользу клинической практики.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Als er jedoch im April 1882 Martha Bernays kennenlernte und zu heiraten begehrte"
+      }
+    },
+    {
+      "key": "career-1882",
+      "date": {
+        "from": "1882-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ассистент в Венской клинике",
+      "long": "Начал работать ассистентом в Венской университетской клинике, чтобы получить клинический опыт для будущей частной практики.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ende Juli 1882 nahm Freud eine Beschäftigung als Assistenzarzt im Wiener Universitätsklinikum an"
+      }
+    },
+    {
+      "key": "other-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Опыты с кокаином",
+      "long": "Стал изучать кокаин, пробовал его на себе и невесте, рекомендовал другу Флейшлю фон Марксову; публично защищал препарат до 1887 года, в последующем критиковался.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1884 году Фрейд прочёл об опытах некоего немецкого военного врача с новым препаратом — кокаином."
+      }
+    },
+    {
+      "key": "education-1885",
+      "date": {
+        "from": "1885",
+        "to": "1886",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Стажировка у Шарко в Париже",
+      "long": "Выиграл конкурс на стажировку и работал в клинике Сальпетриер у Жана Шарко, изучавшего истерию и гипноз.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "student",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1885 года Фрейд прибыл в Париж к Шарко, который в то время находился в зените своей славы."
+      }
+    },
+    {
+      "key": "love-1886",
+      "date": {
+        "from": "1886-09-13",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Марте Бернайс",
+      "long": "После четырёхлетней помолвки женился на Марте Бернайс; на следующий день состоялось венчание по иудейскому обряду.",
+      "place": {
+        "label": "Вандсбек"
+      },
+      "chapter": "practice",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "heirateten Sigmund Freud und Martha Bernays am 13. September 1886 standesamtlich im Rathaus von Wandsbek bei Hamburg"
+      }
+    },
+    {
+      "key": "other-1886",
+      "date": {
+        "from": "1886-10",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Неприятие доклада венскими врачами",
+      "long": "Доклад о мужской истерии в Обществе врачей встретил резкое неприятие, в том числе Мейнерта; Фрейд оказался в изоляции среди венских врачей.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "practice",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "stieß Freud im Oktober 1886 mit einem Vortrag Über männliche Hysterie in der Wiener Gesellschaft der Ärzte auf teils heftige Ablehnung"
+      }
+    },
+    {
+      "key": "child-1887",
+      "date": {
+        "from": "1887",
+        "to": "1895",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение шестерых детей",
+      "long": "В браке с Мартой родились шестеро детей: Матильда, Мартин, Оливер, Эрнст, Софи и Анна.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "practice",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Матильду (1887—1978), Мартина (1889—1969), Оливера (1891—1969), Эрнста (1892—1966), Софи (1893—1920) и Анну (1895—1982)"
+      }
+    },
+    {
+      "key": "creation-1895",
+      "date": {
+        "from": "1895",
+        "to": "1898",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Самоанализ и работа над снами",
+      "long": "Исследовал собственные сновидения и детские воспоминания; по статье, самоанализ последовал за смертью отца и привёл к идее эдипова комплекса.",
+      "place": {
+        "label": "Вена"
+      },
+      "works": [
+        {
+          "ref": "interpretation-of-dreams",
+          "note": "самоанализ предшествовал работе над книгой и лёг в её основу"
+        }
+      ],
+      "chapter": "practice",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "nachdem er sich 1895 bis 1898 einer Selbstanalyse unterzogen hatte"
+      }
+    },
+    {
+      "key": "loss-1896",
+      "date": {
+        "from": "1896-10-23",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Якоба",
+      "long": "Умер отец Якоб Фрейд; на фоне отчаяния и одиночества у Фрейда развился невроз, после чего он начал самоанализ.",
+      "place": {
+        "label": "Вена"
+      },
+      "works": [
+        {
+          "ref": "interpretation-of-dreams",
+          "note": "по биографам, самоанализ после смерти отца стал основой книги"
+        }
+      ],
+      "chapter": "practice",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 октября 1896 года умер Якоб Фрейд, чью смерть Зигмунд переживал особенно остро"
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902",
+        "to": "1908",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "«Психологическое общество по средам»",
+      "long": "По средам дома у Фрейда собирался кружок единомышленников (Адлер, Штекель, Ранк и др.); в 1908 году он стал Венским психоаналитическим обществом.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "movement",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1902 года учёный регулярно принимал в своём доме заинтересованных в развитии и распространении психоаналитических идей врачей"
+      }
+    },
+    {
+      "key": "career-1902-2",
+      "date": {
+        "from": "1902-02-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание экстраординарного профессора",
+      "long": "Через 17 лет после габилитации стал экстраординарным профессором Венского университета; после этого заметно выросла практика.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "movement",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "So wurde Freud erst 17 Jahre nach seiner Habilitation am 22. Februar 1902 mit nunmehr 45 Jahren außerordentlicher Professor."
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Лекции в США, почётная докторская степень",
+      "long": "Приглашение в США стало первым международным признанием: лекции в Университете Кларка были встречены с интересом, Фрейду присвоили почётную степень доктора.",
+      "place": {
+        "label": "Вустер"
+      },
+      "chapter": "movement",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1909 году Грэнвилл Стэнли Холл предложил ему прочесть курс лекций в Университете Кларка (Вустер, штат Массачусетс)"
+      }
+    },
+    {
+      "key": "other-1911",
+      "date": {
+        "from": "1911",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Разрыв с Адлером",
+      "long": "Разногласия с Альфредом Адлером обострились; Адлер и его сторонники покинули Венское общество, Фрейд объявил несовместимость с его кругом.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "movement",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zu Jahresbeginn 1911 eskalierten die Differenzen nach zwei Vorträgen Adlers."
+      }
+    },
+    {
+      "key": "other-1912",
+      "date": {
+        "from": "1912",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Разрыв с Юнгом, прочимым преемником",
+      "long": "Разрыв с Юнгом, которого Фрейд видел своим преемником, оказался болезненным для обоих; переписка прекратилась в 1913 году.",
+      "works": [
+        {
+          "ref": "totem-and-taboo",
+          "note": "по статье, книга рассматривалась Фрейдом как контраргумент цюрихской школе Юнга"
+        }
+      ],
+      "chapter": "movement",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончательный разрыв между двумя учёными произошёл после публикации Юнгом «Символов трансформации» (1912)"
+      }
+    },
+    {
+      "key": "other-1913",
+      "date": {
+        "from": "1913-05-25",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Тайный «Комитет» соратников",
+      "long": "По предложению Эрнеста Джонса создан тайный «Комитет» из ближайших соратников (Ференци, Абрахам, Джонс, Ранк, Сакс) для защиты основ психоанализа.",
+      "chapter": "movement",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Общество появилось на свет 25 мая 1913 года"
+      }
+    },
+    {
+      "key": "poverty-1915",
+      "date": {
+        "from": "1915",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "minor",
+      "short": "Война, потеря практики и доходов",
+      "long": "В годы войны практика сократилась с десяти пациентов в день до двух, к концу войны платили продуктами и углём; Фрейд больше занимался теорией.",
+      "place": {
+        "label": "Вена"
+      },
+      "works": [
+        {
+          "ref": "mourning-and-melancholia",
+          "note": "метапсихологические работы возникли в годы спада практики"
+        }
+      ],
+      "chapter": "war-illness",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Den bis dahin eingetretenen Verlust an Praxiseinnahmen bezifferte er im April 1915 mit 40.000 Kronen."
+      }
+    },
+    {
+      "key": "loss-1920",
+      "date": {
+        "from": "1920-01-25",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Софи",
+      "long": "Умерла от гриппа дочь Софи; позже от туберкулёза умер её сын, внук Фрейда.",
+      "chapter": "war-illness",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Sophie Freud 1920-01-25"
+      }
+    },
+    {
+      "key": "illness-1923",
+      "date": {
+        "from": "1923-04",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Рак нёба",
+      "long": "Обнаружена опухоль нёба (рак); болезнь сопровождала Фрейда до конца жизни, дочь Анна стала его сиделкой и представителем на конгрессах.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "war-illness",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 1923 года у Фрейда обнаружили опухоль нёба"
+      }
+    },
+    {
+      "key": "illness-1923-2",
+      "date": {
+        "from": "1923-10-12",
+        "precision": "day"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция на челюсти, протез",
+      "long": "Операция удалила большую часть правой верхней челюсти и часть нижней; затем потребовался протез и множество дальнейших вмешательств, выступать публично стало трудно.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "war-illness",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "unterzog sich Freud am 12. Oktober 1923 der operativen Entfernung unter anderem des größeren Teils des rechten Oberkiefers"
+      }
+    },
+    {
+      "key": "career-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Гёте",
+      "long": "Город Франкфурт присудил Фрейду премию Гёте.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1930 года Фрейд был удостоен премии Гёте за весомый вклад в науку и литературу"
+      }
+    },
+    {
+      "key": "loss-1930",
+      "date": {
+        "from": "1930-09-12",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери Амалии",
+      "long": "Умерла мать Амалия Фрейд в возрасте 95 лет.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1930 года Фрейд был удостоен премии Гёте за весомый вклад в науку и литературу … Однако это событие оказалось омрачено очередной утратой: в возрасте девяноста пяти лет от туберкулёза умерла мать Фрейда Амалия."
+      }
+    },
+    {
+      "key": "persecution-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет и сожжение книг в Германии",
+      "long": "После прихода нацистов к власти книги Фрейда были запрещены и уничтожены, Психоаналитическая ассоциация в Германии распущена.",
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1933 году рейхсканцлером Германии был назначен Адольф Гитлер … под запрет попали и работы Фрейда"
+      }
+    },
+    {
+      "key": "career-1936",
+      "date": {
+        "from": "1936-06-25",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Иностранный член Королевского общества",
+      "long": "Избран иностранным членом Лондонского королевского общества.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: иностранный член Лондонского королевского общества 1936-06-25"
+      }
+    },
+    {
+      "key": "persecution-1938",
+      "date": {
+        "from": "1938-03-22",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Допрос дочери Анны в гестапо",
+      "long": "После аншлюса гестапо пришло за Фрейдом; вместо него на допрос забрали дочь Анну, к вечеру она была освобождена.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1938 году, после присоединения Австрии к Германии … После ареста дочери Анны и допроса в гестапо Фрейд принял решение покинуть Третий рейх"
+      }
+    },
+    {
+      "key": "relocation-1938",
+      "date": {
+        "from": "1938-06-04",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция из Вены в Англию",
+      "long": "Выезд оплачен ссудой Мари Бонапарт; в Лондоне Фрейд поселился в Хэмпстеде. Четыре сестры остались в Вене.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Фрейд, его жена Марта и дочь Анна уехали из Вены на Восточном Экспрессе 4 июня 1938."
+      }
+    },
+    {
+      "key": "death-1939",
+      "date": {
+        "from": "1939-09-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Умер в Лондоне после введения врачом Максом Шуром дозы морфия, о которой просил сам, измученный болезнью.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "6 мая 1856, Пршибор, Нови-Йичин — 23 сентября 1939, Лондон"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "studies-on-hysteria",
+      "title": "Исследования истерии",
+      "written": {
+        "from": 1893,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "interpretation-of-dreams",
+      "title": "Толкование сновидений",
+      "qid": "Q726382",
+      "written": {
+        "from": 1897,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "psychopathology-of-everyday-life",
+      "title": "Психопатология обыденной жизни",
+      "written": {
+        "from": 1900,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "three-essays-on-sexuality",
+      "title": "Три очерка по теории сексуальности",
+      "qid": "Q673747",
+      "written": {
+        "from": 1904,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "totem-and-taboo",
+      "title": "Тотем и табу",
+      "qid": "Q910769",
+      "written": {
+        "from": 1912,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "mourning-and-melancholia",
+      "title": "Печаль и меланхолия",
+      "written": {
+        "from": 1915,
+        "to": 1916
+      }
+    },
+    {
+      "ref": "introductory-lectures",
+      "title": "Введение в психоанализ. Лекции",
+      "written": {
+        "from": 1915,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "beyond-the-pleasure-principle",
+      "title": "По ту сторону принципа удовольствия",
+      "written": {
+        "from": 1919,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "group-psychology",
+      "title": "Психология масс и анализ человеческого «Я»",
+      "written": {
+        "from": 1920,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "ego-and-id",
+      "title": "Я и Оно",
+      "qid": "Q486893",
+      "written": {
+        "from": 1922,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "future-of-an-illusion",
+      "title": "Будущее одной иллюзии",
+      "written": {
+        "from": 1927,
+        "to": 1927
+      }
+    },
+    {
+      "ref": "civilization-and-its-discontents",
+      "title": "Недовольство культурой",
+      "qid": "Q1170621",
+      "written": {
+        "from": 1929,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "moses-and-monotheism",
+      "title": "Человек Моисей и монотеистическая религия",
+      "written": {
+        "from": 1934,
+        "to": 1939
+      }
+    }
+  ]
+}

@@ -1,0 +1,401 @@
+{
+  "qid": "Q2654502",
+  "name": "Бел Кауфман",
+  "born": "1911-05-10",
+  "died": "2014-07-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%83%D1%84%D0%BC%D0%B0%D0%BD%2C_%D0%91%D0%B5%D0%BB",
+      "rev": 148089359
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Bel_Kaufman",
+      "rev": 1356956200
+    }
+  ],
+  "chapters": [
+    {
+      "key": "berlin-odessa",
+      "title": "Берлин и Одесса",
+      "from": 1911,
+      "to": 1923
+    },
+    {
+      "key": "amerika-uchyoba",
+      "title": "Америка, колледж, первый брак",
+      "from": 1924,
+      "to": 1936
+    },
+    {
+      "key": "semya-shkola",
+      "title": "Семья и школьный класс",
+      "from": 1937,
+      "to": 1963
+    },
+    {
+      "key": "lestnitsa",
+      "title": "Лестница и успех",
+      "from": 1964,
+      "to": 1979
+    },
+    {
+      "key": "dolgie-gody",
+      "title": "Долгие годы",
+      "from": 1980,
+      "to": 2014
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1911",
+      "date": {
+        "from": "1911-05-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Берлине",
+      "long": "Родилась в Берлине, где отец учился на медицинском факультете; внучка Шолом-Алейхема.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 мая 1911, Берлин"
+      }
+    },
+    {
+      "key": "relocation-1923",
+      "date": {
+        "from": "1923-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд из Одессы в США",
+      "long": "Детство прошло в Одессе; с декабря 1923 года семья в США, сначала в Бронксе, затем в Ньюарке.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "berlin-odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с декабря 1923 года — в США"
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак с Сидни Голдстайном",
+      "long": "Первый брак с врачом Сидни Голдстайном (по английской статье — 1936 год); развод в 1960-х.",
+      "chapter": "amerika-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дети от первого брака с врачом Сидни Голдстайном (англ. Sydney Goldstine, 1909—2000, с 1933 года)"
+      }
+    },
+    {
+      "key": "education-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание колледжа Хантер",
+      "long": "Окончила колледж Хантер с отличием.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "amerika-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С отличием окончила колледж Хантер в Нью-Йорке в 1934 году"
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура в Колумбийском университете",
+      "long": "Получила степень магистра литературы в Колумбийском университете.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "amerika-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "магистратуру по литературе в Колумбийском университете (1936)"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рассказы в Esquire под псевдонимом",
+      "long": "В 1940-х годах публиковала рассказы и скетчи в Esquire под псевдонимом Бел Кауфман.",
+      "chapter": "semya-shkola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1940-х годах публиковала рассказы и скетчи в журнале Esquire, взяв литературный псевдоним Бел Кауфман"
+      }
+    },
+    {
+      "key": "child-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Джонатана",
+      "long": "Родился сын Джонатан, впоследствии профессор информатики.",
+      "chapter": "semya-shkola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джонатан Голдстайн (англ. Jonathan Goldstine, род. 1942)"
+      }
+    },
+    {
+      "key": "child-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Теи",
+      "long": "Родилась дочь Теа, впоследствии психолог.",
+      "chapter": "semya-shkola",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Теа Голдстайн (англ. Thea L. Goldstine, род. 1944)"
+      }
+    },
+    {
+      "key": "loss-1946",
+      "date": {
+        "from": "1946-03-23",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, врач Михаил Яковлевич Койфман (Кауфман).",
+      "chapter": "semya-shkola",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Кауфман, Михаил Яковлевич 1881-08-19 — 1946-03-23"
+      }
+    },
+    {
+      "key": "creation-1962",
+      "date": {
+        "from": "1962-11-17",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Рассказ в Saturday Review, зерно романа",
+      "long": "Короткий рассказ в Saturday Review, из которого вырос роман, основанный на её опыте школьной учительницы.",
+      "works": [
+        {
+          "ref": "up-the-down-staircase",
+          "note": "журнальный рассказ стал основой романа"
+        }
+      ],
+      "chapter": "semya-shkola",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Up the Down Staircase was originally a short story—only three and a half pages long — published in The Saturday Review on November 17, 1962"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Громкий успех романа о школе",
+      "long": "Роман, основанный на её преподавательском опыте, имел огромный успех: 64 недели в списке бестселлеров New York Times.",
+      "works": [
+        {
+          "ref": "up-the-down-staircase"
+        }
+      ],
+      "chapter": "lestnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1964, she published Up the Down Staircase, a novel about an idealistic young honors college graduate… The book became an enormous success, remaining on The New York Times Best Seller list for 64 weeks."
+      }
+    },
+    {
+      "key": "loss-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, писательница на идише Ляля (Сара) Кауфман.",
+      "chapter": "lestnitsa",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Сара Соломоновна Рабинович 1887-01-01 — 1964-01-01"
+      }
+    },
+    {
+      "key": "love-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Сидни Глаком",
+      "long": "Второй брак с Сидни Глаком, профессором и президентом Фонда Шолом-Алейхема; они были вместе до её смерти.",
+      "chapter": "lestnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Муж (с 1975 года) — Сидни Глак"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Прохладный приём второго романа",
+      "long": "Второй роман не имел критического успеха.",
+      "works": [
+        {
+          "ref": "love-etc"
+        }
+      ],
+      "chapter": "lestnitsa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1979, Kaufman published a second novel, Love, etc., which was not a critical success."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Курс о еврейском юморе в колледже Хантер",
+      "long": "В 99 лет приглашена в колледж Хантер читать курс о еврейском юморе.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "dolgie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was hired by her alma mater Hunter College in February 2011 to teach a course on Jewish humor"
+      }
+    },
+    {
+      "key": "death-2014",
+      "date": {
+        "from": "2014-07-25",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Нью-Йорке",
+      "long": "Умерла дома в Нью-Йорке в возрасте 103 лет.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "dolgie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "25 июля 2014, Нью-Йорк"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "up-the-down-staircase",
+      "title": "Вверх по лестнице, ведущей вниз",
+      "qid": "Q4105644",
+      "written": {
+        "from": 1962,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "love-etc",
+      "title": "Любовь, и всё такое...",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "abroad-in-america",
+      "title": "В Америке за рубежом",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "sunday-in-the-park",
+      "title": "В воскресенье в парке",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "odessa-memories",
+      "title": "Odessa Memories",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "this-and-that",
+      "title": "This and That",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "la-tigresse",
+      "title": "La Tigresse",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

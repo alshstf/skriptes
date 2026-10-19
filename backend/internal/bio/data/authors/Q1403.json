@@ -1,0 +1,761 @@
+{
+  "qid": "Q1403",
+  "name": "Луиджи Пиранделло",
+  "born": "1867-06-28",
+  "died": "1936-12-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B8%D1%80%D0%B0%D0%BD%D0%B4%D0%B5%D0%BB%D0%BB%D0%BE%2C_%D0%9B%D1%83%D0%B8%D0%B4%D0%B6%D0%B8",
+      "rev": 155500538
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Luigi_Pirandello",
+      "rev": 1380561537
+    },
+    {
+      "id": "itwiki",
+      "url": "https://it.wikipedia.org/wiki/Luigi_Pirandello",
+      "rev": 152949416
+    }
+  ],
+  "chapters": [
+    {
+      "key": "sicily-rome-bonn",
+      "title": "Сицилия, Рим, Бонн",
+      "from": 1867,
+      "to": 1891
+    },
+    {
+      "key": "marriage-and-rome",
+      "title": "Брак и литературный Рим",
+      "from": 1892,
+      "to": 1902
+    },
+    {
+      "key": "collapse-and-fame",
+      "title": "Крах и болезнь Антоньетты",
+      "from": 1903,
+      "to": 1918
+    },
+    {
+      "key": "theatre-years",
+      "title": "Лечебница, провал и триумф на сцене",
+      "from": 1919,
+      "to": 1928
+    },
+    {
+      "key": "nobel-and-end",
+      "title": "Нобель и последние годы",
+      "from": 1929,
+      "to": 1936
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1867",
+      "date": {
+        "from": "1867-06-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в богатой сицилийской семье",
+      "long": "Родился в Джирдженти (ныне Агридженто) в богатой семье владельца серных копей.",
+      "place": {
+        "label": "Агридженто"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 28 июня 1867 года в Агридженто в богатой семье."
+      }
+    },
+    {
+      "key": "relocation-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд семьи в Палермо",
+      "long": "Семья переехала в Палермо, где Пиранделло окончил гимназию, начал писать стихи и влюбился в кузину Лину.",
+      "place": {
+        "label": "Палермо"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1880 семья переехала в Палермо."
+      }
+    },
+    {
+      "key": "career-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа с отцом на серных копях",
+      "long": "Во время каникул помогал отцу в серном деле и увидел жизнь рабочих копей и портовых грузчиков; свадьба с кузиной Линой была отложена.",
+      "place": {
+        "label": "Порто-Эмпедокле"
+      },
+      "works": [
+        {
+          "ref": "old-and-young",
+          "note": "опыт на копях лёг в основу описаний в романе (английская статья о биографии)"
+        }
+      ],
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1886 году, во время каникул, Пиранделло стал помогать отцу на предприятии."
+      }
+    },
+    {
+      "key": "education-1887",
+      "date": {
+        "from": "1887",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба на филологическом факультете в Риме",
+      "long": "Перешёл из Палермо в Римский университет на филологический факультет; Рим разочаровал его, но он начал посещать театры.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1887 году он окончательно определился с выбором специальности и продолжил обучение в Риме на филологическом факультете."
+      }
+    },
+    {
+      "key": "education-1889",
+      "date": {
+        "from": "1889-10",
+        "to": "1891-03",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Учёба в Боннском университете",
+      "long": "После конфликта с профессором латыни в Риме уехал в Бонн, где два года изучал романскую филологию, читал немецких романтиков и переводил Гёте.",
+      "place": {
+        "label": "Бонн"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nell'ottobre del 1889 Luigi Pirandello si trasferì in Germania, raggiungendo Bonn dove si iscrisse alla Rheinische Friedrich-Wilhelms-Universität"
+      }
+    },
+    {
+      "key": "love-1890",
+      "date": {
+        "from": "1890-01",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Любовь к Дженни Шульц-Ландер в Бонне",
+      "long": "В Бонне познакомился с Дженни Шульц-Ландер, влюбился в неё и поселился в пансионе её матери; ей посвящены стихи сборника «Пасха Геи».",
+      "place": {
+        "label": "Бонн"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "alla fine di gennaio del 1890, conobbe a una festa in maschera la giovane Jenny Schulz-Lander, della quale si innamorò"
+      }
+    },
+    {
+      "key": "education-1891",
+      "date": {
+        "from": "1891-03",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская степень по романской филологии",
+      "long": "Получил докторскую степень по романской филологии; диссертация посвящена диалекту Агридженто.",
+      "place": {
+        "label": "Бонн"
+      },
+      "chapter": "sicily-rome-bonn",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1891 he received his doctorate in Romance Philology with a dissertation on the dialect of Agrigento"
+      }
+    },
+    {
+      "key": "relocation-1892",
+      "date": {
+        "from": "1892",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Рим, знакомство с Капуаной",
+      "long": "Поселился в Риме на содержании отца, познакомился с Луиджи Капуаной, который ввёл его в литературные круги.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1892 Pirandello si trasferì a Roma, dove poté mantenersi grazie agli assegni mensili inviati dal padre."
+      }
+    },
+    {
+      "key": "love-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Антоньеттой Портулано",
+      "long": "Женился по совету отца на Марии Антоньетте Портулано, дочери богатого компаньона отца, после того как кузина Лина отказалась от брака с ним.",
+      "place": {
+        "label": "Джирдженти"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1894, a Girgenti, Pirandello sposò Maria Antonietta Portulano (1871-1959)"
+      }
+    },
+    {
+      "key": "child-1895",
+      "date": {
+        "from": "1895-06-14",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Стефано",
+      "long": "Родился первый сын Стефано, впоследствии драматург.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Stefano Pirandello 1895-06-14"
+      }
+    },
+    {
+      "key": "child-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Лиетты",
+      "long": "Родилась дочь Розалия (Лиетта).",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "a cui seguirono, due anni dopo, Rosalia \"Lietta\" Caterina (1897-1971)"
+      }
+    },
+    {
+      "key": "career-1897",
+      "date": {
+        "from": "1897",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в женском педагогическом институте",
+      "long": "Начал преподавать итальянский язык в Высшем педагогическом институте в Риме — единственная постоянная работа писателя.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1897 году он начал деятельность в Istituto Superiore di Magistero di Roma, где преподавал итальянский язык."
+      }
+    },
+    {
+      "key": "career-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание журнала «Ариэль»",
+      "long": "Вместе с Итало Фальбо и Уго Флересом основал журнал «Ариэль».",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1898 году вместе с Итало Фальбо и Уго Флересом основал журнал «Ariel», в котором печатал и свои работы."
+      }
+    },
+    {
+      "key": "child-1899",
+      "date": {
+        "from": "1899-06-17",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Фаусто",
+      "long": "Родился младший сын Фаусто, впоследствии художник.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "marriage-and-rome",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Fausto Pirandello 1899-06-17"
+      }
+    },
+    {
+      "key": "poverty-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Разорение семьи после гибели серной шахты",
+      "long": "Затопление серной шахты в Арагоне, куда были вложены капитал отца и приданое жены, разорило семью; Пиранделло думал о самоубийстве, затем увеличил число уроков.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "mattia-pascal",
+          "note": "роман писался в эти месяцы, по ночам у постели больной жены (английская статья)"
+        }
+      ],
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1903 год был крайне неудачен для семьи Пиранделло. Все деньги были вложены в предприятие по добыче серы, но оно потерпело катастрофу."
+      }
+    },
+    {
+      "key": "illness-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Душевная болезнь жены Антоньетты",
+      "long": "Узнав о крахе, жена Антоньетта пережила шок, после которого её психическое здоровье осталось нарушенным; позже развились ревность и приступы.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1903 год был крайне неудачен для семьи Пиранделло.… Узнав об этом, жена Пиранделло испытала сильный шок, после чего её психическое здоровье стало нестабильным."
+      }
+    },
+    {
+      "key": "career-1904",
+      "date": {
+        "from": "1904",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый большой успех у читателей",
+      "long": "Роман принёс первый большой успех у читателей и был быстро переведён на несколько языков.",
+      "works": [
+        {
+          "ref": "mattia-pascal"
+        }
+      ],
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Il suo primo grande successo fu il romanzo Il fu Mattia Pascal.… Il libro fu pubblicato nel 1904 e immediatamente tradotto in diverse lingue."
+      }
+    },
+    {
+      "key": "career-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рост известности, «Коррьере делла сера»",
+      "long": "Начал сотрудничать с «Коррьере делла сера»; положение семьи и известность писателя росли, но отношения с женой ухудшались из-за её ревности.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "old-and-young"
+        }
+      ],
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1909 года финансовое положение семьи и слава Пиранделло как писателя начали расти"
+      }
+    },
+    {
+      "key": "career-1910",
+      "date": {
+        "from": "1910-12-09",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая постановка пьес в Риме",
+      "long": "Одноактные пьесы «Морса» и «Лимоны Сицилии» поставлены в римском Театре Метастазио — начало сценического пути.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "la rappresentazione dei due atti unici, il 9 dicembre 1910, ebbe un discreto successo."
+      }
+    },
+    {
+      "key": "war-1915",
+      "date": {
+        "from": "1915",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Сын Стефано на войне и в австрийском плену",
+      "long": "Сын Стефано ушёл добровольцем на фронт, попал в австрийский плен и вернулся лишь после войны; Пиранделло не смог добиться его освобождения.",
+      "chapter": "collapse-and-fame",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Una sua lettera apparsa nel 1915 sul Giornale di Sicilia… durante la quale il figlio Stefano fu fatto prigioniero dagli austriaci"
+      }
+    },
+    {
+      "key": "family-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Помещение жены в психиатрическую клинику",
+      "long": "Из-за приступов и галлюцинаций поместил жену в психиатрическую клинику; домой она больше не вернулась.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Пиранделло был вынужден обратиться в психиатрическую лечебницу, куда и отдал жену в 1919 году."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921-05-10",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Скандальный провал римской премьеры",
+      "long": "Римская премьера вызвала скандал: публика разделилась, раздавались крики «В сумасшедший дом!». В Милане та же пьеса имела большой успех.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "six-characters"
+        }
+      ],
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1921, the Compagnia di Dario Niccodemi staged, at the Valle di Roma, the play, Sei Personaggi in Cerca d'Autore, Six Characters in Search of an Author. It was a clamorous failure."
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922-02-24",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Успех миланской премьеры",
+      "long": "Миланская премьера пьесы имела всеобщий успех; растёт международная известность драматурга.",
+      "place": {
+        "label": "Милан"
+      },
+      "works": [
+        {
+          "ref": "henry-iv"
+        }
+      ],
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1922 in Milan, Enrico IV was performed for the first time and was acclaimed universally as a success."
+      }
+    },
+    {
+      "key": "other-1924",
+      "date": {
+        "from": "1924",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Вступление в фашистскую партию",
+      "long": "Просил Муссолини принять его в Национальную фашистскую партию; в 1927 году публично порвал партийный билет, но открытого разрыва с режимом не было.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1924, he wrote a letter to Benito Mussolini asking him to be accepted as a member of the National Fascist Party."
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925",
+        "to": "1928",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Руководство Римским театром искусств",
+      "long": "С помощью Муссолини возглавил Театр искусств в Риме, ставил свои и чужие пьесы и гастролировал по Европе; труппа распалась из-за расходов.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1925—1928 годах Пиранделло был главой римского Художественного театра"
+      }
+    },
+    {
+      "key": "relocation-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Распад театра, Берлин с Мартой Аббой",
+      "long": "После роспуска театра на несколько месяцев уехал в Берлин вместе с примадонной труппы Мартой Аббой, с которой его связывала близкая дружба.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "theatre-years",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "Nel 1928 si concluse senza troppa fortuna l'esperienza del Teatro d'Arte cominciata quattro anni prima; dopo lo scioglimento"
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия и место в Королевской академии Италии",
+      "long": "Награждён Академической премией Италии; назначен одним из первых академиков Королевской академии Италии.",
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929 году Пиранделло был награждён Академической премией Италии"
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия по литературе",
+      "long": "Удостоен Нобелевской премии по литературе «за творческую смелость и изобретательность в возрождении драматургического и сценического искусства».",
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 1934 году — Нобелевской премией по литературе."
+      }
+    },
+    {
+      "key": "other-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Нобелевская медаль в кампанию «Золото Родине»",
+      "long": "Во время кампании «Золото Родине» передал государству Нобелевскую медаль; в США публично поддержал войну в Эфиопии.",
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С началом Второй Абиссинской войны в 1935 году… Пиранделло пожертвовал государству свою Нобелевскую медаль"
+      }
+    },
+    {
+      "key": "illness-1936",
+      "date": {
+        "from": "1936-11",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Пневмония на съёмках фильма",
+      "long": "На съёмках фильма по роману «Покойный Маттиа Паскаль» в Чинечитта заболел пневмонией; пьеса «Горные великаны» осталась неоконченной.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "giants-of-the-mountain"
+        }
+      ],
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "itwiki",
+        "quote": "nel novembre 1936 si ammalò di polmonite"
+      }
+    },
+    {
+      "key": "death-1936",
+      "date": {
+        "from": "1936-12-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Риме",
+      "long": "Умер в Риме; по завещанию был кремирован без церемонии.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "nobel-and-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Луиджи Пиранделло скончался в одиночестве 10 декабря 1936 года в своём доме в Риме."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "l-esclusa",
+      "title": "Отверженная",
+      "qid": "Q3819063",
+      "written": {
+        "from": 1893,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "il-turno",
+      "title": "Очередь",
+      "qid": "Q1131904",
+      "written": {
+        "from": 1902,
+        "to": 1902
+      }
+    },
+    {
+      "ref": "mattia-pascal",
+      "title": "Покойный Маттиа Паскаль",
+      "qid": "Q1632269",
+      "written": {
+        "from": 1903,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "old-and-young",
+      "title": "Старые и молодые",
+      "written": {
+        "from": 1909,
+        "to": 1913
+      }
+    },
+    {
+      "ref": "six-characters",
+      "title": "Шесть персонажей в поисках автора",
+      "qid": "Q641651",
+      "written": {
+        "from": 1920,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "henry-iv",
+      "title": "Генрих IV",
+      "qid": "Q667340",
+      "written": {
+        "from": 1921,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "clothing-the-naked",
+      "title": "Обнажённые одеваются",
+      "qid": "Q3564436",
+      "written": {
+        "from": 1922,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "one-no-one-hundred-thousand",
+      "title": "Один, никто и сто тысяч",
+      "qid": "Q3021244",
+      "written": {
+        "from": 1925,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "novelle-per-un-anno",
+      "title": "Новеллы на каждый год",
+      "qid": "Q1754072",
+      "written": {
+        "from": 1922,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "giants-of-the-mountain",
+      "title": "Горные великаны",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    }
+  ]
+}

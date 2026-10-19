@@ -1,0 +1,766 @@
+{
+  "qid": "Q37767",
+  "name": "Т. С. Элиот",
+  "born": "1888-09-26",
+  "died": "1965-01-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%AD%D0%BB%D0%B8%D0%BE%D1%82%2C_%D0%A2%D0%BE%D0%BC%D0%B0%D1%81_%D0%A1%D1%82%D0%B5%D1%80%D0%BD%D0%B7",
+      "rev": 155467891
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/T._S._Eliot",
+      "rev": 1379837270
+    }
+  ],
+  "chapters": [
+    {
+      "key": "st-louis-harvard",
+      "title": "Сент-Луис, Гарвард, Париж",
+      "from": 1888,
+      "to": 1913
+    },
+    {
+      "key": "england-marriage",
+      "title": "Англия, брак, банк",
+      "from": 1914,
+      "to": 1924
+    },
+    {
+      "key": "faber-anglicanism",
+      "title": "Издательство, англиканство, разрыв",
+      "from": 1925,
+      "to": 1938
+    },
+    {
+      "key": "war-fame",
+      "title": "Война, слава, Нобелевская премия",
+      "from": 1939,
+      "to": 1956
+    },
+    {
+      "key": "late-years",
+      "title": "Второй брак и последние годы",
+      "from": 1957,
+      "to": 1965
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1888",
+      "date": {
+        "from": "1888-09-26",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Сент-Луисе",
+      "long": "Родился в состоятельной семье в Сент-Луисе; отец возглавлял промышленную компанию, мать писала стихи.",
+      "place": {
+        "label": "Сент-Луис"
+      },
+      "chapter": "st-louis-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "26 сентября 1888, Сент-Луис, Миссури, США"
+      }
+    },
+    {
+      "key": "education-1906",
+      "date": {
+        "from": "1906",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Гарварде",
+      "long": "Поступил в Гарвард в 1906 году и закончил курс за три года; печатал стихи в «Харвард адвокат» и редактировал журнал.",
+      "place": {
+        "label": "Кембридж (Массачусетс)"
+      },
+      "chapter": "st-louis-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1906 году после окончания частной школы поступил в Гарвардский университет, который окончил за три года вместо четырёх."
+      }
+    },
+    {
+      "key": "education-1910",
+      "date": {
+        "from": "1910",
+        "to": "1911",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Год в Париже, лекции в Сорбонне",
+      "long": "В 1910–1911 годах жил в Париже, слушал в Сорбонне лекции по философии, в том числе Анри Бергсона.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "st-louis-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1910—1911 годах жил в Париже и слушал в Сорбонне лекции по философии и языкам."
+      }
+    },
+    {
+      "key": "education-1911",
+      "date": {
+        "from": "1911",
+        "to": "1914",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторантура: индийская философия и санскрит",
+      "long": "Вернувшись в США, три года изучал в докторантуре Гарварда индийскую философию и санскрит.",
+      "place": {
+        "label": "Кембридж (Массачусетс)"
+      },
+      "chapter": "st-louis-harvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1911 году вернулся в США и три года в докторантуре Гарварда изучал индийскую философию и санскрит у Чарльза Рокуэлла Ланмана."
+      }
+    },
+    {
+      "key": "relocation-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Европу, затем в Англию",
+      "long": "В 1914 году уехал в Европу, с началом Первой мировой войны перебрался в Англию, где прожил большую часть жизни.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1914 году он переселился в Европу, сначала в германский Марбург, с началом Первой мировой войны уехал в Англию и прожил большую часть жизни в этой стране"
+      }
+    },
+    {
+      "key": "career-1914",
+      "date": {
+        "from": "1914-09-22",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Знакомство с Эзрой Паундом",
+      "long": "Знакомство с Эзрой Паундом, который в дальнейшем продвигал Элиота в литературных кругах Лондона.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 22 September 1914, Eliot paid a visit to Pound's flat. Pound instantly deemed Eliot \"worth watching\""
+      }
+    },
+    {
+      "key": "career-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация стихотворения",
+      "long": "По рекомендации Паунда стихотворение напечатал журнал «Poetry»; его сочли вызывающим.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "love-song-of-j-alfred-prufrock"
+        }
+      ],
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1915 году состоялась первая публикация стихотворения Элиота — это была «Любовная песня Дж. Альфреда Пруфрока»."
+      }
+    },
+    {
+      "key": "love-1915",
+      "date": {
+        "from": "1915-06-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Вивьен Хей-Вуд",
+      "long": "Женился на Вивьен Хей-Вуд; брак оказался несчастливым, отчасти из-за болезней жены. Позднее Элиот связывал с ним душевное состояние, из которого родилась поэма.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "the-waste-land",
+          "note": "частные записи Элиота: брак принёс «состояние ума», из которого вышла поэма"
+        }
+      ],
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They were married at Hampstead Register Office on 26 June 1915."
+      }
+    },
+    {
+      "key": "education-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Докторская диссертация без защиты",
+      "long": "Завершил докторскую диссертацию для Гарварда о философии Брэдли, но не вернулся защищать её.",
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1916 he completed a doctoral dissertation for Harvard on \"Knowledge and Experience in the Philosophy of F. H. Bradley\", but failed to return for the viva voce examination."
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "to": "1925",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в банке Ллойдс",
+      "long": "С 1917 года служил в лондонском банке Ллойдс, занимался иностранными счетами, до перехода в издательство в 1925 году.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1917 he took a position at Lloyds Bank in London, working on foreign accounts."
+      }
+    },
+    {
+      "key": "loss-1919",
+      "date": {
+        "from": "1919-01-07",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Умер отец, Генри Уэр Элиот.",
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Henry Ware Eliot 1843-11-25 — 1919-01-07"
+      }
+    },
+    {
+      "key": "other-1920",
+      "date": {
+        "from": "1920-08",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Знакомство с Джойсом",
+      "long": "В Париже с Уиндемом Льюисом познакомился с Джеймсом Джойсом; позднее они подружились.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On a trip to Paris in August 1920 with the artist Wyndham Lewis, he met James Joyce."
+      }
+    },
+    {
+      "key": "creation-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над поэмой в кризисе брака",
+      "long": "Поэма создавалась в тяжёлое время: брак разваливался, оба супруга страдали нервными расстройствами. Правкой текста занимался Паунд.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "the-waste-land",
+          "note": "поэма написана в период семейных трудностей и нервных расстройств обоих супругов"
+        }
+      ],
+      "chapter": "england-marriage",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1922 Eliot published The Waste Land in The Criterion… It was composed during a period of personal difficulty for Eliot—his marriage was failing, and both he and Vivienne were suffering from nervous disorders."
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925",
+        "to": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Директор издательства Faber \u0026 Faber",
+      "long": "Ушёл из банка и до конца жизни работал в издательстве Faber \u0026 Faber, став директором; издавал Одена, Спендера, Хьюза.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1925 года и до своей кончины в 1965 году работал в известном издательстве «Faber and Faber» (первоначально «Faber and Gwyer») и стал его директором."
+      }
+    },
+    {
+      "key": "relocation-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Британское подданство",
+      "long": "В ноябре 1927 года принял британское подданство, отказавшись от американского гражданства.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году Элиот обратился в англиканство и стал подданным Великобритании."
+      }
+    },
+    {
+      "key": "faith-1927",
+      "date": {
+        "from": "1927-06-29",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Переход в англиканство",
+      "long": "Перешёл из унитарианства в англиканство; стал церковным старостой лондонского прихода.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "ash-wednesday",
+          "note": "первая большая поэма после обращения, называемая «поэмой обращения»"
+        }
+      ],
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 29 June 1927 Eliot converted from Unitarianism to Anglicanism"
+      }
+    },
+    {
+      "key": "loss-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Шарлотта Чамп Элиот.",
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Шарлотта Чамп Элиот 1843-01-01 — 1929-01-01"
+      }
+    },
+    {
+      "key": "family-1932",
+      "date": {
+        "from": "1932",
+        "to": "1933",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Разрыв с Вивьен",
+      "long": "Принял приглашение Гарварда на профессуру Нортона и оставил Вивьен в Англии; по возвращении оформил формальное расставание.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple separated in 1932 and formally separated in 1933"
+      }
+    },
+    {
+      "key": "love-1933",
+      "date": {
+        "from": "1933",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Близкие отношения с Эмили Хейл",
+      "long": "Близкие отношения с Эмили Хейл, с которой Элиот переписывался с 1914 года.",
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1933 to 1946 Eliot had a close emotional relationship with Emily Hale."
+      }
+    },
+    {
+      "key": "persecution-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Виргинские лекции, не переизданные автором",
+      "long": "Лекции содержали высказывание о «свободомыслящих евреях»; Элиот больше не переиздавал их, его обвиняли в антисемитизме.",
+      "place": {
+        "label": "Шарлотсвилл"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In lectures delivered at the University of Virginia in 1933 (published in 1934 under the title After Strange Gods: A Primer of Modern Heresy)"
+      }
+    },
+    {
+      "key": "creation-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Заказ пьесы для Кентерберийского фестиваля",
+      "long": "Епископ Джордж Белл заказал пьесу для Кентерберийского фестиваля; Элиот перешёл к стихотворной драме.",
+      "place": {
+        "label": "Кентербери"
+      },
+      "works": [
+        {
+          "ref": "murder-in-the-cathedral",
+          "note": "пьеса написана по заказу епископа Белла для фестиваля"
+        }
+      ],
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "commissioned Eliot to write another play for the Canterbury Festival in 1935"
+      }
+    },
+    {
+      "key": "illness-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Помещение Вивьен в психиатрическую лечебницу",
+      "long": "Брат Вивьен поместил её в психиатрическую лечебницу; Элиот остался её юридическим мужем, но не навещал её.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1938 Vivienne's brother Maurice had her committed to a mental hospital against her will, where she remained until her death of heart disease in 1947"
+      }
+    },
+    {
+      "key": "love-1938",
+      "date": {
+        "from": "1938",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Спутница Мэри Тревельян",
+      "long": "Спутницей Элиота на людях была Мэри Тревельян, которая хотела выйти за него замуж.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "faber-anglicanism",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1938 to 1957 Eliot's public companion was Mary Trevelyan of London University"
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Репутация крупнейшего живого поэта",
+      "long": "К концу войны Элиот считался крупнейшим живущим англоязычным поэтом.",
+      "works": [
+        {
+          "ref": "four-quartets"
+        }
+      ],
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти Йейтса и публикации поэмы «Четыре квартета» (1943) за Элиотом прочно закрепилась репутация крупнейшего живущего англоязычного поэта."
+      }
+    },
+    {
+      "key": "other-1946",
+      "date": {
+        "from": "1946",
+        "to": "1957",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Общая квартира с Джоном Хейвордом",
+      "long": "Делил квартиру в Челси с другом Джоном Дэви Хейвордом, хранителем его архива.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1946 to 1957, Eliot shared a flat at 19 Carlyle Mansions, Chelsea, with his friend John Davy Hayward"
+      }
+    },
+    {
+      "key": "loss-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Вивьен",
+      "long": "Вивьен умерла в лечебнице от болезни сердца.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "where she remained until her death of heart disease in 1947"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Нобелевская премия и Орден заслуг",
+      "long": "Получил Нобелевскую премию по литературе и британский Орден заслуг.",
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1948 году Элиот был удостоен Нобелевской премии по литературе «за приоритетное новаторство в становлении современной поэзии», награждён британским Орденом заслуг"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Тони» за лучшую пьесу",
+      "long": "Бродвейская постановка пьесы получила премию «Тони» за лучшую пьесу.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "the-cocktail-party"
+        }
+      ],
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Broadway production in New York of The Cocktail Party received the 1950 Tony Award for Best Play."
+      }
+    },
+    {
+      "key": "career-1952",
+      "date": {
+        "from": "1952",
+        "to": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентство в Лондонской библиотеке",
+      "long": "Президент Лондонской библиотеки до конца жизни.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "war-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "C 1952 года до своей кончины был президентом Лондонской библиотеки."
+      }
+    },
+    {
+      "key": "love-1957",
+      "date": {
+        "from": "1957-01-10",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Валери Флетчер",
+      "long": "Женился на Валери Флетчер, своей секретарше в Faber \u0026 Faber с 1949 года; венчание было тайным.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 10 January 1957, at the age of 68, Eliot married Esmé Valerie Fletcher, who was 30."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Президентская медаль Свободы",
+      "long": "Награждён Президентской медалью Свободы США.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Президентская медаль Свободы 1964-01-01"
+      }
+    },
+    {
+      "key": "death-1965",
+      "date": {
+        "from": "1965-01-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Умер от эмфиземы дома в Кенсингтоне; урна с прахом захоронена в церкви в Ист-Кокере.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Eliot died of emphysema at his home in Kensington in London, on 4 January 1965"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "love-song-of-j-alfred-prufrock",
+      "title": "Любовная песня Дж. Альфреда Пруфрока",
+      "written": {
+        "from": 1910,
+        "to": 1915
+      }
+    },
+    {
+      "ref": "prufrock-and-other-observations",
+      "title": "Пруфрок и другие наблюдения",
+      "written": {
+        "from": 1910,
+        "to": 1917
+      }
+    },
+    {
+      "ref": "the-waste-land",
+      "title": "Бесплодная земля",
+      "qid": "Q581458",
+      "written": {
+        "from": 1921,
+        "to": 1922
+      }
+    },
+    {
+      "ref": "the-hollow-men",
+      "title": "Полые люди",
+      "qid": "Q1084475",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "ash-wednesday",
+      "title": "Пепельная среда",
+      "qid": "Q2346941",
+      "written": {
+        "from": 1927,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "murder-in-the-cathedral",
+      "title": "Убийство в соборе",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "old-possums-book-of-practical-cats",
+      "title": "Популярная наука о кошках, написанная Старым Опоссумом",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "four-quartets",
+      "title": "Четыре квартета",
+      "qid": "Q2468448",
+      "written": {
+        "from": 1936,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "the-cocktail-party",
+      "title": "Коктейльная вечеринка",
+      "written": {
+        "from": 1948,
+        "to": 1949
+      }
+    }
+  ]
+}

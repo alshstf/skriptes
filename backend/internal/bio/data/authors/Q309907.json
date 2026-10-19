@@ -1,0 +1,264 @@
+{
+  "qid": "Q309907",
+  "name": "Томас Мэлори",
+  "born": "1405",
+  "died": "1471-03-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D1%8D%D0%BB%D0%BE%D1%80%D0%B8%2C_%D0%A2%D0%BE%D0%BC%D0%B0%D1%81",
+      "rev": 152077812
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Thomas_Malory",
+      "rev": 1379633036
+    }
+  ],
+  "chapters": [
+    {
+      "key": "warwickshire-knight",
+      "title": "Рыцарь из Уорикшира",
+      "from": 1405,
+      "to": 1450
+    },
+    {
+      "key": "accusations-and-prisons",
+      "title": "Обвинения, побеги, Маршалси",
+      "from": 1451,
+      "to": 1461
+    },
+    {
+      "key": "last-years",
+      "title": "Последние годы и книга",
+      "from": 1462,
+      "to": 1471
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1405",
+      "date": {
+        "from": "1405",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в дворянской семье",
+      "long": "Родился около 1405 года, по-видимому, в дворянской семье в графстве Уорикшир. Дата приблизительна, личность автора окончательно не установлена.",
+      "place": {
+        "label": "Уорикшир"
+      },
+      "chapter": "warwickshire-knight",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "(англ. Thomas Malory; ок. 1405 — 14 марта 1471)"
+      }
+    },
+    {
+      "key": "loss-1434",
+      "date": {
+        "from": "1434",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "По данным Wikidata, в 1434 году умер отец — Джон Мэлори.",
+      "chapter": "warwickshire-knight",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: John Mallory died 1434-01-01"
+      }
+    },
+    {
+      "key": "career-1441",
+      "date": {
+        "from": "1441",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Посвящение в рыцари и военная служба",
+      "long": "Посвящён в рыцари до 8 октября 1441 года, стал профессиональным военным и служил под началом Генри де Бошампа, герцога Уорика.",
+      "chapter": "warwickshire-knight",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was knighted before 8 October 1441, became a professional soldier, and served under Henry de Beauchamp"
+      }
+    },
+    {
+      "key": "persecution-1443",
+      "date": {
+        "from": "1443",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Первое уголовное обвинение",
+      "long": "В 1443 году Мэлори и его сообщник Юстас Барнаби обвинены в нападении, похищении и краже имущества у Томаса Смита; дело не имело последствий.",
+      "chapter": "warwickshire-knight",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1443 he and accomplice Eustace Barnaby were accused of attacking, kidnapping, and stealing 40 pounds' worth of goods from Thomas Smythe"
+      }
+    },
+    {
+      "key": "career-1444",
+      "date": {
+        "from": "1444",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Депутат парламента от Уорикшира",
+      "long": "В 1444 или 1445 году представлял графство Уорикшир в английском парламенте.",
+      "chapter": "warwickshire-knight",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1444 или 1445 году представлял своё графство в английском парламенте"
+      }
+    },
+    {
+      "key": "persecution-1451",
+      "date": {
+        "from": "1451",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Обвинения в насилии и грабежах",
+      "long": "В 1451 году Мэлори обвинили в засаде на герцога Бекингема, вымогательстве и взломах; 15 марта предписан арест его и ещё 19 человек. Часть обвинений не доказана.",
+      "place": {
+        "label": "Монкс-Кирби"
+      },
+      "chapter": "accusations-and-prisons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Malory's status changed abruptly in 1451 when he was accused of ambushing Humphrey Stafford, 1st Duke of Buckingham"
+      }
+    },
+    {
+      "key": "persecution-1451-2",
+      "date": {
+        "from": "1451-08-23",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Суд и заключение в тюрьме Маршалси",
+      "long": "На суде в Нанитоне Мэлори признан виновным и отправлен в лондонскую тюрьму Маршалси, где провёл около года. Требование нового суда присяжных своего графства осталось без исполнения.",
+      "place": {
+        "label": "Нанитон"
+      },
+      "works": [
+        {
+          "ref": "le-morte-darthur"
+        }
+      ],
+      "chapter": "accusations-and-prisons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Malory finally came to trial on 23 August 1451, in Nuneaton, a town in the heartland of Buckingham's power"
+      }
+    },
+    {
+      "key": "persecution-1452",
+      "date": {
+        "from": "1452-05",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Побег из тюрьмы Маршалси",
+      "long": "К марту 1452 года снова оказался в Маршалси, откуда через два месяца бежал, возможно подкупив стражу. Через месяц его вновь взяли под стражу.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "accusations-and-prisons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By March 1452, he was back in the Marshalsea, from which he escaped two months later, possibly by bribing the guards and gaolers."
+      }
+    },
+    {
+      "key": "persecution-1461",
+      "date": {
+        "from": "1461",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Освобождение по общему помилованию",
+      "long": "После ряда арестов и побегов освобождён по общему помилованию при вступлении на престол Эдуарда IV в 1461 году.",
+      "chapter": "accusations-and-prisons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Malory was released as part of a general pardon at the accession of King Edward IV in 1461."
+      }
+    },
+    {
+      "key": "family-1462",
+      "date": {
+        "from": "1462",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Передача имения сыну",
+      "long": "В 1462 году передал имение сыну Роберту; позднее наследником стал внук Николас.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1462, Malory settled his estate on his son Robert"
+      }
+    },
+    {
+      "key": "persecution-1468",
+      "date": {
+        "from": "1468",
+        "to": "1470",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Исключение из королевских помилований",
+      "long": "В 1468–1470 годах четыре общих помилования Эдуарда IV исключили некоего Томаса Мэлори; исследователи расходятся в том, о ком идёт речь.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1468–1470, King Edward IV issued four more general pardons which specifically excluded a Thomas Malory."
+      }
+    },
+    {
+      "key": "death-1471",
+      "date": {
+        "from": "1471-03-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умер 14 марта 1471 года, похоронен в церкви Крайст-Чёрч Грейфрайарс близ Ньюгетской тюрьмы.",
+      "place": {
+        "label": "Ньюгетская тюрьма"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Malory died on 14 March 1471 and was buried in Christ Church Greyfriars, near Newgate Prison."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "le-morte-darthur",
+      "title": "Смерть Артура",
+      "qid": "Q1136104",
+      "written": {
+        "from": 1451,
+        "to": 1470
+      }
+    }
+  ]
+}

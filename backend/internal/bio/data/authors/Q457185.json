@@ -1,0 +1,260 @@
+{
+  "qid": "Q457185",
+  "name": "Стивен Дональдсон",
+  "born": "1947-05-13",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%B4%D1%81%D0%BE%D0%BD%2C_%D0%A1%D1%82%D0%B8%D0%B2%D0%B5%D0%BD",
+      "rev": 153591188
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Stephen_R._Donaldson",
+      "rev": 1371767960
+    }
+  ],
+  "chapters": [
+    {
+      "key": "formation",
+      "title": "Индия, учёба, Кент",
+      "from": 1947,
+      "to": 1976
+    },
+    {
+      "key": "covenant-years",
+      "title": "Ковенант и признание",
+      "from": 1977,
+      "to": 1993
+    },
+    {
+      "key": "later-years",
+      "title": "Поздние циклы",
+      "from": 1994,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1947",
+      "date": {
+        "from": "1947-05-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Кливленде",
+      "long": "Родился в Кливленде, штат Огайо.",
+      "place": {
+        "label": "Кливленд"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Stephen Reeder Donaldson (born May 13, 1947)"
+      }
+    },
+    {
+      "key": "other-1970",
+      "date": {
+        "from": "1970-05-04",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Расстрел в Кентском университете",
+      "long": "Будучи аспирантом Кентского университета, оказался вблизи расстрела студентов 4 мая 1970 года: его квартира была в полутора кварталах от кампуса, после событий три дня жил в условиях военного положения. Вспоминать об этом не любит.",
+      "place": {
+        "label": "Кент"
+      },
+      "chapter": "formation",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was attending Kent State University as a graduate student at the time of the Kent State shootings on May 4, 1970."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Кэмпбелла лучшему новому писателю",
+      "long": "В 1979 году получил премию Джона Кэмпбелла лучшему новому писателю-фантасту, а также премию Августа Дерлета.",
+      "chapter": "covenant-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Джона В. Кэмпбелла лучшему новому писателю-фантасту 1979-01-01"
+      }
+    },
+    {
+      "key": "creation-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Детективы под псевдонимом Рид Стивенс",
+      "long": "Издатель Ballantine Books принудил публиковать детективы под псевдонимом Рид Стивенс, чтобы не сбивать с толку читателей фэнтези; Дональдсон всегда не любил писать под вымышленным именем.",
+      "works": [
+        {
+          "ref": "man-who"
+        }
+      ],
+      "chapter": "covenant-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was forced to do so by his publisher, Ballantine Books, who had a firm belief in \"category publishing\"… The Man Who Killed His Brother (1980)"
+      }
+    },
+    {
+      "key": "career-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Жюли Верланже",
+      "long": "Получил премию Жюли Верланже.",
+      "chapter": "covenant-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Премия Жюли Верланже 1990-01-01"
+      }
+    },
+    {
+      "key": "other-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Чёрный пояс по карате сётокан",
+      "long": "Получил чёрный пояс по карате сётокан.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1994, he gained a black belt in Shotokan karate."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за сборник",
+      "long": "Получил Всемирную премию фэнтези за лучший сборник.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Всемирная премия фэнтези за лучший сборник 2000-01-01"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Возвращение в список бестселлеров NYT",
+      "long": "Вторая книга последних хроник заняла 12-е место в списке бестселлеров New York Times.",
+      "works": [
+        {
+          "ref": "last-chronicles-thomas-covenant"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Donaldson again attained bestseller status when the book reached number 12 on the New York Times Bestseller List in October 2007."
+      }
+    },
+    {
+      "key": "education-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Почётный доктор литературы Сент-Эндрюса",
+      "long": "Получил почётную степень доктора литературы Университета Сент-Эндрюса.",
+      "place": {
+        "label": "Сент-Эндрюс"
+      },
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "2009: Doctor of Letters (Honorary), University of St Andrews"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "first-chronicles-thomas-covenant",
+      "title": "Первые хроники Томаса Ковенанта",
+      "written": {
+        "from": 1977,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "second-chronicles-thomas-covenant",
+      "title": "Вторые хроники Томаса Ковенанта",
+      "written": {
+        "from": 1980,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "last-chronicles-thomas-covenant",
+      "title": "Последние хроники Томаса Ковенанта",
+      "written": {
+        "from": 2004,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "gap-cycle",
+      "title": "Цикл «Разрыв»",
+      "written": {
+        "from": 1991,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "mordants-need",
+      "title": "Нужда Морданта",
+      "written": {
+        "from": 1986,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "man-who",
+      "title": "Цикл «Человек, который…» (как Рид Стивенс)",
+      "written": {
+        "from": 1980,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "great-gods-war",
+      "title": "Война Великого Бога",
+      "written": {
+        "from": 2017,
+        "to": 2022
+      }
+    }
+  ]
+}

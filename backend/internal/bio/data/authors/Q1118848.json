@@ -1,0 +1,442 @@
+{
+  "qid": "Q1118848",
+  "name": "Андре Лори (Паскаль Груссе)",
+  "born": "1844-04-07",
+  "died": "1909-04-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B5_%D0%9B%D0%BE%D1%80%D0%B8",
+      "rev": 147284006
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Paschal_Grousset",
+      "rev": 1333488068
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Paschal_Grousset",
+      "rev": 236853420
+    }
+  ],
+  "chapters": [
+    {
+      "key": "corsica-and-paris",
+      "title": "Корсика, Париж, медицина",
+      "from": 1844,
+      "to": 1868
+    },
+    {
+      "key": "noir-and-commune",
+      "title": "Дело Нуара и Коммуна",
+      "from": 1869,
+      "to": 1871
+    },
+    {
+      "key": "deportation-exile",
+      "title": "Каледония и изгнание",
+      "from": 1872,
+      "to": 1880
+    },
+    {
+      "key": "writer-laurie",
+      "title": "Писатель Андре Лори",
+      "from": 1881,
+      "to": 1892
+    },
+    {
+      "key": "deputy",
+      "title": "Депутат Палаты",
+      "from": 1893,
+      "to": 1909
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1844",
+      "date": {
+        "from": "1844-04-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Корте на Корсике",
+      "long": "Жан-Франсуа Паскаль Груссе родился в Корте на Корсике.",
+      "place": {
+        "label": "Корте"
+      },
+      "chapter": "corsica-and-paris",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Груссе родился 7 апреля 1844 года в городе Корте (Корсика)."
+      }
+    },
+    {
+      "key": "education-1865",
+      "date": {
+        "from": "1865",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Занятия медициной, переход в журналистику",
+      "long": "Окончил лицей Карла Великого в Париже, изучал медицину, в 1865 году сдал конкурс на место экстерна в больницах, но оставил учёбу ради научной журналистики.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "corsica-and-paris",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il étudie ensuite la médecine durant 4 ans, est reçu au concours d’externe des hôpitaux, en 1865, mais abandonne les cours de l’école"
+      }
+    },
+    {
+      "key": "career-1869",
+      "date": {
+        "from": "1869",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в оппозиционной газете «Марсельеза»",
+      "long": "Вошёл в редакцию основанной Рошфором газеты «Марсельеза»; его статьи против империи принесли ему известность.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "noir-and-commune",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Lorsque, en 1869, Rochefort, devenu député de Paris, fonde La Marseillaise, il entre à la rédaction de ce journal"
+      }
+    },
+    {
+      "key": "war-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Добровольное участие во франко-прусской войне",
+      "long": "Во время войны 1870 года пошёл добровольцем.",
+      "chapter": "noir-and-commune",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Lors de la guerre de 1870, il s’engage."
+      }
+    },
+    {
+      "key": "loss-1870",
+      "date": {
+        "from": "1870-01",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель секунданта Виктора Нуара, скандальная известность",
+      "long": "Секундант Груссе, журналист Виктор Нуар, был застрелен принцем Пьером Бонапартом при обсуждении дуэли; имя Груссе стало широко известно.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "noir-and-commune",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 1870 года имя Груссе стало широко известно из-за его несостоявшейся дуэли с принцем Пьером Наполеоном Бонапартом, в гневе застрелившим его секунданта, журналиста Виктора Нуара."
+      }
+    },
+    {
+      "key": "persecution-1870",
+      "date": {
+        "from": "1870-02-09",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест и приговор к шести месяцам тюрьмы",
+      "long": "Арестован 9 февраля, заключён в тюрьму Сент-Пелажи; 22 февраля приговорён к шести месяцам тюрьмы и штрафам за прессу и оскорбление императора.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "noir-and-commune",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "À la suite de l’énorme manifestation du 12 janvier 1870, lors des funérailles de Noir, il est condamné à six mois d’emprisonnement… Arrêté le 9 février, il est incarcéré à Sainte-Pélagie."
+      }
+    },
+    {
+      "key": "career-1871",
+      "date": {
+        "from": "1871-03-26",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание в Совет Парижской коммуны",
+      "long": "Избран в Совет Парижской коммуны от 18-го округа, затем назначен делегатом по внешним сношениям, вошёл в исполнительную комиссию.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "noir-and-commune",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "élections municipales du 26 mars 1871, il est élu membre du Conseil de la Commune par le 18e arrondissement"
+      }
+    },
+    {
+      "key": "persecution-1872",
+      "date": {
+        "from": "1872",
+        "to": "1874",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Ссылка в Новую Каледонию",
+      "long": "После разгрома Коммуны арестован и приговорён к ссылке; в 1872 году прибыл в Новую Каледонию.",
+      "place": {
+        "label": "Новая Каледония"
+      },
+      "chapter": "deportation-exile",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "il est arrêté et condamné à la déportation en Nouvelle-Calédonie où il arrive en 1872"
+      }
+    },
+    {
+      "key": "persecution-1874",
+      "date": {
+        "from": "1874",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Побег из ссылки в Австралию",
+      "long": "Бежал из ссылки в Австралию, затем жил в США и Англии (там преподавал).",
+      "place": {
+        "label": "Новая Каледония"
+      },
+      "chapter": "deportation-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сослан на Новую Каледонию, откуда в 1874 году бежал в Австралию"
+      }
+    },
+    {
+      "key": "career-1879",
+      "date": {
+        "from": "1879",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало сотрудничества с Верном и Этцелем",
+      "long": "При поддержке Жюля Верна стал печататься у Этцеля; книга вышла под псевдонимом Андре Лори, так как автор был ещё политзаключённым.",
+      "works": [
+        {
+          "ref": "begum-fortune",
+          "note": "переписка Верна и Этцеля: Верн использовал фабулу Лори, доработав её"
+        }
+      ],
+      "chapter": "deportation-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первой такой публикацией стал роман «Пятьсот миллионов бегумы» (1879) — патриотическая фантастика"
+      }
+    },
+    {
+      "key": "relocation-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение во Францию по амнистии",
+      "long": "Вернулся во Францию после амнистии и занялся литературной и публицистической деятельностью.",
+      "place": {
+        "label": "Франция"
+      },
+      "chapter": "writer-laurie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вернулся во Францию после амнистии 1880 года."
+      }
+    },
+    {
+      "key": "career-1888",
+      "date": {
+        "from": "1888-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Национальной лиги физического воспитания",
+      "long": "Основал Национальную лигу физического воспитания, отвергавшую спортивное соперничество в пользу народного воспитания.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "writer-laurie",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En octobre 1888, il crée la Ligue nationale d'éducation physique"
+      }
+    },
+    {
+      "key": "career-1893",
+      "date": {
+        "from": "1893",
+        "to": "1909",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Депутат Палаты от Парижа",
+      "long": "Избран депутатом от 12-го округа Парижа и оставался им до смерти.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "deputy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1893—1909 годах — член Палаты депутатов."
+      }
+    },
+    {
+      "key": "love-1908",
+      "date": {
+        "from": "1908-07-23",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Мари Жозефиной Элоди Лаволь",
+      "long": "Больной, находившийся на лечении, женился на Мари Жозефине Элоди Лаволь в мэрии 5-го округа Парижа.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "deputy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Malade et sous traitement, il épouse « in extremis » Marie Joséphine Élodie Lavolle, le 23 juillet 1908"
+      }
+    },
+    {
+      "key": "death-1909",
+      "date": {
+        "from": "1909-04-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть, похороны на Пер-Лашез",
+      "long": "Умер 9 апреля 1909 года; похоронен на кладбище Пер-Лашез.",
+      "place": {
+        "label": "Сен-Манде"
+      },
+      "chapter": "deputy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "9 апреля 1909 года умер в Париже. Похоронен на кладбище Пер-Лашез."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "begum-fortune",
+      "title": "Пятьсот миллионов бегумы",
+      "written": {
+        "from": 1878,
+        "to": 1879
+      }
+    },
+    {
+      "ref": "southern-star",
+      "title": "Южная Звезда",
+      "written": {
+        "from": 1884,
+        "to": 1884
+      }
+    },
+    {
+      "ref": "robinson-heir",
+      "title": "Наследник Робинзона",
+      "written": {
+        "from": 1884,
+        "to": 1884
+      }
+    },
+    {
+      "ref": "cynthia-wreck",
+      "title": "Найдёныш с погибшей «Цинтии»",
+      "written": {
+        "from": 1885,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "captain-trafalgar",
+      "title": "Капитан Трафальгар",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "exiles-of-earth",
+      "title": "Изгнанники Земли",
+      "written": {
+        "from": 1887,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "new-york-to-brest",
+      "title": "Через океан. От Нью-Йорка до Бреста за семь часов",
+      "written": {
+        "from": 1888,
+        "to": 1889
+      }
+    },
+    {
+      "ref": "secret-of-the-mage",
+      "title": "Тайна мага",
+      "written": {
+        "from": 1890,
+        "to": 1890
+      }
+    },
+    {
+      "ref": "ruby-of-the-grand-lama",
+      "title": "Рубин Великого Ламы",
+      "written": {
+        "from": 1892,
+        "to": 1894
+      }
+    },
+    {
+      "ref": "atlantis",
+      "title": "Атлантида",
+      "written": {
+        "from": 1895,
+        "to": 1895
+      }
+    },
+    {
+      "ref": "master-of-the-abyss",
+      "title": "Властелин бездны",
+      "written": {
+        "from": 1905,
+        "to": 1905
+      }
+    },
+    {
+      "ref": "spiridon-the-mute",
+      "title": "Немой Спиридон",
+      "written": {
+        "from": 1907,
+        "to": 1907
+      }
+    }
+  ]
+}

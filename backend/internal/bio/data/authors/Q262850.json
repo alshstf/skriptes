@@ -1,0 +1,686 @@
+{
+  "qid": "Q262850",
+  "name": "Вера Фёдоровна Панова",
+  "born": "1905-03-20",
+  "died": "1973-03-03",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0%2C_%D0%92%D0%B5%D1%80%D0%B0_%D0%A4%D1%91%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 153128137
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Vera_Panova",
+      "rev": 1378868429
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-nakhichevan",
+      "title": "Нахичевань, потеря отца",
+      "from": 1905,
+      "to": 1921
+    },
+    {
+      "key": "gazeta-sem-ya",
+      "title": "Газета, браки, дети",
+      "from": 1922,
+      "to": 1934
+    },
+    {
+      "key": "arest-vakhtina",
+      "title": "Арест мужа и Шишаки",
+      "from": 1935,
+      "to": 1939
+    },
+    {
+      "key": "pesy-i-vojna",
+      "title": "Пьесы, война, эвакуация",
+      "from": 1940,
+      "to": 1945
+    },
+    {
+      "key": "slava-i-premii",
+      "title": "Сталинские премии и признание",
+      "from": 1946,
+      "to": 1966
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Болезнь и последние годы",
+      "from": 1967,
+      "to": 1973
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1905",
+      "date": {
+        "from": "1905-03-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нахичевани-на-Дону",
+      "long": "Родилась в Нахичевани-на-Дону (ныне часть Ростова-на-Дону) в семье бухгалтера Фёдора Панова.",
+      "place": {
+        "label": "Нахичевань-на-Дону"
+      },
+      "chapter": "detstvo-nakhichevan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась 7 [20] марта 1905 года в Нахичевани-на-Дону"
+      }
+    },
+    {
+      "key": "loss-1910",
+      "date": {
+        "from": "1910-05",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель отца в Дону",
+      "long": "Отец утонул в Дону на глазах жены. Мать осталась одна с пятилетней Верой и годовалым сыном Лёней, работала служащей в конторе.",
+      "place": {
+        "label": "Нахичевань-на-Дону"
+      },
+      "chapter": "detstvo-nakhichevan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В мае 1910 года в день своего 30-летия глава семейства утонул в реке Дон на глазах жены"
+      }
+    },
+    {
+      "key": "education-1915",
+      "date": {
+        "from": "1915-08",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Частная гимназия Любимовой",
+      "long": "Поступила в частную женскую гимназию Любимовой, учёбу оплачивали братья отца. После двух классов ушла из гимназии и занималась самообразованием.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "detstvo-nakhichevan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 1915 года, ранее позанимавшись с двумя педагогами на дому и выдержав экзамен, девочка поступила в частную женскую гимназию С. Я. Любимовой"
+      }
+    },
+    {
+      "key": "career-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало работы в газете «Трудовой Дон»",
+      "long": "Приглашена в газету «Трудовой Дон» помощницей районного организатора рабкоров. По совету Владимира Филова взяла псевдоним Вельтман.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1922 году … пригласил её в штат газеты «Трудовой Дон»"
+      }
+    },
+    {
+      "key": "career-1924",
+      "date": {
+        "from": "1924-07-01",
+        "to": "1935-02-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Секретарь редакции «Ленинских внучат»",
+      "long": "Более десяти лет работала секретарём редакции детской газеты «Ленинские внучата»; места лишилась 6 февраля 1935 года.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а с 1 июля 1924 года и более 10 лет работала секретарём редакции детской газеты «Ленинские внучата»"
+      }
+    },
+    {
+      "key": "love-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с Арсением Старосельским",
+      "long": "Вышла замуж за поэта Арсения Старосельского; брак продлился около трёх лет.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Весной 1925 года Панова вышла замуж за молодого поэта Арсения Старосельского"
+      }
+    },
+    {
+      "key": "child-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Натальи",
+      "long": "Родилась дочь Наталья, впоследствии редактор и автор воспоминаний о матери.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "дочь Наталья Арсеньевна Озернова-Панова (1926 — 2008)"
+      }
+    },
+    {
+      "key": "illness-1928",
+      "date": {
+        "from": "1928-02",
+        "to": "1928-03",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Перитонит и операция",
+      "long": "Перенесла перитонит; жизнь ей спасла операция профессора Н. А. Богораза.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В феврале-марте 1928 года Вера перенесла перитонит"
+      }
+    },
+    {
+      "key": "love-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с журналистом Борисом Вахтиным",
+      "long": "Вышла замуж за журналиста Бориса Вахтина, отца своих сыновей Бориса и Юрия.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1929 году вышла замуж за журналиста Бориса Вахтина."
+      }
+    },
+    {
+      "key": "loss-1930",
+      "date": {
+        "from": "1930-05-28",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть брата Леонида",
+      "long": "Брат Леонид умер от воспаления лёгких.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 мая 1930 года от воспаления лёгких умер её брат Леонид, а через полгода родился сын Боря"
+      }
+    },
+    {
+      "key": "child-1930",
+      "date": {
+        "from": "1930-11-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Бориса",
+      "long": "Родился сын Борис, впоследствии писатель-диссидент.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 мая 1930 года от воспаления лёгких умер её брат Леонид, а через полгода родился сын Боря"
+      }
+    },
+    {
+      "key": "child-1932",
+      "date": {
+        "from": "1932-11-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Юрия",
+      "long": "Родился младший сын Юрий, впоследствии учёный-генетик.",
+      "chapter": "gazeta-sem-ya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в ноябре 1932 года на свет появился их младший сын Юра"
+      }
+    },
+    {
+      "key": "persecution-1935",
+      "date": {
+        "from": "1935-02-06",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Потеря работы в газете",
+      "long": "После исключения мужа из партии Панова потеряла работу в газете «Ленинские внучата».",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "arest-vakhtina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "6 февраля 1935 года работы в газете «Ленинские внучата» лишилась Панова"
+      }
+    },
+    {
+      "key": "persecution-1935-2",
+      "date": {
+        "from": "1935-02-12",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест мужа Бориса Вахтина",
+      "long": "После обыска арестован Борис Вахтин; 26 июня приговорён к пяти годам лагерей.",
+      "place": {
+        "label": "Ростов-на-Дону"
+      },
+      "chapter": "arest-vakhtina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "6 февраля 1935 года работы в газете «Ленинские внучата» лишилась Панова, а в ночь на 12 февраля после проведённого в доме обыска арестовали её мужа"
+      }
+    },
+    {
+      "key": "loss-1936",
+      "date": {
+        "from": "1936-09",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Последнее свидание с мужем",
+      "long": "Съездила в Кемь на свидание с мужем, отбывавшим срок в Соловецком лагере; встреча стала последней.",
+      "place": {
+        "label": "Кемь"
+      },
+      "chapter": "arest-vakhtina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в начале лета 1936 года вновь осталась безработной … В сентябре того же года съездила в Кемь на свидание с мужем, отбывавшим срок в Соловецком лагере"
+      }
+    },
+    {
+      "key": "relocation-1937",
+      "date": {
+        "from": "1937-06",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в село Шишаки",
+      "long": "Переехала с детьми и матерью из Ростова-на-Дону в село Шишаки Полтавской области.",
+      "place": {
+        "label": "Шишаки"
+      },
+      "chapter": "arest-vakhtina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале лета 1937 года вынуждена была с детьми и матерью переехать из Ростова-на-Дону в Шишаки"
+      }
+    },
+    {
+      "key": "loss-1938",
+      "date": {
+        "from": "1938-03-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Расстрел мужа",
+      "long": "Муж Борис Вахтин расстрелян по новому приговору.",
+      "chapter": "arest-vakhtina",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "встреча оказалась последней — Бориса расстреляли по новому приговору 15 марта 1938 года"
+      }
+    },
+    {
+      "key": "career-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия конкурса за пьесу о старой Москве",
+      "long": "Пьеса отмечена премией Всероссийского конкурса, её захотели ставить театры Москвы и Ленинграда.",
+      "works": [
+        {
+          "ref": "v-staroj-moskve"
+        }
+      ],
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К Всероссийскому конкурсу 1940 года написала пьесу «Старая Москва» (опубликована под названием «В старой Москве»), за которую Панова вновь удостоилась премии"
+      }
+    },
+    {
+      "key": "persecution-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет жить в столицах, переезд в Пушкин",
+      "long": "Как жене «врага народа» не имела права жить в столицах; знакомые помогли переехать с дочерью в город Пушкин под Ленинградом.",
+      "place": {
+        "label": "Пушкин"
+      },
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "К Всероссийскому конкурсу 1940 года написала пьесу «Старая Москва» … Однако как жене «врага народа» ей было запрещено жить в столицах."
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Война и оккупация в Пушкине",
+      "long": "Оказалась с дочерью на оккупированной территории; с трудом выбралась в Шишаки к сыновьям.",
+      "place": {
+        "label": "Пушкин"
+      },
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начавшаяся летом 1941 года война с Германией застала Панову с дочерью в Пушкине, и до прихода немцев эвакуироваться она не успела."
+      }
+    },
+    {
+      "key": "relocation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Эвакуация в Молотов",
+      "long": "Эвакуировалась с семьёй из Полтавской области в Молотов (ныне Пермь), где работала в местной газете.",
+      "place": {
+        "label": "Молотов"
+      },
+      "works": [
+        {
+          "ref": "evdokia"
+        }
+      ],
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце 1943 года по вызову бывшего мужа ей с семьёй удалось из Полтавской области эвакуироваться в Молотов."
+      }
+    },
+    {
+      "key": "creation-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Два месяца на санитарном поезде",
+      "long": "Два месяца провела корреспондентом на санитарном поезде; прерванная работа над «Кружилихой» продолжилась позже.",
+      "works": [
+        {
+          "ref": "sputniki",
+          "note": "роман написан о работе на санитарном поезде"
+        },
+        {
+          "ref": "kruzhilikha",
+          "note": "работа над романом была прервана этой поездкой"
+        }
+      ],
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, as a journalist, she was embedded for two months with a hospital train about which she wrote the novel Sputniki"
+      }
+    },
+    {
+      "key": "love-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с писателем Давидом Даром",
+      "long": "Вышла замуж за писателя Давида Дара (Ривкина); вместе с семьёй вернулась в Ленинград.",
+      "chapter": "pesy-i-vojna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1945, she married David Yakovlevich Ryvkin (1910–1980)"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Сталинская премия 1-й степени",
+      "long": "Сталинская премия 1-й степени за роман «Спутники».",
+      "works": [
+        {
+          "ref": "sputniki",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "slava-i-premii",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат трёх Сталинских премий (1947, 1948, 1950)"
+      }
+    },
+    {
+      "key": "career-1948",
+      "date": {
+        "from": "1948",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сталинская премия 2-й степени",
+      "long": "Сталинская премия 2-й степени за роман «Кружилиха».",
+      "works": [
+        {
+          "ref": "kruzhilikha",
+          "note": "премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "slava-i-premii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Looking Ahead (Stalin Prize second degree, 1948)"
+      }
+    },
+    {
+      "key": "persecution-1953",
+      "date": {
+        "from": "1953",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Критика прессы за «натурализм»",
+      "long": "Роман был очень популярен у читателей, но в прессе её резко критиковали за «натурализм» и «объективизм».",
+      "works": [
+        {
+          "ref": "vremena-goda"
+        }
+      ],
+      "chapter": "slava-i-premii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she wrote Vremena Goda (Span of the Year, 1953) about the relations of fathers and sons within the Soviet intelligentsia … Panova was criticized harshly in the press for her \"naturalism\" and \"objectivism\""
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка по США",
+      "long": "Совершила поездку по США; ранее ездила в Англию, Шотландию и Италию.",
+      "chapter": "slava-i-premii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1960 she toured the United States"
+      }
+    },
+    {
+      "key": "illness-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт и частичный паралич",
+      "long": "Перенесла инсульт, частично парализовавший её; продолжала работать с помощью семьи и секретарей.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1967, she suffered a stroke that left her partially paralyzed."
+      }
+    },
+    {
+      "key": "death-1973",
+      "date": {
+        "from": "1973-03-03",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Ленинграде",
+      "long": "Умерла в Ленинграде, похоронена на кладбище в Комарово.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умерла 3 марта 1973 года в Ленинграде."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "ilya-kosogor",
+      "title": "Илья Косогор",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "v-staroj-moskve",
+      "title": "В старой Москве",
+      "written": {
+        "from": 1940,
+        "to": 1940
+      }
+    },
+    {
+      "ref": "evdokia",
+      "title": "Евдокия",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "sputniki",
+      "title": "Спутники",
+      "written": {
+        "from": 1944,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "kruzhilikha",
+      "title": "Кружилиха",
+      "written": {
+        "from": 1944,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "yasny-bereg",
+      "title": "Ясный берег",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "vremena-goda",
+      "title": "Времена года",
+      "written": {
+        "from": 1953,
+        "to": 1953
+      }
+    },
+    {
+      "ref": "seryozha",
+      "title": "Серёжа",
+      "qid": "Q7455952",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "sentimentalnyj-roman",
+      "title": "Сентиментальный роман",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "valya-volodya",
+      "title": "Валя. Володя",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    }
+  ]
+}

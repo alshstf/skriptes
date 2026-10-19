@@ -1,0 +1,346 @@
+{
+  "qid": "Q318297",
+  "name": "Росс Макдоналд",
+  "born": "1915-12-13",
+  "died": "1983-07-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%81_%D0%9C%D0%B0%D0%BA%D0%B4%D0%BE%D0%BD%D0%B0%D0%BB%D0%B4",
+      "rev": 150558097
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ross_Macdonald",
+      "rev": 1376720688
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-v-kanade",
+      "title": "Детство и юность в Канаде",
+      "from": 1915,
+      "to": 1937
+    },
+    {
+      "key": "brak-i-pervye-romany",
+      "title": "Брак, преподавание, флот",
+      "from": 1938,
+      "to": 1946
+    },
+    {
+      "key": "arcer-i-doktorat",
+      "title": "Santa Barbara, докторат и Арчер",
+      "from": 1947,
+      "to": 1969
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Признание и болезнь",
+      "from": 1970,
+      "to": 1983
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1915",
+      "date": {
+        "from": "1915-12-13",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Лос-Гатосе, Калифорния",
+      "long": "Кеннет Миллар родился в Лос-Гатосе в семье канадцев; вырос в Китченере, Онтарио.",
+      "place": {
+        "label": "Лос-Гатос"
+      },
+      "chapter": "detstvo-v-kanade",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Kenneth Millar (; December 13, 1915 – July 11, 1983)"
+      }
+    },
+    {
+      "key": "love-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Маргарет Штурм",
+      "long": "Женился на Маргарет Штурм, с которой был знаком ещё со школы; она стала писательницей Маргарет Миллар.",
+      "chapter": "brak-i-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He married Margaret Sturm in 1938, though they'd known each other earlier in high school."
+      }
+    },
+    {
+      "key": "child-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Линды",
+      "long": "В семье родилась дочь Линда.",
+      "chapter": "brak-i-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had a daughter in 1939, Linda, who died in 1970."
+      }
+    },
+    {
+      "key": "war-1944",
+      "date": {
+        "from": "1944",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба офицером связи на флоте",
+      "long": "С 1944 по 1946 год служил на море офицером связи в военно-морском флоте.",
+      "works": [
+        {
+          "ref": "dark-tunnel"
+        }
+      ],
+      "chapter": "brak-i-pervye-romany",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After serving at sea as a naval communications officer from 1944 to 1946"
+      }
+    },
+    {
+      "key": "relocation-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд семьи в Санта-Барбару",
+      "long": "Семья переехала из Китченера в Санта-Барбару, где позже разворачивалось действие большинства книг.",
+      "place": {
+        "label": "Санта-Барбара"
+      },
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The family moved from Kitchener to Santa Barbara in 1946."
+      }
+    },
+    {
+      "key": "creation-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман о Лью Арчере под псевдонимом",
+      "long": "Роман 1949 года стал первым в серии из восемнадцати об Арчере; автор выбрал псевдоним, чтобы не путаться с женой-писательницей.",
+      "works": [
+        {
+          "ref": "moving-target"
+        }
+      ],
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "For his fifth novel, in 1949, he wrote under the name John Macdonald (his father's first and middle names) in order to avoid confusion with his wife"
+      }
+    },
+    {
+      "key": "education-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская степень в Мичиганском университете",
+      "long": "Защитил диссертацию о Колридже, учился у У. Х. Одена; получил степень PhD в 1952 году (по русской статье — в 1951).",
+      "place": {
+        "label": "Анн-Арбор"
+      },
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he attended the University of Michigan and received a PhD in 1952"
+      }
+    },
+    {
+      "key": "family-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Исчезновение дочери Линды на неделю",
+      "long": "Дочь бросила колледж и пропала на неделю; её нашли живущей со взрослым мужчиной. По словам автора, это объясняет его сочувствие к проблемным молодым героям.",
+      "works": [
+        {
+          "ref": "galton-case",
+          "note": "сам автор связывал с этими событиями сочувствие к трудным молодым героям своих романов"
+        }
+      ],
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his own daughter Linda dropped out of college and disappeared for a week in 1959"
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Серебряный кинжал»",
+      "long": "Ассоциация детективных писателей Америки присудила премию Серебряный кинжал.",
+      "works": [
+        {
+          "ref": "the-chill"
+        }
+      ],
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1964, the Mystery Writers of America awarded him the Silver Dagger award for The Chill."
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Председательство в Ассоциации детективных писателей",
+      "long": "Возглавил Ассоциацию детективных писателей США; в 1957 году этот пост занимала его жена.",
+      "chapter": "arcer-i-doktorat",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Макдональд возглавлял Ассоциацию детективных писателей США в 1965 году."
+      }
+    },
+    {
+      "key": "loss-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Линды",
+      "long": "Дочь Линда умерла в 1970 году.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They had a daughter in 1939, Linda, who died in 1970."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Звание Грандмастера детектива",
+      "long": "Ассоциация детективных писателей Америки присудила звание Грандмастера.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Ten years later, he received the Grand Master Award from the Mystery Writers of America"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Шеймус» за общий вклад",
+      "long": "Получил премию «Шеймус» за жизненные достижения от Ассоциации частных детективов-писателей.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1982 he received \"The Eye,\" the Lifetime Achievement Shamus Award"
+      }
+    },
+    {
+      "key": "death-1983",
+      "date": {
+        "from": "1983-07-11",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от болезни Альцгеймера",
+      "long": "Умер в Санта-Барбаре от болезни Альцгеймера.",
+      "place": {
+        "label": "Санта-Барбара"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1983 Macdonald died of Alzheimer's disease."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dark-tunnel",
+      "title": "Тёмный туннель",
+      "written": {
+        "from": 1944,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "moving-target",
+      "title": "Живая мишень",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "galton-case",
+      "title": "Дело Гэлтона",
+      "written": {
+        "from": 1959,
+        "to": 1959
+      }
+    },
+    {
+      "ref": "the-chill",
+      "title": "Озноб",
+      "written": {
+        "from": 1963,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "underground-man",
+      "title": "Подземный человек",
+      "written": {
+        "from": 1971,
+        "to": 1971
+      }
+    }
+  ]
+}

@@ -1,0 +1,468 @@
+{
+  "qid": "Q440100",
+  "name": "Джонатан Летем",
+  "born": "1964-02-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%B5%D1%82%D0%B5%D0%BC%2C_%D0%94%D0%B6%D0%BE%D0%BD%D0%B0%D1%82%D0%B0%D0%BD",
+      "rev": 154595409
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jonathan_Lethem",
+      "rev": 1379647361
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-bennington",
+      "title": "Бруклин и Беннингтон",
+      "from": 1964,
+      "to": 1983
+    },
+    {
+      "key": "california",
+      "title": "Калифорния: книжные лавки и первые романы",
+      "from": 1984,
+      "to": 1995
+    },
+    {
+      "key": "brooklyn-return",
+      "title": "Возвращение в Бруклин",
+      "from": 1996,
+      "to": 2004
+    },
+    {
+      "key": "recognition",
+      "title": "Признание и Клермонт",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1964",
+      "date": {
+        "from": "1964-02-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился в Бруклине в семье авангардного художника Ричарда Брауна Летема и политической активистки Джудит Фрэнк Летем; старший из троих детей.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-bennington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Jonathan Allen Lethem ( LEETH-əm born February 19, 1964)"
+      }
+    },
+    {
+      "key": "education-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Беннингтонский колледж и уход из него",
+      "long": "В 1982 году поступил в Беннингтонский колледж в Вермонте как будущий художник; осознав, что его больше интересует писательство, бросил учёбу на втором курсе.",
+      "place": {
+        "label": "Беннингтон, Вермонт"
+      },
+      "chapter": "brooklyn-bennington",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lethem entered Bennington College in Vermont in 1982 as a prospective art student."
+      }
+    },
+    {
+      "key": "relocation-1984",
+      "date": {
+        "from": "1984",
+        "to": "1996",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Двенадцать лет в Калифорнии",
+      "long": "В 1984 году автостопом добрался из Денвера в Беркли с сорока долларами в кармане; в Калифорнии работал в букинистических магазинах и писал.",
+      "place": {
+        "label": "Беркли"
+      },
+      "works": [
+        {
+          "ref": "amnesia-moon",
+          "note": "роман отчасти вдохновлён автостопным путешествием автора через страну"
+        }
+      ],
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He hitchhiked from Denver, Colorado, to Berkeley, California, in 1984"
+      }
+    },
+    {
+      "key": "love-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с писательницей Шелли Джексон",
+      "long": "В 1987 году женился на писательнице и художнице Шелли Джексон; развелись к концу 1990-х.",
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1987, Lethem married the writer and artist Shelley Jackson"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "В 1989 году вышел первый рассказ Летема, за ним последовали другие в начале 1990-х.",
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lethem published his first short story in 1989"
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный роман в крупном издательстве",
+      "long": "Первый роман вышел в твёрдой обложке в Harcourt Brace; восторженная рецензия в Newsweek принесла книге коммерческий успех.",
+      "works": [
+        {
+          "ref": "gun-with-occasional-music"
+        }
+      ],
+      "chapter": "california",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The novel was published in 1994 by Harcourt Brace, in what Lethem later described as a \"delirious\" experience."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Локус» за лучший дебютный роман",
+      "long": "Дебютный роман получил премию «Локус» в 1995 году, годом ранее был финалистом «Небьюлы».",
+      "works": [
+        {
+          "ref": "gun-with-occasional-music"
+        }
+      ],
+      "chapter": "california",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "получил премию «Локус» за лучший дебютный роман в 1995 году"
+      }
+    },
+    {
+      "key": "relocation-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в Бруклин из Калифорнии",
+      "long": "В 1996 году переехал из района залива Сан-Франциско обратно в Бруклин; здесь начал работу над романом о Лайонеле Эссроге.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "works": [
+        {
+          "ref": "motherless-brooklyn",
+          "note": "первый роман, начатый после возвращения в Нью-Йорк"
+        }
+      ],
+      "chapter": "brooklyn-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1996, Lethem moved from the San Francisco Bay Area back to Brooklyn."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Всемирная премия фэнтези за сборник",
+      "long": "В 1997 году получил Всемирную премию фэнтези за сборник рассказов.",
+      "works": [
+        {
+          "ref": "wall-of-the-sky"
+        }
+      ],
+      "chapter": "brooklyn-return",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году получил Всемирную премию фэнтези за сборник рассказов"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия критиков и мировая известность",
+      "long": "Роман получил премию Национального круга книжных критиков, Gold Dagger и Salon Book Award и принёс автору широкую известность.",
+      "works": [
+        {
+          "ref": "motherless-brooklyn"
+        }
+      ],
+      "chapter": "brooklyn-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Upon its publication in 1999, Motherless Brooklyn won the National Book Critics Circle Award for Fiction"
+      }
+    },
+    {
+      "key": "love-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Брак с Джулией Розенберг",
+      "long": "В 2000 году женился на канадском кинопродюсере Джулии Розенберг; пара развелась через два года.",
+      "chapter": "brooklyn-return",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2000, he married Julia Rosenberg, a Canadian film executive; they divorced two years later."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005-09-20",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Стипендия Макартура",
+      "long": "20 сентября 2005 года получил стипендию Макартура («грант для гениев»).",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 20, 2005, Lethem received a MacArthur Fellowship."
+      }
+    },
+    {
+      "key": "relocation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд из Бруклина в Клермонт",
+      "long": "В 2010 году по семейным обстоятельствам переехал из Бруклина в Клермонт, Калифорния.",
+      "place": {
+        "label": "Клермонт"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летхем жил в Бруклине, пока в 2010 году по семейным обстоятельствам не переехал в Клермонт."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Профессорство в Помона-колледже",
+      "long": "С 2011 года преподаёт творческое письмо в Помона-колледже, на кафедре, ранее принадлежавшей Дэвиду Фостеру Уоллесу.",
+      "place": {
+        "label": "Клермонт"
+      },
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Starting in 2011, he served as the Roy E. Disney Professor in Creative Writing at Pomona College"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Берлинская премия",
+      "long": "В 2014 году удостоен Берлинской премии Американской академии в Берлине.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Берлинская премия 2014-01-01"
+      }
+    },
+    {
+      "key": "career-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "В 2025 году получил стипендию Гуггенхайма в области художественной прозы.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2025, he was awarded a Guggenheim Fellowship in fiction"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "gun-with-occasional-music",
+      "title": "Gun, with Occasional Music",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "amnesia-moon",
+      "title": "Amnesia Moon",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "wall-of-the-sky",
+      "title": "The Wall of the Sky, the Wall of the Eye",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "as-she-climbed-across-the-table",
+      "title": "As She Climbed Across the Table",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "motherless-brooklyn",
+      "title": "Сиротский Бруклин",
+      "qid": "Q1058881",
+      "written": {
+        "from": 1996,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "fortress-of-solitude",
+      "title": "Бастион одиночества",
+      "qid": "Q3822446",
+      "written": {
+        "from": 2000,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "men-and-cartoons",
+      "title": "Люди и карикатуры",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "disappointment-artist",
+      "title": "The Disappointment Artist",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "you-dont-love-me-yet",
+      "title": "You Don't Love Me Yet",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "chronic-city",
+      "title": "Chronic City",
+      "written": {
+        "from": 2007,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "dissident-gardens",
+      "title": "Dissident Gardens",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    },
+    {
+      "ref": "a-gamblers-anatomy",
+      "title": "A Gambler's Anatomy",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "the-feral-detective",
+      "title": "The Feral Detective",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "the-arrest",
+      "title": "Арест",
+      "written": {
+        "from": 2020,
+        "to": 2020
+      }
+    }
+  ]
+}

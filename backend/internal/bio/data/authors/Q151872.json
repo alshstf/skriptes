@@ -1,0 +1,671 @@
+{
+  "qid": "Q151872",
+  "name": "Амос Оз",
+  "born": "1939-05-04",
+  "died": "2018-12-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D0%B7%2C_%D0%90%D0%BC%D0%BE%D1%81",
+      "rev": 154347172
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Amos_Oz",
+      "rev": 1380368889
+    },
+    {
+      "id": "hewiki",
+      "url": "https://he.wikipedia.org/wiki/%D7%A2%D7%9E%D7%95%D7%A1_%D7%A2%D7%95%D7%96",
+      "rev": 44069467
+    }
+  ],
+  "chapters": [
+    {
+      "key": "jerusalem-childhood",
+      "title": "Иерусалимское детство",
+      "from": 1939,
+      "to": 1953
+    },
+    {
+      "key": "hulda-and-army",
+      "title": "Кибуц Хульда, армия, университет",
+      "from": 1954,
+      "to": 1964
+    },
+    {
+      "key": "first-books-and-wars",
+      "title": "Первые книги и войны",
+      "from": 1965,
+      "to": 1985
+    },
+    {
+      "key": "arad-years",
+      "title": "Арад и мировая слава",
+      "from": 1986,
+      "to": 2013
+    },
+    {
+      "key": "last-years",
+      "title": "Тель-Авив и последние годы",
+      "from": 2014,
+      "to": 2018
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1939",
+      "date": {
+        "from": "1939-05-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Иерусалиме",
+      "long": "Родился в Иерусалиме как Амос Клаузнер, единственный ребёнок в семье репатриантов из Восточной Европы.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "jerusalem-childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "4 мая 1939, Иерусалим — 28 декабря 2018, Петах-Тиква"
+      }
+    },
+    {
+      "key": "loss-1952",
+      "date": {
+        "from": "1952-01",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Самоубийство матери",
+      "long": "Мать, страдавшая депрессией, покончила с собой, когда мальчику было 12 лет. Последствия этого события Оз позднее исследовал в мемуарах.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "works": [
+        {
+          "ref": "tale-of-love-and-darkness",
+          "note": "Оз возвращается к последствиям этой утраты в мемуарной книге."
+        }
+      ],
+      "chapter": "jerusalem-childhood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His mother, who suffered from depression, committed suicide in January 1952, when he was 12."
+      }
+    },
+    {
+      "key": "relocation-1954",
+      "date": {
+        "from": "1954",
+        "to": "1958",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Уход в кибуц Хульда, приёмная семья",
+      "long": "В возрасте около 14 лет ушёл из дома и поселился в кибуце Хульда, где его приняла семья Хулдаи; сменил фамилию на Оз («мужество»).",
+      "place": {
+        "label": "Кибуц Хульда"
+      },
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "hewiki",
+        "quote": "עמוס נקשר רגשית להורים, עוזר והנקה, אצלם התגורר בין השנים 1954–1958"
+      }
+    },
+    {
+      "key": "creation-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Чтение Шервуда Андерсона",
+      "long": "Перевод сборника Шервуда Андерсона «Уайнсбург, Огайо» Оз называл толчком к решению писать о том, что его окружает.",
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Oz credited a 1959 translation of American writer Sherwood Anderson's short story collection Winesburg, Ohio with his decision to \"write about what was around me\"."
+      }
+    },
+    {
+      "key": "love-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Нили Цукерман",
+      "long": "Женился на Нили Цукерман, члене кибуца Хульда; в браке родились трое детей.",
+      "place": {
+        "label": "Кибуц Хульда"
+      },
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Oz married Nily Zuckerman in 1960, and they had three children."
+      }
+    },
+    {
+      "key": "child-1960",
+      "date": {
+        "from": "1960-10-28",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Фании",
+      "long": "Родилась старшая дочь Фания Оз-Зальцбергер, впоследствии историк.",
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Fania Oz-Salzberger 1960-10-28"
+      }
+    },
+    {
+      "key": "war-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Возвращение в кибуц после службы в «Нахале»",
+      "long": "После службы в бригаде «Нахаль», где участвовал в стычках на сирийской границе, вернулся в кибуц и работал сельскохозяйственным рабочим.",
+      "place": {
+        "label": "Кибуц Хульда"
+      },
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году, по окончании воинской службы, возвратился в кибуц, где работал сельскохозяйственным рабочим."
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Еврейского университета",
+      "long": "Кибуц направил его учиться философии и литературе в Еврейский университет; в 1964 году получил первую степень. Затем преподавал в школе кибуца.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Изучал философию и литературу в Еврейском университете (окончил первую степень в 1964 году)"
+      }
+    },
+    {
+      "key": "child-1964",
+      "date": {
+        "from": "1964-06-08",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Галии",
+      "long": "Родилась дочь Галия Оз, впоследствии писательница.",
+      "chapter": "hulda-and-army",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Galia Oz 1964-06-08"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебютный сборник и первое признание",
+      "long": "Первый сборник рассказов привлёк внимание критики и читателей.",
+      "works": [
+        {
+          "ref": "where-jackals-howl"
+        }
+      ],
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уже первый авторский сборник, «Земли шакала» (1965), был встречен израильским обществом с большим интересом."
+      }
+    },
+    {
+      "key": "war-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Шестидневная война в танковых войсках",
+      "long": "Воевал в Шестидневной войне в составе танковых войск на Синае; с тех пор публикует статьи и эссе об арабо-израильском конфликте.",
+      "place": {
+        "label": "Синайский полуостров"
+      },
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Принимал участие в Шестидневной войне в составе танковых войск на Синайском полуострове… Со времени Шестидневной войны 1967 года Оз опубликовал множество статей"
+      }
+    },
+    {
+      "key": "other-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Призыв к решению о двух государствах",
+      "long": "В статье в газете «Давар» одним из первых в Израиле предложил создание двух государств — еврейского и арабского.",
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Уже в 1967 году выступил с призывом разрешения израильско-арабского конфликта путём создания двух государств"
+      }
+    },
+    {
+      "key": "career-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание после романа о Хане и Михаэле",
+      "long": "Роман имел успех у критики и читателей и утвердил Оза среди ведущих писателей его поколения.",
+      "works": [
+        {
+          "ref": "my-michael"
+        }
+      ],
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1968, he published the critically acclaimed My Michael, establishing himself as one of the most prominent writers of his generation."
+      }
+    },
+    {
+      "key": "education-1969",
+      "date": {
+        "from": "1969",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Оксфорде",
+      "long": "Учился в Оксфордском университете.",
+      "place": {
+        "label": "Оксфорд"
+      },
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в Оксфордском университете (в 1969—1970 году)"
+      }
+    },
+    {
+      "key": "loss-1970",
+      "date": {
+        "from": "1970-10-11",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Иехуда-Арье Клаузнер, работавший библиотекарем.",
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Иехуда-Арье Клаузнер, умер 1970-10-11"
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание движения «Мир — сейчас»",
+      "long": "Стал одним из основателей движения «Шалом ахшав» («Мир — сейчас»).",
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1978, he was one of the founders of Peace Now."
+      }
+    },
+    {
+      "key": "child-1978",
+      "date": {
+        "from": "1978-01-25",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Даниэля",
+      "long": "Родился сын Даниэль, впоследствии поэт и музыкант.",
+      "chapter": "first-books-and-wars",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Daniel Oz 1978-01-25"
+      }
+    },
+    {
+      "key": "relocation-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Арад из-за болезни сына",
+      "long": "Семья покинула кибуц и переехала в Арад в Негеве, спасаясь от астмы сына Даниэля. В Араде Оз прожил больше двадцати лет.",
+      "place": {
+        "label": "Арад"
+      },
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The family continued to live at Hulda until 1986, when they moved to Arad in the Negev to seek relief for their son Daniel's asthma."
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературная премия имени Бялика",
+      "long": "Получил литературную премию имени Бялика.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Премии имени Бялика (1986)"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "to": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профессорство в университете Бен-Гуриона",
+      "long": "Был профессором ивритской литературы в университете имени Бен-Гуриона в Беэр-Шеве.",
+      "place": {
+        "label": "Беэр-Шева"
+      },
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Oz was a full professor of Hebrew literature at Ben-Gurion University of the Negev from 1987 to 2014."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход в издательство «Кетер»",
+      "long": "Ушёл из издательства «Ам овед» в «Кетер», предложившее эксклюзивный контракт с фиксированной ежемесячной зарплатой независимо от объёма написанного.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, in 1988, Oz left Am Oved for the Keter Publishing House, which offered him an exclusive contract that granted him a fixed monthly salary regardless of output."
+      }
+    },
+    {
+      "key": "other-1989",
+      "date": {
+        "from": "1989-06-08",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандальная статья о поселенцах",
+      "long": "Резкие слова о поселенцах в статье вызвали ответную критику, в частности со стороны писателя Аркадия Красильщикова.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В статье «Во имя жизни и мира» («Едиот ахронот» от 8 июня 1989 года) писал, что евреи-поселенцы"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Членство в Академии языка иврит",
+      "long": "Избран действительным членом Академии языка иврит.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1991 года — действительный член Академии языка иврит."
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Орден Почётного легиона",
+      "long": "Награждён французским орденом Почётного легиона.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1997 году президент Франции Жак Ширак наградил Оза орденом Почётного легиона."
+      }
+    },
+    {
+      "key": "career-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Израиля по литературе",
+      "long": "Удостоен Премии Израиля по литературе.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Премии имени Бялика (1986), Премии Израиля по литературе (1998)"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Гёте",
+      "long": "Получил премию Гёте.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премии Израиля по литературе (1998), Премии Гёте (2005)"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия принцессы Астурийской",
+      "long": "Получил премию принцессы Астурийской за литературу.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия принцессы Астурийской за литературу 2007"
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главный претендент на Нобелевскую премию",
+      "long": "Считался главным претендентом на Нобелевскую премию по литературе; премию получила Герта Мюллер.",
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году Оз считался основным претендентом на Нобелевскую премию по литературе"
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Книга с посвящением Марвану Баргути",
+      "long": "Послал заключённому Марвану Баргути свою книгу с посвящением; жест вызвал резкую критику, в том числе вне политических кругов.",
+      "works": [
+        {
+          "ref": "tale-of-love-and-darkness"
+        }
+      ],
+      "chapter": "arad-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 2011, Oz sent imprisoned former Tanzim leader Marwan Barghouti a copy of his book A Tale of Love and Darkness in Arabic translation"
+      }
+    },
+    {
+      "key": "relocation-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Тель-Авив",
+      "long": "Семья переехала из Арада в Тель-Авив.",
+      "place": {
+        "label": "Тель-Авив"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, the family moved to Tel Aviv."
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Ясная Поляна»",
+      "long": "Стал лауреатом российской премии «Ясная Поляна» в номинации «Иностранная литература».",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2018 году стал лауреатом российской премии «Ясная Поляна» в номинации «Иностранная литература»."
+      }
+    },
+    {
+      "key": "death-2018",
+      "date": {
+        "from": "2018-12-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть после борьбы с раком",
+      "long": "Скончался в медицинском центре Рабина в Петах-Тикве после продолжительной борьбы с раком; похоронен в кибуце Хульда.",
+      "place": {
+        "label": "Петах-Тиква"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "28 декабря 2018 года Амос Оз скончался после продолжительной борьбы с раком."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "where-jackals-howl",
+      "title": "Земли шакала",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "elsewhere-perhaps",
+      "title": "Где-то в другом месте",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "my-michael",
+      "title": "Мой Михаэль",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "tale-of-love-and-darkness",
+      "title": "Повесть о любви и тьме",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "jews-and-words",
+      "title": "Евреи и слова",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    }
+  ]
+}

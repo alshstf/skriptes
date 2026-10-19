@@ -1,0 +1,545 @@
+{
+  "qid": "Q169150",
+  "name": "Александр Дюма-сын",
+  "born": "1824-07-27",
+  "died": "1895-11-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D1%8E%D0%BC%D0%B0%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%28%D1%81%D1%8B%D0%BD%29",
+      "rev": 151683233
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Alexandre_Dumas_fils",
+      "rev": 1379516692
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Alexandre_Dumas_%28fils%29",
+      "rev": 237069161
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood",
+      "title": "Узаконенный сын",
+      "from": 1824,
+      "to": 1843
+    },
+    {
+      "key": "duplessis",
+      "title": "Мари Дюплесси и первый успех",
+      "from": 1844,
+      "to": 1851
+    },
+    {
+      "key": "stage",
+      "title": "Театр, скандалы, брак",
+      "from": 1852,
+      "to": 1869
+    },
+    {
+      "key": "academy",
+      "title": "Утраты и Академия",
+      "from": 1870,
+      "to": 1886
+    },
+    {
+      "key": "last",
+      "title": "Последние годы",
+      "from": 1887,
+      "to": 1895
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1824",
+      "date": {
+        "from": "1824-07-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Париже",
+      "long": "Родился в Париже как внебрачный сын писателя Александра Дюма и швеи Катрины Лабе.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Александр Дюма родился 27 июля 1824 года в городе Париже."
+      }
+    },
+    {
+      "key": "family-1831",
+      "date": {
+        "from": "1831-03-17",
+        "precision": "day"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Узаконение отцом и разлука с матерью",
+      "long": "Отец признал его законным сыном и через суд забрал у матери; мальчика отдали в пансион, где его унижали из-за внебрачного происхождения.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "fils-naturel",
+          "note": "тема положения внебрачных детей в пьесах связана с детским опытом (литературоведение)"
+        },
+        {
+          "ref": "pere-prodigue",
+          "note": "тема положения внебрачных детей в пьесах связана с детским опытом (литературоведение)"
+        }
+      ],
+      "chapter": "childhood",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "17 марта 1831 года Дюма-отец официально узаконил своего сына, отняв его у матери через суд."
+      }
+    },
+    {
+      "key": "education-1833",
+      "date": {
+        "from": "1833",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Пансион, насмешки над происхождением",
+      "long": "Помещён в пансион, где учился вместе с Эдмоном де Гонкуром.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1833, il est placé dans une pension où il a comme condisciple Edmond de Goncourt."
+      }
+    },
+    {
+      "key": "education-1839",
+      "date": {
+        "from": "1839",
+        "to": "1841",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Коллеж Бурбон, провал на бакалавриате",
+      "long": "Учился в королевском коллеже Бурбон; после провала на экзамене на степень бакалавра оставил учёбу.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "childhood",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Élève au collège royal de Bourbon (actuel lycée Condorcet) de 1839 à 1841, il abandonne ses études après un échec au baccalauréat"
+      }
+    },
+    {
+      "key": "love-1844",
+      "date": {
+        "from": "1844-09",
+        "to": "1845-08",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Роман с Мари Дюплесси",
+      "long": "Роман с куртизанкой Мари Дюплесси, ставшей прототипом героини его будущего романа.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "la-dame-aux-camelias",
+          "note": "Дюплесси — прототип Маргариты Готье"
+        }
+      ],
+      "chapter": "duplessis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Alexandre Dumas fils vit une histoire d'amour fiévreuse entre septembre 1844 et août 1845 avec la demi-mondaine Marie Duplessis"
+      }
+    },
+    {
+      "key": "career-1847",
+      "date": {
+        "from": "1847",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый стихотворный сборник",
+      "long": "Вышел первый стихотворный сборник; затем последовали повести и рассказы.",
+      "chapter": "duplessis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1847 году появился его первый стихотворный сборник: «Грехи юности»"
+      }
+    },
+    {
+      "key": "creation-1848",
+      "date": {
+        "from": "1848",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Роман за три недели после смерти Дюплесси",
+      "long": "Через несколько месяцев после смерти Дюплесси поселился в Сен-Жермен-ан-Ле и закончил роман за три недели; успех книги открыл ему литературную карьеру.",
+      "place": {
+        "label": "Сен-Жермен-ан-Ле"
+      },
+      "works": [
+        {
+          "ref": "la-dame-aux-camelias"
+        }
+      ],
+      "chapter": "duplessis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La Dame aux camélias, écrit en 1848 quelques mois après la mort de la jeune femme. S'installant à Saint-Germain-en-Laye, à l'Auberge du Cheval Blanc, il achève l'œuvre en trois semaines."
+      }
+    },
+    {
+      "key": "love-1851",
+      "date": {
+        "from": "1851",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Связь с Надеждой Нарышкиной",
+      "long": "Начались отношения с Надеждой Нарышкиной (урождённой Кнорринг), будущей женой; в 1860 родилась дочь.",
+      "chapter": "duplessis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "От добрачной связи с 1851 года с Надеждой Ивановной Нарышкиной (19.11.1825 — 2.04.1895)"
+      }
+    },
+    {
+      "key": "career-1852",
+      "date": {
+        "from": "1852-02",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Постановка пьесы после борьбы с цензурой",
+      "long": "Пьеса по роману поставлена после упорной борьбы с цензурой, считавшей её безнравственной, и имела огромный успех; с неё началась карьера драматурга.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "la-dame-aux-camelias"
+        }
+      ],
+      "chapter": "stage",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Son adaptation du roman pour le théâtre est représentée en février 1852 et connaît un succès prodigieux."
+      }
+    },
+    {
+      "key": "career-1857",
+      "date": {
+        "from": "1857-08-14",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кавалер ордена Почётного легиона",
+      "long": "Награждён орденом Почётного легиона степени кавалера; позднее получил высшие степени ордена.",
+      "chapter": "stage",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Grand officier de la Légion d'honneur (29 décembre 1894, chevalier le 14 août 1857"
+      }
+    },
+    {
+      "key": "child-1860",
+      "date": {
+        "from": "1860-11-20",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Колетт",
+      "long": "Родилась дочь Колетт (Мария-Александрина-Анриетта) от Надежды Нарышкиной; официально удочерена в 1865 году.",
+      "chapter": "stage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мария-Александрина-Анриетта (20.11.1860—17.11.1907)"
+      }
+    },
+    {
+      "key": "love-1865",
+      "date": {
+        "from": "1865-02",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Надеждой Нарышкиной",
+      "long": "Брак с Надеждой Нарышкиной; после венчания он официально удочерил дочь Колетт. По английской статье, венчание состоялось в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "stage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Официально удочерена в 1865, после заключения брака с Нарышкиной (бракосочетание состоялось 3 февраля 1865 года)."
+      }
+    },
+    {
+      "key": "child-1867",
+      "date": {
+        "from": "1867-05-03",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Жаннины",
+      "long": "Родилась вторая дочь, Жаннина.",
+      "chapter": "stage",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вторая дочь Жаннина (03.05.1867—1943) в замужестве де Отерив."
+      }
+    },
+    {
+      "key": "loss-1868",
+      "date": {
+        "from": "1868-10-24",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Катрина Лабе, швея, у которой отец когда-то отсудил сына.",
+      "chapter": "stage",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Катрина Лабе 1794-01-01 — 1868-10-24"
+      }
+    },
+    {
+      "key": "loss-1870",
+      "date": {
+        "from": "1870-12-05",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Умер отец, Александр Дюма.",
+      "chapter": "academy",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Александр Дюма 1802-07-24 — 1870-12-05"
+      }
+    },
+    {
+      "key": "other-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Скандальный памфлет об убийстве неверной жены",
+      "long": "Выпустил памфлет, в котором доказывал, что мужу можно и должно убить изменившую жену; он вызвал полемику.",
+      "chapter": "academy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "памфлет «Мужчина-женщина: Ответ Анри д’Идевилю» (фр. L'homme-femme, réponse à M. Henri d'Ideville; 1872)"
+      }
+    },
+    {
+      "key": "career-1874",
+      "date": {
+        "from": "1874-01-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Избрание во Французскую академию",
+      "long": "Избран во Французскую академию; торжественно принят 11 февраля 1875 года.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "academy",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il est élu au deuxième fauteuil de l'Académie française le 29 janvier 1874 et reçu le 11 février 1875."
+      }
+    },
+    {
+      "key": "love-1887",
+      "date": {
+        "from": "1887-04-13",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Связь с Анриеттой Эскалье",
+      "long": "Начало связи с Анриеттой Эскалье (урождённой Ренье); жена Надежда уехала жить к дочери, отношения со старшей дочерью разладились.",
+      "chapter": "last",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "с которой он поддерживал связь с 13 апреля 1887 года."
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894-12-29",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Великий офицер ордена Почётного легиона",
+      "long": "Получил степень великого офицера ордена Почётного легиона.",
+      "chapter": "last",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Grand officier de la Légion d'honneur (29 décembre 1894"
+      }
+    },
+    {
+      "key": "loss-1895",
+      "date": {
+        "from": "1895-04",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Надежды",
+      "long": "Умерла жена, Надежда Дюма.",
+      "chapter": "last",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "puis Nadine Dumas meurt en avril 1895 à 68 ans."
+      }
+    },
+    {
+      "key": "love-1895",
+      "date": {
+        "from": "1895-06-26",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак с Анриеттой Эскалье",
+      "long": "Меньше чем через три месяца после смерти жены женился на Анриетте Эскалье.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "last",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Второй брак (26.06.1895) с Анриеттой Эскалье"
+      }
+    },
+    {
+      "key": "death-1895",
+      "date": {
+        "from": "1895-11-27",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Марли-ле-Руа",
+      "long": "Умер дома в Марли-ле-Руа; похоронен на кладбище Монмартр.",
+      "place": {
+        "label": "Марли-ле-Руа"
+      },
+      "chapter": "last",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il meurt peu de temps après, le 27 novembre 1895, à son domicile de la « maison Champflour »"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "la-dame-aux-camelias",
+      "title": "Дама с камелиями",
+      "qid": "Q898795",
+      "written": {
+        "from": 1848,
+        "to": 1852
+      }
+    },
+    {
+      "ref": "diane-de-lys",
+      "title": "Диана де Лис",
+      "written": {
+        "from": 1851,
+        "to": 1851
+      }
+    },
+    {
+      "ref": "demi-monde",
+      "title": "Полусвет",
+      "written": {
+        "from": 1855,
+        "to": 1855
+      }
+    },
+    {
+      "ref": "question-d-argent",
+      "title": "Денежный вопрос",
+      "written": {
+        "from": 1857,
+        "to": 1857
+      }
+    },
+    {
+      "ref": "fils-naturel",
+      "title": "Внебрачный сын",
+      "written": {
+        "from": 1858,
+        "to": 1858
+      }
+    },
+    {
+      "ref": "pere-prodigue",
+      "title": "Блудный отец",
+      "written": {
+        "from": 1859,
+        "to": 1859
+      }
+    },
+    {
+      "ref": "affaire-clemenceau",
+      "title": "Дело Клемансо",
+      "written": {
+        "from": 1866,
+        "to": 1866
+      }
+    },
+    {
+      "ref": "la-femme-de-claude",
+      "title": "Жена Клавдия",
+      "written": {
+        "from": 1873,
+        "to": 1873
+      }
+    },
+    {
+      "ref": "francillon",
+      "title": "Франсийон",
+      "written": {
+        "from": 1887,
+        "to": 1887
+      }
+    }
+  ]
+}

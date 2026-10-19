@@ -1,0 +1,386 @@
+{
+  "qid": "Q1446797",
+  "name": "Абрахам Вергезе",
+  "born": "1955-05-30",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D1%80%D0%B3%D0%B5%D0%B7%D0%B5%2C_%D0%90%D0%B1%D1%80%D0%B0%D1%85%D0%B0%D0%BC",
+      "rev": 155560470
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Abraham_Verghese",
+      "rev": 1379597232
+    }
+  ],
+  "chapters": [
+    {
+      "key": "ethiopia",
+      "title": "Эфиопия",
+      "from": 1955,
+      "to": 1973
+    },
+    {
+      "key": "exile-medicine",
+      "title": "Изгнание и учёба врача",
+      "from": 1974,
+      "to": 1984
+    },
+    {
+      "key": "aids-tennessee",
+      "title": "Эпидемия в Теннесси",
+      "from": 1985,
+      "to": 1990
+    },
+    {
+      "key": "words-texas",
+      "title": "Слово и Техас",
+      "from": 1991,
+      "to": 2006
+    },
+    {
+      "key": "stanford",
+      "title": "Стэнфорд и признание",
+      "from": 2007,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1955",
+      "date": {
+        "from": "1955-05-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Аддис-Абебе в семье выходцев из Кералы",
+      "long": "Родился в Аддис-Абебе в семье учителей, православных христиан из Кералы (Индия).",
+      "place": {
+        "label": "Аддис-Абеба"
+      },
+      "chapter": "ethiopia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Verghese was born on May 30, 1955, in Addis Ababa, Ethiopia"
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из Эфиопии после смены власти",
+      "long": "Медицинская учёба в Эфиопии прервалась после свержения Хайле Селассие; Вергезе уехал из страны к родителям, эмигрировавшим в США.",
+      "place": {
+        "label": "Аддис-Абеба"
+      },
+      "works": [
+        {
+          "ref": "cutting-for-stone",
+          "note": "роман описывает период перемен в Эфиопии и потерю автора, вынужденного покинуть родину"
+        }
+      ],
+      "chapter": "exile-medicine",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, his education was interrupted by the civil unrest when emperor Haile Selassie was deposed and a Marxist military government took over. He left the country"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Год работы санитаром в американской больнице",
+      "long": "В США год работал санитаром в больнице; позже называл этот опыт определяющим для решения закончить медицинское образование.",
+      "chapter": "exile-medicine",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1974, his education was interrupted by the civil unrest… There, Verghese worked as a hospital orderly for a year."
+      }
+    },
+    {
+      "key": "education-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом врача в Мадрасском медицинском колледже",
+      "long": "Завершил медицинское образование в Мадрасском медицинском колледже в Индии, получил степень бакалавра медицины.",
+      "place": {
+        "label": "Мадрас"
+      },
+      "chapter": "exile-medicine",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "was awarded an MBBS degree from the University of Madras in 1979"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "to": "1984",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стажировка в Бостоне и первые случаи ВИЧ",
+      "long": "После ординатуры в Джонсон-Сити стажировался в Бостонском университете и два года работал в городской больнице Бостона, где увидел первые признаки эпидемии ВИЧ.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "exile-medicine",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After completing his residency in 1983, he took a fellowship at Boston University School of Medicine."
+      }
+    },
+    {
+      "key": "career-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Эпидемия СПИДа в Джонсон-Сити",
+      "long": "Вернувшись в Джонсон-Сити, вместо одного-двух ВИЧ-пациентов в год вскоре получил около ста; решил рассказать об этой трагедии и взял перерыв в медицине ради писательства.",
+      "place": {
+        "label": "Джонсон-Сити"
+      },
+      "works": [
+        {
+          "ref": "my-own-country",
+          "note": "книга о работе с пациентами в Восточном Теннесси"
+        }
+      ],
+      "chapter": "aids-tennessee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Returning to Johnson City in 1985 as assistant professor of medicine, he saw the first signs of a second epidemic, that of rural AIDS."
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Писательский семинар в Айове, степень MFA",
+      "long": "Подавленный работой с больными СПИДом и на фоне кризиса первого брака, поступил в Айовский писательский семинар, оставив пенсионный план и должность; в 1991 году получил степень магистра изящных искусств.",
+      "place": {
+        "label": "Айова-Сити"
+      },
+      "works": [
+        {
+          "ref": "my-own-country"
+        }
+      ],
+      "chapter": "words-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Verghese joined the Iowa Writers Workshop at the University of Iowa… In 1991, he completed a Master of Fine Arts."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Профессорская должность в Эль-Пасо",
+      "long": "Стал профессором медицины и заведующим отделением инфекционных болезней в Эль-Пасо.",
+      "place": {
+        "label": "Эль-Пасо"
+      },
+      "works": [
+        {
+          "ref": "the-tennis-partner",
+          "note": "книга написана в годы жизни в Эль-Пасо"
+        }
+      ],
+      "chapter": "words-texas",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, Verghese accepted a position as Professor of Medicine and Chief of the Division of Infectious Diseases at Texas Tech Health Sciences Center in El Paso, Texas."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход в Стэнфордскую медицинскую школу",
+      "long": "После пяти лет в Сан-Антонио перешёл в Медицинскую школу Стэнфордского университета профессором теории и практики медицины.",
+      "place": {
+        "label": "Стэнфорд"
+      },
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he joined Stanford University School of Medicine in 2007 as a tenured professor"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Институт медицины",
+      "long": "Избран членом Института медицины.",
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2011, Verghese was elected a member of the Institute of Medicine."
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Хайнца",
+      "long": "Получил премию Хайнца в области искусства и гуманитарных наук.",
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2014, he received the 19th Annual Heinz Award in the Arts and Humanities."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная медаль гуманитарных наук США",
+      "long": "Президент Барак Обама вручил Вергезе Национальную медаль гуманитарных наук.",
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "President Barack Obama presented him with the National Humanities Medal in 2015."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Удостоен стипендии Гуггенхайма.",
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, Verghese was awarded a Guggenheim Fellowship."
+      }
+    },
+    {
+      "key": "career-2023-2",
+      "date": {
+        "from": "2023-05",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Книжный клуб Опры для нового романа",
+      "long": "Роман, вдохновлённый историей жизни матери автора, вышел в мае 2023 года и вошёл в Книжный клуб Опры; 37 недель держался в списке бестселлеров New York Times.",
+      "works": [
+        {
+          "ref": "covenant-of-water",
+          "note": "роман вдохновлён историей жизни матери автора, ей посвящён"
+        }
+      ],
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Covenant of Water, was published in May 2023 by Grove Atlantic and was chosen for Oprah's Book Club."
+      }
+    },
+    {
+      "key": "other-2025",
+      "date": {
+        "from": "2025-05-29",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Речь на выпускном в Гарварде",
+      "long": "Выступил с речью на выпускной церемонии Гарвардского университета.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "stanford",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Harvard University commencement speech on May 29, 2025."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "my-own-country",
+      "title": "Моя страна: История доктора",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "the-tennis-partner",
+      "title": "The Tennis Partner",
+      "qid": "Q7768447",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "cutting-for-stone",
+      "title": "Рассечение Стоуна",
+      "qid": "Q1530474",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "covenant-of-water",
+      "title": "Завет воды",
+      "qid": "Q118901793",
+      "written": {
+        "from": 2023,
+        "to": 2023
+      }
+    }
+  ]
+}

@@ -1,0 +1,583 @@
+{
+  "qid": "Q380265",
+  "name": "Рю Мураками",
+  "born": "1952-02-19",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D1%83%D1%80%D0%B0%D0%BA%D0%B0%D0%BC%D0%B8%2C_%D0%A0%D1%8E",
+      "rev": 150152668
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Ry%C5%AB_Murakami",
+      "rev": 1372557396
+    },
+    {
+      "id": "jawiki",
+      "url": "https://ja.wikipedia.org/wiki/%E6%9D%91%E4%B8%8A%E9%BE%8D",
+      "rev": 111296151
+    }
+  ],
+  "chapters": [
+    {
+      "key": "sasebo",
+      "title": "Сасебо: порт, рок и баррикады",
+      "from": 1952,
+      "to": 1969
+    },
+    {
+      "key": "fussa",
+      "title": "Токио, Фусса, художественный университет",
+      "from": 1970,
+      "to": 1975
+    },
+    {
+      "key": "debut-fame",
+      "title": "Дебют, слава и эксперименты",
+      "from": 1976,
+      "to": 1989
+    },
+    {
+      "key": "cuba-media",
+      "title": "Куба, кино и первые сетевые проекты",
+      "from": 1990,
+      "to": 1999
+    },
+    {
+      "key": "prizes-tv",
+      "title": "Премии, телеэфир и электронные книги",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1952",
+      "date": {
+        "from": "1952-02-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в портовом Сасэбо",
+      "long": "Родился в Сасэбо, портовом городе с американской военно-морской базой, в семье художника. Назван в честь героя повести Накадзато Кайдзана «Перевал Великого Будды».",
+      "place": {
+        "label": "Сасэбо"
+      },
+      "chapter": "sasebo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рюноскэ Мураками родился 19 февраля 1952 года в семье художника в городе Сасэбо (Нагасаки, Япония)."
+      }
+    },
+    {
+      "key": "education-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы, отъезд в Токио",
+      "long": "Окончил школу в Сасэбо (в последний год вместе с одноклассниками забаррикадировал крышу и три месяца провёл под домашним арестом). Весной уехал в Токио, поступил в школу Бигакко, но через полгода был отчислен.",
+      "place": {
+        "label": "Токио"
+      },
+      "chapter": "fussa",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1970年佐世保北高校を卒業… この年の春に上京し、現代思潮社の主宰する美学校のシルクスクリーン科に入学するも、半年で除籍となる。"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970-10",
+        "to": "1972-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Жизнь в Фусса у базы Йокота",
+      "long": "С октября 1970 по февраль 1972 года жил в Фусса, рядом с американской авиабазой Йокота. Впечатления от этих лет легли в основу первого романа.",
+      "place": {
+        "label": "Фусса"
+      },
+      "works": [
+        {
+          "ref": "almost-transparent-blue",
+          "note": "роман основан на опыте жизни в Фусса (по биографической справке)"
+        }
+      ],
+      "chapter": "fussa",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1970年佐世保北高校を卒業… 同年10月から1972年2月まで、アメリカ軍横田基地に近い福生市に住んだ。"
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в университет Мусасино",
+      "long": "Поступил в Художественный университет Мусасино и начал писать прозу на материале жизни в Фусса.",
+      "place": {
+        "label": "Токио"
+      },
+      "works": [
+        {
+          "ref": "almost-transparent-blue",
+          "note": "писать по опыту Фусса начал в эти годы"
+        }
+      ],
+      "chapter": "fussa",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1972年、武蔵野美術大学に入学する。この頃より、福生での体験を元に小説を書き始める。"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют и премия Акутагавы",
+      "long": "Дебютный роман получил премии «Гундзо» для новых писателей и Акутагавы, разошёлся тиражом более миллиона экземпляров. Критики разделились: одни хвалили новое поколение, другие обвиняли автора в декадентстве.",
+      "works": [
+        {
+          "ref": "almost-transparent-blue"
+        }
+      ],
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1976年、アメリカ軍基地の町・福生で麻薬と乱交に明け暮れる若者の姿を描いた『限りなく透明に近いブルー』で第19回群像新人文学賞、第75回芥川龍之介賞を受賞し、デビューする。"
+      }
+    },
+    {
+      "key": "illness-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Депрессия после карнавала в Рио",
+      "long": "По возвращении с карнавала в Рио, по сведениям статьи, потерял интерес ко всему и впал в депрессию.",
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1978年にリオのカーニバルから帰ってきたときにすべてのことに飽きて鬱病になったようである。"
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый фильм по собственному роману",
+      "long": "Дебютный роман экранизировал сам, став кинорежиссёром; в дальнейшем снимал фильмы по собственным книгам.",
+      "works": [
+        {
+          "ref": "almost-transparent-blue"
+        }
+      ],
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Его первым фильмом стал «Все оттенки голубого», вышедший в 1979 году."
+      }
+    },
+    {
+      "key": "child-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына",
+      "long": "Женат на клавишнице; в 1980 году родился сын.",
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He married his wife, a keyboard player, in the 1970s and their son was born in 1980."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кассовый провал фильма с Питером Фондой",
+      "long": "Снял по собственному сюжету музыкальную комедию с Питером Фондой в главной роли; фильм провалился в прокате и получил резкую критику.",
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1982年、アメリカ人俳優ピーター・フォンダを招き、彼が演じる飛べなくなったスーパーマンを巡るミュージカル・コメディー映画『だいじょうぶマイ・フレンド』を原作・監督して… 興行的に失敗し、批評家に酷評された。"
+      }
+    },
+    {
+      "key": "career-1984",
+      "date": {
+        "from": "1984",
+        "to": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Многолетний эссеистический цикл",
+      "long": "Начал эссеистический цикл, который продолжался до 2013 года; от тем любви и наслаждения постепенно перешёл к общественным проблемам.",
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1984年からエッセイ『すべての男は消耗品である』の連載を開始する（連載は長期にわたり2013年まで続いた）。"
+      }
+    },
+    {
+      "key": "education-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Беседы с учёными, самообразование",
+      "long": "Вместе с Рюити Сакамото вёл беседы с учёными и критиками; в эти годы интенсивно изучал биологию, историю и экономику.",
+      "works": [
+        {
+          "ref": "love-and-fascism",
+          "note": "полученные знания использованы в романе (по биографической справке)"
+        }
+      ],
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1985年刊行の『EV.Cafe 超進化論』では、友人のミュージシャン坂本龍一とともにホスト役を務めて… この時期、進化生物学、動物行動学から歴史、経済に至るまで集中的に勉強している。"
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ведущий телепередачи «Бар Рю»",
+      "long": "Вёл телепередачу с гостями из мира эстрады, спорта и культуры.",
+      "chapter": "debut-fame",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1987年から1991年にかけてTV番組『Ryu's Bar 気ままにいい夜』のホストを務める。"
+      }
+    },
+    {
+      "key": "other-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Первая поездка на Кубу",
+      "long": "Первая поездка на Кубу; увлечение кубинской музыкой определило его деятельность в 1990-е: он привозил музыкантов в Японию и выпускал диски.",
+      "place": {
+        "label": "Куба"
+      },
+      "chapter": "cuba-media",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1991年初めてキューバを訪れ、キューバという国やその文化、特に音楽に魅せられる。"
+      }
+    },
+    {
+      "key": "career-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Лейбл кубинской музыки MURAKAMI'S",
+      "long": "Организовал гастроли кубинской группы NG La Banda в Японии и основал лейбл MURAKAMI'S для кубинской музыки.",
+      "chapter": "cuba-media",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "1992年、キューバのバンドNGラ・バンダを日本に招き公演を実施する。またキューバ音楽のCDをリリースする「MURAKAMI‘Sレーベル」を立ち上げる。"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Хирабаяси",
+      "long": "Награждён премией Хирабаяси Тайко.",
+      "chapter": "cuba-media",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Хирабаяси 1996-01-01"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Ёмиури»",
+      "long": "Получил премию «Ёмиури» (за роман, печатавшийся в газете «Ёмиури»).",
+      "works": [
+        {
+          "ref": "in-the-miso-soup",
+          "note": "по биографической справке, премия присуждена за этот роман"
+        }
+      ],
+      "chapter": "cuba-media",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Ёмиури» 1997-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Главный редактор рассылки JMM",
+      "long": "Основал электронную рассылку о финансах и экономике Japan Mail Media и возглавил её как главный редактор.",
+      "chapter": "cuba-media",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Murakami started the e-magazine JMM (Japan Mail Media) in 1999 and still serves as its chief editor."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Танидзаки",
+      "long": "Получил премию Дзюнъитиро Танидзаки.",
+      "works": [
+        {
+          "ref": "kyosei-chu",
+          "note": "премия присуждена за этот роман (по биографической справке)"
+        }
+      ],
+      "chapter": "prizes-tv",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Танидзаки 2000-01-01"
+      }
+    },
+    {
+      "key": "career-2000-2",
+      "date": {
+        "from": "2000",
+        "to": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Член отборочного комитета премии Акутагавы",
+      "long": "Около 18 лет входил в отборочный комитет премии Акутагавы, вышел из него в 2017 году.",
+      "chapter": "prizes-tv",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "2000年より約18年間芥川賞選考委員を務めていたが、2017年に開催された第158回を以て退任した。"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Номы",
+      "long": "Премия Номы за роман о вторжении Северной Кореи в Японию.",
+      "works": [
+        {
+          "ref": "hanto-o-deyo"
+        }
+      ],
+      "chapter": "prizes-tv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году за роман «Фатерлянд» (дословно «Вперёд с полуострова!») Рю Мураками был награждён премией Номы."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Ведущий бизнес-ток-шоу «Камбрия»",
+      "long": "Стал ведущим интервью-программы с деловыми лидерами на TV Tokyo; в тот же год запустил видеосервис RVR.",
+      "chapter": "prizes-tv",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "2006年より財界人を迎えたインタビュー番組『日経スペシャル カンブリア宮殿』のホストを務める。"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Майнити» в области искусства",
+      "long": "Премия «Майнити» в области искусства за антиутопию о контролируемом обществе будущей Японии.",
+      "works": [
+        {
+          "ref": "utau-kujira"
+        }
+      ],
+      "chapter": "prizes-tv",
+      "evidence": {
+        "source": "jawiki",
+        "quote": "2011年、未来の日本の管理社会のディストピアを描いた『歌うクジラ』で第52回毎日芸術賞を受賞した。"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "almost-transparent-blue",
+      "title": "Все оттенки голубого",
+      "written": {
+        "from": 1972,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "coin-locker-babies",
+      "title": "Дети из камеры хранения",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "tennis-boy-melancholy",
+      "title": "Меланхолия теннисиста",
+      "written": {
+        "from": 1982,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "love-and-fascism",
+      "title": "Любовь и фашизм",
+      "written": {
+        "from": 1984,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "69-sixty-nine",
+      "title": "69",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "topaz",
+      "title": "Топаз",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "five-minutes-later",
+      "title": "Мир через пять минут",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "love-and-pop",
+      "title": "Любовь и поп",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "in-the-miso-soup",
+      "title": "Мисо-суп",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "kyosei-chu",
+      "title": "Паразиты",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "exodus-to-hope",
+      "title": "Исход в страну надежды",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "hanto-o-deyo",
+      "title": "Фатерлянд",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "utau-kujira",
+      "title": "Поющий кит",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    }
+  ]
+}

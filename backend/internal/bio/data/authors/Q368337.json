@@ -1,0 +1,414 @@
+{
+  "qid": "Q368337",
+  "name": "Джон Кракауэр",
+  "born": "1954-04-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%80%D0%B0%D0%BA%D0%B0%D1%83%D1%8D%D1%80%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 154871037
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Jon_Krakauer",
+      "rev": 1372442984
+    }
+  ],
+  "chapters": [
+    {
+      "key": "childhood-college",
+      "title": "Корваллис и колледж",
+      "from": 1954,
+      "to": 1976
+    },
+    {
+      "key": "alaska-and-outside",
+      "title": "Аляска, плотницкий топор и журнал",
+      "from": 1977,
+      "to": 1995
+    },
+    {
+      "key": "everest",
+      "title": "Эверест и его последствия",
+      "from": 1996,
+      "to": 1999
+    },
+    {
+      "key": "investigations",
+      "title": "Расследования",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1954",
+      "date": {
+        "from": "1954-04-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в многодетной семье",
+      "long": "Родился в Бруклайне, штат Массачусетс, третьим из пяти детей в семье Льюиса Джозефа и Кэрол Энн Кракауэр.",
+      "place": {
+        "label": "Бруклайн"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Кракауэр (англ. Jon Krakauer; род. 12 апреля 1954 г.)"
+      }
+    },
+    {
+      "key": "education-1972",
+      "date": {
+        "from": "1972",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Корваллисе",
+      "long": "Окончил высшую школу в Корваллисе, штат Орегон, где занимался теннисом.",
+      "place": {
+        "label": "Корваллис"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Кракауэр окончил эту школу в 1972 году."
+      }
+    },
+    {
+      "key": "other-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первое восхождение на Лосиный Зуб",
+      "long": "В составе группы из трёх альпинистов впервые прошёл южным кулуаром «Ветчина и яйца» скалу Лосиный Зуб на Аляске.",
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1975 году Кракауэр в составе группы из трёх альпинистов впервые покорил скалу Лосиный Зуб на Аляске"
+      }
+    },
+    {
+      "key": "education-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Хэмпшир-колледж вопреки воле отца",
+      "long": "Вопреки желанию отца, видевшего сына юристом или врачом, учился в Хэмпшир-колледже и получил квалификацию по наукам об окружающей среде.",
+      "place": {
+        "label": "Хэмпшир-колледж, Массачусетс"
+      },
+      "chapter": "childhood-college",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "поступил на отделение естественных наук в Колледж Хэмпшира (англ. Hampshire College) в Массачусетсе, где в 1976 году получил квалификацию в области наук об окружающей среде"
+      }
+    },
+    {
+      "key": "other-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Экспедиция на Палец Дьявола",
+      "long": "Подрабатывая плотником и моряком на рыболовном судне, добрался до Пальца Дьявола на Аляске; после неудачных попыток на северной стене поднялся по простому маршруту с востока.",
+      "place": {
+        "label": "Аляска"
+      },
+      "works": [
+        {
+          "ref": "eiger-dreams",
+          "note": "Автор сам описал это восхождение в книгах"
+        },
+        {
+          "ref": "into-the-wild",
+          "note": "Автор сам описал это восхождение в книгах"
+        }
+      ],
+      "chapter": "alaska-and-outside",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После окончания колледжа в 1977 году Джон решил покорить северную стену пика Пальца Дьявола на Аляске"
+      }
+    },
+    {
+      "key": "love-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Линдой Мур",
+      "long": "Познакомился с альпинисткой Линдой Мариам Мур.",
+      "chapter": "alaska-and-outside",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году Джон познакомился с альпинисткой Линдой Мариам Мур и женился на ней в 1980 году."
+      }
+    },
+    {
+      "key": "love-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Линдой Мур",
+      "long": "Женился на Линде Мариам Мур; пара жила в Сиэтле, позднее переехала в Боулдер, штат Колорадо.",
+      "chapter": "alaska-and-outside",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1977 году Джон познакомился с альпинисткой Линдой Мариам Мур и женился на ней в 1980 году."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход в журналистику",
+      "long": "После многих лет работы плотником и рыбаком стал журналистом-фрилансером; известность принесли статьи в журнале Outside.",
+      "chapter": "alaska-and-outside",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1983 года он стал журналистом-фрилансером."
+      }
+    },
+    {
+      "key": "other-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Восхождение на Серро-Торре",
+      "long": "Совершил восхождение на Серро-Торре в Патагонии, одну из самых технически сложных вершин мира.",
+      "place": {
+        "label": "Патагония"
+      },
+      "chapter": "alaska-and-outside",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 году Кракауэр совершил восхождение на гору Серро-Торре в Патагонии"
+      }
+    },
+    {
+      "key": "other-1996",
+      "date": {
+        "from": "1996-05",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Трагедия на Эвересте",
+      "long": "По заданию журнала Outside вошёл в коммерческую экспедицию Роба Холла, поднялся на вершину и пережил бурю, в которой погибли участники экспедиций.",
+      "place": {
+        "label": "Эверест"
+      },
+      "works": [
+        {
+          "ref": "into-thin-air",
+          "note": "Книга посвящена этим событиям"
+        }
+      ],
+      "chapter": "everest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году взошёл на Эверест и стал очевидцем трагедии на Джомолунгме в мае 1996 года, когда погибло восемь участников экспедиции."
+      }
+    },
+    {
+      "key": "other-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Спор с Букреевым об Эвересте",
+      "long": "Анатолий Букреев опубликовал ответную книгу с собственной версией событий и просил убрать из книги Кракауэра, по его мнению, клевету; автор отказался.",
+      "works": [
+        {
+          "ref": "into-thin-air"
+        }
+      ],
+      "chapter": "everest",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Букреев в соавторстве с Вестоном Де-Уолтом опубликовал в 1997 году ответную книгу"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Салливана за научную журналистику",
+      "long": "Получил премию Уолтера Салливана за журналистику в области науки.",
+      "chapter": "everest",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Walter Sullivan Award for Excellence in Science Journalism 1997-01-01"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Награда Академии искусств и литературы",
+      "long": "Американская академия искусств и литературы присудила награду по литературе за книгу об Эвересте.",
+      "works": [
+        {
+          "ref": "into-thin-air",
+          "note": "Награда присуждена за рассказ о восхождении на Эверест"
+        }
+      ],
+      "chapter": "everest",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The American Academy of Arts and Letters gave Krakauer an Academy Award in Literature in 1999 for his work"
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор серии Exploration",
+      "long": "Стал редактором серии Exploration издательства Modern Library.",
+      "chapter": "investigations",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "As of 2004, Krakauer edits the Exploration series of the Modern Library."
+      }
+    },
+    {
+      "key": "creation-2008",
+      "date": {
+        "from": "2008-06",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Перенос выхода книги о Тиллмане",
+      "long": "Издательство отложило выход книги о Пэте Тиллмане, сообщив, что автор недоволен рукописью; книга вышла в сентябре 2009 года.",
+      "works": [
+        {
+          "ref": "where-men-win-glory"
+        }
+      ],
+      "chapter": "investigations",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Doubleday Publishing originally planned to release the book in the fall of 2008, but postponed the launch in June of that year, announcing that Krakauer was \"unhappy with the manuscript.\""
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Разоблачение Грега Мортенсона",
+      "long": "Ранее поддерживавший Грега Мортенсона, опубликовал электронную книгу с обвинениями в нецелевом расходовании средств его благотворительной организации; вокруг неё возникла полемика.",
+      "works": [
+        {
+          "ref": "three-cups-of-deceit"
+        }
+      ],
+      "chapter": "investigations",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2011 году Джон Кракауэр опубликовал на сайте Амазон электронную книгу"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "eiger-dreams",
+      "title": "Эйгерские мечты",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    },
+    {
+      "ref": "into-the-wild",
+      "title": "В диких условиях",
+      "written": {
+        "from": 1996,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "into-thin-air",
+      "title": "В разреженном воздухе",
+      "written": {
+        "from": 1996,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "under-the-banner-of-heaven",
+      "title": "Под знаменем небес",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "where-men-win-glory",
+      "title": "Как мужчины достигают славы: одиссея Пэта Тиллмана",
+      "written": {
+        "from": 2007,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "three-cups-of-deceit",
+      "title": "Три чашки лжи",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "missoula",
+      "title": "Миссула",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    }
+  ]
+}
