@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.56.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.56.1**.
 
 ## Рабочее окружение
 
@@ -109,7 +109,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     новый fixed/sticky у края экрана — добавить инсет. Хэдер отделён тенью.
 19. **Ручные правки метаданных материализуются в колонки** (`metadata_overrides` + `OverrideController`): поля,
     которые перетирает импорт, ре-применяет `ReapplyAfterImport`; recompute-пути гейтятся по наличию правки.
-    Контролы правки на карточках — через `useCanEdit()` (админ + режим «Править», `lib/editMode.ts`, #444), не по роли.
+    Контролы правки на карточках — через `useCanEdit()` (админ + режим «Править» на ЭТОЙ карточке — ушли с неё,
+    выключен; `lib/editMode.ts`, #444), не по роли.
 20. **Транзиент ≠ «не найдено»:** 404 → `ErrNotFound`, 429/400/403/5xx → `ErrUpstream` (`statusErr`). Квота Google Books —
     одна на процесс, в транспорте (`daily_quota.go`), не в воркерах. Все HTTP-клиенты
     обогащения — через `SourceHTTPClient` (прерыватель по хосту, `ErrSourcePaused` пропускается молча).

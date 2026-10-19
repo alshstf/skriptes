@@ -2,33 +2,48 @@ import { useSyncExternalStore } from 'react';
 import { useMe } from './auth';
 
 // Режим правки каталога (#444): контролы правки (поля, жанры, авторы, серия,
-// пересборка и слияние изданий, «служебный автор») админ видит только когда
-// включил «Править» на карточке — иначе карточка как у читателя. Флаг — на
-// вкладку (sessionStorage), общий для всех карточек.
+// пересборка и слияние изданий, «служебный автор», скрытие на инстансе) админ
+// видит только когда включил «Править» на карточке — иначе карточка как у
+// читателя. Режим — у той карточки, где его включили (владелец 2026-10-19):
+// ушёл с неё («Назад», на другую книгу или автора) — режим выключен, вернулся —
+// тоже выключен. В sessionStorage — путь карточки: перезагрузка той же
+// карточки режим сохраняет.
 
 const KEY = 'skriptes:edit-mode';
 
-function read(): boolean {
+function currentPath(): string {
+  return typeof window === 'undefined' ? '' : window.location.pathname;
+}
+
+function read(): string | null {
   try {
-    return sessionStorage.getItem(KEY) === '1';
+    const v = sessionStorage.getItem(KEY);
+    // '1' — значение до 1.56.1 (режим на всю вкладку): не переносим.
+    return v && v !== '1' ? v : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
-let enabled = read();
+let scope = read();
 const listeners = new Set<() => void>();
 
-/** setEditMode — включить/выключить режим правки (все карточки перерисуются). */
+/** setEditMode — включить (на текущей карточке) / выключить режим правки. */
 export function setEditMode(on: boolean) {
-  enabled = on;
+  scope = on ? currentPath() : null;
   try {
-    if (on) sessionStorage.setItem(KEY, '1');
+    if (scope) sessionStorage.setItem(KEY, scope);
     else sessionStorage.removeItem(KEY);
   } catch {
     // приватный режим — флаг живёт до перезагрузки
   }
   listeners.forEach((l) => l());
+}
+
+/** syncEditModeWithPath — Layout зовёт на каждую смену пути: режим включён у
+ *  другой карточки — выключить (иначе он вернулся бы вместе с карточкой). */
+export function syncEditModeWithPath(pathname: string) {
+  if (scope !== null && scope !== pathname) setEditMode(false);
 }
 
 function subscribe(l: () => void) {
@@ -38,13 +53,16 @@ function subscribe(l: () => void) {
   };
 }
 
-/** useEditMode — включён ли режим правки (без проверки роли). */
+/** useEditMode — включён ли режим правки на этой карточке (без проверки роли).
+ *  Путь сверяется и при рендере: новая карточка рисуется раньше эффекта Layout —
+ *  без мигания контролов правки. */
 export function useEditMode(): boolean {
-  return useSyncExternalStore(
+  const s = useSyncExternalStore(
     subscribe,
-    () => enabled,
-    () => false,
+    () => scope,
+    () => null,
   );
+  return s !== null && s === currentPath();
 }
 
 /** useIsAdmin — пользователь — админ. */

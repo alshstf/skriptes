@@ -259,9 +259,21 @@ test('режим правки (#444): без «Править» админ ви�
   await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toHaveCount(0);
   await page.getByRole('button', { name: 'Править', exact: true }).click();
   await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toBeVisible();
-  // Режим живёт на вкладку: на другой карточке он включён.
+  // Перезагрузка той же карточки режим сохраняет.
   await page.reload();
   await expect(page.getByRole('button', { name: 'Готово', exact: true })).toBeVisible({ timeout: 10_000 });
+  // Режим — у карточки, где его включили (владелец 2026-10-19): перешли на
+  // другую карточку внутри приложения — выключен; вернулись «Назад» — тоже.
+  await page.getByRole('link', { name: 'Алексеев Евгений Артёмович' }).first().click();
+  await expect(page).toHaveURL(/\/authors\/17$/);
+  await expect(page.getByRole('button', { name: 'Править', exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole('button', { name: 'Готово', exact: true })).toHaveCount(0);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/books\/19$/);
+  await expect(page.getByRole('button', { name: 'Править', exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toHaveCount(0);
+  // «Готово» выключает режим и на месте.
+  await page.getByRole('button', { name: 'Править', exact: true }).click();
   await page.getByRole('button', { name: 'Готово', exact: true }).click();
   await expect(page.getByRole('button', { name: /Объединить с другой книгой/ })).toHaveCount(0);
 });
