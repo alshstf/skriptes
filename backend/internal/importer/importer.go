@@ -628,7 +628,8 @@ var workDocSelect = `
 		), '{}'),
 		COALESCE((
 			SELECT array_agg(DISTINCT aw.award ORDER BY aw.award) FROM award_wins aw WHERE aw.work_id = w.id
-		), '{}')
+		), '{}'),
+		w.instance_hidden
 	FROM works w
 	LEFT JOIN series s ON s.id = w.series_id`
 
@@ -658,7 +659,7 @@ func (im *Importer) scanWorkDocs(ctx context.Context, tail string, args ...any) 
 			&sig.Views, &sig.Reads, &sig.LibrateMax, &sig.ExtVotes,
 			&sig.HasAdaptation, &sig.UserRatings,
 			&sig.FantlabMarks, &sig.OLRatings, &sig.OLWant, &sig.WDSitelinks,
-			&d.Kind, &altTitles, &d.AuthorsLatin, &d.Awards); err != nil {
+			&d.Kind, &altTitles, &d.AuthorsLatin, &d.Awards, &d.InstanceHidden); err != nil {
 			return nil, fmt.Errorf("scan work doc: %w", err)
 		}
 		// Popularity работы = интегральная «известность»: workDocSelect отдаёт сырые

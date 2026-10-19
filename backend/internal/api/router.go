@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/hiding"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
 	"github.com/skriptes/skriptes/backend/internal/settings"
@@ -35,6 +36,8 @@ type Deps struct {
 	Awards      AwardsDeps
 	// Bio — био-таймлайн автора; Service == nil → ручки не монтируются.
 	Bio BioDeps
+	// Hiding — скрытие авторов и работ на инстансе; Store == nil → ручки не монтируются.
+	Hiding HidingDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -86,14 +89,18 @@ func NewRouter(d Deps) http.Handler {
 		r.Route("/opds", func(r chi.Router) {
 			r.Use(requireBasicAuth(d.Auth, th))
 			h := d.OPDS.Handler
+			// Скрытое на инстансе (админ) в OPDS недоступно и по прямой ссылке.
+			opdsAuthor := requireNotHidden(d.Hiding, hiding.KindAuthor)
+			opdsSeries := requireNotHidden(d.Hiding, hiding.KindSeries)
+			opdsBook := requireNotHidden(d.Hiding, hiding.KindBook)
 			r.Get("/", h.Root)
 			r.Get("/opensearch.xml", h.OpenSearchDescription)
 			r.Get("/recent", h.Recent)
 			r.Get("/search", h.Search)
 			r.Get("/authors", h.AuthorsList)
-			r.Get("/authors/{id}", h.AuthorBooks)
+			r.With(opdsAuthor).Get("/authors/{id}", h.AuthorBooks)
 			r.Get("/series", h.SeriesList)
-			r.Get("/series/{id}", h.SeriesBooks)
+			r.With(opdsSeries).Get("/series/{id}", h.SeriesBooks)
 			r.Get("/genres", h.GenresList)
 			r.Get("/genres/{id}", h.GenreBooks)
 			// OPDS 2.0 (JSON) — те же разделы (#389, B7).
@@ -101,12 +108,12 @@ func NewRouter(d Deps) http.Handler {
 			r.Get("/v2/recent", h.V2Recent)
 			r.Get("/v2/search", h.V2Search)
 			r.Get("/v2/authors", h.V2Authors)
-			r.Get("/v2/authors/{id}", h.V2AuthorBooks)
+			r.With(opdsAuthor).Get("/v2/authors/{id}", h.V2AuthorBooks)
 			r.Get("/v2/series", h.V2Series)
-			r.Get("/v2/series/{id}", h.V2SeriesBooks)
+			r.With(opdsSeries).Get("/v2/series/{id}", h.V2SeriesBooks)
 			r.Get("/v2/genres", h.V2Genres)
 			r.Get("/v2/genres/{id}", h.V2GenreBooks)
-			r.Get("/books/{id}/download", h.Download)
+			r.With(opdsBook).Get("/books/{id}/download", h.Download)
 			r.Get("/covers/{name}", h.Cover)
 		})
 	}
@@ -123,7 +130,12 @@ func NewRouter(d Deps) http.Handler {
 				// bookGate — глобальный hard-block скрытого контента на
 				// маршрутах «по id книги» (404 даже по прямой ссылке).
 				// Бесплатен, если админ ничего не скрыл (дефолт).
-				bookGate := requireBookVisible(d.Content, d.Books)
+				// + скрытое на инстансе (админ, 0064): книга, автор, работа, серия —
+				// 404 всем, кроме админа. Удаление из своих списков не закрываем.
+				bookGate := chainMW(requireBookVisible(d.Content, d.Books), requireNotHidden(d.Hiding, hiding.KindBook))
+				authorGate := requireNotHidden(d.Hiding, hiding.KindAuthor)
+				workGate := requireNotHidden(d.Hiding, hiding.KindWork)
+				seriesGate := requireNotHidden(d.Hiding, hiding.KindSeries)
 				r.Get("/auth/me", handleMe(d.Auth))
 				// Self-management. /api/me — обновление своего профиля
 				// (display_name, email), /api/me/password — смена своего
@@ -140,7 +152,7 @@ func NewRouter(d Deps) http.Handler {
 					// Карточка логической книги по works.id. Видимость скрытого
 					// контента обрабатывает GetWork (404, если все издания скрыты) —
 					// отдельный bookGate не нужен (он по book_id).
-					r.Get("/works/{id}", handleGetWork(d.Books, d.History, d.Metadata, d.Content))
+					r.With(workGate).Get("/works/{id}", handleGetWork(d.Books, d.History, d.Metadata, d.Content))
 					// Готовые подборки на /shelves (#389): вычисляются на лету.
 					r.Get("/me/presets", handleListPresets(d.Books, d.Content))
 					r.Get("/me/presets/{key}", handlePresetBooks(d.Books, d.History, d.Content))
@@ -152,12 +164,12 @@ func NewRouter(d Deps) http.Handler {
 						r.Get("/awards/{key}", handleAwardWins(d.Awards, d.Books, d.History, d.Content))
 					}
 					r.Get("/awards/{key}/logo", handleAwardLogo(d.Awards))
-					r.Get("/works/{id}/awards", handleWorkAwards(d.Awards))
-					r.Get("/authors/{id}/awards", handleAuthorAwards(d.Awards))
+					r.With(workGate).Get("/works/{id}/awards", handleWorkAwards(d.Awards))
+					r.With(authorGate).Get("/authors/{id}/awards", handleAuthorAwards(d.Awards))
 				}
 				if d.Bio.Service != nil {
-					r.Get("/authors/{id}/bio-timeline", handleAuthorBioTimeline(d.Bio))
-					r.Get("/works/{id}/life-context", handleWorkLifeContext(d.Bio))
+					r.With(authorGate).Get("/authors/{id}/bio-timeline", handleAuthorBioTimeline(d.Bio))
+					r.With(workGate).Get("/works/{id}/life-context", handleWorkLifeContext(d.Bio))
 				}
 				if d.Adaptations.Service != nil {
 					r.With(bookGate).Get("/books/{id}/adaptations", handleListAdaptations(d.Adaptations, d.Books, d.Metadata))
@@ -179,9 +191,9 @@ func NewRouter(d Deps) http.Handler {
 					// сосуществуют (статический путь vs. path-параметр).
 					r.Get("/authors", handleListAuthors(d.Catalog, d.Content))
 					r.Get("/authors/facets", handleAuthorFacets(d.Catalog, d.Content)) // счётчики фильтров (#389)
-					r.Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
-					r.Get("/authors/{id}/series", handleAuthorSeries(d.Catalog)) // серии автора (пикер переноса)
-					r.Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
+					r.With(authorGate).Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
+					r.With(authorGate).Get("/authors/{id}/series", handleAuthorSeries(d.Catalog)) // серии автора (пикер переноса)
+					r.With(seriesGate).Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))
 					r.Get("/languages", handleListLanguages(d.Catalog))
 				}
@@ -201,17 +213,17 @@ func NewRouter(d Deps) http.Handler {
 					r.Put("/me/rating-prompts", handleUpdateMeRatingPrompts(d.Settings))
 				}
 				if d.History.Service != nil {
-					r.Post("/books/{id}/favorite", handleAddFavorite(d.History))
+					r.With(bookGate).Post("/books/{id}/favorite", handleAddFavorite(d.History))
 					r.Delete("/books/{id}/favorite", handleRemoveFavorite(d.History))
-					r.Post("/authors/{id}/favorite", handleAddFavoriteAuthor(d.History))
+					r.With(authorGate).Post("/authors/{id}/favorite", handleAddFavoriteAuthor(d.History))
 					r.Delete("/authors/{id}/favorite", handleRemoveFavoriteAuthor(d.History))
-					r.Post("/series/{id}/favorite", handleAddFavoriteSeries(d.History))
+					r.With(seriesGate).Post("/series/{id}/favorite", handleAddFavoriteSeries(d.History))
 					r.Delete("/series/{id}/favorite", handleRemoveFavoriteSeries(d.History))
 					// Избранные жанры — раздел «Жанры» (закрепление сверху).
 					r.Post("/genres/{id}/favorite", handleAddFavoriteGenre(d.History))
 					r.Delete("/genres/{id}/favorite", handleRemoveFavoriteGenre(d.History))
 					// Пользовательские оценки книг (work-level, шкала 1–5).
-					r.Put("/works/{id}/rating", handleSetRating(d.History))
+					r.With(workGate).Put("/works/{id}/rating", handleSetRating(d.History))
 					r.Delete("/works/{id}/rating", handleRemoveRating(d.History))
 					// Отложенные запросы оценки («Оцените прочитанное»).
 					r.Get("/me/rating-prompts/feed", handleRateablePrompts(d.History, d.Settings))
@@ -227,15 +239,15 @@ func NewRouter(d Deps) http.Handler {
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
 					// для read_count в статистике автора/серии.
-					r.Post("/books/{id}/read", handleMarkRead(d.History))
+					r.With(bookGate).Post("/books/{id}/read", handleMarkRead(d.History))
 					r.Delete("/books/{id}/read", handleUnmarkRead(d.History))
 					// Позиция чтения для in-browser ридера (epub-cfi).
-					r.Get("/books/{id}/position", handleGetPosition(d.History))
-					r.Put("/books/{id}/position", handleSavePosition(d.History))
+					r.With(bookGate).Get("/books/{id}/position", handleGetPosition(d.History))
+					r.With(bookGate).Put("/books/{id}/position", handleSavePosition(d.History))
 					// Закладки и выделения с заметками веб-ридера (#389).
-					r.Get("/books/{id}/annotations", handleBookAnnotations(d.History))
-					r.Post("/books/{id}/annotations", handleSaveAnnotation(d.History))
-					r.Get("/works/{id}/annotations", handleWorkAnnotations(d.History))
+					r.With(bookGate).Get("/books/{id}/annotations", handleBookAnnotations(d.History))
+					r.With(bookGate).Post("/books/{id}/annotations", handleSaveAnnotation(d.History))
+					r.With(workGate).Get("/works/{id}/annotations", handleWorkAnnotations(d.History))
 					r.Patch("/annotations/{id}", handleUpdateAnnotation(d.History))
 					r.Delete("/annotations/{id}", handleDeleteAnnotation(d.History))
 				}
@@ -255,7 +267,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Post("/me/collections/{id}/books/{bookId}", handleAddBookToCollection(d.Collections))
 					r.Delete("/me/collections/{id}/books/{bookId}", handleRemoveBookFromCollection(d.Collections))
 					// Членство книги в полках — для индикации на карточке.
-					r.Get("/books/{id}/collections", handleCollectionsForBook(d.Collections))
+					r.With(bookGate).Get("/books/{id}/collections", handleCollectionsForBook(d.Collections))
 				}
 				// In-browser ридер: тот же путь конвертации что и /download,
 				// но без Content-Disposition: attachment и без записи в reads.
@@ -285,6 +297,18 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/admin/authors/{id}/duplicates", handleAuthorDuplicates(d.Catalog))
 					r.Post("/admin/authors/{id}/merge", handleMergeAuthors(d.Settings, d.Catalog))
 					r.Post("/admin/authors/{id}/not-duplicate", handleRejectAuthorDuplicate(d.Catalog)) // #527
+				}
+				if d.Hiding.Store != nil && d.Hiding.Sync != nil {
+					r.Get("/admin/hidden", handleListHidden(d.Hiding))
+					r.Post("/admin/authors/{id}/hide", handleSetHidden(d.Hiding, hiding.KindAuthor, true))
+					r.Delete("/admin/authors/{id}/hide", handleSetHidden(d.Hiding, hiding.KindAuthor, false))
+					r.Get("/admin/authors/{id}/hide-preview", handleHidePreview(d.Hiding, hiding.KindAuthor))
+					r.Post("/admin/works/{id}/hide", handleSetHidden(d.Hiding, hiding.KindWork, true))
+					r.Delete("/admin/works/{id}/hide", handleSetHidden(d.Hiding, hiding.KindWork, false))
+					r.Get("/admin/works/{id}/hide-preview", handleHidePreview(d.Hiding, hiding.KindWork))
+					r.Get("/admin/authors/{id}/hidden-status", handleHiddenStatus(d.Hiding, hiding.KindAuthor))
+					r.Get("/admin/works/{id}/hidden-status", handleHiddenStatus(d.Hiding, hiding.KindWork))
+					r.Get("/admin/books/{id}/hidden-status", handleHiddenStatus(d.Hiding, hiding.KindBook))
 				}
 				if d.Bio.Service != nil {
 					r.Patch("/admin/bio-timeline/{qid}/events/{key}", handleSetBioEventHidden(d.Bio))
@@ -453,4 +477,14 @@ func writeJSON(w http.ResponseWriter, code int, body any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(body)
+}
+
+// chainMW — несколько middleware как одно (первое — внешнее).
+func chainMW(ms ...func(http.Handler) http.Handler) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		for i := len(ms) - 1; i >= 0; i-- {
+			next = ms[i](next)
+		}
+		return next
+	}
 }

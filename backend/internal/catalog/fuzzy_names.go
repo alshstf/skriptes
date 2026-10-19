@@ -242,7 +242,7 @@ func (s *Service) fuzzyAuthors(ctx context.Context, words []string, exclude []in
 		SELECT a.id, `+authorNameFold+`, lower(COALESCE(a.latin_name, '')), a.renown
 		FROM authors a
 		WHERE ($1::text <% `+authorNameFold+` OR $1::text <% a.latin_name)
-		  AND NOT (a.id = ANY($2::bigint[]))
+		  AND NOT (a.id = ANY($2::bigint[])) AND NOT a.instance_hidden
 		ORDER BY GREATEST(word_similarity($1::text, `+authorNameFold+`),
 		                  COALESCE(word_similarity($1::text, a.latin_name), 0)) DESC,
 		         a.renown DESC, a.id

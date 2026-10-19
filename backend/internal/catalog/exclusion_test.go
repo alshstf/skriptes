@@ -6,9 +6,10 @@ import (
 )
 
 func TestBookExclusionClause(t *testing.T) {
-	// Пусто → no-op (ни фрагмента, ни аргументов): хелпер безопасно звать всегда.
-	if clause, args := bookExclusionClause(2, nil, nil, false); clause != "" || len(args) != 0 {
-		t.Fatalf("empty: clause=%q args=%v, want empty", clause, args)
+	// Пусто → только скрытое на инстансе (админ, 0064; без аргументов —
+	// плейсхолдеры не сдвигаются): хелпер безопасно звать всегда.
+	if clause, args := bookExclusionClause(2, nil, nil, false); clause != " AND NOT b.instance_hidden" || len(args) != 0 {
+		t.Fatalf("empty: clause=%q args=%v, want only instance_hidden", clause, args)
 	}
 
 	// Только языки: фрагмент по b.lang с плейсхолдером startArg, один арг.

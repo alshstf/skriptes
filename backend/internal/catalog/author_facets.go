@@ -164,8 +164,8 @@ func RecomputeAuthorFacets(ctx context.Context, pool *pgxpool.Pool) (int64, erro
 		WITH live AS (
 		    SELECT ba.author_id, b.id AS book_id, b.work_id, lower(btrim(b.lang)) AS lang
 		    FROM book_authors ba
-		    JOIN authors a ON a.id = ba.author_id AND NOT a.is_service
-		    JOIN books b ON b.id = ba.book_id AND NOT b.deleted
+		    JOIN authors a ON a.id = ba.author_id AND NOT a.is_service AND NOT a.instance_hidden
+		    JOIN books b ON b.id = ba.book_id AND NOT b.deleted AND NOT b.instance_hidden
 		    LEFT JOIN works w ON w.id = b.work_id
 		    WHERE COALESCE(w.kind, '') = ''
 		),

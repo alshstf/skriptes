@@ -206,7 +206,7 @@ func (s *Service) visibleWorks(ctx context.Context, entries []presetEntry, p Pre
 	if byPop {
 		req.Sort = popularitySort
 	}
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, "", req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), "", req)
 	if err != nil {
 		return nil, fmt.Errorf("meili works (preset): %w", err)
 	}
@@ -409,7 +409,7 @@ func (s *Service) authorsUnread(ctx context.Context, p PresetParams) ([]ListItem
 		Filter: andFilter("author_ids IN ["+strings.Join(authorIDs, ", ")+"]", notRead, compilationsExclusion,
 			worksExclusionFilter(p.ExcludeGenres, p.ExcludeLangs, visibleLangs, false)),
 	}
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, "", req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), "", req)
 	if err != nil {
 		return nil, nil, fmt.Errorf("meili works (authors unread): %w", err)
 	}

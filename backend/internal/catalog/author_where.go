@@ -92,6 +92,8 @@ func (w *authorWhere) filters(skip string) []string {
 	// агрегат намеренно можно. Метки: эвристика ClassifyServiceAuthors +
 	// admin-переключатель на карточке автора.
 	where = append(where, "NOT a.is_service")
+	// Скрытые на инстансе (админ, 0064) — вон из списка для всех.
+	where = append(where, "NOT a.instance_hidden")
 
 	if p.fuzzyIDs != nil {
 		// Точных совпадений по имени нет — похожие имена (#516, resolveAuthorQuery).

@@ -34,6 +34,14 @@
 - `0027_external_rating_lookups` (`book_external_rating_lookups`); `0026_external_rating` (`books.external_rating`/`_source`/`_count` — внешний рейтинг из сети, см. граблю №17)
 - `0025_rating_prompts` (`reads.acquired_at` + `book_rating_prompts` для отложенных запросов оценки); `0024_book_ratings` (пользовательские оценки книг), `0023_favorites_collection` (★-избранное → служебная полка, граблю №16), `0022_feed_dismissals`, `0021_collections`, `0020_genre_favorites`, `0019_book_work_lookups` (граблю №15).
 
+## 0064_instance_hidden
+
+Скрытие авторов и работ на инстансе (админ, план `~/projects/plans/skriptes/instance-hide-authors-works.md`): явные
+скрытия `hidden_authors(author_id PK, hidden_at, hidden_by, note)` и `hidden_works(work_id PK, …)`; флаги-материализация
+`authors/works/books.instance_hidden BOOLEAN NOT NULL DEFAULT false` (константный DEFAULT — без перезаписи таблиц) с
+частичными индексами `WHERE instance_hidden`. Флаги пересчитывает `importer.SyncInstanceHidden` (после скрытия/возврата
+и в конце прохода импорта); правила — в `importer/instance_hidden.go`.
+
 ## 0063_book_src_year
 
 Год оригинала перевода (#533, этап 4): `books.src_year SMALLINT` из fb2 `<src-title-info><date>`. Пишет обработка коллекции

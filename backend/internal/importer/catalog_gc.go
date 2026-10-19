@@ -125,8 +125,8 @@ type dbConn interface {
 	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
 }
 
-func collectIDs(ctx context.Context, db dbConn, query string, args ...any) ([]int64, error) {
-	rows, err := db.Query(ctx, query, args...)
+func collectIDs(ctx context.Context, db dbConn, query string) ([]int64, error) {
+	rows, err := db.Query(ctx, query)
 	if err != nil {
 		return nil, err
 	}

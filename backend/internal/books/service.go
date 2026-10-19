@@ -117,7 +117,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 		req.Facets = params.Facets
 	}
 
-	res, err := s.meili.Index("books").SearchWithContext(ctx, params.Query, req)
+	res, err := searchVisible(ctx, s.meili.Index("books"), params.Query, req)
 	if err != nil {
 		return ListResponse{}, fmt.Errorf("meili search: %w", err)
 	}
@@ -348,7 +348,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 	}
 
 	// Поля works-индекса свёрнуты «ё»→«е» (#278) — запрос тоже.
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(params.Query), req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), textnorm.FoldYo(params.Query), req)
 	if err != nil {
 		return ListResponse{}, fmt.Errorf("meili works search: %w", err)
 	}
@@ -443,7 +443,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 		h, _ := s.popularHits(ctx, textnorm.FoldYo(query), exclusion, popularSuggestHits, true)
 		popCh <- h
 	}()
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, textnorm.FoldYo(query), req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), textnorm.FoldYo(query), req)
 	popular := <-popCh
 	if err != nil {
 		return nil, fmt.Errorf("meili works search: %w", err)
@@ -824,7 +824,7 @@ func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, e
 		           -- прод-кейс «Разум и чувства». Живой count заодно не зависит от
 		           -- устаревания works.edition_count после soft-delete импорта.
 		           SELECT count(*)::int FROM books b
-		           WHERE b.work_id = w.id AND b.deleted = false
+		           WHERE b.work_id = w.id AND b.deleted = false AND (NOT b.instance_hidden OR w.instance_hidden)
 		             AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
 		       ),
 		       COALESCE(fb.id, 0), COALESCE(fb.cover_path, '')
@@ -832,7 +832,7 @@ func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, e
 		LEFT JOIN LATERAL (
 		    SELECT b.id, b.lang, b.cover_path, b.rating, `+ExternalRatingSQL("b")+` AS external_rating, b.external_rating_source
 		    FROM books b
-		    WHERE b.work_id = w.id AND b.deleted = false
+		    WHERE b.work_id = w.id AND b.deleted = false AND (NOT b.instance_hidden OR w.instance_hidden)
 		      AND (b.lang IS NULL OR lower(btrim(b.lang)) <> ALL(COALESCE($3::text[], '{}')))
 		      AND NOT EXISTS (
 		          SELECT 1 FROM book_genres bg JOIN genres g ON g.id = bg.genre_id
@@ -845,7 +845,7 @@ func (s *Service) representativeEditions(ctx context.Context, workIDs []int64, e
 		) rep ON true
 		LEFT JOIN LATERAL (
 		    SELECT b.id, b.cover_path FROM books b
-		    WHERE b.work_id = w.id AND b.deleted = false
+		    WHERE b.work_id = w.id AND b.deleted = false AND (NOT b.instance_hidden OR w.instance_hidden)
 		      AND b.cover_path IS NOT NULL AND b.cover_path <> ''
 		    ORDER BY b.id
 		    LIMIT 1
@@ -1326,7 +1326,7 @@ func (s *Service) Suggest(ctx context.Context, query string, limit int, userID i
 	if f := exclusionFilter(excludeGenres, excludeLangs); f != "" {
 		req.Filter = f
 	}
-	res, err := s.meili.Index("books").SearchWithContext(ctx, query, req)
+	res, err := searchVisible(ctx, s.meili.Index("books"), query, req)
 	if err != nil {
 		return nil, fmt.Errorf("meili search: %w", err)
 	}
@@ -1609,7 +1609,7 @@ func (s *Service) queryWorkGenres(ctx context.Context, workID, bookID int64) ([]
 		FROM genres g
 		JOIN book_genres bg ON bg.genre_id = g.id
 		JOIN books b        ON b.id = bg.book_id
-		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false AND (NOT b.instance_hidden OR b.id = $2)
 		GROUP BY g.id, g.fb2_code, g.name_ru, g.name_en
 		ORDER BY g.fb2_code
 	`, workID, bookID)
@@ -1640,7 +1640,7 @@ func (s *Service) queryEditions(ctx context.Context, workID, bookID int64) ([]Ed
 		FROM books b
 		JOIN archives ar      ON ar.id = b.archive_id
 		LEFT JOIN series es    ON es.id = b.series_id
-		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false AND (NOT b.instance_hidden OR b.id = $2)
 		ORDER BY (b.id = $2) DESC, b.lang NULLS LAST, b.edition_year DESC NULLS LAST, b.id
 	`, workID, bookID)
 	if err != nil {
@@ -1697,7 +1697,7 @@ func (s *Service) anchorEditionID(ctx context.Context, workID, bookID int64) int
 	err := s.pool.QueryRow(ctx, `
 		SELECT b.id FROM books b
 		JOIN works w ON w.id = b.work_id
-		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false
+		WHERE (b.work_id = $1 OR b.id = $2) AND b.deleted = false AND (NOT b.instance_hidden OR b.id = $2)
 		ORDER BY (b.normalized_title = w.normalized_title) DESC, b.id
 		LIMIT 1
 	`, workID, bookID).Scan(&id)

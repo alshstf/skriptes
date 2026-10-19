@@ -33,7 +33,7 @@ type CompilationRef struct {
 func visibleWorkClause(alias string, n int, excludeGenres, excludeLangs []string) (string, []any) {
 	var b strings.Builder
 	var args []any
-	fmt.Fprintf(&b, "EXISTS (SELECT 1 FROM books vb WHERE vb.work_id = %s.id AND NOT vb.deleted", alias)
+	fmt.Fprintf(&b, "EXISTS (SELECT 1 FROM books vb WHERE vb.work_id = %s.id AND NOT vb.deleted AND NOT vb.instance_hidden", alias)
 	if len(excludeLangs) > 0 {
 		fmt.Fprintf(&b, " AND (vb.lang IS NULL OR NOT (lower(btrim(vb.lang)) = ANY($%d::text[])))", n)
 		args = append(args, lowerAll(excludeLangs))

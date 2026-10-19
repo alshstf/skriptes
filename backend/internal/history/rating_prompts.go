@@ -66,7 +66,7 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 			       bool_or(r.completed_at IS NOT NULL) AS completed,
 			       max(COALESCE(r.fraction, 0)) AS max_fraction
 			FROM reads r
-			JOIN books b ON b.id = r.book_id AND b.deleted = false AND b.work_id IS NOT NULL
+			JOIN books b ON b.id = r.book_id AND b.deleted = false AND NOT b.instance_hidden AND b.work_id IS NOT NULL
 			WHERE r.user_id = (SELECT uid FROM p0)
 			GROUP BY b.work_id
 		),

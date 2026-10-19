@@ -51,6 +51,8 @@ type bookDoc struct {
 	// поиск/список отдают ОДНО издание на работу (схлопывание дублей/переводов).
 	// Синкается ResyncWorkIDs (импорт + после прохода группировки).
 	WorkID int64 `json:"work_id"`
+	// InstanceHidden — издание скрыто на инстансе (см. workDoc.InstanceHidden).
+	InstanceHidden bool `json:"instance_hidden,omitempty"`
 }
 
 // ConfigureIndex применяет настройки индекса books идемпотентно — для вызова на
@@ -152,6 +154,11 @@ type workDoc struct {
 	// (award_wins.work_id, в т.ч. кинопремии экранизаций): фильтр и фасет
 	// «Премии» на /books (#447).
 	Awards []string `json:"awards"`
+	// InstanceHidden — работа скрыта на инстансе (админ, миграция 0064). omitempty:
+	// фильтр `NOT instance_hidden = true` пропускает документы без поля, поэтому
+	// включение фичи не требует полной переиндексации — поле получают только
+	// скрытые (SyncInstanceHidden → UpsertWorksToIndex).
+	InstanceHidden bool `json:"instance_hidden,omitempty"`
 
 	// renownPop — популярность работы БЕЗ внутриинстансной вовлечённости
 	// (computeWorkPopularityExternal) — сырьё для authors.renown. Неэкспортируемое:
@@ -174,7 +181,7 @@ func configureWorksIndex(ctx context.Context, m meilisearch.ServiceManager, uid 
 	}
 	// id — для «известных совпадений» /books (#401): закреплённые наверху работы
 	// исключаются из остальной выдачи фильтром `id NOT IN [...]`.
-	filterable := []any{"id", "genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind", "awards"}
+	filterable := []any{"id", "genres", "lang", "src_lang", "orig_lang", "year", "series_id", "author_ids", "kind", "awards", "instance_hidden"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("works update filterable: %w", err)
 	}
@@ -213,7 +220,7 @@ func configureIndex(ctx context.Context, m meilisearch.ServiceManager) error {
 	if _, err := idx.UpdateSearchableAttributesWithContext(ctx, &[]string{"title", "authors", "series"}); err != nil {
 		return fmt.Errorf("update searchable: %w", err)
 	}
-	filterable := []any{"genres", "lang", "year", "series_id", "author_ids", "work_id"}
+	filterable := []any{"genres", "lang", "year", "series_id", "author_ids", "work_id", "instance_hidden"}
 	if _, err := idx.UpdateFilterableAttributesWithContext(ctx, &filterable); err != nil {
 		return fmt.Errorf("update filterable: %w", err)
 	}

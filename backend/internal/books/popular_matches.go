@@ -156,7 +156,7 @@ func (s *Service) popularHits(ctx context.Context, q, filter string, limit int64
 	if filter != "" {
 		req.Filter = filter
 	}
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, q, req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), q, req)
 	if err != nil {
 		return nil, fmt.Errorf("meili works search (popular): %w", err)
 	}
@@ -192,7 +192,7 @@ func (s *Service) listWorksWithPinned(ctx context.Context, params ListParams, of
 	if len(params.Facets) > 0 {
 		probe.Facets = params.Facets
 	}
-	resAll, err := index.SearchWithContext(ctx, q, probe)
+	resAll, err := searchVisible(ctx, index, q, probe)
 	pop := <-popCh
 	if err != nil {
 		return ListResponse{}, false, fmt.Errorf("meili works search: %w", err)
@@ -220,7 +220,7 @@ func (s *Service) listWorksWithPinned(ctx context.Context, params ListParams, of
 			Limit: int64(restLimit), Offset: int64(restOffset),
 			Filter: andFilter(base, idsExclusion(pinned)),
 		}
-		resB, err = index.SearchWithContext(ctx, q, reqB)
+		resB, err = searchVisible(ctx, index, q, reqB)
 		if err != nil {
 			// Фильтр по id ещё не применён (настройки индекса догоняют после
 			// выкатки) — обычный поиск, не ошибка.

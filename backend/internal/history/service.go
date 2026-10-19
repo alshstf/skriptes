@@ -463,7 +463,7 @@ func (s *Service) ListFavorites(ctx context.Context, userID int64, limit, offset
 		       ser.title
 		FROM user_collection_books cb
 		JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
-		JOIN books b ON b.id = cb.book_id AND b.deleted = false
+		JOIN books b ON b.id = cb.book_id AND b.deleted = false AND NOT b.instance_hidden
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
@@ -552,10 +552,10 @@ func (s *Service) ListFavoriteAuthors(ctx context.Context, userID int64, limit, 
 		SELECT a.id, a.last_name, a.first_name, a.middle_name, fa.added_at,
 		       (SELECT count(*) FROM book_authors ba
 		        JOIN books b ON b.id = ba.book_id
-		        WHERE ba.author_id = a.id AND b.deleted = false) AS book_count
+		        WHERE ba.author_id = a.id AND b.deleted = false AND NOT b.instance_hidden) AS book_count
 		FROM favorite_authors fa
 		JOIN authors a ON a.id = fa.author_id
-		WHERE fa.user_id = $1
+		WHERE fa.user_id = $1 AND NOT a.instance_hidden
 		ORDER BY fa.added_at DESC
 		LIMIT $2 OFFSET $3
 	`, userID, limit, offset)
@@ -674,11 +674,11 @@ func (s *Service) ListFavoriteSeries(ctx context.Context, userID int64, limit, o
 	rows, err := s.pool.Query(ctx, `
 		SELECT s.id, s.title, fs.added_at,
 		       COALESCE(NULLIF(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), ''), ''),
-		       (SELECT count(*) FROM books b WHERE b.series_id = s.id AND b.deleted = false) AS book_count
+		       (SELECT count(*) FROM books b WHERE b.series_id = s.id AND b.deleted = false AND NOT b.instance_hidden) AS book_count
 		FROM favorite_series fs
 		JOIN series s ON s.id = fs.series_id
 		LEFT JOIN authors a ON a.id = s.author_id
-		WHERE fs.user_id = $1
+		WHERE fs.user_id = $1 AND NOT COALESCE(a.instance_hidden, false)
 		ORDER BY fs.added_at DESC
 		LIMIT $2 OFFSET $3
 	`, userID, limit, offset)
@@ -733,7 +733,7 @@ func (s *Service) RecentViews(ctx context.Context, userID int64, limit int) ([]V
 		           ARRAY[]::text[]
 		       )
 		FROM views v
-		JOIN books b ON b.id = v.book_id AND b.deleted = false
+		JOIN books b ON b.id = v.book_id AND b.deleted = false AND NOT b.instance_hidden
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
 		WHERE v.user_id = $1
@@ -791,7 +791,7 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 			           ARRAY[]::text[]
 			       ) AS authors
 			FROM reads r
-			JOIN books b ON b.id = r.book_id AND b.deleted = false
+			JOIN books b ON b.id = r.book_id AND b.deleted = false AND NOT b.instance_hidden
 			LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 			LEFT JOIN book_authors ba ON ba.book_id = b.id
 			LEFT JOIN authors a ON a.id = ba.author_id
@@ -855,7 +855,7 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_authors fa
 			JOIN book_authors ba ON ba.author_id = fa.author_id
-			JOIN books b ON b.id = ba.book_id AND b.deleted = false
+			JOIN books b ON b.id = ba.book_id AND b.deleted = false AND NOT b.instance_hidden
 			WHERE fa.user_id = $1
 			  AND b.date_added > fa.added_at::date
 			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
@@ -863,7 +863,7 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			UNION
 			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_series fs
-			JOIN books b ON b.series_id = fs.series_id AND b.deleted = false
+			JOIN books b ON b.series_id = fs.series_id AND b.deleted = false AND NOT b.instance_hidden
 			WHERE fs.user_id = $1
 			  AND b.date_added > fs.added_at::date
 			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
@@ -949,7 +949,7 @@ func (s *Service) FavoritesCount(ctx context.Context, userID int64) (int, error)
 	err := s.pool.QueryRow(ctx, `
 		SELECT count(*) FROM user_collection_books cb
 		JOIN user_collections c ON c.id = cb.collection_id AND c.user_id = $1 AND c.kind = 'favorites'
-		JOIN books b ON b.id = cb.book_id AND b.deleted = false
+		JOIN books b ON b.id = cb.book_id AND b.deleted = false AND NOT b.instance_hidden
 	`, userID).Scan(&n)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
