@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.54.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.55.0**.
 
 ## Рабочее окружение
 
@@ -121,7 +121,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     закрытый пул на остановке); подробно — `docs/assistant/code-map.md`, «Фоновые горутины».
 24. **Премии — только белый список владельца** (`awards/catalog.go`, `manual.json` — руками раз в год). Новую премию или
     номинацию — только после его проверки (`~/projects/plans/skriptes/awards-dossier.md`); пометок не ставим.
-25. **Био-таймлайн — курируемый датасет по QID** (`internal/bio/data`), runtime без LLM и внешних вызовов. `short` ≤ 60
+25. **Био-таймлайн — курируемый датасет по QID** (репо `alshstf/skriptes-bio`, коммит — `internal/bio/dataset.ref`,
+    в образ — пакетом `biogen pack`, не в бинарник), runtime без LLM и внешних вызовов. `short` ≤ 60
     без года и названий работ, ключ вехи `type-yyyy` (по нему живёт «скрыть»), даты ISO нового стиля, у вехи
     `evidence`-цитата. Генератор — `cmd/biogen`: `extract` по умолчанию через `claude -p` (подписка), `-engine api` — опция;
     `verify` правит механические огрехи модели с флагом, факты — только отбраковка. Модель массовых прогонов — Sonnet 5.5
@@ -158,7 +159,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | CSP фронта | `frontend/nginx-security-headers.conf` (inline-скрипты запрещены; e2e под CSP) |
 | Docker compose, Caddy, публичный деплой | `infra/docker-compose*.yml`, `infra/Caddyfile`, `infra/Caddyfile.public`, `infra/.env.public.example` |
 | Метрики | `backend/internal/metrics` (отдельный сервер `SKRIPTES_METRICS_ADDR`) |
-| Био-таймлайн автора (датасет, генератор, runtime, UI) | `internal/bio/` (данные `data/authors/<QID>.json`, runtime `bio/timeline`), `cmd/biogen`, `api/bio.go`; фронт — `lib/bioTimeline.ts`, `components/BioTimeline*.tsx`, `AuthorLifeContext.tsx`, `pages/AuthorTimelinePage.tsx` |
+| Био-таймлайн автора (датасет, генератор, runtime, UI) | `internal/bio/` (пакет `pack.go`, runtime `bio/timeline`; данные — репо `skriptes-bio`, коммит `dataset.ref`), `cmd/biogen`, `api/bio.go`; фронт — `lib/bioTimeline.ts`, `components/BioTimeline*.tsx`, `AuthorLifeContext.tsx`, `pages/AuthorTimelinePage.tsx` |
 | Postgres в тестах | `backend/internal/testpg` (своих `postgres.Run` не заводить) |
 | Релиз (CI) | `.github/workflows/release.yml` |
 

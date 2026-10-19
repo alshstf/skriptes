@@ -18,9 +18,9 @@ func TestSeedTimelineAndHides(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 	pool := testpg.Pool(t, ctx)
-	ds, err := bio.Load()
+	pack, ds := testPack(t)
+	svc, err := New(pool, pack, nil)
 	require.NoError(t, err)
-	svc := New(pool, ds, nil)
 
 	// Сев идемпотентен: второй раз — no-op (updated_at не меняется).
 	require.NoError(t, svc.Seed(ctx))
@@ -113,7 +113,8 @@ func TestSeedTimelineAndHides(t *testing.T) {
 	}
 
 	// Скрытие переживает пересев (другая версия → полный upsert).
-	svc2 := New(pool, &bio.Dataset{Authors: ds.Authors, Context: ds.Context, Version: ds.Version + "x"}, nil)
+	svc2, err := New(pool, &bio.PackFile{Path: pack.Path, Version: pack.Version + "x"}, nil)
+	require.NoError(t, err)
 	require.NoError(t, svc2.Seed(ctx))
 	var hides int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM author_event_hides`).Scan(&hides))

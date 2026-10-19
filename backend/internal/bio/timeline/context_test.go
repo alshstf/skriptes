@@ -1,6 +1,8 @@
 package timeline
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/skriptes/skriptes/backend/internal/bio"
@@ -8,11 +10,38 @@ import (
 
 func dostoevsky(t *testing.T) *bio.Author {
 	t.Helper()
-	ds, err := bio.Load()
+	return testDataset(t).Authors["Q991"]
+}
+
+// testDataset — эталонный Достоевский и регионы фона из bio/testdata (сам
+// датасет — в alshstf/skriptes-bio).
+func testDataset(t *testing.T) *bio.Dataset {
+	t.Helper()
+	ds, err := bio.LoadFS(os.DirFS(".."), "testdata")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return ds.Authors["Q991"]
+	return ds
+}
+
+// testPack — testdata, упакованный как в образе.
+func testPack(t *testing.T) (*bio.PackFile, *bio.Dataset) {
+	t.Helper()
+	ds := testDataset(t)
+	path := filepath.Join(t.TempDir(), "bio.pack.gz")
+	f, err := os.Create(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := bio.WritePack(f, ds); err != nil {
+		t.Fatal(err)
+	}
+	_ = f.Close()
+	pack, err := bio.OpenPack(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return pack, ds
 }
 
 func keys(items []ContextItem) []string {

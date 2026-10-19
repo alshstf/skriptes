@@ -15,6 +15,10 @@ type Config struct {
 	LogLevel    string `env:"SKRIPTES_LOG_LEVEL" envDefault:"info"`
 	LogFormat   string `env:"SKRIPTES_LOG_FORMAT" envDefault:"json"`
 	Version     string `env:"SKRIPTES_VERSION" envDefault:"dev"`
+	// BioPack — пакет датасета био-таймлайна: собирается при сборке образа из
+	// alshstf/skriptes-bio (коммит — internal/bio/dataset.ref). Нет файла —
+	// таймлайн выключен (локальный `go run` без пакета).
+	BioPack string `env:"SKRIPTES_BIO_PACK" envDefault:"/usr/share/skriptes/bio.pack.gz"`
 
 	DatabaseURL     string        `env:"SKRIPTES_DATABASE_URL" envDefault:"postgres://skriptes:skriptes@localhost:5432/skriptes?sslmode=disable"`
 	DatabaseTimeout time.Duration `env:"SKRIPTES_DATABASE_TIMEOUT" envDefault:"60s"`

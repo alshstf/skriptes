@@ -75,7 +75,7 @@ func (s *Service) Timeline(ctx context.Context, authorID int64, admin bool) (*Ti
 	if err != nil {
 		return nil, err
 	}
-	out := &Timeline{QID: a.QID, Name: a.Name, Born: a.Born, Died: a.Died, Chapters: a.Chapters, Sources: a.Sources, Version: s.ds.Version}
+	out := &Timeline{QID: a.QID, Name: a.Name, Born: a.Born, Died: a.Died, Chapters: a.Chapters, Sources: a.Sources, Version: s.pack.Version}
 	visible := 0
 	for _, e := range a.Events {
 		h := hidden[e.Key]
@@ -92,7 +92,7 @@ func (s *Service) Timeline(ctx context.Context, authorID int64, admin bool) (*Ti
 	}
 	out.Available = true
 	for _, r := range a.Context {
-		if c := s.ds.Context[r]; c != nil {
+		if c := s.context[r]; c != nil {
 			out.Context = append(out.Context, c.Events...)
 		}
 	}
