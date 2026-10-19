@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { BookOpen, LogOut, Settings, Shield, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +16,7 @@ import { useAppearance } from '@/lib/appearance';
 import { useVersion, useInstanceName, formatCollectionVersion } from '@/lib/version';
 import { HeroSearchContext } from '@/lib/heroSearch';
 import { cn } from '@/lib/utils';
+import { syncEditModeWithPath } from '@/lib/editMode';
 import { useEffect, useState, type ReactNode } from 'react';
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -29,6 +30,11 @@ export function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.title = instanceName;
   }, [instanceName]);
+  // Режим «Править» живёт на карточке, где его включили: ушли с неё — выключен.
+  const pathname = useRouterState({ select: (st) => st.location.pathname });
+  useEffect(() => {
+    syncEditModeWithPath(pathname);
+  }, [pathname]);
   // Видим ли hero-поиск Главной — управляет видимостью кнопки поиска в хэдере
   // (см. heroSearch.ts). Дефолт false: на остальных страницах кнопка видна.
   const [heroSearchVisible, setHeroSearchVisible] = useState(false);
