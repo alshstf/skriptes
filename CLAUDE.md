@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.55.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.56.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0063_book_src_year`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0064_instance_hidden`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -94,7 +94,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     известным авторам (урок 1.19.0: очистили био Достоевского).
 14. **Коды языка** нормализуются (lower+trim+срез субтега; `src_lang` — только через `langcode.Canonical`).
     Скрытый контент режется И в Meili-фильтре `/books`, И в PG-списках карточек (`bookExclusionClause`) — новый
-    список книг прогоняй через те же исключения.
+    список книг прогоняй через те же исключения. Скрытое на инстансе (админ, `instance_hidden`): Meili — только через
+    `books.searchVisible` (`NOT instance_hidden = true`, не `!= true`), прямые ссылки — `requireNotHidden`.
 15. **Работа (`works`) над изданиями (`books`).** Группировка `metadata/work_grouper.go` (Tier-1 локально, Tier-2
     внешний, гейты против склеек — §15 в gotchas), ручные merge/split (якорь не выносится; merge зовёт
     `reassignWorkUserData` до GC), «не объединять» — `work_merge_rejections` (группировка соблюдает, #517),
@@ -153,6 +154,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
 | Видимость контента (скрытые жанры/языки) | `settings/content.go`, `api/content.go`, `components/ContentVisibility.tsx` |
+| Скрытие авторов/работ на инстансе (админ) | `internal/hiding`, `importer/instance_hidden.go`, `api/hiding.go`, `books/visible.go` |
 | Языки, язык оригинала | `catalog/languages.go`, `metadata/src_lang_backfill.go`, `internal/langcode` |
 | Настройки (app/user) | `backend/internal/settings/` |
 | UI-примитивы, API-клиент, query-хуки | `frontend/src/components/ui/`, `lib/api.ts`, `lib/*.ts` |

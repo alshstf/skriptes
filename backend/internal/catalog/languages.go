@@ -93,7 +93,7 @@ func (s *Service) ListLanguages(ctx context.Context) ([]LanguageEntry, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT lower(btrim(lang)) AS code, count(*)::int
 		FROM books
-		WHERE deleted = false AND lang IS NOT NULL AND btrim(lang) <> ''
+		WHERE deleted = false AND NOT instance_hidden AND lang IS NOT NULL AND btrim(lang) <> ''
 		GROUP BY lower(btrim(lang))
 		ORDER BY count(*) DESC, code
 	`)

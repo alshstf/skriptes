@@ -71,6 +71,8 @@ const notCompilationClause = ` AND COALESCE((SELECT wk.kind FROM works wk WHERE 
 func bookExclusionClause(startArg int, excludeGenres, excludeLangs []string, hideCompilations bool) (clause string, args []any) {
 	n := startArg
 	var b strings.Builder
+	// Скрытое на инстансе (админ, миграция 0064) — всегда, для всех.
+	b.WriteString(" AND NOT b.instance_hidden")
 	if len(excludeLangs) > 0 {
 		fmt.Fprintf(&b, " AND (b.lang IS NULL OR NOT (b.lang = ANY($%d::text[])))", n)
 		args = append(args, excludeLangs)

@@ -142,7 +142,7 @@ func (s *Service) matchQueryAuthors(ctx context.Context, query string) ([]Matche
 		SELECT a.id, a.last_name, COALESCE(a.first_name, ''), COALESCE(a.middle_name, ''),
 		       COALESCE(a.name_note, ''), a.book_count, a.renown, COALESCE(a.latin_name, '')
 		FROM authors a
-		WHERE NOT a.is_service AND a.renown >= $2 AND a.book_count > 0
+		WHERE NOT a.is_service AND NOT a.instance_hidden AND a.renown >= $2 AND a.book_count > 0
 		  AND (`+textnorm.NameFoldSQL("a.normalized_name")+` ILIKE '%' || $1 || '%' ESCAPE '\'
 		       OR a.latin_name ILIKE '%' || $1 || '%' ESCAPE '\')
 		ORDER BY a.renown DESC, a.id
@@ -272,7 +272,7 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 		h, _ := s.popularHits(ctx, q, base, pinCandidates, false)
 		popCh <- h
 	}()
-	resAll, err := index.SearchWithContext(ctx, q, all)
+	resAll, err := searchVisible(ctx, index, q, all)
 	popular := <-popCh
 	if err != nil {
 		return ListResponse{}, false, fmt.Errorf("meili works search: %w", err)
@@ -295,7 +295,7 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 		HitsPerPage:      int64(limit), Page: int64(offset/limit) + 1,
 		Filter: andFilter(base, byAuthor), Sort: authorWorksSort,
 	}
-	resA, err := index.SearchWithContext(ctx, "", reqA)
+	resA, err := searchVisible(ctx, index, "", reqA)
 	if err != nil {
 		return ListResponse{}, false, fmt.Errorf("meili works search (author): %w", err)
 	}
@@ -308,7 +308,7 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 			Limit: int64(limit - len(segA)), Offset: int64(max(0, offset-int(resA.TotalHits))),
 			Filter: andFilter(base, "NOT "+byAuthor),
 		}
-		resB, err := index.SearchWithContext(ctx, q, reqB)
+		resB, err := searchVisible(ctx, index, q, reqB)
 		if err != nil {
 			return ListResponse{}, false, fmt.Errorf("meili works search (rest): %w", err)
 		}
@@ -355,7 +355,7 @@ func (s *Service) suggestAuthorWorks(ctx context.Context, query string, filter s
 		Limit: int64(limit), Filter: andFilter(filter, authorIDsFilter(authors)), Sort: authorWorksSort,
 	}
 	// Пустой запрос — порядок только по известности (см. listWorksByAuthor).
-	res, err := s.meili.Index(worksIndexName).SearchWithContext(ctx, "", req)
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), "", req)
 	if err != nil || len(res.Hits) == 0 {
 		return nil
 	}

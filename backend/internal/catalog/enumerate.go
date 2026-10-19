@@ -52,7 +52,7 @@ func (s *Service) ListAuthors(ctx context.Context, limit, offset int) ([]AuthorE
 
 	var total int
 	if err := s.pool.QueryRow(ctx,
-		`SELECT COUNT(*) FROM authors`,
+		`SELECT COUNT(*) FROM authors WHERE NOT instance_hidden`,
 	).Scan(&total); err != nil {
 		return nil, 0, fmt.Errorf("count authors: %w", err)
 	}
@@ -64,7 +64,8 @@ func (s *Service) ListAuthors(ctx context.Context, limit, offset int) ([]AuthorE
 		SELECT a.id, a.last_name, a.first_name, a.middle_name, COUNT(b.id)::int
 		FROM authors a
 		LEFT JOIN book_authors ba ON ba.author_id = a.id
-		LEFT JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		LEFT JOIN books b ON b.id = ba.book_id AND b.deleted = false AND NOT b.instance_hidden
+		WHERE NOT a.instance_hidden
 		GROUP BY a.id
 		ORDER BY a.last_name, a.first_name, a.middle_name, a.id
 		LIMIT $1 OFFSET $2
@@ -92,6 +93,10 @@ func (s *Service) ListAuthors(ctx context.Context, limit, offset int) ([]AuthorE
 	return out, total, nil
 }
 
+// seriesNotHidden — серия скрытого на инстансе автора (series.author_id) не
+// перечисляется; книги скрытых в счётчиках не участвуют.
+const seriesNotHidden = `NOT EXISTS (SELECT 1 FROM authors ah WHERE ah.id = s.author_id AND ah.instance_hidden)`
+
 // ListSeries — постраничный список серий, отсортированный по title.
 // AuthorName заполняется только если у серии есть series.author_id
 // (FK на authors). Это удобство для OPDS-клиентов: можно показать
@@ -101,7 +106,7 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 
 	var total int
 	if err := s.pool.QueryRow(ctx,
-		`SELECT COUNT(*) FROM series`,
+		`SELECT COUNT(*) FROM series s WHERE `+seriesNotHidden,
 	).Scan(&total); err != nil {
 		return nil, 0, fmt.Errorf("count series: %w", err)
 	}
@@ -112,9 +117,10 @@ func (s *Service) ListSeries(ctx context.Context, limit, offset int) ([]SeriesEn
 		       COALESCE(a.first_name, '') AS fi,
 		       COALESCE(a.middle_name, '') AS mi,
 		       (SELECT COUNT(*) FROM books b
-		        WHERE b.series_id = s.id AND b.deleted = false)::int AS book_count
+		        WHERE b.series_id = s.id AND b.deleted = false AND NOT b.instance_hidden)::int AS book_count
 		FROM series s
 		LEFT JOIN authors a ON a.id = s.author_id
+		WHERE `+seriesNotHidden+`
 		ORDER BY s.title, s.id
 		LIMIT $1 OFFSET $2
 	`, limit, offset)
@@ -174,7 +180,7 @@ func (s *Service) ListGenres(ctx context.Context, userID int64) ([]GenreEntry, e
 			SELECT bg.genre_id, COUNT(*)::int AS cnt
 			FROM book_genres bg
 			JOIN books b ON b.id = bg.book_id
-			WHERE b.deleted = false
+			WHERE b.deleted = false AND NOT b.instance_hidden
 			GROUP BY bg.genre_id
 		)
 		SELECT g.id, g.fb2_code,

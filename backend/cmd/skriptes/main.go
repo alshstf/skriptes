@@ -33,6 +33,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/dlimit"
 	"github.com/skriptes/skriptes/backend/internal/email"
 	"github.com/skriptes/skriptes/backend/internal/genres"
+	"github.com/skriptes/skriptes/backend/internal/hiding"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
@@ -744,6 +745,7 @@ func run() error {
 		Content: api.ContentDeps{Resolver: contentResolver},
 		Awards:  api.AwardsDeps{Service: awards.NewService(pool), Logos: awards.NewLogoCache(filepath.Join(cfg.CacheRoot, "award-logos"))},
 		Bio:     api.BioDeps{Service: bioTimeline},
+		Hiding:  api.HidingDeps{Store: hiding.New(pool), Sync: imp.SyncInstanceHidden},
 		OPDS: api.OPDSDeps{Handler: opds.NewHandler(opds.Config{
 			// BaseURL пустой — handler возьмёт схему/host из заголовков
 			// запроса (с поддержкой X-Forwarded-Proto/Host для proxy
@@ -1045,6 +1047,14 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		logger.Warn("author facets recompute after import failed", "err", err)
 	} else if n > 0 {
 		logger.Info("author facets recomputed after import", "rows_changed", n)
+	}
+	// Скрытое на инстансе (админ, 0064) — последним: новые издания скрытого
+	// автора получают флаг, документы Meili, пересобранные импортом без поля,
+	// получают его снова.
+	if books, works, err := imp.SyncInstanceHidden(ctx); err != nil {
+		logger.Warn("instance hidden sync after import failed", "err", err)
+	} else if books+works > 0 {
+		logger.Info("instance hidden synced after import", "books_changed", books, "works_changed", works)
 	}
 }
 

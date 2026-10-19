@@ -185,7 +185,7 @@ func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collecti
 	rows, err := s.pool.Query(ctx, `
 		SELECT c.id, c.name, c.kind, c.created_at, c.updated_at,
 		       (SELECT count(*) FROM user_collection_books cb
-		        JOIN books b ON b.id = cb.book_id AND b.deleted = false
+		        JOIN books b ON b.id = cb.book_id AND b.deleted = false AND NOT b.instance_hidden
 		        WHERE cb.collection_id = c.id)::int AS book_count
 		FROM user_collections c
 		WHERE c.user_id = $1
@@ -331,7 +331,7 @@ func (s *Service) ListCollectionBooks(ctx context.Context, userID, collID int64)
 		       ),
 		       ser.title
 		FROM user_collection_books cb
-		JOIN books b ON b.id = cb.book_id AND b.deleted = false
+		JOIN books b ON b.id = cb.book_id AND b.deleted = false AND NOT b.instance_hidden
 		LEFT JOIN works w ON w.id = b.work_id
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id

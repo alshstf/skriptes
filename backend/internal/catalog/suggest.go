@@ -62,7 +62,7 @@ func (s *Service) SuggestAuthors(ctx context.Context, query string, limit int, e
 			       (`+authorNameFold+` ILIKE $1 || '%' ESCAPE '\') AS prefix,
 			       (`+authorNameFold+` ILIKE '%' || $1 || '%' ESCAPE '\') AS phrase
 			FROM authors a
-			WHERE `+where+`
+			WHERE NOT a.instance_hidden AND `+where+`
 			ORDER BY prefix DESC, phrase DESC, a.renown DESC, a.id
 			LIMIT `+suggestCandidates+`
 		)
